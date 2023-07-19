@@ -1,51 +1,90 @@
 import React, { useState } from "react";
-import { useRecoilState } from "recoil";
+import { useQuery } from "react-query";
+import { useSetRecoilState, useRecoilState } from "recoil";
 import {
   Link,
   useParams,
-  useSearchParams,
   useLocation,
   useNavigate,
+  useSearchParams,
 } from "react-router-dom";
-import { format } from "date-fns";
-import randomstring from "randomstring";
-import {
-  MainTable,
-  Row,
-  Col,
-  Button,
-  Input,
-  Icon,
-} from "@canonical/react-components";
+import { Row, Col, Notification } from "@canonical/react-components";
 
-import { brandStoresState } from "../../atoms";
+import {
+  modelsListFilterState,
+  modelsListState,
+  policiesState,
+} from "../../atoms";
 
 import SectionNav from "../SectionNav";
+import ModelsFilter from "./ModelsFilter";
+import ModelsTable from "./ModelsTable";
+import CreateModelForm from "./CreateModelForm";
 
-import {
-  checkModelNameExists,
-  getFilteredModels,
-  isClosedPanel,
-  maskString,
-} from "../../utils";
+import { isClosedPanel } from "../../utils";
 
-import type { Model, Store } from "../../types/shared";
+import type { Model, Policy } from "../../types/shared";
 
-// This is temporary until the API is connected
-import modelsData from "./models-data";
+type Query = {
+  isLoading: boolean;
+  isError: boolean;
+  error: {
+    message: string;
+  } | null;
+};
 
 function Models() {
+  const getModels = async () => {
+    const response = await fetch(`/admin/store/${id}/models`);
+
+    if (!response.ok) {
+      throw new Error("There was a problem fetching models");
+    }
+
+    const modelsData = await response.json();
+
+    if (!modelsData.success) {
+      throw new Error(modelsData.message);
+    }
+
+    setModelsList(modelsData.data);
+    setFilter(searchParams.get("filter") || "");
+
+    modelsData.data.forEach((model: Model) => {
+      getPolicy(model.name);
+    });
+  };
+
+  const getPolicy = async (modelName: string) => {
+    const response = await fetch(
+      `/admin/store/${id}/models/${modelName}/policies`
+    );
+
+    if (!response.ok) {
+      throw new Error("There was a problem fetching the policy");
+    }
+
+    const policyData = await response.json();
+
+    if (!policyData.success) {
+      throw new Error(policyData.message);
+    }
+
+    setPolicies([...policies, policyData.data]);
+  };
+
   const { id } = useParams();
   const location = useLocation();
   const navigate = useNavigate();
-  const [searchParams, setSearchParams] = useSearchParams();
-  const models = getFilteredModels(modelsData.data, searchParams.get("filter"));
-
-  const [newModelName, setNewModelName] = useState("");
-  const [apiKey, setApiKey] = useState("");
-
-  const stores = useRecoilState(brandStoresState);
-  const currentStore = stores[0].find((store: Store) => store.id === id);
+  const { isLoading, isError, error }: Query = useQuery("models", getModels);
+  const setModelsList = useSetRecoilState<Array<Model>>(modelsListState);
+  const [policies, setPolicies] = useRecoilState<Array<Policy>>(policiesState);
+  const setFilter = useSetRecoilState<string>(modelsListFilterState);
+  const [searchParams] = useSearchParams();
+  const [showNotification, setShowNotification] = useState<boolean>(false);
+  const [showErrorNotification, setShowErrorNotification] = useState<boolean>(
+    false
+  );
 
   return (
     <>
@@ -55,6 +94,18 @@ function Models() {
             <div className="u-fixed-width">
               <SectionNav sectionName="models" />
             </div>
+            {showNotification && (
+              <div className="u-fixed-width">
+                <Notification
+                  severity="positive"
+                  onDismiss={() => {
+                    setShowNotification(false);
+                  }}
+                >
+                  New model created
+                </Notification>
+              </div>
+            )}
             <Row>
               <Col size={6}>
                 <Link className="p-button" to={`/admin/${id}/models/create`}>
@@ -62,104 +113,13 @@ function Models() {
                 </Link>
               </Col>
               <Col size={6}>
-                <div className="p-search-box">
-                  <Input
-                    type="search"
-                    id="search"
-                    className="p-search-box__input"
-                    label="Search models"
-                    labelClassName="u-off-screen"
-                    placeholder="Search models"
-                    autoComplete="off"
-                    value={searchParams.get("filter") || ""}
-                    onChange={(e) => {
-                      if (e.target.value) {
-                        setSearchParams({ filter: e.target.value });
-                      } else {
-                        setSearchParams();
-                      }
-                    }}
-                  />
-                  <Button
-                    type="reset"
-                    className="p-search-box__reset"
-                    onClick={() => {
-                      setSearchParams();
-                    }}
-                  >
-                    <Icon name="close">Close</Icon>
-                  </Button>
-                  <Button type="submit" className="p-search-box__button">
-                    <Icon name="search">Search</Icon>
-                  </Button>
-                </div>
+                <ModelsFilter />
               </Col>
             </Row>
             <div className="u-fixed-width">
-              {models.length > 0 && (
-                <MainTable
-                  data-testid="models-table"
-                  sortable
-                  paginate={10}
-                  emptyStateMsg="Fetching models data..."
-                  headers={[
-                    {
-                      content: `Name (${models.length})`,
-                      sortKey: "name",
-                    },
-                    {
-                      content: "API key",
-                      className: "u-align--right",
-                    },
-                    {
-                      content: "Last updated",
-                      className: "u-align--right",
-                      sortKey: "modified-at",
-                    },
-                    {
-                      content: "Created date",
-                      className: "u-align--right",
-                      sortKey: "created-at",
-                    },
-                  ]}
-                  rows={models.map((model: Model) => {
-                    return {
-                      columns: [
-                        {
-                          content: (
-                            <Link to={`/admin/${id}/models/${model.name}`}>
-                              {model.name}
-                            </Link>
-                          ),
-                        },
-                        {
-                          content: maskString(model["api-key"]),
-                          className: "u-align--right",
-                        },
-                        {
-                          content: format(
-                            new Date(model["modified-at"]),
-                            "dd/MM/yyyy"
-                          ),
-                          className: "u-align--right",
-                        },
-                        {
-                          content: format(
-                            new Date(model["created-at"]),
-                            "dd/MM/yyyy"
-                          ),
-                          className: "u-align--right",
-                        },
-                      ],
-                      sortData: {
-                        name: model.name,
-                        "modified-at": model["modified-at"],
-                        "created-at": model["created-at"],
-                      },
-                    };
-                  })}
-                />
-              )}
+              {isLoading && <p>Fetching models...</p>}
+              {isError && error && <p>Error: {error.message}</p>}
+              <ModelsTable />
             </div>
           </div>
         </div>
@@ -170,8 +130,7 @@ function Models() {
         }`}
         onClick={() => {
           navigate(`/admin/${id}/models`);
-          setNewModelName("");
-          setApiKey("");
+          setShowErrorNotification(false);
         }}
       ></div>
       <aside
@@ -179,98 +138,11 @@ function Models() {
           isClosedPanel(location.pathname, "create") ? "is-collapsed" : ""
         }`}
       >
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            console.log("Submit");
-          }}
-          style={{ height: "100%" }}
-        >
-          <div className="p-panel is-flex-column">
-            <div className="p-panel__header">
-              <h4 className="p-panel__title">Create new model</h4>
-            </div>
-            <div className="p-panel__content">
-              <div className="u-fixed-width">
-                {currentStore && (
-                  <p>
-                    Brand
-                    <br />
-                    {currentStore.name}
-                  </p>
-                )}
-                <Input
-                  type="text"
-                  id="model-name-field"
-                  placeholder="e.g. display-name-123"
-                  label="Name"
-                  help="Name should contain lowercase alphanumeric characters and hyphens only"
-                  value={newModelName}
-                  onChange={(e) => {
-                    const value = e.target.value;
-                    setNewModelName(value);
-                  }}
-                  error={
-                    checkModelNameExists(newModelName, models)
-                      ? `Model ${newModelName} already exists`
-                      : null
-                  }
-                  required
-                />
-                <Input
-                  type="text"
-                  id="api-key-field"
-                  label="API key"
-                  value={apiKey}
-                  placeholder="yx6dnxsWQ3XUB5gza8idCuMvwmxtk1xBpa9by8TuMit5dgGnv"
-                  className="read-only-dark"
-                  style={{ color: "#000" }}
-                  readOnly
-                />
-                <Button
-                  type="button"
-                  onClick={() => {
-                    setApiKey(
-                      randomstring.generate({
-                        length: 50,
-                      })
-                    );
-                  }}
-                >
-                  Generate key
-                </Button>
-              </div>
-            </div>
-            <div className="u-fixed-width">
-              <p>* Mandatory field</p>
-            </div>
-            <hr />
-            <div className="p-panel__footer u-align--right">
-              <div className="u-fixed-width">
-                <Button
-                  className="u-no-margin--bottom"
-                  onClick={() => {
-                    navigate(`/admin/${id}/models`);
-                    setNewModelName("");
-                    setApiKey("");
-                  }}
-                >
-                  Cancel
-                </Button>
-                <Button
-                  type="submit"
-                  appearance="positive"
-                  className="u-no-margin--bottom u-no-margin--right"
-                  disabled={
-                    !newModelName || checkModelNameExists(newModelName, models)
-                  }
-                >
-                  Add model
-                </Button>
-              </div>
-            </div>
-          </div>
-        </form>
+        <CreateModelForm
+          setShowNotification={setShowNotification}
+          showErrorNotification={showErrorNotification}
+          setShowErrorNotification={setShowErrorNotification}
+        />
       </aside>
     </>
   );
