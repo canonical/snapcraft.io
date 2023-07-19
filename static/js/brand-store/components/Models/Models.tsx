@@ -106,6 +106,18 @@ function Models() {
                 </Notification>
               </div>
             )}
+            {showErrorNotification && (
+              <div className="u-fixed-width">
+                <Notification
+                  severity="negative"
+                  onDismiss={() => {
+                    setShowErrorNotification(false);
+                  }}
+                >
+                  Unable to create model
+                </Notification>
+              </div>
+            )}
             <Row>
               <Col size={6}>
                 <Link className="p-button" to={`/admin/${id}/models/create`}>
@@ -140,7 +152,6 @@ function Models() {
       >
         <CreateModelForm
           setShowNotification={setShowNotification}
-          showErrorNotification={showErrorNotification}
           setShowErrorNotification={setShowErrorNotification}
         />
       </aside>
