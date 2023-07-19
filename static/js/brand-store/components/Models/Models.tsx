@@ -23,15 +23,7 @@ import CreateModelForm from "./CreateModelForm";
 
 import { isClosedPanel } from "../../utils";
 
-import type { Model, Policy } from "../../types/shared";
-
-type Query = {
-  isLoading: boolean;
-  isError: boolean;
-  error: {
-    message: string;
-  } | null;
-};
+import type { Model, Policy, Query } from "../../types/shared";
 
 function Models() {
   const getModels = async () => {
