@@ -42,27 +42,33 @@ function Models() {
     setModelsList(modelsData.data);
     setFilter(searchParams.get("filter") || "");
 
-    modelsData.data.forEach((model: Model) => {
-      getPolicy(model.name);
-    });
+    getPolicies(modelsData.data);
   };
 
-  const getPolicy = async (modelName: string) => {
-    const response = await fetch(
-      `/admin/store/${id}/models/${modelName}/policies`
+  const getPolicies = async (modelsList: Array<Model>) => {
+    const data = await Promise.all(
+      modelsList.map((model) => {
+        return fetch(`/admin/store/${id}/models/${model.name}/policies`);
+      })
     );
 
-    if (!response.ok) {
-      throw new Error("There was a problem fetching the policy");
-    }
+    const allPolicies = await Promise.all(
+      data.map(async (res) => {
+        if (!res.ok) {
+          return [];
+        }
 
-    const policyData = await response.json();
+        const policies = await res.json();
 
-    if (!policyData.success) {
-      throw new Error(policyData.message);
-    }
+        if (!policies.success) {
+          return [];
+        }
 
-    setPolicies([...policies, ...policyData.data]);
+        return policies.data;
+      })
+    );
+
+    setPolicies(allPolicies.flat());
   };
 
   const { id } = useParams();
