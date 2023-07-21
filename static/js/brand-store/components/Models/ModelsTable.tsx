@@ -45,6 +45,9 @@ function ModelsTable() {
         },
       ]}
       rows={modelsList.map((model: Model) => {
+        if (model.name === "alimot_test_model_a") {
+          console.log("model", model);
+        }
         return {
           columns: [
             {
@@ -59,7 +62,10 @@ function ModelsTable() {
               className: "u-align--right",
             },
             {
-              content: model["policy-revision"] || "-",
+              content:
+                model["policy-revision"] !== undefined
+                  ? model["policy-revision"]
+                  : "-",
               className: "u-align--right",
             },
             {
