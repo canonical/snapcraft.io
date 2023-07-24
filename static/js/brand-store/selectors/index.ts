@@ -1,12 +1,14 @@
-import { selector } from "recoil";
+import { selector, selectorFamily } from "recoil";
 
 import {
   modelsListFilterState,
   modelsListState,
-  policiesState,
+  policiesListState,
+  policiesListFilterState,
+  signingKeysListState,
 } from "../atoms";
 
-import { getFilteredModels } from "../utils";
+import { getFilteredModels, getFilteredPolicies } from "../utils";
 
 import type {
   StoresSlice,
@@ -15,6 +17,7 @@ import type {
   InvitesSlice,
   MembersSlice,
   Model,
+  Policy,
 } from "../types/shared";
 
 // Redux selectors
@@ -32,7 +35,7 @@ const filteredModelsListState = selector<Array<Model>>({
   get: ({ get }) => {
     const filter = get(modelsListFilterState);
     const models = get(modelsListState);
-    const policies = get(policiesState);
+    const policies = get(policiesListState);
     const modelsWithPolicies = models.map((model) => {
       const policy = policies.find(
         (policy) => policy["model-name"] === model.name
@@ -48,6 +51,35 @@ const filteredModelsListState = selector<Array<Model>>({
   },
 });
 
+const currentModelState = selectorFamily({
+  key: "currentModel",
+  get: (modelId) => ({ get }) => {
+    const models = get(modelsListState);
+    return models.find((model) => model.name === modelId);
+  },
+});
+
+const filteredPoliciesListState = selector<Array<Policy>>({
+  key: "filteredPoliciesList",
+  get: ({ get }) => {
+    const filter = get(policiesListFilterState);
+    const policies = get(policiesListState);
+    const signingKeys = get(signingKeysListState);
+    const policiesWithKeys = policies.map((policy) => {
+      const signingKey = signingKeys.find(
+        (key) => key["sha3-384"] === policy["signing-key-sha3-384"]
+      );
+
+      return {
+        ...policy,
+        "signing-key-name": signingKey?.name,
+        "modified-at": signingKey?.["modified-at"],
+      };
+    });
+    return getFilteredPolicies(policiesWithKeys, filter);
+  },
+});
+
 export {
   brandStoresListSelector,
   currentStoreSelector,
@@ -55,4 +87,6 @@ export {
   membersSelector,
   invitesSelector,
   filteredModelsListState,
+  currentModelState,
+  filteredPoliciesListState,
 };

@@ -59,7 +59,10 @@ function ModelsTable() {
               className: "u-align--right",
             },
             {
-              content: model["policy-revision"] || "-",
+              content:
+                model["policy-revision"] !== undefined
+                  ? model["policy-revision"]
+                  : "-",
               className: "u-align--right",
             },
             {

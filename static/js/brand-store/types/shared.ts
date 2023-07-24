@@ -99,10 +99,23 @@ export type Model = {
   name: string;
   "api-key": string;
   "created-at": string;
-  "created-by"?: string;
-  "modified-at": string;
-  "modified-by"?: string;
+  "created-by"?: {
+    "display-name": string;
+    email: string;
+    id: string;
+    username: string;
+    validation: string;
+  };
+  "modified-at": string | null;
+  "modified-by"?: {
+    "display-name": string;
+    email: string;
+    id: string;
+    username: string;
+    validation: string;
+  } | null;
   "policy-revision"?: number | undefined;
+  series?: string;
 };
 
 export type Policy = {
@@ -111,4 +124,25 @@ export type Policy = {
   "model-name": string;
   revision: number;
   "signing-key-sha3-384": string;
+  "signing-key-name"?: string;
+  "modified-at"?: string;
+};
+
+export type Query = {
+  isLoading?: boolean;
+  isError?: boolean;
+  refetch?: Function;
+  error?: {
+    message: string;
+  } | null;
+};
+
+export type SigningKey = {
+  name: string;
+  "created-at": string;
+  "created-by": string;
+  "modified-at": string;
+  "modified-by": string;
+  fingerprint: string;
+  "sha3-384": string;
 };

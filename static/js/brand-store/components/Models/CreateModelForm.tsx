@@ -2,7 +2,7 @@ import React from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { useMutation } from "react-query";
-import { Input, Button, Notification } from "@canonical/react-components";
+import { Input, Button } from "@canonical/react-components";
 import randomstring from "randomstring";
 
 import { checkModelNameExists } from "../../utils";
@@ -14,13 +14,11 @@ import type { Store, Model } from "../../types/shared";
 
 type Props = {
   setShowNotification: Function;
-  showErrorNotification: boolean;
   setShowErrorNotification: Function;
 };
 
 function CreateModelForm({
   setShowNotification,
-  showErrorNotification,
   setShowErrorNotification,
 }: Props) {
   const navigate = useNavigate();
@@ -31,6 +29,18 @@ function CreateModelForm({
   const modelsList = useRecoilValue(filteredModelsListState);
   const setModelsList = useSetRecoilState<Array<Model>>(modelsListState);
 
+  const handleError = () => {
+    setShowErrorNotification(true);
+    setModelsList((oldModelsList: Array<Model>) => {
+      return oldModelsList.filter((model) => model.name !== newModel.name);
+    });
+    navigate(`/admin/${id}/models`);
+    setNewModel({ name: "", apiKey: "" });
+    setTimeout(() => {
+      setShowErrorNotification(false);
+    }, 5000);
+  };
+
   const mutation = useMutation({
     mutationFn: (newModel: { name: string; apiKey: string }) => {
       const formData = new FormData();
@@ -38,6 +48,8 @@ function CreateModelForm({
       formData.set("csrf_token", window.CSRF_TOKEN);
       formData.set("name", newModel.name);
       formData.set("api_key", newModel.apiKey);
+
+      navigate(`/admin/${id}/models`);
 
       setModelsList((oldModelsList: Array<Model>) => {
         return [
@@ -56,25 +68,27 @@ function CreateModelForm({
         body: formData,
       });
     },
-    onSuccess: (response) => {
+    onSuccess: async (response) => {
       if (!response.ok) {
-        setShowErrorNotification(true);
-        setModelsList((oldModelsList: Array<Model>) => {
-          return oldModelsList.filter((model) => model.name !== newModel.name);
-        });
+        handleError();
         throw new Error(`${response.status} ${response.statusText}`);
       }
 
-      if (response.ok) {
-        navigate(`/admin/${id}/models`);
-        setNewModel({ name: "", apiKey: "" });
-        setShowNotification(true);
+      const modelsData = await response.json();
+
+      if (!modelsData.success) {
+        throw new Error(modelsData.message);
       }
+
+      setShowNotification(true);
+      setNewModel({ name: "", apiKey: "" });
+      navigate(`/admin/${id}/models`);
+      setTimeout(() => {
+        setShowNotification(false);
+      }, 5000);
     },
     onError: () => {
-      setModelsList((oldModelsList: Array<Model>) => {
-        return oldModelsList.filter((model) => model.name !== newModel.name);
-      });
+      handleError();
       throw new Error("Unable to create a new model");
     },
   });
@@ -99,16 +113,6 @@ function CreateModelForm({
                 <br />
                 {currentStore.name}
               </p>
-            )}
-            {showErrorNotification && (
-              <Notification
-                severity="negative"
-                onDismiss={() => {
-                  setShowErrorNotification(false);
-                }}
-              >
-                Unable to create model
-              </Notification>
             )}
             <Input
               type="text"

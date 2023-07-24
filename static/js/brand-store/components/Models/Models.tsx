@@ -13,7 +13,7 @@ import { Row, Col, Notification } from "@canonical/react-components";
 import {
   modelsListFilterState,
   modelsListState,
-  policiesState,
+  policiesListState,
 } from "../../atoms";
 
 import SectionNav from "../SectionNav";
@@ -23,15 +23,7 @@ import CreateModelForm from "./CreateModelForm";
 
 import { isClosedPanel } from "../../utils";
 
-import type { Model, Policy } from "../../types/shared";
-
-type Query = {
-  isLoading: boolean;
-  isError: boolean;
-  error: {
-    message: string;
-  } | null;
-};
+import type { Model, Policy, Query } from "../../types/shared";
 
 function Models() {
   const getModels = async () => {
@@ -50,27 +42,33 @@ function Models() {
     setModelsList(modelsData.data);
     setFilter(searchParams.get("filter") || "");
 
-    modelsData.data.forEach((model: Model) => {
-      getPolicy(model.name);
-    });
+    getPolicies(modelsData.data);
   };
 
-  const getPolicy = async (modelName: string) => {
-    const response = await fetch(
-      `/admin/store/${id}/models/${modelName}/policies`
+  const getPolicies = async (modelsList: Array<Model>) => {
+    const data = await Promise.all(
+      modelsList.map((model) => {
+        return fetch(`/admin/store/${id}/models/${model.name}/policies`);
+      })
     );
 
-    if (!response.ok) {
-      throw new Error("There was a problem fetching the policy");
-    }
+    const allPolicies = await Promise.all(
+      data.map(async (res) => {
+        if (!res.ok) {
+          return [];
+        }
 
-    const policyData = await response.json();
+        const policies = await res.json();
 
-    if (!policyData.success) {
-      throw new Error(policyData.message);
-    }
+        if (!policies.success) {
+          return [];
+        }
 
-    setPolicies([...policies, policyData.data]);
+        return policies.data;
+      })
+    );
+
+    setPolicies(allPolicies.flat());
   };
 
   const { id } = useParams();
@@ -78,7 +76,9 @@ function Models() {
   const navigate = useNavigate();
   const { isLoading, isError, error }: Query = useQuery("models", getModels);
   const setModelsList = useSetRecoilState<Array<Model>>(modelsListState);
-  const [policies, setPolicies] = useRecoilState<Array<Policy>>(policiesState);
+  const [policies, setPolicies] = useRecoilState<Array<Policy>>(
+    policiesListState
+  );
   const setFilter = useSetRecoilState<string>(modelsListFilterState);
   const [searchParams] = useSearchParams();
   const [showNotification, setShowNotification] = useState<boolean>(false);
@@ -103,6 +103,18 @@ function Models() {
                   }}
                 >
                   New model created
+                </Notification>
+              </div>
+            )}
+            {showErrorNotification && (
+              <div className="u-fixed-width">
+                <Notification
+                  severity="negative"
+                  onDismiss={() => {
+                    setShowErrorNotification(false);
+                  }}
+                >
+                  Unable to create model
                 </Notification>
               </div>
             )}
@@ -140,7 +152,6 @@ function Models() {
       >
         <CreateModelForm
           setShowNotification={setShowNotification}
-          showErrorNotification={showErrorNotification}
           setShowErrorNotification={setShowErrorNotification}
         />
       </aside>

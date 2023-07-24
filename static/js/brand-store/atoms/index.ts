@@ -1,5 +1,5 @@
 import { atom } from "recoil";
-import type { Store, Model, Policy } from "../types/shared";
+import type { Store, Model, Policy, SigningKey } from "../types/shared";
 
 const brandStoresState = atom({
   key: "brandStores",
@@ -24,9 +24,19 @@ const newModelState = atom({
   },
 });
 
-const policiesState = atom({
-  key: "policies",
+const policiesListState = atom({
+  key: "policiesList",
   default: [] as Array<Policy>,
+});
+
+const policiesListFilterState = atom({
+  key: "policiesListFilter",
+  default: "" as string,
+});
+
+const signingKeysListState = atom({
+  key: "signingKeysList",
+  default: [] as Array<SigningKey>,
 });
 
 export {
@@ -34,5 +44,7 @@ export {
   modelsListState,
   modelsListFilterState,
   newModelState,
-  policiesState,
+  policiesListState,
+  policiesListFilterState,
+  signingKeysListState,
 };
