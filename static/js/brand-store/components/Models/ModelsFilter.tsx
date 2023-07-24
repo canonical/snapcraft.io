@@ -41,7 +41,7 @@ function ModelsFilter() {
           setFilter("");
         }}
       >
-        <Icon name="close">Close</Icon>
+        <Icon name="close">Clear filter</Icon>
       </Button>
       <Button type="submit" className="p-search-box__button">
         <Icon name="search">Search</Icon>
