@@ -1,12 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useRecoilState } from "recoil";
 import { useParams, Link, useNavigate } from "react-router-dom";
-import { useQuery, useMutation } from "react-query";
+import { useMutation } from "react-query";
 import { Button } from "@canonical/react-components";
 
+import { useSigningKeys } from "../../hooks";
 import { signingKeysListState } from "../../atoms";
-
-import type { Query } from "../../types/shared";
 
 type Props = {
   setShowNotification: Function;
@@ -19,28 +18,9 @@ function CreatePolicyForm({
   setShowErrorNotification,
   refetchPolicies,
 }: Props) {
-  const getSigningKeys = async () => {
-    const response = await fetch(`/admin/store/${id}/signing-keys`);
-
-    if (!response.ok) {
-      throw new Error("There was a problem fetching signing keys");
-    }
-
-    const signingKeysData = await response.json();
-
-    if (!signingKeysData.success) {
-      throw new Error(signingKeysData.message);
-    }
-
-    setSigningKeys(signingKeysData.data);
-  };
-
   const { id, model_id } = useParams();
   const navigate = useNavigate();
-  const { isLoading, isError, error }: Query = useQuery(
-    "signingKeys",
-    getSigningKeys
-  );
+  const { isLoading, isError, error, data }: any = useSigningKeys(id);
   const [signingKeys, setSigningKeys] = useRecoilState(signingKeysListState);
   const [selectedSigningKey, setSelectedSigningKey] = useState("");
 
@@ -92,6 +72,12 @@ function CreatePolicyForm({
       throw new Error("Unable to create a new policy");
     },
   });
+
+  useEffect(() => {
+    if (!isLoading && !error) {
+      setSigningKeys(data);
+    }
+  }, [isLoading, error, data]);
 
   return (
     <form

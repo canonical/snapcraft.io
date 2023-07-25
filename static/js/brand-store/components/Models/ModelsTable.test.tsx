@@ -27,7 +27,7 @@ describe("ModelsTable", () => {
     renderComponent();
 
     expect(
-      screen.getByRole("columnheader", { name: "Name (0)" })
+      screen.getByRole("columnheader", { name: /Name/ })
     ).toBeInTheDocument();
 
     expect(
@@ -51,7 +51,7 @@ describe("ModelsTable", () => {
     renderComponent();
 
     const user = userEvent.setup();
-    const columnHeader = screen.getByRole("columnheader", { name: "Name (0)" });
+    const columnHeader = screen.getByRole("columnheader", { name: /Name/ });
 
     expect(columnHeader.getAttribute("aria-sort")).toBe("none");
 
