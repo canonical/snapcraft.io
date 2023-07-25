@@ -128,15 +128,6 @@ export type Policy = {
   "modified-at"?: string;
 };
 
-export type Query = {
-  isLoading?: boolean;
-  isError?: boolean;
-  refetch?: Function;
-  error?: {
-    message: string;
-  } | null;
-};
-
 export type SigningKey = {
   name: string;
   "created-at": string;
