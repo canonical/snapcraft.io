@@ -29,20 +29,6 @@ const renderComponent = () => {
   );
 };
 
-const mockModel = {
-  "api-key": "K2NjWGA4iKhLmGDDQUJhJyhzS35CBLJClyNu8dAS0TWrTF3aSD",
-  "created-at": "2023-07-13T15:56:35.088052",
-  "created-by": {
-    "display-name": "Steve Rydz",
-    email: "steve.rydz@canonical.com",
-    id: "prFvYmvaBsQbXLNaVaQFV4EAcJ8zh0Ej",
-    username: "steverydz",
-    validation: "unproven",
-  },
-  name: "model-1",
-  series: "16",
-};
-
 jest.mock("react-router-dom", () => ({
   ...jest.requireActual("react-router-dom"),
   useParams: () => ({
@@ -58,10 +44,10 @@ jest.mock("react-query", () => ({
         "api-key": "K2NjWGA4iKhLmGDDQUJhJyhzS35CBLJClyNu8dAS0TWrTF3aSD",
         "created-at": "2023-07-13T15:56:35.088052",
         "created-by": {
-          "display-name": "Steve Rydz",
-          email: "steve.rydz@canonical.com",
+          "display-name": "John Doe",
+          email: "john.doe@canonical.com",
           id: "prFvYmvaBsQbXLNaVaQFV4EAcJ8zh0Ej",
-          username: "steverydz",
+          username: "johndoe",
           validation: "unproven",
         },
         name: "model-1",
@@ -90,7 +76,9 @@ describe("Model", () => {
     await user.click(screen.getByRole("button", { name: "Generate key" }));
     const apiKeyField: HTMLInputElement = screen.getByLabelText("API key");
     const apiKeyFieldValue = apiKeyField.value;
-    expect(apiKeyFieldValue).not.toEqual(mockModel["api-key"]);
+    expect(apiKeyFieldValue).not.toEqual(
+      "K2NjWGA4iKhLmGDDQUJhJyhzS35CBLJClyNu8dAS0TWrTF3aSD"
+    );
   });
 
   it("resets the API when clicking the 'Revert' button", async () => {
@@ -98,9 +86,11 @@ describe("Model", () => {
     const user = userEvent.setup();
     await user.click(screen.getByRole("button", { name: "Generate key" }));
     expect(screen.getByLabelText("API key")).not.toHaveValue(
-      mockModel["api-key"]
+      "K2NjWGA4iKhLmGDDQUJhJyhzS35CBLJClyNu8dAS0TWrTF3aSD"
     );
     await user.click(screen.getByRole("button", { name: "Revert" }));
-    expect(screen.getByLabelText("API key")).toHaveValue(mockModel["api-key"]);
+    expect(screen.getByLabelText("API key")).toHaveValue(
+      "K2NjWGA4iKhLmGDDQUJhJyhzS35CBLJClyNu8dAS0TWrTF3aSD"
+    );
   });
 });
