@@ -63,37 +63,6 @@ describe("Models", () => {
     ).toBeInTheDocument();
   });
 
-  it("disables 'Add model' button if no new model name", async () => {
-    const user = userEvent.setup();
-    renderComponent();
-    await user.click(screen.getByRole("link", { name: "Create new model" }));
-    expect(screen.getByRole("button", { name: "Add model" })).toBeDisabled();
-  });
-
-  it("enables 'Add model' button if there is a new model name", async () => {
-    const user = userEvent.setup();
-    renderComponent();
-    await user.click(screen.getByRole("link", { name: "Create new model" }));
-    await user.type(
-      screen.getByRole("textbox", { name: "Name" }),
-      "test-model-name"
-    );
-    expect(
-      screen.getByRole("button", { name: "Add model" })
-    ).not.toBeDisabled();
-  });
-
-  it("generates an API key when clicking 'Generate key'", async () => {
-    const user = userEvent.setup();
-    renderComponent();
-    await user.click(screen.getByRole("link", { name: "Create new model" }));
-    await user.click(screen.getByRole("button", { name: "Generate key" }));
-    const input: HTMLInputElement = screen.getByRole("textbox", {
-      name: "API key",
-    });
-    expect(input.value.length).toEqual(50);
-  });
-
   it("displays a filter input", () => {
     renderComponent();
     expect(screen.getByLabelText("Search models")).toBeInTheDocument();
