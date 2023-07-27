@@ -126,7 +126,10 @@ def after_login(resp):
 @login.route("/login-beta", methods=["GET"])
 @csrf.exempt
 def login_candid():
-    if authentication.is_authenticated(flask.session):
+    if (
+        authentication.is_authenticated(flask.session)
+        and "developer_token" in flask.session
+    ):
         return flask.redirect(
             flask.url_for("publisher_snaps.get_account_snaps")
         )
