@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 import { useRecoilValue, useSetRecoilState } from "recoil";
-import { useMutation, useQuery } from "react-query";
+import { useMutation } from "react-query";
 import { format } from "date-fns";
 import randomstring from "randomstring";
 import {
@@ -12,32 +12,13 @@ import {
   Notification,
 } from "@canonical/react-components";
 
+import { useModels } from "../../hooks";
 import { modelsListState } from "../../atoms";
 import { currentModelState } from "../../selectors";
 
 import ModelNav from "./ModelNav";
 
 function Model() {
-  const getModels = async () => {
-    if (currentModel) {
-      return;
-    }
-
-    const response = await fetch(`/admin/store/${id}/models`);
-
-    if (!response.ok) {
-      throw new Error("There was a problem fetching models");
-    }
-
-    const modelsData = await response.json();
-
-    if (!modelsData.success) {
-      throw new Error(modelsData.message);
-    }
-
-    setModelsList(modelsData.data);
-  };
-
   const mutation = useMutation({
     mutationFn: (apiKey: string) => {
       const formData = new FormData();
@@ -74,8 +55,7 @@ function Model() {
   const [showSuccessNotification, setShowSuccessNotificaton] = useState(false);
   const [showErrorNotification, setShowErrorNotificaton] = useState(false);
   const setModelsList = useSetRecoilState<any>(modelsListState);
-
-  useQuery("models", getModels);
+  const { isLoading, error, data } = useModels(id);
 
   const handleError = () => {
     setShowErrorNotificaton(true);
@@ -83,6 +63,12 @@ function Model() {
       setShowErrorNotificaton(false);
     }, 5000);
   };
+
+  useEffect(() => {
+    if (!currentModel && !isLoading && !error) {
+      setModelsList(data);
+    }
+  }, [currentModel, isLoading, error, data]);
 
   return (
     <main className="l-main">
@@ -246,6 +232,7 @@ function Model() {
                   <hr style={{ marginTop: "1rem", marginBottom: "1rem" }} />
                   <div className="u-align--right">
                     <Button
+                      type="button"
                       onClick={() => {
                         setNewApiKey("");
                       }}

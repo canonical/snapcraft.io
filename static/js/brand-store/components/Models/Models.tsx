@@ -1,6 +1,5 @@
-import React, { useState } from "react";
-import { useQuery } from "react-query";
-import { useSetRecoilState, useRecoilState } from "recoil";
+import React, { useState, useEffect } from "react";
+import { useSetRecoilState } from "recoil";
 import {
   Link,
   useParams,
@@ -10,6 +9,7 @@ import {
 } from "react-router-dom";
 import { Row, Col, Notification } from "@canonical/react-components";
 
+import { useModels } from "../../hooks";
 import {
   modelsListFilterState,
   modelsListState,
@@ -23,28 +23,9 @@ import CreateModelForm from "./CreateModelForm";
 
 import { isClosedPanel } from "../../utils";
 
-import type { Model, Policy, Query } from "../../types/shared";
+import type { Model, Policy } from "../../types/shared";
 
 function Models() {
-  const getModels = async () => {
-    const response = await fetch(`/admin/store/${id}/models`);
-
-    if (!response.ok) {
-      throw new Error("There was a problem fetching models");
-    }
-
-    const modelsData = await response.json();
-
-    if (!modelsData.success) {
-      throw new Error(modelsData.message);
-    }
-
-    setModelsList(modelsData.data);
-    setFilter(searchParams.get("filter") || "");
-
-    getPolicies(modelsData.data);
-  };
-
   const getPolicies = async (modelsList: Array<Model>) => {
     const data = await Promise.all(
       modelsList.map((model) => {
@@ -74,17 +55,23 @@ function Models() {
   const { id } = useParams();
   const location = useLocation();
   const navigate = useNavigate();
-  const { isLoading, isError, error }: Query = useQuery("models", getModels);
+  const { isLoading, isError, error, data }: any = useModels(id);
   const setModelsList = useSetRecoilState<Array<Model>>(modelsListState);
-  const [policies, setPolicies] = useRecoilState<Array<Policy>>(
-    policiesListState
-  );
+  const setPolicies = useSetRecoilState<Array<Policy>>(policiesListState);
   const setFilter = useSetRecoilState<string>(modelsListFilterState);
   const [searchParams] = useSearchParams();
   const [showNotification, setShowNotification] = useState<boolean>(false);
   const [showErrorNotification, setShowErrorNotification] = useState<boolean>(
     false
   );
+
+  useEffect(() => {
+    if (!isLoading && !error) {
+      setModelsList(data);
+      setFilter(searchParams.get("filter") || "");
+      getPolicies(data);
+    }
+  }, [isLoading, error, data]);
 
   return (
     <>
@@ -129,9 +116,11 @@ function Models() {
               </Col>
             </Row>
             <div className="u-fixed-width">
-              {isLoading && <p>Fetching models...</p>}
-              {isError && error && <p>Error: {error.message}</p>}
-              <ModelsTable />
+              <>
+                {isLoading && <p>Fetching models...</p>}
+                {isError && error && <p>Error: {error.message}</p>}
+                <ModelsTable />
+              </>
             </div>
           </div>
         </div>

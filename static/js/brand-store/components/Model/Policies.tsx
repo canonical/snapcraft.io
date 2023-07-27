@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Link,
   useParams,
@@ -7,7 +7,6 @@ import {
   useNavigate,
 } from "react-router-dom";
 import { useSetRecoilState } from "recoil";
-import { useQuery } from "react-query";
 import { Row, Col, Notification } from "@canonical/react-components";
 
 import ModelNav from "./ModelNav";
@@ -15,40 +14,20 @@ import PoliciesFilter from "./PoliciesFilter";
 import PoliciesTable from "./PoliciesTable";
 import CreatePolicyForm from "./CreatePolicyForm";
 
+import { usePolicies } from "../../hooks";
 import { policiesListFilterState, policiesListState } from "../../atoms";
 
 import { isClosedPanel } from "../../utils";
 
-import type { Policy, Query } from "../../types/shared";
+import type { Policy } from "../../types/shared";
 
 function Policies() {
-  const getPolicies = async () => {
-    setPoliciesList([]);
-
-    const response = await fetch(
-      `/admin/store/${id}/models/${model_id}/policies`
-    );
-
-    if (!response.ok) {
-      throw new Error("There was a problem fetching policies");
-    }
-
-    const policiesData = await response.json();
-
-    if (!policiesData.success) {
-      throw new Error(policiesData.message);
-    }
-
-    setPoliciesList(policiesData.data);
-    setFilter(searchParams.get("filter") || "");
-  };
-
   const { id, model_id } = useParams();
   const location = useLocation();
   const navigate = useNavigate();
-  const { isLoading, isError, error, refetch }: Query = useQuery(
-    "policies",
-    getPolicies
+  const { isLoading, isError, error, refetch, data }: any = usePolicies(
+    id,
+    model_id
   );
   const setPoliciesList = useSetRecoilState<Array<Policy>>(policiesListState);
   const setFilter = useSetRecoilState<string>(policiesListFilterState);
@@ -57,6 +36,15 @@ function Policies() {
   const [showErrorNotification, setShowErrorNotification] = useState<boolean>(
     false
   );
+
+  useEffect(() => {
+    if (!isLoading && !isError) {
+      setPoliciesList(data);
+      setFilter(searchParams.get("filter") || "");
+    } else {
+      setPoliciesList([]);
+    }
+  }, [isLoading, error, data]);
 
   return (
     <>
@@ -110,9 +98,11 @@ function Policies() {
               </Col>
             </Row>
             <div className="u-fixed-width">
-              {isLoading && <p>Fetching policies...</p>}
-              {isError && error && <p>Error: {error.message}</p>}
-              <PoliciesTable />
+              <>
+                {isLoading && <p>Fetching policies...</p>}
+                {isError && error && <p>Error: {error.message}</p>}
+                <PoliciesTable />
+              </>
             </div>
           </div>
         </div>

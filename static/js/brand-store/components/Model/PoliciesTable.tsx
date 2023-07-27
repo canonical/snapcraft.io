@@ -4,15 +4,13 @@ import { useParams, Link } from "react-router-dom";
 import { format } from "date-fns";
 import { MainTable } from "@canonical/react-components";
 
-import { signingKeysListState } from "../../atoms";
 import { filteredPoliciesListState } from "../../selectors";
 
-import type { Policy, SigningKey } from "../../types/shared";
+import type { Policy } from "../../types/shared";
 
 function ModelsTable() {
   const { id } = useParams();
   const policiesList = useRecoilValue<Array<Policy>>(filteredPoliciesListState);
-  const signingKeys = useRecoilValue<Array<SigningKey>>(signingKeysListState);
 
   return (
     <MainTable
