@@ -17,6 +17,7 @@ import ROLES from "./memberRoles";
 import MembersTable from "./MembersTable";
 import InvitesTable from "./InvitesTable";
 import StoreNotFound from "../StoreNotFound";
+import SectionNav from "../SectionNav";
 
 import {
   membersSelector,
@@ -26,7 +27,7 @@ import {
 import { fetchMembers } from "../../slices/membersSlice";
 import { fetchInvites } from "../../slices/invitesSlice";
 
-import SectionNav from "../SectionNav";
+import { setPageTitle } from "../../utils";
 
 import type { InvitesSlice } from "../../types/shared";
 
@@ -76,6 +77,8 @@ function Members() {
     "Changes have been saved"
   );
   const [currentMember, setCurrentMember]: any = useState(null);
+
+  setPageTitle(`Members in ${storeName}`);
 
   const handleInvite = (action: string) => {
     setIsSaving(true);

@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from "react";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { useMutation } from "react-query";
 import { Button } from "@canonical/react-components";
 
+import { setPageTitle } from "../../utils";
+
 import { useSigningKeys } from "../../hooks";
 import { signingKeysListState } from "../../atoms";
+import { brandStoreState } from "../../selectors";
 
 type Props = {
   setShowNotification: Function;
@@ -22,6 +25,7 @@ function CreatePolicyForm({
   const navigate = useNavigate();
   const { isLoading, isError, error, data }: any = useSigningKeys(id);
   const [signingKeys, setSigningKeys] = useRecoilState(signingKeysListState);
+  const brandStore = useRecoilValue(brandStoreState(id));
   const [selectedSigningKey, setSelectedSigningKey] = useState("");
 
   const handleError = () => {
@@ -72,6 +76,10 @@ function CreatePolicyForm({
       throw new Error("Unable to create a new policy");
     },
   });
+
+  brandStore
+    ? setPageTitle(`Create policy in ${brandStore.name}`)
+    : setPageTitle("Create policy");
 
   useEffect(() => {
     if (!isLoading && !error) {

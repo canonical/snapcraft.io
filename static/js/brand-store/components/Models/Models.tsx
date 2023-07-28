@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useSetRecoilState } from "recoil";
+import { useSetRecoilState, useRecoilValue } from "recoil";
 import {
   Link,
   useParams,
@@ -15,13 +15,14 @@ import {
   modelsListState,
   policiesListState,
 } from "../../atoms";
+import { brandStoreState } from "../../selectors";
 
 import SectionNav from "../SectionNav";
 import ModelsFilter from "./ModelsFilter";
 import ModelsTable from "./ModelsTable";
 import CreateModelForm from "./CreateModelForm";
 
-import { isClosedPanel } from "../../utils";
+import { isClosedPanel, setPageTitle } from "../../utils";
 
 import type { Model, Policy } from "../../types/shared";
 
@@ -59,11 +60,16 @@ function Models() {
   const setModelsList = useSetRecoilState<Array<Model>>(modelsListState);
   const setPolicies = useSetRecoilState<Array<Policy>>(policiesListState);
   const setFilter = useSetRecoilState<string>(modelsListFilterState);
+  const brandStore = useRecoilValue(brandStoreState(id));
   const [searchParams] = useSearchParams();
   const [showNotification, setShowNotification] = useState<boolean>(false);
   const [showErrorNotification, setShowErrorNotification] = useState<boolean>(
     false
   );
+
+  brandStore
+    ? setPageTitle(`Models in ${brandStore.name}`)
+    : setPageTitle("Models");
 
   useEffect(() => {
     if (!isLoading && !error) {
@@ -139,10 +145,12 @@ function Models() {
           isClosedPanel(location.pathname, "create") ? "is-collapsed" : ""
         }`}
       >
-        <CreateModelForm
-          setShowNotification={setShowNotification}
-          setShowErrorNotification={setShowErrorNotification}
-        />
+        {!isClosedPanel(location.pathname, "create") && (
+          <CreateModelForm
+            setShowNotification={setShowNotification}
+            setShowErrorNotification={setShowErrorNotification}
+          />
+        )}
       </aside>
     </>
   );
