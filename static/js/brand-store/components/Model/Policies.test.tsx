@@ -47,10 +47,10 @@ describe("Policies", () => {
     ).toBeInTheDocument();
   });
 
-  it("shows a create policy form when 'Create new policy' button clicked", () => {
+  it("shows a create policy form when 'Create new policy' button clicked", async () => {
     const user = userEvent.setup();
     renderComponent();
-    user.click(screen.getByRole("link", { name: "Create policy" }));
+    await user.click(screen.getByRole("link", { name: "Create policy" }));
     expect(
       screen.getByRole("combobox", { name: "Signing key" })
     ).toBeInTheDocument();
