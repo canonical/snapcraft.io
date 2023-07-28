@@ -14,9 +14,11 @@ import {
 
 import { useModels } from "../../hooks";
 import { modelsListState } from "../../atoms";
-import { currentModelState } from "../../selectors";
+import { currentModelState, brandStoreState } from "../../selectors";
 
 import ModelNav from "./ModelNav";
+
+import { setPageTitle } from "../../utils";
 
 function Model() {
   const mutation = useMutation({
@@ -55,6 +57,7 @@ function Model() {
   const [showSuccessNotification, setShowSuccessNotificaton] = useState(false);
   const [showErrorNotification, setShowErrorNotificaton] = useState(false);
   const setModelsList = useSetRecoilState<any>(modelsListState);
+  const brandStore = useRecoilValue(brandStoreState(id));
   const { isLoading, error, data } = useModels(id);
 
   const handleError = () => {
@@ -63,6 +66,10 @@ function Model() {
       setShowErrorNotificaton(false);
     }, 5000);
   };
+
+  currentModel && brandStore
+    ? setPageTitle(`${currentModel.name} in ${brandStore.name}`)
+    : setPageTitle("Model");
 
   useEffect(() => {
     if (!currentModel && !isLoading && !error) {

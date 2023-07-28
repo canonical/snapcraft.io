@@ -25,6 +25,7 @@ function getInitialState(): RootState {
         id: "test-id",
         private: true,
         "manual-review-policy": "allow",
+        name: "test-store",
       },
       loading: false,
       notFound: false,

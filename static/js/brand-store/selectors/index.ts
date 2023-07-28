@@ -6,6 +6,7 @@ import {
   policiesListState,
   policiesListFilterState,
   signingKeysListState,
+  brandStoresState,
 } from "../atoms";
 
 import { getFilteredModels, getFilteredPolicies } from "../utils";
@@ -80,6 +81,14 @@ const filteredPoliciesListState = selector<Array<Policy>>({
   },
 });
 
+const brandStoreState = selectorFamily({
+  key: "brandStore",
+  get: (storeId) => ({ get }) => {
+    const brandStores = get(brandStoresState);
+    return brandStores.find((store) => store.id === storeId);
+  },
+});
+
 export {
   brandStoresListSelector,
   currentStoreSelector,
@@ -89,4 +98,5 @@ export {
   filteredModelsListState,
   currentModelState,
   filteredPoliciesListState,
+  brandStoreState,
 };

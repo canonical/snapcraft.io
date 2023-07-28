@@ -11,6 +11,7 @@ export type CurrentStoreSlice = {
       id: string;
       "manual-review-policy": string;
       private: boolean;
+      name: string;
     };
   };
 };
