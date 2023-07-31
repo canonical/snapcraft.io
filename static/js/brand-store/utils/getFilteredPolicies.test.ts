@@ -3,7 +3,13 @@ import getFilteredPolicies from "./getFilteredPolicies";
 const mockPolicies = [
   {
     "created-at": "2023-07-05T15:11:21.922Z",
-    "created-by": "publisherId",
+    "created-by": {
+      "display-name": "John Doe",
+      email: "john.doe@canonical.com",
+      id: "asdf79807asdf9807",
+      username: "johndoe",
+      validation: "unproven",
+    },
     "model-name": "model-1",
     revision: 1,
     "signing-key-sha3-384":
@@ -11,7 +17,13 @@ const mockPolicies = [
   },
   {
     "created-at": "2023-07-05T15:12:00.978Z",
-    "created-by": "publisherId",
+    "created-by": {
+      "display-name": "John Doe",
+      email: "john.doe@canonical.com",
+      id: "asdf79807asdf9807",
+      username: "johndoe",
+      validation: "unproven",
+    },
     "model-name": "model-2",
     revision: 5,
     "signing-key-sha3-384":
@@ -19,7 +31,13 @@ const mockPolicies = [
   },
   {
     "created-at": "2023-07-05T15:12:47.701Z",
-    "created-by": "publisherId",
+    "created-by": {
+      "display-name": "John Doe",
+      email: "john.doe@canonical.com",
+      id: "asdf79807asdf9807",
+      username: "johndoe",
+      validation: "unproven",
+    },
     "model-name": "model-3",
     revision: 43,
     "signing-key-sha3-384":

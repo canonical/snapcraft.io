@@ -1,6 +1,5 @@
 import React from "react";
 import { useRecoilValue } from "recoil";
-import { useParams, Link } from "react-router-dom";
 import { format } from "date-fns";
 import { MainTable } from "@canonical/react-components";
 
@@ -9,7 +8,6 @@ import { filteredPoliciesListState } from "../../selectors";
 import type { Policy } from "../../types/shared";
 
 function ModelsTable() {
-  const { id } = useParams();
   const policiesList = useRecoilValue<Array<Policy>>(filteredPoliciesListState);
 
   return (
@@ -46,13 +44,7 @@ function ModelsTable() {
               content: policy.revision,
             },
             {
-              content: (
-                <Link
-                  to={`/admin/${id}/signing-keys/${policy["signing-key-sha3-384"]}`}
-                >
-                  {policy["signing-key-name"]}
-                </Link>
-              ),
+              content: policy["signing-key-name"],
               className: "u-align--right",
             },
             {

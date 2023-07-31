@@ -89,6 +89,7 @@ function App() {
               element={<Policies />}
             />
             <Route path="/admin/:id/signing-keys" element={<SigningKeys />} />
+            <Route path="/admin/:id/signing-keys/create" element={<SigningKeys />} />
           </Routes>
         </div>
       </QueryClientProvider>
