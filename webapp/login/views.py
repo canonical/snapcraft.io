@@ -126,13 +126,13 @@ def after_login(resp):
 @login.route("/login-beta", methods=["GET"])
 @csrf.exempt
 def login_candid():
-    if (
-        authentication.is_authenticated(flask.session)
-        and "developer_token" in flask.session
-    ):
-        return flask.redirect(
-            flask.url_for("publisher_snaps.get_account_snaps")
-        )
+    # if (
+    #     authentication.is_authenticated(flask.session)
+    #     and "developer_token" in flask.session
+    # ):
+    #     return flask.redirect(
+    #         flask.url_for("publisher_snaps.get_account_snaps")
+    #     )
 
     # Get a bakery v2 macaroon from the publisher API to be discharged
     # and save it in the session

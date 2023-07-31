@@ -7,7 +7,7 @@ export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
 
 export function useModels(id: string | undefined) {
   return useQuery("models", async () => {
-    const response = await fetch(`/admin/store/${id}/models`);
+    const response = await fetch(`/admin/store/${id}/models`, {mode: "no-cors"});
 
     if (!response.ok) {
       throw new Error("There was a problem fetching models");
@@ -16,6 +16,7 @@ export function useModels(id: string | undefined) {
     const modelsData = await response.json();
 
     if (!modelsData.success) {
+      console.log(modelsData)
       throw new Error(modelsData.message);
     }
 

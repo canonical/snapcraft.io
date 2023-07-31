@@ -11,7 +11,7 @@ from canonicalwebteam.store_api.stores.snapstore import SnapStoreAdmin
 from flask.json import jsonify
 
 # Local
-from webapp.decorators import candid_login_required, login_required
+from webapp.decorators import login_required
 from webapp.helpers import api_publisher_session
 
 admin_api = SnapStoreAdmin(api_publisher_session)
@@ -234,7 +234,7 @@ def update_invite_status(store_id):
 
 # ---------------------- MODELS SERVICES ----------------------
 @admin.route("/admin/store/<store_id>/models")
-@candid_login_required
+# @candid_login_required(store_id)
 @login_required
 def get_models(store_id):
     """
@@ -247,6 +247,9 @@ def get_models(store_id):
         dict: A dictionary containing the response message, success status,
         and data.
     """
+
+    if "developer_token" not in flask.session:
+        return flask.redirect(f"/login-beta?next=/admin/{store_id}/models")
     res = {}
     try:
         models = admin_api.get_store_models(flask.session, store_id)
@@ -265,12 +268,12 @@ def get_models(store_id):
             res["message"] = " ".join(error_messages)
         res["success"] = False
         response = make_response(res, 500)
-
+    # pprint(response)
     return response
 
 
 @admin.route("/admin/store/<store_id>/models", methods=["POST"])
-@candid_login_required
+# @candid_login_required
 @login_required
 def create_models(store_id: str):
     """
@@ -322,7 +325,7 @@ def create_models(store_id: str):
 
 
 @admin.route("/admin/store/<store_id>/models/<model_name>", methods=["PATCH"])
-@candid_login_required
+# @candid_login_required
 @login_required
 def update_model(store_id: str, model_name: str):
     """
@@ -363,7 +366,7 @@ def update_model(store_id: str, model_name: str):
 
 
 @admin.route("/admin/store/<store_id>/models/<model_name>/policies")
-@candid_login_required
+# @candid_login_required
 @login_required
 def get_policies(store_id: str, model_name: str):
     """
@@ -404,7 +407,7 @@ def get_policies(store_id: str, model_name: str):
 @admin.route(
     "/admin/store/<store_id>/models/<model_name>/policies", methods=["POST"]
 )
-@candid_login_required
+# @candid_login_required
 @login_required
 def create_policy(store_id: str, model_name: str):
     """
@@ -446,7 +449,7 @@ def create_policy(store_id: str, model_name: str):
 
 
 @admin.route("/admin/store/<store_id>/signing-keys")
-@candid_login_required
+# @candid_login_required
 @login_required
 def get_signing_keys(store_id: str):
     res = {}
@@ -475,7 +478,7 @@ def get_signing_keys(store_id: str):
 
 
 @admin.route("/admin/store/<store_id>/signing-keys", methods=["POST"])
-@candid_login_required
+# @candid_login_required
 @login_required
 def create_signing_key(store_id: str):
     name = flask.request.form.get("name")
@@ -499,7 +502,7 @@ def create_signing_key(store_id: str):
     "/admin/store/<store_id>/signing-keys/<signing_key_sha3_384>",
     methods=["DELETE"],
 )
-@candid_login_required
+# @candid_login_required
 @login_required
 def delete_signing_key(store_id: str, signing_key_sha3_384: str):
     """
