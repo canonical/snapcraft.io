@@ -27,6 +27,8 @@ import SnapsSearch from "./SnapsSearch";
 import SectionNav from "../SectionNav";
 import StoreNotFound from "../StoreNotFound";
 
+import { setPageTitle } from "../../utils";
+
 import type {
   StoresSlice,
   Snap,
@@ -94,6 +96,8 @@ function SnapsSlice() {
       return storeId;
     }
   };
+
+  id ? setPageTitle(`Snaps in ${getStoreName(id)}`) : setPageTitle("Snaps");
 
   const addSnaps = () => {
     setIsSaving(true);

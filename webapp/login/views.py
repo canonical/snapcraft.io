@@ -134,6 +134,7 @@ def login_candid():
     #         flask.url_for("publisher_snaps.get_account_snaps")
     #     )
 
+
     # Get a bakery v2 macaroon from the publisher API to be discharged
     # and save it in the session
     flask.session["publisher-macaroon"] = publisher_api.get_macaroon(

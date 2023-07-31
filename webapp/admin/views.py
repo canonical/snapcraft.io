@@ -11,7 +11,7 @@ from canonicalwebteam.store_api.stores.snapstore import SnapStoreAdmin
 from flask.json import jsonify
 
 # Local
-from webapp.decorators import login_required
+from webapp.decorators import candid_login_required, login_required
 from webapp.helpers import api_publisher_session
 
 admin_api = SnapStoreAdmin(api_publisher_session)
@@ -502,7 +502,7 @@ def create_signing_key(store_id: str):
     "/admin/store/<store_id>/signing-keys/<signing_key_sha3_384>",
     methods=["DELETE"],
 )
-# @candid_login_required
+ # @candid_login_required
 @login_required
 def delete_signing_key(store_id: str, signing_key_sha3_384: str):
     """

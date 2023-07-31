@@ -1,6 +1,10 @@
 import React from "react";
 
+import { setPageTitle } from "../../utils";
+
 function StoreNotFound() {
+  setPageTitle("Store not found");
+
   return (
     <main className="l-main">
       <div className="p-panel--settings">

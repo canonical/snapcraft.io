@@ -6,7 +6,7 @@ import {
   useLocation,
   useNavigate,
 } from "react-router-dom";
-import { useSetRecoilState } from "recoil";
+import { useSetRecoilState, useRecoilValue } from "recoil";
 import { Row, Col, Notification } from "@canonical/react-components";
 
 import ModelNav from "./ModelNav";
@@ -16,8 +16,9 @@ import CreatePolicyForm from "./CreatePolicyForm";
 
 import { usePolicies } from "../../hooks";
 import { policiesListFilterState, policiesListState } from "../../atoms";
+import { brandStoreState } from "../../selectors";
 
-import { isClosedPanel } from "../../utils";
+import { isClosedPanel, setPageTitle } from "../../utils";
 
 import type { Policy } from "../../types/shared";
 
@@ -31,6 +32,7 @@ function Policies() {
   );
   const setPoliciesList = useSetRecoilState<Array<Policy>>(policiesListState);
   const setFilter = useSetRecoilState<string>(policiesListFilterState);
+  const brandStore = useRecoilValue(brandStoreState(id));
   const [searchParams] = useSearchParams();
   const [showNotification, setShowNotification] = useState<boolean>(false);
   const [showErrorNotification, setShowErrorNotification] = useState<boolean>(
@@ -45,6 +47,10 @@ function Policies() {
       setPoliciesList([]);
     }
   }, [isLoading, error, data]);
+
+  brandStore
+    ? setPageTitle(`Policies in ${brandStore.name}`)
+    : setPageTitle("Policies");
 
   return (
     <>
@@ -120,11 +126,13 @@ function Policies() {
           isClosedPanel(location.pathname, "create") ? "is-collapsed" : ""
         }`}
       >
-        <CreatePolicyForm
-          setShowNotification={setShowNotification}
-          setShowErrorNotification={setShowErrorNotification}
-          refetchPolicies={refetch}
-        />
+        {!isClosedPanel(location.pathname, "create") && (
+          <CreatePolicyForm
+            setShowNotification={setShowNotification}
+            setShowErrorNotification={setShowErrorNotification}
+            refetchPolicies={refetch}
+          />
+        )}
       </aside>
     </>
   );

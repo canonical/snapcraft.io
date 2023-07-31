@@ -47,10 +47,10 @@ describe("Models", () => {
     ).toBeInTheDocument();
   });
 
-  it("shows a create model form when 'Create new model' button clicked", () => {
+  it("shows a create model form when 'Create new model' button clicked", async () => {
     const user = userEvent.setup();
     renderComponent();
-    user.click(screen.getByRole("link", { name: "Create new model" }));
+    await user.click(screen.getByRole("link", { name: "Create new model" }));
     expect(screen.getByRole("textbox", { name: "Name" })).toBeInTheDocument();
     expect(
       screen.getByRole("textbox", { name: "API key" })

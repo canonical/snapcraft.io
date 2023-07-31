@@ -5,10 +5,10 @@ import { useMutation } from "react-query";
 import { Input, Button } from "@canonical/react-components";
 import randomstring from "randomstring";
 
-import { checkModelNameExists } from "../../utils";
+import { checkModelNameExists, setPageTitle } from "../../utils";
 
 import { brandStoresState, modelsListState, newModelState } from "../../atoms";
-import { filteredModelsListState } from "../../selectors";
+import { filteredModelsListState, brandStoreState } from "../../selectors";
 
 import type { Store, Model } from "../../types/shared";
 
@@ -27,6 +27,7 @@ function CreateModelForm({
   const stores = useRecoilState(brandStoresState);
   const currentStore = stores[0].find((store: Store) => store.id === id);
   const modelsList = useRecoilValue(filteredModelsListState);
+  const brandStore = useRecoilValue(brandStoreState(id));
   const setModelsList = useSetRecoilState<Array<Model>>(modelsListState);
 
   const handleError = () => {
@@ -92,6 +93,10 @@ function CreateModelForm({
       throw new Error("Unable to create a new model");
     },
   });
+
+  brandStore
+    ? setPageTitle(`Create model in ${brandStore.name}`)
+    : setPageTitle("Create model");
 
   return (
     <form
