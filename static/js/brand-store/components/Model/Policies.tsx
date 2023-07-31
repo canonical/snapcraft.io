@@ -14,13 +14,17 @@ import PoliciesFilter from "./PoliciesFilter";
 import PoliciesTable from "./PoliciesTable";
 import CreatePolicyForm from "./CreatePolicyForm";
 
-import { usePolicies } from "../../hooks";
-import { policiesListFilterState, policiesListState } from "../../atoms";
+import { usePolicies, useSigningKeys } from "../../hooks";
+import {
+  policiesListFilterState,
+  policiesListState,
+  signingKeysListState,
+} from "../../atoms";
 import { brandStoreState } from "../../selectors";
 
 import { isClosedPanel, setPageTitle } from "../../utils";
 
-import type { Policy } from "../../types/shared";
+import type { Policy, SigningKey } from "../../types/shared";
 
 function Policies() {
   const { id, model_id } = useParams();
@@ -30,6 +34,7 @@ function Policies() {
     id,
     model_id
   );
+  const signingKeys = useSigningKeys(id);
   const setPoliciesList = useSetRecoilState<Array<Policy>>(policiesListState);
   const setFilter = useSetRecoilState<string>(policiesListFilterState);
   const brandStore = useRecoilValue(brandStoreState(id));
@@ -38,6 +43,15 @@ function Policies() {
   const [showErrorNotification, setShowErrorNotification] = useState<boolean>(
     false
   );
+  const setSigningKeysList = useSetRecoilState<Array<SigningKey>>(
+    signingKeysListState
+  );
+
+  useEffect(() => {
+    if (!signingKeys.isLoading && !signingKeys.isError) {
+      setSigningKeysList(signingKeys.data);
+    }
+  }, [signingKeys]);
 
   useEffect(() => {
     if (!isLoading && !isError) {
@@ -106,7 +120,11 @@ function Policies() {
             <div className="u-fixed-width">
               <>
                 {isLoading && <p>Fetching policies...</p>}
-                {isError && error && <p>Error: {error.message}</p>}
+                {isError && error && (
+                  <Notification severity="negative">
+                    Error: {error.message}
+                  </Notification>
+                )}
                 <PoliciesTable />
               </>
             </div>
