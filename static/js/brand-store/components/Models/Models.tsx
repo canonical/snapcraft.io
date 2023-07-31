@@ -124,7 +124,11 @@ function Models() {
             <div className="u-fixed-width">
               <>
                 {isLoading && <p>Fetching models...</p>}
-                {isError && error && <p>Error: {error.message}</p>}
+                {isError && error && (
+                  <Notification severity="negative">
+                    Error: {error.message}
+                  </Notification>
+                )}
                 <ModelsTable />
               </>
             </div>

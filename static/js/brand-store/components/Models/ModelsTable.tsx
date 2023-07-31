@@ -53,6 +53,7 @@ function ModelsTable() {
                   {model.name}
                 </Link>
               ),
+              className: "u-truncate",
             },
             {
               content: maskString(model["api-key"]),
