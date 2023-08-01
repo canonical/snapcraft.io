@@ -24,3 +24,18 @@ def login_required(func):
         return func(*args, **kwargs)
 
     return is_user_logged_in
+
+
+def candid_login_required(func):
+    """
+    Decorator that checks if a user is authenticated in via candid(login-beta),
+    and redirects to /login-beta page if not.
+    """
+
+    @functools.wraps(func)
+    def is_candid_authneticated(*args, **kwargs):
+        if "developer_token" not in flask.session:
+            return flask.redirect(f"/login-beta?next={flask.request.path}")
+        return func(*args, **kwargs)
+
+    return is_candid_authneticated

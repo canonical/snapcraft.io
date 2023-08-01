@@ -20,11 +20,14 @@ import { fetchStore } from "../../slices/currentStoreSlice";
 import SectionNav from "../SectionNav";
 import StoreNotFound from "../StoreNotFound";
 
+import { setPageTitle } from "../../utils";
+
 import type { RouteParams, Member } from "../../types/shared";
 
 export type RootState = {
   currentStore: {
     currentStore: {
+      name: string;
       id: string;
       private: Boolean;
       "manual-review-policy": string;
@@ -63,6 +66,10 @@ function Settings() {
   const [showSuccessNotification, setShowSuccessNotification] = useState(false);
   const [showErrorNotification, setShowErrorNotification] = useState(false);
   const [currentMember, setCurrentMember] = useState<Member | undefined>();
+
+  currentStore
+    ? setPageTitle(`Settings for ${currentStore.name}`)
+    : setPageTitle("Settings");
 
   const handleFormSubmit = (e: ChangeEvent<HTMLFormElement>) => {
     e.preventDefault();
