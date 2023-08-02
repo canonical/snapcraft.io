@@ -9,10 +9,7 @@ import {
 } from "react-router-dom";
 import { Row, Col, Notification } from "@canonical/react-components";
 
-import { sortByDateDescending } from "../../utils";
-
 import { useSigningKeys, useModels } from "../../hooks";
-
 import {
   signingKeysListState,
   signingKeysListFilterState,
@@ -25,7 +22,7 @@ import SigningKeysFilter from "./SigningKeysFilter";
 import SigningKeysTable from "./SigningKeysTable";
 import CreateSigningKeyForm from "./CreateSigningKeyForm";
 
-import { isClosedPanel, setPageTitle } from "../../utils";
+import { isClosedPanel, setPageTitle, sortByDateDescending } from "../../utils";
 
 import type { SigningKey, Model, Policy } from "../../types/shared";
 
@@ -68,9 +65,6 @@ function SigningKeys() {
   const brandStore = useRecoilValue(brandStoreState(id));
   const [searchParams] = useSearchParams();
   const [showNotification, setShowNotification] = useState<boolean>(false);
-  const [showErrorNotification, setShowErrorNotification] = useState<boolean>(
-    false
-  );
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [
     showDisableSuccessNotification,
@@ -116,12 +110,11 @@ function SigningKeys() {
                 </Notification>
               </div>
             )}
-            {showErrorNotification && errorMessage && (
+            {errorMessage && (
               <div className="u-fixed-width">
                 <Notification
                   severity="negative"
                   onDismiss={() => {
-                    setShowErrorNotification(false);
                     setErrorMessage("");
                   }}
                 >
@@ -176,7 +169,7 @@ function SigningKeys() {
         }`}
         onClick={() => {
           navigate(`/admin/${id}/signing-keys`);
-          setShowErrorNotification(false);
+          setErrorMessage("");
         }}
       ></div>
       <aside
@@ -187,7 +180,6 @@ function SigningKeys() {
         {!isClosedPanel(location.pathname, "create") && (
           <CreateSigningKeyForm
             setShowNotification={setShowNotification}
-            setShowErrorNotification={setShowErrorNotification}
             setErrorMessage={setErrorMessage}
             refetch={refetch}
           />

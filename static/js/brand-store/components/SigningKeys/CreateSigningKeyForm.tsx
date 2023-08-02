@@ -13,14 +13,12 @@ import type { SigningKey } from "../../types/shared";
 
 type Props = {
   setShowNotification: Function;
-  setShowErrorNotification: Function;
   setErrorMessage: Function;
   refetch: Function;
 };
 
 function CreateSigningKeyForm({
   setShowNotification,
-  setShowErrorNotification,
   setErrorMessage,
   refetch,
 }: Props) {
@@ -42,7 +40,6 @@ function CreateSigningKeyForm({
     navigate(`/admin/${id}/signing-keys`);
     setNewSigningKey({ name: "" });
     setTimeout(() => {
-      setShowErrorNotification(false);
       setErrorMessage("");
     }, 5000);
   };
@@ -81,7 +78,6 @@ function CreateSigningKeyForm({
       const signingKeysData = await response.json();
 
       if (!signingKeysData.success) {
-        setShowErrorNotification(true);
         setErrorMessage(signingKeysData.message);
         throw new Error(signingKeysData.message);
       }
@@ -149,7 +145,6 @@ function CreateSigningKeyForm({
               onClick={() => {
                 navigate(`/admin/${id}/signing-keys`);
                 setNewSigningKey({ name: "" });
-                setShowErrorNotification(false);
                 setErrorMessage("");
               }}
             >
