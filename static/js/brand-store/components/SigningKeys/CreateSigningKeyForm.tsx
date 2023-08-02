@@ -14,12 +14,14 @@ import type { SigningKey } from "../../types/shared";
 type Props = {
   setShowNotification: Function;
   setShowErrorNotification: Function;
+  setErrorMessage: Function;
   refetch: Function;
 };
 
 function CreateSigningKeyForm({
   setShowNotification,
   setShowErrorNotification,
+  setErrorMessage,
   refetch,
 }: Props) {
   const navigate = useNavigate();
@@ -32,7 +34,6 @@ function CreateSigningKeyForm({
   );
 
   const handleError = () => {
-    setShowErrorNotification(true);
     setSigningKeysList((oldSigningKeysList: Array<SigningKey>) => {
       return oldSigningKeysList.filter(
         (signingKey) => signingKey.name !== newSigningKey.name
@@ -42,6 +43,7 @@ function CreateSigningKeyForm({
     setNewSigningKey({ name: "" });
     setTimeout(() => {
       setShowErrorNotification(false);
+      setErrorMessage("");
     }, 5000);
   };
 
@@ -79,6 +81,8 @@ function CreateSigningKeyForm({
       const signingKeysData = await response.json();
 
       if (!signingKeysData.success) {
+        setShowErrorNotification(true);
+        setErrorMessage(signingKeysData.message);
         throw new Error(signingKeysData.message);
       }
 
@@ -146,6 +150,7 @@ function CreateSigningKeyForm({
                 navigate(`/admin/${id}/signing-keys`);
                 setNewSigningKey({ name: "" });
                 setShowErrorNotification(false);
+                setErrorMessage("");
               }}
             >
               Cancel

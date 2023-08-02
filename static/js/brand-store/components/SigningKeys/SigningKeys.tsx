@@ -71,6 +71,7 @@ function SigningKeys() {
   const [showErrorNotification, setShowErrorNotification] = useState<boolean>(
     false
   );
+  const [errorMessage, setErrorMessage] = useState<string>("");
   const [
     showDisableSuccessNotification,
     setShowDisableSuccessNotification,
@@ -115,15 +116,16 @@ function SigningKeys() {
                 </Notification>
               </div>
             )}
-            {showErrorNotification && (
+            {showErrorNotification && errorMessage && (
               <div className="u-fixed-width">
                 <Notification
                   severity="negative"
                   onDismiss={() => {
                     setShowErrorNotification(false);
+                    setErrorMessage("");
                   }}
                 >
-                  Unable to create signing key
+                  {errorMessage}
                 </Notification>
               </div>
             )}
@@ -186,6 +188,7 @@ function SigningKeys() {
           <CreateSigningKeyForm
             setShowNotification={setShowNotification}
             setShowErrorNotification={setShowErrorNotification}
+            setErrorMessage={setErrorMessage}
             refetch={refetch}
           />
         )}
