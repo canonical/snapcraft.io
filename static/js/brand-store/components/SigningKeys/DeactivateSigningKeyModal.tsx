@@ -19,6 +19,8 @@ function DeactivateSigningKeyModal({
 }: Props) {
   const { id } = useParams();
 
+  console.log("signingKey", signingKey);
+
   return signingKey.models && signingKey.models.length > 0 ? (
     <Modal
       title={
@@ -37,7 +39,9 @@ function DeactivateSigningKeyModal({
           signingKey.models.length > 0 &&
           signingKey.models.map((model) => (
             <li key={model}>
-              <Link to={`/admin/${id}/models/${model}/policies`}>{model}</Link>
+              <Link to={`/admin/${id}/models/${model}/policies/create`}>
+                {model}
+              </Link>
             </li>
           ))}
       </ul>

@@ -1,4 +1,4 @@
-import { atom, RecoilState } from "recoil";
+import { atom } from "recoil";
 import type { Store, Model, Policy, SigningKey } from "../types/shared";
 
 const brandStoresState = atom({
