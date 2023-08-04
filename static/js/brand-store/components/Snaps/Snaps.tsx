@@ -211,6 +211,14 @@ function SnapsSlice() {
     const storeIds: Array<string> = [];
 
     snaps.forEach((snap) => {
+      if (snap.store === "ubuntu" || snap.store === id) {
+        return;
+      }
+
+      if (!storeIds.includes(snap.store)) {
+        storeIds.push(snap.store);
+      }
+
       if (snap?.["other-stores"]?.length) {
         snap["other-stores"].forEach((otherStoreId) => {
           if (otherStoreId !== id && !storeIds.includes(otherStoreId)) {
@@ -259,10 +267,24 @@ function SnapsSlice() {
         return {
           id: storeId,
           name: getStoreName(storeId),
-          snaps: snaps.filter(
-            (snap) =>
-              snap["other-stores"] && snap["other-stores"].includes(storeId)
-          ),
+          snaps: snaps.filter((snap) => {
+            if (storeId === "ubuntu") {
+              return false;
+            }
+
+            if (snap.store === storeId) {
+              return true;
+            }
+
+            if (
+              snap["other-stores"] &&
+              snap["other-stores"].includes(storeId)
+            ) {
+              return true;
+            }
+
+            return false;
+          }),
         };
       })
     );
