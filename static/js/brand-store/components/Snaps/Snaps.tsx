@@ -211,7 +211,7 @@ function SnapsSlice() {
     const storeIds: Array<string> = [];
 
     snaps.forEach((snap) => {
-      if (snap.store === "ubuntu" || snap.store === id) {
+      if (!snap.store || snap.store === "ubuntu" || snap.store === id) {
         return;
       }
 
