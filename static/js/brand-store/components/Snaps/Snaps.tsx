@@ -338,7 +338,7 @@ function SnapsSlice() {
               <Reviewer />
             ) : currentStore && isPublisherOnly ? (
               <Publisher />
-            ) : snapsNotFound || membersNotFound ? (
+            ) : snapsNotFound ? (
               <StoreNotFound />
             ) : (
               <>
@@ -353,12 +353,17 @@ function SnapsSlice() {
                 {!isReloading && (
                   <Row>
                     <Col size={6}>
-                      {isOnlyViewer() && (
-                        <h2 className="p-heading--4">
-                          Snaps in {getStoreName(id || "")}
-                        </h2>
-                      )}
-
+                      <SnapsFilter
+                        setSnapsInStore={setSnapsInStore}
+                        snapsInStore={snapsInStore}
+                        setOtherStores={setOtherStores}
+                        otherStoreIds={otherStoreIds}
+                        getStoreName={getStoreName}
+                        snaps={snaps}
+                        id={id || ""}
+                      />
+                    </Col>
+                    <Col size={6} className="u-align--right">
                       {!isOnlyViewer() && (
                         <>
                           <Button onClick={() => setSidePanelOpen(true)}>
@@ -371,7 +376,11 @@ function SnapsSlice() {
                             onClick={() => {
                               setShowRemoveSnapsConfirmation(true);
                             }}
-                            className={removeSnapSaving ? "has-icon" : ""}
+                            className={
+                              removeSnapSaving
+                                ? "has-icon u-no-margin--right"
+                                : "u-no-margin--right"
+                            }
                           >
                             {removeSnapSaving ? (
                               <>
@@ -386,17 +395,6 @@ function SnapsSlice() {
                           </Button>
                         </>
                       )}
-                    </Col>
-                    <Col size={6}>
-                      <SnapsFilter
-                        setSnapsInStore={setSnapsInStore}
-                        snapsInStore={snapsInStore}
-                        setOtherStores={setOtherStores}
-                        otherStoreIds={otherStoreIds}
-                        getStoreName={getStoreName}
-                        snaps={snaps}
-                        id={id || ""}
-                      />
                     </Col>
                   </Row>
                 )}

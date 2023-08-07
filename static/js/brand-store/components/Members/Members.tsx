@@ -202,15 +202,6 @@ function Members() {
               <>
                 <Row>
                   <Col size={6}>
-                    <Button
-                      onClick={() => {
-                        setSidePanelOpen(true);
-                      }}
-                    >
-                      Add new member
-                    </Button>
-                  </Col>
-                  <Col size={6}>
                     <SearchBox
                       placeholder="Search and filter"
                       autocomplete="off"
@@ -228,6 +219,15 @@ function Members() {
                         }
                       }}
                     />
+                  </Col>
+                  <Col size={6} className="u-align--right">
+                    <Button
+                      onClick={() => {
+                        setSidePanelOpen(true);
+                      }}
+                    >
+                      Add new member
+                    </Button>
                   </Col>
                 </Row>
                 <div className="u-fixed-width app-accordion">

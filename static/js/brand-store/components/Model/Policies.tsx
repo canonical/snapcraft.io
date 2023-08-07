@@ -106,15 +106,15 @@ function Policies() {
             )}
             <Row>
               <Col size={6}>
+                <PoliciesFilter />
+              </Col>
+              <Col size={6} className="u-align--right">
                 <Link
                   className="p-button"
                   to={`/admin/${id}/models/${model_id}/policies/create`}
                 >
                   Create policy
                 </Link>
-              </Col>
-              <Col size={6}>
-                <PoliciesFilter />
               </Col>
             </Row>
             <div className="u-fixed-width">
