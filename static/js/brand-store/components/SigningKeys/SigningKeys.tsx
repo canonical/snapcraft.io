@@ -136,15 +136,15 @@ function SigningKeys() {
             )}
             <Row>
               <Col size={6}>
+                <SigningKeysFilter />
+              </Col>
+              <Col size={6} className="u-align--right">
                 <Link
                   className="p-button"
                   to={`/admin/${id}/signing-keys/create`}
                 >
                   Create new signing key
                 </Link>
-              </Col>
-              <Col size={6}>
-                <SigningKeysFilter />
               </Col>
             </Row>
             <div className="u-fixed-width">
