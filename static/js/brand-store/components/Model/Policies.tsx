@@ -110,7 +110,7 @@ function Policies() {
               </Col>
               <Col size={6} className="u-align--right">
                 <Link
-                  className="p-button"
+                  className="p-button--positive"
                   to={`/admin/${id}/models/${model_id}/policies/create`}
                 >
                   Create policy
