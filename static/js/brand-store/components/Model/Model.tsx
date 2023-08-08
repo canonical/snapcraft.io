@@ -17,6 +17,7 @@ import { modelsListState } from "../../atoms";
 import { currentModelState, brandStoreState } from "../../selectors";
 
 import ModelNav from "./ModelNav";
+import ModelBreadcrumb from "./ModelBreadcrumb";
 
 import { setPageTitle } from "../../utils";
 
@@ -82,10 +83,8 @@ function Model() {
       <div className="p-panel">
         <div className="p-panel__content">
           <div className="u-fixed-width">
-            <Link to={`/admin/${id}/models`}>&lsaquo;&nbsp;Models</Link>
-          </div>
-          <div className="u-fixed-width">
-            <h1>{model_id}</h1>
+            <ModelBreadcrumb />
+            <h1 className="u-off-screen">{model_id}</h1>
           </div>
           <div className="u-fixed-width">
             <ModelNav sectionName="overview" />
@@ -119,12 +118,16 @@ function Model() {
               {currentModel && (
                 <form
                   className="p-form p-form--stacked"
+                  id="save-model-form"
                   onSubmit={(event) => {
                     event.preventDefault();
                     mutation.mutate(newApiKey);
                   }}
                 >
-                  <div className="p-form__group">
+                  <div
+                    className="p-form__group"
+                    style={{ paddingTop: "0.45rem" }}
+                  >
                     <Row>
                       <Col size={2}>
                         <span className="p-form__label">Name</span>
@@ -236,27 +239,29 @@ function Model() {
                       </Row>
                     </div>
                   )}
-                  <hr style={{ marginTop: "1rem", marginBottom: "1rem" }} />
-                  <div className="u-align--right">
-                    <Button
-                      type="button"
-                      onClick={() => {
-                        setNewApiKey("");
-                      }}
-                    >
-                      Revert
-                    </Button>
-                    <Button
-                      type="submit"
-                      appearance="positive"
-                      className="u-no-margin--right"
-                      disabled={!newApiKey}
-                    >
-                      Save
-                    </Button>
-                  </div>
                 </form>
               )}
+            </Col>
+            <Col size={4}>
+              <div className="u-align--right">
+                <Button
+                  type="button"
+                  onClick={() => {
+                    setNewApiKey("");
+                  }}
+                >
+                  Revert
+                </Button>
+                <Button
+                  type="submit"
+                  appearance="positive"
+                  className="u-no-margin--right"
+                  disabled={!newApiKey}
+                  form="save-model-form"
+                >
+                  Save
+                </Button>
+              </div>
             </Col>
           </Row>
         </div>
