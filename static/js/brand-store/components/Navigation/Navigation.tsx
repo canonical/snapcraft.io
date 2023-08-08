@@ -54,7 +54,7 @@ function Navigation() {
             </div>
 
             <div className="p-panel__content">
-              <div className="p-side-navigation--icons">
+              <div className="p-side-navigation">
                 <nav aria-label="Stores navigation">
                   <ul className="p-side-navigation__list">
                     {brandStoresList.map((item: Store) => {
@@ -64,9 +64,6 @@ function Navigation() {
                             className="p-side-navigation__link"
                             to={`/admin/${item.id}/snaps`}
                           >
-                            <i className="p-side-navigation__icon p-icon--initial">
-                              <span>{item.name.charAt(0)}</span>
-                            </i>
                             <span className="p-side-navigation__label u-truncate">
                               {item.name}
                             </span>
