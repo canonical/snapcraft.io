@@ -140,7 +140,7 @@ function SigningKeys() {
               </Col>
               <Col size={6} className="u-align--right">
                 <Link
-                  className="p-button"
+                  className="p-button--positive"
                   to={`/admin/${id}/signing-keys/create`}
                 >
                   Create new signing key

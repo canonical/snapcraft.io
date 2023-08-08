@@ -116,7 +116,10 @@ function Models() {
                 <ModelsFilter />
               </Col>
               <Col size={6} className="u-align--right">
-                <Link className="p-button" to={`/admin/${id}/models/create`}>
+                <Link
+                  className="p-button--positive"
+                  to={`/admin/${id}/models/create`}
+                >
                   Create new model
                 </Link>
               </Col>
