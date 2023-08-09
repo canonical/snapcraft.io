@@ -34,9 +34,21 @@ const policiesListFilterState = atom({
   default: "" as string,
 });
 
-const signingKeysListState = atom({
-  key: "signingKeysList",
-  default: [] as Array<SigningKey>,
+const signingKeysListState = atom<SigningKey[]>({
+  key: "signingKeysListState",
+  default: [],
+});
+
+const signingKeysListFilterState = atom({
+  key: "signingKeysListFilter",
+  default: "" as string,
+});
+
+const newSigningKeyState = atom({
+  key: "newSigningKey",
+  default: {
+    name: "",
+  },
 });
 
 export {
@@ -47,4 +59,6 @@ export {
   policiesListState,
   policiesListFilterState,
   signingKeysListState,
+  signingKeysListFilterState,
+  newSigningKeyState,
 };

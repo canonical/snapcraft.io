@@ -76,7 +76,9 @@ function SnapsTableRow({
         )}
       </td>
       <td data-heading="Latest release">
-        {snap["latest-release"].version ? snap["latest-release"].version : "-"}
+        {snap["latest-release"] && snap["latest-release"].version
+          ? snap["latest-release"].version
+          : "-"}
       </td>
       <td data-heading="Release date">
         {format(new Date(snap["latest-release"].timestamp), "dd/MM/yyyy")}

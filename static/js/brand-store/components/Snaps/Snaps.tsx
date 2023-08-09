@@ -211,6 +211,14 @@ function SnapsSlice() {
     const storeIds: Array<string> = [];
 
     snaps.forEach((snap) => {
+      if (!snap.store || snap.store === "ubuntu" || snap.store === id) {
+        return;
+      }
+
+      if (!storeIds.includes(snap.store)) {
+        storeIds.push(snap.store);
+      }
+
       if (snap?.["other-stores"]?.length) {
         snap["other-stores"].forEach((otherStoreId) => {
           if (otherStoreId !== id && !storeIds.includes(otherStoreId)) {
@@ -259,10 +267,24 @@ function SnapsSlice() {
         return {
           id: storeId,
           name: getStoreName(storeId),
-          snaps: snaps.filter(
-            (snap) =>
-              snap["other-stores"] && snap["other-stores"].includes(storeId)
-          ),
+          snaps: snaps.filter((snap) => {
+            if (storeId === "ubuntu") {
+              return false;
+            }
+
+            if (snap.store === storeId) {
+              return true;
+            }
+
+            if (
+              snap["other-stores"] &&
+              snap["other-stores"].includes(storeId)
+            ) {
+              return true;
+            }
+
+            return false;
+          }),
         };
       })
     );
@@ -316,7 +338,7 @@ function SnapsSlice() {
               <Reviewer />
             ) : currentStore && isPublisherOnly ? (
               <Publisher />
-            ) : snapsNotFound || membersNotFound ? (
+            ) : snapsNotFound ? (
               <StoreNotFound />
             ) : (
               <>
@@ -331,12 +353,17 @@ function SnapsSlice() {
                 {!isReloading && (
                   <Row>
                     <Col size={6}>
-                      {isOnlyViewer() && (
-                        <h2 className="p-heading--4">
-                          Snaps in {getStoreName(id || "")}
-                        </h2>
-                      )}
-
+                      <SnapsFilter
+                        setSnapsInStore={setSnapsInStore}
+                        snapsInStore={snapsInStore}
+                        setOtherStores={setOtherStores}
+                        otherStoreIds={otherStoreIds}
+                        getStoreName={getStoreName}
+                        snaps={snaps}
+                        id={id || ""}
+                      />
+                    </Col>
+                    <Col size={6} className="u-align--right">
                       {!isOnlyViewer() && (
                         <>
                           <Button onClick={() => setSidePanelOpen(true)}>
@@ -349,7 +376,11 @@ function SnapsSlice() {
                             onClick={() => {
                               setShowRemoveSnapsConfirmation(true);
                             }}
-                            className={removeSnapSaving ? "has-icon" : ""}
+                            className={
+                              removeSnapSaving
+                                ? "has-icon u-no-margin--right"
+                                : "u-no-margin--right"
+                            }
                           >
                             {removeSnapSaving ? (
                               <>
@@ -364,17 +395,6 @@ function SnapsSlice() {
                           </Button>
                         </>
                       )}
-                    </Col>
-                    <Col size={6}>
-                      <SnapsFilter
-                        setSnapsInStore={setSnapsInStore}
-                        snapsInStore={snapsInStore}
-                        setOtherStores={setOtherStores}
-                        otherStoreIds={otherStoreIds}
-                        getStoreName={getStoreName}
-                        snaps={snaps}
-                        id={id || ""}
-                      />
                     </Col>
                   </Row>
                 )}

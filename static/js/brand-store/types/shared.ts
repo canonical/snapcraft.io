@@ -121,20 +121,47 @@ export type Model = {
 
 export type Policy = {
   "created-at": string;
-  "created-by": string;
+  "created-by": {
+    "display-name": string;
+    email: string;
+    id: string;
+    username: string;
+    validation: string;
+  } | null;
   "model-name": string;
   revision: number;
   "signing-key-sha3-384": string;
   "signing-key-name"?: string;
-  "modified-at"?: string;
+  "modified-at"?: string | null;
+  "modified-by"?: {
+    "display-name": string;
+    email: string;
+    id: string;
+    username: string;
+    validation: string;
+  } | null;
 };
 
 export type SigningKey = {
   name: string;
   "created-at": string;
-  "created-by": string;
-  "modified-at": string;
-  "modified-by": string;
-  fingerprint: string;
-  "sha3-384": string;
+  "created-by"?: {
+    "display-name": string;
+    email: string;
+    id: string;
+    username: string;
+    validation: string;
+  } | null;
+  "modified-at": string | null;
+  "modified-by"?: {
+    "display-name": string;
+    email: string;
+    id: string;
+    username: string;
+    validation: string;
+  } | null;
+  fingerprint?: string;
+  "sha3-384"?: string;
+  models?: Array<string>;
+  policies?: Array<Policy>;
 };

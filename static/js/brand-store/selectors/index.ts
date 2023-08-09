@@ -7,9 +7,14 @@ import {
   policiesListFilterState,
   signingKeysListState,
   brandStoresState,
+  signingKeysListFilterState,
 } from "../atoms";
 
-import { getFilteredModels, getFilteredPolicies } from "../utils";
+import {
+  getFilteredModels,
+  getFilteredPolicies,
+  getFilteredSigningKeys,
+} from "../utils";
 
 import type {
   StoresSlice,
@@ -19,6 +24,7 @@ import type {
   MembersSlice,
   Model,
   Policy,
+  SigningKey,
 } from "../types/shared";
 
 // Redux selectors
@@ -74,9 +80,9 @@ const filteredPoliciesListState = selector<Array<Policy>>({
       return {
         ...policy,
         "signing-key-name": signingKey?.name,
-        "modified-at": signingKey?.["modified-at"],
       };
     });
+
     return getFilteredPolicies(policiesWithKeys, filter);
   },
 });
@@ -86,6 +92,36 @@ const brandStoreState = selectorFamily({
   get: (storeId) => ({ get }) => {
     const brandStores = get(brandStoresState);
     return brandStores.find((store) => store.id === storeId);
+  },
+});
+
+const filteredSigningKeysListState = selector<Array<SigningKey>>({
+  key: "filteredSigningKeysList",
+  get: ({ get }) => {
+    const filter = get(signingKeysListFilterState);
+    const policies = get(policiesListState);
+    const signingKeys = get(signingKeysListState);
+    const signingKeysWithPolicies = signingKeys.map((signingKey) => {
+      const matchingPolicies = policies.filter((policy) => {
+        return policy["signing-key-sha3-384"] === signingKey["sha3-384"];
+      });
+
+      const signingKeyModels: string[] = [];
+
+      matchingPolicies.forEach((policy) => {
+        if (!signingKeyModels.includes(policy["model-name"])) {
+          signingKeyModels.push(policy["model-name"]);
+        }
+      });
+
+      return {
+        ...signingKey,
+        models: signingKeyModels,
+        policies: matchingPolicies,
+      };
+    });
+
+    return getFilteredSigningKeys(signingKeysWithPolicies, filter);
   },
 });
 
@@ -99,4 +135,5 @@ export {
   currentModelState,
   filteredPoliciesListState,
   brandStoreState,
+  filteredSigningKeysListState,
 };
