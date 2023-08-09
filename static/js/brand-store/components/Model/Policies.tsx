@@ -10,6 +10,7 @@ import { useSetRecoilState, useRecoilValue } from "recoil";
 import { Row, Col, Notification } from "@canonical/react-components";
 
 import ModelNav from "./ModelNav";
+import ModelBreadcrumb from "./ModelBreadcrumb";
 import PoliciesFilter from "./PoliciesFilter";
 import PoliciesTable from "./PoliciesTable";
 import CreatePolicyForm from "./CreatePolicyForm";
@@ -72,10 +73,8 @@ function Policies() {
         <div className="p-panel">
           <div className="p-panel__content">
             <div className="u-fixed-width">
-              <Link to={`/admin/${id}/models`}>&lsaquo;&nbsp;Models</Link>
-            </div>
-            <div className="u-fixed-width">
-              <h1>{model_id}</h1>
+              <ModelBreadcrumb />
+              <h1 className="u-off-screen">{model_id}</h1>
             </div>
             <div className="u-fixed-width">
               <ModelNav sectionName="policies" />

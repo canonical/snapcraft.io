@@ -6,7 +6,7 @@ function SectionNav({ sectionName }: { sectionName: string }) {
   const { id } = useParams<RouteParams>();
 
   return (
-    <div className="p-tabs">
+    <nav className="p-tabs">
       <ul className="p-tabs__list">
         <li className="p-tabs__item">
           <Link
@@ -59,7 +59,7 @@ function SectionNav({ sectionName }: { sectionName: string }) {
           </Link>
         </li>
       </ul>
-    </div>
+    </nav>
   );
 }
 

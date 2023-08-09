@@ -116,8 +116,6 @@ $color-social-icon-foreground: $color-light;
 @include snapcraft-p-multiselect;
 @import "patterns_first-snap-flow";
 @include snapcraft-p-first-snap-flow;
-@import "snapcraft_p-breadcrumbs";
-@include snapcraft-p-breadcrumbs;
 @import "snapcraft-publicise";
 @include snapcraft-publicise;
 @import "snapcraft-publisher";
@@ -454,6 +452,11 @@ code {
 
 .p-navigation__row.is-full-width {
   max-width: 100%;
+}
+
+// Vanilla override
+.p-breadcrumbs__item:not(:first-of-type)::before {
+  margin-left: -0.5rem;
 }
 
 // Vanilla override

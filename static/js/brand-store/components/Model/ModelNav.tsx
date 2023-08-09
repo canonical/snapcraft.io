@@ -5,7 +5,7 @@ function ModelNav({ sectionName }: { sectionName: string }) {
   const { id, model_id } = useParams();
 
   return (
-    <div className="p-tabs">
+    <nav className="p-tabs">
       <ul className="p-tabs__list">
         <li className="p-tabs__item">
           <Link
@@ -28,7 +28,7 @@ function ModelNav({ sectionName }: { sectionName: string }) {
           </Link>
         </li>
       </ul>
-    </div>
+    </nav>
   );
 }
 
