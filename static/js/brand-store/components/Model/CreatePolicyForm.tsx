@@ -97,10 +97,10 @@ function CreatePolicyForm({
     >
       <div className="p-panel is-flex-column">
         <div className="p-panel__header">
-          <h4 className="p-panel__title">Create new policy</h4>
+          <h4 className="p-panel__title p-muted-heading">Create new policy</h4>
         </div>
         <div className="p-panel__content">
-          <div className="u-fixed-width">
+          <div className="u-fixed-width" style={{ marginBottom: "30px" }}>
             {isLoading && <p>Fetching signing keys...</p>}
             {isError && error && <p>Error: {error.message}</p>}
 
@@ -136,26 +136,26 @@ function CreatePolicyForm({
               </p>
             )}
           </div>
-        </div>
-        <hr />
-        <div className="p-panel__footer u-align--right">
           <div className="u-fixed-width">
-            <Button
-              className="u-no-margin--bottom"
-              onClick={() => {
-                navigate(`/admin/${id}/models/${model_id}/policies`);
-              }}
-            >
-              Cancel
-            </Button>
-            <Button
-              type="submit"
-              appearance="positive"
-              className="u-no-margin--bottom u-no-margin--right"
-              disabled={!selectedSigningKey}
-            >
-              Add policy
-            </Button>
+            <hr />
+            <div className="u-align--right">
+              <Button
+                className="u-no-margin--bottom"
+                onClick={() => {
+                  navigate(`/admin/${id}/models/${model_id}/policies`);
+                }}
+              >
+                Cancel
+              </Button>
+              <Button
+                type="submit"
+                appearance="positive"
+                className="u-no-margin--bottom u-no-margin--right"
+                disabled={!selectedSigningKey}
+              >
+                Add policy
+              </Button>
+            </div>
           </div>
         </div>
       </div>
