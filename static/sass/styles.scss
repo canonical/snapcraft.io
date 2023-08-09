@@ -454,6 +454,12 @@ code {
   max-width: 100%;
 }
 
+// Vanilla override
 .p-breadcrumbs__item:not(:first-of-type)::before {
   margin-left: -0.5rem;
+}
+
+// Vanilla override
+.p-panel__logo {
+  margin-left: 0;
 }

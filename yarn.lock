@@ -1039,15 +1039,15 @@
   resolved "https://registry.yarnpkg.com/@bcoe/v8-coverage/-/v8-coverage-0.2.3.tgz#75a2e8b51cb758a7553d6804a5932d7aace75c39"
   integrity sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==
 
-"@canonical/cookie-policy@3.4.0":
-  version "3.4.0"
-  resolved "https://registry.yarnpkg.com/@canonical/cookie-policy/-/cookie-policy-3.4.0.tgz#0d6708da340df5867fd2cc9dbd95538c46f20cf8"
-  integrity sha512-cdVqxQmGu+j+Q86UobihWWVFzGzHlekFeMFxlbRpm+yqxEOUCrLkA9/t/RsMfLNDToP2ECPgsMbS20aPlA2tIg==
+"@canonical/cookie-policy@3.5.0":
+  version "3.5.0"
+  resolved "https://registry.yarnpkg.com/@canonical/cookie-policy/-/cookie-policy-3.5.0.tgz#1c7e6cc2d5a7218375001b2cff2996a927693e89"
+  integrity sha512-XLCIl8+h+3BRfvqADqFsmAfWdaDGDchY/TPCKtpeQdb4r64SR6arsdNftlOb7vX8EuLCK2QRp6evUy0J+qnQTg==
 
-"@canonical/global-nav@3.2.5":
-  version "3.2.5"
-  resolved "https://registry.yarnpkg.com/@canonical/global-nav/-/global-nav-3.2.5.tgz#661abfe497b1266fe59d156711524c1b6352ce8a"
-  integrity sha512-ajrV4lzHC/x9qwsEzFRVJSEkKCx2VsisNhFAz4lHP7ukwMgsV7gbggxF5JDziqAblNJQNcV9NDXxkecZ3L5ZLw==
+"@canonical/global-nav@3.4.0":
+  version "3.4.0"
+  resolved "https://registry.yarnpkg.com/@canonical/global-nav/-/global-nav-3.4.0.tgz#e565c9446fe43281622857e965bcf53bbed0e5c6"
+  integrity sha512-KDlFVPTnO6on8okYfSUtqTdEaMpQE42gqZV82DHcfFOmrDVe8lrLPUl5bS8khJ0WbZhozMIMSTI0PUC/PCgl1Q==
   dependencies:
     vanilla-framework "3.14.0"
 
@@ -1056,10 +1056,10 @@
   resolved "https://registry.yarnpkg.com/@canonical/latest-news/-/latest-news-1.4.1.tgz#dcdd445ac2268a54cf60f2f8c725b6bdeb285d71"
   integrity sha512-lwrikCj0Y11X8Ln8D+elp6Ri3mYjMjsAOJtadNEFzhBrgmg8TVGYJjOdwy8TvRaxy7fHnvVajIKAYWX44Tfj6w==
 
-"@canonical/react-components@0.43.0":
-  version "0.43.0"
-  resolved "https://registry.yarnpkg.com/@canonical/react-components/-/react-components-0.43.0.tgz#6603edbdf3495da562cf6bdb47e580de2f807edd"
-  integrity sha512-3fCq27E5V8BByOPudGxQca9CIffdLGkHP991ozo0/9HlToTiLLYikp+Bbt0i/qk2kn1YilPY2X181LvDKPt48g==
+"@canonical/react-components@0.45.0":
+  version "0.45.0"
+  resolved "https://registry.yarnpkg.com/@canonical/react-components/-/react-components-0.45.0.tgz#2950177000ac01d6889a0ae3929f1fb5fac18db0"
+  integrity sha512-LVvEO8yt4COiRMiNv/UlnJZjAGvyyH8L9ZZUSD7UNv6a7Dx1xtKmX6mwi2+VGXvhCl3TKAxbqT3mabMM+tZX5Q==
   dependencies:
     "@types/jest" "27.5.2"
     "@types/node" "18.16.18"
@@ -7521,9 +7521,9 @@ wildcard@^2.0.0:
   integrity sha512-JcKqAHLPxcdb9KM49dufGXn2x3ssnfjbcaQdLlfZsL9rH9wgDQjUtDxbo8NE0F6SFvydeu1VhZe7hZuHsB2/pw==
 
 word-wrap@^1.2.3, word-wrap@~1.2.3:
-  version "1.2.3"
-  resolved "https://registry.yarnpkg.com/word-wrap/-/word-wrap-1.2.3.tgz#610636f6b1f703891bd34771ccb17fb93b47079c"
-  integrity sha512-Hz/mrNwitNRh/HUAtM/VT/5VH+ygD6DV7mYKZAtHOrbs8U7lvPS6xf7EJKMF0uW1KJCl0H701g3ZGus+muE5vQ==
+  version "1.2.5"
+  resolved "https://registry.yarnpkg.com/word-wrap/-/word-wrap-1.2.5.tgz#d2c45c6dd4fbce621a66f136cbe328afd0410b34"
+  integrity sha512-BN22B5eaMMI9UMtjrGd5g5eCYPpCPDUy0FJXbYsaT5zYxjFOckS53SQDE3pWkVoWpHXVb3BrYcEN4Twa55B5cA==
 
 wrap-ansi@^7.0.0:
   version "7.0.0"
