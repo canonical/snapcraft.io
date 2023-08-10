@@ -105,7 +105,9 @@
   .l-aside {
     height: $layout-height;
     position: relative;
-    z-index: 999;
+
+    // Vanilla override
+    width: 419px !important;
 
     @media (min-width: $breakpoint-small) {
       width: 22.5rem;
