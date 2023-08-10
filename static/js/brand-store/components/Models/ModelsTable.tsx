@@ -32,16 +32,25 @@ function ModelsTable() {
         {
           content: "Policy revision",
           className: "u-align--right",
+          style: {
+            width: "150px",
+          },
         },
         {
           content: "Last updated",
           className: "u-align--right",
           sortKey: "modified-at",
+          style: {
+            width: "120px",
+          },
         },
         {
           content: "Created date",
           className: "u-align--right",
           sortKey: "created-at",
+          style: {
+            width: "120px",
+          },
         },
       ]}
       rows={modelsList.map((model: Model) => {

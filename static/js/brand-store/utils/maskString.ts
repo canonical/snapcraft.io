@@ -1,5 +1,5 @@
 function maskString(str: string | undefined) {
-  const visibleCharacterCount = 6;
+  const visibleCharacterCount = 12;
 
   if (!str) {
     return "";

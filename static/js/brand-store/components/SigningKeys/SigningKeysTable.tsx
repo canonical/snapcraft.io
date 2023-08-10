@@ -95,21 +95,33 @@ function SigningKeysTable({ setShowDisableSuccessNotification }: Props) {
           {
             content: `Name (${signingKeysList.length})`,
             sortKey: "name",
+            style: {
+              width: "320px",
+            },
           },
           {
             content: "Policies",
             sortKey: "policy",
             className: "u-align--right",
+            style: {
+              width: "80px",
+            },
           },
           {
             content: "Models",
             sortKey: "models",
             className: "u-align--right",
+            style: {
+              width: "80px",
+            },
           },
           {
             content: "Created date",
             sortKey: "created-at",
             className: "u-align--right",
+            style: {
+              width: "120px",
+            },
           },
           {
             content: "fingerprint",
@@ -119,6 +131,9 @@ function SigningKeysTable({ setShowDisableSuccessNotification }: Props) {
           {
             content: "",
             className: "u-align--right",
+            style: {
+              width: "150px",
+            },
           },
         ]}
         rows={signingKeysList.map((signingKey: SigningKey) => {
@@ -126,6 +141,7 @@ function SigningKeysTable({ setShowDisableSuccessNotification }: Props) {
             columns: [
               {
                 content: signingKey["name"],
+                className: "u-truncate",
               },
               {
                 content: signingKey.policies ? signingKey.policies.length : 0,
