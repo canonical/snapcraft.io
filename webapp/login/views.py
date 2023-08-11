@@ -209,7 +209,6 @@ def login_callback():
         flask.session["publisher"]["has_stores"] = (
             len(admin_api.get_stores(flask.session)) > 0
         )
-    # pprint(flask.session)
     response = flask.make_response(
         flask.redirect(
             flask.session.pop(

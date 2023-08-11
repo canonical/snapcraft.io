@@ -442,7 +442,7 @@ def create_policy(store_id: str, model_name: str):
 
 
 @admin.route(
-    "/admin/store/<store_id>/models/<model_name>/policies/<revision>",
+    "/ ",
     methods=["DELETE"],
 )
 @login_required
@@ -550,7 +550,6 @@ def delete_signing_key(store_id: str, signing_key_sha3_384: str):
                 matching_models = []
                 models_response = get_models(store_id).json
                 models = models_response.get("data", [])
-                # pprint(models)
                 for model in models:
                     policies_resp = get_policies(store_id, model["name"]).json
                     policies = policies_resp.get("data", [])
