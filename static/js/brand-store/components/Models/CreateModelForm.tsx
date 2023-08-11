@@ -108,10 +108,10 @@ function CreateModelForm({
     >
       <div className="p-panel is-flex-column">
         <div className="p-panel__header">
-          <h4 className="p-panel__title">Create new model</h4>
+          <h4 className="p-panel__title p-muted-heading">Create new model</h4>
         </div>
         <div className="p-panel__content">
-          <div className="u-fixed-width">
+          <div className="u-fixed-width" style={{ marginBottom: "30px" }}>
             {currentStore && (
               <p>
                 Brand
@@ -161,34 +161,32 @@ function CreateModelForm({
               Generate key
             </Button>
           </div>
-        </div>
-        <div className="u-fixed-width">
-          <p>* Mandatory field</p>
-        </div>
-        <hr />
-        <div className="p-panel__footer u-align--right">
           <div className="u-fixed-width">
-            <Button
-              className="u-no-margin--bottom"
-              onClick={() => {
-                navigate(`/admin/${id}/models`);
-                setNewModel({ name: "", apiKey: "" });
-                setShowErrorNotification(false);
-              }}
-            >
-              Cancel
-            </Button>
-            <Button
-              type="submit"
-              appearance="positive"
-              className="u-no-margin--bottom u-no-margin--right"
-              disabled={
-                !newModel.name ||
-                checkModelNameExists(newModel.name, modelsList)
-              }
-            >
-              Add model
-            </Button>
+            <p>* Mandatory field</p>
+            <hr />
+            <div className="u-align--right">
+              <Button
+                className="u-no-margin--bottom"
+                onClick={() => {
+                  navigate(`/admin/${id}/models`);
+                  setNewModel({ name: "", apiKey: "" });
+                  setShowErrorNotification(false);
+                }}
+              >
+                Cancel
+              </Button>
+              <Button
+                type="submit"
+                appearance="positive"
+                className="u-no-margin--bottom u-no-margin--right"
+                disabled={
+                  !newModel.name ||
+                  checkModelNameExists(newModel.name, modelsList)
+                }
+              >
+                Add model
+              </Button>
+            </div>
           </div>
         </div>
       </div>

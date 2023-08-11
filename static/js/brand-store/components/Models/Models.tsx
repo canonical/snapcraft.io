@@ -113,12 +113,15 @@ function Models() {
             )}
             <Row>
               <Col size={6}>
-                <Link className="p-button" to={`/admin/${id}/models/create`}>
+                <ModelsFilter />
+              </Col>
+              <Col size={6} className="u-align--right">
+                <Link
+                  className="p-button--positive"
+                  to={`/admin/${id}/models/create`}
+                >
                   Create new model
                 </Link>
-              </Col>
-              <Col size={6}>
-                <ModelsFilter />
               </Col>
             </Row>
             <div className="u-fixed-width">

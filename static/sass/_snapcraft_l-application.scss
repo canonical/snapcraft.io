@@ -100,31 +100,14 @@
     .p-panel__logo-icon {
       width: 1.5rem;
     }
-
-    .p-side-navigation__link {
-      &.is-active,
-      &[aria-current="page"],
-      &[aria-current="true"] {
-        @include vf-highlight-bar(#82bfa1, left);
-      }
-    }
-
-    .p-side-navigation--icons {
-      .p-side-navigation__icon {
-        left: 1.25rem;
-        top: 0.25rem;
-      }
-
-      .p-side-navigation__link {
-        padding-left: 3.25rem;
-      }
-    }
   }
 
   .l-aside {
     height: $layout-height;
     position: relative;
-    z-index: 999;
+
+    // Vanilla override
+    width: 419px !important;
 
     @media (min-width: $breakpoint-small) {
       width: 22.5rem;
