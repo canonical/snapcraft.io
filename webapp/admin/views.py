@@ -441,6 +441,27 @@ def create_policy(store_id: str, model_name: str):
     return make_response(res)
 
 
+@admin.route(
+    "/admin/store/<store_id>/models/<model_name>/policies/<revision>",
+    methods=["DELETE"],
+)
+@login_required
+def delete_policy(store_id: str, model_name: str, revision: str):
+    res = {}
+    try:
+        response = admin_api.delete_store_model_policy(
+            flask.session, store_id, model_name, revision
+        )
+        if response.status_code == 204:
+            res = {"success": True}
+        if response.status_code == 404:
+            res = {"success": False, "message": "Policy not found"}
+    except StoreApiResponseErrorList as error_list:
+        res["success"] = False
+        res["message"] = error_list.errors[0]["message"]
+    return make_response(res)
+
+
 @admin.route("/admin/store/<store_id>/signing-keys")
 @login_required
 def get_signing_keys(store_id: str):
@@ -513,35 +534,48 @@ def delete_signing_key(store_id: str, signing_key_sha3_384: str):
     res = {}
 
     try:
-        admin_api.delete_store_signing_key(
+        response = admin_api.delete_store_signing_key(
             flask.session, store_id, signing_key_sha3_384
         )
-        res["success"] = True
+
+        if response.status_code == 204:
+            res["success"] = True
+        elif response.status_code == 404:
+            res["success"] = False
+            res["message"] = "Signing key not found"
+        elif response.status_code == 409:
+            message = response.json()["error-list"][0]["message"]
+
+            if "used to sign at least one serial policy" in message:
+                matching_models = []
+                models_response = get_models(store_id).json
+                models = models_response.get("data", [])
+                # pprint(models)
+                for model in models:
+                    policies_resp = get_policies(store_id, model["name"]).json
+                    policies = policies_resp.get("data", [])
+                    matching_policies = [
+                        {"revision": policy["revision"]}
+                        for policy in policies
+                        if policy["signing-key-sha3-384"]
+                        == signing_key_sha3_384
+                    ]
+                    if matching_policies:
+                        matching_models.append(
+                            {
+                                "name": model["name"],
+                                "policies": matching_policies,
+                            }
+                        )
+                    res["data"] = {"models": matching_models}
+                    res[
+                        "message"
+                    ] = "Signing key is used in at least one policy"
+
+            else:
+                res["message"] = message
     except StoreApiResponseErrorList as error_list:
         res["success"] = False
-        message = error_list.errors[0]["message"]
-        if (
-            message == f"Cannot delete signing key {signing_key_sha3_384} as"
-            " it is used to sign at least one serial policy."
-        ):
-            matching_models = []
-            models = get_models(store_id).json["data"]
-            for model in models:
-                policies = get_policies(store_id, model["name"]).json["data"]
-                matching_policies = []
-                for policy in policies:
-                    if policy["signing-key-sha3-384"] == signing_key_sha3_384:
-                        matching_policies.append(
-                            {"revision": policy["revision"]}
-                        )
-                if matching_policies:
-                    matching_models.append(
-                        {"name": model["name"], "policies": matching_policies}
-                    )
-                res["data"] = {"models": matching_models}
-                res["message"] = "Signing key is used in at least one policy"
-
-        else:
-            res["message"] = message
+        res["message"] = error_list.errors[0]["message"]
 
     return make_response(res)
