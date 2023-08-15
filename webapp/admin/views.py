@@ -442,7 +442,7 @@ def create_policy(store_id: str, model_name: str):
 
 
 @admin.route(
-    "/ ",
+    "/admin/store/<store_id>/models/<model_name>/policies/<revision>",
     methods=["DELETE"],
 )
 @login_required

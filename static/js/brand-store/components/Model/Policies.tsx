@@ -44,6 +44,14 @@ function Policies() {
   const [showErrorNotification, setShowErrorNotification] = useState<boolean>(
     false
   );
+  const [
+    showDeletePolicyNotification,
+    setShowDeletePolicyNotification,
+  ] = useState<boolean>(false);
+  const [
+    showDeletePolicyErrorNotification,
+    setShowDeletePolicyErrorNotification,
+  ] = useState<boolean>(false);
   const setSigningKeysList = useSetRecoilState<Array<SigningKey>>(
     signingKeysListState
   );
@@ -91,6 +99,18 @@ function Policies() {
                 </Notification>
               </div>
             )}
+            {showDeletePolicyNotification && (
+              <div className="u-fixed-width">
+                <Notification
+                  severity="positive"
+                  onDismiss={() => {
+                    setShowDeletePolicyNotification(false);
+                  }}
+                >
+                  Policy has been deleted
+                </Notification>
+              </div>
+            )}
             {showErrorNotification && (
               <div className="u-fixed-width">
                 <Notification
@@ -100,6 +120,18 @@ function Policies() {
                   }}
                 >
                   Unable to create policy
+                </Notification>
+              </div>
+            )}
+            {showDeletePolicyErrorNotification && (
+              <div className="u-fixed-width">
+                <Notification
+                  severity="negative"
+                  onDismiss={() => {
+                    setShowDeletePolicyErrorNotification(false);
+                  }}
+                >
+                  Unable to delete policy
                 </Notification>
               </div>
             )}
@@ -124,7 +156,14 @@ function Policies() {
                     Error: {error.message}
                   </Notification>
                 )}
-                <PoliciesTable />
+                <PoliciesTable
+                  setShowDeletePolicyNotification={
+                    setShowDeletePolicyNotification
+                  }
+                  setShowDeletePolicyErrorNotification={
+                    setShowDeletePolicyErrorNotification
+                  }
+                />
               </>
             </div>
           </div>
