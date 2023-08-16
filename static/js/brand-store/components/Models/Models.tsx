@@ -7,7 +7,7 @@ import {
   useNavigate,
   useSearchParams,
 } from "react-router-dom";
-import { Row, Col, Notification } from "@canonical/react-components";
+import { Row, Col, Notification, Icon } from "@canonical/react-components";
 
 import { useModels } from "../../hooks";
 import {
@@ -126,13 +126,19 @@ function Models() {
             </Row>
             <div className="u-fixed-width">
               <>
-                {isLoading && <p>Fetching models...</p>}
                 {isError && error && (
                   <Notification severity="negative">
                     Error: {error.message}
                   </Notification>
                 )}
-                <ModelsTable />
+                {isLoading ? (
+                  <p>
+                    <Icon name="spinner" className="u-animation--spin" />
+                    &nbsp;Fetching models...
+                  </p>
+                ) : (
+                  <ModelsTable />
+                )}
               </>
             </div>
           </div>

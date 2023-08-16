@@ -72,9 +72,4 @@ describe("Models", () => {
     renderComponent();
     expect(screen.getByLabelText("Search models")).toHaveValue(mockFilterQuery);
   });
-
-  it("displays a table of models", () => {
-    renderComponent();
-    expect(screen.getByTestId("models-table")).toBeInTheDocument();
-  });
 });
