@@ -7,7 +7,7 @@ import {
   useSearchParams,
   useLocation,
 } from "react-router-dom";
-import { Row, Col, Notification } from "@canonical/react-components";
+import { Row, Col, Notification, Icon } from "@canonical/react-components";
 
 import { useSigningKeys, useModels } from "../../hooks";
 import {
@@ -51,6 +51,7 @@ function SigningKeys() {
     );
 
     setPolicies(allPolicies.flat());
+    setEnableTableActions(true);
   };
 
   const { id } = useParams();
@@ -70,6 +71,7 @@ function SigningKeys() {
     showDisableSuccessNotification,
     setShowDisableSuccessNotification,
   ] = useState<boolean>(false);
+  const [enableTableActions, setEnableTableActions] = useState(false);
 
   brandStore
     ? setPageTitle(`Signing keys in ${brandStore.name}`)
@@ -148,17 +150,24 @@ function SigningKeys() {
               </Col>
             </Row>
             <div className="u-fixed-width">
-              {isLoading && <p>Fetching signing keys...</p>}
               {isError && error && (
                 <Notification severity="negative">
                   Error: {error.message}
                 </Notification>
               )}
-              <SigningKeysTable
-                setShowDisableSuccessNotification={
-                  setShowDisableSuccessNotification
-                }
-              />
+              {isLoading ? (
+                <p>
+                  <Icon name="spinner" className="u-animation--spin" />
+                  &nbsp;Fetching signing keys...
+                </p>
+              ) : (
+                <SigningKeysTable
+                  setShowDisableSuccessNotification={
+                    setShowDisableSuccessNotification
+                  }
+                  enableTableActions={enableTableActions}
+                />
+              )}
             </div>
           </div>
         </div>

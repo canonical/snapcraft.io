@@ -7,7 +7,7 @@ import {
   useNavigate,
 } from "react-router-dom";
 import { useSetRecoilState, useRecoilValue } from "recoil";
-import { Row, Col, Notification } from "@canonical/react-components";
+import { Row, Col, Notification, Icon } from "@canonical/react-components";
 
 import ModelNav from "./ModelNav";
 import ModelBreadcrumb from "./ModelBreadcrumb";
@@ -150,20 +150,26 @@ function Policies() {
             </Row>
             <div className="u-fixed-width">
               <>
-                {isLoading && <p>Fetching policies...</p>}
                 {isError && error && (
                   <Notification severity="negative">
                     Error: {error.message}
                   </Notification>
                 )}
-                <PoliciesTable
-                  setShowDeletePolicyNotification={
-                    setShowDeletePolicyNotification
-                  }
-                  setShowDeletePolicyErrorNotification={
-                    setShowDeletePolicyErrorNotification
-                  }
-                />
+                {isLoading ? (
+                  <p>
+                    <Icon name="spinner" className="u-animation--spin" />
+                    &nbsp;Fetching policies...
+                  </p>
+                ) : (
+                  <PoliciesTable
+                    setShowDeletePolicyNotification={
+                      setShowDeletePolicyNotification
+                    }
+                    setShowDeletePolicyErrorNotification={
+                      setShowDeletePolicyErrorNotification
+                    }
+                  />
+                )}
               </>
             </div>
           </div>

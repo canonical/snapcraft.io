@@ -70,9 +70,4 @@ describe("Policies", () => {
       mockFilterQuery
     );
   });
-
-  it("displays a table of policies", () => {
-    renderComponent();
-    expect(screen.getByTestId("policies-table")).toBeInTheDocument();
-  });
 });

@@ -14,9 +14,13 @@ import type { SigningKey } from "../../types/shared";
 
 type Props = {
   setShowDisableSuccessNotification: Function;
+  enableTableActions: boolean;
 };
 
-function SigningKeysTable({ setShowDisableSuccessNotification }: Props) {
+function SigningKeysTable({
+  setShowDisableSuccessNotification,
+  enableTableActions,
+}: Props) {
   const { id } = useParams();
   const signingKeysList = useRecoilValue<Array<SigningKey>>(
     filteredSigningKeysListState
@@ -67,8 +71,10 @@ function SigningKeysTable({ setShowDisableSuccessNotification }: Props) {
         .sort(sortByDateDescending);
     });
 
-    setModalOpen(false);
-    setIsDeleting(false);
+    setTimeout(() => {
+      setModalOpen(false);
+      setIsDeleting(false);
+    }, 500);
 
     setTimeout(() => {
       setShowDisableSuccessNotification(false);
@@ -183,7 +189,7 @@ function SigningKeysTable({ setShowDisableSuccessNotification }: Props) {
                     onClick={() => {
                       handleDisableClick(signingKey);
                     }}
-                    disabled={isDeleting}
+                    disabled={isDeleting || !enableTableActions}
                   >
                     Deactivate
                   </Button>
