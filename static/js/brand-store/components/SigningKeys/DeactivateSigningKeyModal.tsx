@@ -19,8 +19,6 @@ function DeactivateSigningKeyModal({
 }: Props) {
   const { id } = useParams();
 
-  console.log("signingKey", signingKey);
-
   return signingKey.models && signingKey.models.length > 0 ? (
     <Modal
       title={

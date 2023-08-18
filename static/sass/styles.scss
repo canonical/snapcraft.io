@@ -463,3 +463,12 @@ code {
 .p-panel__logo {
   margin-left: 0;
 }
+
+// To prevent layout shift
+.brand-store-tabs {
+  height: 48px;
+
+  @media only screen and (min-width: $breakpoint-x-large) {
+    height: 54px;
+  }
+}

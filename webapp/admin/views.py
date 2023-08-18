@@ -462,6 +462,33 @@ def delete_policy(store_id: str, model_name: str, revision: str):
     return make_response(res)
 
 
+@admin.route("/admin/store/<store_id>/brand")
+@login_required
+def get_brand_store(store_id: str):
+    res = {}
+    try:
+        print(admin_api.get_brand(flask.session, store_id))
+        brand = admin_api.get_brand(flask.session, store_id)
+
+        res["data"] = brand
+        res["success"] = True
+
+    except StoreApiResponseErrorList as error_list:
+        res["success"] = False
+        res["message"] = " ".join(
+            [
+                f"{error.get('message', 'An error occurred')}"
+                for error in error_list.errors
+            ]
+        )
+        res["data"] = []
+
+    response = make_response(res)
+    response.cache_control.max_age = 3600
+
+    return response
+
+
 @admin.route("/admin/store/<store_id>/signing-keys")
 @login_required
 def get_signing_keys(store_id: str):
