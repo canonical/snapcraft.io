@@ -14,8 +14,7 @@ def _calculate_colors(countries, max_users):
     """
     for country_code in countries:
         countries[country_code]["color_rgb"] = _calculate_color(
-            countries[country_code]["percentage_of_users"],
-            max_users
+            countries[country_code]["percentage_of_users"], max_users
         )
 
     return countries
@@ -43,8 +42,8 @@ def _calculate_color(thisCountry, max_users):
         [33, 113, 181],
         [8, 81, 156],
         [8, 65, 132],
-        [8 ,48, 107],
-    ];
+        [8, 48, 107],
+    ]
 
     buckets = max_users / len(colors)
 
@@ -52,6 +51,7 @@ def _calculate_color(thisCountry, max_users):
         return [218, 218, 218]
 
     return colors[int(math.ceil(thisCountry / buckets)) - 1]
+
 
 def _capitalize_os_name(os_name):
     """Capitalize OS name
