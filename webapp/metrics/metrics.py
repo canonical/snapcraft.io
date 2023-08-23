@@ -8,7 +8,7 @@ def _calculate_colors(countries, max_users):
     maximum number of users
 
     :param countries: List of countries
-    :param max_users: Max number users
+    :param max_users: Maximum number of users
 
     :returns: The list of countries with a calculated color for each
     """
