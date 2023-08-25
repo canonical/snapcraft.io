@@ -50,7 +50,14 @@ def _calculate_color(thisCountry, max_users):
     if thisCountry == 0.0:
         return [218, 218, 218]
 
-    return colors[int(math.ceil(thisCountry / buckets)) - 1]
+    color_index_range = len(colors) - 1
+
+    color_index = int(thisCountry / buckets) - 1
+
+    if color_index == -1:
+        color_index = 0
+
+    return colors[color_index]
 
 
 def _capitalize_os_name(os_name):
