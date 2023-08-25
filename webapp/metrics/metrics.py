@@ -1,4 +1,3 @@
-import math
 import pycountry
 from operator import itemgetter
 
@@ -49,8 +48,6 @@ def _calculate_color(thisCountry, max_users):
 
     if thisCountry == 0.0:
         return [218, 218, 218]
-
-    color_index_range = len(colors) - 1
 
     color_index = int(thisCountry / buckets) - 1
 
