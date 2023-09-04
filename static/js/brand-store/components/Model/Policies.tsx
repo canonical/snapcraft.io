@@ -188,13 +188,11 @@ function Policies() {
           isClosedPanel(location.pathname, "create") ? "is-collapsed" : ""
         }`}
       >
-        {!isClosedPanel(location.pathname, "create") && (
-          <CreatePolicyForm
-            setShowNotification={setShowNotification}
-            setShowErrorNotification={setShowErrorNotification}
-            refetchPolicies={refetch}
-          />
-        )}
+        <CreatePolicyForm
+          setShowNotification={setShowNotification}
+          setShowErrorNotification={setShowErrorNotification}
+          refetchPolicies={refetch}
+        />
       </aside>
     </>
   );
