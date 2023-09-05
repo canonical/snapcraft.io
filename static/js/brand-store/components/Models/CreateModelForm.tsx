@@ -169,8 +169,6 @@ function CreateModelForm({
                 className="u-no-margin--bottom"
                 onClick={() => {
                   navigate(`/admin/${id}/models`);
-                  setNewModel({ name: "", apiKey: "" });
-                  setShowErrorNotification(false);
                 }}
               >
                 Cancel
