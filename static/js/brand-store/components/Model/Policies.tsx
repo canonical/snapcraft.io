@@ -20,6 +20,7 @@ import {
   policiesListFilterState,
   policiesListState,
   signingKeysListState,
+  newSigningKeyState,
 } from "../../atoms";
 import { brandStoreState } from "../../selectors";
 
@@ -38,6 +39,7 @@ function Policies() {
   const signingKeys = useSigningKeys(id);
   const setPoliciesList = useSetRecoilState<Array<Policy>>(policiesListState);
   const setFilter = useSetRecoilState<string>(policiesListFilterState);
+  const setNewSigningKey = useSetRecoilState(newSigningKeyState);
   const brandStore = useRecoilValue(brandStoreState(id));
   const [searchParams] = useSearchParams();
   const [showNotification, setShowNotification] = useState<boolean>(false);
@@ -181,6 +183,8 @@ function Policies() {
         }`}
         onClick={() => {
           navigate(`/admin/${id}/models/${model_id}/policies`);
+          setNewSigningKey({ name: "" });
+          setShowErrorNotification(false);
         }}
       ></div>
       <aside
