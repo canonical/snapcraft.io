@@ -141,8 +141,6 @@ function CreateSigningKeyForm({
                 className="u-no-margin--bottom"
                 onClick={() => {
                   navigate(`/admin/${id}/signing-keys`);
-                  setNewSigningKey({ name: "" });
-                  setErrorMessage("");
                 }}
               >
                 Cancel

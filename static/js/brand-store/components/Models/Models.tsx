@@ -158,12 +158,10 @@ function Models() {
           isClosedPanel(location.pathname, "create") ? "is-collapsed" : ""
         }`}
       >
-        {!isClosedPanel(location.pathname, "create") && (
-          <CreateModelForm
-            setShowNotification={setShowNotification}
-            setShowErrorNotification={setShowErrorNotification}
-          />
-        )}
+        <CreateModelForm
+          setShowNotification={setShowNotification}
+          setShowErrorNotification={setShowErrorNotification}
+        />
       </aside>
     </>
   );
