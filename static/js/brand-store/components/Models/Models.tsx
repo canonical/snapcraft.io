@@ -84,8 +84,8 @@ function Models() {
   return (
     <>
       <main className="l-main">
-        <div className="p-panel">
-          <div className="p-panel__content">
+        <div className="p-panel u-flex-column">
+          <div className="p-panel__content u-flex-column u-flex-grow">
             <div className="u-fixed-width">
               <SectionNav sectionName="models" />
             </div>
@@ -126,7 +126,7 @@ function Models() {
                 </Link>
               </Col>
             </Row>
-            <div className="u-fixed-width">
+            <div className="u-fixed-width u-flex-column u-flex-grow">
               <>
                 {isError && error && (
                   <Notification severity="negative">
@@ -139,7 +139,9 @@ function Models() {
                     &nbsp;Fetching models...
                   </p>
                 ) : (
-                  <ModelsTable />
+                  <div className="u-flex-column u-flex-grow">
+                    <ModelsTable />
+                  </div>
                 )}
               </>
             </div>
