@@ -186,13 +186,11 @@ function SigningKeys() {
           isClosedPanel(location.pathname, "create") ? "is-collapsed" : ""
         }`}
       >
-        {!isClosedPanel(location.pathname, "create") && (
-          <CreateSigningKeyForm
-            setShowNotification={setShowNotification}
-            setErrorMessage={setErrorMessage}
-            refetch={refetch}
-          />
-        )}
+        <CreateSigningKeyForm
+          setShowNotification={setShowNotification}
+          setErrorMessage={setErrorMessage}
+          refetch={refetch}
+        />
       </aside>
     </>
   );
