@@ -14,6 +14,7 @@ import {
   modelsListFilterState,
   modelsListState,
   policiesListState,
+  newModelState,
 } from "../../atoms";
 import { brandStoreState } from "../../selectors";
 
@@ -59,6 +60,7 @@ function Models() {
   const { isLoading, isError, error, data }: any = useModels(id);
   const setModelsList = useSetRecoilState<Array<Model>>(modelsListState);
   const setPolicies = useSetRecoilState<Array<Policy>>(policiesListState);
+  const setNewModel = useSetRecoilState(newModelState);
   const setFilter = useSetRecoilState<string>(modelsListFilterState);
   const brandStore = useRecoilValue(brandStoreState(id));
   const [searchParams] = useSearchParams();
@@ -151,6 +153,7 @@ function Models() {
         onClick={() => {
           navigate(`/admin/${id}/models`);
           setShowErrorNotification(false);
+          setNewModel({ name: "", apiKey: "" });
         }}
       ></div>
       <aside
