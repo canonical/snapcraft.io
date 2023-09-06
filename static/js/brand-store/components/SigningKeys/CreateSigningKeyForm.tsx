@@ -1,8 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate, useParams, Link } from "react-router-dom";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { useMutation } from "react-query";
-import { Input, Button } from "@canonical/react-components";
+import { Input, Button, Icon } from "@canonical/react-components";
 
 import { checkSigningKeyExists, setPageTitle } from "../../utils";
 
@@ -30,6 +30,7 @@ function CreateSigningKeyForm({
   const setSigningKeysList = useSetRecoilState<Array<SigningKey>>(
     signingKeysListState
   );
+  const [isSaving, setIsSaving] = useState(false);
 
   const handleError = () => {
     setSigningKeysList((oldSigningKeysList: Array<SigningKey>) => {
@@ -39,6 +40,7 @@ function CreateSigningKeyForm({
     });
     navigate(`/admin/${id}/signing-keys`);
     setNewSigningKey({ name: "" });
+    setIsSaving(false);
     setTimeout(() => {
       setErrorMessage("");
     }, 5000);
@@ -46,12 +48,12 @@ function CreateSigningKeyForm({
 
   const mutation = useMutation({
     mutationFn: (newSigningKey: { name: string }) => {
+      setIsSaving(true);
+
       const formData = new FormData();
 
       formData.set("csrf_token", window.CSRF_TOKEN);
       formData.set("name", newSigningKey.name);
-
-      navigate(`/admin/${id}/signing-keys`);
 
       setSigningKeysList((oldSigningKeysList: Array<SigningKey>) => {
         return [
@@ -85,6 +87,7 @@ function CreateSigningKeyForm({
       refetch();
       setShowNotification(true);
       setNewSigningKey({ name: "" });
+      setIsSaving(false);
       navigate(`/admin/${id}/signing-keys`);
       setTimeout(() => {
         setShowNotification(false);
@@ -114,6 +117,12 @@ function CreateSigningKeyForm({
         </div>
         <div className="p-panel__content">
           <div className="u-fixed-width" style={{ marginBottom: "30px" }}>
+            {isSaving && (
+              <p>
+                <Icon name="spinner" className="u-animation--spin" />
+                &nbsp;Adding new signing key...
+              </p>
+            )}
             <Input
               type="text"
               id="signing-key-name-field"
