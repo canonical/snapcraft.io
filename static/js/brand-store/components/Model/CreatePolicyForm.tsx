@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { useMutation } from "react-query";
-import { Button } from "@canonical/react-components";
+import { Button, Icon } from "@canonical/react-components";
 
 import { setPageTitle } from "../../utils";
 
@@ -27,11 +27,13 @@ function CreatePolicyForm({
   const [signingKeys, setSigningKeys] = useRecoilState(signingKeysListState);
   const [newSigningKey, setNewSigningKey] = useRecoilState(newSigningKeyState);
   const brandStore = useRecoilValue(brandStoreState(id));
+  const [isSaving, setIsSaving] = useState(false);
 
   const handleError = () => {
     setShowErrorNotification(true);
     navigate(`/admin/${id}/models/${model_id}/policies`);
     setNewSigningKey({ name: "" });
+    setIsSaving(false);
     setTimeout(() => {
       setShowErrorNotification(false);
     }, 5000);
@@ -39,12 +41,12 @@ function CreatePolicyForm({
 
   const mutation = useMutation({
     mutationFn: (policySigningKey: string) => {
+      setIsSaving(true);
+
       const formData = new FormData();
 
       formData.set("csrf_token", window.CSRF_TOKEN);
       formData.set("signing_key", policySigningKey);
-
-      navigate(`/admin/${id}/models/${model_id}/policies`);
 
       return fetch(`/admin/store/${id}/models/${model_id}/policies`, {
         method: "POST",
@@ -65,6 +67,7 @@ function CreatePolicyForm({
 
       setShowNotification(true);
       setNewSigningKey({ name: "" });
+      setIsSaving(false);
       refetchPolicies();
       navigate(`/admin/${id}/models/${model_id}/policies`);
       setTimeout(() => {
@@ -103,6 +106,13 @@ function CreatePolicyForm({
           <div className="u-fixed-width" style={{ marginBottom: "30px" }}>
             {isLoading && <p>Fetching signing keys...</p>}
             {isError && error && <p>Error: {error.message}</p>}
+
+            {isSaving && (
+              <p>
+                <Icon name="spinner" className="u-animation--spin" />
+                &nbsp;Adding new policy...
+              </p>
+            )}
 
             <label htmlFor="signing-key">Signing key</label>
             <select
