@@ -80,8 +80,8 @@ function Policies() {
   return (
     <>
       <main className="l-main">
-        <div className="p-panel">
-          <div className="p-panel__content">
+        <div className="p-panel u-flex-column">
+          <div className="p-panel__content u-flex-column u-flex-grow">
             <div className="u-fixed-width">
               <ModelBreadcrumb />
               <h1 className="u-off-screen">{model_id}</h1>
@@ -150,7 +150,7 @@ function Policies() {
                 </Link>
               </Col>
             </Row>
-            <div className="u-fixed-width">
+            <div className="u-fixed-width u-flex-column u-flex-grow">
               <>
                 {isError && error && (
                   <Notification severity="negative">
@@ -163,14 +163,16 @@ function Policies() {
                     &nbsp;Fetching policies...
                   </p>
                 ) : (
-                  <PoliciesTable
-                    setShowDeletePolicyNotification={
-                      setShowDeletePolicyNotification
-                    }
-                    setShowDeletePolicyErrorNotification={
-                      setShowDeletePolicyErrorNotification
-                    }
-                  />
+                  <div className="u-flex-column u-flex-grow">
+                    <PoliciesTable
+                      setShowDeletePolicyNotification={
+                        setShowDeletePolicyNotification
+                      }
+                      setShowDeletePolicyErrorNotification={
+                        setShowDeletePolicyErrorNotification
+                      }
+                    />
+                  </div>
                 )}
               </>
             </div>
