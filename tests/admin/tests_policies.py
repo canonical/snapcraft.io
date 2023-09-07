@@ -98,4 +98,4 @@ class TestCreatePolicies(TestModelServiceEndpoints):
         self.assertEqual(data['message'], 'An error occurred')
 
 class TestDeletePolicies(TestModelServiceEndpoints):
-    
+    pass
