@@ -7,13 +7,14 @@ import {
   useNavigate,
   useSearchParams,
 } from "react-router-dom";
-import { Row, Col, Notification } from "@canonical/react-components";
+import { Row, Col, Notification, Icon } from "@canonical/react-components";
 
 import { useModels } from "../../hooks";
 import {
   modelsListFilterState,
   modelsListState,
   policiesListState,
+  newModelState,
 } from "../../atoms";
 import { brandStoreState } from "../../selectors";
 
@@ -59,6 +60,7 @@ function Models() {
   const { isLoading, isError, error, data }: any = useModels(id);
   const setModelsList = useSetRecoilState<Array<Model>>(modelsListState);
   const setPolicies = useSetRecoilState<Array<Policy>>(policiesListState);
+  const setNewModel = useSetRecoilState(newModelState);
   const setFilter = useSetRecoilState<string>(modelsListFilterState);
   const brandStore = useRecoilValue(brandStoreState(id));
   const [searchParams] = useSearchParams();
@@ -82,8 +84,8 @@ function Models() {
   return (
     <>
       <main className="l-main">
-        <div className="p-panel">
-          <div className="p-panel__content">
+        <div className="p-panel u-flex-column">
+          <div className="p-panel__content u-flex-column u-flex-grow">
             <div className="u-fixed-width">
               <SectionNav sectionName="models" />
             </div>
@@ -124,15 +126,23 @@ function Models() {
                 </Link>
               </Col>
             </Row>
-            <div className="u-fixed-width">
+            <div className="u-fixed-width u-flex-column u-flex-grow">
               <>
-                {isLoading && <p>Fetching models...</p>}
                 {isError && error && (
                   <Notification severity="negative">
                     Error: {error.message}
                   </Notification>
                 )}
-                <ModelsTable />
+                {isLoading ? (
+                  <p>
+                    <Icon name="spinner" className="u-animation--spin" />
+                    &nbsp;Fetching models...
+                  </p>
+                ) : (
+                  <div className="u-flex-column u-flex-grow">
+                    <ModelsTable />
+                  </div>
+                )}
               </>
             </div>
           </div>
@@ -145,6 +155,7 @@ function Models() {
         onClick={() => {
           navigate(`/admin/${id}/models`);
           setShowErrorNotification(false);
+          setNewModel({ name: "", apiKey: "" });
         }}
       ></div>
       <aside
@@ -152,12 +163,10 @@ function Models() {
           isClosedPanel(location.pathname, "create") ? "is-collapsed" : ""
         }`}
       >
-        {!isClosedPanel(location.pathname, "create") && (
-          <CreateModelForm
-            setShowNotification={setShowNotification}
-            setShowErrorNotification={setShowErrorNotification}
-          />
-        )}
+        <CreateModelForm
+          setShowNotification={setShowNotification}
+          setShowErrorNotification={setShowErrorNotification}
+        />
       </aside>
     </>
   );

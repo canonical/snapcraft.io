@@ -2,6 +2,7 @@ import React from "react";
 import * as reactRedux from "react-redux";
 import { BrowserRouter as Router } from "react-router-dom";
 import { Provider } from "react-redux";
+import { QueryClient, QueryClientProvider } from "react-query";
 import { render, screen } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import Settings from "./Settings";
@@ -17,6 +18,27 @@ jest.mock("react-redux", () => ({
   ...jest.requireActual("react-redux"),
   useSelector: jest.fn(),
 }));
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+      refetchOnReconnect: false,
+    },
+  },
+});
+
+function renderComponent() {
+  return render(
+    <Provider store={store}>
+      <Router>
+        <QueryClientProvider client={queryClient}>
+          <Settings />
+        </QueryClientProvider>
+      </Router>
+    </Provider>
+  );
+}
 
 function getInitialState(): RootState {
   return {
@@ -59,15 +81,7 @@ beforeEach(() => {
 
 test("the 'is public' checkbox should not be checked when the current store is set to private", () => {
   setupMockSelector(initialState);
-
-  render(
-    <Provider store={store}>
-      <Router>
-        <Settings />
-      </Router>
-    </Provider>
-  );
-
+  renderComponent();
   expect(
     screen.getByLabelText("Include this store in public lists")
   ).not.toBeChecked();
@@ -76,15 +90,7 @@ test("the 'is public' checkbox should not be checked when the current store is s
 test("the 'is public' checkbox should be checked when the current store is not set to private", () => {
   initialState.currentStore.currentStore.private = false;
   setupMockSelector(initialState);
-
-  render(
-    <Provider store={store}>
-      <Router>
-        <Settings />
-      </Router>
-    </Provider>
-  );
-
+  renderComponent();
   expect(
     screen.getByLabelText("Include this store in public lists")
   ).toBeChecked();
@@ -92,35 +98,17 @@ test("the 'is public' checkbox should be checked when the current store is not s
 
 test("the correct value is given to the store ID field", () => {
   setupMockSelector(initialState);
-
-  render(
-    <Provider store={store}>
-      <Router>
-        <Settings />
-      </Router>
-    </Provider>
-  );
-
+  renderComponent();
   const storeIdInput = screen.getByLabelText("Store ID") as HTMLInputElement;
-
   expect(storeIdInput.value).toEqual(initialState.currentStore.currentStore.id);
 });
 
 test("the correct radio button is checked by default for manual review policy", () => {
   setupMockSelector(initialState);
-
-  render(
-    <Provider store={store}>
-      <Router>
-        <Settings />
-      </Router>
-    </Provider>
-  );
-
+  renderComponent();
   const checkedRadioButton = screen.getByRole("radio", {
     checked: true,
   }) as HTMLInputElement;
-
   expect(checkedRadioButton.value).toEqual(
     initialState.currentStore.currentStore["manual-review-policy"]
   );
@@ -128,29 +116,13 @@ test("the correct radio button is checked by default for manual review policy", 
 
 test("the save button is disabled by default", () => {
   setupMockSelector(initialState);
-
-  render(
-    <Provider store={store}>
-      <Router>
-        <Settings />
-      </Router>
-    </Provider>
-  );
-
+  renderComponent();
   expect(screen.getByText("Save changes")).toBeDisabled();
 });
 
 test("the save button is enabled when the data changes", () => {
   setupMockSelector(initialState);
-
-  render(
-    <Provider store={store}>
-      <Router>
-        <Settings />
-      </Router>
-    </Provider>
-  );
-
+  renderComponent();
   screen.getByRole("checkbox").click();
   expect(screen.getByText("Save changes")).not.toBeDisabled();
 });

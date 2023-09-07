@@ -7,7 +7,7 @@ import {
   useNavigate,
 } from "react-router-dom";
 import { useSetRecoilState, useRecoilValue } from "recoil";
-import { Row, Col, Notification } from "@canonical/react-components";
+import { Row, Col, Notification, Icon } from "@canonical/react-components";
 
 import ModelNav from "./ModelNav";
 import ModelBreadcrumb from "./ModelBreadcrumb";
@@ -20,6 +20,7 @@ import {
   policiesListFilterState,
   policiesListState,
   signingKeysListState,
+  newSigningKeyState,
 } from "../../atoms";
 import { brandStoreState } from "../../selectors";
 
@@ -38,12 +39,21 @@ function Policies() {
   const signingKeys = useSigningKeys(id);
   const setPoliciesList = useSetRecoilState<Array<Policy>>(policiesListState);
   const setFilter = useSetRecoilState<string>(policiesListFilterState);
+  const setNewSigningKey = useSetRecoilState(newSigningKeyState);
   const brandStore = useRecoilValue(brandStoreState(id));
   const [searchParams] = useSearchParams();
   const [showNotification, setShowNotification] = useState<boolean>(false);
   const [showErrorNotification, setShowErrorNotification] = useState<boolean>(
     false
   );
+  const [
+    showDeletePolicyNotification,
+    setShowDeletePolicyNotification,
+  ] = useState<boolean>(false);
+  const [
+    showDeletePolicyErrorNotification,
+    setShowDeletePolicyErrorNotification,
+  ] = useState<boolean>(false);
   const setSigningKeysList = useSetRecoilState<Array<SigningKey>>(
     signingKeysListState
   );
@@ -70,8 +80,8 @@ function Policies() {
   return (
     <>
       <main className="l-main">
-        <div className="p-panel">
-          <div className="p-panel__content">
+        <div className="p-panel u-flex-column">
+          <div className="p-panel__content u-flex-column u-flex-grow">
             <div className="u-fixed-width">
               <ModelBreadcrumb />
               <h1 className="u-off-screen">{model_id}</h1>
@@ -91,6 +101,18 @@ function Policies() {
                 </Notification>
               </div>
             )}
+            {showDeletePolicyNotification && (
+              <div className="u-fixed-width">
+                <Notification
+                  severity="positive"
+                  onDismiss={() => {
+                    setShowDeletePolicyNotification(false);
+                  }}
+                >
+                  Policy has been deleted
+                </Notification>
+              </div>
+            )}
             {showErrorNotification && (
               <div className="u-fixed-width">
                 <Notification
@@ -100,6 +122,18 @@ function Policies() {
                   }}
                 >
                   Unable to create policy
+                </Notification>
+              </div>
+            )}
+            {showDeletePolicyErrorNotification && (
+              <div className="u-fixed-width">
+                <Notification
+                  severity="negative"
+                  onDismiss={() => {
+                    setShowDeletePolicyErrorNotification(false);
+                  }}
+                >
+                  Unable to delete policy
                 </Notification>
               </div>
             )}
@@ -116,15 +150,30 @@ function Policies() {
                 </Link>
               </Col>
             </Row>
-            <div className="u-fixed-width">
+            <div className="u-fixed-width u-flex-column u-flex-grow">
               <>
-                {isLoading && <p>Fetching policies...</p>}
                 {isError && error && (
                   <Notification severity="negative">
                     Error: {error.message}
                   </Notification>
                 )}
-                <PoliciesTable />
+                {isLoading ? (
+                  <p>
+                    <Icon name="spinner" className="u-animation--spin" />
+                    &nbsp;Fetching policies...
+                  </p>
+                ) : (
+                  <div className="u-flex-column u-flex-grow">
+                    <PoliciesTable
+                      setShowDeletePolicyNotification={
+                        setShowDeletePolicyNotification
+                      }
+                      setShowDeletePolicyErrorNotification={
+                        setShowDeletePolicyErrorNotification
+                      }
+                    />
+                  </div>
+                )}
               </>
             </div>
           </div>
@@ -136,6 +185,8 @@ function Policies() {
         }`}
         onClick={() => {
           navigate(`/admin/${id}/models/${model_id}/policies`);
+          setNewSigningKey({ name: "" });
+          setShowErrorNotification(false);
         }}
       ></div>
       <aside
@@ -143,13 +194,11 @@ function Policies() {
           isClosedPanel(location.pathname, "create") ? "is-collapsed" : ""
         }`}
       >
-        {!isClosedPanel(location.pathname, "create") && (
-          <CreatePolicyForm
-            setShowNotification={setShowNotification}
-            setShowErrorNotification={setShowErrorNotification}
-            refetchPolicies={refetch}
-          />
-        )}
+        <CreatePolicyForm
+          setShowNotification={setShowNotification}
+          setShowErrorNotification={setShowErrorNotification}
+          refetchPolicies={refetch}
+        />
       </aside>
     </>
   );

@@ -63,3 +63,20 @@ export function useSigningKeys(id: string | undefined) {
     return signingKeysData.data;
   });
 }
+
+export function useBrand(id: string | undefined) {
+  return useQuery("brand", async () => {
+    const response = await fetch(`/admin/store/${id}/brand`);
+
+    if (!response.ok) {
+      return {
+        success: false,
+        message: "Brand not found",
+      };
+    }
+
+    const brand = await response.json();
+
+    return brand;
+  });
+}

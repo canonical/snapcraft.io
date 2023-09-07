@@ -1,5 +1,5 @@
 import React from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, Link } from "react-router-dom";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { useMutation } from "react-query";
 import { Input, Button } from "@canonical/react-components";
@@ -165,16 +165,16 @@ function CreateModelForm({
             <p>* Mandatory field</p>
             <hr />
             <div className="u-align--right">
-              <Button
-                className="u-no-margin--bottom"
+              <Link
+                className="p-button u-no-margin--bottom"
+                to={`/admin/${id}/models`}
                 onClick={() => {
-                  navigate(`/admin/${id}/models`);
                   setNewModel({ name: "", apiKey: "" });
                   setShowErrorNotification(false);
                 }}
               >
                 Cancel
-              </Button>
+              </Link>
               <Button
                 type="submit"
                 appearance="positive"

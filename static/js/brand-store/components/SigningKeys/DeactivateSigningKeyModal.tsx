@@ -19,8 +19,6 @@ function DeactivateSigningKeyModal({
 }: Props) {
   const { id } = useParams();
 
-  console.log("signingKey", signingKey);
-
   return signingKey.models && signingKey.models.length > 0 ? (
     <Modal
       title={
@@ -39,9 +37,7 @@ function DeactivateSigningKeyModal({
           signingKey.models.length > 0 &&
           signingKey.models.map((model) => (
             <li key={model}>
-              <Link to={`/admin/${id}/models/${model}/policies/create`}>
-                {model}
-              </Link>
+              <Link to={`/admin/${id}/models/${model}/policies`}>{model}</Link>
             </li>
           ))}
       </ul>
@@ -70,7 +66,7 @@ function DeactivateSigningKeyModal({
 
           <Button
             dense
-            className="p-button--negative u-no-margin--bottom"
+            className="p-button--negative u-no-margin--bottom u-no-margin--right"
             onClick={() => {
               handleDisable(signingKey);
             }}
@@ -81,7 +77,14 @@ function DeactivateSigningKeyModal({
         </>
       }
     >
-      <p>{`Warning: This will permanently disable the signing key ${signingKey.name}.`}</p>
+      {isDeleting ? (
+        <p>
+          <Icon name="spinner" className="u-animation--spin" />
+          &nbsp;Deleting signing key...
+        </p>
+      ) : (
+        <p>{`Warning: This will permanently disable the signing key ${signingKey.name}.`}</p>
+      )}
     </Modal>
   );
 }

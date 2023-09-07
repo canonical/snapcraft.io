@@ -7,7 +7,7 @@ import { Button } from "@canonical/react-components";
 import { setPageTitle } from "../../utils";
 
 import { useSigningKeys } from "../../hooks";
-import { signingKeysListState } from "../../atoms";
+import { signingKeysListState, newSigningKeyState } from "../../atoms";
 import { brandStoreState } from "../../selectors";
 
 type Props = {
@@ -25,13 +25,13 @@ function CreatePolicyForm({
   const navigate = useNavigate();
   const { isLoading, isError, error, data }: any = useSigningKeys(id);
   const [signingKeys, setSigningKeys] = useRecoilState(signingKeysListState);
+  const [newSigningKey, setNewSigningKey] = useRecoilState(newSigningKeyState);
   const brandStore = useRecoilValue(brandStoreState(id));
-  const [selectedSigningKey, setSelectedSigningKey] = useState("");
 
   const handleError = () => {
     setShowErrorNotification(true);
     navigate(`/admin/${id}/models/${model_id}/policies`);
-    setSelectedSigningKey("");
+    setNewSigningKey({ name: "" });
     setTimeout(() => {
       setShowErrorNotification(false);
     }, 5000);
@@ -64,7 +64,7 @@ function CreatePolicyForm({
       }
 
       setShowNotification(true);
-      setSelectedSigningKey("");
+      setNewSigningKey({ name: "" });
       refetchPolicies();
       navigate(`/admin/${id}/models/${model_id}/policies`);
       setTimeout(() => {
@@ -91,7 +91,7 @@ function CreatePolicyForm({
     <form
       onSubmit={(event) => {
         event.preventDefault();
-        mutation.mutate(selectedSigningKey);
+        mutation.mutate(newSigningKey.name);
       }}
       style={{ height: "100%" }}
     >
@@ -110,9 +110,11 @@ function CreatePolicyForm({
               id="signing-key"
               required
               disabled={signingKeys.length < 1}
-              value={selectedSigningKey}
+              value={newSigningKey.name}
               onChange={(event) => {
-                setSelectedSigningKey(event.target.value);
+                setNewSigningKey({
+                  name: event.target.value,
+                });
               }}
             >
               <option value="">Select a signing key</option>
@@ -139,19 +141,21 @@ function CreatePolicyForm({
           <div className="u-fixed-width">
             <hr />
             <div className="u-align--right">
-              <Button
-                className="u-no-margin--bottom"
+              <Link
+                className="p-button u-no-margin--bottom"
+                to={`/admin/${id}/models/${model_id}/policies`}
                 onClick={() => {
-                  navigate(`/admin/${id}/models/${model_id}/policies`);
+                  setNewSigningKey({ name: "" });
+                  setShowErrorNotification(false);
                 }}
               >
                 Cancel
-              </Button>
+              </Link>
               <Button
                 type="submit"
                 appearance="positive"
                 className="u-no-margin--bottom u-no-margin--right"
-                disabled={!selectedSigningKey}
+                disabled={!newSigningKey.name}
               >
                 Add policy
               </Button>

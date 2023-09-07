@@ -1,17 +1,32 @@
 import React from "react";
 import { BrowserRouter } from "react-router-dom";
 import { RecoilRoot } from "recoil";
+import { QueryClientProvider, QueryClient } from "react-query";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import "@testing-library/jest-dom";
 
 import PoliciesTable from "./PoliciesTable";
 
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+      refetchOnReconnect: false,
+    },
+  },
+});
+
 const renderComponent = () => {
   return render(
     <RecoilRoot>
       <BrowserRouter>
-        <PoliciesTable />
+        <QueryClientProvider client={queryClient}>
+          <PoliciesTable
+            setShowDeletePolicyNotification={jest.fn()}
+            setShowDeletePolicyErrorNotification={jest.fn()}
+          />
+        </QueryClientProvider>
       </BrowserRouter>
     </RecoilRoot>
   );

@@ -7,13 +7,14 @@ import {
   useSearchParams,
   useLocation,
 } from "react-router-dom";
-import { Row, Col, Notification } from "@canonical/react-components";
+import { Row, Col, Notification, Icon } from "@canonical/react-components";
 
 import { useSigningKeys, useModels } from "../../hooks";
 import {
   signingKeysListState,
   signingKeysListFilterState,
   policiesListState,
+  newSigningKeyState,
 } from "../../atoms";
 import { brandStoreState } from "../../selectors";
 
@@ -51,6 +52,7 @@ function SigningKeys() {
     );
 
     setPolicies(allPolicies.flat());
+    setEnableTableActions(true);
   };
 
   const { id } = useParams();
@@ -62,6 +64,7 @@ function SigningKeys() {
   );
   const setPolicies = useSetRecoilState<Array<Policy>>(policiesListState);
   const setFilter = useSetRecoilState<string>(signingKeysListFilterState);
+  const setNewSigningKey = useSetRecoilState(newSigningKeyState);
   const brandStore = useRecoilValue(brandStoreState(id));
   const [searchParams] = useSearchParams();
   const [showNotification, setShowNotification] = useState<boolean>(false);
@@ -70,6 +73,7 @@ function SigningKeys() {
     showDisableSuccessNotification,
     setShowDisableSuccessNotification,
   ] = useState<boolean>(false);
+  const [enableTableActions, setEnableTableActions] = useState(false);
 
   brandStore
     ? setPageTitle(`Signing keys in ${brandStore.name}`)
@@ -93,8 +97,8 @@ function SigningKeys() {
   return (
     <>
       <main className="l-main">
-        <div className="p-panel">
-          <div className="p-panel__content">
+        <div className="p-panel u-flex-column">
+          <div className="p-panel__content u-flex-column u-flex-grow">
             <div className="u-fixed-width">
               <SectionNav sectionName="signing-keys" />
             </div>
@@ -147,18 +151,27 @@ function SigningKeys() {
                 </Link>
               </Col>
             </Row>
-            <div className="u-fixed-width">
-              {isLoading && <p>Fetching signing keys...</p>}
+            <div className="u-fixed-width u-flex-column u-flex-grow">
               {isError && error && (
                 <Notification severity="negative">
                   Error: {error.message}
                 </Notification>
               )}
-              <SigningKeysTable
-                setShowDisableSuccessNotification={
-                  setShowDisableSuccessNotification
-                }
-              />
+              {isLoading ? (
+                <p>
+                  <Icon name="spinner" className="u-animation--spin" />
+                  &nbsp;Fetching signing keys...
+                </p>
+              ) : (
+                <div className="u-flex-column u-flex-grow">
+                  <SigningKeysTable
+                    setShowDisableSuccessNotification={
+                      setShowDisableSuccessNotification
+                    }
+                    enableTableActions={enableTableActions}
+                  />
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -169,6 +182,7 @@ function SigningKeys() {
         }`}
         onClick={() => {
           navigate(`/admin/${id}/signing-keys`);
+          setNewSigningKey({ name: "" });
           setErrorMessage("");
         }}
       ></div>
@@ -177,13 +191,11 @@ function SigningKeys() {
           isClosedPanel(location.pathname, "create") ? "is-collapsed" : ""
         }`}
       >
-        {!isClosedPanel(location.pathname, "create") && (
-          <CreateSigningKeyForm
-            setShowNotification={setShowNotification}
-            setErrorMessage={setErrorMessage}
-            refetch={refetch}
-          />
-        )}
+        <CreateSigningKeyForm
+          setShowNotification={setShowNotification}
+          setErrorMessage={setErrorMessage}
+          refetch={refetch}
+        />
       </aside>
     </>
   );

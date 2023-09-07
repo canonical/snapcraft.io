@@ -194,6 +194,8 @@ $color-social-icon-foreground: $color-light;
 @include snap-image-upload;
 @import "snapcraft_p-featured-snaps";
 @include snapcraft-p-featured-snaps;
+@import "snapcraft_p-app-pagination";
+@include snapcraft-app-pagination;
 
 dl {
   margin-bottom: $spv--x-large;
@@ -462,4 +464,27 @@ code {
 // Vanilla override
 .p-panel__logo {
   margin-left: 0;
+}
+
+// To prevent layout shift
+.brand-store-tabs {
+  height: 48px;
+
+  @media only screen and (min-width: $breakpoint-x-large) {
+    height: 54px;
+  }
+}
+
+.u-flex-column {
+  display: flex;
+  flex-direction: column;
+}
+
+.u-flex-grow {
+  flex-grow: 1;
+}
+
+// Fix issue where pagination causes overflow in application layout
+.u-off-screen--top {
+  top: -100%;
 }

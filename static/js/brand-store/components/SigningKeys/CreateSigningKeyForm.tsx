@@ -1,5 +1,5 @@
 import React from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, Link } from "react-router-dom";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { useMutation } from "react-query";
 import { Input, Button } from "@canonical/react-components";
@@ -137,16 +137,16 @@ function CreateSigningKeyForm({
             <p>* Mandatory field</p>
             <hr />
             <div className="u-align--right">
-              <Button
-                className="u-no-margin--bottom"
+              <Link
+                className="p-button u-no-margin--bottom"
+                to={`/admin/${id}/signing-keys`}
                 onClick={() => {
-                  navigate(`/admin/${id}/signing-keys`);
                   setNewSigningKey({ name: "" });
                   setErrorMessage("");
                 }}
               >
                 Cancel
-              </Button>
+              </Link>
               <Button
                 type="submit"
                 appearance="positive"

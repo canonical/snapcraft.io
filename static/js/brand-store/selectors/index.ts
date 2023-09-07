@@ -85,6 +85,9 @@ const filteredPoliciesListState = selector<Array<Policy>>({
 
     return getFilteredPolicies(policiesWithKeys, filter);
   },
+  set: ({ set }, newValue) => {
+    set(policiesListState, newValue);
+  },
 });
 
 const brandStoreState = selectorFamily({
