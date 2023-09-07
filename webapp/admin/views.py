@@ -424,7 +424,7 @@ def create_policy(store_id: str, model_name: str):
         if not signing_key:
             res["message"] = "Signing key required"
             res["success"] = False
-            return jsonify(res)
+            return make_response(res, 500)
 
         if signing_key in signing_keys:
             admin_api.create_store_model_policy(
@@ -438,7 +438,9 @@ def create_policy(store_id: str, model_name: str):
         res["success"] = False
         res["message"] = error_list.errors[0]["message"]
 
-    return make_response(res)
+    if res["success"] == True:
+        return make_response(res, 200)
+    return make_response(res, 500)
 
 
 @admin.route(
