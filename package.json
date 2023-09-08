@@ -6,7 +6,7 @@
     "test": "yarn run test-python && yarn run test-js-all && yarn run lint-scss",
     "test-js": "jest",
     "test-js-all": "yarn run lint-js && yarn run test-js",
-    "test-python": "FLASK_DEBUG=0 python3 -m unittest discover tests/admin",
+    "test-python": "FLASK_DEBUG=0 python3 -m unittest discover tests",
     "build": "yarn run build-js && yarn run build-css",
     "build-css": "sass static/sass/styles.scss:static/css/styles.css static/sass/styles-embedded.scss:static/css/styles-embedded.css --load-path=node_modules --style=compressed && postcss --use autoprefixer --no-map --replace 'static/css/**/*.css'",
     "build-js": "yarn run copy-3rd-party-js && yarn run build-js-bundle",
