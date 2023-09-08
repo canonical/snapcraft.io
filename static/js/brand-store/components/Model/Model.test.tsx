@@ -81,6 +81,18 @@ describe("Model", () => {
     );
   });
 
+  it("disables the 'Revert' button if the API key hasn't been modified", async () => {
+    renderComponent();
+    expect(screen.getByRole("button", { name: "Revert" })).toBeDisabled();
+  });
+
+  it("enables the 'Revert' button when the API key has been modified", async () => {
+    renderComponent();
+    const user = userEvent.setup();
+    await user.click(screen.getByRole("button", { name: "Generate key" }));
+    expect(screen.getByRole("button", { name: "Revert" })).not.toBeDisabled();
+  });
+
   it("resets the API when clicking the 'Revert' button", async () => {
     renderComponent();
     const user = userEvent.setup();
