@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate, useParams, Link } from "react-router-dom";
+import { useNavigate, useParams, useLocation, Link } from "react-router-dom";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { useMutation } from "react-query";
 import { Input, Button, Icon } from "@canonical/react-components";
@@ -23,6 +23,7 @@ function CreateSigningKeyForm({
   refetch,
 }: Props) {
   const navigate = useNavigate();
+  const location = useLocation();
   const { id } = useParams();
   const [newSigningKey, setNewSigningKey] = useRecoilState(newSigningKeyState);
   const signingKeysList = useRecoilValue(filteredSigningKeysListState);
@@ -100,9 +101,11 @@ function CreateSigningKeyForm({
     },
   });
 
-  brandStore
-    ? setPageTitle(`Create signing key in ${brandStore.name}`)
-    : setPageTitle("Create signing key");
+  if (location.pathname.includes("/create")) {
+    brandStore
+      ? setPageTitle(`Create signing key in ${brandStore.name}`)
+      : setPageTitle("Create signing key");
+  }
 
   return (
     <form

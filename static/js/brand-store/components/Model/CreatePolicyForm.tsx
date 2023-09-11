@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
-import { useParams, Link, useNavigate } from "react-router-dom";
+import { useParams, Link, useNavigate, useLocation } from "react-router-dom";
 import { useMutation } from "react-query";
 import { Button, Icon } from "@canonical/react-components";
 
@@ -23,6 +23,7 @@ function CreatePolicyForm({
 }: Props) {
   const { id, model_id } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
   const { isLoading, isError, error, data }: any = useSigningKeys(id);
   const [signingKeys, setSigningKeys] = useRecoilState(signingKeysListState);
   const [newSigningKey, setNewSigningKey] = useRecoilState(newSigningKeyState);
@@ -81,9 +82,11 @@ function CreatePolicyForm({
     },
   });
 
-  brandStore
-    ? setPageTitle(`Create policy in ${brandStore.name}`)
-    : setPageTitle("Create policy");
+  if (location.pathname.includes("/create")) {
+    brandStore
+      ? setPageTitle(`Create policy in ${brandStore.name}`)
+      : setPageTitle("Create policy");
+  }
 
   useEffect(() => {
     if (!isLoading && !error) {
