@@ -55,6 +55,8 @@ function CreateSigningKeyForm({
       formData.set("csrf_token", window.CSRF_TOKEN);
       formData.set("name", newSigningKey.name);
 
+      setNewSigningKey({ name: "" });
+
       setSigningKeysList((oldSigningKeysList: Array<SigningKey>) => {
         return [
           {
@@ -86,7 +88,6 @@ function CreateSigningKeyForm({
 
       refetch();
       setShowNotification(true);
-      setNewSigningKey({ name: "" });
       setIsSaving(false);
       navigate(`/admin/${id}/signing-keys`);
       setTimeout(() => {

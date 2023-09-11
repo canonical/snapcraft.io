@@ -48,6 +48,8 @@ function CreatePolicyForm({
       formData.set("csrf_token", window.CSRF_TOKEN);
       formData.set("signing_key", policySigningKey);
 
+      setNewSigningKey({ name: "" });
+
       return fetch(`/admin/store/${id}/models/${model_id}/policies`, {
         method: "POST",
         body: formData,
@@ -66,7 +68,6 @@ function CreatePolicyForm({
       }
 
       setShowNotification(true);
-      setNewSigningKey({ name: "" });
       setIsSaving(false);
       refetchPolicies();
       navigate(`/admin/${id}/models/${model_id}/policies`);

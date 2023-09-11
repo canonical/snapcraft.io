@@ -54,6 +54,8 @@ function CreateModelForm({
       formData.set("name", newModel.name);
       formData.set("api_key", newModel.apiKey);
 
+      setNewModel({ name: "", apiKey: "" });
+
       setModelsList((oldModelsList: Array<Model>) => {
         return [
           {
@@ -84,7 +86,6 @@ function CreateModelForm({
       }
 
       setShowNotification(true);
-      setNewModel({ name: "", apiKey: "" });
       setIsSaving(false);
       navigate(`/admin/${id}/models`);
       setTimeout(() => {
