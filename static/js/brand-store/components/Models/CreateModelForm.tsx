@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate, useParams, Link } from "react-router-dom";
+import { useNavigate, useParams, useLocation, Link } from "react-router-dom";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { useMutation } from "react-query";
 import { Input, Button, Icon } from "@canonical/react-components";
@@ -22,6 +22,7 @@ function CreateModelForm({
   setShowErrorNotification,
 }: Props) {
   const navigate = useNavigate();
+  const location = useLocation();
   const { id } = useParams();
   const [newModel, setNewModel] = useRecoilState(newModelState);
   const stores = useRecoilState(brandStoresState);
@@ -98,9 +99,11 @@ function CreateModelForm({
     },
   });
 
-  brandStore
-    ? setPageTitle(`Create model in ${brandStore.name}`)
-    : setPageTitle("Create model");
+  if (location.pathname.includes("/create")) {
+    brandStore
+      ? setPageTitle(`Create model in ${brandStore.name}`)
+      : setPageTitle("Create model");
+  }
 
   return (
     <form
