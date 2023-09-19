@@ -81,7 +81,7 @@ function ModelsTable() {
                 },
                 {
                   content:
-                    model["modified-at"] !== null
+                    model["modified-at"] && model["modified-at"] !== null
                       ? format(new Date(model["modified-at"]), "dd/MM/yyyy")
                       : "-",
                   className: "u-align--right",

@@ -107,7 +107,7 @@ export type Model = {
     username: string;
     validation: string;
   };
-  "modified-at": string | null;
+  "modified-at"?: string | null;
   "modified-by"?: {
     "display-name": string;
     email: string;
