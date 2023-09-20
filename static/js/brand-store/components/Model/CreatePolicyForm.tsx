@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { useParams, Link, useNavigate, useLocation } from "react-router-dom";
-import { useMutation } from "react-query";
+import { useMutation, useQueryClient } from "react-query";
 import { Button, Icon } from "@canonical/react-components";
 
 import { setPageTitle } from "../../utils";
@@ -29,6 +29,7 @@ function CreatePolicyForm({
   const [newSigningKey, setNewSigningKey] = useRecoilState(newSigningKeyState);
   const brandStore = useRecoilValue(brandStoreState(id));
   const [isSaving, setIsSaving] = useState(false);
+  const queryClient = useQueryClient();
 
   const handleError = () => {
     setShowErrorNotification(true);
@@ -56,18 +57,19 @@ function CreatePolicyForm({
         body: formData,
       });
     },
-    onSuccess: async (response) => {
-      if (!response.ok) {
-        handleError();
-        throw new Error(`${response.status} ${response.statusText}`);
-      }
-
-      const policiesData = await response.json();
-
-      if (!policiesData.success) {
-        throw new Error(policiesData.message);
-      }
-
+    onMutate: async (newPolicy) => {
+      await queryClient.cancelQueries({ queryKey: ["policies"] });
+      const previousPolicies = queryClient.getQueryData(["policies"]);
+      queryClient.setQueryData(["policies"], () => [newPolicy]);
+      return { previousPolicies };
+    },
+    onError: ({ context }) => {
+      queryClient.setQueryData(["policies"], context?.previousPolicies);
+      handleError();
+      throw new Error("Unable to create a new policy");
+    },
+    onSettled: async () => {
+      queryClient.invalidateQueries({ queryKey: ["policies"] });
       setShowNotification(true);
       setIsSaving(false);
       refetchPolicies();
@@ -75,10 +77,6 @@ function CreatePolicyForm({
       setTimeout(() => {
         setShowNotification(false);
       }, 5000);
-    },
-    onError: () => {
-      handleError();
-      throw new Error("Unable to create a new policy");
     },
   });
 

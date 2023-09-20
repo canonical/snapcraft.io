@@ -132,9 +132,10 @@ function ModelsTable({
                   className: "u-align--right",
                 },
                 {
-                  content: policy["modified-at"]
-                    ? format(new Date(policy["modified-at"]), "dd/MM/yyyy")
-                    : "-",
+                  content:
+                    policy["modified-at"] && policy["modified-at"]
+                      ? format(new Date(policy["modified-at"]), "dd/MM/yyyy")
+                      : "-",
                   className: "u-align--right",
                 },
                 {
