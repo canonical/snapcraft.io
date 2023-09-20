@@ -1,6 +1,7 @@
 import { useQuery } from "react-query";
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
 import type { AppDispatch, RootState } from "../store";
+import type { Model } from "../types/shared";
 
 export const useAppDispatch: () => AppDispatch = useDispatch;
 export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
@@ -19,7 +20,10 @@ export function useModels(id: string | undefined) {
       throw new Error(modelsData.message);
     }
 
-    return modelsData.data;
+    return modelsData.data.sort((a: Model, b: Model) => {
+      // Always show most recently created model first
+      return new Date(a["created-at"]) < new Date(b["created-at"]) ? 1 : -1;
+    });
   });
 }
 
