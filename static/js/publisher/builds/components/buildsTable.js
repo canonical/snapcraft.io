@@ -18,7 +18,7 @@ const StatusCell = ({ build, queueTime }) => {
   return (
     <Fragment>
       <span className="u-hide u-show--small">{status.shortStatusMessage}</span>
-      <span className="u-hide--small" title={title}>
+      <span className="u-hide--small u-hide--medium" title={title}>
         {status.statusMessage}
       </span>
     </Fragment>
