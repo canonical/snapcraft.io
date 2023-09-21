@@ -178,6 +178,7 @@ function SigningKeysTable({
                 },
                 {
                   content:
+                    signingKey["created-at"] &&
                     signingKey["created-at"] !== null
                       ? format(new Date(signingKey["created-at"]), "dd/MM/yyyy")
                       : "-",
