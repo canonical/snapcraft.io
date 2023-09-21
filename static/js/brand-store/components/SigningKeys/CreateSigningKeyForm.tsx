@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate, useParams, useLocation, Link } from "react-router-dom";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import { useMutation } from "react-query";
+import { useMutation, useQueryClient } from "react-query";
 import { Input, Button, Icon } from "@canonical/react-components";
 
 import { checkSigningKeyExists, setPageTitle } from "../../utils";
@@ -32,6 +32,7 @@ function CreateSigningKeyForm({
     signingKeysListState
   );
   const [isSaving, setIsSaving] = useState(false);
+  const queryClient = useQueryClient();
 
   const handleError = () => {
     setSigningKeysList((oldSigningKeysList: Array<SigningKey>) => {
@@ -74,19 +75,19 @@ function CreateSigningKeyForm({
         body: formData,
       });
     },
-    onSuccess: async (response) => {
-      if (!response.ok) {
-        handleError();
-        throw new Error(`${response.status} ${response.statusText}`);
-      }
-
-      const signingKeysData = await response.json();
-
-      if (!signingKeysData.success) {
-        setErrorMessage(signingKeysData.message);
-        throw new Error(signingKeysData.message);
-      }
-
+    onMutate: async (newSigningKey) => {
+      await queryClient.cancelQueries({ queryKey: ["signingKeys"] });
+      const previousSigningKeys = queryClient.getQueryData(["signingKeys"]);
+      queryClient.setQueryData(["signingKeys"], () => [newSigningKey]);
+      return { previousSigningKeys };
+    },
+    onError: ({ context }) => {
+      queryClient.setQueryData(["signingKeys"], context?.previousSigningKeys);
+      handleError();
+      throw new Error("Unable to create signing key");
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ["signingKeys"] });
       refetch();
       setShowNotification(true);
       setIsSaving(false);
@@ -94,10 +95,6 @@ function CreateSigningKeyForm({
       setTimeout(() => {
         setShowNotification(false);
       }, 5000);
-    },
-    onError: () => {
-      handleError();
-      throw new Error("Unable to create signing key");
     },
   });
 
