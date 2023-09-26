@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate, useParams, useLocation, Link } from "react-router-dom";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import { useMutation } from "react-query";
+import { useMutation, useQueryClient } from "react-query";
 import { Input, Button, Icon } from "@canonical/react-components";
 import randomstring from "randomstring";
 
@@ -31,6 +31,8 @@ function CreateModelForm({
   const brandStore = useRecoilValue(brandStoreState(id));
   const setModelsList = useSetRecoilState<Array<Model>>(modelsListState);
   const [isSaving, setIsSaving] = useState(false);
+
+  const queryClient = useQueryClient();
 
   const handleError = () => {
     setShowErrorNotification(true);
@@ -62,7 +64,6 @@ function CreateModelForm({
           {
             "api-key": newModel.apiKey,
             "created-at": new Date().toISOString(),
-            "modified-at": new Date().toISOString(),
             name: newModel.name,
           },
           ...oldModelsList,
@@ -74,28 +75,24 @@ function CreateModelForm({
         body: formData,
       });
     },
-    onSuccess: async (response) => {
-      if (!response.ok) {
-        handleError();
-        throw new Error(`${response.status} ${response.statusText}`);
-      }
-
-      const modelsData = await response.json();
-
-      if (!modelsData.success) {
-        throw new Error(modelsData.message);
-      }
-
+    onMutate: async (newModel) => {
+      await queryClient.cancelQueries({ queryKey: ["models"] });
+      queryClient.setQueryData(["models"], () => [newModel]);
+      return { previousModels: modelsList };
+    },
+    onError: ({ context }) => {
+      queryClient.setQueryData(["models"], context?.previousModels);
+      handleError();
+      throw new Error("Unable to create a new model");
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ["models"] });
       setShowNotification(true);
       setIsSaving(false);
       navigate(`/admin/${id}/models`);
       setTimeout(() => {
         setShowNotification(false);
       }, 5000);
-    },
-    onError: () => {
-      handleError();
-      throw new Error("Unable to create a new model");
     },
   });
 
