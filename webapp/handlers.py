@@ -8,7 +8,14 @@ import user_agents
 import webapp.template_utils as template_utils
 from canonicalwebteam import image_template
 from webapp import authentication
-from webapp.config import BSI_URL, LOGIN_URL, SENTRY_DSN, COMMIT_ID, ENVIRONMENT, WEBAPP_CONFIG
+from webapp.config import (
+    BSI_URL,
+    LOGIN_URL,
+    SENTRY_DSN,
+    COMMIT_ID,
+    ENVIRONMENT,
+    WEBAPP_CONFIG,
+)
 
 from canonicalwebteam.store_api.exceptions import (
     StoreApiError,

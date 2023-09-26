@@ -20,7 +20,9 @@ def login_required(func):
         if not authentication.is_authenticated(flask.session):
             authentication.empty_session(flask.session)
             if "beta" in flask.request.url:
-                return flask.redirect(f"/{login_path}?next=/beta/{flask.request.path}")
+                return flask.redirect(
+                    f"/{login_path}?next=/beta/{flask.request.path}"
+                )
             return flask.redirect(f"/{login_path}?next={flask.request.path}")
 
         return func(*args, **kwargs)
