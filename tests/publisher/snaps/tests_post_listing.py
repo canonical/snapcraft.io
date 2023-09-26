@@ -27,7 +27,7 @@ class PostMetadataListingPage(BaseTestCases.EndpointLoggedIn):
             "snaps/{}/metadata?conflict_on_update=true"
         ).format(self.snap_id)
 
-        changes = {"contact": "contact-adress"}
+        changes = {"description": "New description"}
         data = {"changes": json.dumps(changes), "snap_id": self.snap_id}
 
         super().setUp(
@@ -61,7 +61,7 @@ class PostMetadataListingPage(BaseTestCases.EndpointLoggedIn):
     def test_update_valid_field(self):
         responses.add(responses.PUT, self.api_url, json={}, status=200)
 
-        changes = {"contact": "contact-adress"}
+        changes = {"description": "New description"}
 
         response = self.client.post(
             self.endpoint_url,
@@ -75,7 +75,7 @@ class PostMetadataListingPage(BaseTestCases.EndpointLoggedIn):
             self.authorization, called.request.headers.get("Authorization")
         )
         self.assertEqual(
-            b'{"contact": "contact-adress"}',
+            b'{"description": "New description"}',
             called.request.body,
         )
 
@@ -130,13 +130,14 @@ class PostMetadataListingPage(BaseTestCases.EndpointLoggedIn):
             "publisher": {"display-name": "The publisher", "username": "toto"},
             "private": True,
             "channel_maps_list": [{"map": [{"info": "info"}]}],
-            "contact": "contact adress",
+            "contact": "contact address",
             "website": "website_url",
             "public_metrics_enabled": True,
             "public_metrics_blacklist": True,
             "license": "test OR testing",
             "video_urls": [],
             "categories": {"items": []},
+            "links": {},
         }
 
         responses.add(responses.GET, info_url, json=payload, status=200)
@@ -184,7 +185,6 @@ class PostMetadataListingPage(BaseTestCases.EndpointLoggedIn):
         self.assert_context("publisher_name", "The publisher")
         self.assert_context("username", "toto")
         self.assert_context("screenshot_urls", [])
-        self.assert_context("contact", "contact adress")
         self.assert_context("website", "website_url")
         self.assert_context("is_on_stable", False)
         self.assert_context("public_metrics_enabled", True)
@@ -215,13 +215,14 @@ class PostMetadataListingPage(BaseTestCases.EndpointLoggedIn):
             "publisher": {"display-name": "The publisher", "username": "toto"},
             "private": True,
             "channel_maps_list": [{"map": [{"info": "info"}]}],
-            "contact": "contact adress",
+            "contact": "contact address",
             "website": "website_url",
             "public_metrics_enabled": False,
             "public_metrics_blacklist": True,
             "license": "test OR testing",
             "video_urls": [],
             "categories": {"items": []},
+            "links": {},
         }
 
         responses.add(responses.GET, info_url, json=payload, status=200)
@@ -239,7 +240,6 @@ class PostMetadataListingPage(BaseTestCases.EndpointLoggedIn):
             "icon_url": None,
             "publisher_name": "New publisher",
             "screenshot_urls": [],
-            "contact": "New contact",
             "website": "New website",
             "public_metrics_enabled": True,
             "public_metrics_blacklist": "new metric1,new metric2",
@@ -283,7 +283,6 @@ class PostMetadataListingPage(BaseTestCases.EndpointLoggedIn):
         # All updatable fields
         self.assert_context("summary", "New summary")
         self.assert_context("description", "New description")
-        self.assert_context("contact", "New contact")
         self.assert_context("website", "New website")
 
     @responses.activate
@@ -322,6 +321,7 @@ class PostMetadataListingPage(BaseTestCases.EndpointLoggedIn):
             "license": "test OR testing",
             "video_urls": [],
             "categories": {"items": []},
+            "links": {},
         }
 
         responses.add(responses.GET, info_url, json=payload, status=200)
@@ -379,13 +379,14 @@ class PostMetadataListingPage(BaseTestCases.EndpointLoggedIn):
             "publisher": {"display-name": "The publisher", "username": "toto"},
             "private": True,
             "channel_maps_list": [{"map": [{"info": "info"}]}],
-            "contact": "contact adress",
+            "contact": "contact address",
             "website": "website_url",
             "public_metrics_enabled": False,
             "public_metrics_blacklist": True,
             "license": "test OR testing",
             "video_urls": [],
             "categories": {"items": []},
+            "links": {},
         }
 
         responses.add(responses.GET, info_url, json=payload, status=200)
