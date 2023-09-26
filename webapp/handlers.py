@@ -8,6 +8,7 @@ import user_agents
 import webapp.template_utils as template_utils
 from canonicalwebteam import image_template
 from webapp import authentication
+from webapp.config import BSI_URL, LOGIN_URL, SENTRY_DSN, COMMIT_ID, ENVIRONMENT, WEBAPP_CONFIG
 
 from canonicalwebteam.store_api.exceptions import (
     StoreApiError,
@@ -66,6 +67,52 @@ def refresh_redirect(path):
     return flask.redirect(path)
 
 
+def snapcraft_utility_processor():
+    if authentication.is_authenticated(flask.session):
+        user_name = flask.session["publisher"]["fullname"]
+        user_is_canonical = flask.session["publisher"].get(
+            "is_canonical", False
+        )
+        stores = flask.session["publisher"].get("stores")
+    else:
+        user_name = None
+        user_is_canonical = False
+        stores = []
+
+    page_slug = template_utils.generate_slug(flask.request.path)
+
+    return {
+        # Variables
+        "LOGIN_URL": LOGIN_URL,
+        "SENTRY_DSN": SENTRY_DSN,
+        "COMMIT_ID": COMMIT_ID,
+        "ENVIRONMENT": ENVIRONMENT,
+        "host_url": flask.request.host_url,
+        "path": flask.request.path,
+        "page_slug": page_slug,
+        "user_name": user_name,
+        "VERIFIED_PUBLISHER": "verified",
+        "STAR_DEVELOPER": "starred",
+        "webapp_config": WEBAPP_CONFIG,
+        "BSI_URL": BSI_URL,
+        "now": datetime.now(),
+        "user_is_canonical": user_is_canonical,
+        # Functions
+        "contains": template_utils.contains,
+        "join": template_utils.join,
+        "static_url": template_utils.static_url,
+        "format_number": template_utils.format_number,
+        "format_display_name": template_utils.format_display_name,
+        "display_name": template_utils.display_name,
+        "install_snippet": template_utils.install_snippet,
+        "format_date": template_utils.format_date,
+        "format_member_role": template_utils.format_member_role,
+        "image": image_template,
+        "stores": stores,
+        "format_link": template_utils.format_link,
+    }
+
+
 def set_handlers(app):
     @app.context_processor
     def utility_processor():
@@ -75,49 +122,7 @@ def set_handlers(app):
         can be used in all templates
         """
 
-        if authentication.is_authenticated(flask.session):
-            user_name = flask.session["publisher"]["fullname"]
-            user_is_canonical = flask.session["publisher"].get(
-                "is_canonical", False
-            )
-            stores = flask.session["publisher"].get("stores")
-        else:
-            user_name = None
-            user_is_canonical = False
-            stores = []
-
-        page_slug = template_utils.generate_slug(flask.request.path)
-
-        return {
-            # Variables
-            "LOGIN_URL": app.config["LOGIN_URL"],
-            "SENTRY_DSN": app.config["SENTRY_DSN"],
-            "COMMIT_ID": app.config["COMMIT_ID"],
-            "ENVIRONMENT": app.config["ENVIRONMENT"],
-            "host_url": flask.request.host_url,
-            "path": flask.request.path,
-            "page_slug": page_slug,
-            "user_name": user_name,
-            "VERIFIED_PUBLISHER": "verified",
-            "STAR_DEVELOPER": "starred",
-            "webapp_config": app.config["WEBAPP_CONFIG"],
-            "BSI_URL": app.config["BSI_URL"],
-            "now": datetime.now(),
-            "user_is_canonical": user_is_canonical,
-            # Functions
-            "contains": template_utils.contains,
-            "join": template_utils.join,
-            "static_url": template_utils.static_url,
-            "format_number": template_utils.format_number,
-            "format_display_name": template_utils.format_display_name,
-            "display_name": template_utils.display_name,
-            "install_snippet": template_utils.install_snippet,
-            "format_date": template_utils.format_date,
-            "format_member_role": template_utils.format_member_role,
-            "image": image_template,
-            "stores": stores,
-            "format_link": template_utils.format_link,
-        }
+        return snapcraft_utility_processor()
 
     # Error handlers
     # ===
