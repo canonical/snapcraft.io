@@ -74,12 +74,21 @@ function getChanges(
     dirtyFields.website
   ) {
     changes.links = {
-      contact: data?.contacts,
-      donation: data?.donations,
-      issues: data?.issues,
-      license: data?.license,
-      "source-code": data?.["source-code"],
-      website: data?.websites,
+      contact: data.contacts
+        ? data.contacts.map((url: { url: string }) => url.url)
+        : [],
+      donations: data.donations
+        ? data.donations.map((url: { url: string }) => url.url)
+        : [],
+      issues: data.issues
+        ? data.issues.map((url: { url: string }) => url.url)
+        : [],
+      website: data.websites
+        ? data.websites.map((url: { url: string }) => url.url)
+        : [],
+      source: data["source-code"]
+        ? data["source-code"].map((url: { url: string }) => url.url)
+        : [],
     };
   }
 
