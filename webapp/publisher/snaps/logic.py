@@ -271,8 +271,6 @@ def filter_changes_data(changes):
         "title",
         "summary",
         "description",
-        "contact",
-        "website",
         "keywords",
         "license",
         "private",
@@ -287,6 +285,7 @@ def filter_changes_data(changes):
         "video_urls",
         "categories",
         "update_metadata_on_release",
+        "links",
     ]
 
     return {key: changes[key] for key in whitelist if key in changes}

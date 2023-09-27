@@ -123,13 +123,7 @@ def get_listing_snap(snap_name):
         "update_metadata_on_release": snap_details[
             "update_metadata_on_release"
         ],
-        "links": {
-            "contact": [],
-            "donation": [],
-            "issues": [],
-            "source-code": [],
-            "website": [],
-        },
+        "links": snap_details["links"],
     }
 
     return flask.render_template(
@@ -310,6 +304,7 @@ def post_listing_snap(snap_name):
                 "is_on_stable": is_on_stable,
                 "categories": categories,
                 "publisher_name": snap_details["publisher"]["display-name"],
+                "links": snap_details["links"],
                 # errors
                 "error_list": error_list,
                 "field_errors": field_errors,

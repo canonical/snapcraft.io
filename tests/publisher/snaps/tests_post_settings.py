@@ -31,7 +31,7 @@ class PostMetadataSettingsPage(BaseTestCases.EndpointLoggedIn):
             "snaps/{}/metadata?conflict_on_update=true"
         ).format(self.snap_id)
 
-        changes = {"contact": "contact-adress"}
+        changes = {"description": "New description"}
         data = {"changes": json.dumps(changes), "snap_id": self.snap_id}
 
         super().setUp(
@@ -65,7 +65,7 @@ class PostMetadataSettingsPage(BaseTestCases.EndpointLoggedIn):
     def test_update_valid_field(self):
         responses.add(responses.PUT, self.api_url, json={}, status=200)
 
-        changes = {"contact": "contact-adress"}
+        changes = {"description": "New description"}
 
         response = self.client.post(
             self.endpoint_url,
@@ -78,7 +78,9 @@ class PostMetadataSettingsPage(BaseTestCases.EndpointLoggedIn):
         self.assertEqual(
             self.authorization, called.request.headers.get("Authorization")
         )
-        self.assertEqual(b'{"contact": "contact-adress"}', called.request.body)
+        self.assertEqual(
+            b'{"description": "New description"}', called.request.body
+        )
 
         assert response.status_code == 302
         assert response.location == self._get_location()
@@ -271,7 +273,6 @@ class PostMetadataSettingsPage(BaseTestCases.EndpointLoggedIn):
             "publisher": {"display-name": "The publisher"},
             "private": True,
             "unlisted": False,
-            "contact": "contact adress",
             "website": "website_url",
             "store": "stotore",
             "keywords": [],
