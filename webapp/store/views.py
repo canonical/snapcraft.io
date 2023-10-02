@@ -269,11 +269,12 @@ def store_blueprint(store_query=None):
             status_code,
         )
 
-    @store.route("/youtube/<video_id>")
-    def get_video_thumbnail_data(video_id):
+    @store.route("/youtube", methods=[ "POST"])
+    def get_video_thumbnail_data():
+        body = flask.request.form
         thumbnail_url = "https://www.googleapis.com/youtube/v3/videos"
         thumbnail_data = session.get(
-            f"{thumbnail_url}?id={video_id}&part=snippet&key={YOUTUBE_API_KEY}"
+          f"{thumbnail_url}?id={body['videoId']}&part=snippet&key={YOUTUBE_API_KEY}"
         )
 
         if thumbnail_data:
