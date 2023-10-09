@@ -174,9 +174,6 @@ def post_settings(snap_name, return_json=False):
                 "keywords": snap_details["keywords"],
                 "status": snap_details["status"],
                 "is_on_lp": is_on_lp,
-                "update_metadata_on_release": snap_details[
-                    "update_metadata_on_release"
-                ],
                 # errors
                 "error_list": error_list,
                 "field_errors": field_errors,

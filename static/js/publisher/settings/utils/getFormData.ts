@@ -40,12 +40,6 @@ function getFormData(
     formData.set("blacklist_countries", "");
   }
 
-  // Forcefully send the state of update_metadata_on_release in an attempt
-  // to ensure it doesn't get disabled when other fields are changed.
-  // This hasn't worked:
-  // https://chat.canonical.com/canonical/pl/67rcgxrtmfyufr9fjd46oit87r
-  changes["update_metadata_on_release"] = data?.update_metadata_on_release;
-
   formData.set("changes", JSON.stringify(changes));
 
   return formData;

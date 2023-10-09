@@ -47,14 +47,6 @@ function getChanges(dirtyFields: { [key: string]: any }, data: any) {
     }
   }
 
-  if (dirtyFields?.update_metadata_on_release) {
-    if (data?.update_metadata_on_release) {
-      changes.update_metadata_on_release = "on";
-    } else {
-      changes.update_metadata_on_release = false;
-    }
-  }
-
   return changes;
 }
 
