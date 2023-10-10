@@ -6,8 +6,6 @@ import {
   Row,
   Col,
   Notification,
-  Modal,
-  Button,
 } from "@canonical/react-components";
 
 import PageHeader from "../../../shared/PageHeader";
@@ -62,7 +60,7 @@ function App() {
       dirtyFieldsKeys.length === 1 &&
       dirtyFieldsKeys[0] === "update_metadata_on_release";
 
-    if (getValues("update_metadata_on_release") && !onlyUpdateMetadataField) {
+    if (getValues("update_metadata_on_release") && dirtyFields.visibility) {
       setShowMetadataWarningModal(true);
       setFormData(data);
     } else {
