@@ -488,3 +488,8 @@ code {
 .u-off-screen--top {
   top: -100%;
 }
+
+// Breaks modals
+.p-accordion__panel[aria-hidden="false"] {
+  transform: none;
+}
