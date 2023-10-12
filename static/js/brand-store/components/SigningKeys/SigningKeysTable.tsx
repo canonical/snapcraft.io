@@ -3,6 +3,8 @@ import { useParams } from "react-router-dom";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { format } from "date-fns";
 import { MainTable, Button, Tooltip } from "@canonical/react-components";
+
+import AppPagination from "../AppPagination";
 import DeactivateSigningKeyModal from "./DeactivateSigningKeyModal";
 
 import { sortByDateDescending } from "../../utils";
@@ -24,6 +26,9 @@ function SigningKeysTable({
   const { id } = useParams();
   const signingKeysList = useRecoilValue<Array<SigningKey>>(
     filteredSigningKeysListState
+  );
+  const [itemsToShow, setItemsToShow] = useState<Array<SigningKey>>(
+    signingKeysList
   );
   const setSigningKeysList = useSetRecoilState(signingKeysListState);
   const [isDeleting, setIsDeleting] = useState(false);
@@ -92,120 +97,127 @@ function SigningKeysTable({
         />
       )}
 
-      <MainTable
-        data-testid="signing-keys-table"
-        sortable
-        paginate={20}
-        emptyStateMsg="No signing keys match this filter"
-        headers={[
-          {
-            content: `Name (${signingKeysList.length})`,
-            sortKey: "name",
-            style: {
-              width: "320px",
-            },
-          },
-          {
-            content: "Policies",
-            sortKey: "policy",
-            className: "u-align--right",
-            style: {
-              width: "80px",
-            },
-          },
-          {
-            content: "Models",
-            sortKey: "models",
-            className: "u-align--right",
-            style: {
-              width: "80px",
-            },
-          },
-          {
-            content: "Created date",
-            sortKey: "created-at",
-            className: "u-align--right",
-            style: {
-              width: "120px",
-            },
-          },
-          {
-            content: "fingerprint",
-            sortKey: "fingerprint",
-            className: "u-align--right",
-          },
-          {
-            content: "",
-            className: "u-align--right",
-            style: {
-              width: "150px",
-            },
-          },
-        ]}
-        rows={signingKeysList.map((signingKey: SigningKey) => {
-          return {
-            columns: [
-              {
-                content: signingKey["name"],
-                className: "u-truncate",
+      <div className="u-flex-grow">
+        <MainTable
+          data-testid="signing-keys-table"
+          sortable
+          emptyStateMsg="No signing keys match this filter"
+          headers={[
+            {
+              content: `Name (${signingKeysList.length})`,
+              sortKey: "name",
+              style: {
+                width: "320px",
               },
-              {
-                content: signingKey.policies ? signingKey.policies.length : 0,
-                className: "u-align--right",
-              },
-              {
-                content: (
-                  <Tooltip
-                    position="btm-right"
-                    message={
-                      <ul className="p-list u-no-margin--bottom">
-                        {signingKey.models &&
-                          signingKey.models.map((model) => (
-                            <li key={model}>{model}</li>
-                          ))}
-                      </ul>
-                    }
-                  >
-                    {signingKey.models ? signingKey.models.length : "0"}
-                  </Tooltip>
-                ),
-                className: "u-align--right",
-              },
-              {
-                content:
-                  signingKey["created-at"] !== null
-                    ? format(new Date(signingKey["created-at"]), "dd/MM/yyyy")
-                    : "-",
-                className: "u-align--right",
-              },
-              {
-                content: signingKey["fingerprint"],
-                className: "u-align--right",
-              },
-              {
-                content: (
-                  <Button
-                    dense
-                    onClick={() => {
-                      handleDisableClick(signingKey);
-                    }}
-                    disabled={isDeleting || !enableTableActions}
-                  >
-                    Deactivate
-                  </Button>
-                ),
-                className: "u-align--right",
-              },
-            ],
-            sortData: {
-              name: signingKey.name,
-              policies: signingKey?.policies?.length,
-              models: signingKey?.models?.length,
-              "created-at": signingKey["created-at"],
-              fingerprint: signingKey.fingerprint,
             },
-          };
-        })}
+            {
+              content: "Policies",
+              sortKey: "policy",
+              className: "u-align--right",
+              style: {
+                width: "80px",
+              },
+            },
+            {
+              content: "Models",
+              sortKey: "models",
+              className: "u-align--right",
+              style: {
+                width: "80px",
+              },
+            },
+            {
+              content: "Created date",
+              sortKey: "created-at",
+              className: "u-align--right",
+              style: {
+                width: "120px",
+              },
+            },
+            {
+              content: "fingerprint",
+              sortKey: "fingerprint",
+              className: "u-align--right",
+            },
+            {
+              content: "",
+              className: "u-align--right",
+              style: {
+                width: "150px",
+              },
+            },
+          ]}
+          rows={itemsToShow.map((signingKey: SigningKey) => {
+            return {
+              columns: [
+                {
+                  content: signingKey["name"],
+                  className: "u-truncate",
+                },
+                {
+                  content: signingKey.policies ? signingKey.policies.length : 0,
+                  className: "u-align--right",
+                },
+                {
+                  content: (
+                    <Tooltip
+                      position="btm-right"
+                      message={
+                        <ul className="p-list u-no-margin--bottom">
+                          {signingKey.models &&
+                            signingKey.models.map((model) => (
+                              <li key={model}>{model}</li>
+                            ))}
+                        </ul>
+                      }
+                    >
+                      {signingKey.models ? signingKey.models.length : "0"}
+                    </Tooltip>
+                  ),
+                  className: "u-align--right",
+                },
+                {
+                  content:
+                    signingKey["created-at"] &&
+                    signingKey["created-at"] !== null
+                      ? format(new Date(signingKey["created-at"]), "dd/MM/yyyy")
+                      : "-",
+                  className: "u-align--right",
+                },
+                {
+                  content: signingKey["fingerprint"],
+                  className: "u-align--right",
+                },
+                {
+                  content: (
+                    <Button
+                      dense
+                      onClick={() => {
+                        handleDisableClick(signingKey);
+                      }}
+                      disabled={isDeleting || !enableTableActions}
+                    >
+                      Deactivate
+                    </Button>
+                  ),
+                  className: "u-align--right",
+                },
+              ],
+              sortData: {
+                name: signingKey.name,
+                policies: signingKey?.policies?.length,
+                models: signingKey?.models?.length,
+                "created-at": signingKey["created-at"],
+                fingerprint: signingKey.fingerprint,
+              },
+            };
+          })}
+        />
+      </div>
+      <AppPagination
+        keyword="signing key"
+        items={signingKeysList}
+        setItemsToShow={setItemsToShow}
       />
     </>
   );

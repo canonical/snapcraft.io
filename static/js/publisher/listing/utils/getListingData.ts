@@ -69,31 +69,46 @@ function getListingData(listingData: { [key: string]: any }) {
       "weekly_installed_base_by_operating_system_normalized"
     ),
     update_metadata_on_release: listingData?.update_metadata_on_release,
-    contacts: listingData?.links?.contact.map((link: string) => {
-      return {
-        url: link,
-      };
-    }),
-    donations: listingData?.links?.donation.map((link: string) => {
-      return {
-        url: link,
-      };
-    }),
-    issues: listingData?.links?.issues.map((link: string) => {
-      return {
-        url: link,
-      };
-    }),
-    "source-code": listingData?.links?.["source-code"].map((link: string) => {
-      return {
-        url: link,
-      };
-    }),
-    websites: listingData?.links?.website.map((link: string) => {
-      return {
-        url: link,
-      };
-    }),
+    contacts:
+      listingData.links && listingData.links.contact
+        ? listingData.links.contact.map((link: string) => {
+            return {
+              url: link,
+            };
+          })
+        : [],
+    donations:
+      listingData.links && listingData.links.donations
+        ? listingData.links.donations.map((link: string) => {
+            return {
+              url: link,
+            };
+          })
+        : [],
+    issues:
+      listingData.links && listingData.links.issues
+        ? listingData.links.issues.map((link: string) => {
+            return {
+              url: link,
+            };
+          })
+        : [],
+    "source-code":
+      listingData.links && listingData.links["source-code"]
+        ? listingData.links["source-code"].map((link: string) => {
+            return {
+              url: link,
+            };
+          })
+        : [],
+    websites:
+      listingData.links && listingData.links.website
+        ? listingData.links.website.map((link: string) => {
+            return {
+              url: link,
+            };
+          })
+        : [],
     banner_urls: window?.listingData?.banner_urls,
     icon_url: window?.listingData?.icon_url,
     screenshot_urls: window?.listingData?.screenshot_urls,

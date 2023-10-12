@@ -249,6 +249,7 @@ function Model() {
                   onClick={() => {
                     setNewApiKey("");
                   }}
+                  disabled={!newApiKey}
                 >
                   Revert
                 </Button>

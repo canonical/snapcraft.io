@@ -7,6 +7,10 @@
   .l-application {
     height: $layout-height;
 
+    @media (max-width: $breakpoint-small) {
+      height: 100vh;
+    }
+
     .p-side-navigation__toggle--dense {
       background: $color-mid-dark;
       border: 0;
@@ -50,11 +54,11 @@
   .l-navigation {
     height: $layout-height-small;
     position: absolute;
-    top: auto;
+    top: 48px;
     z-index: 9;
 
     @media (max-width: $breakpoint-small) {
-      height: $layout-height;
+      height: 100vh;
     }
 
     @media (min-width: $application-layout--breakpoint-side-nav-expanded) {
@@ -63,6 +67,10 @@
 
     .l-navigation__drawer {
       height: $layout-height;
+
+      @media (max-width: $breakpoint-small) {
+        height: 100vh;
+      }
     }
 
     .p-panel {

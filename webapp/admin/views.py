@@ -294,12 +294,12 @@ def create_models(store_id: str):
         if len(name) > 128:
             res["message"] = "Name is too long. Limit 128 characters"
             res["success"] = False
-            return jsonify(res)
+            return make_response(res, 500)
 
         if api_key and len(api_key) != 50 and not api_key.isalpha():
             res["message"] = "Invalid API key"
             res["success"] = False
-            return jsonify(res)
+            return make_response(res, 500)
 
         admin_api.create_store_model(flask.session, store_id, name, api_key)
         res["success"] = True
@@ -342,7 +342,7 @@ def update_model(store_id: str, model_name: str):
         if len(api_key) != 50 and not api_key.isalpha():
             res["message"] = "Invalid API key"
             res["success"] = False
-            return jsonify(res)
+            return make_response(res, 500)
 
         admin_api.update_store_model(
             flask.session, store_id, model_name, api_key
@@ -356,8 +356,9 @@ def update_model(store_id: str, model_name: str):
     except StoreApiResourceNotFound:
         res["success"] = False
         res["message"] = "Model not found"
-
-    return make_response(res, 200)
+    if res["success"]:
+        return make_response(res, 200)
+    return make_response(res, 500)
 
 
 @admin.route("/admin/store/<store_id>/models/<model_name>/policies")
@@ -381,6 +382,9 @@ def get_policies(store_id: str, model_name: str):
         )
         res["success"] = True
         res["data"] = policies
+        response = make_response(res, 200)
+        response.cache_control.max_age = "3600"
+        return response
     except StoreApiResponseErrorList as error_list:
         res["success"] = False
         res["message"] = " ".join(
@@ -393,9 +397,7 @@ def get_policies(store_id: str, model_name: str):
         res["success"] = False
         res["message"] = "An error occurred"
 
-    response = make_response(res)
-    response.cache_control.max_age = "3600"
-    return response
+    return make_response(res, 500)
 
 
 @admin.route(
@@ -424,7 +426,7 @@ def create_policy(store_id: str, model_name: str):
         if not signing_key:
             res["message"] = "Signing key required"
             res["success"] = False
-            return jsonify(res)
+            return make_response(res, 500)
 
         if signing_key in signing_keys:
             admin_api.create_store_model_policy(
@@ -438,7 +440,9 @@ def create_policy(store_id: str, model_name: str):
         res["success"] = False
         res["message"] = error_list.errors[0]["message"]
 
-    return make_response(res)
+    if res["success"]:
+        return make_response(res, 200)
+    return make_response(res, 500)
 
 
 @admin.route(
@@ -459,7 +463,9 @@ def delete_policy(store_id: str, model_name: str, revision: str):
     except StoreApiResponseErrorList as error_list:
         res["success"] = False
         res["message"] = error_list.errors[0]["message"]
-    return make_response(res)
+    if res["success"]:
+        return make_response(res, 200)
+    return make_response(res, 500)
 
 
 @admin.route("/admin/store/<store_id>/brand")
@@ -467,7 +473,6 @@ def delete_policy(store_id: str, model_name: str, revision: str):
 def get_brand_store(store_id: str):
     res = {}
     try:
-        print(admin_api.get_brand(flask.session, store_id))
         brand = admin_api.get_brand(flask.session, store_id)
 
         res["data"] = brand
@@ -499,7 +504,9 @@ def get_signing_keys(store_id: str):
         )
         res["data"] = signing_keys
         res["success"] = True
-
+        response = make_response(res, 200)
+        response.cache_control.max_age = 3600
+        return response
     except StoreApiResponseErrorList as error_list:
         res["success"] = False
         res["success"] = False
@@ -510,11 +517,7 @@ def get_signing_keys(store_id: str):
             ]
         )
         res["data"] = []
-
-    response = make_response(res)
-    response.cache_control.max_age = 3600
-
-    return response
+        return make_response(res, 500)
 
 
 @admin.route("/admin/store/<store_id>/signing-keys", methods=["POST"])
@@ -527,14 +530,16 @@ def create_signing_key(store_id: str):
         if name and len(name) <= 128:
             admin_api.create_store_signing_key(flask.session, store_id, name)
             res["success"] = True
+            return make_response(res, 200)
         else:
             res["message"] = "Invalid signing key. Limit 128 characters"
             res["success"] = False
+            make_response(res, 500)
     except StoreApiResponseErrorList as error_list:
         res["success"] = False
         res["message"] = error_list.errors[0]["message"]
 
-    return jsonify(res)
+    return make_response(res, 500)
 
 
 @admin.route(
@@ -567,41 +572,41 @@ def delete_signing_key(store_id: str, signing_key_sha3_384: str):
 
         if response.status_code == 204:
             res["success"] = True
+            return make_response(res, 200)
         elif response.status_code == 404:
             res["success"] = False
             res["message"] = "Signing key not found"
-        elif response.status_code == 409:
-            message = response.json()["error-list"][0]["message"]
-
-            if "used to sign at least one serial policy" in message:
-                matching_models = []
-                models_response = get_models(store_id).json
-                models = models_response.get("data", [])
-                for model in models:
-                    policies_resp = get_policies(store_id, model["name"]).json
-                    policies = policies_resp.get("data", [])
-                    matching_policies = [
-                        {"revision": policy["revision"]}
-                        for policy in policies
-                        if policy["signing-key-sha3-384"]
-                        == signing_key_sha3_384
-                    ]
-                    if matching_policies:
-                        matching_models.append(
-                            {
-                                "name": model["name"],
-                                "policies": matching_policies,
-                            }
-                        )
-                    res["data"] = {"models": matching_models}
-                    res[
-                        "message"
-                    ] = "Signing key is used in at least one policy"
-
-            else:
-                res["message"] = message
+            return make_response(res, 404)
     except StoreApiResponseErrorList as error_list:
-        res["success"] = False
-        res["message"] = error_list.errors[0]["message"]
+        message = error_list.errors[0]["message"]
+        if (
+            error_list.status_code == 409
+            and "used to sign at least one serial policy" in message
+        ):
+            matching_models = []
+            models_response = get_models(store_id).json
+            models = models_response.get("data", [])
 
-    return make_response(res)
+            for model in models:
+                policies_resp = get_policies(store_id, model["name"]).json
+                policies = policies_resp.get("data", [])
+                matching_policies = [
+                    {"revision": policy["revision"]}
+                    for policy in policies
+                    if policy["signing-key-sha3-384"] == signing_key_sha3_384
+                ]
+                if matching_policies:
+                    matching_models.append(
+                        {
+                            "name": model["name"],
+                            "policies": matching_policies,
+                        }
+                    )
+                res["data"] = {"models": matching_models}
+                res["message"] = "Signing key is used in at least one policy"
+                res["success"] = False
+        else:
+            res["success"] = False
+            res["message"] = error_list.errors[0]["message"]
+
+        return make_response(res, 500)

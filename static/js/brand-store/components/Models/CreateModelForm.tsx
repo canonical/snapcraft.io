@@ -1,8 +1,8 @@
-import React from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import React, { useState } from "react";
+import { useNavigate, useParams, useLocation, Link } from "react-router-dom";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import { useMutation } from "react-query";
-import { Input, Button } from "@canonical/react-components";
+import { useMutation, useQueryClient } from "react-query";
+import { Input, Button, Icon } from "@canonical/react-components";
 import randomstring from "randomstring";
 
 import { checkModelNameExists, setPageTitle } from "../../utils";
@@ -22,6 +22,7 @@ function CreateModelForm({
   setShowErrorNotification,
 }: Props) {
   const navigate = useNavigate();
+  const location = useLocation();
   const { id } = useParams();
   const [newModel, setNewModel] = useRecoilState(newModelState);
   const stores = useRecoilState(brandStoresState);
@@ -29,9 +30,13 @@ function CreateModelForm({
   const modelsList = useRecoilValue(filteredModelsListState);
   const brandStore = useRecoilValue(brandStoreState(id));
   const setModelsList = useSetRecoilState<Array<Model>>(modelsListState);
+  const [isSaving, setIsSaving] = useState(false);
+
+  const queryClient = useQueryClient();
 
   const handleError = () => {
     setShowErrorNotification(true);
+    setIsSaving(false);
     setModelsList((oldModelsList: Array<Model>) => {
       return oldModelsList.filter((model) => model.name !== newModel.name);
     });
@@ -44,20 +49,21 @@ function CreateModelForm({
 
   const mutation = useMutation({
     mutationFn: (newModel: { name: string; apiKey: string }) => {
+      setIsSaving(true);
+
       const formData = new FormData();
 
       formData.set("csrf_token", window.CSRF_TOKEN);
       formData.set("name", newModel.name);
       formData.set("api_key", newModel.apiKey);
 
-      navigate(`/admin/${id}/models`);
+      setNewModel({ name: "", apiKey: "" });
 
       setModelsList((oldModelsList: Array<Model>) => {
         return [
           {
             "api-key": newModel.apiKey,
             "created-at": new Date().toISOString(),
-            "modified-at": new Date().toISOString(),
             name: newModel.name,
           },
           ...oldModelsList,
@@ -69,34 +75,32 @@ function CreateModelForm({
         body: formData,
       });
     },
-    onSuccess: async (response) => {
-      if (!response.ok) {
-        handleError();
-        throw new Error(`${response.status} ${response.statusText}`);
-      }
-
-      const modelsData = await response.json();
-
-      if (!modelsData.success) {
-        throw new Error(modelsData.message);
-      }
-
+    onMutate: async (newModel) => {
+      await queryClient.cancelQueries({ queryKey: ["models"] });
+      queryClient.setQueryData(["models"], () => [newModel]);
+      return { previousModels: modelsList };
+    },
+    onError: ({ context }) => {
+      queryClient.setQueryData(["models"], context?.previousModels);
+      handleError();
+      throw new Error("Unable to create a new model");
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ["models"] });
       setShowNotification(true);
-      setNewModel({ name: "", apiKey: "" });
+      setIsSaving(false);
       navigate(`/admin/${id}/models`);
       setTimeout(() => {
         setShowNotification(false);
       }, 5000);
     },
-    onError: () => {
-      handleError();
-      throw new Error("Unable to create a new model");
-    },
   });
 
-  brandStore
-    ? setPageTitle(`Create model in ${brandStore.name}`)
-    : setPageTitle("Create model");
+  if (location.pathname.includes("/create")) {
+    brandStore
+      ? setPageTitle(`Create model in ${brandStore.name}`)
+      : setPageTitle("Create model");
+  }
 
   return (
     <form
@@ -117,6 +121,12 @@ function CreateModelForm({
                 Brand
                 <br />
                 {currentStore.name}
+              </p>
+            )}
+            {isSaving && (
+              <p>
+                <Icon name="spinner" className="u-animation--spin" />
+                &nbsp;Creating new model...
               </p>
             )}
             <Input
@@ -165,16 +175,16 @@ function CreateModelForm({
             <p>* Mandatory field</p>
             <hr />
             <div className="u-align--right">
-              <Button
-                className="u-no-margin--bottom"
+              <Link
+                className="p-button u-no-margin--bottom"
+                to={`/admin/${id}/models`}
                 onClick={() => {
-                  navigate(`/admin/${id}/models`);
                   setNewModel({ name: "", apiKey: "" });
                   setShowErrorNotification(false);
                 }}
               >
                 Cancel
-              </Button>
+              </Link>
               <Button
                 type="submit"
                 appearance="positive"

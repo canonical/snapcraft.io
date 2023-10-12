@@ -4,6 +4,8 @@ import { useParams } from "react-router-dom";
 import { format } from "date-fns";
 import { MainTable, Button, Modal, Icon } from "@canonical/react-components";
 
+import AppPagination from "../AppPagination";
+
 import { usePolicies } from "../../hooks";
 import { filteredPoliciesListState } from "../../selectors";
 
@@ -22,6 +24,7 @@ function ModelsTable({
   const [policiesList, setPoliciesList] = useRecoilState(
     filteredPoliciesListState
   );
+  const [itemsToShow, setItemsToShow] = useState<Array<Policy>>(policiesList);
   const [showModal, setShowModal] = useState<boolean>(false);
   const [selectedPolicy, setSelectedPolicy] = useState<number | undefined>();
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -85,121 +88,128 @@ function ModelsTable({
 
   return (
     <>
-      <MainTable
-        data-testid="policies-table"
-        sortable
-        paginate={20}
-        emptyStateMsg="No policies available"
-        headers={[
-          {
-            content: "Revision",
-            sortKey: "revision",
-          },
-          {
-            content: "Signing key",
-            sortKey: "name",
-            className: "u-align--right",
-          },
-          {
-            content: "Creation date",
-            sortKey: "created-at",
-            className: "u-align--right",
-          },
-          {
-            content: "Last updated",
-            sortKey: "modified-at",
-            className: "u-align--right",
-          },
-          {
-            content: "",
-          },
-        ]}
-        rows={policiesList.map((policy: Policy) => {
-          return {
-            columns: [
-              {
-                content: policy.revision,
-              },
-              {
-                content: policy["signing-key-name"],
-                className: "u-align--right",
-              },
-              {
-                content: format(new Date(policy["created-at"]), "dd/MM/yyyy"),
-                className: "u-align--right",
-              },
-              {
-                content: policy["modified-at"]
-                  ? format(new Date(policy["modified-at"]), "dd/MM/yyyy")
-                  : "-",
-                className: "u-align--right",
-              },
-              {
-                content: (
-                  <Button
-                    className="u-no-margin--bottom"
-                    onClick={() => {
-                      setSelectedPolicy(policy.revision);
-                      setShowModal(true);
-                    }}
-                  >
-                    Delete
-                  </Button>
-                ),
-                className: "u-align--right",
-              },
-            ],
-            sortData: {
-              revision: policy.revision,
-              name: policy["signing-key-name"],
-              "created-at": policy["created-at"],
-              "modified-at": policy["modified-at"],
+      <div className="u-flex-grow">
+        <MainTable
+          data-testid="policies-table"
+          sortable
+          emptyStateMsg="No policies available"
+          headers={[
+            {
+              content: "Revision",
+              sortKey: "revision",
             },
-          };
-        })}
+            {
+              content: "Signing key",
+              sortKey: "name",
+              className: "u-align--right",
+            },
+            {
+              content: "Creation date",
+              sortKey: "created-at",
+              className: "u-align--right",
+            },
+            {
+              content: "Last updated",
+              sortKey: "modified-at",
+              className: "u-align--right",
+            },
+            {
+              content: "",
+            },
+          ]}
+          rows={itemsToShow.map((policy: Policy) => {
+            return {
+              columns: [
+                {
+                  content: policy.revision,
+                },
+                {
+                  content: policy["signing-key-name"],
+                  className: "u-align--right",
+                },
+                {
+                  content: format(new Date(policy["created-at"]), "dd/MM/yyyy"),
+                  className: "u-align--right",
+                },
+                {
+                  content:
+                    policy["modified-at"] && policy["modified-at"]
+                      ? format(new Date(policy["modified-at"]), "dd/MM/yyyy")
+                      : "-",
+                  className: "u-align--right",
+                },
+                {
+                  content: (
+                    <Button
+                      className="u-no-margin--bottom"
+                      onClick={() => {
+                        setSelectedPolicy(policy.revision);
+                        setShowModal(true);
+                      }}
+                    >
+                      Delete
+                    </Button>
+                  ),
+                  className: "u-align--right",
+                },
+              ],
+              sortData: {
+                revision: policy.revision,
+                name: policy["signing-key-name"],
+                "created-at": policy["created-at"],
+                "modified-at": policy["modified-at"],
+              },
+            };
+          })}
+        />
+        {showModal && (
+          <Modal
+            close={() => {
+              setShowModal(false);
+            }}
+            title="Delete policy"
+            buttonRow={
+              <>
+                <Button
+                  className="u-no-margin--bottom"
+                  onClick={() => {
+                    setSelectedPolicy(undefined);
+                    setShowModal(false);
+                  }}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  className="u-no-margin--bottom u-no-margin--right"
+                  appearance="positive"
+                  onClick={() => {
+                    deletePolicy(selectedPolicy);
+                  }}
+                >
+                  Delete policy
+                </Button>
+              </>
+            }
+          >
+            {isLoading ? (
+              <p>
+                <Icon name="spinner" className="u-animation--spin" />
+                &nbsp;Deleting policy...
+              </p>
+            ) : (
+              <p>
+                Are you sure you want to delete this policy? This action cannot
+                be undone.
+              </p>
+            )}
+          </Modal>
+        )}
+      </div>
+      <AppPagination
+        keyword="policy"
+        items={policiesList}
+        setItemsToShow={setItemsToShow}
       />
-      {showModal && (
-        <Modal
-          close={() => {
-            setShowModal(false);
-          }}
-          title="Delete policy"
-          buttonRow={
-            <>
-              <Button
-                className="u-no-margin--bottom"
-                onClick={() => {
-                  setSelectedPolicy(undefined);
-                  setShowModal(false);
-                }}
-              >
-                Cancel
-              </Button>
-              <Button
-                className="u-no-margin--bottom u-no-margin--right"
-                appearance="positive"
-                onClick={() => {
-                  deletePolicy(selectedPolicy);
-                }}
-              >
-                Delete policy
-              </Button>
-            </>
-          }
-        >
-          {isLoading ? (
-            <p>
-              <Icon name="spinner" className="u-animation--spin" />
-              &nbsp;Deleting policy...
-            </p>
-          ) : (
-            <p>
-              Are you sure you want to delete this policy? This action cannot be
-              undone.
-            </p>
-          )}
-        </Modal>
-      )}
     </>
   );
 }

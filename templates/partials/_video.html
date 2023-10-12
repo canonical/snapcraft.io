@@ -38,7 +38,14 @@
       const thumbnailButton = document.querySelector("#youtube-thumbnail-button");
       const videoUrl = "{{ video.url }}?autoplay=1&cc_load_policy=1&modestbranding=1&rel=0";
 
-      fetch(thumbnailUrl)
+      const data = new FormData();
+      data.append("videoId", videoId);
+      data.append("csrf_token", "{{csrf_token() }}");
+
+      fetch(`/youtube`, {
+        method: "POST",
+        body:  data
+      })
         .then(function(r) {
           if (r.ok === true) {
             return r.json();

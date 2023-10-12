@@ -1,8 +1,8 @@
-import React from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import React, { useState } from "react";
+import { useNavigate, useParams, useLocation, Link } from "react-router-dom";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import { useMutation } from "react-query";
-import { Input, Button } from "@canonical/react-components";
+import { useMutation, useQueryClient } from "react-query";
+import { Input, Button, Icon } from "@canonical/react-components";
 
 import { checkSigningKeyExists, setPageTitle } from "../../utils";
 
@@ -23,6 +23,7 @@ function CreateSigningKeyForm({
   refetch,
 }: Props) {
   const navigate = useNavigate();
+  const location = useLocation();
   const { id } = useParams();
   const [newSigningKey, setNewSigningKey] = useRecoilState(newSigningKeyState);
   const signingKeysList = useRecoilValue(filteredSigningKeysListState);
@@ -30,6 +31,8 @@ function CreateSigningKeyForm({
   const setSigningKeysList = useSetRecoilState<Array<SigningKey>>(
     signingKeysListState
   );
+  const [isSaving, setIsSaving] = useState(false);
+  const queryClient = useQueryClient();
 
   const handleError = () => {
     setSigningKeysList((oldSigningKeysList: Array<SigningKey>) => {
@@ -39,6 +42,7 @@ function CreateSigningKeyForm({
     });
     navigate(`/admin/${id}/signing-keys`);
     setNewSigningKey({ name: "" });
+    setIsSaving(false);
     setTimeout(() => {
       setErrorMessage("");
     }, 5000);
@@ -46,12 +50,14 @@ function CreateSigningKeyForm({
 
   const mutation = useMutation({
     mutationFn: (newSigningKey: { name: string }) => {
+      setIsSaving(true);
+
       const formData = new FormData();
 
       formData.set("csrf_token", window.CSRF_TOKEN);
       formData.set("name", newSigningKey.name);
 
-      navigate(`/admin/${id}/signing-keys`);
+      setNewSigningKey({ name: "" });
 
       setSigningKeysList((oldSigningKeysList: Array<SigningKey>) => {
         return [
@@ -69,36 +75,34 @@ function CreateSigningKeyForm({
         body: formData,
       });
     },
-    onSuccess: async (response) => {
-      if (!response.ok) {
-        handleError();
-        throw new Error(`${response.status} ${response.statusText}`);
-      }
-
-      const signingKeysData = await response.json();
-
-      if (!signingKeysData.success) {
-        setErrorMessage(signingKeysData.message);
-        throw new Error(signingKeysData.message);
-      }
-
+    onMutate: async (newSigningKey) => {
+      await queryClient.cancelQueries({ queryKey: ["signingKeys"] });
+      const previousSigningKeys = queryClient.getQueryData(["signingKeys"]);
+      queryClient.setQueryData(["signingKeys"], () => [newSigningKey]);
+      return { previousSigningKeys };
+    },
+    onError: ({ context }) => {
+      queryClient.setQueryData(["signingKeys"], context?.previousSigningKeys);
+      handleError();
+      throw new Error("Unable to create signing key");
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ["signingKeys"] });
       refetch();
       setShowNotification(true);
-      setNewSigningKey({ name: "" });
+      setIsSaving(false);
       navigate(`/admin/${id}/signing-keys`);
       setTimeout(() => {
         setShowNotification(false);
       }, 5000);
     },
-    onError: () => {
-      handleError();
-      throw new Error("Unable to create signing key");
-    },
   });
 
-  brandStore
-    ? setPageTitle(`Create signing key in ${brandStore.name}`)
-    : setPageTitle("Create signing key");
+  if (location.pathname.includes("/create")) {
+    brandStore
+      ? setPageTitle(`Create signing key in ${brandStore.name}`)
+      : setPageTitle("Create signing key");
+  }
 
   return (
     <form
@@ -114,6 +118,12 @@ function CreateSigningKeyForm({
         </div>
         <div className="p-panel__content">
           <div className="u-fixed-width" style={{ marginBottom: "30px" }}>
+            {isSaving && (
+              <p>
+                <Icon name="spinner" className="u-animation--spin" />
+                &nbsp;Adding new signing key...
+              </p>
+            )}
             <Input
               type="text"
               id="signing-key-name-field"
@@ -137,16 +147,16 @@ function CreateSigningKeyForm({
             <p>* Mandatory field</p>
             <hr />
             <div className="u-align--right">
-              <Button
-                className="u-no-margin--bottom"
+              <Link
+                className="p-button u-no-margin--bottom"
+                to={`/admin/${id}/signing-keys`}
                 onClick={() => {
-                  navigate(`/admin/${id}/signing-keys`);
                   setNewSigningKey({ name: "" });
                   setErrorMessage("");
                 }}
               >
                 Cancel
-              </Button>
+              </Link>
               <Button
                 type="submit"
                 appearance="positive"

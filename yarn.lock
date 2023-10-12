@@ -3,9 +3,9 @@
 
 
 "@adobe/css-tools@^4.0.1":
-  version "4.2.0"
-  resolved "https://registry.yarnpkg.com/@adobe/css-tools/-/css-tools-4.2.0.tgz#e1a84fca468f4b337816fcb7f0964beb620ba855"
-  integrity sha512-E09FiIft46CmH5Qnjb0wsW54/YQd69LsxeKUOWawmws1XWvyFGURnAChH0mlr7YPFR1ofwvUQfcL0J3lMxXqPA==
+  version "4.3.1"
+  resolved "https://registry.yarnpkg.com/@adobe/css-tools/-/css-tools-4.3.1.tgz#abfccb8ca78075a2b6187345c26243c1a0842f28"
+  integrity sha512-/62yikz7NLScCGAAST5SHdnjaDJQBDq0M2muyRTpf2VQhw6StBg2ALiu73zSJQ4fMVLA+0uBhBHAle7Wg+2kSg==
 
 "@ampproject/remapping@^2.2.0":
   version "2.2.0"
@@ -1044,22 +1044,22 @@
   resolved "https://registry.yarnpkg.com/@canonical/cookie-policy/-/cookie-policy-3.5.0.tgz#1c7e6cc2d5a7218375001b2cff2996a927693e89"
   integrity sha512-XLCIl8+h+3BRfvqADqFsmAfWdaDGDchY/TPCKtpeQdb4r64SR6arsdNftlOb7vX8EuLCK2QRp6evUy0J+qnQTg==
 
-"@canonical/global-nav@3.4.0":
-  version "3.4.0"
-  resolved "https://registry.yarnpkg.com/@canonical/global-nav/-/global-nav-3.4.0.tgz#e565c9446fe43281622857e965bcf53bbed0e5c6"
-  integrity sha512-KDlFVPTnO6on8okYfSUtqTdEaMpQE42gqZV82DHcfFOmrDVe8lrLPUl5bS8khJ0WbZhozMIMSTI0PUC/PCgl1Q==
+"@canonical/global-nav@3.6.1":
+  version "3.6.1"
+  resolved "https://registry.yarnpkg.com/@canonical/global-nav/-/global-nav-3.6.1.tgz#d4294a1cc287fd036a12e801fbf86ecf0a9864e0"
+  integrity sha512-P0yuQbItr6E+Y2C6Zxns+rF1ZMunokDSwj5ji9RfXUX7BZ3C3xFwy9DuXYVzTYyAoFfpxzZ/w4fs65sH5Nd3UA==
   dependencies:
-    vanilla-framework "3.14.0"
+    vanilla-framework "4.0.0"
 
 "@canonical/latest-news@1.4.1":
   version "1.4.1"
   resolved "https://registry.yarnpkg.com/@canonical/latest-news/-/latest-news-1.4.1.tgz#dcdd445ac2268a54cf60f2f8c725b6bdeb285d71"
   integrity sha512-lwrikCj0Y11X8Ln8D+elp6Ri3mYjMjsAOJtadNEFzhBrgmg8TVGYJjOdwy8TvRaxy7fHnvVajIKAYWX44Tfj6w==
 
-"@canonical/react-components@0.45.0":
-  version "0.45.0"
-  resolved "https://registry.yarnpkg.com/@canonical/react-components/-/react-components-0.45.0.tgz#2950177000ac01d6889a0ae3929f1fb5fac18db0"
-  integrity sha512-LVvEO8yt4COiRMiNv/UlnJZjAGvyyH8L9ZZUSD7UNv6a7Dx1xtKmX6mwi2+VGXvhCl3TKAxbqT3mabMM+tZX5Q==
+"@canonical/react-components@0.47.0":
+  version "0.47.0"
+  resolved "https://registry.yarnpkg.com/@canonical/react-components/-/react-components-0.47.0.tgz#1c6c29052eb07cb794ab0e9f50e206ab523b8232"
+  integrity sha512-6iIaw5qqJ7bD3M9mGbmh9Ej/uRl6Zi3BsHtotThXQKvvJr4aA7qhh8cISS+zLh/zfJ2a7J1MLc/151PlcSsK6g==
   dependencies:
     "@types/jest" "27.5.2"
     "@types/node" "18.16.18"
@@ -5581,11 +5581,6 @@ nanoid@4.0.1:
   resolved "https://registry.yarnpkg.com/nanoid/-/nanoid-4.0.1.tgz#398d7ccfdbf9faf2231b2ca7e8fff5dbca6a509b"
   integrity sha512-udKGtCCUafD3nQtJg9wBhRP3KMbPglUsgV5JVsXhvyBs/oefqb4sqMEhKBBgqZncYowu58p1prsZQBYvAj/Gww==
 
-nanoid@^3.3.4:
-  version "3.3.4"
-  resolved "https://registry.yarnpkg.com/nanoid/-/nanoid-3.3.4.tgz#730b67e3cd09e2deacf03c027c81c9d9dbc5e8ab"
-  integrity sha512-MqBkQh/OHTS2egovRtLk45wEyNXwF+cokD+1YPf9u5VfJiRdAiRwB2froX5Co9Rh20xs4siNPm8naNotSD6RBw==
-
 natural-compare@^1.4.0:
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/natural-compare/-/natural-compare-1.4.0.tgz#4abebfeed7541f2c27acfb29bdbbd15c8d5ba4f7"
@@ -5983,19 +5978,10 @@ postcss-value-parser@^4.1.0, postcss-value-parser@^4.2.0:
   resolved "https://registry.yarnpkg.com/postcss-value-parser/-/postcss-value-parser-4.2.0.tgz#723c09920836ba6d3e5af019f92bc0971c02e514"
   integrity sha512-1NNCs6uurfkVbeXG4S8JFT9t19m45ICnif8zWLd5oPSZ50QnwMfK+H3jv408d4jw/7Bttv5axS5IiHoLaVNHeQ==
 
-postcss@8.4.21, postcss@^8.4.19, postcss@^8.4.21:
-  version "8.4.21"
-  resolved "https://registry.yarnpkg.com/postcss/-/postcss-8.4.21.tgz#c639b719a57efc3187b13a1d765675485f4134f4"
-  integrity sha512-tP7u/Sn/dVxK2NnruI4H9BG+x+Wxz6oeZ1cJ8P6G/PZY0IKk4k/63TDsQf2kQq3+qoJeLm2kIBUNlZe3zgb4Zg==
-  dependencies:
-    nanoid "^3.3.4"
-    picocolors "^1.0.0"
-    source-map-js "^1.0.2"
-
-postcss@^8.4.24:
-  version "8.4.25"
-  resolved "https://registry.yarnpkg.com/postcss/-/postcss-8.4.25.tgz#4a133f5e379eda7f61e906c3b1aaa9b81292726f"
-  integrity sha512-7taJ/8t2av0Z+sQEvNzCkpDynl0tX3uJMCODi6nT3PfASC7dYCWV9aQ+uiCf+KBD4SEFcu+GvJdGdwzQ6OSjCw==
+postcss@8.4.31, postcss@^8.4.19, postcss@^8.4.21, postcss@^8.4.24:
+  version "8.4.31"
+  resolved "https://registry.yarnpkg.com/postcss/-/postcss-8.4.31.tgz#92b451050a9f914da6755af352bdc0192508656d"
+  integrity sha512-PS08Iboia9mts/2ygV3eLpY5ghnUcfLV/EXTOW1E2qYxJKGGBUtNjN76FYHnMs36RmARn41bC0AZmn+rR0OVpQ==
   dependencies:
     nanoid "^3.3.6"
     picocolors "^1.0.0"
@@ -7326,15 +7312,15 @@ validate-npm-package-license@^3.0.1:
     spdx-correct "^3.0.0"
     spdx-expression-parse "^3.0.0"
 
-vanilla-framework@3.14.0:
-  version "3.14.0"
-  resolved "https://registry.yarnpkg.com/vanilla-framework/-/vanilla-framework-3.14.0.tgz#c5b94d7e2e3ef2d3c9f24091b7efc4abf8054cf9"
-  integrity sha512-06Vr2nhjU72N9IivwCLcd7FgqFNopkiHfzANJUCNdvs8FkbTjIB7fcsFgJ6O76KnOBsEiAoJAssRkTh9x3a2jw==
+vanilla-framework@4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/vanilla-framework/-/vanilla-framework-4.0.0.tgz#a2fee9bd9763ebd6932b764f9d66484dc177d4cc"
+  integrity sha512-fiPnmaTUe15l5MRNJ6IsiJ8qiunfmgtLETOFltaYiE/bQKL7xTI+riBak2iygBKeF1y0Gi/GxUNt4hyb6xDPKA==
 
-vanilla-framework@4.1.0:
-  version "4.1.0"
-  resolved "https://registry.yarnpkg.com/vanilla-framework/-/vanilla-framework-4.1.0.tgz#093b96d5f54f9856817977ec4d90e008aab605ad"
-  integrity sha512-2KF9eGOibzaAN2k5+MAyPREGU/BeKlu7vVoqTyrH0K4prlM520oi3dRsQDKMYvq882AQwUxKgsKsN+od+vJt4w==
+vanilla-framework@4.4.0:
+  version "4.4.0"
+  resolved "https://registry.yarnpkg.com/vanilla-framework/-/vanilla-framework-4.4.0.tgz#0e2492c87632f3c5496a7ac996e11055d7e2914a"
+  integrity sha512-+6zV2+RjIK/tso1yMTvHgiKY4CG3G11opM1oAm6SwqDL9SU7VJh/jSD2BLdNnce+i1UQ28oW45yofZVKwXuvdw==
 
 verbalize@^0.1.2:
   version "0.1.2"
