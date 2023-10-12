@@ -69,7 +69,7 @@
     "markdown-it": "13.0.1",
     "nanoid": "4.0.1",
     "polylabel": "1.1.0",
-    "postcss": "8.4.21",
+    "postcss": "8.4.31",
     "postcss-cli": "10.1.0",
     "prettier": "2.2.1",
     "prop-types": "15.8.1",
