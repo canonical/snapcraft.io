@@ -12,8 +12,7 @@
 </ul>
 <hr>
 
-<!-- Once `links` is added to the API we can remove the `request.args` check -->
-{% if links and request.args.get("show_metadata_links") %}
+{% if links %}
   {% if links["website"] %}
     <h5 class="p-muted-heading">Websites</h5>
     <ul class="p-list">
@@ -38,10 +37,10 @@
     <hr>
   {% endif %}
 
-  {% if links["donation"] %}
+  {% if links["donations"] %}
     <h5 class="p-muted-heading">Donations</h5>
     <ul class="p-list">
-      {% for link in links["donation"] %}
+      {% for link in links["donations"] %}
         <li>
           <a class="js-external-link" title="{{ link }}" href="{{ link }}" aria-controls="modal">{{ format_link(link) }}</a>
         </li>
@@ -50,10 +49,10 @@
     <hr>
   {% endif %}
 
-  {% if links["source-code"] %}
+  {% if links["source"] %}
     <h5 class="p-muted-heading">Source code</h5>
     <ul class="p-list">
-      {% for link in links["source-code"] %}
+      {% for link in links["source"] %}
         <li>
           <a class="js-external-link" title="{{ link }}" href="{{ link }}" aria-controls="modal">{{ format_link(link) }}</a>
         </li>

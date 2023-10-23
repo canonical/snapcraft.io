@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
-import { useParams, Link, useNavigate } from "react-router-dom";
-import { useMutation } from "react-query";
-import { Button } from "@canonical/react-components";
+import { useParams, Link, useNavigate, useLocation } from "react-router-dom";
+import { useMutation, useQueryClient } from "react-query";
+import { Button, Icon } from "@canonical/react-components";
 
 import { setPageTitle } from "../../utils";
 
@@ -23,15 +23,19 @@ function CreatePolicyForm({
 }: Props) {
   const { id, model_id } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
   const { isLoading, isError, error, data }: any = useSigningKeys(id);
   const [signingKeys, setSigningKeys] = useRecoilState(signingKeysListState);
   const [newSigningKey, setNewSigningKey] = useRecoilState(newSigningKeyState);
   const brandStore = useRecoilValue(brandStoreState(id));
+  const [isSaving, setIsSaving] = useState(false);
+  const queryClient = useQueryClient();
 
   const handleError = () => {
     setShowErrorNotification(true);
     navigate(`/admin/${id}/models/${model_id}/policies`);
     setNewSigningKey({ name: "" });
+    setIsSaving(false);
     setTimeout(() => {
       setShowErrorNotification(false);
     }, 5000);
@@ -39,47 +43,48 @@ function CreatePolicyForm({
 
   const mutation = useMutation({
     mutationFn: (policySigningKey: string) => {
+      setIsSaving(true);
+
       const formData = new FormData();
 
       formData.set("csrf_token", window.CSRF_TOKEN);
       formData.set("signing_key", policySigningKey);
 
-      navigate(`/admin/${id}/models/${model_id}/policies`);
+      setNewSigningKey({ name: "" });
 
       return fetch(`/admin/store/${id}/models/${model_id}/policies`, {
         method: "POST",
         body: formData,
       });
     },
-    onSuccess: async (response) => {
-      if (!response.ok) {
-        handleError();
-        throw new Error(`${response.status} ${response.statusText}`);
-      }
-
-      const policiesData = await response.json();
-
-      if (!policiesData.success) {
-        throw new Error(policiesData.message);
-      }
-
+    onMutate: async (newPolicy) => {
+      await queryClient.cancelQueries({ queryKey: ["policies"] });
+      const previousPolicies = queryClient.getQueryData(["policies"]);
+      queryClient.setQueryData(["policies"], () => [newPolicy]);
+      return { previousPolicies };
+    },
+    onError: ({ context }) => {
+      queryClient.setQueryData(["policies"], context?.previousPolicies);
+      handleError();
+      throw new Error("Unable to create a new policy");
+    },
+    onSettled: async () => {
+      queryClient.invalidateQueries({ queryKey: ["policies"] });
       setShowNotification(true);
-      setNewSigningKey({ name: "" });
+      setIsSaving(false);
       refetchPolicies();
       navigate(`/admin/${id}/models/${model_id}/policies`);
       setTimeout(() => {
         setShowNotification(false);
       }, 5000);
     },
-    onError: () => {
-      handleError();
-      throw new Error("Unable to create a new policy");
-    },
   });
 
-  brandStore
-    ? setPageTitle(`Create policy in ${brandStore.name}`)
-    : setPageTitle("Create policy");
+  if (location.pathname.includes("/create")) {
+    brandStore
+      ? setPageTitle(`Create policy in ${brandStore.name}`)
+      : setPageTitle("Create policy");
+  }
 
   useEffect(() => {
     if (!isLoading && !error) {
@@ -103,6 +108,13 @@ function CreatePolicyForm({
           <div className="u-fixed-width" style={{ marginBottom: "30px" }}>
             {isLoading && <p>Fetching signing keys...</p>}
             {isError && error && <p>Error: {error.message}</p>}
+
+            {isSaving && (
+              <p>
+                <Icon name="spinner" className="u-animation--spin" />
+                &nbsp;Adding new policy...
+              </p>
+            )}
 
             <label htmlFor="signing-key">Signing key</label>
             <select
