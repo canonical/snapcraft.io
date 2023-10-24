@@ -6,6 +6,8 @@ import {
   Row,
   Col,
   Notification,
+  Button,
+  Modal,
 } from "@canonical/react-components";
 
 import PageHeader from "../../../shared/PageHeader";
@@ -14,6 +16,7 @@ import SearchAutocomplete from "../../../shared/SearchAutocomplete";
 import UpdateMetadataModal from "../../../shared/UpdateMetadataModal";
 
 import { getSettingsData, getFormData } from "../../utils";
+import { set } from "date-fns";
 
 function App() {
   const settingsData = getSettingsData(window?.settingsData);
@@ -26,6 +29,10 @@ function App() {
   const [showMetadataWarningModal, setShowMetadataWarningModal] = useState(
     false
   );
+  const [showUnregisterModal, setShowUnregisterModal] = useState(false);
+  const [hasUnregistered, setHasUnregistered] = useState(false);
+  const [unregisterError, setUnregisterError] = useState(false);
+  const [unregisterErrorMessage, setUnregisterErrorMessage] = useState("");
 
   const {
     register,
@@ -161,6 +168,30 @@ function App() {
               >
                 Please try again later.
               </Notification>
+            </div>
+          )}
+
+          {hasUnregistered && (
+            <div className="u-fixed-width">
+              <Notification
+                severity="positive"
+                title="Unregistered successfully."
+                onDismiss={() => {
+                  setHasUnregistered(false);
+                }}
+              />
+            </div>
+          )}
+
+          {unregisterError && (
+            <div className="u-fixed-width">
+              <Notification
+                severity="negative"
+                title={unregisterErrorMessage}
+                onDismiss={() => {
+                  setUnregisterError(false);
+                }}
+              />
             </div>
           )}
 
@@ -421,11 +452,77 @@ function App() {
             <Col size={8}>
               <div className="p-form__control" aria-labelledby="status-label">
                 {settingsData?.status}
+                {settingsData?.status === "unpublished" && (
+                  <Button
+                    type="button"
+                    style={{ marginLeft: "2rem" }}
+                    onClick={() => {
+                      setShowUnregisterModal(true);
+                    }}
+                  >
+                    Unregister
+                  </Button>
+                )}
               </div>
             </Col>
           </Row>
         </Strip>
       </Form>
+
+      {showUnregisterModal && (
+        <Modal
+          close={() => {
+            setShowUnregisterModal(false);
+          }}
+          title={`Unregister ${settingsData?.snap_name}`}
+          buttonRow={
+            <>
+              <Button
+                type="button"
+                className="u-no-margin--bottom"
+                onClick={() => {
+                  setShowUnregisterModal(false);
+                }}
+              >
+                Cancel
+              </Button>
+              <Button
+                type="button"
+                className="u-no-margin--bottom u-no-margin--right"
+                appearance="negative"
+                onClick={async () => {
+                  const formData = new FormData();
+                  formData.set("csrf_token", window.CSRF_TOKEN);
+
+                  const response = await fetch(`/${settingsData?.snap_name}`, {
+                    method: "DELETE",
+                    body: formData,
+                  });
+
+                  if (response.status === 200) {
+                    setHasUnregistered(true);
+                  } else {
+                    const responseData = await response.json();
+                    setUnregisterErrorMessage(responseData.error);
+                    setUnregisterError(true);
+                  }
+
+                  setShowUnregisterModal(false);
+                  window.scrollTo(0, 0);
+                }}
+              >
+                Unregister
+              </Button>
+            </>
+          }
+        >
+          <p>
+            Are you sure you want to unregister “{settingsData?.snap_name}”?
+            This name will be removed from your registered names and become
+            available to others.
+          </p>
+        </Modal>
+      )}
 
       {showMetadataWarningModal ? (
         <UpdateMetadataModal
