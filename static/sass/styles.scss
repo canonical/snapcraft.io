@@ -493,3 +493,11 @@ code {
 .p-accordion__panel[aria-hidden="false"] {
   transform: none;
 }
+
+// Vanilla top aligns table cells which causes misalignment when a button is
+// present. This table is targeted to avoid potential issues with other
+// existing tables.
+// stylelint-disable
+.registered-snaps-table td {
+  vertical-align: middle;
+}
