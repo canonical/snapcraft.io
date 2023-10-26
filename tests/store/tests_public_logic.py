@@ -357,3 +357,87 @@ class StoreLogicTest(unittest.TestCase):
         result = logic.get_snap_banner_url(snap_with_banner)
 
         self.assertEqual(result.get("banner_url"), None)
+
+    def test_get_latest_versions(self):
+        latest_stable = {
+            "channel": {
+                "risk": "stable",
+                "track": "latest",
+                "released-at": "2023-02-02",
+            }
+        }
+
+        latest_edge = {
+            "channel": {
+                "risk": "edge",
+                "track": "latest",
+                "released-at": "2023-03-01",
+            }
+        }
+        channel_map_single_channel = [latest_stable]
+
+        channel_map_stable_first = [latest_stable, latest_edge]
+
+        channel_map_stable_second = [latest_edge, latest_stable]
+
+        single_result = logic.get_latest_versions(
+            channel_map_single_channel, "latest", "stable"
+        )
+        self.assertEqual(
+            single_result[0]["released-at-display"], "2 February 2023"
+        )
+        self.assertEqual(single_result[1], None)
+
+        stable_first_result = logic.get_latest_versions(
+            channel_map_stable_first, "latest", "stable"
+        )
+        self.assertEqual(
+            stable_first_result[0]["released-at-display"], "2 February 2023"
+        )
+        self.assertEqual(
+            stable_first_result[1]["released-at-display"], "1 March 2023"
+        )
+
+        stable_second_result = logic.get_latest_versions(
+            channel_map_stable_second, "latest", "stable"
+        )
+        self.assertEqual(
+            stable_second_result[0]["released-at-display"], "2 February 2023"
+        )
+        self.assertEqual(
+            stable_second_result[1]["released-at-display"], "1 March 2023"
+        )
+
+        edge_highest_risk_result = logic.get_latest_versions(
+            channel_map_stable_first, "latest", "edge"
+        )
+        self.assertEqual(
+            edge_highest_risk_result[0]["released-at-display"], "1 March 2023"
+        )
+        self.assertEqual(
+            edge_highest_risk_result[1]["released-at-display"],
+            "2 February 2023",
+        )
+
+    def test_get_last_updated_versions(self):
+        latest_stable = {
+            "channel": {
+                "risk": "stable",
+                "track": "latest",
+                "released-at": "2023-02-02",
+            }
+        }
+
+        latest_edge = {
+            "channel": {
+                "risk": "edge",
+                "track": "latest",
+                "released-at": "2023-03-01",
+            }
+        }
+
+        result = logic.get_last_updated_versions([latest_stable, latest_edge])
+
+        self.assertEqual(
+            result, [latest_edge["channel"], latest_stable["channel"]]
+        )

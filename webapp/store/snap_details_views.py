@@ -56,6 +56,9 @@ def snap_details_views(store, api):
         )
 
         last_updated = latest_channel["channel"]["released-at"]
+        updates = logic.get_latest_versions(
+            details.get("channel-map"), default_track, lowest_risk_available
+        )
         binary_filesize = latest_channel["download"]["size"]
 
         # filter out banner and banner-icon images from screenshots
@@ -149,6 +152,7 @@ def snap_details_views(store, api):
                 "openhab": "openhab",
             },
             "links": details["snap"].get("links"),
+            "updates": updates,
         }
 
         return context
