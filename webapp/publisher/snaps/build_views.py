@@ -111,11 +111,14 @@ def get_snap_builds(snap_name):
 
             if context["yaml_file_exists"]:
                 try:
-                    gh_snap_base = github.get_snapcraft_yaml_data(
+                    yaml_data = github.get_snapcraft_yaml_data(
                         github_owner,
                         github_repo,
                         location=context["yaml_file_exists"],
-                    ).get("base", None)
+                    )
+                    gh_snap_base = yaml_data.get(
+                        "build-base", yaml_data.get("base", None)
+                    )
                 except InvalidYAML:
                     # If we can't parse the yaml we don't
                     # want to cause an error
