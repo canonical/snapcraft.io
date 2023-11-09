@@ -83,7 +83,7 @@ function Settings() {
     settingsData.set("manual-review-policy", manualReviewPolicy);
 
     fetch(`/admin/store/${id}/settings`, {
-      method: "POST",
+      method: "PUT",
       body: settingsData,
     })
       .then((response) => {
