@@ -9,56 +9,36 @@ import type { Snap } from "../../types/shared";
 
 function makeRows(group: { store: string; snaps: Array<Snap> }) {
   return group.snaps.map((snap, index) => {
+    const columns = [];
+
     if (index === 0) {
-      return {
-        columns: [
-          {
-            content: group.store,
-            rowSpan: group.snaps.length,
-          },
-          {
-            content: snap.name || "-",
-          },
-          {
-            content:
-              snap["latest-release"] && snap["latest-release"].version
-                ? snap["latest-release"].version
-                : "-",
-          },
-          {
-            content: format(
-              new Date(snap["latest-release"].timestamp),
-              "dd/MM/yyyy"
-            ),
-          },
-          {
-            content: snap.users[0].displayname,
-          },
-        ],
-      };
+      columns.push({
+        content: group.store,
+        rowSpan: group.snaps.length,
+      });
     }
 
+    columns.push({
+      content: snap.name || "-",
+    });
+
+    columns.push({
+      content:
+        snap["latest-release"] && snap["latest-release"].version
+          ? snap["latest-release"].version
+          : "-",
+    });
+
+    columns.push({
+      content: format(new Date(snap["latest-release"].timestamp), "dd/MM/yyyy"),
+    });
+
+    columns.push({
+      content: snap.users[0].displayname,
+    });
+
     return {
-      columns: [
-        {
-          content: snap.name || "-",
-        },
-        {
-          content:
-            snap["latest-release"] && snap["latest-release"].version
-              ? snap["latest-release"].version
-              : "-",
-        },
-        {
-          content: format(
-            new Date(snap["latest-release"].timestamp),
-            "dd/MM/yyyy"
-          ),
-        },
-        {
-          content: snap.users[0].displayname,
-        },
-      ],
+      columns,
     };
   });
 }
