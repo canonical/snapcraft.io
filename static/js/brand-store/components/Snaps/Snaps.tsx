@@ -10,17 +10,22 @@ import {
 } from "react-router-dom";
 
 import { useSnaps } from "../../hooks";
-import { snapsListFilterState, snapsListState } from "../../atoms";
+
+import {
+  snapsListFilterState,
+  snapsListState,
+  brandStoresState,
+} from "../../atoms";
+import { brandStoreState, includedStoresState } from "../../selectors";
 
 import SectionNav from "../SectionNav";
 import SnapsFilter from "./SnapsFilter";
 import SnapsTable from "./SnapsTable";
 import SnapsSearch from "./SnapsSearch";
 
-import { isClosedPanel, setPageTitle } from "../../utils";
+import { isClosedPanel, setPageTitle, getStoreName } from "../../utils";
 
-import type { Snap } from "../../types/shared";
-import { brandStoreState } from "../../selectors";
+import type { Snap, Store } from "../../types/shared";
 
 function Snaps() {
   const { id } = useParams();
@@ -30,7 +35,9 @@ function Snaps() {
   const setSnapsList = useSetRecoilState<Array<Snap>>(snapsListState);
   const setFilter = useSetRecoilState<string>(snapsListFilterState);
   const brandStore = useRecoilValue(brandStoreState(id));
+  const includedStores = useRecoilValue(includedStoresState);
   const [searchParams] = useSearchParams();
+  const brandStores = useRecoilValue<Array<Store>>(brandStoresState);
 
   brandStore
     ? setPageTitle(`Snaps in ${brandStore.name}`)
@@ -65,6 +72,26 @@ function Snaps() {
             <div className="u-fixed-width u-flex-column">
               <div className="u-flex-column u-flex-grow">
                 <SnapsTable />
+
+                {includedStores && (
+                  <>
+                    <h4>Fully included stores</h4>
+                    <p>
+                      In addition to the snaps listed above, all snaps from the
+                      following stores are also included in{" "}
+                      {getStoreName(id, brandStores)}
+                    </p>
+                    <ul>
+                      {includedStores["included-stores"].map(
+                        (includedStore: any) => (
+                          <li key={includedStore.id}>
+                            {includedStore.name} ({includedStore.id})
+                          </li>
+                        )
+                      )}
+                    </ul>
+                  </>
+                )}
               </div>
             </div>
           </div>

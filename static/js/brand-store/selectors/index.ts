@@ -45,7 +45,18 @@ const filteredSnapsListState = selector<Array<Snap>>({
     const filter = get(snapsListFilterState);
     const snaps = get(snapsListState);
 
-    return getFilteredSnaps(snaps, filter);
+    return getFilteredSnaps(
+      snaps.filter((snap) => !snap["included-stores"]),
+      filter
+    );
+  },
+});
+
+const includedStoresState = selector({
+  key: "includeStoresList",
+  get: ({ get }) => {
+    const snaps = get(snapsListState);
+    return snaps.find((snap) => snap["included-stores"]);
   },
 });
 
@@ -146,6 +157,7 @@ export {
   membersSelector,
   invitesSelector,
   filteredSnapsListState,
+  includedStoresState,
   filteredModelsListState,
   currentModelState,
   filteredPoliciesListState,

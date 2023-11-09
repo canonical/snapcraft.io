@@ -7,17 +7,9 @@ import { MainTable } from "@canonical/react-components";
 import { brandStoresState } from "../../atoms";
 import { filteredSnapsListState } from "../../selectors";
 
+import { getStoreName } from "../../utils";
+
 import type { Snap, Store } from "../../types/shared";
-
-function getStoreName(storeId: string, stores: Array<Store>) {
-  const store = stores.find((store) => store.id === storeId);
-
-  if (!store) {
-    return storeId;
-  }
-
-  return store.name;
-}
 
 function SnapsTable() {
   const snapsList = useRecoilValue<Array<Snap>>(filteredSnapsListState);
