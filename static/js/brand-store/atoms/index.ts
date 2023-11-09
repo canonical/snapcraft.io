@@ -1,9 +1,19 @@
 import { atom } from "recoil";
-import type { Store, Model, Policy, SigningKey } from "../types/shared";
+import type { Store, Model, Policy, SigningKey, Snap } from "../types/shared";
 
 const brandStoresState = atom({
   key: "brandStores",
   default: [] as Array<Store>,
+});
+
+const snapsListState = atom({
+  key: "snapsList",
+  default: [] as Array<Snap>,
+});
+
+const snapsListFilterState = atom({
+  key: "snapsListFilter",
+  default: "" as string,
 });
 
 const modelsListState = atom({
@@ -53,6 +63,8 @@ const newSigningKeyState = atom({
 
 export {
   brandStoresState,
+  snapsListState,
+  snapsListFilterState,
   modelsListState,
   modelsListFilterState,
   newModelState,

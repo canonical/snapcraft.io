@@ -6,6 +6,24 @@ import type { Model } from "../types/shared";
 export const useAppDispatch: () => AppDispatch = useDispatch;
 export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
 
+export function useSnaps(id: string | undefined) {
+  return useQuery("snaps", async () => {
+    const response = await fetch(`/admin/store/${id}/snaps`);
+
+    if (!response.ok) {
+      throw new Error("There was a problem fetching snaps");
+    }
+
+    const snapsData = await response.json();
+
+    if (!snapsData) {
+      throw new Error(snapsData.message);
+    }
+
+    return snapsData;
+  });
+}
+
 export function useModels(id: string | undefined) {
   return useQuery("models", async () => {
     const response = await fetch(`/admin/store/${id}/models`);

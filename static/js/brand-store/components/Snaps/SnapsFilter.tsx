@@ -1,76 +1,50 @@
-import React, { KeyboardEvent } from "react";
+import React from "react";
+import { useSearchParams } from "react-router-dom";
+import { useSetRecoilState } from "recoil";
+import { Button, Icon } from "@canonical/react-components";
 
-import type { SnapsList } from "../../types/shared";
+import { snapsListFilterState } from "../../atoms";
 
-type Props = {
-  setSnapsInStore: Function;
-  snapsInStore: SnapsList;
-  setOtherStores: Function;
-  otherStoreIds: Array<string>;
-  getStoreName: Function;
-  snaps: SnapsList;
-  id: string;
-};
+function SnapsFilter() {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const setFilter = useSetRecoilState(snapsListFilterState);
 
-function SnapsFilter({
-  setSnapsInStore,
-  snapsInStore,
-  setOtherStores,
-  otherStoreIds,
-  getStoreName,
-  snaps,
-  id,
-}: Props) {
   return (
     <div className="p-search-box">
+      <label className="u-off-screen" htmlFor="search">
+        Search snaps
+      </label>
       <input
+        required
         type="search"
+        name="search"
         className="p-search-box__input"
-        name="search-snaps"
-        id="search-snaps"
         placeholder="Search snaps"
         autoComplete="off"
-        onKeyUp={(
-          e: KeyboardEvent<HTMLInputElement> & {
-            target: HTMLInputElement;
-          }
-        ) => {
+        value={searchParams.get("filter") || ""}
+        onChange={(e) => {
           if (e.target.value) {
-            setSnapsInStore(
-              snapsInStore.filter((snap) =>
-                snap?.name?.includes(e.target.value)
-              )
-            );
-            setOtherStores(
-              otherStoreIds.map((storeId) => {
-                return {
-                  id: storeId,
-                  name: getStoreName(storeId),
-                  snaps: snaps.filter(
-                    (snap) =>
-                      snap.store === storeId &&
-                      snap.name.includes(e.target.value)
-                  ),
-                };
-              })
-            );
+            setSearchParams({ filter: e.target.value });
+            setFilter(e.target.value);
           } else {
-            setSnapsInStore(snaps.filter((snap) => snap.store === id));
-            setOtherStores(
-              otherStoreIds.map((storeId) => {
-                return {
-                  id: storeId,
-                  name: getStoreName(storeId),
-                  snaps: snaps.filter((snap) => snap.store === storeId),
-                };
-              })
-            );
+            setSearchParams();
+            setFilter("");
           }
         }}
       />
-      <button type="submit" className="p-search-box__button">
-        <i className="p-icon--search"></i>
-      </button>
+      <Button
+        type="reset"
+        className="p-search-box__reset"
+        onClick={() => {
+          setSearchParams();
+          setFilter("");
+        }}
+      >
+        <Icon name="close">Clear filter</Icon>
+      </Button>
+      <Button type="submit" className="p-search-box__button">
+        <Icon name="search">Search</Icon>
+      </Button>
     </div>
   );
 }

@@ -3,6 +3,8 @@ import { selector, selectorFamily } from "recoil";
 import {
   modelsListFilterState,
   modelsListState,
+  snapsListFilterState,
+  snapsListState,
   policiesListState,
   policiesListFilterState,
   signingKeysListState,
@@ -11,6 +13,7 @@ import {
 } from "../atoms";
 
 import {
+  getFilteredSnaps,
   getFilteredModels,
   getFilteredPolicies,
   getFilteredSigningKeys,
@@ -25,6 +28,7 @@ import type {
   Model,
   Policy,
   SigningKey,
+  Snap,
 } from "../types/shared";
 
 // Redux selectors
@@ -37,6 +41,16 @@ const membersSelector = (state: MembersSlice) => state.members.members;
 const invitesSelector = (state: InvitesSlice) => state.invites.invites;
 
 // Recoil selectors
+const filteredSnapsListState = selector<Array<Snap>>({
+  key: "filteredSnapsList",
+  get: ({ get }) => {
+    const filter = get(snapsListFilterState);
+    const snaps = get(snapsListState);
+
+    return getFilteredSnaps(snaps, filter);
+  },
+});
+
 const filteredModelsListState = selector<Array<Model>>({
   key: "filteredModelsList",
   get: ({ get }) => {
@@ -134,6 +148,7 @@ export {
   snapsSelector,
   membersSelector,
   invitesSelector,
+  filteredSnapsListState,
   filteredModelsListState,
   currentModelState,
   filteredPoliciesListState,
