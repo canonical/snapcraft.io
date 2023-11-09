@@ -7,6 +7,62 @@ import { filteredSnapsListState } from "../../selectors";
 
 import type { Snap } from "../../types/shared";
 
+function makeRows(group: { store: string; snaps: Array<Snap> }) {
+  return group.snaps.map((snap, index) => {
+    if (index === 0) {
+      return {
+        columns: [
+          {
+            content: group.store,
+            rowSpan: group.snaps.length,
+          },
+          {
+            content: snap.name || "-",
+          },
+          {
+            content:
+              snap["latest-release"] && snap["latest-release"].version
+                ? snap["latest-release"].version
+                : "-",
+          },
+          {
+            content: format(
+              new Date(snap["latest-release"].timestamp),
+              "dd/MM/yyyy"
+            ),
+          },
+          {
+            content: snap.users[0].displayname,
+          },
+        ],
+      };
+    }
+
+    return {
+      columns: [
+        {
+          content: snap.name || "-",
+        },
+        {
+          content:
+            snap["latest-release"] && snap["latest-release"].version
+              ? snap["latest-release"].version
+              : "-",
+        },
+        {
+          content: format(
+            new Date(snap["latest-release"].timestamp),
+            "dd/MM/yyyy"
+          ),
+        },
+        {
+          content: snap.users[0].displayname,
+        },
+      ],
+    };
+  });
+}
+
 function SnapsTable() {
   const snapsList = useRecoilValue<Array<Snap>>(filteredSnapsListState);
   const stores: string[] = [];
@@ -53,33 +109,11 @@ function SnapsTable() {
             content: "Publisher",
           },
         ]}
-        rows={snapsList.map((snap) => {
-          return {
-            columns: [
-              {
-                content: snap.store,
-              },
-              {
-                content: snap.name || "-",
-              },
-              {
-                content:
-                  snap["latest-release"] && snap["latest-release"].version
-                    ? snap["latest-release"].version
-                    : "-",
-              },
-              {
-                content: format(
-                  new Date(snap["latest-release"].timestamp),
-                  "dd/MM/yyyy"
-                ),
-              },
-              {
-                content: snap.users[0].displayname,
-              },
-            ],
-          };
-        })}
+        rows={snapsInStores
+          .map((group) => {
+            return makeRows(group);
+          })
+          .flat()}
       />
     </div>
   );
