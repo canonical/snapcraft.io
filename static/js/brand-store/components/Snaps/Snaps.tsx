@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { Row, Col } from "@canonical/react-components";
+import React, { useEffect } from "react";
+import { Row, Col, Button } from "@canonical/react-components";
 import { useSetRecoilState, useRecoilValue } from "recoil";
 import {
   Link,
@@ -59,6 +59,7 @@ function Snaps() {
                 <Link className="p-button" to={`/admin/${id}/snaps/include`}>
                   Include snap
                 </Link>
+                <Button className="p-button">Exclude snap</Button>
               </Col>
             </Row>
             <div className="u-fixed-width u-flex-column">
@@ -82,12 +83,42 @@ function Snaps() {
           isClosedPanel(location.pathname, "include") ? "is-collapsed" : ""
         }`}
       >
-        <SnapsSearch
-          storeId={id}
-          selectedSnaps={[]}
-          setSelectedSnaps={() => false}
-          nonEssentialSnapIds={[]}
-        />
+        <div className="p-panel is-flex-column">
+          <div className="p-panel__header">
+            <h4 className="p-panel__title">Add a snap to store</h4>
+          </div>
+          <div className="p-panel__content u-no-padding--top">
+            <div className="u-fixed-width">
+              <SnapsSearch
+                storeId={id}
+                selectedSnaps={[]}
+                setSelectedSnaps={() => false}
+                nonEssentialSnapIds={[]}
+              />
+            </div>
+          </div>
+          <div className="p-panel__footer u-align--right">
+            <div className="u-fixed-width">
+              <Button
+                className="u-no-margin--bottom"
+                onClick={() => {
+                  navigate(`/admin/${id}/snaps`);
+                }}
+              >
+                Cancel
+              </Button>
+              <Button
+                appearance="positive"
+                onClick={(e) => {
+                  e.preventDefault();
+                }}
+                className="u-no-margin--bottom u-no-margin--right"
+              >
+                Add snap
+              </Button>
+            </div>
+          </div>
+        </div>
       </aside>
     </>
   );
