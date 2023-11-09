@@ -7,7 +7,7 @@ import debounce from "../../../libs/debounce";
 import type { SnapsList, Snap } from "../../types/shared";
 
 type Props = {
-  storeId: string;
+  storeId: string | undefined;
   selectedSnaps: SnapsList;
   setSelectedSnaps: Function;
   nonEssentialSnapIds: Array<string>;

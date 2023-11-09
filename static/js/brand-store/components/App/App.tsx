@@ -75,6 +75,7 @@ function App() {
               }
             />
             <Route path="/admin/:id/snaps" element={<Snaps />} />
+            <Route path="/admin/:id/snaps/include" element={<Snaps />} />
             <Route path="/admin/:id/members" element={<Members />} />
             <Route path="/admin/:id/settings" element={<Settings />} />
             <Route path="/admin/:id/models" element={<Models />} />
@@ -89,7 +90,10 @@ function App() {
               element={<Policies />}
             />
             <Route path="/admin/:id/signing-keys" element={<SigningKeys />} />
-            <Route path="/admin/:id/signing-keys/create" element={<SigningKeys />} />
+            <Route
+              path="/admin/:id/signing-keys/create"
+              element={<SigningKeys />}
+            />
           </Routes>
         </div>
       </QueryClientProvider>
