@@ -9,6 +9,22 @@ import type { Snap } from "../../types/shared";
 
 function SnapsTable() {
   const snapsList = useRecoilValue<Array<Snap>>(filteredSnapsListState);
+  const stores: string[] = [];
+
+  snapsList.forEach((snap) => {
+    if (!stores.includes(snap.store)) {
+      stores.push(snap.store);
+    }
+  });
+
+  const snapsInStores: Array<{ store: string; snaps: Array<Snap> }> = [];
+
+  stores.forEach((store) => {
+    snapsInStores.push({
+      store,
+      snaps: snapsList.filter((snap) => snap.store === store),
+    });
+  });
 
   return (
     <div className="u-flex-grow">
@@ -37,7 +53,7 @@ function SnapsTable() {
             content: "Publisher",
           },
         ]}
-        rows={snapsList.map((snap: Snap) => {
+        rows={snapsList.map((snap) => {
           return {
             columns: [
               {
