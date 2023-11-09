@@ -1,5 +1,6 @@
 import React from "react";
 import { useRecoilValue } from "recoil";
+import { Link } from "react-router-dom";
 import { format } from "date-fns";
 import { MainTable } from "@canonical/react-components";
 
@@ -50,8 +51,20 @@ function SnapsTable() {
         });
       }
 
+      const name = () => {
+        if (!snap.name) {
+          return "-";
+        }
+
+        if (group.store === "ubuntu") {
+          return <a href={`/${snap.name}`}>{snap.name}</a>;
+        }
+
+        return snap.name;
+      };
+
       columns.push({
-        content: snap.name || "-",
+        content: name(),
       });
 
       columns.push({
