@@ -31,7 +31,7 @@ function Snaps() {
   const { id } = useParams();
   const location = useLocation();
   const navigate = useNavigate();
-  const { isLoading, error, data }: any = useSnaps(id);
+  const { isLoading, error, data, refetch }: any = useSnaps(id);
   const setSnapsList = useSetRecoilState<Array<Snap>>(snapsListState);
   const setFilter = useSetRecoilState<string>(snapsListFilterState);
   const brandStore = useRecoilValue(brandStoreState(id));
@@ -44,11 +44,13 @@ function Snaps() {
     : setPageTitle("Snaps");
 
   useEffect(() => {
+    refetch();
+
     if (!isLoading && !error) {
       setSnapsList(data);
       setFilter(searchParams.get("filter") || "");
     }
-  }, [isLoading, error, data]);
+  }, [isLoading, error, data, id]);
 
   return (
     <>
