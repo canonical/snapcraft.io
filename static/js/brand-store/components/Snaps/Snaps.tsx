@@ -43,6 +43,8 @@ function Snaps() {
     }
   }, [isLoading, error, data]);
 
+  console.log("mount");
+
   return (
     <>
       <main className="l-main">
