@@ -1,2 +1,2 @@
-import SnapsSlice from "./Snaps";
-export default SnapsSlice;
+import Snaps from "./Snaps";
+export default Snaps;

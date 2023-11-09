@@ -32,14 +32,6 @@ export type MembersSlice = {
   };
 };
 
-export type SnapsSlice = {
-  snaps: {
-    snaps: SnapsList;
-    loading: boolean;
-    notFound: boolean;
-  };
-};
-
 export type StoresSlice = {
   brandStores: {
     brandStoresList: StoresList;

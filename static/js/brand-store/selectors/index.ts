@@ -22,7 +22,6 @@ import {
 import type {
   StoresSlice,
   CurrentStoreSlice,
-  SnapsSlice,
   InvitesSlice,
   MembersSlice,
   Model,
@@ -36,7 +35,6 @@ const brandStoresListSelector = (state: StoresSlice) =>
   state.brandStores.brandStoresList;
 const currentStoreSelector = (state: CurrentStoreSlice) =>
   state.currentStore.currentStore;
-const snapsSelector = (state: SnapsSlice) => state.snaps.snaps;
 const membersSelector = (state: MembersSlice) => state.members.members;
 const invitesSelector = (state: InvitesSlice) => state.invites.invites;
 
@@ -145,7 +143,6 @@ const filteredSigningKeysListState = selector<Array<SigningKey>>({
 export {
   brandStoresListSelector,
   currentStoreSelector,
-  snapsSelector,
   membersSelector,
   invitesSelector,
   filteredSnapsListState,
