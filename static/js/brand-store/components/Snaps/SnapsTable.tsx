@@ -86,7 +86,6 @@ function SnapsTable() {
   return (
     <div className="u-flex-grow">
       <MainTable
-        sortable
         emptyStateMsg="No snaps match this filter"
         headers={[
           {
