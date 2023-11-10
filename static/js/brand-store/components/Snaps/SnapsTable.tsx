@@ -1,6 +1,5 @@
 import React from "react";
 import { useRecoilValue } from "recoil";
-import { Link } from "react-router-dom";
 import { format } from "date-fns";
 import { MainTable } from "@canonical/react-components";
 
