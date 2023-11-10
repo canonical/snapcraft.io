@@ -10,6 +10,7 @@ import {
   signingKeysListState,
   brandStoresState,
   signingKeysListFilterState,
+  membersListState,
 } from "../atoms";
 
 import {
@@ -57,6 +58,14 @@ const includedStoresState = selector({
   get: ({ get }) => {
     const snaps = get(snapsListState);
     return snaps.find((snap) => snap["included-stores"]);
+  },
+});
+
+const currentMemberState = selector({
+  key: "currentMember",
+  get: ({ get }) => {
+    const members = get(membersListState);
+    return members.find((member) => member.current_user);
   },
 });
 
@@ -163,4 +172,5 @@ export {
   filteredPoliciesListState,
   brandStoreState,
   filteredSigningKeysListState,
+  currentMemberState,
 };

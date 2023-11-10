@@ -9,14 +9,19 @@ import {
   useSearchParams,
 } from "react-router-dom";
 
-import { useSnaps } from "../../hooks";
+import { useMembers, useSnaps } from "../../hooks";
 
 import {
   snapsListFilterState,
   snapsListState,
   brandStoresState,
+  membersListState,
 } from "../../atoms";
-import { brandStoreState, includedStoresState } from "../../selectors";
+import {
+  brandStoreState,
+  currentMemberState,
+  includedStoresState,
+} from "../../selectors";
 
 import SectionNav from "../SectionNav";
 import SnapsFilter from "./SnapsFilter";
@@ -25,19 +30,27 @@ import SnapsSearch from "./SnapsSearch";
 
 import { isClosedPanel, setPageTitle, getStoreName } from "../../utils";
 
-import type { Snap, Store } from "../../types/shared";
+import type { Snap, Store, Member } from "../../types/shared";
 
 function Snaps() {
   const { id } = useParams();
   const location = useLocation();
   const navigate = useNavigate();
   const { isLoading, error, data, refetch }: any = useSnaps(id);
+  const {
+    isLoading: membersLoading,
+    error: membersError,
+    data: membersData,
+    refetch: refetchMembers,
+  }: any = useMembers(id);
   const setSnapsList = useSetRecoilState<Array<Snap>>(snapsListState);
   const setFilter = useSetRecoilState<string>(snapsListFilterState);
   const brandStore = useRecoilValue(brandStoreState(id));
   const includedStores = useRecoilValue(includedStoresState);
   const [searchParams] = useSearchParams();
   const brandStores = useRecoilValue<Array<Store>>(brandStoresState);
+  const currentMember = useRecoilValue<Member | undefined>(currentMemberState);
+  const setMembersList = useSetRecoilState<Array<Member>>(membersListState);
 
   brandStore
     ? setPageTitle(`Snaps in ${brandStore.name}`)
@@ -52,24 +65,40 @@ function Snaps() {
     }
   }, [isLoading, error, data, id]);
 
+  useEffect(() => {
+    refetchMembers();
+
+    if (!membersLoading && !membersError) {
+      setMembersList(membersData);
+    }
+  }, [membersLoading, membersError, membersData, id]);
+
+  console.log("currentMember", currentMember);
+
   return (
     <>
       <main className="l-main">
         <div className="p-panel u-flex-column">
           <div className="p-panel__content u-flex-column u-flex-grow">
-            <div className="u-fixed-width">
-              <SectionNav sectionName="snaps" />
-            </div>
+            {currentMember && currentMember.roles.includes("admin") && (
+              <div className="u-fixed-width">
+                <SectionNav sectionName="snaps" />
+              </div>
+            )}
             <Row>
               <Col size={6}>
                 <SnapsFilter />
               </Col>
-              <Col size={6} className="u-align--right">
-                <Link className="p-button" to={`/admin/${id}/snaps/include`}>
-                  Include snap
-                </Link>
-                <Button className="p-button">Exclude snap</Button>
-              </Col>
+              {currentMember && currentMember.roles.includes("admin") && (
+                <Col size={6} className="u-align--right">
+                  <Link className="p-button" to={`/admin/${id}/snaps/include`}>
+                    Include snap
+                  </Link>
+                  <Button className="p-button u-no-margin--right">
+                    Exclude snap
+                  </Button>
+                </Col>
+              )}
             </Row>
             <div className="u-fixed-width u-flex-column">
               <div className="u-flex-column u-flex-grow">
