@@ -73,8 +73,6 @@ function Snaps() {
     }
   }, [membersLoading, membersError, membersData, id]);
 
-  console.log("currentMember", currentMember);
-
   return (
     <>
       <main className="l-main">
