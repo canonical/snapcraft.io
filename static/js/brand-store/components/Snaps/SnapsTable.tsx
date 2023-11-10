@@ -1,20 +1,24 @@
 import React from "react";
 import { useRecoilValue } from "recoil";
+import { useParams } from "react-router-dom";
 import { format } from "date-fns";
 import { MainTable } from "@canonical/react-components";
 
 import { brandStoresState } from "../../atoms";
-import { filteredSnapsListState } from "../../selectors";
+import { filteredSnapsListState, currentMemberState } from "../../selectors";
 
 import { getStoreName } from "../../utils";
 
-import type { Snap, Store } from "../../types/shared";
+import type { Snap, Store, Member } from "../../types/shared";
 
 function SnapsTable() {
   const snapsList = useRecoilValue<Array<Snap>>(filteredSnapsListState);
   const stores: string[] = [];
 
+  const { id } = useParams();
+
   const brandStores = useRecoilValue<Array<Store>>(brandStoresState);
+  const currentMember = useRecoilValue<Member | undefined>(currentMemberState);
 
   snapsList.forEach((snap) => {
     if (!stores.includes(snap.store)) {
@@ -43,19 +47,51 @@ function SnapsTable() {
       }
 
       const name = () => {
+        if (
+          currentMember &&
+          currentMember.roles.includes("admin") &&
+          !snap.essential &&
+          group.store !== id
+        ) {
+          return (
+            <>
+              <label className="p-checkbox">
+                <input
+                  type="checkbox"
+                  className="p-checkbox__input"
+                  onChange={() => false}
+                  checked={false}
+                />
+                <span className="p-checkbox__label">
+                  {group.store === "ubuntu" ? (
+                    <a href={`/${snap.name}`}>{snap.name}</a>
+                  ) : (
+                    <span style={{ marginLeft: "0.5rem" }}>{snap.name}</span>
+                  )}
+                </span>
+              </label>
+            </>
+          );
+        }
+
         if (!snap.name) {
-          return "-";
+          return <span style={{ marginLeft: "0.5rem" }}>-</span>;
         }
 
         if (group.store === "ubuntu") {
-          return <a href={`/${snap.name}`}>{snap.name}</a>;
+          return (
+            <a href={`/${snap.name}`}>
+              <span style={{ marginLeft: "0.5rem" }}>{snap.name}</span>
+            </a>
+          );
         }
 
-        return snap.name;
+        return <span style={{ marginLeft: "0.5rem" }}>snap.name</span>;
       };
 
       columns.push({
         content: name(),
+        className: "table-cell--checkbox",
       });
 
       columns.push({
@@ -95,6 +131,7 @@ function SnapsTable() {
           },
           {
             content: "Name",
+            className: "table-cell--checkbox",
           },
           {
             content: "Latest release",

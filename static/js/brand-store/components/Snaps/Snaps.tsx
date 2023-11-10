@@ -61,6 +61,7 @@ function Snaps() {
 
     if (!isLoading && !error) {
       setSnapsList(data);
+
       setFilter(searchParams.get("filter") || "");
     }
   }, [isLoading, error, data, id]);
