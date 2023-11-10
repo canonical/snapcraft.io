@@ -24,6 +24,24 @@ export function useSnaps(id: string | undefined) {
   });
 }
 
+export function useMembers(id: string | undefined) {
+  return useQuery("members", async () => {
+    const response = await fetch(`/admin/store/${id}/members`);
+
+    if (!response.ok) {
+      throw new Error("There was a problem fetching members");
+    }
+
+    const membersData = await response.json();
+
+    if (!membersData) {
+      throw new Error(membersData.message);
+    }
+
+    return membersData;
+  });
+}
+
 export function useModels(id: string | undefined) {
   return useQuery("models", async () => {
     const response = await fetch(`/admin/store/${id}/models`);
