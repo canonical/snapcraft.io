@@ -154,7 +154,7 @@ function screenshotsAndVideos(screenshots, video) {
     const holder = document.createElement("div");
     holder.className = "p-snap-details__media row u-equal-height";
     const col10 = document.createElement("div");
-    col10.className = "col-10 u-align-text--center";
+    col10.className = "col-10 u-align--center";
     holder.appendChild(col10);
     const videoSlide = document.createElement("div");
     videoSlide.className = "js-video-slide u-embedded-media";
@@ -305,7 +305,7 @@ function render(packageName) {
     functionMap.screenshots(
       screenshotsEl,
       screenshotsAndVideos(
-        transformedState.screenshots,
+        transformedState.screenshot_urls,
         transformedState.video_urls
       )
     );

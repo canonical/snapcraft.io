@@ -175,22 +175,4 @@
     openExternalLinkButton.removeEventListener("click", handleOpenExternalLink);
   }
 </script>
-
-<!-- Once `links` is added to the API we can remove this `else` section -->
-{% else %}
-  <h5 class="p-muted-heading">Links</h5>
-  <ul class="p-list">
-    {% if website or is_preview %}
-      <li>
-        <a href="{{ website }}" data-live="website">Developer website</a>
-      </li>
-    {% endif %}
-            
-    {% if contact or is_preview %}
-      <li>
-        <a href="{{ contact }}" data-live="contact">Contact {{ format_display_name(publisher) }}</a>
-      </li>
-    {% endif %}
-  </ul>
-  <hr>
 {% endif %}

@@ -124,6 +124,7 @@ function getListingData(listingData: { [key: string]: any }) {
     ],
     images,
     snap_categories: window?.listingData?.snap_categories?.categories,
+    links: window?.listingData?.links,
   };
 }
 
