@@ -1,6 +1,5 @@
 import React from "react";
 
-import ListingFormInput from "../../components/ListingFormInput";
 import MultipleInputs from "../../components/MultipleInputs";
 
 type Props = {
@@ -10,14 +9,7 @@ type Props = {
   control: {};
 };
 
-function ContactInformationSection({
-  getFieldState,
-  register,
-  publisherName,
-  control,
-}: Props) {
-  const queryParams = new URLSearchParams(window.location.search);
-
+function ContactInformationSection({ register, control }: Props) {
   return (
     <>
       <div className="u-fixed-width">
