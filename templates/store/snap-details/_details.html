@@ -6,16 +6,18 @@
 </ul>
 <hr>
 
-<h5 class="p-muted-heading">Last updated</h5>
-<ul class="p-list">
-  {% if updates[0] %}
-    <li>{{ updates[0]["released-at-display"] }} - <small>{{ updates[0]["track"] }}/{{ updates[0]["risk"] }}</small></li>
-  {% endif %}
-  {% if updates[1] %}
-    <li>{{ updates[1]["released-at-display"] }} - <small>{{ updates[1]["track"] }}/{{ updates[1]["risk"] }}</small></li>
-  {% endif %}
-</ul>
-<hr>
+{% if updates %}
+  <h5 class="p-muted-heading">Last updated</h5>
+  <ul class="p-list">
+    {% if updates[0] %}
+      <li>{{ updates[0]["released-at-display"] }} - <small>{{ updates[0]["track"] }}/{{ updates[0]["risk"] }}</small></li>
+    {% endif %}
+    {% if updates[1] %}
+      <li>{{ updates[1]["released-at-display"] }} - <small>{{ updates[1]["track"] }}/{{ updates[1]["risk"] }}</small></li>
+    {% endif %}
+  </ul>
+  <hr>
+{% endif %}
 
 {% if links %}
   {% if links["website"] %}
