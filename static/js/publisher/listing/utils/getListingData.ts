@@ -94,8 +94,8 @@ function getListingData(listingData: { [key: string]: any }) {
           })
         : [],
     "source-code":
-      listingData.links && listingData.links["source-code"]
-        ? listingData.links["source-code"].map((link: string) => {
+      listingData.links && listingData.links["source"]
+        ? listingData.links["source"].map((link: string) => {
             return {
               url: link,
             };
