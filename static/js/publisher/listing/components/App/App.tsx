@@ -125,6 +125,11 @@ function App() {
     });
   }, [listingData]);
 
+  window.localStorage.setItem(
+    `${listingData.snap_name}-initial`,
+    JSON.stringify(listingData)
+  );
+
   return (
     <>
       <PageHeader snapName={listingData?.snap_name} activeTab="listing" />
