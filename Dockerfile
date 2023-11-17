@@ -13,7 +13,8 @@ RUN --mount=type=cache,target=/root/.cache/pip pip3 install --user --requirement
 # ===
 FROM node:16 AS yarn-dependencies
 WORKDIR /srv
-ADD package.json yarn.lock .
+ADD package.json .
+ADD yarn.lock .
 RUN --mount=type=cache,target=/usr/local/share/.cache/yarn yarn install --production
 
 
@@ -26,8 +27,13 @@ RUN yarn run build-css
 # Build stage: Run "yarn run build-js"
 # ===
 FROM yarn-dependencies AS build-js
-WORKDIR /srv
-ADD . .
+ADD static/js static/js
+ADD webpack.config.js .
+ADD webpack.config.entry.js .
+ADD webpack.config.rules.js .
+ADD tsconfig.json .
+ADD babel.config.json .
+RUN yarn install
 RUN yarn run build-js
 
 # Build the production image
