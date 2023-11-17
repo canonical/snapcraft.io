@@ -2,13 +2,7 @@ import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "react-query";
 
-function Test() {
-  return (
-    <div>
-      <h1>Test</h1>
-    </div>
-  );
-}
+import Packages from "../Packages";
 
 function App() {
   const queryClient = new QueryClient({
@@ -24,7 +18,7 @@ function App() {
     <Router>
       <QueryClientProvider client={queryClient}>
         <Routes>
-          <Route path="/beta-store" element={<Test />} />
+          <Route path="/beta-store" element={<Packages />} />
         </Routes>
       </QueryClientProvider>
     </Router>
