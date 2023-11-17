@@ -8,7 +8,7 @@ import {
   Pagination,
   Button,
 } from "@canonical/react-components";
-import { LoadingCard } from "@canonical/store-components";
+import { DefaultCard } from "@canonical/store-components";
 
 function Packages() {
   const ITEMS_PER_PAGE = 12;
@@ -86,7 +86,7 @@ function Packages() {
             {isFetching &&
               [...Array(ITEMS_PER_PAGE)].map((item, index) => (
                 <Col size={3} key={index}>
-                  <LoadingCard />
+                  <h1>HI</h1>
                 </Col>
               ))}
 
@@ -99,7 +99,7 @@ function Packages() {
                   style={{ marginBottom: "1.5rem" }}
                   key={packageData.id}
                 >
-                  <h1>BYE</h1>
+                  <DefaultCard data={packageData} />
                 </Col>
               ))}
 
