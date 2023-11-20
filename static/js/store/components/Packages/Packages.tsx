@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useQuery } from "react-query";
 import { useLocation, useSearchParams } from "react-router-dom";
 import {
@@ -8,7 +8,9 @@ import {
   Pagination,
   Button,
 } from "@canonical/react-components";
-import { DefaultCard, LoadingCard } from "@canonical/store-components";
+import { DefaultCard, LoadingCard, Filters } from "@canonical/store-components";
+
+import categories from "../../data/categories";
 
 import Banner from "../Banner";
 
@@ -36,6 +38,7 @@ function Packages() {
   const { search } = useLocation();
   const [searchParams, setSearchParams] = useSearchParams();
 
+  const [hideFilters, setHideFilters] = useState(true);
   const currentPage = searchParams.get("page") || "1";
   const { data, status, refetch, isFetching } = useQuery("data", getData);
 
@@ -54,77 +57,136 @@ function Packages() {
     <>
       <Banner searchRef={searchRef} searchSummaryRef={searchSummaryRef} />
       <Strip>
-        <div className="u-fixed-width">
-          {data?.packages && data?.packages.length > 0 && (
-            <div className="u-fixed-width" ref={searchSummaryRef}>
-              {searchParams.get("q") ? (
-                <p>
-                  Showing {currentPage === "1" ? "1" : firstResultNumber} to{" "}
-                  {lastResultNumber} of {data?.total_items} results for{" "}
-                  <strong>"{searchParams.get("q")}"</strong>.{" "}
-                  <Button
-                    appearance="link"
-                    onClick={() => {
-                      searchParams.delete("q");
-                      searchParams.delete("page");
-                      setSearchParams(searchParams);
-
-                      if (searchRef.current) {
-                        searchRef.current.value = "";
-                      }
-                    }}
-                  >
-                    Clear search
-                  </Button>
-                </p>
-              ) : (
-                <p>
-                  Showing {currentPage === "1" ? "1" : firstResultNumber} to{" "}
-                  {lastResultNumber} of {data?.total_items} items
-                </p>
-              )}
-            </div>
-          )}
-          <Row>
-            {isFetching &&
-              [...Array(ITEMS_PER_PAGE)].map((item, index) => (
-                <Col size={3} key={index}>
-                  <LoadingCard />
-                </Col>
-              ))}
-
-            {!isFetching &&
-              status === "success" &&
-              data.packages.length > 0 &&
-              data.packages.map((packageData: any) => (
-                <Col
-                  size={3}
-                  style={{ marginBottom: "1.5rem" }}
-                  key={packageData.id}
-                >
-                  <DefaultCard data={packageData} />
-                </Col>
-              ))}
-
-            {status === "success" && data.packages.length === 0 && (
-              <h1 className="p-heading--2">No packages match this filter</h1>
-            )}
-          </Row>
-
-          {status === "success" && data.packages.length > 0 && (
-            <Pagination
-              itemsPerPage={ITEMS_PER_PAGE}
-              totalItems={data.total_items}
-              paginate={(pageNumber) => {
-                searchParams.set("page", pageNumber.toString());
-                setSearchParams(searchParams);
+        <Row>
+          <Col size={3}>
+            <Button
+              className="has-icon u-hide--large p-filter-panel__toggle"
+              onClick={() => {
+                setHideFilters(false);
               }}
-              currentPage={parseInt(currentPage)}
-              centered
-              scrollToTop
-            />
-          )}
-        </div>
+            >
+              <i className="p-icon--arrow-right"></i>
+              <span>Filters</span>
+            </Button>
+            <div
+              className={`p-filter-panel-overlay u-hide--large ${
+                hideFilters ? "u-hide--small u-hide--medium" : ""
+              }`}
+              onClick={() => {
+                setHideFilters(true);
+              }}
+            ></div>
+
+            <div
+              className={`p-filter-panel ${
+                !hideFilters ? "p-filter-panel--expanded" : ""
+              }`}
+            >
+              <div className="p-filter-panel__header">
+                <Button
+                  className="has-icon u-hide--large u-no-margin--bottom u-no-padding--left"
+                  appearance="base"
+                  onClick={() => {
+                    setHideFilters(true);
+                  }}
+                >
+                  <i className="p-icon--chevron-down"></i>
+                  <span>Hide filters</span>
+                </Button>
+              </div>
+              <div className="p-filter-panel__inner">
+                <Filters
+                  categories={categories}
+                  selectedCategories={
+                    searchParams.get("categories")?.split(",") || []
+                  }
+                  setSelectedCategories={(items: any) => {
+                    if (items.length > 0) {
+                      searchParams.set("categories", items.join(","));
+                    } else {
+                      searchParams.delete("categories");
+                    }
+
+                    searchParams.delete("page");
+                    setSearchParams(searchParams);
+                  }}
+                  disabled={isFetching}
+                />
+              </div>
+            </div>
+          </Col>
+          <Col size={9}>
+            {data?.packages && data?.packages.length > 0 && (
+              <div className="u-fixed-width" ref={searchSummaryRef}>
+                {searchParams.get("q") ? (
+                  <p>
+                    Showing {currentPage === "1" ? "1" : firstResultNumber} to{" "}
+                    {lastResultNumber} of {data?.total_items} results for{" "}
+                    <strong>"{searchParams.get("q")}"</strong>.{" "}
+                    <Button
+                      appearance="link"
+                      onClick={() => {
+                        searchParams.delete("q");
+                        searchParams.delete("page");
+                        setSearchParams(searchParams);
+
+                        if (searchRef.current) {
+                          searchRef.current.value = "";
+                        }
+                      }}
+                    >
+                      Clear search
+                    </Button>
+                  </p>
+                ) : (
+                  <p>
+                    Showing {currentPage === "1" ? "1" : firstResultNumber} to{" "}
+                    {lastResultNumber} of {data?.total_items} items
+                  </p>
+                )}
+              </div>
+            )}
+            <Row>
+              {isFetching &&
+                [...Array(ITEMS_PER_PAGE)].map((item, index) => (
+                  <Col size={3} key={index}>
+                    <LoadingCard />
+                  </Col>
+                ))}
+
+              {!isFetching &&
+                status === "success" &&
+                data.packages.length > 0 &&
+                data.packages.map((packageData: any) => (
+                  <Col
+                    size={3}
+                    style={{ marginBottom: "1.5rem" }}
+                    key={packageData.id}
+                  >
+                    <DefaultCard data={packageData} />
+                  </Col>
+                ))}
+
+              {status === "success" && data.packages.length === 0 && (
+                <h1 className="p-heading--2">No packages match this filter</h1>
+              )}
+            </Row>
+
+            {status === "success" && data.packages.length > 0 && (
+              <Pagination
+                itemsPerPage={ITEMS_PER_PAGE}
+                totalItems={data.total_items}
+                paginate={(pageNumber) => {
+                  searchParams.set("page", pageNumber.toString());
+                  setSearchParams(searchParams);
+                }}
+                currentPage={parseInt(currentPage)}
+                centered
+                scrollToTop
+              />
+            )}
+          </Col>
+        </Row>
       </Strip>
     </>
   );

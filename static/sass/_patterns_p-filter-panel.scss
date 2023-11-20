@@ -1,0 +1,61 @@
+@mixin p-filter-panel {
+  .p-filter-panel {
+    @media only screen and (max-width: $breakpoint-large) {
+      background: $color-x-light;
+      height: 100vh;
+      left: 0;
+      position: fixed;
+      top: 0;
+      transform: translateX(-100%);
+      transition: transform 0.3s ease-in;
+      width: 100%;
+      z-index: 100;
+    }
+
+    @media only screen and (min-width: $breakpoint-small) {
+      max-width: 320px;
+    }
+  }
+
+  .p-filter-panel--expanded {
+    @media only screen and (max-width: $breakpoint-large) {
+      transform: translateX(0);
+    }
+  }
+
+  .p-filter-panel-overlay {
+    @media only screen and (min-width: $breakpoint-small) and (max-width: $breakpoint-large) {
+      background-color: rgba(17, 17, 17, 0.85);
+      height: 100vh;
+      left: 0;
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 10;
+    }
+  }
+
+  .p-filter-panel__toggle {
+    @media only screen and (max-width: $breakpoint-large) {
+      text-align: left;
+      width: 50%;
+    }
+  }
+
+  .p-filter-panel__header {
+    @media only screen and (max-width: $breakpoint-large) {
+      border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+      padding: 0.5rem 1rem;
+
+      i {
+        transform: rotate(90deg);
+      }
+    }
+  }
+
+  .p-filter-panel__inner {
+    @media only screen and (max-width: $breakpoint-large) {
+      padding: 1rem;
+    }
+  }
+}
