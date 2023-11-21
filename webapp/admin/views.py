@@ -29,7 +29,6 @@ context = {"api_url": SNAPSTORE_DASHBOARD_API_URL}
 
 @admin.route("/admin", defaults={"path": ""})
 @admin.route("/admin/<path:path>")
-@candid_login_required
 @login_required
 def get_admin(path):
     return flask.render_template("admin/admin.html", **context)
