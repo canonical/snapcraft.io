@@ -11,7 +11,7 @@ from canonicalwebteam.store_api.stores.snapstore import SnapStoreAdmin
 from flask.json import jsonify
 
 # Local
-from webapp.decorators import candid_login_required, login_required
+from webapp.decorators import login_required
 from webapp.helpers import api_publisher_session
 
 admin_api = SnapStoreAdmin(api_publisher_session)
