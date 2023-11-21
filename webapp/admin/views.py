@@ -53,7 +53,7 @@ def get_settings(store_id):
     return jsonify(store)
 
 
-@admin.route("/admin/store/<store_id>/settings", methods=["POST"])
+@admin.route("/admin/store/<store_id>/settings", methods=["PUT"])
 @login_required
 def post_settings(store_id):
     settings = {}

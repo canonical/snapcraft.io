@@ -493,3 +493,11 @@ code {
 .p-accordion__panel[aria-hidden="false"] {
   transform: none;
 }
+
+[data-live="description"] code {
+  display: inline-block;
+  max-width: 100%;
+  overflow: scroll;
+  position: relative;
+  top: 0.3rem;
+}
