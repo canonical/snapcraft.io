@@ -10,6 +10,8 @@ import {
 } from "@canonical/react-components";
 import { DefaultCard, LoadingCard } from "@canonical/store-components";
 
+import Banner from "../Banner";
+
 function Packages() {
   const ITEMS_PER_PAGE = 12;
 
@@ -50,6 +52,7 @@ function Packages() {
 
   return (
     <>
+      <Banner searchRef={searchRef} searchSummaryRef={searchSummaryRef} />
       <Strip>
         <div className="u-fixed-width">
           {data?.packages && data?.packages.length > 0 && (
