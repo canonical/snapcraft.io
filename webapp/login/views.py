@@ -75,6 +75,8 @@ def after_login(resp):
     flask.session.pop("macaroons", None)
 
     flask.session["macaroon_discharge"] = resp.extensions["macaroon"].discharge
+    flask.session["developer_token"] = publisher_api.exchange_dashboard_macaroons(flask.session)
+
     if not resp.nickname:
         return flask.redirect(LOGIN_URL)
 
