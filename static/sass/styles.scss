@@ -237,12 +237,6 @@ dl {
   white-space: pre-wrap;
 }
 
-// Vanilla bug: https://github.com/canonical-web-and-design/vanilla-framework/issues/3526
-code {
-  white-space: pre;
-  word-break: normal;
-}
-
 .p-modal__dialog {
   @media only screen and (min-width: $breakpoint-small) {
     min-width: 400px;
@@ -494,14 +488,6 @@ code {
 // Breaks modals
 .p-accordion__panel[aria-hidden="false"] {
   transform: none;
-}
-
-[data-live="description"] code {
-  display: inline-block;
-  max-width: 100%;
-  overflow: scroll;
-  position: relative;
-  top: 0.3rem;
 }
 
 // XXX - Related to https://github.com/canonical/vanilla-framework/issues/4887
