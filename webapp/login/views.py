@@ -125,6 +125,10 @@ def after_login(resp):
     return response
 
 
+@login.route("/login-beta", methods=["GET"])
+def login_beta():
+    return flask.redirect(flask.url_for(".login_handler"))
+
 @login.route("/logout")
 def logout():
     authentication.empty_session(flask.session)
