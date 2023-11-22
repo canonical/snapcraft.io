@@ -19,14 +19,7 @@ class TestModelServiceEndpoints(unittest.TestCase):
         mocks candid login
         """
 
-        test_macaroon = """
-            AgEQYXBpLnNuYXBjcmFmdC5pbwImAwoQUWyZ4S4wHL6zykGguk4n-
-            RIBMBoOCgVsb2dpbhIFbG9naW4AAid0aW1lLWJlZm9yZSAyMDI0LTA3LTEwVDEzOjMyOjA4L
-            jUxMzE0OFoAAiZ0aW1lLXNpbmNlIDIwMjMtMDctMTFUMTM6MzI6MDguNTEzMTQ4WgACL3Nlc3
-            Npb24taWQgZWI2YWQyOGItMjAxOS00ZjA3LThmOTMtNTRlMTQzODExMWUwAAI5ZGVjbGFyZWQ
-            gdXNlcmlkIHVzc286aHR0cHM6Ly9sb2dpbi51YnVudHUuY29tLytpZC9uNnp0Y3lMAAIZZXh0
-            cmEgeyJwZXJtaXNzaW9ucyI6IFtdfQAABiC_ER3fu5Lfo1XdcXG340Ah18sY41_prGOr-ndF-AkKUQ
-        """
+        test_macaroon = "test_macaroon"
         with client.session_transaction() as s:
             s["publisher"] = {
                 "account_id": "test_account_id",
