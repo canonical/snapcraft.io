@@ -129,6 +129,7 @@ def after_login(resp):
 def login_beta():
     return flask.redirect(flask.url_for(".login_handler"))
 
+
 @login.route("/logout")
 def logout():
     authentication.empty_session(flask.session)
