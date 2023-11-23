@@ -25,5 +25,11 @@
 
 {% block content %}
 <main id="root"></main>
+
+{% if featured_snaps %}
+<script>
+  window.featuredSnaps = {{ featured_snaps | safe }}
+</script>
+{% endif %}
 <script src="{{ versioned_static('js/dist/beta-store.js') }}" defer></script>
 {% endblock %}
