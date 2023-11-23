@@ -15,7 +15,7 @@ import categories from "../../data/categories";
 import Banner from "../Banner";
 
 function Packages() {
-  const ITEMS_PER_PAGE = 12;
+  const ITEMS_PER_PAGE = 15;
 
   const getData = async () => {
     const response = await fetch(`/beta/store.json${search}`);
