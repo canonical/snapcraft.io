@@ -1,6 +1,7 @@
 from math import ceil, floor
 import talisker.requests
 import flask
+from flask import json
 from dateutil import parser
 import webapp.helpers as helpers
 import webapp.store.logic as logic
@@ -271,7 +272,14 @@ def store_blueprint(store_query=None):
 
     @store.route("/beta-store")
     def beta_store_view():
-        return flask.render_template("store/beta.html")
+        featured_snaps = api.get_featured_items()["results"]
+
+        if not featured_snaps:
+            featured_snaps = []
+
+        return flask.render_template(
+            "store/beta.html", featured_snaps=json.dumps(featured_snaps)
+        )
 
     @store.route("/youtube", methods=["POST"])
     def get_video_thumbnail_data():
