@@ -10,8 +10,6 @@ import {
 } from "@canonical/react-components";
 import { DefaultCard, LoadingCard, Filters } from "@canonical/store-components";
 
-import categories from "../../data/categories";
-
 import Banner from "../Banner";
 
 import type { Package, FeaturedPackage } from "../../types/shared";
@@ -119,7 +117,7 @@ function Packages() {
               </div>
               <div className="p-filter-panel__inner">
                 <Filters
-                  categories={categories}
+                  categories={data?.categories || []}
                   selectedCategories={
                     searchParams.get("categories")?.split(",") || []
                   }
