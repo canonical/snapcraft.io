@@ -26,25 +26,3 @@ export type Package = {
     count: number | null;
   };
 };
-
-export type FeaturedPackage = {
-  apps: Array<string>;
-  architecture: Array<string>;
-  developer_id: string;
-  developer_name: string;
-  developer_validation: string;
-  media: Array<{
-    height: number;
-    type: string;
-    url: string;
-    width: number;
-  }>;
-  origin: string;
-  package_name: string;
-  sections: Array<{
-    featured: Boolean;
-    name: string;
-  }>;
-  summary: string;
-  title: string;
-};

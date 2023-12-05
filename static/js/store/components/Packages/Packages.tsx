@@ -12,13 +12,14 @@ import { DefaultCard, LoadingCard, Filters } from "@canonical/store-components";
 
 import Banner from "../Banner";
 
-import type { Package, FeaturedPackage } from "../../types/shared";
+import type { Package } from "../../types/shared";
 
 function Packages() {
   const ITEMS_PER_PAGE = 15;
 
   const getData = async () => {
-    const response = await fetch(`/beta/store.json${search}`);
+    const queryString = search || "?categories=featured";
+    const response = await fetch(`/beta/store.json${queryString}`);
     const data = await response.json();
     const packagesWithId = data.packages.map((item: Package) => {
       return {
@@ -44,27 +45,6 @@ function Packages() {
 
   const searchRef = useRef<HTMLInputElement | null>(null);
   const searchSummaryRef = useRef<HTMLDivElement>(null);
-
-  const topFeaturedSnap: FeaturedPackage = window.featuredSnaps[0];
-  const topFeaturedSnapBanner = topFeaturedSnap.media.find(
-    (media) => media.type === "banner"
-  );
-
-  const featuredSnaps = window.featuredSnaps.slice(1);
-
-  function formatFeaturedSnap(featuredSnap: FeaturedPackage) {
-    const iconUrl = featuredSnap.media.find((media) => media.type === "icon");
-    const snap = {
-      package: {
-        description: featuredSnap.summary,
-        display_name: featuredSnap.title,
-        name: featuredSnap.package_name,
-        icon_url: iconUrl ? iconUrl.url : "",
-      },
-    };
-
-    return snap;
-  }
 
   useEffect(() => {
     refetch();
@@ -119,7 +99,7 @@ function Packages() {
                 <Filters
                   categories={data?.categories || []}
                   selectedCategories={
-                    searchParams.get("categories")?.split(",") || []
+                    searchParams.get("categories")?.split(",") || ["featured"]
                   }
                   setSelectedCategories={(
                     items: Array<{
@@ -137,56 +117,20 @@ function Packages() {
                     setSearchParams(searchParams);
                   }}
                   disabled={isFetching}
+                  showFeatured={true}
                 />
               </div>
             </div>
           </Col>
           <Col size={9}>
-            {featuredSnaps.length > 0 &&
-              !searchParams.get("q") &&
-              !searchParams.get("categories") && (
-                <>
-                  <div className="u-fixed-width">
-                    <h2 className="p-muted-heading">Featured snaps</h2>
-                  </div>
-                  {topFeaturedSnap && topFeaturedSnapBanner && (
-                    <div className="u-fixed-width">
-                      <p className="u-no-max-width">
-                        <a href={`/${topFeaturedSnap.package_name}`}>
-                          <img
-                            src={topFeaturedSnapBanner.url}
-                            alt={topFeaturedSnap.package_name}
-                            width="1920"
-                            height="640"
-                          />
-                        </a>
-                      </p>
-                    </div>
-                  )}
-                  <Row>
-                    {featuredSnaps.map((featuredSnap: FeaturedPackage) => (
-                      <Col
-                        size={3}
-                        style={{ marginBottom: "1.5rem" }}
-                        key={featuredSnap.package_name}
-                      >
-                        <DefaultCard data={formatFeaturedSnap(featuredSnap)} />
-                      </Col>
-                    ))}
-                  </Row>
-                  <hr className="p-rule" />
-                </>
-              )}
-            {!searchParams.get("q") && !searchParams.get("categories") && (
-              <h2 className="p-muted-heading">All snaps</h2>
-            )}
             {data?.packages && data?.packages.length > 0 && (
               <div className="u-fixed-width" ref={searchSummaryRef}>
                 {searchParams.get("q") ? (
                   <p>
                     Showing {currentPage === "1" ? "1" : firstResultNumber} to{" "}
-                    {lastResultNumber} of {data?.total_items} results for{" "}
-                    <strong>"{searchParams.get("q")}"</strong>.{" "}
+                    {lastResultNumber} of{" "}
+                    {data?.total_items < 100 ? data?.total_items : "over 100"}{" "}
+                    items
                     <Button
                       appearance="link"
                       onClick={() => {
