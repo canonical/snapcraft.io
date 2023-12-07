@@ -2,16 +2,16 @@
 var navAccountContainer = document.querySelector(".js-nav-account");
 
 if (navAccountContainer) {
+  var notAuthenticatedMenu = navAccountContainer.querySelector(
+    ".js-nav-account--notauthenticated"
+  );
+  var authenticatedMenu = navAccountContainer.querySelector(
+    ".js-nav-account--authenticated"
+  );
+
   fetch("/account.json")
     .then((response) => response.json())
     .then((data) => {
-      var notAuthenticatedMenu = navAccountContainer.querySelector(
-        ".js-nav-account--notauthenticated"
-      );
-      var authenticatedMenu = navAccountContainer.querySelector(
-        ".js-nav-account--authenticated"
-      );
-
       if (data.publisher) {
         var displayName = navAccountContainer.querySelector(
           ".js-account--name"
@@ -30,5 +30,9 @@ if (navAccountContainer) {
         notAuthenticatedMenu.classList.remove("u-hide");
         authenticatedMenu.classList.add("u-hide");
       }
+    })
+    .catch(() => {
+      notAuthenticatedMenu.classList.remove("u-hide");
+      authenticatedMenu.classList.add("u-hide");
     });
 }
