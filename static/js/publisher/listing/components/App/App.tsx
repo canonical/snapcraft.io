@@ -36,7 +36,7 @@ function App() {
 
   const [isSaving, setIsSaving] = useState(false);
   const [hasSaved, setHasSaved] = useState(false);
-  const [savedError, setSavedError] = useState(false);
+  const [savedError, setSavedError] = useState<boolean | {code: string, message: string}[] >(false);
   const [showMetadataWarningModal, setShowMetadataWarningModal] = useState(
     false
   );
@@ -73,36 +73,47 @@ function App() {
     }
   };
 
-  const submitForm = (data: any) => {
+  const submitForm = async (data: any) => {
     const changes = getChanges(dirtyFields, data);
     const formData = getFormData(data, snapId, changes);
 
     const previousDirtyFields = Object.assign({}, dirtyFields);
 
+    setHasSaved(false);
     setIsSaving(true);
+    setSavedError(false);
 
-    fetch(`/${data.snap_name}/listing`, {
+    const response = await fetch(`/${data.snap_name}/listing.json`, {
       method: "POST",
       body: formData,
-    }).then((response) => {
-      if (shouldShowUpdateMetadataWarning(previousDirtyFields)) {
-        setUpdateMetadataOnRelease(false);
-      }
-
-      if (response.status === 200) {
-        setTimeout(() => {
-          setIsSaving(false);
-          setHasSaved(true);
-          reset(data);
-          window.scrollTo(0, 0);
-        }, 1000);
-      } else {
-        setTimeout(() => {
-          setIsSaving(false);
-          setSavedError(true);
-        }, 1000);
-      }
     });
+
+    if (shouldShowUpdateMetadataWarning(previousDirtyFields)) {
+      setUpdateMetadataOnRelease(false);
+    }
+
+    if (response.status !== 200) {
+      setTimeout(() => {
+        setIsSaving(false);
+        setSavedError(true);
+      }, 1000);
+      return;
+    }
+
+    const jsonData = await response.json();
+    if (jsonData.error_list) {
+      setTimeout(() => {
+        setIsSaving(false);
+        setSavedError(jsonData.error_list);
+      }, 1000);
+      return;
+    }
+    setTimeout(() => {
+      setIsSaving(false);
+      setHasSaved(true);
+      reset(data);
+      window.scrollTo(0, 0);
+    }, 1000);
   };
 
   useEffect(() => {
@@ -193,7 +204,7 @@ function App() {
             <div className="u-fixed-width">
               <Notification
                 severity="negative"
-                title="Something went wrong."
+                title={savedError === true ? "Something went wrong." : savedError.map((error) => `${error.message}`).join("\n")}
                 onDismiss={() => {
                   setHasSaved(false);
                   setSavedError(false);

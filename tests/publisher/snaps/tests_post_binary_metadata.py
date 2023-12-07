@@ -172,7 +172,7 @@ class PostBinaryMetadataListingPage(BaseTestCases.EndpointLoggedIn):
         )
 
         assert response.status_code == 302
-        assert response.location == self._get_location()
+        assert response.location == f"{self._get_location()}.json"
 
     @responses.activate
     def test_upload_new_icon(self):
@@ -227,7 +227,7 @@ class PostBinaryMetadataListingPage(BaseTestCases.EndpointLoggedIn):
         )
 
         assert response.status_code == 302
-        assert response.location == self._get_location()
+        assert response.location == f"{self._get_location()}.json"
 
     @responses.activate
     def test_upload_new_screenshot_with_existing_ones(self):
@@ -301,7 +301,7 @@ class PostBinaryMetadataListingPage(BaseTestCases.EndpointLoggedIn):
         self.assertIn(b'"filename": "red.png"', called.request.body)
 
         assert response.status_code == 302
-        assert response.location == self._get_location()
+        assert response.location == f"{self._get_location()}.json"
 
     @responses.activate
     def test_upload_duplicated_screenshot(self):
@@ -370,7 +370,7 @@ class PostBinaryMetadataListingPage(BaseTestCases.EndpointLoggedIn):
 
         assert called.request.body.count(b'"key": "blue.png"') == 1
         assert response.status_code == 302
-        assert response.location == self._get_location()
+        assert response.location == f"{self._get_location()}.json"
 
     @responses.activate
     def test_upload_screenshot_with_duplicates_current_ones(self):
@@ -451,4 +451,4 @@ class PostBinaryMetadataListingPage(BaseTestCases.EndpointLoggedIn):
 
         assert called.request.body.count(b'"url": "URL"') == 1
         assert response.status_code == 302
-        assert response.location == self._get_location()
+        assert response.location == f"{self._get_location()}.json"
