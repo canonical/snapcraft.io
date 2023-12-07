@@ -30,9 +30,9 @@ if (navAccountContainer) {
         notAuthenticatedMenu.classList.remove("u-hide");
         authenticatedMenu.classList.add("u-hide");
       }
-    }).
-    catch((e) => {
+    })
+    .catch(() => {
       notAuthenticatedMenu.classList.remove("u-hide");
       authenticatedMenu.classList.add("u-hide");
-    });;
+    });
 }
