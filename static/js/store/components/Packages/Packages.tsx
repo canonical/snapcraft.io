@@ -130,7 +130,7 @@ function Packages() {
                     Showing {currentPage === "1" ? "1" : firstResultNumber} to{" "}
                     {lastResultNumber} of{" "}
                     {data?.total_items < 100 ? data?.total_items : "over 100"}{" "}
-                    items
+                    results for <strong>"{searchParams.get("q")}"</strong>.{" "}
                     <Button
                       appearance="link"
                       onClick={() => {
@@ -149,7 +149,9 @@ function Packages() {
                 ) : (
                   <p>
                     Showing {currentPage === "1" ? "1" : firstResultNumber} to{" "}
-                    {lastResultNumber} of {data?.total_items} items
+                    {lastResultNumber} of{" "}
+                    {data?.total_items < 100 ? data?.total_items : "over 100"}{" "}
+                    items
                   </p>
                 )}
               </div>
