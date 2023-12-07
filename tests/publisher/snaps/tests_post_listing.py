@@ -44,7 +44,7 @@ class PostMetadataListingPage(BaseTestCases.EndpointLoggedIn):
         response = self.client.post(self.endpoint_url)
 
         assert response.status_code == 302
-        assert response.location == self._get_location()
+        assert response.location == f"{self._get_location()}.json"
 
     @responses.activate
     def test_update_invalid_field(self):
@@ -55,7 +55,7 @@ class PostMetadataListingPage(BaseTestCases.EndpointLoggedIn):
 
         assert 0 == len(responses.calls)
         assert response.status_code == 302
-        assert response.location == self._get_location()
+        assert response.location == f"{self._get_location()}.json"
 
     @responses.activate
     def test_update_valid_field(self):
@@ -80,7 +80,7 @@ class PostMetadataListingPage(BaseTestCases.EndpointLoggedIn):
         )
 
         assert response.status_code == 302
-        assert response.location == self._get_location()
+        assert response.location == f"{self._get_location()}.json"
 
     @responses.activate
     def test_update_description_with_carriage_return(self):
@@ -105,7 +105,7 @@ class PostMetadataListingPage(BaseTestCases.EndpointLoggedIn):
         )
 
         assert response.status_code == 302
-        assert response.location == self._get_location()
+        assert response.location == f"{self._get_location()}.json"
 
     @responses.activate
     def test_return_error_udpate_one_field(self):
