@@ -115,13 +115,6 @@ def after_login(resp):
         ),
     )
 
-    # Set cookie to know where to redirect users for re-auth
-    response.set_cookie(
-        "last_login_method",
-        "sso",
-        expires=datetime.datetime.now() + datetime.timedelta(days=365),
-    )
-
     return response
 
 

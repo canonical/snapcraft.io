@@ -1,8 +1,8 @@
 import flask
 import prometheus_client
+from talisker import logging
 
 from webapp.snapcraft import logic
-
 
 users_with_js = prometheus_client.Counter(
     "users_with_js", "A counter of sessions with JS"
@@ -10,7 +10,6 @@ users_with_js = prometheus_client.Counter(
 users_without_js = prometheus_client.Counter(
     "users_without_js", "A counter of sessions without JS"
 )
-
 
 def snapcraft_blueprint():
     snapcraft = flask.Blueprint("snapcraft", __name__)
@@ -30,16 +29,27 @@ def snapcraft_blueprint():
         """
         A JSON endpoint to request login status
         """
-        publisher = None
+        try:
+            publisher = None
 
-        if "publisher" in flask.session:
-            publisher = flask.session["publisher"]
+            if "publisher" in flask.session:
+                publisher = flask.session["publisher"]
 
-        response = {"publisher": publisher}
-        response = flask.make_response(response)
-        response.headers["Cache-Control"] = "no-store"
+            response = {"publisher": publisher}
+            response = flask.make_response(response)
+            # Unset the last_login_method cookie to avoid forcing login through candid
+            response.set_cookie("last_login_method", "", expires=0)
 
-        return response
+            response.headers["Cache-Control"] = "no-store"
+
+            return response
+        except Exception as e:
+            logging.getLogger("talisker.wsgi").error("Error with session: %s", e)
+
+            response = {"error": "Error fetching account information"}
+            response = flask.make_response(response)
+            response.headers["Cache-Control"] = "no-store"
+            return response, 502
 
     @snapcraft.route("/iot")
     def iot():
