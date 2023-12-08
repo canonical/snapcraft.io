@@ -11,6 +11,7 @@ users_without_js = prometheus_client.Counter(
     "users_without_js", "A counter of sessions without JS"
 )
 
+
 def snapcraft_blueprint():
     snapcraft = flask.Blueprint("snapcraft", __name__)
 
@@ -44,7 +45,9 @@ def snapcraft_blueprint():
 
             return response
         except Exception as e:
-            logging.getLogger("talisker.wsgi").error("Error with session: %s", e)
+            logging.getLogger("talisker.wsgi").error(
+                "Error with session: %s", e
+            )
 
             response = {"error": "Error fetching account information"}
             response = flask.make_response(response)
