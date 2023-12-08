@@ -38,7 +38,8 @@ def snapcraft_blueprint():
 
             response = {"publisher": publisher}
             response = flask.make_response(response)
-            # Unset the last_login_method cookie to avoid forcing login through candid
+
+            # Unset the last_login_method cookie to avoid forcing
             response.set_cookie("last_login_method", "", expires=0)
 
             response.headers["Cache-Control"] = "no-store"
