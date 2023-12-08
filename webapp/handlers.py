@@ -206,13 +206,8 @@ def set_handlers(app):
             "macaroon-permission-required",
             "macaroon-authorization-required",
         ]:
-            last_login_method = flask.request.cookies.get("last_login_method")
-            if last_login_method == "candid":
-                login_path = "login-beta"
-            else:
-                login_path = "login"
             authentication.empty_session(flask.session)
-            return flask.redirect(f"/{login_path}?next={flask.request.path}")
+            return flask.redirect(f"/login?next={flask.request.path}")
 
         status_code = 502
         codes = [

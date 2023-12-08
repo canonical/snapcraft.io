@@ -1,5 +1,4 @@
 import os
-import datetime
 
 import flask
 from canonicalwebteam.candid import CandidClient
@@ -113,13 +112,6 @@ def after_login(resp):
             open_id.get_next_url(),
             302,
         ),
-    )
-
-    # Set cookie to know where to redirect users for re-auth
-    response.set_cookie(
-        "last_login_method",
-        "sso",
-        expires=datetime.datetime.now() + datetime.timedelta(days=365),
     )
 
     return response
