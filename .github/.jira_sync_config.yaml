@@ -15,11 +15,12 @@ settings:
   # (Optional) GitHub labels. Only issues with one of those labels will be synchronized.
   # If not specified, all issues will be synchronized
   labels:
-    - bug
+    - "Bug 🐛"
+    - "Feature 🎁"
 
   # (Optional) (Default: false) Add a new comment in GitHub with a link to Jira created issue
   add_gh_comment: true
-
+  
   # (Optional) (Default: true) Synchronize issue description from GitHub to Jira
   sync_description: true
 
