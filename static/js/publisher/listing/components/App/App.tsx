@@ -204,12 +204,15 @@ function App() {
             <div className="u-fixed-width">
               <Notification
                 severity="negative"
-                title={savedError === true ? "Something went wrong." : savedError.map((error) => `${error.message}`).join("\n")}
+                title="Error"
                 onDismiss={() => {
                   setHasSaved(false);
                   setSavedError(false);
                 }}
-              />
+              >
+              Changes have not been saved.<br />
+              {savedError === true ? "Something went wrong." : savedError.map((error) => `${error.message}`).join("\n")}
+              </Notification>
             </div>
           )}
 
