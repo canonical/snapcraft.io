@@ -11,6 +11,8 @@ Settings for {% if display_title %}{{ display_title }}{% else %}{{ snap_title }}
   window.CSRF_TOKEN = "{{ csrf_token() }}";
   window.countries = {{ countries|tojson }};
   window.settingsData = {
+    publisher_name: "{{ publisher_name }}",
+    snap_title: "{{ snap_title }}",
     snap_name: "{{ snap_name }}",
     snap_id: "{{ snap_id }}",
     store: "{{ store }}",
