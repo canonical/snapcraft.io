@@ -135,37 +135,55 @@ function Packages() {
           </Col>
           <Col size={9}>
             {data?.packages && data?.packages.length > 0 && (
-              <div className="u-fixed-width" ref={searchSummaryRef}>
-                {searchParams.get("q") ? (
-                  <p>
-                    Showing {currentPage === "1" ? "1" : firstResultNumber} to{" "}
-                    {lastResultNumber} of{" "}
-                    {data?.total_items < 100 ? data?.total_items : "over 100"}{" "}
-                    results for <strong>"{searchParams.get("q")}"</strong>.{" "}
-                    <Button
-                      appearance="link"
-                      onClick={() => {
-                        searchParams.delete("q");
-                        searchParams.delete("page");
-                        setSearchParams(searchParams);
+              <Row ref={searchSummaryRef}>
+                <Col size={6}>
+                  {searchParams.get("q") ? (
+                    <p>
+                      Showing {currentPage === "1" ? "1" : firstResultNumber} to{" "}
+                      {lastResultNumber} of{" "}
+                      {data?.total_items < 100 ? data?.total_items : "over 100"}{" "}
+                      results for <strong>"{searchParams.get("q")}"</strong>.{" "}
+                      <Button
+                        appearance="link"
+                        onClick={() => {
+                          searchParams.delete("q");
+                          searchParams.delete("page");
+                          setSearchParams(searchParams);
 
-                        if (searchRef.current) {
-                          searchRef.current.value = "";
-                        }
-                      }}
-                    >
-                      Clear search
-                    </Button>
-                  </p>
-                ) : (
-                  <p>
-                    Showing {currentPage === "1" ? "1" : firstResultNumber} to{" "}
-                    {lastResultNumber} of{" "}
-                    {data?.total_items < 100 ? data?.total_items : "over 100"}{" "}
-                    items
-                  </p>
-                )}
-              </div>
+                          if (searchRef.current) {
+                            searchRef.current.value = "";
+                          }
+                        }}
+                      >
+                        Clear search
+                      </Button>
+                    </p>
+                  ) : (
+                    <p>
+                      Showing {currentPage === "1" ? "1" : firstResultNumber} to{" "}
+                      {lastResultNumber} of{" "}
+                      {data?.total_items < 100 ? data?.total_items : "over 100"}{" "}
+                      items
+                    </p>
+                  )}
+                </Col>
+                <Col size={3} className="u-align--right">
+                  <div className="p-form p-form--inline">
+                    <div className="p-form__group u-no-margin--right">
+                      <label htmlFor="sort-filter" className="p-form__label">
+                        Sort by
+                      </label>
+                      <select
+                        name="sort-filter"
+                        id="sort-filter"
+                        className="p-form__control"
+                      >
+                        <option value="relevance">Relevance</option>
+                      </select>
+                    </div>
+                  </div>
+                </Col>
+              </Row>
             )}
             <Row>
               {isFetching &&
