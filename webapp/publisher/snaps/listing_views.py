@@ -43,7 +43,7 @@ def redirect_post_market_snap(snap_name):
 
 
 @login_required
-def get_listing_snap(snap_name):
+def get_listing_snap(snap_name, is_json=False):
     snap_details = publisher_api.get_snap_info(snap_name, flask.session)
 
     details_metrics_enabled = snap_details["public_metrics_enabled"]
@@ -126,13 +126,18 @@ def get_listing_snap(snap_name):
         "links": snap_details["links"],
     }
 
-    return flask.render_template(
-        "publisher/listing.html", **context, listing_data=json.dumps(context)
-    )
+    if is_json:
+        return flask.jsonify(context)
+    else:
+        return flask.render_template(
+            "publisher/listing.html",
+            **context,
+            listing_data=json.dumps(context)
+        )
 
 
 @login_required
-def post_listing_snap(snap_name):
+def post_listing_snap(snap_name, is_json=False):
     changes = None
     changed_fields = flask.request.form.get("changes")
 
@@ -312,10 +317,15 @@ def post_listing_snap(snap_name):
                 "tour_steps": tour_steps,
             }
 
-            return flask.render_template("publisher/listing.html", **context)
+            if is_json:
+                return flask.jsonify(context)
+            else:
+                return flask.render_template(
+                    "publisher/listing.html", **context
+                )
 
     return flask.redirect(
-        flask.url_for(".get_listing_snap", snap_name=snap_name)
+        flask.url_for(".get_listing_snap", snap_name=snap_name, is_json=True)
     )
 
 

@@ -11,7 +11,7 @@ from canonicalwebteam.store_api.stores.snapstore import SnapStoreAdmin
 from flask.json import jsonify
 
 # Local
-from webapp.decorators import candid_login_required, login_required
+from webapp.decorators import login_required
 from webapp.helpers import api_publisher_session
 
 admin_api = SnapStoreAdmin(api_publisher_session)
@@ -29,7 +29,6 @@ context = {"api_url": SNAPSTORE_DASHBOARD_API_URL}
 
 @admin.route("/admin", defaults={"path": ""})
 @admin.route("/admin/<path:path>")
-@candid_login_required
 @login_required
 def get_admin(path):
     return flask.render_template("admin/admin.html", **context)
@@ -54,7 +53,7 @@ def get_settings(store_id):
     return jsonify(store)
 
 
-@admin.route("/admin/store/<store_id>/settings", methods=["POST"])
+@admin.route("/admin/store/<store_id>/settings", methods=["PUT"])
 @login_required
 def post_settings(store_id):
     settings = {}

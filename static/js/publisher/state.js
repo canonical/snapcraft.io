@@ -65,6 +65,10 @@ function updateState(state, values) {
 }
 
 function diffState(initialState, state) {
+  if (!initialState) {
+    return null;
+  }
+
   const diff = {};
 
   for (let key of allowedKeys) {

@@ -21,7 +21,7 @@ function App() {
 
   const [isSaving, setIsSaving] = useState(false);
   const [hasSaved, setHasSaved] = useState(false);
-  const [savedError, setSavedError] = useState(false);
+  const [savedError, setSavedError] = useState<boolean | {code: string, message: string}[] >(false);
   const [formData, setFormData] = useState({});
   const [showMetadataWarningModal, setShowMetadataWarningModal] = useState(
     false
@@ -55,11 +55,6 @@ function App() {
   });
 
   const onSubmit = (data: any) => {
-    const dirtyFieldsKeys = Object.keys(dirtyFields);
-    const onlyUpdateMetadataField =
-      dirtyFieldsKeys.length === 1 &&
-      dirtyFieldsKeys[0] === "update_metadata_on_release";
-
     if (getValues("update_metadata_on_release") && dirtyFields.visibility) {
       setShowMetadataWarningModal(true);
       setFormData(data);
@@ -96,6 +91,18 @@ function App() {
     }
 
     let newData = await response.json();
+
+    setIsSaving(false);
+
+    if (newData.error_list) {
+      setSavedError(newData.error_list);
+      setIsSaving(false);
+      return;
+    }
+
+    setHasSaved(true);
+    setIsSaving(false);
+
     newData = { ...data, ...newData };
 
     if (newData.private) {
@@ -103,9 +110,6 @@ function App() {
     } else if (newData.unlisted) {
       newData.visibility = "unlisted";
     }
-
-    setIsSaving(false);
-    setHasSaved(true);
 
     reset(newData);
     window.scrollTo(0, 0);
@@ -153,16 +157,18 @@ function App() {
             <div className="u-fixed-width">
               <Notification
                 severity="negative"
-                title="Something went wrong."
+                title="Error"
                 onDismiss={() => {
                   setHasSaved(false);
                   setSavedError(false);
                 }}
               >
-                Please try again later.
+              Changes have not been saved.<br />
+                {savedError === true ? "Something went wrong." : savedError.map((error) => `${error.message}`).join("\n")}
               </Notification>
             </div>
           )}
+
 
           <Row className="p-form__group">
             <Col size={2}>

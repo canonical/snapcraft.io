@@ -1,5 +1,4 @@
 import os
-import datetime
 
 import flask
 from canonicalwebteam.candid import CandidClient
@@ -11,7 +10,6 @@ from canonicalwebteam.store_api.stores.charmstore import CharmPublisher
 
 from django_openid_auth.teams import TeamsRequest, TeamsResponse
 from flask_openid import OpenID
-from flask_wtf.csrf import generate_csrf, validate_csrf
 
 from webapp import authentication
 from webapp.helpers import api_publisher_session
@@ -73,8 +71,11 @@ def login_handler():
 @open_id.after_login
 def after_login(resp):
     flask.session.pop("macaroons", None)
-
     flask.session["macaroon_discharge"] = resp.extensions["macaroon"].discharge
+    flask.session[
+        "developer_token"
+    ] = publisher_api.exchange_dashboard_macaroons(flask.session)
+
     if not resp.nickname:
         return flask.redirect(LOGIN_URL)
 
@@ -113,121 +114,12 @@ def after_login(resp):
         ),
     )
 
-    # Set cookie to know where to redirect users for re-auth
-    response.set_cookie(
-        "last_login_method",
-        "sso",
-        expires=datetime.datetime.now() + datetime.timedelta(days=365),
-    )
-
     return response
 
 
 @login.route("/login-beta", methods=["GET"])
-@csrf.exempt
-def login_candid():
-    if (
-        authentication.is_authenticated(flask.session)
-        and "developer_token" in flask.session
-    ):
-        return flask.redirect(
-            flask.url_for("publisher_snaps.get_account_snaps")
-        )
-
-    # Get a bakery v2 macaroon from the publisher API to be discharged
-    # and save it in the session
-    flask.session["publisher-macaroon"] = publisher_api.get_macaroon(
-        authentication.PERMISSIONS
-    )
-
-    login_url = candid.get_login_url(
-        macaroon=flask.session["publisher-macaroon"],
-        callback_url=flask.url_for("login.login_callback", _external=True),
-        state=generate_csrf(),
-    )
-
-    # Next URL to redirect the user after the login
-    next_url = flask.request.args.get("next")
-
-    if next_url:
-        if not next_url.startswith("/") and not next_url.startswith(
-            flask.request.url_root
-        ):
-            return flask.abort(400)
-        flask.session["next_url"] = next_url
-
-    return flask.redirect(login_url, 302)
-
-
-@login.route("/login/callback")
-def login_callback():
-    code = flask.request.args["code"]
-    state = flask.request.args["state"]
-
-    flask.session.pop("macaroon_root", None)
-    flask.session.pop("macaroon_discharge", None)
-
-    # Avoid CSRF attacks
-    validate_csrf(state)
-
-    discharged_token = candid.discharge_token(code)
-    candid_macaroon = candid.discharge_macaroon(
-        flask.session["publisher-macaroon"], discharged_token
-    )
-
-    # Store bakery authentication
-    flask.session["macaroons"] = candid.get_serialized_bakery_macaroon(
-        flask.session["publisher-macaroon"], candid_macaroon
-    )
-
-    # Get macaroon from charm publisher and exchange for developer token
-    # for authenticating against the publishergw API
-    publishergw_macaroon = charm_publisher_api.issue_macaroon([])
-    publishergw_candid_macaroon = candid.discharge_macaroon(
-        publishergw_macaroon, discharged_token
-    )
-    publishergw_serialized_macaroons = candid.get_serialized_bakery_macaroon(
-        publishergw_macaroon, publishergw_candid_macaroon
-    )
-
-    flask.session["developer_token"] = charm_publisher_api.exchange_macaroons(
-        publishergw_serialized_macaroons
-    )
-
-    publisher = publisher_api.whoami(flask.session)
-    account = publisher_api.get_account(flask.session)
-
-    flask.session["publisher"] = {
-        "account_id": publisher["account"]["id"],
-        "nickname": publisher["account"]["username"],
-        "fullname": publisher["account"]["name"],
-        "image": None,
-        "email": publisher["account"]["email"],
-    }
-
-    if logic.get_stores(account["stores"], roles=["admin", "review", "view"]):
-        flask.session["publisher"]["has_stores"] = (
-            len(admin_api.get_stores(flask.session)) > 0
-        )
-
-    response = flask.make_response(
-        flask.redirect(
-            flask.session.pop(
-                "next_url",
-                flask.url_for("publisher_snaps.get_account_snaps"),
-            ),
-            302,
-        ),
-    )
-
-    # Set cookie to know where to redirect users for re-auth
-    response.set_cookie(
-        "last_login_method",
-        "candid",
-        expires=datetime.datetime.now() + datetime.timedelta(days=365),
-    )
-
-    return response
+def login_beta():
+    return flask.redirect(flask.url_for(".login_handler"))
 
 
 @login.route("/logout")

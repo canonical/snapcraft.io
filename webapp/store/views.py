@@ -269,6 +269,10 @@ def store_blueprint(store_query=None):
             status_code,
         )
 
+    @store.route("/beta-store")
+    def beta_store_view():
+        return flask.render_template("store/beta.html")
+
     @store.route("/youtube", methods=["POST"])
     def get_video_thumbnail_data():
         body = flask.request.form

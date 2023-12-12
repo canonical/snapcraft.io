@@ -1,25 +1,19 @@
 /* TEAM */
-   Web developer: Bartek Szopka
-   Location: Poznań, Poland
-
-   Web developer: João Figueiredo Martins
-   Location: London, UK
-
-   UX designer: Jordan Hughes
-   Location: London, UK
-
-   UX designer: Juan Real
-   Location: London, UK
-
-   Web developer: Luke Wesley-Holley
+   Engineering manager: Luke Wesley-Holley
    Location: Leeds, UK
 
-   Web developer: Robin Winslow
-   Location: Derby, UK
+   UX designer: Anne-Sophie Muller Eliet
+   Location: Argancy, France
 
-   Web developer: Thomas Bille
+   Web developer: Alimot Akinbode
+   Location: Thuwal, Saudi Arabia
+
+   Web developer: Seulkee Kang
    Location: London, UK
 
+   Web developer: Steve Rydz
+   Location: Nottingham, UK
+   
 /* THANKS */
    Name: Alan Pope
    Location: Farnborough, UK
@@ -58,6 +52,24 @@
    Location: Leeds, UK
 
    Name: Will Moggridge
+   Location: London, UK
+
+   Name: Bartek Szopka
+   Location: Poznań, Poland
+
+   Name: João Figueiredo Martins
+   Location: London, UK
+
+   Name: Jordan Hughes
+   Location: London, UK
+
+   Name: Juan Real
+   Location: London, UK
+
+   Name: Robin Winslow
+   Location: Derby, UK
+
+   Name: Thomas Bille
    Location: London, UK
 
 /* SITE */

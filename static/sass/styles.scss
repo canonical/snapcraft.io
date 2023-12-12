@@ -196,6 +196,8 @@ $color-social-icon-foreground: $color-light;
 @include snapcraft-p-featured-snaps;
 @import "snapcraft_p-app-pagination";
 @include snapcraft-app-pagination;
+@import "patterns_p-filter-panel";
+@include p-filter-panel;
 
 dl {
   margin-bottom: $spv--x-large;
@@ -233,12 +235,6 @@ dl {
 .p-code-snippet__block--numbered.is-wrapped,
 .p-code-snippet__block.is-wrapped {
   white-space: pre-wrap;
-}
-
-// Vanilla bug: https://github.com/canonical-web-and-design/vanilla-framework/issues/3526
-code {
-  white-space: pre;
-  word-break: normal;
 }
 
 .p-modal__dialog {
@@ -448,10 +444,6 @@ code {
   box-shadow: 0 3px 3px rgba(51, 51, 51, 0.2);
 }
 
-.p-strip--dark {
-  background-color: #333 !important;
-}
-
 .p-navigation__row.is-full-width {
   max-width: 100%;
 }
@@ -492,4 +484,17 @@ code {
 // Breaks modals
 .p-accordion__panel[aria-hidden="false"] {
   transform: none;
+}
+
+// XXX - Related to https://github.com/canonical/vanilla-framework/issues/4887
+.p-search-box .p-search-box__button .p-icon--search {
+  background-image: url("data:image/svg+xml,%3Csvg width=%2716%27 height=%2716%27 xmlns=%27http://www.w3.org/2000/svg%27%3E%3Cpath d=%27M6.964 1a5.964 5.964 0 014.709 9.623l4.303 4.305-1.06 1.06-4.306-4.305A5.964 5.964 0 116.963 1zm0 1.5a4.464 4.464 0 100 8.927 4.464 4.464 0 000-8.927z%27 fill=%27%23666%27 fill-rule=%27nonzero%27/%3E%3C/svg%3E") !important;
+}
+
+.p-search-box .p-search-box__reset .p-icon--close {
+  background-image: url("data:image/svg+xml,%3Csvg width=%2716%27 height=%2716%27 xmlns=%27http://www.w3.org/2000/svg%27%3E%3Cpath fill=%27%23666%27 fill-rule=%27nonzero%27 d=%27M13.041 1.898l1.06 1.06L9.062 8l5.04 5.042-1.06 1.06L8 9.062 2.96 14.1l-1.06-1.06L6.938 8 1.9 2.96l1.06-1.06 5.04 5.04z%27/%3E%3C/svg%3E") !important;
+}
+
+.p-search-box .p-search-box__input:placeholder-shown ~ .p-search-box__reset {
+  display: none !important;
 }
