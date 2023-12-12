@@ -21,7 +21,10 @@ if (navAccountContainer) {
         authenticatedMenu.classList.remove("u-hide");
         displayName.innerHTML = data.publisher["fullname"];
         if (window.sessionStorage) {
-          window.sessionStorage.setItem("displayName", data.publisher["fullname"]);
+          window.sessionStorage.setItem(
+            "displayName",
+            data.publisher["fullname"]
+          );
         }
 
         if (data.publisher.has_stores) {
