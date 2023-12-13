@@ -129,7 +129,12 @@ function App() {
 
   return (
     <>
-      <PageHeader snapName={settingsData?.snap_name} activeTab="settings" />
+      <PageHeader
+        snapName={settingsData?.snap_name}
+        snapTitle={settingsData?.snap_title}
+        publisherName={settingsData?.publisher_name}
+        activeTab="settings"
+      />
 
       <Form onSubmit={handleSubmit(onSubmit)} stacked={true}>
         <SaveAndPreview

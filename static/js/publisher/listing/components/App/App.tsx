@@ -1,11 +1,9 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import {
   Form,
   Strip,
-  Notification,
-  Modal,
-  Button,
+  Notification
 } from "@canonical/react-components";
 
 import {
@@ -143,7 +141,12 @@ function App() {
 
   return (
     <>
-      <PageHeader snapName={listingData?.snap_name} activeTab="listing" />
+      <PageHeader
+        snapName={listingData?.snap_name}
+        snapTitle={listingData?.title}
+        publisherName={publisherName}
+        activeTab="listing"
+      />
 
       <Form
         onSubmit={handleSubmit(onSubmit)}
