@@ -97,6 +97,8 @@ function Packages() {
               </div>
               <div className="p-filter-panel__inner">
                 <Filters
+                  showMore
+                  showMoreCount={9}
                   categories={data?.categories || []}
                   selectedCategories={
                     searchParams.get("categories")?.split(",") || ["featured"]
