@@ -19,6 +19,7 @@ function Packages() {
 
   const getData = async () => {
     const queryString = search || "?categories=featured";
+
     const response = await fetch(`/beta/store.json${queryString}`);
     const data = await response.json();
     const packagesWithId = data.packages.map((item: Package) => {
@@ -45,6 +46,11 @@ function Packages() {
 
   const searchRef = useRef<HTMLInputElement | null>(null);
   const searchSummaryRef = useRef<HTMLDivElement>(null);
+
+  const isFeatured =
+    !searchParams.get("categories") &&
+    !searchParams.get("q") &&
+    !searchParams.get("architectures");
 
   useEffect(() => {
     refetch();
@@ -98,10 +104,10 @@ function Packages() {
               <div className="p-filter-panel__inner">
                 <Filters
                   showMore
-                  showMoreCount={9}
+                  showMoreCount={10}
                   categories={data?.categories || []}
                   selectedCategories={
-                    searchParams.get("categories")?.split(",") || ["featured"]
+                    searchParams.get("categories")?.split(",") || []
                   }
                   setSelectedCategories={(
                     items: Array<{
@@ -160,7 +166,6 @@ function Packages() {
                     setSearchParams(searchParams);
                   }}
                   disabled={isFetching}
-                  showFeatured={true}
                   order={[
                     "development",
                     "games",
@@ -178,55 +183,49 @@ function Packages() {
           </Col>
           <Col size={9}>
             {data?.packages && data?.packages.length > 0 && (
-              <Row ref={searchSummaryRef}>
-                <Col size={6}>
-                  {searchParams.get("q") ? (
-                    <p>
-                      Showing {currentPage === "1" ? "1" : firstResultNumber} to{" "}
-                      {lastResultNumber} of{" "}
-                      {data?.total_items < 100 ? data?.total_items : "over 100"}{" "}
-                      results for <strong>"{searchParams.get("q")}"</strong>.{" "}
-                      <Button
-                        appearance="link"
-                        onClick={() => {
-                          searchParams.delete("q");
-                          searchParams.delete("page");
-                          setSearchParams(searchParams);
+              <>
+                {isFeatured && <h2>Featured snaps</h2>}
+                <Row ref={searchSummaryRef}>
+                  <Col size={6}>
+                    {searchParams.get("q") ? (
+                      <p>
+                        Showing {currentPage === "1" ? "1" : firstResultNumber}{" "}
+                        to {lastResultNumber} of{" "}
+                        {data?.total_items < 100
+                          ? data?.total_items
+                          : "over 100"}{" "}
+                        results for <strong>"{searchParams.get("q")}"</strong>.{" "}
+                        <Button
+                          appearance="link"
+                          onClick={() => {
+                            searchParams.delete("q");
+                            searchParams.delete("page");
+                            setSearchParams(searchParams);
 
-                          if (searchRef.current) {
-                            searchRef.current.value = "";
-                          }
-                        }}
-                      >
-                        Clear search
-                      </Button>
-                    </p>
-                  ) : (
-                    <p>
-                      Showing {currentPage === "1" ? "1" : firstResultNumber} to{" "}
-                      {lastResultNumber} of{" "}
-                      {data?.total_items < 100 ? data?.total_items : "over 100"}{" "}
-                      items
-                    </p>
-                  )}
-                </Col>
-                <Col size={3} className="u-align--right">
-                  <div className="p-form p-form--inline">
-                    <div className="p-form__group u-no-margin--right">
-                      <label htmlFor="sort-filter" className="p-form__label">
-                        Sort by
-                      </label>
-                      <select
-                        name="sort-filter"
-                        id="sort-filter"
-                        className="p-form__control"
-                      >
-                        <option value="relevance">Relevance</option>
-                      </select>
-                    </div>
-                  </div>
-                </Col>
-              </Row>
+                            if (searchRef.current) {
+                              searchRef.current.value = "";
+                            }
+                          }}
+                        >
+                          Clear search
+                        </Button>
+                      </p>
+                    ) : (
+                      <p>
+                        Showing {currentPage === "1" ? "1" : firstResultNumber}{" "}
+                        to {lastResultNumber} of{" "}
+                        {data?.total_items < 100
+                          ? data?.total_items
+                          : "over 100"}{" "}
+                        items
+                      </p>
+                    )}
+                  </Col>
+                  <Col size={3} className="u-align--right">
+                    <p>Sorted by relevance</p>
+                  </Col>
+                </Row>
+              </>
             )}
             <Row>
               {isFetching &&
