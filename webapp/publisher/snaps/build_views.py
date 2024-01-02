@@ -76,6 +76,7 @@ def get_snap_builds(snap_name):
     )
 
     context = {
+        "publisher_name": details["publisher"]["display-name"],
         "snap_id": details["snap_id"],
         "snap_name": details["snap_name"],
         "snap_title": details["title"],

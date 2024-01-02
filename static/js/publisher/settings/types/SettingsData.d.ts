@@ -1,4 +1,6 @@
 type SettingsData = {
+  snap_title: string;
+  publisher_name: string;
   snap_name: string;
   snap_id: string;
   store: string;

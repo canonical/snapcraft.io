@@ -97,6 +97,8 @@ function Packages() {
               </div>
               <div className="p-filter-panel__inner">
                 <Filters
+                  showMore
+                  showMoreCount={9}
                   categories={data?.categories || []}
                   selectedCategories={
                     searchParams.get("categories")?.split(",") || ["featured"]
@@ -111,6 +113,47 @@ function Packages() {
                       searchParams.set("categories", items.join(","));
                     } else {
                       searchParams.delete("categories");
+                    }
+
+                    searchParams.delete("page");
+                    setSearchParams(searchParams);
+                  }}
+                  architectures={[
+                    {
+                      name: "",
+                      display_name: "All",
+                    },
+                    {
+                      name: "amd64",
+                      display_name: "AMD64",
+                    },
+                    {
+                      name: "arm64",
+                      display_name: "ARM64",
+                    },
+                    {
+                      name: "armhf",
+                      display_name: "ARMHF",
+                    },
+                    {
+                      name: "i386",
+                      display_name: "I386",
+                    },
+                    {
+                      name: "ppc64el",
+                      display_name: "PPC64EL",
+                    },
+                    {
+                      name: "s390x",
+                      display_name: "S390X",
+                    },
+                  ]}
+                  selectedArchitecture={searchParams.get("architecture") || ""}
+                  setSelectedArchitecture={(item: string) => {
+                    if (item) {
+                      searchParams.set("architecture", item);
+                    } else {
+                      searchParams.delete("architecture");
                     }
 
                     searchParams.delete("page");

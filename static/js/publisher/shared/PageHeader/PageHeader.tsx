@@ -3,18 +3,21 @@ import { Strip, Tabs } from "@canonical/react-components";
 
 type Props = {
   snapName: string;
+  snapTitle?: string;
   activeTab: string;
   publisherName?: string;
 };
 
-function PageHeader({ snapName, activeTab, publisherName }: Props) {
+function PageHeader({ snapName, snapTitle, activeTab, publisherName }: Props) {
+  // Get the users display name from sessionStorage
+  const accountName = window.sessionStorage.getItem("displayName") ?? undefined;
   return (
     <Strip shallow={true} className="u-no-padding--bottom">
       <div className="u-fixed-width">
         <a href="/snaps">&lsaquo;&nbsp;My snaps</a>
         <div className="u-flex" style={{ alignItems: "baseline" }}>
-          <h1 className="p-heading--3">{snapName}</h1>
-          {publisherName && (
+          <h1 className="p-heading--3">{snapTitle ? snapTitle : snapName}</h1>
+          {publisherName && accountName && publisherName !== accountName && (
             <p
               className="u-text-muted u-no-margin--bottom"
               style={{ marginLeft: "0.5rem" }}
