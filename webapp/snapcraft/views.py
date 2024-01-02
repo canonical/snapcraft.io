@@ -31,6 +31,9 @@ def snapcraft_blueprint():
         A JSON endpoint to request login status
         """
         try:
+            if not flask.request.cookies.get("login_migrated"):
+                response.set_cookie("last_login_method", "", expires=0)
+                return flask.redirect("/logout")
             publisher = None
 
             if "publisher" in flask.session:
