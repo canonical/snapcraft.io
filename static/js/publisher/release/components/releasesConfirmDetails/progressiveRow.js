@@ -17,10 +17,8 @@ class ProgressiveRow extends React.Component {
   }
 
   onChangeHandler(percentage) {
-    const {
-      updateProgressiveReleasePercentage,
-      updateGlobalPercentage,
-    } = this.props;
+    const { updateProgressiveReleasePercentage, updateGlobalPercentage } =
+      this.props;
 
     if (updateGlobalPercentage) {
       updateGlobalPercentage(percentage);
@@ -29,12 +27,8 @@ class ProgressiveRow extends React.Component {
   }
 
   render() {
-    const {
-      release,
-      type,
-      globalPercentage,
-      updateGlobalPercentage,
-    } = this.props;
+    const { release, type, globalPercentage, updateGlobalPercentage } =
+      this.props;
 
     if (!release.progressive) {
       return false;
