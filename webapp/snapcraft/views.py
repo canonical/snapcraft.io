@@ -32,8 +32,8 @@ def snapcraft_blueprint():
         """
         try:
             if not flask.request.cookies.get("login_migrated"):
-                response.set_cookie("last_login_method", "", expires=0)
                 return flask.redirect("/logout")
+            
             publisher = None
 
             if "publisher" in flask.session:
