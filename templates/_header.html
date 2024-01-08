@@ -1,108 +1,152 @@
-<header id="navigation" class="p-navigation is-dark">
-  <div class="p-navigation__row {% if full_width_nav %}is-full-width{% endif %}">
-    <div class="p-navigation__banner">
-      <div class="p-navigation__tagged-logo">
-        <a class="p-navigation__link" href="/">
-          <div class="p-navigation__logo-tag">
-            <img class="p-navigation__logo-icon" src="https://assets.ubuntu.com/v1/11ff571b-snapcraft.svg" alt="">
+{% if docs %}
+<div class="l-docs">
+  <div class="l-docs__header">
+{% endif %}
+    <header id="navigation" class="p-navigation is-dark">
+      {% if docs %}
+      <div class="l-docs__subgrid">
+        <div class="l-docs__sidebar">
+      {% endif %}
+        {% if not docs %}
+        <div class="p-navigation__row {% if full_width_nav %}is-full-width{% endif %}">
+        {% endif %}
+          <div class="p-navigation__banner">
+            <div class="p-navigation__tagged-logo">
+              <a class="p-navigation__link" href="/">
+                <div class="p-navigation__logo-tag">
+                  <img class="p-navigation__logo-icon" src="https://assets.ubuntu.com/v1/11ff571b-snapcraft.svg" alt="">
+                </div>
+                <span class="p-navigation__logo-title" {%if docs%}style="font-size: 20px;"{%endif%}>Canonical Snapcraft</span>
+              </a>
+            </div>
+            <a href="#navigation" class="p-navigation__toggle--open" title="menu">Menu</a>
+            <a href="#navigation-closed" class="p-navigation__toggle--close" title="close menu">Close menu</a>
           </div>
-          <span class="p-navigation__logo-title">Canonical Snapcraft</span>
-        </a>
+        {% if docs %}
+        </div>
+        {% endif %}
+        {% if docs %}
+        <div class="l-docs__main">
+          <div class="p-navigation__row u-fixed-width">
+        {% endif %}
+            <nav class="p-navigation__nav">
+              <ul class="p-navigation__items" role="menu">
+                <li
+                  class="p-navigation__item {% if page_slug == 'store' %}is-selected{% endif %}"
+                  role="menuitem"
+                >
+                  <a class="p-navigation__link" href="/store">
+                    Snap Store
+                  </a>
+                </li>
+                <li
+                  class="p-navigation__item- {% if page_slug == 'about' %}is-selected{% endif %}"
+                  role="menuitem"
+                >
+                  <a class="p-navigation__link" href="/about">
+                    About <span class="u-hide--large">Snapcraft</span>
+                  </a>
+                </li>
+                <li
+                class="p-navigation__item--dropdown-toggle {% if page_slug == 'blog' %}is-selected{% endif %}"
+                id="learn-link"
+                role="menuitem"
+                >
+                  <a class="p-navigation__link" href="#learn-menu" aria-controls="learn-menu">
+                    Learn
+                  </a>
+                  <ul class="p-navigation__dropdown" id="learn-menu" aria-hidden="true">
+                    <li>
+                      <a class="p-navigation__dropdown-item" href="/blog">
+                        Blog
+                      </a>
+                    </li>
+                    <li>
+                      <a class="p-navigation__dropdown-item" href="/build">
+                        Build
+                      </a>
+                    </li>
+                    <li>
+                      <a class="p-navigation__dropdown-item" href="{{ url_for('docs.document_view') }}">
+                        Docs
+                      </a>
+                    </li>
+                    <li>
+                      <a class="p-navigation__dropdown-item" href="/docs/snap-tutorials">
+                        Tutorials
+                      </a>
+                    </li>
+                  </ul>
+                </li>
+                <li
+                  class="p-navigation__item {% if page_slug == 'iot' %}is-selected{% endif %}"
+                  role="menuitem"
+                >
+                  <a class="p-navigation__link" href="/iot">
+                    IoT
+                  </a>
+                </li>
+                <li class="p-navigation__item" role="menuitem">
+                  <a class="p-navigation__link " href="https://forum.snapcraft.io/">Forum</a>
+                </li>
+              </ul>
+              {% if not docs %}
+              <ul class="p-navigation__items js-nav-account global-nav" role="menu"> {# Authenticated #} <li class="p-navigation__item--dropdown-toggle js-nav-account--authenticated u-hide" role="menuitem" id="link-1">
+                  <a class="p-subnav__toggle p-navigation__link js-account--name" aria-controls="account-menu" aria-expanded="false"> My account </a>
+                  <ul class="p-navigation__dropdown--right" id="account-menu" aria-hidden="true">
+                    <li>
+                      <a href="/account/snaps" class="p-navigation__dropdown-item">My published snaps</a>
+                    </li>
+                    <li class="js-nav-account--stores u-hide">
+                      <a href="/admin" class="p-navigation__dropdown-item">My stores</a>
+                    </li>
+                    <li>
+                      <a href="/account/details" class="p-navigation__dropdown-item">Account details</a>
+                    </li>
+                    <li>
+                      <a href="/logout" class="p-navigation__dropdown-item">Sign out</a>
+                    </li>
+                  </ul>
+                </li> {# Not authenticated #} <li class="p-navigation__item js-nav-account--notauthenticated u-hide" role="menuitem">
+                  <a class="p-navigation__link" href="{{ url_for('publisher_snaps.get_account_snaps') }}"> Sign in <i class="p-icon--user is-light"></i>
+                  </a>
+                </li>
+              </ul>
+              {% endif %}
+            </nav>
+        {% if docs %}
+          </div>
+        </div>
+        {% endif %}
+        {% if not docs %}
+        </div>
+        {% endif %}
+        {% if docs %}
+        <ul class="p-navigation__items js-nav-account global-nav" role="menu"> {# Authenticated #} <li class="p-navigation__item--dropdown-toggle js-nav-account--authenticated u-hide" role="menuitem" id="link-1">
+            <a class="p-subnav__toggle p-navigation__link js-account--name" aria-controls="account-menu" aria-expanded="false"> My account </a>
+            <ul class="p-navigation__dropdown--right" id="account-menu" aria-hidden="true">
+              <li>
+                <a href="/account/snaps" class="p-navigation__dropdown-item">My published snaps</a>
+              </li>
+              <li class="js-nav-account--stores u-hide">
+                <a href="/admin" class="p-navigation__dropdown-item">My stores</a>
+              </li>
+              <li>
+                <a href="/account/details" class="p-navigation__dropdown-item">Account details</a>
+              </li>
+              <li>
+                <a href="/logout" class="p-navigation__dropdown-item">Sign out</a>
+              </li>
+            </ul>
+          </li> {# Not authenticated #} <li class="p-navigation__item js-nav-account--notauthenticated u-hide" role="menuitem">
+            <a class="p-navigation__link" href="{{ url_for('publisher_snaps.get_account_snaps') }}"> Sign in <i class="p-icon--user is-light"></i>
+            </a>
+          </li>
+        </ul>
       </div>
-      <a href="#navigation" class="p-navigation__toggle--open" title="menu">Menu</a>
-      <a href="#navigation-closed" class="p-navigation__toggle--close" title="close menu">Close menu</a>
-    </div>
-    <nav class="p-navigation__nav">
-      <ul class="p-navigation__items" role="menu">
-        <li
-          class="p-navigation__item {% if page_slug == 'store' %}is-selected{% endif %}"
-          role="menuitem"
-        >
-          <a class="p-navigation__link" href="/store">
-            Snap Store
-          </a>
-        </li>
-        <li
-          class="p-navigation__item- {% if page_slug == 'about' %}is-selected{% endif %}"
-          role="menuitem"
-        >
-          <a class="p-navigation__link" href="/about">
-            About <span class="u-hide--large">Snapcraft</span>
-          </a>
-        </li>
-        <li
-        class="p-navigation__item--dropdown-toggle {% if page_slug == 'blog' %}is-selected{% endif %}"
-        id="learn-link"
-        role="menuitem"
-        >
-          <a class="p-navigation__link" href="#learn-menu" aria-controls="learn-menu">
-            Learn
-          </a>
-          <ul class="p-navigation__dropdown" id="learn-menu" aria-hidden="true">
-            <li>
-              <a class="p-navigation__dropdown-item" href="/blog">
-                Blog
-              </a>
-            </li>
-            <li>
-              <a class="p-navigation__dropdown-item" href="/build">
-                Build
-              </a>
-            </li>
-            <li>
-              <a class="p-navigation__dropdown-item" href="{{ url_for('docs.document_view') }}">
-                Docs
-              </a>
-            </li>
-            <li>
-              <a class="p-navigation__dropdown-item" href="/docs/snap-tutorials">
-                Tutorials
-              </a>
-            </li>
-          </ul>
-        </li>
-        <li
-          class="p-navigation__item {% if page_slug == 'iot' %}is-selected{% endif %}"
-          role="menuitem"
-        >
-          <a class="p-navigation__link" href="/iot">
-            IoT
-          </a>
-        </li>
-        <li class="p-navigation__item" role="menuitem">
-          <a class="p-navigation__link " href="https://forum.snapcraft.io/">Forum</a>
-        </li>
-      </ul>
-
-      <ul class="p-navigation__items js-nav-account global-nav" role="menu">
-        {# Authenticated #}
-        <li class="p-navigation__item--dropdown-toggle js-nav-account--authenticated u-hide" role="menuitem" id="link-1">
-          <a class="p-subnav__toggle p-navigation__link js-account--name" aria-controls="account-menu" aria-expanded="false">
-            My account
-          </a>
-          <ul class="p-navigation__dropdown--right" id="account-menu" aria-hidden="true">
-            <li>
-              <a href="/account/snaps" class="p-navigation__dropdown-item">My published snaps</a>
-            </li>
-            <li class="js-nav-account--stores u-hide">
-              <a href="/admin" class="p-navigation__dropdown-item">My stores</a>
-            </li>
-            <li>
-              <a href="/account/details" class="p-navigation__dropdown-item">Account details</a>
-            </li>
-            <li>
-              <a href="/logout" class="p-navigation__dropdown-item">Sign out</a>
-            </li>
-          </ul>
-        </li>
-        {# Not authenticated #}
-        <li class="p-navigation__item js-nav-account--notauthenticated u-hide" role="menuitem">
-          <a class="p-navigation__link" href="{{ url_for('publisher_snaps.get_account_snaps') }}">
-            Sign in
-            <i class="p-icon--user is-light"></i>
-          </a>
-        </li>
-      </ul>
-    </nav>
+    {% endif %}
+    </header>
+{% if docs %}
   </div>
-</header>
+</div>
+{% endif %}

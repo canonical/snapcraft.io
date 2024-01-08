@@ -1,7 +1,7 @@
 {% extends "_base-layout.html" %}
 
 {% block header %}
-  {% include "_docs_header.html" %}
+{% from "_docs_macros.html" import header %}{{ header() }}
 {% endblock %}
 
 {% block content %}{% endblock %}

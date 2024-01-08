@@ -448,6 +448,16 @@ dl {
   max-width: 100%;
 }
 
+// Vanilla override - documentaion layout
+.l-docs__subgrid {
+  @media (min-width: calc(1036px + 15rem)) {
+    grid-template-columns: 15rem minmax(0, 1fr) 15rem;
+  }
+  @media (min-width: 1036px) {
+    grid-template-columns: 15rem minmax(0, 1fr) 15rem;
+  }
+}
+
 // Vanilla override
 .p-breadcrumbs__item:not(:first-of-type)::before {
   margin-left: -0.5rem;
