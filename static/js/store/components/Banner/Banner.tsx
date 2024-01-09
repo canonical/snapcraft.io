@@ -21,6 +21,7 @@ function Banner({ searchRef, searchSummaryRef }: Props) {
               e.preventDefault();
 
               if (searchRef.current && searchRef.current.value) {
+                searchParams.delete("page");
                 searchParams.set("q", searchRef.current.value);
                 setSearchParams(searchParams);
               }
