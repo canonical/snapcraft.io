@@ -1,5 +1,7 @@
 {% extends "_docs_layout.html" %}
 
+{% set is_docs = True %}
+
 {% block meta_title %} {{ document.title }} | Snapcraft documentation{% endblock %}
 
 {% macro create_navigation(nav_items, expandable=False, expanded=False) %}
