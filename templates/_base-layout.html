@@ -81,12 +81,14 @@
     <!-- JS that is needed right away -->
     <script src="{{ static_url('js/dist/cookie-policy.js') }}"></script>
 
-    {% include "_header.html" %}
+    {% from "_header_macros.html" import header %}
+    {{ header() }}
     {% endblock %}
 
     {% block content %}{% endblock %}
 
-    {% block footer %}{% endblock %}
+    {% block footer %}
+    {% endblock %}
 
     {% block scripts %}{% endblock %}
 
