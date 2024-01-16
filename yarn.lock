@@ -7643,10 +7643,10 @@ vanilla-framework@4.0.0:
   resolved "https://registry.yarnpkg.com/vanilla-framework/-/vanilla-framework-4.0.0.tgz#a2fee9bd9763ebd6932b764f9d66484dc177d4cc"
   integrity sha512-fiPnmaTUe15l5MRNJ6IsiJ8qiunfmgtLETOFltaYiE/bQKL7xTI+riBak2iygBKeF1y0Gi/GxUNt4hyb6xDPKA==
 
-vanilla-framework@4.5.1:
-  version "4.5.1"
-  resolved "https://registry.yarnpkg.com/vanilla-framework/-/vanilla-framework-4.5.1.tgz#19b55dd4771c304b2bae8af646312916f5f45917"
-  integrity sha512-vF7GGZsXcQZnM2522Q2am08to/iM2K+EhsfYPuYsiHvp2kRGxY/rJ8tcjbKftNY859qOqT8yJg0PE+sVmKI5zg==
+vanilla-framework@4.6.0:
+  version "4.6.0"
+  resolved "https://registry.yarnpkg.com/vanilla-framework/-/vanilla-framework-4.6.0.tgz#61b93a2197eed0d869f85e1014dd9e67bacc355e"
+  integrity sha512-pRjJknqsL4CLA+ovLMlg7MhVh9nIcu7Ev81Z62gh3hAzUDIiZOUI2W9+B16XWv4QFmFxEOgQcfVi2cezLun9SQ==
 
 verbalize@^0.1.2:
   version "0.1.2"
