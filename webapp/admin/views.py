@@ -11,7 +11,7 @@ from canonicalwebteam.store_api.stores.snapstore import SnapStoreAdmin
 from flask.json import jsonify
 
 # Local
-from webapp.decorators import login_required
+from webapp.decorators import login_required, exchange_required
 from webapp.helpers import api_publisher_session
 
 admin_api = SnapStoreAdmin(api_publisher_session)
@@ -30,12 +30,14 @@ context = {"api_url": SNAPSTORE_DASHBOARD_API_URL}
 @admin.route("/admin", defaults={"path": ""})
 @admin.route("/admin/<path:path>")
 @login_required
+@exchange_required
 def get_admin(path):
     return flask.render_template("admin/admin.html", **context)
 
 
 @admin.route("/admin/stores")
 @login_required
+@exchange_required
 def get_stores():
     """
     In this view we get all the stores the user is an admin or we show a 403
@@ -47,6 +49,7 @@ def get_stores():
 
 @admin.route("/admin/store/<store_id>")
 @login_required
+@exchange_required
 def get_settings(store_id):
     store = admin_api.get_store(flask.session, store_id)
 
@@ -55,6 +58,7 @@ def get_settings(store_id):
 
 @admin.route("/admin/store/<store_id>/settings", methods=["PUT"])
 @login_required
+@exchange_required
 def post_settings(store_id):
     settings = {}
     settings["private"] = json.loads(flask.request.form.get("private"))
@@ -72,6 +76,7 @@ def post_settings(store_id):
 
 @admin.route("/admin/<store_id>/snaps/search")
 @login_required
+@exchange_required
 def get_snaps_search(store_id):
     snaps = admin_api.get_store_snaps(
         flask.session,
@@ -85,6 +90,7 @@ def get_snaps_search(store_id):
 
 @admin.route("/admin/store/<store_id>/snaps")
 @login_required
+@exchange_required
 def get_store_snaps(store_id):
     snaps = admin_api.get_store_snaps(flask.session, store_id)
     store = admin_api.get_store(flask.session, store_id)
@@ -117,6 +123,7 @@ def get_store_snaps(store_id):
 
 @admin.route("/admin/store/<store_id>/snaps", methods=["POST"])
 @login_required
+@exchange_required
 def post_manage_store_snaps(store_id):
     snaps = json.loads(flask.request.form.get("snaps"))
 
@@ -130,6 +137,7 @@ def post_manage_store_snaps(store_id):
 
 @admin.route("/admin/store/<store_id>/members")
 @login_required
+@exchange_required
 def get_manage_members(store_id):
     members = admin_api.get_store_members(flask.session, store_id)
 
@@ -142,6 +150,7 @@ def get_manage_members(store_id):
 
 @admin.route("/admin/store/<store_id>/members", methods=["POST"])
 @login_required
+@exchange_required
 def post_manage_members(store_id):
     members = json.loads(flask.request.form.get("members"))
 
@@ -178,6 +187,7 @@ def post_manage_members(store_id):
 
 @admin.route("/admin/store/<store_id>/invites")
 @login_required
+@exchange_required
 def get_invites(store_id):
     invites = admin_api.get_store_invites(flask.session, store_id)
 
@@ -186,6 +196,7 @@ def get_invites(store_id):
 
 @admin.route("/admin/store/<store_id>/invite", methods=["POST"])
 @login_required
+@exchange_required
 def post_invite_members(store_id):
     members = json.loads(flask.request.form.get("members"))
 
@@ -210,6 +221,7 @@ def post_invite_members(store_id):
 
 @admin.route("/admin/store/<store_id>/invite/update", methods=["POST"])
 @login_required
+@exchange_required
 def update_invite_status(store_id):
     invites = json.loads(flask.request.form.get("invites"))
 
@@ -235,6 +247,7 @@ def update_invite_status(store_id):
 # ---------------------- MODELS SERVICES ----------------------
 @admin.route("/admin/store/<store_id>/models")
 @login_required
+@exchange_required
 def get_models(store_id):
     """
     Retrieves models associated with a given store ID.
@@ -270,6 +283,7 @@ def get_models(store_id):
 
 @admin.route("/admin/store/<store_id>/models", methods=["POST"])
 @login_required
+@exchange_required
 def create_models(store_id: str):
     """
     Create a model for a given store.
@@ -321,6 +335,7 @@ def create_models(store_id: str):
 
 @admin.route("/admin/store/<store_id>/models/<model_name>", methods=["PATCH"])
 @login_required
+@exchange_required
 def update_model(store_id: str, model_name: str):
     """
     Update a model for a given store.
@@ -362,6 +377,7 @@ def update_model(store_id: str, model_name: str):
 
 @admin.route("/admin/store/<store_id>/models/<model_name>/policies")
 @login_required
+@exchange_required
 def get_policies(store_id: str, model_name: str):
     """
     Get the policies for a given store model.
@@ -403,6 +419,7 @@ def get_policies(store_id: str, model_name: str):
     "/admin/store/<store_id>/models/<model_name>/policies", methods=["POST"]
 )
 @login_required
+@exchange_required
 def create_policy(store_id: str, model_name: str):
     """
     Creat policy for a store model.
@@ -449,6 +466,7 @@ def create_policy(store_id: str, model_name: str):
     methods=["DELETE"],
 )
 @login_required
+@exchange_required
 def delete_policy(store_id: str, model_name: str, revision: str):
     res = {}
     try:
@@ -469,6 +487,7 @@ def delete_policy(store_id: str, model_name: str, revision: str):
 
 @admin.route("/admin/store/<store_id>/brand")
 @login_required
+@exchange_required
 def get_brand_store(store_id: str):
     res = {}
     try:
@@ -495,6 +514,7 @@ def get_brand_store(store_id: str):
 
 @admin.route("/admin/store/<store_id>/signing-keys")
 @login_required
+@exchange_required
 def get_signing_keys(store_id: str):
     res = {}
     try:
@@ -521,6 +541,7 @@ def get_signing_keys(store_id: str):
 
 @admin.route("/admin/store/<store_id>/signing-keys", methods=["POST"])
 @login_required
+@exchange_required
 def create_signing_key(store_id: str):
     name = flask.request.form.get("name")
     res = {}
@@ -546,6 +567,7 @@ def create_signing_key(store_id: str):
     methods=["DELETE"],
 )
 @login_required
+@exchange_required
 def delete_signing_key(store_id: str, signing_key_sha3_384: str):
     """
     Deletes a signing key from the store.
