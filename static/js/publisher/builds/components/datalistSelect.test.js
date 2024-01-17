@@ -44,8 +44,8 @@ describe("DatalistSelect", () => {
     const { container } = render(
       <DatalistSelect {...essentialProps} isLoading={true} />
     );
-    const iconClassList = container.querySelector(".p-icon-container")
-      .firstChild.classList;
+    const iconClassList =
+      container.querySelector(".p-icon-container").firstChild.classList;
 
     expect(iconClassList.contains("p-icon--spinner")).toBeTruthy();
     expect(iconClassList.contains("u-animation--spin")).toBeTruthy();

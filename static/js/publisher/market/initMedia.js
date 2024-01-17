@@ -9,6 +9,7 @@ function initMedia(mediaHolder, images, updateState) {
     throw new Error("No media holder El");
   }
 
+  // eslint-disable-next-line
   ReactDOM.render(
     <Media
       mediaData={images}

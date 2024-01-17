@@ -169,12 +169,9 @@ describe("createChannelTree", () => {
 
   describe("risk/branch", () => {
     beforeEach(() => {
-      channelList = [
-        "stable",
-        "beta/test",
-        "edge/1.0.1",
-        "edge/hotfix",
-      ].map((channel) => parseChannel(channel));
+      channelList = ["stable", "beta/test", "edge/1.0.1", "edge/hotfix"].map(
+        (channel) => parseChannel(channel)
+      );
     });
 
     it("should return latest tracks with different branches on the tracks", () => {
