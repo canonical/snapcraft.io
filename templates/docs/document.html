@@ -1,4 +1,6 @@
-{% extends "_layout.html" %}
+{% extends "_docs_layout.html" %}
+
+{% set is_docs = True %}
 
 {% block meta_title %} {{ document.title }} | Snapcraft documentation{% endblock %}
 
@@ -37,7 +39,9 @@
 {% endmacro %}
 
 {% block content %}
-  <section id="search-docs" class="p-strip--image is-shallow" style="background-image: url('https://assets.ubuntu.com/v1/e54487e2-maas-docs-suru.png')">
+  <section id="search-docs" class="p-strip is-bordered is-shallow l-docs__subgrid">
+    <div class="l-docs__sidebar u-hide--medium u-hide--small"></div>
+    <div class="l-docs__main">
     <div class="row">
       <form class="p-search-box u-no-margin--bottom" action="/docs/search">
         <input type="search" class="p-search-box__input" name="q" {% if query %}value="{{ query }}"{% endif %} placeholder="Search documentation" required/>
@@ -45,57 +49,94 @@
         <button type="submit" class="p-search-box__button" alt="search"><i class="p-icon--search">Search</i></button>
       </form>
     </div>
+    </div>
   </section>
+</div>
 
-  <section class="p-strip u-extra-space">
-    <div class="row">
-      <aside class="col-3">
-        {% if versions | length > 1 %}
-        <label for="version-select" class="u-hide">Version</label>
-        <select name="version-select" id="version-select" onChange="window.location.href=this.value">
-        {% for version in versions %}
-          {% set active = docs_version == version['path'] %}
-          <option value="{{ version_paths[version['path']] }}"{% if active %} selected{% endif %}>{{ version['version'] }}</option>
-        {% endfor %}
-        <select>
-        {% endif %}
+  <aside class="l-docs__sidebar">
+    {% if versions | length > 1 %}
+    <label for="version-select" class="u-hide">Version</label>
+    <select name="version-select" id="version-select" onChange="window.location.href=this.value">
+    {% for version in versions %}
+      {% set active = docs_version == version['path'] %}
+      <option value="{{ version_paths[version['path']] }}"{% if active %} selected{% endif %}>{{ version['version'] }}</option>
+    {% endfor %}
+    </select>
+    {% endif %}
 
-        <nav data-js="navigation" class="p-side-navigation" id="{{ navigation['path'] or 'default' }}">
-        <a href="#{{ navigation['path'] or 'default' }}" class="p-side-navigation__toggle js-drawer-toggle" aria-controls="{{ navigation['path'] or 'default' }}">
+    <nav data-js="navigation" class="p-side-navigation" id="{{ navigation['path'] or 'default' }}">
+      <div class="u-hide--large p-strip is-shallow">
+        <div class="u-fixed-width">
+          <a href="#{{ navigation['path'] or 'default' }}" class="p-side-navigation__toggle js-drawer-toggle" aria-controls="{{ navigation['path'] or 'default' }}">
+            Toggle side navigation
+          </a>
+        </div>
+      </div>
+    <div class="p-side-navigation__overlay js-drawer-toggle" aria-controls="{{ navigation['path'] or 'default' }}"></div>
+    <div class="p-side-navigation__drawer" style="margin-top: 0.5rem">
+      <div class="p-side-navigation__drawer-header">
+        <a href="#" class="p-side-navigation__toggle--in-drawer js-drawer-toggle" aria-controls="{{ navigation['path'] or 'default' }}">
           Toggle side navigation
         </a>
-        <div class="p-side-navigation__overlay js-drawer-toggle" aria-controls="{{ navigation['path'] or 'default' }}"></div>
-        <div class="p-side-navigation__drawer">
-          <div class="p-side-navigation__drawer-header">
-            <a href="#" class="p-side-navigation__toggle--in-drawer js-drawer-toggle" aria-controls="{{ navigation['path'] or 'default' }}">
-              Toggle side navigation
+      </div>
+      {% for nav_group in navigation.nav_items %}
+      {% if not nav_group.hidden %}
+        {% if nav_group.navlink_text %}
+          {% if nav_group.navlink_href %}
+          <h3 class="p-side-navigation__heading--linked">
+            <a class="p-side-navigation__link" href="{{ nav_group.navlink_href }}" {% if nav_group.is_active %}aria-current="page"{% endif %}>
+              {{ nav_group.navlink_text }}
             </a>
-          </div>
-          {% for nav_group in navigation.nav_items %}
-          {% if not nav_group.hidden %}
-            {% if nav_group.navlink_text %}
-              {% if nav_group.navlink_href %}
-              <h3 class="p-side-navigation__heading--linked">
-                <a class="p-side-navigation__link" href="{{ nav_group.navlink_href }}" {% if nav_group.is_active %}aria-current="page"{% endif %}>
-                  {{ nav_group.navlink_text }}
-                </a>
-              </h3>
-              {% else %}
-                <h3 class="p-side-navigation__heading">{{ nav_group.navlink_text }}</h3>
-              {% endif %}
-            {% endif %}
-            {#
-              Use `create_navigation(nav_group.children)` for a default, fully expanded navigation.
-              Use `create_navigation(nav_group.children, expandable=True)` for the nested nav levels to expand only when parent page is active.
-            #}
-            {{ create_navigation(nav_group.children, expandable=True) }}
+          </h3>
+          {% else %}
+            <h3 class="p-side-navigation__heading">{{ nav_group.navlink_text }}</h3>
           {% endif %}
-        {% endfor %}
+        {% endif %}
+        {#
+          Use `create_navigation(nav_group.children)` for a default, fully expanded navigation.
+          Use `create_navigation(nav_group.children, expandable=True)` for the nested nav levels to expand only when parent page is active.
+        #}
+        {{ create_navigation(nav_group.children, expandable=True) }}
+      {% endif %}
+    {% endfor %}
+    </div>
+    </nav>
+  </aside>
+
+  <div class="l-docs__title" id="main-content">
+    <div class="p-section--shallow">
+      <div class="row">
+        <div class="col-12">
+          <h1>{{ document.title }}</h1>
         </div>
-      </nav>
+      </div>
+    </div>
+  </div>
+
+  {% if document.headings_map is defined and document.headings_map|length > 0 %}
+  <div class="l-docs__meta">
+    <div class="l-docs__sticky-container">
+      <aside class="p-table-of-contents">
+        <div class="p-table-of-contents__section">
+          <h4 class="p-table-of-contents__header">On this page</h4>
+          <nav class="p-table-of-contents__nav" aria-label="Table of contents">
+            <ul class="p-table-of-contents__list">
+              {% for heading in document.headings_map %}
+              <li class="p-table-of-contents__item">
+                <a class="p-table-of-contents__link" href="#{{ heading.heading_slug }}">{{ heading.heading_text }}</a>
+              </li>
+              {% endfor %}
+            </ul>
+          </nav>
+        </div>
       </aside>
-      <main class="col-9" id="main-content">
-        <h1>{{ document.title }}</h1>
+    </div>
+  </div>
+  {% endif %}
+
+  <main class="l-docs__main" id="main-content">
+    <div class="row">
+      <div class="col-12">
         {{ document.body_html | safe }}
         <hr />
         <p><i>Last updated {{ document.updated }}.</i></p>
@@ -106,9 +147,10 @@
             </p>
           </div>
         </div>
-      </main>
+      </div>
     </div>
-  </section>
+  </main>
+</div>
 {% endblock %}
 
 {% block scripts %}
@@ -276,7 +318,7 @@
       handleToggle(e);
     });
   });
-})(); 
+})();
     });
   });
 </script>

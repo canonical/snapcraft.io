@@ -12,13 +12,8 @@ const notificationStyle = (element = "", modifier = "") => {
 
 class Notification extends Component {
   render() {
-    const {
-      status,
-      appearance,
-      canDismiss,
-      hideNotification,
-      children,
-    } = this.props;
+    const { status, appearance, canDismiss, hideNotification, children } =
+      this.props;
     const className = notificationStyle("", appearance);
 
     return (
