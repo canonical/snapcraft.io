@@ -91,23 +91,18 @@ jobs:
           sudo apt-get update && sudo apt-get install --yes python3-setuptools
           sudo pip3 install -r requirements.txt
 
-      - name: Install Dotrun
-        uses: canonical/install-dotrun@main
-
       - name: Install dependencies
         run: sudo pip3 install coverage
 
       - name: Install node dependencies
-        run: |
-          sudo chmod -R 777 .
-          dotrun install
+        run: yarn install --immutable
 
       - name: Build resources
-        run: dotrun build
+        run: yarn build
 
       - name: Run python tests with coverage
         run: |
-          dotrun exec coverage run --source=. -m unittest discover tests
+          SECRET_KEY=insecure_secret_key coverage run  --source=. -m unittest discover tests
           bash <(curl -s https://codecov.io/bash) -cF python
 
   test-js:
