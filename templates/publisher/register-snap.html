@@ -80,9 +80,9 @@ Register new Snap name
           <label for="snap-store">Store</label>
           <div class="p-form-validation__field">
             <select name="store" id="snap-store">
-              <option value="ubuntu">Global</option> 
-              {% for store in available_stores %}
-                <option value="{{ store.id }}">{{ store.name }}</option>
+              <option value="ubuntu" {% if store=="ubuntu" %} selected {% endif %}>Global</option> 
+              {% for available_store in available_stores %}
+                <option value="{{ available_store.id }}" {% if store==available_store.id %} selected {% endif %}>{{ available_store.name }}</option>
               {% endfor %}
             </select>
           </div>
