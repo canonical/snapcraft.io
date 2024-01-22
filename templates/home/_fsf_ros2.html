@@ -27,20 +27,20 @@
   This example launches a ROS2 talker and listener.
 
 <b>confinement</b>: devmode
-<b>base</b>: core18
+<b>base</b>: core22
 
 <b>parts</b>:
   <b>ros-demos</b>:
     <b>plugin</b>: colcon
     <b>source</b>: https://github.com/ros2/demos.git
-    <b>source-branch</b>: dashing
-    <b>colcon-rosdistro</b>: dashing
-    <b>colcon-source-space</b>: demo_nodes_cpp
-    <b>stage-packages</b>: [ros-dashing-ros2launch]
+    <b>source-branch</b>: humble
+    <b>source-subdir</b>: demo_nodes_cpp
+    <b>stage-packages</b>: [ros-humble-ros2launch]
 
 <b>apps</b>:
   <b>ros2-talker-listener</b>:
-    <b>command</b>: opt/ros/dashing/bin/ros2 launch demo_nodes_cpp talker_listener.launch.py</pre>
+    <b>command</b>: opt/ros/humble/bin/ros2 launch demo_nodes_cpp talker_listener.launch.py</pre>
+    <b>extensions</b>: [ros2-humble]
 
       {% include "home/_fsf_yaml_show_more.html" %}
 
