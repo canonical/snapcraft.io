@@ -7,7 +7,12 @@ install:
   - action: |
       Snap is available for <a href="https://www.redhat.com/en/enterprise-linux-8" >Red Hat Enterprise Linux (RHEL) 8</a> and RHEL 7, from the 7.6 release onward.
   - action: |
-      The packages for RHEL 8 and RHEL 7 are in each distribution’s respective <a href="https://fedoraproject.org/wiki/EPEL" >Extra Packages for Enterprise Linux</a> (EPEL) repository. The instructions for adding this repository diverge slightly between RHEL 8 and RHEL 7, which is why they’re listed separately below.
+      The packages for RHEL 7, RHEL 8, and RHEL 9 are in each distribution’s respective <a href="https://fedoraproject.org/wiki/EPEL" >Extra Packages for Enterprise Linux</a> (EPEL) repository. The instructions for adding this repository diverge slightly between RHEL 7, RHEL 8 and RHEL 9, which is why they’re listed separately below.
+  - action: |
+      The EPEL repository can be added to <b>RHEL 9</b> with the following command:
+    command: |
+      sudo dnf install https://dl.fedoraproject.org/pub/epel/epel-release-latest-9.noarch.rpm
+      sudo dnf upgrade
   - action: |
       The EPEL repository can be added to <b>RHEL 8</b> with the following command:
     command: |
