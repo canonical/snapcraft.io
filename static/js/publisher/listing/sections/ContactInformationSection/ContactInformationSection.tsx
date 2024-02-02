@@ -9,7 +9,11 @@ type Props = {
   control: {};
 };
 
-function ContactInformationSection({ register, control }: Props) {
+function ContactInformationSection({
+  register,
+  control,
+  getFieldState,
+}: Props) {
   return (
     <>
       <div className="u-fixed-width">
@@ -21,6 +25,7 @@ function ContactInformationSection({ register, control }: Props) {
         label="Websites"
         register={register}
         control={control}
+        getFieldState={getFieldState}
       />
 
       <MultipleInputs
@@ -28,6 +33,7 @@ function ContactInformationSection({ register, control }: Props) {
         label="Contacts"
         register={register}
         control={control}
+        getFieldState={getFieldState}
       />
 
       <MultipleInputs
@@ -35,6 +41,7 @@ function ContactInformationSection({ register, control }: Props) {
         label="Donations"
         register={register}
         control={control}
+        getFieldState={getFieldState}
       />
 
       <MultipleInputs
@@ -42,6 +49,7 @@ function ContactInformationSection({ register, control }: Props) {
         label="Source code"
         register={register}
         control={control}
+        getFieldState={getFieldState}
       />
 
       <MultipleInputs
@@ -49,6 +57,7 @@ function ContactInformationSection({ register, control }: Props) {
         label="Issues"
         register={register}
         control={control}
+        getFieldState={getFieldState}
       />
     </>
   );

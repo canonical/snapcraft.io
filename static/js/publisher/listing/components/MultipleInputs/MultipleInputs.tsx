@@ -2,18 +2,30 @@ import React from "react";
 import { useFieldArray } from "react-hook-form";
 import { Row, Col, Button, Icon } from "@canonical/react-components";
 
+import UrlInput from "../UrlInput";
+
 type Props = {
   fieldName: string;
   label: string;
   register: Function;
   control: any;
+  getFieldState: Function;
 };
 
-function MultipleInputs({ fieldName, label, register, control }: Props) {
+function MultipleInputs({
+  fieldName,
+  label,
+  register,
+  control,
+  getFieldState,
+}: Props) {
   const { fields, append, remove } = useFieldArray({
     control,
     name: fieldName,
   });
+
+  const urlFieldNames = ["websites", "donations", "source-code", "issues"];
+  const isUrl = urlFieldNames.includes(fieldName);
 
   return (
     <Row className="p-form__group">
@@ -24,14 +36,23 @@ function MultipleInputs({ fieldName, label, register, control }: Props) {
         {fields.map((field, index) => (
           <Row key={field.id}>
             <Col size={5}>
-              <div className="p-form__control">
-                <input
-                  type="text"
-                  {...register(`${fieldName}.${index}.url`, {
-                    required: true,
-                  })}
+              {isUrl ? (
+                <UrlInput
+                  fieldName={fieldName}
+                  index={index}
+                  register={register}
+                  getFieldState={getFieldState}
                 />
-              </div>
+              ) : (
+                <div className="p-form__control">
+                  <input
+                    type="text"
+                    {...register(`${fieldName}.${index}.url`, {
+                      required: true,
+                    })}
+                  />
+                </div>
+              )}
             </Col>
             <Col size={2}>
               <Button
