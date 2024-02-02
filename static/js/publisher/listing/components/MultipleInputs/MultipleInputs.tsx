@@ -15,6 +15,16 @@ function MultipleInputs({ fieldName, label, register, control }: Props) {
     name: fieldName,
   });
 
+  let type: string;
+
+  const urlFieldNames = ["websites", "donations", "source-code", "issues"];
+
+  if (urlFieldNames.includes(fieldName)) {
+    type = "url";
+  } else {
+    type = "text";
+  }
+
   return (
     <Row className="p-form__group">
       <Col size={2}>
@@ -26,7 +36,7 @@ function MultipleInputs({ fieldName, label, register, control }: Props) {
             <Col size={5}>
               <div className="p-form__control">
                 <input
-                  type="text"
+                  type={type}
                   {...register(`${fieldName}.${index}.url`, {
                     required: true,
                   })}
