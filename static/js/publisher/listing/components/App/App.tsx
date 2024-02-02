@@ -1,10 +1,6 @@
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
-import {
-  Form,
-  Strip,
-  Notification
-} from "@canonical/react-components";
+import { Form, Strip, Notification } from "@canonical/react-components";
 
 import {
   getChanges,
@@ -34,10 +30,11 @@ function App() {
 
   const [isSaving, setIsSaving] = useState(false);
   const [hasSaved, setHasSaved] = useState(false);
-  const [savedError, setSavedError] = useState<boolean | {code: string, message: string}[] >(false);
-  const [showMetadataWarningModal, setShowMetadataWarningModal] = useState(
-    false
-  );
+  const [savedError, setSavedError] = useState<
+    boolean | { code: string; message: string }[]
+  >(false);
+  const [showMetadataWarningModal, setShowMetadataWarningModal] =
+    useState(false);
   const [formData, setFormData] = useState({});
   const [updateMetadataOnRelease, setUpdateMetadataOnRelease] = useState(
     listingData?.update_metadata_on_release
@@ -213,8 +210,11 @@ function App() {
                   setSavedError(false);
                 }}
               >
-              Changes have not been saved.<br />
-              {savedError === true ? "Something went wrong." : savedError.map((error) => `${error.message}`).join("\n")}
+                Changes have not been saved.
+                <br />
+                {savedError === true
+                  ? "Something went wrong."
+                  : savedError.map((error) => `${error.message}`).join("\n")}
               </Notification>
             </div>
           )}
