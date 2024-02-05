@@ -62,14 +62,11 @@ function SnapsSlice() {
   const [sidePanelOpen, setSidePanelOpen] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [snapsToRemove, setSnapsToRemove]: any = useState([]);
-  const [showAddSuccessNotification, setShowAddSuccessNotification] = useState(
-    false
-  );
+  const [showAddSuccessNotification, setShowAddSuccessNotification] =
+    useState(false);
   const [showErrorNotification, setShowErrorNotification] = useState(false);
-  const [
-    showRemoveSuccessNotification,
-    setShowRemoveSuccessNotification,
-  ] = useState(false);
+  const [showRemoveSuccessNotification, setShowRemoveSuccessNotification] =
+    useState(false);
   const [removeSnapSaving, setRemoveSnapSaving] = useState(false);
   const [nonEssentialSnapIds, setNonEssentialSnapIds]: any = useState([]);
   const [isReloading, setIsReloading] = useState(false);
@@ -77,13 +74,10 @@ function SnapsSlice() {
   const [currentStore, setCurrentStore]: any = useState(null);
   const [isPublisherOnly, setIsPublisherOnly] = useState(false);
   const [isReviewerOnly, setIsReviewerOnly] = useState(false);
-  const [isReviewerAndPublisherOnly, setIsReviewerAndPublisherOnly] = useState(
-    false
-  );
-  const [
-    showRemoveSnapsConfirmation,
-    setShowRemoveSnapsConfirmation,
-  ] = useState(false);
+  const [isReviewerAndPublisherOnly, setIsReviewerAndPublisherOnly] =
+    useState(false);
+  const [showRemoveSnapsConfirmation, setShowRemoveSnapsConfirmation] =
+    useState(false);
   const [globalStore, setGlobalStore]: any = useState(null);
   let location = useLocation();
 
@@ -291,13 +285,10 @@ function SnapsSlice() {
   }, [otherStoreIds]);
 
   useEffect(() => {
-    // protect against hash changes e.g. mobile navigation
-    if (location.pathname !== `/admin/${id}/snaps`) {
-      setSnapsInStore([]);
-      setOtherStores([]);
-      setIsReloading(true);
-    }
-  }, [location]);
+    setSnapsInStore([]);
+    setOtherStores([]);
+    setIsReloading(true);
+  }, [id]);
 
   useEffect(() => {
     setCurrentMember(members.find((member) => member.current_user));
@@ -350,6 +341,11 @@ function SnapsSlice() {
                       <SectionNav sectionName="snaps" />
                     </div>
                   )}
+                {!isReloading && currentStore && (
+                  <div className="u-fixed-width">
+                    <h1 className="p-heading--4">{currentStore.name}</h1>
+                  </div>
+                )}
                 {!isReloading && (
                   <Row>
                     <Col size={6}>
@@ -414,7 +410,7 @@ function SnapsSlice() {
                     />
                   )}
                 </div>
-                {!!includedStores.length && (
+                {!!includedStores.length && !isReloading && (
                   <div className="u-fixed-width">
                     <h4>Fully included stores</h4>
                     <p>
