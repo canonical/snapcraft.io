@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams, useLocation, Link } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import {
   Spinner,
@@ -36,7 +36,7 @@ import type {
   MembersSlice,
 } from "../../types/shared";
 
-function SnapsSlice() {
+function Snaps() {
   const brandStoresList = useSelector(brandStoresListSelector);
   const snaps = useSelector(snapsSelector);
   const members = useSelector(membersSelector);
@@ -79,7 +79,6 @@ function SnapsSlice() {
   const [showRemoveSnapsConfirmation, setShowRemoveSnapsConfirmation] =
     useState(false);
   const [globalStore, setGlobalStore]: any = useState(null);
-  let location = useLocation();
 
   const getStoreName = (storeId: string) => {
     const store = brandStoresList.find((item) => item.id === storeId);
@@ -230,6 +229,9 @@ function SnapsSlice() {
     .map((snap) => snap["included-stores"][0]);
 
   useEffect(() => {
+    setSnapsInStore([]);
+    setOtherStores([]);
+    setIsReloading(true);
     dispatch(fetchMembers(id as string) as any);
     dispatch(fetchSnaps(id as string) as any);
   }, [id]);
@@ -283,12 +285,6 @@ function SnapsSlice() {
       })
     );
   }, [otherStoreIds]);
-
-  useEffect(() => {
-    setSnapsInStore([]);
-    setOtherStores([]);
-    setIsReloading(true);
-  }, [id]);
 
   useEffect(() => {
     setCurrentMember(members.find((member) => member.current_user));
@@ -594,4 +590,4 @@ function SnapsSlice() {
   );
 }
 
-export default SnapsSlice;
+export default Snaps;
