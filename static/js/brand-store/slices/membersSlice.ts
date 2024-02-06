@@ -1,5 +1,17 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { AppDispatch } from "../store";
+
+import type { Member } from "../types/shared";
+
+export const fetchMembers = createAsyncThunk<Member[], string>(
+  "members/fetchMembers",
+  async (storeId: string) => {
+    const response = await fetch(`/admin/store/${storeId}/members`);
+    const data = await response.json();
+
+    return data;
+  }
+);
 
 export const slice = createSlice({
   name: "members",
@@ -26,6 +38,18 @@ export const slice = createSlice({
       state.loading = false;
     },
   },
+  extraReducers: {
+    [fetchMembers.pending.type]: (state) => {
+      state.loading = true;
+    },
+    [fetchMembers.fulfilled.type]: (state, { payload }) => {
+      state.loading = false;
+      state.members = payload;
+    },
+    [fetchMembers.rejected.type]: (state) => {
+      state.loading = false;
+    },
+  },
 });
 
 export const {
@@ -34,20 +58,5 @@ export const {
   getMembersNotFound,
   getMembersError,
 } = slice.actions;
-
-export function fetchMembers(storeId: string) {
-  return async (dispatch: AppDispatch) => {
-    dispatch(getMembersLoading());
-
-    try {
-      const response = await fetch(`/admin/store/${storeId}/members`);
-      const data = await response.json();
-      dispatch(getMembersSuccess(data));
-    } catch (error) {
-      dispatch(getMembersNotFound());
-      dispatch(getMembersError());
-    }
-  };
-}
 
 export default slice.reducer;

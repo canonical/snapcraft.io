@@ -34,6 +34,7 @@ import { setPageTitle } from "../../utils";
 import type {
   StoresSlice,
   Snap,
+  Member,
   SnapsSlice,
   MembersSlice,
 } from "../../types/shared";
@@ -81,6 +82,11 @@ function Snaps() {
   const [showRemoveSnapsConfirmation, setShowRemoveSnapsConfirmation] =
     useState(false);
   const [globalStore, setGlobalStore]: any = useState(null);
+  const [fetchSnapsByStoreIdPromise, setFetchSnapsByStoreIdPromise] = useState<
+    ReturnType<AsyncThunkAction<Snap[], string, {}>> | undefined
+  >();
+  const [fetchMembersByStoreIdPromise, setFetchMembersByStoreIdPromise] =
+    useState<ReturnType<AsyncThunkAction<Member[], string, {}>> | undefined>();
 
   const getStoreName = (storeId: string) => {
     const store = brandStoresList.find((item) => item.id === storeId);
@@ -230,10 +236,6 @@ function Snaps() {
     .filter((snap) => snap["included-stores"])
     .map((snap) => snap["included-stores"][0]);
 
-  const [fetchSnapsByStoreIdPromise, setFetchSnapsByStoreIdPromise] = useState<
-    ReturnType<AsyncThunkAction<Snap[], string, {}>> | undefined
-  >();
-
   useEffect(() => {
     setSnapsInStore([]);
     setOtherStores([]);
@@ -245,9 +247,17 @@ function Snaps() {
 
     dispatch(fetchSnaps(id as string));
 
-    const promise = dispatch(fetchSnaps(id as string) as any);
-    setFetchSnapsByStoreIdPromise(promise);
-    dispatch(fetchMembers(id as string) as any);
+    const fetchSnapsPromise = dispatch(fetchSnaps(id as string));
+    setFetchSnapsByStoreIdPromise(fetchSnapsPromise);
+
+    if (fetchMembersByStoreIdPromise) {
+      fetchMembersByStoreIdPromise?.abort();
+    }
+
+    dispatch(fetchMembers(id as string));
+
+    const fetchMembersPromise = dispatch(fetchMembers(id as string));
+    setFetchMembersByStoreIdPromise(fetchMembersPromise);
   }, [id]);
 
   useEffect(() => {
