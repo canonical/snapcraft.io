@@ -1,5 +1,16 @@
-import { createSlice } from "@reduxjs/toolkit";
-import { AppDispatch } from "../store";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+
+import type { Snap } from "../types/shared";
+
+export const fetchSnaps = createAsyncThunk<Snap[], string>(
+  "snaps/fetchSnaps",
+  async (storeId: string) => {
+    const response = await fetch(`/admin/store/${storeId}/snaps`);
+    const data = await response.json();
+
+    return data;
+  }
+);
 
 export const slice = createSlice({
   name: "snaps",
@@ -26,6 +37,18 @@ export const slice = createSlice({
       state.loading = false;
     },
   },
+  extraReducers: {
+    [fetchSnaps.pending.type]: (state) => {
+      state.loading = true;
+    },
+    [fetchSnaps.fulfilled.type]: (state, { payload }) => {
+      state.loading = false;
+      state.snaps = payload;
+    },
+    [fetchSnaps.rejected.type]: (state) => {
+      state.loading = false;
+    },
+  },
 });
 
 export const {
@@ -34,20 +57,5 @@ export const {
   getSnapsNotFound,
   getSnapsError,
 } = slice.actions;
-
-export function fetchSnaps(storeId: string) {
-  return async (dispatch: AppDispatch) => {
-    dispatch(getSnapsLoading());
-
-    try {
-      const response = await fetch(`/admin/store/${storeId}/snaps`);
-      const data = await response.json();
-      dispatch(getSnapsSuccess(data));
-    } catch (error) {
-      dispatch(getSnapsNotFound());
-      dispatch(getSnapsError());
-    }
-  };
-}
 
 export default slice.reducer;
