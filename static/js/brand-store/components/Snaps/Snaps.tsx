@@ -468,13 +468,6 @@ function SnapsSlice() {
                 storeId={id || ""}
                 nonEssentialSnapIds={nonEssentialSnapIds}
               />
-              {selectedSnaps.length ? (
-                <ul>
-                  {selectedSnaps.map((snap: Snap) => (
-                    <li key={snap.id}>{snap.name}</li>
-                  ))}
-                </ul>
-              ) : null}
             </div>
           </div>
           <div className="p-panel__footer u-align--right">
