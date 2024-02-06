@@ -67,9 +67,13 @@ function App() {
                     <StoreNotFound />
                   ) : brandStoresList[0].id === "ubuntu" ? (
                     // Don't redirect to the global store by default
-                    <Navigate to={`/admin/${brandStoresList[1].id}/snaps`} />
+                    <Navigate
+                      to={`/admin/${brandStoresList[1].id}/snaps${window.location.search}`}
+                    />
                   ) : (
-                    <Navigate to={`/admin/${brandStoresList[0].id}/snaps`} />
+                    <Navigate
+                      to={`/admin/${brandStoresList[0].id}/snaps${window.location.search}`}
+                    />
                   )
                 ) : null
               }
@@ -89,7 +93,10 @@ function App() {
               element={<Policies />}
             />
             <Route path="/admin/:id/signing-keys" element={<SigningKeys />} />
-            <Route path="/admin/:id/signing-keys/create" element={<SigningKeys />} />
+            <Route
+              path="/admin/:id/signing-keys/create"
+              element={<SigningKeys />}
+            />
           </Routes>
         </div>
       </QueryClientProvider>

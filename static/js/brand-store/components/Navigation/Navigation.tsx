@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useSearchParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { brandStoresListSelector } from "../../selectors";
 
@@ -15,6 +15,10 @@ function Navigation() {
       (document.activeElement as HTMLElement).blur();
     }
   };
+
+  // Feature flag for new snaps table layout
+  const [searchParams] = useSearchParams();
+  const showNewTables = searchParams.get("showNewTables");
 
   return (
     <>
@@ -62,7 +66,9 @@ function Navigation() {
                         <li className="p-side-navigation__item" key={item.id}>
                           <NavLink
                             className="p-side-navigation__link"
-                            to={`/admin/${item.id}/snaps`}
+                            to={`/admin/${item.id}/snaps${
+                              showNewTables ? "?showNewTables=true" : ""
+                            }`}
                           >
                             <span className="p-side-navigation__label u-truncate">
                               {item.name}
