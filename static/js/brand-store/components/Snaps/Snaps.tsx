@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
+import { AsyncThunkAction } from "@reduxjs/toolkit";
+import { useAppDispatch } from "../../store";
 import {
   Spinner,
   Row,
@@ -53,7 +55,7 @@ function Snaps() {
   const membersNotFound = useSelector(
     (state: MembersSlice) => state.members.notFound
   );
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const { id } = useParams();
   const [snapsInStore, setSnapsInStore]: any = useState([]);
   const [otherStoreIds, setOtherStoreIds]: any = useState([]);
@@ -228,12 +230,24 @@ function Snaps() {
     .filter((snap) => snap["included-stores"])
     .map((snap) => snap["included-stores"][0]);
 
+  const [fetchSnapsByStoreIdPromise, setFetchSnapsByStoreIdPromise] = useState<
+    ReturnType<AsyncThunkAction<Snap[], string, {}>> | undefined
+  >();
+
   useEffect(() => {
     setSnapsInStore([]);
     setOtherStores([]);
     setIsReloading(true);
+
+    if (fetchSnapsByStoreIdPromise) {
+      fetchSnapsByStoreIdPromise?.abort();
+    }
+
+    dispatch(fetchSnaps(id as string));
+
+    const promise = dispatch(fetchSnaps(id as string) as any);
+    setFetchSnapsByStoreIdPromise(promise);
     dispatch(fetchMembers(id as string) as any);
-    dispatch(fetchSnaps(id as string) as any);
   }, [id]);
 
   useEffect(() => {
