@@ -1,5 +1,5 @@
 import React from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useSearchParams } from "react-router-dom";
 
 import { useBrand } from "../../hooks";
 
@@ -8,6 +8,9 @@ import type { RouteParams } from "../../types/shared";
 function SectionNav({ sectionName }: { sectionName: string }) {
   const { id } = useParams<RouteParams>();
   const { isLoading, isSuccess, data } = useBrand(id);
+  const [searchParams] = useSearchParams();
+
+  const showNewTables = searchParams.get("showNewTables");
 
   return (
     <nav className="p-tabs">
@@ -16,7 +19,9 @@ function SectionNav({ sectionName }: { sectionName: string }) {
           <>
             <li className="p-tabs__item">
               <Link
-                to={`/admin/${id}/snaps`}
+                to={`/admin/${id}/snaps${
+                  showNewTables ? "?showNewTables=true" : ""
+                }`}
                 className="p-tabs__link"
                 aria-selected={sectionName === "snaps"}
                 role="tab"
@@ -29,7 +34,9 @@ function SectionNav({ sectionName }: { sectionName: string }) {
               <>
                 <li className="p-tabs__item">
                   <Link
-                    to={`/admin/${id}/models`}
+                    to={`/admin/${id}/models${
+                      showNewTables ? "?showNewTables=true" : ""
+                    }`}
                     className="p-tabs__link"
                     aria-selected={sectionName === "models"}
                     role="tab"
@@ -39,7 +46,9 @@ function SectionNav({ sectionName }: { sectionName: string }) {
                 </li>
                 <li className="p-tabs__item">
                   <Link
-                    to={`/admin/${id}/signing-keys`}
+                    to={`/admin/${id}/signing-keys${
+                      showNewTables ? "?showNewTables=true" : ""
+                    }`}
                     className="p-tabs__link"
                     aria-selected={sectionName === "signing-keys"}
                     role="tab"
@@ -51,7 +60,9 @@ function SectionNav({ sectionName }: { sectionName: string }) {
             )}
             <li className="p-tabs__item">
               <Link
-                to={`/admin/${id}/members`}
+                to={`/admin/${id}/members${
+                  showNewTables ? "?showNewTables=true" : ""
+                }`}
                 className="p-tabs__link"
                 aria-selected={sectionName === "members"}
                 role="tab"
@@ -61,7 +72,9 @@ function SectionNav({ sectionName }: { sectionName: string }) {
             </li>
             <li className="p-tabs__item">
               <Link
-                to={`/admin/${id}/settings`}
+                to={`/admin/${id}/settings${
+                  showNewTables ? "?showNewTables=true" : ""
+                }`}
                 className="p-tabs__link"
                 aria-selected={sectionName === "settings"}
                 role="tab"
