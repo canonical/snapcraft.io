@@ -33,9 +33,9 @@ def exchange_required(func):
     @functools.wraps(func)
     def is_exchanged(*args, **kwargs):
         if "developer_token" not in flask.session:
-            flask.session[
-                "developer_token"
-            ] = publisher_api.exchange_dashboard_macaroons(flask.session)
+            flask.session["developer_token"] = (
+                publisher_api.exchange_dashboard_macaroons(flask.session)
+            )
         return func(*args, **kwargs)
 
     return is_exchanged
