@@ -10,7 +10,6 @@ function SectionNav({ sectionName }: { sectionName: string }) {
   const { isLoading, isSuccess, data } = useBrand(id);
   const [searchParams] = useSearchParams();
 
-  const showNewTables = searchParams.get("showNewTables");
 
   return (
     <nav className="p-tabs">
@@ -19,9 +18,7 @@ function SectionNav({ sectionName }: { sectionName: string }) {
           <>
             <li className="p-tabs__item">
               <Link
-                to={`/admin/${id}/snaps${
-                  showNewTables ? "?showNewTables=true" : ""
-                }`}
+                to={`/admin/${id}/snaps`}
                 className="p-tabs__link"
                 aria-selected={sectionName === "snaps"}
                 role="tab"
@@ -34,9 +31,7 @@ function SectionNav({ sectionName }: { sectionName: string }) {
               <>
                 <li className="p-tabs__item">
                   <Link
-                    to={`/admin/${id}/models${
-                      showNewTables ? "?showNewTables=true" : ""
-                    }`}
+                    to={`/admin/${id}/models`}
                     className="p-tabs__link"
                     aria-selected={sectionName === "models"}
                     role="tab"
@@ -46,9 +41,7 @@ function SectionNav({ sectionName }: { sectionName: string }) {
                 </li>
                 <li className="p-tabs__item">
                   <Link
-                    to={`/admin/${id}/signing-keys${
-                      showNewTables ? "?showNewTables=true" : ""
-                    }`}
+                    to={`/admin/${id}/signing-keys`}
                     className="p-tabs__link"
                     aria-selected={sectionName === "signing-keys"}
                     role="tab"
@@ -60,9 +53,7 @@ function SectionNav({ sectionName }: { sectionName: string }) {
             )}
             <li className="p-tabs__item">
               <Link
-                to={`/admin/${id}/members${
-                  showNewTables ? "?showNewTables=true" : ""
-                }`}
+                to={`/admin/${id}/members`}
                 className="p-tabs__link"
                 aria-selected={sectionName === "members"}
                 role="tab"
@@ -72,9 +63,7 @@ function SectionNav({ sectionName }: { sectionName: string }) {
             </li>
             <li className="p-tabs__item">
               <Link
-                to={`/admin/${id}/settings${
-                  showNewTables ? "?showNewTables=true" : ""
-                }`}
+                to={`/admin/${id}/settings`}
                 className="p-tabs__link"
                 aria-selected={sectionName === "settings"}
                 role="tab"

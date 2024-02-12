@@ -5,7 +5,7 @@ import { Input } from "@canonical/react-components";
 
 import type { Snap, SnapsList, Store } from "../../types/shared";
 
-type NewTableRowProps = {
+type SnapTableRowProps = {
   snap: Snap;
   isGlobal?: boolean;
   getStoreName?: Function;
@@ -14,14 +14,14 @@ type NewTableRowProps = {
   setSnapsToRemove: Function;
 };
 
-function NewTableRow({
+function SnapsTableRow({
   snap,
   isGlobal,
   getStoreName,
   isOnlyViewer,
   snapsToRemove,
   setSnapsToRemove,
-}: NewTableRowProps) {
+}: SnapTableRowProps) {
   const { id } = useParams();
 
   const [isChecked, setIsChecked] = useState(false);
@@ -82,7 +82,7 @@ function NewTableRow({
   );
 }
 
-type NewTableRowsProps = {
+type SnapTableRowsProps = {
   snaps: Array<Snap>;
   getStoreName?: Function;
   isGlobal?: boolean;
@@ -91,18 +91,18 @@ type NewTableRowsProps = {
   setSnapsToRemove: Function;
 };
 
-function NewTableRows({
+function SnapTableRows({
   snaps,
   getStoreName,
   isGlobal,
   isOnlyViewer,
   snapsToRemove,
   setSnapsToRemove,
-}: NewTableRowsProps) {
+}: SnapTableRowsProps) {
   return (
     <>
       {snaps.map((snap) => (
-        <NewTableRow
+        <SnapsTableRow
           key={snap.id}
           snap={snap}
           isGlobal={isGlobal}
@@ -116,7 +116,7 @@ function NewTableRows({
   );
 }
 
-type NewTablesProps = {
+type SnapTablesProps = {
   currentStoreName: string;
   snapsInStore: Array<Snap>;
   otherStores: Array<{
@@ -132,7 +132,7 @@ type NewTablesProps = {
   nonEssentialSnapIds: SnapsList;
 };
 
-function NewTables({
+function SnapsTables({
   currentStoreName,
   snapsInStore,
   otherStores,
@@ -142,7 +142,7 @@ function NewTables({
   snapsToRemove,
   setSnapsToRemove,
   nonEssentialSnapIds,
-}: NewTablesProps) {
+}: SnapTablesProps) {
   const [isChecked, setIsChecked] = useState(false);
   const [isIndeterminate, setIsIndeterminate] = useState(false);
 
@@ -244,7 +244,7 @@ function NewTables({
         </thead>
         <tbody>
           {otherStores.map((store) => (
-            <NewTableRows
+            <SnapTableRows
               key={store.id}
               snaps={deDupedSnaps(store.snaps, store.id)}
               getStoreName={getStoreName}
@@ -253,7 +253,7 @@ function NewTables({
               setSnapsToRemove={setSnapsToRemove}
             />
           ))}
-          <NewTableRows
+          <SnapTableRows
             snaps={deDupedSnaps(globalStore.snaps, "ubuntu")}
             isGlobal={true}
             isOnlyViewer={isOnlyViewer}
@@ -266,4 +266,4 @@ function NewTables({
   );
 }
 
-export default NewTables;
+export default SnapsTables;

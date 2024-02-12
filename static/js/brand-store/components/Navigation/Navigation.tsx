@@ -18,7 +18,6 @@ function Navigation() {
 
   // Feature flag for new snaps table layout
   const [searchParams] = useSearchParams();
-  const showNewTables = searchParams.get("showNewTables");
 
   return (
     <>
@@ -66,9 +65,7 @@ function Navigation() {
                         <li className="p-side-navigation__item" key={item.id}>
                           <NavLink
                             className="p-side-navigation__link"
-                            to={`/admin/${item.id}/snaps${
-                              showNewTables ? "?showNewTables=true" : ""
-                            }`}
+                            to={`/admin/${item.id}/snaps`}
                           >
                             <span className="p-side-navigation__label u-truncate">
                               {item.name}
