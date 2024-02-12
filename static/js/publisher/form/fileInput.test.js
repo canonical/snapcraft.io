@@ -14,7 +14,7 @@ describe("FileInput", () => {
         }}
       >
         <span>bewton</span>
-      </FileInput>
+      </FileInput>,
     );
 
     const clickElement = container.querySelector(".test");
@@ -37,7 +37,7 @@ describe("FileInput", () => {
         }}
       >
         <span>bewton</span>
-      </FileInput>
+      </FileInput>,
     );
     const clickElement = container.querySelector(".test");
 
@@ -77,7 +77,7 @@ describe("FileInput", () => {
     render(<FileInput />);
 
     const dragRelatedCalls = addEventListener.mock.calls.filter(
-      (call) => call[0].indexOf("drag") > -1 || call[0].indexOf("drop") > -1
+      (call) => call[0].indexOf("drag") > -1 || call[0].indexOf("drop") > -1,
     );
 
     expect(dragRelatedCalls.length).toEqual(3);
@@ -91,7 +91,7 @@ describe("FileInput", () => {
     unmount();
 
     const dragRelatedCalls = removeEventListener.mock.calls.filter(
-      (call) => call[0].indexOf("drag") > -1 || call[0].indexOf("drop") > -1
+      (call) => call[0].indexOf("drag") > -1 || call[0].indexOf("drop") > -1,
     );
 
     expect(dragRelatedCalls.length).toEqual(3);

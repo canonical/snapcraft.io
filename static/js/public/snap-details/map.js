@@ -108,9 +108,9 @@ export default function renderMap(el, snapData) {
             `<span
                class="snapcraft-territories__swatch"
                style="background-color: rgb(${countrySnapData.color_rgb[0]}, ${
-              countrySnapData.color_rgb[1]
-            }, ${countrySnapData.color_rgb[2]})"></span>
-             ${content.join(" ")}`
+                 countrySnapData.color_rgb[1]
+               }, ${countrySnapData.color_rgb[2]})"></span>
+             ${content.join(" ")}`,
           );
         }
       })
@@ -122,7 +122,7 @@ export default function renderMap(el, snapData) {
       .datum(
         mesh(world, world.objects.countries, function (a, b) {
           return a !== b;
-        })
+        }),
       )
       .attr("class", "snapcraft-territories__boundary")
       .attr("d", path);

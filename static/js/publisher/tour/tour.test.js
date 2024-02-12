@@ -39,7 +39,7 @@ describe("Tour", () => {
         expect.objectContaining({
           steps,
         }),
-        expect.any(Object)
+        expect.any(Object),
       );
     });
   });
@@ -52,7 +52,7 @@ describe("Tour", () => {
         expect.objectContaining({
           steps,
         }),
-        expect.any(Object)
+        expect.any(Object),
       );
     });
 
@@ -71,7 +71,7 @@ describe("Tour", () => {
 
     it("should call the callback when starting automatically", () => {
       render(
-        <Tour steps={steps} startTour={true} onTourStarted={onTourStarted} />
+        <Tour steps={steps} startTour={true} onTourStarted={onTourStarted} />,
       );
 
       expect(onTourStarted).toBeCalled();
@@ -79,7 +79,7 @@ describe("Tour", () => {
 
     it("should call the callback when starting with a button", () => {
       const { getByText } = render(
-        <Tour steps={steps} onTourStarted={onTourStarted} />
+        <Tour steps={steps} onTourStarted={onTourStarted} />,
       );
       fireEvent.click(getByText("Tour"));
 
@@ -96,7 +96,7 @@ describe("Tour", () => {
 
     it("should not call the callback when starting automatically", () => {
       render(
-        <Tour steps={steps} startTour={true} onTourClosed={onTourClosed} />
+        <Tour steps={steps} startTour={true} onTourClosed={onTourClosed} />,
       );
 
       expect(onTourClosed).not.toBeCalled();

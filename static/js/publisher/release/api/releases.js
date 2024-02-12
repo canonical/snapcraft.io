@@ -13,7 +13,7 @@ export function fetchReleases(onComplete, releases, csrfToken, snapName) {
         snapName,
         release.id,
         release.channels,
-        release.progressive
+        release.progressive,
       ).then((json) => onComplete(json, release));
     }));
   });
@@ -45,7 +45,7 @@ export function fetchRelease(
   snapName,
   revision,
   channels,
-  progressive
+  progressive,
 ) {
   const body = {
     name: snapName,

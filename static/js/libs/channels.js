@@ -218,7 +218,7 @@ function sortChannels(channels, options) {
                 (item) =>
                   item.track === track.name &&
                   item.risk === risk.name &&
-                  item.branch === branch.name
+                  item.branch === branch.name,
               )[0].format;
               const str = [];
               if (format.track) {

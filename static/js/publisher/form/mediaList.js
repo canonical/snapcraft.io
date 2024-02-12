@@ -51,7 +51,7 @@ class MediaList extends React.Component {
               </span>
             )}
           </FileInput>
-        </Fragment>
+        </Fragment>,
       );
     }
 

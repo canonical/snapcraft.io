@@ -14,7 +14,7 @@ describe("defaultTrack", () => {
         {
           type: SET_DEFAULT_TRACK_SUCCESS,
           payload: "test",
-        }
+        },
       );
 
       expect(result).toEqual("test");

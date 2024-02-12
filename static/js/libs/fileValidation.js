@@ -153,7 +153,7 @@ function imageRestrictions(file, restrictions) {
           // If the min and max are the same we only accept 1 aspect ratio
           if (min === max) {
             message.push(
-              `it needs to be ${aspectRatioMin[0]}:${aspectRatioMin[1]}`
+              `it needs to be ${aspectRatioMin[0]}:${aspectRatioMin[1]}`,
             );
 
             const suggestedSize = [height / max];
@@ -168,14 +168,14 @@ function imageRestrictions(file, restrictions) {
 
             message.push(
               `(e.g., ${Math.round(suggestedSize[0])} x ${Math.round(
-                suggestedSize[1]
-              )} pixels)`
+                suggestedSize[1],
+              )} pixels)`,
             );
 
             // Otherwise it's a range
           } else {
             message.push(
-              `it needs to be between ${aspectRatioMin[0]}:${aspectRatioMin[1]} and ${aspectRatioMax[0]}:${aspectRatioMax[1]}`
+              `it needs to be between ${aspectRatioMin[0]}:${aspectRatioMin[1]} and ${aspectRatioMax[0]}:${aspectRatioMax[1]}`,
             );
           }
 

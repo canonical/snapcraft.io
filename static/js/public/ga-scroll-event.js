@@ -23,7 +23,7 @@ export default function triggerEventWhenVisible(selector) {
         "element-visible",
         origin,
         selector,
-        `Element visible on screen: ${selector}`
+        `Element visible on screen: ${selector}`,
       );
     } else {
       let triggered = false;
@@ -35,11 +35,11 @@ export default function triggerEventWhenVisible(selector) {
               "element-visible",
               origin,
               selector,
-              `Element visible on screen: ${selector}`
+              `Element visible on screen: ${selector}`,
             );
             triggered = true;
           }
-        }, 500)
+        }, 500),
       );
     }
   } else {

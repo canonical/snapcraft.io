@@ -317,7 +317,7 @@ dl {
     margin-left: 0.75rem !important;
   }
 
-  @media (min-width: 1353px) {
+  @media (width >= 1353px) {
     margin-bottom: 0 !important;
   }
 }
@@ -338,7 +338,7 @@ dl {
 }
 
 .u-hide-table-col--large {
-  @media (min-width: 1036px) {
+  @media (width >= 1036px) {
     display: none !important;
   }
 }
@@ -450,11 +450,11 @@ dl {
 
 // Vanilla override - documentaion layout
 .l-docs__subgrid {
-  @media (min-width: 1036px) {
+  @media (width >= 1036px) {
       grid-template-columns: 15rem minmax(0, 1fr) 15rem;
   }
 
-  @media (min-width: calc(1036px + 15rem)) {
+  @media (width >= calc(1036px + 15rem)) {
     grid-template-columns: 15rem minmax(0, 1fr) 15rem;
   }
 }

@@ -34,7 +34,7 @@ describe("pendingCloses", () => {
       it("should add channel to pending closes", () => {
         const result = pendingCloses(
           stateWithOtherPendingCloses,
-          closeChannelAction
+          closeChannelAction,
         );
 
         expect(result).toEqual([...stateWithOtherPendingCloses, channel]);
@@ -47,7 +47,7 @@ describe("pendingCloses", () => {
       it("should not add duplicated channel to pending closes", () => {
         const result = pendingCloses(
           stateWithPendingCloses,
-          closeChannelAction
+          closeChannelAction,
         );
 
         expect(result).toEqual(stateWithPendingCloses);
@@ -80,7 +80,7 @@ describe("pendingCloses", () => {
       it("should not change the state", () => {
         const result = pendingCloses(
           stateWithOtherPendingCloses,
-          releaseRevisionAction
+          releaseRevisionAction,
         );
 
         expect(result).toBe(stateWithOtherPendingCloses);
@@ -93,7 +93,7 @@ describe("pendingCloses", () => {
       it("should remove pending close of the channel released to", () => {
         const result = pendingCloses(
           stateWithPendingCloses,
-          releaseRevisionAction
+          releaseRevisionAction,
         );
 
         expect(result).toEqual(["latest/candidate"]);
@@ -122,7 +122,7 @@ describe("pendingCloses", () => {
       it("should remove all pending releases", () => {
         const result = pendingCloses(
           stateWithPendingCloses,
-          cancelPendingReleasesAction
+          cancelPendingReleasesAction,
         );
 
         expect(result).toEqual([]);

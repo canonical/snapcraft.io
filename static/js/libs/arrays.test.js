@@ -54,7 +54,7 @@ describe("arraysEqual", () => {
     arraysEqual(arr1, arr2);
     expect(
       JSON.stringify(arr1) === JSON.stringify(arr1Copy) &&
-        JSON.stringify(arr2) === JSON.stringify(arr2Copy)
+        JSON.stringify(arr2) === JSON.stringify(arr2Copy),
     ).toEqual(true);
   });
 });

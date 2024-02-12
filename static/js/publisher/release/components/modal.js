@@ -78,7 +78,7 @@ const mapActionButtonDispatchToProps = (dispatch) => ({
 
 const ModalActionButtonWrapped = connect(
   null,
-  mapActionButtonDispatchToProps
+  mapActionButtonDispatchToProps,
 )(ModalActionButton);
 
 const Modal = ({ title, content, actions, closeModal }) => {

@@ -33,7 +33,7 @@ function releaseRevision(
   revision,
   channel,
   progressive,
-  previousRevisions
+  previousRevisions,
 ) {
   state = { ...state };
 
@@ -51,7 +51,7 @@ function releaseRevision(
         state = removePendingRelease(
           state,
           pendingRelease[channel].revision,
-          channel
+          channel,
         );
       }
     });
@@ -85,7 +85,7 @@ function closeChannel(state, channel) {
       state = removePendingRelease(
         state,
         pendingRelease[channel].revision,
-        channel
+        channel,
       );
     }
   });
@@ -205,13 +205,13 @@ export default function pendingReleases(state = {}, action) {
         action.payload.revision,
         action.payload.channel,
         action.payload.progressive,
-        action.payload.previousRevisions
+        action.payload.previousRevisions,
       );
     case UNDO_RELEASE:
       return removePendingRelease(
         state,
         action.payload.revision,
-        action.payload.channel
+        action.payload.channel,
       );
     case CANCEL_PENDING_RELEASES:
       return {};

@@ -202,7 +202,7 @@ function prepareAxis() {
   this.xAxis = axisBottom(this.xScale).tickValues(tickValues).tickPadding(16);
 
   this.yAxis = axisLeft(this.yScale).tickFormat((d) =>
-    d === 0 ? "0" : this.shortValue(d)
+    d === 0 ? "0" : this.shortValue(d),
   );
 }
 

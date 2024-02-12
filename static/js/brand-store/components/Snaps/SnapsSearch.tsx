@@ -52,7 +52,6 @@ function SnapsSearch({
                 className="p-search-box__input"
                 name="search"
                 placeholder="Search available snaps"
-                autoComplete="off"
                 {...getInputProps({
                   onKeyUp: debounce(
                     (
@@ -125,7 +124,6 @@ function SnapsSearch({
                 {suggestions.map((item: Snap, index: number) => (
                   <li
                     className="p-list__item"
-                    key={item.id}
                     {...getItemProps({
                       key: item.id,
                       index,

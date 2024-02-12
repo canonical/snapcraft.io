@@ -16,7 +16,7 @@ function submitEnabler(formSelector, buttonSelectors) {
   }
 
   const buttonEls = buttonSelectors.map((selector) =>
-    document.querySelector(selector)
+    document.querySelector(selector),
   );
 
   const initialState = new FormData(formEl);

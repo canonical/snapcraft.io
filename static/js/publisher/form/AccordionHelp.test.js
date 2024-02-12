@@ -12,7 +12,7 @@ describe("AccordionHelp", () => {
     const { container } = render(
       <AccordionHelp name="test">
         <div className="todd" />
-      </AccordionHelp>
+      </AccordionHelp>,
     );
     const aEl = container.querySelector("a");
     fireEvent.click(aEl);

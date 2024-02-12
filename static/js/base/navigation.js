@@ -3,10 +3,10 @@ var navAccountContainer = document.querySelector(".js-nav-account");
 
 if (navAccountContainer) {
   var notAuthenticatedMenu = navAccountContainer.querySelector(
-    ".js-nav-account--notauthenticated"
+    ".js-nav-account--notauthenticated",
   );
   var authenticatedMenu = navAccountContainer.querySelector(
-    ".js-nav-account--authenticated"
+    ".js-nav-account--authenticated",
   );
 
   fetch("/account.json")
@@ -22,7 +22,7 @@ if (navAccountContainer) {
         if (window.sessionStorage) {
           window.sessionStorage.setItem(
             "displayName",
-            data.publisher["fullname"]
+            data.publisher["fullname"],
           );
         }
 

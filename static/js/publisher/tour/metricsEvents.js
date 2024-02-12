@@ -5,7 +5,7 @@ export const tourStartedByUser = () =>
     "tour-started-by-user",
     window.location.href,
     "",
-    `Tour started manually by user on "${document.title}" page`
+    `Tour started manually by user on "${document.title}" page`,
   );
 
 export const tourStartedAutomatically = () =>
@@ -13,7 +13,7 @@ export const tourStartedAutomatically = () =>
     "tour-started-automatically",
     window.location.href,
     "",
-    `Tour started automatically on "${document.title}" page`
+    `Tour started automatically on "${document.title}" page`,
   );
 
 export const tourFinished = (stepId) =>
@@ -21,7 +21,7 @@ export const tourFinished = (stepId) =>
     "tour-finished",
     window.location.href,
     "",
-    `Tour finished on "${document.title}" page on step ${stepId}`
+    `Tour finished on "${document.title}" page on step ${stepId}`,
   );
 
 export const tourSkipped = (stepId) =>
@@ -29,5 +29,5 @@ export const tourSkipped = (stepId) =>
     "tour-skipped",
     window.location.href,
     "",
-    `Tour skipped on "${document.title}" page on step ${stepId}`
+    `Tour skipped on "${document.title}" page on step ${stepId}`,
   );

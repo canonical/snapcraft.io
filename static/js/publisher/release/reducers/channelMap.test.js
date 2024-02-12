@@ -74,7 +74,7 @@ describe("channelMap", () => {
       it("should update selected revision", () => {
         const result = channelMap(
           stateWithSelectedRevision,
-          selectRevisionAction
+          selectRevisionAction,
         );
 
         expect(result[AVAILABLE]["abc42"]).toEqual(revision);
@@ -108,7 +108,7 @@ describe("channelMap", () => {
         it("should remove selected revision from AVAILABLE channel", () => {
           const result = channelMap(
             stateWithSelectedRevision,
-            toggleRevisionAction
+            toggleRevisionAction,
           );
 
           expect(result[AVAILABLE]["abc42"]).toBeUndefined();
@@ -174,7 +174,7 @@ describe("channelMap", () => {
       it("should not update released revision if it has the same id", () => {
         const result = channelMap(
           stateWithReleasedRevision,
-          releaseRevisionAction
+          releaseRevisionAction,
         );
 
         expect(result[channel]["abc42"].isPreviouslyReleased).toBe(true);
@@ -218,7 +218,7 @@ describe("channelMap", () => {
       it("should remove channel from channel map", () => {
         const result = channelMap(
           stateWithReleasedRevision,
-          closeChannelAction
+          closeChannelAction,
         );
 
         expect(result[channel]).toBeUndefined();

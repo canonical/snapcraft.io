@@ -32,7 +32,7 @@ function renderMetrics(metrics) {
       graphType: metrics.activeDevices.type,
       defaultTrack: metrics.defaultTrack,
       annotations: metrics.activeDevices.annotations,
-    }
+    },
   )
     .render()
     .enableTooltip()
@@ -76,7 +76,7 @@ function renderPublisherMetrics(options) {
     {
       stacked: false,
       area: false,
-    }
+    },
   );
 
   const loader = document.querySelector(".snapcraft-metrics__loader");
@@ -106,10 +106,10 @@ function renderPublisherMetrics(options) {
 
           json.snaps.forEach((snap) => {
             const continuedDevices = snap.series.filter(
-              (singleSeries) => singleSeries.name === "continued"
+              (singleSeries) => singleSeries.name === "continued",
             )[0];
             const newDevices = snap.series.filter(
-              (singleSeries) => singleSeries.name === "new"
+              (singleSeries) => singleSeries.name === "new",
             )[0];
 
             let totalSeries = [];
@@ -118,12 +118,12 @@ function renderPublisherMetrics(options) {
               totalSeries = continuedDevices.values.map(
                 (continuedValue, index) => {
                   return continuedValue + newDevices.values[index];
-                }
+                },
               );
             } else {
               console.log(
                 "There is no information available for continued or new devices.",
-                snap.series
+                snap.series,
               );
             }
 

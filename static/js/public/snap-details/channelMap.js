@@ -67,23 +67,23 @@ class ChannelMap {
 
   initOtherVersions() {
     let installTemplateEl = document.querySelector(
-      '[data-js="install-window"]'
+      '[data-js="install-window"]',
     );
     if (!installTemplateEl) {
       installTemplateEl = document.getElementById("install-window-template");
     }
     let channelRowTemplateEl = document.querySelector(
-      '[data-js="channel-map-row"]'
+      '[data-js="channel-map-row"]',
     );
     if (!channelRowTemplateEl) {
       channelRowTemplateEl = document.getElementById(
-        "channel-map-row-template"
+        "channel-map-row-template",
       );
     }
 
     if (!installTemplateEl || !channelRowTemplateEl) {
       document.querySelector(
-        ".p-snap-install-buttons__versions"
+        ".p-snap-install-buttons__versions",
       ).style.display = "none";
       return false;
     }
@@ -121,7 +121,7 @@ class ChannelMap {
               this.openScreenName === "channel-map-install" ? "cta-0" : "cta-1",
               window.location.href,
               target.dataset.controls,
-              target.innerText
+              target.innerText,
             );
           }
         },
@@ -150,7 +150,7 @@ class ChannelMap {
             "cta-1",
             window.location.href,
             `snap://${target.dataset.snap}`,
-            target.innerText
+            target.innerText,
           );
         },
 
@@ -206,7 +206,7 @@ class ChannelMap {
       this.openButton.getAttribute("aria-controls") || "channel-map-install";
 
     const openScreen = this.channelMapEl.querySelector(
-      `#${this.openScreenName}`
+      `#${this.openScreenName}`,
     );
 
     // select default screen before opening
@@ -296,7 +296,7 @@ class ChannelMap {
     // Add content to the right slide area
     this.writeInstallInstructions(
       clickEl.dataset.channel,
-      clickEl.dataset.confinement
+      clickEl.dataset.confinement,
     );
 
     const slides = clickEl.closest(".p-channel-map__slides");
@@ -347,7 +347,7 @@ class ChannelMap {
     }
 
     const holder = document.querySelector(
-      '[data-js="channel-map-install-details"]'
+      '[data-js="channel-map-install-details"]',
     );
 
     holder.innerHTML = newDiv.innerHTML;
@@ -368,7 +368,7 @@ class ChannelMap {
       }
 
       let _row = this.CHANNEL_ROW_TEMPLATE.split("${rowClass}").join(
-        rowClass.join(" ")
+        rowClass.join(" "),
       );
 
       row.forEach((val, index) => {
@@ -390,7 +390,7 @@ class ChannelMap {
    */
   prepareTable(archData) {
     const tbodyEl = this.channelMapEl.querySelector(
-      '[data-js="channel-map-table"]'
+      '[data-js="channel-map-table"]',
     );
 
     // If we're on the overview tab we only want to see latest/[all risks]
@@ -480,7 +480,7 @@ export default function channelMap(
   el,
   packageName,
   channelMapData,
-  defaultTrack
+  defaultTrack,
 ) {
   return new ChannelMap(el, packageName, channelMapData, defaultTrack);
 }

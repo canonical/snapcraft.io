@@ -72,7 +72,7 @@ function getReleaseDataFromChannelMap(channelMap, revisionsMap, snapName) {
 
       if (!releasedChannels[mapInfo.channel][mapInfo.architecture]) {
         const revisionInfo = revisionsMap.find(
-          (r) => r.revision === mapInfo.revision
+          (r) => r.revision === mapInfo.revision,
         );
         if (revisionInfo) {
           releasedChannels[mapInfo.channel][mapInfo.architecture] =

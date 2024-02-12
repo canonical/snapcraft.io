@@ -6,7 +6,7 @@ export default function history(
     filters: null,
     isOpen: false,
   },
-  action
+  action,
 ) {
   switch (action.type) {
     case OPEN_HISTORY:

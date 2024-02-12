@@ -129,13 +129,13 @@ describe("initCategories", () => {
 
     test("shows the secondary add prompty", () => {
       expect(categorySecondaryAddEl.classList.contains("u-hide")).toEqual(
-        false
+        false,
       );
     });
 
     test("hides the secondary category selector", () => {
       expect(categorySecondaryPickerEl.classList.contains("u-hide")).toEqual(
-        true
+        true,
       );
     });
 
@@ -161,7 +161,7 @@ describe("initCategories", () => {
 
     test("hides the secondary category selector", () => {
       expect(categorySecondaryPickerEl.classList.contains("u-hide")).toEqual(
-        true
+        true,
       );
     });
 
@@ -185,7 +185,7 @@ describe("initCategories", () => {
 
     test("shows the secondary category selector", () => {
       expect(categorySecondaryPickerEl.classList.contains("u-hide")).toEqual(
-        false
+        false,
       );
     });
 
@@ -201,13 +201,13 @@ describe("initCategories", () => {
 
     test("shows the secondary add prompt", () => {
       expect(categorySecondaryAddEl.classList.contains("u-hide")).toEqual(
-        false
+        false,
       );
     });
 
     test("hides the secondary category selector", () => {
       expect(categorySecondaryPickerEl.classList.contains("u-hide")).toEqual(
-        true
+        true,
       );
     });
 

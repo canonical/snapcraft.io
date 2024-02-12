@@ -6,20 +6,20 @@ describe("Icon", () => {
   it("should render without an icon", () => {
     const { container } = render(<Icon updateIcon={() => {}} />);
     expect(container.querySelectorAll(".p-editable-icon__icon").length).toEqual(
-      1
+      1,
     );
     expect(
-      container.querySelectorAll(".p-editable-icon__actions").length
+      container.querySelectorAll(".p-editable-icon__actions").length,
     ).toEqual(0);
   });
 
   it("should render with an icon", () => {
     const { container } = render(
-      <Icon icon={{ url: "test" }} updateIcon={() => {}} />
+      <Icon icon={{ url: "test" }} updateIcon={() => {}} />,
     );
     expect(container.querySelectorAll(`img[src="test"]`).length).toEqual(1);
     expect(
-      container.querySelectorAll(".p-editable-icon__actions").length
+      container.querySelectorAll(".p-editable-icon__actions").length,
     ).toEqual(1);
   });
 
@@ -65,7 +65,7 @@ describe("Icon", () => {
         restrictions={{
           accept: ["text/plain"],
         }}
-      />
+      />,
     );
 
     const file = new File(["test"], "test", { type: "text/html" });
@@ -79,7 +79,7 @@ describe("Icon", () => {
 
     setTimeout(() => {
       expect(
-        container.querySelectorAll(".p-notification--negative").length
+        container.querySelectorAll(".p-notification--negative").length,
       ).toEqual(1);
       done();
     }, 500);
@@ -88,7 +88,7 @@ describe("Icon", () => {
   it("should remove the icon when removeIcon is called", (done) => {
     const changeCB = jest.fn();
     const { container } = render(
-      <Icon icon={{ url: "test" }} updateIcon={changeCB} />
+      <Icon icon={{ url: "test" }} updateIcon={changeCB} />,
     );
 
     const deleteButton = container.querySelector(".p-editable-icon__delete");

@@ -34,8 +34,8 @@ export function toggleHistory(filters) {
         dispatch(
           triggerGAEvent(
             `click-close-history`,
-            `${filters.track}/${filters.risk}/${filters.branch}/${filters.arch}`
-          )
+            `${filters.track}/${filters.risk}/${filters.branch}/${filters.arch}`,
+          ),
         );
       }
       dispatch(closeHistory());
@@ -44,8 +44,8 @@ export function toggleHistory(filters) {
         dispatch(
           triggerGAEvent(
             `click-open-history`,
-            `${filters.track}/${filters.risk}/${filters.branch}/${filters.arch}`
-          )
+            `${filters.track}/${filters.risk}/${filters.branch}/${filters.arch}`,
+          ),
         );
       }
       dispatch(openHistory(filters));

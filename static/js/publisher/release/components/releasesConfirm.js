@@ -38,7 +38,7 @@ class ReleasesConfirm extends Component {
 
         this.stickyBar.current.classList.toggle("is-pinned", topPosition === 0);
       }),
-      500
+      500,
     );
   }
 
@@ -77,7 +77,7 @@ class ReleasesConfirm extends Component {
 
   toggleDetails() {
     this.props.triggerGAEvent(
-      `click-${this.state.showDetails ? "hide" : "show"}-details`
+      `click-${this.state.showDetails ? "hide" : "show"}-details`,
     );
     this.setState({
       showDetails: !this.state.showDetails,

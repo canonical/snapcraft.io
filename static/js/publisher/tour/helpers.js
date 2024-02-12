@@ -12,7 +12,7 @@ export function prepareSteps(steps) {
       return {
         ...step,
         elements: [].slice.apply(
-          document.querySelectorAll(`[data-tour="${step.id}"]`)
+          document.querySelectorAll(`[data-tour="${step.id}"]`),
         ),
         position: step.position || "bottom-left",
       };
@@ -85,6 +85,6 @@ export const getMaskFromElements = (elements) => {
       left: Infinity,
       right: 0,
       bottom: 0,
-    }
+    },
   );
 };

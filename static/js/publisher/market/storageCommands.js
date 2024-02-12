@@ -3,7 +3,7 @@ function storageCommands(
   formEl,
   snap_name,
   ignoreChangesOnUnload,
-  context = window
+  context = window,
 ) {
   const key = `${snap_name}-command`;
   if (e.key === key) {

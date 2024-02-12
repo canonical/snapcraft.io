@@ -3,7 +3,7 @@ import { SET_AVAILABLE_REVISIONS_SELECT } from "../actions/availableRevisionsSel
 
 export default function availableRevisionsSelect(
   state = AVAILABLE_REVISIONS_SELECT_UNRELEASED,
-  action
+  action,
 ) {
   switch (action.type) {
     case SET_AVAILABLE_REVISIONS_SELECT:

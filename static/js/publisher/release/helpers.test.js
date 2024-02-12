@@ -14,7 +14,7 @@ describe("getChannelName", () => {
 
   it("should return track/risk/branch pair as a name", () => {
     expect(getChannelName("track", "risk", "branch")).toEqual(
-      "track/risk/branch"
+      "track/risk/branch",
     );
   });
 
@@ -33,7 +33,7 @@ describe("isRevisionBuiltOnLauchpad", () => {
       isRevisionBuiltOnLauchpad({
         revision: 1,
         attributes: { "build-request-id": "something-else" },
-      })
+      }),
     ).toBe(false);
   });
 
@@ -43,7 +43,7 @@ describe("isRevisionBuiltOnLauchpad", () => {
         revision: 1,
         version: "1",
         attributes: { "build-request-id": "lp-123" },
-      })
+      }),
     ).toBe(true);
   });
 });

@@ -197,8 +197,8 @@ describe("initForm", () => {
           JSON.stringify(
             Object.assign(initialState, {
               title: "test",
-            })
-          )
+            }),
+          ),
         );
 
         const diffInput = document.querySelector("[name='changes']");
@@ -206,7 +206,7 @@ describe("initForm", () => {
           JSON.stringify({
             title: "test3",
             categories: "",
-          })
+          }),
         );
       });
     });
@@ -228,7 +228,7 @@ describe("initForm", () => {
       previewButton.dispatchEvent(
         new Event("click", {
           bubbles: true,
-        })
+        }),
       );
 
       expect(JSON.parse(previewStateInput.value)).toEqual(initialState);
@@ -239,10 +239,10 @@ describe("initForm", () => {
     describe("updateLocalStorage init", () => {
       test("should set the initial state", () => {
         expect(window.localStorage.getItem("test-initial")).toEqual(
-          JSON.stringify(initialState)
+          JSON.stringify(initialState),
         );
         expect(window.localStorage.getItem("test")).toEqual(
-          JSON.stringify(initialState)
+          JSON.stringify(initialState),
         );
       });
     });
@@ -256,7 +256,7 @@ describe("initForm", () => {
         primaryCategoryInput.options[0].removeAttribute("selected");
         primaryCategoryInput.options[1].selected = "selected";
         primaryCategoryInput.dispatchEvent(
-          new Event("change", { bubbles: true })
+          new Event("change", { bubbles: true }),
         );
 
         form.dispatchEvent(new Event("submit"));

@@ -18,7 +18,7 @@ function initIcon(holder, icon, title, updateIcon) {
       title={title}
       updateIcon={updateIcon}
       restrictions={ICON_RESTRICTIONS}
-    />
+    />,
   );
 }
 

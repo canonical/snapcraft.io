@@ -1,5 +1,5 @@
 export const REM = parseFloat(
-  getComputedStyle(document.documentElement).fontSize
+  getComputedStyle(document.documentElement).fontSize,
 );
 export const MASK_OFFSET = REM / 2; // .5rem  is a default spacing unit in Vanilla
 

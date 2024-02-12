@@ -22,7 +22,7 @@
     &__label {
       margin-right: 0.5rem;
 
-      @media (max-width: 768px) {
+      @media (width <= 768px) {
         display: none;
       }
     }

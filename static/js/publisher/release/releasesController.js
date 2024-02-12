@@ -45,7 +45,7 @@ const ReleasesController = ({
         updateArchitectures(revisionsList);
         initChannelMap(transformedChannelMap);
         setReady(true);
-      }
+      },
     );
   }, []);
 

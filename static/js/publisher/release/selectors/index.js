@@ -68,7 +68,7 @@ export function getFilteredReleaseHistory(state) {
 export function getSelectedRevisions(state) {
   if (state.channelMap[AVAILABLE]) {
     return Object.values(state.channelMap[AVAILABLE]).map(
-      (revision) => revision.revision
+      (revision) => revision.revision,
     );
   }
 
@@ -129,7 +129,7 @@ export function getAllRevisions(state) {
 // get all revisions not released to any channel yet
 export function getUnreleasedRevisions(state) {
   return getAllRevisions(state).filter(
-    (revision) => !revision.channels || revision.channels.length === 0
+    (revision) => !revision.channels || revision.channels.length === 0,
   );
 }
 
@@ -137,7 +137,7 @@ export function getUnreleasedRevisions(state) {
 export function getRecentRevisions(state) {
   const interval = 1000 * 60 * 60 * 24 * 7; // 7 days
   return getUnreleasedRevisions(state).filter(
-    (r) => Date.now() - new Date(r.created_at).getTime() < interval
+    (r) => Date.now() - new Date(r.created_at).getTime() < interval,
   );
 }
 
@@ -165,7 +165,7 @@ export function getFilteredAvailableRevisions(state) {
 // filtered by arch (can't be memoized)
 export function getFilteredAvailableRevisionsForArch(state, arch) {
   return getFilteredAvailableRevisions(state).filter((revision) =>
-    revision.architectures.includes(arch)
+    revision.architectures.includes(arch),
   );
 }
 
@@ -199,7 +199,7 @@ export function getBranches(state) {
       const { track, risk, branch, when, revision } = item;
       const exists =
         branches.filter(
-          (b) => b.track === track && b.risk === risk && b.branch === branch
+          (b) => b.track === track && b.risk === risk && b.branch === branch,
         ).length > 0;
 
       if (!exists) {
@@ -242,7 +242,7 @@ export function hasPendingRelease(state, channel, arch) {
 
 export function getTrackRevisions({ channelMap }, track) {
   const trackKeys = Object.keys(channelMap).filter(
-    (trackName) => trackName.indexOf(track) == 0
+    (trackName) => trackName.indexOf(track) == 0,
   );
   return trackKeys.map((trackName) => channelMap[trackName]);
 }
@@ -259,7 +259,7 @@ export function getLaunchpadRevisions(state) {
 
 export function getRevisionsFromBuild(state, buildId) {
   return getAllRevisions(state).filter(
-    (revision) => getBuildId(revision) === buildId
+    (revision) => getBuildId(revision) === buildId,
   );
 }
 
@@ -279,7 +279,7 @@ export function getProgressiveState(state, channel, arch, isPending) {
   let pendingProgressiveStatus = null;
 
   const allReleases = releases.filter(
-    (item) => channel === getChannelString(item) && arch === item.architecture
+    (item) => channel === getChannelString(item) && arch === item.architecture,
   );
 
   const release = allReleases[0];
@@ -326,7 +326,7 @@ export function hasRelease(state, channel, architecture) {
   const filteredReleases = releases.filter(
     (release) =>
       release.architecture === architecture &&
-      getChannelString(release) === channel
+      getChannelString(release) === channel,
   );
 
   return filteredReleases &&
@@ -426,6 +426,6 @@ export function getPendingRelease({ pendingReleases }, channel, arch) {
 export function getReleases({ releases }, archs, channel) {
   return releases.filter(
     (release) =>
-      archs.includes(release.architecture) && release.channel === channel
+      archs.includes(release.architecture) && release.channel === channel,
   );
 }

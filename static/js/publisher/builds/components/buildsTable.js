@@ -99,7 +99,7 @@ const BuildsTable = ({
       },
     ],
     // updates to builds and queueTime affect columns, so they should be recalculated when they change
-    [builds, queueTime]
+    [builds, queueTime],
   );
 
   const data = React.useMemo(() => builds, [builds]);

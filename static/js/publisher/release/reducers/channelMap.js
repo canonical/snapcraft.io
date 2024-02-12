@@ -73,7 +73,7 @@ export default function channelMap(state = {}, action) {
       return selectRevision(
         state,
         action.payload.revision,
-        action.payload.toggle
+        action.payload.toggle,
       );
     case CLEAR_SELECTED_REVISIONS:
       return {
@@ -84,7 +84,7 @@ export default function channelMap(state = {}, action) {
       return releaseRevision(
         state,
         action.payload.revision,
-        action.payload.channel
+        action.payload.channel,
       );
     case CLOSE_CHANNEL_SUCCESS:
       return closeChannel(state, action.payload.channel);

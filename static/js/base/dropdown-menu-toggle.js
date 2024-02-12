@@ -2,7 +2,7 @@
   function toggleDropdown(toggle, open) {
     var parentElement = toggle.parentNode;
     var dropdown = document.getElementById(
-      toggle.getAttribute("aria-controls")
+      toggle.getAttribute("aria-controls"),
     );
     dropdown.setAttribute("aria-hidden", !open);
 
@@ -46,7 +46,7 @@
 
   function initNavDropdowns(containerClass) {
     var toggles = [].slice.call(
-      document.querySelectorAll(containerClass + " [aria-controls]")
+      document.querySelectorAll(containerClass + " [aria-controls]"),
     );
 
     handleClickOutside(toggles, containerClass);
