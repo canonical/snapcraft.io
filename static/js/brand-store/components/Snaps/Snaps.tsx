@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams, useSearchParams, Link } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { AsyncThunkAction } from "@reduxjs/toolkit";
 import { useAppDispatch } from "../../store";
@@ -23,12 +23,11 @@ import { fetchMembers } from "../../slices/membersSlice";
 import Publisher from "../Publisher";
 import Reviewer from "../Reviewer";
 import ReviewerAndPublisher from "../ReviewerAndPublisher";
-import SnapsTable from "./SnapsTable";
+import SnapsTables from "./SnapsTables";
 import SnapsFilter from "./SnapsFilter";
 import SnapsSearch from "./SnapsSearch";
 import SectionNav from "../SectionNav";
 import StoreNotFound from "../StoreNotFound";
-import NewTables from "../NewTables";
 
 import { setPageTitle } from "../../utils";
 
@@ -88,10 +87,6 @@ function Snaps() {
   >();
   const [fetchMembersByStoreIdPromise, setFetchMembersByStoreIdPromise] =
     useState<ReturnType<AsyncThunkAction<Member[], string, {}>> | undefined>();
-
-  // Feature flag for new snaps table layout
-  const [searchParams] = useSearchParams();
-  const showNewTables = searchParams.get("showNewTables");
 
   const getStoreName = (storeId: string) => {
     const store = brandStoresList.find((item) => item.id === storeId);
@@ -378,11 +373,6 @@ function Snaps() {
                         snaps={snaps}
                         id={id || ""}
                       />
-                      {!showNewTables && currentStore && (
-                        <h1 className="p-heading--5">
-                          {currentStore.name} snaps
-                        </h1>
-                      )}
                     </Col>
                     <Col size={6} className="u-align--right">
                       {!isOnlyViewer() && (
@@ -420,10 +410,12 @@ function Snaps() {
                   </Row>
                 )}
                 <div className="u-fixed-width">
-                  {isReloading ? (
+                  {isReloading && (
                     <Spinner text="Loading&hellip;" />
-                  ) : showNewTables && currentStore ? (
-                    <NewTables
+                  )} 
+                  
+                  {!isReloading && currentStore && (
+                    <SnapsTables
                       currentStoreName={currentStore.name}
                       snapsInStore={snapsInStore}
                       otherStores={otherStores}
@@ -433,17 +425,6 @@ function Snaps() {
                       snapsToRemove={snapsToRemove}
                       setSnapsToRemove={setSnapsToRemove}
                       nonEssentialSnapIds={nonEssentialSnapIds}
-                    />
-                  ) : (
-                    <SnapsTable
-                      snaps={snapsInStore}
-                      storeName={getStoreName(id || "")}
-                      otherStores={otherStores}
-                      snapsToRemove={snapsToRemove}
-                      setSnapsToRemove={setSnapsToRemove}
-                      nonEssentialSnapIds={nonEssentialSnapIds}
-                      isOnlyViewer={isOnlyViewer}
-                      globalStore={globalStore}
                     />
                   )}
                 </div>
