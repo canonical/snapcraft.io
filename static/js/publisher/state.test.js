@@ -74,8 +74,8 @@ describe("diffState", () => {
         },
         {
           title: "Test title",
-        }
-      )
+        },
+      ),
     ).toBeNull();
   });
 
@@ -90,8 +90,8 @@ describe("diffState", () => {
           title: "Test title",
           summary: "Test summary changed",
           something: "Test something",
-        }
-      )
+        },
+      ),
     ).toEqual({
       summary: "Test summary changed",
     });
@@ -113,8 +113,8 @@ describe("diffState", () => {
               { url: "test1.png", status: "uploaded", selected: false },
               { url: "test2.png", status: "uploaded", selected: true },
             ],
-          }
-        )
+          },
+        ),
       ).toBeNull();
     });
   });

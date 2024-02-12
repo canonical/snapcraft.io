@@ -120,7 +120,6 @@ function SearchAutocomplete({
                 .map((item, index) => (
                   <li
                     className="p-multiselect__option"
-                    key={item?.key}
                     {...getItemProps({
                       key: item.key,
                       index,

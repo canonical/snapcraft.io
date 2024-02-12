@@ -21,7 +21,7 @@ export function releaseRevision(revision, channel, progressive) {
     const previousRevisions = getReleases(
       state,
       revision.architectures,
-      channel
+      channel,
     )
       .filter((release) => release.revision !== revision.revision)
       .map((release) => revisions[release.revision]);
@@ -143,8 +143,8 @@ export function undoRelease(revision, channel) {
     dispatch(
       triggerGAEvent(
         "click-cancel-promotion",
-        `${channel}/${revision.architectures[0]}`
-      )
+        `${channel}/${revision.architectures[0]}`,
+      ),
     );
     return dispatch({
       type: UNDO_RELEASE,

@@ -63,7 +63,7 @@ function install(language, fsfFlow) {
     const os = type.split("-")[0];
     const selected = document.querySelector(".js-" + type);
     const unselected = document.querySelector(
-      "[class*='js-" + os + "-']:not(.js-" + type + ")"
+      "[class*='js-" + os + "-']:not(.js-" + type + ")",
     );
 
     if (!selected && !unselected) {
@@ -259,7 +259,7 @@ function initRegisterName(formEl, notificationEl, successEl) {
     event.preventDefault();
     let formData = new FormData(formEl);
     const submitButton = formEl.querySelector(
-      "[data-js='js-snap-name-register']"
+      "[data-js='js-snap-name-register']",
     );
 
     const currentPanel = formEl.closest(".p-accordion__group");
@@ -326,7 +326,7 @@ function initRegisterName(formEl, notificationEl, successEl) {
         }
         errorNotification(
           notificationEl,
-          "There was some problem registering name. Please try again."
+          "There was some problem registering name. Please try again.",
         );
       });
   });

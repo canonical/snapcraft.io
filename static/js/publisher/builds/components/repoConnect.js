@@ -72,7 +72,7 @@ class RepoConnect extends React.Component {
         status: null,
         error: null,
       },
-      () => this.checkRepo(selectedRepo)
+      () => this.checkRepo(selectedRepo),
     );
   }
 
@@ -84,7 +84,7 @@ class RepoConnect extends React.Component {
   handleOrganizationSelect(selectedOrganization) {
     this.setState(
       { selectedOrganization: selectedOrganization, selectedRepo: "" },
-      () => this.fetchRepoList()
+      () => this.fetchRepoList(),
     );
   }
 
@@ -153,7 +153,7 @@ class RepoConnect extends React.Component {
     if (selectedRepo && repoList.some((el) => el.value === selectedRepo)) {
       const orgRepo = RepoConnect.orgRepoString(
         selectedOrganization,
-        selectedRepo
+        selectedRepo,
       );
       const url = `/${snapName}/builds/validate-repo?repo=${orgRepo}`;
 
@@ -210,7 +210,7 @@ class RepoConnect extends React.Component {
 
     const orgRepo = RepoConnect.orgRepoString(
       selectedOrganization,
-      selectedRepo
+      selectedRepo,
     );
 
     return (
@@ -319,7 +319,7 @@ class RepoConnect extends React.Component {
     const { selectedOrganization, selectedRepo, snapName } = this.state;
     const orgRepo = RepoConnect.orgRepoString(
       selectedOrganization,
-      selectedRepo
+      selectedRepo,
     );
     return `https://github.com/${orgRepo}/new/master?filename=snap%2Fsnapcraft.yaml&value=%0A%20%20%23%20After%20registering%20a%20name%20on%20build.snapcraft.io%2C%20commit%20an%20uncommented%20line%3A%0A%20%20%23%20name%3A%20${snapName}%0A%20%20version%3A%20%270.1%27%20%23%20just%20for%20humans%2C%20typically%20%271.2%2Bgit%27%20or%20%271.3.2%27%0A%20%20summary%3A%20Single-line%20elevator%20pitch%20for%20your%20amazing%20snap%20%23%2079%20char%20long%20summary%0A%20%20description%3A%20%7C%0A%20%20%20%20This%20is%20my-snap%27s%20description.%20You%20have%20a%20paragraph%20or%20two%20to%20tell%20the%0A%20%20%20%20most%20important%20story%20about%20your%20snap.%20Keep%20it%20under%20100%20words%20though%2C%0A%20%20%20%20we%20live%20in%20tweetspace%20and%20your%20description%20wants%20to%20look%20good%20in%20the%20snap%0A%20%20%20%20store.%0A%0A%20%20grade%3A%20devel%20%23%20must%20be%20%27stable%27%20to%20release%20into%20candidate%2Fstable%20channels%0A%20%20confinement%3A%20devmode%20%23%20use%20%27strict%27%20once%20you%20have%20the%20right%20plugs%20and%20slots%0A%0A%20%20parts%3A%0A%20%20%20%20my-part%3A%0A%20%20%20%20%20%20%23%20See%20%27snapcraft%20plugins%27%0A%20%20%20%20%20%20plugin%3A%20nil%0A%20%20`;
   }
@@ -387,7 +387,7 @@ class RepoConnect extends React.Component {
 
     const orgRepo = RepoConnect.orgRepoString(
       selectedOrganization,
-      selectedRepo
+      selectedRepo,
     );
 
     return (
@@ -467,7 +467,7 @@ function init(selector, organizations, user, snapName) {
         organizations={_organizations}
         user={user}
         snapName={snapName}
-      />
+      />,
     );
   }
 }

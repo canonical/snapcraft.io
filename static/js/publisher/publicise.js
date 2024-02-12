@@ -7,7 +7,7 @@ function initSnapButtonsPicker() {
     const open = document.querySelector("#" + language + "_content");
 
     const notHidden = document.querySelector(
-      ".js-language-content:not(.u-hide)"
+      ".js-language-content:not(.u-hide)",
     );
     if (notHidden) {
       notHidden.classList.add("u-hide");
@@ -67,7 +67,7 @@ const getCardPath = (snapName, options = {}) => {
 const getCardEmbedHTML = (snapName, options) => {
   return `&lt;iframe src="https://snapcraft.io${getCardPath(
     snapName,
-    options
+    options,
   )}" frameborder="0" width="100%" height="${
     options.frameHeight
   }px" style="border: 1px solid #CCC; border-radius: 2px;"&gt;&lt;/iframe&gt;`;
@@ -152,7 +152,7 @@ function initEmbeddedCardPicker(options) {
     if (previewFrame.offsetParent && previewFrame.contentWindow.document.body) {
       const height =
         Math.floor(
-          (previewFrame.contentWindow.document.body.clientHeight + 20) / 10
+          (previewFrame.contentWindow.document.body.clientHeight + 20) / 10,
         ) * 10;
 
       if (height !== state.frameHeight) {
@@ -185,7 +185,7 @@ const getBadgePath = (
   snapName,
   badgeName = "badge",
   showName = true,
-  isPreview = false
+  isPreview = false,
 ) => {
   const params = [];
   if (!showName) {
@@ -207,7 +207,7 @@ const getBadgePreview = (snapName, badgeName, showName) => {
     snapName,
     badgeName,
     showName,
-    badgeName === "trending"
+    badgeName === "trending",
   )}" />
   </a>`;
 };
@@ -217,7 +217,7 @@ const getBadgeHTML = (snapName, badgeName, showName) => {
   &lt;img alt="${snapName}" src="https://snapcraft.io${getBadgePath(
     snapName,
     badgeName,
-    showName
+    showName,
   )}" /&gt;
 &lt;/a&gt;`;
 };
@@ -226,7 +226,7 @@ const getBadgeMarkdown = (snapName, badgeName, showName) => {
   return `[![${snapName}](https://snapcraft.io${getBadgePath(
     snapName,
     badgeName,
-    showName
+    showName,
   )})](https://snapcraft.io/${snapName})`;
 };
 

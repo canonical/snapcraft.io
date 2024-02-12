@@ -52,7 +52,7 @@ function nps() {
         button.innerHTML = `<i class="p-icon--spinner u-animation--spin"></i>`;
         mktoForm.submit();
       });
-    }
+    },
   );
 }
 

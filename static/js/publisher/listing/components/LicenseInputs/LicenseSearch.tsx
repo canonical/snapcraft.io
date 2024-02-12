@@ -106,17 +106,13 @@ function LicenseSearch({
                 <i
                   className="p-icon--close p-multiselect__item-remove"
                   onClick={() => {
-                    const newSelectedLicenses: (
-                      | License
-                      | undefined
-                    )[] = selectedLicenses.filter(
-                      (item) => item?.key !== selectedLicense?.key
-                    );
+                    const newSelectedLicenses: (License | undefined)[] =
+                      selectedLicenses.filter(
+                        (item) => item?.key !== selectedLicense?.key
+                      );
 
-                    const newSelectedLicenseKeys: (
-                      | string
-                      | undefined
-                    )[] = newSelectedLicenses.map((item) => item?.key);
+                    const newSelectedLicenseKeys: (string | undefined)[] =
+                      newSelectedLicenses.map((item) => item?.key);
 
                     const newLicense = newSelectedLicenseKeys.join(" OR ");
                     setLicense(newLicense);
@@ -133,7 +129,6 @@ function LicenseSearch({
               type="text"
               className="p-multiselect__input"
               name="search"
-              autoComplete="off"
               {...getInputProps({
                 onKeyUp: debounce(
                   (
@@ -176,7 +171,6 @@ function LicenseSearch({
               {suggestions.map((item: License, index) => (
                 <li
                   className="p-list__item p-autocomplete__suggestion"
-                  key={item.key}
                   {...getItemProps({
                     key: item.key,
                     index,

@@ -3,7 +3,7 @@ import { validateRestrictions } from "./fileValidation";
 function generateFile(
   options,
   name = "test",
-  fileContents = "testymctestface"
+  fileContents = "testymctestface",
 ) {
   return new File([fileContents], name, options);
 }
@@ -48,7 +48,7 @@ describe("validateRestrictions", () => {
 
       const validationSmall = await validateRestrictions(
         smallFile,
-        smallRestrictions
+        smallRestrictions,
       );
 
       expect(validationSmall.errors).toEqual([`file size is over 1KB`]);
@@ -62,7 +62,7 @@ describe("validateRestrictions", () => {
 
       const validationLarge = await validateRestrictions(
         largeFile,
-        largeRestrictions
+        largeRestrictions,
       );
 
       expect(validationLarge.errors).toEqual([`file size is over 1.00MB`]);
@@ -81,7 +81,7 @@ describe("validateRestrictions", () => {
 
       const validationSmall = await validateRestrictions(
         smallFile,
-        smallRestrictions
+        smallRestrictions,
       );
 
       expect(validationSmall.errors).toEqual([`file size is below 2KB`]);
@@ -95,7 +95,7 @@ describe("validateRestrictions", () => {
 
       const validationLarge = await validateRestrictions(
         largeFile,
-        largeRestrictions
+        largeRestrictions,
       );
 
       expect(validationLarge.errors).toEqual([`file size is below 2.00MB`]);
@@ -605,7 +605,7 @@ describe("validateRestrictions", () => {
           {
             type: "image/png",
           },
-          "test.png"
+          "test.png",
         );
 
         generateImage({
@@ -652,7 +652,7 @@ describe("validateRestrictions", () => {
           {
             type: "image/png",
           },
-          "test.png"
+          "test.png",
         );
 
         generateImage({
@@ -699,7 +699,7 @@ describe("validateRestrictions", () => {
           {
             type: "image/png",
           },
-          "green.png"
+          "green.png",
         );
 
         generateImage({
@@ -746,7 +746,7 @@ describe("validateRestrictions", () => {
           {
             type: "image/png",
           },
-          "test.png"
+          "test.png",
         );
 
         generateImage({

@@ -5,7 +5,7 @@ import { AVAILABLE_REVISIONS_SELECT_UNRELEASED } from "../constants";
 describe("releases", () => {
   it("should return the initial state", () => {
     expect(availableRevisionsSelect(undefined, {})).toEqual(
-      AVAILABLE_REVISIONS_SELECT_UNRELEASED
+      AVAILABLE_REVISIONS_SELECT_UNRELEASED,
     );
   });
 

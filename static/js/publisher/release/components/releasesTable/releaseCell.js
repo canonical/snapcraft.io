@@ -64,7 +64,7 @@ const ReleasesTableReleaseCell = (props) => {
     [previousRevision, pendingProgressiveState] = getProgressiveState(
       channel,
       arch,
-      pendingRelease
+      pendingRelease,
     );
   }
 
@@ -166,7 +166,7 @@ const ReleasesTableReleaseCell = (props) => {
             arch,
             risk,
             track,
-            branchName
+            branchName,
           )}
         />
       )}
@@ -225,5 +225,5 @@ const mapDispatchToProps = (dispatch) => {
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps
+  mapDispatchToProps,
 )(ReleasesTableReleaseCell);

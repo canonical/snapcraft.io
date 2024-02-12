@@ -22,7 +22,7 @@ function initBanner(holder, banners, nextState) {
       bannerImage={banner}
       updateImageState={nextState}
       restrictions={BANNER_RESTRICTIONS}
-    />
+    />,
   );
 }
 

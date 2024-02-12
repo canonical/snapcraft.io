@@ -36,7 +36,7 @@ function buildStatus() {
   getStatuses()
     .then((data) => {
       const snapListRows = document.querySelectorAll(
-        "[data-js='snap-list-row']"
+        "[data-js='snap-list-row']",
       );
 
       snapListRows.forEach((row) => addBuildStatus(row, data));

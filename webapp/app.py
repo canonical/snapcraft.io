@@ -3,6 +3,7 @@ A Flask application for snapcraft.io.
 
 The web frontend for the snap store.
 """
+
 import talisker.requests
 import webapp.api
 

@@ -42,7 +42,7 @@ describe("DatalistSelect", () => {
 
   it("should render the loading icon when loading", () => {
     const { container } = render(
-      <DatalistSelect {...essentialProps} isLoading={true} />
+      <DatalistSelect {...essentialProps} isLoading={true} />,
     );
     const iconClassList =
       container.querySelector(".p-icon-container").firstChild.classList;

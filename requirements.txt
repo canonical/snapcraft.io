@@ -16,7 +16,7 @@ emoji==2.9.0
 humanize==4.9.0
 mistune==2.0.5
 pybadges==3.0.1
-pycountry==22.3.5
+pycountry==23.12.11
 pymacaroons==0.13.0
 python-dateutil==2.8.2
 requests==2.31.0
@@ -28,5 +28,5 @@ user-agents==2.2.0
 # Development dependencies
 Flask-Testing==0.8.1
 freezegun==1.4.0
-black==23.12.1
+black==24.1.1
 flake8==6.1.0

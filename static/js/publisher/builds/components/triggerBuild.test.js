@@ -6,7 +6,7 @@ describe("TriggerBuild", () => {
   it("renders the trigger new build button and the button triggers a build on click", () => {
     const triggerBuildHandler = jest.fn();
     const { container } = render(
-      <TriggerBuild onClick={triggerBuildHandler} />
+      <TriggerBuild onClick={triggerBuildHandler} />,
     );
     const btn = container.querySelector("button");
     expect(btn.innerHTML).toEqual("Trigger new build");
@@ -17,7 +17,7 @@ describe("TriggerBuild", () => {
   it("renders with an error", () => {
     const { container } = render(<TriggerBuild hasError={true} />);
     expect(container.querySelector(".p-notification__title").innerHTML).toEqual(
-      "Error:"
+      "Error:",
     );
   });
 

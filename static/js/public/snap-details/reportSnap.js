@@ -41,7 +41,7 @@ export default function initReportSnap(
   snapName,
   toggleSelector,
   modalSelector,
-  formURL
+  formURL,
 ) {
   const toggle = document.querySelector(toggleSelector);
   const modal = document.querySelector(modalSelector);
@@ -64,7 +64,7 @@ export default function initReportSnap(
     e.preventDefault();
     buttonLoading(
       reportForm.querySelector("button[type=submit]"),
-      "Submitting…"
+      "Submitting…",
     );
 
     fetch(formURL, {

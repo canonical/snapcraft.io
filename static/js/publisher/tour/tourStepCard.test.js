@@ -54,7 +54,7 @@ describe("TourStepCard", () => {
         onSkipClick={onSkipClick}
         onNextClick={onNextClick}
         onPrevClick={onPrevClick}
-      />
+      />,
     );
   };
 

@@ -29,7 +29,7 @@ export default function initAccordion(accordionContainerSelector) {
       if (target && !target.disabled) {
         // Find any open panels within the container and close them.
         Array.from(
-          e.currentTarget.querySelectorAll("[aria-expanded=true]")
+          e.currentTarget.querySelectorAll("[aria-expanded=true]"),
         ).forEach((element) => toggleAccordion(element, false));
         // Open the target.
         toggleAccordion(target, true);
@@ -38,7 +38,7 @@ export default function initAccordion(accordionContainerSelector) {
 
   // Add event listeners to buttons that expand the next section of the accordion
   const nextButtons = [].slice.call(
-    document.querySelectorAll("[data-js='js-accordion-next-button']")
+    document.querySelectorAll("[data-js='js-accordion-next-button']"),
   );
   if (nextButtons) {
     nextButtons.forEach((button) => {
@@ -47,11 +47,11 @@ export default function initAccordion(accordionContainerSelector) {
 
         const currentPanel = button.closest(".p-accordion__group");
         const currentToggle = currentPanel.querySelector(
-          "[class*='p-accordion__tab']"
+          "[class*='p-accordion__tab']",
         );
         const nextPanel = currentPanel.nextElementSibling;
         const nextToggle = nextPanel.querySelector(
-          "[class*='p-accordion__tab']"
+          "[class*='p-accordion__tab']",
         );
 
         if (currentPanel && nextPanel) {
@@ -72,7 +72,7 @@ export function initAccordionButtons(continueButton) {
 
     const currentPanel = continueButton.closest(".p-accordion__group");
     const currentToggle = currentPanel.querySelector(
-      "[class*='p-accordion__tab']"
+      "[class*='p-accordion__tab']",
     );
     const currentSuccess = currentPanel.querySelector(".p-icon--success");
     const nextPanel = currentPanel.nextElementSibling;

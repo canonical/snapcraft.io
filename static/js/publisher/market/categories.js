@@ -19,26 +19,26 @@ function categories(form, state) {
 
 function initCategories() {
   const categoryHelpTextEl = document.querySelector(
-    ".js-categories-category1-help-text"
+    ".js-categories-category1-help-text",
   );
   const categorySecondaryAddEl = document.querySelector(
-    ".js-categories-category2-add"
+    ".js-categories-category2-add",
   );
   const categorySecondaryPickerEl = document.querySelector(
-    ".js-categories-category2-picker"
+    ".js-categories-category2-picker",
   );
   const categorySecondaryAddLink = document.querySelector(
-    ".js-categories-category2-add-link"
+    ".js-categories-category2-add-link",
   );
   const secondaryCategoryRemove = document.querySelector(
-    ".js-categories-category2-remove"
+    ".js-categories-category2-remove",
   );
 
   const primaryCategorySelectEl = document.querySelector(
-    "[name='primary_category']"
+    "[name='primary_category']",
   );
   const secondaryCategorySelectEl = document.querySelector(
-    "[name='secondary_category']"
+    "[name='secondary_category']",
   );
 
   const setSecondaryOptions = () => {
@@ -60,7 +60,7 @@ function initCategories() {
   const resetSecondaryCategory = () => {
     secondaryCategorySelectEl.value = "";
     secondaryCategorySelectEl.dispatchEvent(
-      new Event("change", { bubbles: true })
+      new Event("change", { bubbles: true }),
     );
   };
 

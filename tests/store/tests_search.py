@@ -317,9 +317,11 @@ class GetSearchViewTest(TestCase):
                 {
                     "package_name": snap["package_name"],
                     "media": snap["media"],
-                    "icon_url": snap["media"][0]["url"]
-                    if len(snap["media"]) > 0
-                    else "",
+                    "icon_url": (
+                        snap["media"][0]["url"]
+                        if len(snap["media"]) > 0
+                        else ""
+                    ),
                 }
             )
 

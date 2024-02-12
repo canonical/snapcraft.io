@@ -86,12 +86,12 @@ class BlogPosts {
 function snapDetailsPosts(
   holderSelector,
   templateSelector,
-  showOnSuccessSelector
+  showOnSuccessSelector,
 ) {
   const blogPosts = new BlogPosts(
     "/blog/api/snap-posts/",
     holderSelector,
-    templateSelector
+    templateSelector,
   );
 
   const snap = blogPosts.holder.dataset.snap;
@@ -119,7 +119,7 @@ function seriesPosts(holderSelector, templateSelector) {
   const blogPosts = new BlogPosts(
     "/blog/api/series/",
     holderSelector,
-    templateSelector
+    templateSelector,
   );
 
   const series = blogPosts.holder.dataset.series;

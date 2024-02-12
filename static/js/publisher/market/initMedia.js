@@ -16,7 +16,7 @@ function initMedia(mediaHolder, images, updateState) {
       updateState={updateState}
       restrictions={MEDIA_RESTRICTIONS}
     />,
-    mediaHolderEl
+    mediaHolderEl,
   );
 }
 

@@ -20,7 +20,7 @@ describe("storage commands", () => {
       },
       document.createElement("form"),
       "test",
-      ignoreChangeOnUnload
+      ignoreChangeOnUnload,
     );
   });
 
@@ -34,8 +34,8 @@ describe("storage commands", () => {
           },
           document.createElement("form"),
           "test",
-          ignoreChangeOnUnload
-        )
+          ignoreChangeOnUnload,
+        ),
       ).toEqual(undefined);
     });
   });
@@ -50,8 +50,8 @@ describe("storage commands", () => {
           },
           document.createElement("form"),
           "test",
-          ignoreChangeOnUnload
-        )
+          ignoreChangeOnUnload,
+        ),
       ).toEqual(undefined);
     });
   });
@@ -67,7 +67,7 @@ describe("storage commands", () => {
         },
         document.createElement("form"),
         "test",
-        ignoreChangeOnUnload
+        ignoreChangeOnUnload,
       );
     });
     it("removes the %-command key from localStorage", () => {
@@ -90,7 +90,7 @@ describe("storage commands", () => {
         },
         document.createElement("form"),
         "test",
-        ignoreChangeOnUnload
+        ignoreChangeOnUnload,
       );
     });
 
@@ -125,7 +125,7 @@ describe("storage commands", () => {
         },
         form,
         "test",
-        ignoreChangeOnUnload
+        ignoreChangeOnUnload,
       );
     });
 

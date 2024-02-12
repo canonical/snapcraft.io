@@ -47,7 +47,7 @@ const disabledBecauseNotSelected = "Select some revisions to promote them.";
 // TODO: move to selectors or helpers?
 const compareRevisionsPerArch = (
   currentRevisionsByArch,
-  targetRevisionsByArch
+  targetRevisionsByArch,
 ) => {
   if (currentRevisionsByArch) {
     return Object.keys(currentRevisionsByArch).every((arch) => {
@@ -176,7 +176,7 @@ const ReleasesTableChannelHeading = (props) => {
       if (
         compareRevisionsPerArch(
           rowRevisions,
-          pendingChannelMap[targetChannel.channel]
+          pendingChannelMap[targetChannel.channel],
         )
       ) {
         targetChannel.isDisabled = true;
@@ -189,7 +189,7 @@ const ReleasesTableChannelHeading = (props) => {
     } else {
       // order the channel names
       const channelOrder = sortChannels(
-        targetChannels.map((channel) => channel.channel)
+        targetChannels.map((channel) => channel.channel),
       ).list;
 
       // remap targetchannels to this new order
@@ -245,7 +245,7 @@ const ReleasesTableChannelHeading = (props) => {
       channelBuildDate =
         Object.values(revisions)[0].attributes["build-request-timestamp"] &&
         new Date(
-          Object.values(revisions)[0].attributes["build-request-timestamp"]
+          Object.values(revisions)[0].attributes["build-request-timestamp"],
         );
     }
   }
@@ -269,7 +269,7 @@ const ReleasesTableChannelHeading = (props) => {
     Object.values(rowRevisions).forEach(
       (revision) =>
         canBeReleased(revision) &&
-        props.promoteRevision(revision, targetChannel)
+        props.promoteRevision(revision, targetChannel),
     );
   };
 
@@ -412,5 +412,5 @@ const mapDispatchToProps = (dispatch) => {
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps
+  mapDispatchToProps,
 )(ReleasesTableChannelHeading);

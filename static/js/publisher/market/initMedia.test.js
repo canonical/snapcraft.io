@@ -15,7 +15,7 @@ describe("initMedia", () => {
     initMedia("#media-holder", [], () => {});
 
     expect(
-      holder.querySelectorAll(".p-listing-images__add-image").length
+      holder.querySelectorAll(".p-listing-images__add-image").length,
     ).toEqual(1);
   });
 });

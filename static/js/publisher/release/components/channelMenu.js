@@ -89,7 +89,7 @@ export default class ChannelMenu extends Component {
 
   render() {
     const canBePromoted = !this.props.targetChannels.every(
-      (targetChannel) => targetChannel.isDisabled
+      (targetChannel) => targetChannel.isDisabled,
     );
 
     const isDisabled = !canBePromoted && !this.props.closeChannel;

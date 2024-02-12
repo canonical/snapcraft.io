@@ -4,7 +4,7 @@
     background-color: #333;
 
     // https://github.com/canonical-web-and-design/vanilla-framework/issues/2753
-    @media screen and (max-width: 800px) {
+    @media screen and (width <= 800px) {
       padding-left: 0;
     }
 

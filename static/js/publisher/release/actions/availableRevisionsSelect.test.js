@@ -25,7 +25,7 @@ describe("availableRevisionsSelect actions", () => {
 
     it("should create an action to set value of available revisions select", () => {
       expect(setAvailableRevisionsSelect(value).type).toBe(
-        SET_AVAILABLE_REVISIONS_SELECT
+        SET_AVAILABLE_REVISIONS_SELECT,
       );
     });
 
@@ -57,7 +57,7 @@ describe("availableRevisionsSelect actions", () => {
 
     it("should dispatch SET_AVAILABLE_REVISIONS_SELECT action", () => {
       expect(store.getActions()).toContainEqual(
-        setAvailableRevisionsSelect(value)
+        setAvailableRevisionsSelect(value),
       );
     });
 
@@ -72,7 +72,7 @@ describe("availableRevisionsSelect actions", () => {
 
     it("should not dispatch SELECT_REVISION action for not selected revisions", () => {
       expect(store.getActions()).not.toContainEqual(
-        selectRevision(revisions[3])
+        selectRevision(revisions[3]),
       );
     });
 
@@ -98,7 +98,7 @@ describe("availableRevisionsSelect actions", () => {
               expect.objectContaining({
                 type: SELECT_REVISION,
               }),
-            ])
+            ]),
           );
         });
       });
@@ -139,16 +139,16 @@ describe("availableRevisionsSelect actions", () => {
 
         it("should dispatch SELECT_REVISION action for latest revisions with most recent version", () => {
           expect(store.getActions()).toContainEqual(
-            selectRevision(revisions[1])
+            selectRevision(revisions[1]),
           );
           expect(store.getActions()).toContainEqual(
-            selectRevision(revisions[3])
+            selectRevision(revisions[3]),
           );
         });
 
         it("should not dispatch SELECT_REVISION action for latest revisions with other versions", () => {
           expect(store.getActions()).not.toContainEqual(
-            selectRevision(revisions[2])
+            selectRevision(revisions[2]),
           );
         });
       });
@@ -176,7 +176,7 @@ describe("availableRevisionsSelect actions", () => {
               expect.objectContaining({
                 type: SELECT_REVISION,
               }),
-            ])
+            ]),
           );
         });
       });
@@ -217,16 +217,16 @@ describe("availableRevisionsSelect actions", () => {
 
         it("should dispatch SELECT_REVISION action for latest revisions with most recent build id", () => {
           expect(store.getActions()).toContainEqual(
-            selectRevision(revisions[1])
+            selectRevision(revisions[1]),
           );
           expect(store.getActions()).toContainEqual(
-            selectRevision(revisions[3])
+            selectRevision(revisions[3]),
           );
         });
 
         it("should not dispatch SELECT_REVISION action for latest revisions with other versions", () => {
           expect(store.getActions()).not.toContainEqual(
-            selectRevision(revisions[2])
+            selectRevision(revisions[2]),
           );
         });
       });

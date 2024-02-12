@@ -35,7 +35,7 @@ if (!Array.from) {
       // 3. ReturnIfAbrupt(items).
       if (arrayLike == null) {
         throw new TypeError(
-          "Array.from requires an array-like object - not null or undefined"
+          "Array.from requires an array-like object - not null or undefined",
         );
       }
 
@@ -47,7 +47,7 @@ if (!Array.from) {
         // 5. a If IsCallable(mapfn) is false, throw a TypeError exception.
         if (!isCallable(mapFn)) {
           throw new TypeError(
-            "Array.from: when provided, the second argument must be a function"
+            "Array.from: when provided, the second argument must be a function",
           );
         }
 

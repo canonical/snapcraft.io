@@ -73,7 +73,7 @@ describe("channelMap actions", () => {
   describe("releaseRevisionSuccess", () => {
     it("should create an action to release revision", () => {
       expect(releaseRevisionSuccess(revision, channel).type).toBe(
-        RELEASE_REVISION_SUCCESS
+        RELEASE_REVISION_SUCCESS,
       );
     });
 

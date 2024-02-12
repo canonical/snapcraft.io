@@ -20,7 +20,7 @@ const essentialProps = {
 describe("RepoConnect", () => {
   it("should render all critical elements", () => {
     const { container, queryByPlaceholderText } = render(
-      <RepoConnect {...essentialProps} />
+      <RepoConnect {...essentialProps} />,
     );
 
     expect(container.querySelectorAll("input").length).toEqual(2);

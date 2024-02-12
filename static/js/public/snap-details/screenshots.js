@@ -18,7 +18,7 @@ function clickCallback(event) {
 
 function filterImages() {
   return Array.from(
-    screenshotsEl.querySelectorAll("img, video, .js-video-slide")
+    screenshotsEl.querySelectorAll("img, video, .js-video-slide"),
   )
     .filter((image) => image.dataset.original)
     .map((image) => image.dataset.original);

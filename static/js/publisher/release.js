@@ -19,7 +19,7 @@ const initReleases = (
   releasesData,
   channelMap,
   tracks,
-  options
+  options,
 ) => {
   const store = createStore(
     releases,
@@ -32,7 +32,7 @@ const initReleases = (
         tracks,
       },
     },
-    composeEnhancers(applyMiddleware(thunk))
+    composeEnhancers(applyMiddleware(thunk)),
   );
   const container = document.querySelector(id);
   const root = createRoot(container);
@@ -46,7 +46,7 @@ const initReleases = (
           options={options}
         />
       </DndProvider>
-    </Provider>
+    </Provider>,
   );
 };
 

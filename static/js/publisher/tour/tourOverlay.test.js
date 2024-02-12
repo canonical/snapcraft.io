@@ -74,7 +74,7 @@ describe("TourOverlay", () => {
   describe("when moving to previous step", () => {
     it("should render TourStepCard for previous step", () => {
       const { getByText } = render(
-        <TourOverlay steps={steps} currentStepIndex={1} />
+        <TourOverlay steps={steps} currentStepIndex={1} />,
       );
 
       fireEvent.click(getByText("Previous step"));
@@ -84,7 +84,7 @@ describe("TourOverlay", () => {
 
     it("should scroll previous step into view", () => {
       const { getByText } = render(
-        <TourOverlay steps={steps} currentStepIndex={1} />
+        <TourOverlay steps={steps} currentStepIndex={1} />,
       );
 
       fireEvent.click(getByText("Previous step"));
@@ -98,7 +98,7 @@ describe("TourOverlay", () => {
       const hideTour = jest.fn();
 
       const { getByText } = render(
-        <TourOverlay steps={steps} hideTour={hideTour} />
+        <TourOverlay steps={steps} hideTour={hideTour} />,
       );
 
       fireEvent.click(getByText("Skip tour"));
@@ -110,7 +110,7 @@ describe("TourOverlay", () => {
       const hideTour = jest.fn();
 
       const { getByText } = render(
-        <TourOverlay steps={steps} hideTour={hideTour} />
+        <TourOverlay steps={steps} hideTour={hideTour} />,
       );
 
       fireEvent.click(getByText("Skip tour"));
@@ -125,7 +125,7 @@ describe("TourOverlay", () => {
       const hideTour = jest.fn();
 
       const { getByText } = render(
-        <TourOverlay steps={steps} currentStepIndex={1} hideTour={hideTour} />
+        <TourOverlay steps={steps} currentStepIndex={1} hideTour={hideTour} />,
       );
 
       fireEvent.click(getByText("Finish tour"));
@@ -137,7 +137,7 @@ describe("TourOverlay", () => {
       const hideTour = jest.fn();
 
       const { getByText } = render(
-        <TourOverlay steps={steps} currentStepIndex={1} hideTour={hideTour} />
+        <TourOverlay steps={steps} currentStepIndex={1} hideTour={hideTour} />,
       );
 
       fireEvent.click(getByText("Finish tour"));
@@ -173,7 +173,7 @@ describe("TourOverlay", () => {
       const hideTour = jest.fn();
 
       render(
-        <TourOverlay steps={steps} currentStepIndex={1} hideTour={hideTour} />
+        <TourOverlay steps={steps} currentStepIndex={1} hideTour={hideTour} />,
       );
 
       fireEvent.keyUp(document, { key: "Escape", keyCode: 27 });

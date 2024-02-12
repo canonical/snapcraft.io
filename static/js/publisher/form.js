@@ -56,7 +56,7 @@ function initForm(config, initialState, errors) {
 
       if (errorInput.scrollIntoView) {
         const stickyHeight = document.querySelector(
-          ".snapcraft-p-sticky"
+          ".snapcraft-p-sticky",
         ).scrollHeight;
         errorInput.scrollIntoView();
         window.scrollBy(0, -(stickyHeight + 16));
@@ -126,11 +126,11 @@ function initForm(config, initialState, errors) {
 
   if (config.mediaHolder) {
     const screenshots = state.images.filter(
-      (image) => image.type === "screenshot"
+      (image) => image.type === "screenshot",
     );
     initMedia(config.mediaHolder, screenshots, (newImages) => {
       const noneScreenshots = state.images.filter(
-        (item) => item.type !== "screenshot"
+        (item) => item.type !== "screenshot",
       );
       const newState = {
         ...state,
@@ -301,7 +301,7 @@ function initForm(config, initialState, errors) {
       ignoreChangesOnUnload = true;
 
       const updateMetadataModal = document.querySelector(
-        ".update-metadata-warning"
+        ".update-metadata-warning",
       );
 
       if (updateMetadataModal) {

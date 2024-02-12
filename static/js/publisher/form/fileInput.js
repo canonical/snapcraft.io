@@ -78,7 +78,7 @@ class FileInput extends React.Component {
   fileChangedHandler() {
     const { fileChangedCallback, restrictions } = this.props;
     const files = Array.from(this.input.files).map((file) =>
-      validateRestrictions(file, restrictions)
+      validateRestrictions(file, restrictions),
     );
 
     Promise.all(files).then((values) => {

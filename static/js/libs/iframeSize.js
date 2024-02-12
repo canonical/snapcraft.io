@@ -32,7 +32,7 @@ function sizeIframe(wrapperSelector) {
 export default (wrapperSelector) => {
   window.addEventListener(
     "resize",
-    debounce(sizeIframe.bind(this, wrapperSelector), 100)
+    debounce(sizeIframe.bind(this, wrapperSelector), 100),
   );
 
   sizeIframe(wrapperSelector);

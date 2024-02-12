@@ -31,7 +31,7 @@ describe("createStatus", () => {
       statusMessage: "Built, releasing soon",
     };
     expect(
-      createStatus("Built, releasing soon", "Releasing", 3, "releasing_soon")
+      createStatus("Built, releasing soon", "Releasing", 3, "releasing_soon"),
     ).toEqual(statusObject);
   });
 
@@ -44,7 +44,7 @@ describe("createStatus", () => {
       statusMessage: "Cancelled",
     };
     expect(createStatus("Cancelled", "Cancelled", 8, "cancelled")).toEqual(
-      statusObject
+      statusObject,
     );
   });
 });

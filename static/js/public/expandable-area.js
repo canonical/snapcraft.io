@@ -6,10 +6,10 @@
 */
 export default function initExpandableArea(
   overflowSelector,
-  heightMatchSelector
+  heightMatchSelector,
 ) {
   const showMoreContainer = [].slice.call(
-    document.querySelectorAll("[data-js='js-show-more']")
+    document.querySelectorAll("[data-js='js-show-more']"),
   );
 
   if (showMoreContainer && showMoreContainer.length > 0) {

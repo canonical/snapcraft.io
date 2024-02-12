@@ -53,14 +53,14 @@ const ReleasesTableDroppableRow = (props) => {
     accept: DND_ITEM_REVISIONS,
     drop: (item) => {
       item.revisions.forEach(
-        (r) => canBeReleased(r) && promoteRevision(r, channel)
+        (r) => canBeReleased(r) && promoteRevision(r, channel),
       );
 
       if (item.revisions.length > 1) {
         triggerGAEvent(
           "drop-channel",
           `${currentTrack}/${item.risk}/${item.branch ? item.branch : null}`,
-          `${currentTrack}/${risk}/${branchName}`
+          `${currentTrack}/${risk}/${branchName}`,
         );
       } else {
         triggerGAEvent(
@@ -68,7 +68,7 @@ const ReleasesTableDroppableRow = (props) => {
           `${currentTrack}/${item.risk}/${item.branch ? item.branch : null}/${
             item.architectures[0]
           }`,
-          `${currentTrack}/${risk}/${branchName}/${item.architectures[0]}`
+          `${currentTrack}/${risk}/${branchName}/${item.architectures[0]}`,
         );
       }
     },
@@ -80,7 +80,7 @@ const ReleasesTableDroppableRow = (props) => {
       const draggedChannel = getChannelName(
         currentTrack,
         item.risk,
-        item.branch
+        item.branch,
       );
       const dropChannel = getChannelName(currentTrack, risk, branchName);
 
@@ -214,5 +214,5 @@ const mapDispatchToProps = (dispatch) => {
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps
+  mapDispatchToProps,
 )(ReleasesTableDroppableRow);

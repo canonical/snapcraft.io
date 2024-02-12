@@ -74,7 +74,7 @@ describe("releases actions", () => {
         getErrorMessage({
           message: "error!",
           json: [{ message: "error1" }, { message: "error2" }],
-        })
+        }),
       ).toEqual("error! error1 error2");
     });
 
@@ -83,7 +83,7 @@ describe("releases actions", () => {
         getErrorMessage({
           message: "error!",
           json: { errors: [{ message: "error1" }, { message: "error2" }] },
-        })
+        }),
       ).toEqual("error! error1 error2");
     });
 
@@ -97,7 +97,7 @@ describe("releases actions", () => {
               message: "error message",
             },
           ],
-        })
+        }),
       ).toEqual("error message");
     });
   });

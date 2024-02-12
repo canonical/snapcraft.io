@@ -10,18 +10,18 @@ describe("Banner", () => {
     const { container } = render(<Banner />);
 
     expect(
-      container.querySelectorAll(".p-market-banner__image-holder").length
+      container.querySelectorAll(".p-market-banner__image-holder").length,
     ).toEqual(1);
   });
 
   describe("background image", () => {
     it("should show the background image if set at render", () => {
       const { container } = render(
-        <Banner bannerImage={{ url: "banner.png" }} />
+        <Banner bannerImage={{ url: "banner.png" }} />,
       );
 
       expect(
-        container.querySelector(backgroundSelector).getAttribute("src")
+        container.querySelector(backgroundSelector).getAttribute("src"),
       ).toEqual("banner.png");
     });
 
@@ -49,10 +49,10 @@ describe("Banner", () => {
 
       setTimeout(() => {
         expect(
-          container.querySelectorAll(".p-notification--negative").length
+          container.querySelectorAll(".p-notification--negative").length,
         ).toEqual(0);
         expect(
-          container.querySelector(backgroundSelector).getAttribute("src")
+          container.querySelector(backgroundSelector).getAttribute("src"),
         ).toEqual("banner.png");
         done();
       }, 500);
@@ -64,7 +64,7 @@ describe("Banner", () => {
           restrictions={{
             accept: ["image/jpeg"],
           }}
-        />
+        />,
       );
 
       window.URL = {
@@ -88,7 +88,7 @@ describe("Banner", () => {
 
       setTimeout(() => {
         expect(
-          container.querySelectorAll(".p-notification--negative").length
+          container.querySelectorAll(".p-notification--negative").length,
         ).toEqual(1);
         done();
       }, 500);
@@ -102,7 +102,7 @@ describe("Banner", () => {
             url: "banner.png",
           }}
           updateImageState={cb}
-        />
+        />,
       );
 
       const deleteButton = container.querySelector(".p-market-banner__remove");
@@ -121,7 +121,7 @@ describe("Banner", () => {
             url: "banner.png",
           }}
           updateImageState={cb}
-        />
+        />,
       );
 
       const backgroundImage = container.querySelector(backgroundSelector);
@@ -136,7 +136,7 @@ describe("Banner", () => {
 
     it("should set focus class when focused and remove it on blur", () => {
       const { container } = render(
-        <Banner bannerImage={{ url: "banner.png" }} />
+        <Banner bannerImage={{ url: "banner.png" }} />,
       );
 
       const image = container.querySelector(backgroundSelector);

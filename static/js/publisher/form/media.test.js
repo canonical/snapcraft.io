@@ -20,7 +20,7 @@ describe("Media", () => {
             status: "uploaded",
           },
         ]}
-      />
+      />,
     );
     expect(container.querySelectorAll(imageSelector).length).toEqual(1);
     expect(container.querySelector(`[src="test"]`).length).toBeUndefined();
@@ -35,7 +35,7 @@ describe("Media", () => {
             status: "uploaded",
           },
         ]}
-      />
+      />,
     );
 
     const image = container.querySelector(imageSelector);
@@ -53,7 +53,7 @@ describe("Media", () => {
             status: "uploaded",
           },
         ]}
-      />
+      />,
     );
 
     const image = container.querySelector(imageSelector);
@@ -74,11 +74,11 @@ describe("Media", () => {
           { url: "test-2", status: "uploaded" },
         ]}
         mediaLimit={1}
-      />
+      />,
     );
 
     expect(
-      container.querySelectorAll(".p-notification--caution").length
+      container.querySelectorAll(".p-notification--caution").length,
     ).toEqual(1);
   });
 
@@ -97,7 +97,7 @@ describe("Media", () => {
             },
           ]}
           updateState={updateState}
-        />
+        />,
       );
 
       const addButton = container.querySelector(addImageSelector);
@@ -130,7 +130,7 @@ describe("Media", () => {
         expect(cont.querySelectorAll(`[src="test"]`).length).toEqual(1);
         expect(
           cont.querySelectorAll(`.js-media-item-holder [src="test-upload"]`)
-            .length
+            .length,
         ).toEqual(1);
 
         expect(updateState.mock.calls.length).toEqual(1);
@@ -177,7 +177,7 @@ describe("Media", () => {
             },
           ]}
           updateState={updateState}
-        />
+        />,
       );
 
       cont = container;
@@ -185,7 +185,7 @@ describe("Media", () => {
 
     it("should remove an item from images list", () => {
       const deleteImages = cont.querySelectorAll(
-        ".p-listing-images__delete-image"
+        ".p-listing-images__delete-image",
       );
       expect(deleteImages.length).toEqual(3);
 
@@ -204,7 +204,7 @@ describe("Media", () => {
       ]);
 
       const newDeleteImages = cont.querySelectorAll(
-        ".p-listing-images__delete-image"
+        ".p-listing-images__delete-image",
       );
 
       expect(newDeleteImages.length).toEqual(2);
@@ -218,11 +218,11 @@ describe("Media", () => {
         restrictions={{
           size: { max: 0.00001 },
         }}
-      />
+      />,
     );
 
     const addImageButton = container.querySelector(
-      ".p-listing-images__add-image"
+      ".p-listing-images__add-image",
     );
     fireEvent.click(addImageButton);
 
@@ -245,7 +245,7 @@ describe("Media", () => {
     // timeout to wait for the promises to resolve
     setTimeout(() => {
       expect(
-        container.querySelectorAll(".p-notification--negative").length
+        container.querySelectorAll(".p-notification--negative").length,
       ).toEqual(1);
       done();
     }, 500);

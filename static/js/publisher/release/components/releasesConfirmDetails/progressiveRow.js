@@ -64,7 +64,7 @@ class ProgressiveRow extends React.Component {
       release.progressive.changes.some((change) => change.key === "paused")
     ) {
       const paused = release.progressive.changes.find(
-        (change) => change.key === "paused"
+        (change) => change.key === "paused",
       ).value;
       progress = (
         <Fragment>

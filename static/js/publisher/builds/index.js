@@ -118,7 +118,7 @@ class Builds extends React.Component {
               this.updateQueueTime();
             }
             this.triggerFetchBuilds();
-          }
+          },
         );
       })
       .catch(() => {
@@ -155,7 +155,7 @@ class Builds extends React.Component {
           if (result.status === PENDING) {
             setTimeout(
               () => this.triggerFetchBuildRequest(build_id),
-              this.props.updateFreq
+              this.props.updateFreq,
             );
           } else if (result.status === COMPLETED) {
             this.setState({
@@ -238,7 +238,7 @@ class Builds extends React.Component {
       },
       () => {
         this.fetchBuilds();
-      }
+      },
     );
   }
 
@@ -297,7 +297,7 @@ export function initBuilds(
   csrf_token,
   builds,
   totalBuilds,
-  singleBuild
+  singleBuild,
 ) {
   const container = document.querySelector(id);
   const root = createRoot(container);
@@ -309,6 +309,6 @@ export function initBuilds(
       totalBuilds={totalBuilds}
       updateFreq={singleBuild ? null : 30000}
       singleBuild={singleBuild}
-    />
+    />,
   );
 }
