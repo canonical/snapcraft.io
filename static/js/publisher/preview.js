@@ -1,14 +1,13 @@
-import * as MarkdownIt from "markdown-it";
+import markdownit from "markdown-it";
 import {
   default as initScreenshots,
   terminateScreenshots,
 } from "../public/snap-details/screenshots";
 import { diffState } from "./state";
-
 // Ensure markdown is set to be the same as `webapp/markdown.py` config
 // doesn't include the custom ascii bullet-point (as this is legacy
 // and shouldn't be promoted).
-const md = new MarkdownIt({
+const md = markdownit({
   linkify: true,
 }).disable([
   "table",
