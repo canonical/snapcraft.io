@@ -32,10 +32,10 @@ def login_required(func):
 def exchange_required(func):
     @functools.wraps(func)
     def is_exchanged(*args, **kwargs):
-        if "developer_token" not in flask.session:
-            flask.session["developer_token"] = (
-                publisher_api.exchange_dashboard_macaroons(flask.session)
-            )
+        if "exchanged_developer_token" not in flask.session:
+            result = publisher_api.exchange_dashboard_macaroons(flask.session)
+            flask.session["developer_token"] = result
+            flask.session["exchanged_developer_token"] = True
         return func(*args, **kwargs)
 
     return is_exchanged
