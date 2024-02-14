@@ -27,7 +27,7 @@ function SectionNav({ sectionName }: { sectionName: string }) {
               </Link>
             </li>
             {/* If success then models and signing keys are available */}
-            {data.success && (
+            {data.success && !data.data?.Code && (
               <>
                 <li className="p-tabs__item">
                   <Link
