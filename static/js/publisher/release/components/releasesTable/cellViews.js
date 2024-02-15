@@ -282,7 +282,7 @@ export const ReleasesTableCellView = (props) => {
       className={className}
       onMouseEnter={() => {
         const hoveredRow = document.querySelector(
-          ".p-releases-table__row.is-hovered"
+          ".p-releases-table__row.is-hovered",
         );
 
         if (hoveredRow) {
