@@ -184,6 +184,8 @@ export const RevisionInfo = ({
             isProgressive={isProgressive}
             previousRevision={previousRevision?.revision}
           />
+          &nbsp;
+          {!releasable && <i className="p-icon--warning"></i>}
         </span>
         <span className="p-release-data__meta">
           {isProgressive
@@ -280,7 +282,7 @@ export const ReleasesTableCellView = (props) => {
       className={className}
       onMouseEnter={() => {
         const hoveredRow = document.querySelector(
-          ".p-releases-table__row.is-hovered",
+          ".p-releases-table__row.is-hovered"
         );
 
         if (hoveredRow) {
