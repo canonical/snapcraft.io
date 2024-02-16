@@ -184,6 +184,8 @@ export const RevisionInfo = ({
             isProgressive={isProgressive}
             previousRevision={previousRevision?.revision}
           />
+          &nbsp;
+          {!releasable && <i className="p-icon--warning"></i>}
         </span>
         <span className="p-release-data__meta">
           {isProgressive
