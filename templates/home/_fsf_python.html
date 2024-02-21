@@ -27,27 +27,46 @@
     </div>
     <div class ="p-show-more is-collapsed col-6" data-js="js-show-more">
       <pre class="p-code-yaml"><b>name</b>: offlineimap
-<b>version</b>: '1.0'
+<b>base</b>: core18
 <b>summary</b>: OfflineIMAP
 <b>description</b>: |
 OfflineIMAP is software that downloads [&hellip;]
 
-<b>confinement</b>: devmode
-<b>base</b>: core18
-
-<b>parts</b>:
-<b>offlineimap</b>:
-  <b>plugin</b>: python
-  <b>python-version</b>: python2
-  <b>source</b>: https://github.com/snapcraft-docs/offlineimap.git
-  <b>stage-packages</b>:
-    - python-six
+<b>adopt-info</b>: offlineimap
+<b>confinement</b>: strict
 
 <b>apps</b>:
 <b>offlineimap</b>:
-  <b>command</b>: bin/offlineimap</pre>
+  <b>command</b>: bin/offlineimap
+  <b>plugs:</b>
+    - network
+    - home
+    - removable-media
 
-    {% include "home/_fsf_yaml_show_more.html" %}
+<b>parts</b>:
+  <b>offlineimap</b>:
+    <b>plugin</b>: python
+    <b>python-version</b>: python2
+    <b>source</b>: https://github.com/snapcraft-docs/offlineimap.git
+    <b>build-packages</b>:
+      - python-gssapi
+    <b>python-packages</b>:
+      - portalocker[cygwin]
+      - rfc6555
+      - six
+    <b>override-pull</b>: |
+      snapcraftctl pull
+      last_committed_tag="$(git describe --tags --abbrev=0)"
+      last_released_tag=v"$(cd /tmp; snap info offlineimap | awk '$1 == "latest/beta:" { print $2 }')"
+      if [ "${last_committed_tag}" != "${last_released_tag}" ]; then
+        echo "checking out ${last_committed_tag}"
+        git fetch
+        git checkout "${last_committed_tag}"
+      fi
+      snapcraftctl set-version "$(echo $last_committed_tag | tr -d 'v')"
+      snapcraftctl set-grade "stable"</pre>
+
+        {% include "home/_fsf_yaml_show_more.html" %}
 
     </div>
   </div>
