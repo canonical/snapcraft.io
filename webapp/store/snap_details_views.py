@@ -22,6 +22,10 @@ def snap_details_views(store, api):
     def _get_context_snap_details(snap_name):
         details = api.get_item_details(snap_name, api_version=2)
 
+        # 404 for any snap under quarantine
+        if details["snap"]["publisher"]["username"] == "snap-quarantine":
+            flask.abort(404, "No snap named {}".format(snap_name))
+
         # When removing all the channel maps of an existing snap the API,
         # responds that the snaps still exists with data.
         # Return a 404 if not channel maps, to avoid having a error.
