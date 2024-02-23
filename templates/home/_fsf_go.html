@@ -21,31 +21,33 @@
   <hr class="p-rule">
   <div class="row">
     <div class="col-3">
-      <h3 class="p-heading--5">Here’s how httplab defines snapcraft.yaml:</h3>
+      <h3 class="p-heading--5">Here’s how <a href=https://github.com/degville/woke-snap>Woke</a> defines snapcraft.yaml:</h3>
     </div>
     <div class ="p-show-more is-collapsed col-6" data-js="js-show-more">
-      <pre class="p-code-yaml"><b>name</b>: httplab
-<b>version</b>: '0.1.0+git'
-<b>summary</b>: An interactive web server
+      <pre class="p-code-yaml"><b>name</b>: woke
+<b>summary</b>: Detect non-inclusive language in your source code
 <b>description</b>: |
-  HTTPLab let you inspect HTTP requests [&hellip;]
-
+  Creating an inclusive work environment is imperative to a healthy,
+  supportive, and productive culture, and an environment where everyone
+  feels welcome and included. woke is a text file analysis tool that finds
+  places within your source code that contain non-inclusive language and
+  suggests replacing them with more inclusive alternatives.
+<b>version</b>: git
 <b>grade</b>: stable
-<b>confinement</b>: strict
+<b>base</b>: core20
+
+<b>confinement</b>: devmode
 
 <b>apps</b>:
-  <b>httplab</b>:
-    <b>command</b>: httplab
+  <b>woke</b>:
+    <b>command</b>: bin/woke
     <b>plugs</b>:
-      - network
-      - network-bind
-
+      - home
 <b>parts</b>:
-  <b>httplab</b>:
+  <b>woke</b>:
     <b>plugin</b>: go
-    <b>source</b>: ../../
     <b>source-type</b>: git
-    <b>go-importpath</b>: github.com/gchaincl/httplab</pre>
+    <b>source</b>: https://github.com/get-woke/woke</pre>
 
       {% include "home/_fsf_yaml_show_more.html" %}
 
