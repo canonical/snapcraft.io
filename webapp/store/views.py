@@ -295,6 +295,10 @@ def store_blueprint(store_query=None):
         A view to display the publisher details page for specific publisher.
         """
 
+        # 404 for the snap-quarantine publisher
+        if publisher == "snap-quarantine":
+            flask.abort(404)
+
         publisher_content_path = flask.current_app.config["CONTENT_DIRECTORY"][
             "PUBLISHER_PAGES"
         ]
