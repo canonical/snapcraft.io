@@ -26,19 +26,22 @@
 <b>description</b>: |
   This example launches a ROS talker and listener.
 
-<b>base</b>: core18
 <b>confinement</b>: devmode
+<b>base</b>: core20
 
 <b>parts</b>:
   <b>ros-tutorials</b>:
     <b>plugin</b>: catkin
     <b>source</b>: https://github.com/ros/ros_tutorials.git
-    <b>source-branch</b>: melodic-devel
-    <b>source-space</b>: roscpp_tutorials/
+    <b>source-branch</b>: noetic-devel
+    <b>catkin-packages</b>: [roscpp_tutorials]
+    <b>stage-packages</b>:
+      - ros-noetic-roslaunch
 
 <b>apps</b>:
   <b>ros-talker-listener</b>:
-    <b>command</b>: roslaunch roscpp_tutorials talker_listener.launch</pre>
+    <b>command</b>: opt/ros/noetic/bin/roslaunch roscpp_tutorials talker_listener.launch
+    <b>extensions</b>: [ros1-noetic]</pre>
 
       {% include "home/_fsf_yaml_show_more.html" %}
 
