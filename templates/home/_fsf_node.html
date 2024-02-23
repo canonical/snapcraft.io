@@ -17,26 +17,32 @@
   <hr class="p-rule">
   <div class="row">
     <div class="col-3">
-      <h3 class="p-heading--5">Here's how <a href="https://snapcraft.io/wethr">wethr</a> defines snapcraft.yaml:</h3>
+      <h3 class="p-heading--5">Here's how <a href="https://github.com/snapcraft-docs/wethr">wethr</a> defines snapcraft.yaml:</h3>
     </div>
     <div class ="p-show-more is-collapsed col-6" data-js="js-show-more">
       <pre class="p-code-yaml"><b>name</b>: wethr
-<b>version</b>: '1.0'
+<b>version</b>: git
 <b>summary</b>: Command line weather tool.
 <b>description</b>: |
-  Get current weather [&hellip;]
+  Get current weather:-
+    $ wethr
+  Get current weather in metric units
+    $ wethr --metric
+  Get current weather in imperial units
+    $ wethr --imperial
 
-<b>confinement</b>: devmode
-<b>base</b>: core18
-
-<b>parts</b>:
-  <b>wethr</b>:
-    <b>plugin</b>: nodejs
-    <b>source</b>: https://github.com/twobucks/wethr.git
+<b>confinement</b>: strict
+<b>base</b>: core20
 
 <b>apps</b>:
   <b>wethr</b>:
-    <b>command</b>: wethr</pre>
+    <b>command</b>: wethr
+
+<b>parts</b>:
+  <b>wethr</b>:
+    <b>plugin</b>: npm
+    <b>npm-node-version</b>: 14.16.1
+    <b>source</b>: .</pre>
 
         {% include "home/_fsf_yaml_show_more.html" %}
 
