@@ -18,153 +18,47 @@
   <hr class="p-rule">
     <div class="row">
       <div class="col-3">
-        <h3 class="p-heading--5">Here's how <a href="https://snapcraft.io/dosbox-x">dosbox</a> defines snapcraft.yaml:</h3>
+        <h3 class="p-heading--5">Here's how <a href="https://snapcraft.io/docs/c-c-applications">DOSBox</a> defines snapcraft.yaml:</h3>
       </div>
       <div class ="p-show-more is-collapsed col-6" data-js="js-show-more">
         <pre class="p-code-yaml"><b>name</b>: dosbox
-<b>adopt-info</b>: dosbox-x
-<b>base</b>: core22
+<b>version</b>: "0.74-svn"
+<b>summary</b>: DOS emulator
+<b>description</b>: |
+  DOSBox is a x86 emulator with Tandy/Hercules/
+  CGA/EGA/VGA/SVGA graphics sound and DOS. It's
+  been designed to run old DOS games under
+  platforms that don't support it.
 
-<b>architectures</b>:
-  - build-on: i386
-  - build-on: amd64
-
-<b>confinement</b>: strict
-<b>grade</b>: stable
-
-<b>assumes</b>:
-  - snapd2.36
-
-<b>layout</b>:
-  <b>/usr/share/dosbox-x</b>:
-    <b>bind</b>: $SNAP/usr/share/dosbox-x
-  <b>/usr/share/sounds</b>:
-    <b>bind</b>: $SNAP/usr/share/sounds
-
-<b>icon</b>: snap/gui/dosbox-x.svg
-
-<b>apps</b>:
-  <b>dosbox</b>:
-    <b>command</b>: bin/desktop-launch $SNAP/usr/bin/dosbox-x
-    <b>desktop</b>: usr/share/applications/com.dosbox_x.DOSBox-X.desktop
-    <b>common-id</b>: com.dosbox_x.DOSBox-X
-    <b>environment</b>:
-      <b>LD_LIBRARY_PATH</b>: "$SNAP/usr/lib:$SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/:$SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/pulseaudio"
-      <b>DISABLE_WAYLAND</b>: 1
-    <b>plugs</b>:
-      - audio-playback
-      - desktop
-      - desktop-legacy
-      [&hellip;]
-      - x11
+<b>base</b>: core18
+<b>confinement</b>: devmode
 
 <b>parts</b>:
   <b>dosbox</b>:
     <b>plugin</b>: autotools
-    <b>after</b>: [desktop-glib-only,ffmpeg]
-    <b>parse-info</b>: [usr/share/metainfo/com.dosbox_x.DOSBox-X.metainfo.xml]
-    <b>source-type</b>: git
-    <b>source</b>: https://github.com/joncampbell123/dosbox-x.git
-    <b>autotools-configure-parameters</b>:
-      - --prefix=/usr
-      - --enable-debug=heavy
-      - --enable-sdl2
-    <b>build-environment</b>:
-      <b>- LD_LIBRARY_PATH</b>: ${CRAFT_STAGE}/usr/lib
-    <b>override-build</b>:
-      last_committed_tag="$(git describe --tags --abbrev=0)"
-      last_committed_tag_ver="$(echo ${last_committed_tag} | sed -e 's/dosbox-x-//' -e 's/wip-//' -e 's/windows-//' -e 's/v//')"
-      last_released_tag="$(snap info dosbox-x | awk '$1 == "latest/beta:" { print $2 }')"
+    <b>source-type</b>: tar
+    <b>source</b>: http://source.dosbox.com/dosboxsvn.tgz
+    <b>build-packages</b>:
+      - g++
+      - make
+      - libsdl1.2-dev
+      [&hellip;]
+      - libasound2-dev
+    <b>stage-packages</b>:
+      - freeglut3
+      - libsdl-sound1.2
+      - libsdl-net1.2
+      [&hellip;]
+      - zlib1g
 
-      if [ "${last_committed_tag_ver}" != "${last_released_tag}" ]; then
-        git fetch
-        git checkout "${last_committed_tag}"
-      fi
+<b>apps</b>:
+  <b>dosbox</b>:
+    <b>command</b>: dosbox
+    <b>environment</b>:
+      <b>"LD_LIBRARY_PATH"</b>: "$SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/pulseaudio"
+      <b>"DISABLE_WAYLAND"</b>: "1"</pre>
 
-      snapcraftctl build
-
-      desktop-file-edit --set-key=Icon --set-value='${SNAP}/usr/share/icons/hicolor/scalable/apps/dosbox-x.svg' $SNAPCRAFT_PART_INSTALL/usr/share/applications/com.dosbox_x.DOSBox-X.desktop || true
-      <b>build-packages</b>:
-        - desktop-file-utils
-        - g++
-        - libasound2-dev
-        [&hellip;]
-        -nasm
-      <b>stage-packages</b>:
-        - fluid-soundfont-gm
-        - libasound2
-        - libbluray2
-        [&hellip;]
-        -yad
-
-      <b>desktop-glib-only</b>:
-        <b>plugin</b>: make
-        <b>source</b>: https://github.com/ubuntu/snapcraft-desktop-helpers.git
-        <b>source-subdir</b>: glib-only
-        <b>build-packages</b>:
-          - libglib2.0-dev
-        <b>stage-packages</b>:
-          - libglib2.0-bin
-
-      <b>nv-codec-headers</b>:
-        <b>plugin</b>: make
-        <b>source</b>: https://github.com/FFmpeg/nv-codec-headers.git
-        <b>source-branch</b>: 'old/sdk/10.0'
-        <b>override-build</b>: |
-          make install PREFIX=/usr
-        <b>build-packages</b>:
-          - pkg-config
-
-      <b>fdk-aac</b>:
-        <b>plugin</b>: autotools
-        <b>source</b>: https://github.com/mstorsjo/fdk-aac/archive/v2.0.2.tar.gz
-        <b>build-packages</b>:
-          - g++
-        <b>autotools-configure-parameters</b>:
-          - --prefix=/usr
-          - --disable-static
-        <b>prime</b>:
-          - usr/lib
-          - usr/lib/pkgconfig
-          - usr/include
-
-      <b>ffmpeg</b>:
-        <b>plugin</b>: autotools
-        <b>source</b>: https://github.com/FFmpeg/FFmpeg.git
-        <b>source-branch</b>: release/4.4
-        <b>after</b>:
-          - nv-codec-headers
-          - fdk-aac
-        <b>build-packages</b>:
-          - libass-dev
-          - libbz2-dev
-          - libdrm-dev
-          [&hellip;]
-          - yasm
-        <b>stage-packages</b>:
-          - libass9
-          - libdrm2
-          - libgnutls30
-          [&hellip;]
-          - ocl-icd-libopencl1
-          <b>- on amd64</b>:
-            - i965-va-driver
-          <b>- on i386</b>:
-            - i965-va-driver
-        <b>autotools-configure-parameters</b>:
-          - --prefix=/usr
-          - --disable-debug
-          - --disable-doc
-          [&hellip;]
-          - --enable-xlib
-        <b>prime</b>:
-          - usr/bin
-          - usr/lib
-          - usr/lib/pkgconfig
-          [&hellip;]
-          - -usr/share/man</pre>
-
-            {% include "home/_fsf_yaml_show_more.html" %}
+        {% include "home/_fsf_yaml_show_more.html" %}
 
     </div>
   </div>
