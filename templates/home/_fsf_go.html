@@ -25,28 +25,29 @@
     </div>
     <div class ="p-show-more is-collapsed col-6" data-js="js-show-more">
       <pre class="p-code-yaml"><b>name</b>: httplab
-<b>version</b>: '1.0'
-<b>summary</b>: An interactive web server.
+<b>version</b>: '0.1.0+git'
+<b>summary</b>: An interactive web server
 <b>description</b>: |
   HTTPLab let you inspect HTTP requests [&hellip;]
 
-<b>confinement</b>: devmode
-<b>base</b>: core18
+<b>grade</b>: stable
+<b>confinement</b>: strict
+
+<b>apps</b>:
+  <b>httplab</b>:
+    <b>command</b>: httplab
+    <b>plugs</b>:
+      - network
+      - network-bind
 
 <b>parts</b>:
   <b>httplab</b>:
     <b>plugin</b>: go
-    <b>go-importpath</b>: github.com/gchaincl/httplab
-    <b>source</b>: https://github.com/gchaincl/httplab
+    <b>source</b>: ../../
     <b>source-type</b>: git
-    <b>build-packages</b>:
-      - gcc
+    <b>go-importpath</b>: github.com/gchaincl/httplab</pre>
 
-<b>apps</b>:
-  <b>httplab</b>:
-    <b>command</b>: bin/httplab</pre>
-
-        {% include "home/_fsf_yaml_show_more.html" %}
+      {% include "home/_fsf_yaml_show_more.html" %}
 
     </div>
   </div>
