@@ -18,17 +18,17 @@
   <hr class="p-rule">
     <div class="row">
       <div class="col-3">
-        <h3 class="p-heading--5">Here's how <a href="https://snapcraft.io/dosbox-x">dosbox</a> defines snapcraft.yaml:</h3>
+        <h3 class="p-heading--5">Here's how <a href="https://snapcraft.io/docs/c-c-applications">DOSBox</a> defines snapcraft.yaml:</h3>
       </div>
       <div class ="p-show-more is-collapsed col-6" data-js="js-show-more">
         <pre class="p-code-yaml"><b>name</b>: dosbox
 <b>version</b>: "0.74-svn"
 <b>summary</b>: DOS emulator
 <b>description</b>: |
-    DOSBox is a x86 emulator with Tandy/Hercules/[&hellip;]
+  DOSBox is a x86 emulator with Tandy/Hercules/ [&hellip;]
 
-<b>confinement</b>: devmode
 <b>base</b>: core18
+<b>confinement</b>: devmode
 
 <b>parts</b>:
   <b>dosbox</b>:
@@ -36,25 +36,24 @@
     <b>source-type</b>: tar
     <b>source</b>: http://source.dosbox.com/dosboxsvn.tgz
     <b>build-packages</b>:
-    - g++
-    - make
-    - libsdl1.2-dev
-    [&hellip;]
-    - libasound2-dev
+      - g++
+      - make
+      - libsdl1.2-dev
+      [&hellip;]
+      - libasound2-dev
     <b>stage-packages</b>:
-    - libsdl-sound1.2
-    - libsdl-net1.2
-    - libxcursor1
-    [&hellip;]
-    - zlib1g
+      - freeglut3
+      - libsdl-sound1.2
+      - libsdl-net1.2
+      [&hellip;]
+      - zlib1g
 
-  <b>apps</b>:
-    <b>dosbox</b>:
-      <b>command</b>: dosbox
-      <b>environment</b>:
-        "LD_LIBRARY_PATH": "$SNAP/usr/lib/
-        $SNAPCRAFT_ARCH_TRIPLET/pulseaudio"
-        "DISABLE_WAYLAND": "1"</pre>
+<b>apps</b>:
+  <b>dosbox</b>:
+    <b>command</b>: dosbox
+    <b>environment</b>:
+      <b>"LD_LIBRARY_PATH"</b>: "$SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/pulseaudio"
+      <b>"DISABLE_WAYLAND"</b>: "1"</pre>
 
         {% include "home/_fsf_yaml_show_more.html" %}
 

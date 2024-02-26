@@ -21,32 +21,31 @@
   <hr class="p-rule">
   <div class="row">
     <div class="col-3">
-      <h3 class="p-heading--5">Here’s how httplab defines snapcraft.yaml:</h3>
+      <h3 class="p-heading--5">Here’s how <a href=https://github.com/degville/woke-snap>Woke</a> defines snapcraft.yaml:</h3>
     </div>
     <div class ="p-show-more is-collapsed col-6" data-js="js-show-more">
-      <pre class="p-code-yaml"><b>name</b>: httplab
-<b>version</b>: '1.0'
-<b>summary</b>: An interactive web server.
+      <pre class="p-code-yaml"><b>name</b>: woke
+<b>summary</b>: Detect non-inclusive language in your source code
 <b>description</b>: |
-  HTTPLab let you inspect HTTP requests [&hellip;]
+  Creating an inclusive work environment is imperative [&hellip;]
+<b>version</b>: git
+<b>grade</b>: stable
+<b>base</b>: core20
 
 <b>confinement</b>: devmode
-<b>base</b>: core18
-
-<b>parts</b>:
-  <b>httplab</b>:
-    <b>plugin</b>: go
-    <b>go-importpath</b>: github.com/gchaincl/httplab
-    <b>source</b>: https://github.com/gchaincl/httplab
-    <b>source-type</b>: git
-    <b>build-packages</b>:
-      - gcc
 
 <b>apps</b>:
-  <b>httplab</b>:
-    <b>command</b>: bin/httplab</pre>
+  <b>woke</b>:
+    <b>command</b>: bin/woke
+    <b>plugs</b>:
+      - home
+<b>parts</b>:
+  <b>woke</b>:
+    <b>plugin</b>: go
+    <b>source-type</b>: git
+    <b>source</b>: https://github.com/get-woke/woke</pre>
 
-        {% include "home/_fsf_yaml_show_more.html" %}
+      {% include "home/_fsf_yaml_show_more.html" %}
 
     </div>
   </div>

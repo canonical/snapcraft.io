@@ -23,31 +23,32 @@
   <hr class="p-rule">
   <div class="row">
     <div class="col-3">
-      <h3 class="p-heading--5">Here's how <a href="https://snapcraft.io/offlineimap">offlineimap</a> defines snapcraft.yaml:</h3>
+      <h3 class="p-heading--5">Here's how <a href="https://snapcraft.io/liquidctl">liquidctl</a> defines snapcraft.yaml:</h3>
     </div>
     <div class ="p-show-more is-collapsed col-6" data-js="js-show-more">
-      <pre class="p-code-yaml"><b>name</b>: offlineimap
-<b>version</b>: '1.0'
-<b>summary</b>: OfflineIMAP
+      <pre class="p-code-yaml"><b>name</b>: liquidctl
+<b>summary</b>: a status and control utility to for power, cooling and LED components
 <b>description</b>: |
-OfflineIMAP is software that downloads [&hellip;]
-
-<b>confinement</b>: devmode
-<b>base</b>: core18
+  liquidctl is a command-line tool to monitor and control [&hellip;]
+<b>version</b>: test
+<b>base</b>: core22
+<b>confinement</b>: strict
 
 <b>parts</b>:
-<b>offlineimap</b>:
-  <b>plugin</b>: python
-  <b>python-version</b>: python2
-  <b>source</b>: https://github.com/snapcraft-docs/offlineimap.git
-  <b>stage-packages</b>:
-    - python-six
+  <b>liquidctl</b>:
+    <b>plugin</b>: python
+    <b>source</b>: .
+    <b>stage-packages</b>:
+      - python3-usb
 
 <b>apps</b>:
-<b>offlineimap</b>:
-  <b>command</b>: bin/offlineimap</pre>
+  <b>liquidctl</b>:
+    <b>command</b>: bin/liquidctl
+    <b>plugs</b>:
+      - raw-usb
+      - hardware-observe</pre>
 
-    {% include "home/_fsf_yaml_show_more.html" %}
+        {% include "home/_fsf_yaml_show_more.html" %}
 
     </div>
   </div>
