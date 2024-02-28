@@ -132,6 +132,16 @@
               </span>
             </p>
             {% endif %}
+            {% if (categories[0] and categories[0].slug == "devices-and-iot") or (categories[1] and categories[1].slug == "devices-and-iot") %}
+           <p class="u-no-margin--bottom">
+             <a
+               href="/about/contact-us"
+               data-js="contact-form-trigger"
+               data-formid="2639">
+               Contact us about Snaps and IoT&nbsp;&rsaquo;
+             </a>
+           </p>
+        {% endif %}
         </div>
       </div>
     </div>
