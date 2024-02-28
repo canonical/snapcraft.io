@@ -1,0 +1,23 @@
+{% extends '_base-layout.html' %}
+
+{% block title %}Contact us{% endblock %}
+{% block meta_title %}Contact us {% endblock %}
+
+{% block content %}
+<section class="p-strip">
+  <div class="row">
+    <div class="col-8">
+      <h1>Contact us</h1>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-8">
+      {% with formid="2639",
+       product="appstore",
+       returnURL="https://snapcraft.io/about/thank-you" %}
+        {% include 'shared/contact-form.html' %}
+      {% endwith %}
+    </div>
+  </div>
+</section>
+{% endblock content %}

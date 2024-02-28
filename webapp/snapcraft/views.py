@@ -340,6 +340,16 @@ def snapcraft_blueprint():
     def about_publicise():
         return flask.render_template("about/publicise.html")
 
+    @snapcraft.route("/about/contact-us")
+    def about_contact():
+        return flask.render_template(
+            "contact-us.html"
+        )
+
+    @snapcraft.route("/about/thank-you")
+    def about_thankyou():
+        return flask.render_template("thank-you.html")
+
     @snapcraft.route("/community")
     def community_redirect():
         return flask.redirect("/")
