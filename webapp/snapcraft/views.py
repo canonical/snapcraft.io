@@ -342,9 +342,7 @@ def snapcraft_blueprint():
 
     @snapcraft.route("/about/contact-us")
     def about_contact():
-        return flask.render_template(
-            "contact-us.html"
-        )
+        return flask.render_template("contact-us.html")
 
     @snapcraft.route("/about/thank-you")
     def about_thankyou():
