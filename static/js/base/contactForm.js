@@ -1,4 +1,6 @@
-const contactFormTriggers = document.querySelectorAll("[data-js='contact-form-trigger']");
+const contactFormTriggers = document.querySelectorAll(
+  "[data-js='contact-form-trigger']",
+);
 
 const modal = document.getElementById("contact-form-modal");
 const modalBody = document.getElementById("modal-body");
