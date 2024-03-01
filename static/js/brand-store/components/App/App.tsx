@@ -23,6 +23,8 @@ import Policies from "../Model/Policies";
 import SigningKeys from "../SigningKeys";
 import StoreNotFound from "../StoreNotFound";
 
+import Layout from "../Layout";
+
 import type { StoresList, StoresSlice } from "../../types/shared";
 
 function App() {
@@ -56,8 +58,9 @@ function App() {
   return (
     <Router>
       <QueryClientProvider client={queryClient}>
-        <div className="l-application" role="presentation">
-          <Navigation />
+        <>
+          <Layout />
+          {/* <Navigation />
           <Routes>
             <Route
               path="/admin"
@@ -97,8 +100,8 @@ function App() {
               path="/admin/:id/signing-keys/create"
               element={<SigningKeys />}
             />
-          </Routes>
-        </div>
+          </Routes> */}
+        </>
       </QueryClientProvider>
     </Router>
   );
