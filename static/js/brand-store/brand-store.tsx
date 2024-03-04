@@ -1,15 +1,14 @@
 import React from "react";
 import { createRoot } from "react-dom/client";
 import * as Sentry from "@sentry/react";
-import { Integrations } from "@sentry/tracing";
+import { BrowserTracing } from "@sentry/browser";
 import App from "./components/App";
 import { store } from "./store";
 import { Provider } from "react-redux";
 import { RecoilRoot } from "recoil";
-
 Sentry.init({
   dsn: window.SENTRY_DSN,
-  integrations: [new Integrations.BrowserTracing()],
+  integrations: [new BrowserTracing()],
   tracesSampleRate: 1.0,
 });
 
