@@ -26,8 +26,8 @@ import ReviewerAndPublisher from "../ReviewerAndPublisher";
 import SnapsTables from "./SnapsTables";
 import SnapsFilter from "./SnapsFilter";
 import SnapsSearch from "./SnapsSearch";
-import SectionNav from "../SectionNav";
 import StoreNotFound from "../StoreNotFound";
+import Navigation from "../Navigation";
 
 import { setPageTitle } from "../../utils";
 
@@ -334,8 +334,17 @@ function Snaps() {
     );
   }, [currentStore, id]);
 
+  const getSectionName = () => {
+    if (!isReloading && !isOnlyViewer() && !snapsNotFound && !membersNotFound) {
+      return "snaps";
+    } else {
+      return null;
+    }
+  };
+
   return (
-    <>
+    <div className="l-application" role="presentation">
+      <Navigation sectionName={getSectionName()} />
       <main className="l-main">
         <div className="p-panel">
           <div className="p-panel__content">
@@ -353,14 +362,6 @@ function Snaps() {
               <StoreNotFound />
             ) : (
               <>
-                {!isReloading &&
-                  !isOnlyViewer() &&
-                  !snapsNotFound &&
-                  !membersNotFound && (
-                    <div className="u-fixed-width">
-                      <SectionNav sectionName="snaps" />
-                    </div>
-                  )}
                 {!isReloading && (
                   <Row>
                     <Col size={6}>
@@ -410,10 +411,8 @@ function Snaps() {
                   </Row>
                 )}
                 <div className="u-fixed-width">
-                  {isReloading && (
-                    <Spinner text="Loading&hellip;" />
-                  )} 
-                  
+                  {isReloading && <Spinner text="Loading&hellip;" />}
+
                   {!isReloading && currentStore && (
                     <SnapsTables
                       currentStoreName={currentStore.name}
@@ -601,7 +600,7 @@ function Snaps() {
           </p>
         </Modal>
       )}
-    </>
+    </div>
   );
 }
 
