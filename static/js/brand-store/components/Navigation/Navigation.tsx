@@ -1,106 +1,155 @@
 import React, { useState } from "react";
-import { NavLink, useSearchParams } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { useParams, useNavigate } from "react-router-dom";
+
+import Logo from "./Logo";
+
 import { brandStoresListSelector } from "../../selectors";
 
 import type { Store } from "../../types/shared";
 
-function Navigation() {
+function Navigation({ sectionName }: { sectionName: string | null }) {
   const brandStoresList = useSelector(brandStoresListSelector);
-  const [collapsed, setCollapsedState] = useState(true);
-  const hideSideNav = (hide: boolean) => {
-    setCollapsedState(hide);
-
-    if (hide) {
-      (document.activeElement as HTMLElement).blur();
-    }
-  };
-
-  // Feature flag for new snaps table layout
-  const [searchParams] = useSearchParams();
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const [pinSideNavigation, setPinSideNavigation] = useState<boolean>(false);
+  const [collapseNavigation, setCollapseNavigation] = useState<boolean>(false);
 
   return (
     <>
-      <div className="l-navigation-bar">
-        <div className="p-panel">
+      <header className="l-navigation-bar">
+        <div className="p-panel is-dark">
           <div className="p-panel__header">
+            <Logo />
             <div className="p-panel__controls">
               <button
-                className="p-side-navigation__toggle--dense"
-                onClick={() => hideSideNav(false)}
+                className="p-panel__toggle u-no-margin--bottom"
+                onClick={() => {
+                  setCollapseNavigation(!collapseNavigation);
+                }}
               >
-                <i className="p-icon--right-chevrons"></i>
+                Menu
               </button>
-              &emsp;Open side navigation
-            </div>
-          </div>
-        </div>
-      </div>
-      <header className={`l-navigation ${collapsed ? "is-collapsed" : ""}`}>
-        <div className="l-navigation__drawer">
-          <div className="p-panel is-flex-column--medium">
-            <div className="p-panel__header is-sticky">
-              <span className="p-panel__logo">
-                <i className="p-panel__logo-icon p-icon--snapcraft-cube" />
-                <h2 className="p-heading--5 p-panel__logo-name is-fading-when-collapsed">
-                  My stores
-                </h2>
-              </span>
-              <div className="p-panel__controls u-hide--large">
-                <button
-                  onClick={() => hideSideNav(true)}
-                  className="p-side-navigation__toggle--dense has-icon u-no-margin u-hide--medium"
-                >
-                  <i className="p-icon--left-chevrons">Close side navigation</i>
-                </button>
-              </div>
-            </div>
-
-            <div className="p-panel__content">
-              <div className="p-side-navigation">
-                <nav aria-label="Stores navigation">
-                  <ul className="p-side-navigation__list">
-                    {brandStoresList.map((item: Store) => {
-                      return item.id && item.name ? (
-                        <li className="p-side-navigation__item" key={item.id}>
-                          <NavLink
-                            className="p-side-navigation__link"
-                            to={`/admin/${item.id}/snaps`}
-                          >
-                            <span className="p-side-navigation__label u-truncate">
-                              {item.name}
-                            </span>
-                          </NavLink>
-                        </li>
-                      ) : (
-                        ""
-                      );
-                    })}
-                  </ul>
-                </nav>
-              </div>
-            </div>
-
-            <div className="p-panel__footer u-hide--small u-hide--large">
-              {collapsed ? (
-                <button
-                  onClick={() => hideSideNav(false)}
-                  className="p-side-navigation__toggle--dense has-icon u-no-margin"
-                >
-                  <i className="p-icon--right-chevrons">Open side navigation</i>
-                </button>
-              ) : (
-                <button
-                  onClick={() => hideSideNav(true)}
-                  className="p-side-navigation__toggle--dense has-icon u-no-margin"
-                >
-                  <i className="p-icon--left-chevrons">Close side navigation</i>
-                </button>
-              )}
             </div>
           </div>
         </div>
       </header>
+      <nav
+        className={`l-navigation ${!collapseNavigation ? "is-collapsed" : ""} ${pinSideNavigation ? "is-pinned" : ""}`}
+      >
+        <div className="l-navigation__drawer">
+          <div className="p-panel is-dark">
+            <div className="p-panel__header is-sticky">
+              <Logo />
+              <div className="p-panel__controls">
+                {pinSideNavigation && (
+                  <button
+                    className="p-button--base is-dark has-icon u-no-margin u-hide--small u-hide--large"
+                    onClick={() => {
+                      setPinSideNavigation(false);
+                    }}
+                  >
+                    <i className="is-light p-icon--close"></i>
+                  </button>
+                )}
+
+                {!pinSideNavigation && (
+                  <button
+                    className="p-button--base is-dark has-icon u-no-margin u-hide--small u-hide--large"
+                    onClick={() => {
+                      setPinSideNavigation(true);
+                    }}
+                  >
+                    <i className="is-light p-icon--pin"></i>
+                  </button>
+                )}
+              </div>
+            </div>
+            <div className="p-panel__content">
+              <div className="p-side-navigation--icons is-dark">
+                <ul className="p-side-navigation__list sidenav-top-ul">
+                  <li className="p-side-navigation__item--title">
+                    <span className="p-side-navigation__link">
+                      <span className="p-side-navigation__label">
+                        My stores
+                      </span>
+                    </span>
+                  </li>
+                  <li className="p-side-navigation__item">
+                    <span className="p-side-navigation__link">
+                      <span className="p-side-navigation__label">
+                        <select
+                          value={id}
+                          onChange={(e) => {
+                            navigate(`/admin/${e.target.value}/snaps`);
+                          }}
+                        >
+                          {brandStoresList.map((store: Store) => (
+                            <option key={store.id} value={store.id}>
+                              {store.name}
+                            </option>
+                          ))}
+                        </select>
+                      </span>
+                    </span>
+                  </li>
+                  {sectionName && (
+                    <>
+                      <li className="p-side-navigation__item">
+                        <a
+                          className={`p-side-navigation__link ${sectionName === "snaps" ? "is-active" : ""}`}
+                          href={`/admin/${id}/snaps`}
+                        >
+                          <i className="p-icon--pods is-light p-side-navigation__icon"></i>
+                          <span className="p-side-navigation__label">
+                            Store snaps
+                          </span>
+                        </a>
+                      </li>
+                      <li className="p-side-navigation__item">
+                        <a
+                          className={`p-side-navigation__link ${sectionName === "members" ? "is-active" : ""}`}
+                          href={`/admin/${id}/members`}
+                        >
+                          <i className="p-icon--user-group is-light p-side-navigation__icon"></i>
+                          <span className="p-side-navigation__label">
+                            Members
+                          </span>
+                        </a>
+                      </li>
+                      <li className="p-side-navigation__item">
+                        <a
+                          className={`p-side-navigation__link ${sectionName === "settings" ? "is-active" : ""}`}
+                          href={`/admin/${id}/settings`}
+                        >
+                          <i className="p-icon--settings is-light p-side-navigation__icon"></i>
+                          <span className="p-side-navigation__label">
+                            Settings
+                          </span>
+                        </a>
+                      </li>
+                    </>
+                  )}
+                </ul>
+                <ul className="p-side-navigation__list sidenav-bottom-ul">
+                  <li className="p-side-navigation__item">
+                    <a href="/" className="p-side-navigation__link">
+                      <i className="p-icon--user is-light p-side-navigation__icon"></i>
+                      <span className="p-side-navigation__label">Username</span>
+                    </a>
+                  </li>
+                  <li className="p-side-navigation__item">
+                    <a href="/" className="p-side-navigation__link">
+                      <i className="p-icon--begin-downloading is-light p-side-navigation__icon"></i>
+                      <span className="p-side-navigation__label">Logout</span>
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </nav>
     </>
   );
 }
