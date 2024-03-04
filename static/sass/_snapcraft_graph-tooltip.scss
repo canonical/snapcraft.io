@@ -28,11 +28,11 @@
       }
 
       &-start {
-        overflow: hidden;
+        align-items: center;
         display: flex;
         flex-direction: row;
         flex-shrink: 1;
-        align-items: center;
+        overflow: hidden;
       }
 
       &-name {
@@ -42,9 +42,9 @@
       }
 
       &-color {
-        flex-grow: 0;
         border-radius: 0.75rem;
         display: inline-block;
+        flex-grow: 0;
         height: 0.75rem;
         width: 0.75rem;
         margin: {
