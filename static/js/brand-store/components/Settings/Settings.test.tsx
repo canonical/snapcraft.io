@@ -63,6 +63,11 @@ function getInitialState(): RootState {
       loading: false,
       notFound: false,
     },
+    brandStores: {
+      brandStoresList: [],
+      loading: false,
+      notFound: false,
+    },
   };
 }
 
