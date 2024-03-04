@@ -1,3 +1,11 @@
+const addDateToFilename = (file: File): File => {
+  const now = Math.round(new Date().getTime() / 1000);
+  const nameParts = file.name.split(".");
+  const extension = nameParts.pop();
+  const newName = `${nameParts.join(".")}-${now}.${extension}`;
+  return new File([file], newName);
+};
+
 const formatLinkFields = (fields: Array<{ url: string }>) => {
   return fields.map((item) => item.url);
 };
@@ -53,6 +61,7 @@ function getFormData(
     formData.set("license", data?.license || "unset");
   }
 
+  // The currently uploaded images
   if (changes.images) {
     formData.set("images", data?.["images"]);
   }
@@ -70,21 +79,33 @@ function getFormData(
     );
   }
 
-  formData.set("changes", JSON.stringify(changes));
-
-  if (data?.icon) {
-    formData.append("icon", data?.icon[0]);
+  if (data?.icon?.[0]) {
+    formData.append("icon", data.icon[0]);
   }
 
-  if (data?.banner) {
-    formData.append("banner-image", data?.banner[0]);
+  if (data?.banner?.[0]) {
+    formData.append("banner-image", data.banner[0]);
   }
 
   if (data?.screenshots) {
     data?.screenshots.forEach((screenshot: FileList) => {
-      formData.append("screenshots", screenshot[0]);
+      if (screenshot[0]) {
+        // Add a timestamp to the filename
+        const oldName = screenshot[0].name;
+        const newFile = addDateToFilename(screenshot[0]);
+
+        formData.append("screenshots", newFile);
+
+        // update changes object
+        const imageIndex = changes.images.findIndex((image: any) => image.name === oldName);
+        changes.images[imageIndex].name = newFile.name;
+        changes.images[imageIndex].url = URL.createObjectURL(newFile);
+      }
     });
   }
+
+  // Set changes last, just incase any modifications have happened
+  formData.set("changes", JSON.stringify(changes));
 
   return formData;
 }
