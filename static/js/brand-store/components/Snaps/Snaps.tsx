@@ -363,52 +363,59 @@ function Snaps() {
             ) : (
               <>
                 {!isReloading && (
-                  <Row>
-                    <Col size={6}>
-                      <SnapsFilter
-                        setSnapsInStore={setSnapsInStore}
-                        snapsInStore={snapsInStore}
-                        setOtherStores={setOtherStores}
-                        otherStoreIds={otherStoreIds}
-                        getStoreName={getStoreName}
-                        snaps={snaps}
-                        id={id || ""}
-                      />
-                    </Col>
-                    <Col size={6} className="u-align--right">
-                      {!isOnlyViewer() && (
-                        <>
-                          <Button onClick={() => setSidePanelOpen(true)}>
-                            Include snap
-                          </Button>
-                          <Button
-                            disabled={
-                              snapsToRemove.length < 1 || removeSnapSaving
-                            }
-                            onClick={() => {
-                              setShowRemoveSnapsConfirmation(true);
-                            }}
-                            className={
-                              removeSnapSaving
-                                ? "has-icon u-no-margin--right"
-                                : "u-no-margin--right"
-                            }
-                          >
-                            {removeSnapSaving ? (
-                              <>
-                                <i className="p-icon--spinner u-animation--spin"></i>
-                                <span>Saving...</span>
-                              </>
-                            ) : snapsToRemove.length > 1 ? (
-                              "Exclude snaps"
-                            ) : (
-                              "Exclude snap"
-                            )}
-                          </Button>
-                        </>
-                      )}
-                    </Col>
-                  </Row>
+                  <>
+                    <div className="u-fixed-width">
+                      <h1 className="p-heading--4">
+                        {getStoreName(id || "")} / Store snaps
+                      </h1>
+                    </div>
+                    <Row>
+                      <Col size={6}>
+                        <SnapsFilter
+                          setSnapsInStore={setSnapsInStore}
+                          snapsInStore={snapsInStore}
+                          setOtherStores={setOtherStores}
+                          otherStoreIds={otherStoreIds}
+                          getStoreName={getStoreName}
+                          snaps={snaps}
+                          id={id || ""}
+                        />
+                      </Col>
+                      <Col size={6} className="u-align--right">
+                        {!isOnlyViewer() && (
+                          <>
+                            <Button onClick={() => setSidePanelOpen(true)}>
+                              Include snap
+                            </Button>
+                            <Button
+                              disabled={
+                                snapsToRemove.length < 1 || removeSnapSaving
+                              }
+                              onClick={() => {
+                                setShowRemoveSnapsConfirmation(true);
+                              }}
+                              className={
+                                removeSnapSaving
+                                  ? "has-icon u-no-margin--right"
+                                  : "u-no-margin--right"
+                              }
+                            >
+                              {removeSnapSaving ? (
+                                <>
+                                  <i className="p-icon--spinner u-animation--spin"></i>
+                                  <span>Saving...</span>
+                                </>
+                              ) : snapsToRemove.length > 1 ? (
+                                "Exclude snaps"
+                              ) : (
+                                "Exclude snap"
+                              )}
+                            </Button>
+                          </>
+                        )}
+                      </Col>
+                    </Row>
+                  </>
                 )}
                 <div className="u-fixed-width">
                   {isReloading && <Spinner text="Loading&hellip;" />}

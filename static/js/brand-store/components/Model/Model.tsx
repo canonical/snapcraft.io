@@ -18,6 +18,7 @@ import { currentModelState, brandStoreState } from "../../selectors";
 
 import ModelNav from "./ModelNav";
 import ModelBreadcrumb from "./ModelBreadcrumb";
+import Navigation from "../Navigation";
 
 import { setPageTitle } from "../../utils";
 
@@ -79,195 +80,200 @@ function Model() {
   }, [currentModel, isLoading, error, data]);
 
   return (
-    <main className="l-main">
-      <div className="p-panel">
-        <div className="p-panel__content">
-          <div className="u-fixed-width">
-            <ModelBreadcrumb />
-            <h1 className="u-off-screen">{model_id}</h1>
-          </div>
-          <div className="u-fixed-width">
-            <ModelNav sectionName="overview" />
-          </div>
-          {showSuccessNotification && (
+    <div className="l-application" role="presentation">
+      <Navigation sectionName="models" />
+      <main className="l-main">
+        <div className="p-panel">
+          <div className="p-panel__content">
             <div className="u-fixed-width">
-              <Notification
-                severity="positive"
-                onDismiss={() => {
-                  setShowSuccessNotificaton(false);
-                }}
-              >
-                Model updated successfully
-              </Notification>
+              <ModelBreadcrumb />
             </div>
-          )}
-          {showErrorNotification && (
             <div className="u-fixed-width">
-              <Notification
-                severity="negative"
-                onDismiss={() => {
-                  setShowErrorNotificaton(false);
-                }}
-              >
-                Unable to update model
-              </Notification>
+              <ModelNav sectionName="overview" />
             </div>
-          )}
-          <Row>
-            <Col size={8}>
-              {currentModel && (
-                <form
-                  className="p-form p-form--stacked"
-                  id="save-model-form"
-                  onSubmit={(event) => {
-                    event.preventDefault();
-                    mutation.mutate(newApiKey);
+            {showSuccessNotification && (
+              <div className="u-fixed-width">
+                <Notification
+                  severity="positive"
+                  onDismiss={() => {
+                    setShowSuccessNotificaton(false);
                   }}
                 >
-                  <div
-                    className="p-form__group"
-                    style={{ paddingTop: "0.45rem" }}
+                  Model updated successfully
+                </Notification>
+              </div>
+            )}
+            {showErrorNotification && (
+              <div className="u-fixed-width">
+                <Notification
+                  severity="negative"
+                  onDismiss={() => {
+                    setShowErrorNotificaton(false);
+                  }}
+                >
+                  Unable to update model
+                </Notification>
+              </div>
+            )}
+            <Row>
+              <Col size={8}>
+                {currentModel && (
+                  <form
+                    className="p-form p-form--stacked"
+                    id="save-model-form"
+                    onSubmit={(event) => {
+                      event.preventDefault();
+                      mutation.mutate(newApiKey);
+                    }}
                   >
-                    <Row>
-                      <Col size={2}>
-                        <span className="p-form__label">Name</span>
-                      </Col>
-                      <Col size={6}>
-                        <div className="p-form__control">
-                          <strong>{currentModel.name}</strong>
-                        </div>
-                      </Col>
-                    </Row>
-                  </div>
-                  <div className="p-form__group">
-                    <Row>
-                      <Col size={2}>
-                        <span className="p-form__label">Series</span>
-                      </Col>
-                      <Col size={6}>
-                        <div className="p-form__control">
-                          {currentModel.series}
-                        </div>
-                      </Col>
-                    </Row>
-                  </div>
-                  <div className="p-form__group">
-                    <Row>
-                      <Col size={2}>
-                        <span className="p-form__label">API key</span>
-                      </Col>
-                      <Col size={6}>
-                        <div className="p-form__control">
-                          <Input
-                            type="text"
-                            id="api-key-field"
-                            label="API key"
-                            labelClassName="u-off-screen"
-                            value={newApiKey || currentModel["api-key"] || ""}
-                            placeholder="yx6dnxsWQ3XUB5gza8idCuMvwmxtk1xBpa9by8TuMit5dgGnv"
-                            className="read-only-dark"
-                            style={{ color: "#000" }}
-                            readOnly
-                          />
-                          <Button
-                            type="button"
-                            onClick={() => {
-                              setNewApiKey(
-                                randomstring.generate({
-                                  length: 50,
-                                })
-                              );
-                            }}
-                          >
-                            Generate key
-                          </Button>
-                        </div>
-                      </Col>
-                    </Row>
-                  </div>
-                  <div className="p-form__group">
-                    <Row>
-                      <Col size={2}>
-                        <span className="p-form__label">Creation date</span>
-                      </Col>
-                      <Col size={6}>
-                        <div className="p-form__control">
-                          {format(
-                            new Date(currentModel["created-at"]),
-                            "dd/MM/yyyy"
-                          )}
-                        </div>
-                      </Col>
-                    </Row>
-                    {currentModel["created-by"] && (
+                    <div
+                      className="p-form__group"
+                      style={{ paddingTop: "0.45rem" }}
+                    >
                       <Row>
                         <Col size={2}>
-                          <span className="p-form__label">Created by</span>
+                          <span className="p-form__label">Name</span>
                         </Col>
                         <Col size={6}>
                           <div className="p-form__control">
-                            {currentModel["created-by"]["display-name"]}
+                            <strong>{currentModel.name}</strong>
                           </div>
                         </Col>
                       </Row>
-                    )}
-                  </div>
-                  {currentModel["modified-at"] && currentModel["modified-by"] && (
+                    </div>
                     <div className="p-form__group">
                       <Row>
                         <Col size={2}>
-                          <span className="p-form__label">Last updated</span>
+                          <span className="p-form__label">Series</span>
+                        </Col>
+                        <Col size={6}>
+                          <div className="p-form__control">
+                            {currentModel.series}
+                          </div>
+                        </Col>
+                      </Row>
+                    </div>
+                    <div className="p-form__group">
+                      <Row>
+                        <Col size={2}>
+                          <span className="p-form__label">API key</span>
+                        </Col>
+                        <Col size={6}>
+                          <div className="p-form__control">
+                            <Input
+                              type="text"
+                              id="api-key-field"
+                              label="API key"
+                              labelClassName="u-off-screen"
+                              value={newApiKey || currentModel["api-key"] || ""}
+                              placeholder="yx6dnxsWQ3XUB5gza8idCuMvwmxtk1xBpa9by8TuMit5dgGnv"
+                              className="read-only-dark"
+                              style={{ color: "#000" }}
+                              readOnly
+                            />
+                            <Button
+                              type="button"
+                              onClick={() => {
+                                setNewApiKey(
+                                  randomstring.generate({
+                                    length: 50,
+                                  })
+                                );
+                              }}
+                            >
+                              Generate key
+                            </Button>
+                          </div>
+                        </Col>
+                      </Row>
+                    </div>
+                    <div className="p-form__group">
+                      <Row>
+                        <Col size={2}>
+                          <span className="p-form__label">Creation date</span>
                         </Col>
                         <Col size={6}>
                           <div className="p-form__control">
                             {format(
-                              new Date(currentModel["modified-at"]),
+                              new Date(currentModel["created-at"]),
                               "dd/MM/yyyy"
                             )}
                           </div>
                         </Col>
                       </Row>
-                      <Row>
-                        <Col size={2}>
-                          <span className="p-form__label">Modified by</span>
-                        </Col>
-                        <Col size={6}>
-                          <div className="p-form__control">
-                            {currentModel["modified-by"]["display-name"]}
-                          </div>
-                        </Col>
-                      </Row>
+                      {currentModel["created-by"] && (
+                        <Row>
+                          <Col size={2}>
+                            <span className="p-form__label">Created by</span>
+                          </Col>
+                          <Col size={6}>
+                            <div className="p-form__control">
+                              {currentModel["created-by"]["display-name"]}
+                            </div>
+                          </Col>
+                        </Row>
+                      )}
                     </div>
-                  )}
-                </form>
-              )}
-            </Col>
-            <Col size={4}>
-              <div className="u-align--right">
-                <Button
-                  type="button"
-                  onClick={() => {
-                    setNewApiKey("");
-                  }}
-                  disabled={!newApiKey}
-                >
-                  Revert
-                </Button>
-                <Button
-                  type="submit"
-                  appearance="positive"
-                  className="u-no-margin--right"
-                  disabled={!newApiKey}
-                  form="save-model-form"
-                >
-                  Save
-                </Button>
-              </div>
-            </Col>
-          </Row>
+                    {currentModel["modified-at"] &&
+                      currentModel["modified-by"] && (
+                        <div className="p-form__group">
+                          <Row>
+                            <Col size={2}>
+                              <span className="p-form__label">
+                                Last updated
+                              </span>
+                            </Col>
+                            <Col size={6}>
+                              <div className="p-form__control">
+                                {format(
+                                  new Date(currentModel["modified-at"]),
+                                  "dd/MM/yyyy"
+                                )}
+                              </div>
+                            </Col>
+                          </Row>
+                          <Row>
+                            <Col size={2}>
+                              <span className="p-form__label">Modified by</span>
+                            </Col>
+                            <Col size={6}>
+                              <div className="p-form__control">
+                                {currentModel["modified-by"]["display-name"]}
+                              </div>
+                            </Col>
+                          </Row>
+                        </div>
+                      )}
+                  </form>
+                )}
+              </Col>
+              <Col size={4}>
+                <div className="u-align--right">
+                  <Button
+                    type="button"
+                    onClick={() => {
+                      setNewApiKey("");
+                    }}
+                    disabled={!newApiKey}
+                  >
+                    Revert
+                  </Button>
+                  <Button
+                    type="submit"
+                    appearance="positive"
+                    className="u-no-margin--right"
+                    disabled={!newApiKey}
+                    form="save-model-form"
+                  >
+                    Save
+                  </Button>
+                </div>
+              </Col>
+            </Row>
+          </div>
         </div>
-      </div>
-    </main>
+      </main>
+    </div>
   );
 }
 

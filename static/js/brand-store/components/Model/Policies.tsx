@@ -14,6 +14,7 @@ import ModelBreadcrumb from "./ModelBreadcrumb";
 import PoliciesFilter from "./PoliciesFilter";
 import PoliciesTable from "./PoliciesTable";
 import CreatePolicyForm from "./CreatePolicyForm";
+import Navigation from "../Navigation";
 
 import { usePolicies, useSigningKeys } from "../../hooks";
 import {
@@ -43,20 +44,16 @@ function Policies() {
   const brandStore = useRecoilValue(brandStoreState(id));
   const [searchParams] = useSearchParams();
   const [showNotification, setShowNotification] = useState<boolean>(false);
-  const [showErrorNotification, setShowErrorNotification] = useState<boolean>(
-    false
-  );
-  const [
-    showDeletePolicyNotification,
-    setShowDeletePolicyNotification,
-  ] = useState<boolean>(false);
+  const [showErrorNotification, setShowErrorNotification] =
+    useState<boolean>(false);
+  const [showDeletePolicyNotification, setShowDeletePolicyNotification] =
+    useState<boolean>(false);
   const [
     showDeletePolicyErrorNotification,
     setShowDeletePolicyErrorNotification,
   ] = useState<boolean>(false);
-  const setSigningKeysList = useSetRecoilState<Array<SigningKey>>(
-    signingKeysListState
-  );
+  const setSigningKeysList =
+    useSetRecoilState<Array<SigningKey>>(signingKeysListState);
 
   useEffect(() => {
     if (!signingKeys.isLoading && !signingKeys.isError) {
@@ -78,7 +75,8 @@ function Policies() {
     : setPageTitle("Policies");
 
   return (
-    <>
+    <div className="l-application" role="presentation">
+      <Navigation sectionName="policies" />
       <main className="l-main">
         <div className="p-panel u-flex-column">
           <div className="p-panel__content u-flex-column u-flex-grow">
@@ -200,7 +198,7 @@ function Policies() {
           refetchPolicies={refetch}
         />
       </aside>
-    </>
+    </div>
   );
 }
 
