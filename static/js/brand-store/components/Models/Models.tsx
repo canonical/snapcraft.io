@@ -18,10 +18,10 @@ import {
 } from "../../atoms";
 import { brandStoreState } from "../../selectors";
 
-import SectionNav from "../SectionNav";
 import ModelsFilter from "./ModelsFilter";
 import ModelsTable from "./ModelsTable";
 import CreateModelForm from "./CreateModelForm";
+import Navigation from "../Navigation";
 
 import { isClosedPanel, setPageTitle } from "../../utils";
 
@@ -65,9 +65,8 @@ function Models() {
   const brandStore = useRecoilValue(brandStoreState(id));
   const [searchParams] = useSearchParams();
   const [showNotification, setShowNotification] = useState<boolean>(false);
-  const [showErrorNotification, setShowErrorNotification] = useState<boolean>(
-    false
-  );
+  const [showErrorNotification, setShowErrorNotification] =
+    useState<boolean>(false);
 
   brandStore
     ? setPageTitle(`Models in ${brandStore.name}`)
@@ -82,12 +81,13 @@ function Models() {
   }, [isLoading, error, data]);
 
   return (
-    <>
+    <div className="l-application" role="presentation">
+      <Navigation sectionName="models" />
       <main className="l-main">
         <div className="p-panel u-flex-column">
           <div className="p-panel__content u-flex-column u-flex-grow">
             <div className="u-fixed-width">
-              <SectionNav sectionName="models" />
+              <h1 className="p-heading--4">Models</h1>
             </div>
             {showNotification && (
               <div className="u-fixed-width">
@@ -127,7 +127,7 @@ function Models() {
               </Col>
             </Row>
             <div className="u-fixed-width u-flex-column u-flex-grow">
-              <>
+              <div>
                 {isError && error && (
                   <Notification severity="negative">
                     Error: {error.message}
@@ -143,7 +143,7 @@ function Models() {
                     <ModelsTable />
                   </div>
                 )}
-              </>
+              </div>
             </div>
           </div>
         </div>
@@ -168,7 +168,7 @@ function Models() {
           setShowErrorNotification={setShowErrorNotification}
         />
       </aside>
-    </>
+    </div>
   );
 }
 

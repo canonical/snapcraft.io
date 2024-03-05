@@ -1,4 +1,5 @@
 import React from "react";
+import { Provider } from "react-redux";
 import { BrowserRouter } from "react-router-dom";
 import { RecoilRoot } from "recoil";
 import { QueryClient, QueryClientProvider } from "react-query";
@@ -8,6 +9,7 @@ import userEvent from "@testing-library/user-event";
 import "@testing-library/jest-dom";
 
 import Policies from "./Policies";
+import { store } from "../../store";
 
 let mockFilterQuery = "1.7";
 
@@ -17,6 +19,11 @@ jest.mock("react-router-dom", () => {
     useSearchParams: () => [new URLSearchParams({ filter: mockFilterQuery })],
   };
 });
+
+jest.mock("react-redux", () => ({
+  ...jest.requireActual("react-redux"),
+  useSelector: jest.fn(),
+}));
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -29,13 +36,15 @@ const queryClient = new QueryClient({
 
 function renderComponent() {
   return render(
-    <RecoilRoot>
-      <BrowserRouter>
-        <QueryClientProvider client={queryClient}>
-          <Policies />
-        </QueryClientProvider>
-      </BrowserRouter>
-    </RecoilRoot>
+    <Provider store={store}>
+      <RecoilRoot>
+        <BrowserRouter>
+          <QueryClientProvider client={queryClient}>
+            <Policies />
+          </QueryClientProvider>
+        </BrowserRouter>
+      </RecoilRoot>
+    </Provider>
   );
 }
 

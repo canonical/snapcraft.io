@@ -188,6 +188,16 @@ function Members() {
     }
   };
 
+  const getStoreName = (storeId: string) => {
+    const store = brandStoresList.find((item) => item.id === storeId);
+
+    if (store) {
+      return store.name;
+    } else {
+      return storeId;
+    }
+  };
+
   return (
     <div className="l-application" role="presentation">
       <Navigation sectionName={getSectionName()} />
@@ -204,6 +214,11 @@ function Members() {
               <Navigate to={`/admin/${id}/snaps`} />
             ) : (
               <div>
+                <div className="u-fixed-width">
+                  <h1 className="p-heading--4">
+                    {getStoreName(id || "")} / Members
+                  </h1>
+                </div>
                 <Row>
                   <Col size={6}>
                     <SearchBox
