@@ -171,8 +171,6 @@ function SnapsTables({
 
   return (
     <>
-      <h1 className="p-heading--5">{currentStoreName} snaps</h1>
-
       {snapsInStore.length > 0 ? (
         <table>
           <thead>
