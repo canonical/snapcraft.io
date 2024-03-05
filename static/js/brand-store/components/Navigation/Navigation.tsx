@@ -76,7 +76,7 @@ function Navigation({ sectionName }: { sectionName: string | null }) {
               <div className="p-side-navigation--icons is-dark">
                 {!brandIsLoading && brandIsSuccess && (
                   <ul className="p-side-navigation__list sidenav-top-ul">
-                    <li className="p-side-navigation__item--title">
+                    <li className="p-side-navigation__item--title p-muted-heading">
                       <span className="p-side-navigation__link">
                         <span className="p-side-navigation__label">
                           My stores

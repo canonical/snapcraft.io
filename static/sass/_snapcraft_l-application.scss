@@ -72,5 +72,9 @@
       width: 100%;
       z-index: 110;
     }
+
+    .p-side-navigation__item--title .p-side-navigation__link {
+      color: #a8a8a8 !important;
+    }
   }
 }
