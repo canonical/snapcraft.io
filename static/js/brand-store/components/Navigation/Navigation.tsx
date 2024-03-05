@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
-import { useParams, useNavigate, NavLink } from "react-router-dom";
+import { useParams, NavLink } from "react-router-dom";
 
 import Logo from "./Logo";
 
@@ -12,7 +12,6 @@ import type { Store } from "../../types/shared";
 function Navigation({ sectionName }: { sectionName: string | null }) {
   const brandStoresList = useSelector(brandStoresListSelector);
   const { id } = useParams();
-  const navigate = useNavigate();
   const {
     isLoading: brandIsLoading,
     isSuccess: brandIsSuccess,
@@ -21,6 +20,27 @@ function Navigation({ sectionName }: { sectionName: string | null }) {
   const { data: publisherData } = usePublisher();
   const [pinSideNavigation, setPinSideNavigation] = useState<boolean>(false);
   const [collapseNavigation, setCollapseNavigation] = useState<boolean>(false);
+  const [showStoreSelector, setShowStoreSelector] = useState<boolean>(false);
+  const [filteredBrandStores, setFilteredBrandstores] =
+    useState<Array<Store>>(brandStoresList);
+
+  const getStoreName = (id: string | undefined) => {
+    if (!id) {
+      return;
+    }
+
+    const targetStore = brandStoresList.find((store) => store.id === id);
+
+    if (targetStore) {
+      return targetStore.name;
+    }
+
+    return;
+  };
+
+  useEffect(() => {
+    setFilteredBrandstores(brandStoresList);
+  }, [brandStoresList]);
 
   return (
     <>
@@ -76,9 +96,10 @@ function Navigation({ sectionName }: { sectionName: string | null }) {
               {!brandIsLoading && brandIsSuccess && (
                 <>
                   <div className="p-side-navigation--icons is-dark">
-                    <ul className="p-side-navigation__list sidenav-top-ul">
+                    <ul className="p-side-navigation__list sidenav-top-ul u-no-margin--bottom">
                       <li className="p-side-navigation__item--title p-muted-heading">
                         <span className="p-side-navigation__link">
+                          <i className="p-icon--pods is-light p-side-navigation__icon"></i>
                           <span className="p-side-navigation__label">
                             My stores
                           </span>
@@ -91,18 +112,85 @@ function Navigation({ sectionName }: { sectionName: string | null }) {
                       <li className="p-side-navigation__item">
                         <span className="p-side-navigation__link">
                           <span className="p-side-navigation__label">
-                            <select
-                              value={id}
-                              onChange={(e) => {
-                                navigate(`/admin/${e.target.value}/snaps`);
-                              }}
-                            >
-                              {brandStoresList.map((store: Store) => (
-                                <option key={store.id} value={store.id}>
-                                  {store.name}
-                                </option>
-                              ))}
-                            </select>
+                            <div className="store-selector">
+                              <button
+                                className="store-selector__button u-no-margin--bottom"
+                                onClick={() => {
+                                  setShowStoreSelector(!showStoreSelector);
+                                }}
+                              >
+                                {getStoreName(id)}
+                              </button>
+                              {showStoreSelector && (
+                                <div className="store-selector__panel">
+                                  <div className="p-search-box u-no-margin--bottom">
+                                    <label
+                                      htmlFor="search-stores"
+                                      className="u-off-screen"
+                                    >
+                                      Search stores
+                                    </label>
+                                    <input
+                                      type="search"
+                                      className="p-search-box__input"
+                                      id="search-stores"
+                                      name="search-stores"
+                                      placeholder="Search"
+                                      onInput={(e) => {
+                                        const value = (
+                                          e.target as HTMLInputElement
+                                        ).value;
+
+                                        if (value.length > 0) {
+                                          setFilteredBrandstores(
+                                            brandStoresList.filter((store) => {
+                                              const storeName =
+                                                store.name.toLowerCase();
+                                              return storeName.includes(
+                                                value.toLowerCase()
+                                              );
+                                            })
+                                          );
+                                        } else {
+                                          setFilteredBrandstores(
+                                            brandStoresList
+                                          );
+                                        }
+                                      }}
+                                    />
+                                    <button
+                                      type="reset"
+                                      className="p-search-box__reset"
+                                    >
+                                      <i className="p-icon--close">Close</i>
+                                    </button>
+                                    <button
+                                      type="submit"
+                                      className="p-search-box__button"
+                                    >
+                                      <i className="p-icon--search">Search</i>
+                                    </button>
+                                  </div>
+                                  <ul className="store-selector__list">
+                                    {filteredBrandStores.map((store: Store) => (
+                                      <li
+                                        key={store.id}
+                                        className="store-selector__item"
+                                      >
+                                        <NavLink
+                                          to={`/admin/${store.id}/snaps`}
+                                          onClick={() => {
+                                            setShowStoreSelector(false);
+                                          }}
+                                        >
+                                          {store.name}
+                                        </NavLink>
+                                      </li>
+                                    ))}
+                                  </ul>
+                                </div>
+                              )}
+                            </div>
                           </span>
                         </span>
                       </li>
