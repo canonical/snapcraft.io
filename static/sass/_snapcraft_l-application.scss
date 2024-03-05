@@ -62,5 +62,15 @@
     .l-aside {
       z-index: 200;
     }
+
+    .l-aside__overlay {
+      background-color: rgba(0, 0, 0, 0.25);
+      height: 100%;
+      position: absolute;
+      right: 0;
+      top: 0;
+      width: 100%;
+      z-index: 110;
+    }
   }
 }
