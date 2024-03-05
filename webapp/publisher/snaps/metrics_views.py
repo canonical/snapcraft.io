@@ -57,6 +57,7 @@ def publisher_snap_metrics(snap_name):
     with appropriate sanitation.
     """
     details = publisher_api.get_snap_info(snap_name, flask.session)
+    default_track = details.get("default_track", "latest")
 
     metric_requested = logic.extract_metrics_period(
         flask.request.args.get("period", default="30d", type=str)
@@ -96,8 +97,10 @@ def publisher_snap_metrics(snap_name):
 
     series = active_metrics["series"]
 
-    # Temp fix (https://forum.snapcraft.io/t/metrics-by-channel-broken/26188/3)
-    series = [s for s in series if s["name"] != "latest/stable"]
+    if active_metrics["metric_name"] == "weekly_installed_base_by_channel":
+        for s in series:
+            if "/" not in s["name"]:
+                s["name"] = f"latest/{s['name']}"
 
     if installed_base_metric == "os":
         capitalized_series = active_metrics["series"]
@@ -150,8 +153,6 @@ def publisher_snap_metrics(snap_name):
     nodata = not any([country_devices, active_devices])
 
     annotations = {"name": "annotations", "series": [], "buckets": []}
-
-    default_track = details.get("default_track", "latest")
 
     for category in details["categories"]["items"]:
         date = category["since"].split("T")[0]
