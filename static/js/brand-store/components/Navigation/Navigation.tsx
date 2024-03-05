@@ -5,7 +5,7 @@ import { useParams, useNavigate, NavLink } from "react-router-dom";
 import Logo from "./Logo";
 
 import { brandStoresListSelector } from "../../selectors";
-import { useBrand } from "../../hooks";
+import { useBrand, usePublisher } from "../../hooks";
 
 import type { Store } from "../../types/shared";
 
@@ -13,7 +13,12 @@ function Navigation({ sectionName }: { sectionName: string | null }) {
   const brandStoresList = useSelector(brandStoresListSelector);
   const { id } = useParams();
   const navigate = useNavigate();
-  const { isLoading, isSuccess, data } = useBrand(id);
+  const {
+    isLoading: brandIsLoading,
+    isSuccess: brandIsSuccess,
+    data: brandData,
+  } = useBrand(id);
+  const { data: publisherData } = usePublisher();
   const [pinSideNavigation, setPinSideNavigation] = useState<boolean>(false);
   const [collapseNavigation, setCollapseNavigation] = useState<boolean>(false);
 
@@ -69,7 +74,7 @@ function Navigation({ sectionName }: { sectionName: string | null }) {
             </div>
             <div className="p-panel__content">
               <div className="p-side-navigation--icons is-dark">
-                {!isLoading && isSuccess && (
+                {!brandIsLoading && brandIsSuccess && (
                   <ul className="p-side-navigation__list sidenav-top-ul">
                     <li className="p-side-navigation__item--title">
                       <span className="p-side-navigation__link">
@@ -111,7 +116,7 @@ function Navigation({ sectionName }: { sectionName: string | null }) {
                           </NavLink>
                         </li>
                         {/* If success then models and signing keys are available */}
-                        {data.success && !data.data?.Code && (
+                        {brandData.success && !brandData.data?.Code && (
                           <>
                             <li className="p-tabs__item">
                               <NavLink
@@ -165,20 +170,27 @@ function Navigation({ sectionName }: { sectionName: string | null }) {
                     )}
                   </ul>
                 )}
-                <ul className="p-side-navigation__list sidenav-bottom-ul">
-                  <li className="p-side-navigation__item">
-                    <a href="/" className="p-side-navigation__link">
-                      <i className="p-icon--user is-light p-side-navigation__icon"></i>
-                      <span className="p-side-navigation__label">Username</span>
-                    </a>
-                  </li>
-                  <li className="p-side-navigation__item">
-                    <a href="/" className="p-side-navigation__link">
-                      <i className="p-icon--begin-downloading is-light p-side-navigation__icon"></i>
-                      <span className="p-side-navigation__label">Logout</span>
-                    </a>
-                  </li>
-                </ul>
+                {publisherData && publisherData.publisher && (
+                  <ul className="p-side-navigation__list sidenav-bottom-ul">
+                    <li className="p-side-navigation__item">
+                      <a
+                        href="/account/details"
+                        className="p-side-navigation__link"
+                      >
+                        <i className="p-icon--user is-light p-side-navigation__icon"></i>
+                        <span className="p-side-navigation__label">
+                          {publisherData.publisher.fullname}
+                        </span>
+                      </a>
+                    </li>
+                    <li className="p-side-navigation__item">
+                      <a href="/logout" className="p-side-navigation__link">
+                        <i className="p-icon--begin-downloading is-light p-side-navigation__icon"></i>
+                        <span className="p-side-navigation__label">Logout</span>
+                      </a>
+                    </li>
+                  </ul>
+                )}
               </div>
             </div>
           </div>
