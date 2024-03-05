@@ -18,10 +18,10 @@ import {
 } from "../../atoms";
 import { brandStoreState } from "../../selectors";
 
-import SectionNav from "../SectionNav";
 import SigningKeysFilter from "./SigningKeysFilter";
 import SigningKeysTable from "./SigningKeysTable";
 import CreateSigningKeyForm from "./CreateSigningKeyForm";
+import Navigation from "../Navigation";
 
 import { isClosedPanel, setPageTitle, sortByDateDescending } from "../../utils";
 
@@ -59,9 +59,8 @@ function SigningKeys() {
   const location = useLocation();
   const navigate = useNavigate();
   const { isLoading, isError, error, data, refetch }: any = useSigningKeys(id);
-  const setSigningKeysList = useSetRecoilState<Array<SigningKey>>(
-    signingKeysListState
-  );
+  const setSigningKeysList =
+    useSetRecoilState<Array<SigningKey>>(signingKeysListState);
   const setPolicies = useSetRecoilState<Array<Policy>>(policiesListState);
   const setFilter = useSetRecoilState<string>(signingKeysListFilterState);
   const setNewSigningKey = useSetRecoilState(newSigningKeyState);
@@ -69,10 +68,8 @@ function SigningKeys() {
   const [searchParams] = useSearchParams();
   const [showNotification, setShowNotification] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>("");
-  const [
-    showDisableSuccessNotification,
-    setShowDisableSuccessNotification,
-  ] = useState<boolean>(false);
+  const [showDisableSuccessNotification, setShowDisableSuccessNotification] =
+    useState<boolean>(false);
   const [enableTableActions, setEnableTableActions] = useState(false);
 
   brandStore
@@ -95,12 +92,13 @@ function SigningKeys() {
   }, [models]);
 
   return (
-    <>
+    <div className="l-application" role="presentation">
+      <Navigation sectionName="signing-keys" />
       <main className="l-main">
         <div className="p-panel u-flex-column">
           <div className="p-panel__content u-flex-column u-flex-grow">
             <div className="u-fixed-width">
-              <SectionNav sectionName="signing-keys" />
+              <h1 className="p-heading--4">Signing keys</h1>
             </div>
             {showNotification && (
               <div className="u-fixed-width">
@@ -197,7 +195,7 @@ function SigningKeys() {
           refetch={refetch}
         />
       </aside>
-    </>
+    </div>
   );
 }
 

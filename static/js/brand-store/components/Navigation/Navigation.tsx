@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, NavLink } from "react-router-dom";
 
 import Logo from "./Logo";
 
 import { brandStoresListSelector } from "../../selectors";
+import { useBrand } from "../../hooks";
 
 import type { Store } from "../../types/shared";
 
@@ -12,6 +13,7 @@ function Navigation({ sectionName }: { sectionName: string | null }) {
   const brandStoresList = useSelector(brandStoresListSelector);
   const { id } = useParams();
   const navigate = useNavigate();
+  const { isLoading, isSuccess, data } = useBrand(id);
   const [pinSideNavigation, setPinSideNavigation] = useState<boolean>(false);
   const [collapseNavigation, setCollapseNavigation] = useState<boolean>(false);
 
@@ -67,70 +69,102 @@ function Navigation({ sectionName }: { sectionName: string | null }) {
             </div>
             <div className="p-panel__content">
               <div className="p-side-navigation--icons is-dark">
-                <ul className="p-side-navigation__list sidenav-top-ul">
-                  <li className="p-side-navigation__item--title">
-                    <span className="p-side-navigation__link">
-                      <span className="p-side-navigation__label">
-                        My stores
+                {!isLoading && isSuccess && (
+                  <ul className="p-side-navigation__list sidenav-top-ul">
+                    <li className="p-side-navigation__item--title">
+                      <span className="p-side-navigation__link">
+                        <span className="p-side-navigation__label">
+                          My stores
+                        </span>
                       </span>
-                    </span>
-                  </li>
-                  <li className="p-side-navigation__item">
-                    <span className="p-side-navigation__link">
-                      <span className="p-side-navigation__label">
-                        <select
-                          value={id}
-                          onChange={(e) => {
-                            navigate(`/admin/${e.target.value}/snaps`);
-                          }}
-                        >
-                          {brandStoresList.map((store: Store) => (
-                            <option key={store.id} value={store.id}>
-                              {store.name}
-                            </option>
-                          ))}
-                        </select>
+                    </li>
+                    <li className="p-side-navigation__item">
+                      <span className="p-side-navigation__link">
+                        <span className="p-side-navigation__label">
+                          <select
+                            value={id}
+                            onChange={(e) => {
+                              navigate(`/admin/${e.target.value}/snaps`);
+                            }}
+                          >
+                            {brandStoresList.map((store: Store) => (
+                              <option key={store.id} value={store.id}>
+                                {store.name}
+                              </option>
+                            ))}
+                          </select>
+                        </span>
                       </span>
-                    </span>
-                  </li>
-                  {sectionName && (
-                    <>
-                      <li className="p-side-navigation__item">
-                        <a
-                          className={`p-side-navigation__link ${sectionName === "snaps" ? "is-active" : ""}`}
-                          href={`/admin/${id}/snaps`}
-                        >
-                          <i className="p-icon--pods is-light p-side-navigation__icon"></i>
-                          <span className="p-side-navigation__label">
-                            Store snaps
-                          </span>
-                        </a>
-                      </li>
-                      <li className="p-side-navigation__item">
-                        <a
-                          className={`p-side-navigation__link ${sectionName === "members" ? "is-active" : ""}`}
-                          href={`/admin/${id}/members`}
-                        >
-                          <i className="p-icon--user-group is-light p-side-navigation__icon"></i>
-                          <span className="p-side-navigation__label">
-                            Members
-                          </span>
-                        </a>
-                      </li>
-                      <li className="p-side-navigation__item">
-                        <a
-                          className={`p-side-navigation__link ${sectionName === "settings" ? "is-active" : ""}`}
-                          href={`/admin/${id}/settings`}
-                        >
-                          <i className="p-icon--settings is-light p-side-navigation__icon"></i>
-                          <span className="p-side-navigation__label">
-                            Settings
-                          </span>
-                        </a>
-                      </li>
-                    </>
-                  )}
-                </ul>
+                    </li>
+                    {sectionName && (
+                      <>
+                        <li className="p-side-navigation__item">
+                          <NavLink
+                            className="p-side-navigation__link"
+                            to={`/admin/${id}/snaps`}
+                            aria-selected={sectionName === "snaps"}
+                          >
+                            <i className="p-icon--pods is-light p-side-navigation__icon"></i>
+                            <span className="p-side-navigation__label">
+                              Store snaps
+                            </span>
+                          </NavLink>
+                        </li>
+                        {/* If success then models and signing keys are available */}
+                        {data.success && !data.data?.Code && (
+                          <>
+                            <li className="p-tabs__item">
+                              <NavLink
+                                to={`/admin/${id}/models`}
+                                className="p-side-navigation__link"
+                                aria-selected={sectionName === "models"}
+                              >
+                                <div className="p-side-navigation__label">
+                                  Models
+                                </div>
+                              </NavLink>
+                            </li>
+                            <li className="p-tabs__item">
+                              <NavLink
+                                to={`/admin/${id}/signing-keys`}
+                                className="p-side-navigation__link"
+                                aria-selected={sectionName === "signing-keys"}
+                              >
+                                <div className="p-side-navigation__label">
+                                  Signing keys
+                                </div>
+                              </NavLink>
+                            </li>
+                          </>
+                        )}
+                        <li className="p-side-navigation__item">
+                          <NavLink
+                            className="p-side-navigation__link"
+                            to={`/admin/${id}/members`}
+                            aria-selected={sectionName === "members"}
+                          >
+                            <i className="p-icon--user-group is-light p-side-navigation__icon"></i>
+                            <span className="p-side-navigation__label">
+                              Members
+                            </span>
+                          </NavLink>
+                        </li>
+                        <li className="p-side-navigation__item">
+                          <NavLink
+                            className="p-side-navigation__link"
+                            to={`/admin/${id}/settings`}
+                            aria-selected={sectionName === "settings"}
+                          >
+                            <i className="p-icon--settings is-light p-side-navigation__icon"></i>
+                            <span className="p-side-navigation__label">
+                              Settings
+                            </span>
+                          </NavLink>
+                        </li>
+                      </>
+                    )}
+                  </ul>
+                )}
                 <ul className="p-side-navigation__list sidenav-bottom-ul">
                   <li className="p-side-navigation__item">
                     <a href="/" className="p-side-navigation__link">
