@@ -14,7 +14,7 @@ from webapp.api.github import GitHub, InvalidYAML
 from webapp.decorators import login_required
 from webapp.extensions import csrf
 from webapp.publisher.snaps.builds import map_build_and_upload_states
-from werkzeug.exceptions import Unauthorized
+from werkzeug.exceptions import Unauthorized, Forbidden
 
 GITHUB_SNAPCRAFT_USER_TOKEN = os.getenv("GITHUB_SNAPCRAFT_USER_TOKEN")
 GITHUB_WEBHOOK_HOST_URL = os.getenv("GITHUB_WEBHOOK_HOST_URL")
@@ -152,7 +152,7 @@ def get_snap_builds(snap_name):
 
         try:
             context["github_user"] = github.get_user()
-        except Unauthorized:
+        except (Unauthorized, Forbidden):
             context["github_user"] = None
 
         if context["github_user"]:
