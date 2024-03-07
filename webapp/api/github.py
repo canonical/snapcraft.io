@@ -248,7 +248,7 @@ class GitHub:
         except Unauthorized:
             return False
         except Forbidden:
-            return false
+            return False
         except HTTPError as e:
             if e.response.status_code == 404:
                 return False
