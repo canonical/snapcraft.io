@@ -4,7 +4,7 @@ from os import getenv
 
 from webapp import api
 from webapp.helpers import get_yaml_loader
-from werkzeug.exceptions import Unauthorized
+from werkzeug.exceptions import Unauthorized, Forbidden
 from requests.exceptions import HTTPError
 
 GITHUB_WEBHOOK_SECRET = getenv("GITHUB_WEBHOOK_SECRET")
@@ -58,6 +58,8 @@ class GitHub:
         if raise_exceptions:
             if response.status_code == 401:
                 raise Unauthorized(response=response)
+            if response.status_code == 403:
+                raise Forbidden(response=response)
 
             response.raise_for_status()
 
@@ -81,6 +83,8 @@ class GitHub:
 
         if response.status_code == 401:
             raise Unauthorized(response=response)
+        if response.status_code == 403:
+            raise Forbidden
 
         response.raise_for_status()
         return response.json()["data"]
@@ -243,6 +247,8 @@ class GitHub:
             )
         except Unauthorized:
             return False
+        except Forbidden:
+            return false
         except HTTPError as e:
             if e.response.status_code == 404:
                 return False
@@ -269,6 +275,8 @@ class GitHub:
             return True
         elif response.status_code == 401:
             raise Unauthorized
+        elif response.status_code == 403:
+            raise Forbidden
 
         response.raise_for_status()
 
@@ -291,6 +299,8 @@ class GitHub:
                 return loc
             elif response.status_code == 401:
                 raise Unauthorized
+            elif response.status_code == 403:
+                raise Forbidden
 
             response.raise_for_status()
 
