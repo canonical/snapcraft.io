@@ -82,7 +82,10 @@
     <script src="{{ static_url('js/dist/cookie-policy.js') }}"></script>
 
     {% from "_header_macros.html" import header %}
-    {{ header() }}
+      {% if show_header != False %}
+        {% from "_header_macros.html" import header %}
+        {{ header() }}
+      {% endif %}
     {% endblock %}
 
     {% block content %}{% endblock %}

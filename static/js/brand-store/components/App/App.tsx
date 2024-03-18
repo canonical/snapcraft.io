@@ -13,7 +13,6 @@ import { fetchStores } from "../../slices/brandStoreSlice";
 import { brandStoresListSelector } from "../../selectors";
 import { brandStoresState } from "../../atoms";
 
-import Navigation from "../Navigation";
 import Snaps from "../Snaps";
 import Members from "../Members";
 import Settings from "../Settings";
@@ -56,49 +55,46 @@ function App() {
   return (
     <Router>
       <QueryClientProvider client={queryClient}>
-        <div className="l-application" role="presentation">
-          <Navigation />
-          <Routes>
-            <Route
-              path="/admin"
-              element={
-                !isLoading ? (
-                  !brandStoresList || brandStoresList.length < 1 ? (
-                    <StoreNotFound />
-                  ) : brandStoresList[0].id === "ubuntu" ? (
-                    // Don't redirect to the global store by default
-                    <Navigate
-                      to={`/admin/${brandStoresList[1].id}/snaps${window.location.search}`}
-                    />
-                  ) : (
-                    <Navigate
-                      to={`/admin/${brandStoresList[0].id}/snaps${window.location.search}`}
-                    />
-                  )
-                ) : null
-              }
-            />
-            <Route path="/admin/:id/snaps" element={<Snaps />} />
-            <Route path="/admin/:id/members" element={<Members />} />
-            <Route path="/admin/:id/settings" element={<Settings />} />
-            <Route path="/admin/:id/models" element={<Models />} />
-            <Route path="/admin/:id/models/create" element={<Models />} />
-            <Route path="/admin/:id/models/:model_id" element={<Model />} />
-            <Route
-              path="/admin/:id/models/:model_id/policies"
-              element={<Policies />}
-            />
-            <Route
-              path="/admin/:id/models/:model_id/policies/create"
-              element={<Policies />}
-            />
-            <Route path="/admin/:id/signing-keys" element={<SigningKeys />} />
-            <Route
-              path="/admin/:id/signing-keys/create"
-              element={<SigningKeys />}
-            />
-          </Routes>
-        </div>
+        <Routes>
+          <Route
+            path="/admin"
+            element={
+              !isLoading ? (
+                !brandStoresList || brandStoresList.length < 1 ? (
+                  <StoreNotFound />
+                ) : brandStoresList[0].id === "ubuntu" ? (
+                  // Don't redirect to the global store by default
+                  <Navigate
+                    to={`/admin/${brandStoresList[1].id}/snaps${window.location.search}`}
+                  />
+                ) : (
+                  <Navigate
+                    to={`/admin/${brandStoresList[0].id}/snaps${window.location.search}`}
+                  />
+                )
+              ) : null
+            }
+          />
+          <Route path="/admin/:id/snaps" element={<Snaps />} />
+          <Route path="/admin/:id/members" element={<Members />} />
+          <Route path="/admin/:id/settings" element={<Settings />} />
+          <Route path="/admin/:id/models" element={<Models />} />
+          <Route path="/admin/:id/models/create" element={<Models />} />
+          <Route path="/admin/:id/models/:model_id" element={<Model />} />
+          <Route
+            path="/admin/:id/models/:model_id/policies"
+            element={<Policies />}
+          />
+          <Route
+            path="/admin/:id/models/:model_id/policies/create"
+            element={<Policies />}
+          />
+          <Route path="/admin/:id/signing-keys" element={<SigningKeys />} />
+          <Route
+            path="/admin/:id/signing-keys/create"
+            element={<SigningKeys />}
+          />
+        </Routes>
       </QueryClientProvider>
     </Router>
   );

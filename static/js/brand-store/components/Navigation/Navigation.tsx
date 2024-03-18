@@ -1,106 +1,301 @@
-import React, { useState } from "react";
-import { NavLink, useSearchParams } from "react-router-dom";
+import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
+import { useParams, NavLink } from "react-router-dom";
+
+import Logo from "./Logo";
+
 import { brandStoresListSelector } from "../../selectors";
+import { useBrand, usePublisher } from "../../hooks";
 
 import type { Store } from "../../types/shared";
 
-function Navigation() {
+function Navigation({ sectionName }: { sectionName: string | null }) {
   const brandStoresList = useSelector(brandStoresListSelector);
-  const [collapsed, setCollapsedState] = useState(true);
-  const hideSideNav = (hide: boolean) => {
-    setCollapsedState(hide);
+  const { id } = useParams();
+  const {
+    isLoading: brandIsLoading,
+    isSuccess: brandIsSuccess,
+    data: brandData,
+  } = useBrand(id);
+  const { data: publisherData } = usePublisher();
+  const [pinSideNavigation, setPinSideNavigation] = useState<boolean>(false);
+  const [collapseNavigation, setCollapseNavigation] = useState<boolean>(false);
+  const [showStoreSelector, setShowStoreSelector] = useState<boolean>(false);
+  const [filteredBrandStores, setFilteredBrandstores] =
+    useState<Array<Store>>(brandStoresList);
 
-    if (hide) {
-      (document.activeElement as HTMLElement).blur();
+  const getStoreName = (id: string | undefined) => {
+    if (!id) {
+      return;
     }
+
+    const targetStore = brandStoresList.find((store) => store.id === id);
+
+    if (targetStore) {
+      return targetStore.name;
+    }
+
+    return;
   };
 
-  // Feature flag for new snaps table layout
-  const [searchParams] = useSearchParams();
+  useEffect(() => {
+    setFilteredBrandstores(brandStoresList);
+  }, [brandStoresList]);
 
   return (
     <>
-      <div className="l-navigation-bar">
-        <div className="p-panel">
+      <header className="l-navigation-bar">
+        <div className="p-panel is-dark">
           <div className="p-panel__header">
+            <Logo />
             <div className="p-panel__controls">
               <button
-                className="p-side-navigation__toggle--dense"
-                onClick={() => hideSideNav(false)}
+                className="p-panel__toggle u-no-margin--bottom"
+                onClick={() => {
+                  setCollapseNavigation(!collapseNavigation);
+                }}
               >
-                <i className="p-icon--right-chevrons"></i>
+                Menu
               </button>
-              &emsp;Open side navigation
-            </div>
-          </div>
-        </div>
-      </div>
-      <header className={`l-navigation ${collapsed ? "is-collapsed" : ""}`}>
-        <div className="l-navigation__drawer">
-          <div className="p-panel is-flex-column--medium">
-            <div className="p-panel__header is-sticky">
-              <span className="p-panel__logo">
-                <i className="p-panel__logo-icon p-icon--snapcraft-cube" />
-                <h2 className="p-heading--5 p-panel__logo-name is-fading-when-collapsed">
-                  My stores
-                </h2>
-              </span>
-              <div className="p-panel__controls u-hide--large">
-                <button
-                  onClick={() => hideSideNav(true)}
-                  className="p-side-navigation__toggle--dense has-icon u-no-margin u-hide--medium"
-                >
-                  <i className="p-icon--left-chevrons">Close side navigation</i>
-                </button>
-              </div>
-            </div>
-
-            <div className="p-panel__content">
-              <div className="p-side-navigation">
-                <nav aria-label="Stores navigation">
-                  <ul className="p-side-navigation__list">
-                    {brandStoresList.map((item: Store) => {
-                      return item.id && item.name ? (
-                        <li className="p-side-navigation__item" key={item.id}>
-                          <NavLink
-                            className="p-side-navigation__link"
-                            to={`/admin/${item.id}/snaps`}
-                          >
-                            <span className="p-side-navigation__label u-truncate">
-                              {item.name}
-                            </span>
-                          </NavLink>
-                        </li>
-                      ) : (
-                        ""
-                      );
-                    })}
-                  </ul>
-                </nav>
-              </div>
-            </div>
-
-            <div className="p-panel__footer u-hide--small u-hide--large">
-              {collapsed ? (
-                <button
-                  onClick={() => hideSideNav(false)}
-                  className="p-side-navigation__toggle--dense has-icon u-no-margin"
-                >
-                  <i className="p-icon--right-chevrons">Open side navigation</i>
-                </button>
-              ) : (
-                <button
-                  onClick={() => hideSideNav(true)}
-                  className="p-side-navigation__toggle--dense has-icon u-no-margin"
-                >
-                  <i className="p-icon--left-chevrons">Close side navigation</i>
-                </button>
-              )}
             </div>
           </div>
         </div>
       </header>
+      <nav
+        className={`l-navigation ${!collapseNavigation ? "is-collapsed" : ""} ${pinSideNavigation ? "is-pinned" : ""}`}
+      >
+        <div className="l-navigation__drawer">
+          <div className="p-panel is-dark">
+            <div className="p-panel__header is-sticky">
+              <Logo />
+              <div className="p-panel__controls">
+                {pinSideNavigation && (
+                  <button
+                    className="p-button--base is-dark has-icon u-no-margin u-hide--small u-hide--large"
+                    onClick={() => {
+                      setPinSideNavigation(false);
+                    }}
+                  >
+                    <i className="is-light p-icon--close"></i>
+                  </button>
+                )}
+
+                {!pinSideNavigation && (
+                  <button
+                    className="p-button--base is-dark has-icon u-no-margin u-hide--small u-hide--large"
+                    onClick={() => {
+                      setPinSideNavigation(true);
+                    }}
+                  >
+                    <i className="is-light p-icon--pin"></i>
+                  </button>
+                )}
+              </div>
+            </div>
+            <div className="p-panel__content">
+              {!brandIsLoading && brandIsSuccess && (
+                <>
+                  <div className="p-side-navigation--icons is-dark">
+                    <ul className="p-side-navigation__list sidenav-top-ul u-no-margin--bottom">
+                      <li className="p-side-navigation__item--title p-muted-heading">
+                        <span className="p-side-navigation__link">
+                          <i className="p-icon--pods is-light p-side-navigation__icon"></i>
+                          <span className="p-side-navigation__label">
+                            My stores
+                          </span>
+                        </span>
+                      </li>
+                    </ul>
+                  </div>
+                  <div className="p-side-navigation is-dark">
+                    <ul className="p-side-navigation__list">
+                      <li className="p-side-navigation__item">
+                        <span className="p-side-navigation__link">
+                          <span className="p-side-navigation__label">
+                            <div className="store-selector">
+                              <button
+                                className="store-selector__button u-no-margin--bottom"
+                                onClick={() => {
+                                  setShowStoreSelector(!showStoreSelector);
+                                }}
+                              >
+                                {getStoreName(id)}
+                              </button>
+                              {showStoreSelector && (
+                                <div className="store-selector__panel">
+                                  <div className="p-search-box u-no-margin--bottom">
+                                    <label
+                                      htmlFor="search-stores"
+                                      className="u-off-screen"
+                                    >
+                                      Search stores
+                                    </label>
+                                    <input
+                                      type="search"
+                                      className="p-search-box__input"
+                                      id="search-stores"
+                                      name="search-stores"
+                                      placeholder="Search"
+                                      onInput={(e) => {
+                                        const value = (
+                                          e.target as HTMLInputElement
+                                        ).value;
+
+                                        if (value.length > 0) {
+                                          setFilteredBrandstores(
+                                            brandStoresList.filter((store) => {
+                                              const storeName =
+                                                store.name.toLowerCase();
+                                              return storeName.includes(
+                                                value.toLowerCase()
+                                              );
+                                            })
+                                          );
+                                        } else {
+                                          setFilteredBrandstores(
+                                            brandStoresList
+                                          );
+                                        }
+                                      }}
+                                    />
+                                    <button
+                                      type="reset"
+                                      className="p-search-box__reset"
+                                    >
+                                      <i className="p-icon--close">Close</i>
+                                    </button>
+                                    <button
+                                      type="submit"
+                                      className="p-search-box__button"
+                                    >
+                                      <i className="p-icon--search">Search</i>
+                                    </button>
+                                  </div>
+                                  <ul className="store-selector__list">
+                                    {filteredBrandStores.map((store: Store) => (
+                                      <li
+                                        key={store.id}
+                                        className="store-selector__item"
+                                      >
+                                        <NavLink
+                                          to={`/admin/${store.id}/snaps`}
+                                          onClick={() => {
+                                            setShowStoreSelector(false);
+                                          }}
+                                        >
+                                          {store.name}
+                                        </NavLink>
+                                      </li>
+                                    ))}
+                                  </ul>
+                                </div>
+                              )}
+                            </div>
+                          </span>
+                        </span>
+                      </li>
+                    </ul>
+                  </div>
+                  <div className="p-side-navigation--icons is-dark">
+                    <ul className="p-side-navigation__list">
+                      {sectionName && (
+                        <>
+                          <li className="p-side-navigation__item">
+                            <NavLink
+                              className="p-side-navigation__link"
+                              to={`/admin/${id}/snaps`}
+                              aria-selected={sectionName === "snaps"}
+                            >
+                              <i className="p-icon--pods is-light p-side-navigation__icon"></i>
+                              <span className="p-side-navigation__label">
+                                Store snaps
+                              </span>
+                            </NavLink>
+                          </li>
+                          {/* If success then models and signing keys are available */}
+                          {brandData.success && !brandData.data?.Code && (
+                            <>
+                              <li className="p-tabs__item">
+                                <NavLink
+                                  to={`/admin/${id}/models`}
+                                  className="p-side-navigation__link"
+                                  aria-selected={sectionName === "models"}
+                                >
+                                  <div className="p-side-navigation__label">
+                                    Models
+                                  </div>
+                                </NavLink>
+                              </li>
+                              <li className="p-tabs__item">
+                                <NavLink
+                                  to={`/admin/${id}/signing-keys`}
+                                  className="p-side-navigation__link"
+                                  aria-selected={sectionName === "signing-keys"}
+                                >
+                                  <div className="p-side-navigation__label">
+                                    Signing keys
+                                  </div>
+                                </NavLink>
+                              </li>
+                            </>
+                          )}
+                          <li className="p-side-navigation__item">
+                            <NavLink
+                              className="p-side-navigation__link"
+                              to={`/admin/${id}/members`}
+                              aria-selected={sectionName === "members"}
+                            >
+                              <i className="p-icon--user-group is-light p-side-navigation__icon"></i>
+                              <span className="p-side-navigation__label">
+                                Members
+                              </span>
+                            </NavLink>
+                          </li>
+                          <li className="p-side-navigation__item">
+                            <NavLink
+                              className="p-side-navigation__link"
+                              to={`/admin/${id}/settings`}
+                              aria-selected={sectionName === "settings"}
+                            >
+                              <i className="p-icon--settings is-light p-side-navigation__icon"></i>
+                              <span className="p-side-navigation__label">
+                                Settings
+                              </span>
+                            </NavLink>
+                          </li>
+                        </>
+                      )}
+                    </ul>
+                  </div>
+                </>
+              )}
+              <div className="p-side-navigation--icons is-dark">
+                {publisherData && publisherData.publisher && (
+                  <ul className="p-side-navigation__list sidenav-bottom-ul">
+                    <li className="p-side-navigation__item">
+                      <a
+                        href="/account/details"
+                        className="p-side-navigation__link"
+                      >
+                        <i className="p-icon--user is-light p-side-navigation__icon"></i>
+                        <span className="p-side-navigation__label">
+                          {publisherData.publisher.fullname}
+                        </span>
+                      </a>
+                    </li>
+                    <li className="p-side-navigation__item">
+                      <a href="/logout" className="p-side-navigation__link">
+                        <i className="p-icon--begin-downloading is-light p-side-navigation__icon"></i>
+                        <span className="p-side-navigation__label">Logout</span>
+                      </a>
+                    </li>
+                  </ul>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      </nav>
     </>
   );
 }

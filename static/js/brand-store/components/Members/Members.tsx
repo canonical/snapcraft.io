@@ -17,7 +17,7 @@ import ROLES from "./memberRoles";
 import MembersTable from "./MembersTable";
 import InvitesTable from "./InvitesTable";
 import StoreNotFound from "../StoreNotFound";
-import SectionNav from "../SectionNav";
+import Navigation from "../Navigation";
 
 import {
   membersSelector,
@@ -180,16 +180,30 @@ function Members() {
     setCurrentMember(members.find((member) => member.current_user));
   }, [members, membersLoading, invitesLoading]);
 
+  const getSectionName = () => {
+    if (!membersNotFound && !invitesNotFound) {
+      return "members";
+    } else {
+      return null;
+    }
+  };
+
+  const getStoreName = (storeId: string) => {
+    const store = brandStoresList.find((item) => item.id === storeId);
+
+    if (store) {
+      return store.name;
+    } else {
+      return storeId;
+    }
+  };
+
   return (
-    <>
+    <div className="l-application" role="presentation">
+      <Navigation sectionName={getSectionName()} />
       <main className="l-main">
         <div className="p-panel">
           <div className="p-panel__content">
-            <div className="u-fixed-width">
-              {!membersNotFound && !invitesNotFound && (
-                <SectionNav sectionName="members" />
-              )}
-            </div>
             {membersLoading && invitesLoading ? (
               <div className="u-fixed-width">
                 <Spinner text="Loading&hellip;" />
@@ -199,7 +213,12 @@ function Members() {
             ) : isOnlyViewer() ? (
               <Navigate to={`/admin/${id}/snaps`} />
             ) : (
-              <>
+              <div>
+                <div className="u-fixed-width">
+                  <h1 className="p-heading--4">
+                    {getStoreName(id || "")} / Members
+                  </h1>
+                </div>
                 <Row>
                   <Col size={6}>
                     <SearchBox
@@ -262,7 +281,7 @@ function Members() {
                     ]}
                   />
                 </div>
-              </>
+              </div>
             )}
           </div>
         </div>
@@ -492,7 +511,7 @@ function Members() {
           </Notification>
         )}
       </div>
-    </>
+    </div>
   );
 }
 

@@ -84,3 +84,19 @@ export function useBrand(id: string | undefined) {
     return brand;
   });
 }
+
+export function usePublisher() {
+  return useQuery("publisher", async () => {
+    const response = await fetch("/account.json");
+
+    if (!response.ok) {
+      return {
+        publisher: null,
+      };
+    }
+
+    const publisherData = await response.json();
+
+    return publisherData;
+  });
+}

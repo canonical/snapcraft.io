@@ -1,157 +1,166 @@
 @mixin snapcraft-l-application {
-  // main navigation height is based on padding and line height of a nav link
-  $main-nav-height: map-get($line-heights, default-text) + $spv--large * 2;
-  $layout-height: calc(100vh - #{$main-nav-height});
-  $layout-height-small: calc(100vh - 48px);
-
   .l-application {
-    height: $layout-height;
+    .p-panel__logo {
+      margin-top: 0;
 
-    @media (max-width: $breakpoint-small) {
-      height: 100vh;
-    }
-
-    .p-side-navigation__toggle--dense {
-      background: $color-mid-dark;
-      border: 0;
-      line-height: 1rem;
-      padding: 0.5rem;
-      width: auto;
-
-      &:hover {
-        background: #333;
+      .p-panel__logo-image {
+        height: 36px;
+        max-width: inherit;
       }
 
-      &:active {
-        background: #000;
+      .logo-text {
+        color: #fff;
+        left: 47px;
+        position: absolute;
+        top: 0;
       }
     }
 
-    .p-tabs__link:active,
-    .p-tabs__link[aria-pressed="true"],
-    .p-tabs__link[aria-selected="true"],
-    .p-tabs__link[aria-expanded="true"] {
-      background-color: $color-x-light;
+    .l-navigation-bar {
+      z-index: 200;
+
+      .p-panel__controls {
+        padding-top: 0.25rem;
+      }
     }
 
-    .u-fixed-width,
-    .row {
-      max-width: 100%;
-    }
-  }
+    .l-navigation {
+      background-color: #262626;
 
-  .l-navigation-bar {
-    .p-panel {
-      background-color: $color-light;
-      border-bottom: $border;
-    }
-
-    .p-panel__controls {
-      margin-left: 0;
-    }
-  }
-
-  .l-navigation {
-    height: $layout-height-small;
-    position: absolute;
-    top: 48px;
-    z-index: 9;
-
-    @media (max-width: $breakpoint-small) {
-      height: 100vh;
-    }
-
-    @media (min-width: $application-layout--breakpoint-side-nav-expanded) {
-      position: static;
+      .p-panel__content {
+        overflow: visible;
+      }
     }
 
     .l-navigation__drawer {
-      height: $layout-height;
+      .p-panel__controls {
+        margin-right: -1rem;
+        padding-top: 0.5rem;
+      }
 
-      @media (max-width: $breakpoint-small) {
-        height: 100vh;
+      .p-icon--begin-downloading {
+        transform: rotate(90deg);
       }
     }
 
-    .p-panel {
-      background: $color-light;
+    .p-side-navigation__label {
+      width: 100%;
+    }
 
-      // side nav tablet view with fixed footer
-      &.is-flex-column--medium {
-        // stylelint-disable-next-line max-line-length
-        @media (min-width: $application-layout--breakpoint-side-nav-collapsed) and (max-width: $application-layout--breakpoint-side-nav-expanded - 1px) {
-          .l-navigation & {
-            @content;
-          }
+    .sidenav-top-ul::after {
+      display: none;
+    }
 
-          display: flex;
-          flex-direction: column;
+    .sidenav-bottom-ul {
+      bottom: 0;
+      position: absolute;
+      width: 15rem;
+    }
 
-          .p-panel__content {
-            flex: 1 1 0;
-            overflow-y: scroll;
-          }
+    .aside-overlay {
+      background-color: rgba(0, 0, 0, 0.25);
+      height: 100%;
+      left: 0;
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 200;
+    }
+
+    .l-aside {
+      z-index: 200;
+    }
+
+    .l-aside__overlay {
+      background-color: rgba(0, 0, 0, 0.25);
+      height: 100%;
+      position: absolute;
+      right: 0;
+      top: 0;
+      width: 100%;
+      z-index: 110;
+    }
+
+    .p-side-navigation__item--title .p-side-navigation__link {
+      color: #a8a8a8 !important;
+    }
+
+    .store-selector {
+      margin-right: 0.5rem;
+      position: relative;
+
+      .p-search-box {
+        background-color: #262626;
+        position: sticky;
+        top: 0;
+      }
+    }
+
+    .store-selector__button {
+      background-color: rgba(255, 255, 255, 0.04);
+      background-image: url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%2716%27 height=%2716%27%3E%3Cpath fill=%27%23666%27 d=%27M8.187 11.748l6.187-6.187-1.06-1.061-5.127 5.127L3.061 4.5 2 5.561z%27/%3E%3C/svg%3E");
+      background-position: right 0.75rem center;
+      background-repeat: no-repeat;
+      background-size: 1rem;
+      border: 0;
+      border-bottom: 1.5px solid rgba(255, 255, 255, 0.5);
+      color: $color-x-light;
+      cursor: pointer;
+      max-width: 100%;
+      min-height: 1.5rem;
+      overflow: hidden;
+      padding: calc(0.4rem - 1px) 2rem calc(0.4rem - 1px) 0.5rem;
+      text-align: left;
+      text-indent: 0.01px;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      width: 100%;
+    }
+
+    .store-selector__panel {
+      background-color: #2d2d2d;
+      left: 0;
+      padding: 0.5rem 0.5rem 0;
+      position: absolute;
+      top: 2.3rem;
+      width: 100%;
+      z-index: 1;
+    }
+
+    .p-search-box__input:focus {
+      color: $color-x-dark;
+    }
+
+    .p-search-box__input:hover::placeholder,
+    .p-search-box__input:focus::placeholder {
+      color: $color-mid-dark;
+    }
+
+    .store-selector__list {
+      background-color: #2d2d2d;
+      margin: 0;
+      padding-left: 0;
+    }
+
+    .store-selector__item {
+      border-bottom: 1px solid rgba(255, 255, 255, 0.25);
+      padding: calc(0.4rem - 1px) 0;
+
+      &:last-child {
+        border-bottom: 0;
+      }
+
+      a {
+        color: $color-x-light;
+        display: block;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+
+        &:hover {
+          text-decoration: none;
         }
       }
     }
-
-    .p-panel__header {
-      background-color: $color-light;
-      padding-left: 1.5rem;
-      padding-right: 1.5rem;
-    }
-
-    .p-panel__footer {
-      padding: 1rem;
-    }
-
-    .p-panel__logo-icon {
-      width: 1.5rem;
-    }
-  }
-
-  .l-aside {
-    height: $layout-height;
-    position: relative;
-
-    // Vanilla override
-    width: 419px !important;
-
-    @media (min-width: $breakpoint-small) {
-      width: 22.5rem;
-    }
-
-    .is-flex-column {
-      display: flex;
-      flex-direction: column;
-
-      .p-panel__content {
-        flex: 1 1 0;
-        overflow-y: scroll;
-      }
-    }
-
-    .p-panel__footer {
-      background-color: $color-x-light;
-      padding: 1rem;
-    }
-  }
-
-  .l-status {
-    background-color: $color-x-light;
-    padding-bottom: $spv--large;
-    padding-top: $spv--large;
-    position: relative;
-    top: -100%;
-  }
-
-  .l-aside__overlay {
-    background-color: rgba(0, 0, 0, 0.5);
-    height: 100%;
-    position: absolute;
-    right: 0;
-    top: 0;
-    width: 100%;
-    z-index: 10;
   }
 }

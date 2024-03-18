@@ -164,8 +164,6 @@ $color-social-icon-foreground: $color-light;
 @include snapcraft-p-progressive-bar;
 @import "snapcraft_p-release-details-row";
 @include snapcraft-p-release-details-row;
-@import "snapcraft_l-application";
-@include snapcraft-l-application;
 @import "snapcraft-p-videos";
 @include snapcraft-p-videos;
 @import "pattern_p-button-group";
@@ -197,7 +195,14 @@ $color-social-icon-foreground: $color-light;
 @import "snapcraft_p-app-pagination";
 @include snapcraft-app-pagination;
 @import "patterns_p-filter-panel";
+@import "snapcraft_l-application";
+@include snapcraft-l-application;
 @include p-filter-panel;
+@include vf-p-icon-pin;
+@include vf-p-icon-user-group;
+@include vf-p-icon-settings;
+@include vf-p-icon-begin-downloading;
+@include vf-p-icon-pods;
 
 dl {
   margin-bottom: $spv--x-large;
@@ -462,11 +467,6 @@ dl {
 // Vanilla override
 .p-breadcrumbs__item:not(:first-of-type)::before {
   margin-left: -0.5rem;
-}
-
-// Vanilla override
-.p-panel__logo {
-  margin-left: 0;
 }
 
 // To prevent layout shift
