@@ -451,7 +451,7 @@ dl {
 // Vanilla override - documentaion layout
 .l-docs__subgrid {
   @media (width >= 1036px) {
-      grid-template-columns: 15rem minmax(0, 1fr) 15rem;
+    grid-template-columns: 15rem minmax(0, 1fr) 15rem;
   }
 
   @media (width >= calc(1036px + 15rem)) {
@@ -508,4 +508,9 @@ dl {
 
 .p-search-box .p-search-box__input:placeholder-shown ~ .p-search-box__reset {
   display: none !important;
+}
+
+// XXX - Can be removed once https://github.com/canonical/vanilla-framework/issues/5031 is resolved
+.global-nav__strip .p-link--inverted {
+  color: $color-light;
 }
