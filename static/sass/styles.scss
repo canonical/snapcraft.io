@@ -509,8 +509,3 @@ dl {
 .p-search-box .p-search-box__input:placeholder-shown ~ .p-search-box__reset {
   display: none !important;
 }
-
-// XXX - Can be removed once https://github.com/canonical/vanilla-framework/issues/5031 is resolved
-.global-nav__strip .p-link--inverted {
-  color: $color-light;
-}
