@@ -290,6 +290,9 @@ function Members() {
         className={`l-aside__overlay ${sidePanelOpen ? "" : "u-hide"}`}
         onClick={() => {
           setSidePanelOpen(false);
+          setShowInviteForm(false);
+          setNewMemberEmail("");
+          setNewMemberRoles([]);
         }}
       ></div>
       <aside
@@ -367,6 +370,7 @@ function Members() {
                   setSidePanelOpen(false);
                   setNewMemberEmail("");
                   setNewMemberRoles([]);
+                  setShowInviteForm(false);
                 }}
               >
                 Cancel
