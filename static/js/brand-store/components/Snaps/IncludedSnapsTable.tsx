@@ -3,9 +3,9 @@ import { useParams } from "react-router-dom";
 import { format } from "date-fns";
 import { Input } from "@canonical/react-components";
 
-import type { Snap, SnapsList, Store } from "../../types/shared";
+import type { SnapsList, Store, Snap } from "../../types/shared";
 
-type SnapTableRowProps = {
+type IncludedSnapsTableRowProps = {
   snap: Snap;
   isGlobal?: boolean;
   getStoreName?: Function;
@@ -14,14 +14,14 @@ type SnapTableRowProps = {
   setSnapsToRemove: Function;
 };
 
-function SnapsTableRow({
+function IncludedSnapsTableRow({
   snap,
   isGlobal,
   getStoreName,
   isOnlyViewer,
   snapsToRemove,
   setSnapsToRemove,
-}: SnapTableRowProps) {
+}: IncludedSnapsTableRowProps) {
   const { id } = useParams();
 
   const [isChecked, setIsChecked] = useState(false);
@@ -31,7 +31,7 @@ function SnapsTableRow({
     : "table-cell--checkbox u-truncate";
 
   const snapName = isGlobal ? (
-    <a href={`https://snapcraft.io/${snap.name}`}>{snap.name}</a>
+    <a href={`https://snapcraft.io/${snap.name}/listing`}>{snap.name}</a>
   ) : (
     snap.name || "-"
   );
@@ -82,7 +82,7 @@ function SnapsTableRow({
   );
 }
 
-type SnapTableRowsProps = {
+type IncludedSnapsTableRowsProps = {
   snaps: Array<Snap>;
   getStoreName?: Function;
   isGlobal?: boolean;
@@ -98,11 +98,11 @@ function SnapTableRows({
   isOnlyViewer,
   snapsToRemove,
   setSnapsToRemove,
-}: SnapTableRowsProps) {
+}: IncludedSnapsTableRowsProps) {
   return (
     <>
       {snaps.map((snap) => (
-        <SnapsTableRow
+        <IncludedSnapsTableRow
           key={snap.id}
           snap={snap}
           isGlobal={isGlobal}
@@ -116,33 +116,29 @@ function SnapTableRows({
   );
 }
 
-type SnapTablesProps = {
-  currentStoreName: string;
-  snapsInStore: Array<Snap>;
+type IncludedSnapsTableProps = {
+  isOnlyViewer: Function;
+  snapsToRemove: SnapsList;
+  setSnapsToRemove: Function;
+  globalStore: Store;
+  nonEssentialSnapIds: SnapsList;
+  getStoreName: Function;
   otherStores: Array<{
     id: string;
     name: string;
     snaps: Array<Snap>;
   }>;
-  globalStore: Store;
-  getStoreName: Function;
-  isOnlyViewer: Function;
-  snapsToRemove: SnapsList;
-  setSnapsToRemove: Function;
-  nonEssentialSnapIds: SnapsList;
 };
 
-function SnapsTables({
-  currentStoreName,
-  snapsInStore,
-  otherStores,
-  globalStore,
-  getStoreName,
+function IncludedSnapsTable({
   isOnlyViewer,
   snapsToRemove,
   setSnapsToRemove,
+  globalStore,
   nonEssentialSnapIds,
-}: SnapTablesProps) {
+  getStoreName,
+  otherStores,
+}: IncludedSnapsTableProps) {
   const [isChecked, setIsChecked] = useState(false);
   const [isIndeterminate, setIsIndeterminate] = useState(false);
 
@@ -170,98 +166,61 @@ function SnapsTables({
   }, [snapsToRemove]);
 
   return (
-    <>
-      {snapsInStore.length > 0 ? (
-        <table>
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Latest release</th>
-              <th>Release date</th>
-              <th>Publisher</th>
-            </tr>
-          </thead>
-          <tbody>
-            {snapsInStore.map((snap: Snap) => (
-              <tr key={snap.id}>
-                <td className="u-truncate">{snap.name}</td>
-                <td className="u-truncate">
-                  {snap["latest-release"] && snap["latest-release"].version
-                    ? snap["latest-release"].version
-                    : "-"}
-                </td>
-                <td className="u-truncate">
-                  {format(
-                    new Date(snap["latest-release"].timestamp),
-                    "dd/MM/yyyy"
-                  )}
-                </td>
-                <td className="u-truncate">{snap.users[0].displayname}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      ) : (
-        <p>There are currently no snaps in this store</p>
-      )}
-
-      <h2 className="p-heading--5">Snaps from other stores</h2>
-      <table>
-        <thead>
-          <tr>
-            <th className={tableCellClass}>
-              {!isOnlyViewer() ? (
-                <Input
-                  type="checkbox"
-                  onChange={(e) => {
-                    if (e.target.checked) {
-                      setSnapsToRemove(
-                        allSnaps.filter((item) => !item.essential)
-                      );
-                      setIsChecked(true);
-                    } else {
-                      setSnapsToRemove([]);
-                      setIsChecked(false);
-                    }
-                  }}
-                  disabled={!nonEssentialSnapIds.length}
-                  label="Name"
-                  checked={isChecked}
-                  // @ts-ignore
-                  indeterminate={isIndeterminate}
-                />
-              ) : (
-                "Name"
-              )}
-            </th>
-            <th>Source store</th>
-            <th>Latest release</th>
-            <th>Release date</th>
-            <th>Publisher</th>
-          </tr>
-        </thead>
-        <tbody>
-          {otherStores.map((store) => (
-            <SnapTableRows
-              key={store.id}
-              snaps={deDupedSnaps(store.snaps, store.id)}
-              getStoreName={getStoreName}
-              isOnlyViewer={isOnlyViewer}
-              snapsToRemove={snapsToRemove}
-              setSnapsToRemove={setSnapsToRemove}
-            />
-          ))}
+    <table>
+      <thead>
+        <tr>
+          <th className={tableCellClass}>
+            {!isOnlyViewer() ? (
+              <Input
+                type="checkbox"
+                onChange={(e) => {
+                  if (e.target.checked) {
+                    setSnapsToRemove(
+                      allSnaps.filter((item) => !item.essential)
+                    );
+                    setIsChecked(true);
+                  } else {
+                    setSnapsToRemove([]);
+                    setIsChecked(false);
+                  }
+                }}
+                disabled={!nonEssentialSnapIds.length}
+                label="Name"
+                checked={isChecked}
+                // @ts-ignore
+                indeterminate={isIndeterminate}
+              />
+            ) : (
+              "Name"
+            )}
+          </th>
+          <th>Source store</th>
+          <th>Latest release</th>
+          <th>Release date</th>
+          <th>Publisher</th>
+        </tr>
+      </thead>
+      <tbody>
+        {otherStores.map((store) => (
           <SnapTableRows
-            snaps={deDupedSnaps(globalStore.snaps, "ubuntu")}
-            isGlobal={true}
+            key={store.id}
+            snaps={deDupedSnaps(store.snaps, store.id)}
+            getStoreName={getStoreName}
             isOnlyViewer={isOnlyViewer}
             snapsToRemove={snapsToRemove}
             setSnapsToRemove={setSnapsToRemove}
           />
-        </tbody>
-      </table>
-    </>
+        ))}
+        <SnapTableRows
+          snaps={deDupedSnaps(globalStore.snaps, "ubuntu")}
+          isGlobal={true}
+          isOnlyViewer={isOnlyViewer}
+          snapsToRemove={snapsToRemove}
+          setSnapsToRemove={setSnapsToRemove}
+        />
+      </tbody>
+    </table>
   );
 }
 
-export default SnapsTables;
+export default IncludedSnapsTable;
