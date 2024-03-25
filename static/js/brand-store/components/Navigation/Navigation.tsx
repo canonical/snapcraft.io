@@ -221,9 +221,10 @@ function Navigation({ sectionName }: { sectionName: string | null }) {
                                   className="p-side-navigation__link"
                                   aria-selected={sectionName === "models"}
                                 >
-                                  <div className="p-side-navigation__label">
+                                  <i className="p-icon--models is-light p-side-navigation__icon"></i>
+                                  <span className="p-side-navigation__label">
                                     Models
-                                  </div>
+                                  </span>
                                 </NavLink>
                               </li>
                               <li className="p-tabs__item">
@@ -232,9 +233,10 @@ function Navigation({ sectionName }: { sectionName: string | null }) {
                                   className="p-side-navigation__link"
                                   aria-selected={sectionName === "signing-keys"}
                                 >
-                                  <div className="p-side-navigation__label">
+                                  <i className="p-icon--security is-light p-side-navigation__icon"></i>
+                                  <span className="p-side-navigation__label">
                                     Signing keys
-                                  </div>
+                                  </span>
                                 </NavLink>
                               </li>
                             </>
