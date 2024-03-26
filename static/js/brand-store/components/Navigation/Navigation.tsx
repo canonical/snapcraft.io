@@ -96,7 +96,24 @@ function Navigation({ sectionName }: { sectionName: string | null }) {
               {!brandIsLoading && brandIsSuccess && (
                 <>
                   <div className="p-side-navigation--icons is-dark">
-                    <ul className="p-side-navigation__list sidenav-top-ul u-no-margin--bottom">
+                    <ul className="p-side-navigation__list">
+                      <li className="p-side-navigation__item--title p-muted-heading">
+                        <span className="p-side-navigation__link">
+                          <span className="p-side-navigation__label">
+                            My snaps
+                          </span>
+                        </span>
+                      </li>
+                      <li className="p-side-navigation__item">
+                        <a className="p-side-navigation__link" href="/snaps">
+                          <i className="p-icon--pods is-light p-side-navigation__icon"></i>
+                          <span className="p-side-navigation__label">
+                            Overview
+                          </span>
+                        </a>
+                      </li>
+                    </ul>
+                    <ul className="p-side-navigation__list u-no-margin--bottom">
                       <li className="p-side-navigation__item--title p-muted-heading">
                         <span className="p-side-navigation__link">
                           <i className="p-icon--pods is-light p-side-navigation__icon"></i>
