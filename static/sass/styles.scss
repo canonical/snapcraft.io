@@ -511,3 +511,43 @@ dl {
 .p-search-box .p-search-box__input:placeholder-shown ~ .p-search-box__reset {
   display: none !important;
 }
+
+.brand-store-accordion {
+  .p-accordion__heading button {
+    font-weight: bold;
+    text-transform: uppercase;
+  }
+
+  .p-accordion__panel {
+    padding-left: 1rem;
+  }
+
+  .p-accordion__list {
+    margin-bottom: 0;
+  }
+}
+
+.accordion-actions {
+  position: relative;
+}
+
+.accordion-actions__row {
+  margin-top: 1rem;
+
+  @media (min-width: $breakpoint-small) {
+    margin-top: 0;
+    position: absolute;
+    right: 0;
+    top: 0.25rem;
+    z-index: 10;
+  }
+}
+
+.is-flex-column {
+  display: flex;
+  flex-direction: column;
+
+  .p-panel__content {
+    flex-grow: 1;
+  }
+}
