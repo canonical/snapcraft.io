@@ -5,11 +5,15 @@ import flask
 from canonicalwebteam.launchpad import Launchpad
 from ruamel.yaml import YAML
 from webapp.api.requests import PublisherSession, Session
+from canonicalwebteam.store_api.stores.snapstore import SnapPublisher
+import webapp.api.marketo as marketo_api
 
 _yaml = YAML(typ="rt")
 _yaml_safe = YAML(typ="safe")
 api_session = Session()
 api_publisher_session = PublisherSession()
+marketo = marketo_api.Marketo()
+publisher_api = SnapPublisher(api_publisher_session)
 
 launchpad = Launchpad(
     username=os.getenv("LP_API_USERNAME"),
@@ -98,3 +102,37 @@ def get_icon(media):
     if len(icons) > 0:
         return icons[0]
     return ""
+
+
+def get_publisher_data():
+    # We don't use the data from this endpoint.
+    # It is mostly used to make sure the user has signed
+    # the terms and conditions.
+    publisher_api.get_account(flask.session)
+
+    flask_user = flask.session["publisher"]
+
+    subscriptions = None
+
+    # don't rely on marketo to show the page,
+    # if anything fails, just continue and don't show
+    # this section
+    try:
+        subscribed_to_newsletter = False
+        marketo_user = marketo.get_user(flask_user["email"])
+        if marketo_user:
+            marketo_subscribed = marketo.get_newsletter_subscription(
+                marketo_user["id"]
+            )
+            if marketo_subscribed.get("snapcraftnewsletter"):
+                subscribed_to_newsletter = True
+
+        subscriptions = {"newsletter": subscribed_to_newsletter}
+    except Exception:
+        if "sentry" in flask.current_app.extensions:
+            flask.current_app.extensions["sentry"].captureException()
+
+    flask_user["subscriptions"] = subscriptions
+    context = {"publisher": flask_user}
+
+    return context

@@ -28,7 +28,7 @@ class AccountDetailsPage(BaseTestCases.EndpointLoggedInErrorHandling):
         )
 
     @responses.activate
-    @patch("webapp.publisher.views.marketo")
+    @patch("webapp.helpers.marketo")
     def test_account(self, marketo):
         responses.add(responses.GET, self.api_url, json={}, status=200)
 
@@ -51,7 +51,7 @@ class AccountDetailsPage(BaseTestCases.EndpointLoggedInErrorHandling):
         self.assert_context("subscriptions", {"newsletter": True})
 
     @responses.activate
-    @patch("webapp.publisher.views.marketo")
+    @patch("webapp.helpers.marketo")
     def test_account_marketo_no_sub(self, marketo):
         responses.add(responses.GET, self.api_url, json={}, status=200)
 
@@ -72,7 +72,7 @@ class AccountDetailsPage(BaseTestCases.EndpointLoggedInErrorHandling):
         self.assert_context("subscriptions", {"newsletter": False})
 
     @responses.activate
-    @patch("webapp.publisher.views.marketo")
+    @patch("webapp.helpers.marketo")
     def test_account_marketo_exception(self, marketo):
         responses.add(responses.GET, self.api_url, json={}, status=200)
 
