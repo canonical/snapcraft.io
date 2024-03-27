@@ -7,6 +7,7 @@ from canonicalwebteam.store_api.exceptions import StoreApiResponseErrorList
 # Local
 import webapp.api.marketo as marketo_api
 from webapp.helpers import api_publisher_session
+from webapp import helpers
 from webapp.decorators import login_required
 
 account = flask.Blueprint(
@@ -26,42 +27,30 @@ def get_account():
 @account.route("/details", methods=["GET"])
 @login_required
 def get_account_details():
-    # We don't use the data from this endpoint.
-    # It is mostly used to make sure the user has signed
-    # the terms and conditions.
-    publisher_api.get_account(flask.session)
-
-    flask_user = flask.session["publisher"]
-
-    subscriptions = None
-
-    # don't rely on marketo to show the page,
-    # if anything fails, just continue and don't show
-    # this section
-    try:
-        subscribed_to_newsletter = False
-        marketo_user = marketo.get_user(flask_user["email"])
-        if marketo_user:
-            marketo_subscribed = marketo.get_newsletter_subscription(
-                marketo_user["id"]
-            )
-            if marketo_subscribed.get("snapcraftnewsletter"):
-                subscribed_to_newsletter = True
-
-        subscriptions = {"newsletter": subscribed_to_newsletter}
-    except Exception:
-        if "sentry" in flask.current_app.extensions:
-            flask.current_app.extensions["sentry"].captureException()
+    flask_user = helpers.get_publisher_data()
 
     context = {
-        "image": flask_user["image"],
-        "username": flask_user["nickname"],
-        "displayname": flask_user["fullname"],
-        "email": flask_user["email"],
-        "subscriptions": subscriptions,
+        "image": flask_user["publisher"]["image"],
+        "username": flask_user["publisher"]["nickname"],
+        "displayname": flask_user["publisher"]["fullname"],
+        "email": flask_user["publisher"]["email"],
+        "subscriptions": flask_user["publisher"]["subscriptions"],
     }
 
     return flask.render_template("publisher/account-details.html", **context)
+
+
+@account.route("/publisher", methods=["GET"])
+@login_required
+def get_publisher_details():
+    flask_user = helpers.get_publisher_data()
+    response = flask.make_response(flask_user)
+
+    # Unset the last_login_method cookie to avoid forcing
+    response.set_cookie("last_login_method", "", expires=0)
+    response.headers["Cache-Control"] = "no-store"
+
+    return response
 
 
 @account.route("/details", methods=["POST"])
