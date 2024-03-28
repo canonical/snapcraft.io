@@ -1,6 +1,5 @@
 import flask
 import prometheus_client
-from talisker import logging
 
 from webapp.snapcraft import logic
 
@@ -24,36 +23,6 @@ def snapcraft_blueprint():
         return flask.render_template(
             "index.html", nps=nps, livestream=livestream
         )
-
-    @snapcraft.route("/account.json")
-    def get_account_json():
-        """
-        A JSON endpoint to request login status
-        """
-        try:
-            publisher = None
-
-            if "publisher" in flask.session:
-                publisher = flask.session["publisher"]
-
-            response = {"publisher": publisher}
-            response = flask.make_response(response)
-
-            # Unset the last_login_method cookie to avoid forcing
-            response.set_cookie("last_login_method", "", expires=0)
-
-            response.headers["Cache-Control"] = "no-store"
-
-            return response
-        except Exception as e:
-            logging.getLogger("talisker.wsgi").error(
-                "Error with session: %s", e
-            )
-
-            response = {"error": "Error fetching account information"}
-            response = flask.make_response(response)
-            response.headers["Cache-Control"] = "no-store"
-            return response, 502
 
     @snapcraft.route("/iot")
     def iot():
