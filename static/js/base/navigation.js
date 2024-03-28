@@ -9,7 +9,7 @@ if (navAccountContainer) {
     ".js-nav-account--authenticated",
   );
 
-  fetch("/account.json")
+  fetch("/account/publisher")
     .then((response) => response.json())
     .then((data) => {
       if (data.publisher) {
