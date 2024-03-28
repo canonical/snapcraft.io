@@ -2,19 +2,27 @@ from math import ceil, floor
 import talisker.requests
 import flask
 from dateutil import parser
+from webapp.decorators import exchange_required, login_required
 import webapp.helpers as helpers
 import webapp.store.logic as logic
 from webapp.api import requests
-from canonicalwebteam.store_api.stores.snapstore import SnapStore
+from canonicalwebteam.store_api.stores.snapstore import (
+    SnapStore,
+    SnapPublisher,
+)
 from canonicalwebteam.store_api.exceptions import StoreApiError
 from webapp.api.exceptions import ApiError
 from webapp.snapcraft import logic as snapcraft_logic
 from webapp.store.snap_details_views import snap_details_views
+from webapp.helpers import api_publisher_session
+from flask.json import jsonify
 import os
+from webapp.extensions import csrf
 
 session = talisker.requests.get_session(requests.Session)
 
 YOUTUBE_API_KEY = os.getenv("YOUTUBE_API_KEY")
+publisher_api = SnapPublisher(api_publisher_session)
 
 
 def store_blueprint(store_query=None):
@@ -498,5 +506,30 @@ def store_blueprint(store_query=None):
     else:
         store.add_url_rule("/store", "homepage", store_view)
         store.add_url_rule("/search", "search", search_snap)
+
+    @store.route("/<snap_name>/create-track", methods=["POST"])
+    @login_required
+    @csrf.exempt
+    @exchange_required
+    def post_create_track(snap_name):
+        track_name = flask.request.form["track-name"]
+        response = publisher_api.create_track(
+            flask.session, snap_name, track_name
+        )
+        if response.status_code == 201:
+            return response.json(), response.status_code
+        if response.status_code == 409:
+            return (
+                jsonify({"error": "Track already exists."}),
+                response.status_code,
+            )
+        if "error-list" in response.json():
+            return (
+                jsonify(
+                    {"error": response.json()["error-list"][0]["message"]}
+                ),
+                response.status_code,
+            )
+        return response.json(), response.status_code
 
     return store
