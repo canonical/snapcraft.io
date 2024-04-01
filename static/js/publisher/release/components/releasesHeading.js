@@ -7,56 +7,39 @@ import { closeHistory } from "../actions/history";
 import { getTracks } from "../selectors";
 
 import DefaultTrackModifier from "./defaultTrackModifier";
+import TrackDropdown from "./trackDropdown";
 
 class ReleasesHeading extends Component {
-  onTrackChange(event) {
-    this.props.setCurrentTrack(event.target.value);
-    this.props.closeHistoryPanel();
-  }
-
-  renderTrackDropdown(tracks) {
-    const { currentTrack, defaultTrack } = this.props;
-    return (
-      <form className="p-form p-form--inline">
-        <select
-          id="track-dropdown"
-          onChange={this.onTrackChange.bind(this)}
-          value={currentTrack}
-        >
-          {tracks.map((track) => (
-            <option key={`${track}`} value={track}>
-              {track}{" "}
-              {defaultTrack === track && track !== "latest" && "(default)"}
-            </option>
-          ))}
-        </select>
-      </form>
-    );
-  }
-
   render() {
-    const { tracks } = this.props;
+    const { tracks, currentTrack, defaultTrack, setCurrentTrack } = this.props;
+    const options = tracks.map((track) => ({ value: track, label: track }));
 
-    const Wrap = tracks.length > 1 ? "label" : "span";
+    const handleTrackChange = (track) => {
+      setCurrentTrack(track);
+    };
+
     return (
       <section className="p-strip is-shallow u-no-padding--bottom">
         <div className="row">
           <div className="col-6">
-            <h4>
-              <Wrap htmlFor="track-dropdown">
-                {tracks.length > 1 ? (
-                  <>
-                    Track &nbsp;
-                    {this.renderTrackDropdown(tracks)}
-                  </>
-                ) : (
-                  <>Releases available to install</>
-                )}
-              </Wrap>
+            <h4 className="p-strip is-shallow u-no-padding--top u-no-padding--bottom">
+              Releases available to install
             </h4>
+            <h5 className="p-strip is-shallow u-no-padding--top">
+              <label htmlFor="track-dropdown">
+                Track: &nbsp;
+                <TrackDropdown
+                  options={options}
+                  label={currentTrack}
+                  defaultTrack={defaultTrack}
+                  currentTrack={currentTrack}
+                  onChange={handleTrackChange}
+                />
+              </label>
+            </h5>
           </div>
           <div className="col-6" style={{ marginTop: "0.25rem" }}>
-            {tracks.length > 1 && <DefaultTrackModifier />}
+            {<DefaultTrackModifier />}
           </div>
         </div>
       </section>
