@@ -1,4 +1,5 @@
 @import "snapcraft_patterns_icons";
+@include vf-p-icon-task-outstanding;
 
 @mixin snapcraft-release {
   $color-highlighted: #e9ffec;
@@ -11,6 +12,58 @@
     .is-pinned & {
       border-bottom: none;
     }
+  }
+
+  // CUSTOM TRACK DROPDOWN
+
+  .track-dropdown {
+    background-color: $color-mid-light;
+    border-bottom: 1px solid $color-mid-dark;
+    display: inline-block;
+    height: 40px;
+    min-width: 150px;
+    width: auto;
+  }
+    
+  .dropdown-toggle {
+      align-items: center;
+      cursor: pointer;
+      display: flex;
+      height: inherit;
+      justify-content: space-between;
+      padding: $sp-small;
+  }
+    
+  .dropdown-menu {
+      background-color: $color-x-light;
+      box-shadow: 0 3px 3px rgba(51, 51, 51, 0.2);
+      margin-top: $sp-small;
+      max-height: 400px;
+      min-width: 150px;
+      overflow-y: auto;
+      padding: $sp-small;
+      position: absolute;
+      width: auto;
+      z-index: 1000;
+  }
+
+  .dropdown-item {
+      align-items: center;
+      cursor: pointer;
+      display: flex;
+      height: inherit;
+      justify-content: space-between;
+      padding: $sp-small;
+      width: 100%;
+      
+      &:hover {
+          background-color: $color-mid-light;
+          border-radius: 4px;
+      }
+  }
+
+  .p-status-label {
+      margin: 0 $sp-small 0 $sp-small;
   }
 
   // RELEASES CONFIRM
