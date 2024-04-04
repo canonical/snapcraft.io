@@ -1,32 +1,9 @@
-from unittest import TestCase
 from unittest.mock import Mock, patch
-from webapp.app import create_app
-from webapp.authentication import get_publishergw_authorization_header
+from tests.admin.admin_endpoint_testing import TestAdminEndpoints
 
 
-class TestUpdateFeaturedSnaps(TestCase):
-
-    def _log_in(self, client):
-        test_macaroon = "test_macaroon"
-        with client.session_transaction() as s:
-            s["publisher"] = {
-                "account_id": "test_account_id",
-                "image": None,
-                "nickname": "XYZ",
-                "fullname": "ABC XYZ",
-                "email": "testing@testing.com",
-                "stores": [],
-            }
-            s["macaroons"] = "test_macaroon"
-            s["developer_token"] = test_macaroon
-            s["exchanged_developer_token"] = True
-
-        return get_publishergw_authorization_header(test_macaroon)
-
+class TestUpdateFeaturedSnaps(TestAdminEndpoints):
     def setUp(self):
-        self.app = create_app(testing=True)
-        self.client = self.app.test_client()
-        self._log_in(self.client)
         self.mock_flask = patch("webapp.admin.views.flask").start()
         self.mock_get_snap_id = patch(
             "webapp.admin.views.publisher_api.get_snap_id"
@@ -40,6 +17,7 @@ class TestUpdateFeaturedSnaps(TestCase):
         self.mock_update_featured_snaps = patch(
             "webapp.admin.views.admin_api.update_featured_snaps"
         ).start()
+        super().setUp()
 
     def tearDown(self):
         # Clean up the patches after each test
