@@ -68,6 +68,7 @@ def post_account_details():
 
 
 @account.route("/agreement")
+@login_required
 def get_agreement():
     return flask.render_template(
         "publisher/developer_programme_agreement.html"
