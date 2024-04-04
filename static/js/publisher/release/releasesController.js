@@ -2,7 +2,6 @@ import React, { Fragment, useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
-import ReleasesTable from "./components/releasesTable";
 import Notification from "./components/globalNotification";
 import ReleasesHeading from "./components/releasesHeading";
 import ReleasesConfirm from "./components/releasesConfirm";
@@ -84,7 +83,6 @@ const ReleasesController = ({
             </div>
           </div>
           <ReleasesHeading />
-          <ReleasesTable />
           {showModal && <Modal />}
         </Fragment>
       )}
