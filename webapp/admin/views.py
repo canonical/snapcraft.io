@@ -666,7 +666,7 @@ def post_featured_snaps():
             "success": False,
             "message": "Snaps cannot be empty",
         }
-        return make_response(response, 502)
+        return make_response(response, 500)
     new_featured_snaps = featured_snaps.split(",")
 
     # currently_featured_snap is the list of featured snaps to be deleted
@@ -692,7 +692,7 @@ def post_featured_snaps():
             "success": False,
             "message": "An error occurred while deleting featured snaps",
         }
-        return make_response(response, 502)
+        return make_response(response, 500)
     snap_ids = [
         publisher_api.get_snap_id(snap_name, flask.session)
         for snap_name in new_featured_snaps
@@ -706,5 +706,5 @@ def post_featured_snaps():
             "success": False,
             "message": "An error occured while updating featured snaps",
         }
-        return make_response(response, 502)
+        return make_response(response, 500)
     return make_response({"success": True}, 200)

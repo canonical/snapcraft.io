@@ -120,7 +120,7 @@ class TestUpdateFeaturedSnaps(TestCase):
             self.mock_get_snap_id.side_effect = [1, 2]
 
             response = self.client.post("/admin/featured")
-        self.assertEqual(response.status_code, 502)
+        self.assertEqual(response.status_code, 500)
 
     def test_update_featured_snaps_update_failed(self):
         with self.app.test_request_context("/admin/featured"):
@@ -145,5 +145,5 @@ class TestUpdateFeaturedSnaps(TestCase):
             self.mock_get_snap_id.side_effect = [1, 2]
 
             response = self.client.post("/admin/featured")
-        self.assertEqual(response.status_code, 502)
+        self.assertEqual(response.status_code, 500)
         self.assertEqual(response.json.get("success"), False)
