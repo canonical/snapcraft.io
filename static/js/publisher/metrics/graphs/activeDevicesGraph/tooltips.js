@@ -79,7 +79,7 @@ export function tooltips() {
               `</span>`,
               `<span class="snapcraft-graph-tooltip__series-value">${commaValue(
                 item.value,
-              )} (${((item.value / total) * 100).toFixed(2)}%)</span>`,
+              )} (${total !== 0 ? ((item.value / total) * 100).toFixed(2) : 0}%)</span>`,
               `</span>`,
             ].join("");
           }
