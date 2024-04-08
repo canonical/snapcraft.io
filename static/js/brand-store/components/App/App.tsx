@@ -13,6 +13,7 @@ import { fetchStores } from "../../slices/brandStoreSlice";
 import { brandStoresListSelector } from "../../selectors";
 import { brandStoresState } from "../../atoms";
 
+import AccountDetails from "../AccountDetails";
 import Snaps from "../Snaps";
 import Members from "../Members";
 import Settings from "../Settings";
@@ -75,6 +76,7 @@ function App() {
               ) : null
             }
           />
+          <Route path="/admin/account" element={<AccountDetails />} />
           <Route path="/admin/:id/snaps" element={<Snaps />} />
           <Route path="/admin/:id/members" element={<Members />} />
           <Route path="/admin/:id/settings" element={<Settings />} />

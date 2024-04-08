@@ -93,201 +93,208 @@ function Navigation({ sectionName }: { sectionName: string | null }) {
               </div>
             </div>
             <div className="p-panel__content">
-              {!brandIsLoading && brandIsSuccess && (
-                <>
-                  <div className="p-side-navigation--icons is-dark">
-                    <ul className="p-side-navigation__list">
-                      <li className="p-side-navigation__item--title p-muted-heading">
-                        <span className="p-side-navigation__link">
-                          <span className="p-side-navigation__label">
-                            My snaps
+              <div className="p-side-navigation--icons is-dark">
+                <ul className="p-side-navigation__list">
+                  <li className="p-side-navigation__item--title p-muted-heading">
+                    <span className="p-side-navigation__link">
+                      <span className="p-side-navigation__label">My snaps</span>
+                    </span>
+                  </li>
+                  <li className="p-side-navigation__item">
+                    <a className="p-side-navigation__link" href="/snaps">
+                      <i className="p-icon--pods is-light p-side-navigation__icon"></i>
+                      <span className="p-side-navigation__label">Overview</span>
+                    </a>
+                  </li>
+                </ul>
+              </div>
+              {publisherData &&
+                publisherData?.publisher?.has_stores &&
+                !brandIsLoading &&
+                brandIsSuccess && (
+                  <>
+                    <div className="p-side-navigation--icons is-dark">
+                      <ul className="p-side-navigation__list u-no-margin--bottom">
+                        <li className="p-side-navigation__item--title p-muted-heading">
+                          <span className="p-side-navigation__link">
+                            <i className="p-icon--pods is-light p-side-navigation__icon"></i>
+                            <span className="p-side-navigation__label">
+                              My stores
+                            </span>
                           </span>
-                        </span>
-                      </li>
-                      <li className="p-side-navigation__item">
-                        <a className="p-side-navigation__link" href="/snaps">
-                          <i className="p-icon--pods is-light p-side-navigation__icon"></i>
-                          <span className="p-side-navigation__label">
-                            Overview
-                          </span>
-                        </a>
-                      </li>
-                    </ul>
-                    <ul className="p-side-navigation__list u-no-margin--bottom">
-                      <li className="p-side-navigation__item--title p-muted-heading">
-                        <span className="p-side-navigation__link">
-                          <i className="p-icon--pods is-light p-side-navigation__icon"></i>
-                          <span className="p-side-navigation__label">
-                            My stores
-                          </span>
-                        </span>
-                      </li>
-                    </ul>
-                  </div>
-                  <div className="p-side-navigation is-dark">
-                    <ul className="p-side-navigation__list">
-                      <li className="p-side-navigation__item">
-                        <span className="p-side-navigation__link">
-                          <span className="p-side-navigation__label">
-                            <div className="store-selector">
-                              <button
-                                className="store-selector__button u-no-margin--bottom"
-                                onClick={() => {
-                                  setShowStoreSelector(!showStoreSelector);
-                                }}
-                              >
-                                {getStoreName(id)}
-                              </button>
-                              {showStoreSelector && (
-                                <div className="store-selector__panel">
-                                  <div className="p-search-box u-no-margin--bottom">
-                                    <label
-                                      htmlFor="search-stores"
-                                      className="u-off-screen"
-                                    >
-                                      Search stores
-                                    </label>
-                                    <input
-                                      type="search"
-                                      className="p-search-box__input"
-                                      id="search-stores"
-                                      name="search-stores"
-                                      placeholder="Search"
-                                      onInput={(e) => {
-                                        const value = (
-                                          e.target as HTMLInputElement
-                                        ).value;
-
-                                        if (value.length > 0) {
-                                          setFilteredBrandstores(
-                                            brandStoresList.filter((store) => {
-                                              const storeName =
-                                                store.name.toLowerCase();
-                                              return storeName.includes(
-                                                value.toLowerCase()
-                                              );
-                                            })
-                                          );
-                                        } else {
-                                          setFilteredBrandstores(
-                                            brandStoresList
-                                          );
-                                        }
-                                      }}
-                                    />
-                                    <button
-                                      type="reset"
-                                      className="p-search-box__reset"
-                                    >
-                                      <i className="p-icon--close">Close</i>
-                                    </button>
-                                    <button
-                                      type="submit"
-                                      className="p-search-box__button"
-                                    >
-                                      <i className="p-icon--search">Search</i>
-                                    </button>
-                                  </div>
-                                  <ul className="store-selector__list">
-                                    {filteredBrandStores.map((store: Store) => (
-                                      <li
-                                        key={store.id}
-                                        className="store-selector__item"
+                        </li>
+                      </ul>
+                    </div>
+                    <div className="p-side-navigation is-dark">
+                      <ul className="p-side-navigation__list">
+                        <li className="p-side-navigation__item">
+                          <span className="p-side-navigation__link">
+                            <span className="p-side-navigation__label">
+                              <div className="store-selector">
+                                <button
+                                  className="store-selector__button u-no-margin--bottom"
+                                  onClick={() => {
+                                    setShowStoreSelector(!showStoreSelector);
+                                  }}
+                                >
+                                  {getStoreName(id)}
+                                </button>
+                                {showStoreSelector && (
+                                  <div className="store-selector__panel">
+                                    <div className="p-search-box u-no-margin--bottom">
+                                      <label
+                                        htmlFor="search-stores"
+                                        className="u-off-screen"
                                       >
-                                        <NavLink
-                                          to={`/admin/${store.id}/snaps`}
-                                          onClick={() => {
-                                            setShowStoreSelector(false);
-                                          }}
-                                        >
-                                          {store.name}
-                                        </NavLink>
-                                      </li>
-                                    ))}
-                                  </ul>
-                                </div>
-                              )}
-                            </div>
+                                        Search stores
+                                      </label>
+                                      <input
+                                        type="search"
+                                        className="p-search-box__input"
+                                        id="search-stores"
+                                        name="search-stores"
+                                        placeholder="Search"
+                                        onInput={(e) => {
+                                          const value = (
+                                            e.target as HTMLInputElement
+                                          ).value;
+
+                                          if (value.length > 0) {
+                                            setFilteredBrandstores(
+                                              brandStoresList.filter(
+                                                (store) => {
+                                                  const storeName =
+                                                    store.name.toLowerCase();
+                                                  return storeName.includes(
+                                                    value.toLowerCase()
+                                                  );
+                                                }
+                                              )
+                                            );
+                                          } else {
+                                            setFilteredBrandstores(
+                                              brandStoresList
+                                            );
+                                          }
+                                        }}
+                                      />
+                                      <button
+                                        type="reset"
+                                        className="p-search-box__reset"
+                                      >
+                                        <i className="p-icon--close">Close</i>
+                                      </button>
+                                      <button
+                                        type="submit"
+                                        className="p-search-box__button"
+                                      >
+                                        <i className="p-icon--search">Search</i>
+                                      </button>
+                                    </div>
+                                    <ul className="store-selector__list">
+                                      {filteredBrandStores.map(
+                                        (store: Store) => (
+                                          <li
+                                            key={store.id}
+                                            className="store-selector__item"
+                                          >
+                                            <NavLink
+                                              to={`/admin/${store.id}/snaps`}
+                                              onClick={() => {
+                                                setShowStoreSelector(false);
+                                              }}
+                                            >
+                                              {store.name}
+                                            </NavLink>
+                                          </li>
+                                        )
+                                      )}
+                                    </ul>
+                                  </div>
+                                )}
+                              </div>
+                            </span>
                           </span>
-                        </span>
-                      </li>
-                    </ul>
-                  </div>
-                  <div className="p-side-navigation--icons is-dark">
-                    <ul className="p-side-navigation__list">
-                      {sectionName && (
-                        <>
-                          <li className="p-side-navigation__item">
-                            <NavLink
-                              className="p-side-navigation__link"
-                              to={`/admin/${id}/snaps`}
-                              aria-selected={sectionName === "snaps"}
-                            >
-                              <i className="p-icon--pods is-light p-side-navigation__icon"></i>
-                              <span className="p-side-navigation__label">
-                                Store snaps
-                              </span>
-                            </NavLink>
-                          </li>
-                          {/* If success then models and signing keys are available */}
-                          {brandData.success && !brandData.data?.Code && (
-                            <>
-                              <li className="p-tabs__item">
-                                <NavLink
-                                  to={`/admin/${id}/models`}
-                                  className="p-side-navigation__link"
-                                  aria-selected={sectionName === "models"}
-                                >
-                                  <i className="p-icon--models is-light p-side-navigation__icon"></i>
-                                  <span className="p-side-navigation__label">
-                                    Models
-                                  </span>
-                                </NavLink>
-                              </li>
-                              <li className="p-tabs__item">
-                                <NavLink
-                                  to={`/admin/${id}/signing-keys`}
-                                  className="p-side-navigation__link"
-                                  aria-selected={sectionName === "signing-keys"}
-                                >
-                                  <i className="p-icon--security is-light p-side-navigation__icon"></i>
-                                  <span className="p-side-navigation__label">
-                                    Signing keys
-                                  </span>
-                                </NavLink>
-                              </li>
-                            </>
-                          )}
-                          <li className="p-side-navigation__item">
-                            <NavLink
-                              className="p-side-navigation__link"
-                              to={`/admin/${id}/members`}
-                              aria-selected={sectionName === "members"}
-                            >
-                              <i className="p-icon--user-group is-light p-side-navigation__icon"></i>
-                              <span className="p-side-navigation__label">
-                                Members
-                              </span>
-                            </NavLink>
-                          </li>
-                          <li className="p-side-navigation__item">
-                            <NavLink
-                              className="p-side-navigation__link"
-                              to={`/admin/${id}/settings`}
-                              aria-selected={sectionName === "settings"}
-                            >
-                              <i className="p-icon--settings is-light p-side-navigation__icon"></i>
-                              <span className="p-side-navigation__label">
-                                Settings
-                              </span>
-                            </NavLink>
-                          </li>
-                        </>
-                      )}
-                    </ul>
-                  </div>
-                </>
-              )}
+                        </li>
+                      </ul>
+                    </div>
+                    <div className="p-side-navigation--icons is-dark">
+                      <ul className="p-side-navigation__list">
+                        {sectionName && (
+                          <>
+                            <li className="p-side-navigation__item">
+                              <NavLink
+                                className="p-side-navigation__link"
+                                to={`/admin/${id}/snaps`}
+                                aria-selected={sectionName === "snaps"}
+                              >
+                                <i className="p-icon--pods is-light p-side-navigation__icon"></i>
+                                <span className="p-side-navigation__label">
+                                  Store snaps
+                                </span>
+                              </NavLink>
+                            </li>
+                            {/* If success then models and signing keys are available */}
+                            {brandData.success && !brandData.data?.Code && (
+                              <>
+                                <li className="p-tabs__item">
+                                  <NavLink
+                                    to={`/admin/${id}/models`}
+                                    className="p-side-navigation__link"
+                                    aria-selected={sectionName === "models"}
+                                  >
+                                    <i className="p-icon--models is-light p-side-navigation__icon"></i>
+                                    <span className="p-side-navigation__label">
+                                      Models
+                                    </span>
+                                  </NavLink>
+                                </li>
+                                <li className="p-tabs__item">
+                                  <NavLink
+                                    to={`/admin/${id}/signing-keys`}
+                                    className="p-side-navigation__link"
+                                    aria-selected={
+                                      sectionName === "signing-keys"
+                                    }
+                                  >
+                                    <i className="p-icon--security is-light p-side-navigation__icon"></i>
+                                    <span className="p-side-navigation__label">
+                                      Signing keys
+                                    </span>
+                                  </NavLink>
+                                </li>
+                              </>
+                            )}
+                            <li className="p-side-navigation__item">
+                              <NavLink
+                                className="p-side-navigation__link"
+                                to={`/admin/${id}/members`}
+                                aria-selected={sectionName === "members"}
+                              >
+                                <i className="p-icon--user-group is-light p-side-navigation__icon"></i>
+                                <span className="p-side-navigation__label">
+                                  Members
+                                </span>
+                              </NavLink>
+                            </li>
+                            <li className="p-side-navigation__item">
+                              <NavLink
+                                className="p-side-navigation__link"
+                                to={`/admin/${id}/settings`}
+                                aria-selected={sectionName === "settings"}
+                              >
+                                <i className="p-icon--settings is-light p-side-navigation__icon"></i>
+                                <span className="p-side-navigation__label">
+                                  Settings
+                                </span>
+                              </NavLink>
+                            </li>
+                          </>
+                        )}
+                      </ul>
+                    </div>
+                  </>
+                )}
               <div className="p-side-navigation--icons is-dark">
                 {publisherData && publisherData.publisher && (
                   <ul className="p-side-navigation__list sidenav-bottom-ul">
@@ -295,6 +302,7 @@ function Navigation({ sectionName }: { sectionName: string | null }) {
                       <a
                         href="/account/details"
                         className="p-side-navigation__link"
+                        aria-selected={sectionName === "account"}
                       >
                         <i className="p-icon--user is-light p-side-navigation__icon"></i>
                         <span className="p-side-navigation__label">
