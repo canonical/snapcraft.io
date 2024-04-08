@@ -205,6 +205,7 @@ $color-social-icon-foreground: $color-light;
 @include vf-p-icon-pods;
 @include vf-p-icon-security;
 @include vf-p-icon-models;
+@include vf-p-icon-edit;
 
 dl {
   margin-bottom: $spv--x-large;

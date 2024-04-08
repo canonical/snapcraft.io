@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
+import { useRecoilState } from "recoil";
 import { useParams, NavLink } from "react-router-dom";
 
 import Logo from "./Logo";
 
+import { publisherState } from "../../atoms";
 import { brandStoresListSelector } from "../../selectors";
 import { useBrand, usePublisher } from "../../hooks";
 
@@ -23,6 +25,7 @@ function Navigation({ sectionName }: { sectionName: string | null }) {
   const [showStoreSelector, setShowStoreSelector] = useState<boolean>(false);
   const [filteredBrandStores, setFilteredBrandstores] =
     useState<Array<Store>>(brandStoresList);
+  const [publisher, setPublisher] = useRecoilState(publisherState);
 
   const getStoreName = (id: string | undefined) => {
     if (!id) {
@@ -41,6 +44,12 @@ function Navigation({ sectionName }: { sectionName: string | null }) {
   useEffect(() => {
     setFilteredBrandstores(brandStoresList);
   }, [brandStoresList]);
+
+  useEffect(() => {
+    if (publisherData) {
+      setPublisher(publisherData.publisher);
+    }
+  }, [publisherData]);
 
   return (
     <>
