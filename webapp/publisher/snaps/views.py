@@ -374,9 +374,7 @@ def post_register_name():
         if api_response_error_list.status_code == 409:
             for error in api_response_error_list.errors:
                 if error["code"] == "already_claimed":
-                    return flask.redirect(
-                        flask.url_for("account.get_account_details")
-                    )
+                    return flask.redirect("/admin/account")
                 elif error["code"] == "already_registered":
                     return flask.redirect(
                         flask.url_for(
