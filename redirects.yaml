@@ -71,4 +71,3 @@ docs/snaps: /docs
 docs/snaps/intro: /docs/getting-started
 docs/snaps/metadata: /docs/snap-format
 docs/snaps/structure: /docs/system-snap-directory
-account/details: /admin/account
