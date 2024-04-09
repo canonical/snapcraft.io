@@ -1,5 +1,6 @@
 # Packages
 import flask
+from flask.json import jsonify
 
 from canonicalwebteam.store_api.stores.snapstore import SnapPublisher
 from canonicalwebteam.store_api.exceptions import StoreApiResponseErrorList
@@ -51,6 +52,23 @@ def get_publisher_details():
     response.headers["Cache-Control"] = "no-store"
 
     return response
+
+
+@account.route("/publisher", methods=["POST"])
+@login_required
+def post_publisher_details():
+    try:
+        newsletter_status = flask.request.form.get("newsletter")
+        email = flask.request.form.get("email")
+        marketo.set_newsletter_subscription(email, newsletter_status)
+        return jsonify({"success": True})
+    except Exception:
+        return jsonify(
+            {
+                "success": False,
+                "message": "There was an error, please try again.",
+            }
+        )
 
 
 @account.route("/details", methods=["POST"])

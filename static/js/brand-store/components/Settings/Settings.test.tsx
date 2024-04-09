@@ -1,6 +1,7 @@
 import React from "react";
 import * as reactRedux from "react-redux";
 import { BrowserRouter as Router } from "react-router-dom";
+import { RecoilRoot } from "recoil";
 import { Provider } from "react-redux";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { render, screen } from "@testing-library/react";
@@ -31,11 +32,13 @@ const queryClient = new QueryClient({
 function renderComponent() {
   return render(
     <Provider store={store}>
-      <Router>
-        <QueryClientProvider client={queryClient}>
-          <Settings />
-        </QueryClientProvider>
-      </Router>
+      <RecoilRoot>
+        <Router>
+          <QueryClientProvider client={queryClient}>
+            <Settings />
+          </QueryClientProvider>
+        </Router>
+      </RecoilRoot>
     </Provider>
   );
 }
