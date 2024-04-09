@@ -308,8 +308,8 @@ function Navigation({ sectionName }: { sectionName: string | null }) {
                 {publisherData && publisherData.publisher && (
                   <ul className="p-side-navigation__list sidenav-bottom-ul">
                     <li className="p-side-navigation__item">
-                      <a
-                        href="/account/details"
+                      <NavLink
+                        to="/admin/account"
                         className="p-side-navigation__link"
                         aria-selected={sectionName === "account"}
                       >
@@ -317,7 +317,7 @@ function Navigation({ sectionName }: { sectionName: string | null }) {
                         <span className="p-side-navigation__label">
                           {publisherData.publisher.fullname}
                         </span>
-                      </a>
+                      </NavLink>
                     </li>
                     <li className="p-side-navigation__item">
                       <a href="/logout" className="p-side-navigation__link">
