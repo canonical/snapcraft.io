@@ -82,7 +82,7 @@ def post_release(snap_name):
             return flask.abort(404, "No snap named {}".format(snap_name))
         else:
             response = {
-                "errors": api_response_error_list.errors,
+                "errors": api_response_error_list,
             }
             return flask.jsonify(response), 400
 
