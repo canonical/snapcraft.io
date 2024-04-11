@@ -31,6 +31,10 @@ def get_authorization_header(root, discharge):
     return "Macaroon root={}, discharge={}".format(root, bound.serialize())
 
 
+def get_publishergw_authorization_header(developer_token):
+    return {"Authorization ": f"Macaroon {developer_token}"}
+
+
 def is_authenticated(session):
     """
     Checks if the user is authenticated from the session

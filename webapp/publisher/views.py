@@ -1,5 +1,6 @@
 # Packages
 import flask
+from flask.json import jsonify
 
 from canonicalwebteam.store_api.stores.snapstore import SnapPublisher
 from canonicalwebteam.store_api.exceptions import StoreApiResponseErrorList
@@ -24,22 +25,6 @@ def get_account():
     return flask.redirect(flask.url_for("publisher_snaps.get_account_snaps"))
 
 
-@account.route("/details", methods=["GET"])
-@login_required
-def get_account_details():
-    flask_user = helpers.get_publisher_data()
-
-    context = {
-        "image": flask_user["publisher"]["image"],
-        "username": flask_user["publisher"]["nickname"],
-        "displayname": flask_user["publisher"]["fullname"],
-        "email": flask_user["publisher"]["email"],
-        "subscriptions": flask_user["publisher"]["subscriptions"],
-    }
-
-    return flask.render_template("publisher/account-details.html", **context)
-
-
 @account.route("/publisher", methods=["GET"])
 @login_required
 def get_publisher_details():
@@ -53,18 +38,21 @@ def get_publisher_details():
     return response
 
 
-@account.route("/details", methods=["POST"])
+@account.route("/publisher", methods=["POST"])
 @login_required
-def post_account_details():
+def post_publisher_details():
     try:
         newsletter_status = flask.request.form.get("newsletter")
         email = flask.request.form.get("email")
         marketo.set_newsletter_subscription(email, newsletter_status)
-        flask.flash("Changes applied successfully.", "positive")
+        return jsonify({"success": True})
     except Exception:
-        flask.flash("There was an error, please try again.", "negative")
-
-    return flask.redirect(flask.url_for("account.get_account_details"))
+        return jsonify(
+            {
+                "success": False,
+                "message": "There was an error, please try again.",
+            }
+        )
 
 
 @account.route("/agreement")

@@ -123,10 +123,6 @@ class DefaultTrackModifier extends Component {
     const isCurrentDefault = defaultTrack === currentTrack;
     const defaultIsLatest = defaultTrack === "latest";
 
-    if (currentTrack === "latest") {
-      return null;
-    }
-
     return (
       <div className="u-float-right">
         {!isCurrentDefault && this.renderSetButton()}

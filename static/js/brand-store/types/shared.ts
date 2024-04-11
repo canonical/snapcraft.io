@@ -165,3 +165,16 @@ export type SigningKey = {
   models?: Array<string>;
   policies?: Array<Policy>;
 };
+
+export type Publisher = {
+  email: string;
+  fullname: string;
+  has_stores?: boolean;
+  identity_url: string;
+  image: string | null;
+  is_canonical: boolean;
+  nickname: string;
+  subscriptions: {
+    newsletter: boolean;
+  } | null;
+} | null;

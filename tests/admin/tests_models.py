@@ -1,4 +1,3 @@
-import unittest
 from unittest.mock import patch
 
 from canonicalwebteam.candid import CandidClient
@@ -6,39 +5,18 @@ from canonicalwebteam.store_api.exceptions import (
     StoreApiResponseErrorList,
     StoreApiResourceNotFound,
 )
-from webapp.app import create_app
 from webapp.helpers import api_publisher_session
+from tests.admin.admin_endpoint_testing import TestAdminEndpoints
 
 
 candid = CandidClient(api_publisher_session)
 
 
-class TestModelServiceEndpoints(unittest.TestCase):
-    def _candid_log_in(self, client):
-        """
-        mocks candid login
-        """
-
-        test_macaroon = "test_macaroon"
-        with client.session_transaction() as s:
-            s["publisher"] = {
-                "account_id": "test_account_id",
-                "image": None,
-                "nickname": "XYZ",
-                "fullname": "ABC XYZ",
-                "email": "testing@testing.com",
-                "stores": [],
-            }
-            s["macaroons"] = "test_macaroon"
-            s["developer_token"] = test_macaroon
-
-        return f"Macaroon {test_macaroon}"
+class TestModelServiceEndpoints(TestAdminEndpoints):
 
     def setUp(self):
-        self.app = create_app(testing=True)
-        self.client = self.app.test_client()
-        self._candid_log_in(self.client)
         self.api_key = "qwertyuioplkjhgfdsazxcvbnmkiopuytrewqasdfghjklmnbv"
+        super().setUp()
 
 
 class TestGetModels(TestModelServiceEndpoints):

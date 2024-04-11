@@ -1,5 +1,11 @@
 import { atom } from "recoil";
-import type { Store, Model, Policy, SigningKey } from "../types/shared";
+import type {
+  Store,
+  Model,
+  Policy,
+  SigningKey,
+  Publisher,
+} from "../types/shared";
 
 const brandStoresState = atom({
   key: "brandStores",
@@ -51,6 +57,11 @@ const newSigningKeyState = atom({
   },
 });
 
+const publisherState = atom({
+  key: "publisher",
+  default: null as Publisher,
+});
+
 export {
   brandStoresState,
   modelsListState,
@@ -61,4 +72,5 @@ export {
   signingKeysListState,
   signingKeysListFilterState,
   newSigningKeyState,
+  publisherState,
 };
