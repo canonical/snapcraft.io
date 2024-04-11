@@ -1,4 +1,5 @@
 @import "snapcraft_patterns_icons";
+@include vf-p-icon-task-outstanding;
 
 @mixin snapcraft-release {
   $color-highlighted: #e9ffec;
@@ -11,6 +12,89 @@
     .is-pinned & {
       border-bottom: none;
     }
+  }
+
+  // CUSTOM TRACK DROPDOWN
+
+  .track-dropdown {
+    background-color: $color-mid-light;
+    border-bottom: 1px solid $color-mid-dark;
+    display: inline-block;
+    height: 42px;
+    margin-right: 1rem;
+    min-width: 150px;
+    width: auto;
+  }
+    
+  .dropdown-toggle {
+      align-items: center;
+      cursor: pointer;
+      display: flex;
+      height: inherit;
+      justify-content: space-between;
+      padding: $sp-small;
+  }
+    
+  .dropdown-menu {
+      background-color: $color-x-light;
+      box-shadow: 0 3px 3px rgba(51, 51, 51, 0.2);
+      margin: $sp-small 0 $sp-small 0;
+      max-height: 400px;
+      min-width: 150px;
+      order: 1;
+      overflow-y: auto;
+      padding: $sp-small;
+      position: absolute;
+      width: auto;
+      z-index: 1000;
+  }
+
+  .dropdown-item {
+      align-items: center;
+      cursor: pointer;
+      display: flex;
+      height: inherit;
+      justify-content: space-between;
+      padding: $sp-small;
+      width: 100%;
+      
+      &:hover {
+          background-color: $color-mid-light;
+          border-radius: 4px;
+      }
+  }
+
+  .new-track-button {
+    border: none;
+    margin: $sp-small 0 0 0;
+    width: 100%;
+
+    &:hover {
+      background-color: $color-mid-light;
+      border-radius: 4px;
+    }
+  }
+
+  .track-button {
+    border-top: $border;
+    margin-top: $spv--x-small;
+    padding: $sp-x-small;
+  }
+
+  .p-status-label {
+      margin: 0 $sp-small 0 $sp-small;
+  }
+
+  // REQUEST / CREATE TRACK ASIDE COMPONENT
+  
+  .aside-panel-footer {
+    background-color: $color-x-light;
+    border-top: $border;
+    bottom: 0;
+    margin: $spv--small;
+    padding: $spv--medium 0 $spv--medium 0;
+    position: sticky;
+    z-index: 1000;
   }
 
   // RELEASES CONFIRM

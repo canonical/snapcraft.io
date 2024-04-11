@@ -14,7 +14,7 @@ responses.mock.assert_all_requests_are_fired = True
 class TestCache(BaseTestCases.EndpointLoggedInErrorHandling):
     def setUp(self):
         api_url = "https://dashboard.snapcraft.io/dev/api/account"
-        endpoint_url = "/account/details"
+        endpoint_url = "/account/publisher"
 
         super().setUp(
             snap_name=None,

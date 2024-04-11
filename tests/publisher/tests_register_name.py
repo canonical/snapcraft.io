@@ -272,7 +272,7 @@ class PostRegisterNamePage(BaseTestCases.EndpointLoggedIn):
         response = self.client.post(self.endpoint_url, data=self.data)
 
         assert response.status_code == 302
-        self.assertEqual(response.location, "http://localhost/account/details")
+        self.assertEqual(response.location, "http://localhost/admin/account")
 
     @responses.activate
     def test_post_error_user_error(self):
