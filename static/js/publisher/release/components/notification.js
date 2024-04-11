@@ -18,19 +18,20 @@ class Notification extends Component {
 
     return (
       <div className={`p-notification ${className}`}>
-        <p className={notificationStyle("response")}>
-          {status && this.getStatus(this.props.status)}
-          {children}
-        </p>
-        {canDismiss && (
-          <button
-            className="p-icon--close"
-            aria-label="Close notification"
-            onClick={hideNotification}
-          >
-            Close
-          </button>
-        )}
+        <div className="p-notification__content">
+          <p className={notificationStyle("message")}>
+            {status && this.getStatus(this.props.status)} {children}
+          </p>
+          {canDismiss && (
+            <button
+              className="p-notification__close"
+              aria-label="Close notification"
+              onClick={hideNotification}
+            >
+              Close
+            </button>
+          )}
+        </div>
       </div>
     );
   }
