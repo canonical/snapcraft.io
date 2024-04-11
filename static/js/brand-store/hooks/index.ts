@@ -87,7 +87,7 @@ export function useBrand(id: string | undefined) {
 
 export function usePublisher() {
   return useQuery("publisher", async () => {
-    const response = await fetch("/account/publisher");
+    const response = await fetch("/account.json");
 
     if (!response.ok) {
       return {
