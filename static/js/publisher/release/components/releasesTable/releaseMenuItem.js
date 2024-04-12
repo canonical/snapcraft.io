@@ -4,16 +4,19 @@ import { connect } from "react-redux";
 
 import { promoteRevision } from "../../actions/pendingReleases";
 import { getPendingChannelMap } from "../../selectors";
-import { canBeReleased } from "../../helpers";
+import { canBeReleased, isInDevmode } from "../../helpers";
 
 function ReleaseMenuItem(props) {
   const risk = `latest/${props.risk}`;
+  const devModeRisk = props.risk === "stable" || props.risk === "candidate";
+  const hasDevmodeRevisions =
+    Object.values(props.item.revisions).some(isInDevmode) && devModeRisk;
 
   return (
     <span
       key={props.risk}
       className={`p-contextual-menu__link ${
-        props.current === risk ? "is-disabled" : ""
+        props.current === risk || hasDevmodeRevisions ? "is-disabled" : ""
       }`}
       onClick={() => {
         props.item.revisions.forEach((r) => {
