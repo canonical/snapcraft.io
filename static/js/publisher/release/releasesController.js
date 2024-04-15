@@ -86,7 +86,7 @@ const ReleasesController = ({
               </div>
             </div>
           </div>
-          <ReleasesHeading />
+          <ReleasesHeading snapName={snapName} />
           {showModal && <Modal />}
         </Fragment>
       )}

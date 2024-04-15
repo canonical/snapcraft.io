@@ -38,12 +38,14 @@
   .dropdown-menu {
       background-color: $color-x-light;
       box-shadow: 0 3px 3px rgba(51, 51, 51, 0.2);
+      display: flex;
+      flex-direction: column;
       margin: $sp-small 0 $sp-small 0;
-      max-height: 400px;
+      max-height: 250px;
       min-width: 150px;
       order: 1;
       overflow-y: auto;
-      padding: $sp-small;
+      padding: $sp-small $sp-small 0 $sp-small;
       position: absolute;
       width: auto;
       z-index: 1000;
@@ -53,6 +55,7 @@
       align-items: center;
       cursor: pointer;
       display: flex;
+      flex: 1;
       height: inherit;
       justify-content: space-between;
       padding: $sp-small;
@@ -64,9 +67,14 @@
       }
   }
 
+  .options-container {
+    flex-grow: 1;
+  }
+
   .new-track-button {
     border: none;
-    margin: $sp-small 0 0 0;
+    height: 100%;
+    margin: 0;
     width: 100%;
 
     &:hover {
@@ -76,17 +84,30 @@
   }
 
   .track-button {
+    background-color: $color-x-light;
     border-top: $border;
+    bottom: 0;
+    height: 100%;
     margin-top: $spv--x-small;
-    padding: $sp-x-small;
+    padding: $sp-small 0 $sp-small 0;
+    position: sticky;
+    width: 100%;
+  }
+
+  .track-button-wrapper {
+    background-color: $color-x-light;
+    bottom: 0;
+    margin-top: auto;
+    padding: none;
+    position: sticky;
   }
 
   .p-status-label {
       margin: 0 $sp-small 0 $sp-small;
   }
 
-  // REQUEST / CREATE TRACK ASIDE COMPONENT
-  
+  // REQUEST / ADD TRACK ASIDE COMPONENT
+
   .aside-panel-footer {
     background-color: $color-x-light;
     border-top: $border;
