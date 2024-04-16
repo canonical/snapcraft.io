@@ -71,7 +71,7 @@ function Navigation({ sectionName }: { sectionName: string | null }) {
         </div>
       </header>
       <nav
-        className={`l-navigation ${!collapseNavigation ? "is-collapsed" : ""} ${pinSideNavigation ? "is-pinned" : ""}`}
+        className={`l-navigation ${collapseNavigation ? "is-collapsed" : ""} ${pinSideNavigation ? "is-pinned" : ""}`}
       >
         <div className="l-navigation__drawer">
           <div className="p-panel is-dark">
@@ -328,6 +328,17 @@ function Navigation({ sectionName }: { sectionName: string | null }) {
                   </ul>
                 )}
               </div>
+            </div>
+            <div className="sidenav-toggle-wrapper u-hide--small u-hide--medium">
+              <button
+                className="p-button--base has-icon is-dense sidenav-toggle is-dark u-no-margin l-navigation-collapse-toggle u-hide--small"
+                aria-label={`${collapseNavigation ? "Collapse" : "Expand"} main navigation`}
+                onClick={() => {
+                  setCollapseNavigation(!collapseNavigation);
+                }}
+              >
+                <i className="p-icon--sidebar-toggle is-light"></i>
+              </button>
             </div>
           </div>
         </div>
