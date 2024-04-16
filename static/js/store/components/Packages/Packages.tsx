@@ -191,9 +191,9 @@ function Packages() {
           </Col>
           <Col size={9}>
             {data?.packages && data?.packages.length > 0 && (
-              <>
+              <div ref={searchSummaryRef}>
                 {isFeatured && <h2>Featured snaps</h2>}
-                <Row ref={searchSummaryRef}>
+                <Row>
                   <Col size={6}>
                     {searchParams.get("q") ? (
                       <p>
@@ -233,7 +233,7 @@ function Packages() {
                     <p>Sorted by relevance</p>
                   </Col>
                 </Row>
-              </>
+              </div>
             )}
             <Row>
               {isFetching &&
