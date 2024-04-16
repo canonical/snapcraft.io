@@ -18,7 +18,15 @@ function Packages() {
   const ITEMS_PER_PAGE = 15;
 
   const getData = async () => {
-    const queryString = search || "?categories=featured";
+    let queryString = search;
+
+    if (!search) {
+      queryString = "?categories=featured";
+    }
+
+    if (search && !search.includes("categories=")) {
+      queryString += "&categories=featured";
+    }
 
     const response = await fetch(`/beta/store.json${queryString}`);
     const data = await response.json();
