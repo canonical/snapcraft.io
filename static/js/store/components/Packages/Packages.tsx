@@ -18,7 +18,15 @@ function Packages() {
   const ITEMS_PER_PAGE = 15;
 
   const getData = async () => {
-    const queryString = search || "?categories=featured";
+    let queryString = search;
+
+    if (!search) {
+      queryString = "?categories=featured";
+    }
+
+    if (search && !search.includes("categories=")) {
+      queryString += "&categories=featured";
+    }
 
     const response = await fetch(`/beta/store.json${queryString}`);
     const data = await response.json();
@@ -183,9 +191,9 @@ function Packages() {
           </Col>
           <Col size={9}>
             {data?.packages && data?.packages.length > 0 && (
-              <>
+              <div ref={searchSummaryRef}>
                 {isFeatured && <h2>Featured snaps</h2>}
-                <Row ref={searchSummaryRef}>
+                <Row>
                   <Col size={6}>
                     {searchParams.get("q") ? (
                       <p>
@@ -225,7 +233,7 @@ function Packages() {
                     <p>Sorted by relevance</p>
                   </Col>
                 </Row>
-              </>
+              </div>
             )}
             <Row>
               {isFetching &&
