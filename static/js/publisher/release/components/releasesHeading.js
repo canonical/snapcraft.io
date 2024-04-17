@@ -370,7 +370,7 @@ function ReleasesHeading(props) {
                   </div>
                 </div>
                 <p className="p-form-help-text" id="trackNameHelpMessage">
-                  Name should follow the track creation guardrails (TCG)
+                  Name should follow the track creation guardrails (TCG).
                 </p>
 
                 {/* Optional Properties */}
@@ -445,11 +445,18 @@ function ReleasesHeading(props) {
               </Form>
               <p>* Mandatory field</p>
               <p>
+                TCG were provided by the team when the first track was requested
+                through the Snapcraft forum.
+              </p>
+              <p>
                 <a href="https://snapcraft.io/docs/channels">
                   Learn about tracks
                 </a>{" "}
-                or <a href="https://discourse.canonical.com/">contact us</a> for
-                help.
+                or{" "}
+                <a href="https://forum.snapcraft.io/c/store-requests/19">
+                  contact us
+                </a>{" "}
+                for help.
               </p>
               {notification && (
                 <Notification
