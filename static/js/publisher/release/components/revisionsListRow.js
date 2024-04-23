@@ -104,7 +104,12 @@ const RevisionsListRow = (props) => {
           </span>
         )}
       </td>
-      <td data-heading="Version">{revision.version}</td>
+      <td 
+        data-heading="Version" 
+        style={{ whiteSpace: "normal", wordWrap: "break-word" }}
+      >
+        {revision.version}
+      </td>
       {showBuildRequest && (
         <td data-heading="Build request">
           {buildRequestId && <>{buildRequestId}</>}
