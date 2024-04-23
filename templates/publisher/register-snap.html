@@ -98,25 +98,27 @@ Register new Snap name
             <input class="p-form-validation__input" type="text" name="snap-name" id="snap-name" required maxlength="40" value="{{ snap_name }}" />
           </div>
         </div>
-        <div class="p-form-validation">
-          <label for="public">Snap privacy</label>
-          <p class="p-form-help-text">This can be changed at any time after the initial upload</p>
-          <div class="p-form-validation__field">
-            <div>
-              <label>
-                <input type="radio" name="is_private" value="public" class="p-form-validation__input" id="public" aria-labelledby="register-snap-public" {% if not is_private %} checked {% endif %}>
-                <span id="register-snap-public">Public</span>
-              </label>
-            </div>
-            <div>
-              <label>
-                <input type="radio" name="is_private" value="private" class="p-form-validation__input" id="private" aria-labelledby="register-snap-private" {% if is_private %} checked {% endif %}>
-                <span id="register-snap-private">Private</span>
-              </label>
-              <p class="p-form-help-text" style="margin-left: 1.5rem;">Snap is hidden in stores and only accessible by the publisher and collaborators</p>
+        {% if available_stores %}
+          <div class="p-form-validation">
+            <label for="public">Snap privacy</label>
+            <p class="p-form-help-text">This can be changed at any time after the initial upload</p>
+            <div class="p-form-validation__field">
+              <div>
+                <label>
+                  <input type="radio" name="is_private" value="public" class="p-form-validation__input" id="public" aria-labelledby="register-snap-public">
+                  <span id="register-snap-public">Public</span>
+                </label>
+              </div>
+              <div>
+                <label>
+                  <input type="radio" name="is_private" value="private" class="p-form-validation__input" id="private" aria-labelledby="register-snap-private">
+                  <span id="register-snap-private">Private</span>
+                </label>
+                <p class="p-form-help-text" style="margin-left: 1.5rem;">Snap is hidden in stores and only accessible by the publisher and collaborators</p>
+              </div>
             </div>
           </div>
-        </div>
+        {% endif %}
       </div>
     </div>
 
