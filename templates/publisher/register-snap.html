@@ -114,13 +114,13 @@ Register new Snap name
             <div class="p-form-validation__field">
               <div>
                 <label>
-                  <input type="radio" name="is_private" value="public" class="p-form-validation__input" id="public" aria-labelledby="register-snap-public" {% if not is_private %} checked {% endif %}>
+                  <input type="radio" name="is_private" value="public" class="p-form-validation__input" id="public" aria-labelledby="register-snap-public">
                   <span id="register-snap-public">Public</span>
                 </label>
               </div>
               <div>
                 <label>
-                  <input type="radio" name="is_private" value="private" class="p-form-validation__input" id="private" aria-labelledby="register-snap-private" {% if is_private %} checked {% endif %}>
+                  <input type="radio" name="is_private" value="private" class="p-form-validation__input" id="private" aria-labelledby="register-snap-private">
                   <span id="register-snap-private">Private</span>
                 </label>
                 <p class="p-form-help-text" style="margin-left: 1.5rem;">Snap is hidden in stores and only accessible by the publisher and collaborators</p>
@@ -145,13 +145,36 @@ Register new Snap name
 
 <script>
   let isPrivate = true
-  store = document.querySelector("#snap-store")
+  let store = document.querySelector("#snap-store")
+  let privateRadioButton = document.querySelector("#private")
+  let publicRadioButton = document.querySelector("#public")
+  let toggleNotification = document.querySelector(".toggle-nofication")
   let selectedStore = store.value
+
+  if (isPrivate) {
+    privateRadioButton.checked = true
+    publicRadioButton.disabled = true
+    privateRadioButton.disabled = true
+  }
+  else {
+    publicRadioButton.checked = true
+  }
+
   store.addEventListener("change", function() {
     selectedStore = store.value
     selectedStore == "ubuntu" ? isPrivate = true : isPrivate = false
-    toggleNotification = document.querySelector(".toggle-nofication")
-    isPrivate ? toggleNotification.style.display = "block" : toggleNotification.style.display = "none"
+    if (isPrivate) {
+      toggleNotification.style.display = "block"
+      privateRadioButton.checked = true
+      publicRadioButton.disabled = true
+      privateRadioButton.disabled = true
+
+    } else {
+      toggleNotification.style.display = "none"
+      publicRadioButton.disabled = false
+      privateRadioButton.disabled = false
+    
+    }
   })
 </script>
 {% endblock %}
