@@ -149,7 +149,7 @@ Register new Snap name
   let privateRadioButton = document.querySelector("#private")
   let publicRadioButton = document.querySelector("#public")
   let toggleNotification = document.querySelector(".toggle-nofication")
-  let selectedStore = store.value
+  let selectedStore = store?.value
 
   if (isPrivate) {
     privateRadioButton.checked = true
@@ -160,7 +160,7 @@ Register new Snap name
     publicRadioButton.checked = true
   }
 
-  store.addEventListener("change", function() {
+  store?.addEventListener("change", function() {
     selectedStore = store.value
     selectedStore == "ubuntu" ? isPrivate = true : isPrivate = false
     if (isPrivate) {
