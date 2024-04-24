@@ -358,6 +358,9 @@ def post_register_name():
     store = flask.request.form.get("store")
     registrant_comment = flask.request.form.get("registrant_comment")
 
+    if store =="ubuntu" or store == None:
+        return flask.redirect("https://dashboard.snapcraft.io/register-snap")
+        
     try:
         publisher_api.post_register_name(
             session=flask.session,
