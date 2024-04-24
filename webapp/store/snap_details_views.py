@@ -1,5 +1,6 @@
 import flask
 import humanize
+import requests
 
 import webapp.helpers as helpers
 import webapp.metrics.helper as metrics_helper
@@ -400,3 +401,31 @@ def snap_details_views(store, api):
         return flask.render_template(
             "store/snap-distro-install.html", **context
         )
+
+    @store.route("/report", methods=["POST"])
+    def report_snap():
+        form_url = "/".join(
+            [
+                "https://docs.google.com",
+                "forms",
+                "d",
+                "e",
+                "1FAIpQLSc5w1Ow6hRGs-VvBXmDtPOZaadYHEpsqCl2RbKEenluBvaw3Q",
+                "formResponse",
+            ]
+        )
+
+        fields = flask.request.form
+
+        # If the honeypot is activated or a URL is included in the message,
+        # say "OK" to avoid spam
+        if (
+            "entry.13371337" in fields and fields["entry.13371337"] == "on"
+        ) or "http" in fields["entry.1974584359"]:
+            return "", 200
+
+        try:
+            requests.post(form_url, data=fields)
+            return "", 200
+        except Exception as e:
+            return e, 500
