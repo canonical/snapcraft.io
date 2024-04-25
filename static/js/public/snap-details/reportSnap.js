@@ -78,25 +78,29 @@ export default function initReportSnap(
       return;
     }
 
-    const resp = await fetch(formURL, {
-      method: "POST",
-      body: new FormData(reportForm),
-      mode: "no-cors",
-    });
+    try {
+      const resp = await fetch(formURL, {
+        method: "POST",
+        body: new FormData(reportForm),
+        mode: "no-cors",
+      });
 
-    if (reportForm.action.endsWith("/report")) {
-      const data = await resp.json();
-      if (data.url) {
-        const formData = new FormData(reportForm);
-        fetch(data.url, {
-          method: "POST",
-          body: formData,
-          mode: "no-cors",
-        });
+      if (reportForm.action.endsWith("/report")) {
+        const data = await resp.json();
+        if (data.url) {
+          const formData = new FormData(reportForm);
+          fetch(data.url, {
+            method: "POST",
+            body: formData,
+            mode: "no-cors",
+          });
+        }
       }
-    }
 
-    showSuccess(modal);
+      showSuccess(modal);
+    } catch (e) {
+      showError(modal);
+    }
   });
 
   // close modal on ESC
