@@ -1,6 +1,5 @@
 import flask
 import humanize
-import requests
 
 import webapp.helpers as helpers
 import webapp.metrics.helper as metrics_helper
@@ -424,8 +423,4 @@ def snap_details_views(store, api):
         ) or "http" in fields["entry.1974584359"]:
             return "", 200
 
-        try:
-            requests.post(form_url, data=fields)
-            return "", 200
-        except Exception as e:
-            return e, 500
+        return flask.jsonify({"url": form_url}), 200
