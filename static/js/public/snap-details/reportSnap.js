@@ -47,6 +47,9 @@ export default function initReportSnap(
   const modal = document.querySelector(modalSelector);
   const reportForm = modal.querySelector("form");
 
+  const honeypotField = reportForm.querySelector("#report-snap-confirm");
+  const commentField = reportForm.querySelector("#report-snap-comment");
+
   toggle.addEventListener("click", (event) => {
     event.preventDefault();
     toggleModal(modal);
@@ -66,6 +69,14 @@ export default function initReportSnap(
       reportForm.querySelector("button[type=submit]"),
       "Submitting…",
     );
+
+    if (
+      honeypotField.checked ||
+      (commentField.value && commentField.value.includes("http"))
+    ) {
+      showSuccess(modal);
+      return;
+    }
 
     fetch(formURL, {
       method: "POST",
