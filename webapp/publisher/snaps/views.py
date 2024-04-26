@@ -1,6 +1,7 @@
 # Packages
 import bleach
 import flask
+import re
 from canonicalwebteam.store_api.stores.snapstore import (
     SnapPublisher,
     SnapStoreAdmin,
@@ -405,6 +406,13 @@ def post_register_name():
                             reserved=True,
                         )
                     )
+                elif error["code"] == "name-review-required":
+                    formatted_error = re.sub(
+                        r"(https?://\S+)",
+                        r'<a href="\1">\1</a>',
+                        error["message"],
+                    )
+                    error["message"] = formatted_error
 
         context = {
             "snap_name": snap_name,
