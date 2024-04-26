@@ -64,7 +64,7 @@ Register new Snap name
       {% for error in errors %}
         <div class="p-notification--caution">
           <div class="p-notification__content">
-            <p class="p-notification__message">{{ error.message }}</p>
+            <p class="p-notification__message">{{ error.message | safe }}</p>
           </div>
         </div>
       {% endfor %}
