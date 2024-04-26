@@ -8,7 +8,8 @@
 
       {# report snap form submits to a Google Forms #}
       {# names of the inputs need to be consistend with the original form #}
-      <form id="report-snap-form" action="https://docs.google.com/forms/d/e/1FAIpQLSc5w1Ow6hRGs-VvBXmDtPOZaadYHEpsqCl2RbKEenluBvaw3Q/formResponse" method="POST">
+      <form id="report-snap-form" action="/report" method="POST">
+        <input name="csrf_token" type="hidden" value="{{csrf_token()}}" />
         <input type="hidden" name="entry.718227286" value="{{package_name}}" />
         <label for="report-snap-reason">Choose a reason for reporting this snap</label>
         <select id="report-snap-reason" name="entry.340540050" required>
@@ -21,6 +22,8 @@
 
         <label for="report-snap-email">Your email (optional)</label>
         <input id="report-snap-email" type="email" name="entry.1624813972" placeholder="email@example.com" />
+        <label for="report-snap-confirm" style="position: absolute; top: -9999999px;">I agree</label>
+        <input id="report-snap-confirm" type="checkbox" name="entry.13371337" style="position: absolute; top: -9999999px;" />
         <p>In submitting this form, I confirm that I have read and agree to <a href="https://ubuntu.com/legal/data-privacy/contact">Canonical’s Privacy Notice</a> and <a href="https://ubuntu.com/legal/data-privacy">Privacy Policy</a>.</p>
         <div class="u-align--right">
           <button type="button" class="js-modal-close u-no-margin--bottom">Cancel</button>
