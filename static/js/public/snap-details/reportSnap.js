@@ -47,6 +47,9 @@ export default function initReportSnap(
   const modal = document.querySelector(modalSelector);
   const reportForm = modal.querySelector("form");
 
+  const honeypotField = reportForm.querySelector("#report-snap-confirm");
+  const commentField = reportForm.querySelector("#report-snap-comment");
+
   toggle.addEventListener("click", (event) => {
     event.preventDefault();
     toggleModal(modal);
@@ -60,20 +63,44 @@ export default function initReportSnap(
     }
   });
 
-  reportForm.addEventListener("submit", (e) => {
+  reportForm.addEventListener("submit", async (e) => {
     e.preventDefault();
     buttonLoading(
       reportForm.querySelector("button[type=submit]"),
       "Submitting…",
     );
 
-    fetch(formURL, {
-      method: "POST",
-      body: new FormData(reportForm),
-      mode: "no-cors",
-    })
-      .then(() => showSuccess(modal))
-      .catch(() => showError(modal));
+    if (
+      honeypotField.checked ||
+      (commentField.value && commentField.value.includes("http"))
+    ) {
+      showSuccess(modal);
+      return;
+    }
+
+    try {
+      const resp = await fetch(formURL, {
+        method: "POST",
+        body: new FormData(reportForm),
+        mode: "no-cors",
+      });
+
+      if (reportForm.action.endsWith("/report")) {
+        const data = await resp.json();
+        if (data.url) {
+          const formData = new FormData(reportForm);
+          fetch(data.url, {
+            method: "POST",
+            body: formData,
+            mode: "no-cors",
+          });
+        }
+      }
+
+      showSuccess(modal);
+    } catch (e) {
+      showError(modal);
+    }
   });
 
   // close modal on ESC
