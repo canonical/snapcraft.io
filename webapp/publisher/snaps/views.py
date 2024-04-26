@@ -407,7 +407,11 @@ def post_register_name():
                         )
                     )
                 elif error["code"] == "name-review-required":
-                    formatted_error = re.sub(r'(https?://\S+)', r'<a href="\1">\1</a>', error["message"])
+                    formatted_error = re.sub(
+                        r"(https?://\S+)",
+                        r'<a href="\1">\1</a>',
+                        error["message"],
+                    )
                     error["message"] = formatted_error
 
         context = {
