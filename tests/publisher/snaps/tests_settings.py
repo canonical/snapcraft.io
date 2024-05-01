@@ -59,6 +59,7 @@ class GetSettingsPage(BaseTestCases.EndpointLoggedInErrorHandling):
             "publisher": {"display-name": "test"},
             "update_metadata_on_release": True,
             "license": "",
+            "visibility_locked": False,
         }
 
         responses.add(responses.GET, self.api_url, json=payload, status=200)
