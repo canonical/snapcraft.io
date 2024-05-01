@@ -100,7 +100,11 @@ jobs:
       - name: Run python tests with coverage
         run: |
           SECRET_KEY=insecure_secret_key coverage run  --source=. -m unittest discover tests
-          bash <(curl -s https://codecov.io/bash) -cF python
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v3
+        with:
+          flags: python
 
   test-js:
     runs-on: ubuntu-latest
@@ -117,8 +121,12 @@ jobs:
 
       - name: Run JS tests with coverage
         run: |
-          yarn test-js
-          bash <(curl -s https://codecov.io/bash) -cF javascript
+          yarn test-js --coverage
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v3
+        with:
+          flags: javascript
 
   check-inclusive-naming:
     runs-on: ubuntu-latest
