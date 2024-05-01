@@ -136,6 +136,16 @@ function App() {
         activeTab="settings"
       />
 
+      {settingsData?.visibility_locked && (
+        <div className="u-fixed-width">
+          <Notification
+            severity="information"
+            title=""
+          >
+            Your Snap is in the queue for manual review. When approved, you will receive an email, and you will be able to change the visibility of your Snap.
+          </Notification>
+          </div>
+      )}
       <Form onSubmit={handleSubmit(onSubmit)} stacked={true}>
         <SaveAndPreview
           snapName={settingsData?.snap_name}
