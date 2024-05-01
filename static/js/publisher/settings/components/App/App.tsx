@@ -71,7 +71,7 @@ function App() {
     if (data.visibility === "unlisted") {
       data.private = false;
       data.unlisted = true;
-    } else if (data.visibility === "private") {
+    } else if (data.visibility === "private" || data.visibility_locked) {
       data.private = true;
       data.unlisted = false;
     } else if (data.visibility === "public") {
