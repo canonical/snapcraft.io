@@ -198,6 +198,7 @@ function App() {
                     type="radio"
                     className="p-radio__input"
                     value="public"
+                    disabled={settingsData?.visibility_locked}
                     {...register("visibility")}
                   />
                   <span className="p-radio__label">Public</span>
@@ -214,6 +215,7 @@ function App() {
                     type="radio"
                     className="p-radio__input"
                     value="unlisted"
+                    disabled={settingsData?.visibility_locked}
                     {...register("visibility")}
                   />
                   <span className="p-radio__label">Unlisted</span>
@@ -231,6 +233,7 @@ function App() {
                     type="radio"
                     className="p-radio__input"
                     value="private"
+                    disabled={settingsData?.visibility_locked}
                     {...register("visibility")}
                   />
                   <span className="p-radio__label">Private</span>
