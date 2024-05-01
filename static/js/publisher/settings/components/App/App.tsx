@@ -68,12 +68,12 @@ function App() {
     setHasSaved(false);
     setSavedError(false);
 
-    if (data.visibility === "unlisted") {
-      data.private = false;
-      data.unlisted = true;
-    } else if (data.visibility === "private") {
+    if (data.visibility === "private" || data.visibility_locked) {
       data.private = true;
       data.unlisted = false;
+    } else if (data.visibility === "unlisted") {
+      data.private = false;
+      data.unlisted = true;
     } else if (data.visibility === "public") {
       data.private = false;
       data.unlisted = false;
@@ -136,6 +136,16 @@ function App() {
         activeTab="settings"
       />
 
+      {settingsData?.visibility_locked && (
+        <div className="u-fixed-width">
+          <Notification
+            severity="information"
+            title=""
+          >
+            Your Snap is in the queue for manual review. When approved, you will receive an email, and you will be able to change the visibility of your Snap.
+          </Notification>
+          </div>
+      )}
       <Form onSubmit={handleSubmit(onSubmit)} stacked={true}>
         <SaveAndPreview
           snapName={settingsData?.snap_name}
@@ -188,6 +198,7 @@ function App() {
                     type="radio"
                     className="p-radio__input"
                     value="public"
+                    disabled={settingsData?.visibility_locked}
                     {...register("visibility")}
                   />
                   <span className="p-radio__label">Public</span>
@@ -204,6 +215,7 @@ function App() {
                     type="radio"
                     className="p-radio__input"
                     value="unlisted"
+                    disabled={settingsData?.visibility_locked}
                     {...register("visibility")}
                   />
                   <span className="p-radio__label">Unlisted</span>
@@ -221,6 +233,7 @@ function App() {
                     type="radio"
                     className="p-radio__input"
                     value="private"
+                    disabled={settingsData?.visibility_locked}
                     {...register("visibility")}
                   />
                   <span className="p-radio__label">Private</span>

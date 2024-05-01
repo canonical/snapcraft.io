@@ -15,6 +15,7 @@ type SettingsData = {
   whitelist_country_keys: string;
   blacklist_country_keys: string;
   country_keys_status: string | null;
+  visibility_locked: boolean
 };
 
 export type { SettingsData };
