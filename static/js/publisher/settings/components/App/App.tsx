@@ -68,12 +68,12 @@ function App() {
     setHasSaved(false);
     setSavedError(false);
 
-    if (data.visibility === "unlisted") {
-      data.private = false;
-      data.unlisted = true;
-    } else if (data.visibility === "private" || data.visibility_locked) {
+    if (data.visibility === "private" || data.visibility_locked) {
       data.private = true;
       data.unlisted = false;
+    } else if (data.visibility === "unlisted") {
+      data.private = false;
+      data.unlisted = true;
     } else if (data.visibility === "public") {
       data.private = false;
       data.unlisted = false;
