@@ -10,6 +10,7 @@ LOGIN_URL = os.getenv("LOGIN_URL", "https://login.ubuntu.com")
 PERMISSIONS = [
     "edit_account",
     "package_access",
+    "package_manage",
     "package_metrics",
     "package_register",
     "package_release",

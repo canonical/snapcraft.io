@@ -10,11 +10,13 @@ from canonicalwebteam.store_api.exceptions import (
     StoreApiError,
     StoreApiResponseErrorList,
 )
+from flask.json import jsonify
 
 # Local
 from webapp.helpers import api_publisher_session, launchpad
 from webapp.api.exceptions import ApiError
-from webapp.decorators import login_required
+from webapp.extensions import csrf
+from webapp.decorators import exchange_required, login_required
 from webapp.publisher.snaps import (
     build_views,
     listing_views,
@@ -436,6 +438,23 @@ def post_register_name():
     )
 
     return flask.redirect(flask.url_for("account.get_account"))
+
+
+@publisher_snaps.route("/<package_name>", methods=["DELETE"])
+@login_required
+@exchange_required
+@csrf.exempt
+def delete_package(package_name):
+    response = publisher_api.unregister_package_name(
+        flask.session, package_name
+    )
+
+    if response.status_code == 200:
+        return ("", 200)
+    return (
+        jsonify({"error": response.json()["error-list"][0]["message"]}),
+        response.status_code,
+    )
 
 
 @publisher_snaps.route("/register-snap/json", methods=["POST"])
