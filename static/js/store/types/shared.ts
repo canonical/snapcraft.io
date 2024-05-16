@@ -17,12 +17,14 @@ export type Package = {
     name: string;
     validation?: string;
   };
-  categories?: Array<{
-    display_name: string;
-    name: string;
-  }>;
+  categories?: Array<Category>;
   ratings?: {
     value: number | null;
     count: number | null;
   };
+};
+
+export type Category = {
+  display_name: string;
+  name: string;
 };

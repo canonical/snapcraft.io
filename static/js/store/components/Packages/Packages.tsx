@@ -12,7 +12,7 @@ import { DefaultCard, LoadingCard, Filters } from "@canonical/store-components";
 
 import Banner from "../Banner";
 
-import type { Package } from "../../types/shared";
+import type { Package, Category } from "../../types/shared";
 
 function Packages() {
   const ITEMS_PER_PAGE = 15;
@@ -67,6 +67,31 @@ function Packages() {
   const firstResultNumber = (parseInt(currentPage) - 1) * ITEMS_PER_PAGE + 1;
   const lastResultNumber =
     (parseInt(currentPage) - 1) * ITEMS_PER_PAGE + data?.packages.length;
+
+  const getCategoryDisplayName = (name: string) => {
+    const category = data?.categories?.find(
+      (cat: Category) => cat.name === name
+    );
+
+    return category.display_name;
+  };
+
+  const getResultsTitle = () => {
+    const selectedCategories = searchParams.get("categories")?.split(",");
+    if (!selectedCategories) {
+      return;
+    }
+
+    if (selectedCategories.length === 2) {
+      return `${getCategoryDisplayName(selectedCategories[0])} and 1 more category`;
+    }
+
+    if (selectedCategories.length > 1) {
+      return `${getCategoryDisplayName(selectedCategories[0])} and ${selectedCategories.length - 1} more categories`;
+    }
+
+    return getCategoryDisplayName(selectedCategories[0]);
+  };
 
   return (
     <>
@@ -190,9 +215,13 @@ function Packages() {
             </div>
           </Col>
           <Col size={9}>
-            {data?.packages && data?.packages.length > 0 && (
+            {status === "success" && data.packages.length && (
               <div ref={searchSummaryRef}>
-                {isFeatured && <h2>Featured snaps</h2>}
+                {isFeatured ? (
+                  <h2>Featured snaps</h2>
+                ) : (
+                  <h2>{getResultsTitle()}</h2>
+                )}
                 <Row>
                   <Col size={6}>
                     {searchParams.get("q") ? (
@@ -228,9 +257,6 @@ function Packages() {
                         items
                       </p>
                     )}
-                  </Col>
-                  <Col size={3} className="u-align--right">
-                    <p>Sorted by relevance</p>
                   </Col>
                 </Row>
               </div>

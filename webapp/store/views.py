@@ -12,7 +12,6 @@ from canonicalwebteam.store_api.stores.snapstore import (
 )
 from canonicalwebteam.store_api.exceptions import StoreApiError
 from webapp.api.exceptions import ApiError
-from webapp.snapcraft import logic as snapcraft_logic
 from webapp.store.snap_details_views import snap_details_views
 from webapp.helpers import api_publisher_session
 from flask.json import jsonify
@@ -39,49 +38,6 @@ def store_blueprint(store_query=None):
     @store.route("/discover")
     def discover():
         return flask.redirect(flask.url_for(".homepage"))
-
-    def store_view():
-        error_info = {}
-        status_code = 200
-
-        try:
-            categories_results = api.get_categories()
-        except StoreApiError:
-            categories_results = []
-
-        categories = logic.get_categories(categories_results)
-
-        featured_snaps = api.get_featured_items()["results"]
-
-        if not featured_snaps:
-            return flask.abort(503)
-
-        for snap in featured_snaps:
-            snap["icon_url"] = helpers.get_icon(snap["media"])
-
-        # if the first snap (banner snap) doesn't have an icon, remove the last
-        # snap from the list to avoid a hanging snap (grid of 9)
-        if len(featured_snaps) == 10 and featured_snaps[0]["icon_url"] == "":
-            featured_snaps = featured_snaps[:-1]
-
-        for index in range(len(featured_snaps)):
-            featured_snaps[index] = logic.get_snap_banner_url(
-                featured_snaps[index]
-            )
-
-        livestream = snapcraft_logic.get_livestreams()
-
-        return (
-            flask.render_template(
-                "store/store.html",
-                categories=categories,
-                has_featured=True,
-                featured_snaps=featured_snaps,
-                error_info=error_info,
-                livestream=livestream,
-            ),
-            status_code,
-        )
 
     def brand_store_view():
         error_info = {}
@@ -277,9 +233,9 @@ def store_blueprint(store_query=None):
             status_code,
         )
 
-    @store.route("/beta-store")
-    def beta_store_view():
-        return flask.render_template("store/beta.html")
+    @store.route("/store")
+    def store_view():
+        return flask.render_template("store/store.html")
 
     @store.route("/youtube", methods=["POST"])
     def get_video_thumbnail_data():
