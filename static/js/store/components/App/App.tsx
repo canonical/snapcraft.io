@@ -18,7 +18,7 @@ function App() {
     <Router>
       <QueryClientProvider client={queryClient}>
         <Routes>
-          <Route path="/beta-store" element={<Packages />} />
+          <Route path="/store" element={<Packages />} />
         </Routes>
       </QueryClientProvider>
     </Router>
