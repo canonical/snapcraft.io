@@ -4,8 +4,10 @@ module.exports = {
     url: "http://localhost.test",
   },
   collectCoverage: true,
-  transformIgnorePatterns: ["node_modules/@canonical/(?!react-components)"],
+  transformIgnorePatterns: [
+    "node_modules/@canonical/(?!(react-components|store-components))",
+  ],
   moduleNameMapper: {
-    "\\.(scss|sass|css)$": "identity-obj-proxy"
+    "\\.(scss|sass|css)$": "identity-obj-proxy",
   },
 };
