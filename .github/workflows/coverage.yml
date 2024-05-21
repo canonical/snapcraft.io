@@ -92,10 +92,9 @@ jobs:
         run: |
           sudo pip3 install dotrun
 
-      - name: Install LXD-UI dependencies
+      - name: Install dependencies
         run: |
           set -x
-          sudo chmod 0777 ../lxd-ui
           dotrun install
 
       - name: Produce TICS report
