@@ -24,10 +24,6 @@ function Packages() {
       queryString = "?categories=featured";
     }
 
-    if (search && !search.includes("categories=")) {
-      queryString += "&categories=featured";
-    }
-
     const response = await fetch(`/beta/store.json${queryString}`);
     const data = await response.json();
     const packagesWithId = data.packages.map((item: Package) => {
@@ -215,7 +211,7 @@ function Packages() {
             </div>
           </Col>
           <Col size={9}>
-            {status === "success" && data.packages.length && (
+            {status === "success" && data.packages.length > 0 && (
               <div ref={searchSummaryRef}>
                 {isFeatured ? (
                   <h2>Featured snaps</h2>
