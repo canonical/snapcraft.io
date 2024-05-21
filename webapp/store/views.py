@@ -1,4 +1,4 @@
-from math import ceil, floor
+from math import floor
 import talisker.requests
 import flask
 from dateutil import parser
@@ -58,133 +58,6 @@ def store_blueprint(store_query=None):
             ),
             status_code,
         )
-
-    def search_snap():
-        snap_searched = flask.request.args.get("q", default="", type=str)
-        snap_category = flask.request.args.get(
-            "category", default="", type=str
-        )
-        page = flask.request.args.get("page", default=1, type=int)
-
-        if snap_category:
-            snap_category_display = snap_category.capitalize().replace(
-                "-", " "
-            )
-        else:
-            snap_category_display = None
-
-        if not snap_searched and not snap_category:
-            return flask.redirect(flask.url_for(".homepage"))
-
-        # The default size is 44
-        # (11 rows of 4) - on search results pages
-        # or (1 + 5 rows of 3 + 7 rows of 4) - on category page 1
-
-        size = 44
-
-        publishers = {
-            "jetbrains": "28zEonXNoBLvIB7xneRbltOsp0Nf7DwS",
-            "kde": "2rsYZu6kqYVFsSejExu4YENdXQEO40Xb",
-            "snapcrafters": "eEoV9TnaNkCzfJBu9SRhr2678vzyYV43",
-        }
-
-        display_query = snap_searched
-
-        if "publisher:jetbrains" in snap_searched:
-            snap_searched = f'publisher:{publishers["jetbrains"]}'
-            display_query = "publisher:jetbrains"
-
-        if "publisher:kde" in snap_searched:
-            snap_searched = f'publisher:{publishers["kde"]}'
-            display_query = "publisher:kde"
-
-        if "publisher:snapcrafters" in snap_searched:
-            snap_searched = f'publisher:{publishers["snapcrafters"]}'
-            display_query = "publisher:snapcrafters"
-
-        searched_results = api.search(
-            snap_searched,
-            category=snap_category,
-            size=size,
-            page=page,
-        )
-
-        total_pages = None
-
-        if "total" in searched_results:
-            total_results_count = searched_results["total"]
-            total_pages = ceil(total_results_count / size)
-        else:
-            total_results_count = None
-
-        snaps_results = searched_results["results"]
-
-        for snap in snaps_results:
-            snap["icon_url"] = helpers.get_icon(snap["media"])
-
-        links = {}
-
-        if page > 1:
-            links["first"] = logic.build_pagination_link(
-                snap_searched=snap_searched,
-                snap_category=snap_category,
-                page=1,
-            )
-            links["prev"] = logic.build_pagination_link(
-                snap_searched=snap_searched,
-                snap_category=snap_category,
-                page=page - 1,
-            )
-
-        if not total_pages or page < total_pages:
-            links["next"] = logic.build_pagination_link(
-                snap_searched=snap_searched,
-                snap_category=snap_category,
-                page=page + 1,
-            )
-            if total_pages:
-                links["last"] = logic.build_pagination_link(
-                    snap_searched=snap_searched,
-                    snap_category=snap_category,
-                    page=total_pages,
-                )
-
-        featured_snaps = []
-
-        # These are the hand-selected "featured snaps" in each category.
-        # We don't have this information on the API, so it's hardcoded.
-        number_of_featured_snaps = 16
-
-        if snap_category_display and page == 1:
-            if snaps_results and snaps_results[0]:
-                if snaps_results[0]["icon_url"] == "":
-                    snaps_results = logic.promote_snap_with_icon(snaps_results)
-
-                snaps_results[0] = logic.get_snap_banner_url(snaps_results[0])
-
-                if (
-                    snap_category == "featured"
-                    or len(snaps_results) < number_of_featured_snaps
-                ):
-                    featured_snaps = snaps_results
-                    snaps_results = []
-                else:
-                    featured_snaps = snaps_results[:number_of_featured_snaps]
-                    snaps_results = snaps_results[number_of_featured_snaps:]
-
-        context = {
-            "query": snap_searched,
-            "category": snap_category,
-            "category_display": snap_category_display,
-            "searched_snaps": snaps_results,
-            "featured_snaps": featured_snaps,
-            "total": total_results_count,
-            "links": links,
-            "page": page,
-            "display_query": display_query,
-        }
-
-        return flask.render_template("store/search.html", **context)
 
     def brand_search_snap():
         status_code = 200
@@ -461,7 +334,6 @@ def store_blueprint(store_query=None):
         store.add_url_rule("/search", "search", brand_search_snap)
     else:
         store.add_url_rule("/store", "homepage", store_view)
-        store.add_url_rule("/search", "search", search_snap)
 
     @store.route("/<snap_name>/create-track", methods=["POST"])
     @login_required
