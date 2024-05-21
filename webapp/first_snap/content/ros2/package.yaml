@@ -1,2 +1,0 @@
-name: ros2-talker-listener-{name}
-download: git clone https://github.com/snapcraft-docs/ros2-talker-listener-core22.git
