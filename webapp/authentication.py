@@ -29,7 +29,7 @@ def get_authorization_header(root, discharge):
         Macaroon.deserialize(discharge)
     )
 
-    return "Macaroon root={}, discharge={}".format(root, bound.serialize())
+    return "macaroon root={}, discharge={}".format(root, bound.serialize())
 
 
 def get_publishergw_authorization_header(developer_token):
