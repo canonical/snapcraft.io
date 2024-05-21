@@ -4,6 +4,7 @@ module.exports = {
     url: "http://localhost.test",
   },
   collectCoverage: true,
+  coverageReporters: ["html", "cobertura"],
   transformIgnorePatterns: [
     "node_modules/@canonical/(?!(react-components|store-components))",
   ],
