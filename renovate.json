@@ -1,5 +1,0 @@
-{
-  "extends": [
-    "github>canonical-web-and-design/renovate-websites"
-  ]
-}
