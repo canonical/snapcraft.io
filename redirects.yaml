@@ -4,6 +4,9 @@
 # Redirect tutorials
 tutorials(.*?): /docs/snap-tutorials
 
+# Redirect search results to new store page
+search(.*?): /store
+
 # Old URL redirects
 docs/build-snaps: /docs/snap-format
 docs/build-snaps/build-for-another-arch: /docs/building-snaps
