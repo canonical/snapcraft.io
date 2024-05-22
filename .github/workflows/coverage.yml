@@ -95,7 +95,7 @@ jobs:
       - name: Install dependencies
         run: |
           set -x
-          chmod -R 777 .
+          sudo chmod 0777 ../snapcraft.io
           dotrun install
 
       - name: Produce TICS report
