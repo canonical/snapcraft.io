@@ -95,6 +95,7 @@ jobs:
       - name: Install dependencies
         run: |
           set -x
+          chmod -R 777 .
           dotrun install
 
       - name: Produce TICS report
