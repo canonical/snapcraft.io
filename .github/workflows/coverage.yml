@@ -1,8 +1,7 @@
 name: Test coverage
 on:
-  push:
-    branches:
-      - tics-workflow
+  schedule:
+    - cron: "0 22 * * *"
 
 jobs:
   test-js:
@@ -23,6 +22,7 @@ jobs:
         run: |
           yarn test-js --coverage
           zip -r coverage/cobertura-coverage.zip coverage/cobertura-coverage.xml
+      
       - name: Upload coverage report
         if: always()
         uses: actions/upload-artifact@v4
@@ -30,7 +30,7 @@ jobs:
           name: snapcraftio-coverage
           path: coverage
           retention-days: 1
-          
+  
   publish-coverage-report:
       name: publish-coverage-report
       runs-on: ubuntu-latest
