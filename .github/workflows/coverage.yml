@@ -88,6 +88,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Download coverage report artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: snapcraftio-coverage
+          path: coverage
+
       - name: Install Dotrun
         run: |
           sudo pip3 install dotrun requests==2.31.0 # requests version is pinned to avoid breaking changes, can be removed once issue is resolved: https://github.com/docker/docker-py/issues/3256
@@ -105,7 +111,7 @@ jobs:
           export TICSAUTHTOKEN=${{ secrets.TICS_AUTH_TOKEN }}
           curl --silent --show-error "https://canonical.tiobe.com/tiobeweb/TICS/api/public/v1/fapi/installtics/Script?cfg=default&platform=linux&url=https://canonical.tiobe.com/tiobeweb/TICS/" > install_tics.sh
           . ./install_tics.sh
-          TICSQServer -project snapcraft.io -tmpdir /tmp/tics -branchdir ../
+          TICSQServer -project snapcraft.io -tmpdir /tmp/tics -branchdir .
 
       - name: Upload TICS report
         if: always()
