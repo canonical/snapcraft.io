@@ -12,7 +12,6 @@ module.exports = {
   publisher: "./static/js/publisher/publisher.js",
   homepage: "./static/js/public/homepage.js",
   blog: "./static/js/public/blog.js",
-  store: "./static/js/public/store.js",
   "store-details": "./static/js/public/store-details.js",
   fsf: "./static/js/public/fsf.js",
   search: "./static/js/public/search.js",
@@ -23,5 +22,5 @@ module.exports = {
   "publisher-settings": "./static/js/publisher/settings/index.tsx",
   "publisher-collaboration": "./static/js/publisher/collaboration/index.tsx",
   "about-listing": "./static/js/public/about/listing.ts",
-  "beta-store": "./static/js/store/index.tsx",
+  store: "./static/js/store/index.tsx",
 };
