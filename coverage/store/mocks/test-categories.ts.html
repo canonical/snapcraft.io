@@ -3,7 +3,7 @@
 <html lang="en">
 
 <head>
-    <title>Code coverage report for publisher/market/restrictions.js</title>
+    <title>Code coverage report for store/mocks/test-categories.ts</title>
     <meta charset="utf-8" />
     <link rel="stylesheet" href="../../prettify.css" />
     <link rel="stylesheet" href="../../base.css" />
@@ -19,34 +19,34 @@
 <body>
 <div class='wrapper'>
     <div class='pad1'>
-        <h1><a href="../../index.html">All files</a> / <a href="index.html">publisher/market</a> restrictions.js</h1>
+        <h1><a href="../../index.html">All files</a> / <a href="index.html">store/mocks</a> test-categories.ts</h1>
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>3/3</span>
+                <span class='fraction'>0/0</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Branches</span>
                 <span class='fraction'>0/0</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Functions</span>
                 <span class='fraction'>0/0</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>3/3</span>
+                <span class='fraction'>0/0</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line high'></div>
+    <div class='status-line low'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -141,11 +141,7 @@
 <a name='L76'></a><a href='#L76'>76</a>
 <a name='L77'></a><a href='#L77'>77</a>
 <a name='L78'></a><a href='#L78'>78</a>
-<a name='L79'></a><a href='#L79'>79</a>
-<a name='L80'></a><a href='#L80'>80</a>
-<a name='L81'></a><a href='#L81'>81</a>
-<a name='L82'></a><a href='#L82'>82</a>
-<a name='L83'></a><a href='#L83'>83</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L79'></a><a href='#L79'>79</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -155,7 +151,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -186,7 +181,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -206,7 +200,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -226,89 +219,84 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">/**
-   These configs can contain a whitelist array of objects at the top level
-   containing: {
-     dimensions: [width, height],
-     fileName: "string",
-     accept: ["file/format", "file/format"]
-   }
-   This was previously used for legacy banners
-*/
-&nbsp;
-const MEDIA_RESTRICTIONS = {
-  accept: ["image/png", "image/gif", "image/jpeg"],
-  width: {
-    min: 480,
-    max: 3840,
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">export default [
+  {
+    display_name: "Art and Design",
+    name: "art-and-design",
   },
-  height: {
-    min: 480,
-    max: 2160,
+  {
+    display_name: "Books and Reference",
+    name: "books-and-reference",
   },
-  aspectRatio: {
-    min: [1, 2],
-    max: [2, 1],
+  {
+    display_name: "Development",
+    name: "development",
   },
-  // bytes
-  size: {
-    min: 0,
-    max: 2000000,
+  {
+    display_name: "Devices and IoT",
+    name: "devices-and-iot",
   },
-  animation: {
-    fps: {
-      min: 1,
-      max: 30,
-    },
-    length: {
-      min: 0,
-      max: 40,
-    },
+  {
+    display_name: "Education",
+    name: "education",
   },
-};
-&nbsp;
-const ICON_RESTRICTIONS = {
-  accept: ["image/png", "image/jpeg", "image/svg+xml"],
-  width: {
-    min: 40,
-    max: 512,
+  {
+    display_name: "Entertainment",
+    name: "entertainment",
   },
-  height: {
-    min: 40,
-    max: 512,
+  {
+    display_name: "Finance",
+    name: "finance",
   },
-  aspectRatio: {
-    min: [1, 1],
-    max: [1, 1],
+  {
+    display_name: "Games",
+    name: "games",
   },
-  size: {
-    min: 0,
-    max: 256000,
+  {
+    display_name: "Health and Fitness",
+    name: "health-and-fitness",
   },
-};
-&nbsp;
-const BANNER_RESTRICTIONS = {
-  accept: ["image/png", "image/jpeg"],
-  width: {
-    min: 720,
-    max: 4320,
+  {
+    display_name: "Music and Audio",
+    name: "music-and-audio",
   },
-  height: {
-    min: 240,
-    max: 1440,
+  {
+    display_name: "News and Weather",
+    name: "news-and-weather",
   },
-  aspectRatio: {
-    min: [3, 1],
-    max: [3, 1],
+  {
+    display_name: "Personalisation",
+    name: "personalisation",
   },
-  size: {
-    min: 0,
-    max: 2000000,
+  {
+    display_name: "Photo and Video",
+    name: "photo-and-video",
   },
-};
-&nbsp;
-export { MEDIA_RESTRICTIONS, ICON_RESTRICTIONS, BANNER_RESTRICTIONS };
+  {
+    display_name: "Productivity",
+    name: "productivity",
+  },
+  {
+    display_name: "Science",
+    name: "science",
+  },
+  {
+    display_name: "Security",
+    name: "security",
+  },
+  {
+    display_name: "Server and Cloud",
+    name: "server-and-cloud",
+  },
+  {
+    display_name: "Social",
+    name: "social",
+  },
+  {
+    display_name: "Utilities",
+    name: "utilities",
+  },
+];
 &nbsp;</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
