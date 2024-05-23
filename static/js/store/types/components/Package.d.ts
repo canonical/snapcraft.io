@@ -1,4 +1,6 @@
-export type Package = {
+import type { Category } from "./Category";
+
+type Package = {
   id?: string;
   package: {
     description: string;
@@ -24,7 +26,4 @@ export type Package = {
   };
 };
 
-export type Category = {
-  display_name: string;
-  name: string;
-};
+export default Package;

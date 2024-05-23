@@ -5,7 +5,8 @@ module.exports = [
     // except some that use ES6 modules and need to be transpiled:
     // such as swiper http://idangero.us/swiper/get-started/
     // and also react-dnd related
-    exclude: /node_modules\/(?!(dom7|ssr-window|swiper|dnd-core|react-dnd|react-dnd-html5-backend)\/).*/,
+    exclude:
+      /node_modules\/(?!(dom7|ssr-window|swiper|dnd-core|react-dnd|react-dnd-html5-backend)\/).*/,
     use: {
       loader: "babel-loader",
     },
@@ -54,10 +55,6 @@ module.exports = [
   {
     test: require.resolve(__dirname + "/static/js/public/blog.js"),
     use: ["expose-loader?exposes=snapcraft.public.blog", "babel-loader"],
-  },
-  {
-    test: require.resolve(__dirname + "/static/js/public/store.js"),
-    use: ["expose-loader?exposes=snapcraft.public.store", "babel-loader"],
   },
   {
     test: require.resolve(__dirname + "/static/js/public/store-details.js"),
