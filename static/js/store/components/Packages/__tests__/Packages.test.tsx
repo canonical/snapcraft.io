@@ -7,14 +7,13 @@ import "@testing-library/jest-dom";
 
 import Packages from "../Packages";
 
+import { testCategories } from "../../../mocks";
+
 global.fetch = jest.fn(() =>
   Promise.resolve({
     json: () =>
       Promise.resolve({
-        categories: [
-          { display_name: "Development", name: "development" },
-          { display_name: "Social", name: "social" },
-        ],
+        categories: testCategories,
         packages: [],
       }),
   })
@@ -22,7 +21,7 @@ global.fetch = jest.fn(() =>
 
 const queryClient = new QueryClient();
 
-const renderComponent = () =>
+const renderComponent = () => {
   render(
     <BrowserRouter>
       <QueryClientProvider client={queryClient}>
@@ -30,6 +29,7 @@ const renderComponent = () =>
       </QueryClientProvider>
     </BrowserRouter>
   );
+};
 
 describe("Packages", () => {
   test("featured categories are called by deafult", async () => {
@@ -74,6 +74,32 @@ describe("Packages", () => {
     await user.click(screen.getByRole("button", { name: "Search" }));
     await waitFor(() => {
       expect(global.fetch).toHaveBeenCalledWith("/beta/store.json?q=code");
+    });
+  });
+
+  test("filters are not expanded if there are no selected categories", async () => {
+    renderComponent();
+    await waitFor(() => {
+      expect(
+        screen.getByRole("button", { name: /Show more/ })
+      ).toBeInTheDocument();
+      expect(
+        screen.queryByRole("button", { name: /Show less/ })
+      ).not.toBeInTheDocument();
+    });
+  });
+
+  test("filters are expanded if 'Show more' button is clicked", async () => {
+    const user = userEvent.setup();
+    renderComponent();
+    user.click(screen.getByRole("button", { name: /Show more/ }));
+    await waitFor(() => {
+      expect(
+        screen.queryByRole("button", { name: /Show more/ })
+      ).not.toBeInTheDocument();
+      expect(
+        screen.getByRole("button", { name: /Show less/ })
+      ).toBeInTheDocument();
     });
   });
 });
