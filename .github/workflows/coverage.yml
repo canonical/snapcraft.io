@@ -105,7 +105,7 @@ jobs:
           export TICSAUTHTOKEN=${{ secrets.TICS_AUTH_TOKEN }}
           curl --silent --show-error "https://canonical.tiobe.com/tiobeweb/TICS/api/public/v1/fapi/installtics/Script?cfg=default&platform=linux&url=https://canonical.tiobe.com/tiobeweb/TICS/" > install_tics.sh
           . ./install_tics.sh
-          TICSQServer -project snapcraft.io -tmpdir /tmp/tics -branchdir .
+          TICSQServer -project snapcraft.io -tmpdir /tmp/tics -branchdir ../
 
       - name: Upload TICS report
         if: always()
