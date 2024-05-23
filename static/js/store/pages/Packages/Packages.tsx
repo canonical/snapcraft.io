@@ -10,24 +10,16 @@ import {
 } from "@canonical/react-components";
 import { DefaultCard, LoadingCard, Filters } from "@canonical/store-components";
 
-import Banner from "../Banner";
+import Banner from "../../components/Banner";
 
-import type { Package, Category } from "../../types/shared";
+import { getArchitectures, getCategoryOrder } from "../../utils";
+
+import type { Package, Category } from "../../types";
 
 function Packages() {
   const ITEMS_PER_PAGE = 15;
   const SHOW_MORE_COUNT = 10;
-  const CATEGORY_ORDER = [
-    "development",
-    "games",
-    "social",
-    "productivity",
-    "utilities",
-    "music-and-audio",
-    "art-and-design",
-    "photo-and-video",
-    "server-and-cloud",
-  ];
+  const CATEGORY_ORDER = getCategoryOrder();
 
   const getData = async () => {
     let queryString = search;
@@ -207,36 +199,7 @@ function Packages() {
                       searchParams.delete("page");
                       setSearchParams(searchParams);
                     }}
-                    architectures={[
-                      {
-                        name: "",
-                        display_name: "All",
-                      },
-                      {
-                        name: "amd64",
-                        display_name: "AMD64",
-                      },
-                      {
-                        name: "arm64",
-                        display_name: "ARM64",
-                      },
-                      {
-                        name: "armhf",
-                        display_name: "ARMHF",
-                      },
-                      {
-                        name: "i386",
-                        display_name: "I386",
-                      },
-                      {
-                        name: "ppc64el",
-                        display_name: "PPC64EL",
-                      },
-                      {
-                        name: "s390x",
-                        display_name: "S390X",
-                      },
-                    ]}
+                    architectures={getArchitectures()}
                     selectedArchitecture={
                       searchParams.get("architecture") || ""
                     }
