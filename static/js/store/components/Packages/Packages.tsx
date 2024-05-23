@@ -16,6 +16,18 @@ import type { Package, Category } from "../../types/shared";
 
 function Packages() {
   const ITEMS_PER_PAGE = 15;
+  const SHOW_MORE_COUNT = 10;
+  const CATEGORY_ORDER = [
+    "development",
+    "games",
+    "social",
+    "productivity",
+    "utilities",
+    "music-and-audio",
+    "art-and-design",
+    "photo-and-video",
+    "server-and-cloud",
+  ];
 
   const getData = async () => {
     let queryString = search;
@@ -71,9 +83,51 @@ function Packages() {
 
     return category.display_name;
   };
+  const selectedCategories = searchParams.get("categories")?.split(",");
+  let showAllCategories = false;
+
+  const selectedFiltersNotVisible = (
+    selectedFilters: Array<string>,
+    allFilters: Array<Category>
+  ) => {
+    const sortedFilters = [] as Array<Category>;
+
+    CATEGORY_ORDER.forEach((item) => {
+      const filter = allFilters.find((category) => category.name === item);
+      if (filter) {
+        sortedFilters.push(filter);
+      }
+    });
+
+    allFilters.forEach((filter) => {
+      if (!CATEGORY_ORDER.includes(filter.name)) {
+        sortedFilters.push(filter);
+      }
+    });
+
+    return selectedFilters.some((selectedFilter) => {
+      const currentFilter = allFilters.find(
+        (filter: Category) => filter.name === selectedFilter
+      );
+
+      if (currentFilter) {
+        return sortedFilters.indexOf(currentFilter) > SHOW_MORE_COUNT - 1;
+      }
+
+      return false;
+    });
+  };
+
+  if (
+    selectedCategories &&
+    data &&
+    data.categories &&
+    selectedFiltersNotVisible(selectedCategories, data.categories)
+  ) {
+    showAllCategories = true;
+  }
 
   const getResultsTitle = () => {
-    const selectedCategories = searchParams.get("categories")?.split(",");
     if (!selectedCategories) {
       return;
     }
@@ -131,82 +185,75 @@ function Packages() {
                 </Button>
               </div>
               <div className="p-filter-panel__inner">
-                <Filters
-                  showMore
-                  showMoreCount={10}
-                  categories={data?.categories || []}
-                  selectedCategories={
-                    searchParams.get("categories")?.split(",") || []
-                  }
-                  setSelectedCategories={(
-                    items: Array<{
-                      display_name: string;
-                      name: string;
-                    }>
-                  ) => {
-                    if (items.length > 0) {
-                      searchParams.set("categories", items.join(","));
-                    } else {
-                      searchParams.delete("categories");
-                    }
+                {data && (
+                  <Filters
+                    showMore
+                    showMoreCount={SHOW_MORE_COUNT}
+                    displayAllCategories={showAllCategories}
+                    categories={data?.categories || []}
+                    selectedCategories={selectedCategories || []}
+                    setSelectedCategories={(
+                      items: Array<{
+                        display_name: string;
+                        name: string;
+                      }>
+                    ) => {
+                      if (items.length > 0) {
+                        searchParams.set("categories", items.join(","));
+                      } else {
+                        searchParams.delete("categories");
+                      }
 
-                    searchParams.delete("page");
-                    setSearchParams(searchParams);
-                  }}
-                  architectures={[
-                    {
-                      name: "",
-                      display_name: "All",
-                    },
-                    {
-                      name: "amd64",
-                      display_name: "AMD64",
-                    },
-                    {
-                      name: "arm64",
-                      display_name: "ARM64",
-                    },
-                    {
-                      name: "armhf",
-                      display_name: "ARMHF",
-                    },
-                    {
-                      name: "i386",
-                      display_name: "I386",
-                    },
-                    {
-                      name: "ppc64el",
-                      display_name: "PPC64EL",
-                    },
-                    {
-                      name: "s390x",
-                      display_name: "S390X",
-                    },
-                  ]}
-                  selectedArchitecture={searchParams.get("architecture") || ""}
-                  setSelectedArchitecture={(item: string) => {
-                    if (item) {
-                      searchParams.set("architecture", item);
-                    } else {
-                      searchParams.delete("architecture");
+                      searchParams.delete("page");
+                      setSearchParams(searchParams);
+                    }}
+                    architectures={[
+                      {
+                        name: "",
+                        display_name: "All",
+                      },
+                      {
+                        name: "amd64",
+                        display_name: "AMD64",
+                      },
+                      {
+                        name: "arm64",
+                        display_name: "ARM64",
+                      },
+                      {
+                        name: "armhf",
+                        display_name: "ARMHF",
+                      },
+                      {
+                        name: "i386",
+                        display_name: "I386",
+                      },
+                      {
+                        name: "ppc64el",
+                        display_name: "PPC64EL",
+                      },
+                      {
+                        name: "s390x",
+                        display_name: "S390X",
+                      },
+                    ]}
+                    selectedArchitecture={
+                      searchParams.get("architecture") || ""
                     }
+                    setSelectedArchitecture={(item: string) => {
+                      if (item) {
+                        searchParams.set("architecture", item);
+                      } else {
+                        searchParams.delete("architecture");
+                      }
 
-                    searchParams.delete("page");
-                    setSearchParams(searchParams);
-                  }}
-                  disabled={isFetching}
-                  order={[
-                    "development",
-                    "games",
-                    "social",
-                    "productivity",
-                    "utilities",
-                    "music-and-audio",
-                    "art-and-design",
-                    "photo-and-video",
-                    "server-and-cloud",
-                  ]}
-                />
+                      searchParams.delete("page");
+                      setSearchParams(searchParams);
+                    }}
+                    disabled={isFetching}
+                    order={CATEGORY_ORDER}
+                  />
+                )}
               </div>
             </div>
           </Col>
