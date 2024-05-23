@@ -38,10 +38,7 @@ export function tooltips() {
         });
       });
 
-      if (
-        (this.options.graphType && this.options.graphType !== "channel") ||
-        this.options.stacked === false
-      ) {
+      if (this.options.graphType || this.options.stacked === false) {
         dataArr.sort((a, b) => b.value - a.value);
       }
 
