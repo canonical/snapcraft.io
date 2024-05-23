@@ -42,40 +42,74 @@ jobs:
 
   lint-python:
     runs-on: ubuntu-latest
-
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
-      - name: Install python dependencies
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            py:
+              - '**/*.py'
+
+      - name: Install Python dependencies
+        if: ${{ steps.filter.outputs.py == 'true' }}
         run: |
           python3 -m pip install --upgrade pip
           sudo pip3 install -r requirements.txt
 
-      - name: Lint python
-        run: yarn lint-python
+      - name: Lint Python
+        if: ${{ steps.filter.outputs.py == 'true' }}
+        run: |
+          yarn lint-python
 
   lint-scss:
     runs-on: ubuntu-latest
-
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
-      - name: Install dependencies
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            scss:
+              - '**/*.scss'
+
+      - name: Install SCSS dependencies
+        if: ${{ steps.filter.outputs.scss == 'true' }}
         run: yarn install --immutable
 
-      - name: Lint scss
+      - name: Lint SCSS
+        if: ${{ steps.filter.outputs.scss == 'true' }}
         run: yarn lint-scss
 
   lint-js:
     runs-on: ubuntu-latest
-
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
-      - name: Install dependencies
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            js:
+              - '**/*.js'
+            ts:
+              - '**/*.ts'
+            jsx:
+              - '**/*.jsx'
+            tsx:
+              - '**/*.tsx'
+
+      - name: Install JS dependencies
+        if: ${{ steps.filter.outputs.js == 'true' || steps.filter.outputs.ts == 'true' || steps.filter.outputs.jsx == 'true' || steps.filter.outputs.tsx == 'true' }}
         run: yarn install --immutable
 
-      - name: Lint js
+      - name: Lint JS
+        if: ${{ steps.filter.outputs.js == 'true' || steps.filter.outputs.ts == 'true' || steps.filter.outputs.jsx == 'true' || steps.filter.outputs.tsx == 'true' }}
         run: yarn lint-js
 
   test-python:
@@ -83,26 +117,39 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+      
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            py:
+              - '**/*.py'
 
       - name: Install requirements
+        if: ${{ steps.filter.outputs.py == 'true' }}
         run: |
           sudo apt-get update && sudo apt-get install --yes python3-setuptools
           sudo pip3 install -r requirements.txt
 
       - name: Install dependencies
+        if: ${{ steps.filter.outputs.py == 'true' }}
         run: sudo pip3 install coverage
 
       - name: Install node dependencies
+        if: ${{ steps.filter.outputs.py == 'true' }}
         run: yarn install --immutable
 
       - name: Build resources
+        if: ${{ steps.filter.outputs.py == 'true' }}
         run: yarn build
 
       - name: Run python tests with coverage
+        if: ${{ steps.filter.outputs.py == 'true' }}
         run: |
           SECRET_KEY=insecure_secret_key coverage run  --source=. -m unittest discover tests
 
       - name: Upload coverage to Codecov
+        if: ${{ steps.filter.outputs.py == 'true' }}
         uses: codecov/codecov-action@v3
         with:
           flags: python
@@ -113,18 +160,34 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            js:
+              - '**/*.js'
+            ts:
+              - '**/*.ts'
+            jsx:
+              - '**/*.jsx'
+            tsx:
+              - '**/*.tsx'
+
       - uses: actions/setup-node@v4
         with:
           node-version: 20
 
       - name: Install dependencies
+        if: ${{ steps.filter.outputs.js == 'true' || steps.filter.outputs.ts == 'true' || steps.filter.outputs.jsx == 'true' || steps.filter.outputs.tsx == 'true' }}
         run: yarn install --immutable
 
       - name: Run JS tests with coverage
+        if: ${{ steps.filter.outputs.js == 'true' || steps.filter.outputs.ts == 'true' || steps.filter.outputs.jsx == 'true' || steps.filter.outputs.tsx == 'true' }}
         run: |
           yarn test-js --coverage
 
       - name: Upload coverage to Codecov
+        if: ${{ steps.filter.outputs.js == 'true' || steps.filter.outputs.ts == 'true' || steps.filter.outputs.jsx == 'true' || steps.filter.outputs.tsx == 'true' }}
         uses: codecov/codecov-action@v3
         with:
           flags: javascript
