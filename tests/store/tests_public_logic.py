@@ -361,6 +361,7 @@ class StoreLogicTest(unittest.TestCase):
     def test_get_latest_versions(self):
         latest_stable = {
             "channel": {
+                "architecture": "amd64",
                 "risk": "stable",
                 "track": "latest",
                 "released-at": "2023-02-02",
@@ -369,16 +370,33 @@ class StoreLogicTest(unittest.TestCase):
 
         latest_edge = {
             "channel": {
+                "architecture": "amd64",
                 "risk": "edge",
                 "track": "latest",
                 "released-at": "2023-03-01",
             }
         }
+
+        latest_stable_arm = {
+            "channel": {
+                "architecture": "arm64",
+                "released-at": "2023-01-04",
+                "risk": "candidate",
+                "track": "latest",
+            }
+        }
+
         channel_map_single_channel = [latest_stable]
 
         channel_map_stable_first = [latest_stable, latest_edge]
 
         channel_map_stable_second = [latest_edge, latest_stable]
+
+        channel_map_multiple_stable_architectures = [
+            latest_edge,
+            latest_stable,
+            latest_stable_arm,
+        ]
 
         single_result = logic.get_latest_versions(
             channel_map_single_channel, "latest", "stable"
@@ -417,6 +435,19 @@ class StoreLogicTest(unittest.TestCase):
         self.assertEqual(
             edge_highest_risk_result[1]["released-at-display"],
             "2 February 2023",
+        )
+
+        multiple_stable_channels_results = logic.get_latest_versions(
+            channel_map_multiple_stable_architectures, "latest", "stable"
+        )
+
+        self.assertEqual(
+            multiple_stable_channels_results[0]["released-at-display"],
+            "2 February 2023",
+        )
+        self.assertEqual(
+            multiple_stable_channels_results[1]["released-at-display"],
+            "1 March 2023",
         )
 
     def test_get_last_updated_versions(self):
