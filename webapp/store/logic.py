@@ -306,6 +306,7 @@ def get_latest_versions(channel_maps, default_track, lowest_risk):
                 and channel["risk"] == lowest_risk
             ):
                 default_stable = channel
+                break
 
     if default_stable:
         default_stable["released-at-display"] = convert_date(
