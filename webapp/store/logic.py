@@ -290,23 +290,15 @@ def get_latest_versions(channel_maps, default_track, lowest_risk):
     default_stable = None
     other = None
 
-    if (
-        ordered_versions[0]["track"] == default_track
-        and ordered_versions[0]["risk"] == lowest_risk
-    ):
-        default_stable = ordered_versions[0]
-
-        if len(ordered_versions) > 1:
-            other = ordered_versions[1]
-    else:
-        other = ordered_versions[0]
-        for channel in ordered_versions:
-            if (
-                channel["track"] == default_track
-                and channel["risk"] == lowest_risk
-            ):
+    for channel in ordered_versions:
+        if (
+            channel["track"] == default_track
+            and channel["risk"] == lowest_risk
+        ):
+            if not default_stable:
                 default_stable = channel
-                break
+        elif not other:
+            other = channel
 
     if default_stable:
         default_stable["released-at-display"] = convert_date(
