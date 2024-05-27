@@ -1,4 +1,6 @@
 # Packages
+import logging
+import pprint
 import bleach
 import flask
 import re
@@ -439,6 +441,23 @@ def post_register_name():
 
     return flask.redirect(flask.url_for("account.get_account"))
 
+@publisher_snaps.route("/api/packages/<snap_name>", methods=["GET"])
+# @login_required
+# @exchange_required
+def get_package_metadata(snap_name):
+    # put your flask.session here
+    testing_session = {}
+    package_metadata = publisher_api.get_package_metadata(
+        flask.session, "snap", snap_name
+    )
+    if package_metadata.status_code != 201:
+        return package_metadata.json(), package_metadata.status_code
+    try:
+        res = jsonify({"data": package_metadata, "success": True})
+    except Exception:
+        logging.error("Could not retrieve package metadata")
+        res = jsonify({"error": "Could not retrieve package metadata"})
+    return res
 
 @publisher_snaps.route("/<package_name>", methods=["DELETE"])
 @login_required
