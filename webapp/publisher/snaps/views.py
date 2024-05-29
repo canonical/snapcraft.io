@@ -15,7 +15,6 @@ from flask.json import jsonify
 # Local
 from webapp.helpers import api_publisher_session, launchpad
 from webapp.api.exceptions import ApiError
-from webapp.extensions import csrf
 from webapp.decorators import exchange_required, login_required
 from webapp.publisher.snaps import (
     build_views,
@@ -440,10 +439,9 @@ def post_register_name():
     return flask.redirect(flask.url_for("account.get_account"))
 
 
-@publisher_snaps.route("/<package_name>", methods=["DELETE"])
+@publisher_snaps.route("/packages/<package_name>", methods=["DELETE"])
 @login_required
 @exchange_required
-@csrf.exempt
 def delete_package(package_name):
     response = publisher_api.unregister_package_name(
         flask.session, package_name
