@@ -2,7 +2,11 @@
 const origin = window.location.href;
 const categoryPrefix = "snapcraft.io-";
 
-const events = {
+type Events = {
+  [key: string]: string;
+};
+
+const events: Events = {
   ".global-nav a": "nav-0",
   ".p-navigation a": "nav-1",
   ".p-sticky-footer a": "footer-0",
@@ -10,8 +14,10 @@ const events = {
   ".p-strip .p-button--positive": "content-cta-0",
   "#main-content .p-button": "content-cta-1",
   ".p-strip .p-button": "content-cta-1",
+  // @ts-ignore
   // eslint-disable-next-line no-dupe-keys
   "#main-content .p-button": "content-cta-1",
+  // @ts-ignore
   // eslint-disable-next-line no-dupe-keys
   ".p-strip .p-button": "content-cta-1",
   "#main-content .p-card": "content-card",
@@ -22,21 +28,26 @@ const events = {
   ".p-strip a": "content-link",
 };
 
-function triggerEvent(category, from, to, label) {
-  if (dataLayer) {
-    dataLayer.push({
+function triggerEvent(
+  category: string,
+  from: string,
+  to: string,
+  label: string
+) {
+  if (window.dataLayer) {
+    window.dataLayer.push({
       event: "GAEvent",
       eventCategory: `${categoryPrefix}${category}`,
       eventAction: `from:${from} to:${to}`,
       eventLabel: label,
       eventValue: undefined,
-    });
+    } as DataLayerEvent);
   }
 }
 
-function triggerEventReleaseUI(action, label) {
-  if (dataLayer) {
-    dataLayer.push({
+function triggerEventReleaseUI(action: string, label: string) {
+  if (window.dataLayer) {
+    window.dataLayer.push({
       event: "GAEvent",
       eventCategory: `Release UI`,
       eventAction: action,
@@ -46,16 +57,20 @@ function triggerEventReleaseUI(action, label) {
   }
 }
 
-if (typeof dataLayer !== "undefined") {
+if (typeof window.dataLayer !== "undefined") {
   window.addEventListener("click", function (e) {
-    let target = e.target;
-    if (!target || !e.target.closest) {
+    let target;
+
+    const eventTarget = e.target as HTMLElement;
+
+    if (!eventTarget || !eventTarget.closest) {
       return;
     }
 
-    target = e.target.closest("a");
+    target = eventTarget.closest("a") as HTMLAnchorElement;
+
     if (!target) {
-      target = e.target.closest("button");
+      target = eventTarget.closest("button") as HTMLButtonElement;
     }
 
     if (!target) {
@@ -69,19 +84,22 @@ if (typeof dataLayer !== "undefined") {
         e.stopImmediatePropagation();
         let label = "";
 
-        if (target.text) {
-          label = target.text.trim();
-        } else if (target.innerText) {
+        if (target.innerText) {
           label = target.innerText.trim();
         }
 
         if (label === "") {
-          if (target.children[0] && target.children[0].alt) {
+          if (
+            target.children[0] &&
+            target.children[0] instanceof HTMLImageElement
+          ) {
             label = `image: ${target.children[0].alt}`;
           }
         }
 
-        triggerEvent(events[key], origin, target.href, label);
+        if (target instanceof HTMLAnchorElement) {
+          triggerEvent(events[key], origin, target.href, label);
+        }
 
         break;
       }
