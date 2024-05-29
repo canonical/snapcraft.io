@@ -1,5 +1,7 @@
 # ![snapcraft.io](https://assets.ubuntu.com/v1/944b8760-snapcraft-logo-bird.svg?fmt=png&w=50 "Snapcraft") snapcraft.io codebase
 
+[Python Coverage](https://canonical.github.io/snapcraft.io/coverage/python) | [JavaScript Coverage](https://canonical.github.io/snapcraft.io/coverage/js)
+
 ![Github Actions Status](https://github.com/canonical-web-and-design/snapcraft.io/workflows/main%20checks/badge.svg) [![Code coverage](https://codecov.io/gh/canonical-web-and-design/snapcraft.io/branch/master/graph/badge.svg)](https://codecov.io/gh/canonical-web-and-design/snapcraft.io)
 
 Snaps are applications packaged with all their dependencies to run on all popular Linux distributions from a single build. They update automatically and roll back gracefully. This repo is the application for the [snapcraft.io](https://snapcraft.io) website.
