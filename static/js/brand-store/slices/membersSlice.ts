@@ -1,5 +1,4 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { AppDispatch } from "../store";
 
 import type { Member } from "../types/shared";
 

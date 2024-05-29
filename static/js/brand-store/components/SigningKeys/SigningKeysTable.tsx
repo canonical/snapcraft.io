@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { format } from "date-fns";
@@ -27,9 +27,8 @@ function SigningKeysTable({
   const signingKeysList = useRecoilValue<Array<SigningKey>>(
     filteredSigningKeysListState
   );
-  const [itemsToShow, setItemsToShow] = useState<Array<SigningKey>>(
-    signingKeysList
-  );
+  const [itemsToShow, setItemsToShow] =
+    useState<Array<SigningKey>>(signingKeysList);
   const setSigningKeysList = useSetRecoilState(signingKeysListState);
   const [isDeleting, setIsDeleting] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useRecoilState } from "recoil";
 import { useParams } from "react-router-dom";
 import { format } from "date-fns";

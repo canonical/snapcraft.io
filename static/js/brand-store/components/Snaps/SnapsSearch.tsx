@@ -1,4 +1,4 @@
-import React, { useState, KeyboardEvent } from "react";
+import { useState, KeyboardEvent } from "react";
 import Downshift from "downshift";
 import { Spinner } from "@canonical/react-components";
 

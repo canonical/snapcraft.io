@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { MainTable, CheckboxInput } from "@canonical/react-components";
 import ROLES from "./memberRoles";
 

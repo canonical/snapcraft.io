@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
-import { useRecoilState } from "recoil";
+import { useSetRecoilState } from "recoil";
 import { useParams, NavLink } from "react-router-dom";
 
 import Logo from "./Logo";
@@ -25,7 +25,7 @@ function Navigation({ sectionName }: { sectionName: string | null }) {
   const [showStoreSelector, setShowStoreSelector] = useState<boolean>(false);
   const [filteredBrandStores, setFilteredBrandstores] =
     useState<Array<Store>>(brandStoresList);
-  const [publisher, setPublisher] = useRecoilState(publisherState);
+  const setPublisher = useSetRecoilState(publisherState);
 
   const getStoreName = (id: string | undefined) => {
     if (!id) {

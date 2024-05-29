@@ -1,5 +1,3 @@
-import React from "react";
-
 function Publisher() {
   return (
     <div className="u-fixed-width">
