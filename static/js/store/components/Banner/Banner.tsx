@@ -1,4 +1,4 @@
-import React, { RefObject } from "react";
+import { RefObject } from "react";
 import { useSearchParams } from "react-router-dom";
 import { Strip, Row, Col } from "@canonical/react-components";
 
