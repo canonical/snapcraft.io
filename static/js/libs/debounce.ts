@@ -1,15 +1,13 @@
-/**
- * Debounce
- * @param {Function} func Function to run.
- * @param {Number} wait Time to wait between tries.
- * @param {Boolean} immediate Immediately call func.
- */
-export default function debounce(func, wait, immediate) {
-  let timeout;
+export default function debounce(
+  func: Function,
+  wait: number,
+  immediate?: boolean
+) {
+  let timeout: any;
 
-  const debounced = function () {
-    const context = this,
-      args = arguments;
+  const debounced = function (this: HTMLElement) {
+    const context = this;
+    const args = arguments;
     let later = function () {
       timeout = null;
       if (!immediate) func.apply(context, args);
