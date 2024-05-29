@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=emulateIE7" />
+    <title>Coverage for webapp/publisher/snaps/publicise_views.py: 100%</title>
+    <link rel="icon" sizes="32x32" href="favicon_32.png">
+    <link rel="stylesheet" href="style.css" type="text/css">
+    <script type="text/javascript" src="jquery.min.js"></script>
+    <script type="text/javascript" src="jquery.hotkeys.js"></script>
+    <script type="text/javascript" src="jquery.isonscreen.js"></script>
+    <script type="text/javascript" src="coverage_html.js"></script>
+    <script type="text/javascript">
+        jQuery(document).ready(coverage.pyfile_ready);
+    </script>
+</head>
+<body class="pyfile">
+<div id="header">
+    <div class="content">
+        <h1>Coverage for <b>webapp/publisher/snaps/publicise_views.py</b> :
+            <span class="pc_cov">100%</span>
+        </h1>
+        <img id="keyboard_icon" src="keybd_closed.png" alt="Show keyboard shortcuts" />
+        <h2 class="stats">
+            31 statements &nbsp;
+            <button type="button" class="run shortkey_r button_toggle_run" title="Toggle lines run">31 run</button>
+            <button type="button" class="mis show_mis shortkey_m button_toggle_mis" title="Toggle lines missing">0 missing</button>
+            <button type="button" class="exc show_exc shortkey_x button_toggle_exc" title="Toggle lines excluded">0 excluded</button>
+        </h2>
+    </div>
+</div>
+<div class="help_panel">
+    <img id="panel_icon" src="keybd_open.png" alt="Hide keyboard shortcuts" />
+    <p class="legend">Hot-keys on this page</p>
+    <div>
+    <p class="keyhelp">
+        <span class="key">r</span>
+        <span class="key">m</span>
+        <span class="key">x</span>
+        <span class="key">p</span> &nbsp; toggle line displays
+    </p>
+    <p class="keyhelp">
+        <span class="key">j</span>
+        <span class="key">k</span> &nbsp; next/prev highlighted chunk
+    </p>
+    <p class="keyhelp">
+        <span class="key">0</span> &nbsp; (zero) top of page
+    </p>
+    <p class="keyhelp">
+        <span class="key">1</span> &nbsp; (one) first highlighted chunk
+    </p>
+    </div>
+</div>
+<div id="source">
+    <p id="t1" class="pln"><span class="n"><a href="#t1">1</a></span><span class="t"><span class="com"># Packages</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t2" class="run"><span class="n"><a href="#t2">2</a></span><span class="t"><span class="key">import</span> <span class="nam">flask</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t3" class="run"><span class="n"><a href="#t3">3</a></span><span class="t"><span class="key">from</span> <span class="nam">canonicalwebteam</span><span class="op">.</span><span class="nam">store_api</span><span class="op">.</span><span class="nam">stores</span><span class="op">.</span><span class="nam">snapstore</span> <span class="key">import</span> <span class="op">(</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t4" class="pln"><span class="n"><a href="#t4">4</a></span><span class="t">    <span class="nam">SnapStore</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t5" class="pln"><span class="n"><a href="#t5">5</a></span><span class="t">    <span class="nam">SnapPublisher</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t6" class="pln"><span class="n"><a href="#t6">6</a></span><span class="t"><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t7" class="pln"><span class="n"><a href="#t7">7</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p id="t8" class="pln"><span class="n"><a href="#t8">8</a></span><span class="t"><span class="com"># Local</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t9" class="run"><span class="n"><a href="#t9">9</a></span><span class="t"><span class="key">from</span> <span class="nam">webapp</span><span class="op">.</span><span class="nam">helpers</span> <span class="key">import</span> <span class="nam">api_publisher_session</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t10" class="run"><span class="n"><a href="#t10">10</a></span><span class="t"><span class="key">from</span> <span class="nam">webapp</span><span class="op">.</span><span class="nam">decorators</span> <span class="key">import</span> <span class="nam">login_required</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t11" class="run"><span class="n"><a href="#t11">11</a></span><span class="t"><span class="key">from</span> <span class="nam">webapp</span><span class="op">.</span><span class="nam">store</span><span class="op">.</span><span class="nam">logic</span> <span class="key">import</span> <span class="nam">filter_screenshots</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t12" class="pln"><span class="n"><a href="#t12">12</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p id="t13" class="run"><span class="n"><a href="#t13">13</a></span><span class="t"><span class="nam">store_api</span> <span class="op">=</span> <span class="nam">SnapStore</span><span class="op">(</span><span class="nam">api_publisher_session</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t14" class="run"><span class="n"><a href="#t14">14</a></span><span class="t"><span class="nam">publisher_api</span> <span class="op">=</span> <span class="nam">SnapPublisher</span><span class="op">(</span><span class="nam">api_publisher_session</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t15" class="pln"><span class="n"><a href="#t15">15</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p id="t16" class="pln"><span class="n"><a href="#t16">16</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p id="t17" class="run"><span class="n"><a href="#t17">17</a></span><span class="t"><span class="op">@</span><span class="nam">login_required</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t18" class="run"><span class="n"><a href="#t18">18</a></span><span class="t"><span class="key">def</span> <span class="nam">get_publicise</span><span class="op">(</span><span class="nam">snap_name</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t19" class="run"><span class="n"><a href="#t19">19</a></span><span class="t">    <span class="nam">snap_details</span> <span class="op">=</span> <span class="nam">publisher_api</span><span class="op">.</span><span class="nam">get_snap_info</span><span class="op">(</span><span class="nam">snap_name</span><span class="op">,</span> <span class="nam">flask</span><span class="op">.</span><span class="nam">session</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t20" class="pln"><span class="n"><a href="#t20">20</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p id="t21" class="run"><span class="n"><a href="#t21">21</a></span><span class="t">    <span class="nam">is_released</span> <span class="op">=</span> <span class="nam">len</span><span class="op">(</span><span class="nam">snap_details</span><span class="op">[</span><span class="str">"channel_maps_list"</span><span class="op">]</span><span class="op">)</span> <span class="op">></span> <span class="num">0</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t22" class="pln"><span class="n"><a href="#t22">22</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p id="t23" class="run"><span class="n"><a href="#t23">23</a></span><span class="t">    <span class="nam">available_languages</span> <span class="op">=</span> <span class="op">{</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t24" class="pln"><span class="n"><a href="#t24">24</a></span><span class="t">        <span class="str">"ar"</span><span class="op">:</span> <span class="op">{</span><span class="str">"title"</span><span class="op">:</span> <span class="str">"&#1575;&#1604;&#1593;&#1585;&#1576;&#1610;&#1577;"</span><span class="op">,</span> <span class="str">"text"</span><span class="op">:</span> <span class="str">"&#1575;&#1581;&#1589;&#1604; &#1593;&#1604;&#1610;&#1607; &#1605;&#1606; Snap Store"</span><span class="op">}</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t25" class="pln"><span class="n"><a href="#t25">25</a></span><span class="t">        <span class="str">"bg"</span><span class="op">:</span> <span class="op">{</span><span class="str">"title"</span><span class="op">:</span> <span class="str">"&#1073;&#1098;&#1083;&#1075;&#1072;&#1088;&#1089;&#1082;&#1080;"</span><span class="op">,</span> <span class="str">"text"</span><span class="op">:</span> <span class="str">"&#1048;&#1085;&#1089;&#1090;&#1072;&#1083;&#1080;&#1088;&#1072;&#1081;&#1090;&#1077; &#1075;&#1086; &#1086;&#1090; Snap Store"</span><span class="op">}</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t26" class="pln"><span class="n"><a href="#t26">26</a></span><span class="t">        <span class="str">"bn"</span><span class="op">:</span> <span class="op">{</span><span class="str">"title"</span><span class="op">:</span> <span class="str">"&#2476;&#2494;&#2434;&#2482;&#2494;"</span><span class="op">,</span> <span class="str">"text"</span><span class="op">:</span> <span class="str">"&#2469;&#2503;&#2453;&#2503; &#2439;&#2472;&#2488;&#2509;&#2463;&#2482; &#2453;&#2480;&#2497;&#2472;"</span><span class="op">}</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t27" class="pln"><span class="n"><a href="#t27">27</a></span><span class="t">        <span class="str">"de"</span><span class="op">:</span> <span class="op">{</span><span class="str">"title"</span><span class="op">:</span> <span class="str">"Deutsch"</span><span class="op">,</span> <span class="str">"text"</span><span class="op">:</span> <span class="str">"Installieren vom Snap Store"</span><span class="op">}</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t28" class="pln"><span class="n"><a href="#t28">28</a></span><span class="t">        <span class="str">"en"</span><span class="op">:</span> <span class="op">{</span><span class="str">"title"</span><span class="op">:</span> <span class="str">"English"</span><span class="op">,</span> <span class="str">"text"</span><span class="op">:</span> <span class="str">"Get it from the Snap Store"</span><span class="op">}</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t29" class="pln"><span class="n"><a href="#t29">29</a></span><span class="t">        <span class="str">"es"</span><span class="op">:</span> <span class="op">{</span><span class="str">"title"</span><span class="op">:</span> <span class="str">"Espa&#241;ol"</span><span class="op">,</span> <span class="str">"text"</span><span class="op">:</span> <span class="str">"Instalar desde Snap Store"</span><span class="op">}</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t30" class="pln"><span class="n"><a href="#t30">30</a></span><span class="t">        <span class="str">"fr"</span><span class="op">:</span> <span class="op">{</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t31" class="pln"><span class="n"><a href="#t31">31</a></span><span class="t">            <span class="str">"title"</span><span class="op">:</span> <span class="str">"Fran&#231;ais"</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t32" class="pln"><span class="n"><a href="#t32">32</a></span><span class="t">            <span class="str">"text"</span><span class="op">:</span> <span class="str">"Installer &#224; partir du Snap Store"</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t33" class="pln"><span class="n"><a href="#t33">33</a></span><span class="t">        <span class="op">}</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t34" class="pln"><span class="n"><a href="#t34">34</a></span><span class="t">        <span class="str">"it"</span><span class="op">:</span> <span class="op">{</span><span class="str">"title"</span><span class="op">:</span> <span class="str">"Italiano"</span><span class="op">,</span> <span class="str">"text"</span><span class="op">:</span> <span class="str">"Scarica dallo Snap Store"</span><span class="op">}</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t35" class="pln"><span class="n"><a href="#t35">35</a></span><span class="t">        <span class="str">"jp"</span><span class="op">:</span> <span class="op">{</span><span class="str">"title"</span><span class="op">:</span> <span class="str">"&#26085;&#26412;&#35486;"</span><span class="op">,</span> <span class="str">"text"</span><span class="op">:</span> <span class="str">"Snap Store &#12363;&#12425;&#20837;&#25163;&#12367;&#12384;&#12373;&#12356;"</span><span class="op">}</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t36" class="pln"><span class="n"><a href="#t36">36</a></span><span class="t">        <span class="str">"pl"</span><span class="op">:</span> <span class="op">{</span><span class="str">"title"</span><span class="op">:</span> <span class="str">"Polski"</span><span class="op">,</span> <span class="str">"text"</span><span class="op">:</span> <span class="str">"Pobierz w Snap Store"</span><span class="op">}</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t37" class="pln"><span class="n"><a href="#t37">37</a></span><span class="t">        <span class="str">"pt"</span><span class="op">:</span> <span class="op">{</span><span class="str">"title"</span><span class="op">:</span> <span class="str">"Portugu&#234;s"</span><span class="op">,</span> <span class="str">"text"</span><span class="op">:</span> <span class="str">"Dispon&#237;vel na Snap Store"</span><span class="op">}</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t38" class="pln"><span class="n"><a href="#t38">38</a></span><span class="t">        <span class="str">"ro"</span><span class="op">:</span> <span class="op">{</span><span class="str">"title"</span><span class="op">:</span> <span class="str">"Rom&#226;n&#259;"</span><span class="op">,</span> <span class="str">"text"</span><span class="op">:</span> <span class="str">"Instaleaz&#259; din Snap Store"</span><span class="op">}</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t39" class="pln"><span class="n"><a href="#t39">39</a></span><span class="t">        <span class="str">"ru"</span><span class="op">:</span> <span class="op">{</span><span class="str">"title"</span><span class="op">:</span> <span class="str">"&#1088;&#1091;&#1089;&#1089;&#1082;&#1080;&#1081; &#1103;&#1079;&#1099;&#1082;"</span><span class="op">,</span> <span class="str">"text"</span><span class="op">:</span> <span class="str">"&#1047;&#1072;&#1075;&#1088;&#1091;&#1079;&#1080;&#1090;&#1077; &#1080;&#1079; Snap Store"</span><span class="op">}</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t40" class="pln"><span class="n"><a href="#t40">40</a></span><span class="t">        <span class="str">"tw"</span><span class="op">:</span> <span class="op">{</span><span class="str">"title"</span><span class="op">:</span> <span class="str">"&#20013;&#25991;&#65288;&#21488;&#28771;&#65289;"</span><span class="op">,</span> <span class="str">"text"</span><span class="op">:</span> <span class="str">"&#23433;&#35037;&#36575;&#39636;&#25964;&#35531;&#31227;&#39381; Snap Store"</span><span class="op">}</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t41" class="pln"><span class="n"><a href="#t41">41</a></span><span class="t">    <span class="op">}</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t42" class="pln"><span class="n"><a href="#t42">42</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p id="t43" class="run"><span class="n"><a href="#t43">43</a></span><span class="t">    <span class="nam">context</span> <span class="op">=</span> <span class="op">{</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t44" class="pln"><span class="n"><a href="#t44">44</a></span><span class="t">        <span class="str">"private"</span><span class="op">:</span> <span class="nam">snap_details</span><span class="op">[</span><span class="str">"private"</span><span class="op">]</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t45" class="pln"><span class="n"><a href="#t45">45</a></span><span class="t">        <span class="str">"snap_name"</span><span class="op">:</span> <span class="nam">snap_details</span><span class="op">[</span><span class="str">"snap_name"</span><span class="op">]</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t46" class="pln"><span class="n"><a href="#t46">46</a></span><span class="t">        <span class="str">"snap_title"</span><span class="op">:</span> <span class="nam">snap_details</span><span class="op">[</span><span class="str">"title"</span><span class="op">]</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t47" class="pln"><span class="n"><a href="#t47">47</a></span><span class="t">        <span class="str">"publisher_name"</span><span class="op">:</span> <span class="nam">snap_details</span><span class="op">[</span><span class="str">"publisher"</span><span class="op">]</span><span class="op">[</span><span class="str">"display-name"</span><span class="op">]</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t48" class="pln"><span class="n"><a href="#t48">48</a></span><span class="t">        <span class="str">"snap_id"</span><span class="op">:</span> <span class="nam">snap_details</span><span class="op">[</span><span class="str">"snap_id"</span><span class="op">]</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t49" class="pln"><span class="n"><a href="#t49">49</a></span><span class="t">        <span class="str">"is_release"</span><span class="op">:</span> <span class="nam">is_released</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t50" class="pln"><span class="n"><a href="#t50">50</a></span><span class="t">        <span class="str">"available"</span><span class="op">:</span> <span class="nam">available_languages</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t51" class="pln"><span class="n"><a href="#t51">51</a></span><span class="t">        <span class="str">"download_version"</span><span class="op">:</span> <span class="str">"v1.4.2"</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t52" class="pln"><span class="n"><a href="#t52">52</a></span><span class="t">    <span class="op">}</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t53" class="pln"><span class="n"><a href="#t53">53</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p id="t54" class="run"><span class="n"><a href="#t54">54</a></span><span class="t">    <span class="key">return</span> <span class="nam">flask</span><span class="op">.</span><span class="nam">render_template</span><span class="op">(</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t55" class="pln"><span class="n"><a href="#t55">55</a></span><span class="t">        <span class="str">"publisher/publicise/store_buttons.html"</span><span class="op">,</span> <span class="op">**</span><span class="nam">context</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t56" class="pln"><span class="n"><a href="#t56">56</a></span><span class="t">    <span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t57" class="pln"><span class="n"><a href="#t57">57</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p id="t58" class="pln"><span class="n"><a href="#t58">58</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p id="t59" class="run"><span class="n"><a href="#t59">59</a></span><span class="t"><span class="op">@</span><span class="nam">login_required</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t60" class="run"><span class="n"><a href="#t60">60</a></span><span class="t"><span class="key">def</span> <span class="nam">get_publicise_badges</span><span class="op">(</span><span class="nam">snap_name</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t61" class="run"><span class="n"><a href="#t61">61</a></span><span class="t">    <span class="nam">snap_details</span> <span class="op">=</span> <span class="nam">publisher_api</span><span class="op">.</span><span class="nam">get_snap_info</span><span class="op">(</span><span class="nam">snap_name</span><span class="op">,</span> <span class="nam">flask</span><span class="op">.</span><span class="nam">session</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t62" class="pln"><span class="n"><a href="#t62">62</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p id="t63" class="run"><span class="n"><a href="#t63">63</a></span><span class="t">    <span class="key">if</span> <span class="nam">snap_details</span><span class="op">[</span><span class="str">"private"</span><span class="op">]</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t64" class="run"><span class="n"><a href="#t64">64</a></span><span class="t">        <span class="key">return</span> <span class="nam">flask</span><span class="op">.</span><span class="nam">abort</span><span class="op">(</span><span class="num">404</span><span class="op">,</span> <span class="str">"No snap named {}"</span><span class="op">.</span><span class="nam">format</span><span class="op">(</span><span class="nam">snap_name</span><span class="op">)</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t65" class="pln"><span class="n"><a href="#t65">65</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p id="t66" class="run"><span class="n"><a href="#t66">66</a></span><span class="t">    <span class="nam">snap_public_details</span> <span class="op">=</span> <span class="nam">store_api</span><span class="op">.</span><span class="nam">get_item_details</span><span class="op">(</span><span class="nam">snap_name</span><span class="op">,</span> <span class="nam">api_version</span><span class="op">=</span><span class="num">2</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t67" class="pln"><span class="n"><a href="#t67">67</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p id="t68" class="run"><span class="n"><a href="#t68">68</a></span><span class="t">    <span class="nam">context</span> <span class="op">=</span> <span class="op">{</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t69" class="pln"><span class="n"><a href="#t69">69</a></span><span class="t">        <span class="str">"snap_name"</span><span class="op">:</span> <span class="nam">snap_details</span><span class="op">[</span><span class="str">"snap_name"</span><span class="op">]</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t70" class="pln"><span class="n"><a href="#t70">70</a></span><span class="t">        <span class="str">"snap_title"</span><span class="op">:</span> <span class="nam">snap_details</span><span class="op">[</span><span class="str">"title"</span><span class="op">]</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t71" class="pln"><span class="n"><a href="#t71">71</a></span><span class="t">        <span class="str">"publisher_name"</span><span class="op">:</span> <span class="nam">snap_details</span><span class="op">[</span><span class="str">"publisher"</span><span class="op">]</span><span class="op">[</span><span class="str">"display-name"</span><span class="op">]</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t72" class="pln"><span class="n"><a href="#t72">72</a></span><span class="t">        <span class="str">"snap_id"</span><span class="op">:</span> <span class="nam">snap_details</span><span class="op">[</span><span class="str">"snap_id"</span><span class="op">]</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t73" class="pln"><span class="n"><a href="#t73">73</a></span><span class="t">        <span class="str">"trending"</span><span class="op">:</span> <span class="nam">snap_public_details</span><span class="op">[</span><span class="str">"snap"</span><span class="op">]</span><span class="op">[</span><span class="str">"trending"</span><span class="op">]</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t74" class="pln"><span class="n"><a href="#t74">74</a></span><span class="t">    <span class="op">}</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t75" class="pln"><span class="n"><a href="#t75">75</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p id="t76" class="run"><span class="n"><a href="#t76">76</a></span><span class="t">    <span class="key">return</span> <span class="nam">flask</span><span class="op">.</span><span class="nam">render_template</span><span class="op">(</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t77" class="pln"><span class="n"><a href="#t77">77</a></span><span class="t">        <span class="str">"publisher/publicise/github_badges.html"</span><span class="op">,</span> <span class="op">**</span><span class="nam">context</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t78" class="pln"><span class="n"><a href="#t78">78</a></span><span class="t">    <span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t79" class="pln"><span class="n"><a href="#t79">79</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p id="t80" class="pln"><span class="n"><a href="#t80">80</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p id="t81" class="run"><span class="n"><a href="#t81">81</a></span><span class="t"><span class="op">@</span><span class="nam">login_required</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t82" class="run"><span class="n"><a href="#t82">82</a></span><span class="t"><span class="key">def</span> <span class="nam">get_publicise_cards</span><span class="op">(</span><span class="nam">snap_name</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t83" class="run"><span class="n"><a href="#t83">83</a></span><span class="t">    <span class="nam">snap_details</span> <span class="op">=</span> <span class="nam">publisher_api</span><span class="op">.</span><span class="nam">get_snap_info</span><span class="op">(</span><span class="nam">snap_name</span><span class="op">,</span> <span class="nam">flask</span><span class="op">.</span><span class="nam">session</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t84" class="pln"><span class="n"><a href="#t84">84</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p id="t85" class="run"><span class="n"><a href="#t85">85</a></span><span class="t">    <span class="key">if</span> <span class="nam">snap_details</span><span class="op">[</span><span class="str">"private"</span><span class="op">]</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t86" class="run"><span class="n"><a href="#t86">86</a></span><span class="t">        <span class="key">return</span> <span class="nam">flask</span><span class="op">.</span><span class="nam">abort</span><span class="op">(</span><span class="num">404</span><span class="op">,</span> <span class="str">"No snap named {}"</span><span class="op">.</span><span class="nam">format</span><span class="op">(</span><span class="nam">snap_name</span><span class="op">)</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t87" class="pln"><span class="n"><a href="#t87">87</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p id="t88" class="run"><span class="n"><a href="#t88">88</a></span><span class="t">    <span class="nam">screenshots</span> <span class="op">=</span> <span class="nam">filter_screenshots</span><span class="op">(</span><span class="nam">snap_details</span><span class="op">[</span><span class="str">"media"</span><span class="op">]</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t89" class="run"><span class="n"><a href="#t89">89</a></span><span class="t">    <span class="nam">has_screenshot</span> <span class="op">=</span> <span class="key">True</span> <span class="key">if</span> <span class="nam">screenshots</span> <span class="key">else</span> <span class="key">False</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t90" class="pln"><span class="n"><a href="#t90">90</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p id="t91" class="run"><span class="n"><a href="#t91">91</a></span><span class="t">    <span class="nam">context</span> <span class="op">=</span> <span class="op">{</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t92" class="pln"><span class="n"><a href="#t92">92</a></span><span class="t">        <span class="str">"has_screenshot"</span><span class="op">:</span> <span class="nam">has_screenshot</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t93" class="pln"><span class="n"><a href="#t93">93</a></span><span class="t">        <span class="str">"snap_name"</span><span class="op">:</span> <span class="nam">snap_details</span><span class="op">[</span><span class="str">"snap_name"</span><span class="op">]</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t94" class="pln"><span class="n"><a href="#t94">94</a></span><span class="t">        <span class="str">"snap_title"</span><span class="op">:</span> <span class="nam">snap_details</span><span class="op">[</span><span class="str">"title"</span><span class="op">]</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t95" class="pln"><span class="n"><a href="#t95">95</a></span><span class="t">        <span class="str">"publisher_name"</span><span class="op">:</span> <span class="nam">snap_details</span><span class="op">[</span><span class="str">"publisher"</span><span class="op">]</span><span class="op">[</span><span class="str">"display-name"</span><span class="op">]</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t96" class="pln"><span class="n"><a href="#t96">96</a></span><span class="t">        <span class="str">"snap_id"</span><span class="op">:</span> <span class="nam">snap_details</span><span class="op">[</span><span class="str">"snap_id"</span><span class="op">]</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t97" class="pln"><span class="n"><a href="#t97">97</a></span><span class="t">    <span class="op">}</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t98" class="pln"><span class="n"><a href="#t98">98</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p id="t99" class="run"><span class="n"><a href="#t99">99</a></span><span class="t">    <span class="key">return</span> <span class="nam">flask</span><span class="op">.</span><span class="nam">render_template</span><span class="op">(</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t100" class="pln"><span class="n"><a href="#t100">100</a></span><span class="t">        <span class="str">"publisher/publicise/embedded_cards.html"</span><span class="op">,</span> <span class="op">**</span><span class="nam">context</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t101" class="pln"><span class="n"><a href="#t101">101</a></span><span class="t">    <span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+</div>
+<div id="footer">
+    <div class="content">
+        <p>
+            <a class="nav" href="index.html">&#xab; index</a> &nbsp; &nbsp; <a class="nav" href="https://coverage.readthedocs.io">coverage.py v5.5</a>,
+            created at 2024-05-29 09:51 +0000
+        </p>
+    </div>
+</div>
+</body>
+</html>

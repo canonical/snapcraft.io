@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=emulateIE7" />
+    <title>Coverage for webapp/login/views.py: 78%</title>
+    <link rel="icon" sizes="32x32" href="favicon_32.png">
+    <link rel="stylesheet" href="style.css" type="text/css">
+    <script type="text/javascript" src="jquery.min.js"></script>
+    <script type="text/javascript" src="jquery.hotkeys.js"></script>
+    <script type="text/javascript" src="jquery.isonscreen.js"></script>
+    <script type="text/javascript" src="coverage_html.js"></script>
+    <script type="text/javascript">
+        jQuery(document).ready(coverage.pyfile_ready);
+    </script>
+</head>
+<body class="pyfile">
+<div id="header">
+    <div class="content">
+        <h1>Coverage for <b>webapp/login/views.py</b> :
+            <span class="pc_cov">78%</span>
+        </h1>
+        <img id="keyboard_icon" src="keybd_closed.png" alt="Show keyboard shortcuts" />
+        <h2 class="stats">
+            58 statements &nbsp;
+            <button type="button" class="run shortkey_r button_toggle_run" title="Toggle lines run">45 run</button>
+            <button type="button" class="mis show_mis shortkey_m button_toggle_mis" title="Toggle lines missing">13 missing</button>
+            <button type="button" class="exc show_exc shortkey_x button_toggle_exc" title="Toggle lines excluded">0 excluded</button>
+        </h2>
+    </div>
+</div>
+<div class="help_panel">
+    <img id="panel_icon" src="keybd_open.png" alt="Hide keyboard shortcuts" />
+    <p class="legend">Hot-keys on this page</p>
+    <div>
+    <p class="keyhelp">
+        <span class="key">r</span>
+        <span class="key">m</span>
+        <span class="key">x</span>
+        <span class="key">p</span> &nbsp; toggle line displays
+    </p>
+    <p class="keyhelp">
+        <span class="key">j</span>
+        <span class="key">k</span> &nbsp; next/prev highlighted chunk
+    </p>
+    <p class="keyhelp">
+        <span class="key">0</span> &nbsp; (zero) top of page
+    </p>
+    <p class="keyhelp">
+        <span class="key">1</span> &nbsp; (one) first highlighted chunk
+    </p>
+    </div>
+</div>
+<div id="source">
+    <p id="t1" class="run"><span class="n"><a href="#t1">1</a></span><span class="t"><span class="key">import</span> <span class="nam">os</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t2" class="pln"><span class="n"><a href="#t2">2</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p id="t3" class="run"><span class="n"><a href="#t3">3</a></span><span class="t"><span class="key">import</span> <span class="nam">flask</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t4" class="run"><span class="n"><a href="#t4">4</a></span><span class="t"><span class="key">from</span> <span class="nam">canonicalwebteam</span><span class="op">.</span><span class="nam">candid</span> <span class="key">import</span> <span class="nam">CandidClient</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t5" class="run"><span class="n"><a href="#t5">5</a></span><span class="t"><span class="key">from</span> <span class="nam">canonicalwebteam</span><span class="op">.</span><span class="nam">store_api</span><span class="op">.</span><span class="nam">stores</span><span class="op">.</span><span class="nam">snapstore</span> <span class="key">import</span> <span class="op">(</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t6" class="pln"><span class="n"><a href="#t6">6</a></span><span class="t">    <span class="nam">SnapPublisher</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t7" class="pln"><span class="n"><a href="#t7">7</a></span><span class="t">    <span class="nam">SnapStoreAdmin</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t8" class="pln"><span class="n"><a href="#t8">8</a></span><span class="t"><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t9" class="run"><span class="n"><a href="#t9">9</a></span><span class="t"><span class="key">from</span> <span class="nam">canonicalwebteam</span><span class="op">.</span><span class="nam">store_api</span><span class="op">.</span><span class="nam">stores</span><span class="op">.</span><span class="nam">charmstore</span> <span class="key">import</span> <span class="nam">CharmPublisher</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t10" class="pln"><span class="n"><a href="#t10">10</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p id="t11" class="run"><span class="n"><a href="#t11">11</a></span><span class="t"><span class="key">from</span> <span class="nam">django_openid_auth</span><span class="op">.</span><span class="nam">teams</span> <span class="key">import</span> <span class="nam">TeamsRequest</span><span class="op">,</span> <span class="nam">TeamsResponse</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t12" class="run"><span class="n"><a href="#t12">12</a></span><span class="t"><span class="key">from</span> <span class="nam">flask_openid</span> <span class="key">import</span> <span class="nam">OpenID</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t13" class="pln"><span class="n"><a href="#t13">13</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p id="t14" class="run"><span class="n"><a href="#t14">14</a></span><span class="t"><span class="key">from</span> <span class="nam">webapp</span> <span class="key">import</span> <span class="nam">authentication</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t15" class="run"><span class="n"><a href="#t15">15</a></span><span class="t"><span class="key">from</span> <span class="nam">webapp</span><span class="op">.</span><span class="nam">helpers</span> <span class="key">import</span> <span class="nam">api_publisher_session</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t16" class="run"><span class="n"><a href="#t16">16</a></span><span class="t"><span class="key">from</span> <span class="nam">webapp</span><span class="op">.</span><span class="nam">api</span><span class="op">.</span><span class="nam">exceptions</span> <span class="key">import</span> <span class="nam">ApiResponseError</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t17" class="run"><span class="n"><a href="#t17">17</a></span><span class="t"><span class="key">from</span> <span class="nam">webapp</span><span class="op">.</span><span class="nam">extensions</span> <span class="key">import</span> <span class="nam">csrf</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t18" class="run"><span class="n"><a href="#t18">18</a></span><span class="t"><span class="key">from</span> <span class="nam">webapp</span><span class="op">.</span><span class="nam">login</span><span class="op">.</span><span class="nam">macaroon</span> <span class="key">import</span> <span class="nam">MacaroonRequest</span><span class="op">,</span> <span class="nam">MacaroonResponse</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t19" class="run"><span class="n"><a href="#t19">19</a></span><span class="t"><span class="key">from</span> <span class="nam">webapp</span><span class="op">.</span><span class="nam">publisher</span><span class="op">.</span><span class="nam">snaps</span> <span class="key">import</span> <span class="nam">logic</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t20" class="pln"><span class="n"><a href="#t20">20</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p id="t21" class="run"><span class="n"><a href="#t21">21</a></span><span class="t"><span class="nam">login</span> <span class="op">=</span> <span class="nam">flask</span><span class="op">.</span><span class="nam">Blueprint</span><span class="op">(</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t22" class="pln"><span class="n"><a href="#t22">22</a></span><span class="t">    <span class="str">"login"</span><span class="op">,</span> <span class="nam">__name__</span><span class="op">,</span> <span class="nam">template_folder</span><span class="op">=</span><span class="str">"/templates"</span><span class="op">,</span> <span class="nam">static_folder</span><span class="op">=</span><span class="str">"/static"</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t23" class="pln"><span class="n"><a href="#t23">23</a></span><span class="t"><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t24" class="pln"><span class="n"><a href="#t24">24</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p id="t25" class="run"><span class="n"><a href="#t25">25</a></span><span class="t"><span class="nam">LOGIN_URL</span> <span class="op">=</span> <span class="nam">os</span><span class="op">.</span><span class="nam">getenv</span><span class="op">(</span><span class="str">"LOGIN_URL"</span><span class="op">,</span> <span class="str">"https://login.ubuntu.com"</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t26" class="pln"><span class="n"><a href="#t26">26</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p id="t27" class="run"><span class="n"><a href="#t27">27</a></span><span class="t"><span class="nam">LP_CANONICAL_TEAM</span> <span class="op">=</span> <span class="str">"canonical"</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t28" class="pln"><span class="n"><a href="#t28">28</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p id="t29" class="run"><span class="n"><a href="#t29">29</a></span><span class="t"><span class="nam">open_id</span> <span class="op">=</span> <span class="nam">OpenID</span><span class="op">(</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t30" class="pln"><span class="n"><a href="#t30">30</a></span><span class="t">    <span class="nam">store_factory</span><span class="op">=</span><span class="key">lambda</span><span class="op">:</span> <span class="key">None</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t31" class="pln"><span class="n"><a href="#t31">31</a></span><span class="t">    <span class="nam">safe_roots</span><span class="op">=</span><span class="op">[</span><span class="op">]</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t32" class="pln"><span class="n"><a href="#t32">32</a></span><span class="t">    <span class="nam">extension_responses</span><span class="op">=</span><span class="op">[</span><span class="nam">MacaroonResponse</span><span class="op">,</span> <span class="nam">TeamsResponse</span><span class="op">]</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t33" class="pln"><span class="n"><a href="#t33">33</a></span><span class="t"><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t34" class="pln"><span class="n"><a href="#t34">34</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p id="t35" class="run"><span class="n"><a href="#t35">35</a></span><span class="t"><span class="nam">publisher_api</span> <span class="op">=</span> <span class="nam">SnapPublisher</span><span class="op">(</span><span class="nam">api_publisher_session</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t36" class="run"><span class="n"><a href="#t36">36</a></span><span class="t"><span class="nam">admin_api</span> <span class="op">=</span> <span class="nam">SnapStoreAdmin</span><span class="op">(</span><span class="nam">api_publisher_session</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t37" class="run"><span class="n"><a href="#t37">37</a></span><span class="t"><span class="nam">candid</span> <span class="op">=</span> <span class="nam">CandidClient</span><span class="op">(</span><span class="nam">api_publisher_session</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t38" class="run"><span class="n"><a href="#t38">38</a></span><span class="t"><span class="nam">charm_publisher_api</span> <span class="op">=</span> <span class="nam">CharmPublisher</span><span class="op">(</span><span class="nam">api_publisher_session</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t39" class="pln"><span class="n"><a href="#t39">39</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p id="t40" class="pln"><span class="n"><a href="#t40">40</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p id="t41" class="run"><span class="n"><a href="#t41">41</a></span><span class="t"><span class="op">@</span><span class="nam">login</span><span class="op">.</span><span class="nam">route</span><span class="op">(</span><span class="str">"/login"</span><span class="op">,</span> <span class="nam">methods</span><span class="op">=</span><span class="op">[</span><span class="str">"GET"</span><span class="op">,</span> <span class="str">"POST"</span><span class="op">]</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t42" class="run"><span class="n"><a href="#t42">42</a></span><span class="t"><span class="op">@</span><span class="nam">csrf</span><span class="op">.</span><span class="nam">exempt</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t43" class="run"><span class="n"><a href="#t43">43</a></span><span class="t"><span class="op">@</span><span class="nam">open_id</span><span class="op">.</span><span class="nam">loginhandler</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t44" class="run"><span class="n"><a href="#t44">44</a></span><span class="t"><span class="key">def</span> <span class="nam">login_handler</span><span class="op">(</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t45" class="run"><span class="n"><a href="#t45">45</a></span><span class="t">    <span class="key">if</span> <span class="nam">authentication</span><span class="op">.</span><span class="nam">is_authenticated</span><span class="op">(</span><span class="nam">flask</span><span class="op">.</span><span class="nam">session</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t46" class="run"><span class="n"><a href="#t46">46</a></span><span class="t">        <span class="key">return</span> <span class="nam">flask</span><span class="op">.</span><span class="nam">redirect</span><span class="op">(</span><span class="nam">open_id</span><span class="op">.</span><span class="nam">get_next_url</span><span class="op">(</span><span class="op">)</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t47" class="pln"><span class="n"><a href="#t47">47</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p id="t48" class="run"><span class="n"><a href="#t48">48</a></span><span class="t">    <span class="key">try</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t49" class="run"><span class="n"><a href="#t49">49</a></span><span class="t">        <span class="nam">root</span> <span class="op">=</span> <span class="nam">authentication</span><span class="op">.</span><span class="nam">request_macaroon</span><span class="op">(</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t50" class="run"><span class="n"><a href="#t50">50</a></span><span class="t">    <span class="key">except</span> <span class="nam">ApiResponseError</span> <span class="key">as</span> <span class="nam">api_response_error</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t51" class="run"><span class="n"><a href="#t51">51</a></span><span class="t">        <span class="key">if</span> <span class="nam">api_response_error</span><span class="op">.</span><span class="nam">status_code</span> <span class="op">==</span> <span class="num">401</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t52" class="run"><span class="n"><a href="#t52">52</a></span><span class="t">            <span class="key">return</span> <span class="nam">flask</span><span class="op">.</span><span class="nam">redirect</span><span class="op">(</span><span class="nam">flask</span><span class="op">.</span><span class="nam">url_for</span><span class="op">(</span><span class="str">".logout"</span><span class="op">)</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t53" class="pln"><span class="n"><a href="#t53">53</a></span><span class="t">        <span class="key">else</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t54" class="run"><span class="n"><a href="#t54">54</a></span><span class="t">            <span class="key">return</span> <span class="nam">flask</span><span class="op">.</span><span class="nam">abort</span><span class="op">(</span><span class="num">502</span><span class="op">,</span> <span class="nam">str</span><span class="op">(</span><span class="nam">api_response_error</span><span class="op">)</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t55" class="pln"><span class="n"><a href="#t55">55</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p id="t56" class="run"><span class="n"><a href="#t56">56</a></span><span class="t">    <span class="nam">openid_macaroon</span> <span class="op">=</span> <span class="nam">MacaroonRequest</span><span class="op">(</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t57" class="pln"><span class="n"><a href="#t57">57</a></span><span class="t">        <span class="nam">caveat_id</span><span class="op">=</span><span class="nam">authentication</span><span class="op">.</span><span class="nam">get_caveat_id</span><span class="op">(</span><span class="nam">root</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t58" class="pln"><span class="n"><a href="#t58">58</a></span><span class="t">    <span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t59" class="run"><span class="n"><a href="#t59">59</a></span><span class="t">    <span class="nam">flask</span><span class="op">.</span><span class="nam">session</span><span class="op">[</span><span class="str">"macaroon_root"</span><span class="op">]</span> <span class="op">=</span> <span class="nam">root</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t60" class="pln"><span class="n"><a href="#t60">60</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p id="t61" class="run"><span class="n"><a href="#t61">61</a></span><span class="t">    <span class="nam">lp_teams</span> <span class="op">=</span> <span class="nam">TeamsRequest</span><span class="op">(</span><span class="nam">query_membership</span><span class="op">=</span><span class="op">[</span><span class="nam">LP_CANONICAL_TEAM</span><span class="op">]</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t62" class="pln"><span class="n"><a href="#t62">62</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p id="t63" class="run"><span class="n"><a href="#t63">63</a></span><span class="t">    <span class="key">return</span> <span class="nam">open_id</span><span class="op">.</span><span class="nam">try_login</span><span class="op">(</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t64" class="pln"><span class="n"><a href="#t64">64</a></span><span class="t">        <span class="nam">LOGIN_URL</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t65" class="pln"><span class="n"><a href="#t65">65</a></span><span class="t">        <span class="nam">ask_for</span><span class="op">=</span><span class="op">[</span><span class="str">"email"</span><span class="op">,</span> <span class="str">"nickname"</span><span class="op">,</span> <span class="str">"image"</span><span class="op">]</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t66" class="pln"><span class="n"><a href="#t66">66</a></span><span class="t">        <span class="nam">ask_for_optional</span><span class="op">=</span><span class="op">[</span><span class="str">"fullname"</span><span class="op">]</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t67" class="pln"><span class="n"><a href="#t67">67</a></span><span class="t">        <span class="nam">extensions</span><span class="op">=</span><span class="op">[</span><span class="nam">openid_macaroon</span><span class="op">,</span> <span class="nam">lp_teams</span><span class="op">]</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t68" class="pln"><span class="n"><a href="#t68">68</a></span><span class="t">    <span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t69" class="pln"><span class="n"><a href="#t69">69</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p id="t70" class="pln"><span class="n"><a href="#t70">70</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p id="t71" class="run"><span class="n"><a href="#t71">71</a></span><span class="t"><span class="op">@</span><span class="nam">open_id</span><span class="op">.</span><span class="nam">after_login</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t72" class="run"><span class="n"><a href="#t72">72</a></span><span class="t"><span class="key">def</span> <span class="nam">after_login</span><span class="op">(</span><span class="nam">resp</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t73" class="mis show_mis"><span class="n"><a href="#t73">73</a></span><span class="t">    <span class="nam">flask</span><span class="op">.</span><span class="nam">session</span><span class="op">[</span><span class="str">"macaroon_discharge"</span><span class="op">]</span> <span class="op">=</span> <span class="nam">resp</span><span class="op">.</span><span class="nam">extensions</span><span class="op">[</span><span class="str">"macaroon"</span><span class="op">]</span><span class="op">.</span><span class="nam">discharge</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t74" class="pln"><span class="n"><a href="#t74">74</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p id="t75" class="mis show_mis"><span class="n"><a href="#t75">75</a></span><span class="t">    <span class="key">if</span> <span class="key">not</span> <span class="nam">resp</span><span class="op">.</span><span class="nam">nickname</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t76" class="mis show_mis"><span class="n"><a href="#t76">76</a></span><span class="t">        <span class="key">return</span> <span class="nam">flask</span><span class="op">.</span><span class="nam">redirect</span><span class="op">(</span><span class="nam">LOGIN_URL</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t77" class="pln"><span class="n"><a href="#t77">77</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p id="t78" class="mis show_mis"><span class="n"><a href="#t78">78</a></span><span class="t">    <span class="nam">account</span> <span class="op">=</span> <span class="nam">publisher_api</span><span class="op">.</span><span class="nam">get_account</span><span class="op">(</span><span class="nam">flask</span><span class="op">.</span><span class="nam">session</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t79" class="pln"><span class="n"><a href="#t79">79</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p id="t80" class="mis show_mis"><span class="n"><a href="#t80">80</a></span><span class="t">    <span class="key">if</span> <span class="nam">account</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t81" class="mis show_mis"><span class="n"><a href="#t81">81</a></span><span class="t">        <span class="nam">flask</span><span class="op">.</span><span class="nam">session</span><span class="op">[</span><span class="str">"publisher"</span><span class="op">]</span> <span class="op">=</span> <span class="op">{</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t82" class="pln"><span class="n"><a href="#t82">82</a></span><span class="t">            <span class="str">"identity_url"</span><span class="op">:</span> <span class="nam">resp</span><span class="op">.</span><span class="nam">identity_url</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t83" class="pln"><span class="n"><a href="#t83">83</a></span><span class="t">            <span class="str">"nickname"</span><span class="op">:</span> <span class="nam">account</span><span class="op">[</span><span class="str">"username"</span><span class="op">]</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t84" class="pln"><span class="n"><a href="#t84">84</a></span><span class="t">            <span class="str">"fullname"</span><span class="op">:</span> <span class="nam">account</span><span class="op">[</span><span class="str">"displayname"</span><span class="op">]</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t85" class="pln"><span class="n"><a href="#t85">85</a></span><span class="t">            <span class="str">"image"</span><span class="op">:</span> <span class="nam">resp</span><span class="op">.</span><span class="nam">image</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t86" class="pln"><span class="n"><a href="#t86">86</a></span><span class="t">            <span class="str">"email"</span><span class="op">:</span> <span class="nam">account</span><span class="op">[</span><span class="str">"email"</span><span class="op">]</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t87" class="pln"><span class="n"><a href="#t87">87</a></span><span class="t">            <span class="str">"is_canonical"</span><span class="op">:</span> <span class="nam">LP_CANONICAL_TEAM</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t88" class="pln"><span class="n"><a href="#t88">88</a></span><span class="t">            <span class="key">in</span> <span class="nam">resp</span><span class="op">.</span><span class="nam">extensions</span><span class="op">[</span><span class="str">"lp"</span><span class="op">]</span><span class="op">.</span><span class="nam">is_member</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t89" class="pln"><span class="n"><a href="#t89">89</a></span><span class="t">        <span class="op">}</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t90" class="pln"><span class="n"><a href="#t90">90</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p id="t91" class="mis show_mis"><span class="n"><a href="#t91">91</a></span><span class="t">        <span class="key">if</span> <span class="nam">logic</span><span class="op">.</span><span class="nam">get_stores</span><span class="op">(</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t92" class="pln"><span class="n"><a href="#t92">92</a></span><span class="t">            <span class="nam">account</span><span class="op">[</span><span class="str">"stores"</span><span class="op">]</span><span class="op">,</span> <span class="nam">roles</span><span class="op">=</span><span class="op">[</span><span class="str">"admin"</span><span class="op">,</span> <span class="str">"review"</span><span class="op">,</span> <span class="str">"view"</span><span class="op">]</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t93" class="pln"><span class="n"><a href="#t93">93</a></span><span class="t">        <span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t94" class="mis show_mis"><span class="n"><a href="#t94">94</a></span><span class="t">            <span class="nam">flask</span><span class="op">.</span><span class="nam">session</span><span class="op">[</span><span class="str">"publisher"</span><span class="op">]</span><span class="op">[</span><span class="str">"has_stores"</span><span class="op">]</span> <span class="op">=</span> <span class="op">(</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t95" class="pln"><span class="n"><a href="#t95">95</a></span><span class="t">                <span class="nam">len</span><span class="op">(</span><span class="nam">admin_api</span><span class="op">.</span><span class="nam">get_stores</span><span class="op">(</span><span class="nam">flask</span><span class="op">.</span><span class="nam">session</span><span class="op">)</span><span class="op">)</span> <span class="op">></span> <span class="num">0</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t96" class="pln"><span class="n"><a href="#t96">96</a></span><span class="t">            <span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t97" class="pln"><span class="n"><a href="#t97">97</a></span><span class="t">    <span class="key">else</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t98" class="mis show_mis"><span class="n"><a href="#t98">98</a></span><span class="t">        <span class="nam">flask</span><span class="op">.</span><span class="nam">session</span><span class="op">[</span><span class="str">"publisher"</span><span class="op">]</span> <span class="op">=</span> <span class="op">{</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t99" class="pln"><span class="n"><a href="#t99">99</a></span><span class="t">            <span class="str">"identity_url"</span><span class="op">:</span> <span class="nam">resp</span><span class="op">.</span><span class="nam">identity_url</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t100" class="pln"><span class="n"><a href="#t100">100</a></span><span class="t">            <span class="str">"nickname"</span><span class="op">:</span> <span class="nam">resp</span><span class="op">.</span><span class="nam">nickname</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t101" class="pln"><span class="n"><a href="#t101">101</a></span><span class="t">            <span class="str">"fullname"</span><span class="op">:</span> <span class="nam">resp</span><span class="op">.</span><span class="nam">fullname</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t102" class="pln"><span class="n"><a href="#t102">102</a></span><span class="t">            <span class="str">"image"</span><span class="op">:</span> <span class="nam">resp</span><span class="op">.</span><span class="nam">image</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t103" class="pln"><span class="n"><a href="#t103">103</a></span><span class="t">            <span class="str">"email"</span><span class="op">:</span> <span class="nam">resp</span><span class="op">.</span><span class="nam">email</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t104" class="pln"><span class="n"><a href="#t104">104</a></span><span class="t">        <span class="op">}</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t105" class="pln"><span class="n"><a href="#t105">105</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p id="t106" class="mis show_mis"><span class="n"><a href="#t106">106</a></span><span class="t">    <span class="nam">response</span> <span class="op">=</span> <span class="nam">flask</span><span class="op">.</span><span class="nam">make_response</span><span class="op">(</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t107" class="pln"><span class="n"><a href="#t107">107</a></span><span class="t">        <span class="nam">flask</span><span class="op">.</span><span class="nam">redirect</span><span class="op">(</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t108" class="pln"><span class="n"><a href="#t108">108</a></span><span class="t">            <span class="nam">open_id</span><span class="op">.</span><span class="nam">get_next_url</span><span class="op">(</span><span class="op">)</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t109" class="pln"><span class="n"><a href="#t109">109</a></span><span class="t">            <span class="num">302</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t110" class="pln"><span class="n"><a href="#t110">110</a></span><span class="t">        <span class="op">)</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t111" class="pln"><span class="n"><a href="#t111">111</a></span><span class="t">    <span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t112" class="pln"><span class="n"><a href="#t112">112</a></span><span class="t">    <span class="com"># this is a temporary cookies to be taken out later</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t113" class="mis show_mis"><span class="n"><a href="#t113">113</a></span><span class="t">    <span class="nam">response</span><span class="op">.</span><span class="nam">set_cookie</span><span class="op">(</span><span class="str">"login_migrated"</span><span class="op">,</span> <span class="str">"true"</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t114" class="mis show_mis"><span class="n"><a href="#t114">114</a></span><span class="t">    <span class="key">return</span> <span class="nam">response</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t115" class="pln"><span class="n"><a href="#t115">115</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p id="t116" class="pln"><span class="n"><a href="#t116">116</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p id="t117" class="run"><span class="n"><a href="#t117">117</a></span><span class="t"><span class="op">@</span><span class="nam">login</span><span class="op">.</span><span class="nam">route</span><span class="op">(</span><span class="str">"/login-beta"</span><span class="op">,</span> <span class="nam">methods</span><span class="op">=</span><span class="op">[</span><span class="str">"GET"</span><span class="op">]</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t118" class="run"><span class="n"><a href="#t118">118</a></span><span class="t"><span class="key">def</span> <span class="nam">login_beta</span><span class="op">(</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t119" class="mis show_mis"><span class="n"><a href="#t119">119</a></span><span class="t">    <span class="key">return</span> <span class="nam">flask</span><span class="op">.</span><span class="nam">redirect</span><span class="op">(</span><span class="nam">flask</span><span class="op">.</span><span class="nam">url_for</span><span class="op">(</span><span class="str">".login_handler"</span><span class="op">)</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t120" class="pln"><span class="n"><a href="#t120">120</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p id="t121" class="pln"><span class="n"><a href="#t121">121</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p id="t122" class="run"><span class="n"><a href="#t122">122</a></span><span class="t"><span class="op">@</span><span class="nam">login</span><span class="op">.</span><span class="nam">route</span><span class="op">(</span><span class="str">"/logout"</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t123" class="run"><span class="n"><a href="#t123">123</a></span><span class="t"><span class="key">def</span> <span class="nam">logout</span><span class="op">(</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t124" class="run"><span class="n"><a href="#t124">124</a></span><span class="t">    <span class="nam">authentication</span><span class="op">.</span><span class="nam">empty_session</span><span class="op">(</span><span class="nam">flask</span><span class="op">.</span><span class="nam">session</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t125" class="pln"><span class="n"><a href="#t125">125</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p id="t126" class="run"><span class="n"><a href="#t126">126</a></span><span class="t">    <span class="key">return</span> <span class="nam">flask</span><span class="op">.</span><span class="nam">redirect</span><span class="op">(</span><span class="str">"/"</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+</div>
+<div id="footer">
+    <div class="content">
+        <p>
+            <a class="nav" href="index.html">&#xab; index</a> &nbsp; &nbsp; <a class="nav" href="https://coverage.readthedocs.io">coverage.py v5.5</a>,
+            created at 2024-05-29 09:51 +0000
+        </p>
+    </div>
+</div>
+</body>
+</html>
