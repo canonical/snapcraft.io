@@ -5,6 +5,7 @@ module.exports = {
   },
   collectCoverage: true,
   coverageReporters: ["html", "cobertura"],
+  coverageDirectory: "coverage/js",
   transformIgnorePatterns: [
     "node_modules/@canonical/(?!(react-components|store-components))",
   ],

@@ -4,8 +4,8 @@ on:
     - cron: "0 22 * * *"
 
 jobs:
-  test-js:
-    name: test-js
+  test:
+    name: test
     runs-on: ubuntu-latest
 
     steps:
@@ -15,13 +15,30 @@ jobs:
         with:
           node-version: 20
 
-      - name: Install dependencies
+      - name: Install JS dependencies
         run: yarn install --immutable
 
       - name: Run JS tests with coverage
         run: |
           yarn test-js --coverage
-          zip -r coverage/cobertura-coverage.zip coverage/cobertura-coverage.xml
+          mv coverage/js/cobertura-coverage.xml coverage/cobertura-coverage.xml
+
+      - name: Install Python requirements
+        run: |
+          sudo pip3 install -r requirements.txt
+
+      - name: Install Python dependencies
+        run: sudo pip3 install coverage
+
+      - name: Run Python tests with coverage
+        run: |
+          SECRET_KEY=simplesecretkey coverage run --source=. -m unittest discover tests
+          coverage xml -o coverage/coverage.xml
+          coverage html -d coverage/python
+
+      - name: Zip coverage report
+        run: |
+          zip -r coverage/cobertura-coverage.zip coverage/cobertura-coverage.xml coverage/coverage.xml
       
       - name: Upload coverage report
         if: always()
@@ -34,7 +51,7 @@ jobs:
   publish-coverage-report:
       name: publish-coverage-report
       runs-on: ubuntu-latest
-      needs: test-js
+      needs: test
       continue-on-error: true
       steps:
         - uses: actions/checkout@v4
