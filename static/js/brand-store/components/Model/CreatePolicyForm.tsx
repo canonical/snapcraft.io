@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { useParams, Link, useNavigate, useLocation } from "react-router-dom";
 import { useMutation, useQueryClient } from "react-query";

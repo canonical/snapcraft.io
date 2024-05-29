@@ -1,4 +1,4 @@
-import React, { KeyboardEvent } from "react";
+import { KeyboardEvent } from "react";
 
 import type { SnapsList } from "../../types/shared";
 

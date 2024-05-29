@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { BrowserRouter } from "react-router-dom";
 import { RecoilRoot, useRecoilValue } from "recoil";
 import { QueryClient, QueryClientProvider } from "react-query";

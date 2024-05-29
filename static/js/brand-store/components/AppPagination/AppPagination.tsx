@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Button, Icon, Input, Select } from "@canonical/react-components";
 
 type Props = {

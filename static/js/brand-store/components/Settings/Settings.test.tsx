@@ -1,4 +1,3 @@
-import React from "react";
 import * as reactRedux from "react-redux";
 import { BrowserRouter as Router } from "react-router-dom";
 import { RecoilRoot } from "recoil";

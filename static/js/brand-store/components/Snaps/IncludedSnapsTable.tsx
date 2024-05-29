@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { format, parseISO } from "date-fns";
 import { Input, MainTable } from "@canonical/react-components";
@@ -32,7 +32,7 @@ function SnapTableRows({
     );
 
     const isChecked = snapsToRemove.some((item: Snap) => item.id === snap.id);
-    
+
     let latestReleaseVersion = "-";
     if (snap["latest-release"] && snap["latest-release"].version) {
       latestReleaseVersion = snap["latest-release"].version || "-";
@@ -48,38 +48,60 @@ function SnapTableRows({
     return {
       columns: [
         {
-          content: snap.store !== id && !snap.essential && !isOnlyViewer() ? (
-            <div className={`u-truncate ${isOnlyViewer() ? "" : "table-cell-checkbox"}`}>
-              <Input
-                type="checkbox"
-                onChange={(e) => {
-                  if (e.target.checked) {
-                    setSnapsToRemove([...snapsToRemove, snap]);
-                  } else {
-                    setSnapsToRemove(snapsToRemove.filter((item) => item.id !== snap.id));
-                  }
-                }}
-                checked={isChecked}
-                label={snapName}
-              />
-            </div>
-          ) : (
-            <div className="brand-store-table-no-checkbox">
-              <span style={{ marginLeft: "2rem" }}>{snapName}</span>
-            </div>
-          ),
+          content:
+            snap.store !== id && !snap.essential && !isOnlyViewer() ? (
+              <div
+                className={`u-truncate ${isOnlyViewer() ? "" : "table-cell-checkbox"}`}
+              >
+                <Input
+                  type="checkbox"
+                  onChange={(e) => {
+                    if (e.target.checked) {
+                      setSnapsToRemove([...snapsToRemove, snap]);
+                    } else {
+                      setSnapsToRemove(
+                        snapsToRemove.filter((item) => item.id !== snap.id)
+                      );
+                    }
+                  }}
+                  checked={isChecked}
+                  label={snapName}
+                />
+              </div>
+            ) : (
+              <div className="brand-store-table-no-checkbox">
+                <span style={{ marginLeft: "2rem" }}>{snapName}</span>
+              </div>
+            ),
         },
-        { content: isGlobal ? "Global" : (getStoreName && getStoreName(snap.store)) || snap.store, className: "brand-store-table-content" },
-        { content: snap["latest-release"] && snap["latest-release"].version ? snap["latest-release"].version : "-", className: "brand-store-table-content" },
-        { content: releaseDate ? format(releaseDate, "dd/MM/yyyy") : "-", className: "brand-store-table-content" },
-        { content: snap.users[0].displayname, className: "brand-store-table-content" },
+        {
+          content: isGlobal
+            ? "Global"
+            : (getStoreName && getStoreName(snap.store)) || snap.store,
+          className: "brand-store-table-content",
+        },
+        {
+          content:
+            snap["latest-release"] && snap["latest-release"].version
+              ? snap["latest-release"].version
+              : "-",
+          className: "brand-store-table-content",
+        },
+        {
+          content: releaseDate ? format(releaseDate, "dd/MM/yyyy") : "-",
+          className: "brand-store-table-content",
+        },
+        {
+          content: snap.users[0].displayname,
+          className: "brand-store-table-content",
+        },
       ],
       sortData: {
         name: snap.name,
         sourceStore: snap.store,
         latestRelease: latestReleaseVersion || null,
         releaseDate: releaseDate || null,
-        publisher: publisher,      
+        publisher: publisher,
       },
     };
   });
@@ -137,53 +159,76 @@ function IncludedSnapsTable({
     <MainTable
       sortable
       headers={[
-        { 
-          content: (
-            !isOnlyViewer() ? (
-              <div className={`u-truncate ${isOnlyViewer() ? "" : "table-cell-checkbox"}`}>
-                <Input
-                  type="checkbox"
-                  onChange={(e) => {
-                    if (e.target.checked) {
-                      setSnapsToRemove(
-                        allSnaps.filter((item) => !item.essential)
-                      );
-                      setIsChecked(true);
-                    } else {
-                      setSnapsToRemove([]);
-                      setIsChecked(false);
-                    }
-                  }}
-                  disabled={!nonEssentialSnapIds.length}
-                  label="Name"
-                  checked={isChecked}
-                  // @ts-ignore
-                  indeterminate={isIndeterminate}
-                />
-              </div>
-            ) : (
-              "Name"
-            )
-          ), 
+        {
+          content: !isOnlyViewer() ? (
+            <div
+              className={`u-truncate ${isOnlyViewer() ? "" : "table-cell-checkbox"}`}
+            >
+              <Input
+                type="checkbox"
+                onChange={(e) => {
+                  if (e.target.checked) {
+                    setSnapsToRemove(
+                      allSnaps.filter((item) => !item.essential)
+                    );
+                    setIsChecked(true);
+                  } else {
+                    setSnapsToRemove([]);
+                    setIsChecked(false);
+                  }
+                }}
+                disabled={!nonEssentialSnapIds.length}
+                label="Name"
+                checked={isChecked}
+                // @ts-ignore
+                indeterminate={isIndeterminate}
+              />
+            </div>
+          ) : (
+            "Name"
+          ),
         },
-        { content: "Source store", sortKey: "sourceStore", className: "brand-store-table-header" },
-        { content: "Latest release", sortKey: "latestRelease", className: "brand-store-table-header" },
-        { content: "Release date", sortKey: "releaseDate", className: "brand-store-table-header" },
-        { content: "Publisher", sortKey: "publisher", className: "brand-store-table-header" },
+        {
+          content: "Source store",
+          sortKey: "sourceStore",
+          className: "brand-store-table-header",
+        },
+        {
+          content: "Latest release",
+          sortKey: "latestRelease",
+          className: "brand-store-table-header",
+        },
+        {
+          content: "Release date",
+          sortKey: "releaseDate",
+          className: "brand-store-table-header",
+        },
+        {
+          content: "Publisher",
+          sortKey: "publisher",
+          className: "brand-store-table-header",
+        },
       ]}
-      rows={otherStores.map((store) => SnapTableRows({
-        snaps: deDupedSnaps(store.snaps, store.id),
-        getStoreName,
-        isOnlyViewer,
-        snapsToRemove,
-        setSnapsToRemove,
-      })).flat().concat(...SnapTableRows({
-        snaps: deDupedSnaps(globalStore.snaps, "ubuntu"),
-        isGlobal: true,
-        isOnlyViewer,
-        snapsToRemove,
-        setSnapsToRemove,
-      }))}
+      rows={otherStores
+        .map((store) =>
+          SnapTableRows({
+            snaps: deDupedSnaps(store.snaps, store.id),
+            getStoreName,
+            isOnlyViewer,
+            snapsToRemove,
+            setSnapsToRemove,
+          })
+        )
+        .flat()
+        .concat(
+          ...SnapTableRows({
+            snaps: deDupedSnaps(globalStore.snaps, "ubuntu"),
+            isGlobal: true,
+            isOnlyViewer,
+            snapsToRemove,
+            setSnapsToRemove,
+          })
+        )}
     />
   );
 }

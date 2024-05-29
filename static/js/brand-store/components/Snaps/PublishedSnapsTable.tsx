@@ -1,4 +1,3 @@
-import React from "react";
 import { format, parseISO } from "date-fns";
 
 import type { Snap } from "../../types/shared";
@@ -9,7 +8,6 @@ type Props = {
 };
 
 function PublishedSnapsTable({ snapsInStore }: Props) {
-
   return (
     <>
       {snapsInStore.length > 0 ? (
@@ -26,13 +24,22 @@ function PublishedSnapsTable({ snapsInStore }: Props) {
             if (snap["latest-release"] && snap["latest-release"].timestamp) {
               releaseDate = parseISO(snap["latest-release"].timestamp);
             }
-            
+
             return {
               columns: [
                 { content: snap.name },
-                { content: snap["latest-release"] && snap["latest-release"].version ? snap["latest-release"].version : "-" },
-                { content: releaseDate ? format(releaseDate, "dd/MM/yyyy") : "-" },                
-                { content: snap.users[0].displayname }
+                {
+                  content:
+                    snap["latest-release"] && snap["latest-release"].version
+                      ? snap["latest-release"].version
+                      : "-",
+                },
+                {
+                  content: releaseDate
+                    ? format(releaseDate, "dd/MM/yyyy")
+                    : "-",
+                },
+                { content: snap.users[0].displayname },
               ],
               sortData: {
                 name: snap.name,
