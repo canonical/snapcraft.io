@@ -1,4 +1,4 @@
-import React, { useState, SyntheticEvent, useEffect } from "react";
+import { useState, SyntheticEvent, useEffect } from "react";
 import Downshift from "downshift";
 
 import debounce from "../../../../libs/debounce";

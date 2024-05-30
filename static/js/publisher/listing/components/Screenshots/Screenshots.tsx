@@ -1,4 +1,4 @@
-import React, { useState, SyntheticEvent } from "react";
+import { useState } from "react";
 import { useFieldArray } from "react-hook-form";
 import { nanoid } from "nanoid";
 import { Row, Col, Notification } from "@canonical/react-components";

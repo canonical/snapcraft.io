@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { nanoid } from "nanoid";
 import { Row, Col, Button } from "@canonical/react-components";
 

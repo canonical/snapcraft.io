@@ -1,4 +1,3 @@
-import React from "react";
 import { nanoid } from "nanoid";
 import { Row, Col } from "@canonical/react-components";
 

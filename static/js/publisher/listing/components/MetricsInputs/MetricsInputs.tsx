@@ -1,4 +1,4 @@
-import React, { useState, useEffect, SyntheticEvent } from "react";
+import { useState, useEffect, SyntheticEvent } from "react";
 import { nanoid } from "nanoid";
 import { Row, Col } from "@canonical/react-components";
 

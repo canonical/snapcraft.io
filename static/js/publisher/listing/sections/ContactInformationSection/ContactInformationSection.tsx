@@ -1,5 +1,3 @@
-import React from "react";
-
 import MultipleInputs from "../../components/MultipleInputs";
 
 type Props = {
