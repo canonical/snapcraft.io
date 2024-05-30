@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import {
   Strip,
   Accordion,
@@ -27,10 +27,13 @@ type Invite = {
 };
 
 function App() {
+  // These lines can be ignored as this feature isn't fully developed yet
+  // @ts-ignore
   const [data, setData] = useState(window?.data);
   const [collaborators, setCollaborators] = useState(
     window?.data?.collaborators
   );
+  // @ts-ignore
   const [invites, setInvites] = useState(window?.data?.invites);
 
   return (
