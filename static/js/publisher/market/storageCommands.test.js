@@ -104,7 +104,6 @@ describe("storage commands", () => {
 
     it("reloads the page", () => {
       expect(window.location.reload.mock.calls.length).toBe(1);
-      expect(window.location.reload.mock.calls[0][0]).toBe(true);
     });
   });
 

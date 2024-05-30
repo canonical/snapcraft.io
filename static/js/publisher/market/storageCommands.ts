@@ -1,9 +1,9 @@
 function storageCommands(
-  e,
-  formEl,
-  snap_name,
-  ignoreChangesOnUnload,
-  context = window,
+  e: StorageEvent,
+  formEl: HTMLFormElement,
+  snap_name: string,
+  ignoreChangesOnUnload: Function,
+  context = window
 ) {
   const key = `${snap_name}-command`;
   if (e.key === key) {
@@ -14,7 +14,7 @@ function storageCommands(
         break;
       case "revert":
         ignoreChangesOnUnload();
-        context.location.reload(true);
+        context.location.reload();
         break;
       case "save":
         formEl.dispatchEvent(new Event("submit"));
