@@ -64,7 +64,7 @@ class Banner extends React.Component {
 
   keyboardEvent(e) {
     if (e.key === "Delete" || e.key === "Backspace") {
-      this.handleRemoveImageClick(e);
+      this.handleRemoveImageClick();
     }
   }
 
