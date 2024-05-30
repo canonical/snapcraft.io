@@ -441,7 +441,7 @@ RepoConnect.propTypes = {
  * </div>
  *
  * @param {HTMLElement} selector
- * @param {{name: string, key: string}[]} organizations
+ * @param {{name: string, login: string,  key: string}[]} organizations
  * @param {login: string, name: string, avatarUrl: string} user
  * @param {string} snapName
  */

@@ -22,7 +22,7 @@ function initRepoDisconnect() {
   const repoDisconnectModal = document.querySelector(
     "[data-js='repo-disconnect-modal']",
   );
-  const repoDisconnectForm = document.repoDisconnectForm;
+  const repoDisconnectForm = document.getElementById("repoDisconnectForm");
 
   if (
     repoDisconnectButtons &&
