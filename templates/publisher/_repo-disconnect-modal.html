@@ -10,7 +10,7 @@
       <li>You will be able to continue to release your previous revisions on the Releases tab</li>
     </ul>
     <p>Do you wish to <strong>continue disconnecting your repository?</strong></p>
-    <form class="p-form" method="POST" action="/{{ snap_name }}/builds/disconnect" name="repoDisconnectForm">
+    <form class="p-form" method="POST" action="/{{ snap_name }}/builds/disconnect" name="repoDisconnectForm" id="repoDisconnectForm">
       <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
       <p class="u-align--right u-no-margin--bottom">
         <button aria-label="Close active modal" aria-controls="repo-disconnect-modal" class="p-button u-no-margin--bottom">Cancel</button>
