@@ -1,4 +1,4 @@
-import React, { SyntheticEvent } from "react";
+import { SyntheticEvent } from "react";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 
@@ -23,13 +23,8 @@ function Screenshot({
   register,
   setImage,
 }: Props) {
-  const {
-    attributes,
-    listeners,
-    setNodeRef,
-    transform,
-    transition,
-  } = useSortable({ id: field.id });
+  const { attributes, listeners, setNodeRef, transform, transition } =
+    useSortable({ id: field.id });
 
   const style = {
     transform: CSS.Transform.toString(transform),

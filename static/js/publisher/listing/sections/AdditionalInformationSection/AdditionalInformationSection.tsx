@@ -1,5 +1,3 @@
-import React from "react";
-
 import LicenseInputs from "../../components/LicenseInputs";
 import MetricsInputs from "../../components/MetricsInputs";
 

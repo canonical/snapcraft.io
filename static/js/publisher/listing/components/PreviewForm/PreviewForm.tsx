@@ -1,4 +1,3 @@
-import React from "react";
 import { Form } from "@canonical/react-components";
 
 type Link = Array<{ url: string }>;

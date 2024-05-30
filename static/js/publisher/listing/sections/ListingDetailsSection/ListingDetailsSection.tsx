@@ -1,5 +1,3 @@
-import React from "react";
-
 import ListingFormInput from "../../components/ListingFormInput";
 import ListingDescriptionField from "../../components/ListingDescriptionField";
 import CategoriesInput from "../../components/CategoriesInput";

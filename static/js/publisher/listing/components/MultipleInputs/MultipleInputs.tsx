@@ -1,4 +1,3 @@
-import React from "react";
 import { useFieldArray } from "react-hook-form";
 import { Row, Col, Button, Icon } from "@canonical/react-components";
 
