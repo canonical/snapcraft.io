@@ -3,7 +3,7 @@ function initRepoDisconnect() {
   Toggles visibility of modal dialog.
   @param {HTMLElement} modal Modal dialog to show or hide.
 */
-  function toggleModal(modal) {
+  function toggleModal(modal: HTMLElement) {
     if (modal && modal.classList.contains("p-modal")) {
       if (modal.style.display === "none") {
         modal.style.display = "flex";
@@ -14,15 +14,17 @@ function initRepoDisconnect() {
   }
 
   const repoDisconnectButtons = document.querySelectorAll(
-    "[aria-controls='repo-disconnect-modal']",
-  );
+    "[aria-controls='repo-disconnect-modal']"
+  ) as NodeList;
   const repoDisconnectConfirm = document.querySelector(
-    "[data-js='repo-disconnect-confirm']",
-  );
+    "[data-js='repo-disconnect-confirm']"
+  ) as HTMLButtonElement;
   const repoDisconnectModal = document.querySelector(
-    "[data-js='repo-disconnect-modal']",
-  );
-  const repoDisconnectForm = document.getElementById("repoDisconnectForm");
+    "[data-js='repo-disconnect-modal']"
+  ) as HTMLElement;
+  const repoDisconnectForm = document.getElementById(
+    "repoDisconnectForm"
+  ) as HTMLElement;
 
   if (
     repoDisconnectButtons &&
@@ -31,7 +33,7 @@ function initRepoDisconnect() {
     repoDisconnectForm
   ) {
     // Add click handler for clicks on elements with aria-controls for repo-disconnect-modal
-    [].slice.call(repoDisconnectButtons).forEach((el) => {
+    [].slice.call(repoDisconnectButtons).forEach((el: HTMLElement) => {
       el.addEventListener("click", (event) => {
         event.preventDefault();
         toggleModal(repoDisconnectModal);
