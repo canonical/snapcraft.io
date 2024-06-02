@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 <!DOCTYPE coverage SYSTEM "http://cobertura.sourceforge.net/xml/coverage-04.dtd">
-<coverage lines-valid="2954" lines-covered="1966" line-rate="0.6655" branches-valid="1621" branches-covered="956" branch-rate="0.5897" timestamp="1717279591498" complexity="0" version="0.1">
+<coverage lines-valid="2954" lines-covered="1966" line-rate="0.6655" branches-valid="1621" branches-covered="956" branch-rate="0.5897" timestamp="1717365993340" complexity="0" version="0.1">
   <sources>
     <source>/home/runner/work/snapcraft.io/snapcraft.io</source>
   </sources>
@@ -83,9 +83,9 @@
       <classes>
         <class name="AppPagination.tsx" filename="static/js/brand-store/components/AppPagination/AppPagination.tsx" line-rate="0.8095" branch-rate="0.75">
           <methods>
-            <method name="AppPagination" hits="22" signature="()V">
+            <method name="AppPagination" hits="23" signature="()V">
               <lines>
-                <line number="10" hits="22"/>
+                <line number="10" hits="23"/>
               </lines>
             </method>
             <method name="(anonymous_1)" hits="11" signature="()V">
@@ -120,23 +120,23 @@
             </method>
           </methods>
           <lines>
-            <line number="11" hits="22" branch="false"/>
-            <line number="30" hits="22" branch="false"/>
-            <line number="31" hits="22" branch="false"/>
-            <line number="32" hits="22" branch="false"/>
-            <line number="33" hits="22" branch="false"/>
-            <line number="37" hits="22" branch="false"/>
+            <line number="11" hits="23" branch="false"/>
+            <line number="30" hits="23" branch="false"/>
+            <line number="31" hits="23" branch="false"/>
+            <line number="32" hits="23" branch="false"/>
+            <line number="33" hits="23" branch="false"/>
+            <line number="37" hits="23" branch="false"/>
             <line number="38" hits="11" branch="false"/>
             <line number="40" hits="11" branch="false"/>
             <line number="41" hits="11" branch="false"/>
             <line number="42" hits="11" branch="false"/>
             <line number="43" hits="11" branch="false"/>
-            <line number="46" hits="22" branch="false"/>
+            <line number="46" hits="23" branch="false"/>
             <line number="47" hits="11" branch="false"/>
             <line number="48" hits="11" branch="false"/>
             <line number="53" hits="11" branch="false"/>
             <line number="54" hits="11" branch="false"/>
-            <line number="57" hits="22" branch="false"/>
+            <line number="57" hits="23" branch="false"/>
             <line number="73" hits="0" branch="false"/>
             <line number="86" hits="0" branch="false"/>
             <line number="99" hits="0" branch="false"/>
@@ -523,9 +523,9 @@
         </class>
         <class name="PoliciesTable.tsx" filename="static/js/brand-store/components/Model/PoliciesTable.tsx" line-rate="0.20929999999999999" branch-rate="0.07139999999999999">
           <methods>
-            <method name="ModelsTable" hits="12" signature="()V">
+            <method name="ModelsTable" hits="13" signature="()V">
               <lines>
-                <line number="19" hits="12"/>
+                <line number="19" hits="13"/>
               </lines>
             </method>
             <method name="(anonymous_1)" hits="0" signature="()V">
@@ -585,14 +585,14 @@
             </method>
           </methods>
           <lines>
-            <line number="23" hits="12" branch="false"/>
-            <line number="24" hits="12" branch="false"/>
-            <line number="27" hits="12" branch="false"/>
-            <line number="28" hits="12" branch="false"/>
-            <line number="29" hits="12" branch="false"/>
-            <line number="30" hits="12" branch="false"/>
-            <line number="31" hits="12" branch="false"/>
-            <line number="33" hits="12" branch="false"/>
+            <line number="23" hits="13" branch="false"/>
+            <line number="24" hits="13" branch="false"/>
+            <line number="27" hits="13" branch="false"/>
+            <line number="28" hits="13" branch="false"/>
+            <line number="29" hits="13" branch="false"/>
+            <line number="30" hits="13" branch="false"/>
+            <line number="31" hits="13" branch="false"/>
+            <line number="33" hits="13" branch="false"/>
             <line number="34" hits="0" branch="true" condition-coverage="0% (0/2)"/>
             <line number="35" hits="0" branch="false"/>
             <line number="38" hits="0" branch="false"/>
@@ -620,7 +620,7 @@
             <line number="82" hits="0" branch="false"/>
             <line number="84" hits="0" branch="false"/>
             <line number="85" hits="0" branch="false"/>
-            <line number="89" hits="12" branch="false"/>
+            <line number="89" hits="13" branch="false"/>
             <line number="121" hits="0" branch="false"/>
             <line number="146" hits="0" branch="false"/>
             <line number="147" hits="0" branch="false"/>
@@ -1281,14 +1281,14 @@
                 <line number="23" hits="0"/>
               </lines>
             </method>
-            <method name="usePolicies" hits="17" signature="()V">
+            <method name="usePolicies" hits="18" signature="()V">
               <lines>
-                <line number="30" hits="17"/>
+                <line number="30" hits="18"/>
               </lines>
             </method>
-            <method name="(anonymous_4)" hits="2" signature="()V">
+            <method name="(anonymous_4)" hits="3" signature="()V">
               <lines>
-                <line number="34" hits="2"/>
+                <line number="34" hits="3"/>
               </lines>
             </method>
             <method name="useSigningKeys" hits="17" signature="()V">
@@ -1334,8 +1334,8 @@
             <line number="20" hits="0" branch="false"/>
             <line number="23" hits="0" branch="false"/>
             <line number="25" hits="0" branch="true" condition-coverage="0% (0/2)"/>
-            <line number="34" hits="17" branch="false"/>
-            <line number="35" hits="2" branch="false"/>
+            <line number="34" hits="18" branch="false"/>
+            <line number="35" hits="3" branch="false"/>
             <line number="39" hits="0" branch="true" condition-coverage="0% (0/2)"/>
             <line number="40" hits="0" branch="false"/>
             <line number="43" hits="0" branch="false"/>
