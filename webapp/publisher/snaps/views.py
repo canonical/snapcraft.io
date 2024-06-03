@@ -13,6 +13,7 @@ from canonicalwebteam.store_api.exceptions import (
 from flask.json import jsonify
 
 # Local
+from webapp import authentication
 from webapp.helpers import api_publisher_session, launchpad
 from webapp.api.exceptions import ApiError
 from webapp.decorators import exchange_required, login_required
@@ -267,10 +268,16 @@ def get_account_snaps():
 
     flask_user = flask.session["publisher"]
 
+    is_users_snap = {
+        snap_name: get_is_user_snap(snap_name)
+        for snap_name in registered_snaps
+    }
+
     context = {
         "snaps": user_snaps,
         "current_user": flask_user["nickname"],
         "registered_snaps": registered_snaps,
+        "is_users_snap": is_users_snap,
     }
 
     return flask.render_template("publisher/account-snaps.html", **context)
@@ -453,6 +460,26 @@ def delete_package(package_name):
         jsonify({"error": response.json()["error-list"][0]["message"]}),
         response.status_code,
     )
+
+
+@publisher_snaps.route("/snap_info/user_snap/<snap_name>", methods=["GET"])
+@login_required
+def get_is_user_snap(snap_name):
+    is_users_snap = False
+    try:
+        snap_info = publisher_api.get_snap_info(snap_name, flask.session)
+    except (StoreApiError, ApiError) as api_error:
+        return flask.jsonify({"error": str(api_error)}), 400
+
+    if authentication.is_authenticated(flask.session):
+        publisher_info = flask.session.get("publisher", {})
+        if (
+            publisher_info.get("nickname")
+            == snap_info["publisher"]["username"]
+        ):
+            is_users_snap = True
+
+    return {"is_users_snap": is_users_snap}
 
 
 @publisher_snaps.route("/register-snap/json", methods=["POST"])

@@ -1,17 +1,20 @@
 import React, { useState, useEffect } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import {
+  Button,
   Form,
   Strip,
   Row,
   Col,
   Notification,
+  Tooltip,
 } from "@canonical/react-components";
 
 import PageHeader from "../../../shared/PageHeader";
 import SaveAndPreview from "../../../shared/SaveAndPreview";
 import SearchAutocomplete from "../../../shared/SearchAutocomplete";
 import UpdateMetadataModal from "../../../shared/UpdateMetadataModal";
+import { UnregisterSnapModal } from "../UnregisterSnapModal";
 
 import { getSettingsData, getFormData } from "../../utils";
 
@@ -22,6 +25,10 @@ function App() {
   const [isSaving, setIsSaving] = useState(false);
   const [hasSaved, setHasSaved] = useState(false);
   const [savedError, setSavedError] = useState<boolean | {code: string, message: string}[] >(false);
+  const [unregisterError, setUnregisterError] = useState(false);
+  const [unregisterErrorMessage, setUnregisterErrorMessage] = useState("");
+  const [unregisterModalOpen, setUnregisterModalOpen] = useState(false);
+  const [isUsersSnap, setIsUsersSnap] = useState(false);
   const [formData, setFormData] = useState({});
   const [showMetadataWarningModal, setShowMetadataWarningModal] = useState(
     false
@@ -126,6 +133,24 @@ function App() {
       setValue("whitelist_country_keys", "");
     }
   }, [blacklistCountryKeyValues]);
+
+  useEffect(() => {
+    const snapName = settingsData?.snap_name;
+
+    fetch(`/snap_info/user_snap/${snapName}`)
+    .then(response => {
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status}}`);
+      }
+      return response.json();
+    })
+    .then(data => {
+      setIsUsersSnap(data.is_users_snap);
+    })
+    .catch(error => {
+      console.error('Error:', error);
+    });
+  }, [settingsData?.snap_name]);
 
   return (
     <>
@@ -437,6 +462,15 @@ function App() {
           </div>
 
           <Row className="p-form__group">
+            {unregisterModalOpen && (
+              <UnregisterSnapModal
+                snapName={settingsData.snap_name}
+                setUnregisterModalOpen={setUnregisterModalOpen}
+                setUnregisterError={setUnregisterError}
+                setUnregisterErrorMessage={setUnregisterErrorMessage}
+              />
+            
+            )}
             <Col size={2}>
               <label className="p-form__label" id="status-label">
                 Status:
@@ -444,9 +478,49 @@ function App() {
             </Col>
             <Col size={8}>
               <div className="p-form__control" aria-labelledby="status-label">
-                {settingsData?.status}
+                {settingsData?.status === "unpublished" ? ( 
+                  <div>
+                    <span className="u-margin--right">Registered</span>
+                    {!isUsersSnap ? (
+                      <Tooltip 
+                        message={<>Snaps can only be unregistered by their owner.</>} 
+                        position="top-center"
+                      >
+                        <Button
+                          inline={true}
+                          disabled
+                        >
+                          Unregister
+                        </Button>
+                      </Tooltip>
+                    ) : (
+                      <Button
+                        inline={true}
+                        onClick={(event) => {
+                          event.preventDefault();
+                          setUnregisterModalOpen(true);                      
+                        }}
+                      >
+                        Unregister
+                      </Button>
+                    )}
+                  </div>
+                ) : (
+                  (settingsData?.status).charAt(0).toUpperCase() + (settingsData?.status).slice(1)
+                )}
               </div>
             </Col>
+            {unregisterError && (
+                <div className="u-fixed-width">
+                  <Notification
+                    severity="negative"
+                    title={unregisterErrorMessage}
+                    onDismiss={() => {
+                      setUnregisterError(false);
+                    }}
+                  />
+                </div>
+              )}
           </Row>
         </Strip>
       </Form>
