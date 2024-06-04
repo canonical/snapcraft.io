@@ -21,7 +21,8 @@ import {
 import { tooltips } from "./tooltips";
 
 class ActiveDevicesGraph {
-  constructor(holderSelector, rawData, options) {
+  [x: string]: any;
+  constructor(holderSelector: string, rawData: any, options: any) {
     this.holder = document.querySelector(holderSelector);
     if (!this.holder) {
       throw new Error(`${holderSelector} does not exist.`);
@@ -36,7 +37,7 @@ class ActiveDevicesGraph {
         bottom: 30,
         left: 50,
       },
-      options.margin || {},
+      options.margin || {}
     );
 
     this.padding = Object.assign(
@@ -46,7 +47,7 @@ class ActiveDevicesGraph {
         bottom: 16,
         left: 16,
       },
-      options.padding || {},
+      options.padding || {}
     );
 
     this.width;
@@ -73,16 +74,16 @@ class ActiveDevicesGraph {
 
     this.lines = line()
       .curve(curveMonotoneX)
-      .x((d) => this.xScale(d.date))
-      .y((d) => this.yScale(d.value));
+      .x((d: any) => this.xScale(d.date))
+      .y((d: any) => this.yScale(d.value));
 
     this.areas = area()
       .curve(curveMonotoneX)
-      .x((d) => this.xScale(d.data.date))
+      .x((d: any) => this.xScale(d.data.date))
       .y0((d) => this.yScale(d[0]))
       .y1((d) => this.yScale(d[1]));
 
-    this.shortValue = (number) =>
+    this.shortValue = (number: number) =>
       number < 1000 ? number : format(".2s")(number);
 
     this._prepareSVG();
@@ -100,6 +101,7 @@ class ActiveDevicesGraph {
       }
     }, 100);
 
+    // @ts-ignore
     select(window).on("resize", resize);
   }
 
@@ -145,7 +147,7 @@ class ActiveDevicesGraph {
     return this;
   }
 
-  updateData(data) {
+  updateData(data: any) {
     if (!this.rawData.series) {
       this.rawData = data;
     } else {
@@ -159,10 +161,6 @@ class ActiveDevicesGraph {
     return this;
   }
 
-  /**
-   *
-   * @returns {ActiveDevicesGraph}
-   */
   render() {
     if (!this.tooltip) {
       this.tooltip = select(this.holder)
@@ -186,10 +184,6 @@ class ActiveDevicesGraph {
     return this;
   }
 
-  /**
-   *
-   * @returns {ActiveDevicesGraph}
-   */
   show() {
     this.holder.style.opacity = 1;
 
