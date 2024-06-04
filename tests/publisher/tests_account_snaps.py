@@ -1,4 +1,5 @@
 import responses
+from unittest.mock import patch
 from tests.publisher.endpoint_testing import BaseTestCases
 
 # Make sure tests fail on stray responses.
@@ -67,7 +68,7 @@ class AccountSnapsPage(BaseTestCases.EndpointLoggedInErrorHandling):
         self.assertEqual(200, response.status_code)
         # Add pyQuery basic context checks
 
-        self.assertEqual(1, len(responses.calls))
+        self.assertEqual(2, len(responses.calls))
         called = responses.calls[0]
         self.assertEqual(self.api_url, called.request.url)
         self.assertEqual(
@@ -195,7 +196,7 @@ class AccountSnapsPage(BaseTestCases.EndpointLoggedInErrorHandling):
         self.assertEqual(200, response.status_code)
         # Add pyQuery basic context checks
 
-        self.assertEqual(1, len(responses.calls))
+        self.assertEqual(2, len(responses.calls))
         called = responses.calls[0]
         self.assertEqual(self.api_url, called.request.url)
         self.assertEqual(
@@ -282,7 +283,7 @@ class AccountSnapsPage(BaseTestCases.EndpointLoggedInErrorHandling):
         self.assertEqual(200, response.status_code)
         # Add pyQuery basic context checks
 
-        self.assertEqual(1, len(responses.calls))
+        self.assertEqual(2, len(responses.calls))
         called = responses.calls[0]
         self.assertEqual(self.api_url, called.request.url)
         self.assertEqual(
@@ -318,3 +319,36 @@ class AccountSnapsPage(BaseTestCases.EndpointLoggedInErrorHandling):
         self.assert_context("current_user", "Toto")
         self.assert_context("snaps", uploaded_snaps)
         self.assert_context("registered_snaps", registered_snaps)
+
+    @responses.activate
+    @patch("webapp.publisher.snaps.views.authentication.is_authenticated")
+    @patch("canonicalwebteam.store_api.publisher.Publisher.get_snap_info")
+    def test_get_is_user_snap(self, mock_get_snap_info, mock_is_authenticated):
+        mock_is_authenticated.return_value = True
+        mock_get_snap_info.return_value = {
+            "publisher": {"username": "test_username"}
+        }
+
+        payload = {
+            "snaps": {
+                "test_snap": {"publisher": {"username": "test_username"}}
+            }
+        }
+
+        responses.add(
+            responses.GET,
+            self.api_url,
+            json=payload,
+            status=200,
+        )
+
+        with self.client.session_transaction() as sess:
+            sess["publisher"] = {
+                "nickname": "test_username",
+                "fullname": "Test User",
+            }
+
+        response = self.client.get("/snap_info/user_snap/test_snap")
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json, {"is_users_snap": True})
