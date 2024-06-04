@@ -6,27 +6,23 @@ import {
   formatYAxisTickLabels,
 } from "../axis";
 import debounce from "../../../libs/debounce";
-import { snapcraftGraphTooltip, positionTooltip } from "../tooltips";
 import { COLORS, PADDING } from "../config";
 
-function showGraph(el) {
+function showGraph(el: HTMLElement) {
   formatAxis(el);
-  el.style.opacity = 1;
+  el.style.opacity = "1";
 }
 
-export default function installsMetrics(days, installs) {
-  const el = document.getElementById("installs_metrics");
+export default function installsMetrics(days: string, installs: string) {
+  const el = document.getElementById("installs_metrics") as HTMLElement;
 
+  // @ts-ignore
   const installsMetrics = bb.generate({
     bindto: "#installs_metrics",
     legend: {
       hide: true,
     },
     padding: PADDING,
-    tooltip: {
-      contents: snapcraftGraphTooltip.bind(this, COLORS),
-      position: positionTooltip.bind(this, el),
-    },
     transition: {
       duration: 0,
     },
@@ -68,7 +64,8 @@ export default function installsMetrics(days, installs) {
 
   const resize = debounce(function () {
     if (el.clientWidth !== elWidth) {
-      el.style.opacity = 0;
+      el.style.opacity = "0";
+      // @ts-ignore
       debounce(function () {
         installsMetrics.resize();
         showGraph(el);
