@@ -6,28 +6,32 @@ import { schemePaired } from "d3-scale-chromatic";
 import { isMobile } from "../../../../libs/mobile";
 import { axisBottom, axisLeft } from "d3-axis";
 
-function prepareStackedData() {
-  const _data = [];
-  const _keys = [];
+function prepareStackedData(this: any) {
+  const _data: Array<any> = [];
+  const _keys: Array<any> = [];
   let max = 0;
 
-  const getStackedData = (keys, data) => {
+  const getStackedData = (keys: any, data: any) => {
     const stackFunc = stack().order(stackOrderReverse).keys(keys);
 
     return stackFunc(data);
   };
 
-  this.rawData.buckets.forEach((bucket, i) => {
-    let obj = {
+  this.rawData.buckets.forEach((bucket: any, i: number) => {
+    let obj: {
+      [key: string]: any;
+    } = {
       date: utcParse("%Y-%m-%d")(bucket),
     };
 
-    this.rawData.series.forEach((series) => {
-      obj[series.name] = series.values[i];
-      if (_keys.indexOf(series.name) < 0) {
-        _keys.push(series.name);
+    this.rawData.series.forEach(
+      (series: { name: string; values: Array<number> }) => {
+        obj[series.name] = series.values[i];
+        if (_keys.indexOf(series.name) < 0) {
+          _keys.push(series.name);
+        }
       }
-    });
+    );
 
     _data.push(obj);
   });
@@ -48,28 +52,33 @@ function prepareStackedData() {
   this.transformedData = getStackedData(_keys, _data);
 }
 
-function prepareLineData() {
-  const _data = [];
-  const _keys = [];
-  const data = [];
+function prepareLineData(this: any) {
+  const _data: Array<any> = [];
+  const _keys: Array<any> = [];
+  const data: Array<any> = [];
 
-  this.rawData.series.forEach((series) => {
-    _keys.push(series.name);
-    const obj = {
-      name: series.name,
-      values: [],
-    };
-    series.values.forEach((value, index) => {
-      obj.values.push({
-        date: utcParse("%Y-%m-%d")(this.rawData.buckets[index]),
-        value: value,
+  this.rawData.series.forEach(
+    (series: { name: string; values: Array<number> }) => {
+      _keys.push(series.name);
+      const obj = {
+        name: series.name,
+        values: [],
+      };
+      series.values.forEach((value, index) => {
+        // @ts-ignore
+        obj.values.push({
+          date: utcParse("%Y-%m-%d")(this.rawData.buckets[index]),
+          value: value,
+        });
       });
-    });
-    data.push(obj);
-  });
+      data.push(obj);
+    }
+  );
 
-  this.rawData.buckets.forEach((bucket, i) => {
-    const obj = {
+  this.rawData.buckets.forEach((bucket: any, i: number) => {
+    const obj: {
+      [key: string]: any;
+    } = {
       date: utcParse("%Y-%m-%d")(bucket),
     };
 
@@ -82,9 +91,12 @@ function prepareLineData() {
     _data.push(obj);
   });
 
-  const values = this.rawData.series.reduce((acc, current) => {
-    return acc.concat(current.values);
-  }, []);
+  const values = this.rawData.series.reduce(
+    (acc: Array<any>, current: { values: Array<number> }) => {
+      return acc.concat(current.values);
+    },
+    []
+  );
 
   this.data = _data;
   this.keys = _keys;
@@ -92,7 +104,7 @@ function prepareLineData() {
   this.transformedData = data;
 }
 
-function prepareScales() {
+function prepareScales(this: any) {
   this.width =
     this.holder.clientWidth -
     this.margin.left -
@@ -112,6 +124,7 @@ function prepareScales() {
       this.padding.left,
       this.width - this.padding.left - this.padding.right,
     ])
+    // @ts-ignore
     .domain(extent(this.data, (d) => d.date));
   this.yScale = scaleLinear()
     .rangeRound([
@@ -122,20 +135,24 @@ function prepareScales() {
     .domain([0, this.maxYValue + Math.ceil(this.maxYValue * 0.1)]);
 }
 
-function prepareAnnotationsData() {
-  let annotationsData;
+function prepareAnnotationsData(this: any) {
+  let annotationsData: Array<any>;
   annotationsData = [];
-  this.options.annotations.buckets.forEach((bucket, i) => {
-    let obj = {
+  this.options.annotations.buckets.forEach((bucket: any, i: number) => {
+    let obj: {
+      [key: string]: any;
+    } = {
       date: utcParse("%Y-%m-%d")(bucket),
     };
 
-    this.options.annotations.series.forEach((series) => {
-      obj[series.name] = series.values[i];
-      if (this.keys.indexOf(series.name) < 0) {
-        this.keys.push(series.name);
+    this.options.annotations.series.forEach(
+      (series: { name: string; values: Array<number> }) => {
+        obj[series.name] = series.values[i];
+        if (this.keys.indexOf(series.name) < 0) {
+          this.keys.push(series.name);
+        }
       }
-    });
+    );
 
     annotationsData.push(obj);
   });
@@ -166,7 +183,7 @@ function prepareAnnotationsData() {
   this.annotationsData = annotationsData.filter((item) => item !== false);
 }
 
-function prepareAxis() {
+function prepareAxis(this: any) {
   this.colorScale = scaleOrdinal(schemePaired).domain(this.keys);
 
   // xAxis
@@ -177,32 +194,32 @@ function prepareAxis() {
   if (this.data.length > 360) {
     // This restricts anything over 1 year
     tickValues = this.data
-      .filter((item, i) => {
+      .filter((_item: any, i: number) => {
         return i % 14 === 0;
       })
-      .map((item) => item.date);
+      .map((item: any) => item.date);
     this.xAxisTickFormat = "%b %e %Y";
   } else if (isMobile() && this.data.length > 90) {
     // This restricts anything over 3 months and if viewing on a mobile
     // Get the first day of each month
     let monthCache = false;
     tickValues = this.data
-      .filter((item) => {
+      .filter((item: any) => {
         if (!monthCache || item.date.getMonth() !== monthCache) {
           monthCache = item.date.getMonth();
           return true;
         }
         return false;
       })
-      .map((item) => item.date);
+      .map((item: any) => item.date);
   } else {
-    tickValues = this.data.map((item) => item.date);
+    tickValues = this.data.map((item: any) => item.date);
   }
 
   this.xAxis = axisBottom(this.xScale).tickValues(tickValues).tickPadding(16);
 
   this.yAxis = axisLeft(this.yScale).tickFormat((d) =>
-    d === 0 ? "0" : this.shortValue(d),
+    d === 0 ? "0" : this.shortValue(d)
   );
 }
 
