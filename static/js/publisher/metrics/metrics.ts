@@ -2,13 +2,45 @@ import { arrayChunk } from "../../libs/arrays";
 import { ActiveDevicesGraph } from "./graphs/activeDevicesGraph/";
 import territoriesMetrics from "./graphs/territories";
 
-/**
- * Render all metrics
- * @param {Object} metrics An object of metrics from the API.
- */
-function renderMetrics(metrics) {
-  // Active devices
-  let activeDevices = {
+type Series = {
+  name: string;
+  values: Array<number>;
+};
+
+type Metrics = {
+  activeDevices: {
+    annotations: {
+      buckets: Array<string>;
+      name: string;
+      series: Array<Series>;
+    };
+    metrics: {
+      buckets: Array<string>;
+      series: Array<Series>;
+    };
+    selector: string;
+    type: string;
+  };
+  defaultTrack: string;
+  territories: {
+    metrics: {
+      [key: string]: {
+        code: string;
+        color_rgb: string;
+        name: string;
+        number_of_users: number;
+        percentage_of_users: number;
+      };
+    };
+    selector: string;
+  };
+};
+
+function renderMetrics(metrics: Metrics) {
+  let activeDevices: {
+    series: Array<Series>;
+    buckets: Array<string>;
+  } = {
     series: [],
     buckets: metrics.activeDevices.metrics.buckets,
   };
@@ -32,9 +64,10 @@ function renderMetrics(metrics) {
       graphType: metrics.activeDevices.type,
       defaultTrack: metrics.defaultTrack,
       annotations: metrics.activeDevices.annotations,
-    },
+    }
   )
     .render()
+    // @ts-ignore
     .enableTooltip()
     .show();
 
@@ -42,7 +75,10 @@ function renderMetrics(metrics) {
   const categories = document.querySelector(`[data-js="annotations-hover"]`);
   if (categories) {
     categories.addEventListener("mouseover", (e) => {
-      const annotationHover = e.target.closest(`[data-js="annotation-hover"]`);
+      const target = e.target as HTMLElement;
+      const annotationHover = target.closest(
+        `[data-js="annotation-hover"]`
+      ) as HTMLElement;
       if (annotationHover) {
         const category = annotationHover.dataset.id;
         graph.g.selectAll(`#${category}`).style("visibility", "visible");
@@ -50,7 +86,10 @@ function renderMetrics(metrics) {
     });
 
     categories.addEventListener("mouseout", (e) => {
-      const annotationHover = e.target.closest(`[data-js="annotation-hover"]`);
+      const target = e.target as HTMLElement;
+      const annotationHover = target.closest(
+        `[data-js="annotation-hover"]`
+      ) as HTMLElement;
       if (annotationHover) {
         const category = annotationHover.dataset.id;
         graph.g.selectAll(`#${category}`).style("visibility", "hidden");
@@ -66,7 +105,12 @@ function renderMetrics(metrics) {
  * Render publisher page metrics
  * @param {Object} options An object with rendering options.
  */
-function renderPublisherMetrics(options) {
+function renderPublisherMetrics(options: {
+  token: string;
+  snaps: {
+    [key: string]: any;
+  };
+}) {
   let first = true;
   const chunkSize = 10;
 
@@ -76,12 +120,14 @@ function renderPublisherMetrics(options) {
     {
       stacked: false,
       area: false,
-    },
+    }
   );
 
-  const loader = document.querySelector(".snapcraft-metrics__loader");
+  const loader = document.querySelector(
+    ".snapcraft-metrics__loader"
+  ) as HTMLElement;
 
-  function getSnapDevices(snapList) {
+  function getSnapDevices(snapList: any) {
     return new Promise((resolve, reject) => {
       fetch("/snaps/metrics/json", {
         method: "POST",
@@ -99,39 +145,44 @@ function renderPublisherMetrics(options) {
           }
         })
         .then((json) => {
-          const snaps = {
+          const snaps: {
+            series: Array<Series>;
+            buckets: Array<string>;
+          } = {
             series: [],
             buckets: json.buckets,
           };
 
-          json.snaps.forEach((snap) => {
-            const continuedDevices = snap.series.filter(
-              (singleSeries) => singleSeries.name === "continued",
-            )[0];
-            const newDevices = snap.series.filter(
-              (singleSeries) => singleSeries.name === "new",
-            )[0];
+          json.snaps.forEach(
+            (snap: { series: Array<Series>; name: string }) => {
+              const continuedDevices = snap.series.filter(
+                (singleSeries) => singleSeries.name === "continued"
+              )[0];
+              const newDevices = snap.series.filter(
+                (singleSeries) => singleSeries.name === "new"
+              )[0];
 
-            let totalSeries = [];
+              let totalSeries: Array<number> = [];
 
-            if (continuedDevices && newDevices) {
-              totalSeries = continuedDevices.values.map(
-                (continuedValue, index) => {
-                  return continuedValue + newDevices.values[index];
-                },
-              );
-            } else {
-              console.log(
-                "There is no information available for continued or new devices.",
-                snap.series,
-              );
+              if (continuedDevices && newDevices) {
+                totalSeries = continuedDevices.values.map(
+                  (continuedValue, index) => {
+                    return continuedValue + newDevices.values[index];
+                  }
+                );
+              } else {
+                console.log(
+                  "There is no information available for continued or new devices.",
+                  snap.series
+                );
+              }
+
+              snaps.series.push({
+                name: snap.name,
+                values: totalSeries,
+              });
             }
-
-            snaps.series.push({
-              name: snap.name,
-              values: totalSeries,
-            });
-          });
+          );
 
           resolve(snaps);
         })
@@ -146,15 +197,17 @@ function renderPublisherMetrics(options) {
     };
   });
 
-  const chunkedSnaps = arrayChunk(snaps_arr, chunkSize).map((chunk) => {
-    const chunkObj = {};
+  const chunkedSnaps = arrayChunk(snaps_arr, chunkSize).map(
+    (chunk: Array<{ name: string; id: string }>) => {
+      const chunkObj: { [key: string]: any } = {};
 
-    chunk.forEach((item) => {
-      chunkObj[item.name] = item.id;
-    });
+      chunk.forEach((item: { name: string; id: string }) => {
+        chunkObj[item.name] = item.id;
+      });
 
-    return chunkObj;
-  });
+      return chunkObj;
+    }
+  );
 
   const toLoad = chunkedSnaps.length;
   let loaded = 0;
@@ -163,7 +216,7 @@ function renderPublisherMetrics(options) {
   loaderText.innerText = `${loaded * chunkSize} / ${toLoad * chunkSize}`;
   loader.appendChild(loaderText);
 
-  function getChunk(chunks) {
+  function getChunk(chunks: Array<any>) {
     if (chunks.length === 0) {
       if (
         !_graph ||
@@ -171,10 +224,13 @@ function renderPublisherMetrics(options) {
         !_graph.rawData.buckets ||
         _graph.rawData.buckets.length === 0
       ) {
-        document
-          .querySelector(`[data-js="dashboard-metrics"]`)
-          .classList.add("u-hide");
+        const dashboardMetrics = document.querySelector(
+          `[data-js="dashboard-metrics"]`
+        ) as HTMLElement;
+
+        dashboardMetrics.classList.add("u-hide");
       } else {
+        // @ts-ignore
         _graph.enableTooltip();
       }
       return;
@@ -199,7 +255,7 @@ function renderPublisherMetrics(options) {
       .finally(() => {
         loaded += 1;
 
-        if (loaded === toLoad) {
+        if (loaded === toLoad && loader.parentNode) {
           loader.parentNode.removeChild(loader);
         }
 
