@@ -4,15 +4,23 @@ import { sortChannels } from "../../../../libs/channels";
 import { utcFormat } from "d3-time-format";
 import { format } from "d3-format";
 
-export function tooltips() {
+export function tooltips(this: any) {
   const tooltipTimeFormat = utcFormat("%Y-%m-%d");
-  const commaValue = (number) => format(",")(number);
+  const commaValue = (number: number) => format(",")(number);
 
   this.showTooltips = false;
 
-  const tooltipTemplate = (dateData, currentHoverKey) => {
-    const tooltipRows = (dateData, currentHoverKey) => {
-      let dataArr = [];
+  const tooltipTemplate = (dateData: { date: Date }, currentHoverKey: any) => {
+    const tooltipRows = (
+      dateData: { [x: string]: any; date?: Date },
+      currentHoverKey: string
+    ) => {
+      let dataArr: {
+        skip?: boolean;
+        key: any;
+        value: any;
+        count: any;
+      }[] = [];
       let total = 0;
       let other = {
         key: "other",
@@ -35,6 +43,8 @@ export function tooltips() {
         dataArr.push({
           key: key,
           value: dateData[key],
+          skip: false,
+          count: undefined,
         });
       });
 
@@ -75,7 +85,7 @@ export function tooltips() {
               `<span class="snapcraft-graph-tooltip__series-name">${item.key}</span>`,
               `</span>`,
               `<span class="snapcraft-graph-tooltip__series-value">${commaValue(
-                item.value,
+                item.value
               )} (${total !== 0 ? ((item.value / total) * 100).toFixed(2) : 0}%)</span>`,
               `</span>`,
             ].join("");
@@ -88,7 +98,7 @@ export function tooltips() {
       `<div class="p-tooltip p-tooltip--top-center" style="display: block; pointer-events: none;">`,
       `<span class="p-tooltip__message" role="tooltip" style="display: block;">`,
       `<span class="snapcraft-graph-tooltip__title">${tooltipTimeFormat(
-        dateData.date,
+        dateData.date
       )}</span>`,
       tooltipRows(dateData, currentHoverKey),
       `</span>`,
@@ -96,12 +106,12 @@ export function tooltips() {
     ].join("");
   };
 
-  const mouseMove = (event, d) => {
+  const mouseMove = (event: Event, d: { key: any }) => {
     if (!this.showTooltips) {
       return;
     }
 
-    const bisectDate = bisector((d) => d.date).left;
+    const bisectDate = bisector((d: any) => d.date).left;
     const mousePosition = pointer(event, event.currentTarget);
 
     const x0 = this.xScale.invert(mousePosition[0]);
@@ -121,9 +131,10 @@ export function tooltips() {
     } else {
       let matchFilter;
       if (this.options.stacked) {
-        matchFilter = (item) => item[i][0] <= value && item[i][1] >= value;
+        matchFilter = (item: number[][]) =>
+          item[i][0] <= value && item[i][1] >= value;
       } else {
-        matchFilter = (item) => {
+        matchFilter = (item: { values: { value: any }[] }) => {
           const matchValue = item.values[i].value;
           const range = [matchValue / 1.05, matchValue * 1.05];
           return value >= range[0] && value <= range[1];
@@ -132,7 +143,7 @@ export function tooltips() {
 
       const match = this.transformedData
         .filter(matchFilter)
-        .map((item) => item.key || item.name)
+        .map((item: { key: any; name: any }) => item.key || item.name)
         .pop();
       currentHoverKey = match;
     }
@@ -164,14 +175,11 @@ export function tooltips() {
     this.tooltip.style("display", "none");
   };
 
-  /**
-   *
-   * @returns {tooltips}
-   */
   this.enableTooltip = () => {
     const dataLayer = select(".layer");
 
     if (dataLayer.node()) {
+      // @ts-ignore
       const dataLayerBox = dataLayer.node().getBBox();
 
       dataLayer
@@ -183,6 +191,7 @@ export function tooltips() {
         .attr("height", dataLayerBox.height + this.margin.top)
         .attr("x", dataLayerBox.x)
         .attr("y", dataLayerBox.y - this.margin.top / 2)
+        // @ts-ignore
         .on("mousemove", mouseMove.bind(this))
         .on("mouseout", cancelTooltip.bind(this));
 
