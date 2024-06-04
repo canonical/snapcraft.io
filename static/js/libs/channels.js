@@ -168,7 +168,6 @@ function sortAlphaNum(list, hoistValue) {
  * track/stable/branches
  * ...
  *
- * @param {[string]} channels An array of "risk" / "track/risk" / "track/risk/branch"
  * @param {{defaultTrack: string}} options
  * @returns {{tree: Array, list: Array}}
  */
