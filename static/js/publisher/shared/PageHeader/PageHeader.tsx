@@ -1,4 +1,3 @@
-import React from "react";
 import { Strip, Tabs } from "@canonical/react-components";
 
 type Props = {

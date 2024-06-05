@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import { Row, Col, Button } from "@canonical/react-components";
 
 import debounce from "../../../libs/debounce";
