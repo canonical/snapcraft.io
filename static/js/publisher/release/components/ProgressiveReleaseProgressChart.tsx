@@ -1,5 +1,3 @@
-import React from "react";
-
 type ReleaseProgress = {
   currentPercentage: number;
   targetPercentage: number;

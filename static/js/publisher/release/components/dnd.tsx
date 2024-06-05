@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useDrag, useDrop } from "react-dnd";
 
 export const DND_ITEM_REVISIONS = "DND_ITEM_REVISIONS";
@@ -11,7 +11,13 @@ export const Handle = () => (
 
 // it's a wrapper around react-dnd useDrag hook
 // with some added functionality and workaround for a bug
-export const useDragging = ({ item, canDrag }) => {
+export const useDragging = ({
+  item,
+  canDrag,
+}: {
+  item: any;
+  canDrag: boolean;
+}) => {
   // default canDrag to true, make sure it's boolean
   if (typeof canDrag === "undefined") {
     canDrag = true;
@@ -37,6 +43,7 @@ export const useDragging = ({ item, canDrag }) => {
     };
   });
 
+  // @ts-ignore
   const [{ isDragging }, drag, preview] = useDrag({
     item: item,
     type: item?.type,
@@ -45,6 +52,7 @@ export const useDragging = ({ item, canDrag }) => {
       isDragging: !!monitor.isDragging(),
     }),
 
+    // @ts-ignore
     beginDrag: () => {
       setIsGrabbing(true);
     },

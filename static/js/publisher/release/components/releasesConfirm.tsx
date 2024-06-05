@@ -1,5 +1,4 @@
-import React, { Component, createRef } from "react";
-import PropTypes from "prop-types";
+import { Component, createRef } from "react";
 import { connect } from "react-redux";
 
 import debounce from "../../../libs/debounce";
@@ -15,8 +14,23 @@ import { releaseRevisions } from "../actions/releases";
 import { triggerGAEvent } from "../actions/gaEventTracking";
 import { getSeparatePendingReleases } from "../selectors";
 
-class ReleasesConfirm extends Component {
-  constructor(props) {
+type Props = {
+  triggerGAEvent: Function;
+  cancelPendingReleases: Function;
+  setProgressiveReleasePercentage: Function;
+  releaseRevisions: Function;
+  updates: any;
+};
+
+type State = {
+  isLoading: boolean;
+  showDetails: boolean;
+  percentage?: number;
+};
+
+class ReleasesConfirm extends Component<Props, State> {
+  stickyBar: any;
+  constructor(props: Props) {
     super(props);
 
     this.state = {
@@ -37,8 +51,7 @@ class ReleasesConfirm extends Component {
         const topPosition = top + scrollX;
 
         this.stickyBar.current.classList.toggle("is-pinned", topPosition === 0);
-      }),
-      500,
+      }, 500)
     );
   }
 
@@ -69,7 +82,7 @@ class ReleasesConfirm extends Component {
     });
   }
 
-  onPercentageChange(event) {
+  onPercentageChange(event: { target: { value: any } }) {
     this.setState({
       percentage: event.target.value,
     });
@@ -77,7 +90,7 @@ class ReleasesConfirm extends Component {
 
   toggleDetails() {
     this.props.triggerGAEvent(
-      `click-${this.state.showDetails ? "hide" : "show"}-details`,
+      `click-${this.state.showDetails ? "hide" : "show"}-details`
     );
     this.setState({
       showDetails: !this.state.showDetails,
@@ -159,16 +172,7 @@ class ReleasesConfirm extends Component {
   }
 }
 
-ReleasesConfirm.propTypes = {
-  updates: PropTypes.object.isRequired,
-
-  releaseRevisions: PropTypes.func.isRequired,
-  cancelPendingReleases: PropTypes.func.isRequired,
-  setProgressiveReleasePercentage: PropTypes.func.isRequired,
-  triggerGAEvent: PropTypes.func.isRequired,
-};
-
-const mapStateToProps = (state) => {
+const mapStateToProps = (state: { pendingCloses: any }) => {
   return {
     updates: {
       ...getSeparatePendingReleases(state),
@@ -177,13 +181,14 @@ const mapStateToProps = (state) => {
   };
 };
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = (dispatch: any) => {
   return {
     releaseRevisions: () => dispatch(releaseRevisions()),
     cancelPendingReleases: () => dispatch(cancelPendingReleases()),
-    setProgressiveReleasePercentage: (percentage) =>
+    setProgressiveReleasePercentage: (percentage: number) =>
       dispatch(setProgressiveReleasePercentage(percentage)),
-    triggerGAEvent: (...eventProps) => dispatch(triggerGAEvent(...eventProps)),
+    triggerGAEvent: (...eventProps: any) =>
+      dispatch(triggerGAEvent(...eventProps)),
   };
 };
 
