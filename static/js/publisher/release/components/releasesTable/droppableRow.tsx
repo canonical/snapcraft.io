@@ -1,4 +1,3 @@
-import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
@@ -14,11 +13,15 @@ import { getChannelName, isInDevmode, canBeReleased } from "../../helpers";
 
 import ReleasesTableChannelRow from "./channelRow";
 
-const getRevisionsToDrop = (revisions, targetChannel, channelMap) => {
+const getRevisionsToDrop = (
+  revisions: any[],
+  targetChannel: string,
+  channelMap: { [x: string]: any }
+) => {
   const targetChannelArchs = channelMap[targetChannel];
 
   return revisions.filter((revision) => {
-    return revision.architectures.some((arch) => {
+    return revision.architectures.some((arch: string | number) => {
       // if nothing released to target channel in this arch
       if (!targetChannelArchs || !targetChannelArchs[arch]) {
         return true;
@@ -34,7 +37,15 @@ const getRevisionsToDrop = (revisions, targetChannel, channelMap) => {
 };
 
 // releases table row with channel data that can be a drop target for revisions
-const ReleasesTableDroppableRow = (props) => {
+const ReleasesTableDroppableRow = (props: {
+  currentTrack: any;
+  risk: any;
+  branch: any;
+  revisions: any;
+  promoteRevision: any;
+  pendingChannelMap: any;
+  triggerGAEvent: any;
+}) => {
   const {
     currentTrack,
     risk,
@@ -51,16 +62,17 @@ const ReleasesTableDroppableRow = (props) => {
 
   const [{ isOver, canDrop, item }, drop] = useDrop({
     accept: DND_ITEM_REVISIONS,
-    drop: (item) => {
+    drop: (item: any) => {
       item.revisions.forEach(
-        (r) => canBeReleased(r) && promoteRevision(r, channel),
+        (r: { status: string }) =>
+          canBeReleased(r) && promoteRevision(r, channel)
       );
 
       if (item.revisions.length > 1) {
         triggerGAEvent(
           "drop-channel",
           `${currentTrack}/${item.risk}/${item.branch ? item.branch : null}`,
-          `${currentTrack}/${risk}/${branchName}`,
+          `${currentTrack}/${risk}/${branchName}`
         );
       } else {
         triggerGAEvent(
@@ -68,7 +80,7 @@ const ReleasesTableDroppableRow = (props) => {
           `${currentTrack}/${item.risk}/${item.branch ? item.branch : null}/${
             item.architectures[0]
           }`,
-          `${currentTrack}/${risk}/${branchName}/${item.architectures[0]}`,
+          `${currentTrack}/${risk}/${branchName}/${item.architectures[0]}`
         );
       }
     },
@@ -80,7 +92,7 @@ const ReleasesTableDroppableRow = (props) => {
       const draggedChannel = getChannelName(
         currentTrack,
         item.risk,
-        item.branch,
+        item.branch
       );
       const dropChannel = getChannelName(currentTrack, risk, branchName);
 
@@ -134,7 +146,7 @@ const ReleasesTableDroppableRow = (props) => {
 
   const versions = pendingChannelMap[channel];
 
-  const currentVersions = [];
+  const currentVersions: any[] = [];
 
   if (versions) {
     for (let [value] of Object.entries(versions)) {
@@ -172,6 +184,7 @@ const ReleasesTableDroppableRow = (props) => {
         <ReleasesTableChannelRow
           risk={risk}
           branch={branch}
+          // @ts-ignore
           revisions={revisions}
           isOverParent={isOver}
           draggedItem={item}
@@ -197,22 +210,23 @@ ReleasesTableDroppableRow.propTypes = {
   triggerGAEvent: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = (state) => {
+const mapStateToProps = (state: { currentTrack: any }) => {
   return {
     currentTrack: state.currentTrack,
     pendingChannelMap: getPendingChannelMap(state),
   };
 };
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = (dispatch: any) => {
   return {
-    promoteRevision: (revision, targetChannel) =>
+    promoteRevision: (revision: any, targetChannel: any) =>
       dispatch(promoteRevision(revision, targetChannel)),
-    triggerGAEvent: (...eventProps) => dispatch(triggerGAEvent(...eventProps)),
+    triggerGAEvent: (...eventProps: any) =>
+      dispatch(triggerGAEvent(...eventProps)),
   };
 };
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps,
+  mapDispatchToProps
 )(ReleasesTableDroppableRow);

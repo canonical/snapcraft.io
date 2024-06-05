@@ -2,14 +2,14 @@ import { AVAILABLE, REVISION_STATUS } from "./constants";
 import { getChannelString } from "../../libs/channels";
 import { useEffect } from "react";
 
-export function isInDevmode(revision: { confinement: string; grade: string }) {
+export function isInDevmode(revision: any) {
   return revision.confinement === "devmode" || revision.grade === "devel";
 }
 
 export function getChannelName(
   track: string,
   risk: string,
-  branch: string | undefined
+  branch?: string | undefined
 ) {
   if (risk === AVAILABLE) {
     return AVAILABLE;
