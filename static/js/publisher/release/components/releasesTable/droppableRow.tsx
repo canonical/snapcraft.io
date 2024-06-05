@@ -210,7 +210,7 @@ ReleasesTableDroppableRow.propTypes = {
   triggerGAEvent: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = (state: { currentTrack: any }) => {
+const mapStateToProps = (state: any) => {
   return {
     currentTrack: state.currentTrack,
     pendingChannelMap: getPendingChannelMap(state),

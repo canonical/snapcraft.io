@@ -172,7 +172,7 @@ class ReleasesConfirm extends Component<Props, State> {
   }
 }
 
-const mapStateToProps = (state: { pendingCloses: any }) => {
+const mapStateToProps = (state: any) => {
   return {
     updates: {
       ...getSeparatePendingReleases(state),

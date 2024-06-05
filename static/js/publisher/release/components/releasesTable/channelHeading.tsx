@@ -370,15 +370,7 @@ const ReleasesTableChannelHeading = (props: {
   );
 };
 
-const mapStateToProps = (
-  state: {
-    currentTrack: any;
-    history: { filters: any };
-    pendingCloses: any;
-    branches: any;
-  },
-  props: { branch: any; risk: any }
-) => {
+const mapStateToProps = (state: any, props: { branch: any; risk: any }) => {
   const availableBranches = getBranches(state);
 
   const numberOfBranches = props.branch
