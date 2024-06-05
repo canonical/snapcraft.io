@@ -1,5 +1,4 @@
-import React, { Fragment } from "react";
-import PropTypes from "prop-types";
+import { Fragment } from "react";
 import { connect } from "react-redux";
 import { format, formatDistanceToNow } from "date-fns";
 
@@ -46,8 +45,8 @@ const disabledBecauseNotSelected = "Select some revisions to promote them.";
 
 // TODO: move to selectors or helpers?
 const compareRevisionsPerArch = (
-  currentRevisionsByArch,
-  targetRevisionsByArch,
+  currentRevisionsByArch: { [x: string]: { revision: any } },
+  targetRevisionsByArch: { [x: string]: { revision: any } }
 ) => {
   if (currentRevisionsByArch) {
     return Object.keys(currentRevisionsByArch).every((arch) => {
@@ -64,7 +63,23 @@ const compareRevisionsPerArch = (
 };
 
 // heading cell of releases table rows
-const ReleasesTableChannelHeading = (props) => {
+const ReleasesTableChannelHeading = (props: {
+  pendingCloses: any;
+  filters: any;
+  promoteRevision: any;
+  triggerGAEvent: any;
+  closeChannel: any;
+  toggleBranches: any;
+  currentTrack: any;
+  risk: any;
+  branch: any;
+  numberOfBranches: any;
+  pendingChannelMap: any;
+  openBranches: any;
+  availableBranches: any;
+  drag: any;
+  revisions: { [key: string]: any };
+}) => {
   const {
     currentTrack,
     risk,
@@ -81,7 +96,8 @@ const ReleasesTableChannelHeading = (props) => {
 
   const channel = getChannelName(currentTrack, risk, branchName);
 
-  const rowRevisions = revisions || pendingChannelMap[channel];
+  const rowRevisions: { [key: string]: any } =
+    revisions || pendingChannelMap[channel];
 
   const hasOpenBranches = openBranches.includes(channel);
 
@@ -111,7 +127,7 @@ const ReleasesTableChannelHeading = (props) => {
     promoteTooltip = disabledBecauseNotSelected;
   }
 
-  let targetChannels = [];
+  let targetChannels: any[] = [];
 
   if (canBePromoted) {
     let targetChannelRisks;
@@ -144,7 +160,7 @@ const ReleasesTableChannelHeading = (props) => {
     const branchRisks = RISKS.slice(0, RISKS.indexOf(risk) + 1);
     let isParent = false;
     const targetChannelBranches = availableBranches
-      .filter((b) => {
+      .filter((b: { track: any; risk: string; branch: string | undefined }) => {
         return (
           b.track === currentTrack &&
           channel !== getChannelName(currentTrack, b.risk, b.branch) &&
@@ -152,7 +168,7 @@ const ReleasesTableChannelHeading = (props) => {
             RISKS.indexOf(branchRisks[branchRisks.length - 1])
         );
       })
-      .map((b) => {
+      .map((b: { risk: string; branch: string | undefined }) => {
         const channelName = getChannelName(currentTrack, b.risk, b.branch);
         isParent = channelName.indexOf(channel) > -1;
         return {
@@ -176,7 +192,7 @@ const ReleasesTableChannelHeading = (props) => {
       if (
         compareRevisionsPerArch(
           rowRevisions,
-          pendingChannelMap[targetChannel.channel],
+          pendingChannelMap[targetChannel.channel]
         )
       ) {
         targetChannel.isDisabled = true;
@@ -188,8 +204,9 @@ const ReleasesTableChannelHeading = (props) => {
       canBePromoted = false;
     } else {
       // order the channel names
+      // @ts-ignore
       const channelOrder = sortChannels(
-        targetChannels.map((channel) => channel.channel),
+        targetChannels.map((channel) => channel.channel)
       ).list;
 
       // remap targetchannels to this new order
@@ -204,12 +221,12 @@ const ReleasesTableChannelHeading = (props) => {
 
   let hasSameVersion = false;
   let channelVersion = "";
-  let versionsMap = {};
+  let versionsMap: any = {};
 
   let isLaunchpadBuild = false;
   let channelBuild = "";
   let channelBuildDate = null;
-  let buildMap = {};
+  let buildMap: any = {};
 
   if (rowRevisions) {
     // calculate map of architectures for each version
@@ -245,12 +262,12 @@ const ReleasesTableChannelHeading = (props) => {
       channelBuildDate =
         Object.values(revisions)[0].attributes["build-request-timestamp"] &&
         new Date(
-          Object.values(revisions)[0].attributes["build-request-timestamp"],
+          Object.values(revisions)[0].attributes["build-request-timestamp"]
         );
     }
   }
 
-  let rowTitle = risk === AVAILABLE ? channelVersion : channel;
+  let rowTitle: any = risk === AVAILABLE ? channelVersion : channel;
 
   if (risk === BUILD) {
     rowTitle = <>{channelBuild}</>;
@@ -265,15 +282,15 @@ const ReleasesTableChannelHeading = (props) => {
     timeUntilExpiration = formatDistanceToNow(Date.parse(branch.expiration));
   }
 
-  const promoteRevisions = (targetChannel) => {
+  const promoteRevisions = (targetChannel: any) => {
     Object.values(rowRevisions).forEach(
-      (revision) =>
+      (revision: any) =>
         canBeReleased(revision) &&
-        props.promoteRevision(revision, targetChannel),
+        props.promoteRevision(revision, targetChannel)
     );
   };
 
-  const triggerGAEvent = (targetChannel, actionType) => {
+  const triggerGAEvent = (targetChannel: any, actionType: string) => {
     if (actionType === "close") {
       props.triggerGAEvent("click-close-channel", targetChannel);
     } else {
@@ -288,7 +305,10 @@ const ReleasesTableChannelHeading = (props) => {
         filteredChannel === channel ? "is-active" : ""
       } ${canDrag ? "is-draggable" : ""}`}
       onMouseEnter={(e) => {
-        e.target.parentElement.classList.add("is-hovered");
+        const target = e.target as HTMLElement;
+        if (target.parentElement) {
+          target.parentElement.classList.add("is-hovered");
+        }
       }}
     >
       <div className="p-releases-channel__inner">
@@ -350,36 +370,15 @@ const ReleasesTableChannelHeading = (props) => {
   );
 };
 
-ReleasesTableChannelHeading.propTypes = {
-  // props
-  drag: PropTypes.func,
-  risk: PropTypes.string.isRequired,
-  branch: PropTypes.object,
-  availableBranches: PropTypes.array,
-
-  revisions: PropTypes.object,
-
-  // state
-  numberOfBranches: PropTypes.number,
-  currentTrack: PropTypes.string.isRequired,
-  filters: PropTypes.object,
-  pendingCloses: PropTypes.array.isRequired,
-
-  archs: PropTypes.array.isRequired,
-  pendingChannelMap: PropTypes.object,
-
-  hasPendingRelease: PropTypes.func,
-
-  openBranches: PropTypes.array,
-
-  // actions
-  closeChannel: PropTypes.func.isRequired,
-  promoteRevision: PropTypes.func.isRequired,
-  toggleBranches: PropTypes.func.isRequired,
-  triggerGAEvent: PropTypes.func.isRequired,
-};
-
-const mapStateToProps = (state, props) => {
+const mapStateToProps = (
+  state: {
+    currentTrack: any;
+    history: { filters: any };
+    pendingCloses: any;
+    branches: any;
+  },
+  props: { branch: any; risk: any }
+) => {
   const availableBranches = getBranches(state);
 
   const numberOfBranches = props.branch
@@ -394,23 +393,24 @@ const mapStateToProps = (state, props) => {
     pendingCloses: state.pendingCloses,
     archs: getArchitectures(state),
     pendingChannelMap: getPendingChannelMap(state),
-    hasPendingRelease: (channel, arch) =>
+    hasPendingRelease: (channel: any, arch: any) =>
       hasPendingRelease(state, channel, arch),
     openBranches: state.branches,
   };
 };
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = (dispatch: any) => {
   return {
-    promoteRevision: (revision, targetChannel) =>
+    promoteRevision: (revision: any, targetChannel: any) =>
       dispatch(promoteRevision(revision, targetChannel)),
-    closeChannel: (channel) => dispatch(closeChannel(channel)),
-    toggleBranches: (channel) => dispatch(toggleBranches(channel)),
-    triggerGAEvent: (...eventProps) => dispatch(triggerGAEvent(...eventProps)),
+    closeChannel: (channel: any) => dispatch(closeChannel(channel)),
+    toggleBranches: (channel: any) => dispatch(toggleBranches(channel)),
+    triggerGAEvent: (...eventProps: any) =>
+      dispatch(triggerGAEvent(...eventProps)),
   };
 };
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps,
+  mapDispatchToProps
 )(ReleasesTableChannelHeading);

@@ -1,5 +1,4 @@
-import React, { useRef } from "react";
-import PropTypes from "prop-types";
+import { useRef } from "react";
 
 import { useDragging, DND_ITEM_REVISIONS } from "../dnd";
 
@@ -7,7 +6,14 @@ import { getRevisionsArchitectures } from "../../helpers";
 import ReleasesTableChannelHeading from "./channelHeading";
 
 // generic releases table row component
-const ReleasesTableRow = (props) => {
+const ReleasesTableRow = (props: {
+  canDrag?: any;
+  risk?: any;
+  branch?: any;
+  revisions?: any;
+  canDrop?: any;
+  children?: any;
+}) => {
   const { risk, branch, revisions, canDrop, children } = props;
 
   const canDrag = !!revisions && props.canDrag;
@@ -25,7 +31,7 @@ const ReleasesTableRow = (props) => {
     canDrag,
   });
 
-  const tableRow = useRef(null);
+  const tableRow: any = useRef(null);
 
   return (
     <div
@@ -36,12 +42,20 @@ const ReleasesTableRow = (props) => {
         isGrabbing ? "is-grabbing" : ""
       } ${canDrop ? "can-drop" : ""}`}
       onMouseEnter={(e) => {
-        if (!e.target.parentNode.classList.contains("p-releases-table__cell")) {
-          tableRow.current.classList.add("is-hovered");
+        const target = e.target as HTMLElement;
+        const parentNode = target.parentNode as HTMLElement;
+        if (parentNode) {
+          if (!parentNode.classList.contains("p-releases-table__cell")) {
+            if (tableRow.current) {
+              tableRow.current.classList.add("is-hovered");
+            }
+          }
         }
       }}
       onMouseLeave={() => {
-        tableRow.current.classList.remove("is-hovered");
+        if (tableRow.current) {
+          tableRow.current.classList.remove("is-hovered");
+        }
       }}
     >
       <ReleasesTableChannelHeading
@@ -57,16 +71,6 @@ const ReleasesTableRow = (props) => {
 
 ReleasesTableRow.defaultProps = {
   canDrag: true,
-};
-
-ReleasesTableRow.propTypes = {
-  risk: PropTypes.string.isRequired,
-  branch: PropTypes.object,
-  revisions: PropTypes.object,
-  children: PropTypes.node,
-
-  canDrag: PropTypes.bool,
-  canDrop: PropTypes.bool,
 };
 
 export default ReleasesTableRow;
