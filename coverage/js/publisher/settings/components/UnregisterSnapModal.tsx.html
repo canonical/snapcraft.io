@@ -154,7 +154,15 @@
 <a name='L89'></a><a href='#L89'>89</a>
 <a name='L90'></a><a href='#L90'>90</a>
 <a name='L91'></a><a href='#L91'>91</a>
-<a name='L92'></a><a href='#L92'>92</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L92'></a><a href='#L92'>92</a>
+<a name='L93'></a><a href='#L93'>93</a>
+<a name='L94'></a><a href='#L94'>94</a>
+<a name='L95'></a><a href='#L95'>95</a>
+<a name='L96'></a><a href='#L96'>96</a>
+<a name='L97'></a><a href='#L97'>97</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -186,7 +194,6 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
@@ -245,96 +252,104 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import React, { useState } from "react";
-import {
-  Button,
-  Modal,
-} from "@canonical/react-components";
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { useState } from "react";
+import { Button, Modal } from "@canonical/react-components";
 &nbsp;
 type UnregisterSnapModalProps = {
-    snapName: string;
-    setUnregisterModalOpen: Function;
-    setUnregisterError: Function;
-    setUnregisterErrorMessage: Function;
+  snapName: string;
+  setUnregisterModalOpen: Function;
+  setUnregisterError: Function;
+  setUnregisterErrorMessage: Function;
 };
 &nbsp;
-export function UnregisterSnapModal({ snapName, setUnregisterModalOpen, setUnregisterError, setUnregisterErrorMessage }: UnregisterSnapModalProps) {
-    const [unregisterPackageInProgress, setUnregisterPackageInProgress] = useState(false);
+export function UnregisterSnapModal({
+  snapName,
+  setUnregisterModalOpen,
+  setUnregisterError,
+  setUnregisterErrorMessage,
+}: UnregisterSnapModalProps) {
+  const [unregisterPackageInProgress, setUnregisterPackageInProgress] =
+    useState(false);
 &nbsp;
-    const unregisterPackage = async () =&gt; {
-        try {
-            const response = await fetch(`/packages/${snapName}`, {
-                method: "DELETE",
-                headers: {
-                "X-CSRFToken": window["CSRF_TOKEN"],
-                },
-            });
+  const unregisterPackage = async () =&gt; {
+    try {
+      const response = await fetch(`/packages/${snapName}`, {
+        method: "DELETE",
+        headers: {
+          "X-CSRFToken": window["CSRF_TOKEN"],
+        },
+      });
 &nbsp;
-            if (!response.ok) {
-                const responseData = await response.json();
-                setUnregisterModalOpen(false);
-                setUnregisterError(true);
-                setUnregisterErrorMessage(responseData.error);
-            } else {
-                window.location.href = '/snaps';
-            }
+      if (!response.ok) {
+        const responseData = await response.json();
+        setUnregisterModalOpen(false);
+        setUnregisterError(true);
+        setUnregisterErrorMessage(responseData.error);
+      } else {
+        window.location.href = "/snaps";
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
 &nbsp;
-        } catch (error) {
-            console.error(error);
+  return (
+    &lt;&gt;
+      &lt;Modal
+        close={<span class="fstat-no" title="function not covered" >()</span> =&gt; {
+<span class="cstat-no" title="statement not covered" >          setUnregisterModalOpen(false);</span>
+        }}
+        title={
+          &lt;span className="u-has-icon"&gt;
+            &lt;i className="p-icon--warning modal-header-icon"&gt;&lt;/i&gt;
+            Unregister "{snapName}"
+          &lt;/span&gt;
         }
-    };
-&nbsp;
-    return (
-        &lt;&gt;
-          &lt;Modal
-                close={<span class="fstat-no" title="function not covered" >()</span> =&gt; {
-<span class="cstat-no" title="statement not covered" >                  setUnregisterModalOpen(false);</span>
-                }}
-                title={
-                  &lt;span className="u-has-icon"&gt;
-                    &lt;i className="p-icon--warning modal-header-icon"&gt;&lt;/i&gt;
-                    Unregister "{snapName}"
-                  &lt;/span&gt;
-                }
-                buttonRow={
-                  &lt;&gt;
-                    &lt;Button
-                      className="u-no-margin--bottom"
-                      onClick={() =&gt; {
-                          setUnregisterModalOpen(false);
-                      }}
-                    &gt;
-                      Cancel
-                    &lt;/Button&gt;
-                    &lt;Button
-                      appearance="negative"
-                      className={`u-no-margin--bottom ${
-                        unregisterPackageInProgress ? "has-icon is-dark" : ""
-                      }`}
-                      onClick={() =&gt; {
-                        setUnregisterPackageInProgress(true);
-                        unregisterPackage();
-                      }}
-                      disabled={unregisterPackageInProgress}
-                    &gt;
-                      {unregisterPackageInProgress ? (
-                        &lt;&gt;
-                          &lt;i className="p-icon--spinner u-animation--spin is-light"&gt;&lt;/i&gt;
-                          &lt;span&gt;Unregistering...&lt;/span&gt;
-                        &lt;/&gt;
-                      ) : (
-                        "Unregister"
-                      )}
-                    &lt;/Button&gt;
-                  &lt;/&gt;
-                }
-              &gt;
-              &lt;p&gt;Are you sure you want to unregister "{snapName}"?&lt;br /&gt;
-                This name will be removed from your registered names and become available to others. This action is permanent and cannot be undone.
-              &lt;/p&gt;
-          &lt;/Modal&gt;
-        &lt;/&gt;
-    );
+        buttonRow={
+          &lt;&gt;
+            &lt;Button
+              className="u-no-margin--bottom"
+              onClick={() =&gt; {
+                setUnregisterModalOpen(false);
+              }}
+            &gt;
+              Cancel
+            &lt;/Button&gt;
+            &lt;Button
+              appearance="negative"
+              className={`u-no-margin--bottom ${
+                unregisterPackageInProgress ? "has-icon is-dark" : ""
+              }`}
+              onClick={() =&gt; {
+                setUnregisterPackageInProgress(true);
+                unregisterPackage();
+              }}
+              disabled={unregisterPackageInProgress}
+            &gt;
+              {unregisterPackageInProgress ? (
+                &lt;&gt;
+                  &lt;i className="p-icon--spinner u-animation--spin is-light"&gt;&lt;/i&gt;
+                  &lt;span&gt;Unregistering...&lt;/span&gt;
+                &lt;/&gt;
+              ) : (
+                "Unregister"
+              )}
+            &lt;/Button&gt;
+          &lt;/&gt;
+        }
+      &gt;
+        &lt;p&gt;
+          Are you sure you want to unregister "{snapName}"?
+          &lt;br /&gt;
+          This name will be removed from your registered names and become
+          available to others. This action is permanent and cannot be undone.
+        &lt;/p&gt;
+      &lt;/Modal&gt;
+    &lt;/&gt;
+  );
 }
 &nbsp;</pre></td></tr></table></pre>
 
@@ -343,7 +358,7 @@ export function UnregisterSnapModal({ snapName, setUnregisterModalOpen, setUnreg
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2024-06-04T22:06:30.698Z
+                at 2024-06-05T22:06:18.659Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>
