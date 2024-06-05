@@ -90,6 +90,8 @@ export function tooltips(this: any) {
               `</span>`,
             ].join("");
           }
+
+          return "";
         })
         .join("");
     };
