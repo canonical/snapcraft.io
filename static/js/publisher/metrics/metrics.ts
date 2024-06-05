@@ -139,7 +139,7 @@ function renderPublisherMetrics(options: {
       })
         .then((response) => {
           if (!response.ok) {
-            reject("Could not fetch data.");
+            return reject("Could not fetch data.");
           } else {
             return response.json();
           }

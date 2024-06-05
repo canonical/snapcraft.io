@@ -60,12 +60,14 @@ function prepareLineData(this: any) {
   this.rawData.series.forEach(
     (series: { name: string; values: Array<number> }) => {
       _keys.push(series.name);
-      const obj = {
+      const obj: {
+        name: string;
+        values: Array<any>;
+      } = {
         name: series.name,
         values: [],
       };
       series.values.forEach((value, index) => {
-        // @ts-ignore
         obj.values.push({
           date: utcParse("%Y-%m-%d")(this.rawData.buckets[index]),
           value: value,
