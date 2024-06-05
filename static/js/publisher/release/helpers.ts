@@ -2,11 +2,15 @@ import { AVAILABLE, REVISION_STATUS } from "./constants";
 import { getChannelString } from "../../libs/channels";
 import { useEffect } from "react";
 
-export function isInDevmode(revision) {
+export function isInDevmode(revision: { confinement: string; grade: string }) {
   return revision.confinement === "devmode" || revision.grade === "devel";
 }
 
-export function getChannelName(track, risk, branch) {
+export function getChannelName(
+  track: string,
+  risk: string,
+  branch: string | undefined
+) {
   if (risk === AVAILABLE) {
     return AVAILABLE;
   }
@@ -18,19 +22,19 @@ export function getChannelName(track, risk, branch) {
   });
 }
 
-export function getBuildId(revision) {
+export function getBuildId(revision: { attributes: { [x: string]: any } }) {
   return (
     revision && revision.attributes && revision.attributes["build-request-id"]
   );
 }
 
-export function isRevisionBuiltOnLauchpad(revision) {
+export function isRevisionBuiltOnLauchpad(revision: any) {
   const buildId = getBuildId(revision);
   return !!(buildId && buildId.indexOf("lp-") === 0);
 }
 
-export function getRevisionsArchitectures(revisions) {
-  let archs = [];
+export function getRevisionsArchitectures(revisions: any[]) {
+  let archs: any[] = [];
 
   // get all architectures from all revisions
   revisions.forEach((revision) => {
@@ -43,9 +47,9 @@ export function getRevisionsArchitectures(revisions) {
   return archs;
 }
 
-export function isSameVersion(revisions) {
+export function isSameVersion(revisions: { version: string }[]) {
   let hasSameVersion = false;
-  let versionsMap = {};
+  let versionsMap: any = {};
 
   if (revisions) {
     // calculate map of architectures for each version
@@ -64,19 +68,25 @@ export function isSameVersion(revisions) {
   return hasSameVersion;
 }
 
-export function jsonClone(obj) {
+export function jsonClone(obj: {
+  string: string;
+  number?: number;
+  boolean?: boolean;
+  array?: (string | number | boolean)[];
+  function?: () => string;
+}) {
   return JSON.parse(JSON.stringify(obj));
 }
 
-export function canBeReleased(revision) {
+export function canBeReleased(revision: { status: string }) {
   const allowed = [REVISION_STATUS.PUBLISHED, REVISION_STATUS.UNPUBLISHED];
 
   return revision && allowed.includes(revision.status);
 }
 
-export function validatePhasingPercentage(value) {
+export function validatePhasingPercentage(value: string) {
   if (value.trim()) {
-    if (isNaN(value)) {
+    if (isNaN(parseInt(value))) {
       return "Phasing percentage must be a number";
     } else {
       const percentage = parseFloat(value);
@@ -88,14 +98,22 @@ export function validatePhasingPercentage(value) {
   return "";
 }
 
-export function resizeAsidePanel(tracks) {
+export function resizeAsidePanel(tracks: Array<any>) {
   useEffect(() => {
     function adjustAsidePanelHeight() {
       const targetComponent = document.querySelector("#main-content");
-      const asidePanel =
-        tracks.length > 1
-          ? document.querySelector("#add-track-aside-panel")
-          : document.querySelector("#request-track-aside-panel");
+      let asidePanel;
+
+      if (tracks.length > 1) {
+        asidePanel = document.querySelector(
+          "#add-track-aside-panel"
+        ) as HTMLElement;
+      } else {
+        asidePanel = document.querySelector(
+          "#request-track-aside-panel"
+        ) as HTMLElement;
+      }
+
       if (targetComponent && asidePanel) {
         const targetRect = targetComponent.getBoundingClientRect();
         const targetTop = targetRect.top;
@@ -125,7 +143,7 @@ export function resizeAsidePanel(tracks) {
   }, [tracks]);
 }
 
-export function numericalSort(a, b) {
+export function numericalSort(a: string, b: string) {
   const regex = /\d+/g;
   const numSeqA = (a.match(regex) || []).map(Number);
   const numSeqB = (b.match(regex) || []).map(Number);
