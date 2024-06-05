@@ -28,15 +28,15 @@ const md = markdownit({
 ]);
 
 // For the different elements we might need to change different properties
-const functionMap = {
-  title: (el, content) => (el.innerHTML = content),
-  summary: (el, content) => (el.innerHTML = content),
-  description: (el, content) => (el.innerHTML = content),
-  website: (el, content) => (el.href = content),
-  contact: (el, content) => (el.href = content),
-  screenshots: (el, content) => el.appendChild(content),
-  license: (el, content) => (el.innerHTML = content),
-  icon: (el, content) => {
+const functionMap: { [key: string]: any } = {
+  title: (el: any, content: any) => (el.innerHTML = content),
+  summary: (el: any, content: any) => (el.innerHTML = content),
+  description: (el: any, content: any) => (el.innerHTML = content),
+  website: (el: any, content: any) => (el.href = content),
+  contact: (el: any, content: any) => (el.href = content),
+  screenshots: (el: any, content: any) => el.appendChild(content),
+  license: (el: any, content: any) => (el.innerHTML = content),
+  icon: (el: any, content: any) => {
     if (content) {
       el.src = content;
     } else {
@@ -48,30 +48,31 @@ const functionMap = {
 
 // For some elements we want to hide/ show a different element to the one
 // being targeted.
-const hideMap = {
-  screenshots: (el) => el.parentNode,
-  website: (el) => el.parentNode,
-  contact: (el) => el.parentNode,
+const hideMap: { [key: string]: any } = {
+  screenshots: (el: { parentNode: any }) => el.parentNode,
+  website: (el: { parentNode: any }) => el.parentNode,
+  contact: (el: { parentNode: any }) => el.parentNode,
 };
 
 // For some fields we need to transform the data.
-const transformMap = {
+const transformMap: { [key: string]: any } = {
   description: md.render.bind(md),
 };
 
-/**
- * Split the images array to separate screenshots and icon.
- * @param {object} state
- * @returns {object}
- */
-function transformStateImages(state) {
-  const newState = {
+function transformStateImages(state: {
+  [x: string]: any;
+  images: Array<{
+    type: string;
+    url: string;
+  }>;
+}) {
+  const newState: any = {
     icon: null,
     screenshots: [],
   };
 
   if (state.images) {
-    state.images.forEach((image) => {
+    state.images.forEach((image: { [key: string]: any }) => {
       if (image.type === "icon") {
         newState.icon = image.url;
       } else if (image.type === "screenshot") {
@@ -87,12 +88,7 @@ function transformStateImages(state) {
   return newState;
 }
 
-/**
- * Get the details of a video, as per `webapp/store/logic.py:get_video_embed_code`
- * @param url
- * @returns {{type: string, url: string, id: string}}
- */
-function getVideoDetails(url) {
+function getVideoDetails(url: string) {
   if (url.indexOf("youtube") > -1) {
     return {
       type: "youtube",
@@ -125,15 +121,10 @@ function getVideoDetails(url) {
   }
 }
 
-/**
- * Generate a screenshot element, as needed for the details page.
- * @param image
- * @returns {HTMLElement}
- */
-function screenshot(image) {
+function screenshot(image: string | undefined) {
   const slide = document.createElement("div");
   slide.className = "p-carousel__item--screenshot swiper-slide";
-  const img = new Image();
+  const img: any = new Image();
   img.src = image;
   img.dataset.original = image;
 
@@ -141,15 +132,9 @@ function screenshot(image) {
   return slide;
 }
 
-/**
- * Create the holder for screenshots or videos and screenshots
- * @param {Array} screenshots
- * @param {String} video
- * @returns {HTMLElement}
- */
-function screenshotsAndVideos(screenshots, video) {
+function screenshotsAndVideos(screenshots: any[], video: string) {
   if (video) {
-    const videoDetails = getVideoDetails(video);
+    const videoDetails: any = getVideoDetails(video);
     const holder = document.createElement("div");
     holder.className = "p-snap-details__media row u-equal-height";
     const col10 = document.createElement("div");
@@ -161,7 +146,7 @@ function screenshotsAndVideos(screenshots, video) {
     videoSlide.setAttribute("data-video-url", videoDetails.url);
     videoSlide.setAttribute("data-video-id", videoDetails.id);
     const videoTemplate = document.querySelector(
-      `#video-${videoDetails.type}-template`,
+      `#video-${videoDetails.type}-template`
     );
     if (!videoTemplate) {
       throw new Error("Video template not available");
@@ -175,9 +160,9 @@ function screenshotsAndVideos(screenshots, video) {
     if (videoDetails.type === "asciinema") {
       const fakeHolder = document.createElement("div");
       fakeHolder.innerHTML = videoHTML;
-      const fakeScript = fakeHolder.children[0];
+      const fakeScript: any = fakeHolder.children[0];
       const scriptTag = document.createElement("script");
-      fakeScript.getAttributeNames().forEach((attr) => {
+      fakeScript.getAttributeNames().forEach((attr: any) => {
         scriptTag.setAttribute(attr, fakeScript.getAttribute(attr));
       });
 
@@ -230,43 +215,41 @@ function screenshotsAndVideos(screenshots, video) {
   return holder;
 }
 
-/**
- * Get the state from localstorage for the current package
- * @param packageName
- * @returns {Object}
- */
-function getState(packageName) {
-  return JSON.parse(window.localStorage.getItem(packageName));
+function getState(packageName: string) {
+  const storedPackage = window.localStorage.getItem(packageName);
+  return storedPackage !== null ? JSON.parse(storedPackage) : {};
 }
 
-function sendCommand(packageName, command) {
+function sendCommand(packageName: any, command: string) {
   window.localStorage.setItem(`${packageName}-command`, command);
 }
 
-/**
- * Render the changes
- * @param packageName
- */
-function render(packageName) {
-  let transformedState;
+function render(packageName: string) {
+  let transformedState: any;
   try {
     transformedState = transformStateImages(getState(packageName));
   } catch (e) {
     const notification = `<div class="p-notification--negative"><div class="p-notification__content">
 <p class="p-notification__message">Something went wrong. Please ensure you have permission to preview this snap.</p></div>
 </div>`;
-    document.querySelector(".p-snap-heading").parentNode.appendChild(
-      (() => {
-        const el = document.createElement("div");
-        el.innerHTML = notification;
-        return el;
-      })(),
-    );
+    const snapHeading = document.querySelector(
+      ".p-snap-heading"
+    ) as HTMLElement;
+
+    if (snapHeading.parentNode) {
+      snapHeading.parentNode.appendChild(
+        (() => {
+          const el = document.createElement("div");
+          el.innerHTML = notification;
+          return el;
+        })()
+      );
+    }
     return;
   }
 
   // For basic content, loop through and update the content
-  Object.keys(transformedState).forEach(function (key) {
+  Object.keys(transformedState).forEach(function (key: string) {
     if (key === "screenshots") {
       return;
     }
@@ -295,7 +278,9 @@ function render(packageName) {
   });
 
   // Screenshots are a bit more involved, so treat them separately
-  const screenshotsEl = document.querySelector(`[data-live="screenshots"]`);
+  const screenshotsEl = document.querySelector(
+    `[data-live="screenshots"]`
+  ) as HTMLElement;
   if (
     transformedState.video_urls !== "" ||
     transformedState.screenshots.length > 0
@@ -305,8 +290,8 @@ function render(packageName) {
       screenshotsEl,
       screenshotsAndVideos(
         transformedState.screenshot_urls,
-        transformedState.video_urls,
-      ),
+        transformedState.video_urls
+      )
     );
     hideMap.screenshots(screenshotsEl).classList.remove("u-hide");
     terminateScreenshots("#js-snap-screenshots");
@@ -322,10 +307,10 @@ function render(packageName) {
   const metricsEl = document.querySelector(`[data-live="public_metrics_live"]`);
   if (metricsEl) {
     const mapEl = metricsEl.querySelector(
-      `[data-live="installed_base_by_country_percent"]`,
+      `[data-live="installed_base_by_country_percent"]`
     );
     const distroEl = metricsEl.querySelector(
-      `[data-live="weekly_installed_base_by_operating_system_normalized"]`,
+      `[data-live="weekly_installed_base_by_operating_system_normalized"]`
     );
 
     if (transformedState.public_metrics_enabled) {
@@ -337,7 +322,7 @@ function render(packageName) {
     if (mapEl) {
       if (
         transformedState.public_metrics_blacklist.indexOf(
-          "installed_base_by_country_percent",
+          "installed_base_by_country_percent"
         ) > -1
       ) {
         mapEl.classList.add("u-hide");
@@ -349,7 +334,7 @@ function render(packageName) {
     if (distroEl) {
       if (
         transformedState.public_metrics_blacklist.indexOf(
-          "weekly_installed_base_by_operating_system_normalized",
+          "weekly_installed_base_by_operating_system_normalized"
         ) > -1
       ) {
         distroEl.classList.add("u-hide");
@@ -361,21 +346,28 @@ function render(packageName) {
 
   // Remove the notification that you can edit the snap
   const snapOwnerNotification = document.querySelector(
-    ".js-snap-owner-notification",
+    ".js-snap-owner-notification"
   );
   if (snapOwnerNotification) {
     snapOwnerNotification.classList.add("u-hide");
   }
 }
 
-function lostConnection(packageName, disableButtons) {
-  const previewMessageEl = document.querySelector("#preview-message");
+function lostConnection(disableButtons: any) {
+  const previewMessageEl = document.querySelector(
+    "#preview-message"
+  ) as HTMLElement;
   previewMessageEl.innerHTML = `<i class="p-icon--error"></i> This is taking longer then usual. You can click "Edit" to return to the form.`;
   disableButtons();
 }
 
-function establishedConnection(packageName, enableButtons) {
-  const previewMessageEl = document.querySelector("#preview-message");
+function establishedConnection(
+  packageName: any,
+  enableButtons: { (): void; (): void; (): void }
+) {
+  const previewMessageEl = document.querySelector(
+    "#preview-message"
+  ) as HTMLElement;
   previewMessageEl.innerHTML = `You are previewing the listing page for ${packageName}`;
   enableButtons();
 }
@@ -384,15 +376,17 @@ function establishedConnection(packageName, enableButtons) {
  * Initial render and storage change listener
  * @param packageName
  */
-function preview(packageName) {
-  let initialState = JSON.parse(
-    window.localStorage.getItem(`${packageName}-initial`),
+function preview(packageName: string) {
+  let packageNameInitial = window.localStorage.getItem(
+    `${packageName}-initial`
   );
-  let editButton;
-  let revertButton;
-  let saveButton;
+  let initialState =
+    packageNameInitial !== null ? JSON.parse(packageNameInitial) : "";
+  let editButton: Element;
+  let revertButton: Element;
+  let saveButton: Element;
 
-  let responseTimer;
+  let responseTimer: string | number | NodeJS.Timeout | undefined;
   let timedOut = false;
   const RESPONSE_TIMEOUT = 30000; // 30seconds
 
@@ -442,7 +436,7 @@ function preview(packageName) {
       // Slight delay to ensure the state has fully updated
       // There was an issue with images when it was immediate.
       setTimeout(() => {
-        render(packageName, initialState, disableButtons, enableButtons);
+        render(packageName);
 
         if (timedOut === true) {
           establishedConnection(packageName, enableButtons);
@@ -459,7 +453,9 @@ function preview(packageName) {
       resetButtons();
 
       // We've saved or reset the listing page form - the initialState might have changed
-      initialState = JSON.parse(e.newValue);
+      if (e.newValue) {
+        initialState = JSON.parse(e.newValue);
+      }
       if (timedOut === true) {
         establishedConnection(packageName, enableButtons);
         timedOut = false;
@@ -478,13 +474,13 @@ function preview(packageName) {
   }, 500);
 
   // Init the toolbar
-  editButton = document.querySelector(".js-edit");
-  revertButton = document.querySelector(".js-revert");
-  saveButton = document.querySelector(".js-save");
+  editButton = document.querySelector(".js-edit") as HTMLElement;
+  revertButton = document.querySelector(".js-revert") as HTMLElement;
+  saveButton = document.querySelector(".js-save") as HTMLElement;
 
   const timeoutTimer = () => {
     responseTimer = window.setTimeout(() => {
-      lostConnection(packageName, disableButtons);
+      lostConnection(disableButtons);
       timedOut = true;
     }, RESPONSE_TIMEOUT);
   };

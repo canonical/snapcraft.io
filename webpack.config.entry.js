@@ -2,7 +2,7 @@ module.exports = {
   "cookie-policy": "./static/js/base/cookie-policy.js",
   "global-nav": "./static/js/base/global-nav.js",
   base: "./static/js/base/base.js",
-  release: "./static/js/publisher/release.js",
+  release: "./static/js/publisher/release.tsx",
   about: "./static/js/public/about/index.js",
   "featured-snaps": "./static/js/public/featured-snaps.ts",
   modal: "./static/js/public/modal.js",

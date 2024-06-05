@@ -8,4 +8,6 @@ type DataLayerEvent = {
 
 declare interface Window {
   dataLayer: Array<DataLayerEvent>;
+  chrome: any;
+  __REDUX_DEVTOOLS_EXTENSION_COMPOSE__: any;
 }
