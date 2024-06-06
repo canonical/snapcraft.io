@@ -1,9 +1,15 @@
 import { initEmbeddedCardPicker } from "../../publisher/publicise";
 
-const showEl = (el) => el.classList.remove("u-hide");
-const hideEl = (el) => el.classList.add("u-hide");
+const showEl = (el: { classList: { remove: (arg0: string) => any } }) =>
+  el.classList.remove("u-hide");
+const hideEl = (el: { classList: { add: (arg0: string) => any } }) =>
+  el.classList.add("u-hide");
 
-function toggleModal(modal, show, initCallback) {
+function toggleModal(
+  modal: HTMLElement,
+  show?: boolean | undefined,
+  initCallback?: { (): void; (): void } | undefined
+) {
   if (typeof show === "undefined") {
     show = modal.classList.contains("u-hide");
   }
@@ -20,10 +26,14 @@ function toggleModal(modal, show, initCallback) {
   }
 }
 
-export default function initEmbeddedCardModal(snapName) {
-  const toggle = document.querySelector(".js-embedded-card-toggle");
-  const modal = document.querySelector("#embedded-card-modal");
-  const dialog = modal.querySelector("#embedded-card-modal-dialog");
+export default function initEmbeddedCardModal(snapName: any) {
+  const toggle = document.querySelector(
+    ".js-embedded-card-toggle"
+  ) as HTMLElement;
+  const modal = document.querySelector("#embedded-card-modal") as HTMLElement;
+  const dialog = modal.querySelector(
+    "#embedded-card-modal-dialog"
+  ) as HTMLElement;
   const previewFrame = modal.querySelector("#embedded-card-frame");
   const codeElement = modal.querySelector("#snippet-card-html");
   const buttonRadios = modal.querySelectorAll("input[name=store-button]");
@@ -57,7 +67,7 @@ export default function initEmbeddedCardModal(snapName) {
   });
 
   modal.addEventListener("click", (event) => {
-    const target = event.target;
+    const target = event.target as HTMLElement;
 
     if (target.closest(".js-modal-close") || target === modal) {
       toggleModal(modal);
