@@ -1,4 +1,4 @@
-function toggleModal(modal) {
+function toggleModal(modal: HTMLElement) {
   if (modal && modal.classList.contains("p-modal")) {
     if (modal.style.display === "none") {
       modal.style.display = "flex";
@@ -12,9 +12,9 @@ function toggleModal(modal) {
 
 function init() {
   document.addEventListener("click", (e) => {
-    const target = e.target;
-    const modalId = target.getAttribute("aria-controls");
-    const modal = document.getElementById(modalId);
+    const target = e.target as HTMLElement;
+    const modalId = target.getAttribute("aria-controls") as string;
+    const modal = document.getElementById(modalId) as HTMLElement;
 
     if (Object.keys(target.dataset).includes("jsToggleModal")) {
       toggleModal(modal);

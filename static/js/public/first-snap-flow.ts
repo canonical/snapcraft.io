@@ -4,11 +4,11 @@ import "whatwg-fetch";
 
 import { toggleAccordion } from "./accordion";
 
-function install(language, fsfFlow) {
+function install(language: any, fsfFlow: any) {
   const osPickers = Array.from(document.querySelectorAll(".js-os-select"));
   const osWrappers = Array.from(document.querySelectorAll(".js-os-wrapper"));
 
-  function select(selectedOs) {
+  function select(selectedOs: string) {
     if (osWrappers) {
       osWrappers.forEach(function (wrapper) {
         wrapper.classList.add("u-hide");
@@ -20,7 +20,9 @@ function install(language, fsfFlow) {
     }
 
     if (!document.querySelector(".js-linux-manual")) {
-      const paginationBtn = document.querySelector(`#js-pagination-next`);
+      const paginationBtn = document.querySelector(
+        `#js-pagination-next`
+      ) as HTMLLinkElement;
       if (paginationBtn) {
         paginationBtn.classList.remove("is-disabled");
         paginationBtn.href = `/${fsfFlow}/${language}/${selectedOs}/package`;
@@ -34,13 +36,14 @@ function install(language, fsfFlow) {
     const isLinux = !!userAgent.match(/(Linux)|(X11)/);
     const userOS = isMac ? "macos" : isLinux ? "linux" : null;
 
-    osPickers.forEach(function (os) {
+    osPickers.forEach(function (os: any) {
       if (os.dataset.os === userOS) {
         os.classList.add("is-selected");
       }
 
-      os.addEventListener("click", function (e) {
-        const osSelect = e.target.closest(".js-os-select");
+      os.addEventListener("click", function (e: Event) {
+        const target = e.target as HTMLElement;
+        const osSelect = target.closest(".js-os-select") as HTMLElement;
         if (!osSelect) {
           return;
         }
@@ -49,7 +52,9 @@ function install(language, fsfFlow) {
           picker.classList.remove("is-selected");
         });
         osSelect.classList.add("is-selected");
-        select(osSelect.dataset.os);
+        if (osSelect.dataset && osSelect.dataset.os) {
+          select(osSelect.dataset.os);
+        }
       });
     });
 
@@ -58,13 +63,14 @@ function install(language, fsfFlow) {
     }
   }
 
-  function onChange(e) {
-    const type = e.target.value;
+  function onChange(e: Event) {
+    const target = e.target as HTMLInputElement;
+    const type = target.value;
     const os = type.split("-")[0];
-    const selected = document.querySelector(".js-" + type);
+    const selected = document.querySelector(".js-" + type) as HTMLElement;
     const unselected = document.querySelector(
-      "[class*='js-" + os + "-']:not(.js-" + type + ")",
-    );
+      "[class*='js-" + os + "-']:not(.js-" + type + ")"
+    ) as HTMLElement;
 
     if (!selected && !unselected) {
       return;
@@ -84,7 +90,9 @@ function install(language, fsfFlow) {
     selected.classList.remove("u-hide");
     unselected.classList.add("u-hide");
 
-    const paginationBtn = document.querySelector(`#js-pagination-next`);
+    const paginationBtn = document.querySelector(
+      `#js-pagination-next`
+    ) as HTMLLinkElement;
     if (paginationBtn) {
       paginationBtn.classList.remove("is-disabled");
       paginationBtn.href = `/${fsfFlow}/${language}/${type}/package`;
@@ -93,12 +101,14 @@ function install(language, fsfFlow) {
 
   document.addEventListener("change", onChange);
 
+  // @ts-ignore
   if (typeof ClipboardJS !== "undefined") {
+    // @ts-ignore
     new ClipboardJS(".js-clipboard-copy");
   }
 }
 
-function getSnapCount(cb) {
+function getSnapCount(cb: { (data: any): void; (arg0: any): void }) {
   fetch("/snaps/api/snap-count")
     .then((r) => r.json())
     .then((data) => {
@@ -106,9 +116,9 @@ function getSnapCount(cb) {
     });
 }
 
-function getArrayDiff(arr1, arr2) {
-  let newArr;
-  let oldArr;
+function getArrayDiff(arr1: string | any[], arr2: string | any[]) {
+  let newArr: any;
+  let oldArr: any;
   if (arr1.length === arr2.length) {
     return false;
   }
@@ -121,9 +131,9 @@ function getArrayDiff(arr1, arr2) {
     oldArr = arr1;
   }
 
-  let newValues = [];
+  let newValues: Array<any> = [];
 
-  newArr.forEach((item) => {
+  newArr.forEach((item: string) => {
     if (!oldArr.includes(item)) {
       newValues.push(item);
     }
@@ -133,12 +143,12 @@ function getArrayDiff(arr1, arr2) {
 }
 
 function push() {
-  let initialCount = null;
-  let initialSnaps = [];
-  let timer;
+  let initialCount: null = null;
+  let initialSnaps: string | any[] = [];
+  let timer: string | number | NodeJS.Timeout | undefined;
   let ready = false;
 
-  function getCount(cb) {
+  const getCount = (cb: { (snapName: any): void; (arg0: any): void }) => {
     clearTimeout(timer);
 
     getSnapCount((data) => {
@@ -148,28 +158,35 @@ function push() {
       } else if (data.count !== initialCount) {
         const newSnaps = getArrayDiff(initialSnaps, data.snaps);
 
+        // @ts-ignore
         if (newSnaps.length > 0 && typeof ga !== "undefined") {
+          // @ts-ignore
           ga("gtm1.send", {
             hitType: "event",
             eventCategory: "First Snap Flow",
             eventAction: "Snap pushed",
+            // @ts-ignore
             eventLabel: `${newSnaps.join(",")}`,
           });
         }
 
         ready = true;
+        // @ts-ignore
         cb(newSnaps[0]);
       }
     });
 
     if (!ready) {
+      // @ts-ignore
       timer = setTimeout(getCount.bind(this, cb), 5000);
     }
-  }
+  };
 
   getCount((snapName) => {
     // Enable "Continue" button
-    const continueBtn = document.querySelector(".js-continue");
+    const continueBtn = document.querySelector(
+      ".js-continue"
+    ) as HTMLLinkElement;
     if (continueBtn) {
       continueBtn.href = `/${snapName}/releases`;
       continueBtn.classList.add("p-button--positive");
@@ -178,7 +195,9 @@ function push() {
       continueBtn.innerHTML = "Continue";
     }
     // Update "Go to listing" button for a published snap
-    const paginationBtn = document.querySelector("#js-pagination-next");
+    const paginationBtn = document.querySelector(
+      "#js-pagination-next"
+    ) as HTMLLinkElement;
     if (paginationBtn) {
       paginationBtn.href = `/${snapName}/listing?from=first-snap`;
       paginationBtn.classList.remove("is-disabled");
@@ -186,25 +205,54 @@ function push() {
   });
 }
 
-function updateNotification(notificationEl, className, message) {
+function updateNotification(
+  notificationEl: {
+    className: any;
+    querySelector: (arg0: string) => { (): any; new (): any; innerHTML: any };
+  },
+  className: string,
+  message: any
+) {
   notificationEl.className = className;
   notificationEl.querySelector(".p-notification__message").innerHTML = message;
 }
 
-function successNotification(notificationEl, message) {
+function successNotification(
+  notificationEl: {
+    className: any;
+    querySelector: (arg0: string) => { (): any; new (): any; innerHTML: any };
+  },
+  message: any
+) {
   updateNotification(notificationEl, "p-notification--positive", message);
 }
 
-function errorNotification(notificationEl, message) {
+function errorNotification(
+  notificationEl: {
+    className: any;
+    querySelector: (arg0: string) => { (): any; new (): any; innerHTML: any };
+  },
+  message: string
+) {
   updateNotification(notificationEl, "p-notification--negative", message);
 }
 
-function validateSnapName(name) {
+function validateSnapName(name: string) {
   return /^[a-z0-9-]*[a-z][a-z0-9-]*$/.test(name) && !/^-|-$/.test(name);
 }
 
-function initChooseName(formEl, language) {
-  const snapNameInput = formEl.querySelector("[name=snap-name]");
+function initChooseName(
+  formEl: {
+    querySelector: (arg0: string) => {
+      (): any;
+      new (): any;
+      disabled: boolean;
+    };
+    addEventListener: (arg0: string, arg1: (event: any) => void) => void;
+  },
+  language: any
+) {
+  const snapNameInput = formEl.querySelector("[name=snap-name]") as any;
 
   snapNameInput.addEventListener("keyup", () => {
     const isValid = validateSnapName(snapNameInput.value);
@@ -227,8 +275,14 @@ function initChooseName(formEl, language) {
   });
 }
 
-function initRegisterName(formEl, notificationEl, successEl) {
-  const snapNameInput = formEl.querySelector("[name=snap-name]");
+function initRegisterName(
+  formEl: HTMLFormElement,
+  notificationEl: HTMLElement,
+  successEl: { classList: { remove: (arg0: string) => void } }
+) {
+  const snapNameInput = formEl.querySelector(
+    "[name=snap-name]"
+  ) as HTMLInputElement;
 
   snapNameInput.addEventListener("keyup", () => {
     if (notificationEl.classList.contains("u-hide")) {
@@ -237,21 +291,26 @@ function initRegisterName(formEl, notificationEl, successEl) {
 
     const isValid = validateSnapName(snapNameInput.value);
 
-    if (!isValid) {
-      snapNameInput.parentNode.classList.add("is-error");
-      formEl.querySelector("button").disabled = true;
-    } else {
-      snapNameInput.parentNode.classList.remove("is-error");
-      formEl.querySelector("button").disabled = false;
+    const inputParent = snapNameInput.parentNode as HTMLElement;
+    const formButton = formEl.querySelector("button") as HTMLButtonElement;
+
+    if (inputParent) {
+      if (!isValid) {
+        inputParent.classList.add("is-error");
+        formButton.disabled = true;
+      } else {
+        inputParent.classList.remove("is-error");
+        formButton.disabled = false;
+      }
     }
   });
 
-  function showSuccess(message) {
+  function showSuccess(message: string | undefined) {
     successEl.classList.remove("u-hide");
     successNotification(notificationEl, message);
   }
 
-  function showError(message) {
+  function showError(message: string) {
     errorNotification(notificationEl, message);
   }
 
@@ -259,13 +318,19 @@ function initRegisterName(formEl, notificationEl, successEl) {
     event.preventDefault();
     let formData = new FormData(formEl);
     const submitButton = formEl.querySelector(
-      "[data-js='js-snap-name-register']",
-    );
+      "[data-js='js-snap-name-register']"
+    ) as HTMLButtonElement;
 
-    const currentPanel = formEl.closest(".p-accordion__group");
-    const currentToggle = currentPanel.querySelector(".p-accordion__tab");
-    const nextPanel = currentPanel.nextElementSibling;
-    const nextToggle = nextPanel.querySelector(".p-accordion__tab");
+    const currentPanel = formEl.closest(
+      ".p-accordion__group"
+    ) as HTMLFormElement;
+    const currentToggle = currentPanel.querySelector(
+      ".p-accordion__tab"
+    ) as HTMLElement;
+    const nextPanel = currentPanel.nextElementSibling as HTMLElement;
+    const nextToggle = nextPanel.querySelector(
+      ".p-accordion__tab"
+    ) as HTMLElement;
 
     const enableButton = () => {
       if (submitButton.disabled) {
@@ -276,8 +341,13 @@ function initRegisterName(formEl, notificationEl, successEl) {
 
     // Enable "Go to listing" button for an unpublished app
     const enableGoToListingButton = () => {
-      const snapName = formEl.querySelector("[name=snap-name]").value;
-      const paginationBtn = document.querySelector("#js-pagination-next");
+      const formField = formEl.querySelector(
+        "[name=snap-name]"
+      ) as HTMLInputElement;
+      const snapName = formField.value;
+      const paginationBtn = document.querySelector(
+        "#js-pagination-next"
+      ) as HTMLLinkElement;
       if (paginationBtn) {
         paginationBtn.href = `/${snapName}/listing?from=first-snap-unpublished`;
         paginationBtn.classList.remove("is-disabled");
@@ -326,7 +396,7 @@ function initRegisterName(formEl, notificationEl, successEl) {
         }
         errorNotification(
           notificationEl,
-          "There was some problem registering name. Please try again.",
+          "There was some problem registering name. Please try again."
         );
       });
   });

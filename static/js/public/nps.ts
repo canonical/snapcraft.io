@@ -3,14 +3,18 @@ const MARKETO_FORM_ID = 3308;
 function nps() {
   const MktoForms2 = window.MktoForms2 || null;
 
-  const toggle = document.querySelector(".js-nps-comment-toggle");
+  const toggle = document.querySelector(
+    ".js-nps-comment-toggle"
+  ) as HTMLElement;
   if (!MktoForms2) {
     toggle.classList.add("u-hide");
     return;
   }
-  const commentHolder = document.querySelector(".js-nps-comment");
-  const form = commentHolder.querySelector("form");
-  const button = form.querySelector("button");
+  const commentHolder = document.querySelector(
+    ".js-nps-comment"
+  ) as HTMLElement;
+  const form = commentHolder.querySelector("form") as HTMLFormElement;
+  const button = form.querySelector("button") as HTMLButtonElement;
   const fakeForm = document.createElement("form");
   fakeForm.setAttribute("id", `mktoForm_${MARKETO_FORM_ID}`);
   fakeForm.setAttribute("class", "u-hide");
@@ -33,15 +37,16 @@ function nps() {
     "//app-sjg.marketo.com",
     "066-EOV-335",
     MARKETO_FORM_ID,
-    (mktoForm) => {
+    (mktoForm: HTMLFormElement) => {
       mktoForm.onSuccess(() => {
         commentHolder.classList.add("u-hide");
         toggle.classList.add("u-hide");
         return false;
       });
       form.addEventListener("change", (e) => {
-        const name = e.target.name;
-        const value = e.target.value;
+        const target = e.target as HTMLInputElement;
+        const name = target.name;
+        const value = target.value;
 
         mktoForm.setValues({
           [name]: value,
@@ -52,7 +57,7 @@ function nps() {
         button.innerHTML = `<i class="p-icon--spinner u-animation--spin"></i>`;
         mktoForm.submit();
       });
-    },
+    }
   );
 }
 
