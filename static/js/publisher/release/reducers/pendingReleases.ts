@@ -142,7 +142,7 @@ function updateProgressiveRelease(
   return nextState;
 }
 
-function pauseProgressiveRelease(state: any, payload: any) {
+function pauseProgressiveRelease(state: any) {
   const nextState = jsonClone(state);
 
   Object.values(nextState).forEach((pendingRelease: any) => {
@@ -156,7 +156,7 @@ function pauseProgressiveRelease(state: any, payload: any) {
   return nextState;
 }
 
-function resumeProgressiveRelease(state: any, payload: any) {
+function resumeProgressiveRelease(state: any) {
   const nextState = jsonClone(state);
 
   Object.values(nextState).forEach((pendingRelease: any) => {
@@ -242,9 +242,9 @@ export default function pendingReleases(
     case UPDATE_PROGRESSIVE_RELEASE_PERCENTAGE:
       return updateProgressiveRelease(state, action.payload);
     case PAUSE_PROGRESSIVE_RELEASE:
-      return pauseProgressiveRelease(state, action.payload);
+      return pauseProgressiveRelease(state);
     case RESUME_PROGRESSIVE_RELEASE:
-      return resumeProgressiveRelease(state, action.payload);
+      return resumeProgressiveRelease(state);
     case CANCEL_PROGRESSIVE_RELEASE:
       return cancelProgressiveRelease(state, action.payload.previousRevision);
     default:

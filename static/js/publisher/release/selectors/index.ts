@@ -809,7 +809,7 @@ export function getReleases(
   channel: string
 ) {
   return releases.filter(
-    (release) =>
+    (release: any) =>
       archs.includes(release.architecture) && release.channel === channel
   );
 }
