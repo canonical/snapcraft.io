@@ -45,7 +45,7 @@ module.exports = [
     ],
   },
   {
-    test: require.resolve(__dirname + "/static/js/public/modal.js"),
+    test: require.resolve(__dirname + "/static/js/public/modal.ts"),
     use: ["expose-loader?exposes=snapcraft.public.modal", "babel-loader"],
   },
   {
