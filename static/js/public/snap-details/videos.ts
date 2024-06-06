@@ -1,8 +1,11 @@
 function vimeo() {
   const vimeoPlayerScript = document.createElement("script");
   vimeoPlayerScript.src = "https://player.vimeo.com/api/player.js";
-  const firstScript = document.getElementsByTagName("script")[0];
-  firstScript.parentNode.insertBefore(vimeoPlayerScript, firstScript);
+  const firstScript = document.getElementsByTagName("script")[0] as HTMLElement;
+
+  if (firstScript.parentNode) {
+    firstScript.parentNode.insertBefore(vimeoPlayerScript, firstScript);
+  }
 
   const frame = document.getElementById("vimeoplayer");
 
@@ -25,7 +28,10 @@ function vimeo() {
   checkVimeo();
 }
 
-function asciinema(holderEl) {
+function asciinema(
+  this: any,
+  holderEl: { querySelector: (arg0: string) => any }
+) {
   const asciinemaPlayer = holderEl.querySelector("iframe");
 
   if (!asciinemaPlayer) {
@@ -34,7 +40,7 @@ function asciinema(holderEl) {
   }
 }
 
-function videos(holderSelector) {
+function videos(holderSelector: any) {
   const holderEl = document.querySelector(holderSelector);
 
   if (!holderEl) {

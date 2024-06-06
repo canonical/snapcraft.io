@@ -11,4 +11,5 @@ declare interface Window {
   chrome: any;
   __REDUX_DEVTOOLS_EXTENSION_COMPOSE__: any;
   MktoForms2: any;
+  Vimeo: any;
 }

@@ -2,7 +2,36 @@ import SnapEvents from "../../libs/events";
 import { triggerEvent } from "../../base/ga";
 
 class ChannelMap {
-  constructor(selectorString, packageName, channelMapData, defaultTrack) {
+  RISK_ORDER: string[];
+  packageName: any;
+  currentTab: string;
+  defaultTrack: any;
+  selectorString: any;
+  channelMapEl: any;
+  channelOverlayEl: any;
+  channelMapData: any;
+  events: SnapEvents;
+  INSTALL_TEMPLATE: any;
+  CHANNEL_ROW_TEMPLATE: string | undefined;
+  arch: string | undefined;
+  openButton:
+    | {
+        classList: any;
+        getBoundingClientRect(): unknown;
+        dataset: {
+          controls: string;
+        };
+        innerText: string;
+      }
+    | undefined
+    | null;
+  openScreenName: string | undefined;
+  constructor(
+    selectorString: any,
+    packageName: any,
+    channelMapData: any,
+    defaultTrack: any
+  ) {
     this.RISK_ORDER = ["stable", "candidate", "beta", "edge"];
     this.packageName = packageName;
     this.currentTab = "overview";
@@ -26,11 +55,11 @@ class ChannelMap {
     this.bindEvents();
   }
 
-  sortRows(rows) {
+  sortRows(rows: any[]) {
     // split tracks into strings and numbers
-    let numberTracks = [];
-    let stringTracks = [];
-    let latestTracks = [];
+    let numberTracks: Array<any> = [];
+    let stringTracks: Array<any> = [];
+    let latestTracks: any[] = [];
     rows.forEach((row) => {
       // numbers are defined by any string starting any of the following patterns:
       //   just a number – 1,2,3,4,
@@ -67,24 +96,25 @@ class ChannelMap {
 
   initOtherVersions() {
     let installTemplateEl = document.querySelector(
-      '[data-js="install-window"]',
+      '[data-js="install-window"]'
     );
     if (!installTemplateEl) {
       installTemplateEl = document.getElementById("install-window-template");
     }
     let channelRowTemplateEl = document.querySelector(
-      '[data-js="channel-map-row"]',
+      '[data-js="channel-map-row"]'
     );
     if (!channelRowTemplateEl) {
       channelRowTemplateEl = document.getElementById(
-        "channel-map-row-template",
+        "channel-map-row-template"
       );
     }
 
     if (!installTemplateEl || !channelRowTemplateEl) {
-      document.querySelector(
-        ".p-snap-install-buttons__versions",
-      ).style.display = "none";
+      const buttonsVersions = document.querySelector(
+        ".p-snap-install-buttons__versions"
+      ) as HTMLElement;
+      buttonsVersions.style.display = "none";
       return false;
     }
 
@@ -95,7 +125,9 @@ class ChannelMap {
     const architectures = Object.keys(this.channelMapData);
 
     // initialize architecture select
-    const archSelect = document.querySelector('[data-js="arch-select"]');
+    const archSelect = document.querySelector(
+      '[data-js="arch-select"]'
+    ) as HTMLElement;
 
     archSelect.innerHTML = architectures
       .map((arch) => `<option value="${arch}">${arch}</option>`)
@@ -107,7 +139,10 @@ class ChannelMap {
   bindEvents() {
     this.events.addEvents({
       click: {
-        '[data-js="open-channel-map"]': (event, target) => {
+        '[data-js="open-channel-map"]': (
+          event: { preventDefault: () => void },
+          target: any
+        ) => {
           event.preventDefault();
 
           // If the button has already been clicked, close the channel map
@@ -121,56 +156,75 @@ class ChannelMap {
               this.openScreenName === "channel-map-install" ? "cta-0" : "cta-1",
               window.location.href,
               target.dataset.controls,
-              target.innerText,
+              target.innerText
             );
           }
         },
 
-        '[data-js="close-channel-map"]': (event) => {
+        '[data-js="close-channel-map"]': (event: {
+          preventDefault: () => void;
+        }) => {
           event.preventDefault();
 
           this.closeChannelMap();
           this.openButton = null;
         },
 
-        '[data-js="slide-all-versions"]': (event, target) => {
+        '[data-js="slide-all-versions"]': (
+          event: { preventDefault: () => void },
+          target: any
+        ) => {
           event.preventDefault();
           this.slideToVersions(target);
         },
 
-        '[data-js="switch-tab"]': (event, target) => {
+        '[data-js="switch-tab"]': (
+          event: { preventDefault: () => void },
+          target: any
+        ) => {
           event.preventDefault();
           this.switchTab(target);
         },
 
-        '[data-js="open-desktop"]': (event, target) => {
+        '[data-js="open-desktop"]': (
+          event: { preventDefault: () => void },
+          target: { dataset: { snap: any }; innerText: string }
+        ) => {
           event.preventDefault();
           this.openDesktop(target);
           triggerEvent(
             "cta-1",
             window.location.href,
             `snap://${target.dataset.snap}`,
-            target.innerText,
+            target.innerText
           );
         },
 
-        '[data-js="slide-install-instructions"]': (event, target) => {
+        '[data-js="slide-install-instructions"]': (
+          event: { preventDefault: () => void },
+          target: any
+        ) => {
           event.preventDefault();
           this.slideToInstructions(target);
         },
       },
 
       change: {
-        '[data-js="arch-select"]': (event, target) => {
+        '[data-js="arch-select"]': (
+          _event: any,
+          target: { value: string | number }
+        ) => {
           this.prepareTable(this.channelMapData[target.value]);
         },
       },
     });
 
-    this.events.addEvent("keyup", window, (event) => {
+    // @ts-ignore
+    this.events.addEvent("keyup", window, (event: any) => {
       this._closeOnEscape.call(this, event);
     });
 
+    // @ts-ignore
     this.events.addEvent("resize", window, () => {
       this.positionChannelMap.bind(this);
     });
@@ -181,7 +235,7 @@ class ChannelMap {
       return;
     }
     const windowWidth = document.body.scrollWidth;
-    const buttonRect = this.openButton.getBoundingClientRect();
+    const buttonRect = this.openButton.getBoundingClientRect() as any;
     const channelMapPosition = [
       windowWidth - buttonRect.right,
       buttonRect.y + buttonRect.height + 16 + window.scrollY,
@@ -191,22 +245,24 @@ class ChannelMap {
     this.channelMapEl.style.top = `${channelMapPosition[1]}px`;
   }
 
-  openChannelMap(openButton) {
+  openChannelMap(openButton: any) {
     // Hide everything first, so we can click between
     this.closeChannelMap();
 
     this.openButton = openButton;
 
+    // @ts-ignore
     this.openButton.classList.add("is-active");
 
     this.positionChannelMap();
 
     // open screen based on button click (or install screen by default)
     this.openScreenName =
+      // @ts-ignore
       this.openButton.getAttribute("aria-controls") || "channel-map-install";
 
     const openScreen = this.channelMapEl.querySelector(
-      `#${this.openScreenName}`,
+      `#${this.openScreenName}`
     );
 
     // select default screen before opening
@@ -214,6 +270,7 @@ class ChannelMap {
 
     // If we're going to the 'other' screen, prepare the tables
     if (openButton.dataset.controls === "channel-map-versions") {
+      // @ts-ignore
       this.prepareTable(this.channelMapData[this.arch]);
     }
 
@@ -236,7 +293,7 @@ class ChannelMap {
     }
   }
 
-  _closeOnEscape(event) {
+  _closeOnEscape(event: { key: string }) {
     if (
       event.key === "Escape" &&
       !this.channelMapEl.classList.contains("is-closed")
@@ -245,7 +302,7 @@ class ChannelMap {
     }
   }
 
-  _closeOnClick(event) {
+  _closeOnClick(event: { target: { closest: (arg0: any) => any } }) {
     // when channel map is not closed and clicking outside of it, close it
     if (
       !this.channelMapEl.classList.contains("is-closed") &&
@@ -255,11 +312,13 @@ class ChannelMap {
     }
   }
 
-  openDesktop(clickEl) {
+  openDesktop(clickEl: { dataset: any; innerText?: string }) {
     const name = clickEl.dataset.snap.trim();
-    let iframe = document.querySelector(".js-snap-open-frame");
+    let iframe = document.querySelector(
+      ".js-snap-open-frame"
+    ) as HTMLIFrameElement;
 
-    if (iframe) {
+    if (iframe && iframe.parentNode) {
       iframe.parentNode.removeChild(iframe);
     }
 
@@ -272,7 +331,12 @@ class ChannelMap {
     document.body.appendChild(iframe);
   }
 
-  selectScreen(screenEl) {
+  selectScreen(screenEl: {
+    getAttribute: (arg0: string) => any;
+    parentNode: { querySelector: (arg0: string) => any };
+    classList: { add: (arg0: string) => void };
+    setAttribute: (arg0: string, arg1: string) => void;
+  }) {
     const selected = screenEl.getAttribute("aria-selected");
     const currentlySelected = screenEl.parentNode.querySelector(".is-open");
 
@@ -286,17 +350,20 @@ class ChannelMap {
     }
   }
 
-  slideToVersions(clickEl) {
+  slideToVersions(clickEl: { closest: (arg0: string) => any }) {
     const slides = clickEl.closest(".p-channel-map__slides");
     slides.classList.add("show-left");
     slides.classList.remove("show-right");
   }
 
-  slideToInstructions(clickEl) {
+  slideToInstructions(clickEl: {
+    dataset: { channel: any; confinement: any };
+    closest: (arg0: string) => any;
+  }) {
     // Add content to the right slide area
     this.writeInstallInstructions(
       clickEl.dataset.channel,
-      clickEl.dataset.confinement,
+      clickEl.dataset.confinement
     );
 
     const slides = clickEl.closest(".p-channel-map__slides");
@@ -304,7 +371,7 @@ class ChannelMap {
     slides.classList.remove("show-left");
   }
 
-  writeInstallInstructions(channel, confinement) {
+  writeInstallInstructions(channel: string, confinement: string) {
     let paramString = "";
 
     // By default no params are required
@@ -347,14 +414,14 @@ class ChannelMap {
     }
 
     const holder = document.querySelector(
-      '[data-js="channel-map-install-details"]',
-    );
+      '[data-js="channel-map-install-details"]'
+    ) as HTMLElement;
 
     holder.innerHTML = newDiv.innerHTML;
   }
 
-  writeTable(el, data) {
-    let cache;
+  writeTable(el: { innerHTML: any }, data: any[]) {
+    let cache: any;
     const tbody = data.map((row, i) => {
       const isSameTrack = cache && row[0] === cache;
       let rowClass = [];
@@ -367,11 +434,15 @@ class ChannelMap {
         rowClass.push("no-border");
       }
 
-      let _row = this.CHANNEL_ROW_TEMPLATE.split("${rowClass}").join(
-        rowClass.join(" "),
-      );
+      let _row: string = "";
 
-      row.forEach((val, index) => {
+      if (this.CHANNEL_ROW_TEMPLATE) {
+        _row = this.CHANNEL_ROW_TEMPLATE.split("${rowClass}").join(
+          rowClass.join(" ")
+        );
+      }
+
+      row.forEach((val: string | undefined, index: string) => {
         _row = _row.split("${row[" + index + "]}").join(val);
       });
 
@@ -388,9 +459,9 @@ class ChannelMap {
    * @param {Object} archData
    * @param {Array.<{channel: string, confinement: string, 'released-at': string, risk: string, size: number, version: string}>} archData.track
    */
-  prepareTable(archData) {
+  prepareTable(archData: { [x: string]: any[] }) {
     const tbodyEl = this.channelMapEl.querySelector(
-      '[data-js="channel-map-table"]',
+      '[data-js="channel-map-table"]'
     );
 
     // If we're on the overview tab we only want to see latest/[all risks]
@@ -405,7 +476,7 @@ class ChannelMap {
       numberOfTracks += archData[arch].length;
     });
 
-    let rows = [];
+    let rows: Array<any> = [];
 
     // If we're not filtering, pass through all the data....
     let trackList = filtered ? {} : archData;
@@ -457,14 +528,24 @@ class ChannelMap {
   }
 
   hideTabs() {
-    const tabs = document.querySelector('[data-js="channel-map-tabs"]');
+    const tabs = document.querySelector(
+      '[data-js="channel-map-tabs"]'
+    ) as HTMLElement;
 
     if (tabs) {
       tabs.style.display = "none";
     }
   }
 
-  switchTab(clickEl) {
+  switchTab(clickEl: {
+    closest: (arg0: string) => {
+      (): any;
+      new (): any;
+      querySelector: { (arg0: string): any; new (): any };
+    };
+    dataset: { tab: string };
+    setAttribute: (arg0: string, arg1: string) => void;
+  }) {
     const selected = clickEl
       .closest(".p-tabs")
       .querySelector('[aria-selected="true"]');
@@ -472,15 +553,17 @@ class ChannelMap {
     selected.removeAttribute("aria-selected");
     clickEl.setAttribute("aria-selected", "true");
 
-    this.prepareTable(this.channelMapData[this.arch]);
+    if (this.arch) {
+      this.prepareTable(this.channelMapData[this.arch]);
+    }
   }
 }
 
 export default function channelMap(
-  el,
-  packageName,
-  channelMapData,
-  defaultTrack,
+  el: any,
+  packageName: any,
+  channelMapData: any,
+  defaultTrack: any
 ) {
   return new ChannelMap(el, packageName, channelMapData, defaultTrack);
 }
