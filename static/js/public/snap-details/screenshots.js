@@ -3,6 +3,7 @@ import Swiper from "swiper";
 import { Navigation } from "swiper/modules";
 import { SCREENSHOTS_CONFIG } from "../../config/swiper.config";
 import iframeSize from "../../libs/iframeSize";
+import debounce from "../../libs/debounce";
 
 Swiper.use([Navigation]);
 
@@ -35,6 +36,11 @@ function initScreenshots(screenshotsId) {
   screenshotsEl.addEventListener("click", clickCallback);
 
   // We need to resize the iframe on window resize
+  window.addEventListener(
+    "resize",
+    debounce(iframeSize.bind(this, ".js-video-slide"), 100),
+  );
+
   iframeSize(".js-video-slide");
 
   const swipeContainer = screenshotsEl.querySelector(".swiper-container");
