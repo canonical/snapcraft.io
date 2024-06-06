@@ -3,7 +3,7 @@
 <html lang="en">
 
 <head>
-    <title>Code coverage report for publisher/tour/tourOverlay.js</title>
+    <title>Code coverage report for publisher/tour/tourOverlay.tsx</title>
     <meta charset="utf-8" />
     <link rel="stylesheet" href="../../prettify.css" />
     <link rel="stylesheet" href="../../base.css" />
@@ -19,7 +19,7 @@
 <body>
 <div class='wrapper'>
     <div class='pad1'>
-        <h1><a href="../../index.html">All files</a> / <a href="index.html">publisher/tour</a> tourOverlay.js</h1>
+        <h1><a href="../../index.html">All files</a> / <a href="index.html">publisher/tour</a> tourOverlay.tsx</h1>
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
@@ -235,7 +235,23 @@
 <a name='L170'></a><a href='#L170'>170</a>
 <a name='L171'></a><a href='#L171'>171</a>
 <a name='L172'></a><a href='#L172'>172</a>
-<a name='L173'></a><a href='#L173'>173</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L173'></a><a href='#L173'>173</a>
+<a name='L174'></a><a href='#L174'>174</a>
+<a name='L175'></a><a href='#L175'>175</a>
+<a name='L176'></a><a href='#L176'>176</a>
+<a name='L177'></a><a href='#L177'>177</a>
+<a name='L178'></a><a href='#L178'>178</a>
+<a name='L179'></a><a href='#L179'>179</a>
+<a name='L180'></a><a href='#L180'>180</a>
+<a name='L181'></a><a href='#L181'>181</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -407,7 +423,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import React, { useState, useRef, useEffect } from "react";
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { useState, useRef, useEffect } from "react";
 import PropTypes from "prop-types";
 &nbsp;
 import debounce from "../../libs/debounce";
@@ -424,10 +440,18 @@ import {
 &nbsp;
 import { animateScrollTo } from "../../public/scroll-to";
 &nbsp;
-export default function TourOverlay({ steps, hideTour, currentStepIndex = 0 }) {
+export default function TourOverlay({
+  steps,
+  hideTour,
+  currentStepIndex = 0,
+}: {
+  steps: any;
+  hideTour: any;
+  currentStepIndex: number;
+}) {
   steps = prepareSteps(steps);
 &nbsp;
-  let setCurrentStepIndex;
+  let setCurrentStepIndex: Function;
   [currentStepIndex, setCurrentStepIndex] = useState(currentStepIndex);
 &nbsp;
   const step = steps[currentStepIndex];
@@ -451,7 +475,7 @@ export default function TourOverlay({ steps, hideTour, currentStepIndex = 0 }) {
             // we scroll relative to top of the screen, but we want to stick to bottom
             // so we need to substract the window height
             mask.bottom - window.innerHeight,
-            -SCROLL_OFFSET_BOTTOM,
+            -SCROLL_OFFSET_BOTTOM
           );
         }
       }
@@ -467,7 +491,7 @@ export default function TourOverlay({ steps, hideTour, currentStepIndex = 0 }) {
         }
       }
     },
-    [currentStepIndex], // refresh effect on step changes, to scroll to correct step
+    [currentStepIndex] // refresh effect on step changes, to scroll to correct step
   );
 &nbsp;
   const overlayEl = useRef(null);
@@ -478,7 +502,7 @@ export default function TourOverlay({ steps, hideTour, currentStepIndex = 0 }) {
   // it is an unusual use of useState to force rerender, but on resize or scroll
   // the state of component doesn't change, it's the position of elements
   // in DOM that changes and component needs to rerender to adapt
-  const [, forceUpdate] = useState();
+  const [, forceUpdate] = useState&lt;any&gt;();
   const rerender = <span class="fstat-no" title="function not covered" >()</span> =&gt; <span class="cstat-no" title="statement not covered" >forceUpdate({});</span>
 &nbsp;
   const [isResizing, setIsResizing] = useState(false);
@@ -494,7 +518,7 @@ export default function TourOverlay({ steps, hideTour, currentStepIndex = 0 }) {
         window.removeEventListener("scroll", afterScroll);
       };
     },
-    [], // don't refresh the effect on every render
+    [] // don't refresh the effect on every render
   );
 &nbsp;
   // rerender after resize (to adjust to new positions of elements)
@@ -518,7 +542,7 @@ export default function TourOverlay({ steps, hideTour, currentStepIndex = 0 }) {
         window.removeEventListener("resize", afterResize);
       };
     },
-    [], // don't refresh the effect on every render
+    [] // don't refresh the effect on every render
   );
 &nbsp;
   const onNextClick = () =&gt;
@@ -540,7 +564,7 @@ export default function TourOverlay({ steps, hideTour, currentStepIndex = 0 }) {
   // treat as 'finished' on last step and as 'skipped' on any other step
   useEffect(
     () =&gt; {
-      const escClick = (event) =&gt; {
+      const escClick = (event: { keyCode: number }) =&gt; {
         <span class="missing-if-branch" title="else path not taken" >E</span>if (event.keyCode === 27) {
           if (currentStepIndex === steps.length - 1) {
             onFinishClick();
@@ -555,7 +579,7 @@ export default function TourOverlay({ steps, hideTour, currentStepIndex = 0 }) {
         window.removeEventListener("keyup", escClick);
       };
     },
-    [currentStepIndex], // refresh effect when step changes, to pass correct step id into skip metrics
+    [currentStepIndex] // refresh effect when step changes, to pass correct step id into skip metrics
   );
 &nbsp;
   return (
@@ -586,7 +610,7 @@ TourOverlay.propTypes = {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2024-06-05T22:06:18.659Z
+                at 2024-06-06T22:06:18.715Z
             </div>
         <script src="../../prettify.js"></script>
         <script>
