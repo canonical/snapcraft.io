@@ -22,8 +22,8 @@ const IS_CHROMIUM =
   typeof window.chrome !== "undefined" &&
   window.navigator.userAgent.indexOf("Edge") === -1; // Edge pretends to have window.chrome
 
-function initFormNotification(formElId, notificationElId) {
-  var form = document.getElementById(formElId);
+function initFormNotification(formElId: string, notificationElId: string) {
+  var form = document.getElementById(formElId) as HTMLFormElement;
 
   form.addEventListener("change", function () {
     var notification = document.getElementById(notificationElId);
@@ -43,21 +43,33 @@ function initFormNotification(formElId, notificationElId) {
   }
 }
 
-function initForm(config, initialState, errors) {
+function initForm(
+  config: {
+    form: string;
+    snapIconHolder: any;
+    formNotification: string;
+    mediaHolder: any;
+    bannerHolder: any;
+    licenseRadioContent: any;
+  },
+  initialState: any,
+  errors: string | any[] | undefined
+) {
   // if there are errors focus first error
   if (errors && errors.length) {
     // find input with error or error notification and scroll it into view
     const errorInput =
-      document.querySelector(".is-error input") ||
-      document.querySelector(".p-notification--negative");
+      (document.querySelector(".is-error input") as HTMLInputElement) ||
+      (document.querySelector(".p-notification--negative") as HTMLInputElement);
 
     if (errorInput) {
       errorInput.focus();
 
       if (errorInput.scrollIntoView) {
-        const stickyHeight = document.querySelector(
-          ".snapcraft-p-sticky",
-        ).scrollHeight;
+        const stickyEl = document.querySelector(
+          ".snapcraft-p-sticky"
+        ) as HTMLElement;
+        const stickyHeight = stickyEl.scrollHeight;
         errorInput.scrollIntoView();
         window.scrollBy(0, -(stickyHeight + 16));
       }
@@ -65,15 +77,19 @@ function initForm(config, initialState, errors) {
   }
 
   // setup form functionality
-  const formEl = document.getElementById(config.form);
-  const submitButton = formEl.querySelector(".js-form-submit");
-  const revertButton = formEl.querySelector(".js-form-revert");
-  const previewButton = formEl.querySelector(".js-listing-preview");
-  const revertURL = revertButton.getAttribute("href");
+  const formEl = document.getElementById(config.form) as any;
+  const submitButton = formEl.querySelector(
+    ".js-form-submit"
+  ) as HTMLButtonElement;
+  const revertButton = formEl.querySelector(".js-form-revert") as HTMLElement;
+  const previewButton = formEl.querySelector(
+    ".js-listing-preview"
+  ) as HTMLElement;
+  const revertURL = revertButton.getAttribute("href") as string;
   const disabledRevertClass = "is-disabled";
 
   function disableSubmit() {
-    submitButton.disabled = "disabled";
+    submitButton.disabled = true;
   }
 
   function enableSubmit() {
@@ -104,9 +120,13 @@ function initForm(config, initialState, errors) {
   formEl.appendChild(diffInput);
 
   if (config.snapIconHolder) {
-    const icons = state.images.filter((image) => image.type === "icon");
-    initIcon(config.snapIconHolder, icons[0], state.title, (newIcon) => {
-      let noneIcons = state.images.filter((image) => image.type !== "icon");
+    const icons = state.images.filter(
+      (image: { type: string }) => image.type === "icon"
+    );
+    initIcon(config.snapIconHolder, icons[0], state.title, (newIcon: any) => {
+      let noneIcons = state.images.filter(
+        (image: { type: string }) => image.type !== "icon"
+      );
 
       if (newIcon) {
         noneIcons = noneIcons.concat([newIcon]);
@@ -126,11 +146,11 @@ function initForm(config, initialState, errors) {
 
   if (config.mediaHolder) {
     const screenshots = state.images.filter(
-      (image) => image.type === "screenshot",
+      (image: { type: string }) => image.type === "screenshot"
     );
-    initMedia(config.mediaHolder, screenshots, (newImages) => {
+    initMedia(config.mediaHolder, screenshots, (newImages: any) => {
       const noneScreenshots = state.images.filter(
-        (item) => item.type !== "screenshot",
+        (item: { type: string }) => item.type !== "screenshot"
       );
       const newState = {
         ...state,
@@ -142,9 +162,13 @@ function initForm(config, initialState, errors) {
   }
 
   if (config.bannerHolder) {
-    let banners = state.images.filter((image) => image.type === "banner");
-    initBanner(config.bannerHolder, banners, (image) => {
-      let newImages = state.images.filter((image) => image.type !== "banner");
+    let banners = state.images.filter(
+      (image: { type: string }) => image.type === "banner"
+    );
+    initBanner(config.bannerHolder, banners, (image: any) => {
+      let newImages = state.images.filter(
+        (image: { type: string }) => image.type !== "banner"
+      );
 
       if (image) {
         newImages = newImages.concat([image]);
@@ -211,7 +235,7 @@ function initForm(config, initialState, errors) {
     }
   }
 
-  function metadata(field, state) {
+  function metadata(field: { checked: any }, state: { [x: string]: any }) {
     state["update_metadata_on_release"] = field.checked;
   }
 
@@ -288,67 +312,73 @@ function initForm(config, initialState, errors) {
     updateFormState();
   });
 
-  formEl.addEventListener("submit", function (event) {
-    event.preventDefault();
+  formEl.addEventListener(
+    "submit",
+    function (event: { preventDefault: () => void }) {
+      event.preventDefault();
 
-    const diff = diffState(initialState, state);
+      const diff = diffState(initialState, state);
 
-    // if anything was changed, update state inputs and submit
-    if (diff) {
-      diffInput.value = JSON.stringify(diff);
+      // if anything was changed, update state inputs and submit
+      if (diff) {
+        diffInput.value = JSON.stringify(diff);
 
-      // make sure we don't warn user about leaving the page when submitting
-      ignoreChangesOnUnload = true;
+        // make sure we don't warn user about leaving the page when submitting
+        ignoreChangesOnUnload = true;
 
-      const updateMetadataModal = document.querySelector(
-        ".update-metadata-warning",
-      );
+        const updateMetadataModal = document.querySelector(
+          ".update-metadata-warning"
+        );
 
-      if (updateMetadataModal) {
-        updateMetadataModal.classList.remove("u-hide");
+        if (updateMetadataModal) {
+          updateMetadataModal.classList.remove("u-hide");
 
-        const saveChangesButton =
-          updateMetadataModal.querySelector(".js-save-changes");
-        const closeModalButtons =
-          updateMetadataModal.querySelectorAll(".js-close-modal");
+          const saveChangesButton = updateMetadataModal.querySelector(
+            ".js-save-changes"
+          ) as HTMLButtonElement;
+          const closeModalButtons =
+            updateMetadataModal.querySelectorAll(".js-close-modal");
 
-        closeModalButtons.forEach((closeModalButton) => {
-          closeModalButton.addEventListener("click", () => {
-            updateMetadataModal.classList.add("u-hide");
+          closeModalButtons.forEach((closeModalButton: any) => {
+            closeModalButton.addEventListener("click", () => {
+              updateMetadataModal.classList.add("u-hide");
+            });
           });
-        });
 
-        saveChangesButton.addEventListener("click", () => {
-          updateMetadataModal.classList.add("u-hide");
+          saveChangesButton.addEventListener("click", () => {
+            updateMetadataModal.classList.add("u-hide");
+            disableSubmit();
+            submitButton.classList.add("has-spinner");
+            setTimeout(() => {
+              formEl.submit();
+            }, 2000);
+          });
+        } else {
           disableSubmit();
           submitButton.classList.add("has-spinner");
           setTimeout(() => {
             formEl.submit();
           }, 2000);
-        });
+        }
       } else {
-        disableSubmit();
-        submitButton.classList.add("has-spinner");
-        setTimeout(() => {
-          formEl.submit();
-        }, 2000);
+        updateLocalStorage();
       }
-    } else {
-      updateLocalStorage();
     }
-  });
+  );
 
   // client side validation
 
-  const validation = {};
+  const validation: { [key: string]: any } = {};
   const validateInputs = Array.from(formEl.querySelectorAll("input,textarea"));
 
   function isFormValid() {
     // form is valid if every validated input is valid
-    return Object.keys(validation).every((name) => validation[name].isValid);
+    return Object.keys(validation).every(
+      (name: any) => validation[name].isValid
+    );
   }
 
-  function validateInput(input) {
+  function validateInput(input: any) {
     const field = input.closest(".p-form-validation");
 
     if (field) {
@@ -414,8 +444,8 @@ function initForm(config, initialState, errors) {
   }
 
   // prepare validation of inputs based on their HTML attributes
-  validateInputs.forEach((input) => {
-    const inputValidation = { isValid: true };
+  validateInputs.forEach((input: any) => {
+    const inputValidation: any = { isValid: true };
 
     if (input.maxLength > 0) {
       // save max length, but remove it from input so more chars can be entered
@@ -445,12 +475,12 @@ function initForm(config, initialState, errors) {
   });
 
   // validate inputs on change
-  formEl.addEventListener("input", function (event) {
+  formEl.addEventListener("input", function (event: { target: any }) {
     validateInput(event.target);
     updateFormState();
   });
 
-  const previewForm = document.getElementById("preview-form");
+  const previewForm = document.getElementById("preview-form") as any;
   const openPreview = () => {
     const stateInput = previewForm.elements.state;
     stateInput.value = JSON.stringify(state);
@@ -461,7 +491,7 @@ function initForm(config, initialState, errors) {
   }
 
   // Prefix contact and website fields on blur if the user doesn't provide the protocol
-  function prefixInput(input) {
+  function prefixInput(input: any) {
     if (["website", "contact"].includes(input.name)) {
       if (
         validation[input.name].isValid &&
@@ -484,12 +514,15 @@ function initForm(config, initialState, errors) {
   }
 
   const prefixableFields = ["website", "contact"];
-  prefixableFields.forEach((inputName) => {
+  prefixableFields.forEach((inputName: any) => {
     const input = formEl[inputName];
     if (input) {
-      input.addEventListener("blur", function (event) {
-        prefixInput(event.target);
-      });
+      input.addEventListener(
+        "blur",
+        function (event: { target: EventTarget | null }) {
+          prefixInput(event.target);
+        }
+      );
     }
   });
 

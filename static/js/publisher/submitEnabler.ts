@@ -1,6 +1,9 @@
 import shallowDiff from "../libs/shallowDiff";
 
-function submitEnabler(formSelector, buttonSelectors) {
+function submitEnabler(
+  formSelector: string | undefined,
+  buttonSelectors: any[] | undefined
+) {
   if (!formSelector) {
     throw new TypeError("`formSelector` argument is required");
   }
@@ -9,19 +12,19 @@ function submitEnabler(formSelector, buttonSelectors) {
     throw new TypeError("At least one `buttonSelectors` must be defined");
   }
 
-  const formEl = document.querySelector(formSelector);
+  const formEl = document.querySelector(formSelector) as HTMLFormElement;
 
   if (!formEl) {
     throw new Error(`${formSelector} is not a valid element`);
   }
 
   const buttonEls = buttonSelectors.map((selector) =>
-    document.querySelector(selector),
+    document.querySelector(selector)
   );
 
   const initialState = new FormData(formEl);
 
-  const initialStateJson = {};
+  const initialStateJson: { [key: string]: any } = {};
 
   for (const [key, value] of initialState.entries()) {
     initialStateJson[key] = value;
@@ -36,7 +39,7 @@ function submitEnabler(formSelector, buttonSelectors) {
 
   formEl.addEventListener("change", () => {
     const newState = new FormData(formEl);
-    const newStateJson = {};
+    const newStateJson: { [key: string]: any } = {};
 
     for (const [key, value] of newState.entries()) {
       newStateJson[key] = value;

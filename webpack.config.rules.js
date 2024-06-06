@@ -26,7 +26,7 @@ module.exports = [
     use: ["expose-loader?exposes=snapcraft.base", "babel-loader"],
   },
   {
-    test: require.resolve(__dirname + "/static/js/publisher/release.js"),
+    test: require.resolve(__dirname + "/static/js/publisher/release.tsx"),
     use: ["expose-loader?exposes=snapcraft.release", "babel-loader"],
   },
   {

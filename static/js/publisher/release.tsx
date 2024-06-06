@@ -1,11 +1,9 @@
-import React from "react";
 import { createRoot } from "react-dom/client";
 import { createStore, applyMiddleware, compose } from "redux";
 import thunk from "redux-thunk";
+import { HTML5Backend } from "react-dnd-html5-backend";
 import { Provider } from "react-redux";
 import { DndProvider } from "react-dnd";
-import { HTML5Backend } from "react-dnd-html5-backend";
-
 import ReleasesController from "./release/releasesController";
 import releases from "./release/reducers";
 
@@ -14,12 +12,12 @@ import releases from "./release/reducers";
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
 const initReleases = (
-  id,
-  snapName,
-  releasesData,
-  channelMap,
-  tracks,
-  options,
+  id: any,
+  snapName: any,
+  releasesData: { releasesData: any },
+  channelMap: { channelMap: any },
+  tracks: any,
+  options: { [key: string]: any }
 ) => {
   const store = createStore(
     releases,
@@ -28,11 +26,12 @@ const initReleases = (
       defaultTrack: options.defaultTrack,
       options: {
         ...options,
+        // @ts-ignore
         snapName,
         tracks,
       },
     },
-    composeEnhancers(applyMiddleware(thunk)),
+    composeEnhancers(applyMiddleware(thunk))
   );
   const container = document.querySelector(id);
   const root = createRoot(container);
@@ -42,11 +41,12 @@ const initReleases = (
         <ReleasesController
           snapName={snapName}
           releasesData={releasesData}
+          // @ts-ignore
           channelMap={channelMap}
           options={options}
         />
       </DndProvider>
-    </Provider>,
+    </Provider>
   );
 };
 

@@ -3,11 +3,11 @@
 function initSnapButtonsPicker() {
   const languagePicker = document.querySelector(".js-language-select");
 
-  function showLanguage(language) {
+  function showLanguage(language: string) {
     const open = document.querySelector("#" + language + "_content");
 
     const notHidden = document.querySelector(
-      ".js-language-content:not(.u-hide)",
+      ".js-language-content:not(.u-hide)"
     );
     if (notHidden) {
       notHidden.classList.add("u-hide");
@@ -17,10 +17,12 @@ function initSnapButtonsPicker() {
     }
   }
 
-  let checked = document.querySelector("[name='language']:checked");
+  let checked = document.querySelector(
+    "[name='language']:checked"
+  ) as HTMLInputElement;
 
   if (!checked) {
-    checked = document.querySelector("[name='language']");
+    checked = document.querySelector("[name='language']") as HTMLInputElement;
     checked.setAttribute("checked", "checked");
   }
 
@@ -30,6 +32,7 @@ function initSnapButtonsPicker() {
 
   if (languagePicker) {
     languagePicker.addEventListener("change", function () {
+      // @ts-ignore
       showLanguage(this.elements["language"].value);
     });
   }
@@ -37,9 +40,10 @@ function initSnapButtonsPicker() {
 
 // EMBEDDABLE CARDS
 
-const getCardPath = (snapName, options = {}) => {
+const getCardPath = (snapName: any, options: { [key: string]: any } = {}) => {
   const path = `/${snapName}/embedded`;
-  let params = [];
+  let params: Array<string> = [];
+  let paramsString: string = "";
 
   if (options.button) {
     params.push(`button=${options.button}`);
@@ -58,24 +62,24 @@ const getCardPath = (snapName, options = {}) => {
   }
 
   if (params.length) {
-    params = `?${params.join("&")}`;
+    paramsString = `?${params.join("&")}`;
   }
 
-  return `${path}${params}`;
+  return `${path}${paramsString}`;
 };
 
-const getCardEmbedHTML = (snapName, options) => {
+const getCardEmbedHTML = (snapName: any, options: { [key: string]: any }) => {
   return `&lt;iframe src="https://snapcraft.io${getCardPath(
     snapName,
-    options,
+    options
   )}" frameborder="0" width="100%" height="${
     options.frameHeight
   }px" style="border: 1px solid #CCC; border-radius: 2px;"&gt;&lt;/iframe&gt;`;
 };
 
 // get form state from inputs
-const getCurrentFormState = (buttonRadios, optionButtons) => {
-  const state = {};
+const getCurrentFormState = (buttonRadios: any[], optionButtons: any[]) => {
+  const state: { [key: string]: any } = {};
 
   // get state of store button radio
   let checked = buttonRadios.filter((b) => b.checked);
@@ -91,9 +95,18 @@ const getCurrentFormState = (buttonRadios, optionButtons) => {
   return state;
 };
 
-function initEmbeddedCardPicker(options) {
+function initEmbeddedCardPicker(options: {
+  snapName?: any;
+  previewFrame?: any;
+  codeElement?: any;
+  buttonRadios?: any;
+  optionButtons?: any;
+  updateHeightCallback?: any;
+}) {
   const { snapName, previewFrame, codeElement } = options;
-  const buttonRadios = [].slice.call(options.buttonRadios);
+  const buttonRadios: Array<HTMLInputElement> = [].slice.call(
+    options.buttonRadios
+  );
   const optionButtons = [].slice.call(options.optionButtons);
 
   let state = {
@@ -101,11 +114,11 @@ function initEmbeddedCardPicker(options) {
     frameHeight: 320,
   };
 
-  const renderCode = (state) => {
+  const renderCode = (state: { [x: string]: any; frameHeight?: number }) => {
     codeElement.innerHTML = getCardEmbedHTML(snapName, state);
   };
 
-  const render = (state) => {
+  const render = (state: { [key: string]: any }) => {
     previewFrame.src = getCardPath(snapName, state);
     renderCode(state);
   };
@@ -122,22 +135,23 @@ function initEmbeddedCardPicker(options) {
     render(state);
   };
 
-  buttonRadios.forEach((radio) => {
+  buttonRadios.forEach((radio: HTMLInputElement) => {
     radio.addEventListener("change", (e) => {
-      if (e.target.checked) {
+      const target = e.target as HTMLInputElement;
+      if (target.checked) {
         updateState();
       }
     });
   });
 
-  optionButtons.forEach((checkbox) => {
+  optionButtons.forEach((checkbox: HTMLInputElement) => {
     checkbox.addEventListener("change", () => {
       updateState();
     });
   });
 
   if (buttonRadios.length > 0) {
-    buttonRadios.filter((r) => r.value === "black")[0].checked = true;
+    buttonRadios.filter((r: any) => r.value === "black")[0].checked = true;
   }
 
   // update the frame (but only if it's visible)
@@ -152,7 +166,7 @@ function initEmbeddedCardPicker(options) {
     if (previewFrame.offsetParent && previewFrame.contentWindow.document.body) {
       const height =
         Math.floor(
-          (previewFrame.contentWindow.document.body.clientHeight + 20) / 10,
+          (previewFrame.contentWindow.document.body.clientHeight + 20) / 10
         ) * 10;
 
       if (height !== state.frameHeight) {
@@ -182,10 +196,10 @@ function initEmbeddedCardPicker(options) {
 // GITHUB BADGES
 
 const getBadgePath = (
-  snapName,
+  snapName: any,
   badgeName = "badge",
   showName = true,
-  isPreview = false,
+  isPreview = false
 ) => {
   const params = [];
   if (!showName) {
@@ -201,36 +215,48 @@ const getBadgePath = (
   }`;
 };
 
-const getBadgePreview = (snapName, badgeName, showName) => {
+const getBadgePreview = (
+  snapName: any,
+  badgeName: string | undefined,
+  showName: boolean | undefined
+) => {
   return `<a href="/${snapName}">
   <img alt="${snapName}" src="${getBadgePath(
     snapName,
     badgeName,
     showName,
-    badgeName === "trending",
+    badgeName === "trending"
   )}" />
   </a>`;
 };
 
-const getBadgeHTML = (snapName, badgeName, showName) => {
+const getBadgeHTML = (
+  snapName: any,
+  badgeName: string | undefined,
+  showName: boolean | undefined
+) => {
   return `&lt;a href="https://snapcraft.io/${snapName}"&gt;
   &lt;img alt="${snapName}" src="https://snapcraft.io${getBadgePath(
     snapName,
     badgeName,
-    showName,
+    showName
   )}" /&gt;
 &lt;/a&gt;`;
 };
 
-const getBadgeMarkdown = (snapName, badgeName, showName) => {
+const getBadgeMarkdown = (
+  snapName: any,
+  badgeName: string | undefined,
+  showName: boolean | undefined
+) => {
   return `[![${snapName}](https://snapcraft.io${getBadgePath(
     snapName,
     badgeName,
-    showName,
+    showName
   )})](https://snapcraft.io/${snapName})`;
 };
 
-const getBadgesCode = (snapName, options, badgeGenerator) => {
+const getBadgesCode = (snapName: any, options: any, badgeGenerator: any) => {
   const badges = [];
   if (options["show-channel"]) {
     badges.push(badgeGenerator(snapName));
@@ -241,19 +267,29 @@ const getBadgesCode = (snapName, options, badgeGenerator) => {
   return badges.join("\n");
 };
 
-const getBadgesHTML = (snapName, options) => {
+const getBadgesHTML = (snapName: any, options: any) => {
   return getBadgesCode(snapName, options, getBadgeHTML);
 };
 
-const getBadgesPreviewHTML = (snapName, options) => {
+const getBadgesPreviewHTML = (snapName: any, options: any) => {
   return getBadgesCode(snapName, options, getBadgePreview);
 };
 
-const getBadgesMarkdown = (snapName, options) => {
+const getBadgesMarkdown = (snapName: any, options: any) => {
   return getBadgesCode(snapName, options, getBadgeMarkdown);
 };
 
-function initGitHubBadgePicker(options) {
+function initGitHubBadgePicker(options: {
+  optionButtons?: any;
+  snapName?: any;
+  htmlElement?: any;
+  previewElement?: any;
+  markdownElement?: any;
+  notificationElement?: any;
+  badgeCodeElement?: any;
+  optionsUncheckedElement?: any;
+  isTrending?: any;
+}) {
   const {
     snapName,
     htmlElement,
@@ -270,7 +306,7 @@ function initGitHubBadgePicker(options) {
     ...getCurrentFormState([], optionButtons),
   };
 
-  const render = (state) => {
+  const render = (state: { [x: string]: any }) => {
     if (state["show-trending"] && !isTrending) {
       notificationElement.classList.remove("u-hide");
     } else {
@@ -302,7 +338,7 @@ function initGitHubBadgePicker(options) {
     render(state);
   };
 
-  optionButtons.forEach((checkbox) => {
+  optionButtons.forEach((checkbox: HTMLInputElement) => {
     checkbox.addEventListener("change", () => {
       updateState();
     });
