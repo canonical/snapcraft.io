@@ -134,6 +134,8 @@ class ChannelMap {
       .join("");
 
     this.arch = this.channelMapData["amd64"] ? "amd64" : architectures[0];
+
+    return;
   }
 
   bindEvents() {
