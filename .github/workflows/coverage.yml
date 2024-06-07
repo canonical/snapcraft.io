@@ -111,15 +111,12 @@ jobs:
           name: snapcraftio-coverage
           path: coverage
 
-      - name: Install Dotrun
+      - name: Install Python requirements
         run: |
-          sudo pip3 install dotrun requests==2.31.0 # requests version is pinned to avoid breaking changes, can be removed once issue is resolved: https://github.com/docker/docker-py/issues/3256
+          sudo pip3 install -r requirements.txt
 
-      - name: Install dependencies
-        run: |
-          set -x
-          sudo chmod 0777 .
-          dotrun install
+      - name: Install Python dependencies
+        run: sudo pip3 install pylint
 
       - name: Produce TICS report
         shell: bash
