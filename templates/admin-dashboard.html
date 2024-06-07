@@ -8,5 +8,9 @@
 
 {% block content %}
 <main id="root"></main>
+<script>
+  window.SENTRY_DSN = "{{ SENTRY_DSN }}";
+  window.CSRF_TOKEN = "{{ csrf_token() }}";
+</script>
 <script src="{{ versioned_static('js/dist/admin.js') }}" defer></script>
 {% endblock %}

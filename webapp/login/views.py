@@ -25,6 +25,7 @@ login = flask.Blueprint(
 LOGIN_URL = os.getenv("LOGIN_URL", "https://login.ubuntu.com")
 
 LP_CANONICAL_TEAM = "canonical"
+LP_ADMIN_TEAM = "featured-packages-editors"
 
 open_id = OpenID(
     store_factory=lambda: None,
@@ -58,7 +59,9 @@ def login_handler():
     )
     flask.session["macaroon_root"] = root
 
-    lp_teams = TeamsRequest(query_membership=[LP_CANONICAL_TEAM])
+    lp_teams = TeamsRequest(
+        query_membership=[LP_CANONICAL_TEAM, LP_ADMIN_TEAM]
+    )
 
     return open_id.try_login(
         LOGIN_URL,
@@ -86,6 +89,7 @@ def after_login(resp):
             "email": account["email"],
             "is_canonical": LP_CANONICAL_TEAM
             in resp.extensions["lp"].is_member,
+            "is_admin": LP_ADMIN_TEAM in resp.extensions["lp"].is_member,
         }
 
         if logic.get_stores(

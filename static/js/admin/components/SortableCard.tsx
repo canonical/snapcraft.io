@@ -9,9 +9,10 @@ import type { SnapData } from "../types/SnapData";
 
 type SortableCardProps = {
   snap: SnapData;
+  handleRemove: (id: string) => void;
 };
 
-const SortableCard = ({ snap }: SortableCardProps) => {
+const SortableCard = ({ snap, handleRemove }: SortableCardProps) => {
   const {
     attributes,
     listeners,
@@ -29,14 +30,16 @@ const SortableCard = ({ snap }: SortableCardProps) => {
 
   return (
     <Col size={3} style={{ marginBottom: "1.5rem", position: "relative" }}>
-      <div style={{ ...style }} ref={setNodeRef} {...listeners} {...attributes}>
+      <div style={{ ...style }} ref={setNodeRef}>
         <Icon
           style={{
             position: "absolute",
             top: ".5rem",
             right: ".5rem",
+            cursor: "pointer",
           }}
           name="delete"
+          onClick={() => handleRemove(snap.package_name)}
         />
         <Icon
           style={{
@@ -45,6 +48,8 @@ const SortableCard = ({ snap }: SortableCardProps) => {
             left: ".5rem",
           }}
           name="drag"
+          {...listeners}
+          {...attributes}
         />
         <DefaultCard
           data={{
