@@ -3,11 +3,15 @@ import throttle from "../throttle";
 describe("throttle", () => {
   test("calls function", () => {
     const fn = jest.fn();
+    const throttledFunction: Function = throttle(fn, -1);
+    throttledFunction();
+    expect(fn).toHaveBeenCalled();
+  });
 
-    throttle(fn, 100);
-
-    setTimeout(() => {
-      expect(fn).toHaveBeenCalled();
-    }, 101);
+  test("doesn't call function", () => {
+    const fn = jest.fn();
+    const throttledFunction: Function = throttle(fn, 1);
+    throttledFunction();
+    expect(fn).not.toHaveBeenCalled();
   });
 });
