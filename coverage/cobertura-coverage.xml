@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 <!DOCTYPE coverage SYSTEM "http://cobertura.sourceforge.net/xml/coverage-04.dtd">
-<coverage lines-valid="3020" lines-covered="2023" line-rate="0.6698000000000001" branches-valid="1648" branches-covered="977" branch-rate="0.5928" timestamp="1717970797838" complexity="0" version="0.1">
+<coverage lines-valid="3020" lines-covered="2023" line-rate="0.6698000000000001" branches-valid="1648" branches-covered="977" branch-rate="0.5928" timestamp="1718057220450" complexity="0" version="0.1">
   <sources>
     <source>/home/runner/work/snapcraft.io/snapcraft.io</source>
   </sources>
@@ -14,9 +14,9 @@
                 <line number="31" hits="0"/>
               </lines>
             </method>
-            <method name="triggerEventReleaseUI" hits="9" signature="()V">
+            <method name="triggerEventReleaseUI" hits="10" signature="()V">
               <lines>
-                <line number="48" hits="9"/>
+                <line number="48" hits="10"/>
               </lines>
             </method>
             <method name="(anonymous_2)" hits="0" signature="()V">
@@ -26,14 +26,14 @@
             </method>
           </methods>
           <lines>
-            <line number="2" hits="12" branch="false"/>
-            <line number="3" hits="12" branch="false"/>
-            <line number="9" hits="12" branch="false"/>
+            <line number="2" hits="13" branch="false"/>
+            <line number="3" hits="13" branch="false"/>
+            <line number="9" hits="13" branch="false"/>
             <line number="37" hits="0" branch="true" condition-coverage="0% (0/2)"/>
             <line number="38" hits="0" branch="false"/>
-            <line number="49" hits="9" branch="true" condition-coverage="50% (1/2)"/>
-            <line number="50" hits="9" branch="false"/>
-            <line number="60" hits="12" branch="true" condition-coverage="50% (1/2)"/>
+            <line number="49" hits="10" branch="true" condition-coverage="50% (1/2)"/>
+            <line number="50" hits="10" branch="false"/>
+            <line number="60" hits="13" branch="true" condition-coverage="50% (1/2)"/>
             <line number="61" hits="0" branch="false"/>
             <line number="64" hits="0" branch="false"/>
             <line number="66" hits="0" branch="true" condition-coverage="0% (0/4)"/>
