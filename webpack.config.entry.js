@@ -20,7 +20,6 @@ module.exports = {
   "brand-store": "./static/js/brand-store/brand-store.tsx",
   "publisher-listing": "./static/js/publisher/listing/index.tsx",
   "publisher-settings": "./static/js/publisher/settings/index.tsx",
-  "publisher-collaboration": "./static/js/publisher/collaboration/index.tsx",
   "about-listing": "./static/js/public/about/listing.ts",
   store: "./static/js/store/index.tsx",
 };
