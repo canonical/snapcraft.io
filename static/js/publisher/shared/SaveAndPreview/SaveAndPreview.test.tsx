@@ -1,95 +1,67 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import "@testing-library/jest-dom";
 
 import SaveAndPreview from "./SaveAndPreview";
 
-test("the 'Revert' button is disabled by default", () => {
-  render(
+const reset = jest.fn();
+
+const renderComponent = (
+  isDirty: boolean,
+  isSaving: boolean,
+  isValid: boolean
+) => {
+  return render(
     <SaveAndPreview
       snapName="test-snap-name"
-      isDirty={false}
-      reset={jest.fn()}
-      isSaving={false}
-      isValid={true}
+      isDirty={isDirty}
+      reset={reset}
+      isSaving={isSaving}
+      isValid={isValid}
     />
   );
+};
+
+test("the 'Revert' button is disabled by default", () => {
+  renderComponent(false, false, true);
   expect(screen.getByRole("button", { name: "Revert" })).toBeDisabled();
 });
 
 test("the 'Revert' button is enabled is data is dirty", () => {
-  render(
-    <SaveAndPreview
-      snapName="test-snap-name"
-      isDirty={true}
-      reset={jest.fn()}
-      isSaving={false}
-      isValid={true}
-    />
-  );
+  renderComponent(true, false, true);
   expect(screen.getByRole("button", { name: "Revert" })).not.toBeDisabled();
 });
 
 test("the 'Save' button is disabled by default", () => {
-  render(
-    <SaveAndPreview
-      snapName="test-snap-name"
-      isDirty={false}
-      reset={jest.fn()}
-      isSaving={false}
-      isValid={true}
-    />
-  );
+  renderComponent(false, false, true);
   expect(screen.getByRole("button", { name: "Save" })).toBeDisabled();
 });
 
 test("the 'Save' button is enabled is data is dirty", () => {
-  render(
-    <SaveAndPreview
-      snapName="test-snap-name"
-      isDirty={true}
-      reset={jest.fn()}
-      isSaving={false}
-      isValid={true}
-    />
-  );
+  renderComponent(true, false, true);
   expect(screen.getByRole("button", { name: "Save" })).not.toBeDisabled();
 });
 
 test("the 'Save' button shows loading state if saving", () => {
-  render(
-    <SaveAndPreview
-      snapName="test-snap-name"
-      isDirty={true}
-      reset={jest.fn()}
-      isSaving={true}
-      isValid={true}
-    />
-  );
+  renderComponent(true, true, true);
   expect(screen.getByRole("button", { name: "Saving" })).toBeInTheDocument();
 });
 
 test("the 'Save' button is disabled when saving", () => {
-  render(
-    <SaveAndPreview
-      snapName="test-snap-name"
-      isDirty={true}
-      reset={jest.fn()}
-      isSaving={true}
-      isValid={true}
-    />
-  );
+  renderComponent(true, true, true);
   expect(screen.getByRole("button", { name: "Saving" })).toBeDisabled();
 });
 
 test("the 'Save' button is disabled if the form is invalid", () => {
-  render(
-    <SaveAndPreview
-      snapName="test-snap-name"
-      isDirty={false}
-      reset={jest.fn()}
-      isSaving={false}
-      isValid={false}
-    />
-  );
+  renderComponent(false, false, false);
   expect(screen.getByRole("button", { name: "Save" })).toBeDisabled();
+});
+
+test("revert button resets the form", async () => {
+  const user = userEvent.setup();
+  renderComponent(true, false, true);
+  await user.click(screen.getByRole("button", { name: "Revert" }));
+  await waitFor(() => {
+    expect(reset).toHaveBeenCalled();
+  });
 });
