@@ -53,4 +53,46 @@ describe("getChanges", () => {
     expect(changes.websites).not.toBeDefined();
     expect(changes.licenses).not.toBeDefined();
   });
+
+  test("handles image changes", () => {
+    const data = {
+      banner: new File([""], "test-banner", { type: "image" }),
+      banner_url: "https://example.com/banner-image.jpg",
+      banner_urls: ["https://example.com/banner-image.jpg"],
+      icon: new File([""], "test-icon", { type: "image" }),
+      icon_url: "https://example.com/icon-image.jpg",
+      images: [
+        {
+          status: "uploaded",
+          type: "icon",
+          url: "https://example.com/icon-image.jpg",
+        },
+        {
+          status: "uploaded",
+          type: "screenshot",
+          url: "https://example.com/screenshot-image.jpg",
+        },
+        {
+          status: "uploaded",
+          type: "banner",
+          url: "https://example.com/banner-image.jpg",
+        },
+      ],
+      screenshot_urls: ["https://example.com/screenshot-image.jpg"],
+      screenshots: [new File([""], "test-screenshot", { type: "image" })],
+    };
+
+    const changedFields = {
+      banner_url: true,
+      icon_url: true,
+      screenshot_urls: true,
+      icon: true,
+      banner: true,
+      screenshots: true,
+    };
+
+    const changes = getChanges(changedFields, data);
+
+    expect(changes.images).toHaveLength(3);
+  });
 });
