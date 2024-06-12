@@ -1,10 +1,10 @@
 from unittest.mock import Mock, patch
-from tests.admin_dashboard.admin_dashboard_endpoint_testing import (
-    TestAdminDashboardEndpoints,
+from tests.admin.admin_endpoint_testing import (
+    TestAdminEndpoints,
 )
 
 
-class TestUpdateFeaturedSnaps(TestAdminDashboardEndpoints):
+class TestUpdateFeaturedSnaps(TestAdminEndpoints):
     def setUp(self):
         self.mock_flask = patch("webapp.admin_dashboard.views.flask").start()
         self.mock_get_snap_id = patch(
@@ -46,14 +46,12 @@ class TestUpdateFeaturedSnaps(TestAdminDashboardEndpoints):
 
         self.mock_get_snap_id.side_effect = [1, 2]
 
-        response = self.client.post("/admin-dashboard/api/featured-snaps")
+        response = self.client.post("/admin/featured")
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json, {"success": True})
 
     def test_update_featured_snaps_no_snaps(self):
-        with self.app.test_request_context(
-            "/admin-dashboard/api/featured-snaps"
-        ):
+        with self.app.test_request_context("/admin/featured"):
             self.mock_flask.request.form.get.return_value = ""
             self.mock_get_featured_snaps.side_effect = [
                 {
@@ -74,15 +72,13 @@ class TestUpdateFeaturedSnaps(TestAdminDashboardEndpoints):
 
             self.mock_get_snap_id.side_effect = []
 
-            response = self.client.post("/admin-dashboard/api/featured-snaps")
+            response = self.client.post("/admin/featured")
         self.assertEqual(response.status_code, 500)
         self.assertEqual(response.json.get("success"), False)
         self.assertEqual(response.json.get("message"), "Snaps cannot be empty")
 
     def test_update_featured_snaps_delete_failed(self):
-        with self.app.test_request_context(
-            "/admin-dashboard/api/featured-snaps"
-        ):
+        with self.app.test_request_context("/admin/featured"):
             self.mock_flask.request.form.get.return_value = "snap_id1,snap_id2"
             self.mock_get_featured_snaps.side_effect = [
                 {
@@ -103,13 +99,11 @@ class TestUpdateFeaturedSnaps(TestAdminDashboardEndpoints):
 
             self.mock_get_snap_id.side_effect = [1, 2]
 
-            response = self.client.post("/admin-dashboard/api/featured-snaps")
+            response = self.client.post("/admin/featured")
         self.assertEqual(response.status_code, 500)
 
     def test_update_featured_snaps_update_failed(self):
-        with self.app.test_request_context(
-            "/admin-dashboard/api/featured-snaps"
-        ):
+        with self.app.test_request_context("/admin/featured"):
             self.mock_flask.request.form.get.return_value = "snap_id1,snap_id2"
             self.mock_get_featured_snaps.side_effect = [
                 {
@@ -130,6 +124,6 @@ class TestUpdateFeaturedSnaps(TestAdminDashboardEndpoints):
 
             self.mock_get_snap_id.side_effect = [1, 2]
 
-            response = self.client.post("/admin-dashboard/api/featured-snaps")
+            response = self.client.post("/admin/featured")
         self.assertEqual(response.status_code, 500)
         self.assertEqual(response.json.get("success"), False)

@@ -118,7 +118,7 @@ function FeaturedSnaps() {
 
     setIsSaving(true);
 
-    const response = await fetch("/admin-dashboard/api/featured-snaps", {
+    const response = await fetch("/admin/featured", {
       method: "POST",
       body: data,
     });
