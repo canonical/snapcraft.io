@@ -27,7 +27,7 @@ function shouldShowUpdateMetadataWarning(dirtyFields: DirtyField) {
       filteredDirtyFields.push("icon");
     }
 
-    if (key === "screenshot_urls" && value.includes(true)) {
+    if (key === "screenshot_urls" && value === true) {
       filteredDirtyFields.push("screenshot_urls");
     }
   }

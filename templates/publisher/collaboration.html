@@ -11,5 +11,4 @@ Collaboration for {% if display_title %}{{ display_title }}{% else %}{{ snap_tit
   window.CSRF_TOKEN = "{{ csrf_token() }}";
   window.data = JSON.parse({{ collaborations_data|tojson }});
 </script>
-<script src="{{ static_url('js/dist/publisher-collaboration.js') }}"></script>
 {% endblock %}
