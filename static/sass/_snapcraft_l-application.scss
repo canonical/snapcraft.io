@@ -58,7 +58,7 @@
       width: 100%;
     }
 
-    .sidenav-bottom-ul {
+    .sidenav-bottom {
       bottom: 1.5rem;
       position: absolute;
       width: 15rem;
@@ -226,6 +226,59 @@
 
       .p-side-navigation--icons .p-side-navigation__list {
         opacity: 1 !important;
+      }
+    }
+  }
+
+  // Overrides to add separators and hide icons in side nav when collapsed
+  .nav-list-separator {
+    padding-left: 4rem;
+  }
+
+  .is-collapsed {
+    .hide-collapsed {
+      .p-side-navigation__icon {
+        display: none !important;
+      }
+
+      [aria-current="page"] {
+        &.p-side-navigation__link {
+          background-color: inherit !important;
+
+          &:hover {
+            background-color: inherit !important;
+            cursor: default !important;
+          }
+
+          &::before {
+            display: none !important;
+          }
+        }
+      }
+    }
+  }
+
+  @media (min-width: $breakpoint-small) and (max-width: $breakpoint-large) {
+    .l-navigation:not(.is-pinned, :hover) {
+      .hide-collapsed {
+        .p-side-navigation__icon {
+          display: none !important;
+        }
+
+        [aria-current="page"] {
+          &.p-side-navigation__link {
+            background-color: inherit !important;
+
+            &:hover {
+              background-color: inherit !important;
+              cursor: default !important;
+            }
+
+            &::before {
+              display: none !important;
+            }
+          }
+        }
       }
     }
   }

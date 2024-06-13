@@ -102,7 +102,10 @@ function Navigation({ sectionName }: { sectionName: string | null }) {
               </div>
             </div>
             <div className="p-panel__content">
-              <div className="p-side-navigation--icons is-dark">
+              <div className="nav-list-separator">
+                <hr />
+              </div>
+              <div className="p-side-navigation--icons hide-collapsed is-dark">
                 <ul className="p-side-navigation__list">
                   <li className="p-side-navigation__item--title p-muted-heading">
                     <span className="p-side-navigation__link">
@@ -122,7 +125,10 @@ function Navigation({ sectionName }: { sectionName: string | null }) {
                 !brandIsLoading &&
                 brandIsSuccess && (
                   <>
-                    <div className="p-side-navigation--icons is-dark">
+                    <div className="nav-list-separator">
+                      <hr />
+                    </div>
+                    <div className="p-side-navigation--icons hide-collapsed is-dark">
                       <ul className="p-side-navigation__list u-no-margin--bottom">
                         <li className="p-side-navigation__item--title p-muted-heading">
                           <span className="p-side-navigation__link">
@@ -227,7 +233,7 @@ function Navigation({ sectionName }: { sectionName: string | null }) {
                         </li>
                       </ul>
                     </div>
-                    <div className="p-side-navigation--icons is-dark">
+                    <div className="p-side-navigation--icons hide-collapsed is-dark">
                       <ul className="p-side-navigation__list">
                         {sectionName && (
                           <>
@@ -306,26 +312,33 @@ function Navigation({ sectionName }: { sectionName: string | null }) {
                 )}
               <div className="p-side-navigation--icons is-dark">
                 {publisherData && publisherData.publisher && (
-                  <ul className="p-side-navigation__list sidenav-bottom-ul">
-                    <li className="p-side-navigation__item">
-                      <NavLink
-                        to="/admin/account"
-                        className="p-side-navigation__link"
-                        aria-selected={sectionName === "account"}
-                      >
-                        <i className="p-icon--user is-light p-side-navigation__icon"></i>
-                        <span className="p-side-navigation__label">
-                          {publisherData.publisher.fullname}
-                        </span>
-                      </NavLink>
-                    </li>
-                    <li className="p-side-navigation__item">
-                      <a href="/logout" className="p-side-navigation__link">
-                        <i className="p-icon--begin-downloading is-light p-side-navigation__icon"></i>
-                        <span className="p-side-navigation__label">Logout</span>
-                      </a>
-                    </li>
-                  </ul>
+                  <div className="sidenav-bottom">
+                    <div className="nav-list-separator">
+                      <hr />
+                    </div>
+                    <ul className="p-side-navigation__list">
+                      <li className="p-side-navigation__item">
+                        <NavLink
+                          to="/admin/account"
+                          className="p-side-navigation__link"
+                          aria-selected={sectionName === "account"}
+                        >
+                          <i className="p-icon--user is-light p-side-navigation__icon"></i>
+                          <span className="p-side-navigation__label">
+                            {publisherData.publisher.fullname}
+                          </span>
+                        </NavLink>
+                      </li>
+                      <li className="p-side-navigation__item">
+                        <a href="/logout" className="p-side-navigation__link">
+                          <i className="p-icon--begin-downloading is-light p-side-navigation__icon"></i>
+                          <span className="p-side-navigation__label">
+                            Logout
+                          </span>
+                        </a>
+                      </li>
+                    </ul>
+                  </div>
                 )}
               </div>
             </div>
