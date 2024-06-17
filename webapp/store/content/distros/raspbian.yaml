@@ -14,6 +14,6 @@ install:
     command: |
       sudo reboot
   - action: |
-      After this, install the core snap in order to get the latest snapd:
+      After this, install the snapd snap in order to get the latest snapd:
     command: |
-      sudo snap install core
+      sudo snap install snapd
