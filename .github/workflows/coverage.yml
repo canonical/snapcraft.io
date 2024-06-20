@@ -118,6 +118,9 @@ jobs:
       - name: Install Python dependencies
         run: sudo pip3 install pylint
 
+      - name: Install JS dependencies
+        run: yarn install --immutable
+
       - name: Produce TICS report
         shell: bash
         run: |
