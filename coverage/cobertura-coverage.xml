@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 <!DOCTYPE coverage SYSTEM "http://cobertura.sourceforge.net/xml/coverage-04.dtd">
-<coverage lines-valid="3270" lines-covered="2175" line-rate="0.6651" branches-valid="1866" branches-covered="1100" branch-rate="0.5893999999999999" timestamp="1719180376333" complexity="0" version="0.1">
+<coverage lines-valid="3270" lines-covered="2175" line-rate="0.6651" branches-valid="1870" branches-covered="1104" branch-rate="0.5903" timestamp="1719266860183" complexity="0" version="0.1">
   <sources>
     <source>/home/runner/work/snapcraft.io/snapcraft.io</source>
   </sources>
@@ -278,7 +278,7 @@
         </class>
       </classes>
     </package>
-    <package name="brand-store.components.Model" line-rate="0.4514" branch-rate="0.5384">
+    <package name="brand-store.components.Model" line-rate="0.4514" branch-rate="0.5578">
       <classes>
         <class name="CreatePolicyForm.tsx" filename="static/js/brand-store/components/Model/CreatePolicyForm.tsx" line-rate="0.38770000000000004" branch-rate="0.7646999999999999">
           <methods>
@@ -517,13 +517,13 @@
           <methods>
             <method name="ModelBreadcrumb" hits="22" signature="()V">
               <lines>
-                <line number="3" hits="22"/>
+                <line number="7" hits="22"/>
               </lines>
             </method>
           </methods>
           <lines>
-            <line number="4" hits="22" branch="false"/>
-            <line number="6" hits="22" branch="false"/>
+            <line number="8" hits="22" branch="false"/>
+            <line number="10" hits="22" branch="false"/>
           </lines>
         </class>
         <class name="ModelNav.tsx" filename="static/js/brand-store/components/Model/ModelNav.tsx" line-rate="1" branch-rate="1">
