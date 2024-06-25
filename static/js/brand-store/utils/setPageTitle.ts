@@ -1,4 +1,4 @@
-function setPageTitle(title: string) {
+function setPageTitle(title: string): void {
   document.title = `${title} - Snapcraft`;
 }
 
