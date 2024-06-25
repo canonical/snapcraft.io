@@ -30,10 +30,8 @@ function vimeo(): void {
   checkVimeo();
 }
 
-function asciinema(
-  holderEl: { querySelector: (arg0: string) => HTMLIFrameElement | null }
-): void {
-  const asciinemaPlayer = holderEl.querySelector("iframe");
+function asciinema(holderEl: HTMLElement): void {
+  const asciinemaPlayer = holderEl.querySelector("iframe") as HTMLIFrameElement | null;
 
   if (!asciinemaPlayer) {
     setTimeout(() => asciinema(holderEl), 200);
