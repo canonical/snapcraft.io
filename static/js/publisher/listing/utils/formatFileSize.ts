@@ -1,4 +1,4 @@
-function formatFileSize(fileSize: number) {
+function formatFileSize(fileSize: number): string {
   if (fileSize < 1000000) {
     return `${fileSize / 1000}kB`;
   }
