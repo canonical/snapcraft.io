@@ -1,5 +1,6 @@
 import json
 import os
+import hashlib
 
 import flask
 from canonicalwebteam.launchpad import Launchpad
@@ -136,3 +137,10 @@ def get_publisher_data():
     context = {"publisher": flask_user}
 
     return context
+
+
+def get_dns_verification_token(snap_name, domain):
+    salt = os.getenv("DNS_VERIFICATION_SALT")
+    token_string = f"{domain}:{snap_name}:{salt}"
+    token = hashlib.sha256(token_string.encode("utf-8")).hexdigest()
+    return token
