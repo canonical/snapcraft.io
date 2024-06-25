@@ -1,7 +1,3 @@
-interface HolderElement {
-  querySelector: (selector: string) => HTMLIFrameElement | null;
-}
-
 function vimeo(): void {
   const vimeoPlayerScript = document.createElement("script");
   vimeoPlayerScript.src = "https://player.vimeo.com/api/player.js";
@@ -62,7 +58,7 @@ function videos(holderSelector: string): void {
   if (videoType === "vimeo") {
     vimeo();
   } else if (videoType === "asciinema") {
-    asciinema(holderEl as HolderElement);
+    asciinema(holderEl);
   }
 }
 
