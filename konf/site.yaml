@@ -81,6 +81,11 @@ env: &env
       key: discourse-api-username
       name: snapcraft-io
 
+  - name: DNS_VERIFICATION_SALT
+    secureKeyRef:
+      key: dns-verification-salt
+      name: snapcraft-io
+
 memoryLimit: 256Mi
 
 extraHosts:
