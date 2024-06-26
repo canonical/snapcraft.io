@@ -12,6 +12,7 @@ ENVIRONMENT = os.getenv("ENVIRONMENT", "devel")
 COMMIT_ID = os.getenv("COMMIT_ID", "commit_id")
 SENTRY_DSN = os.getenv("SENTRY_DSN", "").strip()
 SENTRY_CONFIG = {"release": COMMIT_ID, "environment": ENVIRONMENT}
+DNS_VERIFICATION_SALT = os.getenv("DNS_VERIFICATION_SALT")
 
 if ENVIRONMENT != "devel":
     SESSION_COOKIE_SAMESITE = "None"
