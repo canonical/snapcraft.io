@@ -15,6 +15,7 @@ from webapp.config import (
     COMMIT_ID,
     ENVIRONMENT,
     WEBAPP_CONFIG,
+    DNS_VERIFICATION_SALT,
 )
 
 from canonicalwebteam.store_api.exceptions import (
@@ -117,6 +118,7 @@ def snapcraft_utility_processor():
         "image": image_template,
         "stores": stores,
         "format_link": template_utils.format_link,
+        "DNS_VERIFICATION_SALT": DNS_VERIFICATION_SALT,
     }
 
 
