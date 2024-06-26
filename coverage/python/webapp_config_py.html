@@ -22,8 +22,8 @@
         </h1>
         <img id="keyboard_icon" src="keybd_closed.png" alt="Show keyboard shortcuts" />
         <h2 class="stats">
-            20 statements &nbsp;
-            <button type="button" class="run shortkey_r button_toggle_run" title="Toggle lines run">18 run</button>
+            21 statements &nbsp;
+            <button type="button" class="run shortkey_r button_toggle_run" title="Toggle lines run">19 run</button>
             <button type="button" class="mis show_mis shortkey_m button_toggle_mis" title="Toggle lines missing">2 missing</button>
             <button type="button" class="exc show_exc shortkey_x button_toggle_exc" title="Toggle lines excluded">0 excluded</button>
         </h2>
@@ -66,30 +66,31 @@
     <p id="t12" class="run"><span class="n"><a href="#t12">12</a></span><span class="t"><span class="nam">COMMIT_ID</span> <span class="op">=</span> <span class="nam">os</span><span class="op">.</span><span class="nam">getenv</span><span class="op">(</span><span class="str">"COMMIT_ID"</span><span class="op">,</span> <span class="str">"commit_id"</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p id="t13" class="run"><span class="n"><a href="#t13">13</a></span><span class="t"><span class="nam">SENTRY_DSN</span> <span class="op">=</span> <span class="nam">os</span><span class="op">.</span><span class="nam">getenv</span><span class="op">(</span><span class="str">"SENTRY_DSN"</span><span class="op">,</span> <span class="str">""</span><span class="op">)</span><span class="op">.</span><span class="nam">strip</span><span class="op">(</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p id="t14" class="run"><span class="n"><a href="#t14">14</a></span><span class="t"><span class="nam">SENTRY_CONFIG</span> <span class="op">=</span> <span class="op">{</span><span class="str">"release"</span><span class="op">:</span> <span class="nam">COMMIT_ID</span><span class="op">,</span> <span class="str">"environment"</span><span class="op">:</span> <span class="nam">ENVIRONMENT</span><span class="op">}</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t15" class="pln"><span class="n"><a href="#t15">15</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
-    <p id="t16" class="run"><span class="n"><a href="#t16">16</a></span><span class="t"><span class="key">if</span> <span class="nam">ENVIRONMENT</span> <span class="op">!=</span> <span class="str">"devel"</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t17" class="mis show_mis"><span class="n"><a href="#t17">17</a></span><span class="t">    <span class="nam">SESSION_COOKIE_SAMESITE</span> <span class="op">=</span> <span class="str">"None"</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t18" class="mis show_mis"><span class="n"><a href="#t18">18</a></span><span class="t">    <span class="nam">SESSION_COOKIE_SECURE</span> <span class="op">=</span> <span class="key">True</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t19" class="pln"><span class="n"><a href="#t19">19</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
-    <p id="t20" class="run"><span class="n"><a href="#t20">20</a></span><span class="t"><span class="nam">WEBAPP_CONFIG</span> <span class="op">=</span> <span class="op">{</span><span class="str">"LAYOUT"</span><span class="op">:</span> <span class="str">"_layout.html"</span><span class="op">,</span> <span class="str">"STORE_NAME"</span><span class="op">:</span> <span class="str">"Snap store"</span><span class="op">}</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t21" class="pln"><span class="n"><a href="#t21">21</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
-    <p id="t22" class="run"><span class="n"><a href="#t22">22</a></span><span class="t"><span class="nam">WEBAPP_EXTRA_HEADERS</span> <span class="op">=</span> <span class="op">{</span><span class="op">}</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t23" class="pln"><span class="n"><a href="#t23">23</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
-    <p id="t24" class="pln"><span class="n"><a href="#t24">24</a></span><span class="t"><span class="com"># Ten years default cache time on static files</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t25" class="run"><span class="n"><a href="#t25">25</a></span><span class="t"><span class="nam">SEND_FILE_MAX_AGE_DEFAULT</span> <span class="op">=</span> <span class="num">10</span> <span class="op">*</span> <span class="num">365</span> <span class="op">*</span> <span class="num">24</span> <span class="op">*</span> <span class="num">60</span> <span class="op">*</span> <span class="num">60</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t26" class="pln"><span class="n"><a href="#t26">26</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
-    <p id="t27" class="run"><span class="n"><a href="#t27">27</a></span><span class="t"><span class="nam">CONTENT_DIRECTORY</span> <span class="op">=</span> <span class="op">{</span><span class="str">"PUBLISHER_PAGES"</span><span class="op">:</span> <span class="str">"store/content/publishers/"</span><span class="op">}</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t28" class="pln"><span class="n"><a href="#t28">28</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
-    <p id="t29" class="pln"><span class="n"><a href="#t29">29</a></span><span class="t"><span class="com"># Docs search</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t30" class="run"><span class="n"><a href="#t30">30</a></span><span class="t"><span class="nam">SEARCH_API_KEY</span> <span class="op">=</span> <span class="nam">os</span><span class="op">.</span><span class="nam">getenv</span><span class="op">(</span><span class="str">"SEARCH_API_KEY"</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t31" class="run"><span class="n"><a href="#t31">31</a></span><span class="t"><span class="nam">SEARCH_API_URL</span> <span class="op">=</span> <span class="str">"https://www.googleapis.com/customsearch/v1"</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t32" class="run"><span class="n"><a href="#t32">32</a></span><span class="t"><span class="nam">SEARCH_CUSTOM_ID</span> <span class="op">=</span> <span class="str">"009048213575199080868:i3zoqdwqk8o"</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t15" class="run"><span class="n"><a href="#t15">15</a></span><span class="t"><span class="nam">DNS_VERIFICATION_SALT</span> <span class="op">=</span> <span class="nam">os</span><span class="op">.</span><span class="nam">getenv</span><span class="op">(</span><span class="str">"DNS_VERIFICATION_SALT"</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t16" class="pln"><span class="n"><a href="#t16">16</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p id="t17" class="run"><span class="n"><a href="#t17">17</a></span><span class="t"><span class="key">if</span> <span class="nam">ENVIRONMENT</span> <span class="op">!=</span> <span class="str">"devel"</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t18" class="mis show_mis"><span class="n"><a href="#t18">18</a></span><span class="t">    <span class="nam">SESSION_COOKIE_SAMESITE</span> <span class="op">=</span> <span class="str">"None"</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t19" class="mis show_mis"><span class="n"><a href="#t19">19</a></span><span class="t">    <span class="nam">SESSION_COOKIE_SECURE</span> <span class="op">=</span> <span class="key">True</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t20" class="pln"><span class="n"><a href="#t20">20</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p id="t21" class="run"><span class="n"><a href="#t21">21</a></span><span class="t"><span class="nam">WEBAPP_CONFIG</span> <span class="op">=</span> <span class="op">{</span><span class="str">"LAYOUT"</span><span class="op">:</span> <span class="str">"_layout.html"</span><span class="op">,</span> <span class="str">"STORE_NAME"</span><span class="op">:</span> <span class="str">"Snap store"</span><span class="op">}</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t22" class="pln"><span class="n"><a href="#t22">22</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p id="t23" class="run"><span class="n"><a href="#t23">23</a></span><span class="t"><span class="nam">WEBAPP_EXTRA_HEADERS</span> <span class="op">=</span> <span class="op">{</span><span class="op">}</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t24" class="pln"><span class="n"><a href="#t24">24</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p id="t25" class="pln"><span class="n"><a href="#t25">25</a></span><span class="t"><span class="com"># Ten years default cache time on static files</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t26" class="run"><span class="n"><a href="#t26">26</a></span><span class="t"><span class="nam">SEND_FILE_MAX_AGE_DEFAULT</span> <span class="op">=</span> <span class="num">10</span> <span class="op">*</span> <span class="num">365</span> <span class="op">*</span> <span class="num">24</span> <span class="op">*</span> <span class="num">60</span> <span class="op">*</span> <span class="num">60</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t27" class="pln"><span class="n"><a href="#t27">27</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p id="t28" class="run"><span class="n"><a href="#t28">28</a></span><span class="t"><span class="nam">CONTENT_DIRECTORY</span> <span class="op">=</span> <span class="op">{</span><span class="str">"PUBLISHER_PAGES"</span><span class="op">:</span> <span class="str">"store/content/publishers/"</span><span class="op">}</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t29" class="pln"><span class="n"><a href="#t29">29</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p id="t30" class="pln"><span class="n"><a href="#t30">30</a></span><span class="t"><span class="com"># Docs search</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t31" class="run"><span class="n"><a href="#t31">31</a></span><span class="t"><span class="nam">SEARCH_API_KEY</span> <span class="op">=</span> <span class="nam">os</span><span class="op">.</span><span class="nam">getenv</span><span class="op">(</span><span class="str">"SEARCH_API_KEY"</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t32" class="run"><span class="n"><a href="#t32">32</a></span><span class="t"><span class="nam">SEARCH_API_URL</span> <span class="op">=</span> <span class="str">"https://www.googleapis.com/customsearch/v1"</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t33" class="run"><span class="n"><a href="#t33">33</a></span><span class="t"><span class="nam">SEARCH_CUSTOM_ID</span> <span class="op">=</span> <span class="str">"009048213575199080868:i3zoqdwqk8o"</span>&nbsp;</span><span class="r"></span></p>
 </div>
 <div id="footer">
     <div class="content">
         <p>
             <a class="nav" href="index.html">&#xab; index</a> &nbsp; &nbsp; <a class="nav" href="https://coverage.readthedocs.io">coverage.py v5.5</a>,
-            created at 2024-06-25 22:07 +0000
+            created at 2024-06-26 22:07 +0000
         </p>
     </div>
 </div>
