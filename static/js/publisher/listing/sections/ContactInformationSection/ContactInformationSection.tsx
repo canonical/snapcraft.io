@@ -1,4 +1,5 @@
 import MultipleInputs from "../../components/MultipleInputs";
+import ListingFormInput from "../../components/ListingFormInput";
 
 type Props = {
   getFieldState: Function;
@@ -18,9 +19,18 @@ function ContactInformationSection({
         <h2 className="p-heading--4">Contact information</h2>
       </div>
 
+      <ListingFormInput
+        label="Primary website"
+        name="primary_website"
+        register={register}
+        getFieldState={getFieldState}
+        type="url"
+        colSize={5}
+      />
+
       <MultipleInputs
         fieldName="websites"
-        label="Websites"
+        label="Other websites"
         register={register}
         control={control}
         getFieldState={getFieldState}

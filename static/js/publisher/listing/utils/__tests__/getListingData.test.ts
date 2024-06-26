@@ -67,5 +67,6 @@ describe("getListingData", () => {
     expect(listingData.images).toBeDefined();
     expect(listingData.snap_categories).toBeDefined();
     expect(listingData.links).toBeDefined();
+    expect(listingData.primary_website).toBeDefined();
   });
 });

@@ -3,6 +3,16 @@ type License = {
   name: string;
 };
 
+const getOtherWebsites = (websites: Array<string>) => {
+  if (websites.length > 1) {
+    return websites.slice(1, websites.length).map((url) => ({ url })) as Array<{
+      url: string;
+    }>;
+  }
+
+  return [] as [];
+};
+
 const licenseSort = (a: License, b: License) => {
   if (a.name < b.name) {
     return -1;
@@ -101,13 +111,13 @@ function getListingData(listingData: { [key: string]: any }) {
             };
           })
         : [],
+    primary_website:
+      listingData.links && listingData.links.website
+        ? listingData.links.website[0]
+        : "",
     websites:
       listingData.links && listingData.links.website
-        ? listingData.links.website.map((link: string) => {
-            return {
-              url: link,
-            };
-          })
+        ? getOtherWebsites(listingData.links.website)
         : [],
     banner_urls: window?.listingData?.banner_urls,
     icon_url: window?.listingData?.icon_url,

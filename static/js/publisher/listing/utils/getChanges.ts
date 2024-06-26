@@ -69,7 +69,15 @@ function getChanges(
     return urls.filter((url) => url.url !== "");
   };
 
+  const combineWebsites = (
+    primaryWebsite: string,
+    websites: Array<{ url: string }>
+  ) => {
+    return [{ url: primaryWebsite }].concat(websites);
+  };
+
   if (
+    dirtyFields.primary_website ||
     dirtyFields.contacts ||
     dirtyFields.donations ||
     dirtyFields.issues ||
@@ -77,6 +85,7 @@ function getChanges(
     dirtyFields["source-code"] ||
     dirtyFields.website
   ) {
+    combineWebsites(data.primary_website, data.websites);
     changes.links = {
       contact: data.contacts
         ? removeEmptyUrls(data.contacts).map((url: { url: string }) => url.url)
@@ -88,7 +97,9 @@ function getChanges(
         ? removeEmptyUrls(data.issues).map((url: { url: string }) => url.url)
         : [],
       website: data.websites
-        ? removeEmptyUrls(data.websites).map((url: { url: string }) => url.url)
+        ? removeEmptyUrls(
+            combineWebsites(data.primary_website, data.websites)
+          ).map((url: { url: string }) => url.url)
         : [],
       source: data["source-code"]
         ? removeEmptyUrls(data["source-code"]).map(
