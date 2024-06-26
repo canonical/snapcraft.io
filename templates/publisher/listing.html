@@ -7,6 +7,7 @@ Listing details for {% if display_title %}{{ display_title }}{% else %}{{ snap_t
 {% block content %}
 <main id="main-content"></main>
 <script>
+  window.DNS_VERIFICATION_SALT = "{{ DNS_VERIFICATION_SALT }}"
   window.SENTRY_DSN = "{{ SENTRY_DSN }}";
   window.CSRF_TOKEN = "{{ csrf_token() }}";
   window.listingData = JSON.parse({{ listing_data|tojson }});
