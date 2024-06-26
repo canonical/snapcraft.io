@@ -1,5 +1,5 @@
 import { nanoid } from "nanoid";
-import { Row, Col } from "@canonical/react-components";
+import { Row, Col, ColSize } from "@canonical/react-components";
 
 type Props = {
   label: string;
@@ -12,7 +12,8 @@ type Props = {
   placeholder?: string;
   getFieldState: Function;
   pattern?: RegExp;
-  tourLabel: string;
+  tourLabel?: string;
+  colSize?: ColSize;
 };
 
 function ListingFormInput({
@@ -27,6 +28,7 @@ function ListingFormInput({
   getFieldState,
   pattern,
   tourLabel,
+  colSize,
 }: Props) {
   const id = nanoid();
   const fieldState = getFieldState ? getFieldState(name) : "";
@@ -42,7 +44,7 @@ function ListingFormInput({
           {label}:
         </label>
       </Col>
-      <Col size={8}>
+      <Col size={colSize || 8}>
         <div className="p-form__control">
           <input
             data-tour={tourLabel}
