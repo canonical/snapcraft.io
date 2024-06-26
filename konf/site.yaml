@@ -80,9 +80,9 @@ env: &env
     secretKeyRef:
       key: discourse-api-username
       name: snapcraft-io
-
+  
   - name: DNS_VERIFICATION_SALT
-    secureKeyRef:
+    secretKeyRef:
       key: dns-verification-salt
       name: snapcraft-io
 
