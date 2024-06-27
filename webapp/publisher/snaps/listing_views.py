@@ -132,7 +132,10 @@ def get_listing_snap(snap_name, is_json=False):
         return flask.render_template(
             "publisher/listing.html",
             **context,
-            listing_data=json.dumps(context)
+            listing_data=json.dumps(context),
+            dns_verification_token=helpers.get_dns_verification_token(
+                snap_details["snap_name"], snap_details["links"]["website"][0]
+            )
         )
 
 

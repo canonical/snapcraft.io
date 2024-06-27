@@ -132,7 +132,7 @@ upstream project.</span>
   
   if (primaryDomainListItem) {
     async function getVerifiedStatus() {
-      const response = await fetch("/api/{{ snap_title }}/verify");
+      const response = await fetch("/api/{{ package_name }}/verify");
       
       if (!response.ok) {
         return;

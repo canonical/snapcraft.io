@@ -12,13 +12,13 @@ const formatLinkFields = (fields: Array<{ url: string }>) => {
 
 function getFormData(
   data: { [key: string]: any },
-  snapId: string,
+  snapId: string | undefined,
   changes: { [key: string]: any }
 ) {
   const formData = new FormData();
 
   formData.set("csrf_token", window.CSRF_TOKEN);
-  formData.set("snap_id", snapId);
+  formData.set("snap_id", snapId || "");
 
   if (changes.title) {
     formData.set("title", data?.title);
@@ -97,7 +97,9 @@ function getFormData(
         formData.append("screenshots", newFile);
 
         // update changes object
-        const imageIndex = changes.images.findIndex((image: any) => image.name === oldName);
+        const imageIndex = changes.images.findIndex(
+          (image: any) => image.name === oldName
+        );
         changes.images[imageIndex].name = newFile.name;
         changes.images[imageIndex].url = URL.createObjectURL(newFile);
       }

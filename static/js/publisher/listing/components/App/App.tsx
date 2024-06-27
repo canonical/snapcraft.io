@@ -238,10 +238,13 @@ function App() {
           </Strip>
 
           <ContactInformationSection
+            snapName={listingData?.snap_name}
             getFieldState={getFieldState}
             register={register}
             publisherName={publisherName}
             control={control}
+            getValues={getValues}
+            formState={formState}
           />
 
           <Strip shallow={true}>
