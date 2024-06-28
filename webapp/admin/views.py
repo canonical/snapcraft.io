@@ -663,8 +663,6 @@ def post_featured_snaps():
 
     # new_featured_snaps is the list of featured snaps to be updated
     featured_snaps = flask.request.form.get("snaps")
-    print("featured_snaps")
-    print(featured_snaps)
     if not featured_snaps:
         response = {
             "success": False,
