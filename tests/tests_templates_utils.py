@@ -260,7 +260,7 @@ class TemplateUtilsTest(unittest.TestCase):
         for domain in [
             "github.com",
             "gitlab.com",
-            "bithucket.org",
+            "bitbucket.org",
             "launchpad.net",
             "sourceforge.net",
         ]:
