@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import {
@@ -18,6 +18,7 @@ import {
   validatePhasingPercentage,
   resizeAsidePanel,
   numericalSort,
+  hasTrackGuardrails,
 } from "../helpers";
 
 import DefaultTrackModifier from "./defaultTrackModifier";
@@ -72,10 +73,24 @@ function ReleasesHeading(props) {
   const [versionPattern, setVersionPattern] = useState("");
   const [phasingPercentage, setPhasingPercentage] = useState("");
   const [phasingPercentageError, setPhasingPercentageError] = useState("");
+  const [hasGuardrails, setHasGuardrails] = useState(false);
 
   const [isTrackNameFilled, setIsTrackNameFilled] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [notification, setNotification] = useState(null);
+
+  useEffect(() => {
+    hasTrackGuardrails(props.snapName)
+      .then((response) => {
+        setHasGuardrails(response);
+      })
+      .catch(
+        (error) => {
+          console.error("Error:", error.message);
+        },
+        [props.snapName],
+      );
+  });
 
   const handleTrackNameChange = (event) => {
     const { value } = event.target;
@@ -184,7 +199,7 @@ function ReleasesHeading(props) {
                           </div>
                           <div className="track-button-wrapper">
                             <div className="track-button">
-                              {options.length <= 1 ? (
+                              {!hasGuardrails ? (
                                 <Button
                                   className="p-button has-icon new-track-button"
                                   onClick={() => {
