@@ -80,6 +80,19 @@
     <hr>
   {% endif %}
 
+  {# REPORT SNAP SECTION - hidden in preview #}
+    {% if not is_preview and not IS_BRAND_STORE %}
+      <h5 class="p-muted-heading">Report a Snap Store violation</h5>
+      <ul class="p-list">
+        <li>
+          <a class="js-modal-open">Report this app</a>
+        </li>
+      </ul>
+
+      {% include "store/snap-details/_report_snap_modal.html" %}
+      <hr>
+    {% endif %}
+
 <div class="p-modal js-exeternal-link-modal u-hide" id="modal">
   <section class="p-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="modal-title" aria-describedby="modal-description">
     <header class="p-modal__header">
