@@ -173,11 +173,11 @@ def format_link(url):
         url_parts_no_path = url_parts_no_query.split("/")[0]
 
         if url_parts_no_path in [
-                "github.com",
-                "gitlab.com",
-                "bitbucket.org",
-                "launchpad.net",
-                "sourceforge.net"
+            "github.com",
+            "gitlab.com",
+            "bitbucket.org",
+            "launchpad.net",
+            "sourceforge.net",
         ]:
             return url_parts_no_query
 
