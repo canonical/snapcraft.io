@@ -22,8 +22,8 @@
         </h1>
         <img id="keyboard_icon" src="keybd_closed.png" alt="Show keyboard shortcuts" />
         <h2 class="stats">
-            152 statements &nbsp;
-            <button type="button" class="run shortkey_r button_toggle_run" title="Toggle lines run">152 run</button>
+            161 statements &nbsp;
+            <button type="button" class="run shortkey_r button_toggle_run" title="Toggle lines run">161 run</button>
             <button type="button" class="mis show_mis shortkey_m button_toggle_mis" title="Toggle lines missing">0 missing</button>
             <button type="button" class="exc show_exc shortkey_x button_toggle_exc" title="Toggle lines excluded">0 excluded</button>
         </h2>
@@ -310,12 +310,35 @@
     <p id="t256" class="pln"><span class="n"><a href="#t256">256</a></span><span class="t">            <span class="str">"http://example.com/path/path/?foo=bar&amp;bar=foo"</span>&nbsp;</span><span class="r"></span></p>
     <p id="t257" class="pln"><span class="n"><a href="#t257">257</a></span><span class="t">        <span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p id="t258" class="run"><span class="n"><a href="#t258">258</a></span><span class="t">        <span class="nam">self</span><span class="op">.</span><span class="nam">assertEqual</span><span class="op">(</span><span class="nam">result</span><span class="op">,</span> <span class="str">"example.com"</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t259" class="pln"><span class="n"><a href="#t259">259</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p id="t260" class="run"><span class="n"><a href="#t260">260</a></span><span class="t">        <span class="key">for</span> <span class="nam">domain</span> <span class="key">in</span> <span class="op">[</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t261" class="pln"><span class="n"><a href="#t261">261</a></span><span class="t">            <span class="str">"github.com"</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t262" class="pln"><span class="n"><a href="#t262">262</a></span><span class="t">            <span class="str">"gitlab.com"</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t263" class="pln"><span class="n"><a href="#t263">263</a></span><span class="t">            <span class="str">"bitbucket.org"</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t264" class="pln"><span class="n"><a href="#t264">264</a></span><span class="t">            <span class="str">"launchpad.net"</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t265" class="pln"><span class="n"><a href="#t265">265</a></span><span class="t">            <span class="str">"sourceforge.net"</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t266" class="pln"><span class="n"><a href="#t266">266</a></span><span class="t">        <span class="op">]</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t267" class="run"><span class="n"><a href="#t267">267</a></span><span class="t">            <span class="nam">result</span> <span class="op">=</span> <span class="nam">template_utils</span><span class="op">.</span><span class="nam">format_link</span><span class="op">(</span><span class="str">f"https://{domain}/test/test"</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t268" class="run"><span class="n"><a href="#t268">268</a></span><span class="t">            <span class="nam">self</span><span class="op">.</span><span class="nam">assertEqual</span><span class="op">(</span><span class="nam">result</span><span class="op">,</span> <span class="str">f"{domain}/test/test"</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t269" class="pln"><span class="n"><a href="#t269">269</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p id="t270" class="run"><span class="n"><a href="#t270">270</a></span><span class="t">            <span class="nam">result</span> <span class="op">=</span> <span class="nam">template_utils</span><span class="op">.</span><span class="nam">format_link</span><span class="op">(</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t271" class="pln"><span class="n"><a href="#t271">271</a></span><span class="t">                <span class="str">f"http://{domain}/test/test?foo=bar"</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t272" class="pln"><span class="n"><a href="#t272">272</a></span><span class="t">            <span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t273" class="run"><span class="n"><a href="#t273">273</a></span><span class="t">            <span class="nam">self</span><span class="op">.</span><span class="nam">assertEqual</span><span class="op">(</span><span class="nam">result</span><span class="op">,</span> <span class="str">f"{domain}/test/test"</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t274" class="pln"><span class="n"><a href="#t274">274</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p id="t275" class="run"><span class="n"><a href="#t275">275</a></span><span class="t">            <span class="nam">result</span> <span class="op">=</span> <span class="nam">template_utils</span><span class="op">.</span><span class="nam">format_link</span><span class="op">(</span><span class="str">f"http://{domain}/test/test"</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t276" class="run"><span class="n"><a href="#t276">276</a></span><span class="t">            <span class="nam">self</span><span class="op">.</span><span class="nam">assertEqual</span><span class="op">(</span><span class="nam">result</span><span class="op">,</span> <span class="str">f"{domain}/test/test"</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t277" class="pln"><span class="n"><a href="#t277">277</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p id="t278" class="run"><span class="n"><a href="#t278">278</a></span><span class="t">            <span class="nam">result</span> <span class="op">=</span> <span class="nam">template_utils</span><span class="op">.</span><span class="nam">format_link</span><span class="op">(</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t279" class="pln"><span class="n"><a href="#t279">279</a></span><span class="t">                <span class="str">f"http://{domain}/test/test?foo=bar"</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t280" class="pln"><span class="n"><a href="#t280">280</a></span><span class="t">            <span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t281" class="run"><span class="n"><a href="#t281">281</a></span><span class="t">            <span class="nam">self</span><span class="op">.</span><span class="nam">assertEqual</span><span class="op">(</span><span class="nam">result</span><span class="op">,</span> <span class="str">f"{domain}/test/test"</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
 </div>
 <div id="footer">
     <div class="content">
         <p>
             <a class="nav" href="index.html">&#xab; index</a> &nbsp; &nbsp; <a class="nav" href="https://coverage.readthedocs.io">coverage.py v5.5</a>,
-            created at 2024-06-27 22:07 +0000
+            created at 2024-06-28 22:07 +0000
         </p>
     </div>
 </div>
