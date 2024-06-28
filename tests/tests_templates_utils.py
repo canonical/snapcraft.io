@@ -256,3 +256,26 @@ class TemplateUtilsTest(unittest.TestCase):
             "http://example.com/path/path/?foo=bar&bar=foo"
         )
         self.assertEqual(result, "example.com")
+
+        for domain in [
+            "github.com",
+            "gitlab.com",
+            "bitbucket.org",
+            "launchpad.net",
+            "sourceforge.net",
+        ]:
+            result = template_utils.format_link(f"https://{domain}/test/test")
+            self.assertEqual(result, f"{domain}/test/test")
+
+            result = template_utils.format_link(
+                f"http://{domain}/test/test?foo=bar"
+            )
+            self.assertEqual(result, f"{domain}/test/test")
+
+            result = template_utils.format_link(f"http://{domain}/test/test")
+            self.assertEqual(result, f"{domain}/test/test")
+
+            result = template_utils.format_link(
+                f"http://{domain}/test/test?foo=bar"
+            )
+            self.assertEqual(result, f"{domain}/test/test")
