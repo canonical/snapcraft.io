@@ -1,23 +1,21 @@
 from unittest.mock import Mock, patch
-from tests.admin.admin_endpoint_testing import (
-    TestAdminEndpoints,
-)
+from tests.admin.admin_endpoint_testing import TestAdminEndpoints
 
 
 class TestUpdateFeaturedSnaps(TestAdminEndpoints):
     def setUp(self):
-        self.mock_flask = patch("webapp.admin_dashboard.views.flask").start()
+        self.mock_flask = patch("webapp.admin.views.flask").start()
         self.mock_get_snap_id = patch(
-            "webapp.admin_dashboard.views.publisher_api.get_snap_id"
+            "webapp.admin.views.publisher_api.get_snap_id"
         ).start()
         self.mock_get_featured_snaps = patch(
-            "webapp.admin_dashboard.views.admin_api.get_featured_snaps"
+            "webapp.admin.views.admin_api.get_featured_snaps"
         ).start()
         self.mock_delete_featured_snaps = patch(
-            "webapp.admin_dashboard.views.admin_api.delete_featured_snaps"
+            "webapp.admin.views.admin_api.delete_featured_snaps"
         ).start()
         self.mock_update_featured_snaps = patch(
-            "webapp.admin_dashboard.views.admin_api.update_featured_snaps"
+            "webapp.admin.views.admin_api.update_featured_snaps"
         ).start()
         super().setUp()
 

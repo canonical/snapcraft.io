@@ -38,6 +38,7 @@ def featured_snaps():
 
 @admin_dashboard.route("/api/featured-snaps", methods=["GET"])
 @login_required
+@exchange_required
 @admin_required
 def get_featured_snaps():
     fields = ",".join(

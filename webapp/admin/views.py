@@ -14,7 +14,7 @@ from canonicalwebteam.store_api.stores.snapstore import (
 from flask.json import jsonify
 
 # Local
-from webapp.decorators import login_required, exchange_required, admin_required
+from webapp.decorators import login_required, exchange_required
 from webapp.helpers import api_publisher_session
 
 admin_api = SnapStoreAdmin(api_publisher_session)
@@ -641,12 +641,9 @@ def delete_signing_key(store_id: str, signing_key_sha3_384: str):
 
 
 # -------------------- FEATURED SNAPS AUTOMATION ------------------
-
-
 @admin.route("/admin/featured", methods=["POST"])
 @login_required
 @exchange_required
-@admin_required
 def post_featured_snaps():
     """
     In this view, we do three things:
