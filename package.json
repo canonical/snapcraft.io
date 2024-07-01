@@ -17,7 +17,7 @@
     "start": "yarn run build && concurrently --raw 'yarn run watch-scss' 'yarn run watch-js' 'yarn run serve'",
     "watch": "watch -p 'static/sass/**/*.scss' -p 'static/js/**/*.js' -c 'yarn run build'",
     "watch-scss": "watch -p 'static/sass/**/*.scss' -c 'yarn run build-css'",
-    "watch-js": "webpack --watch",
+    "watch-js": "webpack --watch --mode development",
     "clean": "rm -rf node_modules yarn-error.log css static/js/modules static/css *.log *.sqlite _site/ build/ .jekyll-metadata .bundle cache.tmp",
     "percy": "node_modules/.bin/percy snapshot snapshots.yml"
   },
