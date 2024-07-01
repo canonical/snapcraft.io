@@ -22,4 +22,5 @@ module.exports = {
   "publisher-settings": "./static/js/publisher/settings/index.tsx",
   "about-listing": "./static/js/public/about/listing.ts",
   store: "./static/js/store/index.tsx",
+  admin: "./static/js/admin/index.tsx",
 };
