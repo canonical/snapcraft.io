@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 <!DOCTYPE coverage SYSTEM "http://cobertura.sourceforge.net/xml/coverage-04.dtd">
-<coverage lines-valid="3276" lines-covered="2179" line-rate="0.6651" branches-valid="1877" branches-covered="1111" branch-rate="0.5919" timestamp="1719785180008" complexity="0" version="0.1">
+<coverage lines-valid="3285" lines-covered="2185" line-rate="0.6651" branches-valid="1879" branches-covered="1112" branch-rate="0.5918" timestamp="1719871600823" complexity="0" version="0.1">
   <sources>
     <source>/home/runner/work/snapcraft.io/snapcraft.io</source>
   </sources>
@@ -6005,7 +6005,7 @@
         </class>
       </classes>
     </package>
-    <package name="publisher.release" line-rate="0.4029" branch-rate="0.282">
+    <package name="publisher.release" line-rate="0.41950000000000004" branch-rate="0.2875">
       <classes>
         <class name="constants.js" filename="static/js/publisher/release/constants.js" line-rate="1" branch-rate="1">
           <methods>
@@ -6027,7 +6027,7 @@
             <line number="22" hits="10" branch="false"/>
           </lines>
         </class>
-        <class name="helpers.ts" filename="static/js/publisher/release/helpers.ts" line-rate="0.375" branch-rate="0.2926">
+        <class name="helpers.ts" filename="static/js/publisher/release/helpers.ts" line-rate="0.41090000000000004" branch-rate="0.3023">
           <methods>
             <method name="isInDevmode" hits="7" signature="()V">
               <lines>
@@ -6109,6 +6109,11 @@
                 <line number="146" hits="0"/>
               </lines>
             </method>
+            <method name="hasTrackGuardrails" hits="2" signature="()V">
+              <lines>
+                <line number="163" hits="2"/>
+              </lines>
+            </method>
           </methods>
           <lines>
             <line number="6" hits="7" branch="true" condition-coverage="100% (2/2)"/>
@@ -6175,6 +6180,15 @@
             <line number="155" hits="0" branch="true" condition-coverage="0% (0/2)"/>
             <line number="156" hits="0" branch="false"/>
             <line number="160" hits="0" branch="false"/>
+            <line number="164" hits="2" branch="false"/>
+            <line number="165" hits="2" branch="false"/>
+            <line number="166" hits="2" branch="false"/>
+            <line number="173" hits="2" branch="true" condition-coverage="50% (1/2)"/>
+            <line number="174" hits="0" branch="false"/>
+            <line number="177" hits="2" branch="false"/>
+            <line number="179" hits="2" branch="false"/>
+            <line number="181" hits="0" branch="false"/>
+            <line number="182" hits="0" branch="false"/>
           </lines>
         </class>
         <class name="releasesState.js" filename="static/js/publisher/release/releasesState.js" line-rate="0.2857" branch-rate="0.2702">
