@@ -10,4 +10,7 @@ install:
     command: |
       sudo apt update
       sudo apt install snapd
-      sudo snap install core
+  - action: |
+      After this, install the snapd snap in order to get the latest snapd:
+    command: |
+      sudo snap install snapd
