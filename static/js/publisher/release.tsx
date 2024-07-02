@@ -6,19 +6,20 @@ import { Provider } from "react-redux";
 import { DndProvider } from "react-dnd";
 import ReleasesController from "./release/releasesController";
 import releases from "./release/reducers";
+import { ReleasesData, ChannelMap, Track, Options } from "./types/releaseTypes"
 
 // setup redux store with thunk middleware and devtools extension:
 // https://github.com/zalmoxisus/redux-devtools-extension#12-advanced-store-setup
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
 const initReleases = (
-  id: any,
-  snapName: any,
-  releasesData: { releasesData: any },
-  channelMap: { channelMap: any },
-  tracks: any,
-  options: { [key: string]: any }
-) => {
+  id: string,
+  snapName: string,
+  releasesData: ReleasesData,
+  channelMap: ChannelMap[],
+  tracks: Track[],
+  options: Options,
+): void => {
   const store = createStore(
     releases,
     {
@@ -26,7 +27,7 @@ const initReleases = (
       defaultTrack: options.defaultTrack,
       options: {
         ...options,
-        // @ts-ignore
+        // @ts-expect-error
         snapName,
         tracks,
       },
@@ -34,6 +35,7 @@ const initReleases = (
     composeEnhancers(applyMiddleware(thunk))
   );
   const container = document.querySelector(id);
+  if (!container) throw new Error(`Container with id ${id} not found`);
   const root = createRoot(container);
   root.render(
     <Provider store={store}>
@@ -41,8 +43,8 @@ const initReleases = (
         <ReleasesController
           snapName={snapName}
           releasesData={releasesData}
-          // @ts-ignore
           channelMap={channelMap}
+          // @ts-expect-error
           options={options}
         />
       </DndProvider>
