@@ -61,7 +61,7 @@ class GetListingPage(BaseTestCases.EndpointLoggedInErrorHandling):
             "categories": {"items": []},
             "status": "published",
             "update_metadata_on_release": True,
-            "links": {},
+            "links": {"website": "https://example.com"},
         }
 
         responses.add(responses.GET, self.api_url, json=payload, status=200)
@@ -120,7 +120,7 @@ class GetListingPage(BaseTestCases.EndpointLoggedInErrorHandling):
             "categories": {"items": []},
             "status": "published",
             "update_metadata_on_release": True,
-            "links": {},
+            "links": {"website": "https://example.com"},
         }
 
         responses.add(responses.GET, self.api_url, json=payload, status=200)
@@ -161,7 +161,7 @@ class GetListingPage(BaseTestCases.EndpointLoggedInErrorHandling):
             "categories": {"items": []},
             "status": "published",
             "update_metadata_on_release": True,
-            "links": {},
+            "links": {"website": "https://example.com"},
         }
 
         responses.add(responses.GET, self.api_url, json=payload, status=200)
@@ -208,7 +208,7 @@ class GetListingPage(BaseTestCases.EndpointLoggedInErrorHandling):
             "categories": {"items": []},
             "status": "published",
             "update_metadata_on_release": True,
-            "links": {},
+            "links": {"website": "https://example.com"},
         }
 
         responses.add(responses.GET, self.api_url, json=payload, status=200)
@@ -249,7 +249,7 @@ class GetListingPage(BaseTestCases.EndpointLoggedInErrorHandling):
             "categories": {"items": []},
             "status": "published",
             "update_metadata_on_release": True,
-            "links": {},
+            "links": {"website": "https://example.com"},
         }
 
         responses.add(responses.GET, self.api_url, json=payload, status=200)
@@ -290,7 +290,7 @@ class GetListingPage(BaseTestCases.EndpointLoggedInErrorHandling):
             "categories": {"items": []},
             "status": "published",
             "update_metadata_on_release": True,
-            "links": {},
+            "links": {"website": "https://example.com"},
         }
 
         responses.add(responses.GET, self.api_url, json=payload, status=200)

@@ -12,4 +12,5 @@ declare interface Window {
   __REDUX_DEVTOOLS_EXTENSION_COMPOSE__?: typeof compose;
   MktoForms2: any;
   Vimeo: any;
+  DNS_VERIFICATION_TOKEN: string;
 }
