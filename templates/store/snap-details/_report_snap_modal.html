@@ -2,7 +2,7 @@
   <div class="p-modal__dialog" role="dialog" aria-labelledby="modal-title" aria-describedby="modal-description">
     <div class="js-report-snap-form">
       <header class="p-modal__header">
-        <h2 class="p-modal__title" id="modal-title">Report {{snap_title}}</h2>
+        <h2 class="p-modal__title" id="modal-title">Report {{snap_title}} for a Snap Store violation</h2>
         <button class="p-modal__close js-modal-close" aria-label="Close dialog">Close</button>
       </header>
 
@@ -11,6 +11,35 @@
       <form id="report-snap-form" action="/report" method="POST">
         <input name="csrf_token" type="hidden" value="{{csrf_token()}}" />
         <input type="hidden" name="entry.718227286" value="{{package_name}}" />
+        <div class="p-notification--negative">
+          <div class="p-notification__content">
+            <h5 class="p-notification__title">
+              Reports submitted through this form go to the Snap team, not the Snap Developer.
+            </h5>
+            {% if links and links["contact"] %}
+              <p class="p-notification__message">
+                The Snap developer has provided the following <b>contact information</b>:</p>
+              <ul>
+                {% if links["contact"] %}
+                  {% for link in links["contact"] %}
+                    <li><a href="{{link}}" target="_blank" rel="noopener">{{ format_link(link) }}</a></li>
+                  {% endfor %}
+                {% endif %}
+              </ul>
+            {% endif %}
+            {% if links and links["issues"] %}
+              <p class="p-notification__message">
+                The Snap developer has provided the following links for <b>reporting issues</b>:</p>
+              <ul>
+                {% if links["issues"] %}
+                  {% for link in links["issues"] %}
+                    <li><a href="{{link}}" target="_blank" rel="noopener">{{ format_link(link) }}</a></li>
+                  {% endfor %}
+                {% endif %}
+              </ul>
+            {% endif %}
+          </div>
+        </div>
         <label for="report-snap-reason">Choose a reason for reporting this snap</label>
         <select id="report-snap-reason" name="entry.340540050" required>
           <option value="" selected>Select an option</option>
@@ -35,10 +64,10 @@
 
     <div class="js-report-snap-success u-hide">
       <header class="p-modal__header">
-        <h2 class="p-modal__title" id="modal-title">Report submitted successfully</h2>
+        <h2 class="p-modal__title" id="modal-title">Snap Store Violation Report submitted successfully</h2>
         <button class="p-modal__close js-modal-close" aria-label="Close dialog">Close</button>
       </header>
-      <p>Thanks for bringing this to our attention. Information you provided will help us investigate further.</p>
+      <p>Thank you for your report. Information you provided will help us investigate further.</p>
       <div class="u-align--right">
         <button type="button" class="p-button--positive js-modal-close u-no-margin--bottom">Close</button>
       </div>

@@ -159,3 +159,26 @@ export function numericalSort(a: string, b: string) {
 
   return a.localeCompare(b);
 }
+
+export async function hasTrackGuardrails(snap: string) {
+  const url = `/api/packages/${snap}`;
+  try {
+    const response = await fetch(url, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error("There was a problem fetching the snap's metadata");
+    }
+
+    const data = await response.json();
+
+    return data.data["track-guardrails"].length > 0;
+  } catch (e) {
+    console.error(e);
+    return false;
+  }
+}

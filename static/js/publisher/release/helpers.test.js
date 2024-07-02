@@ -5,7 +5,10 @@ import {
   getRevisionsArchitectures,
   isSameVersion,
   jsonClone,
+  hasTrackGuardrails,
 } from "./helpers";
+
+global.fetch = jest.fn();
 
 describe("getChannelName", () => {
   it("should return track/risk pair as a name", () => {
@@ -109,5 +112,41 @@ describe("jsonClone", () => {
     };
 
     expect(jsonClone(testJson)).toEqual({ string: "string" });
+  });
+});
+
+describe("hasTrackGuardrails", () => {
+  beforeEach(() => {
+    fetch.mockClear();
+  });
+
+  it("should return true when track-guardrails are present", async () => {
+    fetch.mockResolvedValueOnce({
+      ok: true,
+      json: () =>
+        Promise.resolve({
+          data: {
+            "track-guardrails": ["example-guardrail"],
+          },
+        }),
+    });
+
+    const result = await hasTrackGuardrails("test-snap");
+    expect(result).toBe(true);
+  });
+
+  it("should return false when track-guardrails are not present", async () => {
+    fetch.mockResolvedValueOnce({
+      ok: true,
+      json: () =>
+        Promise.resolve({
+          data: {
+            "track-guardrails": [],
+          },
+        }),
+    });
+
+    const result = await hasTrackGuardrails("test-snap");
+    expect(result).toBe(false);
   });
 });
