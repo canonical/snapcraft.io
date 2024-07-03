@@ -61,6 +61,7 @@ function ImageUpload({
   const [imageIsValid, setImageIsValid] = useState(true);
   const [isDragging, setIsDragging] = useState(false);
   const [darkThemeEnabled, setDarkThemeEnabled] = useState(false);
+  const [previewImageUrl, setPreviewImageUrl] = useState(imageUrl);
 
   const fieldId = nanoid();
   const isDark = hasDarkThemePreview && darkThemeEnabled;
@@ -113,6 +114,7 @@ function ImageUpload({
       } else {
         setImageIsValid(true);
         setValue(imageUrlFieldKey, renderedImageUrl);
+        setPreviewImageUrl(renderedImageUrl);
       }
     };
   };
@@ -139,7 +141,8 @@ function ImageUpload({
               style={{
                 width: `${previewWidth}px`,
                 height: `${previewHeight}px`,
-                marginRight: hasDarkThemePreview && !imageUrl ? "1rem" : "0",
+                marginRight:
+                  hasDarkThemePreview && !previewImageUrl ? "1rem" : "0",
               }}
               onDragOver={() => {
                 setIsDragging(true);
@@ -151,7 +154,7 @@ function ImageUpload({
                 setIsDragging(false);
               }}
             >
-              {imageUrl ? (
+              {previewImageUrl ? (
                 <div
                   className="snap-image-upload-preview"
                   style={{
@@ -160,7 +163,7 @@ function ImageUpload({
                   }}
                 >
                   <img
-                    src={imageUrl}
+                    src={previewImageUrl}
                     width={previewWidth}
                     height={previewHeight}
                     alt=""
@@ -211,7 +214,7 @@ function ImageUpload({
               />
             </div>
 
-            {imageUrl && (
+            {previewImageUrl && (
               <button
                 type="button"
                 className="p-button--base snap-remove-icon"
@@ -223,6 +226,7 @@ function ImageUpload({
                   setValue(imageFieldKey, new File([], ""), {
                     shouldDirty: window?.listingData?.banner_urls[0] !== null,
                   });
+                  setPreviewImageUrl("");
                 }}
               >
                 <Icon name="delete" light={isDark}>
