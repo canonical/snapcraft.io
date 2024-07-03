@@ -129,13 +129,16 @@ def get_listing_snap(snap_name, is_json=False):
     if is_json:
         return flask.jsonify(context)
     else:
+        token = ""
+        if snap_details["links"]["website"]:
+            token = helpers.get_dns_verification_token(
+                snap_details["snap_name"], snap_details["links"]["website"][0]
+            )
         return flask.render_template(
             "publisher/listing.html",
             **context,
             listing_data=json.dumps(context),
-            dns_verification_token=helpers.get_dns_verification_token(
-                snap_details["snap_name"], snap_details["links"]["website"][0]
-            )
+            dns_verification_token=token
         )
 
 
