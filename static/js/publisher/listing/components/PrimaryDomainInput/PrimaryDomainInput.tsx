@@ -44,14 +44,13 @@ function PrimaryDomainInput({
     return urlWithoutProtocol;
   };
 
-  const initialUrl = new URL(formState.defaultValues.primary_website);
-
   const domainChanged = () => {
     if (!getValues("primary_website")) {
       return false;
     }
 
     try {
+      const initialUrl = new URL(formState.defaultValues.primary_website);
       const newUrl = new URL(getValues("primary_website"));
       return initialUrl.hostname !== newUrl.hostname;
     } catch (e) {
@@ -65,6 +64,7 @@ function PrimaryDomainInput({
     }
 
     try {
+      const initialUrl = new URL(formState.defaultValues.primary_website);
       const newUrl = new URL(getValues("primary_website"));
       return initialUrl.pathname !== newUrl.pathname;
     } catch (e) {
@@ -82,6 +82,14 @@ function PrimaryDomainInput({
       return noPathDomains.includes(newUrl.hostname);
     } catch (e) {
       return false;
+    }
+  };
+
+  const getHostname = (url: string | undefined) => {
+    if (!url) {
+      return "";
+    } else {
+      return new URL(url).hostname;
     }
   };
 
@@ -119,7 +127,12 @@ function PrimaryDomainInput({
                         domainInNoPathList() && (
                           <>
                             Unable to verify{" "}
-                            <strong>{initialUrl.hostname}</strong> with a path
+                            <strong>
+                              {getHostname(
+                                formState.defaultValues.primary_website
+                              )}
+                            </strong>{" "}
+                            with a path
                           </>
                         )}
 
