@@ -127,30 +127,30 @@ describe("PrimaryDomainInput", () => {
     expect(screen.getByText("Verified ownership")).toBeInTheDocument();
   });
 
-  // it("shows message if verified domain is in no path list", async () => {
-  //   mockUseQueryReturnValue.data.primary_domain = true;
+  it("shows message if verified domain is in no path list", async () => {
+    mockUseQueryReturnValue.data.primary_domain = true;
 
-  //   // @ts-ignore
-  //   useQuery.mockImplementation(() => mockUseQueryReturnValue);
+    // @ts-ignore
+    useQuery.mockImplementation(() => mockUseQueryReturnValue);
 
-  //   mockUseFormReturnValue.formState = {
-  //     defaultValues: { primary_website: "https://launchpad.net" },
-  //   };
+    mockUseFormReturnValue.formState = {
+      defaultValues: { primary_website: "https://launchpad.net" },
+    };
 
-  //   mockUseFormReturnValue.getValues = jest
-  //     .fn()
-  //     .mockReturnValue("https://launchpad.net/path");
+    mockUseFormReturnValue.getValues = jest
+      .fn()
+      .mockReturnValue("https://launchpad.net/path");
 
-  //   // @ts-ignore
-  //   useForm.mockImplementation(() => mockUseFormReturnValue);
-  //   const user = userEvent.setup();
-  //   renderComponent({ primary_website: "https://launchpad.net" });
-  //   await user.type(
-  //     screen.getByRole("textbox", { name: "Primary website:" }),
-  //     "/path"
-  //   );
-  //   expect(screen.getByText(/Unable to verify/)).toBeInTheDocument();
-  // });
+    // @ts-ignore
+    useForm.mockImplementation(() => mockUseFormReturnValue);
+    const user = userEvent.setup();
+    renderComponent({ primary_website: "https://launchpad.net" });
+    await user.type(
+      screen.getByRole("textbox", { name: "Primary website:" }),
+      "/path"
+    );
+    expect(screen.getByText(/Unable to verify/)).toBeInTheDocument();
+  });
 
   it("'Verified ownership' button opens modal with token", async () => {
     mockUseQueryReturnValue.data.primary_domain = true;

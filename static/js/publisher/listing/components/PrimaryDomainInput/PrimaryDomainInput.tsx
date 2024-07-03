@@ -138,7 +138,19 @@ function PrimaryDomainInput({
 
                       {!domainChanged() &&
                         pathChanged() &&
-                        !domainInNoPathList() && <>Verified ownership</>}
+                        !domainInNoPathList() && (
+                          <button
+                            type="button"
+                            className="p-button--base has-icon"
+                            onClick={() => {
+                              setShowVerifyModal(true);
+                            }}
+                            disabled={fieldState.isDirty}
+                          >
+                            <span>Verified ownership</span>
+                            <i className="p-icon--chevron-right"></i>
+                          </button>
+                        )}
 
                       {!domainChanged() && !pathChanged() && (
                         <>Verified ownership</>
