@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 <!DOCTYPE coverage SYSTEM "http://cobertura.sourceforge.net/xml/coverage-04.dtd">
-<coverage lines-valid="3331" lines-covered="2216" line-rate="0.6652" branches-valid="1921" branches-covered="1145" branch-rate="0.596" timestamp="1719958027143" complexity="0" version="0.1">
+<coverage lines-valid="3337" lines-covered="2220" line-rate="0.6652" branches-valid="1923" branches-covered="1146" branch-rate="0.5959" timestamp="1720044412107" complexity="0" version="0.1">
   <sources>
     <source>/home/runner/work/snapcraft.io/snapcraft.io</source>
   </sources>
@@ -5208,9 +5208,9 @@
         </class>
       </classes>
     </package>
-    <package name="publisher.listing.components.PrimaryDomainInput" line-rate="0.7692" branch-rate="0.8421">
+    <package name="publisher.listing.components.PrimaryDomainInput" line-rate="0.7555" branch-rate="0.825">
       <classes>
-        <class name="PrimaryDomainInput.tsx" filename="static/js/publisher/listing/components/PrimaryDomainInput/PrimaryDomainInput.tsx" line-rate="0.7692" branch-rate="0.8421">
+        <class name="PrimaryDomainInput.tsx" filename="static/js/publisher/listing/components/PrimaryDomainInput/PrimaryDomainInput.tsx" line-rate="0.7555" branch-rate="0.825">
           <methods>
             <method name="PrimaryDomainInput" hits="10" signature="()V">
               <lines>
@@ -5224,12 +5224,12 @@
             </method>
             <method name="(anonymous_2)" hits="12" signature="()V">
               <lines>
-                <line number="49" hits="12"/>
+                <line number="47" hits="12"/>
               </lines>
             </method>
             <method name="(anonymous_3)" hits="6" signature="()V">
               <lines>
-                <line number="62" hits="6"/>
+                <line number="61" hits="6"/>
               </lines>
             </method>
             <method name="(anonymous_4)" hits="3" signature="()V">
@@ -5239,22 +5239,32 @@
             </method>
             <method name="(anonymous_5)" hits="1" signature="()V">
               <lines>
-                <line number="147" hits="1"/>
+                <line number="88" hits="1"/>
               </lines>
             </method>
-            <method name="(anonymous_6)" hits="1" signature="()V">
+            <method name="(anonymous_6)" hits="0" signature="()V">
               <lines>
-                <line number="163" hits="1"/>
+                <line number="145" hits="0"/>
               </lines>
             </method>
-            <method name="(anonymous_7)" hits="0" signature="()V">
+            <method name="(anonymous_7)" hits="1" signature="()V">
               <lines>
-                <line number="179" hits="0"/>
+                <line number="172" hits="1"/>
               </lines>
             </method>
-            <method name="(anonymous_8)" hits="0" signature="()V">
+            <method name="(anonymous_8)" hits="1" signature="()V">
               <lines>
-                <line number="202" hits="0"/>
+                <line number="188" hits="1"/>
+              </lines>
+            </method>
+            <method name="(anonymous_9)" hits="0" signature="()V">
+              <lines>
+                <line number="204" hits="0"/>
+              </lines>
+            </method>
+            <method name="(anonymous_10)" hits="0" signature="()V">
+              <lines>
+                <line number="227" hits="0"/>
               </lines>
             </method>
           </methods>
@@ -5272,16 +5282,17 @@
             <line number="41" hits="0" branch="false"/>
             <line number="44" hits="2" branch="false"/>
             <line number="47" hits="10" branch="false"/>
-            <line number="49" hits="10" branch="false"/>
-            <line number="50" hits="12" branch="true" condition-coverage="50% (1/2)"/>
-            <line number="51" hits="0" branch="false"/>
+            <line number="48" hits="12" branch="true" condition-coverage="50% (1/2)"/>
+            <line number="49" hits="0" branch="false"/>
+            <line number="52" hits="12" branch="false"/>
+            <line number="53" hits="12" branch="false"/>
             <line number="54" hits="12" branch="false"/>
             <line number="55" hits="12" branch="false"/>
-            <line number="56" hits="12" branch="false"/>
-            <line number="58" hits="0" branch="false"/>
-            <line number="62" hits="10" branch="false"/>
-            <line number="63" hits="6" branch="true" condition-coverage="50% (1/2)"/>
-            <line number="64" hits="0" branch="false"/>
+            <line number="57" hits="0" branch="false"/>
+            <line number="61" hits="10" branch="false"/>
+            <line number="62" hits="6" branch="true" condition-coverage="50% (1/2)"/>
+            <line number="63" hits="0" branch="false"/>
+            <line number="66" hits="6" branch="false"/>
             <line number="67" hits="6" branch="false"/>
             <line number="68" hits="6" branch="false"/>
             <line number="69" hits="6" branch="false"/>
@@ -5294,10 +5305,15 @@
             <line number="82" hits="3" branch="false"/>
             <line number="84" hits="0" branch="false"/>
             <line number="88" hits="10" branch="false"/>
-            <line number="148" hits="1" branch="false"/>
-            <line number="164" hits="1" branch="false"/>
-            <line number="180" hits="0" branch="false"/>
-            <line number="203" hits="0" branch="false"/>
+            <line number="89" hits="1" branch="true" condition-coverage="50% (1/2)"/>
+            <line number="90" hits="0" branch="false"/>
+            <line number="92" hits="1" branch="false"/>
+            <line number="96" hits="10" branch="false"/>
+            <line number="146" hits="0" branch="false"/>
+            <line number="173" hits="1" branch="false"/>
+            <line number="189" hits="1" branch="false"/>
+            <line number="205" hits="0" branch="false"/>
+            <line number="228" hits="0" branch="false"/>
           </lines>
         </class>
       </classes>
