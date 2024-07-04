@@ -12,6 +12,7 @@ type Props = {
     license_type: string;
     licenses: Array<{ key: string; name: string }>;
   };
+  getValues: Function;
 };
 
 function AdditionalInformationSection({
@@ -19,6 +20,7 @@ function AdditionalInformationSection({
   listingData,
   setValue,
   watch,
+  getValues,
 }: Props) {
   return (
     <>
@@ -35,8 +37,11 @@ function AdditionalInformationSection({
 
       <MetricsInputs
         register={register}
-        listingData={listingData}
         setValue={setValue}
+        getValues={getValues}
+        defaultPublicMetricsBlacklist={
+          listingData?.public_metrics_blacklist || []
+        }
       />
     </>
   );

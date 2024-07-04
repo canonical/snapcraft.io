@@ -20,6 +20,7 @@ const renderComponent = () => {
         license_type: "test",
         licenses: [],
       }}
+      getValues={jest.fn()}
     />
   );
 };

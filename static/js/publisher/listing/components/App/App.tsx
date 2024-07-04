@@ -7,6 +7,7 @@ import {
   getFormData,
   getListingData,
   shouldShowUpdateMetadataWarning,
+  getDefaultValues,
 } from "../../utils";
 import { initListingTour } from "../../../tour";
 
@@ -19,14 +20,15 @@ import AdditionalInformationSection from "../../sections/AdditionalInformationSe
 import PreviewForm from "../PreviewForm";
 
 function App() {
+  const snapData = getListingData(window?.listingData);
   const snapId = window?.listingData?.snap_id;
+  const snapTitle = window?.listingData?.snap_title;
+  const snapName = window?.listingData?.snap_name;
   const publisherName = window?.listingData?.publisher_name;
   const categories = window?.listingData?.categories;
   const tourSteps = window?.tourSteps;
 
-  const [listingData, setListingData] = useState(
-    getListingData(window?.listingData)
-  );
+  const defaultValues = getDefaultValues(snapData);
 
   const [isSaving, setIsSaving] = useState(false);
   const [hasSaved, setHasSaved] = useState(false);
@@ -37,7 +39,7 @@ function App() {
     useState(false);
   const [formData, setFormData] = useState({});
   const [updateMetadataOnRelease, setUpdateMetadataOnRelease] = useState(
-    listingData?.update_metadata_on_release
+    snapData.update_metadata_on_release
   );
 
   const {
@@ -50,7 +52,7 @@ function App() {
     control,
     getValues,
     formState,
-  } = useForm({ defaultValues: listingData, mode: "onChange" });
+  } = useForm({ defaultValues, mode: "onChange" });
 
   const isDirty = formState.isDirty;
   const isValid = formState.isValid;
@@ -58,7 +60,7 @@ function App() {
 
   const onSubmit = (data: any) => {
     if (
-      listingData?.update_metadata_on_release &&
+      snapData.update_metadata_on_release &&
       shouldShowUpdateMetadataWarning(dirtyFields)
     ) {
       setShowMetadataWarningModal(true);
@@ -78,7 +80,7 @@ function App() {
     setIsSaving(true);
     setSavedError(false);
 
-    const response = await fetch(`/${data.snap_name}/listing.json`, {
+    const response = await fetch(`/${snapName}/listing.json`, {
       method: "POST",
       body: formData,
     });
@@ -112,35 +114,19 @@ function App() {
   };
 
   useEffect(() => {
-    const formFieldSubscription = watch((data: any) => {
-      setListingData(data);
-      window.localStorage.setItem(data.snap_name, JSON.stringify(data));
-    });
-
-    return () => {
-      formFieldSubscription.unsubscribe();
-    };
-  }, [watch]);
-
-  useEffect(() => {
     initListingTour({
-      snapName: listingData?.snap_name,
+      snapName,
       container: document.getElementById("tour-container"),
-      formFields: listingData,
+      formFields: snapData,
       steps: tourSteps,
     });
-  }, [listingData]);
-
-  window.localStorage.setItem(
-    `${listingData.snap_name}-initial`,
-    JSON.stringify(listingData)
-  );
+  }, []);
 
   return (
     <>
       <PageHeader
-        snapName={listingData?.snap_name}
-        snapTitle={listingData?.title}
+        snapName={snapName}
+        snapTitle={snapTitle}
         publisherName={publisherName}
         activeTab="listing"
       />
@@ -151,7 +137,7 @@ function App() {
         encType="multipart/form-data"
       >
         <SaveAndPreview
-          snapName={listingData?.snap_name}
+          snapName={snapName}
           isDirty={isDirty}
           reset={reset}
           isSaving={isSaving}
@@ -224,10 +210,10 @@ function App() {
             getFieldState={getFieldState}
             setValue={setValue}
             categories={categories}
-            primaryCategory={listingData?.["primary-category"]}
-            secondaryCategory={listingData?.["secondary-category"]}
-            iconUrl={listingData?.icon_url}
-            bannerUrl={listingData?.banner_url}
+            primaryCategory={snapData["primary-category"]}
+            secondaryCategory={snapData["secondary-category"]}
+            iconUrl={snapData.icon_url}
+            bannerUrl={snapData.banner_url}
             control={control}
             getValues={getValues}
           />
@@ -238,7 +224,7 @@ function App() {
           </Strip>
 
           <ContactInformationSection
-            snapName={listingData?.snap_name}
+            snapName={snapName}
             getFieldState={getFieldState}
             register={register}
             publisherName={publisherName}
@@ -255,13 +241,14 @@ function App() {
 
           <AdditionalInformationSection
             register={register}
-            listingData={listingData}
+            listingData={snapData}
             setValue={setValue}
             watch={watch}
+            getValues={getValues}
           />
         </Strip>
       </Form>
-      <PreviewForm listingData={listingData} />
+      <PreviewForm snapName={snapName} getValues={getValues} />
 
       <div id="tour-container" />
     </>

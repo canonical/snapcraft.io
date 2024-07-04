@@ -49,8 +49,9 @@ function PrimaryDomainInput({
       return false;
     }
 
+    const initialUrl = new URL(formState.defaultValues.primary_website);
+
     try {
-      const initialUrl = new URL(formState.defaultValues.primary_website);
       const newUrl = new URL(getValues("primary_website"));
       return initialUrl.hostname !== newUrl.hostname;
     } catch (e) {
@@ -63,8 +64,9 @@ function PrimaryDomainInput({
       return false;
     }
 
+    const initialUrl = new URL(formState.defaultValues.primary_website);
+
     try {
-      const initialUrl = new URL(formState.defaultValues.primary_website);
       const newUrl = new URL(getValues("primary_website"));
       return initialUrl.pathname !== newUrl.pathname;
     } catch (e) {
@@ -153,7 +155,17 @@ function PrimaryDomainInput({
                         )}
 
                       {!domainChanged() && !pathChanged() && (
-                        <>Verified ownership</>
+                        <button
+                          type="button"
+                          className="p-button--base has-icon"
+                          onClick={() => {
+                            setShowVerifyModal(true);
+                          }}
+                          disabled={fieldState.isDirty}
+                        >
+                          <span>Verified ownership</span>
+                          <i className="p-icon--chevron-right"></i>
+                        </button>
                       )}
 
                       {domainChanged() && !domainInNoPathList() && (

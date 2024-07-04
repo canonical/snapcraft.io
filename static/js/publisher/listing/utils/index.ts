@@ -5,6 +5,7 @@ import validateImageDimensions from "./validateImageDimensions";
 import validateAspectRatio from "./validateAspectRatio";
 import formatFileSize from "./formatFileSize";
 import shouldShowUpdateMetadataWarning from "./shouldShowUpdateMetadataWarning";
+import getDefaultValues from "./getDefaultValues";
 
 export {
   getChanges,
@@ -14,4 +15,5 @@ export {
   validateAspectRatio,
   formatFileSize,
   shouldShowUpdateMetadataWarning,
+  getDefaultValues,
 };
