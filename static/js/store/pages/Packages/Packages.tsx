@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useQuery } from "react-query";
 import { useLocation, useSearchParams } from "react-router-dom";
+import { v4 as uuidv4 } from "uuid";
 import {
   Strip,
   Row,
@@ -33,7 +34,7 @@ function Packages() {
     const packagesWithId = data.packages.map((item: Package) => {
       return {
         ...item,
-        id: crypto.randomUUID(),
+        id: uuidv4(),
       };
     });
 

@@ -6,17 +6,112 @@ import "@testing-library/jest-dom";
 
 import Packages from "../Packages";
 
-import { testCategories } from "../../../mocks";
+global.fetch = jest.fn(() => {
+  return Promise.resolve({
+    json: () => {
+      return Promise.resolve({
+        total_items: 100,
+        total_pages: 10,
+        categories: [
+          {
+            display_name: "Art and Design",
+            name: "art-and-design",
+          },
+          {
+            display_name: "Books and Reference",
+            name: "books-and-reference",
+          },
+          {
+            display_name: "Development",
+            name: "development",
+          },
+          {
+            display_name: "Devices and IoT",
+            name: "devices-and-iot",
+          },
+          {
+            display_name: "Education",
+            name: "education",
+          },
+          {
+            display_name: "Entertainment",
+            name: "entertainment",
+          },
+          {
+            display_name: "Finance",
+            name: "finance",
+          },
+          {
+            display_name: "Games",
+            name: "games",
+          },
+          {
+            display_name: "Health and Fitness",
+            name: "health-and-fitness",
+          },
+          {
+            display_name: "Music and Audio",
+            name: "music-and-audio",
+          },
+          {
+            display_name: "News and Weather",
+            name: "news-and-weather",
+          },
+          {
+            display_name: "Personalisation",
+            name: "personalisation",
+          },
+          {
+            display_name: "Photo and Video",
+            name: "photo-and-video",
+          },
+          {
+            display_name: "Productivity",
+            name: "productivity",
+          },
+          {
+            display_name: "Science",
+            name: "science",
+          },
+          {
+            display_name: "Security",
+            name: "security",
+          },
+          {
+            display_name: "Server and Cloud",
+            name: "server-and-cloud",
+          },
+          {
+            display_name: "Social",
+            name: "social",
+          },
+          {
+            display_name: "Utilities",
+            name: "utilities",
+          },
+        ],
+        packages: [
+          {
+            package: {
+              description: "This is a test package",
+              display_name: "Test package",
+              name: "test-package",
+            },
+            categories: [
+              {
+                featured: false,
+                name: "development",
+              },
+            ],
+          },
+        ],
+      });
+    },
+  });
+}) as jest.Mock;
 
-global.fetch = jest.fn(() =>
-  Promise.resolve({
-    json: () =>
-      Promise.resolve({
-        categories: testCategories,
-        packages: [],
-      }),
-  })
-) as jest.Mock;
+// Required because of the Banner component which uses this
+window.HTMLElement.prototype.scrollIntoView = jest.fn();
 
 const queryClient = new QueryClient();
 
@@ -44,8 +139,6 @@ describe("Packages", () => {
     const user = userEvent.setup();
     renderComponent();
     await user.click(screen.getByLabelText("Development"));
-    await user.type(screen.getByLabelText("Search Snapcraft"), "code");
-    await user.click(screen.getByRole("button", { name: "Search" }));
     await waitFor(() => {
       expect(global.fetch).toHaveBeenCalledWith(
         "/beta/store.json?categories=development"
@@ -56,9 +149,9 @@ describe("Packages", () => {
   test("selected categories and search query are appended to the API call", async () => {
     const user = userEvent.setup();
     renderComponent();
-    await user.click(screen.getByLabelText("Development"));
     await user.type(screen.getByLabelText("Search Snapcraft"), "code");
     await user.click(screen.getByRole("button", { name: "Search" }));
+    await user.click(screen.getByLabelText("Development"));
     await waitFor(() => {
       expect(global.fetch).toHaveBeenCalledWith(
         "/beta/store.json?categories=development&q=code"
@@ -91,7 +184,7 @@ describe("Packages", () => {
   test("filters are expanded if 'Show more' button is clicked", async () => {
     const user = userEvent.setup();
     renderComponent();
-    user.click(screen.getByRole("button", { name: /Show more/ }));
+    await user.click(screen.getByRole("button", { name: /Show more/ }));
     await waitFor(() => {
       expect(
         screen.queryByRole("button", { name: /Show more/ })
@@ -99,6 +192,16 @@ describe("Packages", () => {
       expect(
         screen.getByRole("button", { name: /Show less/ })
       ).toBeInTheDocument();
+    });
+  });
+
+  test("reset button should clear the search field", async () => {
+    const user = userEvent.setup();
+    renderComponent();
+    await user.type(screen.getByLabelText("Search Snapcraft"), "code");
+    await user.click(screen.getByRole("button", { name: "Close" }));
+    await waitFor(() => {
+      expect(screen.getByLabelText("Search Snapcraft")).toHaveValue("");
     });
   });
 });
