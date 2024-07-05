@@ -1,5 +1,5 @@
 import { QueryClient, QueryClientProvider } from "react-query";
-import { BrowserRouter } from "react-router-dom";
+import { BrowserRouter, MemoryRouter } from "react-router-dom";
 import { render, waitFor, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import "@testing-library/jest-dom";
@@ -115,8 +115,21 @@ window.HTMLElement.prototype.scrollIntoView = jest.fn();
 
 const queryClient = new QueryClient();
 
-const renderComponent = () => {
-  render(
+const renderComponent = (
+  useMemoryRouter?: boolean,
+  initialEntries?: Array<string>
+) => {
+  if (useMemoryRouter && initialEntries) {
+    return render(
+      <MemoryRouter initialEntries={initialEntries}>
+        <QueryClientProvider client={queryClient}>
+          <Packages />
+        </QueryClientProvider>
+      </MemoryRouter>
+    );
+  }
+
+  return render(
     <BrowserRouter>
       <QueryClientProvider client={queryClient}>
         <Packages />
@@ -202,6 +215,44 @@ describe("Packages", () => {
     await user.click(screen.getByRole("button", { name: "Close" }));
     await waitFor(() => {
       expect(screen.getByLabelText("Search Snapcraft")).toHaveValue("");
+    });
+  });
+
+  test("shows all categories if selected categories are not visible", async () => {
+    renderComponent(true, ["?categories=science"]);
+    await waitFor(() => {
+      expect(
+        screen.queryByRole("button", { name: "Show more" })
+      ).not.toBeInTheDocument();
+      expect(
+        screen.getByRole("button", { name: "Show less" })
+      ).toBeInTheDocument();
+    });
+  });
+
+  test("shows correct title if two categories are selected", async () => {
+    renderComponent(true, ["?categories=development%2Cscience"]);
+    await waitFor(() => {
+      expect(
+        screen.getByRole("heading", {
+          level: 2,
+          name: "Development and 1 more category",
+        })
+      ).toBeInTheDocument();
+    });
+  });
+
+  test("shows correct title if several categories are selected", async () => {
+    renderComponent(true, [
+      "?categories=development,science,utilities,education,finance",
+    ]);
+    await waitFor(() => {
+      expect(
+        screen.getByRole("heading", {
+          level: 2,
+          name: "Development and 4 more categories",
+        })
+      ).toBeInTheDocument();
     });
   });
 });
