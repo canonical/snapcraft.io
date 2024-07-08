@@ -270,7 +270,7 @@ function Packages() {
             )}
             <Row>
               {isFetching &&
-                [...Array(ITEMS_PER_PAGE)].map((item, index) => (
+                [...Array(ITEMS_PER_PAGE)].map((_item, index) => (
                   <Col size={3} key={index}>
                     <LoadingCard />
                   </Col>
