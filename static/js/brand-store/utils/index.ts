@@ -7,6 +7,7 @@ import setPageTitle from "./setPageTitle";
 import getFilteredSigningKeys from "./getFilteredSigningKeys";
 import checkSigningKeyExists from "./checkSigningKeyExists";
 import sortByDateDescending from "./sortByDateDescending";
+import getPolicies from "./getPolicies";
 
 export {
   checkModelNameExists,
@@ -18,4 +19,5 @@ export {
   getFilteredSigningKeys,
   checkSigningKeyExists,
   sortByDateDescending,
+  getPolicies,
 };

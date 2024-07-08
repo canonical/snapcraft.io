@@ -14,6 +14,7 @@ import PageHeader from "../../../shared/PageHeader";
 import SaveAndPreview from "../../../shared/SaveAndPreview";
 import SearchAutocomplete from "../../../shared/SearchAutocomplete";
 import UpdateMetadataModal from "../../../shared/UpdateMetadataModal";
+import SaveStateNotifications from "../../../shared/SaveStateNotifications";
 import { UnregisterSnapModal } from "../UnregisterSnapModal";
 
 import { getSettingsData, getFormData } from "../../utils";
@@ -24,15 +25,16 @@ function App() {
 
   const [isSaving, setIsSaving] = useState(false);
   const [hasSaved, setHasSaved] = useState(false);
-  const [savedError, setSavedError] = useState<boolean | {code: string, message: string}[] >(false);
+  const [savedError, setSavedError] = useState<
+    boolean | { code: string; message: string }[]
+  >(false);
   const [unregisterError, setUnregisterError] = useState(false);
   const [unregisterErrorMessage, setUnregisterErrorMessage] = useState("");
   const [unregisterModalOpen, setUnregisterModalOpen] = useState(false);
   const [isUsersSnap, setIsUsersSnap] = useState(false);
   const [formData, setFormData] = useState({});
-  const [showMetadataWarningModal, setShowMetadataWarningModal] = useState(
-    false
-  );
+  const [showMetadataWarningModal, setShowMetadataWarningModal] =
+    useState(false);
 
   const {
     register,
@@ -138,18 +140,18 @@ function App() {
     const snapName = settingsData?.snap_name;
 
     fetch(`/snap_info/user_snap/${snapName}`)
-    .then(response => {
-      if (!response.ok) {
-        throw new Error(`Error: ${response.status}}`);
-      }
-      return response.json();
-    })
-    .then(data => {
-      setIsUsersSnap(data.is_users_snap);
-    })
-    .catch(error => {
-      console.error('Error:', error);
-    });
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`Error: ${response.status}}`);
+        }
+        return response.json();
+      })
+      .then((data) => {
+        setIsUsersSnap(data.is_users_snap);
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
   }, [settingsData?.snap_name]);
 
   return (
@@ -163,13 +165,12 @@ function App() {
 
       {settingsData?.visibility_locked && (
         <div className="u-fixed-width">
-          <Notification
-            severity="information"
-            title=""
-          >
-            Your Snap is in the queue for manual review. When approved, you will receive an email, and you will be able to change the visibility of your Snap.
+          <Notification severity="information" title="">
+            Your Snap is in the queue for manual review. When approved, you will
+            receive an email, and you will be able to change the visibility of
+            your Snap.
           </Notification>
-          </div>
+        </div>
       )}
       <Form onSubmit={handleSubmit(onSubmit)} stacked={true}>
         <SaveAndPreview
@@ -181,34 +182,12 @@ function App() {
         />
 
         <Strip shallow={true}>
-          {hasSaved && (
-            <div className="u-fixed-width">
-              <Notification
-                severity="positive"
-                title="Changes applied successfully."
-                onDismiss={() => {
-                  setHasSaved(false);
-                }}
-              />
-            </div>
-          )}
-
-          {savedError && (
-            <div className="u-fixed-width">
-              <Notification
-                severity="negative"
-                title="Error"
-                onDismiss={() => {
-                  setHasSaved(false);
-                  setSavedError(false);
-                }}
-              >
-              Changes have not been saved.<br />
-                {savedError === true ? "Something went wrong." : savedError.map((error) => `${error.message}`).join("\n")}
-              </Notification>
-            </div>
-          )}
-
+          <SaveStateNotifications
+            hasSaved={hasSaved}
+            setHasSaved={setHasSaved}
+            savedError={savedError}
+            setSavedError={setSavedError}
+          />
 
           <Row className="p-form__group">
             <Col size={2}>
@@ -469,7 +448,6 @@ function App() {
                 setUnregisterError={setUnregisterError}
                 setUnregisterErrorMessage={setUnregisterErrorMessage}
               />
-            
             )}
             <Col size={2}>
               <label className="p-form__label" id="status-label">
@@ -478,18 +456,17 @@ function App() {
             </Col>
             <Col size={8}>
               <div className="p-form__control" aria-labelledby="status-label">
-                {settingsData?.status === "unpublished" ? ( 
+                {settingsData?.status === "unpublished" ? (
                   <div>
                     <span className="u-margin--right">Registered</span>
                     {!isUsersSnap ? (
-                      <Tooltip 
-                        message={<>Snaps can only be unregistered by their owner.</>} 
+                      <Tooltip
+                        message={
+                          <>Snaps can only be unregistered by their owner.</>
+                        }
                         position="top-center"
                       >
-                        <Button
-                          inline={true}
-                          disabled
-                        >
+                        <Button inline={true} disabled>
                           Unregister
                         </Button>
                       </Tooltip>
@@ -498,7 +475,7 @@ function App() {
                         inline={true}
                         onClick={(event) => {
                           event.preventDefault();
-                          setUnregisterModalOpen(true);                      
+                          setUnregisterModalOpen(true);
                         }}
                       >
                         Unregister
@@ -506,21 +483,22 @@ function App() {
                     )}
                   </div>
                 ) : (
-                  (settingsData?.status).charAt(0).toUpperCase() + (settingsData?.status).slice(1)
+                  (settingsData?.status).charAt(0).toUpperCase() +
+                  (settingsData?.status).slice(1)
                 )}
               </div>
             </Col>
             {unregisterError && (
-                <div className="u-fixed-width">
-                  <Notification
-                    severity="negative"
-                    title={unregisterErrorMessage}
-                    onDismiss={() => {
-                      setUnregisterError(false);
-                    }}
-                  />
-                </div>
-              )}
+              <div className="u-fixed-width">
+                <Notification
+                  severity="negative"
+                  title={unregisterErrorMessage}
+                  onDismiss={() => {
+                    setUnregisterError(false);
+                  }}
+                />
+              </div>
+            )}
           </Row>
         </Strip>
       </Form>

@@ -18,42 +18,16 @@ import {
 } from "../../atoms";
 import { brandStoreState } from "../../selectors";
 
-import ModelsFilter from "./ModelsFilter";
+import Filter from "../Filter";
 import ModelsTable from "./ModelsTable";
 import CreateModelForm from "./CreateModelForm";
 import Navigation from "../Navigation";
 
-import { isClosedPanel, setPageTitle } from "../../utils";
+import { isClosedPanel, setPageTitle, getPolicies } from "../../utils";
 
 import type { Model, Policy } from "../../types/shared";
 
 function Models() {
-  const getPolicies = async (modelsList: Array<Model>) => {
-    const data = await Promise.all(
-      modelsList.map((model) => {
-        return fetch(`/admin/store/${id}/models/${model.name}/policies`);
-      })
-    );
-
-    const allPolicies = await Promise.all(
-      data.map(async (res) => {
-        if (!res.ok) {
-          return [];
-        }
-
-        const policies = await res.json();
-
-        if (!policies.success) {
-          return [];
-        }
-
-        return policies.data;
-      })
-    );
-
-    setPolicies(allPolicies.flat());
-  };
-
   const { id } = useParams();
   const location = useLocation();
   const navigate = useNavigate();
@@ -76,7 +50,7 @@ function Models() {
     if (!isLoading && !error) {
       setModelsList(data);
       setFilter(searchParams.get("filter") || "");
-      getPolicies(data);
+      getPolicies(data, id, setPolicies);
     }
   }, [isLoading, error, data]);
 
@@ -115,7 +89,11 @@ function Models() {
             )}
             <Row>
               <Col size={6}>
-                <ModelsFilter />
+                <Filter
+                  state={modelsListFilterState}
+                  label="Search models"
+                  placeholder="Search models"
+                />
               </Col>
               <Col size={6} className="u-align--right">
                 <Link
