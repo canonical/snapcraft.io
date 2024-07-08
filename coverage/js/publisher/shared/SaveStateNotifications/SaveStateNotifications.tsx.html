@@ -3,7 +3,7 @@
 <html lang="en">
 
 <head>
-    <title>Code coverage report for brand-store/components/Models/ModelsFilter.tsx</title>
+    <title>Code coverage report for publisher/shared/SaveStateNotifications/SaveStateNotifications.tsx</title>
     <meta charset="utf-8" />
     <link rel="stylesheet" href="../../../prettify.css" />
     <link rel="stylesheet" href="../../../base.css" />
@@ -19,34 +19,34 @@
 <body>
 <div class='wrapper'>
     <div class='pad1'>
-        <h1><a href="../../../index.html">All files</a> / <a href="index.html">brand-store/components/Models</a> ModelsFilter.tsx</h1>
+        <h1><a href="../../../index.html">All files</a> / <a href="index.html">publisher/shared/SaveStateNotifications</a> SaveStateNotifications.tsx</h1>
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">80% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>8/10</span>
+                <span class='fraction'>5/5</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">75% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>3/4</span>
+                <span class='fraction'>6/6</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>3/3</span>
+                <span class='fraction'>4/4</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">80% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>8/10</span>
+                <span class='fraction'>5/5</span>
             </div>
         
             
@@ -122,10 +122,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">10x</span>
-<span class="cline-any cline-yes">10x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">10x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -133,6 +129,8 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">35x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -141,20 +139,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -166,59 +150,75 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { useSearchParams } from "react-router-dom";
-import { useSetRecoilState } from "recoil";
-import { Button, Icon } from "@canonical/react-components";
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { Notification } from "@canonical/react-components";
 &nbsp;
-import { modelsListFilterState } from "../../atoms";
+type Props = {
+  hasSaved: boolean;
+  setHasSaved: Function;
+  savedError: boolean | Array&lt;{ message: string }&gt;;
+  setSavedError: Function;
+};
 &nbsp;
-function ModelsFilter() {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const setFilter = useSetRecoilState(modelsListFilterState);
-&nbsp;
+function SaveStateNotifications({
+  hasSaved,
+  setHasSaved,
+  savedError,
+  setSavedError,
+}: Props) {
   return (
-    &lt;div className="p-search-box"&gt;
-      &lt;label className="u-off-screen" htmlFor="search"&gt;
-        Search models
-      &lt;/label&gt;
-      &lt;input
-        required
-        type="search"
-        id="search"
-        name="search"
-        className="p-search-box__input"
-        placeholder="Search models"
-        autoComplete="off"
-        value={searchParams.get("filter") || ""}
-        onChange={(e) =&gt; {
-          if (e.target.value) {
-            setSearchParams({ filter: e.target.value });
-            setFilter(e.target.value);
-          } else <span class="missing-if-branch" title="else path not taken" >E</span>{
-<span class="cstat-no" title="statement not covered" >            setSearchParams();</span>
-<span class="cstat-no" title="statement not covered" >            setFilter("");</span>
-          }
-        }}
-      /&gt;
-      &lt;Button
-        type="reset"
-        className="p-search-box__reset"
-        onClick={() =&gt; {
-          setSearchParams();
-          setFilter("");
-        }}
-      &gt;
-        &lt;Icon name="close"&gt;Clear filter&lt;/Icon&gt;
-      &lt;/Button&gt;
-      &lt;Button type="submit" className="p-search-box__button"&gt;
-        &lt;Icon name="search"&gt;Search&lt;/Icon&gt;
-      &lt;/Button&gt;
-    &lt;/div&gt;
+    &lt;&gt;
+      {hasSaved &amp;&amp; (
+        &lt;div className="u-fixed-width"&gt;
+          &lt;Notification
+            severity="positive"
+            title="Changes applied successfully."
+            onDismiss={() =&gt; {
+              setHasSaved(false);
+            }}
+          /&gt;
+        &lt;/div&gt;
+      )}
+&nbsp;
+      {savedError &amp;&amp; (
+        &lt;div className="u-fixed-width"&gt;
+          &lt;Notification
+            severity="negative"
+            title="Error"
+            onDismiss={() =&gt; {
+              setHasSaved(false);
+              setSavedError(false);
+            }}
+          &gt;
+            Changes have not been saved.
+            &lt;br /&gt;
+            {savedError === true
+              ? "Something went wrong."
+              : savedError.map((error) =&gt; `${error.message}`).join("\n")}
+          &lt;/Notification&gt;
+        &lt;/div&gt;
+      )}
+    &lt;/&gt;
   );
 }
 &nbsp;
-export default ModelsFilter;
+export default SaveStateNotifications;
 &nbsp;</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
@@ -226,7 +226,7 @@ export default ModelsFilter;
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2024-07-07T22:06:29.769Z
+                at 2024-07-08T22:07:00.500Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>

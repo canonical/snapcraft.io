@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">41.07% </span>
+                <span class="strong">44.23% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>23/56</span>
+                <span class='fraction'>23/52</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">15% </span>
+                <span class="strong">7.14% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>3/20</span>
+                <span class='fraction'>1/14</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">20% </span>
+                <span class="strong">28.57% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>2/10</span>
+                <span class='fraction'>2/7</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">41.07% </span>
+                <span class="strong">44.23% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>23/56</span>
+                <span class='fraction'>23/52</span>
             </div>
         
             
@@ -298,30 +298,8 @@
 <a name='L233'></a><a href='#L233'>233</a>
 <a name='L234'></a><a href='#L234'>234</a>
 <a name='L235'></a><a href='#L235'>235</a>
-<a name='L236'></a><a href='#L236'>236</a>
-<a name='L237'></a><a href='#L237'>237</a>
-<a name='L238'></a><a href='#L238'>238</a>
-<a name='L239'></a><a href='#L239'>239</a>
-<a name='L240'></a><a href='#L240'>240</a>
-<a name='L241'></a><a href='#L241'>241</a>
-<a name='L242'></a><a href='#L242'>242</a>
-<a name='L243'></a><a href='#L243'>243</a>
-<a name='L244'></a><a href='#L244'>244</a>
-<a name='L245'></a><a href='#L245'>245</a>
-<a name='L246'></a><a href='#L246'>246</a>
-<a name='L247'></a><a href='#L247'>247</a>
-<a name='L248'></a><a href='#L248'>248</a>
-<a name='L249'></a><a href='#L249'>249</a>
-<a name='L250'></a><a href='#L250'>250</a>
-<a name='L251'></a><a href='#L251'>251</a>
-<a name='L252'></a><a href='#L252'>252</a>
-<a name='L253'></a><a href='#L253'>253</a>
-<a name='L254'></a><a href='#L254'>254</a>
-<a name='L255'></a><a href='#L255'>255</a>
-<a name='L256'></a><a href='#L256'>256</a>
-<a name='L257'></a><a href='#L257'>257</a>
-<a name='L258'></a><a href='#L258'>258</a>
-<a name='L259'></a><a href='#L259'>259</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L236'></a><a href='#L236'>236</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -503,30 +481,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -595,6 +549,7 @@ import { initListingTour } from "../../../tour";
 import PageHeader from "../../../shared/PageHeader";
 import SaveAndPreview from "../../../shared/SaveAndPreview";
 import UpdateMetadataModal from "../../../shared/UpdateMetadataModal";
+import SaveStateNotifications from "../../../shared/SaveStateNotifications";
 import ListingDetailsSection from "../../sections/ListingDetailsSection";
 import ContactInformationSection from "../../sections/ContactInformationSection";
 import AdditionalInformationSection from "../../sections/AdditionalInformationSection";
@@ -755,36 +710,12 @@ function App() {
         )}
 &nbsp;
         &lt;Strip shallow={true} className="u-no-padding--bottom"&gt;
-          {hasSaved &amp;&amp; (
-<span class="branch-1 cbranch-no" title="branch not covered" >            &lt;div className="u-fixed-width"&gt;</span>
-              &lt;Notification
-                severity="positive"
-                title="Changes applied successfully."
-                onDismiss={<span class="fstat-no" title="function not covered" >()</span> =&gt; {
-<span class="cstat-no" title="statement not covered" >                  setHasSaved(false);</span>
-                }}
-              /&gt;
-            &lt;/div&gt;
-          )}
-&nbsp;
-          {savedError &amp;&amp; (
-<span class="branch-1 cbranch-no" title="branch not covered" >            &lt;div className="u-fixed-width"&gt;</span>
-              &lt;Notification
-                severity="negative"
-                title="Error"
-                onDismiss={<span class="fstat-no" title="function not covered" >()</span> =&gt; {
-<span class="cstat-no" title="statement not covered" >                  setHasSaved(false);</span>
-<span class="cstat-no" title="statement not covered" >                  setSavedError(false);</span>
-                }}
-              &gt;
-                Changes have not been saved.
-                &lt;br /&gt;
-                {savedError === true
-                  ? "Something went wrong."
-                  : savedError.map(<span class="fstat-no" title="function not covered" >(e</span>rror) =&gt; <span class="cstat-no" title="statement not covered" >`${error.message}`)</span>.join("\n")}
-              &lt;/Notification&gt;
-            &lt;/div&gt;
-          )}
+          &lt;SaveStateNotifications
+            hasSaved={hasSaved}
+            setHasSaved={setHasSaved}
+            savedError={savedError}
+            setSavedError={setSavedError}
+          /&gt;
 &nbsp;
           &lt;ListingDetailsSection
             register={register}
@@ -844,7 +775,7 @@ export default App;
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2024-07-07T22:06:29.769Z
+                at 2024-07-08T22:07:00.500Z
             </div>
         <script src="../../../../prettify.js"></script>
         <script>
