@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 
 import FileInput from "../form/fileInput";
 import AccordionHelp from "./AccordionHelp";
+import RenderErrors from "../shared/RenderErrors";
 
 class Banner extends React.Component {
   constructor(props) {
@@ -78,26 +79,7 @@ class Banner extends React.Component {
   renderErrors() {
     const { errors } = this.state;
     if (Object.keys(errors).length > 0) {
-      return (
-        <div className="p-notification--negative">
-          <div className="p-notification__content">
-            <p className="p-notification__message">
-              {Object.keys(errors).map((fileName) => (
-                <Fragment key={`errors-${fileName}`}>
-                  {fileName}
-                  &nbsp;
-                  {errors[fileName].map((error, index) => (
-                    <Fragment key={`errors-${fileName}-${index}`}>
-                      {error}
-                      <br />
-                    </Fragment>
-                  ))}
-                </Fragment>
-              ))}
-            </p>
-          </div>
-        </div>
-      );
+      return <RenderErrors errors={errors} />;
     }
     return false;
   }

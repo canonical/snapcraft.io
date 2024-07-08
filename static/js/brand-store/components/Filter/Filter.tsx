@@ -1,17 +1,21 @@
 import { useSearchParams } from "react-router-dom";
-import { useSetRecoilState } from "recoil";
+import { RecoilState, useSetRecoilState } from "recoil";
 import { Button, Icon } from "@canonical/react-components";
 
-import { policiesListFilterState } from "../../atoms";
+type Props = {
+  state: RecoilState<any>;
+  label: string;
+  placeholder: string;
+};
 
-function PoliciesFilter() {
+function Filter({ state, label, placeholder }: Props) {
   const [searchParams, setSearchParams] = useSearchParams();
-  const setFilter = useSetRecoilState(policiesListFilterState);
+  const setFilter = useSetRecoilState(state);
 
   return (
     <div className="p-search-box">
       <label className="u-off-screen" htmlFor="search">
-        Search policies
+        {label}
       </label>
       <input
         required
@@ -19,7 +23,7 @@ function PoliciesFilter() {
         id="search"
         name="search"
         className="p-search-box__input"
-        placeholder="Search policies"
+        placeholder={placeholder}
         autoComplete="off"
         value={searchParams.get("filter") || ""}
         onChange={(e) => {
@@ -49,4 +53,4 @@ function PoliciesFilter() {
   );
 }
 
-export default PoliciesFilter;
+export default Filter;
