@@ -84,12 +84,10 @@ function ReleasesHeading(props) {
       .then((response) => {
         setHasGuardrails(response);
       })
-      .catch(
-        (error) => {
-          console.error("Error:", error.message);
-        },
-        [props.snapName],
-      );
+      .catch((error) => {
+        console.error("Error:", error.message);
+      });
+    [props.snapName];
   });
 
   const handleTrackNameChange = (event) => {

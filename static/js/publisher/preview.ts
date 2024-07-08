@@ -119,6 +119,7 @@ function getVideoDetails(url: string) {
       id: splitUrl[splitUrl.length - 1],
     };
   }
+  return url;
 }
 
 function screenshot(image: string | undefined) {
