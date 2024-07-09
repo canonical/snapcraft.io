@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { ReactNode, SetStateAction, useState, Dispatch } from "react";
 import { useParams } from "react-router-dom";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { format } from "date-fns";
@@ -15,14 +15,14 @@ import { signingKeysListState } from "../../atoms";
 import type { SigningKey } from "../../types/shared";
 
 type Props = {
-  setShowDisableSuccessNotification: Function;
+  setShowDisableSuccessNotification: Dispatch<SetStateAction<boolean>>;
   enableTableActions: boolean;
 };
 
 function SigningKeysTable({
   setShowDisableSuccessNotification,
   enableTableActions,
-}: Props) {
+}: Props): ReactNode {
   const { id } = useParams();
   const signingKeysList = useRecoilValue<Array<SigningKey>>(
     filteredSigningKeysListState

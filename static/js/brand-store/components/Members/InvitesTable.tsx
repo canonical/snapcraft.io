@@ -1,4 +1,10 @@
-import { useState, useEffect } from "react";
+import {
+  useState,
+  useEffect,
+  ReactNode,
+  Dispatch,
+  SetStateAction,
+} from "react";
 import { useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
 import { format } from "date-fns";
@@ -13,9 +19,9 @@ import type { Invite, InvitesList, Status } from "../../types/shared";
 
 type Props = {
   invites: any;
-  setShowSuccessNotification: Function;
-  setNotificationText: Function;
-  setShowErrorNotification: Function;
+  setShowSuccessNotification: Dispatch<SetStateAction<boolean>>;
+  setNotificationText: Dispatch<SetStateAction<string>>;
+  setShowErrorNotification: Dispatch<SetStateAction<boolean>>;
 };
 
 function InvitesTable({
@@ -23,7 +29,7 @@ function InvitesTable({
   setShowSuccessNotification,
   setNotificationText,
   setShowErrorNotification,
-}: Props) {
+}: Props): ReactNode {
   const [pendingInvites, setPendingInvites] = useState([]);
   const [expiredInvites, setExpiredInvites] = useState([]);
   const [revokedInvites, setRevokedInvites] = useState([]);

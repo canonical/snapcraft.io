@@ -1,4 +1,4 @@
-import { ChangeEvent, useEffect, useState } from "react";
+import { ChangeEvent, ReactNode, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useParams, Navigate } from "react-router-dom";
 import { useAppDispatch } from "../../hooks";
@@ -33,25 +33,25 @@ export type RootState = {
     currentStore: {
       name: string;
       id: string;
-      private: Boolean;
+      private: boolean;
       "manual-review-policy": string;
     };
-    loading: Boolean;
-    notFound: Boolean;
+    loading: boolean;
+    notFound: boolean;
   };
   members: {
     members: Array<{}>;
-    loading: Boolean;
-    notFound: Boolean;
+    loading: boolean;
+    notFound: boolean;
   };
   brandStores: {
     brandStoresList: Array<{}>;
-    loading: Boolean;
-    notFound: Boolean;
+    loading: boolean;
+    notFound: boolean;
   };
 };
 
-function Settings() {
+function Settings(): ReactNode {
   const currentStore = useSelector(currentStoreSelector);
   const members = useSelector(membersSelector);
   const storeLoading = useSelector(
