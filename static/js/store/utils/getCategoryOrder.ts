@@ -1,4 +1,4 @@
-function getCategoryOrder() {
+function getCategoryOrder(): string[] {
   return [
     "development",
     "games",
