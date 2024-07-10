@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { ReactNode, SetStateAction, useState, Dispatch } from "react";
 import { useRecoilState } from "recoil";
 import { useParams } from "react-router-dom";
 import { format } from "date-fns";
@@ -12,14 +12,14 @@ import { filteredPoliciesListState } from "../../selectors";
 import type { Policy } from "../../types/shared";
 
 type Props = {
-  setShowDeletePolicyNotification: Function;
-  setShowDeletePolicyErrorNotification: Function;
+  setShowDeletePolicyNotification: Dispatch<SetStateAction<boolean>>;
+  setShowDeletePolicyErrorNotification: Dispatch<SetStateAction<boolean>>;
 };
 
 function ModelsTable({
   setShowDeletePolicyNotification,
   setShowDeletePolicyErrorNotification,
-}: Props) {
+}: Props): ReactNode {
   const { id, model_id } = useParams();
   const [policiesList, setPoliciesList] = useRecoilState(
     filteredPoliciesListState
