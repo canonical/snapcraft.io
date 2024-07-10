@@ -1,4 +1,4 @@
-function isMobile() {
+function isMobile(): boolean {
   // If the mobile menu button is visible, we're on mobile
   const mobileMenuButton = document.querySelector(
     ".p-navigation__toggle--open"

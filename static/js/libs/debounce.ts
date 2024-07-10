@@ -2,7 +2,7 @@ export default function debounce(
   func: Function,
   wait: number,
   immediate?: boolean
-) {
+): { (this: HTMLElement): void; clear(): void } {
   let timeout: any;
 
   const debounced = function (this: HTMLElement) {
