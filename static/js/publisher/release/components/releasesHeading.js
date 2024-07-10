@@ -25,7 +25,9 @@ import DefaultTrackModifier from "./defaultTrackModifier";
 import ReleasesTable from "./releasesTable";
 
 function ReleasesHeading(props) {
-  resizeAsidePanel(props.tracks);
+  resizeAsidePanel("request");
+  resizeAsidePanel("add");
+
   const [isOpen, setIsOpen] = useState(false);
 
   const [requestTrackSidePanelOpen, setRequestTrackSidePanelOpen] =
@@ -73,24 +75,37 @@ function ReleasesHeading(props) {
   const [versionPattern, setVersionPattern] = useState("");
   const [phasingPercentage, setPhasingPercentage] = useState("");
   const [phasingPercentageError, setPhasingPercentageError] = useState("");
-  const [hasGuardrails, setHasGuardrails] = useState(false);
+  const [trackGuardrailsStatus, setTrackGuardrailsStatus] = useState(null);
+  const [guardrailsLoading, setGuardrailsLoading] = useState(true);
 
   const [isTrackNameFilled, setIsTrackNameFilled] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [notification, setNotification] = useState(null);
 
   useEffect(() => {
-    hasTrackGuardrails(props.snapName)
-      .then((response) => {
-        setHasGuardrails(response);
-      })
-      .catch((error) => {
+    const fetchTrackGuardrails = async () => {
+      try {
+        const response = await hasTrackGuardrails(props.snapName);
+        if (response["track-guardrails"].length === 0) {
+          setTrackGuardrailsStatus("request");
+        } else if (response["track-guardrails"].length > 0) {
+          setTrackGuardrailsStatus("add");
+        } else if (response["error"]) {
+          setTrackGuardrailsStatus("error");
+        }
+      } catch (error) {
         console.error("Error:", error.message);
-      });
-    [props.snapName];
-  });
+        setTrackGuardrailsStatus("error");
+      } finally {
+        setGuardrailsLoading(false);
+      }
+    };
+
+    fetchTrackGuardrails();
+  }, [props.snapName]);
 
   const handleTrackNameChange = (event) => {
+    setTrackNameError("");
     const { value } = event.target;
     setTrackName(value);
     setIsTrackNameFilled(value.trim().length > 0);
@@ -158,6 +173,11 @@ function ReleasesHeading(props) {
     }
   };
 
+  const dropdownPaddingClass =
+    trackGuardrailsStatus === "error"
+      ? "dropdown-menu padding-bottom"
+      : "dropdown-menu no-padding-bottom";
+
   return (
     <div>
       <div className="l-application">
@@ -177,7 +197,7 @@ function ReleasesHeading(props) {
                         <i className="p-icon--chevron-down u-float-right"></i>
                       </div>
                       {isOpen && (
-                        <div className="dropdown-menu">
+                        <div className={dropdownPaddingClass}>
                           <div className="options-container">
                             {options.map((option, index) => (
                               <div
@@ -195,37 +215,50 @@ function ReleasesHeading(props) {
                               </div>
                             ))}
                           </div>
-                          <div className="track-button-wrapper">
-                            <div className="track-button">
-                              {!hasGuardrails ? (
-                                <Button
-                                  className="p-button has-icon new-track-button"
-                                  onClick={() => {
-                                    openRequestTrackSidePanel();
-                                    if (isOpen) {
-                                      handleToggle();
-                                    }
-                                  }}
-                                >
-                                  <i className="p-icon--plus"></i>
-                                  <span>Request track</span>
-                                </Button>
+                          {trackGuardrailsStatus !== "error" && (
+                            <div className="track-button-wrapper">
+                              {guardrailsLoading ? (
+                                <div>
+                                  <Icon
+                                    name="spinner"
+                                    className="u-animation--spin"
+                                  />
+                                  &nbsp;Loading...
+                                </div>
                               ) : (
-                                <Button
-                                  className="p-button has-icon new-track-button"
-                                  onClick={() => {
-                                    openAddTrackSidePanel();
-                                    if (isOpen) {
-                                      handleToggle();
-                                    }
-                                  }}
-                                >
-                                  <i className="p-icon--plus"></i>
-                                  <span>Add track</span>
-                                </Button>
+                                <div className="track-button">
+                                  {trackGuardrailsStatus === "request" && (
+                                    <Button
+                                      className="p-button has-icon new-track-button"
+                                      onClick={() => {
+                                        openRequestTrackSidePanel();
+                                        if (isOpen) {
+                                          handleToggle();
+                                        }
+                                      }}
+                                    >
+                                      <i className="p-icon--plus"></i>
+                                      <span>Request track</span>
+                                    </Button>
+                                  )}
+                                  {trackGuardrailsStatus === "add" && (
+                                    <Button
+                                      className="p-button has-icon new-track-button"
+                                      onClick={() => {
+                                        openAddTrackSidePanel();
+                                        if (isOpen) {
+                                          handleToggle();
+                                        }
+                                      }}
+                                    >
+                                      <i className="p-icon--plus"></i>
+                                      <span>Add track</span>
+                                    </Button>
+                                  )}
+                                </div>
                               )}
                             </div>
-                          </div>
+                          )}
                         </div>
                       )}
                     </div>
@@ -316,7 +349,7 @@ function ReleasesHeading(props) {
                 <div className="u-fixed-width">
                   <Button
                     className="u-no-margin--bottom"
-                    onClick={closeAddTrackSidePanel}
+                    onClick={closeRequestTrackSidePanel}
                   >
                     Cancel
                   </Button>
