@@ -1,4 +1,4 @@
-function iframeSize(wrapperSelector: string) {
+function iframeSize(wrapperSelector: string): void {
   const wrapperEl = document.querySelector(wrapperSelector);
   if (!wrapperEl) {
     return;
