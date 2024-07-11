@@ -1,8 +1,8 @@
 import { triggerEvent } from "../base/ga";
 import debounce from "../libs/debounce";
 
-const isInViewport = (el: { getBoundingClientRect: () => any }) => {
-  var bounding = el.getBoundingClientRect();
+const isInViewport = (el: { getBoundingClientRect: () => DOMRect }) => {
+  var bounding = el.getBoundingClientRect() as DOMRect;
   return (
     bounding.top >= 0 &&
     bounding.left >= 0 &&
@@ -13,7 +13,7 @@ const isInViewport = (el: { getBoundingClientRect: () => any }) => {
   );
 };
 
-export default function triggerEventWhenVisible(selector: string) {
+export default function triggerEventWhenVisible(selector: string): void {
   const el = document.querySelector(selector);
   const origin = window.location.href;
 

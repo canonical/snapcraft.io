@@ -4,9 +4,13 @@ import "whatwg-fetch";
 
 import { toggleAccordion } from "./accordion";
 
-function install(language: any, fsfFlow: any) {
-  const osPickers = Array.from(document.querySelectorAll(".js-os-select"));
-  const osWrappers = Array.from(document.querySelectorAll(".js-os-wrapper"));
+function install(language: unknown, fsfFlow: string): void {
+  const osPickers = Array.from(
+    document.querySelectorAll(".js-os-select")
+  ) as Array<HTMLElement>;
+  const osWrappers = Array.from(
+    document.querySelectorAll(".js-os-wrapper")
+  ) as Array<HTMLElement>;
 
   function select(selectedOs: string) {
     if (osWrappers) {
@@ -36,7 +40,7 @@ function install(language: any, fsfFlow: any) {
     const isLinux = !!userAgent.match(/(Linux)|(X11)/);
     const userOS = isMac ? "macos" : isLinux ? "linux" : null;
 
-    osPickers.forEach(function (os: any) {
+    osPickers.forEach(function (os) {
       if (os.dataset.os === userOS) {
         os.classList.add("is-selected");
       }
@@ -94,8 +98,9 @@ function install(language: any, fsfFlow: any) {
       `#js-pagination-next`
     ) as HTMLLinkElement;
     if (paginationBtn) {
+      const paginationBtnLink = `/${fsfFlow}/${language}/${type}/package`;
       paginationBtn.classList.remove("is-disabled");
-      paginationBtn.href = `/${fsfFlow}/${language}/${type}/package`;
+      paginationBtn.href = paginationBtnLink;
     }
   }
 
@@ -108,17 +113,21 @@ function install(language: any, fsfFlow: any) {
   }
 }
 
-function getSnapCount(cb: { (data: any): void; (arg0: any): void }) {
+function getSnapCount(cb: {
+  (data: { count: number; snaps: string[] }): void;
+  (arg0: any): void;
+}) {
   fetch("/snaps/api/snap-count")
     .then((r) => r.json())
     .then((data) => {
       cb(data);
-    });
+    })
+    .catch();
 }
 
-function getArrayDiff(arr1: string | any[], arr2: string | any[]) {
-  let newArr: any;
-  let oldArr: any;
+function getArrayDiff(arr1: [], arr2: []) {
+  let newArr: string[];
+  let oldArr: string[];
   if (arr1.length === arr2.length) {
     return false;
   }
@@ -131,7 +140,7 @@ function getArrayDiff(arr1: string | any[], arr2: string | any[]) {
     oldArr = arr1;
   }
 
-  let newValues: Array<any> = [];
+  let newValues: Array<string> = [];
 
   newArr.forEach((item: string) => {
     if (!oldArr.includes(item)) {
@@ -142,13 +151,16 @@ function getArrayDiff(arr1: string | any[], arr2: string | any[]) {
   return newValues;
 }
 
-function push() {
-  let initialCount: null = null;
-  let initialSnaps: string | any[] = [];
+function push(): void {
+  let initialCount: number | null = null;
+  let initialSnaps: [] = [];
   let timer: string | number | NodeJS.Timeout | undefined;
   let ready = false;
 
-  const getCount = (cb: { (snapName: any): void; (arg0: any): void }) => {
+  const getCount = (cb: {
+    (snapName: string): void;
+    (arg0: unknown): void;
+  }) => {
     clearTimeout(timer);
 
     getSnapCount((data) => {
@@ -207,30 +219,46 @@ function push() {
 
 function updateNotification(
   notificationEl: {
-    className: any;
-    querySelector: (arg0: string) => { (): any; new (): any; innerHTML: any };
+    className: string;
+    querySelector: (arg0: string) => {
+      (): HTMLElement;
+      new (): any;
+      innerHTML: string;
+    };
   },
   className: string,
-  message: any
+  message: string | undefined
 ) {
   notificationEl.className = className;
-  notificationEl.querySelector(".p-notification__message").innerHTML = message;
+
+  if (message) {
+    notificationEl.querySelector(".p-notification__message").innerHTML =
+      message;
+  }
 }
 
 function successNotification(
   notificationEl: {
-    className: any;
-    querySelector: (arg0: string) => { (): any; new (): any; innerHTML: any };
+    className: string;
+    querySelector: (arg0: string) => {
+      (): HTMLElement;
+      new (): any;
+      innerHTML: string;
+    };
   },
-  message: any
+  message: string | undefined
 ) {
   updateNotification(notificationEl, "p-notification--positive", message);
 }
 
 function errorNotification(
   notificationEl: {
-    className: any;
-    querySelector: (arg0: string) => { (): any; new (): any; innerHTML: any };
+    className: string;
+    querySelector: (arg0: string) => {
+      (): HTMLElement;
+      new (): any;
+      innerHTML: string;
+    };
   },
   message: string
 ) {
@@ -244,14 +272,14 @@ function validateSnapName(name: string) {
 function initChooseName(
   formEl: {
     querySelector: (arg0: string) => {
-      (): any;
+      (): HTMLElement;
       new (): any;
       disabled: boolean;
     };
-    addEventListener: (arg0: string, arg1: (event: any) => void) => void;
+    addEventListener: (arg0: string, arg1: (event: Event) => void) => void;
   },
-  language: any
-) {
+  language: string
+): void {
   const snapNameInput = formEl.querySelector("[name=snap-name]") as any;
 
   snapNameInput.addEventListener("keyup", () => {
@@ -266,7 +294,7 @@ function initChooseName(
     }
   });
 
-  formEl.addEventListener("submit", (event) => {
+  formEl.addEventListener("submit", (event: Event) => {
     event.preventDefault();
 
     // set value in cookie an reload (to render with a new name)
@@ -279,7 +307,7 @@ function initRegisterName(
   formEl: HTMLFormElement,
   notificationEl: HTMLElement,
   successEl: { classList: { remove: (arg0: string) => void } }
-) {
+): void {
   const snapNameInput = formEl.querySelector(
     "[name=snap-name]"
   ) as HTMLInputElement;
