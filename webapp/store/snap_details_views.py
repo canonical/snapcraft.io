@@ -175,27 +175,28 @@ def snap_details_views(store, api):
     def dns_verified_status(snap_name):
         res = {"primary_domain": False}
         context = _get_snap_link_fields(snap_name)
-        primary_domain = context["links"]["website"][0]
+        if "links" in context and "website" in context["links"] and len(context["links"]["website"]) >= 1:
+            primary_domain = context["links"]["website"][0]
 
-        if primary_domain:
-            token = helpers.get_dns_verification_token(
-                snap_name, primary_domain
-            )
+            if primary_domain:
+                token = helpers.get_dns_verification_token(
+                    snap_name, primary_domain
+                )
 
-            domain = re.compile(r"https?://")
-            domain = domain.sub("", primary_domain).strip().strip("/")
+                domain = re.compile(r"https?://")
+                domain = domain.sub("", primary_domain).strip().strip("/")
 
-            try:
-                dns_txt_records = [
-                    dns_record.to_text()
-                    for dns_record in dns.resolver.resolve(domain, "TXT").rrset
-                ]
+                try:
+                    dns_txt_records = [
+                        dns_record.to_text()
+                        for dns_record in dns.resolver.resolve(domain, "TXT").rrset
+                    ]
 
-                if f'"SNAPCRAFT_IO_VERIFICATION={token}"' in dns_txt_records:
-                    res["primary_domain"] = True
+                    if f'"SNAPCRAFT_IO_VERIFICATION={token}"' in dns_txt_records:
+                        res["primary_domain"] = True
 
-            except Exception:
-                res["primary_domain"] = False
+                except Exception:
+                    res["primary_domain"] = False
 
         response = make_response(res, 200)
         response.cache_control.max_age = "3600"
