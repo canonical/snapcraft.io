@@ -1,10 +1,32 @@
-async function buildCards(category: string) {
+type PackageData = {
+  apps: Array<string>;
+  architecture: Array<string>;
+  developer_id: string;
+  developer_name: string;
+  developer_validation: string;
+  icon_url: string;
+  media: Array<{
+    height: number;
+    type: string;
+    url: string;
+    width: number;
+  }>;
+  origin: string;
+  package_name: string;
+  sections: Array<{ featured: boolean; name: string }>;
+  summary: string;
+  title: string;
+};
+
+async function buildCards(category: string): Promise<unknown> {
   const featuredSnapCards = document.querySelectorAll(
     "[data-js='featured-snap-card']"
-  );
+  ) as NodeListOf<HTMLElement>;
 
   if (window.sessionStorage.getItem(category)) {
-    const localData = JSON.parse(window.sessionStorage.getItem(category) || "");
+    const localData = JSON.parse(
+      window.sessionStorage.getItem(category) as string
+    );
 
     featuredSnapCards.forEach((featuredSnapCard, index) => {
       buildCard(featuredSnapCard, localData[index]);
@@ -14,7 +36,7 @@ async function buildCards(category: string) {
   }
 
   const response = await fetch(`/store/featured-snaps/${category}`);
-  const data = await response.json();
+  const data: Array<PackageData> = await response.json();
 
   featuredSnapCards.forEach((featuredSnapCard, index) => {
     buildCard(featuredSnapCard, data[index]);
@@ -23,10 +45,10 @@ async function buildCards(category: string) {
   window.sessionStorage.setItem(category, JSON.stringify(data));
 }
 
-function buildCard(featuredSnapCard: Element, data: any) {
+function buildCard(featuredSnapCard: Element, data: PackageData) {
   const placeholder = featuredSnapCard.querySelector(
     "[data-js='featured-snap-card-placeholder']"
-  );
+  ) as HTMLElement;
 
   const content = featuredSnapCard.querySelector(
     "[data-js='featured-snap-card-content']"
@@ -94,14 +116,14 @@ function buildCard(featuredSnapCard: Element, data: any) {
       snapPublisher.appendChild(verifiedWrapper);
     }
 
-    content!.appendChild(clone);
+    content.appendChild(clone);
   }
 
-  placeholder!.classList.add("u-hide");
-  content!.classList.remove("u-hide");
+  placeholder.classList.add("u-hide");
+  content.classList.remove("u-hide");
 }
 
-function init(featuredCategories: Array<string>) {
+async function init(featuredCategories: Array<string>): Promise<void> {
   const featuredCategorySwitches = document.querySelectorAll(
     "[data-js='featured-category-switch']"
   );
@@ -111,7 +133,7 @@ function init(featuredCategories: Array<string>) {
   ) as HTMLLinkElement;
 
   featuredCategorySwitches.forEach((featuredCategorySwitch) => {
-    featuredCategorySwitch.addEventListener("click", (e: Event) => {
+    featuredCategorySwitch.addEventListener("click", async (e: Event) => {
       e.preventDefault();
 
       const target = e.target as HTMLLinkElement;
@@ -138,14 +160,14 @@ function init(featuredCategories: Array<string>) {
         return;
       }
 
-      buildCards(category);
+      await buildCards(category);
 
       viewCategoryLink?.setAttribute("href", `/search?category=${category}`);
       viewCategoryLink.innerText = `View all ${category} snaps`;
     });
   });
 
-  buildCards(featuredCategories[0].toLowerCase());
+  await buildCards(featuredCategories[0].toLowerCase());
 }
 
 export { init };

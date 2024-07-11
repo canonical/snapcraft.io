@@ -37,7 +37,9 @@ listingTabsSelect.addEventListener("change", (e) => {
   const target = e.target as HTMLSelectElement;
   const nextTabId = target.value;
   const listingTab = document.querySelector(nextTabId) as HTMLElement;
-  const options = Array.prototype.slice.call(listingTabsSelect.options);
+  const options = Array.prototype.slice.call(
+    listingTabsSelect.options
+  ) as Array<HTMLOptionElement>;
   const optionIndex = options.findIndex((option) => {
     return option.value === nextTabId;
   });
