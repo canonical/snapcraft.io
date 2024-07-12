@@ -29,7 +29,7 @@ function Packages(): ReactNode {
       queryString = "?categories=featured";
     }
 
-    const response = await fetch(`/beta/store.json${queryString}`);
+    const response: Response = await fetch(`/beta/store.json${queryString}`);
     const data: {
       total_items: number;
       total_pages: number;
