@@ -453,8 +453,13 @@ def get_package_metadata(snap_name):
     package_metadata = publisher_api.get_package_metadata(
         flask.session, "snap", snap_name
     )
-
-    return jsonify({"data": package_metadata, "success": True})
+    if "metadata" in package_metadata and package_metadata["metadata"]:
+        return jsonify({"data": package_metadata["metadata"], "success": True})
+    else:
+        return (
+            jsonify({"error": "Package metadata not found", "success": False}),
+            404,
+        )
 
 
 @publisher_snaps.route("/packages/<package_name>", methods=["DELETE"])
