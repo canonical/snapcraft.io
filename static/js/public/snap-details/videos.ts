@@ -7,7 +7,9 @@ function vimeo(): void {
     firstScript.parentNode.insertBefore(vimeoPlayerScript, firstScript);
   }
 
-  const frame = document.getElementById("vimeoplayer") as HTMLIFrameElement | null;
+  const frame = document.getElementById(
+    "vimeoplayer"
+  ) as HTMLIFrameElement | null;
 
   const vimeoReady = () => {
     if (frame && window.Vimeo && window.Vimeo.Player) {
@@ -16,8 +18,8 @@ function vimeo(): void {
         player.setVolume(0);
       });
       player.play();
-      }
-    };
+    }
+  };
 
   const checkVimeo = () => {
     if (window.Vimeo && window.Vimeo.Player) {
@@ -31,7 +33,7 @@ function vimeo(): void {
 }
 
 function asciinema(holderEl: HTMLElement): void {
-  const asciinemaPlayer = holderEl.querySelector("iframe") as HTMLIFrameElement | null;
+  const asciinemaPlayer = holderEl.querySelector("iframe");
 
   if (!asciinemaPlayer) {
     setTimeout(() => asciinema(holderEl), 200);
@@ -48,7 +50,7 @@ function videos(holderSelector: string): void {
 
   const videoType = holderEl.dataset.videoType;
 
-  const iframe = holderEl.querySelector("iframe") as HTMLIFrameElement | null;
+  const iframe = holderEl.querySelector("iframe");
   if (iframe && iframe.src && iframe.src.indexOf("http://") !== -1) {
     iframe.src = iframe.src.replace("http://", "https://");
   }
