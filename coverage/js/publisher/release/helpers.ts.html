@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">41.33% </span>
+                <span class="strong">41.89% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>31/75</span>
+                <span class='fraction'>31/74</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">41.09% </span>
+                <span class="strong">41.66% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>30/73</span>
+                <span class='fraction'>30/72</span>
             </div>
         
             
@@ -240,14 +240,7 @@
 <a name='L175'></a><a href='#L175'>175</a>
 <a name='L176'></a><a href='#L176'>176</a>
 <a name='L177'></a><a href='#L177'>177</a>
-<a name='L178'></a><a href='#L178'>178</a>
-<a name='L179'></a><a href='#L179'>179</a>
-<a name='L180'></a><a href='#L180'>180</a>
-<a name='L181'></a><a href='#L181'>181</a>
-<a name='L182'></a><a href='#L182'>182</a>
-<a name='L183'></a><a href='#L183'>183</a>
-<a name='L184'></a><a href='#L184'>184</a>
-<a name='L185'></a><a href='#L185'>185</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L178'></a><a href='#L178'>178</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -356,11 +349,7 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -422,12 +411,9 @@
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -531,20 +517,16 @@ export function <span class="fstat-no" title="function not covered" >validatePha
 <span class="cstat-no" title="statement not covered" >  return "";</span>
 }
 &nbsp;
-export function <span class="fstat-no" title="function not covered" >resizeAsidePanel(</span>tracks: Array&lt;any&gt;) {
+export function <span class="fstat-no" title="function not covered" >resizeAsidePanel(</span>panelType: string) {
 <span class="cstat-no" title="statement not covered" >  useEffect(<span class="fstat-no" title="function not covered" >()</span> =&gt; {</span>
     function <span class="fstat-no" title="function not covered" >adjustAsidePanelHeight(</span>) {
       const targetComponent = <span class="cstat-no" title="statement not covered" >document.querySelector("#main-content");</span>
       let asidePanel;
 &nbsp;
-<span class="cstat-no" title="statement not covered" >      if (tracks.length &gt; 1) {</span>
-<span class="cstat-no" title="statement not covered" >        asidePanel = document.querySelector(</span>
-          "#add-track-aside-panel"
-        ) as HTMLElement;
+<span class="cstat-no" title="statement not covered" >      if (panelType === "add") {</span>
+<span class="cstat-no" title="statement not covered" >        asidePanel = document.querySelector("#add-track-aside-panel") as HTMLElement;</span>
       } else {
-<span class="cstat-no" title="statement not covered" >        asidePanel = document.querySelector(</span>
-          "#request-track-aside-panel"
-        ) as HTMLElement;
+<span class="cstat-no" title="statement not covered" >        asidePanel = document.querySelector("#request-track-aside-panel") as HTMLElement;</span>
       }
 &nbsp;
 <span class="cstat-no" title="statement not covered" >      if (targetComponent &amp;&amp; asidePanel) {</span>
@@ -573,7 +555,7 @@ export function <span class="fstat-no" title="function not covered" >resizeAside
 <span class="cstat-no" title="statement not covered" >      window.removeEventListener("resize", adjustAsidePanelHeight);</span>
 <span class="cstat-no" title="statement not covered" >      window.removeEventListener("scroll", adjustAsidePanelHeight);</span>
     };
-  }, [tracks]);
+  });
 }
 &nbsp;
 export function <span class="fstat-no" title="function not covered" >numericalSort(</span>a: string, b: string) {
@@ -606,13 +588,10 @@ export async function hasTrackGuardrails(snap: string) {
     <span class="missing-if-branch" title="if path not taken" >I</span>if (!response.ok) {
 <span class="cstat-no" title="statement not covered" >      throw new Error("There was a problem fetching the snap's metadata");</span>
     }
-&nbsp;
     const data = await response.json();
-&nbsp;
-    return data.data["track-guardrails"].length &gt; 0;
+    return { "track-guardrails": data.data["track-guardrails"] };
   } catch (e) {
-<span class="cstat-no" title="statement not covered" >    console.error(e);</span>
-<span class="cstat-no" title="statement not covered" >    return false;</span>
+<span class="cstat-no" title="statement not covered" >    return { "error": e };</span>
   }
 }
 &nbsp;</pre></td></tr></table></pre>
@@ -622,7 +601,7 @@ export async function hasTrackGuardrails(snap: string) {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2024-07-11T22:06:17.015Z
+                at 2024-07-12T22:06:42.107Z
             </div>
         <script src="../../prettify.js"></script>
         <script>
