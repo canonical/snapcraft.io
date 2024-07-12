@@ -1,4 +1,6 @@
-function Logo() {
+import { ReactNode } from "react";
+
+function Logo(): ReactNode {
   return (
     <a href="/" className="p-panel__logo">
       <img

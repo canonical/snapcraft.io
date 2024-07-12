@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, ReactNode } from "react";
 import { useQuery } from "react-query";
 import { useLocation, useSearchParams } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
@@ -17,7 +17,7 @@ import { getArchitectures, getCategoryOrder } from "../../utils";
 
 import type { Package, Category } from "../../types";
 
-function Packages() {
+function Packages(): ReactNode {
   const ITEMS_PER_PAGE = 15;
   const SHOW_MORE_COUNT = 10;
   const CATEGORY_ORDER = getCategoryOrder();
@@ -30,7 +30,13 @@ function Packages() {
     }
 
     const response = await fetch(`/beta/store.json${queryString}`);
-    const data = await response.json();
+    const data: {
+      total_items: number;
+      total_pages: number;
+      packages: Package[];
+      categories: Category[];
+    } = await response.json();
+
     const packagesWithId = data.packages.map((item: Package) => {
       return {
         ...item,
@@ -65,16 +71,18 @@ function Packages() {
     refetch();
   }, [searchParams]);
 
+  const packagesCount = data?.packages ? data?.packages.length : 0;
+
   const firstResultNumber = (parseInt(currentPage) - 1) * ITEMS_PER_PAGE + 1;
   const lastResultNumber =
-    (parseInt(currentPage) - 1) * ITEMS_PER_PAGE + data?.packages.length;
+    (parseInt(currentPage) - 1) * ITEMS_PER_PAGE + packagesCount;
 
   const getCategoryDisplayName = (name: string) => {
     const category = data?.categories?.find(
       (cat: Category) => cat.name === name
     );
 
-    return category.display_name;
+    return category?.display_name;
   };
   const selectedCategories = searchParams.get("categories")?.split(",");
   let showAllCategories = false;

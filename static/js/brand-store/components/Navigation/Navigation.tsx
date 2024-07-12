@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, ReactNode } from "react";
 import { useSelector } from "react-redux";
 import { useSetRecoilState } from "recoil";
 import { useParams, NavLink } from "react-router-dom";
@@ -11,7 +11,11 @@ import { useBrand, usePublisher } from "../../hooks";
 
 import type { Store } from "../../types/shared";
 
-function Navigation({ sectionName }: { sectionName: string | null }) {
+function Navigation({
+  sectionName,
+}: {
+  sectionName: string | null;
+}): ReactNode {
   const brandStoresList = useSelector(brandStoresListSelector);
   const { id } = useParams();
   const {

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, ReactNode } from "react";
 import { useSetRecoilState, useRecoilValue } from "recoil";
 import {
   Link,
@@ -27,7 +27,7 @@ import { isClosedPanel, setPageTitle, getPolicies } from "../../utils";
 
 import type { Model, Policy } from "../../types/shared";
 
-function Models() {
+function Models(): ReactNode {
   const { id } = useParams();
   const location = useLocation();
   const navigate = useNavigate();

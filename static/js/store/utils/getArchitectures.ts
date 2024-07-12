@@ -1,4 +1,4 @@
-function getArchitectures() {
+function getArchitectures(): Array<{ name: string; display_name: string }> {
   return [
     {
       name: "",

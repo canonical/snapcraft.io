@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, ReactNode } from "react";
 import { useSetRecoilState, useRecoilValue } from "recoil";
 import {
   Link,
@@ -32,7 +32,7 @@ import {
 
 import type { SigningKey, Policy } from "../../types/shared";
 
-function SigningKeys() {
+function SigningKeys(): ReactNode {
   const { id } = useParams();
   const location = useLocation();
   const navigate = useNavigate();
