@@ -29,7 +29,8 @@ function install(language: unknown, fsfFlow: string): void {
       ) as HTMLLinkElement;
       if (paginationBtn) {
         paginationBtn.classList.remove("is-disabled");
-        paginationBtn.href = `/${fsfFlow}/${language}/${selectedOs}/package`;
+        paginationBtn.href =
+          `/${fsfFlow}/${language}/${selectedOs}/package` as string;
       }
     }
   }
@@ -98,7 +99,7 @@ function install(language: unknown, fsfFlow: string): void {
       `#js-pagination-next`
     ) as HTMLLinkElement;
     if (paginationBtn) {
-      const paginationBtnLink = `/${fsfFlow}/${language}/${type}/package`;
+      const paginationBtnLink: string = `/${fsfFlow}/${language}/${type}/package`;
       paginationBtn.classList.remove("is-disabled");
       paginationBtn.href = paginationBtnLink;
     }
