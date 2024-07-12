@@ -3,7 +3,7 @@
 
 export const toggleAccordion = (element: HTMLElement, show: boolean): void => {
   element.setAttribute("aria-expanded", show.toString());
-  const controlElId = `#${element.getAttribute("aria-controls")}`;
+  const controlElId: string = `#${element.getAttribute("aria-controls")}`;
   const controlEl = document.querySelector(controlElId) as HTMLElement;
   controlEl.setAttribute("aria-hidden", `${show ? "false" : "true"}`);
 };
