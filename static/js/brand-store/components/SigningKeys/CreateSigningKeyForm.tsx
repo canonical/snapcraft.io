@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { Dispatch, ReactNode, useState, SetStateAction } from "react";
 import { useNavigate, useParams, useLocation, Link } from "react-router-dom";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { useMutation, useQueryClient } from "react-query";
@@ -12,8 +12,8 @@ import { filteredSigningKeysListState, brandStoreState } from "../../selectors";
 import type { SigningKey } from "../../types/shared";
 
 type Props = {
-  setShowNotification: Function;
-  setErrorMessage: Function;
+  setShowNotification: Dispatch<SetStateAction<boolean>>;
+  setErrorMessage: Dispatch<SetStateAction<string>>;
   refetch: Function;
 };
 
@@ -21,7 +21,7 @@ function CreateSigningKeyForm({
   setShowNotification,
   setErrorMessage,
   refetch,
-}: Props) {
+}: Props): ReactNode {
   const navigate = useNavigate();
   const location = useLocation();
   const { id } = useParams();

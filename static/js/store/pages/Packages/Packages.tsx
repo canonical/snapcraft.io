@@ -31,10 +31,12 @@ function Packages(): ReactNode {
       categories: Category[];
     } = await response.json();
 
-    const packagesWithId = data.packages.map((item: Package) => ({
-      ...item,
-      id: uuidv4(),
-    }));
+    const packagesWithId = data.packages.map((item: Package) => {
+      return {
+        ...item,
+        id: uuidv4(),
+      }
+    });
 
     return {
       total_items: data.total_items,
@@ -78,14 +80,16 @@ function Packages(): ReactNode {
     refetch();
   }, [searchParams]);
 
-  const packagesCount = data?.packages ? data.packages.length : 0;
+  const packagesCount = data?.packages ? data?.packages.length : 0;
 
   const firstResultNumber = (parseInt(currentPage) - 1) * ITEMS_PER_PAGE + 1;
   const lastResultNumber =
     (parseInt(currentPage) - 1) * ITEMS_PER_PAGE + packagesCount;
 
   const getCategoryDisplayName = (name: string) => {
-    const category = data?.categories?.find((cat: Category) => cat.name === name);
+    const category = data?.categories?.find(
+      (cat: Category) => cat.name === name
+    );
     return category?.display_name;
   };
 

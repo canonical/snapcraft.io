@@ -1,7 +1,7 @@
 const MARKETO_FORM_ID = 3308;
 
-function nps() {
-  const MktoForms2 = window.MktoForms2 || null;
+function nps(): void {
+  const MktoForms2 = window.MktoForms2 || (null as unknown | null);
 
   const toggle = document.querySelector(
     ".js-nps-comment-toggle"

@@ -1,9 +1,13 @@
+interface CallableFunction {
+  apply<T, R>(thisArg: T, args: IArguments): R;
+}
+
 export default function debounce(
-  func: Function,
+  func: CallableFunction,
   wait: number,
   immediate?: boolean
-) {
-  let timeout: any;
+): { (this: HTMLElement): void; clear(): void } {
+  let timeout: ReturnType<typeof setTimeout> | null;
 
   const debounced = function (this: HTMLElement) {
     const context = this;
@@ -13,13 +17,19 @@ export default function debounce(
       if (!immediate) func.apply(context, args);
     };
     const callNow = immediate && !timeout;
-    clearTimeout(timeout);
+
+    if (timeout) {
+      clearTimeout(timeout);
+    }
     timeout = setTimeout(later, wait);
+
     if (callNow) func.apply(context, args);
   };
 
   debounced.clear = function () {
-    clearTimeout(timeout);
+    if (timeout) {
+      clearTimeout(timeout);
+    }
   };
 
   return debounced;

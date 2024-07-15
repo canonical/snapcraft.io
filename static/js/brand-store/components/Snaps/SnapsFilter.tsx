@@ -1,4 +1,4 @@
-import { KeyboardEvent } from "react";
+import { KeyboardEvent, ReactNode } from "react";
 
 import type { SnapsList } from "../../types/shared";
 
@@ -20,7 +20,7 @@ function SnapsFilter({
   getStoreName,
   snaps,
   id,
-}: Props) {
+}: Props): ReactNode {
   return (
     <div className="p-search-box">
       <input

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { Dispatch, ReactNode, SetStateAction, useState } from "react";
 import { useNavigate, useParams, useLocation, Link } from "react-router-dom";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { useMutation, useQueryClient } from "react-query";
@@ -13,14 +13,14 @@ import { filteredModelsListState, brandStoreState } from "../../selectors";
 import type { Store, Model } from "../../types/shared";
 
 type Props = {
-  setShowNotification: Function;
-  setShowErrorNotification: Function;
+  setShowNotification: Dispatch<SetStateAction<boolean>>;
+  setShowErrorNotification: Dispatch<SetStateAction<boolean>>;
 };
 
 function CreateModelForm({
   setShowNotification,
   setShowErrorNotification,
-}: Props) {
+}: Props): ReactNode {
   const navigate = useNavigate();
   const location = useLocation();
   const { id } = useParams();

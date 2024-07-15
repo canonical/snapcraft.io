@@ -1,10 +1,9 @@
 (function () {
   function toggleDropdown(toggle: HTMLElement, open: boolean) {
     var parentElement = toggle.parentNode as HTMLElement;
+    var dropdownElId = toggle.getAttribute("aria-controls") as string;
 
-    var dropdown = document.getElementById(
-      toggle.getAttribute("aria-controls")!
-    )!;
+    var dropdown = document.getElementById(dropdownElId) as HTMLElement;
 
     const openMenu = !open;
 
