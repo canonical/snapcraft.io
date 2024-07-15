@@ -45,6 +45,8 @@ function Navigation({
     return;
   };
 
+  const currentStore = brandStoresList.find((store) => store.id === id);
+
   useEffect(() => {
     setFilteredBrandstores(brandStoresList);
   }, [brandStoresList]);
@@ -284,30 +286,36 @@ function Navigation({
                                 </li>
                               </>
                             )}
-                            <li className="p-side-navigation__item">
-                              <NavLink
-                                className="p-side-navigation__link"
-                                to={`/admin/${id}/members`}
-                                aria-selected={sectionName === "members"}
-                              >
-                                <i className="p-icon--user-group is-light p-side-navigation__icon"></i>
-                                <span className="p-side-navigation__label">
-                                  Members
-                                </span>
-                              </NavLink>
-                            </li>
-                            <li className="p-side-navigation__item">
-                              <NavLink
-                                className="p-side-navigation__link"
-                                to={`/admin/${id}/settings`}
-                                aria-selected={sectionName === "settings"}
-                              >
-                                <i className="p-icon--settings is-light p-side-navigation__icon"></i>
-                                <span className="p-side-navigation__label">
-                                  Settings
-                                </span>
-                              </NavLink>
-                            </li>
+                            {currentStore &&
+                              currentStore.roles &&
+                              currentStore.roles.includes("admin") && (
+                                <>
+                                  <li className="p-side-navigation__item">
+                                    <NavLink
+                                      className="p-side-navigation__link"
+                                      to={`/admin/${id}/members`}
+                                      aria-selected={sectionName === "members"}
+                                    >
+                                      <i className="p-icon--user-group is-light p-side-navigation__icon"></i>
+                                      <span className="p-side-navigation__label">
+                                        Members
+                                      </span>
+                                    </NavLink>
+                                  </li>
+                                  <li className="p-side-navigation__item">
+                                    <NavLink
+                                      className="p-side-navigation__link"
+                                      to={`/admin/${id}/settings`}
+                                      aria-selected={sectionName === "settings"}
+                                    >
+                                      <i className="p-icon--settings is-light p-side-navigation__icon"></i>
+                                      <span className="p-side-navigation__label">
+                                        Settings
+                                      </span>
+                                    </NavLink>
+                                  </li>
+                                </>
+                              )}
                           </>
                         )}
                       </ul>
