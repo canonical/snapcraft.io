@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, ReactNode } from "react";
 import { useQuery } from "react-query";
 import { useLocation, useSearchParams } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
@@ -17,26 +17,24 @@ import { getArchitectures, getCategoryOrder } from "../../utils";
 
 import type { Package, Category } from "../../types";
 
-function Packages() {
+function Packages(): ReactNode {
   const ITEMS_PER_PAGE = 15;
   const SHOW_MORE_COUNT = 10;
   const CATEGORY_ORDER = getCategoryOrder();
 
-  const getData = async () => {
-    let queryString = search;
-
-    if (!search) {
-      queryString = "?categories=featured";
-    }
-
+  const getData = async (queryString: string) => {
     const response = await fetch(`/beta/store.json${queryString}`);
-    const data = await response.json();
-    const packagesWithId = data.packages.map((item: Package) => {
-      return {
-        ...item,
-        id: uuidv4(),
-      };
-    });
+    const data: {
+      total_items: number;
+      total_pages: number;
+      packages: Package[];
+      categories: Category[];
+    } = await response.json();
+
+    const packagesWithId = data.packages.map((item: Package) => ({
+      ...item,
+      id: uuidv4(),
+    }));
 
     return {
       total_items: data.total_items,
@@ -48,35 +46,53 @@ function Packages() {
 
   const { search } = useLocation();
   const [searchParams, setSearchParams] = useSearchParams();
+  const [initialLoad, setInitialLoad] = useState(true);
 
   const [hideFilters, setHideFilters] = useState(true);
   const currentPage = searchParams.get("page") || "1";
-  const { data, status, refetch, isFetching } = useQuery("data", getData);
+
+  let queryString = search;
+  if (!search || (!searchParams.get("categories") && !searchParams.get("q") && !searchParams.get("architecture"))) {
+    queryString = "?categories=featured";
+  }
+
+  const { data, status, refetch, isFetching } = useQuery(
+    ["data", queryString],
+    () => getData(queryString),
+    {
+      keepPreviousData: true,
+    }
+  );
 
   const searchRef = useRef<HTMLInputElement | null>(null);
   const searchSummaryRef = useRef<HTMLDivElement>(null);
 
-  const isFeatured =
-    !searchParams.get("categories") &&
-    !searchParams.get("q") &&
-    !searchParams.get("architectures");
-
   useEffect(() => {
+    if (initialLoad) {
+      if (!searchParams.get("categories") && !searchParams.get("q") && !searchParams.get("architecture")) {
+        searchParams.set("categories", "featured");
+        setSearchParams(searchParams);
+      }
+      setInitialLoad(false);
+    }
     refetch();
   }, [searchParams]);
 
+  const packagesCount = data?.packages ? data.packages.length : 0;
+
   const firstResultNumber = (parseInt(currentPage) - 1) * ITEMS_PER_PAGE + 1;
   const lastResultNumber =
-    (parseInt(currentPage) - 1) * ITEMS_PER_PAGE + data?.packages.length;
+    (parseInt(currentPage) - 1) * ITEMS_PER_PAGE + packagesCount;
 
   const getCategoryDisplayName = (name: string) => {
-    const category = data?.categories?.find(
-      (cat: Category) => cat.name === name
-    );
-
-    return category.display_name;
+    const category = data?.categories?.find((cat: Category) => cat.name === name);
+    return category?.display_name;
   };
-  const selectedCategories = searchParams.get("categories")?.split(",");
+
+  const selectedCategories = searchParams.get("categories")?.split(",").filter(Boolean) || [];
+  const isFeatured =
+    selectedCategories.length === 0 || (selectedCategories.length === 1 && selectedCategories[0] === "featured");
+
   let showAllCategories = false;
 
   const selectedFiltersNotVisible = (
@@ -112,7 +128,7 @@ function Packages() {
   };
 
   if (
-    selectedCategories &&
+    selectedCategories.length > 0 &&
     data &&
     data.categories &&
     selectedFiltersNotVisible(selectedCategories, data.categories)
@@ -121,7 +137,11 @@ function Packages() {
   }
 
   const getResultsTitle = () => {
-    if (!selectedCategories) {
+    if (isFeatured) {
+      return "Featured snaps";
+    }
+
+    if (selectedCategories.length === 0) {
       return;
     }
 
@@ -184,15 +204,19 @@ function Packages() {
                     showMoreCount={SHOW_MORE_COUNT}
                     displayAllCategories={showAllCategories}
                     categories={data?.categories || []}
-                    selectedCategories={selectedCategories || []}
+                    selectedCategories={selectedCategories}
                     setSelectedCategories={(
                       items: Array<{
                         display_name: string;
                         name: string;
-                      }>
+                      }> | string[]
                     ) => {
-                      if (items.length > 0) {
-                        searchParams.set("categories", items.join(","));
+                      const categoryNames = items.map(item => typeof item === 'string' ? item : item.name).filter(Boolean);
+                      if (categoryNames.length > 0) {
+                        if (categoryNames.includes("featured")) {
+                          categoryNames.splice(categoryNames.indexOf("featured"), 1);
+                        }
+                        searchParams.set("categories", categoryNames.join(","));
                       } else {
                         searchParams.delete("categories");
                       }
@@ -207,6 +231,9 @@ function Packages() {
                     setSelectedArchitecture={(item: string) => {
                       if (item) {
                         searchParams.set("architecture", item);
+                        if (searchParams.get("categories") === "featured") {
+                          searchParams.delete("categories");
+                        }
                       } else {
                         searchParams.delete("architecture");
                       }
@@ -224,11 +251,7 @@ function Packages() {
           <Col size={9}>
             {status === "success" && data.packages.length > 0 && (
               <div ref={searchSummaryRef}>
-                {isFeatured ? (
-                  <h2>Featured snaps</h2>
-                ) : (
-                  <h2>{getResultsTitle()}</h2>
-                )}
+                <h2>{getResultsTitle()}</h2>
                 <Row>
                   <Col size={6}>
                     {searchParams.get("q") ? (
