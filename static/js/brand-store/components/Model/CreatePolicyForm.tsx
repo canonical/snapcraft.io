@@ -1,4 +1,10 @@
-import { useState, useEffect } from "react";
+import {
+  useState,
+  useEffect,
+  ReactNode,
+  Dispatch,
+  SetStateAction,
+} from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { useParams, Link, useNavigate, useLocation } from "react-router-dom";
 import { useMutation, useQueryClient } from "react-query";
@@ -11,8 +17,8 @@ import { signingKeysListState, newSigningKeyState } from "../../atoms";
 import { brandStoreState } from "../../selectors";
 
 type Props = {
-  setShowNotification: Function;
-  setShowErrorNotification: Function;
+  setShowNotification: Dispatch<SetStateAction<boolean>>;
+  setShowErrorNotification: Dispatch<SetStateAction<boolean>>;
   refetchPolicies: Function;
 };
 
@@ -20,7 +26,7 @@ function CreatePolicyForm({
   setShowNotification,
   setShowErrorNotification,
   refetchPolicies,
-}: Props) {
+}: Props): ReactNode {
   const { id, model_id } = useParams();
   const navigate = useNavigate();
   const location = useLocation();

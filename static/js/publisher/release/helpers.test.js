@@ -132,7 +132,7 @@ describe("hasTrackGuardrails", () => {
     });
 
     const result = await hasTrackGuardrails("test-snap");
-    expect(result).toBe(true);
+    expect(result).toStrictEqual({ "track-guardrails": ["example-guardrail"] });
   });
 
   it("should return false when track-guardrails are not present", async () => {
@@ -147,6 +147,6 @@ describe("hasTrackGuardrails", () => {
     });
 
     const result = await hasTrackGuardrails("test-snap");
-    expect(result).toBe(false);
+    expect(result).toStrictEqual({ "track-guardrails": [] });
   });
 });

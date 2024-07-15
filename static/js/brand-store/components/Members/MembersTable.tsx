@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, ReactNode } from "react";
 import { MainTable, CheckboxInput } from "@canonical/react-components";
 import ROLES from "./memberRoles";
 
@@ -14,8 +14,8 @@ function MembersTable({
   filteredMembers,
   changedMembers,
   setChangedMembers,
-}: Props) {
-  const [members, setMembers]: any = useState(filteredMembers);
+}: Props): ReactNode {
+  const [members, setMembers] = useState<Member[]>(filteredMembers);
 
   const checkArrayEqual = (array1: Array<string>, array2: Array<string>) => {
     if (array1.length !== array2.length) {

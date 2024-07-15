@@ -1,4 +1,4 @@
-function initFSFLanguageSelect() {
+function initFSFLanguageSelect(): void {
   const flowLinksContainer = document.querySelector(
     "[data-js='flow-links-container']"
   ) as HTMLElement;
@@ -12,8 +12,9 @@ function initFSFLanguageSelect() {
 
   let activeFlowLanguage = activeFlowLink.getAttribute("data-flow");
 
+  let activeFlowContentSelector = `[data-flow-details='${activeFlowLanguage}']`;
   let activeFlowContent = document.querySelector(
-    `[data-flow-details='${activeFlowLanguage}']`
+    activeFlowContentSelector
   ) as HTMLElement;
 
   function hideCurrentFlow() {

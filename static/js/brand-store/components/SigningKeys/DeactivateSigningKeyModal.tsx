@@ -2,9 +2,10 @@ import { Link, useParams } from "react-router-dom";
 import { Modal, Button, Icon } from "@canonical/react-components";
 
 import type { SigningKey } from "../../types/shared";
+import { Dispatch, ReactNode, SetStateAction } from "react";
 
 type Props = {
-  setModalOpen: Function;
+  setModalOpen: Dispatch<SetStateAction<boolean>>;
   handleDisable: Function;
   isDeleting: boolean;
   signingKey: SigningKey;
@@ -15,7 +16,7 @@ function DeactivateSigningKeyModal({
   handleDisable,
   isDeleting,
   signingKey,
-}: Props) {
+}: Props): ReactNode {
   const { id } = useParams();
 
   return signingKey.models && signingKey.models.length > 0 ? (

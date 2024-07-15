@@ -144,11 +144,7 @@ def set_handlers(app):
         error_name = getattr(error, "name", type(error).__name__)
         return_code = getattr(error, "code", 500)
 
-        supress_sentry = False
-        if type(error).__name__ == "BadGateway":
-            supress_sentry = True
-
-        if not app.testing and not supress_sentry:
+        if not app.testing:
             app.extensions["sentry"].captureException()
 
         return (

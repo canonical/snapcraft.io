@@ -1,4 +1,3 @@
-/* global dataLayer */
 const origin = window.location.href;
 const categoryPrefix = "snapcraft.io-";
 
@@ -14,12 +13,6 @@ const events: Events = {
   ".p-strip .p-button--positive": "content-cta-0",
   "#main-content .p-button": "content-cta-1",
   ".p-strip .p-button": "content-cta-1",
-  // @ts-ignore
-  // eslint-disable-next-line no-dupe-keys
-  "#main-content .p-button": "content-cta-1",
-  // @ts-ignore
-  // eslint-disable-next-line no-dupe-keys
-  ".p-strip .p-button": "content-cta-1",
   "#main-content .p-card": "content-card",
   ".p-strip .p-card": "content-card",
   "#main-content .p-media-object--snap": "content-card-snap",
@@ -33,7 +26,7 @@ function triggerEvent(
   from: string,
   to: string,
   label: string
-) {
+): void {
   if (window.dataLayer) {
     window.dataLayer.push({
       event: "GAEvent",
@@ -45,7 +38,7 @@ function triggerEvent(
   }
 }
 
-function triggerEventReleaseUI(action: string, label: string) {
+function triggerEventReleaseUI(action: string, label: string): void {
   if (window.dataLayer) {
     window.dataLayer.push({
       event: "GAEvent",

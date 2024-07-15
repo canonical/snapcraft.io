@@ -1,4 +1,4 @@
-import { useState, useEffect, SyntheticEvent } from "react";
+import { useState, useEffect, SyntheticEvent, ReactNode } from "react";
 import { useRecoilValue } from "recoil";
 import {
   Row,
@@ -13,7 +13,7 @@ import Navigation from "../Navigation";
 
 import { publisherState } from "../../atoms";
 
-function AccountDetails() {
+function AccountDetails(): ReactNode {
   const [subscriptionPreferencesChanged, setSubscriptionPreferencesChanged] =
     useState(false);
   const [subscribeToNewsletter, setSubscribeToNewsletter] = useState(false);
@@ -216,10 +216,13 @@ function AccountDetails() {
                             subscribeToNewsletter ? "on" : ""
                           );
 
-                          const response = await fetch("/account/publisher", {
-                            method: "POST",
-                            body: data,
-                          });
+                          const response: Response = await fetch(
+                            "/account/publisher",
+                            {
+                              method: "POST",
+                              body: data,
+                            }
+                          );
 
                           if (!response.ok) {
                             setShowErrorMessage(true);

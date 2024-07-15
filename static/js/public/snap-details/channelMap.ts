@@ -3,12 +3,12 @@ import { triggerEvent } from "../../base/ga";
 
 class ChannelMap {
   RISK_ORDER: string[];
-  packageName: any;
+  packageName: string;
   currentTab: string;
-  defaultTrack: any;
-  selectorString: any;
-  channelMapEl: any;
-  channelOverlayEl: any;
+  defaultTrack: string;
+  selectorString: string;
+  channelMapEl: HTMLElement;
+  channelOverlayEl: HTMLElement;
   channelMapData: any;
   events: SnapEvents;
   INSTALL_TEMPLATE: any;
@@ -27,10 +27,10 @@ class ChannelMap {
     | null;
   openScreenName: string | undefined;
   constructor(
-    selectorString: any,
-    packageName: any,
+    selectorString: string,
+    packageName: string,
     channelMapData: any,
-    defaultTrack: any
+    defaultTrack: string
   ) {
     this.RISK_ORDER = ["stable", "candidate", "beta", "edge"];
     this.packageName = packageName;
@@ -39,8 +39,12 @@ class ChannelMap {
     this.defaultTrack = defaultTrack;
 
     this.selectorString = selectorString;
-    this.channelMapEl = document.querySelector(this.selectorString);
-    this.channelOverlayEl = document.querySelector(".p-channel-map-overlay");
+    this.channelMapEl = document.querySelector(
+      this.selectorString
+    ) as HTMLElement;
+    this.channelOverlayEl = document.querySelector(
+      ".p-channel-map-overlay"
+    ) as HTMLElement;
     this.channelMapData = channelMapData;
 
     if (!this.channelOverlayEl) {
@@ -265,7 +269,7 @@ class ChannelMap {
 
     const openScreen = this.channelMapEl.querySelector(
       `#${this.openScreenName}`
-    );
+    ) as HTMLElement;
 
     // select default screen before opening
     this.selectScreen(openScreen);
@@ -333,14 +337,12 @@ class ChannelMap {
     document.body.appendChild(iframe);
   }
 
-  selectScreen(screenEl: {
-    getAttribute: (arg0: string) => any;
-    parentNode: { querySelector: (arg0: string) => any };
-    classList: { add: (arg0: string) => void };
-    setAttribute: (arg0: string, arg1: string) => void;
-  }) {
+  selectScreen(screenEl: HTMLElement) {
     const selected = screenEl.getAttribute("aria-selected");
-    const currentlySelected = screenEl.parentNode.querySelector(".is-open");
+    let currentlySelected;
+    if (screenEl.parentNode) {
+      currentlySelected = screenEl.parentNode.querySelector(".is-open");
+    }
 
     if (currentlySelected) {
       currentlySelected.classList.remove("is-open");
@@ -464,7 +466,7 @@ class ChannelMap {
   prepareTable(archData: { [x: string]: any[] }) {
     const tbodyEl = this.channelMapEl.querySelector(
       '[data-js="channel-map-table"]'
-    );
+    ) as HTMLElement;
 
     // If we're on the overview tab we only want to see latest/[all risks]
     // and [all tracks]/[highest risk], so filter out anything that isn't these

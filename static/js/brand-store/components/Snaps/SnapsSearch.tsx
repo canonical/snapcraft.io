@@ -1,4 +1,4 @@
-import { useState, KeyboardEvent } from "react";
+import { useState, KeyboardEvent, ReactNode } from "react";
 import Downshift from "downshift";
 import { Spinner } from "@canonical/react-components";
 
@@ -18,7 +18,7 @@ function SnapsSearch({
   selectedSnaps,
   setSelectedSnaps,
   nonEssentialSnapIds,
-}: Props) {
+}: Props): ReactNode {
   const [suggestions, setSuggestions] = useState([]);
   const [isSearching, setIsSearching] = useState(false);
 
