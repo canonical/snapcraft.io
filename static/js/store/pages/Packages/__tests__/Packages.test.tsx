@@ -255,4 +255,15 @@ describe("Packages", () => {
       ).toBeInTheDocument();
     });
   });
+
+  test("removes featured category when another category is selected", async () => {
+    const user = userEvent.setup();
+    renderComponent();
+    await user.click(screen.getByLabelText("Development"));
+    await waitFor(() => {
+      expect(global.fetch).toHaveBeenCalledWith(
+        "/beta/store.json?categories=development"
+      );
+    });
+  });
 });
