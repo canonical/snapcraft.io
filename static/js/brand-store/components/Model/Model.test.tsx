@@ -11,7 +11,14 @@ import { store } from "../../store";
 
 jest.mock("react-redux", () => ({
   ...jest.requireActual("react-redux"),
-  useSelector: jest.fn(),
+  useSelector: jest.fn().mockReturnValue([
+    { id: "test-id", name: "Test store", roles: ["admin"] },
+    {
+      id: "non-admin-store",
+      name: "Non-admin store",
+      roles: ["review", "view", "access"],
+    },
+  ]),
 }));
 
 const queryClient = new QueryClient({

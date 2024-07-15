@@ -24,7 +24,6 @@ import SigningKeys from "../SigningKeys";
 import StoreNotFound from "../StoreNotFound";
 
 import type { StoresList, StoresSlice } from "../../types/shared";
-import { AnyAction } from "redux";
 
 function App(): ReactNode {
   const isLoading = useSelector(
