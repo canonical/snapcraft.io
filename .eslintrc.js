@@ -12,6 +12,7 @@ module.exports = {
     "eslint:recommended",
     "plugin:react/recommended",
     "plugin:prettier/recommended",
+    "plugin:prettier/recommended",
   ],
   parserOptions: {
     sourceType: "module",
@@ -26,7 +27,7 @@ module.exports = {
   },
   settings: {
     react: {
-      version: "detect"
-    }
-  }
+      version: "detect",
+    },
+  },
 };
