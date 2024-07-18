@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 <!DOCTYPE coverage SYSTEM "http://cobertura.sourceforge.net/xml/coverage-04.dtd">
-<coverage lines-valid="3588" lines-covered="2417" line-rate="0.6736" branches-valid="2124" branches-covered="1306" branch-rate="0.6148" timestamp="1721253883048" complexity="0" version="0.1">
+<coverage lines-valid="3588" lines-covered="2417" line-rate="0.6736" branches-valid="2124" branches-covered="1306" branch-rate="0.6148" timestamp="1721340299353" complexity="0" version="0.1">
   <sources>
     <source>/home/runner/work/snapcraft.io/snapcraft.io</source>
   </sources>
@@ -5704,9 +5704,9 @@
       <classes>
         <class name="PrimaryDomainInput.tsx" filename="static/js/publisher/listing/components/PrimaryDomainInput/PrimaryDomainInput.tsx" line-rate="0.7391" branch-rate="0.825">
           <methods>
-            <method name="PrimaryDomainInput" hits="36" signature="()V">
+            <method name="PrimaryDomainInput" hits="38" signature="()V">
               <lines>
-                <line number="15" hits="36"/>
+                <line number="15" hits="38"/>
               </lines>
             </method>
             <method name="(anonymous_1)" hits="2" signature="()V">
@@ -5766,19 +5766,19 @@
             </method>
           </methods>
           <lines>
-            <line number="22" hits="36" branch="false"/>
-            <line number="23" hits="36" branch="false"/>
-            <line number="24" hits="36" branch="false"/>
-            <line number="25" hits="36" branch="false"/>
-            <line number="26" hits="36" branch="false"/>
-            <line number="27" hits="36" branch="false"/>
-            <line number="29" hits="36" branch="false"/>
-            <line number="37" hits="36" branch="false"/>
+            <line number="22" hits="38" branch="false"/>
+            <line number="23" hits="38" branch="false"/>
+            <line number="24" hits="38" branch="false"/>
+            <line number="25" hits="38" branch="false"/>
+            <line number="26" hits="38" branch="false"/>
+            <line number="27" hits="38" branch="false"/>
+            <line number="29" hits="38" branch="false"/>
+            <line number="37" hits="38" branch="false"/>
             <line number="38" hits="2" branch="false"/>
             <line number="40" hits="2" branch="true" condition-coverage="50% (1/2)"/>
             <line number="41" hits="0" branch="false"/>
             <line number="44" hits="2" branch="false"/>
-            <line number="47" hits="36" branch="false"/>
+            <line number="47" hits="38" branch="false"/>
             <line number="48" hits="12" branch="true" condition-coverage="50% (1/2)"/>
             <line number="49" hits="0" branch="false"/>
             <line number="52" hits="12" branch="false"/>
@@ -5786,7 +5786,7 @@
             <line number="55" hits="12" branch="false"/>
             <line number="56" hits="12" branch="false"/>
             <line number="58" hits="0" branch="false"/>
-            <line number="62" hits="36" branch="false"/>
+            <line number="62" hits="38" branch="false"/>
             <line number="63" hits="6" branch="true" condition-coverage="50% (1/2)"/>
             <line number="64" hits="0" branch="false"/>
             <line number="67" hits="6" branch="false"/>
@@ -5794,18 +5794,18 @@
             <line number="70" hits="6" branch="false"/>
             <line number="71" hits="6" branch="false"/>
             <line number="73" hits="0" branch="false"/>
-            <line number="77" hits="36" branch="false"/>
+            <line number="77" hits="38" branch="false"/>
             <line number="78" hits="3" branch="true" condition-coverage="50% (1/2)"/>
             <line number="79" hits="0" branch="false"/>
             <line number="82" hits="3" branch="false"/>
             <line number="83" hits="3" branch="false"/>
             <line number="84" hits="3" branch="false"/>
             <line number="86" hits="0" branch="false"/>
-            <line number="90" hits="36" branch="false"/>
+            <line number="90" hits="38" branch="false"/>
             <line number="91" hits="1" branch="true" condition-coverage="50% (1/2)"/>
             <line number="92" hits="0" branch="false"/>
             <line number="94" hits="1" branch="false"/>
-            <line number="98" hits="36" branch="false"/>
+            <line number="98" hits="38" branch="false"/>
             <line number="148" hits="0" branch="false"/>
             <line number="162" hits="0" branch="false"/>
             <line number="185" hits="1" branch="false"/>
@@ -5993,20 +5993,20 @@
         </class>
         <class name="useVerified.ts" filename="static/js/publisher/listing/hooks/useVerified.ts" line-rate="0.3333" branch-rate="0">
           <methods>
-            <method name="useVerified" hits="36" signature="()V">
+            <method name="useVerified" hits="38" signature="()V">
               <lines>
-                <line number="3" hits="36"/>
+                <line number="3" hits="38"/>
               </lines>
             </method>
-            <method name="(anonymous_1)" hits="2" signature="()V">
+            <method name="(anonymous_1)" hits="3" signature="()V">
               <lines>
-                <line number="4" hits="2"/>
+                <line number="4" hits="3"/>
               </lines>
             </method>
           </methods>
           <lines>
-            <line number="4" hits="36" branch="false"/>
-            <line number="5" hits="2" branch="false"/>
+            <line number="4" hits="38" branch="false"/>
+            <line number="5" hits="3" branch="false"/>
             <line number="7" hits="0" branch="true" condition-coverage="0% (0/2)"/>
             <line number="8" hits="0" branch="false"/>
             <line number="11" hits="0" branch="false"/>
