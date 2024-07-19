@@ -17,7 +17,8 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": false,
-    "sourceMap": true
+    "sourceMap": true,
+    "ignoreDeprecations": "5.0"
   },
   "include": ["./static/js"],
   "paths": [
