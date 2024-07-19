@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, ReactNode } from "react";
+import { useState, useEffect, useRef, ReactElement } from "react";
 import { useQuery } from "react-query";
 import { useLocation, useSearchParams } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
@@ -17,7 +17,7 @@ import { getArchitectures, getCategoryOrder } from "../../utils";
 
 import type { Package, Category } from "../../types";
 
-function Packages(): ReactNode {
+function Packages(): ReactElement {
   const ITEMS_PER_PAGE = 15;
   const SHOW_MORE_COUNT = 10;
   const CATEGORY_ORDER = getCategoryOrder();
@@ -35,7 +35,7 @@ function Packages(): ReactNode {
       return {
         ...item,
         id: uuidv4(),
-      }
+      };
     });
 
     return {
@@ -54,7 +54,12 @@ function Packages(): ReactNode {
   const currentPage = searchParams.get("page") || "1";
 
   let queryString = search;
-  if (!search || (!searchParams.get("categories") && !searchParams.get("q") && !searchParams.get("architecture"))) {
+  if (
+    !search ||
+    (!searchParams.get("categories") &&
+      !searchParams.get("q") &&
+      !searchParams.get("architecture"))
+  ) {
     queryString = "?categories=featured";
   }
 
@@ -71,7 +76,11 @@ function Packages(): ReactNode {
 
   useEffect(() => {
     if (initialLoad) {
-      if (!searchParams.get("categories") && !searchParams.get("q") && !searchParams.get("architecture")) {
+      if (
+        !searchParams.get("categories") &&
+        !searchParams.get("q") &&
+        !searchParams.get("architecture")
+      ) {
         searchParams.set("categories", "featured");
         setSearchParams(searchParams);
       }
@@ -93,9 +102,11 @@ function Packages(): ReactNode {
     return category?.display_name;
   };
 
-  const selectedCategories = searchParams.get("categories")?.split(",").filter(Boolean) || [];
+  const selectedCategories =
+    searchParams.get("categories")?.split(",").filter(Boolean) || [];
   const isFeatured =
-    selectedCategories.length === 0 || (selectedCategories.length === 1 && selectedCategories[0] === "featured");
+    selectedCategories.length === 0 ||
+    (selectedCategories.length === 1 && selectedCategories[0] === "featured");
 
   let showAllCategories = false;
 
@@ -210,15 +221,24 @@ function Packages(): ReactNode {
                     categories={data?.categories || []}
                     selectedCategories={selectedCategories}
                     setSelectedCategories={(
-                      items: Array<{
-                        display_name: string;
-                        name: string;
-                      }> | string[]
+                      items:
+                        | Array<{
+                            display_name: string;
+                            name: string;
+                          }>
+                        | string[]
                     ) => {
-                      const categoryNames = items.map(item => typeof item === 'string' ? item : item.name).filter(Boolean);
+                      const categoryNames = items
+                        .map((item) =>
+                          typeof item === "string" ? item : item.name
+                        )
+                        .filter(Boolean);
                       if (categoryNames.length > 0) {
                         if (categoryNames.includes("featured")) {
-                          categoryNames.splice(categoryNames.indexOf("featured"), 1);
+                          categoryNames.splice(
+                            categoryNames.indexOf("featured"),
+                            1
+                          );
                         }
                         searchParams.set("categories", categoryNames.join(","));
                       } else {

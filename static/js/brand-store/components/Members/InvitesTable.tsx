@@ -1,7 +1,7 @@
 import {
   useState,
   useEffect,
-  ReactNode,
+  ReactElement,
   Dispatch,
   SetStateAction,
 } from "react";
@@ -29,7 +29,7 @@ function InvitesTable({
   setShowSuccessNotification,
   setNotificationText,
   setShowErrorNotification,
-}: Props): ReactNode {
+}: Props): ReactElement {
   const [pendingInvites, setPendingInvites] = useState([]);
   const [expiredInvites, setExpiredInvites] = useState([]);
   const [revokedInvites, setRevokedInvites] = useState([]);

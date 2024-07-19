@@ -1,4 +1,4 @@
-import { Dispatch, ReactNode, useState, SetStateAction } from "react";
+import { Dispatch, ReactElement, useState, SetStateAction } from "react";
 import { useNavigate, useParams, useLocation, Link } from "react-router-dom";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { useMutation, useQueryClient } from "react-query";
@@ -21,7 +21,7 @@ function CreateSigningKeyForm({
   setShowNotification,
   setErrorMessage,
   refetch,
-}: Props): ReactNode {
+}: Props): ReactElement {
   const navigate = useNavigate();
   const location = useLocation();
   const { id } = useParams();

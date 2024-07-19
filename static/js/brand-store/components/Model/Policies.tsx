@@ -1,4 +1,4 @@
-import { useState, useEffect, ReactNode } from "react";
+import { useState, useEffect, ReactElement } from "react";
 import {
   Link,
   useParams,
@@ -29,7 +29,7 @@ import { isClosedPanel, setPageTitle } from "../../utils";
 
 import type { Policy, SigningKey } from "../../types/shared";
 
-function Policies(): ReactNode {
+function Policies(): ReactElement {
   const { id, model_id } = useParams();
   const location = useLocation();
   const navigate = useNavigate();

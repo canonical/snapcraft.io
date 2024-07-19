@@ -1,7 +1,7 @@
 import {
   useState,
   useEffect,
-  ReactNode,
+  ReactElement,
   Dispatch,
   SetStateAction,
 } from "react";
@@ -26,7 +26,7 @@ function CreatePolicyForm({
   setShowNotification,
   setShowErrorNotification,
   refetchPolicies,
-}: Props): ReactNode {
+}: Props): ReactElement {
   const { id, model_id } = useParams();
   const navigate = useNavigate();
   const location = useLocation();

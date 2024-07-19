@@ -1,9 +1,9 @@
-import { ReactNode } from "react";
+import { ReactElement } from "react";
 import { useParams } from "react-router-dom";
 
 import type { RouteParams } from "../../types/shared";
 
-function Reviewer(): ReactNode {
+function Reviewer(): ReactElement {
   const { id } = useParams<RouteParams>();
 
   return (

@@ -1,6 +1,6 @@
-import { ReactNode } from "react";
+import { ReactElement } from "react";
 
-function Logo(): ReactNode {
+function Logo(): ReactElement {
   return (
     <a href="/" className="p-panel__logo">
       <img

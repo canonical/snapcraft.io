@@ -1,4 +1,4 @@
-import { useState, useEffect, ReactNode } from "react";
+import { useState, useEffect, ReactElement } from "react";
 import { useSelector } from "react-redux";
 import { useSetRecoilState } from "recoil";
 import { useParams, NavLink } from "react-router-dom";
@@ -15,7 +15,7 @@ function Navigation({
   sectionName,
 }: {
   sectionName: string | null;
-}): ReactNode {
+}): ReactElement {
   const brandStoresList = useSelector(brandStoresListSelector);
   const { id } = useParams();
   const {

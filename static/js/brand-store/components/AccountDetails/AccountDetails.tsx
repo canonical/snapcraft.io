@@ -1,4 +1,4 @@
-import { useState, useEffect, SyntheticEvent, ReactNode } from "react";
+import { useState, useEffect, SyntheticEvent, ReactElement } from "react";
 import { useRecoilValue } from "recoil";
 import {
   Row,
@@ -13,7 +13,7 @@ import Navigation from "../Navigation";
 
 import { publisherState } from "../../atoms";
 
-function AccountDetails(): ReactNode {
+function AccountDetails(): ReactElement {
   const [subscriptionPreferencesChanged, setSubscriptionPreferencesChanged] =
     useState(false);
   const [subscribeToNewsletter, setSubscribeToNewsletter] = useState(false);

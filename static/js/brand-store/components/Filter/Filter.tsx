@@ -1,7 +1,7 @@
 import { useSearchParams } from "react-router-dom";
 import { RecoilState, useSetRecoilState } from "recoil";
 import { Button, Icon } from "@canonical/react-components";
-import { ReactNode } from "react";
+import { ReactElement } from "react";
 
 type Props = {
   state: RecoilState<string>;
@@ -9,7 +9,7 @@ type Props = {
   placeholder: string;
 };
 
-function Filter({ state, label, placeholder }: Props): ReactNode {
+function Filter({ state, label, placeholder }: Props): ReactElement {
   const [searchParams, setSearchParams] = useSearchParams();
   const setFilter = useSetRecoilState(state);
 

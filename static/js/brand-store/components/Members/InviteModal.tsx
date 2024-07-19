@@ -1,4 +1,4 @@
-import { Dispatch, ReactNode, SetStateAction } from "react";
+import { Dispatch, ReactElement, SetStateAction } from "react";
 import { Modal, Button } from "@canonical/react-components";
 
 type InviteActionData = {
@@ -20,7 +20,7 @@ function InviteModal({
   setInviteModalOpen,
   updateInvite,
   inviteModalIsSaving,
-}: Props): ReactNode {
+}: Props): ReactElement {
   const ACTIONS = {
     resend: "Resend",
     revoke: "Revoke",
@@ -30,7 +30,7 @@ function InviteModal({
   const closeHandler = () => setInviteModalOpen(false);
 
   if (!inviteModalOpen) {
-    return null;
+    return <></>;
   }
 
   return (

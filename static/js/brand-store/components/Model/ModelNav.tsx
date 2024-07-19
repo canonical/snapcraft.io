@@ -1,7 +1,7 @@
-import { ReactNode } from "react";
+import { ReactElement } from "react";
 import { Link, useParams } from "react-router-dom";
 
-function ModelNav({ sectionName }: { sectionName: string }): ReactNode {
+function ModelNav({ sectionName }: { sectionName: string }): ReactElement {
   const { id, model_id } = useParams();
 
   return (

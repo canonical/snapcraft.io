@@ -1,4 +1,4 @@
-import { ChangeEvent, ReactNode, useEffect, useState } from "react";
+import { ChangeEvent, ReactElement, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useParams, Navigate } from "react-router-dom";
 import { useAppDispatch } from "../../hooks";
@@ -51,7 +51,7 @@ export type RootState = {
   };
 };
 
-function Settings(): ReactNode {
+function Settings(): ReactElement {
   const currentStore = useSelector(currentStoreSelector);
   const members = useSelector(membersSelector);
   const storeLoading = useSelector(

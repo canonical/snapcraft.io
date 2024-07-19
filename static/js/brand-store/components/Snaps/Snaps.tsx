@@ -1,4 +1,4 @@
-import { useState, useEffect, ReactNode } from "react";
+import { useState, useEffect, ReactElement } from "react";
 import { useParams, Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { AsyncThunkAction } from "@reduxjs/toolkit";
@@ -41,7 +41,7 @@ import type {
   MembersSlice,
 } from "../../types/shared";
 
-function Snaps(): ReactNode {
+function Snaps(): ReactElement {
   const brandStoresList = useSelector(brandStoresListSelector);
   const snaps = useSelector(snapsSelector);
   const members = useSelector(membersSelector);

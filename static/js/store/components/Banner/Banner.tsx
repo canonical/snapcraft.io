@@ -1,4 +1,4 @@
-import { ReactNode, RefObject } from "react";
+import { ReactElement, RefObject } from "react";
 import { useSearchParams } from "react-router-dom";
 import { Strip, Row, Col } from "@canonical/react-components";
 
@@ -7,7 +7,7 @@ type Props = {
   searchSummaryRef: RefObject<HTMLDivElement>;
 };
 
-function Banner({ searchRef, searchSummaryRef }: Props): ReactNode {
+function Banner({ searchRef, searchSummaryRef }: Props): ReactElement {
   const [searchParams, setSearchParams] = useSearchParams();
 
   return (

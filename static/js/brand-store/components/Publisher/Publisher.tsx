@@ -1,6 +1,6 @@
-import { ReactNode } from "react";
+import { ReactElement } from "react";
 
-function Publisher(): ReactNode {
+function Publisher(): ReactElement {
   return (
     <div className="u-fixed-width">
       <h1>Publisher</h1>

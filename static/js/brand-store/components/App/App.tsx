@@ -1,4 +1,4 @@
-import { useEffect, ReactNode } from "react";
+import { useEffect, ReactElement } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { useSetRecoilState } from "recoil";
@@ -25,7 +25,7 @@ import StoreNotFound from "../StoreNotFound";
 
 import type { StoresList, StoresSlice } from "../../types/shared";
 
-function App(): ReactNode {
+function App(): ReactElement {
   const isLoading = useSelector(
     (state: StoresSlice) => state.brandStores.loading
   );

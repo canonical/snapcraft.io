@@ -1,4 +1,4 @@
-import { useState, useEffect, ReactNode } from "react";
+import { useState, useEffect, ReactElement } from "react";
 import { Button, Icon, Input, Select } from "@canonical/react-components";
 
 import type { Model, Policy, SigningKey } from "../../types/shared";
@@ -9,7 +9,11 @@ type Props = {
   setItemsToShow: Function;
 };
 
-function AppPagination({ keyword, items, setItemsToShow }: Props): ReactNode {
+function AppPagination({
+  keyword,
+  items,
+  setItemsToShow,
+}: Props): ReactElement {
   const paginationOptions = [
     {
       label: "25/page",

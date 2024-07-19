@@ -1,4 +1,4 @@
-import { ReactNode, SetStateAction, useState, Dispatch } from "react";
+import { ReactElement, SetStateAction, useState, Dispatch } from "react";
 import { useParams } from "react-router-dom";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { format } from "date-fns";
@@ -22,7 +22,7 @@ type Props = {
 function SigningKeysTable({
   setShowDisableSuccessNotification,
   enableTableActions,
-}: Props): ReactNode {
+}: Props): ReactElement {
   const { id } = useParams();
   const signingKeysList = useRecoilValue<Array<SigningKey>>(
     filteredSigningKeysListState

@@ -1,4 +1,4 @@
-import { ChangeEvent, ReactNode, useEffect, useState } from "react";
+import { ChangeEvent, ReactElement, useEffect, useState } from "react";
 import { useParams, Navigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import {
@@ -48,7 +48,7 @@ type Member = {
   current_user: boolean;
 };
 
-function Members(): ReactNode {
+function Members(): ReactElement {
   const members = useSelector(membersSelector);
   const membersLoading = useSelector((state: Members) => state.members.loading);
   const invites = useSelector(invitesSelector);
