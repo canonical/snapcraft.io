@@ -1,6 +1,6 @@
 module.exports = {
   parser: "@babel/eslint-parser",
-  plugins: ["jest", "react", "jsx-a11y"],
+  plugins: ["jest", "react"],
   globals: {},
   env: {
     browser: true,
@@ -12,7 +12,6 @@ module.exports = {
     "eslint:recommended",
     "plugin:react/recommended",
     "plugin:prettier/recommended",
-    "plugin:jsx-a11y/recommended",
   ],
   parserOptions: {
     sourceType: "module",
@@ -31,4 +30,12 @@ module.exports = {
       version: "detect",
     },
   },
+  overrides: [
+    {
+      files: ["*.ts", "*.tsx"],
+      parser: "@typescript-eslint/parser",
+      plugins: ["@typescript-eslint"],
+      extends: ["plugin:@typescript-eslint/recommended"],
+    },
+  ],
 };
