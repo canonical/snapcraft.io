@@ -1,6 +1,6 @@
 module.exports = {
   parser: "@babel/eslint-parser",
-  plugins: ["jest", "react"],
+  plugins: ["jest", "react", "jsx-a11y"],
   globals: {},
   env: {
     browser: true,
@@ -12,13 +12,14 @@ module.exports = {
     "eslint:recommended",
     "plugin:react/recommended",
     "plugin:prettier/recommended",
-    "plugin:prettier/recommended",
+    "plugin:jsx-a11y/recommended",
   ],
   parserOptions: {
     sourceType: "module",
     ecmaFeatures: {
       jsx: true,
     },
+    requireConfigFile: false,
   },
   rules: {
     "linebreak-style": ["error", "unix"],
