@@ -22,7 +22,7 @@ module.exports = [
   // loaders are evaluated from bottom to top (right to left)
   // so first transpile via babel, then expose as global
   {
-    test: require.resolve(__dirname + "/static/js/base/base.js"),
+    test: require.resolve(__dirname + "/static/js/base/base.ts"),
     use: ["expose-loader?exposes=snapcraft.base", "babel-loader"],
   },
   {

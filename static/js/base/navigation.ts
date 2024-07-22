@@ -1,20 +1,23 @@
 // Login
-var navAccountContainer = document.querySelector(".js-nav-account");
+var navAccountContainer = document.querySelector(
+  ".js-nav-account"
+) as HTMLElement;
 
 if (navAccountContainer) {
   var notAuthenticatedMenu = navAccountContainer.querySelector(
-    ".js-nav-account--notauthenticated",
-  );
+    ".js-nav-account--notauthenticated"
+  ) as HTMLElement;
   var authenticatedMenu = navAccountContainer.querySelector(
-    ".js-nav-account--authenticated",
-  );
+    ".js-nav-account--authenticated"
+  ) as HTMLElement;
 
   fetch("/account.json")
     .then((response) => response.json())
-    .then((data) => {
+    .then((data: { publisher: { fullname: string; has_stores: boolean } }) => {
       if (data.publisher) {
-        var displayName =
-          navAccountContainer.querySelector(".js-account--name");
+        var displayName = navAccountContainer.querySelector(
+          ".js-account--name"
+        ) as HTMLElement;
 
         notAuthenticatedMenu.classList.add("u-hide");
         authenticatedMenu.classList.remove("u-hide");
@@ -22,14 +25,15 @@ if (navAccountContainer) {
         if (window.sessionStorage) {
           window.sessionStorage.setItem(
             "displayName",
-            data.publisher["fullname"],
+            data.publisher["fullname"]
           );
         }
 
         if (data.publisher.has_stores) {
-          authenticatedMenu
-            .querySelector(".js-nav-account--stores")
-            .classList.remove("u-hide");
+          const storesMenu = authenticatedMenu.querySelector(
+            ".js-nav-account--stores"
+          ) as HTMLElement;
+          storesMenu.classList.remove("u-hide");
         }
       } else {
         notAuthenticatedMenu.classList.remove("u-hide");
