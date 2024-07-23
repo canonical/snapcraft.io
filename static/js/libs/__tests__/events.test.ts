@@ -2,7 +2,7 @@ import "@testing-library/jest-dom";
 
 import Events from "../events";
 
-const events = new Events();
+const events = new Events(null);
 const button = document.createElement("button");
 button.classList.add("test-button");
 

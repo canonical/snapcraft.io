@@ -167,19 +167,14 @@ class ChannelMap {
           }
         },
 
-        '[data-js="close-channel-map"]': (event: {
-          preventDefault: () => void;
-        }) => {
+        '[data-js="close-channel-map"]': (event: Event) => {
           event.preventDefault();
 
           this.closeChannelMap();
           this.openButton = null;
         },
 
-        '[data-js="slide-all-versions"]': (
-          event: { preventDefault: () => void },
-          target: any
-        ) => {
+        '[data-js="slide-all-versions"]': (event: Event, target: any) => {
           event.preventDefault();
           this.slideToVersions(target);
         },
@@ -193,7 +188,7 @@ class ChannelMap {
         },
 
         '[data-js="open-desktop"]': (
-          event: { preventDefault: () => void },
+          event: Event,
           target: { dataset: { snap: any }; innerText: string }
         ) => {
           event.preventDefault();
