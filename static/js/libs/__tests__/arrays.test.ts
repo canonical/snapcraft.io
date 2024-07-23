@@ -1,4 +1,4 @@
-import { arraysEqual, arrayChunk, arraysMerge } from "./arrays";
+import { arraysEqual, arrayChunk, arraysMerge } from "../arrays";
 
 describe("arraysEqual", () => {
   it("should return empty arrays as equal", () => {
@@ -54,7 +54,7 @@ describe("arraysEqual", () => {
     arraysEqual(arr1, arr2);
     expect(
       JSON.stringify(arr1) === JSON.stringify(arr1Copy) &&
-        JSON.stringify(arr2) === JSON.stringify(arr2Copy),
+        JSON.stringify(arr2) === JSON.stringify(arr2Copy)
     ).toEqual(true);
   });
 });

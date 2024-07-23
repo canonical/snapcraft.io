@@ -1,4 +1,4 @@
-import shallowDiff from "./shallowDiff";
+import shallowDiff from "../shallowDiff";
 
 describe("shallowDiff", () => {
   it("should return false if nothing is different", () => {

@@ -1,4 +1,7 @@
-const shallowDiff = (firstState, secondState) => {
+const shallowDiff = (
+  firstState: { [key: string]: unknown },
+  secondState: { [key: string]: unknown }
+) => {
   let diff = Object.keys(firstState).some((key) => {
     const value = firstState[key];
     if (secondState[key] === undefined) {

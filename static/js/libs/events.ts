@@ -1,5 +1,8 @@
 class Events {
-  constructor(defaultBindTarget) {
+  events: any;
+  availableHandles: any;
+  defaultBindTarget: any;
+  constructor(defaultBindTarget: ParentNode | null | undefined) {
     this.defaultBindTarget = defaultBindTarget || document.body;
     this.events = {};
     this.availableHandles = [];
@@ -7,35 +10,33 @@ class Events {
     return this;
   }
 
-  _addListener(type, selector) {
+  _addListener(type: string, selector: string | HTMLElement) {
     const bindTarget =
       typeof selector === "string" ? this.defaultBindTarget : selector;
     bindTarget.addEventListener(type, this._handleEvent.bind(this, type));
   }
 
-  _handleEvent(type, event) {
-    const eventTarget = event.target;
+  _handleEvent(type: string, event: Event) {
+    const eventTarget = event.target as HTMLElement;
 
-    this.events[type].forEach((ev) => {
-      const target =
-        typeof ev.selector === "string"
-          ? eventTarget.closest(ev.selector)
-          : ev.selector;
+    this.events[type].forEach(
+      (ev: {
+        selector: string;
+        func: (ar1: unknown, arg2: unknown) => void;
+      }) => {
+        const target =
+          typeof ev.selector === "string"
+            ? eventTarget.closest(ev.selector)
+            : ev.selector;
 
-      if (target) {
-        ev.func(event, target);
+        if (target) {
+          ev.func(event, target);
+        }
       }
-    });
+    );
   }
 
-  /**
-   * Add an event listener
-   *
-   * @param {String} type The event type (click, change, keyup etc.)
-   * @param {String|Element} selector CSS Selector or element to trigger the event
-   * @param {Function} func The function to trigger
-   */
-  addEvent(type, selector, func) {
+  addEvent(type: string, selector: string | HTMLElement, func: unknown) {
     if (!this.events[type]) {
       this.events[type] = [];
     }
@@ -51,12 +52,7 @@ class Events {
     }
   }
 
-  addEvents(eventTypes) {
-    /**
-     * Add events by type
-     *
-     * @param {{eventType: {selector: Function}}} eventTypes
-     */
+  addEvents(eventTypes: { [key: string]: { [key: string]: unknown } }) {
     Object.keys(eventTypes).forEach((type) => {
       Object.keys(eventTypes[type]).forEach((selector) => {
         this.addEvent(type, selector, eventTypes[type][selector]);

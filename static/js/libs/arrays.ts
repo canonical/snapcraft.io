@@ -1,12 +1,4 @@
-/**
- * Checks the items in an array are equal.
- * The order of the items doesn't matter
- *
- * @param {array} oldArray
- * @param {array} newArray
- * @returns {boolean}
- */
-function arraysEqual(oldArray, newArray) {
+function arraysEqual(oldArray: unknown[], newArray: unknown[]): boolean {
   if (oldArray === newArray) {
     return true;
   }
@@ -33,13 +25,7 @@ function arraysEqual(oldArray, newArray) {
   return true;
 }
 
-/**
- * Splits an array into chunks
- * @param {array} arr
- * @param {number} chunkSize
- * @returns {array}
- */
-function arrayChunk(arr, chunkSize) {
+function arrayChunk(arr: unknown[], chunkSize: number): any[] {
   const chunks = [];
   const arrCopy = arr.slice(0);
 
@@ -50,13 +36,7 @@ function arrayChunk(arr, chunkSize) {
   return chunks;
 }
 
-/**
- * Merges 2 arrays and dedupes
- * @param {array} arr1
- * @param {array} arr2
- * @returns {array}
- */
-function arraysMerge(arr1, arr2) {
+function arraysMerge(arr1: unknown[], arr2: unknown[]): unknown[] {
   const arr3 = [...arr1, ...arr2];
 
   return arr3.filter((item, i) => arr3.indexOf(item) === i);
