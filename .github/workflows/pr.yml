@@ -137,7 +137,7 @@ jobs:
 
       - name: Lint JS for Accessibility
         if: ${{ steps.filter.outputs.js == 'true' || steps.filter.outputs.ts == 'true' || steps.filter.outputs.jsx == 'true' || steps.filter.outputs.tsx == 'true' }}
-        run: yarn a11y-lint
+        run: yarn lint-a11y
 
   test-python:
     runs-on: ubuntu-latest
