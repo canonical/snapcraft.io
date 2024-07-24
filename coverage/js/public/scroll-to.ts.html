@@ -3,7 +3,7 @@
 <html lang="en">
 
 <head>
-    <title>Code coverage report for public/scroll-to.js</title>
+    <title>Code coverage report for public/scroll-to.ts</title>
     <meta charset="utf-8" />
     <link rel="stylesheet" href="../prettify.css" />
     <link rel="stylesheet" href="../base.css" />
@@ -19,7 +19,7 @@
 <body>
 <div class='wrapper'>
     <div class='pad1'>
-        <h1><a href="../index.html">All files</a> / <a href="index.html">public</a> scroll-to.js</h1>
+        <h1><a href="../index.html">All files</a> / <a href="index.html">public</a> scroll-to.ts</h1>
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
@@ -97,7 +97,9 @@
 <a name='L32'></a><a href='#L32'>32</a>
 <a name='L33'></a><a href='#L33'>33</a>
 <a name='L34'></a><a href='#L34'>34</a>
-<a name='L35'></a><a href='#L35'>35</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L35'></a><a href='#L35'>35</a>
+<a name='L36'></a><a href='#L36'>36</a>
+<a name='L37'></a><a href='#L37'>37</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -120,7 +122,9 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -131,11 +135,11 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">export function <span class="fstat-no" title="function not covered" >animateScrollTo(</span>to, offset = <span class="branch-0 cbranch-no" title="branch not covered" >0)</span> {
-  const element = <span class="cstat-no" title="statement not covered" >document.scrollingElement || window;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">export function <span class="fstat-no" title="function not covered" >animateScrollTo(</span>to: string | number | HTMLElement, offset = <span class="branch-0 cbranch-no" title="branch not covered" >0)</span> {
+  const element = <span class="cstat-no" title="statement not covered" >(document.scrollingElement as HTMLElement) || window;</span>
 &nbsp;
 <span class="cstat-no" title="statement not covered" >  if (typeof to === "string") {</span>
-<span class="cstat-no" title="statement not covered" >    to = document.querySelector(to);</span>
+<span class="cstat-no" title="statement not covered" >    to = document.querySelector(to) as HTMLElement;</span>
 <span class="cstat-no" title="statement not covered" >    if (!to) {</span>
 <span class="cstat-no" title="statement not covered" >      throw Error(`Can't find any element for "${to}" in animateScrollTo.`);</span>
     }
@@ -152,15 +156,17 @@
   }
 }
 &nbsp;
-export function <span class="fstat-no" title="function not covered" >initLinkScroll(</span>link, { offset = <span class="branch-0 cbranch-no" title="branch not covered" >0 </span>}) {
+export function <span class="fstat-no" title="function not covered" >initLinkScroll(</span>link: HTMLLinkElement, { offset = <span class="branch-0 cbranch-no" title="branch not covered" >0 </span>}) {
 <span class="cstat-no" title="statement not covered" >  if (link &amp;&amp; (link.dataset.scrollTo || link.href)) {</span>
-    const href = <span class="cstat-no" title="statement not covered" >link.dataset.scrollTo || link.getAttribute("href");</span>
-    const target = <span class="cstat-no" title="statement not covered" >document.querySelector(href);</span>
+    const href =
+<span class="cstat-no" title="statement not covered" >      (link.dataset.scrollTo as string) ||</span>
+      (link.getAttribute("href") as string);
+    const target = <span class="cstat-no" title="statement not covered" >document.querySelector(href) as HTMLElement;</span>
 <span class="cstat-no" title="statement not covered" >    if (target) {</span>
 <span class="cstat-no" title="statement not covered" >      link.addEventListener("click", <span class="fstat-no" title="function not covered" >(e</span>vent) =&gt; {</span>
 <span class="cstat-no" title="statement not covered" >        event.preventDefault();</span>
 <span class="cstat-no" title="statement not covered" >        animateScrollTo(target, offset);</span>
-<span class="cstat-no" title="statement not covered" >        setTimeout(<span class="fstat-no" title="function not covered" >()</span> =&gt; <span class="cstat-no" title="statement not covered" >window.history.pushState({}, null, href),</span> 100);</span>
+<span class="cstat-no" title="statement not covered" >        setTimeout(<span class="fstat-no" title="function not covered" >()</span> =&gt; <span class="cstat-no" title="statement not covered" >window.history.pushState({}, "", href),</span> 100);</span>
       });
     }
   }
@@ -172,7 +178,7 @@ export function <span class="fstat-no" title="function not covered" >initLinkScr
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2024-07-23T22:05:46.037Z
+                at 2024-07-24T22:05:52.304Z
             </div>
         <script src="../prettify.js"></script>
         <script>
