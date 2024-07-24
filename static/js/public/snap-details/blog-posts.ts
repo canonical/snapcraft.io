@@ -1,7 +1,18 @@
 import "whatwg-fetch";
 
 class BlogPosts {
-  constructor(url, holderSelector, templateSelector) {
+  url: string;
+  path: string;
+  holder: any;
+  template: any;
+  limit: number;
+  modifiers?: ((posts: any) => any)[];
+
+  constructor(
+    url: string | undefined,
+    holderSelector: string,
+    templateSelector: string
+  ) {
     if (!url) {
       throw new Error("`url` must be defined");
     }
@@ -28,7 +39,7 @@ class BlogPosts {
     }
   }
 
-  setResultModifiers(modifiers) {
+  setResultModifiers(modifiers: ((posts: any) => any)[]) {
     this.modifiers = modifiers;
   }
 
@@ -39,7 +50,7 @@ class BlogPosts {
         if (posts.length === 0) {
           return false;
         }
-        const postsHTML = [];
+        const postsHTML: unknown[] = [];
 
         if (this.modifiers) {
           this.modifiers.forEach((modifier) => {
@@ -49,27 +60,29 @@ class BlogPosts {
 
         const cols = 12 / this.limit;
 
-        posts.forEach((post, index) => {
-          if (index >= this.limit) {
-            return;
-          }
-          let postHTML = this.template.innerHTML;
-          Object.keys(post).forEach((key) => {
-            if (post[key]) {
-              postHTML = postHTML.split("${" + key + "}").join(post[key]);
-            } else {
-              postHTML = postHTML.split("${" + key + "}").join("");
+        posts.forEach(
+          (post: { [x: string]: any; slug?: any }, index: number) => {
+            if (index >= this.limit) {
+              return;
             }
-          });
-          const containerClasses = [`col-${cols}`];
-          if (post.slug.indexOf("http") === 0) {
-            containerClasses.push(`p-blog-post--guest-post`);
+            let postHTML = this.template.innerHTML;
+            Object.keys(post).forEach((key) => {
+              if (post[key]) {
+                postHTML = postHTML.split("${" + key + "}").join(post[key]);
+              } else {
+                postHTML = postHTML.split("${" + key + "}").join("");
+              }
+            });
+            const containerClasses = [`col-${cols}`];
+            if (post.slug.indexOf("http") === 0) {
+              containerClasses.push(`p-blog-post--guest-post`);
+            }
+            postHTML = postHTML
+              .split("${container_class}")
+              .join(containerClasses.join(" "));
+            postsHTML.push(postHTML);
           }
-          postHTML = postHTML
-            .split("${container_class}")
-            .join(containerClasses.join(" "));
-          postsHTML.push(postHTML);
-        });
+        );
 
         if (postsHTML.length > 0) {
           this.holder.innerHTML = postsHTML.join("");
@@ -84,14 +97,14 @@ class BlogPosts {
 }
 
 function snapDetailsPosts(
-  holderSelector,
-  templateSelector,
-  showOnSuccessSelector,
-) {
+  holderSelector: string,
+  templateSelector: string,
+  showOnSuccessSelector: string
+): void {
   const blogPosts = new BlogPosts(
     "/blog/api/snap-posts/",
     holderSelector,
-    templateSelector,
+    templateSelector
   );
 
   const snap = blogPosts.holder.dataset.snap;
@@ -115,11 +128,11 @@ function snapDetailsPosts(
   });
 }
 
-function seriesPosts(holderSelector, templateSelector) {
+function seriesPosts(holderSelector: string, templateSelector: string): void {
   const blogPosts = new BlogPosts(
     "/blog/api/series/",
     holderSelector,
-    templateSelector,
+    templateSelector
   );
 
   const series = blogPosts.holder.dataset.series;
@@ -132,7 +145,7 @@ function seriesPosts(holderSelector, templateSelector) {
       return posts.reverse();
     },
     function filter(posts) {
-      return posts.map((post) => {
+      return posts.map((post: { slug: any; className: string }) => {
         if (post.slug === currentSlug) {
           post.className = "is-current";
         } else {
