@@ -32,7 +32,7 @@ function PreviewForm({ snapName, getValues }: Props) {
       website: getValues("websites").map((item: { url: string }) => item.url),
       contact: getValues("contacts").map((item: { url: string }) => item.url),
       donations: getValues("donations").map(
-        (item: { url: string }) => item.url
+        (item: { url: string }) => item.url,
       ),
       source: getValues("source_code").map((item: { url: string }) => item.url),
       issues: getValues("issues").map((item: { url: string }) => item.url),
@@ -86,7 +86,7 @@ function PreviewForm({ snapName, getValues }: Props) {
 
   window.localStorage.setItem(
     `${snapName}-initial`,
-    JSON.stringify(listingData)
+    JSON.stringify(listingData),
   );
 
   window.localStorage.setItem(snapName, JSON.stringify(listingData));

@@ -5,14 +5,14 @@ interface CallableFunction {
 export default function debounce(
   func: CallableFunction,
   wait: number,
-  immediate?: boolean
+  immediate?: boolean,
 ): { (this: HTMLElement): void; clear(): void } {
   let timeout: ReturnType<typeof setTimeout> | null;
 
   const debounced = function (this: HTMLElement) {
     const context = this;
     const args = arguments;
-    let later = function () {
+    const later = function () {
       timeout = null;
       if (!immediate) func.apply(context, args);
     };

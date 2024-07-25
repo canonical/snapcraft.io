@@ -2,17 +2,17 @@
 export {};
 
 const listingTabLinks = document.querySelectorAll(
-  "[data-js='listing-tabs-link']"
+  "[data-js='listing-tabs-link']",
 );
 const listingTabs = document.querySelectorAll("[data-js='listing-tab']");
 const previousTabButton = document.querySelector(
-  "[data-js='previous-tab-button']"
+  "[data-js='previous-tab-button']",
 ) as HTMLButtonElement;
 const nextTabButton = document.querySelector(
-  "[data-js='next-tab-button']"
+  "[data-js='next-tab-button']",
 ) as HTMLButtonElement;
 const listingTabsSelect = document.querySelector(
-  "[data-js='listing-tabs-select']"
+  "[data-js='listing-tabs-select']",
 ) as HTMLSelectElement;
 
 let currentTabIndex = 0;
@@ -38,7 +38,7 @@ listingTabsSelect.addEventListener("change", (e) => {
   const nextTabId = target.value;
   const listingTab = document.querySelector(nextTabId) as HTMLElement;
   const options = Array.prototype.slice.call(
-    listingTabsSelect.options
+    listingTabsSelect.options,
   ) as Array<HTMLOptionElement>;
   const optionIndex = options.findIndex((option) => {
     return option.value === nextTabId;
@@ -55,7 +55,7 @@ listingTabsSelect.addEventListener("change", (e) => {
 const selectCurrentTab = (tab: HTMLElement) => {
   const nextTabId = tab.id;
   const currentListingTabLink = document.querySelector(
-    `[data-js='listing-tabs-link'][href='#${nextTabId}']`
+    `[data-js='listing-tabs-link'][href='#${nextTabId}']`,
   ) as HTMLLinkElement;
   currentListingTabLink.setAttribute("aria-current", "page");
   listingTabsSelect.value = `#${nextTabId}`;
@@ -64,13 +64,13 @@ const selectCurrentTab = (tab: HTMLElement) => {
 
 const deselectPreviousTab = () => {
   const previousListingTabLink = document.querySelector(
-    "[data-js='listing-tabs-link'][aria-current='page']"
+    "[data-js='listing-tabs-link'][aria-current='page']",
   ) as HTMLLinkElement;
   const previousListingTabId = previousListingTabLink.getAttribute(
-    "href"
+    "href",
   ) as string;
   const previousListingTab = document.querySelector(
-    previousListingTabId
+    previousListingTabId,
   ) as HTMLElement;
   previousListingTab.classList.add("u-hide");
   previousListingTabLink.removeAttribute("aria-current");

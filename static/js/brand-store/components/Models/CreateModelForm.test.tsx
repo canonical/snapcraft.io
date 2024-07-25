@@ -28,7 +28,7 @@ const renderComponent = () => {
           />
         </QueryClientProvider>
       </BrowserRouter>
-    </RecoilRoot>
+    </RecoilRoot>,
   );
 };
 
@@ -43,10 +43,10 @@ describe("CreateModelForm", () => {
     renderComponent();
     await user.type(
       screen.getByRole("textbox", { name: "Name" }),
-      "test-model-name"
+      "test-model-name",
     );
     expect(
-      screen.getByRole("button", { name: "Add model" })
+      screen.getByRole("button", { name: "Add model" }),
     ).not.toBeDisabled();
   });
 

@@ -34,7 +34,7 @@ const renderComponent = () => {
           />
         </QueryClientProvider>
       </BrowserRouter>
-    </RecoilRoot>
+    </RecoilRoot>,
   );
 };
 
@@ -80,7 +80,7 @@ describe("CreatePolicyForm", () => {
       "signing-key-1",
     ]);
     expect(
-      screen.getByRole("button", { name: "Add policy" })
+      screen.getByRole("button", { name: "Add policy" }),
     ).not.toBeDisabled();
   });
 });

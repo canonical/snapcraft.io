@@ -24,7 +24,7 @@ function ModelsTable({
   const { model_id } = useParams();
   const brandId = useRecoilValue(brandIdState);
   const [policiesList, setPoliciesList] = useRecoilState(
-    filteredPoliciesListState
+    filteredPoliciesListState,
   );
   const [itemsToShow, setItemsToShow] = useState<Array<Policy>>(policiesList);
   const [showModal, setShowModal] = useState<boolean>(false);
@@ -40,7 +40,7 @@ function ModelsTable({
     setIsLoading(true);
 
     setPoliciesList(
-      policiesList.filter((policy) => policy.revision !== policyRevision)
+      policiesList.filter((policy) => policy.revision !== policyRevision),
     );
 
     const formData = new FormData();
@@ -51,7 +51,7 @@ function ModelsTable({
       {
         method: "DELETE",
         body: formData,
-      }
+      },
     );
 
     const data = await response.json();

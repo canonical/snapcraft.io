@@ -32,7 +32,7 @@ class Events {
         if (target) {
           ev.func(event, target);
         }
-      }
+      },
     );
   }
 

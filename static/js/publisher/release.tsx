@@ -7,7 +7,7 @@ import { DndProvider } from "react-dnd";
 import { QueryClient, QueryClientProvider } from "react-query";
 import ReleasesController from "./release/releasesController";
 import releases from "./release/reducers";
-import { ReleasesData, ChannelMap, Track, Options } from "./types/releaseTypes"
+import { ReleasesData, ChannelMap, Track, Options } from "./types/releaseTypes";
 
 // setup redux store with thunk middleware and devtools extension:
 // https://github.com/zalmoxisus/redux-devtools-extension#12-advanced-store-setup
@@ -33,7 +33,7 @@ const initReleases = (
         tracks,
       },
     },
-    composeEnhancers(applyMiddleware(thunk))
+    composeEnhancers(applyMiddleware(thunk)),
   );
 
   const queryClient = new QueryClient();
@@ -54,7 +54,7 @@ const initReleases = (
           />
         </QueryClientProvider>
       </DndProvider>
-    </Provider>
+    </Provider>,
   );
 };
 
