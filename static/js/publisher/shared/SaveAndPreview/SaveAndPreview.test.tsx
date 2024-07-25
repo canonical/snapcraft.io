@@ -9,7 +9,7 @@ const reset = jest.fn();
 const renderComponent = (
   isDirty: boolean,
   isSaving: boolean,
-  isValid: boolean
+  isValid: boolean,
 ) => {
   return render(
     <SaveAndPreview
@@ -18,7 +18,7 @@ const renderComponent = (
       reset={reset}
       isSaving={isSaving}
       isValid={isValid}
-    />
+    />,
   );
 };
 

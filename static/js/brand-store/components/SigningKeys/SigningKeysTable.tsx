@@ -26,7 +26,7 @@ function SigningKeysTable({
   const { id } = useParams();
   const brandId = useRecoilValue(brandIdState);
   const signingKeysList = useRecoilValue<Array<SigningKey>>(
-    filteredSigningKeysListState
+    filteredSigningKeysListState,
   );
   const [itemsToShow, setItemsToShow] =
     useState<Array<SigningKey>>(signingKeysList);
@@ -55,7 +55,7 @@ function SigningKeysTable({
       {
         method: "DELETE",
         body: formData,
-      }
+      },
     );
 
     if (!response.ok) {

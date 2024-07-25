@@ -13,7 +13,7 @@ const renderComponent = () =>
   render(
     <QueryClientProvider client={queryClient}>
       <App />
-    </QueryClientProvider>
+    </QueryClientProvider>,
   );
 
 window.listingData = mockListingData;
@@ -35,7 +35,7 @@ describe("App", () => {
     renderComponent();
     await user.type(
       screen.getByRole("textbox", { name: "Title:" }),
-      "new-name"
+      "new-name",
     );
     expect(screen.getByRole("button", { name: "Save" })).not.toBeDisabled();
   });
@@ -45,7 +45,7 @@ describe("App", () => {
     renderComponent();
     await user.type(
       screen.getByRole("textbox", { name: "Title:" }),
-      "new-name"
+      "new-name",
     );
     expect(screen.getByRole("button", { name: "Revert" })).not.toBeDisabled();
   });

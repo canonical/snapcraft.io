@@ -48,16 +48,16 @@ const mockPolicies = [
 describe("getFilteredPolicies", () => {
   it("returns unfiltered policies if no filter query", () => {
     expect(getFilteredPolicies(mockPolicies).length).toEqual(
-      mockPolicies.length
+      mockPolicies.length,
     );
     expect(getFilteredPolicies(mockPolicies)[0]["revision"]).toEqual(
-      mockPolicies[0]["revision"]
+      mockPolicies[0]["revision"],
     );
     expect(getFilteredPolicies(mockPolicies)[1]["revision"]).toEqual(
-      mockPolicies[1]["revision"]
+      mockPolicies[1]["revision"],
     );
     expect(getFilteredPolicies(mockPolicies)[2]["revision"]).toEqual(
-      mockPolicies[2]["revision"]
+      mockPolicies[2]["revision"],
     );
   });
 

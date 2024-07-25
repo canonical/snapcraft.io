@@ -33,7 +33,7 @@ function CategoriesInput({
     : "";
 
   const [showSecondCategoryField, setShowSecondCategoryField] = useState(
-    secondaryCategory ? true : false
+    secondaryCategory ? true : false,
   );
 
   useEffect(() => {

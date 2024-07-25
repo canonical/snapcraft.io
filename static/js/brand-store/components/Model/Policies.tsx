@@ -37,7 +37,7 @@ function Policies(): ReactNode {
   const navigate = useNavigate();
   const { isLoading, isError, error, refetch, data }: any = usePolicies(
     brandId,
-    model_id
+    model_id,
   );
   const signingKeys = useSigningKeys(brandId);
   const setPoliciesList = useSetRecoilState<Array<Policy>>(policiesListState);

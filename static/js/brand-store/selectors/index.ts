@@ -45,7 +45,7 @@ const filteredModelsListState = selector<Array<Model>>({
     const policies = get(policiesListState);
     const modelsWithPolicies = models.map((model) => {
       const policy = policies.find(
-        (policy) => policy["model-name"] === model.name
+        (policy) => policy["model-name"] === model.name,
       );
 
       return {
@@ -60,10 +60,12 @@ const filteredModelsListState = selector<Array<Model>>({
 
 const currentModelState = selectorFamily({
   key: "currentModel",
-  get: (modelId) => ({ get }) => {
-    const models = get(modelsListState);
-    return models.find((model) => model.name === modelId);
-  },
+  get:
+    (modelId) =>
+    ({ get }) => {
+      const models = get(modelsListState);
+      return models.find((model) => model.name === modelId);
+    },
 });
 
 const filteredPoliciesListState = selector<Array<Policy>>({
@@ -74,7 +76,7 @@ const filteredPoliciesListState = selector<Array<Policy>>({
     const signingKeys = get(signingKeysListState);
     const policiesWithKeys = policies.map((policy) => {
       const signingKey = signingKeys.find(
-        (key) => key["sha3-384"] === policy["signing-key-sha3-384"]
+        (key) => key["sha3-384"] === policy["signing-key-sha3-384"],
       );
 
       return {
@@ -92,10 +94,12 @@ const filteredPoliciesListState = selector<Array<Policy>>({
 
 const brandStoreState = selectorFamily({
   key: "brandStore",
-  get: (storeId) => ({ get }) => {
-    const brandStores = get(brandStoresState);
-    return brandStores.find((store) => store.id === storeId);
-  },
+  get:
+    (storeId) =>
+    ({ get }) => {
+      const brandStores = get(brandStoresState);
+      return brandStores.find((store) => store.id === storeId);
+    },
 });
 
 const filteredSigningKeysListState = selector<Array<SigningKey>>({
