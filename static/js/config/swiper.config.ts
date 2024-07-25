@@ -1,4 +1,20 @@
-const SCREENSHOTS = {
+const SCREENSHOTS: {
+  freeMode: boolean;
+  watchOverflow: boolean;
+  slidesPerView: number | "auto" | undefined;
+  roundLengths: boolean;
+  spaceBetween: number;
+  resizeObserver: boolean;
+  breakpoints: {
+    [key: number]: {
+      spaceBetween: number;
+    };
+  };
+  navigation: {
+    nextEl: string;
+    prevEl: string;
+  };
+} = {
   freeMode: true,
   watchOverflow: true,
   slidesPerView: "auto",
