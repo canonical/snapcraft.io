@@ -1,4 +1,32 @@
-function baseRestrictions(file, restrictions) {
+type Restrictions = {
+  accept: string;
+  size: {
+    min: number;
+    max: number;
+  };
+  width: {
+    min: number;
+    max: number;
+  };
+  height: {
+    min: number;
+    max: number;
+  };
+  aspectRatio: {
+    min: number[];
+    max: number[];
+  };
+  whitelist: Array<{
+    fileName: string;
+    accept: string;
+    dimensions: number[];
+  }>;
+};
+
+function baseRestrictions(
+  file: File,
+  restrictions: Restrictions
+): Promise<File> {
   const MB = 1000000;
   const KB = 1000;
   return new Promise((resolve, reject) => {
@@ -42,10 +70,18 @@ function baseRestrictions(file, restrictions) {
   });
 }
 
-function imageWhitelistHandler(file, image, whitelist) {
+function imageWhitelistHandler(
+  file: File,
+  image: { naturalWidth: number; naturalHeight: number },
+  whitelist: Array<{
+    fileName: string;
+    accept: string;
+    dimensions: number[];
+  }>
+): boolean {
   const errors = whitelist.filter((whitelistItem) => {
     if (whitelistItem.fileName) {
-      let fileName = file.name.split(".");
+      let fileName: string[] | string = file.name.split(".");
       fileName = fileName.slice(0, fileName.length - 1).join(".");
       if (fileName !== whitelistItem.fileName) {
         return false;
@@ -70,7 +106,10 @@ function imageWhitelistHandler(file, image, whitelist) {
   return errors.length > 0;
 }
 
-function imageRestrictions(file, restrictions) {
+function imageRestrictions(
+  file: File,
+  restrictions: Restrictions
+): Promise<File> {
   return new Promise((resolve, reject) => {
     if (!restrictions.accept || restrictions.accept[0].indexOf("image") < 0) {
       resolve(file);
@@ -153,7 +192,7 @@ function imageRestrictions(file, restrictions) {
           // If the min and max are the same we only accept 1 aspect ratio
           if (min === max) {
             message.push(
-              `it needs to be ${aspectRatioMin[0]}:${aspectRatioMin[1]}`,
+              `it needs to be ${aspectRatioMin[0]}:${aspectRatioMin[1]}`
             );
 
             const suggestedSize = [height / max];
@@ -168,14 +207,14 @@ function imageRestrictions(file, restrictions) {
 
             message.push(
               `(e.g., ${Math.round(suggestedSize[0])} x ${Math.round(
-                suggestedSize[1],
-              )} pixels)`,
+                suggestedSize[1]
+              )} pixels)`
             );
 
             // Otherwise it's a range
           } else {
             message.push(
-              `it needs to be between ${aspectRatioMin[0]}:${aspectRatioMin[1]} and ${aspectRatioMax[0]}:${aspectRatioMax[1]}`,
+              `it needs to be between ${aspectRatioMin[0]}:${aspectRatioMin[1]} and ${aspectRatioMax[0]}:${aspectRatioMax[1]}`
             );
           }
 
@@ -190,12 +229,16 @@ function imageRestrictions(file, restrictions) {
   });
 }
 
-function validateRestrictions(file, restrictions) {
+function validateRestrictions(
+  file: File,
+  restrictions: Restrictions
+): Promise<File> {
   return new Promise((resolve) => {
     baseRestrictions(file, restrictions)
       .then((file) => imageRestrictions(file, restrictions))
       .then(resolve)
       .catch((errors) => {
+        // @ts-expect-error
         file.errors = errors;
         resolve(file);
       });
