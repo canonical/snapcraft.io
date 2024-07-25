@@ -18,7 +18,7 @@ type PackageData = {
   title: string;
 };
 
-async function buildCards(category: string): Promise<unknown> {
+async function buildCards(category: string): Promise<void> {
   const featuredSnapCards = document.querySelectorAll(
     "[data-js='featured-snap-card']"
   ) as NodeListOf<HTMLElement>;
@@ -31,18 +31,16 @@ async function buildCards(category: string): Promise<unknown> {
     featuredSnapCards.forEach((featuredSnapCard, index) => {
       buildCard(featuredSnapCard, localData[index]);
     });
+  } else {
+    const response = await fetch(`/store/featured-snaps/${category}`);
+    const data: Array<PackageData> = await response.json();
 
-    return;
+    featuredSnapCards.forEach((featuredSnapCard, index) => {
+      buildCard(featuredSnapCard, data[index]);
+    });
+
+    window.sessionStorage.setItem(category, JSON.stringify(data));
   }
-
-  const response = await fetch(`/store/featured-snaps/${category}`);
-  const data: Array<PackageData> = await response.json();
-
-  featuredSnapCards.forEach((featuredSnapCard, index) => {
-    buildCard(featuredSnapCard, data[index]);
-  });
-
-  window.sessionStorage.setItem(category, JSON.stringify(data));
 }
 
 function buildCard(featuredSnapCard: Element, data: PackageData) {

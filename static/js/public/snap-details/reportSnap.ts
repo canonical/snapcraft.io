@@ -41,7 +41,6 @@ function showError(modal: HTMLElement): void {
 }
 
 export default function initReportSnap(
-  snapName: string,
   toggleSelector: string,
   modalSelector: string,
   formURL: string
