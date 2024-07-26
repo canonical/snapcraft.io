@@ -1,9 +1,6 @@
-import React from "react";
-import PropTypes from "prop-types";
-
 import { tourStartedByUser } from "./metricsEvents";
 
-export default function TourBar({ showTour }) {
+export default function TourBar({ showTour }: { showTour: () => void }) {
   const onButtonClick = () => {
     tourStartedByUser();
     showTour();
@@ -23,7 +20,3 @@ export default function TourBar({ showTour }) {
     </div>
   );
 }
-
-TourBar.propTypes = {
-  showTour: PropTypes.func,
-};

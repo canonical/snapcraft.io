@@ -19,9 +19,15 @@ export function initTour({
   startTour,
 }: {
   container: HTMLElement;
-  steps: unknown[];
-  onTourStarted: () => unknown;
-  onTourClosed: () => unknown;
+  steps: Array<{
+    id: string;
+    position: string;
+    elements: HTMLElement[];
+    title: string;
+    content: string;
+  }>;
+  onTourStarted: () => void;
+  onTourClosed: () => void;
   startTour: boolean;
 }) {
   if (!document.contains(container)) {
@@ -50,7 +56,13 @@ export function initListingTour({
 }: {
   snapName: string;
   container: HTMLElement;
-  steps: unknown[];
+  steps: Array<{
+    id: string;
+    position: string;
+    elements: HTMLElement[];
+    content: string;
+    title: string;
+  }>;
   formFields: {
     title: string;
     snap_name: string;
@@ -97,7 +109,7 @@ export function initListingTour({
   const startTour = !isFormCompleted && !isTourFinished;
 
   const stickyHeader = document.querySelector(".js-sticky-bar");
-  const onTourClosed = () => {
+  const onTourClosed = (): void => {
     // save that tour was seen by user
     window.localStorage && window.localStorage.setItem(storageKey, "true");
     // make header sticky again
@@ -107,7 +119,7 @@ export function initListingTour({
     toggleShadowWhenSticky(stickyHeader);
   };
 
-  const onTourStarted = () => {
+  const onTourStarted = (): void => {
     if (stickyHeader) {
       stickyHeader.classList.add("is-static");
     }

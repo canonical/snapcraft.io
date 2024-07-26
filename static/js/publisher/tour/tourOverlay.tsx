@@ -19,8 +19,14 @@ export default function TourOverlay({
   hideTour,
   currentStepIndex = 0,
 }: {
-  steps: any;
-  hideTour: any;
+  steps: Array<{
+    id: string;
+    position: string;
+    elements: HTMLElement[];
+    content: string;
+    title: string;
+  }>;
+  hideTour: () => void;
   currentStepIndex?: number;
 }) {
   steps = prepareSteps(steps);
@@ -76,7 +82,7 @@ export default function TourOverlay({
   // it is an unusual use of useState to force rerender, but on resize or scroll
   // the state of component doesn't change, it's the position of elements
   // in DOM that changes and component needs to rerender to adapt
-  const [, forceUpdate] = useState<any>();
+  const [, forceUpdate] = useState<object>();
   const rerender = () => forceUpdate({});
 
   const [isResizing, setIsResizing] = useState(false);
