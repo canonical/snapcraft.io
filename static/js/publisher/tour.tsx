@@ -1,4 +1,3 @@
-import React from "react";
 import { createRoot } from "react-dom/client";
 
 import Tour from "./tour/tour";
@@ -6,7 +5,7 @@ import Tour from "./tour/tour";
 import { toggleShadowWhenSticky } from "./market/stickyListingBar";
 
 // returns true if % of truthy values in the array is above the threshold
-function isCompleted(fields, threshold = 0.5) {
+function isCompleted(fields: unknown[], threshold = 0.5): boolean {
   const completed = fields.filter((isCompleted) => isCompleted);
 
   return completed.length / fields.length >= threshold;
@@ -18,6 +17,12 @@ export function initTour({
   onTourStarted,
   onTourClosed,
   startTour,
+}: {
+  container: HTMLElement;
+  steps: unknown[];
+  onTourStarted: () => unknown;
+  onTourClosed: () => unknown;
+  startTour: boolean;
 }) {
   if (!document.contains(container)) {
     throw Error("initTour container element not found in document.");
@@ -33,11 +38,32 @@ export function initTour({
       onTourStarted={onTourStarted}
       onTourClosed={onTourClosed}
       startTour={startTour}
-    />,
+    />
   );
 }
 
-export function initListingTour({ snapName, container, steps, formFields }) {
+export function initListingTour({
+  snapName,
+  container,
+  steps,
+  formFields,
+}: {
+  snapName: string;
+  container: HTMLElement;
+  steps: unknown[];
+  formFields: {
+    title: string;
+    snap_name: string;
+    categories: string[];
+    video_urls: string[];
+    images: Array<{
+      type: string;
+    }>;
+    summary: string;
+    website: string[];
+    contact: string[];
+  };
+}) {
   const storageKey = `listing-tour-finished-${snapName}`;
 
   // check form fields completed status
@@ -73,7 +99,7 @@ export function initListingTour({ snapName, container, steps, formFields }) {
   const stickyHeader = document.querySelector(".js-sticky-bar");
   const onTourClosed = () => {
     // save that tour was seen by user
-    window.localStorage && window.localStorage.setItem(storageKey, true);
+    window.localStorage && window.localStorage.setItem(storageKey, "true");
     // make header sticky again
     if (stickyHeader) {
       stickyHeader.classList.remove("is-static");

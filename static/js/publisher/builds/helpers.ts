@@ -13,7 +13,15 @@ const ERROR = "ERROR";
 const SUCCESS = "SUCCESS";
 const IDLE = "IDLE";
 
-export const UserFacingStatus = {
+export const UserFacingStatus: {
+  [key: string]: {
+    statusMessage: string;
+    shortStatusMessage: string;
+    icon: string | undefined;
+    priority: number;
+    badge: string;
+  };
+} = {
   // Used only when there is no build returned from LP.
   // When build is returned from LP (scheduled) it's 'Building soon' for BSI.
   [NEVER_BUILT]: createStatus("Never built", "Never built", 8, NEVER_BUILT),
@@ -22,14 +30,14 @@ export const UserFacingStatus = {
     "Built, won’t be released",
     "Built",
     6,
-    WONT_RELEASE,
+    WONT_RELEASE
   ),
   [RELEASED]: createStatus("Released", "Released", 5, "released"),
   [RELEASE_FAILED]: createStatus(
     "Built, failed to release",
     "Failed",
     4,
-    RELEASE_FAILED,
+    RELEASE_FAILED
   ),
   [RELEASING_SOON]: createStatus("Releasing", "Releasing", 3, RELEASING_SOON),
   [IN_PROGRESS]: createStatus("In progress", "In progress", 2, IN_PROGRESS),
@@ -37,17 +45,17 @@ export const UserFacingStatus = {
     "Failed to build",
     "Failed",
     1,
-    FAILED_TO_BUILD,
+    FAILED_TO_BUILD
   ),
   [CANCELLED]: createStatus("Cancelled", "Cancelled", 8, CANCELLED),
   [UNKNOWN]: createStatus("Unknown", "Unknown", 8, NEVER_BUILT),
 };
 
 export function createStatus(
-  statusMessage,
-  shortStatusMessage,
-  priority,
-  badge,
+  statusMessage: string,
+  shortStatusMessage: string,
+  priority: number,
+  badge: string
 ) {
   const loadingStatus = [IN_PROGRESS, RELEASING_SOON];
   let icon;
@@ -66,7 +74,7 @@ export function createStatus(
   };
 }
 
-export function createDuration(duration) {
+export function createDuration(duration: string) {
   if (duration) {
     const durationParts = duration.split(":");
     const hours = parseInt(durationParts[0]);

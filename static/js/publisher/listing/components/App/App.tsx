@@ -115,9 +115,12 @@ function App() {
   };
 
   useEffect(() => {
+    const tourContainer = document.getElementById(
+      "tour-container"
+    ) as HTMLElement;
     initListingTour({
       snapName,
-      container: document.getElementById("tour-container"),
+      container: tourContainer,
       formFields: snapData,
       steps: tourSteps,
     });

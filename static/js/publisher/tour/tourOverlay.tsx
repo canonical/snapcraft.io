@@ -1,5 +1,4 @@
 import { useState, useRef, useEffect } from "react";
-import PropTypes from "prop-types";
 
 import debounce from "../../libs/debounce";
 
@@ -22,7 +21,7 @@ export default function TourOverlay({
 }: {
   steps: any;
   hideTour: any;
-  currentStepIndex: number;
+  currentStepIndex?: number;
 }) {
   steps = prepareSteps(steps);
 
@@ -172,9 +171,3 @@ export default function TourOverlay({
     </div>
   );
 }
-
-TourOverlay.propTypes = {
-  steps: PropTypes.array,
-  currentStepIndex: PropTypes.number,
-  hideTour: PropTypes.func,
-};
