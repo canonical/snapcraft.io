@@ -1,4 +1,3 @@
-import React from "react";
 import { render, fireEvent, cleanup } from "@testing-library/react";
 
 import Tour from "./tour";
@@ -14,13 +13,24 @@ describe("Tour", () => {
   const steps = [
     {
       id: "test-step",
+      title: "",
+      content: "",
+      elements: [],
+      position: "",
     },
   ];
 
   afterEach(cleanup);
 
   it("should render TourBar with a button", () => {
-    const { getByText } = render(<Tour steps={steps} />);
+    const { getByText } = render(
+      <Tour
+        steps={steps}
+        startTour={false}
+        onTourClosed={jest.fn()}
+        onTourStarted={jest.fn()}
+      />
+    );
 
     const button = getByText("Tour");
     expect(button).toBeDefined();
@@ -30,7 +40,14 @@ describe("Tour", () => {
 
   describe("when tour button is clicked", () => {
     it("should render tour overlay", () => {
-      const { getByText } = render(<Tour steps={steps} />);
+      const { getByText } = render(
+        <Tour
+          steps={steps}
+          startTour={false}
+          onTourClosed={jest.fn()}
+          onTourStarted={jest.fn()}
+        />
+      );
       const button = getByText("Tour");
 
       fireEvent.click(button);
@@ -39,31 +56,45 @@ describe("Tour", () => {
         expect.objectContaining({
           steps,
         }),
-        expect.any(Object),
+        expect.any(Object)
       );
     });
   });
 
   describe("when startTour is true", () => {
     it("should render tour overlay", () => {
-      render(<Tour steps={steps} startTour={true} />);
+      render(
+        <Tour
+          steps={steps}
+          startTour={true}
+          onTourClosed={jest.fn()}
+          onTourStarted={jest.fn()}
+        />
+      );
 
       expect(TourOverlay).toBeCalledWith(
         expect.objectContaining({
           steps,
         }),
-        expect.any(Object),
+        expect.any(Object)
       );
     });
 
     it("should call metrics event", () => {
-      render(<Tour steps={steps} startTour={true} />);
+      render(
+        <Tour
+          steps={steps}
+          startTour={true}
+          onTourClosed={jest.fn()}
+          onTourStarted={jest.fn()}
+        />
+      );
       expect(tourStartedAutomatically).toBeCalled();
     });
   });
 
   describe("when tour start callback is provided", () => {
-    let onTourStarted;
+    let onTourStarted: () => void;
 
     beforeEach(() => {
       onTourStarted = jest.fn();
@@ -71,7 +102,12 @@ describe("Tour", () => {
 
     it("should call the callback when starting automatically", () => {
       render(
-        <Tour steps={steps} startTour={true} onTourStarted={onTourStarted} />,
+        <Tour
+          steps={steps}
+          startTour={true}
+          onTourStarted={onTourStarted}
+          onTourClosed={jest.fn()}
+        />
       );
 
       expect(onTourStarted).toBeCalled();
@@ -79,7 +115,12 @@ describe("Tour", () => {
 
     it("should call the callback when starting with a button", () => {
       const { getByText } = render(
-        <Tour steps={steps} onTourStarted={onTourStarted} />,
+        <Tour
+          steps={steps}
+          onTourStarted={onTourStarted}
+          startTour={false}
+          onTourClosed={jest.fn()}
+        />
       );
       fireEvent.click(getByText("Tour"));
 
@@ -88,7 +129,7 @@ describe("Tour", () => {
   });
 
   describe("when tour close callback is provided", () => {
-    let onTourClosed;
+    let onTourClosed: () => void;
 
     beforeEach(() => {
       onTourClosed = jest.fn();
@@ -96,14 +137,26 @@ describe("Tour", () => {
 
     it("should not call the callback when starting automatically", () => {
       render(
-        <Tour steps={steps} startTour={true} onTourClosed={onTourClosed} />,
+        <Tour
+          steps={steps}
+          startTour={true}
+          onTourClosed={onTourClosed}
+          onTourStarted={jest.fn()}
+        />
       );
 
       expect(onTourClosed).not.toBeCalled();
     });
 
     it("should call the callback when rendered initially", () => {
-      render(<Tour steps={steps} onTourClosed={onTourClosed} />);
+      render(
+        <Tour
+          steps={steps}
+          onTourClosed={onTourClosed}
+          startTour={false}
+          onTourStarted={jest.fn()}
+        />
+      );
 
       expect(onTourClosed).toBeCalled();
     });

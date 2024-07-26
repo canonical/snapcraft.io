@@ -1,5 +1,25 @@
-import React from "react";
-import PropTypes from "prop-types";
+import { ReactNode } from "react";
+
+type Props = {
+  steps: Array<{
+    id: string;
+    position: string;
+    elements: HTMLElement[];
+    content: string;
+    title: string;
+  }>;
+  currentStepIndex: number;
+  mask: {
+    top: number;
+    bottom: number;
+    left: number;
+    right: number;
+  };
+  onFinishClick: () => void;
+  onSkipClick: () => void;
+  onNextClick: () => void;
+  onPrevClick: () => void;
+};
 
 export default function TourStepCard({
   steps,
@@ -9,7 +29,7 @@ export default function TourStepCard({
   onSkipClick,
   onNextClick,
   onPrevClick,
-}) {
+}: Props): ReactNode {
   const step = steps[currentStepIndex];
 
   let tooltipStyle = {};
@@ -96,18 +116,3 @@ export default function TourStepCard({
     </div>
   );
 }
-
-TourStepCard.propTypes = {
-  mask: PropTypes.shape({
-    top: PropTypes.number,
-    bottom: PropTypes.number,
-    left: PropTypes.number,
-    right: PropTypes.number,
-  }).isRequired,
-  steps: PropTypes.array.isRequired,
-  currentStepIndex: PropTypes.number.isRequired,
-  onFinishClick: PropTypes.func.isRequired,
-  onSkipClick: PropTypes.func.isRequired,
-  onNextClick: PropTypes.func.isRequired,
-  onPrevClick: PropTypes.func.isRequired,
-};

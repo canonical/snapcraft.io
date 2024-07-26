@@ -1,4 +1,3 @@
-import React from "react";
 import { render, fireEvent, cleanup } from "@testing-library/react";
 
 import TourStepCard from "./tourStepCard";
@@ -11,8 +10,9 @@ import TourStepCard from "./tourStepCard";
 // <button><i>Text</i></button>
 //
 // getByText(textContentEquals("Text"), { selector: "button" })
-const textContentEquals = (textContent) => {
-  return (_, node) => node.textContent === textContent;
+const textContentEquals = (textContent: string) => {
+  return (_: unknown, node: HTMLElement): boolean =>
+    node.textContent === textContent;
 };
 
 describe("TourStepCard", () => {
@@ -21,6 +21,7 @@ describe("TourStepCard", () => {
     position: "bottom-left",
     title: "Test step title",
     content: "Test step content",
+    elements: [],
   };
 
   const dummyMask = {
@@ -30,10 +31,10 @@ describe("TourStepCard", () => {
     right: 40,
   };
 
-  let onFinishClick;
-  let onSkipClick;
-  let onNextClick;
-  let onPrevClick;
+  let onFinishClick: () => void;
+  let onSkipClick: () => void;
+  let onNextClick: () => void;
+  let onPrevClick: () => void;
 
   beforeEach(() => {
     onFinishClick = jest.fn();
@@ -54,7 +55,7 @@ describe("TourStepCard", () => {
         onSkipClick={onSkipClick}
         onNextClick={onNextClick}
         onPrevClick={onPrevClick}
-      />,
+      />
     );
   };
 
@@ -83,10 +84,12 @@ describe("TourStepCard", () => {
 
     it("should show disabled Previous button", () => {
       const { getByText } = renderTourStepCard(steps);
+      // @ts-expect-error
       const prevButton = getByText(textContentEquals("Previous step"), {
         selector: "button",
       });
 
+      // @ts-expect-error
       expect(prevButton.disabled).toBe(true);
     });
 
@@ -158,6 +161,9 @@ describe("TourStepCard", () => {
       {
         id: "test-step-last",
         position: "top-right",
+        title: "",
+        elements: [],
+        content: "",
       },
     ];
 

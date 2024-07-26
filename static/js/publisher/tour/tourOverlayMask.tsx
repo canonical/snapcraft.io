@@ -1,7 +1,13 @@
-import React from "react";
-import PropTypes from "prop-types";
+import { ReactNode } from "react";
 
-const getClipPathFromMask = ({ top, bottom, left, right }) => {
+type Props = {
+  top: number;
+  bottom: number;
+  left: number;
+  right: number;
+};
+
+const getClipPathFromMask = ({ top, bottom, left, right }: Props): string => {
   let mask = [
     `${left}px ${top}px`,
     `${left}px ${bottom}px`,
@@ -13,7 +19,11 @@ const getClipPathFromMask = ({ top, bottom, left, right }) => {
   return `polygon(0 0, 100% 0, 100% 100%, 0 100%, 0 0, ${mask})`;
 };
 
-export default function TourOverlayMask({ mask }) {
+export default function TourOverlayMask({
+  mask,
+}: {
+  mask: Props | null;
+}): ReactNode {
   let maskStyle = {};
 
   if (mask) {
@@ -26,12 +36,3 @@ export default function TourOverlayMask({ mask }) {
 
   return <div className="p-tour-overlay__mask" style={maskStyle} />;
 }
-
-TourOverlayMask.propTypes = {
-  mask: PropTypes.shape({
-    top: PropTypes.number,
-    bottom: PropTypes.number,
-    left: PropTypes.number,
-    right: PropTypes.number,
-  }),
-};
