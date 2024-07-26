@@ -357,7 +357,7 @@ function ReleasesHeading(props) {
                     className="u-no-margin--bottom p-button--positive"
                     onClick={() =>
                       window.open(
-                        "https://forum.snapcraft.io/c/store-requests",
+                        'https://forum.snapcraft.io/new-topic?title=Create+new+track+for+"snap+name"&category=store-requests',
                         "_blank",
                       )
                     }
