@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 <!DOCTYPE coverage SYSTEM "http://cobertura.sourceforge.net/xml/coverage-04.dtd">
-<coverage lines-valid="3585" lines-covered="2414" line-rate="0.6733" branches-valid="2126" branches-covered="1307" branch-rate="0.6147" timestamp="1722031495735" complexity="0" version="0.1">
+<coverage lines-valid="3585" lines-covered="2414" line-rate="0.6733" branches-valid="2126" branches-covered="1307" branch-rate="0.6147" timestamp="1722117891948" complexity="0" version="0.1">
   <sources>
     <source>/home/runner/work/snapcraft.io/snapcraft.io</source>
   </sources>
@@ -6000,15 +6000,15 @@
                 <line number="3" hits="37"/>
               </lines>
             </method>
-            <method name="(anonymous_1)" hits="3" signature="()V">
+            <method name="(anonymous_1)" hits="2" signature="()V">
               <lines>
-                <line number="4" hits="3"/>
+                <line number="4" hits="2"/>
               </lines>
             </method>
           </methods>
           <lines>
             <line number="4" hits="37" branch="false"/>
-            <line number="5" hits="3" branch="false"/>
+            <line number="5" hits="2" branch="false"/>
             <line number="7" hits="0" branch="true" condition-coverage="0% (0/2)"/>
             <line number="8" hits="0" branch="false"/>
             <line number="11" hits="0" branch="false"/>
