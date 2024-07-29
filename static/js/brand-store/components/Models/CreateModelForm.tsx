@@ -7,7 +7,12 @@ import randomstring from "randomstring";
 
 import { checkModelNameExists, setPageTitle } from "../../utils";
 
-import { brandStoresState, modelsListState, newModelState } from "../../atoms";
+import {
+  brandStoresState,
+  modelsListState,
+  newModelState,
+  brandIdState,
+} from "../../atoms";
 import { filteredModelsListState, brandStoreState } from "../../selectors";
 
 import type { Store, Model } from "../../types/shared";
@@ -24,6 +29,7 @@ function CreateModelForm({
   const navigate = useNavigate();
   const location = useLocation();
   const { id } = useParams();
+  const brandId = useRecoilValue(brandIdState);
   const [newModel, setNewModel] = useRecoilState(newModelState);
   const stores = useRecoilState(brandStoresState);
   const currentStore = stores[0].find((store: Store) => store.id === id);
@@ -70,7 +76,7 @@ function CreateModelForm({
         ];
       });
 
-      return fetch(`/admin/store/${id}/models`, {
+      return fetch(`/admin/store/${brandId}/models`, {
         method: "POST",
         body: formData,
       });

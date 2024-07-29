@@ -13,7 +13,11 @@ import { Button, Icon } from "@canonical/react-components";
 import { setPageTitle } from "../../utils";
 
 import { useSigningKeys } from "../../hooks";
-import { signingKeysListState, newSigningKeyState } from "../../atoms";
+import {
+  signingKeysListState,
+  newSigningKeyState,
+  brandIdState,
+} from "../../atoms";
 import { brandStoreState } from "../../selectors";
 
 type Props = {
@@ -28,9 +32,10 @@ function CreatePolicyForm({
   refetchPolicies,
 }: Props): ReactNode {
   const { id, model_id } = useParams();
+  const brandId = useRecoilValue(brandIdState);
   const navigate = useNavigate();
   const location = useLocation();
-  const { isLoading, isError, error, data }: any = useSigningKeys(id);
+  const { isLoading, isError, error, data }: any = useSigningKeys(brandId);
   const [signingKeys, setSigningKeys] = useRecoilState(signingKeysListState);
   const [newSigningKey, setNewSigningKey] = useRecoilState(newSigningKeyState);
   const brandStore = useRecoilValue(brandStoreState(id));
@@ -58,7 +63,7 @@ function CreatePolicyForm({
 
       setNewSigningKey({ name: "" });
 
-      return fetch(`/admin/store/${id}/models/${model_id}/policies`, {
+      return fetch(`/admin/store/${brandId}/models/${model_id}/policies`, {
         method: "POST",
         body: formData,
       });

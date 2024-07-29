@@ -22,6 +22,7 @@ import {
   policiesListState,
   signingKeysListState,
   newSigningKeyState,
+  brandIdState,
 } from "../../atoms";
 import { brandStoreState } from "../../selectors";
 
@@ -31,13 +32,14 @@ import type { Policy, SigningKey } from "../../types/shared";
 
 function Policies(): ReactNode {
   const { id, model_id } = useParams();
+  const brandId = useRecoilValue(brandIdState);
   const location = useLocation();
   const navigate = useNavigate();
   const { isLoading, isError, error, refetch, data }: any = usePolicies(
-    id,
+    brandId,
     model_id
   );
-  const signingKeys = useSigningKeys(id);
+  const signingKeys = useSigningKeys(brandId);
   const setPoliciesList = useSetRecoilState<Array<Policy>>(policiesListState);
   const setFilter = useSetRecoilState<string>(policiesListFilterState);
   const setNewSigningKey = useSetRecoilState(newSigningKeyState);
