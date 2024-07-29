@@ -260,7 +260,7 @@ function Navigation({
                               <>
                                 <li className="p-tabs__item">
                                   <NavLink
-                                    to={`/admin/${id}/models`}
+                                    to={`/admin/${brandData.data["account-id"]}/models`}
                                     className="p-side-navigation__link"
                                     aria-selected={sectionName === "models"}
                                   >
@@ -272,7 +272,7 @@ function Navigation({
                                 </li>
                                 <li className="p-tabs__item">
                                   <NavLink
-                                    to={`/admin/${id}/signing-keys`}
+                                    to={`/admin/${brandData.data["account-id"]}/signing-keys`}
                                     className="p-side-navigation__link"
                                     aria-selected={
                                       sectionName === "signing-keys"
