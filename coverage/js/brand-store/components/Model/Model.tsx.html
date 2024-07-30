@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">45.94% </span>
+                <span class="strong">47.36% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>17/37</span>
+                <span class='fraction'>18/38</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">62.96% </span>
+                <span class="strong">64.28% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>17/27</span>
+                <span class='fraction'>18/28</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">45.94% </span>
+                <span class="strong">47.36% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>17/37</span>
+                <span class='fraction'>18/38</span>
             </div>
         
             
@@ -337,7 +337,13 @@
 <a name='L272'></a><a href='#L272'>272</a>
 <a name='L273'></a><a href='#L273'>273</a>
 <a name='L274'></a><a href='#L274'>274</a>
-<a name='L275'></a><a href='#L275'>275</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L275'></a><a href='#L275'>275</a>
+<a name='L276'></a><a href='#L276'>276</a>
+<a name='L277'></a><a href='#L277'>277</a>
+<a name='L278'></a><a href='#L278'>278</a>
+<a name='L279'></a><a href='#L279'>279</a>
+<a name='L280'></a><a href='#L280'>280</a>
+<a name='L281'></a><a href='#L281'>281</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -361,6 +367,15 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">17x</span>
+<span class="cline-any cline-yes">17x</span>
+<span class="cline-any cline-yes">17x</span>
+<span class="cline-any cline-yes">17x</span>
+<span class="cline-any cline-yes">17x</span>
+<span class="cline-any cline-yes">17x</span>
+<span class="cline-any cline-yes">17x</span>
+<span class="cline-any cline-yes">17x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">17x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -392,13 +407,10 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">17x</span>
-<span class="cline-any cline-yes">17x</span>
-<span class="cline-any cline-yes">17x</span>
-<span class="cline-any cline-yes">17x</span>
-<span class="cline-any cline-yes">17x</span>
-<span class="cline-any cline-yes">17x</span>
-<span class="cline-any cline-yes">17x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">17x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">17x</span>
@@ -625,24 +637,33 @@ import {
   Notification,
 } from "@canonical/react-components";
 &nbsp;
-import { useModels } from "../../hooks";
-import { modelsListState } from "../../atoms";
+import { modelsListState, brandIdState } from "../../atoms";
 import { currentModelState, brandStoreState } from "../../selectors";
 &nbsp;
 import ModelNav from "./ModelNav";
 import ModelBreadcrumb from "./ModelBreadcrumb";
 import Navigation from "../Navigation";
 &nbsp;
+import { useModels } from "../../hooks";
 import { setPageTitle } from "../../utils";
 &nbsp;
 function Model() {
+  const { id, model_id } = useParams();
+  const brandId = useRecoilValue(brandIdState);
+  const currentModel = useRecoilValue(currentModelState(model_id));
+  const [newApiKey, setNewApiKey] = useState("");
+  const [showSuccessNotification, setShowSuccessNotificaton] = useState(false);
+  const [showErrorNotification, setShowErrorNotificaton] = useState(false);
+  const setModelsList = useSetRecoilState&lt;any&gt;(modelsListState);
+  const brandStore = useRecoilValue(brandStoreState(id));
+&nbsp;
   const mutation = useMutation({
     mutationFn: <span class="fstat-no" title="function not covered" >(a</span>piKey: string) =&gt; {
       const formData = <span class="cstat-no" title="statement not covered" >new FormData();</span>
 <span class="cstat-no" title="statement not covered" >      formData.set("csrf_token", window.CSRF_TOKEN);</span>
 <span class="cstat-no" title="statement not covered" >      formData.set("api_key", apiKey);</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >      return fetch(`/admin/store/${id}/models/${model_id}`, {</span>
+<span class="cstat-no" title="statement not covered" >      return fetch(`/admin/store/${brandId}/models/${model_id}`, {</span>
         method: "PATCH",
         body: formData,
       });
@@ -666,14 +687,11 @@ function Model() {
     },
   });
 &nbsp;
-  const { id, model_id } = useParams();
-  const currentModel = useRecoilValue(currentModelState(model_id));
-  const [newApiKey, setNewApiKey] = useState("");
-  const [showSuccessNotification, setShowSuccessNotificaton] = useState(false);
-  const [showErrorNotification, setShowErrorNotificaton] = useState(false);
-  const setModelsList = useSetRecoilState&lt;any&gt;(modelsListState);
-  const brandStore = useRecoilValue(brandStoreState(id));
-  const { isLoading, error, data } = useModels(id);
+  const {
+    data: models,
+    isLoading: modelsIsLoading,
+    error: modelsError,
+  }: any = useModels(brandId);
 &nbsp;
   const handleError = <span class="fstat-no" title="function not covered" >()</span> =&gt; {
 <span class="cstat-no" title="statement not covered" >    setShowErrorNotificaton(true);</span>
@@ -687,10 +705,10 @@ function Model() {
     : setPageTitle("Model");
 &nbsp;
   useEffect(() =&gt; {
-    if (!currentModel &amp;&amp; !isLoading &amp;&amp; !error) {
-      setModelsList(data);
+    if (!currentModel &amp;&amp; !modelsIsLoading &amp;&amp; !modelsError &amp;&amp; models) {
+      setModelsList(models);
     }
-  }, [currentModel, isLoading, error, data]);
+  }, [currentModel, modelsIsLoading, modelsError, models]);
 &nbsp;
   return (
     &lt;div className="l-application" role="presentation"&gt;
@@ -892,7 +910,7 @@ export default Model;
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2024-07-29T22:05:27.536Z
+                at 2024-07-30T22:04:43.531Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>
