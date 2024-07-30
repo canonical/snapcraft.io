@@ -62,6 +62,11 @@ const publisherState = atom({
   default: null as Publisher,
 });
 
+const brandIdState = atom({
+  key: "brandId",
+  default: "",
+});
+
 export {
   brandStoresState,
   modelsListState,
@@ -73,4 +78,5 @@ export {
   signingKeysListFilterState,
   newSigningKeyState,
   publisherState,
+  brandIdState,
 };
