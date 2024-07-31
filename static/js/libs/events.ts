@@ -10,7 +10,7 @@ class Events {
     return this;
   }
 
-  _addListener(type: string, selector: string | HTMLElement) {
+  _addListener(type: string, selector: string | HTMLElement | Window) {
     const bindTarget =
       typeof selector === "string" ? this.defaultBindTarget : selector;
     bindTarget.addEventListener(type, this._handleEvent.bind(this, type));
@@ -36,7 +36,11 @@ class Events {
     );
   }
 
-  addEvent(type: string, selector: string | HTMLElement, func: unknown) {
+  addEvent(
+    type: string,
+    selector: string | HTMLElement | Window,
+    func: unknown
+  ) {
     if (!this.events[type]) {
       this.events[type] = [];
     }
