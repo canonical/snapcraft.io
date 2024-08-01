@@ -40,7 +40,7 @@ export function initTour({
       onTourStarted={onTourStarted}
       onTourClosed={onTourClosed}
       startTour={startTour}
-    />
+    />,
   );
 }
 
