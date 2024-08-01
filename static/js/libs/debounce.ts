@@ -10,7 +10,9 @@ export default function debounce(
   let timeout: ReturnType<typeof setTimeout> | null;
 
   const debounced = function (this: HTMLElement) {
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
     const context = this;
+    // eslint-disable-next-line prefer-rest-params
     const args = arguments;
     const later = function () {
       timeout = null;
