@@ -1,14 +1,27 @@
-import type { Model } from "../types/shared";
+import { Dispatch, SetStateAction } from "react";
+import { SetterOrUpdater } from "recoil";
+import type { Model, Policy } from "../types/shared";
 
-const getPolicies = async (
-  modelsList: Array<Model>,
-  id: string | undefined,
-  setPolicies: Function,
-  setEnableTableActions?: Function
-) => {
+type Options = {
+  models: Model[];
+  id: string | undefined;
+  setPolicies: SetterOrUpdater<Policy[]>;
+  signal?: AbortSignal;
+  setEnableTableActions?: Dispatch<SetStateAction<boolean>>;
+};
+
+const getPolicies = async ({
+  models,
+  id,
+  setPolicies,
+  signal,
+  setEnableTableActions,
+}: Options) => {
   const data = await Promise.all(
-    modelsList.map((model) => {
-      return fetch(`/admin/store/${id}/models/${model.name}/policies`);
+    models.map((model) => {
+      return fetch(`/admin/store/${id}/models/${model.name}/policies`, {
+        signal,
+      });
     })
   );
 

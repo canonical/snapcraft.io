@@ -56,11 +56,18 @@ function Models(): ReactNode {
     : setPageTitle("Models");
 
   useEffect(() => {
+    const controller = new AbortController();
+    const signal = controller.signal;
+
     if (!modelsIsLoading && !modelsError && models) {
       setModelsList(models);
       setFilter(searchParams.get("filter") || "");
-      getPolicies(models, id, setPolicies);
+      getPolicies({ models, id, setPolicies, signal });
     }
+
+    return () => {
+      controller.abort();
+    };
   }, [modelsIsLoading, modelsError, models]);
 
   return (
