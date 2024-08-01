@@ -116,7 +116,7 @@ function App() {
 
   useEffect(() => {
     const tourContainer = document.getElementById(
-      "tour-container"
+      "tour-container",
     ) as HTMLElement;
     initListingTour({
       snapName,
