@@ -4,11 +4,14 @@ const getPolicies = async (
   modelsList: Array<Model>,
   id: string | undefined,
   setPolicies: Function,
+  signal: any,
   setEnableTableActions?: Function
 ) => {
   const data = await Promise.all(
     modelsList.map((model) => {
-      return fetch(`/admin/store/${id}/models/${model.name}/policies`);
+      return fetch(`/admin/store/${id}/models/${model.name}/policies`, {
+        signal,
+      });
     })
   );
 
