@@ -71,8 +71,21 @@ function SigningKeys(): ReactNode {
   }, [isLoading, error, data]);
 
   useEffect(() => {
+    const controller = new AbortController();
+    const signal = controller.signal;
+
     if (!modelsIsLoading && !modelsIsError && models) {
-      getPolicies(models, id, setPolicies, setEnableTableActions);
+      getPolicies({
+        models,
+        id,
+        setPolicies,
+        signal,
+        setEnableTableActions,
+      });
+
+      return () => {
+        controller.abort();
+      };
     }
   }, [models]);
 
