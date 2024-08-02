@@ -22,7 +22,7 @@ module.exports = [
   // loaders are evaluated from bottom to top (right to left)
   // so first transpile via babel, then expose as global
   {
-    test: require.resolve(__dirname + "/static/js/base/base.js"),
+    test: require.resolve(__dirname + "/static/js/base/base.ts"),
     use: ["expose-loader?exposes=snapcraft.base", "babel-loader"],
   },
   {
@@ -30,11 +30,11 @@ module.exports = [
     use: ["expose-loader?exposes=snapcraft.release", "babel-loader"],
   },
   {
-    test: require.resolve(__dirname + "/static/js/publisher/publisher.js"),
+    test: require.resolve(__dirname + "/static/js/publisher/publisher.ts"),
     use: ["expose-loader?exposes=snapcraft.publisher", "babel-loader"],
   },
   {
-    test: require.resolve(__dirname + "/static/js/public/about/index.js"),
+    test: require.resolve(__dirname + "/static/js/public/about/index.ts"),
     use: ["expose-loader?exposes=snapcraft.about", "babel-loader"],
   },
   {
@@ -49,45 +49,37 @@ module.exports = [
     use: ["expose-loader?exposes=snapcraft.public.modal", "babel-loader"],
   },
   {
-    test: require.resolve(__dirname + "/static/js/public/homepage.js"),
+    test: require.resolve(__dirname + "/static/js/public/homepage.ts"),
     use: ["expose-loader?exposes=snapcraft.public.homepage", "babel-loader"],
   },
   {
-    test: require.resolve(__dirname + "/static/js/public/blog.js"),
+    test: require.resolve(__dirname + "/static/js/public/blog.ts"),
     use: ["expose-loader?exposes=snapcraft.public.blog", "babel-loader"],
   },
   {
-    test: require.resolve(__dirname + "/static/js/public/store-details.js"),
+    test: require.resolve(__dirname + "/static/js/public/store-details.ts"),
     use: [
       "expose-loader?exposes=snapcraft.public.storeDetails",
       "babel-loader",
     ],
   },
   {
-    test: require.resolve(__dirname + "/static/js/public/fsf.js"),
+    test: require.resolve(__dirname + "/static/js/public/fsf.ts"),
     use: ["expose-loader?exposes=snapcraft.public.fsf", "babel-loader"],
   },
   {
-    test: require.resolve(__dirname + "/static/js/public/search.js"),
-    use: ["expose-loader?exposes=snapcraft.public.search", "babel-loader"],
-  },
-  {
-    test: require.resolve(__dirname + "/static/js/public/distro-install.js"),
+    test: require.resolve(__dirname + "/static/js/public/distro-install.ts"),
     use: [
       "expose-loader?exposes=snapcraft.public.distroInstall",
       "babel-loader",
     ],
   },
   {
-    test: require.resolve(__dirname + "/static/js/public/publisher-details.js"),
+    test: require.resolve(__dirname + "/static/js/public/publisher-details.ts"),
     use: [
       "expose-loader?exposes=snapcraft.public.publisherDetails",
       "babel-loader",
     ],
-  },
-  {
-    test: require.resolve(__dirname + "/static/js/public/brand-store.js"),
-    use: ["expose-loader?exposes=snapcraft.public.brandStore", "babel-loader"],
   },
   {
     test: /\.tsx?/,

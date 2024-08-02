@@ -253,17 +253,6 @@
     </div>
   {% endif %}
 
-  {# REPORT SNAP SECTION - hidden in preview #}
-  {% if not is_preview and not IS_BRAND_STORE %}
-    <div class="p-strip--light">
-      <div class="u-fixed-width">
-        <p>Is there a problem with {{snap_title}}? <a class="js-modal-open">Report this app</a></p>
-      </div>
-    </div>
-
-    {% include "store/snap-details/_report_snap_modal.html" %}
-  {% endif %}
-
   {% if has_publisher_page %}
   <div class="p-strip is-shallow">
       <div class="u-fixed-width u-clearfix">
@@ -352,7 +341,7 @@
         {% if not is_preview %}
         try {
           snapcraft.public.storeDetails.initReportSnap(
-            '{{ package_name }}', '.js-modal-open', '#report-snap-modal',
+            '.js-modal-open', '#report-snap-modal',
             document.getElementById('report-snap-form').action
           );
         } catch(e) {

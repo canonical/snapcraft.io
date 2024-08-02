@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, ReactNode } from "react";
 import { useSetRecoilState, useRecoilValue } from "recoil";
 import {
   Link,
@@ -15,50 +15,31 @@ import {
   signingKeysListFilterState,
   policiesListState,
   newSigningKeyState,
+  brandIdState,
 } from "../../atoms";
 import { brandStoreState } from "../../selectors";
 
-import SigningKeysFilter from "./SigningKeysFilter";
+import Filter from "../Filter";
 import SigningKeysTable from "./SigningKeysTable";
 import CreateSigningKeyForm from "./CreateSigningKeyForm";
 import Navigation from "../Navigation";
 
-import { isClosedPanel, setPageTitle, sortByDateDescending } from "../../utils";
+import {
+  isClosedPanel,
+  setPageTitle,
+  sortByDateDescending,
+  getPolicies,
+} from "../../utils";
 
-import type { SigningKey, Model, Policy } from "../../types/shared";
+import type { SigningKey, Policy } from "../../types/shared";
 
-function SigningKeys() {
-  const getPolicies = async (modelsList: Array<Model>) => {
-    const data = await Promise.all(
-      modelsList.map((model) => {
-        return fetch(`/admin/store/${id}/models/${model.name}/policies`);
-      })
-    );
-
-    const allPolicies = await Promise.all(
-      data.map(async (res) => {
-        if (!res.ok) {
-          return [];
-        }
-
-        const policies = await res.json();
-
-        if (!policies.success) {
-          return [];
-        }
-
-        return policies.data;
-      })
-    );
-
-    setPolicies(allPolicies.flat());
-    setEnableTableActions(true);
-  };
-
+function SigningKeys(): ReactNode {
   const { id } = useParams();
+  const brandId = useRecoilValue(brandIdState);
   const location = useLocation();
   const navigate = useNavigate();
-  const { isLoading, isError, error, data, refetch }: any = useSigningKeys(id);
+  const { isLoading, isError, error, data, refetch }: any =
+    useSigningKeys(brandId);
   const setSigningKeysList =
     useSetRecoilState<Array<SigningKey>>(signingKeysListState);
   const setPolicies = useSetRecoilState<Array<Policy>>(policiesListState);
@@ -76,18 +57,35 @@ function SigningKeys() {
     ? setPageTitle(`Signing keys in ${brandStore.name}`)
     : setPageTitle("Signing keys");
 
-  const models = useModels(id);
+  const {
+    data: models,
+    isLoading: modelsIsLoading,
+    isError: modelsIsError,
+  }: any = useModels(brandId);
 
   useEffect(() => {
     if (!isLoading && !error) {
-      setSigningKeysList(data.sort(sortByDateDescending));
+      setSigningKeysList([...data.sort(sortByDateDescending)]);
       setFilter(searchParams.get("filter") || "");
     }
   }, [isLoading, error, data]);
 
   useEffect(() => {
-    if (!models.isLoading && !models.isError) {
-      getPolicies(models.data);
+    const controller = new AbortController();
+    const signal = controller.signal;
+
+    if (!modelsIsLoading && !modelsIsError && models) {
+      getPolicies({
+        models,
+        id,
+        setPolicies,
+        signal,
+        setEnableTableActions,
+      });
+
+      return () => {
+        controller.abort();
+      };
     }
   }, [models]);
 
@@ -138,7 +136,11 @@ function SigningKeys() {
             )}
             <Row>
               <Col size={6}>
-                <SigningKeysFilter />
+                <Filter
+                  state={signingKeysListFilterState}
+                  label="Signing keys"
+                  placeholder="Search keys"
+                />
               </Col>
               <Col size={6} className="u-align--right">
                 <Link

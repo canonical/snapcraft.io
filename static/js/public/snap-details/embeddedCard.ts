@@ -1,8 +1,8 @@
 import { initEmbeddedCardPicker } from "../../publisher/publicise";
 
-const showEl = (el: { classList: { remove: (arg0: string) => any } }) =>
+const showEl = (el: { classList: { remove: (arg0: string) => void } }) =>
   el.classList.remove("u-hide");
-const hideEl = (el: { classList: { add: (arg0: string) => any } }) =>
+const hideEl = (el: { classList: { add: (arg0: string) => void } }) =>
   el.classList.add("u-hide");
 
 function toggleModal(
@@ -26,7 +26,7 @@ function toggleModal(
   }
 }
 
-export default function initEmbeddedCardModal(snapName: any) {
+export default function initEmbeddedCardModal(snapName: string): void {
   const toggle = document.querySelector(
     ".js-embedded-card-toggle"
   ) as HTMLElement;
@@ -44,7 +44,7 @@ export default function initEmbeddedCardModal(snapName: any) {
     dialog.style.minHeight = "";
 
     setTimeout(() => {
-      dialog.style.minHeight = dialog.clientHeight + "px";
+      dialog.style.minHeight = `${dialog.clientHeight}px`;
     }, 1);
   }
 

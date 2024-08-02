@@ -12,24 +12,33 @@ import {
   Notification,
 } from "@canonical/react-components";
 
-import { useModels } from "../../hooks";
-import { modelsListState } from "../../atoms";
+import { modelsListState, brandIdState } from "../../atoms";
 import { currentModelState, brandStoreState } from "../../selectors";
 
 import ModelNav from "./ModelNav";
 import ModelBreadcrumb from "./ModelBreadcrumb";
 import Navigation from "../Navigation";
 
+import { useModels } from "../../hooks";
 import { setPageTitle } from "../../utils";
 
 function Model() {
+  const { id, model_id } = useParams();
+  const brandId = useRecoilValue(brandIdState);
+  const currentModel = useRecoilValue(currentModelState(model_id));
+  const [newApiKey, setNewApiKey] = useState("");
+  const [showSuccessNotification, setShowSuccessNotificaton] = useState(false);
+  const [showErrorNotification, setShowErrorNotificaton] = useState(false);
+  const setModelsList = useSetRecoilState<any>(modelsListState);
+  const brandStore = useRecoilValue(brandStoreState(id));
+
   const mutation = useMutation({
     mutationFn: (apiKey: string) => {
       const formData = new FormData();
       formData.set("csrf_token", window.CSRF_TOKEN);
       formData.set("api_key", apiKey);
 
-      return fetch(`/admin/store/${id}/models/${model_id}`, {
+      return fetch(`/admin/store/${brandId}/models/${model_id}`, {
         method: "PATCH",
         body: formData,
       });
@@ -53,14 +62,11 @@ function Model() {
     },
   });
 
-  const { id, model_id } = useParams();
-  const currentModel = useRecoilValue(currentModelState(model_id));
-  const [newApiKey, setNewApiKey] = useState("");
-  const [showSuccessNotification, setShowSuccessNotificaton] = useState(false);
-  const [showErrorNotification, setShowErrorNotificaton] = useState(false);
-  const setModelsList = useSetRecoilState<any>(modelsListState);
-  const brandStore = useRecoilValue(brandStoreState(id));
-  const { isLoading, error, data } = useModels(id);
+  const {
+    data: models,
+    isLoading: modelsIsLoading,
+    error: modelsError,
+  }: any = useModels(brandId);
 
   const handleError = () => {
     setShowErrorNotificaton(true);
@@ -74,10 +80,10 @@ function Model() {
     : setPageTitle("Model");
 
   useEffect(() => {
-    if (!currentModel && !isLoading && !error) {
-      setModelsList(data);
+    if (!currentModel && !modelsIsLoading && !modelsError && models) {
+      setModelsList(models);
     }
-  }, [currentModel, isLoading, error, data]);
+  }, [currentModel, modelsIsLoading, modelsError, models]);
 
   return (
     <div className="l-application" role="presentation">

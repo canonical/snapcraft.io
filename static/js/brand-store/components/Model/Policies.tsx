@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, ReactNode } from "react";
 import {
   Link,
   useParams,
@@ -11,7 +11,7 @@ import { Row, Col, Notification, Icon } from "@canonical/react-components";
 
 import ModelNav from "./ModelNav";
 import ModelBreadcrumb from "./ModelBreadcrumb";
-import PoliciesFilter from "./PoliciesFilter";
+import Filter from "../Filter";
 import PoliciesTable from "./PoliciesTable";
 import CreatePolicyForm from "./CreatePolicyForm";
 import Navigation from "../Navigation";
@@ -22,6 +22,7 @@ import {
   policiesListState,
   signingKeysListState,
   newSigningKeyState,
+  brandIdState,
 } from "../../atoms";
 import { brandStoreState } from "../../selectors";
 
@@ -29,15 +30,16 @@ import { isClosedPanel, setPageTitle } from "../../utils";
 
 import type { Policy, SigningKey } from "../../types/shared";
 
-function Policies() {
+function Policies(): ReactNode {
   const { id, model_id } = useParams();
+  const brandId = useRecoilValue(brandIdState);
   const location = useLocation();
   const navigate = useNavigate();
   const { isLoading, isError, error, refetch, data }: any = usePolicies(
-    id,
+    brandId,
     model_id
   );
-  const signingKeys = useSigningKeys(id);
+  const signingKeys = useSigningKeys(brandId);
   const setPoliciesList = useSetRecoilState<Array<Policy>>(policiesListState);
   const setFilter = useSetRecoilState<string>(policiesListFilterState);
   const setNewSigningKey = useSetRecoilState(newSigningKeyState);
@@ -137,7 +139,11 @@ function Policies() {
             )}
             <Row>
               <Col size={6}>
-                <PoliciesFilter />
+                <Filter
+                  state={policiesListFilterState}
+                  label="Search policies"
+                  placeholder="Search policies"
+                />
               </Col>
               <Col size={6} className="u-align--right">
                 <Link

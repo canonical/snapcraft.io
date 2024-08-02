@@ -1,9 +1,10 @@
+import { ReactNode } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "react-query";
 
 import Packages from "../../pages/Packages";
 
-function App() {
+function App(): ReactNode {
   const queryClient = new QueryClient({
     defaultOptions: {
       queries: {

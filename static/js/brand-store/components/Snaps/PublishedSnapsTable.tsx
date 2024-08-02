@@ -2,12 +2,13 @@ import { format, parseISO } from "date-fns";
 
 import type { Snap } from "../../types/shared";
 import { MainTable } from "@canonical/react-components";
+import { ReactNode } from "react";
 
 type Props = {
   snapsInStore: Array<Snap>;
 };
 
-function PublishedSnapsTable({ snapsInStore }: Props) {
+function PublishedSnapsTable({ snapsInStore }: Props): ReactNode {
   return (
     <>
       {snapsInStore.length > 0 ? (

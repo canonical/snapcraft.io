@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, ReactNode } from "react";
 import { useSetRecoilState, useRecoilValue } from "recoil";
 import {
   Link,
@@ -9,55 +9,38 @@ import {
 } from "react-router-dom";
 import { Row, Col, Notification, Icon } from "@canonical/react-components";
 
-import { useModels } from "../../hooks";
 import {
   modelsListFilterState,
   modelsListState,
   policiesListState,
   newModelState,
+  brandIdState,
 } from "../../atoms";
 import { brandStoreState } from "../../selectors";
 
-import ModelsFilter from "./ModelsFilter";
+import Filter from "../Filter";
 import ModelsTable from "./ModelsTable";
 import CreateModelForm from "./CreateModelForm";
 import Navigation from "../Navigation";
 
-import { isClosedPanel, setPageTitle } from "../../utils";
+import { useModels } from "../../hooks";
+import { isClosedPanel, setPageTitle, getPolicies } from "../../utils";
 
 import type { Model, Policy } from "../../types/shared";
 
-function Models() {
-  const getPolicies = async (modelsList: Array<Model>) => {
-    const data = await Promise.all(
-      modelsList.map((model) => {
-        return fetch(`/admin/store/${id}/models/${model.name}/policies`);
-      })
-    );
-
-    const allPolicies = await Promise.all(
-      data.map(async (res) => {
-        if (!res.ok) {
-          return [];
-        }
-
-        const policies = await res.json();
-
-        if (!policies.success) {
-          return [];
-        }
-
-        return policies.data;
-      })
-    );
-
-    setPolicies(allPolicies.flat());
-  };
-
+function Models(): ReactNode {
   const { id } = useParams();
+  const brandId = useRecoilValue(brandIdState);
+
+  const {
+    data: models,
+    isLoading: modelsIsLoading,
+    error: modelsError,
+    isError: modelsIsError,
+  }: any = useModels(brandId);
+
   const location = useLocation();
   const navigate = useNavigate();
-  const { isLoading, isError, error, data }: any = useModels(id);
   const setModelsList = useSetRecoilState<Array<Model>>(modelsListState);
   const setPolicies = useSetRecoilState<Array<Policy>>(policiesListState);
   const setNewModel = useSetRecoilState(newModelState);
@@ -73,12 +56,19 @@ function Models() {
     : setPageTitle("Models");
 
   useEffect(() => {
-    if (!isLoading && !error) {
-      setModelsList(data);
+    const controller = new AbortController();
+    const signal = controller.signal;
+
+    if (!modelsIsLoading && !modelsError && models) {
+      setModelsList(models);
       setFilter(searchParams.get("filter") || "");
-      getPolicies(data);
+      getPolicies({ models, id, setPolicies, signal });
     }
-  }, [isLoading, error, data]);
+
+    return () => {
+      controller.abort();
+    };
+  }, [modelsIsLoading, modelsError, models]);
 
   return (
     <div className="l-application" role="presentation">
@@ -115,7 +105,11 @@ function Models() {
             )}
             <Row>
               <Col size={6}>
-                <ModelsFilter />
+                <Filter
+                  state={modelsListFilterState}
+                  label="Search models"
+                  placeholder="Search models"
+                />
               </Col>
               <Col size={6} className="u-align--right">
                 <Link
@@ -128,12 +122,12 @@ function Models() {
             </Row>
             <div className="u-fixed-width u-flex-column u-flex-grow">
               <div>
-                {isError && error && (
+                {modelsIsError && modelsError && (
                   <Notification severity="negative">
-                    Error: {error.message}
+                    Error: {modelsError.message}
                   </Notification>
                 )}
-                {isLoading ? (
+                {modelsIsLoading ? (
                   <p>
                     <Icon name="spinner" className="u-animation--spin" />
                     &nbsp;Fetching models...

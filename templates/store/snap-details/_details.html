@@ -24,7 +24,7 @@
     <h5 class="p-muted-heading">Websites</h5>
     <ul class="p-list">
       {% for link in links["website"] %}
-        <li>
+        <li {% if loop.index == 1 %}data-js="primary-domain"{% endif %}>
           <a class="js-external-link" title="{{ link }}" href="{{ link }}" aria-controls="modal">{{ format_link(link) }}</a>
         </li>
       {% endfor %}
@@ -80,6 +80,19 @@
     <hr>
   {% endif %}
 
+  {# REPORT SNAP SECTION - hidden in preview #}
+    {% if not is_preview and not IS_BRAND_STORE %}
+      <h5 class="p-muted-heading">Report a Snap Store violation</h5>
+      <ul class="p-list">
+        <li>
+          <a class="js-modal-open">Report this Snap</a>
+        </li>
+      </ul>
+
+      {% include "store/snap-details/_report_snap_modal.html" %}
+      <hr>
+    {% endif %}
+
 <div class="p-modal js-exeternal-link-modal u-hide" id="modal">
   <section class="p-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="modal-title" aria-describedby="modal-description">
     <header class="p-modal__header">
@@ -95,7 +108,47 @@
   </section>
 </div>
 
+<template id="verified-status">
+  (Verified ownership) 
+  <span class="p-tooltip--btm-right" aria-describedby="verified-explanation">
+    <i class="p-icon--information"></i>
+    <span class="p-tooltip__message" role="tooltip" id="verified-explanation">The publisher has verified that they own this domain. 
+It does not guarantee the Snap is an official upload from the 
+upstream project.</span>
+  </span>
+</template>
+
 <script>
+  // Handle verified domain status
+  const primaryDomainListItem = document.querySelector("[data-js='primary-domain']");
+  
+  function renderVerificationStatus() {
+    if ("content" in document.createElement("template")) {
+      const template = document.querySelector("#verified-status");
+      const clone = template.content.cloneNode(true);
+      primaryDomainListItem.appendChild(clone);
+    }
+  }
+  
+  if (primaryDomainListItem) {
+    async function getVerifiedStatus() {
+      const response = await fetch("/api/{{ package_name }}/verify");
+      
+      if (!response.ok) {
+        return;
+      }
+
+      const responseData = await response.json();
+
+      if (responseData.primary_domain) {
+        renderVerificationStatus();
+      }
+    }
+
+    getVerifiedStatus();
+  }
+
+  // Handle external links
   const externalLinks = document.querySelectorAll(".js-external-link");
   const externalLinkModal = document.querySelector(".js-exeternal-link-modal");
   const externalLinkModalCloseButton = externalLinkModal.querySelector(

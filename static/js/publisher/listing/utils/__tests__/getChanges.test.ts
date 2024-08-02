@@ -19,6 +19,19 @@ describe("getChanges", () => {
     expect(changes.snap_name).not.toBeDefined();
   });
 
+  test("handles website changes in data", () => {
+    const changedFields = {
+      primary_website: true,
+    };
+    const data = {
+      primary_website: "https://example.com",
+      websites: [{ url: "https://test.com" }],
+    };
+    const changes = getChanges(changedFields, data);
+
+    expect(changes.links.website[0]).toBe("https://example.com");
+  });
+
   test("doesn't return changes for forbidden keys", () => {
     const changedFields = {
       "primary-category": true,

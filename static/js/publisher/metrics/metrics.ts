@@ -190,24 +190,24 @@ function renderPublisherMetrics(options: {
     });
   }
 
-  const snaps_arr = Object.keys(options.snaps).map((key) => {
+  const snaps_arr: Array<{ name: string; id: string }> = Object.keys(
+    options.snaps
+  ).map((key) => {
     return {
       name: key,
       id: options.snaps[key],
     };
   });
 
-  const chunkedSnaps = arrayChunk(snaps_arr, chunkSize).map(
-    (chunk: Array<{ name: string; id: string }>) => {
-      const chunkObj: { [key: string]: any } = {};
+  const chunkedSnaps = arrayChunk(snaps_arr, chunkSize).map((chunk) => {
+    const chunkObj: { [key: string]: string } = {};
 
-      chunk.forEach((item: { name: string; id: string }) => {
-        chunkObj[item.name] = item.id;
-      });
+    chunk.forEach((item: { name: string; id: string }) => {
+      chunkObj[item.name] = item.id;
+    });
 
-      return chunkObj;
-    }
-  );
+    return chunkObj;
+  });
 
   const toLoad = chunkedSnaps.length;
   let loaded = 0;

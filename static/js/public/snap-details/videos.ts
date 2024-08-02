@@ -1,4 +1,4 @@
-function vimeo() {
+function vimeo(): void {
   const vimeoPlayerScript = document.createElement("script");
   vimeoPlayerScript.src = "https://player.vimeo.com/api/player.js";
   const firstScript = document.getElementsByTagName("script")[0] as HTMLElement;
@@ -7,18 +7,22 @@ function vimeo() {
     firstScript.parentNode.insertBefore(vimeoPlayerScript, firstScript);
   }
 
-  const frame = document.getElementById("vimeoplayer");
+  const frame = document.getElementById(
+    "vimeoplayer"
+  ) as HTMLIFrameElement | null;
 
   const vimeoReady = () => {
-    const player = new window.Vimeo.Player(frame);
-    player.on("play", function () {
-      player.setVolume(0);
-    });
-    player.play();
+    if (frame && window.Vimeo && window.Vimeo.Player) {
+      const player = new window.Vimeo.Player(frame);
+      player.on("play", function () {
+        player.setVolume(0);
+      });
+      player.play();
+    }
   };
 
   const checkVimeo = () => {
-    if (window.Vimeo) {
+    if (window.Vimeo && window.Vimeo.Player) {
       vimeoReady();
     } else {
       setTimeout(checkVimeo, 200);
@@ -28,20 +32,17 @@ function vimeo() {
   checkVimeo();
 }
 
-function asciinema(
-  this: any,
-  holderEl: { querySelector: (arg0: string) => any }
-) {
+function asciinema(holderEl: HTMLElement): void {
   const asciinemaPlayer = holderEl.querySelector("iframe");
 
   if (!asciinemaPlayer) {
-    setTimeout(asciinema.bind(this, holderEl), 200);
+    setTimeout(() => asciinema(holderEl), 200);
     return;
   }
 }
 
-function videos(holderSelector: any) {
-  const holderEl = document.querySelector(holderSelector);
+function videos(holderSelector: string): void {
+  const holderEl = document.querySelector(holderSelector) as HTMLElement | null;
 
   if (!holderEl) {
     return;

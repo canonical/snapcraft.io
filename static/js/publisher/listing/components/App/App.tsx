@@ -7,26 +7,29 @@ import {
   getFormData,
   getListingData,
   shouldShowUpdateMetadataWarning,
+  getDefaultValues,
 } from "../../utils";
 import { initListingTour } from "../../../tour";
 
 import PageHeader from "../../../shared/PageHeader";
 import SaveAndPreview from "../../../shared/SaveAndPreview";
 import UpdateMetadataModal from "../../../shared/UpdateMetadataModal";
+import SaveStateNotifications from "../../../shared/SaveStateNotifications";
 import ListingDetailsSection from "../../sections/ListingDetailsSection";
 import ContactInformationSection from "../../sections/ContactInformationSection";
 import AdditionalInformationSection from "../../sections/AdditionalInformationSection";
 import PreviewForm from "../PreviewForm";
 
 function App() {
+  const snapData = getListingData(window?.listingData);
   const snapId = window?.listingData?.snap_id;
+  const snapTitle = window?.listingData?.snap_title;
+  const snapName = window?.listingData?.snap_name;
   const publisherName = window?.listingData?.publisher_name;
   const categories = window?.listingData?.categories;
   const tourSteps = window?.tourSteps;
 
-  const [listingData, setListingData] = useState(
-    getListingData(window?.listingData)
-  );
+  const defaultValues = getDefaultValues(snapData);
 
   const [isSaving, setIsSaving] = useState(false);
   const [hasSaved, setHasSaved] = useState(false);
@@ -37,7 +40,7 @@ function App() {
     useState(false);
   const [formData, setFormData] = useState({});
   const [updateMetadataOnRelease, setUpdateMetadataOnRelease] = useState(
-    listingData?.update_metadata_on_release
+    snapData.update_metadata_on_release
   );
 
   const {
@@ -50,7 +53,7 @@ function App() {
     control,
     getValues,
     formState,
-  } = useForm({ defaultValues: listingData, mode: "onChange" });
+  } = useForm({ defaultValues, mode: "onChange" });
 
   const isDirty = formState.isDirty;
   const isValid = formState.isValid;
@@ -58,7 +61,7 @@ function App() {
 
   const onSubmit = (data: any) => {
     if (
-      listingData?.update_metadata_on_release &&
+      snapData.update_metadata_on_release &&
       shouldShowUpdateMetadataWarning(dirtyFields)
     ) {
       setShowMetadataWarningModal(true);
@@ -78,7 +81,7 @@ function App() {
     setIsSaving(true);
     setSavedError(false);
 
-    const response = await fetch(`/${data.snap_name}/listing.json`, {
+    const response = await fetch(`/${snapName}/listing.json`, {
       method: "POST",
       body: formData,
     });
@@ -112,35 +115,22 @@ function App() {
   };
 
   useEffect(() => {
-    const formFieldSubscription = watch((data: any) => {
-      setListingData(data);
-      window.localStorage.setItem(data.snap_name, JSON.stringify(data));
-    });
-
-    return () => {
-      formFieldSubscription.unsubscribe();
-    };
-  }, [watch]);
-
-  useEffect(() => {
+    const tourContainer = document.getElementById(
+      "tour-container"
+    ) as HTMLElement;
     initListingTour({
-      snapName: listingData?.snap_name,
-      container: document.getElementById("tour-container"),
-      formFields: listingData,
+      snapName,
+      container: tourContainer,
+      formFields: snapData,
       steps: tourSteps,
     });
-  }, [listingData]);
-
-  window.localStorage.setItem(
-    `${listingData.snap_name}-initial`,
-    JSON.stringify(listingData)
-  );
+  }, []);
 
   return (
     <>
       <PageHeader
-        snapName={listingData?.snap_name}
-        snapTitle={listingData?.title}
+        snapName={snapName}
+        snapTitle={snapTitle}
         publisherName={publisherName}
         activeTab="listing"
       />
@@ -151,7 +141,7 @@ function App() {
         encType="multipart/form-data"
       >
         <SaveAndPreview
-          snapName={listingData?.snap_name}
+          snapName={snapName}
           isDirty={isDirty}
           reset={reset}
           isSaving={isSaving}
@@ -188,46 +178,22 @@ function App() {
         )}
 
         <Strip shallow={true} className="u-no-padding--bottom">
-          {hasSaved && (
-            <div className="u-fixed-width">
-              <Notification
-                severity="positive"
-                title="Changes applied successfully."
-                onDismiss={() => {
-                  setHasSaved(false);
-                }}
-              />
-            </div>
-          )}
-
-          {savedError && (
-            <div className="u-fixed-width">
-              <Notification
-                severity="negative"
-                title="Error"
-                onDismiss={() => {
-                  setHasSaved(false);
-                  setSavedError(false);
-                }}
-              >
-                Changes have not been saved.
-                <br />
-                {savedError === true
-                  ? "Something went wrong."
-                  : savedError.map((error) => `${error.message}`).join("\n")}
-              </Notification>
-            </div>
-          )}
+          <SaveStateNotifications
+            hasSaved={hasSaved}
+            setHasSaved={setHasSaved}
+            savedError={savedError}
+            setSavedError={setSavedError}
+          />
 
           <ListingDetailsSection
             register={register}
             getFieldState={getFieldState}
             setValue={setValue}
             categories={categories}
-            primaryCategory={listingData?.["primary-category"]}
-            secondaryCategory={listingData?.["secondary-category"]}
-            iconUrl={listingData?.icon_url}
-            bannerUrl={listingData?.banner_url}
+            primaryCategory={snapData["primary-category"]}
+            secondaryCategory={snapData["secondary-category"]}
+            iconUrl={snapData.icon_url}
+            bannerUrl={snapData.banner_url}
             control={control}
             getValues={getValues}
           />
@@ -238,10 +204,13 @@ function App() {
           </Strip>
 
           <ContactInformationSection
+            snapName={snapName}
             getFieldState={getFieldState}
             register={register}
             publisherName={publisherName}
             control={control}
+            getValues={getValues}
+            formState={formState}
           />
 
           <Strip shallow={true}>
@@ -252,13 +221,14 @@ function App() {
 
           <AdditionalInformationSection
             register={register}
-            listingData={listingData}
+            listingData={snapData}
             setValue={setValue}
             watch={watch}
+            getValues={getValues}
           />
         </Strip>
       </Form>
-      <PreviewForm listingData={listingData} />
+      <PreviewForm snapName={snapName} getValues={getValues} />
 
       <div id="tour-container" />
     </>

@@ -212,6 +212,8 @@ function initForm(
     if (!IS_CHROMIUM) {
       ignoreChangesOnUnload = false;
     }
+
+    return "";
   });
 
   revertButton.addEventListener("click", () => {

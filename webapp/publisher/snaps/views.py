@@ -446,6 +446,22 @@ def post_register_name():
     return flask.redirect(flask.url_for("account.get_account"))
 
 
+@publisher_snaps.route("/api/packages/<snap_name>", methods=["GET"])
+@login_required
+@exchange_required
+def get_package_metadata(snap_name):
+    package_metadata = publisher_api.get_package_metadata(
+        flask.session, "snap", snap_name
+    )
+    if "metadata" in package_metadata and package_metadata["metadata"]:
+        return jsonify({"data": package_metadata["metadata"], "success": True})
+    else:
+        return (
+            jsonify({"error": "Package metadata not found", "success": False}),
+            404,
+        )
+
+
 @publisher_snaps.route("/packages/<package_name>", methods=["DELETE"])
 @login_required
 @exchange_required

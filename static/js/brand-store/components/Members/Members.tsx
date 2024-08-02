@@ -1,4 +1,4 @@
-import { ChangeEvent, useEffect, useState } from "react";
+import { ChangeEvent, ReactNode, useEffect, useState } from "react";
 import { useParams, Navigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import {
@@ -48,7 +48,7 @@ type Member = {
   current_user: boolean;
 };
 
-function Members() {
+function Members(): ReactNode {
   const members = useSelector(membersSelector);
   const membersLoading = useSelector((state: Members) => state.members.loading);
   const invites = useSelector(invitesSelector);
@@ -62,21 +62,21 @@ function Members() {
   );
   const dispatch = useDispatch();
   const { id } = useParams();
-  const [filteredMembers, setFilteredMembers]: any = useState([]);
+  const [filteredMembers, setFilteredMembers] = useState<Member[]>([]);
   const [sidePanelOpen, setSidePanelOpen] = useState(false);
   const [newMemberEmail, setNewMemberEmail] = useState("");
-  const [newMemberRoles, setNewMemberRoles]: any = useState([]);
+  const [newMemberRoles, setNewMemberRoles] = useState<string[]>([]);
   const [isSaving, setIsSaving] = useState(false);
   const [showSuccessNotification, setShowSuccessNotification] = useState(false);
   const [showErrorNotification, setShowErrorNotification] = useState(false);
   const [showInviteForm, setShowInviteForm] = useState(false);
-  const [storeName, setStoreName]: any = useState("");
+  const [storeName, setStoreName] = useState<string | undefined>("");
   const [memberButtonDisabled, setMemberButtonDisabled] = useState(false);
   const [changedMembers, setChangedMembers] = useState([]);
   const [notificationText, setNotificationText] = useState(
     "Changes have been saved"
   );
-  const [currentMember, setCurrentMember]: any = useState(null);
+  const [currentMember, setCurrentMember] = useState<Member | undefined>();
 
   setPageTitle(`Members in ${storeName}`);
 
@@ -157,7 +157,7 @@ function Members() {
   useEffect(() => {
     dispatch(fetchMembers(id as string) as any);
     dispatch(fetchInvites(id as string) as any);
-    setStoreName(() => {
+    setStoreName((): string | undefined => {
       const store = brandStoresList.find((item) => item.id === id);
 
       if (store) {

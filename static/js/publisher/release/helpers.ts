@@ -98,20 +98,16 @@ export function validatePhasingPercentage(value: string) {
   return "";
 }
 
-export function resizeAsidePanel(tracks: Array<any>) {
+export function resizeAsidePanel(panelType: string) {
   useEffect(() => {
     function adjustAsidePanelHeight() {
       const targetComponent = document.querySelector("#main-content");
       let asidePanel;
 
-      if (tracks.length > 1) {
-        asidePanel = document.querySelector(
-          "#add-track-aside-panel"
-        ) as HTMLElement;
+      if (panelType === "add") {
+        asidePanel = document.querySelector("#add-track-aside-panel") as HTMLElement;
       } else {
-        asidePanel = document.querySelector(
-          "#request-track-aside-panel"
-        ) as HTMLElement;
+        asidePanel = document.querySelector("#request-track-aside-panel") as HTMLElement;
       }
 
       if (targetComponent && asidePanel) {
@@ -140,7 +136,7 @@ export function resizeAsidePanel(tracks: Array<any>) {
       window.removeEventListener("resize", adjustAsidePanelHeight);
       window.removeEventListener("scroll", adjustAsidePanelHeight);
     };
-  }, [tracks]);
+  });
 }
 
 export function numericalSort(a: string, b: string) {
@@ -158,4 +154,24 @@ export function numericalSort(a: string, b: string) {
   }
 
   return a.localeCompare(b);
+}
+
+export async function hasTrackGuardrails(snap: string) {
+  const url = `/api/packages/${snap}`;
+  try {
+    const response = await fetch(url, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error("There was a problem fetching the snap's metadata");
+    }
+    const data = await response.json();
+    return { "track-guardrails": data.data["track-guardrails"] };
+  } catch (e) {
+    return { "error": e };
+  }
 }

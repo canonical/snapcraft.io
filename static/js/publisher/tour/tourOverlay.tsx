@@ -1,5 +1,4 @@
 import { useState, useRef, useEffect } from "react";
-import PropTypes from "prop-types";
 
 import debounce from "../../libs/debounce";
 
@@ -20,9 +19,15 @@ export default function TourOverlay({
   hideTour,
   currentStepIndex = 0,
 }: {
-  steps: any;
-  hideTour: any;
-  currentStepIndex: number;
+  steps: Array<{
+    id: string;
+    position: string;
+    elements: HTMLElement[];
+    content: string;
+    title: string;
+  }>;
+  hideTour: () => void;
+  currentStepIndex?: number;
 }) {
   steps = prepareSteps(steps);
 
@@ -77,7 +82,7 @@ export default function TourOverlay({
   // it is an unusual use of useState to force rerender, but on resize or scroll
   // the state of component doesn't change, it's the position of elements
   // in DOM that changes and component needs to rerender to adapt
-  const [, forceUpdate] = useState<any>();
+  const [, forceUpdate] = useState<object>();
   const rerender = () => forceUpdate({});
 
   const [isResizing, setIsResizing] = useState(false);
@@ -172,9 +177,3 @@ export default function TourOverlay({
     </div>
   );
 }
-
-TourOverlay.propTypes = {
-  steps: PropTypes.array,
-  currentStepIndex: PropTypes.number,
-  hideTour: PropTypes.func,
-};

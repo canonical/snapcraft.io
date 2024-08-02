@@ -9,7 +9,8 @@ type DataLayerEvent = {
 declare interface Window {
   dataLayer: Array<DataLayerEvent>;
   chrome: any;
-  __REDUX_DEVTOOLS_EXTENSION_COMPOSE__: any;
+  __REDUX_DEVTOOLS_EXTENSION_COMPOSE__?: typeof compose;
   MktoForms2: any;
   Vimeo: any;
+  DNS_VERIFICATION_TOKEN: string;
 }

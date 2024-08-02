@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { ReactNode, SetStateAction, useState, Dispatch } from "react";
 import { useParams } from "react-router-dom";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { format } from "date-fns";
@@ -10,20 +10,21 @@ import DeactivateSigningKeyModal from "./DeactivateSigningKeyModal";
 import { sortByDateDescending } from "../../utils";
 
 import { filteredSigningKeysListState } from "../../selectors";
-import { signingKeysListState } from "../../atoms";
+import { signingKeysListState, brandIdState } from "../../atoms";
 
 import type { SigningKey } from "../../types/shared";
 
 type Props = {
-  setShowDisableSuccessNotification: Function;
+  setShowDisableSuccessNotification: Dispatch<SetStateAction<boolean>>;
   enableTableActions: boolean;
 };
 
 function SigningKeysTable({
   setShowDisableSuccessNotification,
   enableTableActions,
-}: Props) {
+}: Props): ReactNode {
   const { id } = useParams();
+  const brandId = useRecoilValue(brandIdState);
   const signingKeysList = useRecoilValue<Array<SigningKey>>(
     filteredSigningKeysListState
   );
@@ -50,7 +51,7 @@ function SigningKeysTable({
     formData.set("csrf_token", window.CSRF_TOKEN);
 
     const response = await fetch(
-      `/admin/store/${id}/signing-keys/${signingKey["sha3-384"]}`,
+      `/admin/store/${brandId}/signing-keys/${signingKey["sha3-384"]}`,
       {
         method: "DELETE",
         body: formData,

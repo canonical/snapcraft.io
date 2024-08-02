@@ -1,15 +1,16 @@
 // based on Vanilla accordion example
 // https://github.com/vanilla-framework/vanilla-framework/blob/develop/examples/patterns/accordion.html
 
-export const toggleAccordion = (element: HTMLElement, show: boolean) => {
+export const toggleAccordion = (element: HTMLElement, show: boolean): void => {
   element.setAttribute("aria-expanded", show.toString());
-  const controlEl = document.querySelector(
-    `#${element.getAttribute("aria-controls")}`
-  ) as HTMLElement;
+  const controlElId: string = `#${element.getAttribute("aria-controls")}`;
+  const controlEl = document.querySelector(controlElId) as HTMLElement;
   controlEl.setAttribute("aria-hidden", `${show ? "false" : "true"}`);
 };
 
-export default function initAccordion(accordionContainerSelector: string) {
+export default function initAccordion(
+  accordionContainerSelector: string
+): void {
   // Set up an event listener on the container so that panels can be added
   // and removed and events do not need to be managed separately.
   const accordionContainer = document.querySelector(
@@ -23,9 +24,12 @@ export default function initAccordion(accordionContainerSelector: string) {
     if (target && !target.disabled) {
       // Find any open panels within the container and close them.
       const currentTarget = e.currentTarget as HTMLElement;
-      Array.from(
-        currentTarget.querySelectorAll("[aria-expanded=true]")
-      ).forEach((element: any) => toggleAccordion(element, false));
+      const expandedElements = currentTarget.querySelectorAll(
+        "[aria-expanded=true]"
+      ) as NodeListOf<HTMLElement>;
+      Array.from(expandedElements).forEach((element: HTMLElement) =>
+        toggleAccordion(element, false)
+      );
       // Open the target.
       toggleAccordion(target, true);
     }
@@ -63,7 +67,7 @@ export default function initAccordion(accordionContainerSelector: string) {
 /**
   Attaches click event to a button to close current accordion tab and open next one.
 */
-export function initAccordionButtons(continueButton: HTMLButtonElement) {
+export function initAccordionButtons(continueButton: HTMLButtonElement): void {
   continueButton.addEventListener("click", (event) => {
     event.preventDefault();
 

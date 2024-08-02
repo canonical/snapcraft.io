@@ -10,7 +10,7 @@ function toggleModal(modal: HTMLElement) {
   }
 }
 
-function init() {
+function init(): void {
   document.addEventListener("click", (e) => {
     const target = e.target as HTMLElement;
     const modalId = target.getAttribute("aria-controls") as string;

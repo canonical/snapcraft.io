@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { useRecoilState } from "recoil";
+import { ReactNode, SetStateAction, useState, Dispatch } from "react";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { useParams } from "react-router-dom";
 import { format } from "date-fns";
 import { MainTable, Button, Modal, Icon } from "@canonical/react-components";
@@ -7,20 +7,22 @@ import { MainTable, Button, Modal, Icon } from "@canonical/react-components";
 import AppPagination from "../AppPagination";
 
 import { usePolicies } from "../../hooks";
+import { brandIdState } from "../../atoms";
 import { filteredPoliciesListState } from "../../selectors";
 
 import type { Policy } from "../../types/shared";
 
 type Props = {
-  setShowDeletePolicyNotification: Function;
-  setShowDeletePolicyErrorNotification: Function;
+  setShowDeletePolicyNotification: Dispatch<SetStateAction<boolean>>;
+  setShowDeletePolicyErrorNotification: Dispatch<SetStateAction<boolean>>;
 };
 
 function ModelsTable({
   setShowDeletePolicyNotification,
   setShowDeletePolicyErrorNotification,
-}: Props) {
-  const { id, model_id } = useParams();
+}: Props): ReactNode {
+  const { model_id } = useParams();
+  const brandId = useRecoilValue(brandIdState);
   const [policiesList, setPoliciesList] = useRecoilState(
     filteredPoliciesListState
   );
@@ -28,7 +30,7 @@ function ModelsTable({
   const [showModal, setShowModal] = useState<boolean>(false);
   const [selectedPolicy, setSelectedPolicy] = useState<number | undefined>();
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const { refetch }: any = usePolicies(id, model_id);
+  const { refetch }: any = usePolicies(brandId, model_id);
 
   const deletePolicy = async (policyRevision: number | undefined) => {
     if (policyRevision === undefined) {
@@ -45,7 +47,7 @@ function ModelsTable({
     formData.set("csrf_token", window.CSRF_TOKEN);
 
     const response = await fetch(
-      `/admin/store/${id}/models/${model_id}/policies/${policyRevision}`,
+      `/admin/store/${brandId}/models/${model_id}/policies/${policyRevision}`,
       {
         method: "DELETE",
         body: formData,

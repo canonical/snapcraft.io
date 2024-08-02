@@ -96,7 +96,7 @@ const getCurrentFormState = (buttonRadios: any[], optionButtons: any[]) => {
 };
 
 function initEmbeddedCardPicker(options: {
-  snapName?: any;
+  snapName?: string;
   previewFrame?: any;
   codeElement?: any;
   buttonRadios?: any;

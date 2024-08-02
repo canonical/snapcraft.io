@@ -1,16 +1,23 @@
 import MultipleInputs from "../../components/MultipleInputs";
+import PrimaryDomainInput from "../../components/PrimaryDomainInput";
 
 type Props = {
+  snapName: string | undefined;
   getFieldState: Function;
   register: Function;
   publisherName: string;
   control: {};
+  getValues: Function;
+  formState: { [key: string]: any };
 };
 
 function ContactInformationSection({
+  snapName,
   register,
   control,
   getFieldState,
+  getValues,
+  formState,
 }: Props) {
   return (
     <>
@@ -18,9 +25,17 @@ function ContactInformationSection({
         <h2 className="p-heading--4">Contact information</h2>
       </div>
 
+      <PrimaryDomainInput
+        snapName={snapName}
+        register={register}
+        getFieldState={getFieldState}
+        getValues={getValues}
+        formState={formState}
+      />
+
       <MultipleInputs
         fieldName="websites"
-        label="Websites"
+        label="Other websites"
         register={register}
         control={control}
         getFieldState={getFieldState}

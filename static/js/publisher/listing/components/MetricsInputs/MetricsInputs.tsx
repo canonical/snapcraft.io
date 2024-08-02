@@ -5,27 +5,26 @@ import { Row, Col } from "@canonical/react-components";
 type Props = {
   register: Function;
   setValue: Function;
-  listingData: {
-    public_metrics_enabled: boolean;
-    public_metrics_blacklist: Array<string>;
-  };
+  defaultPublicMetricsBlacklist: Array<string>;
+  getValues: Function;
 };
 
-function MetricsInputs({ register, setValue, listingData }: Props) {
+function MetricsInputs({
+  register,
+  setValue,
+  getValues,
+  defaultPublicMetricsBlacklist,
+}: Props) {
   const [publicMetricsBlacklist, setPublicMetricsBlacklist] = useState(
-    listingData?.public_metrics_blacklist || []
+    defaultPublicMetricsBlacklist
   );
 
-  const [publicMetricsTerritories, setPublicMetricsTerritories] = useState(
-    publicMetricsBlacklist.includes("installed_base_by_country_percent")
-  );
   const [publicMetricsDistros, setPublicMetricsDistros] = useState(
     publicMetricsBlacklist.includes(
       "weekly_installed_base_by_operating_system_normalized"
     )
   );
 
-  const publicMetricsEnabled = listingData?.public_metrics_enabled;
   const displayPublicChartsInputId = nanoid();
   const worldMapInputId = nanoid();
   const linuxDistributionInputId = nanoid();
@@ -116,7 +115,6 @@ function MetricsInputs({ register, setValue, listingData }: Props) {
                 className="p-checkbox__input"
                 name="public_metrics_enabled"
                 {...register("public_metrics_enabled")}
-                defaultChecked={publicMetricsEnabled}
               />
               <span
                 className="p-checkbox__label"
@@ -134,15 +132,13 @@ function MetricsInputs({ register, setValue, listingData }: Props) {
                   aria-labelledby={worldMapInputId}
                   className="p-checkbox__input"
                   name="public_metrics_territories"
-                  disabled={!publicMetricsEnabled}
-                  defaultChecked={!publicMetricsTerritories}
+                  disabled={!getValues("public_metrics_enabled")}
                   {...register("public_metrics_territories", {
                     onChange: (
                       e: SyntheticEvent<HTMLInputElement> & {
                         target: HTMLInputElement;
                       }
                     ) => {
-                      setPublicMetricsTerritories(!e.target.checked);
                       updatePublicMetricsBlacklist(
                         e.target.name,
                         e.target.checked
@@ -164,9 +160,9 @@ function MetricsInputs({ register, setValue, listingData }: Props) {
                   type="checkbox"
                   aria-labelledby={linuxDistributionInputId}
                   className="p-checkbox__input"
-                  disabled={!publicMetricsEnabled}
                   name="public_metrics_distros"
                   defaultChecked={!publicMetricsDistros}
+                  disabled={!getValues("public_metrics_enabled")}
                   {...register("public_metrics_distros", {
                     onChange: (
                       e: SyntheticEvent<HTMLInputElement> & {

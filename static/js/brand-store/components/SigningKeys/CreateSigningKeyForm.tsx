@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { Dispatch, ReactNode, useState, SetStateAction } from "react";
 import { useNavigate, useParams, useLocation, Link } from "react-router-dom";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { useMutation, useQueryClient } from "react-query";
@@ -6,14 +6,18 @@ import { Input, Button, Icon } from "@canonical/react-components";
 
 import { checkSigningKeyExists, setPageTitle } from "../../utils";
 
-import { signingKeysListState, newSigningKeyState } from "../../atoms";
+import {
+  signingKeysListState,
+  newSigningKeyState,
+  brandIdState,
+} from "../../atoms";
 import { filteredSigningKeysListState, brandStoreState } from "../../selectors";
 
 import type { SigningKey } from "../../types/shared";
 
 type Props = {
-  setShowNotification: Function;
-  setErrorMessage: Function;
+  setShowNotification: Dispatch<SetStateAction<boolean>>;
+  setErrorMessage: Dispatch<SetStateAction<string>>;
   refetch: Function;
 };
 
@@ -21,10 +25,11 @@ function CreateSigningKeyForm({
   setShowNotification,
   setErrorMessage,
   refetch,
-}: Props) {
+}: Props): ReactNode {
   const navigate = useNavigate();
   const location = useLocation();
   const { id } = useParams();
+  const brandId = useRecoilValue(brandIdState);
   const [newSigningKey, setNewSigningKey] = useRecoilState(newSigningKeyState);
   const signingKeysList = useRecoilValue(filteredSigningKeysListState);
   const brandStore = useRecoilValue(brandStoreState(id));
@@ -69,7 +74,7 @@ function CreateSigningKeyForm({
         ];
       });
 
-      return fetch(`/admin/store/${id}/signing-keys`, {
+      return fetch(`/admin/store/${brandId}/signing-keys`, {
         method: "POST",
         body: formData,
       });
