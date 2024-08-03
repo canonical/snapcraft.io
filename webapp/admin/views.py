@@ -660,18 +660,18 @@ def post_featured_snaps():
 
     # new_featured_snaps is the list of featured snaps to be updated
     featured_snaps = flask.request.form.get("snaps")
-
     if not featured_snaps:
         response = {
             "success": False,
             "message": "Snaps cannot be empty",
         }
-        return make_response(response, 500)
+        return flask.make_response(response, 500)
     new_featured_snaps = featured_snaps.split(",")
 
     # currently_featured_snap is the list of featured snaps to be deleted
     currently_featured_snaps = []
 
+    # 1. Fetch all currently featured snaps
     next = True
     while next:
         featured_snaps = admin_api.get_featured_snaps(flask.session)
@@ -684,6 +684,7 @@ def post_featured_snaps():
         snap["snap_id"] for snap in currently_featured_snaps
     ]
 
+    # 2. Delete the currently featured snaps
     delete_response = admin_api.delete_featured_snaps(
         flask.session, {"packages": currently_featured_snap_ids}
     )
@@ -692,7 +693,9 @@ def post_featured_snaps():
             "success": False,
             "message": "An error occurred while deleting featured snaps",
         }
-        return make_response(response, 500)
+        return flask.make_response(response, 500)
+
+    # 3. Update featured snaps to be newly featured
     snap_ids = [
         publisher_api.get_snap_id(snap_name, flask.session)
         for snap_name in new_featured_snaps
@@ -706,5 +709,5 @@ def post_featured_snaps():
             "success": False,
             "message": "An error occured while updating featured snaps",
         }
-        return make_response(response, 500)
-    return make_response({"success": True}, 200)
+        return flask.make_response(response, 500)
+    return flask.make_response({"success": True}, 200)
