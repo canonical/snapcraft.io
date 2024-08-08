@@ -41,7 +41,8 @@ def transform_snapcraft_yaml(snapcraft_yaml):
 
 
 def directory_exists(file):
-    return os.path.isdir(os.path.join(flask.current_app.root_path, file))
+    root_path = helpers.get_root_path(flask.current_app.root_path)
+    return os.path.isdir(os.path.join(root_path, file))
 
 
 @first_snap.route("/")

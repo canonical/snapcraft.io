@@ -14,3 +14,11 @@ class GetDnsVerificationTokenTest(unittest.TestCase):
             helpers.get_dns_verification_token("spotify", "spotify.com"),
             test_hash,
         )
+
+
+class GetRootPathTest(unittest.TestCase):
+    def test_get_root_path(self):
+        self.assertEqual(
+            helpers.get_root_path("/home/ubuntu/snapcraft.io/.venv/lib/"),
+            "/home/ubuntu/snapcraft.io/webapp/",
+        )

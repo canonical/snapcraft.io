@@ -53,6 +53,11 @@ def get_licenses():
     return licenses
 
 
+def get_root_path(path):
+    path_parts = path.split(".venv")
+    return f"{path_parts[0]}webapp/"
+
+
 def get_file(filename, replaces={}):
     """
     Reads a file, replaces occurences of all the keys in `replaces` with
@@ -62,7 +67,8 @@ def get_file(filename, replaces={}):
     filename -- name if the file to load.
     replaces -- key/values to replace in the file content (default {})
     """
-    filepath = os.path.join(flask.current_app.root_path, filename)
+    root_path = get_root_path(flask.current_app.root_path)
+    filepath = os.path.join(root_path, filename)
 
     try:
         with open(filepath, "r") as f:
