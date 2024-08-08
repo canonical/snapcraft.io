@@ -75,7 +75,10 @@ jest.mock("react-query", () => ({
 describe("Model", () => {
   it("disables the 'Save' button if the API key hasn't been modified", async () => {
     renderComponent();
-    expect(screen.getByRole("button", { name: "Save" })).toBeDisabled();
+    expect(screen.getByRole("button", { name: "Save" })).toHaveAttribute(
+      "aria-disabled",
+      "true",
+    );
   });
 
   it("enables the 'Save' button when the API key has been modified", async () => {
@@ -98,7 +101,10 @@ describe("Model", () => {
 
   it("disables the 'Revert' button if the API key hasn't been modified", async () => {
     renderComponent();
-    expect(screen.getByRole("button", { name: "Revert" })).toBeDisabled();
+    expect(screen.getByRole("button", { name: "Revert" })).toHaveAttribute(
+      "aria-disabled",
+      "true",
+    );
   });
 
   it("enables the 'Revert' button when the API key has been modified", async () => {

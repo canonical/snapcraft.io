@@ -22,12 +22,18 @@ window.tourSteps = mockListingData.tour_steps;
 describe("App", () => {
   it("shows 'Save' button as disabled by default", () => {
     renderComponent();
-    expect(screen.getByRole("button", { name: "Save" })).toBeDisabled();
+    expect(screen.getByRole("button", { name: "Save" })).toHaveAttribute(
+      "aria-disabled",
+      "true",
+    );
   });
 
   it("shows 'Revert' button as disabled by default", () => {
     renderComponent();
-    expect(screen.getByRole("button", { name: "Revert" })).toBeDisabled();
+    expect(screen.getByRole("button", { name: "Revert" })).toHaveAttribute(
+      "aria-disabled",
+      "true",
+    );
   });
 
   it("enables 'Save' button if a change is made to the form", async () => {
@@ -57,7 +63,10 @@ describe("App", () => {
     await user.type(input, "new-name");
     await user.clear(input);
     await user.type(input, mockListingData.snap_title);
-    expect(screen.getByRole("button", { name: "Save" })).toBeDisabled();
+    expect(screen.getByRole("button", { name: "Save" })).toHaveAttribute(
+      "aria-disabled",
+      "true",
+    );
   });
 
   it("disables 'Revert' button if a change is made to the form and then reset", async () => {
@@ -67,6 +76,9 @@ describe("App", () => {
     await user.type(input, "new-name");
     await user.clear(input);
     await user.type(input, mockListingData.snap_title);
-    expect(screen.getByRole("button", { name: "Revert" })).toBeDisabled();
+    expect(screen.getByRole("button", { name: "Revert" })).toHaveAttribute(
+      "aria-disabled",
+      "true",
+    );
   });
 });

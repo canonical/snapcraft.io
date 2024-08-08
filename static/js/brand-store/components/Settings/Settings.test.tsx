@@ -124,7 +124,10 @@ test("the correct radio button is checked by default for manual review policy", 
 test("the save button is disabled by default", () => {
   setupMockSelector(initialState);
   renderComponent();
-  expect(screen.getByText("Save changes")).toBeDisabled();
+  expect(screen.getByText("Save changes")).toHaveAttribute(
+    "aria-disabled",
+    "true",
+  );
 });
 
 test("the save button is enabled when the data changes", () => {
