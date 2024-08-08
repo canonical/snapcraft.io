@@ -29,7 +29,10 @@ test("the 'Revert' button is disabled by default", () => {
 
 test("the 'Revert' button is enabled is data is dirty", () => {
   renderComponent(true, false, true);
-  expect(screen.getByRole("button", { name: "Revert" })).not.toBeDisabled();
+  expect(screen.getByRole("button", { name: "Revert" })).not.toHaveAttribute(
+    "aria-disabled",
+    "true",
+  );
 });
 
 test("the 'Save' button is disabled by default", () => {
