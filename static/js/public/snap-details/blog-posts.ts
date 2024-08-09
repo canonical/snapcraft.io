@@ -11,7 +11,7 @@ class BlogPosts {
   constructor(
     url: string | undefined,
     holderSelector: string,
-    templateSelector: string,
+    templateSelector: string
   ) {
     if (!url) {
       throw new Error("`url` must be defined");
@@ -81,7 +81,7 @@ class BlogPosts {
               .split("${container_class}")
               .join(containerClasses.join(" "));
             postsHTML.push(postHTML);
-          },
+          }
         );
 
         if (postsHTML.length > 0) {
@@ -99,12 +99,12 @@ class BlogPosts {
 function snapDetailsPosts(
   holderSelector: string,
   templateSelector: string,
-  showOnSuccessSelector: string,
+  showOnSuccessSelector: string
 ): void {
   const blogPosts = new BlogPosts(
     "/blog/api/snap-posts/",
     holderSelector,
-    templateSelector,
+    templateSelector
   );
 
   const snap = blogPosts.holder.dataset.snap;
@@ -132,7 +132,7 @@ function seriesPosts(holderSelector: string, templateSelector: string): void {
   const blogPosts = new BlogPosts(
     "/blog/api/series/",
     holderSelector,
-    templateSelector,
+    templateSelector
   );
 
   const series = blogPosts.holder.dataset.series;

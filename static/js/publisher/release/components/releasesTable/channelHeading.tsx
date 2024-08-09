@@ -46,7 +46,7 @@ const disabledBecauseNotSelected = "Select some revisions to promote them.";
 // TODO: move to selectors or helpers?
 const compareRevisionsPerArch = (
   currentRevisionsByArch: { [x: string]: { revision: any } },
-  targetRevisionsByArch: { [x: string]: { revision: any } },
+  targetRevisionsByArch: { [x: string]: { revision: any } }
 ) => {
   if (currentRevisionsByArch) {
     return Object.keys(currentRevisionsByArch).every((arch) => {
@@ -192,7 +192,7 @@ const ReleasesTableChannelHeading = (props: {
       if (
         compareRevisionsPerArch(
           rowRevisions,
-          pendingChannelMap[targetChannel.channel],
+          pendingChannelMap[targetChannel.channel]
         )
       ) {
         targetChannel.isDisabled = true;
@@ -206,7 +206,7 @@ const ReleasesTableChannelHeading = (props: {
       // order the channel names
       // @ts-ignore
       const channelOrder = sortChannels(
-        targetChannels.map((channel) => channel.channel),
+        targetChannels.map((channel) => channel.channel)
       ).list;
 
       // remap targetchannels to this new order
@@ -221,12 +221,12 @@ const ReleasesTableChannelHeading = (props: {
 
   let hasSameVersion = false;
   let channelVersion = "";
-  const versionsMap: any = {};
+  let versionsMap: any = {};
 
   let isLaunchpadBuild = false;
   let channelBuild = "";
   let channelBuildDate = null;
-  const buildMap: any = {};
+  let buildMap: any = {};
 
   if (rowRevisions) {
     // calculate map of architectures for each version
@@ -262,7 +262,7 @@ const ReleasesTableChannelHeading = (props: {
       channelBuildDate =
         Object.values(revisions)[0].attributes["build-request-timestamp"] &&
         new Date(
-          Object.values(revisions)[0].attributes["build-request-timestamp"],
+          Object.values(revisions)[0].attributes["build-request-timestamp"]
         );
     }
   }
@@ -286,7 +286,7 @@ const ReleasesTableChannelHeading = (props: {
     Object.values(rowRevisions).forEach(
       (revision: any) =>
         canBeReleased(revision) &&
-        props.promoteRevision(revision, targetChannel),
+        props.promoteRevision(revision, targetChannel)
     );
   };
 
@@ -404,5 +404,5 @@ const mapDispatchToProps = (dispatch: any) => {
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps,
+  mapDispatchToProps
 )(ReleasesTableChannelHeading);

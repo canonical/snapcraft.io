@@ -1,9 +1,9 @@
 export default function initExpandableArea(
   overflowSelector: string,
-  heightMatchSelector: string,
+  heightMatchSelector: string
 ): void {
   const showMoreContainer = [].slice.call(
-    document.querySelectorAll("[data-js='js-show-more']"),
+    document.querySelectorAll("[data-js='js-show-more']")
   ) as Array<HTMLElement>;
 
   if (showMoreContainer && showMoreContainer.length > 0) {
@@ -14,7 +14,7 @@ export default function initExpandableArea(
       if (overflowSelector && heightMatchSelector) {
         const overflowEl = el.querySelector(overflowSelector) as HTMLElement;
         const heightMatchEl = el.querySelector(
-          heightMatchSelector,
+          heightMatchSelector
         ) as HTMLElement;
 
         if (overflowEl.scrollHeight <= heightMatchEl.scrollHeight) {

@@ -13,7 +13,7 @@ const formatLinkFields = (fields: Array<{ url: string }>) => {
 function getFormData(
   data: { [key: string]: any },
   snapId: string | undefined,
-  changes: { [key: string]: any },
+  changes: { [key: string]: any }
 ) {
   const formData = new FormData();
 
@@ -75,7 +75,7 @@ function getFormData(
         issues: formatLinkFields(data?.issues),
         "source-code": formatLinkFields(data?.["source-code"]),
         website: formatLinkFields(data?.websites),
-      }),
+      })
     );
   }
 
@@ -98,7 +98,7 @@ function getFormData(
 
         // update changes object
         const imageIndex = changes.images.findIndex(
-          (image: any) => image.name === oldName,
+          (image: any) => image.name === oldName
         );
         changes.images[imageIndex].name = newFile.name;
         changes.images[imageIndex].url = URL.createObjectURL(newFile);

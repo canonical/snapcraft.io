@@ -34,7 +34,7 @@ const renderComponent = () => {
           />
         </QueryClientProvider>
       </BrowserRouter>
-    </RecoilRoot>,
+    </RecoilRoot>
   );
 };
 
@@ -59,10 +59,7 @@ describe("CreatePolicyForm", () => {
       ],
     });
     renderComponent();
-    expect(screen.getByRole("button", { name: "Add policy" })).toHaveAttribute(
-      "aria-disabled",
-      "true",
-    );
+    expect(screen.getByRole("button", { name: "Add policy" })).toBeDisabled();
   });
 
   it("enables the 'Add policy' button if a signing key is selected", async () => {
@@ -83,7 +80,7 @@ describe("CreatePolicyForm", () => {
       "signing-key-1",
     ]);
     expect(
-      screen.getByRole("button", { name: "Add policy" }),
+      screen.getByRole("button", { name: "Add policy" })
     ).not.toBeDisabled();
   });
 });

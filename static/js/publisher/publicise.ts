@@ -7,7 +7,7 @@ function initSnapButtonsPicker() {
     const open = document.querySelector("#" + language + "_content");
 
     const notHidden = document.querySelector(
-      ".js-language-content:not(.u-hide)",
+      ".js-language-content:not(.u-hide)"
     );
     if (notHidden) {
       notHidden.classList.add("u-hide");
@@ -18,7 +18,7 @@ function initSnapButtonsPicker() {
   }
 
   let checked = document.querySelector(
-    "[name='language']:checked",
+    "[name='language']:checked"
   ) as HTMLInputElement;
 
   if (!checked) {
@@ -42,7 +42,7 @@ function initSnapButtonsPicker() {
 
 const getCardPath = (snapName: any, options: { [key: string]: any } = {}) => {
   const path = `/${snapName}/embedded`;
-  const params: Array<string> = [];
+  let params: Array<string> = [];
   let paramsString: string = "";
 
   if (options.button) {
@@ -71,7 +71,7 @@ const getCardPath = (snapName: any, options: { [key: string]: any } = {}) => {
 const getCardEmbedHTML = (snapName: any, options: { [key: string]: any }) => {
   return `&lt;iframe src="https://snapcraft.io${getCardPath(
     snapName,
-    options,
+    options
   )}" frameborder="0" width="100%" height="${
     options.frameHeight
   }px" style="border: 1px solid #CCC; border-radius: 2px;"&gt;&lt;/iframe&gt;`;
@@ -82,7 +82,7 @@ const getCurrentFormState = (buttonRadios: any[], optionButtons: any[]) => {
   const state: { [key: string]: any } = {};
 
   // get state of store button radio
-  const checked = buttonRadios.filter((b) => b.checked);
+  let checked = buttonRadios.filter((b) => b.checked);
   if (checked.length > 0) {
     state.button = checked[0].value;
   }
@@ -105,7 +105,7 @@ function initEmbeddedCardPicker(options: {
 }) {
   const { snapName, previewFrame, codeElement } = options;
   const buttonRadios: Array<HTMLInputElement> = [].slice.call(
-    options.buttonRadios,
+    options.buttonRadios
   );
   const optionButtons = [].slice.call(options.optionButtons);
 
@@ -166,7 +166,7 @@ function initEmbeddedCardPicker(options: {
     if (previewFrame.offsetParent && previewFrame.contentWindow.document.body) {
       const height =
         Math.floor(
-          (previewFrame.contentWindow.document.body.clientHeight + 20) / 10,
+          (previewFrame.contentWindow.document.body.clientHeight + 20) / 10
         ) * 10;
 
       if (height !== state.frameHeight) {
@@ -199,7 +199,7 @@ const getBadgePath = (
   snapName: any,
   badgeName = "badge",
   showName = true,
-  isPreview = false,
+  isPreview = false
 ) => {
   const params = [];
   if (!showName) {
@@ -218,14 +218,14 @@ const getBadgePath = (
 const getBadgePreview = (
   snapName: any,
   badgeName: string | undefined,
-  showName: boolean | undefined,
+  showName: boolean | undefined
 ) => {
   return `<a href="/${snapName}">
   <img alt="${snapName}" src="${getBadgePath(
     snapName,
     badgeName,
     showName,
-    badgeName === "trending",
+    badgeName === "trending"
   )}" />
   </a>`;
 };
@@ -233,13 +233,13 @@ const getBadgePreview = (
 const getBadgeHTML = (
   snapName: any,
   badgeName: string | undefined,
-  showName: boolean | undefined,
+  showName: boolean | undefined
 ) => {
   return `&lt;a href="https://snapcraft.io/${snapName}"&gt;
   &lt;img alt="${snapName}" src="https://snapcraft.io${getBadgePath(
     snapName,
     badgeName,
-    showName,
+    showName
   )}" /&gt;
 &lt;/a&gt;`;
 };
@@ -247,12 +247,12 @@ const getBadgeHTML = (
 const getBadgeMarkdown = (
   snapName: any,
   badgeName: string | undefined,
-  showName: boolean | undefined,
+  showName: boolean | undefined
 ) => {
   return `[![${snapName}](https://snapcraft.io${getBadgePath(
     snapName,
     badgeName,
-    showName,
+    showName
   )})](https://snapcraft.io/${snapName})`;
 };
 

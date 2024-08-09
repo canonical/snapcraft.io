@@ -18,5 +18,5 @@ root.render(
     <RecoilRoot>
       <App />
     </RecoilRoot>
-  </Provider>,
+  </Provider>
 );

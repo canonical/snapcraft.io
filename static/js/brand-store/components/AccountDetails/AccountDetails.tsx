@@ -24,7 +24,7 @@ function AccountDetails(): ReactNode {
 
   useEffect(() => {
     setSubscribeToNewsletter(
-      publisher?.subscriptions ? publisher?.subscriptions?.newsletter : false,
+      publisher?.subscriptions ? publisher?.subscriptions?.newsletter : false
     );
   }, [publisher]);
 
@@ -171,11 +171,11 @@ function AccountDetails(): ReactNode {
                           onChange={(
                             e: SyntheticEvent<HTMLInputElement> & {
                               target: HTMLInputElement;
-                            },
+                            }
                           ) => {
                             setSubscribeToNewsletter(e.target.checked);
                             setSubscriptionPreferencesChanged(
-                              hasChanged(e.target.checked),
+                              hasChanged(e.target.checked)
                             );
                           }}
                         />
@@ -213,7 +213,7 @@ function AccountDetails(): ReactNode {
                           data.set("email", publisher?.email || "");
                           data.set(
                             "newsletter",
-                            subscribeToNewsletter ? "on" : "",
+                            subscribeToNewsletter ? "on" : ""
                           );
 
                           const response: Response = await fetch(
@@ -221,14 +221,14 @@ function AccountDetails(): ReactNode {
                             {
                               method: "POST",
                               body: data,
-                            },
+                            }
                           );
 
                           if (!response.ok) {
                             setShowErrorMessage(true);
                             setIsSaving(false);
                             throw new Error(
-                              "There has been a problem saving newsletter preferences",
+                              "There has been a problem saving newsletter preferences"
                             );
                           }
 

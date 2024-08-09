@@ -1,5 +1,5 @@
 const contactFormTriggers = document.querySelectorAll(
-  "[data-js='contact-form-trigger']",
+  "[data-js='contact-form-trigger']"
 ) as NodeListOf<Element>;
 
 const modal = document.getElementById("contact-form-modal") as HTMLElement;
@@ -19,7 +19,7 @@ function handleClick(event: Event): void {
   const args = target.dataset;
 
   const formEl = document.getElementById(
-    "contactFormTemplate",
+    "contactFormTemplate"
   ) as HTMLFormElement;
 
   let formTemplate = formEl.innerText;

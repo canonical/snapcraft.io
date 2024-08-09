@@ -75,16 +75,16 @@ const mockSigningKeys = [
 describe("getFilteredSigningKeys", () => {
   it("returns unfiltered signing keys if no filter query", () => {
     expect(getFilteredSigningKeys(mockSigningKeys).length).toEqual(
-      mockSigningKeys.length,
+      mockSigningKeys.length
     );
     expect(getFilteredSigningKeys(mockSigningKeys)[0].name).toEqual(
-      mockSigningKeys[0].name,
+      mockSigningKeys[0].name
     );
     expect(getFilteredSigningKeys(mockSigningKeys)[1].name).toEqual(
-      mockSigningKeys[1].name,
+      mockSigningKeys[1].name
     );
     expect(getFilteredSigningKeys(mockSigningKeys)[2].name).toEqual(
-      mockSigningKeys[2].name,
+      mockSigningKeys[2].name
     );
   });
 
@@ -94,10 +94,10 @@ describe("getFilteredSigningKeys", () => {
 
   it("returns filtered signing keys if query matches", () => {
     expect(
-      getFilteredSigningKeys(mockSigningKeys, "signing-key-1").length,
+      getFilteredSigningKeys(mockSigningKeys, "signing-key-1").length
     ).toBe(1);
     expect(
-      getFilteredSigningKeys(mockSigningKeys, "signing-key-2")[0].name,
+      getFilteredSigningKeys(mockSigningKeys, "signing-key-2")[0].name
     ).toEqual("signing-key-2");
   });
 });

@@ -13,7 +13,7 @@ export function prepareSteps(
     elements: HTMLElement[];
     content: string;
     title: string;
-  }>,
+  }>
 ): Array<{
   id: string;
   position: string;
@@ -26,7 +26,7 @@ export function prepareSteps(
       return {
         ...step,
         elements: [].slice.apply(
-          document.querySelectorAll(`[data-tour="${step.id}"]`),
+          document.querySelectorAll(`[data-tour="${step.id}"]`)
         ),
         position: step.position || "bottom-left",
       };
@@ -37,15 +37,15 @@ export function prepareSteps(
 // get rectangle of given DOM element
 // relative to the page, taking scroll into account
 const getRectFromEl = (
-  el: HTMLElement,
+  el: HTMLElement
 ): {
   top: number;
   left: number;
   width: number;
   height: number;
 } => {
-  const clientRect = el.getBoundingClientRect();
-  const ret = {
+  let clientRect = el.getBoundingClientRect();
+  let ret = {
     top:
       clientRect.top +
       (window.pageYOffset || document.documentElement.scrollTop),
@@ -81,8 +81,8 @@ const getMaskFromRect = (rect: {
     left = 0;
   }
 
-  const bottom = rect.top + rect.height + MASK_OFFSET;
-  const right = rect.left + rect.width + MASK_OFFSET;
+  let bottom = rect.top + rect.height + MASK_OFFSET;
+  let right = rect.left + rect.width + MASK_OFFSET;
 
   return {
     top,
@@ -116,6 +116,6 @@ export const getMaskFromElements = (elements: Array<HTMLElement>) => {
       left: Infinity,
       right: 0,
       bottom: 0,
-    },
+    }
   );
 };

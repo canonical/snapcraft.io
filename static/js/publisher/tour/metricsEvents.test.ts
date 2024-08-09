@@ -16,7 +16,7 @@ describe("metricsEvents", () => {
         "tour-started-by-user",
         expect.anything(),
         expect.anything(),
-        expect.anything(),
+        expect.anything()
       );
     });
   });
@@ -28,7 +28,7 @@ describe("metricsEvents", () => {
         "tour-started-automatically",
         expect.anything(),
         expect.anything(),
-        expect.anything(),
+        expect.anything()
       );
     });
   });
@@ -40,7 +40,7 @@ describe("metricsEvents", () => {
         "tour-finished",
         expect.anything(),
         expect.anything(),
-        expect.stringContaining("test-step"),
+        expect.stringContaining("test-step")
       );
     });
   });
@@ -52,7 +52,7 @@ describe("metricsEvents", () => {
         "tour-skipped",
         expect.anything(),
         expect.anything(),
-        expect.stringContaining("test-step"),
+        expect.stringContaining("test-step")
       );
     });
   });

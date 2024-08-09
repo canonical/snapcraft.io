@@ -52,7 +52,7 @@ function getListingData(listingData: { [key: string]: any }) {
           type: "screenshot",
           status: "uploaded",
         };
-      }),
+      })
     );
   }
 
@@ -73,10 +73,10 @@ function getListingData(listingData: { [key: string]: any }) {
     "primary-category": listingData?.snap_categories?.categories[0],
     "secondary-category": listingData?.snap_categories?.categories[1],
     public_metrics_territories: !listingData?.public_metrics_blacklist.includes(
-      "installed_base_by_country_percent",
+      "installed_base_by_country_percent"
     ),
     public_metrics_distros: !listingData?.public_metrics_blacklist.includes(
-      "weekly_installed_base_by_operating_system_normalized",
+      "weekly_installed_base_by_operating_system_normalized"
     ),
     update_metadata_on_release: listingData?.update_metadata_on_release,
     contacts:

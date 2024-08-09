@@ -1,5 +1,5 @@
 function categories(form: any, state: any) {
-  const categoriesList = [];
+  let categoriesList = [];
   if (
     form.elements["primary_category"] &&
     form.elements["primary_category"].value !== ""
@@ -19,26 +19,26 @@ function categories(form: any, state: any) {
 
 function initCategories() {
   const categoryHelpTextEl = document.querySelector(
-    ".js-categories-category1-help-text",
+    ".js-categories-category1-help-text"
   ) as HTMLElement;
   const categorySecondaryAddEl = document.querySelector(
-    ".js-categories-category2-add",
+    ".js-categories-category2-add"
   ) as HTMLElement;
   const categorySecondaryPickerEl = document.querySelector(
-    ".js-categories-category2-picker",
+    ".js-categories-category2-picker"
   ) as HTMLElement;
   const categorySecondaryAddLink = document.querySelector(
-    ".js-categories-category2-add-link",
+    ".js-categories-category2-add-link"
   ) as HTMLElement;
   const secondaryCategoryRemove = document.querySelector(
-    ".js-categories-category2-remove",
+    ".js-categories-category2-remove"
   ) as HTMLElement;
 
   const primaryCategorySelectEl = document.querySelector(
-    "[name='primary_category']",
+    "[name='primary_category']"
   ) as HTMLSelectElement;
   const secondaryCategorySelectEl = document.querySelector(
-    "[name='secondary_category']",
+    "[name='secondary_category']"
   ) as HTMLSelectElement;
 
   const setSecondaryOptions = () => {
@@ -60,7 +60,7 @@ function initCategories() {
   const resetSecondaryCategory = () => {
     secondaryCategorySelectEl.value = "";
     secondaryCategorySelectEl.dispatchEvent(
-      new Event("change", { bubbles: true }),
+      new Event("change", { bubbles: true })
     );
   };
 

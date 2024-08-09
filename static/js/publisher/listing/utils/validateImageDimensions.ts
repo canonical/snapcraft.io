@@ -6,7 +6,7 @@ function validateImageDimensions(
     maxWidth: number;
     minHeight: number;
     maxHeight: number;
-  },
+  }
 ) {
   return (
     imageWidth >= dimensions.minWidth &&

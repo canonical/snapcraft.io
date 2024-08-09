@@ -27,7 +27,7 @@ import type { StoresList, StoresSlice } from "../../types/shared";
 
 function App(): ReactNode {
   const isLoading = useSelector(
-    (state: StoresSlice) => state.brandStores.loading,
+    (state: StoresSlice) => state.brandStores.loading
   );
   const brandStoresList: StoresList = useSelector(brandStoresListSelector);
   const dispatch = useDispatch();

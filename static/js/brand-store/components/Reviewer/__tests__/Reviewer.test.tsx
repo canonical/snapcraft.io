@@ -15,7 +15,7 @@ const renderComponent = () => {
   render(
     <BrowserRouter>
       <Reviewer />
-    </BrowserRouter>,
+    </BrowserRouter>
   );
 };
 
@@ -23,7 +23,7 @@ describe("Reviewer", () => {
   test("shows the correct page", () => {
     renderComponent();
     expect(
-      screen.getByRole("heading", { level: 1, name: "Reviewer" }),
+      screen.getByRole("heading", { level: 1, name: "Reviewer" })
     ).toBeInTheDocument();
   });
 
@@ -33,7 +33,7 @@ describe("Reviewer", () => {
     expect(
       screen.getByRole("link", {
         name: "review the snaps in this store on the dashboard",
-      }),
+      })
     ).toHaveAttribute("href", "https://snapcraft.io/stores/storeid/reviews/");
   });
 });

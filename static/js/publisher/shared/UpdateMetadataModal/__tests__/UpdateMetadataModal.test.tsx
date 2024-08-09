@@ -14,7 +14,7 @@ const renderComponent = () => {
       setShowMetadataWarningModal={setShowMetadataWarningModal}
       submitForm={submitForm}
       formData={formData}
-    />,
+    />
   );
 };
 

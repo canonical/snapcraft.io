@@ -38,7 +38,7 @@ const getPolicies = async ({
       }
 
       return policies.data;
-    }),
+    })
   );
 
   setPolicies(allPolicies.flat());

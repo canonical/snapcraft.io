@@ -13,7 +13,7 @@ const renderComponent = () =>
   render(
     <QueryClientProvider client={queryClient}>
       <App />
-    </QueryClientProvider>,
+    </QueryClientProvider>
   );
 
 window.listingData = mockListingData;
@@ -22,18 +22,12 @@ window.tourSteps = mockListingData.tour_steps;
 describe("App", () => {
   it("shows 'Save' button as disabled by default", () => {
     renderComponent();
-    expect(screen.getByRole("button", { name: "Save" })).toHaveAttribute(
-      "aria-disabled",
-      "true",
-    );
+    expect(screen.getByRole("button", { name: "Save" })).toBeDisabled();
   });
 
   it("shows 'Revert' button as disabled by default", () => {
     renderComponent();
-    expect(screen.getByRole("button", { name: "Revert" })).toHaveAttribute(
-      "aria-disabled",
-      "true",
-    );
+    expect(screen.getByRole("button", { name: "Revert" })).toBeDisabled();
   });
 
   it("enables 'Save' button if a change is made to the form", async () => {
@@ -41,7 +35,7 @@ describe("App", () => {
     renderComponent();
     await user.type(
       screen.getByRole("textbox", { name: "Title:" }),
-      "new-name",
+      "new-name"
     );
     expect(screen.getByRole("button", { name: "Save" })).not.toBeDisabled();
   });
@@ -51,7 +45,7 @@ describe("App", () => {
     renderComponent();
     await user.type(
       screen.getByRole("textbox", { name: "Title:" }),
-      "new-name",
+      "new-name"
     );
     expect(screen.getByRole("button", { name: "Revert" })).not.toBeDisabled();
   });
@@ -63,10 +57,7 @@ describe("App", () => {
     await user.type(input, "new-name");
     await user.clear(input);
     await user.type(input, mockListingData.snap_title);
-    expect(screen.getByRole("button", { name: "Save" })).toHaveAttribute(
-      "aria-disabled",
-      "true",
-    );
+    expect(screen.getByRole("button", { name: "Save" })).toBeDisabled();
   });
 
   it("disables 'Revert' button if a change is made to the form and then reset", async () => {
@@ -76,9 +67,6 @@ describe("App", () => {
     await user.type(input, "new-name");
     await user.clear(input);
     await user.type(input, mockListingData.snap_title);
-    expect(screen.getByRole("button", { name: "Revert" })).toHaveAttribute(
-      "aria-disabled",
-      "true",
-    );
+    expect(screen.getByRole("button", { name: "Revert" })).toBeDisabled();
   });
 });

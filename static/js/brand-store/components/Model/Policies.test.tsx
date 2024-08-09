@@ -10,7 +10,7 @@ import "@testing-library/jest-dom";
 import Policies from "./Policies";
 import { store } from "../../store";
 
-const mockFilterQuery = "1.7";
+let mockFilterQuery = "1.7";
 
 jest.mock("react-router-dom", () => {
   return {
@@ -50,7 +50,7 @@ function renderComponent() {
           </QueryClientProvider>
         </BrowserRouter>
       </RecoilRoot>
-    </Provider>,
+    </Provider>
   );
 }
 
@@ -58,7 +58,7 @@ describe("Policies", () => {
   it("displays a link to create a new policy", () => {
     renderComponent();
     expect(
-      screen.getByRole("link", { name: "Create policy" }),
+      screen.getByRole("link", { name: "Create policy" })
     ).toBeInTheDocument();
   });
 
@@ -67,10 +67,10 @@ describe("Policies", () => {
     renderComponent();
     await user.click(screen.getByRole("link", { name: "Create policy" }));
     expect(
-      screen.getByRole("combobox", { name: "Signing key" }),
+      screen.getByRole("combobox", { name: "Signing key" })
     ).toBeInTheDocument();
     expect(
-      screen.getByRole("button", { name: "Add policy" }),
+      screen.getByRole("button", { name: "Add policy" })
     ).toBeInTheDocument();
   });
 
@@ -82,7 +82,7 @@ describe("Policies", () => {
   it("populates filter with the filter query parameter", () => {
     renderComponent();
     expect(screen.getByLabelText("Search policies")).toHaveValue(
-      mockFilterQuery,
+      mockFilterQuery
     );
   });
 });

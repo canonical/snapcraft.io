@@ -57,7 +57,7 @@ function SnapsSearch({
                     (
                       e: KeyboardEvent<HTMLInputElement> & {
                         target: HTMLInputElement;
-                      },
+                      }
                     ) => {
                       if (e.target.value.length < 2) {
                         return;
@@ -66,7 +66,7 @@ function SnapsSearch({
                       setIsSearching(true);
 
                       fetch(
-                        `/admin/${storeId}/snaps/search?q=${e.target.value}&allowed_for_inclusion=${storeId}`,
+                        `/admin/${storeId}/snaps/search?q=${e.target.value}&allowed_for_inclusion=${storeId}`
                       )
                         .then((response) => {
                           if (response.status !== 200) {
@@ -77,7 +77,7 @@ function SnapsSearch({
                         })
                         .then((data) => {
                           const selectionIds = selectedSnaps.map(
-                            (item) => item.id,
+                            (item) => item.id
                           );
 
                           setSuggestions(
@@ -86,7 +86,7 @@ function SnapsSearch({
                                 !selectionIds.includes(item.id) &&
                                 !nonEssentialSnapIds.includes(item.id)
                               );
-                            }),
+                            })
                           );
 
                           setIsSearching(false);
@@ -97,7 +97,7 @@ function SnapsSearch({
                         });
                     },
                     200,
-                    false,
+                    false
                   ),
                 })}
               />
@@ -167,7 +167,7 @@ function SnapsSearch({
                   onClick={() => {
                     setSelectedSnaps([
                       ...selectedSnaps.filter(
-                        (suggestion) => suggestion.id !== item.id,
+                        (suggestion) => suggestion.id !== item.id
                       ),
                     ]);
                   }}

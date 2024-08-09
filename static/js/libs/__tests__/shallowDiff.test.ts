@@ -6,10 +6,10 @@ describe("shallowDiff", () => {
   });
 
   it("should return true if different", () => {
-    const initialState = { test: true };
-    const addedState = { ...initialState, added: true };
-    const removedState = {};
-    const changeState = { test: false };
+    let initialState = { test: true };
+    let addedState = { ...initialState, added: true };
+    let removedState = {};
+    let changeState = { test: false };
 
     expect(shallowDiff(initialState, addedState)).toEqual(true);
     expect(shallowDiff(initialState, removedState)).toEqual(true);

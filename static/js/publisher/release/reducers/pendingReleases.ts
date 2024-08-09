@@ -16,7 +16,7 @@ import { jsonClone } from "../helpers";
 function removePendingRelease(
   state: any,
   revision: { revision: string | number },
-  channel: string | number,
+  channel: string | number
 ) {
   const newState = jsonClone(state);
   if (newState[revision.revision]) {
@@ -37,7 +37,7 @@ function releaseRevision(
   revision: { architectures: any[]; revision: number },
   channel: string,
   progressive: null,
-  previousRevisions: undefined,
+  previousRevisions: undefined
 ) {
   state = { ...state };
 
@@ -55,7 +55,7 @@ function releaseRevision(
         state = removePendingRelease(
           state,
           pendingRelease[channel].revision,
-          channel,
+          channel
         );
       }
     });
@@ -85,14 +85,14 @@ function releaseRevision(
 
 function closeChannel(
   state: { [s: string]: unknown } | ArrayLike<unknown>,
-  channel: string | number,
+  channel: string | number
 ) {
   Object.values(state).forEach((pendingRelease: any) => {
     if (pendingRelease[channel]) {
       state = removePendingRelease(
         state,
         pendingRelease[channel].revision,
-        channel,
+        channel
       );
     }
   });
@@ -102,7 +102,7 @@ function closeChannel(
 
 function setProgressiveRelease(
   state: any,
-  progressive: { percentage: number },
+  progressive: { percentage: number }
 ) {
   const nextState = jsonClone(state);
 
@@ -127,7 +127,7 @@ function setProgressiveRelease(
 
 function updateProgressiveRelease(
   state: any,
-  progressive: { percentage: any },
+  progressive: { percentage: any }
 ) {
   const nextState = jsonClone(state);
 
@@ -176,7 +176,7 @@ function resumeProgressiveRelease(state: any) {
 // same key are not affected.
 function cancelProgressiveRelease(
   state: any,
-  previousRevision: { revision: any; architectures?: any[] },
+  previousRevision: { revision: any; architectures?: any[] }
 ) {
   let nextState = jsonClone(state);
 
@@ -216,7 +216,7 @@ function cancelProgressiveRelease(
 // to prevent duplication of revison data
 export default function pendingReleases(
   state = {},
-  action: { type?: any; payload?: any },
+  action: { type?: any; payload?: any }
 ) {
   switch (action.type) {
     case RELEASE_REVISION:
@@ -225,13 +225,13 @@ export default function pendingReleases(
         action.payload.revision,
         action.payload.channel,
         action.payload.progressive,
-        action.payload.previousRevisions,
+        action.payload.previousRevisions
       );
     case UNDO_RELEASE:
       return removePendingRelease(
         state,
         action.payload.revision,
-        action.payload.channel,
+        action.payload.channel
       );
     case CANCEL_PENDING_RELEASES:
       return {};
