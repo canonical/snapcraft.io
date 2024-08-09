@@ -6,7 +6,7 @@ import { Provider } from "react-redux";
 import { DndProvider } from "react-dnd";
 import ReleasesController from "./release/releasesController";
 import releases from "./release/reducers";
-import { ReleasesData, ChannelMap, Track, Options } from "./types/releaseTypes"
+import { ReleasesData, ChannelMap, Track, Options } from "./types/releaseTypes";
 
 // setup redux store with thunk middleware and devtools extension:
 // https://github.com/zalmoxisus/redux-devtools-extension#12-advanced-store-setup
@@ -32,7 +32,7 @@ const initReleases = (
         tracks,
       },
     },
-    composeEnhancers(applyMiddleware(thunk))
+    composeEnhancers(applyMiddleware(thunk)),
   );
   const container = document.querySelector(id);
   if (!container) throw new Error(`Container with id ${id} not found`);
@@ -48,7 +48,7 @@ const initReleases = (
           options={options}
         />
       </DndProvider>
-    </Provider>
+    </Provider>,
   );
 };
 

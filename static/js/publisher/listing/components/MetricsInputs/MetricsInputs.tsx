@@ -16,13 +16,13 @@ function MetricsInputs({
   defaultPublicMetricsBlacklist,
 }: Props) {
   const [publicMetricsBlacklist, setPublicMetricsBlacklist] = useState(
-    defaultPublicMetricsBlacklist
+    defaultPublicMetricsBlacklist,
   );
 
   const [publicMetricsDistros, setPublicMetricsDistros] = useState(
     publicMetricsBlacklist.includes(
-      "weekly_installed_base_by_operating_system_normalized"
-    )
+      "weekly_installed_base_by_operating_system_normalized",
+    ),
   );
 
   const displayPublicChartsInputId = nanoid();
@@ -31,36 +31,36 @@ function MetricsInputs({
 
   const updatePublicMetricsBlacklist = (
     fieldName: string,
-    isChecked: boolean
+    isChecked: boolean,
   ) => {
     const newPublicMetricsBlacklist: Array<string> = Array.prototype.concat(
-      publicMetricsBlacklist
+      publicMetricsBlacklist,
     );
 
     if (fieldName === "public_metrics_territories") {
       if (
         !newPublicMetricsBlacklist.includes(
-          "installed_base_by_country_percent"
+          "installed_base_by_country_percent",
         ) &&
         !isChecked
       ) {
         setPublicMetricsBlacklist(
           newPublicMetricsBlacklist.concat([
             "installed_base_by_country_percent",
-          ])
+          ]),
         );
       }
 
       if (
         newPublicMetricsBlacklist.includes(
-          "installed_base_by_country_percent"
+          "installed_base_by_country_percent",
         ) &&
         isChecked
       ) {
         setPublicMetricsBlacklist(
           newPublicMetricsBlacklist.filter(
-            (d) => d !== "installed_base_by_country_percent"
-          )
+            (d) => d !== "installed_base_by_country_percent",
+          ),
         );
       }
     }
@@ -68,27 +68,27 @@ function MetricsInputs({
     if (fieldName === "public_metrics_distros") {
       if (
         !newPublicMetricsBlacklist.includes(
-          "weekly_installed_base_by_operating_system_normalized"
+          "weekly_installed_base_by_operating_system_normalized",
         ) &&
         !isChecked
       ) {
         setPublicMetricsBlacklist(
           newPublicMetricsBlacklist.concat([
             "weekly_installed_base_by_operating_system_normalized",
-          ])
+          ]),
         );
       }
 
       if (
         newPublicMetricsBlacklist.includes(
-          "weekly_installed_base_by_operating_system_normalized"
+          "weekly_installed_base_by_operating_system_normalized",
         ) &&
         isChecked
       ) {
         setPublicMetricsBlacklist(
           newPublicMetricsBlacklist.filter(
-            (d) => d !== "weekly_installed_base_by_operating_system_normalized"
-          )
+            (d) => d !== "weekly_installed_base_by_operating_system_normalized",
+          ),
         );
       }
     }
@@ -137,11 +137,11 @@ function MetricsInputs({
                     onChange: (
                       e: SyntheticEvent<HTMLInputElement> & {
                         target: HTMLInputElement;
-                      }
+                      },
                     ) => {
                       updatePublicMetricsBlacklist(
                         e.target.name,
-                        e.target.checked
+                        e.target.checked,
                       );
                     },
                   })}
@@ -167,12 +167,12 @@ function MetricsInputs({
                     onChange: (
                       e: SyntheticEvent<HTMLInputElement> & {
                         target: HTMLInputElement;
-                      }
+                      },
                     ) => {
                       setPublicMetricsDistros(!e.target.checked);
                       updatePublicMetricsBlacklist(
                         e.target.name,
-                        e.target.checked
+                        e.target.checked,
                       );
                     },
                   })}

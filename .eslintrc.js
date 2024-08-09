@@ -1,6 +1,6 @@
 module.exports = {
   parser: "@babel/eslint-parser",
-  plugins: ["jest", "react"],
+  plugins: ["jest", "react", "prettier"],
   globals: {},
   env: {
     browser: true,
@@ -23,10 +23,21 @@ module.exports = {
     "linebreak-style": ["error", "unix"],
     semi: ["error", "always"],
     "object-curly-spacing": ["error", "always"],
+    "prettier/prettier": "error",
+    "react/react-in-jsx-scope": "off",
+    "react/no-unescaped-entities": "off",
   },
   settings: {
     react: {
-      version: "detect"
-    }
-  }
+      version: "detect",
+    },
+  },
+  overrides: [
+    {
+      files: ["*.ts", "*.tsx"],
+      parser: "@typescript-eslint/parser",
+      plugins: ["@typescript-eslint"],
+      extends: ["plugin:@typescript-eslint/recommended"],
+    },
+  ],
 };

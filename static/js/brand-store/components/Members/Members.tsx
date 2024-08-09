@@ -55,10 +55,10 @@ function Members(): ReactNode {
   const brandStoresList = useSelector(brandStoresListSelector);
   const invitesLoading = useSelector((state: Members) => state.members.loading);
   const membersNotFound = useSelector(
-    (state: Members) => state.members.notFound
+    (state: Members) => state.members.notFound,
   );
   const invitesNotFound = useSelector(
-    (state: InvitesSlice) => state.invites.notFound
+    (state: InvitesSlice) => state.invites.notFound,
   );
   const dispatch = useDispatch();
   const { id } = useParams();
@@ -74,7 +74,7 @@ function Members(): ReactNode {
   const [memberButtonDisabled, setMemberButtonDisabled] = useState(false);
   const [changedMembers, setChangedMembers] = useState([]);
   const [notificationText, setNotificationText] = useState(
-    "Changes have been saved"
+    "Changes have been saved",
   );
   const [currentMember, setCurrentMember] = useState<Member | undefined>();
 
@@ -230,8 +230,8 @@ function Members(): ReactNode {
                             members.filter(
                               (member) =>
                                 member.displayname.includes(query) ||
-                                member.email.includes(query)
-                            )
+                                member.email.includes(query),
+                            ),
                           );
                         } else {
                           setFilteredMembers(members);

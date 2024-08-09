@@ -32,14 +32,14 @@ class Events {
         if (target) {
           ev.func(event, target);
         }
-      }
+      },
     );
   }
 
   addEvent(
     type: string,
     selector: string | HTMLElement | Window,
-    func: unknown
+    func: unknown,
   ) {
     if (!this.events[type]) {
       this.events[type] = [];

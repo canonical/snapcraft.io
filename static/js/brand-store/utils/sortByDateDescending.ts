@@ -1,6 +1,6 @@
 function sortByDateAscending(
   a: { "created-at": string },
-  b: { "created-at": string }
+  b: { "created-at": string },
 ) {
   if (a["created-at"] > b["created-at"]) {
     return -1;

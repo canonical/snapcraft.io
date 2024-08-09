@@ -2,7 +2,7 @@ import type { Policy } from "../types/shared";
 
 function getFilteredPolicies(
   policies: Array<Policy>,
-  filterQuery?: string | null
+  filterQuery?: string | null,
 ) {
   if (!filterQuery) {
     return policies;

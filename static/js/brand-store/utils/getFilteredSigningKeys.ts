@@ -2,7 +2,7 @@ import type { SigningKey } from "../types/shared";
 
 function getFilteredSigningKeys(
   signingKeys: Array<SigningKey>,
-  filterQuery?: string | null
+  filterQuery?: string | null,
 ) {
   if (!filterQuery) {
     return signingKeys;
