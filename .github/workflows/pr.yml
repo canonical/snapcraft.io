@@ -85,33 +85,32 @@ jobs:
         if: ${{ steps.filter.outputs.scss == 'true' }}
         run: yarn lint-scss
 
-  # Temprarily disable it for PRs for fixing the existing linting errors
-  # lint-js:
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: Checkout
-  #       uses: actions/checkout@v4
+  lint-js:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
 
-  #     - uses: dorny/paths-filter@v3
-  #       id: filter
-  #       with:
-  #         filters: |
-  #           js:
-  #             - '**/*.js'
-  #           ts:
-  #             - '**/*.ts'
-  #           jsx:
-  #             - '**/*.jsx'
-  #           tsx:
-  #             - '**/*.tsx'
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            js:
+              - '**/*.js'
+            ts:
+              - '**/*.ts'
+            jsx:
+              - '**/*.jsx'
+            tsx:
+              - '**/*.tsx'
 
-  #     - name: Install JS dependencies
-  #       if: ${{ steps.filter.outputs.js == 'true' || steps.filter.outputs.ts == 'true' || steps.filter.outputs.jsx == 'true' || steps.filter.outputs.tsx == 'true' }}
-  #       run: yarn install --immutable
+      - name: Install JS dependencies
+        if: ${{ steps.filter.outputs.js == 'true' || steps.filter.outputs.ts == 'true' || steps.filter.outputs.jsx == 'true' || steps.filter.outputs.tsx == 'true' }}
+        run: yarn install --immutable
 
-  #     - name: Lint JS
-  #       if: ${{ steps.filter.outputs.js == 'true' || steps.filter.outputs.ts == 'true' || steps.filter.outputs.jsx == 'true' || steps.filter.outputs.tsx == 'true' }}
-  #       run: yarn lint-js
+      - name: Lint JS
+        if: ${{ steps.filter.outputs.js == 'true' || steps.filter.outputs.ts == 'true' || steps.filter.outputs.jsx == 'true' || steps.filter.outputs.tsx == 'true' }}
+        run: yarn lint-js
 
   test-python:
     runs-on: ubuntu-latest
