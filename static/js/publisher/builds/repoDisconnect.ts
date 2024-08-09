@@ -14,16 +14,16 @@ function initRepoDisconnect() {
   }
 
   const repoDisconnectButtons = document.querySelectorAll(
-    "[aria-controls='repo-disconnect-modal']"
+    "[aria-controls='repo-disconnect-modal']",
   ) as NodeList;
   const repoDisconnectConfirm = document.querySelector(
-    "[data-js='repo-disconnect-confirm']"
+    "[data-js='repo-disconnect-confirm']",
   ) as HTMLButtonElement;
   const repoDisconnectModal = document.querySelector(
-    "[data-js='repo-disconnect-modal']"
+    "[data-js='repo-disconnect-modal']",
   ) as HTMLElement;
   const repoDisconnectForm = document.getElementById(
-    "repoDisconnectForm"
+    "repoDisconnectForm",
   ) as HTMLElement;
 
   if (

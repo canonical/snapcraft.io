@@ -60,7 +60,7 @@ function SnapTableRows({
                       setSnapsToRemove([...snapsToRemove, snap]);
                     } else {
                       setSnapsToRemove(
-                        snapsToRemove.filter((item) => item.id !== snap.id)
+                        snapsToRemove.filter((item) => item.id !== snap.id),
                       );
                     }
                   }}
@@ -169,7 +169,7 @@ function IncludedSnapsTable({
                 onChange={(e) => {
                   if (e.target.checked) {
                     setSnapsToRemove(
-                      allSnaps.filter((item) => !item.essential)
+                      allSnaps.filter((item) => !item.essential),
                     );
                     setIsChecked(true);
                   } else {
@@ -217,7 +217,7 @@ function IncludedSnapsTable({
             isOnlyViewer,
             snapsToRemove,
             setSnapsToRemove,
-          })
+          }),
         )
         .flat()
         .concat(
@@ -227,7 +227,7 @@ function IncludedSnapsTable({
             isOnlyViewer,
             snapsToRemove,
             setSnapsToRemove,
-          })
+          }),
         )}
     />
   );

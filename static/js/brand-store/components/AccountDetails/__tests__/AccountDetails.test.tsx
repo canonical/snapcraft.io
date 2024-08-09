@@ -48,7 +48,7 @@ const renderComponent = ({ event, state }: { event: Function; state: any }) => {
           </QueryClientProvider>
         </Provider>
       </BrowserRouter>
-    </RecoilRoot>
+    </RecoilRoot>,
   );
 };
 

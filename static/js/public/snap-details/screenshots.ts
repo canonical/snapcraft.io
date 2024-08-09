@@ -21,7 +21,7 @@ function clickCallback(event: Event): void {
 
 function filterImages(): (string | undefined)[] {
   const screenshotsEls = screenshotsEl.querySelectorAll(
-    "img, video, .js-video-slide"
+    "img, video, .js-video-slide",
   ) as NodeListOf<HTMLElement>;
 
   return Array.from(screenshotsEls)
@@ -41,13 +41,13 @@ function initScreenshots(this: unknown, screenshotsId: string) {
   // We need to resize the iframe on window resize
   window.addEventListener(
     "resize",
-    debounce(iframeSize.bind(this, ".js-video-slide"), 100)
+    debounce(iframeSize.bind(this, ".js-video-slide"), 100),
   );
 
   iframeSize(".js-video-slide");
 
   const swipeContainer = screenshotsEl.querySelector(
-    ".swiper-container"
+    ".swiper-container",
   ) as HTMLElement;
 
   if (swipeContainer) {

@@ -25,7 +25,7 @@ type Restrictions = {
 
 function baseRestrictions(
   file: File,
-  restrictions: Restrictions
+  restrictions: Restrictions,
 ): Promise<File> {
   const MB = 1000000;
   const KB = 1000;
@@ -77,7 +77,7 @@ function imageWhitelistHandler(
     fileName: string;
     accept: string;
     dimensions: number[];
-  }>
+  }>,
 ): boolean {
   const errors = whitelist.filter((whitelistItem) => {
     if (whitelistItem.fileName) {
@@ -108,7 +108,7 @@ function imageWhitelistHandler(
 
 function imageRestrictions(
   file: File,
-  restrictions: Restrictions
+  restrictions: Restrictions,
 ): Promise<File> {
   return new Promise((resolve, reject) => {
     if (!restrictions.accept || restrictions.accept[0].indexOf("image") < 0) {
@@ -192,7 +192,7 @@ function imageRestrictions(
           // If the min and max are the same we only accept 1 aspect ratio
           if (min === max) {
             message.push(
-              `it needs to be ${aspectRatioMin[0]}:${aspectRatioMin[1]}`
+              `it needs to be ${aspectRatioMin[0]}:${aspectRatioMin[1]}`,
             );
 
             const suggestedSize = [height / max];
@@ -207,14 +207,14 @@ function imageRestrictions(
 
             message.push(
               `(e.g., ${Math.round(suggestedSize[0])} x ${Math.round(
-                suggestedSize[1]
-              )} pixels)`
+                suggestedSize[1],
+              )} pixels)`,
             );
 
             // Otherwise it's a range
           } else {
             message.push(
-              `it needs to be between ${aspectRatioMin[0]}:${aspectRatioMin[1]} and ${aspectRatioMax[0]}:${aspectRatioMax[1]}`
+              `it needs to be between ${aspectRatioMin[0]}:${aspectRatioMin[1]} and ${aspectRatioMax[0]}:${aspectRatioMax[1]}`,
             );
           }
 
@@ -231,7 +231,7 @@ function imageRestrictions(
 
 function validateRestrictions(
   file: File,
-  restrictions: Restrictions
+  restrictions: Restrictions,
 ): Promise<File> {
   return new Promise((resolve) => {
     baseRestrictions(file, restrictions)

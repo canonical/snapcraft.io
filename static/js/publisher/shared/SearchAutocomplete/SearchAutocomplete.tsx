@@ -83,7 +83,7 @@ function SearchAutocomplete({
                 className="p-icon--close p-multiselect__item-remove"
                 onClick={() => {
                   const newSelections = selections.filter(
-                    (item: DataItem) => item.key !== suggestion.key
+                    (item: DataItem) => item.key !== suggestion.key,
                   );
 
                   const newSelectionsKeys = getNewSelectionKeys(newSelections);
@@ -115,7 +115,7 @@ function SearchAutocomplete({
                   (item) =>
                     !inputValue ||
                     item.key.toLowerCase().includes(inputValue) ||
-                    item.name.toLowerCase().includes(inputValue)
+                    item.name.toLowerCase().includes(inputValue),
                 )
                 .map((item, index) => (
                   <li

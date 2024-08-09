@@ -33,13 +33,13 @@ function SnapsFilter({
         onKeyUp={(
           e: KeyboardEvent<HTMLInputElement> & {
             target: HTMLInputElement;
-          }
+          },
         ) => {
           if (e.target.value) {
             setSnapsInStore(
               snapsInStore.filter((snap) =>
-                snap?.name?.includes(e.target.value)
-              )
+                snap?.name?.includes(e.target.value),
+              ),
             );
             setOtherStores(
               otherStoreIds.map((storeId) => {
@@ -49,10 +49,10 @@ function SnapsFilter({
                   snaps: snaps.filter(
                     (snap) =>
                       snap.store === storeId &&
-                      snap.name.includes(e.target.value)
+                      snap.name.includes(e.target.value),
                   ),
                 };
-              })
+              }),
             );
           } else {
             setSnapsInStore(snaps.filter((snap) => snap.store === id));
@@ -63,7 +63,7 @@ function SnapsFilter({
                   name: getStoreName(storeId),
                   snaps: snaps.filter((snap) => snap.store === storeId),
                 };
-              })
+              }),
             );
           }
         }}

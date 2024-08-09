@@ -23,16 +23,16 @@ const IS_CHROMIUM =
   window.navigator.userAgent.indexOf("Edge") === -1; // Edge pretends to have window.chrome
 
 function initFormNotification(formElId: string, notificationElId: string) {
-  var form = document.getElementById(formElId) as HTMLFormElement;
+  const form = document.getElementById(formElId) as HTMLFormElement;
 
   form.addEventListener("change", function () {
-    var notification = document.getElementById(notificationElId);
+    const notification = document.getElementById(notificationElId);
 
     if (notification && notification.parentNode) {
       notification.parentNode.removeChild(notification);
     }
   });
-  var notification = document.getElementById(notificationElId);
+  const notification = document.getElementById(notificationElId);
 
   if (notification) {
     setTimeout(function () {
@@ -53,7 +53,7 @@ function initForm(
     licenseRadioContent: any;
   },
   initialState: any,
-  errors: string | any[] | undefined
+  errors: string | any[] | undefined,
 ) {
   // if there are errors focus first error
   if (errors && errors.length) {
@@ -67,7 +67,7 @@ function initForm(
 
       if (errorInput.scrollIntoView) {
         const stickyEl = document.querySelector(
-          ".snapcraft-p-sticky"
+          ".snapcraft-p-sticky",
         ) as HTMLElement;
         const stickyHeight = stickyEl.scrollHeight;
         errorInput.scrollIntoView();
@@ -79,11 +79,11 @@ function initForm(
   // setup form functionality
   const formEl = document.getElementById(config.form) as any;
   const submitButton = formEl.querySelector(
-    ".js-form-submit"
+    ".js-form-submit",
   ) as HTMLButtonElement;
   const revertButton = formEl.querySelector(".js-form-revert") as HTMLElement;
   const previewButton = formEl.querySelector(
-    ".js-listing-preview"
+    ".js-listing-preview",
   ) as HTMLElement;
   const revertURL = revertButton.getAttribute("href") as string;
   const disabledRevertClass = "is-disabled";
@@ -110,7 +110,7 @@ function initForm(
   disableSubmit();
   disableRevert();
 
-  let state = JSON.parse(JSON.stringify(initialState));
+  const state = JSON.parse(JSON.stringify(initialState));
 
   const diffInput = document.createElement("input");
   diffInput.type = "hidden";
@@ -121,11 +121,11 @@ function initForm(
 
   if (config.snapIconHolder) {
     const icons = state.images.filter(
-      (image: { type: string }) => image.type === "icon"
+      (image: { type: string }) => image.type === "icon",
     );
     initIcon(config.snapIconHolder, icons[0], state.title, (newIcon: any) => {
       let noneIcons = state.images.filter(
-        (image: { type: string }) => image.type !== "icon"
+        (image: { type: string }) => image.type !== "icon",
       );
 
       if (newIcon) {
@@ -146,11 +146,11 @@ function initForm(
 
   if (config.mediaHolder) {
     const screenshots = state.images.filter(
-      (image: { type: string }) => image.type === "screenshot"
+      (image: { type: string }) => image.type === "screenshot",
     );
     initMedia(config.mediaHolder, screenshots, (newImages: any) => {
       const noneScreenshots = state.images.filter(
-        (item: { type: string }) => item.type !== "screenshot"
+        (item: { type: string }) => item.type !== "screenshot",
       );
       const newState = {
         ...state,
@@ -162,12 +162,12 @@ function initForm(
   }
 
   if (config.bannerHolder) {
-    let banners = state.images.filter(
-      (image: { type: string }) => image.type === "banner"
+    const banners = state.images.filter(
+      (image: { type: string }) => image.type === "banner",
     );
     initBanner(config.bannerHolder, banners, (image: any) => {
       let newImages = state.images.filter(
-        (image: { type: string }) => image.type !== "banner"
+        (image: { type: string }) => image.type !== "banner",
       );
 
       if (image) {
@@ -198,7 +198,7 @@ function initForm(
 
       // confirmation message (ignored by most browsers),
       // but may be showed by some older ones
-      var confirmationMessage =
+      const confirmationMessage =
         "Changes that you made will not be saved if you leave the page.";
 
       event.returnValue = confirmationMessage; // Gecko, Trident, Chrome 34+
@@ -260,7 +260,7 @@ function initForm(
       metadata(formEl.elements["update_metadata_on_release"], state);
     }
 
-    let formData = new FormData(formEl);
+    const formData = new FormData(formEl);
 
     // update state based on data of all inputs
     updateState(state, formData);
@@ -329,14 +329,14 @@ function initForm(
         ignoreChangesOnUnload = true;
 
         const updateMetadataModal = document.querySelector(
-          ".update-metadata-warning"
+          ".update-metadata-warning",
         );
 
         if (updateMetadataModal) {
           updateMetadataModal.classList.remove("u-hide");
 
           const saveChangesButton = updateMetadataModal.querySelector(
-            ".js-save-changes"
+            ".js-save-changes",
           ) as HTMLButtonElement;
           const closeModalButtons =
             updateMetadataModal.querySelectorAll(".js-close-modal");
@@ -365,7 +365,7 @@ function initForm(
       } else {
         updateLocalStorage();
       }
-    }
+    },
   );
 
   // client side validation
@@ -376,7 +376,7 @@ function initForm(
   function isFormValid() {
     // form is valid if every validated input is valid
     return Object.keys(validation).every(
-      (name: any) => validation[name].isValid
+      (name: any) => validation[name].isValid,
     );
   }
 
@@ -523,7 +523,7 @@ function initForm(
         "blur",
         function (event: { target: EventTarget | null }) {
           prefixInput(event.target);
-        }
+        },
       );
     }
   });

@@ -10,7 +10,7 @@ describe("RenderErrors", () => {
         errors={{
           file: ["error message one", "error message two"],
         }}
-      />
+      />,
     );
     expect(screen.getByText(/error message one/)).toBeInTheDocument();
     expect(screen.getByText(/error message two/)).toBeInTheDocument();

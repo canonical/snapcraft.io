@@ -6,10 +6,10 @@ import { toggleAccordion } from "./accordion";
 
 function install(language: unknown, fsfFlow: string): void {
   const osPickers = Array.from(
-    document.querySelectorAll(".js-os-select")
+    document.querySelectorAll(".js-os-select"),
   ) as Array<HTMLElement>;
   const osWrappers = Array.from(
-    document.querySelectorAll(".js-os-wrapper")
+    document.querySelectorAll(".js-os-wrapper"),
   ) as Array<HTMLElement>;
 
   function select(selectedOs: string) {
@@ -25,7 +25,7 @@ function install(language: unknown, fsfFlow: string): void {
 
     if (!document.querySelector(".js-linux-manual")) {
       const paginationBtn = document.querySelector(
-        `#js-pagination-next`
+        `#js-pagination-next`,
       ) as HTMLLinkElement;
       if (paginationBtn) {
         paginationBtn.classList.remove("is-disabled");
@@ -74,7 +74,7 @@ function install(language: unknown, fsfFlow: string): void {
     const os = type.split("-")[0];
     const selected = document.querySelector(".js-" + type) as HTMLElement;
     const unselected = document.querySelector(
-      "[class*='js-" + os + "-']:not(.js-" + type + ")"
+      "[class*='js-" + os + "-']:not(.js-" + type + ")",
     ) as HTMLElement;
 
     if (!selected && !unselected) {
@@ -96,7 +96,7 @@ function install(language: unknown, fsfFlow: string): void {
     unselected.classList.add("u-hide");
 
     const paginationBtn = document.querySelector(
-      `#js-pagination-next`
+      `#js-pagination-next`,
     ) as HTMLLinkElement;
     if (paginationBtn) {
       const paginationBtnLink: string = `/${fsfFlow}/${language}/${type}/package`;
@@ -141,7 +141,7 @@ function getArrayDiff(arr1: [], arr2: []) {
     oldArr = arr1;
   }
 
-  let newValues: Array<string> = [];
+  const newValues: Array<string> = [];
 
   newArr.forEach((item: string) => {
     if (!oldArr.includes(item)) {
@@ -198,7 +198,7 @@ function push(): void {
   getCount((snapName) => {
     // Enable "Continue" button
     const continueBtn = document.querySelector(
-      ".js-continue"
+      ".js-continue",
     ) as HTMLLinkElement;
     if (continueBtn) {
       continueBtn.href = `/${snapName}/releases`;
@@ -209,7 +209,7 @@ function push(): void {
     }
     // Update "Go to listing" button for a published snap
     const paginationBtn = document.querySelector(
-      "#js-pagination-next"
+      "#js-pagination-next",
     ) as HTMLLinkElement;
     if (paginationBtn) {
       paginationBtn.href = `/${snapName}/listing?from=first-snap`;
@@ -228,7 +228,7 @@ function updateNotification(
     };
   },
   className: string,
-  message: string | undefined
+  message: string | undefined,
 ) {
   notificationEl.className = className;
 
@@ -247,7 +247,7 @@ function successNotification(
       innerHTML: string;
     };
   },
-  message: string | undefined
+  message: string | undefined,
 ) {
   updateNotification(notificationEl, "p-notification--positive", message);
 }
@@ -261,7 +261,7 @@ function errorNotification(
       innerHTML: string;
     };
   },
-  message: string
+  message: string,
 ) {
   updateNotification(notificationEl, "p-notification--negative", message);
 }
@@ -279,7 +279,7 @@ function initChooseName(
     };
     addEventListener: (arg0: string, arg1: (event: Event) => void) => void;
   },
-  language: string
+  language: string,
 ): void {
   const snapNameInput = formEl.querySelector("[name=snap-name]") as any;
 
@@ -307,10 +307,10 @@ function initChooseName(
 function initRegisterName(
   formEl: HTMLFormElement,
   notificationEl: HTMLElement,
-  successEl: { classList: { remove: (arg0: string) => void } }
+  successEl: { classList: { remove: (arg0: string) => void } },
 ): void {
   const snapNameInput = formEl.querySelector(
-    "[name=snap-name]"
+    "[name=snap-name]",
   ) as HTMLInputElement;
 
   snapNameInput.addEventListener("keyup", () => {
@@ -345,20 +345,20 @@ function initRegisterName(
 
   formEl.addEventListener("submit", (event) => {
     event.preventDefault();
-    let formData = new FormData(formEl);
+    const formData = new FormData(formEl);
     const submitButton = formEl.querySelector(
-      "[data-js='js-snap-name-register']"
+      "[data-js='js-snap-name-register']",
     ) as HTMLButtonElement;
 
     const currentPanel = formEl.closest(
-      ".p-accordion__group"
+      ".p-accordion__group",
     ) as HTMLFormElement;
     const currentToggle = currentPanel.querySelector(
-      ".p-accordion__tab"
+      ".p-accordion__tab",
     ) as HTMLElement;
     const nextPanel = currentPanel.nextElementSibling as HTMLElement;
     const nextToggle = nextPanel.querySelector(
-      ".p-accordion__tab"
+      ".p-accordion__tab",
     ) as HTMLElement;
 
     const enableButton = () => {
@@ -371,11 +371,11 @@ function initRegisterName(
     // Enable "Go to listing" button for an unpublished app
     const enableGoToListingButton = () => {
       const formField = formEl.querySelector(
-        "[name=snap-name]"
+        "[name=snap-name]",
       ) as HTMLInputElement;
       const snapName = formField.value;
       const paginationBtn = document.querySelector(
-        "#js-pagination-next"
+        "#js-pagination-next",
       ) as HTMLLinkElement;
       if (paginationBtn) {
         paginationBtn.href = `/${snapName}/listing?from=first-snap-unpublished`;
@@ -425,7 +425,7 @@ function initRegisterName(
         }
         errorNotification(
           notificationEl,
-          "There was some problem registering name. Please try again."
+          "There was some problem registering name. Please try again.",
         );
       });
   });

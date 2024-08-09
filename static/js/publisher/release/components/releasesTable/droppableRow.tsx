@@ -16,7 +16,7 @@ import ReleasesTableChannelRow from "./channelRow";
 const getRevisionsToDrop = (
   revisions: any[],
   targetChannel: string,
-  channelMap: { [x: string]: any }
+  channelMap: { [x: string]: any },
 ) => {
   const targetChannelArchs = channelMap[targetChannel];
 
@@ -65,14 +65,14 @@ const ReleasesTableDroppableRow = (props: {
     drop: (item: any) => {
       item.revisions.forEach(
         (r: { status: string }) =>
-          canBeReleased(r) && promoteRevision(r, channel)
+          canBeReleased(r) && promoteRevision(r, channel),
       );
 
       if (item.revisions.length > 1) {
         triggerGAEvent(
           "drop-channel",
           `${currentTrack}/${item.risk}/${item.branch ? item.branch : null}`,
-          `${currentTrack}/${risk}/${branchName}`
+          `${currentTrack}/${risk}/${branchName}`,
         );
       } else {
         triggerGAEvent(
@@ -80,7 +80,7 @@ const ReleasesTableDroppableRow = (props: {
           `${currentTrack}/${item.risk}/${item.branch ? item.branch : null}/${
             item.architectures[0]
           }`,
-          `${currentTrack}/${risk}/${branchName}/${item.architectures[0]}`
+          `${currentTrack}/${risk}/${branchName}/${item.architectures[0]}`,
         );
       }
     },
@@ -92,7 +92,7 @@ const ReleasesTableDroppableRow = (props: {
       const draggedChannel = getChannelName(
         currentTrack,
         item.risk,
-        item.branch
+        item.branch,
       );
       const dropChannel = getChannelName(currentTrack, risk, branchName);
 
@@ -149,7 +149,7 @@ const ReleasesTableDroppableRow = (props: {
   const currentVersions: any[] = [];
 
   if (versions) {
-    for (let [value] of Object.entries(versions)) {
+    for (const [value] of Object.entries(versions)) {
       if (value && !currentVersions.includes(versions[value].version)) {
         currentVersions.push(versions[value].version);
       }
@@ -228,5 +228,5 @@ const mapDispatchToProps = (dispatch: any) => {
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps
+  mapDispatchToProps,
 )(ReleasesTableDroppableRow);

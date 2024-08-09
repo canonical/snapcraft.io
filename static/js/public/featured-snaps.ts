@@ -20,12 +20,12 @@ type PackageData = {
 
 async function buildCards(category: string): Promise<void> {
   const featuredSnapCards = document.querySelectorAll(
-    "[data-js='featured-snap-card']"
+    "[data-js='featured-snap-card']",
   ) as NodeListOf<HTMLElement>;
 
   if (window.sessionStorage.getItem(category)) {
     const localData = JSON.parse(
-      window.sessionStorage.getItem(category) as string
+      window.sessionStorage.getItem(category) as string,
     );
 
     featuredSnapCards.forEach((featuredSnapCard, index) => {
@@ -45,40 +45,40 @@ async function buildCards(category: string): Promise<void> {
 
 function buildCard(featuredSnapCard: Element, data: PackageData) {
   const placeholder = featuredSnapCard.querySelector(
-    "[data-js='featured-snap-card-placeholder']"
+    "[data-js='featured-snap-card-placeholder']",
   ) as HTMLElement;
 
   const content = featuredSnapCard.querySelector(
-    "[data-js='featured-snap-card-content']"
+    "[data-js='featured-snap-card-content']",
   ) as HTMLElement;
 
   content.innerHTML = "";
 
   if ("content" in document.createElement("template")) {
     const template = document.querySelector(
-      "#featured-snap-card"
+      "#featured-snap-card",
     ) as HTMLTemplateElement;
 
     const clone = template.content.cloneNode(true) as HTMLElement;
 
     const snapIcon = clone.querySelector(
-      "[data-js='snap-icon']"
+      "[data-js='snap-icon']",
     ) as HTMLImageElement;
 
     const snapIconLink = clone.querySelector(
-      "[data-js='snap-icon-link']"
+      "[data-js='snap-icon-link']",
     ) as HTMLLinkElement;
 
     const snapTitleLink = clone.querySelector(
-      "[data-js='snap-title-link']"
+      "[data-js='snap-title-link']",
     ) as HTMLLinkElement;
 
     const snapPublisher = clone.querySelector(
-      "[data-js='snap-publisher']"
+      "[data-js='snap-publisher']",
     ) as HTMLElement;
 
     const snapDescription = clone.querySelector(
-      "[data-js='snap-description']"
+      "[data-js='snap-description']",
     ) as HTMLElement;
 
     snapIcon.src = data.icon_url;
@@ -123,11 +123,11 @@ function buildCard(featuredSnapCard: Element, data: PackageData) {
 
 async function init(featuredCategories: Array<string>): Promise<void> {
   const featuredCategorySwitches = document.querySelectorAll(
-    "[data-js='featured-category-switch']"
+    "[data-js='featured-category-switch']",
   );
 
   const viewCategoryLink = document.querySelector(
-    "[data-js='view-category-link']"
+    "[data-js='view-category-link']",
   ) as HTMLLinkElement;
 
   featuredCategorySwitches.forEach((featuredCategorySwitch) => {
@@ -137,10 +137,10 @@ async function init(featuredCategories: Array<string>): Promise<void> {
       const target = e.target as HTMLLinkElement;
       const category = target.dataset.category?.toLowerCase();
       const previousTargetLink = document.querySelector(
-        "[data-js='featured-category-switch'][aria-current='page']"
+        "[data-js='featured-category-switch'][aria-current='page']",
       );
       const previousTargetTab = document.querySelector(
-        "[data-js='featured-category-switch'][aria-selected='true']"
+        "[data-js='featured-category-switch'][aria-selected='true']",
       );
 
       if (previousTargetLink) {

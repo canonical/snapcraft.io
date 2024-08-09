@@ -31,7 +31,7 @@ function LicenseSearch({
 }: Props) {
   const [suggestions, setSuggestions] = useState<License[]>([]);
   const [selectedLicenseKeys, setSelectedLicenseKeys] = useState<string[]>(
-    license?.split(" OR ") || []
+    license?.split(" OR ") || [],
   );
   const [selectedLicenses, setSelectedLicenses] = useState<
     (License | undefined)[]
@@ -49,7 +49,7 @@ function LicenseSearch({
     setSelectedLicenses(
       selectedLicenseKeys
         .filter((key) => licenses.find((l) => l.key === key))
-        .map((key) => licenses.find((l) => l.key === key))
+        .map((key) => licenses.find((l) => l.key === key)),
     );
   }, [selectedLicenseKeys]);
 
@@ -108,7 +108,7 @@ function LicenseSearch({
                   onClick={() => {
                     const newSelectedLicenses: (License | undefined)[] =
                       selectedLicenses.filter(
-                        (item) => item?.key !== selectedLicense?.key
+                        (item) => item?.key !== selectedLicense?.key,
                       );
 
                     const newSelectedLicenseKeys: (string | undefined)[] =
@@ -134,7 +134,7 @@ function LicenseSearch({
                   (
                     e: SyntheticEvent<HTMLInputElement> & {
                       target: HTMLInputElement;
-                    }
+                    },
                   ) => {
                     const value = e?.target?.value.toLowerCase();
 
@@ -144,17 +144,17 @@ function LicenseSearch({
                           !selectedLicenseKeys.includes(item?.key) &&
                           item?.name.toLowerCase().startsWith(value)
                         );
-                      })
+                      }),
                     );
                   },
                   200,
-                  false
+                  false,
                 ),
                 onFocus: () => {
                   setSuggestions(
                     licenses.filter((item) => {
                       return !selectedLicenseKeys.includes(item?.key);
-                    })
+                    }),
                   );
                 },
                 onBlur: () => {

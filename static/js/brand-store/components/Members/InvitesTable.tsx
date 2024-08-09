@@ -41,13 +41,13 @@ function InvitesTable({
 
   useEffect(() => {
     setPendingInvites(
-      invites.filter((invite: Invite) => invite.status === "Pending")
+      invites.filter((invite: Invite) => invite.status === "Pending"),
     );
     setExpiredInvites(
-      invites.filter((invite: Invite) => invite.status === "Expired")
+      invites.filter((invite: Invite) => invite.status === "Expired"),
     );
     setRevokedInvites(
-      invites.filter((invite: Invite) => invite.status === "Revoked")
+      invites.filter((invite: Invite) => invite.status === "Revoked"),
     );
   }, [invites]);
 

@@ -14,16 +14,19 @@ describe("iframeSize", () => {
 
     document.body.appendChild(frameWrapper);
 
-    frameWrapper.getBoundingClientRect = jest.fn(() => ({
-      x: 0,
-      y: 0,
-      top: 0,
-      left: 0,
-      bottom: 0,
-      right: 0,
-      width: 500,
-      height: 500,
-    })) as any;
+    frameWrapper.getBoundingClientRect = jest.fn(
+      (): DOMRect => ({
+        x: 0,
+        y: 0,
+        top: 0,
+        left: 0,
+        bottom: 0,
+        right: 0,
+        width: 500,
+        height: 500,
+        toJSON: () => ({}),
+      }),
+    ) as jest.Mock;
 
     iframeSize(".frame-wrapper");
 

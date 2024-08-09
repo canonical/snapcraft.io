@@ -9,7 +9,8 @@ function ModelBreadcrumb(): JSX.Element {
 
   return (
     <h1 className="p-heading--4">
-      <Link to={`/admin/${id ?? ''}/models`}>&lsaquo;&nbsp;Models</Link> / {model_id ?? ''}
+      <Link to={`/admin/${id ?? ""}/models`}>&lsaquo;&nbsp;Models</Link> /{" "}
+      {model_id ?? ""}
     </h1>
   );
 }

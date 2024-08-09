@@ -17,5 +17,5 @@ const root = createRoot(container as HTMLElement);
 root.render(
   <QueryClientProvider client={queryClient}>
     <App />
-  </QueryClientProvider>
+  </QueryClientProvider>,
 );

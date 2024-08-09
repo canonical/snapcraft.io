@@ -7,13 +7,13 @@ export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
 
 export function usePolicies(
   brandId: string | undefined,
-  modelId: string | undefined
+  modelId: string | undefined,
 ) {
   return useQuery({
     queryKey: ["policies", brandId],
     queryFn: async () => {
       const response = await fetch(
-        `/admin/store/${brandId}/models/${modelId}/policies`
+        `/admin/store/${brandId}/models/${modelId}/policies`,
       );
 
       if (!response.ok) {

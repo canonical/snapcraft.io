@@ -1,20 +1,20 @@
 function initFSFLanguageSelect(): void {
   const flowLinksContainer = document.querySelector(
-    "[data-js='flow-links-container']"
+    "[data-js='flow-links-container']",
   ) as HTMLElement;
   const flowLinks = document.querySelectorAll(
-    "[data-js='flow-link']"
+    "[data-js='flow-link']",
   ) as NodeList;
 
   let activeFlowLink = flowLinksContainer.querySelector(
-    "[aria-current='page']"
+    "[aria-current='page']",
   ) as HTMLElement;
 
   let activeFlowLanguage = activeFlowLink.getAttribute("data-flow");
 
-  let activeFlowContentSelector = `[data-flow-details='${activeFlowLanguage}']`;
+  const activeFlowContentSelector = `[data-flow-details='${activeFlowLanguage}']`;
   let activeFlowContent = document.querySelector(
-    activeFlowContentSelector
+    activeFlowContentSelector,
   ) as HTMLElement;
 
   function hideCurrentFlow() {
@@ -25,7 +25,7 @@ function initFSFLanguageSelect(): void {
   function updateFlow(
     newFlowLink: HTMLLinkElement,
     newFlowLanguage: string,
-    newFlowContent: HTMLElement
+    newFlowContent: HTMLElement,
   ) {
     activeFlowLink = newFlowLink;
     activeFlowLanguage = newFlowLanguage;
@@ -34,7 +34,7 @@ function initFSFLanguageSelect(): void {
 
   function showNewFlow(
     newFlowLink: HTMLLinkElement,
-    newFlowContent: HTMLElement
+    newFlowContent: HTMLElement,
   ) {
     newFlowLink.setAttribute("aria-current", "page");
     newFlowContent.classList.remove("u-hide");
@@ -42,10 +42,10 @@ function initFSFLanguageSelect(): void {
 
   function handleFlowChange(
     newFlowLink: HTMLLinkElement,
-    newFlowLanguage: string
+    newFlowLanguage: string,
   ) {
     const newFlowContent = document.querySelector(
-      `[data-flow-details='${newFlowLanguage}']`
+      `[data-flow-details='${newFlowLanguage}']`,
     ) as HTMLElement;
 
     hideCurrentFlow();
@@ -67,14 +67,14 @@ function initFSFLanguageSelect(): void {
   });
 
   const flowOptions = document.querySelector(
-    "[data-js='flow-options']"
+    "[data-js='flow-options']",
   ) as HTMLSelectElement;
 
   flowOptions.addEventListener("change", (e: Event) => {
     const target = e.target as HTMLSelectElement;
     const newFlowLanguage = target.value;
     const flowLink = flowLinksContainer.querySelector(
-      `[data-flow='${newFlowLanguage}']`
+      `[data-flow='${newFlowLanguage}']`,
     ) as HTMLLinkElement;
 
     handleFlowChange(flowLink, newFlowLanguage);

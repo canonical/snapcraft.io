@@ -1,11 +1,11 @@
 import debounce from "../debounce";
 
 jest.useFakeTimers();
-const fn: Function = jest.fn();
+const fn: jest.Mock = jest.fn();
 
 describe("debounce", () => {
   test("function is only called once", () => {
-    const debouncedFn: Function = debounce(fn, 1000);
+    const debouncedFn: () => void = debounce(fn, 1000);
 
     for (let i = 0; i < 1000; i++) {
       debouncedFn();
@@ -17,7 +17,7 @@ describe("debounce", () => {
   });
 
   test("function is called with immediate flag", () => {
-    const debouncedFn: Function = debounce(fn, 0, false);
+    const debouncedFn: () => void = debounce(fn, 0, false);
 
     for (let i = 0; i < 1000; i++) {
       debouncedFn();

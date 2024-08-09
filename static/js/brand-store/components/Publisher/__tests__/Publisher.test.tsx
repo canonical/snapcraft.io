@@ -11,7 +11,7 @@ describe("Publisher", () => {
   test("shows the correct page", () => {
     renderComponent();
     expect(
-      screen.getByRole("heading", { level: 1, name: "Publisher" })
+      screen.getByRole("heading", { level: 1, name: "Publisher" }),
     ).toBeInTheDocument();
   });
 
@@ -21,12 +21,12 @@ describe("Publisher", () => {
     expect(
       screen.getByRole("link", {
         name: "register a snap name on the Snap store",
-      })
+      }),
     ).toHaveAttribute("href", "/snaps");
     expect(
       screen.getByRole("link", {
         name: "manage your snaps on the dashboard",
-      })
+      }),
     ).toHaveAttribute("href", "https://snapcraft.io/stores/snaps/");
   });
 });

@@ -40,7 +40,7 @@ function App() {
     useState(false);
   const [formData, setFormData] = useState({});
   const [updateMetadataOnRelease, setUpdateMetadataOnRelease] = useState(
-    snapData.update_metadata_on_release
+    snapData.update_metadata_on_release,
   );
 
   const {
@@ -116,7 +116,7 @@ function App() {
 
   useEffect(() => {
     const tourContainer = document.getElementById(
-      "tour-container"
+      "tour-container",
     ) as HTMLElement;
     initListingTour({
       snapName,

@@ -8,7 +8,7 @@ const hideEl = (el: { classList: { add: (arg0: string) => void } }) =>
 function toggleModal(
   modal: HTMLElement,
   show?: boolean | undefined,
-  initCallback?: { (): void; (): void } | undefined
+  initCallback?: { (): void; (): void } | undefined,
 ) {
   if (typeof show === "undefined") {
     show = modal.classList.contains("u-hide");
@@ -28,11 +28,11 @@ function toggleModal(
 
 export default function initEmbeddedCardModal(snapName: string): void {
   const toggle = document.querySelector(
-    ".js-embedded-card-toggle"
+    ".js-embedded-card-toggle",
   ) as HTMLElement;
   const modal = document.querySelector("#embedded-card-modal") as HTMLElement;
   const dialog = modal.querySelector(
-    "#embedded-card-modal-dialog"
+    "#embedded-card-modal-dialog",
   ) as HTMLElement;
   const previewFrame = modal.querySelector("#embedded-card-frame");
   const codeElement = modal.querySelector("#snippet-card-html");

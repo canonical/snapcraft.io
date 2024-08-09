@@ -60,7 +60,7 @@ const initLightboxEl = () => {
 const loadLightboxImage = (
   lightboxEl: HTMLElement,
   url: string | undefined,
-  images: Array<any>
+  images: Array<any>,
 ) => {
   const contentEl = lightboxEl.querySelector(".vbox-content") as HTMLElement;
 
@@ -85,15 +85,15 @@ const loadLightboxImage = (
       contentEl.style.opacity = "1";
 
       const originalEl = document.body.querySelector(
-        `[data-original="${url}"]`
+        `[data-original="${url}"]`,
       );
 
       if (originalEl) {
         const webm = originalEl.querySelector(
-          "[type='video/webm']"
+          "[type='video/webm']",
         ) as HTMLMediaElement;
         const mp4 = originalEl.querySelector(
-          "[type='video/mp4']"
+          "[type='video/mp4']",
         ) as HTMLMediaElement;
 
         if (media.canPlayType("video/webm") && webm) {
@@ -156,7 +156,7 @@ const loadLightboxImage = (
 const openLightboxEl = (
   lightboxEl: HTMLElement,
   url: string,
-  images: Array<any>
+  images: Array<any>,
 ) => {
   // prepare navigating to next/prev images
   if (images && images.length) {

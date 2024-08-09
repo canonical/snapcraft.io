@@ -41,7 +41,7 @@ function CreateSigningKeyForm({
   const handleError = () => {
     setSigningKeysList((oldSigningKeysList: Array<SigningKey>) => {
       return oldSigningKeysList.filter(
-        (signingKey) => signingKey.name !== newSigningKey.name
+        (signingKey) => signingKey.name !== newSigningKey.name,
       );
     });
     navigate(`/admin/${id}/signing-keys`);

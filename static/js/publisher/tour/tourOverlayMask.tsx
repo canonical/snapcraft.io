@@ -8,7 +8,7 @@ type Props = {
 };
 
 const getClipPathFromMask = ({ top, bottom, left, right }: Props): string => {
-  let mask = [
+  const mask = [
     `${left}px ${top}px`,
     `${left}px ${bottom}px`,
     `${right}px ${bottom}px`,

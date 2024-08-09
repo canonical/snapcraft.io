@@ -55,7 +55,7 @@ export default function TourOverlay({
             // we scroll relative to top of the screen, but we want to stick to bottom
             // so we need to substract the window height
             mask.bottom - window.innerHeight,
-            -SCROLL_OFFSET_BOTTOM
+            -SCROLL_OFFSET_BOTTOM,
           );
         }
       }
@@ -71,7 +71,7 @@ export default function TourOverlay({
         }
       }
     },
-    [currentStepIndex] // refresh effect on step changes, to scroll to correct step
+    [currentStepIndex], // refresh effect on step changes, to scroll to correct step
   );
 
   const overlayEl = useRef(null);
@@ -98,7 +98,7 @@ export default function TourOverlay({
         window.removeEventListener("scroll", afterScroll);
       };
     },
-    [] // don't refresh the effect on every render
+    [], // don't refresh the effect on every render
   );
 
   // rerender after resize (to adjust to new positions of elements)
@@ -122,7 +122,7 @@ export default function TourOverlay({
         window.removeEventListener("resize", afterResize);
       };
     },
-    [] // don't refresh the effect on every render
+    [], // don't refresh the effect on every render
   );
 
   const onNextClick = () =>
@@ -159,7 +159,7 @@ export default function TourOverlay({
         window.removeEventListener("keyup", escClick);
       };
     },
-    [currentStepIndex] // refresh effect when step changes, to pass correct step id into skip metrics
+    [currentStepIndex], // refresh effect when step changes, to pass correct step id into skip metrics
   );
 
   return (

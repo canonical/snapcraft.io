@@ -23,7 +23,7 @@ function SaveAndPreview({
   const handleScroll = () => {
     stickyBar?.current?.classList.toggle(
       "sticky-shadow",
-      stickyBar?.current?.getBoundingClientRect()?.top === 0
+      stickyBar?.current?.getBoundingClientRect()?.top === 0,
     );
   };
 

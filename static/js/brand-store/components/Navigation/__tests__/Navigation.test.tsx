@@ -57,7 +57,7 @@ const renderComponent = (sectionName: string) => {
           </QueryClientProvider>
         </BrowserRouter>
       </RecoilRoot>
-    </Provider>
+    </Provider>,
   );
 };
 
@@ -65,7 +65,7 @@ describe("Navigation", () => {
   test("displays logo", () => {
     renderComponent("snaps");
     expect(screen.getAllByRole("img", { name: "Snapcraft logo" })).toHaveLength(
-      2
+      2,
     );
   });
 
@@ -79,7 +79,7 @@ describe("Navigation", () => {
     mockRouterReturnValue.id = "non-admin-store";
     renderComponent("snaps");
     expect(
-      screen.queryByRole("link", { name: /Members/ })
+      screen.queryByRole("link", { name: /Members/ }),
     ).not.toBeInTheDocument();
   });
 
@@ -93,7 +93,7 @@ describe("Navigation", () => {
     mockRouterReturnValue.id = "non-admin-store";
     renderComponent("snaps");
     expect(
-      screen.queryByRole("link", { name: /Settings/ })
+      screen.queryByRole("link", { name: /Settings/ }),
     ).not.toBeInTheDocument();
   });
 });

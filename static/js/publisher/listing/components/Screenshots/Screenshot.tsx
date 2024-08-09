@@ -87,7 +87,7 @@ function Screenshot({
               onChange: (
                 e: SyntheticEvent<HTMLInputElement> & {
                   target: HTMLInputElement;
-                }
+                },
               ) => {
                 if (e.target.files) {
                   setImage(e.target.files[0]);

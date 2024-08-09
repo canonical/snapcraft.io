@@ -33,9 +33,8 @@ function getVisibilityStatus(data: SettingsData) {
 
 function getSettingsData(settingsData: SettingsData) {
   settingsData.visibility = getVisibilityStatus(settingsData);
-  settingsData.territory_distribution_status = getTerritoryDistributionStatus(
-    settingsData
-  );
+  settingsData.territory_distribution_status =
+    getTerritoryDistributionStatus(settingsData);
   settingsData.whitelist_country_keys = settingsData?.whitelist_countries
     .sort()
     .join(" ");

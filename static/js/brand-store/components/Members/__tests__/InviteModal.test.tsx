@@ -16,7 +16,7 @@ const renderComponent = (props: {
       setInviteModalOpen={jest.fn()}
       updateInvite={updateInvite}
       inviteModalIsSaving={props.inviteModalIsSaving}
-    />
+    />,
   );
 };
 

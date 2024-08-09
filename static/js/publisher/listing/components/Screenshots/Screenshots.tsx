@@ -49,7 +49,7 @@ function Screenshots({ register, control, getValues, setValue }: Props) {
       setImageValidationError(
         `${image.name} file size is over ${
           validationSchema?.maxFileSize / 1000000
-        }KB`
+        }KB`,
       );
       return;
     }
@@ -69,7 +69,7 @@ function Screenshots({ register, control, getValues, setValue }: Props) {
       ) {
         setImageIsValid(false);
         setImageValidationError(
-          `${image.name} has dimension ${renderedImage.width} x ${renderedImage.height} pixels. It needs to be at least ${validationSchema?.minWidth} x ${validationSchema?.minHeight} and at most ${validationSchema?.maxWidth} x ${validationSchema?.maxHeight} pixels.`
+          `${image.name} has dimension ${renderedImage.width} x ${renderedImage.height} pixels. It needs to be at least ${validationSchema?.minWidth} x ${validationSchema?.minHeight} and at most ${validationSchema?.maxWidth} x ${validationSchema?.maxHeight} pixels.`,
         );
       } else {
         setImageIsValid(true);

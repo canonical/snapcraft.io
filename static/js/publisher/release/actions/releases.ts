@@ -28,7 +28,7 @@ function updateReleasesData(releasesData: { revisions: any; releases: any }) {
         | { releases: any }
         | { revisions: any }
         | { architectures: any[] };
-    }) => void
+    }) => void,
   ) => {
     // init channel data in revisions list
     const revisionsMap = getRevisionsMap(releasesData.revisions);
@@ -53,8 +53,8 @@ export function handleCloseResponse(dispatch: any, json: any, channels: any) {
       });
     }
   } else {
-    let error = new Error(
-      `Error while closing channels: ${channels.join(", ")}.`
+    const error = new Error(
+      `Error while closing channels: ${channels.join(", ")}.`,
     );
     // @ts-ignore
     error.json = json;
@@ -93,7 +93,7 @@ export function handleReleaseResponse(
   dispatch: any,
   json: any,
   release: any,
-  revisions: any
+  revisions: any,
 ) {
   if (json.success) {
     // Update channel map based on the response
@@ -122,10 +122,10 @@ export function handleReleaseResponse(
                   };
                 }
 
-                let channel = `${trackKey}/${map.channel}`;
+                const channel = `${trackKey}/${map.channel}`;
                 dispatch(releaseRevisionSuccess(revision, channel));
               }
-            }
+            },
           );
         });
       });
@@ -167,7 +167,7 @@ export function releaseRevisions() {
       pendingCloses: any;
       revisions: any;
       options: any;
-    }
+    },
   ) => {
     const { pendingReleases, pendingCloses, revisions, options } = getState();
     const { csrfToken, snapName } = options;
@@ -191,7 +191,7 @@ export function releaseRevisions() {
         } else {
           const releaseIndex = regularReleases.findIndex(
             (release: { revision: { revision: number } }) =>
-              release.revision.revision === parseInt(revId)
+              release.revision.revision === parseInt(revId),
           );
           if (releaseIndex === -1) {
             regularReleases.push(mapToRelease(pendingRelease));
@@ -206,7 +206,7 @@ export function releaseRevisions() {
 
     const _handleReleaseResponse = (
       json: { success: any; channel_map_tree: any; errors?: any },
-      release: { id: number; revision: number; channels: string[] }[]
+      release: { id: number; revision: number; channels: string[] }[],
     ) => {
       return handleReleaseResponse(dispatch, json, release, revisions);
     };
@@ -223,7 +223,7 @@ export function releaseRevisions() {
     dispatch(hideNotification());
     return fetchReleases(_handleReleaseResponse, releases, csrfToken, snapName)
       .then(() =>
-        fetchCloses(_handleCloseResponse, csrfToken, snapName, pendingCloses)
+        fetchCloses(_handleCloseResponse, csrfToken, snapName, pendingCloses),
       )
       .then(() => fetchReleasesHistory(csrfToken, snapName))
       .then((json) => dispatch(updateReleasesData(json)))
@@ -233,8 +233,8 @@ export function releaseRevisions() {
             status: "error",
             appearance: "negative",
             content: getErrorMessage(error),
-          })
-        )
+          }),
+        ),
       )
       .then(() => dispatch(cancelPendingReleases()))
       .then(() => dispatch(closeHistory()));
