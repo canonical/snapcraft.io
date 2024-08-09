@@ -6,11 +6,11 @@ function getStatuses() {
 
 function addBuildStatus(
   row: HTMLElement,
-  data: Array<{ name: string; status: string }>,
+  data: Array<{ name: string; status: string }>
 ): void {
   const snapName: string | undefined = row.dataset.snapName;
   const releaseData: { name: string; status: string } | undefined = data.find(
-    (d) => d.name === snapName,
+    (d) => d.name === snapName
   );
 
   let buildStatus: string | undefined;
@@ -20,7 +20,7 @@ function addBuildStatus(
   }
 
   const buildColumn = row.querySelector(
-    "[data-js='snap-build-status']",
+    "[data-js='snap-build-status']"
   ) as HTMLElement;
 
   const failedStatuses: string[] = ["failed_to_build", "release_failed"];
@@ -49,7 +49,7 @@ function buildStatus(): void {
   getStatuses()
     .then((data) => {
       const snapListRows = document.querySelectorAll(
-        "[data-js='snap-list-row']",
+        "[data-js='snap-list-row']"
       ) as NodeListOf<HTMLElement>;
 
       snapListRows.forEach((row) => addBuildStatus(row, data));

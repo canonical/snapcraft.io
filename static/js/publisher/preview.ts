@@ -147,12 +147,12 @@ function screenshotsAndVideos(screenshots: any[], video: string) {
     videoSlide.setAttribute("data-video-url", videoDetails.url);
     videoSlide.setAttribute("data-video-id", videoDetails.id);
     const videoTemplate = document.querySelector(
-      `#video-${videoDetails.type}-template`,
+      `#video-${videoDetails.type}-template`
     );
     if (!videoTemplate) {
       throw new Error("Video template not available");
     }
-    const videoHTML = videoTemplate.innerHTML
+    let videoHTML = videoTemplate.innerHTML
       .split("${url}")
       .join(videoDetails.url)
       .split("${id}")
@@ -234,7 +234,7 @@ function render(packageName: string) {
 <p class="p-notification__message">Something went wrong. Please ensure you have permission to preview this snap.</p></div>
 </div>`;
     const snapHeading = document.querySelector(
-      ".p-snap-heading",
+      ".p-snap-heading"
     ) as HTMLElement;
 
     if (snapHeading.parentNode) {
@@ -243,7 +243,7 @@ function render(packageName: string) {
           const el = document.createElement("div");
           el.innerHTML = notification;
           return el;
-        })(),
+        })()
       );
     }
     return;
@@ -280,7 +280,7 @@ function render(packageName: string) {
 
   // Screenshots are a bit more involved, so treat them separately
   const screenshotsEl = document.querySelector(
-    `[data-live="screenshots"]`,
+    `[data-live="screenshots"]`
   ) as HTMLElement;
   if (
     transformedState.video_urls !== "" ||
@@ -291,8 +291,8 @@ function render(packageName: string) {
       screenshotsEl,
       screenshotsAndVideos(
         transformedState.screenshot_urls,
-        transformedState.video_urls,
-      ),
+        transformedState.video_urls
+      )
     );
     hideMap.screenshots(screenshotsEl).classList.remove("u-hide");
     terminateScreenshots("#js-snap-screenshots");
@@ -308,10 +308,10 @@ function render(packageName: string) {
   const metricsEl = document.querySelector(`[data-live="public_metrics_live"]`);
   if (metricsEl) {
     const mapEl = metricsEl.querySelector(
-      `[data-live="installed_base_by_country_percent"]`,
+      `[data-live="installed_base_by_country_percent"]`
     );
     const distroEl = metricsEl.querySelector(
-      `[data-live="weekly_installed_base_by_operating_system_normalized"]`,
+      `[data-live="weekly_installed_base_by_operating_system_normalized"]`
     );
 
     if (transformedState.public_metrics_enabled) {
@@ -323,7 +323,7 @@ function render(packageName: string) {
     if (mapEl) {
       if (
         transformedState.public_metrics_blacklist.indexOf(
-          "installed_base_by_country_percent",
+          "installed_base_by_country_percent"
         ) > -1
       ) {
         mapEl.classList.add("u-hide");
@@ -335,7 +335,7 @@ function render(packageName: string) {
     if (distroEl) {
       if (
         transformedState.public_metrics_blacklist.indexOf(
-          "weekly_installed_base_by_operating_system_normalized",
+          "weekly_installed_base_by_operating_system_normalized"
         ) > -1
       ) {
         distroEl.classList.add("u-hide");
@@ -347,7 +347,7 @@ function render(packageName: string) {
 
   // Remove the notification that you can edit the snap
   const snapOwnerNotification = document.querySelector(
-    ".js-snap-owner-notification",
+    ".js-snap-owner-notification"
   );
   if (snapOwnerNotification) {
     snapOwnerNotification.classList.add("u-hide");
@@ -356,7 +356,7 @@ function render(packageName: string) {
 
 function lostConnection(disableButtons: any) {
   const previewMessageEl = document.querySelector(
-    "#preview-message",
+    "#preview-message"
   ) as HTMLElement;
   previewMessageEl.innerHTML = `<i class="p-icon--error"></i> This is taking longer then usual. You can click "Edit" to return to the form.`;
   disableButtons();
@@ -364,10 +364,10 @@ function lostConnection(disableButtons: any) {
 
 function establishedConnection(
   packageName: any,
-  enableButtons: { (): void; (): void; (): void },
+  enableButtons: { (): void; (): void; (): void }
 ) {
   const previewMessageEl = document.querySelector(
-    "#preview-message",
+    "#preview-message"
   ) as HTMLElement;
   previewMessageEl.innerHTML = `You are previewing the listing page for ${packageName}`;
   enableButtons();
@@ -378,8 +378,8 @@ function establishedConnection(
  * @param packageName
  */
 function preview(packageName: string) {
-  const packageNameInitial = window.localStorage.getItem(
-    `${packageName}-initial`,
+  let packageNameInitial = window.localStorage.getItem(
+    `${packageName}-initial`
   );
   let initialState =
     packageNameInitial !== null ? JSON.parse(packageNameInitial) : "";

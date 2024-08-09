@@ -9,7 +9,7 @@ export function isInDevmode(revision: any) {
 export function getChannelName(
   track: string,
   risk: string,
-  branch?: string | undefined,
+  branch?: string | undefined
 ) {
   if (risk === AVAILABLE) {
     return AVAILABLE;
@@ -49,7 +49,7 @@ export function getRevisionsArchitectures(revisions: any[]) {
 
 export function isSameVersion(revisions: { version: string }[]) {
   let hasSameVersion = false;
-  const versionsMap: any = {};
+  let versionsMap: any = {};
 
   if (revisions) {
     // calculate map of architectures for each version
@@ -105,13 +105,9 @@ export function resizeAsidePanel(panelType: string) {
       let asidePanel;
 
       if (panelType === "add") {
-        asidePanel = document.querySelector(
-          "#add-track-aside-panel",
-        ) as HTMLElement;
+        asidePanel = document.querySelector("#add-track-aside-panel") as HTMLElement;
       } else {
-        asidePanel = document.querySelector(
-          "#request-track-aside-panel",
-        ) as HTMLElement;
+        asidePanel = document.querySelector("#request-track-aside-panel") as HTMLElement;
       }
 
       if (targetComponent && asidePanel) {
@@ -176,6 +172,6 @@ export async function hasTrackGuardrails(snap: string) {
     const data = await response.json();
     return { "track-guardrails": data.data["track-guardrails"] };
   } catch (e) {
-    return { error: e };
+    return { "error": e };
   }
 }

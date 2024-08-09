@@ -132,7 +132,7 @@ function PrimaryDomainInput({
                             Unable to verify{" "}
                             <strong>
                               {getHostname(
-                                formState.defaultValues.primary_website,
+                                formState.defaultValues.primary_website
                               )}
                             </strong>{" "}
                             with a path

@@ -2,7 +2,7 @@ const formatImageChanges = (
   bannerUrl: [string],
   iconUrl: string,
   screenshotUrls: [string],
-  screenshots: [FileList],
+  screenshots: [FileList]
 ) => {
   const images = [];
 
@@ -50,7 +50,7 @@ const formatImageChanges = (
 
 function getChanges(
   dirtyFields: { [key: string]: any },
-  data: { [key: string]: any },
+  data: { [key: string]: any }
 ) {
   const changes: { [key: string]: any } = {};
   const keys = Object.keys(dirtyFields);
@@ -71,7 +71,7 @@ function getChanges(
 
   const combineWebsites = (
     primaryWebsite: string,
-    websites: Array<{ url: string }>,
+    websites: Array<{ url: string }>
   ) => {
     return [{ url: primaryWebsite }].concat(websites);
   };
@@ -98,12 +98,12 @@ function getChanges(
         : [],
       website: data.websites
         ? removeEmptyUrls(
-            combineWebsites(data.primary_website, data.websites),
+            combineWebsites(data.primary_website, data.websites)
           ).map((url: { url: string }) => url.url)
         : [],
       source: data["source-code"]
         ? removeEmptyUrls(data["source-code"]).map(
-            (url: { url: string }) => url.url,
+            (url: { url: string }) => url.url
           )
         : [],
     };
@@ -121,7 +121,7 @@ function getChanges(
       data?.banner_url,
       data?.icon_url,
       data?.screenshot_urls,
-      data?.screenshots,
+      data?.screenshots
     );
   }
 

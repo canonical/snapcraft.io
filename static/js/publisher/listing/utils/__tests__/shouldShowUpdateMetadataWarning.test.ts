@@ -7,7 +7,7 @@ describe("shouldShowUpdateMetadataWarning", () => {
         banner_url: true,
         icon_url: true,
         screenshot_urls: true,
-      }),
+      })
     ).toBe(false);
   });
 

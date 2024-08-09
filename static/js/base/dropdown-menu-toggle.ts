@@ -1,9 +1,9 @@
 (function () {
   function toggleDropdown(toggle: HTMLElement, open: boolean) {
-    const parentElement = toggle.parentNode as HTMLElement;
-    const dropdownElId = toggle.getAttribute("aria-controls") as string;
+    var parentElement = toggle.parentNode as HTMLElement;
+    var dropdownElId = toggle.getAttribute("aria-controls") as string;
 
-    const dropdown = document.getElementById(dropdownElId) as HTMLElement;
+    var dropdown = document.getElementById(dropdownElId) as HTMLElement;
 
     const openMenu = !open;
 
@@ -26,10 +26,10 @@
 
   function handleClickOutside(
     toggles: Array<HTMLElement>,
-    containerClass: string,
+    containerClass: string
   ) {
     document.addEventListener("click", function (event) {
-      const target = event.target as HTMLElement;
+      var target = event.target as HTMLElement;
 
       if (target.closest) {
         if (!target.closest(containerClass)) {
@@ -40,8 +40,8 @@
   }
 
   function initNavDropdowns(containerClass: string) {
-    const toggles = [].slice.call(
-      document.querySelectorAll(containerClass + " [aria-controls]"),
+    var toggles = [].slice.call(
+      document.querySelectorAll(containerClass + " [aria-controls]")
     );
 
     handleClickOutside(toggles, containerClass);
@@ -50,7 +50,7 @@
       toggle.addEventListener("click", function (e) {
         e.preventDefault();
 
-        const parentElement = toggle.parentNode as HTMLElement;
+        var parentElement = toggle.parentNode as HTMLElement;
         if (parentElement.classList.contains("is-active")) {
           toggleDropdown(toggle, false);
         } else {

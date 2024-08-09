@@ -186,13 +186,13 @@ function Navigation({
                                               const storeName =
                                                 store.name.toLowerCase();
                                               return storeName.includes(
-                                                value.toLowerCase(),
+                                                value.toLowerCase()
                                               );
-                                            }),
+                                            })
                                           );
                                         } else {
                                           setFilteredBrandstores(
-                                            brandStoresList,
+                                            brandStoresList
                                           );
                                         }
                                       }}

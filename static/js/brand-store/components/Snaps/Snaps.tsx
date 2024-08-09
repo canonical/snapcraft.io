@@ -47,16 +47,16 @@ function Snaps(): ReactNode {
   const members = useSelector(membersSelector);
   const snapsLoading = useSelector((state: SnapsSlice) => state.snaps.loading);
   const storesLoading = useSelector(
-    (state: StoresSlice) => state.brandStores.loading,
+    (state: StoresSlice) => state.brandStores.loading
   );
   const membersLoading = useSelector(
-    (state: MembersSlice) => state.members.loading,
+    (state: MembersSlice) => state.members.loading
   );
   const snapsNotFound = useSelector(
-    (state: SnapsSlice) => state.snaps.notFound,
+    (state: SnapsSlice) => state.snaps.notFound
   );
   const membersNotFound = useSelector(
-    (state: MembersSlice) => state.members.notFound,
+    (state: MembersSlice) => state.members.notFound
   );
   const dispatch = useAppDispatch();
   const { id } = useParams();
@@ -308,7 +308,7 @@ function Snaps(): ReactNode {
             return false;
           }),
         };
-      }),
+      })
     );
   }, [otherStoreIds]);
 
@@ -322,19 +322,17 @@ function Snaps(): ReactNode {
 
   useEffect(() => {
     setIsPublisherOnly(
-      currentStore?.roles.length === 1 &&
-        currentStore?.roles.includes("access"),
+      currentStore?.roles.length === 1 && currentStore?.roles.includes("access")
     );
 
     setIsReviewerOnly(
-      currentStore?.roles.length === 1 &&
-        currentStore?.roles.includes("review"),
+      currentStore?.roles.length === 1 && currentStore?.roles.includes("review")
     );
 
     setIsReviewerAndPublisherOnly(
       currentStore?.roles.length === 2 &&
         currentStore?.roles.includes("access") &&
-        currentStore?.roles.includes("review"),
+        currentStore?.roles.includes("review")
     );
   }, [currentStore, id]);
 

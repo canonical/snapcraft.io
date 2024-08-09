@@ -30,14 +30,14 @@ export const UserFacingStatus: {
     "Built, won’t be released",
     "Built",
     6,
-    WONT_RELEASE,
+    WONT_RELEASE
   ),
   [RELEASED]: createStatus("Released", "Released", 5, "released"),
   [RELEASE_FAILED]: createStatus(
     "Built, failed to release",
     "Failed",
     4,
-    RELEASE_FAILED,
+    RELEASE_FAILED
   ),
   [RELEASING_SOON]: createStatus("Releasing", "Releasing", 3, RELEASING_SOON),
   [IN_PROGRESS]: createStatus("In progress", "In progress", 2, IN_PROGRESS),
@@ -45,7 +45,7 @@ export const UserFacingStatus: {
     "Failed to build",
     "Failed",
     1,
-    FAILED_TO_BUILD,
+    FAILED_TO_BUILD
   ),
   [CANCELLED]: createStatus("Cancelled", "Cancelled", 8, CANCELLED),
   [UNKNOWN]: createStatus("Unknown", "Unknown", 8, NEVER_BUILT),
@@ -55,7 +55,7 @@ export function createStatus(
   statusMessage: string,
   shortStatusMessage: string,
   priority: number,
-  badge: string,
+  badge: string
 ) {
   const loadingStatus = [IN_PROGRESS, RELEASING_SOON];
   let icon;

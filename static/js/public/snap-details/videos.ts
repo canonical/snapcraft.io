@@ -8,7 +8,7 @@ function vimeo(): void {
   }
 
   const frame = document.getElementById(
-    "vimeoplayer",
+    "vimeoplayer"
   ) as HTMLIFrameElement | null;
 
   const vimeoReady = () => {

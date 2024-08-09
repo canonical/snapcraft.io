@@ -55,16 +55,16 @@ function Settings(): ReactNode {
   const currentStore = useSelector(currentStoreSelector);
   const members = useSelector(membersSelector);
   const storeLoading = useSelector(
-    (state: RootState) => state.currentStore.loading,
+    (state: RootState) => state.currentStore.loading
   );
   const membersLoading = useSelector(
-    (state: RootState) => state.members.loading,
+    (state: RootState) => state.members.loading
   );
   const storeNotFound = useSelector(
-    (state: RootState) => state.currentStore.notFound,
+    (state: RootState) => state.currentStore.notFound
   );
   const membersNotFound = useSelector(
-    (state: RootState) => state.members.notFound,
+    (state: RootState) => state.members.notFound
   );
   const dispatch = useAppDispatch();
   const { id } = useParams<RouteParams>();

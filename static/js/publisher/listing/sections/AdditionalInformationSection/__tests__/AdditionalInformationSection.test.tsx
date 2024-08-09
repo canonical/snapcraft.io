@@ -21,7 +21,7 @@ const renderComponent = () => {
         licenses: [],
       }}
       getValues={jest.fn()}
-    />,
+    />
   );
 };
 
@@ -29,7 +29,7 @@ describe("AdditionalInformationSection", () => {
   test("shows the correct section", () => {
     renderComponent();
     expect(
-      screen.getByRole("heading", { level: 2, name: "Additional information" }),
+      screen.getByRole("heading", { level: 2, name: "Additional information" })
     ).toBeInTheDocument();
   });
 });

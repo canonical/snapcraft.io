@@ -60,7 +60,7 @@ const renderComponent = (filterQuery?: string) => {
           />
         </QueryClientProvider>
       </BrowserRouter>
-    </RecoilRoot>,
+    </RecoilRoot>
   );
 };
 

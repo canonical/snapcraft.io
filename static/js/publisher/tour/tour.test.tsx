@@ -29,7 +29,7 @@ describe("Tour", () => {
         startTour={false}
         onTourClosed={jest.fn()}
         onTourStarted={jest.fn()}
-      />,
+      />
     );
 
     const button = getByText("Tour");
@@ -46,7 +46,7 @@ describe("Tour", () => {
           startTour={false}
           onTourClosed={jest.fn()}
           onTourStarted={jest.fn()}
-        />,
+        />
       );
       const button = getByText("Tour");
 
@@ -56,7 +56,7 @@ describe("Tour", () => {
         expect.objectContaining({
           steps,
         }),
-        expect.any(Object),
+        expect.any(Object)
       );
     });
   });
@@ -69,14 +69,14 @@ describe("Tour", () => {
           startTour={true}
           onTourClosed={jest.fn()}
           onTourStarted={jest.fn()}
-        />,
+        />
       );
 
       expect(TourOverlay).toBeCalledWith(
         expect.objectContaining({
           steps,
         }),
-        expect.any(Object),
+        expect.any(Object)
       );
     });
 
@@ -87,7 +87,7 @@ describe("Tour", () => {
           startTour={true}
           onTourClosed={jest.fn()}
           onTourStarted={jest.fn()}
-        />,
+        />
       );
       expect(tourStartedAutomatically).toBeCalled();
     });
@@ -107,7 +107,7 @@ describe("Tour", () => {
           startTour={true}
           onTourStarted={onTourStarted}
           onTourClosed={jest.fn()}
-        />,
+        />
       );
 
       expect(onTourStarted).toBeCalled();
@@ -120,7 +120,7 @@ describe("Tour", () => {
           onTourStarted={onTourStarted}
           startTour={false}
           onTourClosed={jest.fn()}
-        />,
+        />
       );
       fireEvent.click(getByText("Tour"));
 
@@ -142,7 +142,7 @@ describe("Tour", () => {
           startTour={true}
           onTourClosed={onTourClosed}
           onTourStarted={jest.fn()}
-        />,
+        />
       );
 
       expect(onTourClosed).not.toBeCalled();
@@ -155,7 +155,7 @@ describe("Tour", () => {
           onTourClosed={onTourClosed}
           startTour={false}
           onTourStarted={jest.fn()}
-        />,
+        />
       );
 
       expect(onTourClosed).toBeCalled();

@@ -2,7 +2,7 @@ import { triggerEvent } from "../base/ga";
 import debounce from "../libs/debounce";
 
 const isInViewport = (el: { getBoundingClientRect: () => DOMRect }) => {
-  const bounding = el.getBoundingClientRect();
+  var bounding = el.getBoundingClientRect();
   return (
     bounding.top >= 0 &&
     bounding.left >= 0 &&
@@ -23,7 +23,7 @@ export default function triggerEventWhenVisible(selector: string): void {
         "element-visible",
         origin,
         selector,
-        `Element visible on screen: ${selector}`,
+        `Element visible on screen: ${selector}`
       );
     } else {
       let triggered = false;
@@ -35,11 +35,11 @@ export default function triggerEventWhenVisible(selector: string): void {
               "element-visible",
               origin,
               selector,
-              `Element visible on screen: ${selector}`,
+              `Element visible on screen: ${selector}`
             );
             triggered = true;
           }
-        }, 500),
+        }, 500)
       );
     }
   } else {
