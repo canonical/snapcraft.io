@@ -341,8 +341,20 @@ def store_blueprint(store_query=None):
     @exchange_required
     def post_create_track(snap_name):
         track_name = flask.request.form["track-name"]
+        version_pattern = flask.request.form["version-pattern"]
+        auto_phasing_percentage = flask.request.form[
+            "automatic-phasing-percentage"
+        ]
+
+        if auto_phasing_percentage:
+            auto_phasing_percentage = float(auto_phasing_percentage)
+
         response = publisher_api.create_track(
-            flask.session, snap_name, track_name
+            flask.session,
+            snap_name,
+            track_name,
+            version_pattern,
+            auto_phasing_percentage,
         )
         if response.status_code == 201:
             return response.json(), response.status_code
