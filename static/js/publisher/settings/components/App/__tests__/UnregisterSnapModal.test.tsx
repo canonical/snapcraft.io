@@ -46,7 +46,7 @@ describe('UnregisterSnapModal', () => {
     render(<UnregisterSnapModal {...defaultProps} />);
     const unregisterButton = screen.getByText('Unregister');
     await user.click(unregisterButton);
-    expect(unregisterButton).toBeDisabled();
+    expect(unregisterButton).toHaveAttribute("aria-disabled","true");
     expect(screen.getByText('Unregistering...')).toBeInTheDocument();
   });
 

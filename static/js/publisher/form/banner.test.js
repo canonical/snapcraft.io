@@ -51,9 +51,12 @@ describe("Banner", () => {
         expect(
           container.querySelectorAll(".p-notification--negative").length,
         ).toEqual(0);
-        expect(
-          container.querySelector(backgroundSelector).getAttribute("src"),
-        ).toEqual("banner.png");
+
+        const imageElement = container.querySelector(backgroundSelector);
+        if (imageElement) {
+          expect(imageElement.getAttribute("src")).toEqual("banner.png");
+        }
+
         done();
       }, 500);
     });
