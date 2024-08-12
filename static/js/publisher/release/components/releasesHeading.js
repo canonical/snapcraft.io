@@ -83,10 +83,6 @@ function ReleasesHeading(props) {
   const [notification, setNotification] = useState(null);
 
   const [storedTracks, setStoredTracks] = useState([]);
-  const [currentTrackVersionPattern, setCurrentTrackVersionPattern] =
-    useState(null);
-  const [currentTrackPhasingPercentage, setCurrentTrackPhasingPercentage] =
-    useState(null);
 
   // Fetch tracks once
   useEffect(() => {
@@ -105,21 +101,12 @@ function ReleasesHeading(props) {
   }, [props.snapName]);
 
   // Update track info when currentTrack changes
-  useEffect(() => {
-    const trackInfo = storedTracks.find(
-      (track) => track.name === props.currentTrack,
-    );
-
-    if (trackInfo) {
-      setCurrentTrackVersionPattern(trackInfo["version-pattern"]);
-      setCurrentTrackPhasingPercentage(
-        trackInfo["automatic-phasing-percentage"],
-      );
-    } else {
-      setCurrentTrackVersionPattern(null);
-      setCurrentTrackPhasingPercentage(null);
-    }
-  }, [props.currentTrack, storedTracks]);
+  const trackInfo = storedTracks.find(
+    (track) => track.name === props.currentTrack,
+  );
+  const currentTrackVersionPattern = trackInfo?.["version-pattern"] || null;
+  const currentPhasingPercentage =
+    trackInfo?.["automatic-phasing-percentage"] || null;
 
   useEffect(() => {
     const fetchTrackGuardrails = async () => {
@@ -305,7 +292,7 @@ function ReleasesHeading(props) {
                 </h5>
                 <TrackInfo
                   versionPattern={currentTrackVersionPattern}
-                  automaticPhasingPercentage={currentTrackPhasingPercentage}
+                  automaticPhasingPercentage={currentPhasingPercentage}
                 />
                 <div className="success-notification">
                   {successNotification && (
