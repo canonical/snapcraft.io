@@ -35,6 +35,71 @@ def store_blueprint(store_query=None):
     )
     snap_details_views(store, api)
 
+    def format_validation_set(validation_set):
+        return validation_set["headers"]
+
+    @store.route("/api/validation-sets")
+    @login_required
+    def get_validation_sets():
+        res = {}
+
+        try:
+            validation_sets = publisher_api.get_validation_sets(flask.session)
+            res["success"] = True
+
+            if len(validation_sets["assertions"]) > 0:
+                res["data"] = [
+                    format_validation_set(item)
+                    for item in validation_sets["assertions"]
+                ]
+            else:
+                res["data"] = []
+
+            response = flask.make_response(res, 200)
+            response.cache_control.max_age = "3600"
+        except StoreApiError as error_list:
+            error_messages = [
+                f"{error.get('message', 'An error occurred')}"
+                for error in error_list.errors
+            ]
+
+            res["message"] = " ".join(error_messages)
+            res["success"] = False
+            response = flask.make_response(res, 500)
+
+        return response
+
+    @store.route("/api/validation-sets/<validation_set_id>")
+    @login_required
+    def get_validation_set(validation_set_id):
+        res = {}
+
+        try:
+            validation_set = publisher_api.get_validation_set(
+                flask.session, validation_set_id
+            )
+            res["success"] = True
+
+            if len(validation_set["assertions"]) > 0:
+                res["data"] = format_validation_set(
+                    validation_set["assertions"][0]
+                )
+            else:
+                res["data"] = {}
+            response = flask.make_response(res, 200)
+            response.cache_control.max_age = "3600"
+        except StoreApiError as error_list:
+            error_messages = [
+                f"{error.get('message', 'An error occurred')}"
+                for error in error_list.errors
+            ]
+
+            res["message"] = " ".join(error_messages)
+            res["success"] = False
+            response = flask.make_response(res, 500)
+
+        return response
+
     @store.route("/discover")
     def discover():
         return flask.redirect(flask.url_for(".homepage"))
