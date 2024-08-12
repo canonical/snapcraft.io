@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import { select, pointer, Selection, BaseType } from "d3-selection";
 import { json } from "d3-fetch";
 import { geoNaturalEarth1, geoPath } from "d3-geo";
@@ -81,7 +82,7 @@ export default function renderMap(
           coordinates: Array<Array<number>>;
         };
         id: number;
-        properties: {};
+        properties: object;
         type: string;
       },
       SVGGElement,
