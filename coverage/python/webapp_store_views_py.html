@@ -3,7 +3,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=emulateIE7" />
-    <title>Coverage for webapp/store/views.py: 48%</title>
+    <title>Coverage for webapp/store/views.py: 47%</title>
     <link rel="icon" sizes="32x32" href="favicon_32.png">
     <link rel="stylesheet" href="style.css" type="text/css">
     <script type="text/javascript" src="jquery.min.js"></script>
@@ -18,13 +18,13 @@
 <div id="header">
     <div class="content">
         <h1>Coverage for <b>webapp/store/views.py</b> :
-            <span class="pc_cov">48%</span>
+            <span class="pc_cov">47%</span>
         </h1>
         <img id="keyboard_icon" src="keybd_closed.png" alt="Show keyboard shortcuts" />
         <h2 class="stats">
-            178 statements &nbsp;
+            182 statements &nbsp;
             <button type="button" class="run shortkey_r button_toggle_run" title="Toggle lines run">86 run</button>
-            <button type="button" class="mis show_mis shortkey_m button_toggle_mis" title="Toggle lines missing">92 missing</button>
+            <button type="button" class="mis show_mis shortkey_m button_toggle_mis" title="Toggle lines missing">96 missing</button>
             <button type="button" class="exc show_exc shortkey_x button_toggle_exc" title="Toggle lines excluded">0 excluded</button>
         </h2>
     </div>
@@ -395,32 +395,44 @@
     <p id="t341" class="run"><span class="n"><a href="#t341">341</a></span><span class="t">    <span class="op">@</span><span class="nam">exchange_required</span>&nbsp;</span><span class="r"></span></p>
     <p id="t342" class="run"><span class="n"><a href="#t342">342</a></span><span class="t">    <span class="key">def</span> <span class="nam">post_create_track</span><span class="op">(</span><span class="nam">snap_name</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
     <p id="t343" class="mis show_mis"><span class="n"><a href="#t343">343</a></span><span class="t">        <span class="nam">track_name</span> <span class="op">=</span> <span class="nam">flask</span><span class="op">.</span><span class="nam">request</span><span class="op">.</span><span class="nam">form</span><span class="op">[</span><span class="str">"track-name"</span><span class="op">]</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t344" class="mis show_mis"><span class="n"><a href="#t344">344</a></span><span class="t">        <span class="nam">response</span> <span class="op">=</span> <span class="nam">publisher_api</span><span class="op">.</span><span class="nam">create_track</span><span class="op">(</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t345" class="pln"><span class="n"><a href="#t345">345</a></span><span class="t">            <span class="nam">flask</span><span class="op">.</span><span class="nam">session</span><span class="op">,</span> <span class="nam">snap_name</span><span class="op">,</span> <span class="nam">track_name</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t346" class="pln"><span class="n"><a href="#t346">346</a></span><span class="t">        <span class="op">)</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t347" class="mis show_mis"><span class="n"><a href="#t347">347</a></span><span class="t">        <span class="key">if</span> <span class="nam">response</span><span class="op">.</span><span class="nam">status_code</span> <span class="op">==</span> <span class="num">201</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t348" class="mis show_mis"><span class="n"><a href="#t348">348</a></span><span class="t">            <span class="key">return</span> <span class="nam">response</span><span class="op">.</span><span class="nam">json</span><span class="op">(</span><span class="op">)</span><span class="op">,</span> <span class="nam">response</span><span class="op">.</span><span class="nam">status_code</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t349" class="mis show_mis"><span class="n"><a href="#t349">349</a></span><span class="t">        <span class="key">if</span> <span class="nam">response</span><span class="op">.</span><span class="nam">status_code</span> <span class="op">==</span> <span class="num">409</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t350" class="mis show_mis"><span class="n"><a href="#t350">350</a></span><span class="t">            <span class="key">return</span> <span class="op">(</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t351" class="pln"><span class="n"><a href="#t351">351</a></span><span class="t">                <span class="nam">jsonify</span><span class="op">(</span><span class="op">{</span><span class="str">"error"</span><span class="op">:</span> <span class="str">"Track already exists."</span><span class="op">}</span><span class="op">)</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t352" class="pln"><span class="n"><a href="#t352">352</a></span><span class="t">                <span class="nam">response</span><span class="op">.</span><span class="nam">status_code</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t353" class="pln"><span class="n"><a href="#t353">353</a></span><span class="t">            <span class="op">)</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t354" class="mis show_mis"><span class="n"><a href="#t354">354</a></span><span class="t">        <span class="key">if</span> <span class="str">"error-list"</span> <span class="key">in</span> <span class="nam">response</span><span class="op">.</span><span class="nam">json</span><span class="op">(</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t355" class="mis show_mis"><span class="n"><a href="#t355">355</a></span><span class="t">            <span class="key">return</span> <span class="op">(</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t356" class="pln"><span class="n"><a href="#t356">356</a></span><span class="t">                <span class="nam">jsonify</span><span class="op">(</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t357" class="pln"><span class="n"><a href="#t357">357</a></span><span class="t">                    <span class="op">{</span><span class="str">"error"</span><span class="op">:</span> <span class="nam">response</span><span class="op">.</span><span class="nam">json</span><span class="op">(</span><span class="op">)</span><span class="op">[</span><span class="str">"error-list"</span><span class="op">]</span><span class="op">[</span><span class="num">0</span><span class="op">]</span><span class="op">[</span><span class="str">"message"</span><span class="op">]</span><span class="op">}</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t358" class="pln"><span class="n"><a href="#t358">358</a></span><span class="t">                <span class="op">)</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t359" class="pln"><span class="n"><a href="#t359">359</a></span><span class="t">                <span class="nam">response</span><span class="op">.</span><span class="nam">status_code</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t360" class="pln"><span class="n"><a href="#t360">360</a></span><span class="t">            <span class="op">)</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t361" class="mis show_mis"><span class="n"><a href="#t361">361</a></span><span class="t">        <span class="key">return</span> <span class="nam">response</span><span class="op">.</span><span class="nam">json</span><span class="op">(</span><span class="op">)</span><span class="op">,</span> <span class="nam">response</span><span class="op">.</span><span class="nam">status_code</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t362" class="pln"><span class="n"><a href="#t362">362</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
-    <p id="t363" class="run"><span class="n"><a href="#t363">363</a></span><span class="t">    <span class="key">return</span> <span class="nam">store</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t344" class="mis show_mis"><span class="n"><a href="#t344">344</a></span><span class="t">        <span class="nam">version_pattern</span> <span class="op">=</span> <span class="nam">flask</span><span class="op">.</span><span class="nam">request</span><span class="op">.</span><span class="nam">form</span><span class="op">[</span><span class="str">"version-pattern"</span><span class="op">]</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t345" class="mis show_mis"><span class="n"><a href="#t345">345</a></span><span class="t">        <span class="nam">auto_phasing_percentage</span> <span class="op">=</span> <span class="nam">flask</span><span class="op">.</span><span class="nam">request</span><span class="op">.</span><span class="nam">form</span><span class="op">[</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t346" class="pln"><span class="n"><a href="#t346">346</a></span><span class="t">            <span class="str">"automatic-phasing-percentage"</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t347" class="pln"><span class="n"><a href="#t347">347</a></span><span class="t">        <span class="op">]</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t348" class="pln"><span class="n"><a href="#t348">348</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p id="t349" class="mis show_mis"><span class="n"><a href="#t349">349</a></span><span class="t">        <span class="key">if</span> <span class="nam">auto_phasing_percentage</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t350" class="mis show_mis"><span class="n"><a href="#t350">350</a></span><span class="t">            <span class="nam">auto_phasing_percentage</span> <span class="op">=</span> <span class="nam">float</span><span class="op">(</span><span class="nam">auto_phasing_percentage</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t351" class="pln"><span class="n"><a href="#t351">351</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p id="t352" class="mis show_mis"><span class="n"><a href="#t352">352</a></span><span class="t">        <span class="nam">response</span> <span class="op">=</span> <span class="nam">publisher_api</span><span class="op">.</span><span class="nam">create_track</span><span class="op">(</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t353" class="pln"><span class="n"><a href="#t353">353</a></span><span class="t">            <span class="nam">flask</span><span class="op">.</span><span class="nam">session</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t354" class="pln"><span class="n"><a href="#t354">354</a></span><span class="t">            <span class="nam">snap_name</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t355" class="pln"><span class="n"><a href="#t355">355</a></span><span class="t">            <span class="nam">track_name</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t356" class="pln"><span class="n"><a href="#t356">356</a></span><span class="t">            <span class="nam">version_pattern</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t357" class="pln"><span class="n"><a href="#t357">357</a></span><span class="t">            <span class="nam">auto_phasing_percentage</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t358" class="pln"><span class="n"><a href="#t358">358</a></span><span class="t">        <span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t359" class="mis show_mis"><span class="n"><a href="#t359">359</a></span><span class="t">        <span class="key">if</span> <span class="nam">response</span><span class="op">.</span><span class="nam">status_code</span> <span class="op">==</span> <span class="num">201</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t360" class="mis show_mis"><span class="n"><a href="#t360">360</a></span><span class="t">            <span class="key">return</span> <span class="nam">response</span><span class="op">.</span><span class="nam">json</span><span class="op">(</span><span class="op">)</span><span class="op">,</span> <span class="nam">response</span><span class="op">.</span><span class="nam">status_code</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t361" class="mis show_mis"><span class="n"><a href="#t361">361</a></span><span class="t">        <span class="key">if</span> <span class="nam">response</span><span class="op">.</span><span class="nam">status_code</span> <span class="op">==</span> <span class="num">409</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t362" class="mis show_mis"><span class="n"><a href="#t362">362</a></span><span class="t">            <span class="key">return</span> <span class="op">(</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t363" class="pln"><span class="n"><a href="#t363">363</a></span><span class="t">                <span class="nam">jsonify</span><span class="op">(</span><span class="op">{</span><span class="str">"error"</span><span class="op">:</span> <span class="str">"Track already exists."</span><span class="op">}</span><span class="op">)</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t364" class="pln"><span class="n"><a href="#t364">364</a></span><span class="t">                <span class="nam">response</span><span class="op">.</span><span class="nam">status_code</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t365" class="pln"><span class="n"><a href="#t365">365</a></span><span class="t">            <span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t366" class="mis show_mis"><span class="n"><a href="#t366">366</a></span><span class="t">        <span class="key">if</span> <span class="str">"error-list"</span> <span class="key">in</span> <span class="nam">response</span><span class="op">.</span><span class="nam">json</span><span class="op">(</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t367" class="mis show_mis"><span class="n"><a href="#t367">367</a></span><span class="t">            <span class="key">return</span> <span class="op">(</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t368" class="pln"><span class="n"><a href="#t368">368</a></span><span class="t">                <span class="nam">jsonify</span><span class="op">(</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t369" class="pln"><span class="n"><a href="#t369">369</a></span><span class="t">                    <span class="op">{</span><span class="str">"error"</span><span class="op">:</span> <span class="nam">response</span><span class="op">.</span><span class="nam">json</span><span class="op">(</span><span class="op">)</span><span class="op">[</span><span class="str">"error-list"</span><span class="op">]</span><span class="op">[</span><span class="num">0</span><span class="op">]</span><span class="op">[</span><span class="str">"message"</span><span class="op">]</span><span class="op">}</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t370" class="pln"><span class="n"><a href="#t370">370</a></span><span class="t">                <span class="op">)</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t371" class="pln"><span class="n"><a href="#t371">371</a></span><span class="t">                <span class="nam">response</span><span class="op">.</span><span class="nam">status_code</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t372" class="pln"><span class="n"><a href="#t372">372</a></span><span class="t">            <span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t373" class="mis show_mis"><span class="n"><a href="#t373">373</a></span><span class="t">        <span class="key">return</span> <span class="nam">response</span><span class="op">.</span><span class="nam">json</span><span class="op">(</span><span class="op">)</span><span class="op">,</span> <span class="nam">response</span><span class="op">.</span><span class="nam">status_code</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t374" class="pln"><span class="n"><a href="#t374">374</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p id="t375" class="run"><span class="n"><a href="#t375">375</a></span><span class="t">    <span class="key">return</span> <span class="nam">store</span>&nbsp;</span><span class="r"></span></p>
 </div>
 <div id="footer">
     <div class="content">
         <p>
             <a class="nav" href="index.html">&#xab; index</a> &nbsp; &nbsp; <a class="nav" href="https://coverage.readthedocs.io">coverage.py v5.5</a>,
-            created at 2024-08-01 22:05 +0000
+            created at 2024-08-12 22:06 +0000
         </p>
     </div>
 </div>
