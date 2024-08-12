@@ -18,13 +18,11 @@ import {
   validatePhasingPercentage,
   resizeAsidePanel,
   numericalSort,
-  getTrackGuardrails,
-  getPackageMetadata,
+  hasTrackGuardrails,
 } from "../helpers";
 
 import DefaultTrackModifier from "./defaultTrackModifier";
 import ReleasesTable from "./releasesTable";
-import TrackInfo from "./TrackInfo";
 
 function ReleasesHeading(props) {
   resizeAsidePanel("request");
@@ -71,6 +69,8 @@ function ReleasesHeading(props) {
   tracks.sort(numericalSort);
   const options = tracks.map((track) => ({ value: track, label: track }));
 
+  // add new track form
+
   const [trackName, setTrackName] = useState("");
   const [versionPattern, setVersionPattern] = useState("");
   const [phasingPercentage, setPhasingPercentage] = useState("");
@@ -82,49 +82,10 @@ function ReleasesHeading(props) {
   const [isLoading, setIsLoading] = useState(false);
   const [notification, setNotification] = useState(null);
 
-  const [storedTracks, setStoredTracks] = useState([]);
-  const [currentTrackVersionPattern, setCurrentTrackVersionPattern] =
-    useState(null);
-  const [currentTrackPhasingPercentage, setCurrentTrackPhasingPercentage] =
-    useState(null);
-
-  // Fetch tracks once
-  useEffect(() => {
-    const fetchTracks = async () => {
-      try {
-        const snapMetadata = await getPackageMetadata(props.snapName);
-        if (snapMetadata.tracks) {
-          setStoredTracks(snapMetadata.tracks);
-        }
-      } catch (error) {
-        console.error("Failed to fetch tracks:", error.message);
-      }
-    };
-
-    fetchTracks();
-  }, [props.snapName]);
-
-  // Update track info when currentTrack changes
-  useEffect(() => {
-    const trackInfo = storedTracks.find(
-      (track) => track.name === props.currentTrack,
-    );
-
-    if (trackInfo) {
-      setCurrentTrackVersionPattern(trackInfo["version-pattern"]);
-      setCurrentTrackPhasingPercentage(
-        trackInfo["automatic-phasing-percentage"],
-      );
-    } else {
-      setCurrentTrackVersionPattern(null);
-      setCurrentTrackPhasingPercentage(null);
-    }
-  }, [props.currentTrack, storedTracks]);
-
   useEffect(() => {
     const fetchTrackGuardrails = async () => {
       try {
-        const response = await getTrackGuardrails(props.snapName);
+        const response = await hasTrackGuardrails(props.snapName);
         if (response["track-guardrails"].length === 0) {
           setTrackGuardrailsStatus("request");
         } else if (response["track-guardrails"].length > 0) {
@@ -303,10 +264,6 @@ function ReleasesHeading(props) {
                     </div>
                   </label>
                 </h5>
-                <TrackInfo
-                  versionPattern={currentTrackVersionPattern}
-                  automaticPhasingPercentage={currentTrackPhasingPercentage}
-                />
                 <div className="success-notification">
                   {successNotification && (
                     <Notification severity="positive">

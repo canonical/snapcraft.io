@@ -156,7 +156,7 @@ export function numericalSort(a: string, b: string) {
   return a.localeCompare(b);
 }
 
-export async function getPackageMetadata(snap: string) {
+export async function hasTrackGuardrails(snap: string) {
   const url = `/api/packages/${snap}`;
   try {
     const response = await fetch(url, {
@@ -170,13 +170,8 @@ export async function getPackageMetadata(snap: string) {
       throw new Error("There was a problem fetching the snap's metadata");
     }
     const data = await response.json();
-    return data.data;
+    return { "track-guardrails": data.data["track-guardrails"] };
   } catch (e) {
     return { "error": e };
   }
-}
-
-export async function getTrackGuardrails(snap: string) {
-  const snapMetadata: any = await getPackageMetadata(snap);
-  return { "track-guardrails": snapMetadata["track-guardrails"] };
 }

@@ -5,7 +5,7 @@ import {
   getRevisionsArchitectures,
   isSameVersion,
   jsonClone,
-  getTrackGuardrails,
+  hasTrackGuardrails,
 } from "./helpers";
 
 global.fetch = jest.fn();
@@ -115,7 +115,7 @@ describe("jsonClone", () => {
   });
 });
 
-describe("getTrackGuardrails", () => {
+describe("hasTrackGuardrails", () => {
   beforeEach(() => {
     fetch.mockClear();
   });
@@ -131,7 +131,7 @@ describe("getTrackGuardrails", () => {
         }),
     });
 
-    const result = await getTrackGuardrails("test-snap");
+    const result = await hasTrackGuardrails("test-snap");
     expect(result).toStrictEqual({ "track-guardrails": ["example-guardrail"] });
   });
 
@@ -146,7 +146,7 @@ describe("getTrackGuardrails", () => {
         }),
     });
 
-    const result = await getTrackGuardrails("test-snap");
+    const result = await hasTrackGuardrails("test-snap");
     expect(result).toStrictEqual({ "track-guardrails": [] });
   });
 });
