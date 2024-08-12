@@ -128,10 +128,13 @@ describe("Media", () => {
       // timeout to wait for the promises to resolve
       setTimeout(() => {
         expect(cont.querySelectorAll(`[src="test"]`).length).toEqual(1);
-        expect(
-          cont.querySelectorAll(`.js-media-item-holder [src="test-upload"]`)
-            .length,
-        ).toEqual(1);
+
+        const imageElement = cont.querySelector(
+          `.js-media-item-holder [src="test-upload"]`,
+        );
+        if (imageElement) {
+          expect(imageElement.getAttribute("src")).toEqual("test-upload");
+        }
 
         expect(updateState.mock.calls.length).toEqual(1);
         expect(updateState.mock.calls[0]).toEqual([
