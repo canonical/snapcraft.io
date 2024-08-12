@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 /* globals ClipboardJS, ga */
 
 import "whatwg-fetch";
@@ -116,8 +117,7 @@ function install(language: unknown, fsfFlow: string): void {
 
 function getSnapCount(cb: {
   (data: { count: number; snaps: string[] }): void;
-  (arg0: any): void;
-}) {
+}): void {
   fetch("/snaps/api/snap-count")
     .then((r) => r.json())
     .then((data) => {
@@ -126,11 +126,11 @@ function getSnapCount(cb: {
     .catch();
 }
 
-function getArrayDiff(arr1: [], arr2: []) {
+function getArrayDiff(arr1: string[], arr2: string[]): string[] {
   let newArr: string[];
   let oldArr: string[];
   if (arr1.length === arr2.length) {
-    return false;
+    return [];
   }
 
   if (arr1.length > arr2.length) {
@@ -154,7 +154,7 @@ function getArrayDiff(arr1: [], arr2: []) {
 
 function push(): void {
   let initialCount: number | null = null;
-  let initialSnaps: [] = [];
+  let initialSnaps: string[] = [];
   let timer: string | number | NodeJS.Timeout | undefined;
   let ready = false;
 
@@ -221,31 +221,24 @@ function push(): void {
 function updateNotification(
   notificationEl: {
     className: string;
-    querySelector: (arg0: string) => {
-      (): HTMLElement;
-      new (): any;
-      innerHTML: string;
-    };
+    querySelector: (arg0: string) => HTMLElement;
   },
   className: string,
   message: string | undefined,
 ) {
   notificationEl.className = className;
-
   if (message) {
-    notificationEl.querySelector(".p-notification__message").innerHTML =
-      message;
+    const messageEl = notificationEl.querySelector(".p-notification__message");
+    if (messageEl) {
+      messageEl.innerHTML = message;
+    }
   }
 }
 
 function successNotification(
   notificationEl: {
     className: string;
-    querySelector: (arg0: string) => {
-      (): HTMLElement;
-      new (): any;
-      innerHTML: string;
-    };
+    querySelector: (arg0: string) => HTMLElement;
   },
   message: string | undefined,
 ) {
@@ -255,11 +248,7 @@ function successNotification(
 function errorNotification(
   notificationEl: {
     className: string;
-    querySelector: (arg0: string) => {
-      (): HTMLElement;
-      new (): any;
-      innerHTML: string;
-    };
+    querySelector: (arg0: string) => HTMLElement;
   },
   message: string,
 ) {
@@ -272,26 +261,39 @@ function validateSnapName(name: string) {
 
 function initChooseName(
   formEl: {
-    querySelector: (arg0: string) => {
-      (): HTMLElement;
-      new (): any;
-      disabled: boolean;
-    };
+    querySelector: (arg0: string) => HTMLElement;
     addEventListener: (arg0: string, arg1: (event: Event) => void) => void;
   },
   language: string,
 ): void {
-  const snapNameInput = formEl.querySelector("[name=snap-name]") as any;
+  const snapNameInput = formEl.querySelector(
+    "[name=snap-name]",
+  ) as HTMLInputElement;
 
   snapNameInput.addEventListener("keyup", () => {
     const isValid = validateSnapName(snapNameInput.value);
 
-    if (!isValid) {
-      snapNameInput.parentNode.classList.add("is-error");
-      formEl.querySelector("button").disabled = true;
-    } else {
-      snapNameInput.parentNode.classList.remove("is-error");
-      formEl.querySelector("button").disabled = false;
+    const parent = snapNameInput.parentNode as HTMLElement | null;
+    if (parent) {
+      if (!isValid) {
+        parent.classList.add("is-error");
+
+        const submitButton = formEl.querySelector(
+          "button",
+        ) as HTMLButtonElement;
+        if (submitButton) {
+          submitButton.disabled = true;
+        }
+      } else {
+        parent.classList.remove("is-error");
+
+        const submitButton = formEl.querySelector(
+          "button",
+        ) as HTMLButtonElement;
+        if (submitButton) {
+          submitButton.disabled = false;
+        }
+      }
     }
   });
 
