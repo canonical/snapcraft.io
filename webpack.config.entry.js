@@ -21,4 +21,5 @@ module.exports = {
   "publisher-settings": "./static/js/publisher/settings/index.tsx",
   "about-listing": "./static/js/public/about/listing.ts",
   store: "./static/js/store/index.tsx",
+  "validation-sets": "./static/js/validation-sets/index.tsx",
 };
