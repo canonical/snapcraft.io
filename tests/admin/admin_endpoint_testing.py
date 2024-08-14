@@ -15,6 +15,7 @@ class TestAdminEndpoints(TestCase):
                 "fullname": "ABC XYZ",
                 "email": "testing@testing.com",
                 "stores": [],
+                "is_admin": True,
             }
             s["macaroons"] = "test_macaroon"
             s["developer_token"] = test_macaroon
