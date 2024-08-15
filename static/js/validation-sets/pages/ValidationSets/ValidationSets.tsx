@@ -11,13 +11,7 @@ import {
 
 import { useValidationSets } from "../../hooks";
 
-type ValidationSet = {
-  name: string;
-  revision?: number;
-  sequence?: number;
-  snaps: { id: string; name: string }[];
-  timestamp: string;
-};
+import type { ValidationSet } from "../../types";
 
 function ValidationSets(): JSX.Element {
   const { status, data: validationSets } = useValidationSets();

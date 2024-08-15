@@ -1,1 +1,2 @@
-export { default } from "./ValidationSet";
+import ValidationSet from "./ValidationSet";
+export default ValidationSet;
