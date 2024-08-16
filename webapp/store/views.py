@@ -81,11 +81,13 @@ def store_blueprint(store_query=None):
             res["success"] = True
 
             if len(validation_set["assertions"]) > 0:
-                res["data"] = format_validation_set(
-                    validation_set["assertions"][0]
-                )
+                res["data"] = [
+                    format_validation_set(item)
+                    for item in validation_set["assertions"]
+                ]
             else:
-                res["data"] = {}
+                res["data"] = []
+
             response = flask.make_response(res, 200)
             response.cache_control.max_age = "3600"
         except StoreApiError as error_list:
