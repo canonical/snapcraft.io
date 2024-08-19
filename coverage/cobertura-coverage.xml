@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 <!DOCTYPE coverage SYSTEM "http://cobertura.sourceforge.net/xml/coverage-04.dtd">
-<coverage lines-valid="3647" lines-covered="2456" line-rate="0.6734" branches-valid="2192" branches-covered="1364" branch-rate="0.6222" timestamp="1724018690621" complexity="0" version="0.1">
+<coverage lines-valid="3648" lines-covered="2457" line-rate="0.6735" branches-valid="2193" branches-covered="1365" branch-rate="0.6224000000000001" timestamp="1724105131146" complexity="0" version="0.1">
   <sources>
     <source>/home/runner/work/snapcraft.io/snapcraft.io</source>
   </sources>
@@ -10024,9 +10024,9 @@
         </class>
       </classes>
     </package>
-    <package name="validation-sets.pages.ValidationSet" line-rate="0.9166" branch-rate="1">
+    <package name="validation-sets.pages.ValidationSet" line-rate="0.9229999999999999" branch-rate="1">
       <classes>
-        <class name="ValidationSet.tsx" filename="static/js/validation-sets/pages/ValidationSet/ValidationSet.tsx" line-rate="0.9166" branch-rate="1">
+        <class name="ValidationSet.tsx" filename="static/js/validation-sets/pages/ValidationSet/ValidationSet.tsx" line-rate="0.9229999999999999" branch-rate="1">
           <methods>
             <method name="ValidationSet" hits="6" signature="()V">
               <lines>
@@ -10035,38 +10035,39 @@
             </method>
             <method name="(anonymous_1)" hits="3" signature="()V">
               <lines>
-                <line number="20" hits="3"/>
+                <line number="23" hits="3"/>
               </lines>
             </method>
             <method name="(anonymous_2)" hits="0" signature="()V">
               <lines>
-                <line number="54" hits="0"/>
+                <line number="60" hits="0"/>
               </lines>
             </method>
             <method name="(anonymous_3)" hits="9" signature="()V">
               <lines>
-                <line number="59" hits="9"/>
+                <line number="65" hits="9"/>
               </lines>
             </method>
             <method name="(anonymous_4)" hits="8" signature="()V">
               <lines>
-                <line number="126" hits="8"/>
+                <line number="132" hits="8"/>
               </lines>
             </method>
           </methods>
           <lines>
             <line number="15" hits="6" branch="false"/>
             <line number="16" hits="6" branch="false"/>
-            <line number="18" hits="6" branch="false"/>
-            <line number="20" hits="6" branch="false"/>
-            <line number="21" hits="3" branch="false"/>
-            <line number="23" hits="3" branch="true" condition-coverage="100% (2/2)"/>
-            <line number="24" hits="1" branch="false"/>
-            <line number="27" hits="2" branch="false"/>
-            <line number="30" hits="6" branch="false"/>
-            <line number="55" hits="0" branch="false"/>
-            <line number="60" hits="9" branch="false"/>
-            <line number="127" hits="8" branch="false"/>
+            <line number="21" hits="6" branch="false"/>
+            <line number="23" hits="6" branch="false"/>
+            <line number="24" hits="3" branch="false"/>
+            <line number="26" hits="3" branch="true" condition-coverage="100% (2/2)"/>
+            <line number="27" hits="1" branch="false"/>
+            <line number="30" hits="2" branch="false"/>
+            <line number="34" hits="6" branch="true" condition-coverage="100% (3/3)"/>
+            <line number="36" hits="6" branch="false"/>
+            <line number="61" hits="0" branch="false"/>
+            <line number="66" hits="9" branch="false"/>
+            <line number="133" hits="8" branch="false"/>
           </lines>
         </class>
       </classes>
