@@ -14,8 +14,11 @@ import type { ValidationSet, Snap } from "../../types";
 function ValidationSet(): JSX.Element {
   const { validationSetId } = useParams();
   const [searchParams, setSearchParams] = useSearchParams();
-  const { status, data: validationSetSequences } =
-    useValidationSet(validationSetId);
+  const {
+    status,
+    data: validationSetSequences,
+    isFetching,
+  } = useValidationSet(validationSetId);
 
   const getSelectedSquence = () => {
     const sequenceQuery = searchParams.get("sequence");
@@ -27,6 +30,9 @@ function ValidationSet(): JSX.Element {
     return validationSetSequences.length - 1;
   };
 
+  const showValidationSetSnaps =
+    !isFetching && status === "success" && validationSetSequences.length > 0;
+
   return (
     <>
       <h1 className="p-heading--4">
@@ -34,7 +40,7 @@ function ValidationSet(): JSX.Element {
         {validationSetId}
       </h1>
 
-      {status === "success" && validationSetSequences.length > 0 && (
+      {showValidationSetSnaps && (
         <Row>
           <Col size={3}>
             <div style={{ display: "flex" }}>
@@ -90,7 +96,7 @@ function ValidationSet(): JSX.Element {
         </Notification>
       )}
 
-      {status === "success" && validationSetSequences.length > 0 && (
+      {showValidationSetSnaps && (
         <MainTable
           sortable
           headers={[
