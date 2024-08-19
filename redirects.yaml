@@ -37,7 +37,7 @@ docs/build-snaps/rust: /docs/rust-applications
 docs/build-snaps/syntax: /docs/snapcraft-yaml-reference
 docs/build-snaps/upload: /docs/releasing-your-app
 docs/build-snaps/your-first-snap: /docs/build-on-lxd
-docs/core: /docs/getting-started
+docs/core: /docs/quickstart-tour
 docs/core/install-arch-linux: /docs/installing-snap-on-arch-linux
 docs/core/install-debian: /docs/installing-snap-on-debian
 docs/core/install-elementary-os: /docs/installing-snap-on-elementary-os
@@ -54,7 +54,7 @@ docs/core/install-ubuntu: /docs/installing-snap-on-ubuntu
 docs/core/install: /docs/installing-snapd
 docs/core/interfaces: /docs/interface-management
 docs/core/updates: /docs/keeping-snaps-up-to-date
-docs/core/usage: /docs/getting-started
+docs/core/usage: /docs/quickstart-tour
 docs/deprecation-notices/dn1: /docs/t/deprecation-notice-1/8397
 docs/deprecation-notices/dn2: /docs/t/deprecation-notice-2/8398
 docs/deprecation-notices/dn3: /docs/t/deprecation-notice-3/8403
@@ -71,7 +71,7 @@ docs/reference/env: /docs/environment-variables
 docs/reference/interfaces: /docs/interface-management
 docs/reference/plugins.*: /docs/writing-local-plugins
 docs/snaps: /docs
-docs/snaps/intro: /docs/getting-started
+docs/snaps/intro: /docs/quickstart-tour
 docs/snaps/metadata: /docs/snap-format
 docs/snaps/structure: /docs/system-snap-directory
 account/details: /admin/account
