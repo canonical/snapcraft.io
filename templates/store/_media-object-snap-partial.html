@@ -32,7 +32,7 @@
         <p class="u-overflow-visible">
           <span class="u-off-screen">Publisher: </span>
           {% if snap.developer_link %}
-            <span class="developer-link" onclick="window.open('{{ snap.developer_link }}', '_blank');" style="cursor: pointer; color: #0766CC; text-decoration: none;">
+            <span class="developer-link" onclick="window.open('{{ snap.developer_link }}', '_blank');">
               {{ format_display_name(snap.developer_name) }}
             </span>
           {% else %}
