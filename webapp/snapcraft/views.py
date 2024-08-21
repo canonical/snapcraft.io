@@ -65,9 +65,7 @@ def snapcraft_blueprint():
         devices = [
             {
                 "package_name": "ubuntu-frame-osk",
-                "icon_url": "/".join(
-                    [icon_host, "2023/03/icon_2_Frame.png"]
-                ),
+                "icon_url": "/".join([icon_host, "2023/03/icon_2_Frame.png"]),
                 "title": "Ubuntu Frame",
                 "developer_name": "Canonical",
                 "developer_link": "/publisher/canonical",
@@ -75,7 +73,9 @@ def snapcraft_blueprint():
             },
             {
                 "package_name": "mir-kiosk",
-                "icon_url": "/".join([icon_host, "2021/06/mir-sqr-stacked-orng.png"]),
+                "icon_url": "/".join(
+                    [icon_host, "2021/06/mir-sqr-stacked-orng.png"]
+                ),
                 "title": "mir-kiosk",
                 "developer_name": "Canonical",
                 "developer_link": "/publisher/canonical",
@@ -120,7 +120,9 @@ def snapcraft_blueprint():
             },
             {
                 "package_name": "ubports-installer",
-                "icon_url": "/".join([icon_host, "2017/09/256x256_h3aYso1.png"]),
+                "icon_url": "/".join(
+                    [icon_host, "2017/09/256x256_h3aYso1.png"]
+                ),
                 "title": "ubports-installer",
                 "developer_name": "UBports",
                 "developer_link": "/publisher/ubports",
@@ -164,9 +166,7 @@ def snapcraft_blueprint():
             },
             {
                 "package_name": "rosbot-xl",
-                "icon_url": "/".join(
-                    [icon_host, "2024/06/rosbot-xl.png"]
-                ),
+                "icon_url": "/".join([icon_host, "2024/06/rosbot-xl.png"]),
                 "title": "ROSbot XL",
                 "developer_name": "Husarion",
                 "developer_link": "/publisher/husarion",
@@ -184,18 +184,14 @@ def snapcraft_blueprint():
             },
             {
                 "package_name": "webots",
-                "icon_url": "/".join(
-                    [icon_host, "2019/08/webots.png"]
-                ),
+                "icon_url": "/".join([icon_host, "2019/08/webots.png"]),
                 "title": "Webots",
                 "developer_name": "Cyberbotics",
                 "developer_link": "/publisher/cyberbotics",
             },
             {
                 "package_name": "gazebo",
-                "icon_url": "/".join(
-                    [icon_host, "2022/05/icon.svg.png"]
-                ),
+                "icon_url": "/".join([icon_host, "2022/05/icon.svg.png"]),
                 "title": "gazebo",
                 "developer_name": "Ubuntu Robotics Community (ubuntu-robotics-community)",
                 "developer_link": "/publisher/ubuntu-robotics-community",
@@ -213,9 +209,7 @@ def snapcraft_blueprint():
             },
             {
                 "package_name": "vulcanexus-router",
-                "icon_url": "/".join(
-                    [icon_host, "2023/05/V-DDSRouter.png"]
-                ),
+                "icon_url": "/".join([icon_host, "2023/05/V-DDSRouter.png"]),
                 "title": "Vulcanexus Router",
                 "developer_name": "eProsima",
                 "developer_link": "/publisher/eprosima",
@@ -231,9 +225,7 @@ def snapcraft_blueprint():
             },
             {
                 "package_name": "foxglove-studio",
-                "icon_url": "/".join(
-                    [icon_host, "2022/07/fs-icon.svg.png"]
-                ),
+                "icon_url": "/".join([icon_host, "2022/07/fs-icon.svg.png"]),
                 "title": "foxglove-studio",
                 "developer_name": "Roman Shtylman (roman-foxglove)",
                 "developer_link": "/publisher/roman-foxglove",
@@ -266,14 +258,18 @@ def snapcraft_blueprint():
             },
             {
                 "package_name": "home-assistant-snap",
-                "icon_url": "/".join([icon_host, "2020/07/favicon-192x192.png"]),
+                "icon_url": "/".join(
+                    [icon_host, "2020/07/favicon-192x192.png"]
+                ),
                 "title": "Home Assistant",
                 "developer_name": "Giaever.online (giaever-online)",
                 "developer_link": "/publisher/giaever-online",
             },
             {
                 "package_name": "security-bear",
-                "icon_url": "/".join([icon_host, "2020/11/security-bear_Logo.png"]),
+                "icon_url": "/".join(
+                    [icon_host, "2020/11/security-bear_Logo.png"]
+                ),
                 "title": "security-bear",
                 "developer_name": "CyBear Jinni (cybearjinni)",
                 "developer_link": "/publisher/cybearjinni",
@@ -287,14 +283,18 @@ def snapcraft_blueprint():
             },
             {
                 "package_name": "openthread-border-router",
-                "icon_url": "/".join([icon_host, "2023/09/ThreadLogo-stort-1.png"]),
+                "icon_url": "/".join(
+                    [icon_host, "2023/09/ThreadLogo-stort-1.png"]
+                ),
                 "title": "openthread-border-router",
                 "developer_name": "Canonical IoT Labs (canonical-iot-labs)",
                 "developer_link": "/publisher/canonical-iot-labs",
             },
             {
                 "package_name": "matter-bridge-tapo-lighting",
-                "icon_url": "/".join([icon_host, "2023/01/1F3E0_color_8tMXOjP.png"]),
+                "icon_url": "/".join(
+                    [icon_host, "2023/01/1F3E0_color_8tMXOjP.png"]
+                ),
                 "title": "matter-bridge-tapo-lighting",
                 "developer_name": "Canonical IoT Labs (canonical-iot-labs)",
                 "developer_link": "/publisher/canonical-iot-labs",
@@ -311,7 +311,9 @@ def snapcraft_blueprint():
         networking = [
             {
                 "package_name": "mosquitto",
-                "icon_url": "/".join([icon_host, "2018/08/mosquitto-logo-only.svg.png"]),
+                "icon_url": "/".join(
+                    [icon_host, "2018/08/mosquitto-logo-only.svg.png"]
+                ),
                 "title": "mosquitto",
                 "developer_name": "Mosquitto Team (mosquitto)",
                 "developer_link": "/publisher/mosquitto",
@@ -319,7 +321,9 @@ def snapcraft_blueprint():
             },
             {
                 "package_name": "domotzpro-agent-publicstore",
-                "icon_url": "/".join([icon_host, "2019/03/new_domotz_icon.png"]),
+                "icon_url": "/".join(
+                    [icon_host, "2019/03/new_domotz_icon.png"]
+                ),
                 "title": "Domotz Pro Agent",
                 "developer_name": "Domotz (domotzpublicstore)",
                 "developer_link": "/publisher/domotzpublicstore",
@@ -350,7 +354,9 @@ def snapcraft_blueprint():
             },
             {
                 "package_name": "snap-store-proxy",
-                "icon_url": "/".join([icon_host, "2018/09/Snapcraft_Proxy_Aubergine-256.png"]),
+                "icon_url": "/".join(
+                    [icon_host, "2018/09/Snapcraft_Proxy_Aubergine-256.png"]
+                ),
                 "title": "snap-store-proxy",
                 "developer_name": "Canonical",
                 "developer_link": "/publisher/canonical",
@@ -376,7 +382,9 @@ def snapcraft_blueprint():
             },
             {
                 "package_name": "pi-desktop",
-                "icon_url": "/".join([assets_host, "be6eb412-snapcraft-missing-icon.svg"]),
+                "icon_url": "/".join(
+                    [assets_host, "be6eb412-snapcraft-missing-icon.svg"]
+                ),
                 "title": "pi-desktop",
                 "developer_name": "Canonical",
                 "developer_link": "/publisher/canonical",
@@ -384,7 +392,9 @@ def snapcraft_blueprint():
             },
             {
                 "package_name": "pi",
-                "icon_url": "/".join([assets_host, "be6eb412-snapcraft-missing-icon.svg"]),
+                "icon_url": "/".join(
+                    [assets_host, "be6eb412-snapcraft-missing-icon.svg"]
+                ),
                 "title": "pi",
                 "developer_name": "Canonical",
                 "developer_link": "/publisher/canonical",
@@ -400,7 +410,9 @@ def snapcraft_blueprint():
             },
             {
                 "package_name": "pi3",
-                "icon_url": "/".join([assets_host, "be6eb412-snapcraft-missing-icon.svg"]),
+                "icon_url": "/".join(
+                    [assets_host, "be6eb412-snapcraft-missing-icon.svg"]
+                ),
                 "title": "pi3",
                 "developer_name": "Canonical",
                 "developer_link": "/publisher/canonical",
