@@ -193,7 +193,9 @@ def snapcraft_blueprint():
                 "package_name": "gazebo",
                 "icon_url": "/".join([icon_host, "2022/05/icon.svg.png"]),
                 "title": "gazebo",
-                "developer_name": "Ubuntu Robotics Community (ubuntu-robotics-community)",
+                "developer_name": (
+                    "Ubuntu Robotics Community (ubuntu-robotics-community)"
+                ),
                 "developer_link": "/publisher/ubuntu-robotics-community",
                 "developer_validation": "verified",
             },
@@ -203,7 +205,9 @@ def snapcraft_blueprint():
                     [icon_host, "2023/02/ros2-cli_icon_1.png"]
                 ),
                 "title": "ros2-cli",
-                "developer_name": "Ubuntu Robotics Community (ubuntu-robotics-community)",
+                "developer_name": (
+                    "Ubuntu Robotics Community (ubuntu-robotics-community)"
+                ),
                 "developer_link": "/publisher/ubuntu-robotics-community",
                 "developer_validation": "verified",
             },
