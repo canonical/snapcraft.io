@@ -91,9 +91,7 @@ def snapcraft_blueprint():
             },
             {
                 "package_name": "node-red",
-                "icon_url": "/".join(
-                    [icon_host, "2018/03/icon.svg_UYFdU9y.png"]
-                ),
+                "icon_url": "/".join([icon_host, "2017/01/nr-hex_1.png"]),
                 "title": "Node-Red",
                 "developer_name": "Node-RED-Team (noderedteam)",
                 "developer_link": "/publisher/noderedteam",
@@ -112,7 +110,7 @@ def snapcraft_blueprint():
             {
                 "package_name": "zwave-js-ui",
                 "icon_url": "/".join(
-                    [icon_host, "2019/03/new_domotz_icon.png"]
+                    [icon_host, "2022/10/app_logo-svg_2.svg.png"]
                 ),
                 "title": "Zwave JS UI",
                 "developer_name": "Giaever.online (giaever-online)",
