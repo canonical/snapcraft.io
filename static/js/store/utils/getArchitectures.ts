@@ -28,6 +28,10 @@ function getArchitectures(): Array<{ name: string; display_name: string }> {
       name: "s390x",
       display_name: "S390X",
     },
+    {
+      name: "riscv64",
+      display_name: "RISC-V",
+    },
   ];
 }
 
