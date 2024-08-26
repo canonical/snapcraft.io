@@ -35,6 +35,9 @@ CSP = {
         "assets.ubuntu.com",
         "res.cloudinary.com",
         "data: dashboard.snapcraft.io",
+        "https://i3.ytimg.com",
+        "https://i.ytimg.com",
+        "https://snapcraft.io",
     ],
     "script-src-elem": [
         "'self'",
@@ -58,6 +61,7 @@ CSP = {
     "frame-src": [
         "'self'",
         "td.doubleclick.net",
+        "https://www.youtube.com/",
     ],
 }
 
