@@ -145,11 +145,12 @@ def get_dns_verification_token(snap_name, domain):
     token = hashlib.sha256(token_string.encode("utf-8")).hexdigest()
     return token
 
+
 def get_csp_as_str(csp={}):
     csp_str = ""
     for key, values in csp.items():
         csp_value = ""
         for value in values:
-            csp_value = " ".join([csp_value, value]) 
+            csp_value = " ".join([csp_value, value])
         csp_str = " ".join([csp_str, "".join([key, csp_value, ";"])])
     return csp_str

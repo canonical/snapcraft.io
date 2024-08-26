@@ -28,41 +28,39 @@ from webapp import helpers
 
 
 TALISKER_WSGI_LOGGER = logging.getLogger("talisker.wsgi")
-csp = {
-    "default-src": [
-        "\'self\'",
-        "\'unsafe-inline\'"
-    ],
+CSP = {
+    "default-src": ["'self'", "'unsafe-inline'"],
     "img-src": [
-        "\'self\'",
+        "'self'",
         "assets.ubuntu.com",
         "res.cloudinary.com",
-        "data: dashboard.snapcraft.io"
+        "data: dashboard.snapcraft.io",
     ],
     "script-src-elem": [
-        "\'self\'",
+        "'self'",
         "assets.ubuntu.com",
         "www.googletagmanager.com",
-        "\'unsafe-inline\'"
+        "'unsafe-inline'",
     ],
     "font-src": [
-        "\'self\'",
+        "'self'",
         "assets.ubuntu.com",
     ],
     "script-src": [
-        "\'self\'",
-        "\'unsafe-eval\'"
+        "'self'",
+        "'unsafe-eval'",
     ],
     "connect-src": [
-        "\'self\'",
+        "'self'",
         "ubuntu.com",
-        "analytics.google.com"
+        "analytics.google.com",
     ],
     "frame-src": [
-        "\'self\'",
-        "td.doubleclick.net"
-    ]
+        "'self'",
+        "td.doubleclick.net",
+    ],
 }
+
 
 def create_app(testing=False):
     app = FlaskBase(
@@ -86,9 +84,9 @@ def create_app(testing=False):
 
     @app.after_request
     def set_security_headers(response):
-        print("after_request executing!")
-        response.headers["X-Puck"] = "Pakito"
-        response.headers['Content-Security-Policy'] = helpers.get_csp_as_str(csp)
+        response.headers["Content-Security-Policy"] = helpers.get_csp_as_str(
+            CSP
+        )
         return response
 
     app.register_blueprint(snapcraft_blueprint())
