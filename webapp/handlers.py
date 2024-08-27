@@ -73,6 +73,7 @@ CSP = {
         "'self'",
         "assets.ubuntu.com",
         "www.googletagmanager.com",
+        "https://asciinema.org",
         "'unsafe-inline'",
     ],
     "font-src": [
@@ -92,6 +93,7 @@ CSP = {
         "'self'",
         "td.doubleclick.net",
         "https://www.youtube.com/",
+        "https://asciinema.org",
     ],
 }
 
