@@ -61,19 +61,12 @@ accept_encoding_counter = prometheus_client.Counter(
 CSP = {
     "default-src": ["'self'", "'unsafe-inline'"],
     "img-src": [
-        "'self'",
-        "assets.ubuntu.com",
-        "res.cloudinary.com",
-        "data: dashboard.snapcraft.io",
-        "https://i3.ytimg.com",
-        "https://i.ytimg.com",
-        "https://snapcraft.io",
+        "*",
+        "data: blob:",
+        "'unsafe-inline'",
     ],
     "script-src-elem": [
-        "'self'",
-        "assets.ubuntu.com",
-        "www.googletagmanager.com",
-        "https://asciinema.org",
+        "*",
         "'unsafe-inline'",
     ],
     "font-src": [
@@ -91,10 +84,7 @@ CSP = {
         "https://stats.g.doubleclick.net",
     ],
     "frame-src": [
-        "'self'",
-        "td.doubleclick.net",
-        "https://www.youtube.com/",
-        "https://asciinema.org",
+        "*",
     ],
 }
 
