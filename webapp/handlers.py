@@ -8,6 +8,7 @@ import user_agents
 import webapp.template_utils as template_utils
 from canonicalwebteam import image_template
 from webapp import authentication
+from webapp import helpers
 from webapp.config import (
     BSI_URL,
     LOGIN_URL,
@@ -56,6 +57,43 @@ accept_encoding_counter = prometheus_client.Counter(
     "A counter for Accept-Encoding headers, split by browser",
     ["accept_encoding", "browser_family"],
 )
+
+CSP = {
+    "default-src": ["'self'", "'unsafe-inline'"],
+    "img-src": [
+        "'self'",
+        "assets.ubuntu.com",
+        "res.cloudinary.com",
+        "data: dashboard.snapcraft.io",
+        "https://i3.ytimg.com",
+        "https://i.ytimg.com",
+        "https://snapcraft.io",
+    ],
+    "script-src-elem": [
+        "'self'",
+        "assets.ubuntu.com",
+        "www.googletagmanager.com",
+        "'unsafe-inline'",
+    ],
+    "font-src": [
+        "'self'",
+        "assets.ubuntu.com",
+    ],
+    "script-src": [
+        "'self'",
+        "'unsafe-eval'",
+    ],
+    "connect-src": [
+        "'self'",
+        "ubuntu.com",
+        "analytics.google.com",
+    ],
+    "frame-src": [
+        "'self'",
+        "td.doubleclick.net",
+        "https://www.youtube.com/",
+    ],
+}
 
 
 def refresh_redirect(path):
@@ -283,6 +321,9 @@ def set_handlers(app):
 
         - X-Hostname: Mention the name of the host/pod running the application
         - Cache-Control: Add cache-control headers for public and private pages
+        - Content-Security-Policy: Restrict which resources (ie. JavaScript,
+        CSS, Images, etc.) can be loaded, and the URLs that they can be loaded
+        from.
         """
 
         response.headers["X-Hostname"] = socket.gethostname()
@@ -302,4 +343,7 @@ def set_handlers(app):
                         }
                     )
 
+        response.headers["Content-Security-Policy"] = helpers.get_csp_as_str(
+            CSP
+        )
         return response
