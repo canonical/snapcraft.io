@@ -88,6 +88,7 @@ CSP = {
         "'self'",
         "ubuntu.com",
         "analytics.google.com",
+        "https://stats.g.doubleclick.net",
     ],
     "frame-src": [
         "'self'",
