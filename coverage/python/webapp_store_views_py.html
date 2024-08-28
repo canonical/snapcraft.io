@@ -468,12 +468,12 @@
     <p id="t414" class="run"><span class="n"><a href="#t414">414</a></span><span class="t">    <span class="op">@</span><span class="nam">exchange_required</span>&nbsp;</span><span class="r"></span></p>
     <p id="t415" class="run"><span class="n"><a href="#t415">415</a></span><span class="t">    <span class="key">def</span> <span class="nam">post_create_track</span><span class="op">(</span><span class="nam">snap_name</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
     <p id="t416" class="mis show_mis"><span class="n"><a href="#t416">416</a></span><span class="t">        <span class="nam">track_name</span> <span class="op">=</span> <span class="nam">flask</span><span class="op">.</span><span class="nam">request</span><span class="op">.</span><span class="nam">form</span><span class="op">[</span><span class="str">"track-name"</span><span class="op">]</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t417" class="mis show_mis"><span class="n"><a href="#t417">417</a></span><span class="t">        <span class="nam">version_pattern</span> <span class="op">=</span> <span class="nam">flask</span><span class="op">.</span><span class="nam">request</span><span class="op">.</span><span class="nam">form</span><span class="op">[</span><span class="str">"version-pattern"</span><span class="op">]</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t418" class="mis show_mis"><span class="n"><a href="#t418">418</a></span><span class="t">        <span class="nam">auto_phasing_percentage</span> <span class="op">=</span> <span class="nam">flask</span><span class="op">.</span><span class="nam">request</span><span class="op">.</span><span class="nam">form</span><span class="op">[</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t417" class="mis show_mis"><span class="n"><a href="#t417">417</a></span><span class="t">        <span class="nam">version_pattern</span> <span class="op">=</span> <span class="nam">flask</span><span class="op">.</span><span class="nam">request</span><span class="op">.</span><span class="nam">form</span><span class="op">.</span><span class="nam">get</span><span class="op">(</span><span class="str">"version-pattern"</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t418" class="mis show_mis"><span class="n"><a href="#t418">418</a></span><span class="t">        <span class="nam">auto_phasing_percentage</span> <span class="op">=</span> <span class="nam">flask</span><span class="op">.</span><span class="nam">request</span><span class="op">.</span><span class="nam">form</span><span class="op">.</span><span class="nam">get</span><span class="op">(</span>&nbsp;</span><span class="r"></span></p>
     <p id="t419" class="pln"><span class="n"><a href="#t419">419</a></span><span class="t">            <span class="str">"automatic-phasing-percentage"</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t420" class="pln"><span class="n"><a href="#t420">420</a></span><span class="t">        <span class="op">]</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t420" class="pln"><span class="n"><a href="#t420">420</a></span><span class="t">        <span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p id="t421" class="pln"><span class="n"><a href="#t421">421</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
-    <p id="t422" class="mis show_mis"><span class="n"><a href="#t422">422</a></span><span class="t">        <span class="key">if</span> <span class="nam">auto_phasing_percentage</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t422" class="mis show_mis"><span class="n"><a href="#t422">422</a></span><span class="t">        <span class="key">if</span> <span class="nam">auto_phasing_percentage</span> <span class="key">is</span> <span class="key">not</span> <span class="key">None</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
     <p id="t423" class="mis show_mis"><span class="n"><a href="#t423">423</a></span><span class="t">            <span class="nam">auto_phasing_percentage</span> <span class="op">=</span> <span class="nam">float</span><span class="op">(</span><span class="nam">auto_phasing_percentage</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p id="t424" class="pln"><span class="n"><a href="#t424">424</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p id="t425" class="mis show_mis"><span class="n"><a href="#t425">425</a></span><span class="t">        <span class="nam">response</span> <span class="op">=</span> <span class="nam">publisher_api</span><span class="op">.</span><span class="nam">create_track</span><span class="op">(</span>&nbsp;</span><span class="r"></span></p>
@@ -505,7 +505,7 @@
     <div class="content">
         <p>
             <a class="nav" href="index.html">&#xab; index</a> &nbsp; &nbsp; <a class="nav" href="https://coverage.readthedocs.io">coverage.py v5.5</a>,
-            created at 2024-08-27 22:06 +0000
+            created at 2024-08-28 22:06 +0000
         </p>
     </div>
 </div>
