@@ -353,7 +353,8 @@ def set_handlers(app):
 
         - X-Hostname: Mention the name of the host/pod running the application
         - Cache-Control: Add cache-control headers for public and private pages
-        - Content-Security-Policy: Restrict resources (e.g., JavaScript, CSS, Images) and URLs
+        - Content-Security-Policy: Restrict resources (e.g., JavaScript, CSS,
+        Images) and URLs
         """
 
         response.headers["X-Hostname"] = socket.gethostname()
