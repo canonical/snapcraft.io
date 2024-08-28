@@ -1,6 +1,10 @@
 import socket
 from urllib.parse import unquote, urlparse, urlunparse
 
+import base64
+import hashlib
+import re
+
 import flask
 from flask import render_template, request
 import prometheus_client
@@ -59,15 +63,29 @@ accept_encoding_counter = prometheus_client.Counter(
 )
 
 CSP = {
-    "default-src": ["'self'", "'unsafe-inline'"],
+    "default-src": ["'self'"],
     "img-src": [
-        "*",
+        "'self'",
+        "assets.ubuntu.com",
+        "res.cloudinary.com",
+        "dashboard.snapcraft.io",
         "data: blob:",
-        "'unsafe-inline'",
+        "i.ytimg.com",
+        "i1.ytimg.com",
+        "i2.ytimg.com",
+        "i3.ytimg.com",
+        "i4.ytimg.com",
+        "www.googletagmanager.com",
+        "i.vimeocdn.com",
+        "forum.snapcraft.io",
     ],
     "script-src-elem": [
-        "*",
-        "'unsafe-inline'",
+        "'self'",
+        "assets.ubuntu.com",
+        "www.googletagmanager.com",
+        "www.youtube.com",
+        "asciinema.org",
+        "player.vimeo.com",
     ],
     "font-src": [
         "'self'",
@@ -81,10 +99,17 @@ CSP = {
         "'self'",
         "ubuntu.com",
         "analytics.google.com",
-        "https://stats.g.doubleclick.net",
+        "stats.g.doubleclick.net",
     ],
     "frame-src": [
-        "*",
+        "td.doubleclick.net",
+        "www.youtube.com/",
+        "asciinema.org",
+        "player.vimeo.com",
+    ],
+    "style-src": [
+        "'self'",
+        "'unsafe-inline'",
     ],
 }
 
@@ -307,6 +332,20 @@ def set_handlers(app):
             else:
                 badge_counter.inc()
 
+    # Calculate the SHA256 hash of the script content and encode it in base64.
+    def calculate_sha256_base64(script_content):
+        sha256_hash = hashlib.sha256(script_content.encode()).digest()
+        return "sha256-" + base64.b64encode(sha256_hash).decode()
+
+    # Find all script elements in the response and add their hashes to the CSP.
+    def add_script_hashes_to_csp(response):
+        script_pattern = re.compile(r"<script>([\s\S]*?)<\/script>")
+        scripts = script_pattern.findall(response.data.decode("utf-8"))
+        CSP["script-src-elem"].extend(
+            f"'{calculate_sha256_base64(script)}'" for script in scripts
+        )
+        return CSP
+
     @app.after_request
     def add_headers(response):
         """
@@ -314,9 +353,7 @@ def set_handlers(app):
 
         - X-Hostname: Mention the name of the host/pod running the application
         - Cache-Control: Add cache-control headers for public and private pages
-        - Content-Security-Policy: Restrict which resources (ie. JavaScript,
-        CSS, Images, etc.) can be loaded, and the URLs that they can be loaded
-        from.
+        - Content-Security-Policy: Restrict resources (e.g., JavaScript, CSS, Images) and URLs
         """
 
         response.headers["X-Hostname"] = socket.gethostname()
@@ -335,8 +372,8 @@ def set_handlers(app):
                             "stale-if-error=86400",
                         }
                     )
-
+        csp = add_script_hashes_to_csp(response)
         response.headers["Content-Security-Policy"] = helpers.get_csp_as_str(
-            CSP
+            csp
         )
         return response
