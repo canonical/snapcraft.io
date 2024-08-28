@@ -429,7 +429,6 @@ def store_blueprint(store_query=None):
             version_pattern,
             auto_phasing_percentage,
         )
-        print(response)
         if response.status_code == 201:
             return response.json(), response.status_code
         if response.status_code == 409:
