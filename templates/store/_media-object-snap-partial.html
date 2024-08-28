@@ -31,6 +31,7 @@
       {% if not hide_publisher %}
         <p class="u-overflow-visible">
           <span class="u-off-screen">Publisher: </span>
+          <span class="developer-info">
           {% if snap.developer_link %}
             <span class="developer-link" onclick="window.open('{{ snap.developer_link }}', '_blank');">
               {{ format_display_name(snap.developer_name) }}
@@ -48,6 +49,7 @@
               {% include "partials/_star_developer.html" %}
             {% endif %}
           {% endif %}
+          </span>
         </p>
       {% endif %}
       {% if show_summary %}
