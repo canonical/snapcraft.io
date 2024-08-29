@@ -12,8 +12,7 @@ import user_agents
 import webapp.template_utils as template_utils
 from canonicalwebteam import image_template
 from webapp import authentication
-
-# from webapp import helpers
+from webapp import helpers
 from webapp.config import (
     BSI_URL,
     LOGIN_URL,
@@ -383,7 +382,7 @@ def set_handlers(app):
                         }
                     )
         # csp = add_script_hashes_to_csp(response)
-        # response.headers["Content-Security-Policy"] = helpers.get_csp_as_str(
-        #     csp
-        # )
+        response.headers["Content-Security-Policy"] = helpers.get_csp_as_str(
+            CSP
+        )
         return response
