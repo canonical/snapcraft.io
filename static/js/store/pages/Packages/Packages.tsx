@@ -23,7 +23,7 @@ function Packages(): ReactNode {
   const CATEGORY_ORDER = getCategoryOrder();
 
   const getData = async (queryString: string) => {
-    const response = await fetch(`/beta/store.json${queryString}`);
+    const response = await fetch(`/store.json${queryString}`);
     const data: {
       total_items: number;
       total_pages: number;
