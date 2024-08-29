@@ -1,9 +1,9 @@
 import socket
 from urllib.parse import unquote, urlparse, urlunparse
 
-import base64
-import hashlib
-import re
+# import base64
+# import hashlib
+# import re
 
 import flask
 from flask import render_template, request
@@ -12,7 +12,8 @@ import user_agents
 import webapp.template_utils as template_utils
 from canonicalwebteam import image_template
 from webapp import authentication
-from webapp import helpers
+
+# from webapp import helpers
 from webapp.config import (
     BSI_URL,
     LOGIN_URL,
@@ -110,6 +111,7 @@ CSP = {
     "style-src": [
         "'self'",
         "'unsafe-inline'",
+        # "'unsafe-hashes'"
     ],
 }
 
@@ -333,18 +335,25 @@ def set_handlers(app):
                 badge_counter.inc()
 
     # Calculate the SHA256 hash of the script content and encode it in base64.
-    def calculate_sha256_base64(script_content):
-        sha256_hash = hashlib.sha256(script_content.encode()).digest()
-        return "sha256-" + base64.b64encode(sha256_hash).decode()
+    # def calculate_sha256_base64(script_content):
+    #     sha256_hash = hashlib.sha256(script_content.encode()).digest()
+    #     return "sha256-" + base64.b64encode(sha256_hash).decode()
 
     # Find all script elements in the response and add their hashes to the CSP.
-    def add_script_hashes_to_csp(response):
-        script_pattern = re.compile(r"<script>([\s\S]*?)<\/script>")
-        scripts = script_pattern.findall(response.data.decode("utf-8"))
-        CSP["script-src-elem"].extend(
-            f"'{calculate_sha256_base64(script)}'" for script in scripts
-        )
-        return CSP
+    # def add_script_hashes_to_csp(response):
+    #     script_pattern = re.compile(r"<script>([\s\S]*?)<\/script>")
+    #     scripts = script_pattern.findall(response.data.decode("utf-8"))
+    #     CSP["script-src-elem"].extend(
+    #         f"'{calculate_sha256_base64(script)}'" for script in scripts
+    #     )
+
+    #     # inline_style_pattern = re.compile(r'style\s*=\s*["\'](.*?)["\']')
+    #     # inline_styles = inline_style_pattern.findall(response.data
+    #     # .decode("utf-8"))
+    #     CSP["style-src"].extend(f"'{calculate_sha256_base64(inline_style)}'"
+    #     # for inline_style in inline_styles)
+
+    #     return CSP
 
     @app.after_request
     def add_headers(response):
@@ -373,8 +382,8 @@ def set_handlers(app):
                             "stale-if-error=86400",
                         }
                     )
-        csp = add_script_hashes_to_csp(response)
-        response.headers["Content-Security-Policy"] = helpers.get_csp_as_str(
-            csp
-        )
+        # csp = add_script_hashes_to_csp(response)
+        # response.headers["Content-Security-Policy"] = helpers.get_csp_as_str(
+        #     csp
+        # )
         return response
