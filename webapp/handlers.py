@@ -110,7 +110,6 @@ CSP = {
     "style-src": [
         "'self'",
         "'unsafe-inline'",
-        # "'unsafe-hashes'"
     ],
 }
 
@@ -341,12 +340,12 @@ def set_handlers(app):
     # Find all script elements in the response and add their hashes to the CSP.
     def add_script_hashes_to_csp(response):
         script_pattern = re.compile(r"<script>([\s\S]*?)<\/script>")
-        # scripts = script_pattern.findall(response.data.decode("utf-8"))
-        scripts = script_pattern.findall("asd")
+        scripts = script_pattern.findall(
+            b"".join(response.response).decode("utf-8")
+        )
         CSP["script-src-elem"].extend(
             f"'{calculate_sha256_base64(script)}'" for script in scripts
         )
-
         return CSP
 
     @app.after_request
