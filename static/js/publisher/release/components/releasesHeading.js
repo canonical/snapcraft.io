@@ -78,7 +78,7 @@ function ReleasesHeading(props) {
   const [trackGuardrailsStatus, setTrackGuardrailsStatus] = useState(null);
   const [guardrailsLoading, setGuardrailsLoading] = useState(true);
 
-  const [isTrackNameFilled, setIsTrackNameFilled] = useState(false);
+  const isTrackNameFilled = trackName.trim().length > 0;
   const [isLoading, setIsLoading] = useState(false);
   const [notification, setNotification] = useState(null);
 
@@ -134,7 +134,6 @@ function ReleasesHeading(props) {
     setTrackNameError("");
     const { value } = event.target;
     setTrackName(value);
-    setIsTrackNameFilled(value.trim().length > 0);
   };
 
   const handleVersionPatternChange = (event) => {

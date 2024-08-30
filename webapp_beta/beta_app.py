@@ -7,14 +7,14 @@ from webapp.decorators import login_required
 
 
 app = create_app(
-    "snapcraft_beta",
+    "snapcraft",
     login_required,
     store_bp=snapcraft_bp,
     utility_processor=snapcraft_utility_processor,
 )
 app.config.from_object("webapp.config")
 
-app.name = "snapcraft_beta"
+app.name = "snapcraft"
 app.static_folder = snapcraft_bp.static_folder
 app.template_folder = snapcraft_bp.template_folder
 
