@@ -4,6 +4,7 @@ from urllib.parse import unquote, urlparse, urlunparse
 import base64
 import hashlib
 import re
+import io
 
 import flask
 from flask import render_template, request
@@ -70,12 +71,26 @@ CSP = {
         # https://www.google.*/ads/ga-audiences to load.
         "*",
     ],
-    "script-src-elem": [],
+    "script-src-elem": [
+           "'self'",
+    "assets.ubuntu.com",
+    "www.googletagmanager.com",
+    "www.youtube.com",
+    "asciinema.org",
+    "player.vimeo.com",
+    "'unsafe-hashes'",
+    "'unsafe-inline'",
+    ],
     "font-src": [
         "'self'",
         "assets.ubuntu.com",
     ],
-    "script-src": [],
+    "script-src": [
+            "'self'",
+    "'unsafe-eval'",
+    "'unsafe-hashes'",
+        "'unsafe-inline'",
+    ],
     "connect-src": [
         "'self'",
         "ubuntu.com",
@@ -385,6 +400,9 @@ def set_handlers(app):
                             "stale-if-error=86400",
                         }
                     )
+
+
+        response.freeze()
         csp = add_script_hashes_to_csp(response)
         response.headers["Content-Security-Policy"] = helpers.get_csp_as_str(
             csp
