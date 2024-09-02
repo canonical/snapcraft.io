@@ -4,7 +4,6 @@ from urllib.parse import unquote, urlparse, urlunparse
 import base64
 import hashlib
 import re
-import io
 
 import flask
 from flask import render_template, request
@@ -71,26 +70,12 @@ CSP = {
         # https://www.google.*/ads/ga-audiences to load.
         "*",
     ],
-    "script-src-elem": [
-           "'self'",
-    "assets.ubuntu.com",
-    "www.googletagmanager.com",
-    "www.youtube.com",
-    "asciinema.org",
-    "player.vimeo.com",
-    "'unsafe-hashes'",
-    "'unsafe-inline'",
-    ],
+    "script-src-elem": [],
     "font-src": [
         "'self'",
         "assets.ubuntu.com",
     ],
-    "script-src": [
-            "'self'",
-    "'unsafe-eval'",
-    "'unsafe-hashes'",
-        "'unsafe-inline'",
-    ],
+    "script-src": [],
     "connect-src": [
         "'self'",
         "ubuntu.com",
@@ -363,6 +348,7 @@ def set_handlers(app):
 
     # Find all script elements in the response and add their hashes to the CSP.
     def add_script_hashes_to_csp(response):
+        response.freeze()
         decoded_content = b"".join(response.response).decode("utf-8")
 
         CSP["script-src-elem"] = CSP_SCRIPT_SRC_ELEM + get_csp_directive(
@@ -371,6 +357,7 @@ def set_handlers(app):
         CSP["script-src"] = CSP_SCRIPT_SRC + get_csp_directive(
             decoded_content, r'onclick\s*=\s*"(.*?)"'
         )
+
         return CSP
 
     @app.after_request
@@ -401,8 +388,6 @@ def set_handlers(app):
                         }
                     )
 
-
-        response.freeze()
         csp = add_script_hashes_to_csp(response)
         response.headers["Content-Security-Policy"] = helpers.get_csp_as_str(
             csp
