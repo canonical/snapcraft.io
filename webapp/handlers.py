@@ -79,7 +79,8 @@ CSP = {
         "i.vimeocdn.com",
         "forum.snapcraft.io",
         "snapcraft.io",
-        # This is needed because of "https://www.google.*/ads/ga-audiences" images to load
+        # This is needed to allow images from
+        # https://www.google.*/ads/ga-audiences to load.
         "*",
     ],
     "script-src-elem": [
@@ -104,6 +105,7 @@ CSP = {
         "analytics.google.com",
         "stats.g.doubleclick.net",
         "www.googletagmanager.com",
+        "sentry.is.canonical.com",
     ],
     "frame-src": [
         "'self'",
