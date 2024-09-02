@@ -349,7 +349,7 @@ def set_handlers(app):
     # Find all script elements in the response and add their hashes to the CSP.
     def add_script_hashes_to_csp(response):
         response.freeze()
-        decoded_content = b"".join(response.response).decode("utf-8")
+        decoded_content = b"".join(response.response).decode('utf-8', errors='replace')
 
         CSP["script-src-elem"] = CSP_SCRIPT_SRC_ELEM + get_csp_directive(
             decoded_content, r"<script>([\s\S]*?)<\/script>"
