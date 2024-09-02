@@ -1,3 +1,4 @@
+import { useParams, useLocation } from "react-router-dom";
 import {
   SideNavigation,
   SideNavigationText,
@@ -12,6 +13,7 @@ function PrimaryNav({
   collapseNavigation: boolean;
   setCollapseNavigation: Function;
 }): JSX.Element {
+  const location = useLocation();
   const { data: publisherData } = usePublisher();
 
   return (
@@ -38,12 +40,17 @@ function PrimaryNav({
                 label: "Overview",
                 href: "/snaps",
                 icon: "pods",
+                "aria-current": location.pathname === "/snaps",
               },
+            ],
+          },
+          {
+            items: [
               {
                 label: "My validation sets",
                 href: "/validation-sets",
-                icon: "pods",
-                "aria-current": "page",
+                icon: "topic",
+                "aria-current": location.pathname === "/validation-sets",
               },
             ],
           },

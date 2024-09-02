@@ -2,7 +2,6 @@ import * as metrics from "./metrics/metrics";
 import { selector } from "./metrics/filters";
 import * as market from "./form";
 import { initRepoConnect } from "./builds/components/repoConnect";
-import * as publicise from "./publicise";
 import { initCategories } from "./market/categories";
 import markdownToggle from "./market/markdown";
 import stickyListingBar from "./market/stickyListingBar";
@@ -19,7 +18,6 @@ export {
   markdownToggle,
   metrics,
   market,
-  publicise,
   selector,
   stickyListingBar,
   preview,

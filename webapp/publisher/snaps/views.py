@@ -225,11 +225,11 @@ publisher_snaps.add_url_rule(
 )
 publisher_snaps.add_url_rule(
     "/<snap_name>/publicise/badges",
-    view_func=publicise_views.get_publicise_badges,
+    view_func=publicise_views.get_publicise,
 )
 publisher_snaps.add_url_rule(
     "/<snap_name>/publicise/cards",
-    view_func=publicise_views.get_publicise_cards,
+    view_func=publicise_views.get_publicise,
 )
 
 # Settings views
