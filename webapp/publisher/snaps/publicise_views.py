@@ -51,9 +51,7 @@ def get_publicise(snap_name):
         "download_version": "v1.4.2",
     }
 
-    return flask.render_template(
-        "publisher/publicise/store_buttons.html", **context
-    )
+    return flask.render_template("store/publisher.html", **context)
 
 
 @login_required
@@ -73,9 +71,7 @@ def get_publicise_badges(snap_name):
         "trending": snap_public_details["snap"]["trending"],
     }
 
-    return flask.render_template(
-        "publisher/publicise/github_badges.html", **context
-    )
+    return flask.render_template("store/publisher.html", **context)
 
 
 @login_required
@@ -96,6 +92,4 @@ def get_publicise_cards(snap_name):
         "snap_id": snap_details["snap_id"],
     }
 
-    return flask.render_template(
-        "publisher/publicise/embedded_cards.html", **context
-    )
+    return flask.render_template("store/publisher.html", **context)

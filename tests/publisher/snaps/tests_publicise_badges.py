@@ -98,7 +98,7 @@ class GetPubliciseBadgesPage(BaseTestCases.EndpointLoggedInErrorHandling):
         self.check_call_by_api_url(responses.calls)
 
         self.assertEqual(response.status_code, 200)
-        self.assert_template_used("publisher/publicise/github_badges.html")
+        self.assert_template_used("store/publisher.html")
 
         self.assert_context("snap_id", "id")
         self.assert_context("snap_title", "test snap")
