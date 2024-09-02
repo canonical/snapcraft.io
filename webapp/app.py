@@ -24,6 +24,7 @@ from webapp.publisher.views import account
 from webapp.snapcraft.views import snapcraft_blueprint
 from webapp.store.views import store_blueprint
 from webapp.tutorials.views import init_tutorials
+from webapp.packages.store_packages import store_packages
 
 
 TALISKER_WSGI_LOGGER = logging.getLogger("talisker.wsgi")
@@ -39,6 +40,7 @@ def create_app(testing=False):
         static_folder="../static",
     )
     app.config.from_object("webapp.config")
+    app.name = "snapcraft"
     app.testing = testing
 
     if not testing:
@@ -50,6 +52,7 @@ def create_app(testing=False):
     set_handlers(app)
 
     app.register_blueprint(snapcraft_blueprint())
+    app.register_blueprint(store_packages)
     app.register_blueprint(first_snap, url_prefix="/first-snap")
     app.register_blueprint(login)
     app.register_blueprint(oauth)
