@@ -385,8 +385,9 @@ def set_handlers(app):
                             "stale-if-error=86400",
                         }
                     )
-        csp = add_script_hashes_to_csp(response)
-        response.headers["Content-Security-Policy"] = helpers.get_csp_as_str(
-            csp
-        )
+        # csp = add_script_hashes_to_csp(response)
+        # response.headers["Content-Security-Policy"] = helpers.get_csp_as_str(
+        #     csp
+        # )
+
         return response
