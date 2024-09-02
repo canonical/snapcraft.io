@@ -78,6 +78,9 @@ CSP = {
         "www.googletagmanager.com",
         "i.vimeocdn.com",
         "forum.snapcraft.io",
+        "snapcraft.io",
+        # This is needed because of "https://www.google.*/ads/ga-audiences" images to load
+        "*",
     ],
     "script-src-elem": [
         "'self'",
@@ -100,8 +103,10 @@ CSP = {
         "ubuntu.com",
         "analytics.google.com",
         "stats.g.doubleclick.net",
+        "www.googletagmanager.com",
     ],
     "frame-src": [
+        "'self'",
         "td.doubleclick.net",
         "www.youtube.com/",
         "asciinema.org",
