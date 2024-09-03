@@ -348,7 +348,10 @@ def set_handlers(app):
 
     # Find all script elements in the response and add their hashes to the CSP.
     def add_script_hashes_to_csp(response):
-        decoded_content = b"".join(response.response).decode("utf-8")
+        response.freeze()
+        decoded_content = b"".join(response.response).decode(
+            "utf-8", errors="replace"
+        )
 
         CSP["script-src-elem"] = CSP_SCRIPT_SRC_ELEM + get_csp_directive(
             decoded_content, r"<script>([\s\S]*?)<\/script>"
@@ -385,9 +388,9 @@ def set_handlers(app):
                             "stale-if-error=86400",
                         }
                     )
-        # csp = add_script_hashes_to_csp(response)
-        # response.headers["Content-Security-Policy"] = helpers.get_csp_as_str(
-        #     csp
-        # )
+        csp = add_script_hashes_to_csp(response)
+        response.headers["Content-Security-Policy"] = helpers.get_csp_as_str(
+            csp
+        )
 
         return response
