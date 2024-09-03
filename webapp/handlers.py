@@ -83,6 +83,7 @@ CSP = {
         "stats.g.doubleclick.net",
         "www.googletagmanager.com",
         "sentry.is.canonical.com",
+        "www.google-analytics.com",
     ],
     "frame-src": [
         "'self'",
@@ -105,6 +106,8 @@ CSP_SCRIPT_SRC_ELEM = [
     "www.youtube.com",
     "asciinema.org",
     "player.vimeo.com",
+    "plausible.io",
+    "script.crazyegg.com",
     "'unsafe-hashes'",
 ]
 
