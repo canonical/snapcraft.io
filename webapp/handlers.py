@@ -98,7 +98,7 @@ CSP = {
         "sentry.is.canonical.com",
         "www.google-analytics.com",
         "plausible.io",
-        "script.crazyegg.com",
+        "*.crazyegg.com",
     ],
     "frame-src": [
         "'self'",
