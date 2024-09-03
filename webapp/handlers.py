@@ -70,7 +70,18 @@ CSP = {
         # https://www.google.*/ads/ga-audiences to load.
         "*",
     ],
-    "script-src-elem": [],
+    "script-src-elem": [
+        "'self'",
+        "assets.ubuntu.com",
+        "www.googletagmanager.com",
+        "www.youtube.com",
+        "asciinema.org",
+        "player.vimeo.com",
+        "plausible.io",
+        "script.crazyegg.com",
+        # This is necessary for Google Tag Manager to function properly.
+        "'unsafe-inline'",
+    ],
     "font-src": [
         "'self'",
         "assets.ubuntu.com",
@@ -84,6 +95,8 @@ CSP = {
         "www.googletagmanager.com",
         "sentry.is.canonical.com",
         "www.google-analytics.com",
+        "plausible.io",
+        "script.crazyegg.com",
     ],
     "frame-src": [
         "'self'",
@@ -98,18 +111,6 @@ CSP = {
         "'unsafe-inline'",
     ],
 }
-
-CSP_SCRIPT_SRC_ELEM = [
-    "'self'",
-    "assets.ubuntu.com",
-    "www.googletagmanager.com",
-    "www.youtube.com",
-    "asciinema.org",
-    "player.vimeo.com",
-    "plausible.io",
-    "script.crazyegg.com",
-    "'unsafe-hashes'",
-]
 
 CSP_SCRIPT_SRC = [
     "'self'",
@@ -357,9 +358,6 @@ def set_handlers(app):
             "utf-8", errors="replace"
         )
 
-        CSP["script-src-elem"] = CSP_SCRIPT_SRC_ELEM + get_csp_directive(
-            decoded_content, r"<script>([\s\S]*?)<\/script>"
-        )
         CSP["script-src"] = CSP_SCRIPT_SRC + get_csp_directive(
             decoded_content, r'onclick\s*=\s*"(.*?)"'
         )
