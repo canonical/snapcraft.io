@@ -79,6 +79,8 @@ CSP = {
         "player.vimeo.com",
         "plausible.io",
         "script.crazyegg.com",
+        "w.usabilla.com",
+        "connect.facebook.net",
         # This is necessary for Google Tag Manager to function properly.
         "'unsafe-inline'",
     ],
@@ -114,6 +116,7 @@ CSP = {
 
 CSP_SCRIPT_SRC = [
     "'self'",
+    "blob:",
     "'unsafe-eval'",
     "'unsafe-hashes'",
 ]
