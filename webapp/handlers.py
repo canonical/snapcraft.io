@@ -90,6 +90,7 @@ CSP = {
         "www.youtube.com/",
         "asciinema.org",
         "player.vimeo.com",
+        "snapcraft.io",
     ],
     "style-src": [
         "'self'",
