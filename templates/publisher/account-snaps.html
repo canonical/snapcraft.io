@@ -286,19 +286,23 @@ My published snaps — Linux software in the Snap Store
 </script>
 {% endif %}
 <script>
-  $(document).ready(function(){
-    $("[id^='tooltip-']").each(function() {
-      const tooltipId = $(this).attr('id');
-      const tooltip = $("#" + tooltipId);
-      const trigger = $("button[aria-describedby='" + tooltipId + "']");
+  document.addEventListener("DOMContentLoaded", function () {
+      const tooltips = document.querySelectorAll("[id^='tooltip-']");
+      tooltips.forEach(function (tooltip) {
+        const tooltipId = tooltip.id;
+        const trigger = document.querySelector("button[aria-describedby='" + tooltipId + "']");
 
-      trigger.hover(function(){
-        tooltip.removeClass("u-hide");
-      }, function(){
-        tooltip.addClass("u-hide");
+        if (trigger) {
+          trigger.addEventListener("mouseenter", function () {
+            tooltip.classList.remove("u-hide");
+          });
+
+          trigger.addEventListener("mouseleave", function () {
+            tooltip.classList.add("u-hide");
+          });
+        }
       });
     });
-  });
 </script>
 <script>
   // De-register snaps
