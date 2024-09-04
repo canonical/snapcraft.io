@@ -101,7 +101,7 @@ CSP = {
         "plausible.io",
         "*.crazyegg.com",
         "www.facebook.com",
-        "px.ads.linkedin.com"
+        "px.ads.linkedin.com",
     ],
     "frame-src": [
         "'self'",
