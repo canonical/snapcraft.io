@@ -81,6 +81,7 @@ CSP = {
         "script.crazyegg.com",
         "w.usabilla.com",
         "connect.facebook.net",
+        "snap.licdn.com",
         # This is necessary for Google Tag Manager to function properly.
         "'unsafe-inline'",
     ],
@@ -98,7 +99,7 @@ CSP = {
         "sentry.is.canonical.com",
         "www.google-analytics.com",
         "plausible.io",
-        "script.crazyegg.com",
+        "*.crazyegg.com",
     ],
     "frame-src": [
         "'self'",
@@ -107,6 +108,8 @@ CSP = {
         "asciinema.org",
         "player.vimeo.com",
         "snapcraft.io",
+        "www.facebook.com",
+        "snap:",
     ],
     "style-src": [
         "'self'",
