@@ -105,7 +105,7 @@ function PubliciseButtons(): JSX.Element {
       </Row>
       <hr />
       <Row>
-        <Col size={10} emptyLarge={3}>
+        <Col size={10}>
           <p>
             <img
               src={`https://snapcraft.io/static/images/badges/${selectedLanguage}/snap-store-white.svg`}
