@@ -106,7 +106,7 @@ def store_blueprint(store_query=None):
     @store.route("/validation-sets/<path:path>")
     @login_required
     def validation_sets(path):
-        return flask.render_template("store/validation-sets.html")
+        return flask.render_template("store/publisher.html")
 
     @store.route("/discover")
     def discover():
