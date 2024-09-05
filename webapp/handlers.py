@@ -417,6 +417,6 @@ def set_handlers(app):
         response.headers["Cross-Origin-Opener-Policy"] = (
             "same-origin-allow-popups"
         )
-        response.headers["Cross-Origin-Resource-Policy"] = "same-site"
-        response.headers["X-Permitted-Cross-Domain-Policies"] = "none"
+        # response.headers["Cross-Origin-Resource-Policy"] = "same-site"
+        # response.headers["X-Permitted-Cross-Domain-Policies"] = "none"
         return response
