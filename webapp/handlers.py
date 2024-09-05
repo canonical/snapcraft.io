@@ -383,7 +383,7 @@ def set_handlers(app):
         - Referrer-Policy: Limit referrer data for security while preserving
         full referrer for same-origin requests
         - Cross-Origin-Embedder-Policy: allows embedding cross-origin
-        resources without credentials
+        resources
         - Cross-Origin-Opener-Policy: enable the page to open pop-ups while
         maintaining same-origin policy
         - Cross-Origin-Resource-Policy: allowing only same-origin requests to
