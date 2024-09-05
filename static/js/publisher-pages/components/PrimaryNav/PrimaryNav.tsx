@@ -39,10 +39,14 @@ function PrimaryNav({
                 href: "/snaps",
                 icon: "pods",
               },
+            ],
+          },
+          {
+            items: [
               {
                 label: "My validation sets",
                 href: "/validation-sets",
-                icon: "pods",
+                icon: "topic",
                 "aria-current": "page",
               },
             ],
