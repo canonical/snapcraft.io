@@ -16,4 +16,10 @@ declare interface Window {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   Vimeo: any;
   DNS_VERIFICATION_TOKEN: string;
+  SNAP_PUBLICISE_DATA: {
+    hasScreenshot: boolean;
+    isReleased: boolean;
+    private: boolean;
+    trending: boolean;
+  };
 }
