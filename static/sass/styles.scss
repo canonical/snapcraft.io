@@ -116,8 +116,6 @@ $color-social-icon-foreground: $color-light;
 @include snapcraft-p-multiselect;
 @import "patterns_first-snap-flow";
 @include snapcraft-p-first-snap-flow;
-@import "snapcraft-publicise";
-@include snapcraft-publicise;
 @import "snapcraft-publisher";
 @include snapcraft-publisher;
 @import "patterns_modal";

@@ -76,13 +76,8 @@ class GetPubliciseBadgesPage(BaseTestCases.EndpointLoggedInErrorHandling):
         snap_name = "test-snap"
 
         payload = {
-            "snap_id": "id",
-            "title": "test snap",
             "private": False,
             "snap_name": snap_name,
-            "keywords": [],
-            "media": [],
-            "publisher": {"display-name": "test"},
         }
 
         responses.add(responses.GET, self.api_url, json=payload, status=200)
@@ -98,10 +93,8 @@ class GetPubliciseBadgesPage(BaseTestCases.EndpointLoggedInErrorHandling):
         self.check_call_by_api_url(responses.calls)
 
         self.assertEqual(response.status_code, 200)
-        self.assert_template_used("publisher/publicise/github_badges.html")
+        self.assert_template_used("store/publisher.html")
 
-        self.assert_context("snap_id", "id")
-        self.assert_context("snap_title", "test snap")
         self.assert_context("snap_name", snap_name)
 
     @responses.activate
@@ -109,12 +102,8 @@ class GetPubliciseBadgesPage(BaseTestCases.EndpointLoggedInErrorHandling):
         snap_name = "test-snap"
 
         payload = {
-            "snap_id": "id",
-            "title": "test snap",
             "private": True,
             "snap_name": snap_name,
-            "keywords": [],
-            "media": [],
         }
 
         responses.add(responses.GET, self.api_url, json=payload, status=200)

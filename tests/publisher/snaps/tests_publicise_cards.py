@@ -43,13 +43,9 @@ class GetPubliciseCardsPage(BaseTestCases.EndpointLoggedInErrorHandling):
         snap_name = "test-snap"
 
         payload = {
-            "snap_id": "id",
-            "title": "test snap",
             "private": False,
             "snap_name": snap_name,
-            "keywords": [],
             "media": [],
-            "publisher": {"display-name": "test"},
         }
 
         responses.add(responses.GET, self.api_url, json=payload, status=200)
@@ -59,10 +55,8 @@ class GetPubliciseCardsPage(BaseTestCases.EndpointLoggedInErrorHandling):
         self.check_call_by_api_url(responses.calls)
 
         self.assertEqual(response.status_code, 200)
-        self.assert_template_used("publisher/publicise/embedded_cards.html")
+        self.assert_template_used("store/publisher.html")
 
-        self.assert_context("snap_id", "id")
-        self.assert_context("snap_title", "test snap")
         self.assert_context("snap_name", snap_name)
         self.assert_context("has_screenshot", False)
 
@@ -71,13 +65,9 @@ class GetPubliciseCardsPage(BaseTestCases.EndpointLoggedInErrorHandling):
         snap_name = "test-snap"
 
         payload = {
-            "snap_id": "id",
-            "title": "test snap",
             "private": False,
             "snap_name": snap_name,
-            "keywords": [],
             "media": [{"url": "this is a url", "type": "screenshot"}],
-            "publisher": {"display-name": "test"},
         }
 
         responses.add(responses.GET, self.api_url, json=payload, status=200)
@@ -87,7 +77,7 @@ class GetPubliciseCardsPage(BaseTestCases.EndpointLoggedInErrorHandling):
         self.check_call_by_api_url(responses.calls)
 
         self.assertEqual(response.status_code, 200)
-        self.assert_template_used("publisher/publicise/embedded_cards.html")
+        self.assert_template_used("store/publisher.html")
 
         self.assert_context("has_screenshot", True)
 
@@ -96,11 +86,9 @@ class GetPubliciseCardsPage(BaseTestCases.EndpointLoggedInErrorHandling):
         snap_name = "test-snap"
 
         payload = {
-            "snap_id": "id",
             "title": "test snap",
             "private": True,
             "snap_name": snap_name,
-            "keywords": [],
             "media": [],
         }
 
