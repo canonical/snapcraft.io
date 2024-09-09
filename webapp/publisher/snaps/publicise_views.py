@@ -20,40 +20,13 @@ def get_publicise(snap_name):
 
     is_released = len(snap_details["channel_maps_list"]) > 0
 
-    available_languages = {
-        "ar": {"title": "العربية", "text": "احصل عليه من Snap Store"},
-        "bg": {"title": "български", "text": "Инсталирайте го от Snap Store"},
-        "bn": {"title": "বাংলা", "text": "থেকে ইনস্টল করুন"},
-        "de": {"title": "Deutsch", "text": "Installieren vom Snap Store"},
-        "en": {"title": "English", "text": "Get it from the Snap Store"},
-        "es": {"title": "Español", "text": "Instalar desde Snap Store"},
-        "fr": {
-            "title": "Français",
-            "text": "Installer à partir du Snap Store",
-        },
-        "it": {"title": "Italiano", "text": "Scarica dallo Snap Store"},
-        "jp": {"title": "日本語", "text": "Snap Store から入手ください"},
-        "pl": {"title": "Polski", "text": "Pobierz w Snap Store"},
-        "pt": {"title": "Português", "text": "Disponível na Snap Store"},
-        "ro": {"title": "Română", "text": "Instalează din Snap Store"},
-        "ru": {"title": "русский язык", "text": "Загрузите из Snap Store"},
-        "tw": {"title": "中文（台灣）", "text": "安裝軟體敬請移駕 Snap Store"},
-    }
-
     context = {
         "private": snap_details["private"],
         "snap_name": snap_details["snap_name"],
-        "snap_title": snap_details["title"],
-        "publisher_name": snap_details["publisher"]["display-name"],
-        "snap_id": snap_details["snap_id"],
-        "is_release": is_released,
-        "available": available_languages,
-        "download_version": "v1.4.2",
+        "is_released": is_released,
     }
 
-    return flask.render_template(
-        "publisher/publicise/store_buttons.html", **context
-    )
+    return flask.render_template("store/publisher.html", **context)
 
 
 @login_required
@@ -67,15 +40,10 @@ def get_publicise_badges(snap_name):
 
     context = {
         "snap_name": snap_details["snap_name"],
-        "snap_title": snap_details["title"],
-        "publisher_name": snap_details["publisher"]["display-name"],
-        "snap_id": snap_details["snap_id"],
         "trending": snap_public_details["snap"]["trending"],
     }
 
-    return flask.render_template(
-        "publisher/publicise/github_badges.html", **context
-    )
+    return flask.render_template("store/publisher.html", **context)
 
 
 @login_required
@@ -91,11 +59,6 @@ def get_publicise_cards(snap_name):
     context = {
         "has_screenshot": has_screenshot,
         "snap_name": snap_details["snap_name"],
-        "snap_title": snap_details["title"],
-        "publisher_name": snap_details["publisher"]["display-name"],
-        "snap_id": snap_details["snap_id"],
     }
 
-    return flask.render_template(
-        "publisher/publicise/embedded_cards.html", **context
-    )
+    return flask.render_template("store/publisher.html", **context)

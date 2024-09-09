@@ -13,4 +13,10 @@ declare interface Window {
   MktoForms2: any;
   Vimeo: any;
   DNS_VERIFICATION_TOKEN: string;
+  SNAP_PUBLICISE_DATA: {
+    hasScreenshot: boolean;
+    isReleased: boolean;
+    private: boolean;
+    trending: boolean;
+  };
 }
