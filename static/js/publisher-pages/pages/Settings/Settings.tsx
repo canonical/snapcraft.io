@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useForm, useWatch } from "react-hook-form";
+import { useParams } from "react-router-dom";
 import {
   Button,
   Form,
@@ -10,18 +11,19 @@ import {
   Tooltip,
 } from "@canonical/react-components";
 
-import PageHeader from "../../../shared/PageHeader";
-import SaveAndPreview from "../../../shared/SaveAndPreview";
-import SearchAutocomplete from "../../../shared/SearchAutocomplete";
-import UpdateMetadataModal from "../../../shared/UpdateMetadataModal";
-import SaveStateNotifications from "../../../shared/SaveStateNotifications";
-import { UnregisterSnapModal } from "../UnregisterSnapModal";
+import SectionNav from "../../components/SectionNav";
+import SaveAndPreview from "../../components/SaveAndPreview";
+import SearchAutocomplete from "../../components/SearchAutocomplete";
+import UpdateMetadataModal from "../../components/UpdateMetadataModal";
+import SaveStateNotifications from "../../components/SaveStateNotifications";
+import { UnregisterSnapModal } from "./UnregisterSnapModal";
 
 import { getSettingsData, getFormData } from "../../utils";
 
-function App() {
-  const settingsData = getSettingsData(window?.settingsData);
-  const countries = window?.countries;
+function Settings() {
+  const { snapId } = useParams();
+  const settingsData = getSettingsData(window.SNAP_SETTINGS_DATA);
+  const countries = window.SNAP_SETTINGS_DATA.countries;
 
   const [isSaving, setIsSaving] = useState(false);
   const [hasSaved, setHasSaved] = useState(false);
@@ -156,12 +158,12 @@ function App() {
 
   return (
     <>
-      <PageHeader
-        snapName={settingsData?.snap_name}
-        snapTitle={settingsData?.snap_title}
-        publisherName={settingsData?.publisher_name}
-        activeTab="settings"
-      />
+      <h1 className="p-heading--4">
+        <a href="/snaps">My snaps</a> / <a href={`/${snapId}`}>{snapId}</a> /
+        Settings
+      </h1>
+
+      <SectionNav snapName={snapId} activeTab="settings" />
 
       {settingsData?.visibility_locked && (
         <div className="u-fixed-width">
@@ -514,4 +516,4 @@ function App() {
   );
 }
 
-export default App;
+export default Settings;
