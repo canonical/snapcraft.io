@@ -1,4 +1,4 @@
-import type { SettingsData } from "../types/SettingsData";
+import type { SettingsData } from "../types";
 
 function getCountryKeysStatus(settingsData: SettingsData) {
   if (settingsData?.blacklist_country_keys) {
