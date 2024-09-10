@@ -1,8 +1,8 @@
-import ListingFormInput from "../../components/ListingFormInput";
-import ListingDescriptionField from "../../components/ListingDescriptionField";
-import CategoriesInput from "../../components/CategoriesInput";
-import ImageUpload from "../../components/ImageUpload";
-import Screenshots from "../../components/Screenshots";
+import ListingFormInput from "../../ListingFormInput";
+import ListingDescriptionField from "../../ListingDescriptionField";
+import CategoriesInput from "../../CategoriesInput";
+import ImageUpload from "../../ImageUpload";
+import Screenshots from "../../Screenshots";
 
 type Props = {
   register: Function;

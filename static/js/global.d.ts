@@ -41,4 +41,6 @@ declare interface Window {
     whitelist_countries: string[];
     whitelist_country_keys: string;
   };
+  SNAP_LISTING_DATA: any;
+  tourSteps: any;
 }

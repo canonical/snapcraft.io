@@ -2,7 +2,7 @@ import { useState } from "react";
 import { nanoid } from "nanoid";
 import { Row, Col, Modal } from "@canonical/react-components";
 
-import { useVerified } from "../../hooks";
+import { useVerified } from "../../../hooks";
 
 type Props = {
   snapName: string | undefined;

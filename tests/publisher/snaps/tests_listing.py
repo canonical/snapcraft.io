@@ -79,7 +79,7 @@ class GetListingPage(BaseTestCases.EndpointLoggedInErrorHandling):
         self.check_call_by_api_url(responses.calls)
 
         assert response.status_code == 200
-        self.assert_template_used("publisher/listing.html")
+        self.assert_template_used("store/publisher.html")
 
         self.assert_context("snap_id", "id")
         self.assert_context("snap_name", snap_name)
@@ -136,7 +136,7 @@ class GetListingPage(BaseTestCases.EndpointLoggedInErrorHandling):
         self.check_call_by_api_url(responses.calls)
 
         assert response.status_code == 200
-        self.assert_template_used("publisher/listing.html")
+        self.assert_template_used("store/publisher.html")
 
         self.assert_context("icon_url", "this is a url")
 
@@ -177,7 +177,7 @@ class GetListingPage(BaseTestCases.EndpointLoggedInErrorHandling):
         self.check_call_by_api_url(responses.calls)
 
         assert response.status_code == 200
-        self.assert_template_used("publisher/listing.html")
+        self.assert_template_used("store/publisher.html")
 
         self.assert_context("screenshot_urls", ["this is a url"])
 
@@ -224,7 +224,7 @@ class GetListingPage(BaseTestCases.EndpointLoggedInErrorHandling):
         self.check_call_by_api_url(responses.calls)
 
         assert response.status_code == 200
-        self.assert_template_used("publisher/listing.html")
+        self.assert_template_used("store/publisher.html")
 
         self.assert_context("banner_urls", ["/banner_1234.png"])
 
@@ -265,7 +265,7 @@ class GetListingPage(BaseTestCases.EndpointLoggedInErrorHandling):
         self.check_call_by_api_url(responses.calls)
 
         assert response.status_code == 200
-        self.assert_template_used("publisher/listing.html")
+        self.assert_template_used("store/publisher.html")
 
         self.assert_context("video_urls", ["https://youtube.com/watch?v=1234"])
 
@@ -306,6 +306,6 @@ class GetListingPage(BaseTestCases.EndpointLoggedInErrorHandling):
         self.check_call_by_api_url(responses.calls)
 
         assert response.status_code == 200
-        self.assert_template_used("publisher/listing.html")
+        self.assert_template_used("store/publisher.html")
 
         self.assert_context("categories", [])

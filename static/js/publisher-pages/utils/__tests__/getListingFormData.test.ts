@@ -1,6 +1,6 @@
-import getFormData from "../getFormData";
+import getListingFormData from "../getListingFormData";
 
-describe("getFormData", () => {
+describe("getListingFormData", () => {
   window.CSRF_TOKEN = "test_token";
 
   const data = {
@@ -42,7 +42,7 @@ describe("getFormData", () => {
   };
 
   test("returns form data", () => {
-    const formData = getFormData(data, "test-snap-id", changes);
+    const formData = getListingFormData(data, "test-snap-id", changes);
 
     expect(formData.get("csrf_token")).toEqual("test_token");
     expect(formData.get("snap_id")).toEqual("test-snap-id");

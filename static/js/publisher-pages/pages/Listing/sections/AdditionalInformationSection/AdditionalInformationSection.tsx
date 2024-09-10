@@ -1,5 +1,5 @@
-import LicenseInputs from "../../components/LicenseInputs";
-import MetricsInputs from "../../components/MetricsInputs";
+import LicenseInputs from "../../LicenseInputs";
+import MetricsInputs from "../../MetricsInputs";
 
 type Props = {
   register: Function;

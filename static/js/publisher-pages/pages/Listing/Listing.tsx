@@ -1,32 +1,33 @@
 import { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { Form, Strip, Notification } from "@canonical/react-components";
 
 import {
-  getChanges,
-  getFormData,
+  getListingChanges,
+  getListingFormData,
   getListingData,
   shouldShowUpdateMetadataWarning,
   getDefaultValues,
 } from "../../utils";
-import { initListingTour } from "../../../tour";
+import { initListingTour } from "../../../publisher/tour";
 
-import PageHeader from "../../../shared/PageHeader";
-import SaveAndPreview from "../../../shared/SaveAndPreview";
-import UpdateMetadataModal from "../../../shared/UpdateMetadataModal";
-import SaveStateNotifications from "../../../shared/SaveStateNotifications";
-import ListingDetailsSection from "../../sections/ListingDetailsSection";
-import ContactInformationSection from "../../sections/ContactInformationSection";
-import AdditionalInformationSection from "../../sections/AdditionalInformationSection";
-import PreviewForm from "../PreviewForm";
+import SectionNav from "../../components/SectionNav";
+import SaveAndPreview from "../../components/SaveAndPreview";
+import UpdateMetadataModal from "../../components/UpdateMetadataModal";
+import SaveStateNotifications from "../../components/SaveStateNotifications";
+import ListingDetailsSection from "./sections/ListingDetailsSection";
+import ContactInformationSection from "./sections/ContactInformationSection";
+import AdditionalInformationSection from "./sections/AdditionalInformationSection";
+import PreviewForm from "./PreviewForm";
 
-function App() {
-  const snapData = getListingData(window?.listingData);
-  const snapId = window?.listingData?.snap_id;
-  const snapTitle = window?.listingData?.snap_title;
-  const snapName = window?.listingData?.snap_name;
-  const publisherName = window?.listingData?.publisher_name;
-  const categories = window?.listingData?.categories;
+function Listing() {
+  const { snapId } = useParams();
+  const snapData = getListingData(window.SNAP_LISTING_DATA);
+  const snapTitle = window.SNAP_LISTING_DATA.snap_title;
+  const snapName = window.SNAP_LISTING_DATA.snap_name;
+  const publisherName = window.SNAP_LISTING_DATA.publisher_name;
+  const categories = window.SNAP_LISTING_DATA.categories;
   const tourSteps = window?.tourSteps;
 
   const defaultValues = getDefaultValues(snapData);
@@ -72,8 +73,8 @@ function App() {
   };
 
   const submitForm = async (data: any) => {
-    const changes = getChanges(dirtyFields, data);
-    const formData = getFormData(data, snapId, changes);
+    const changes = getListingChanges(dirtyFields, data);
+    const formData = getListingFormData(data, snapId, changes);
 
     const previousDirtyFields = Object.assign({}, dirtyFields);
 
@@ -128,12 +129,12 @@ function App() {
 
   return (
     <>
-      <PageHeader
-        snapName={snapName}
-        snapTitle={snapTitle}
-        publisherName={publisherName}
-        activeTab="listing"
-      />
+      <h1 className="p-heading--4">
+        <a href="/snaps">My snaps</a> / <a href={`/${snapId}`}>{snapId}</a> /
+        Listing
+      </h1>
+
+      <SectionNav snapName={snapId} activeTab="listing" />
 
       <Form
         onSubmit={handleSubmit(onSubmit)}
@@ -235,4 +236,4 @@ function App() {
   );
 }
 
-export default App;
+export default Listing;

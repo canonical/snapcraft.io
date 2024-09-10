@@ -11,7 +11,7 @@
     isReleased: {% if is_released %}{{ is_released | tojson }}{% else %}false{% endif %},
     private: {% if private %}{{ private | tojson }}{% else %}false{% endif %},
     trending: {% if trending %}{{ trending | tojson }}{% else %}false{% endif %},
-  }
+  };
 
   window.SNAP_SETTINGS_DATA = {
     countries: {% if countries %}{{ countries|tojson }}{% else %}[]{% endif %},
@@ -27,7 +27,13 @@
     whitelist_countries: {% if whitelist_country_codes %}{{ whitelist_country_codes|tojson }}{% else %}[]{% endif %},
     blacklist_countries: {% if blacklist_country_codes %}{{ blacklist_country_codes|tojson }}{% else %}[]{% endif %},
     visibility_locked: {% if visibility_locked %}{{ visibility_locked|tojson }}{% else %}false{% endif %},
-  }
+  };
+
+  window.SNAP_LISTING_DATA  = {% if listing_data %}JSON.parse({{ listing_data|tojson }});{% else %}{}{% endif %};
+  
+  window.tourSteps = {% if tour_steps %}{{ tour_steps|tojson }};{% else %}[]{% endif %};
+
+  window.DNS_VERIFICATION_TOKEN = {% if dns_verification_token %}"{{ dns_verification_token }}"{% else %}""{% endif %};
 </script>
 <script src="{{ static_url('js/dist/publisher-pages.js') }}"></script>
 {% endblock %}

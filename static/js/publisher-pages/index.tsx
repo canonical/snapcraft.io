@@ -3,6 +3,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "react-query";
 
 import Root from "./routes/root";
+import Listing from "./pages/Listing";
 import Publicise from "./pages/Publicise";
 import Settings from "./pages/Settings";
 import ValidationSets from "./pages/ValidationSets";
@@ -13,6 +14,10 @@ const router = createBrowserRouter([
     path: "/",
     element: <Root />,
     children: [
+      {
+        path: "/:snapId/listing",
+        element: <Listing />,
+      },
       {
         path: "/:snapId/publicise",
         element: <Publicise />,

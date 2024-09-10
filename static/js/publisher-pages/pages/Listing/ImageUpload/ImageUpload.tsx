@@ -12,7 +12,7 @@ import {
   validateImageDimensions,
   validateAspectRatio,
   formatFileSize,
-} from "../../utils";
+} from "../../../utils";
 
 type Props = {
   imageUrl: string | null;
@@ -221,10 +221,12 @@ function ImageUpload({
                 onClick={() => {
                   setImageIsValid(true);
                   setValue(imageUrlFieldKey, "", {
-                    shouldDirty: window?.listingData?.banner_urls[0] !== null,
+                    shouldDirty:
+                      window.SNAP_LISTING_DATA.banner_urls[0] !== null,
                   });
                   setValue(imageFieldKey, new File([], ""), {
-                    shouldDirty: window?.listingData?.banner_urls[0] !== null,
+                    shouldDirty:
+                      window.SNAP_LISTING_DATA.banner_urls[0] !== null,
                   });
                   setPreviewImageUrl("");
                 }}

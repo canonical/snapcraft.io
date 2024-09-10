@@ -3,7 +3,7 @@ import { useFieldArray } from "react-hook-form";
 import { nanoid } from "nanoid";
 import { Row, Col, Notification } from "@canonical/react-components";
 
-import { validateImageDimensions } from "../../utils";
+import { validateImageDimensions } from "../../../utils";
 
 import ScreenshotList from "./ScreenshotList";
 

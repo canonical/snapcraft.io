@@ -28,25 +28,25 @@ const licenseSort = (a: License, b: License) => {
 function getListingData(listingData: { [key: string]: any }) {
   let images = [];
 
-  if (window?.listingData?.icon_url) {
+  if (window.SNAP_LISTING_DATA.icon_url) {
     images.push({
-      url: window?.listingData?.icon_url,
+      url: window.SNAP_LISTING_DATA.icon_url,
       type: "icon",
       status: "uploaded",
     });
   }
 
-  if (window?.listingData?.banner_urls.length) {
+  if (window.SNAP_LISTING_DATA.banner_urls.length) {
     images.push({
-      url: window?.listingData?.banner_urls[0],
+      url: window.SNAP_LISTING_DATA.banner_urls[0],
       type: "banner",
       status: "uploaded",
     });
   }
 
-  if (window?.listingData?.screenshot_urls) {
+  if (window.SNAP_LISTING_DATA.screenshot_urls) {
     images = images.concat(
-      window?.listingData?.screenshot_urls.map((url: string) => {
+      window.SNAP_LISTING_DATA.screenshot_urls.map((url: string) => {
         return {
           url,
           type: "screenshot",
@@ -119,11 +119,11 @@ function getListingData(listingData: { [key: string]: any }) {
       listingData.links && listingData.links.website
         ? getOtherWebsites(listingData.links.website)
         : [],
-    banner_urls: window?.listingData?.banner_urls,
-    icon_url: window?.listingData?.icon_url,
-    screenshot_urls: window?.listingData?.screenshot_urls,
+    banner_urls: window.SNAP_LISTING_DATA.banner_urls,
+    icon_url: window.SNAP_LISTING_DATA.icon_url,
+    screenshot_urls: window.SNAP_LISTING_DATA.screenshot_urls,
     icon: new File([], ""),
-    banner_url: window?.listingData?.banner_urls[0],
+    banner_url: window.SNAP_LISTING_DATA.banner_urls[0],
     banner: new File([], ""),
     screenshots: [
       new File([], ""),
@@ -133,8 +133,8 @@ function getListingData(listingData: { [key: string]: any }) {
       new File([], ""),
     ],
     images,
-    snap_categories: window?.listingData?.snap_categories?.categories,
-    links: window?.listingData?.links,
+    snap_categories: window.SNAP_LISTING_DATA.snap_categories?.categories,
+    links: window.SNAP_LISTING_DATA.links,
   };
 }
 

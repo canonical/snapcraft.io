@@ -1,6 +1,6 @@
-import getChanges from "../getChanges";
+import getListingChanges from "../getListingChanges";
 
-describe("getChanges", () => {
+describe("getListingChanges", () => {
   test("returns changes in data", () => {
     const changedFields = {
       description: true,
@@ -12,7 +12,7 @@ describe("getChanges", () => {
       summary: "lorem ipsum dolor sit amet",
     };
 
-    const changes = getChanges(changedFields, data);
+    const changes = getListingChanges(changedFields, data);
 
     expect(changes.description).toBe("lorem ipsum");
     expect(changes.summary).toBe("lorem ipsum dolor sit amet");
@@ -27,7 +27,7 @@ describe("getChanges", () => {
       primary_website: "https://example.com",
       websites: [{ url: "https://test.com" }],
     };
-    const changes = getChanges(changedFields, data);
+    const changes = getListingChanges(changedFields, data);
 
     expect(changes.links.website[0]).toBe("https://example.com");
   });
@@ -55,7 +55,7 @@ describe("getChanges", () => {
       licenses: [{ key: "Glide", name: "3dfx Glide License" }],
     };
 
-    const changes = getChanges(changedFields, data);
+    const changes = getListingChanges(changedFields, data);
 
     expect(changes["primary-category"]).not.toBeDefined();
     expect(changes["secondary-category"]).not.toBeDefined();
@@ -104,7 +104,7 @@ describe("getChanges", () => {
       screenshots: true,
     };
 
-    const changes = getChanges(changedFields, data);
+    const changes = getListingChanges(changedFields, data);
 
     expect(changes.images).toHaveLength(3);
   });

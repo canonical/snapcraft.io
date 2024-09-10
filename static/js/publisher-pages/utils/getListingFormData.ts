@@ -10,7 +10,7 @@ const formatLinkFields = (fields: Array<{ url: string }>) => {
   return fields.map((item) => item.url);
 };
 
-function getFormData(
+function getListingFormData(
   data: { [key: string]: any },
   snapId: string | undefined,
   changes: { [key: string]: any }
@@ -112,4 +112,4 @@ function getFormData(
   return formData;
 }
 
-export default getFormData;
+export default getListingFormData;

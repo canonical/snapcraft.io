@@ -2,7 +2,7 @@ import getListingData from "../getListingData";
 
 describe("getListingData", () => {
   test("returns listing data", () => {
-    window.listingData = {
+    window.SNAP_LISTING_DATA = {
       icon_url: "https://example.com/icon.jpg",
       banner_urls: ["https://example.com/banner.jpg"],
       screenshot_urls: ["https://example.com/screenshot.jpg"],

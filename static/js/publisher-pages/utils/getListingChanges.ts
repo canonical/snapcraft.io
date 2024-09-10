@@ -48,7 +48,7 @@ const formatImageChanges = (
   return images;
 };
 
-function getChanges(
+function getListingChanges(
   dirtyFields: { [key: string]: any },
   data: { [key: string]: any }
 ) {
@@ -146,4 +146,4 @@ function getChanges(
   return changes;
 }
 
-export default getChanges;
+export default getListingChanges;

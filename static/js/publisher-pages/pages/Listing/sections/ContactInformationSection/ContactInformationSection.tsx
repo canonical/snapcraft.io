@@ -1,5 +1,5 @@
-import MultipleInputs from "../../components/MultipleInputs";
-import PrimaryDomainInput from "../../components/PrimaryDomainInput";
+import MultipleInputs from "../../MultipleInputs";
+import PrimaryDomainInput from "../../PrimaryDomainInput";
 
 type Props = {
   snapName: string | undefined;

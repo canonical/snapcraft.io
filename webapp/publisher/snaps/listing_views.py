@@ -135,7 +135,7 @@ def get_listing_snap(snap_name, is_json=False):
                 snap_details["snap_name"], snap_details["links"]["website"][0]
             )
         return flask.render_template(
-            "publisher/listing.html",
+            "store/publisher.html",
             **context,
             listing_data=json.dumps(context),
             dns_verification_token=token
@@ -326,9 +326,7 @@ def post_listing_snap(snap_name, is_json=False):
             if is_json:
                 return flask.jsonify(context)
             else:
-                return flask.render_template(
-                    "publisher/listing.html", **context
-                )
+                return flask.render_template("store/publisher.html", **context)
 
     return flask.redirect(
         flask.url_for(".get_listing_snap", snap_name=snap_name, is_json=True)

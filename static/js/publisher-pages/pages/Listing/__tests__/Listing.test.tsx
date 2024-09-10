@@ -1,9 +1,10 @@
+import { BrowserRouter } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import "@testing-library/jest-dom";
 
-import App from "../App";
+import Listing from "../Listing";
 
 import mockListingData from "../mocks/mockListingData";
 
@@ -11,23 +12,31 @@ const queryClient = new QueryClient();
 
 const renderComponent = () =>
   render(
-    <QueryClientProvider client={queryClient}>
-      <App />
-    </QueryClientProvider>
+    <BrowserRouter>
+      <QueryClientProvider client={queryClient}>
+        <Listing />
+      </QueryClientProvider>
+    </BrowserRouter>
   );
 
-window.listingData = mockListingData;
+window.SNAP_LISTING_DATA = mockListingData;
 window.tourSteps = mockListingData.tour_steps;
 
 describe("App", () => {
   it("shows 'Save' button as disabled by default", () => {
     renderComponent();
-    expect(screen.getByRole("button", { name: "Save" })).toHaveAttribute("aria-disabled","true");
+    expect(screen.getByRole("button", { name: "Save" })).toHaveAttribute(
+      "aria-disabled",
+      "true"
+    );
   });
 
   it("shows 'Revert' button as disabled by default", () => {
     renderComponent();
-    expect(screen.getByRole("button", { name: "Revert" })).toHaveAttribute("aria-disabled","true");
+    expect(screen.getByRole("button", { name: "Revert" })).toHaveAttribute(
+      "aria-disabled",
+      "true"
+    );
   });
 
   it("enables 'Save' button if a change is made to the form", async () => {
@@ -57,7 +66,10 @@ describe("App", () => {
     await user.type(input, "new-name");
     await user.clear(input);
     await user.type(input, mockListingData.snap_title);
-    expect(screen.getByRole("button", { name: "Save" })).toHaveAttribute("aria-disabled","true");
+    expect(screen.getByRole("button", { name: "Save" })).toHaveAttribute(
+      "aria-disabled",
+      "true"
+    );
   });
 
   it("disables 'Revert' button if a change is made to the form and then reset", async () => {
@@ -67,6 +79,9 @@ describe("App", () => {
     await user.type(input, "new-name");
     await user.clear(input);
     await user.type(input, mockListingData.snap_title);
-    expect(screen.getByRole("button", { name: "Revert" })).toHaveAttribute("aria-disabled","true");
+    expect(screen.getByRole("button", { name: "Revert" })).toHaveAttribute(
+      "aria-disabled",
+      "true"
+    );
   });
 });
