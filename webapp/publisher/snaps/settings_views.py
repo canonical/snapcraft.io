@@ -77,7 +77,7 @@ def get_settings(snap_name, return_json=False):
     if return_json:
         return flask.jsonify(context)
 
-    return flask.render_template("publisher/settings.html", **context)
+    return flask.render_template("store/publisher.html", **context)
 
 
 @login_required
@@ -187,6 +187,6 @@ def post_settings(snap_name, return_json=False):
             if return_json:
                 return flask.jsonify(context)
 
-            return flask.render_template("publisher/settings.html", **context)
+            return flask.render_template("store/publisher.html", **context)
 
     return flask.redirect(flask.url_for(".get_settings", snap_name=snap_name))

@@ -4,6 +4,7 @@ import { QueryClient, QueryClientProvider } from "react-query";
 
 import Root from "./routes/root";
 import Publicise from "./pages/Publicise";
+import Settings from "./pages/Settings";
 import ValidationSets from "./pages/ValidationSets";
 import ValidationSet from "./pages/ValidationSet";
 
@@ -24,7 +25,10 @@ const router = createBrowserRouter([
         path: "/:snapId/publicise/cards",
         element: <Publicise view="cards" />,
       },
-
+      {
+        path: "/:snapId/settings",
+        element: <Settings />,
+      },
       {
         path: "/validation-sets",
         element: <ValidationSets />,

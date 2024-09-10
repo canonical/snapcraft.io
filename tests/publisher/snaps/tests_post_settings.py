@@ -153,7 +153,7 @@ class PostMetadataSettingsPage(BaseTestCases.EndpointLoggedIn):
         )
 
         self.assertEqual(response.status_code, 200)
-        self.assert_template_used("publisher/settings.html")
+        self.assert_template_used("store/publisher.html")
 
         self.assert_context("snap_id", self.snap_id)
         self.assert_context("snap_title", "test snap")
@@ -232,7 +232,7 @@ class PostMetadataSettingsPage(BaseTestCases.EndpointLoggedIn):
         )
 
         self.assertEqual(response.status_code, 200)
-        self.assert_template_used("publisher/settings.html")
+        self.assert_template_used("store/publisher.html")
 
         # Not updatable fields
         self.assert_context("snap_id", self.snap_id)
@@ -321,6 +321,6 @@ class PostMetadataSettingsPage(BaseTestCases.EndpointLoggedIn):
         )
 
         self.assertEqual(response.status_code, 200)
-        self.assert_template_used("publisher/settings.html")
+        self.assert_template_used("store/publisher.html")
 
         self.assert_context("field_errors", {"description": "error message"})

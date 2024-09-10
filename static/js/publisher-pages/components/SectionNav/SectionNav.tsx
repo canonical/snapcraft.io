@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { Tabs } from "@canonical/react-components";
 
 type Props = {
@@ -13,7 +14,6 @@ function SectionNav({ activeTab, snapName }: Props) {
           label: "Listing",
           active: activeTab === "listing" || !activeTab,
           href: `/${snapName}/listing`,
-          "data-tour": "listing-intro",
         },
         {
           label: "Builds",
@@ -33,12 +33,14 @@ function SectionNav({ activeTab, snapName }: Props) {
         {
           label: "Publicise",
           active: activeTab === "publicise",
-          href: `/${snapName}/publicise`,
+          to: `/${snapName}/publicise`,
+          component: Link,
         },
         {
           label: "Settings",
           active: activeTab === "settings",
-          href: `/${snapName}/settings`,
+          to: `/${snapName}/settings`,
+          component: Link,
         },
       ]}
     />

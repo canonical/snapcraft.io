@@ -1,6 +1,6 @@
 import getChanges from "./getChanges";
 
-import type { SettingsData } from "../types/SettingsData";
+import type { SettingsData } from "../types";
 
 function getFormData(
   settingsData: SettingsData,
