@@ -16,10 +16,32 @@ declare interface Window {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   Vimeo: any;
   DNS_VERIFICATION_TOKEN: string;
+  SENTRY_DSN: string;
+  CSRF_TOKEN: string;
   SNAP_PUBLICISE_DATA: {
     hasScreenshot: boolean;
     isReleased: boolean;
     private: boolean;
     trending: boolean;
+  };
+  SNAP_SETTINGS_DATA: {
+    blacklist_countries: string[];
+    blacklist_country_keys: string;
+    countries: Array<{ key: string; name: string }>;
+    country_keys_status: string | null;
+    private: boolean;
+    publisher_name: string;
+    snap_id: string;
+    snap_name: string;
+    snap_title: string;
+    status: string;
+    store: string;
+    territory_distribution_status: string;
+    unlisted: boolean;
+    update_metadata_on_release: boolean;
+    visibility: string;
+    visibility_locked: boolean;
+    whitelist_countries: string[];
+    whitelist_country_keys: string;
   };
 }
