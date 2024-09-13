@@ -204,8 +204,7 @@ def publisher_snap_metrics(snap_name):
 
 @login_required
 def get_active_devices(snap_name):
-    # very slow where else can i get snap id?
-    details = publisher_api.get_snap_info(snap_name, flask.session)
+    snap_id = publisher_api.get_snap_id(snap_name, flask.session)
 
     metric_requested = logic.extract_metrics_period(
         flask.request.args.get("period", default="30d", type=str)
@@ -217,7 +216,7 @@ def get_active_devices(snap_name):
 
     installed_base = logic.get_installed_based_metric(installed_base_metric)
     metrics_query_json = metrics_helper.build_metric_query_installed_base(
-        snap_id=details["snap_id"],
+        snap_id=snap_id,
         installed_base=installed_base,
         metric_period=metric_requested["int"],
         metric_bucket=metric_requested["bucket"],
@@ -254,7 +253,7 @@ def get_active_devices(snap_name):
     latest_day_period = logic.extract_metrics_period("1d")
     latest_installed_base = logic.get_installed_based_metric("version")
     latest_day_query_json = metrics_helper.build_metric_query_installed_base(
-        snap_id=details["snap_id"],
+        snap_id=snap_id,
         installed_base=latest_installed_base,
         metric_period=latest_day_period["int"],
         metric_bucket=latest_day_period["bucket"],
