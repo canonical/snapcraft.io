@@ -4,6 +4,7 @@ import { Row, Col, Select } from "@canonical/react-components";
 import { useEffect, useState } from "react";
 import { renderActiveDevicesMetrics } from "../../../publisher/metrics/metrics";
 import { select } from "d3-selection";
+import ActiveDeviceAnnotation from "./ActiveDeviceAnnotation";
 
 function ActiveDeviceMetric({ isEmpty }: { isEmpty: boolean }): JSX.Element {
   const { snapId } = useParams();
@@ -144,34 +145,7 @@ function ActiveDeviceMetric({ isEmpty }: { isEmpty: boolean }): JSX.Element {
             <div id="area-holder">
               <svg width="100%" height="320"></svg>
             </div>
-            {/* <Row data-js="annotations-hover">
-                {active_devices_annotations.series.map((category) => (
-                  <Col size={4}>
-                    <p
-                      data-js="annotation-hover"
-                      data-id={`category-${category.name}`}
-                    >
-                      {category.name == "featured" ? (
-                        <>
-                          ⭐{" "}
-                          <small>
-                            <b>Featured</b> snap since{" "}
-                            <b>{category.display_date}</b>
-                          </small>
-                        </>
-                      ) : (
-                        <>
-                          🗂{" "}
-                          <small>
-                            Added to <b>{category.display_name}</b> in{" "}
-                            <b>{category.display_date}</b>
-                          </small>
-                        </>
-                      )}
-                    </p>
-                  </Col>
-                ))}
-              </Row> */}
+            <ActiveDeviceAnnotation />
           </div>
         </Col>
       </Row>

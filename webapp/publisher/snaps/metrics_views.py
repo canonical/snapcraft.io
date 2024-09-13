@@ -5,14 +5,14 @@ from json import loads
 import flask
 import webapp.metrics.helper as metrics_helper
 import webapp.metrics.metrics as metrics
-from canonicalwebteam.store_api.stores.snapstore import SnapPublisher
+from canonicalwebteam.store_api.stores.snapstore import SnapPublisher, SnapStore
 
 # Local
 from webapp.helpers import api_publisher_session
 from webapp.decorators import login_required
 from webapp.publisher.snaps import logic
-
 publisher_api = SnapPublisher(api_publisher_session)
+store_api = SnapStore(api_publisher_session)
 
 
 @login_required
@@ -204,8 +204,8 @@ def publisher_snap_metrics(snap_name):
 
 @login_required
 def get_active_devices(snap_name):
-    snap_id = publisher_api.get_snap_id(snap_name, flask.session)
-
+    snap_details = store_api.get_item_details(snap_name, api_version=2, fields=["snap-id"])
+    snap_id = snap_details["snap-id"]
     metric_requested = logic.extract_metrics_period(
         flask.request.args.get("period", default="30d", type=str)
     )
@@ -284,3 +284,36 @@ def get_active_devices(snap_name):
         "active_devices": dict(active_devices),
         "latest_active_devices": latest_active,
     })
+
+@login_required
+def get_metric_annotaion(snap_name):
+    details = publisher_api.get_snap_info(snap_name, flask.session)
+    annotations = {"name": "annotations", "series": [], "buckets": []}
+
+    for category in details["categories"]["items"]:
+        date = category["since"].split("T")[0]
+        new_date = logic.convert_date(category["since"])
+
+        if date not in annotations["buckets"]:
+            annotations["buckets"].append(date)
+
+        index_of_date = annotations["buckets"].index(date)
+
+        single_series = {
+            "values": [0] * (len(annotations)),
+            "name": category["name"],
+            "display_name": category["name"].capitalize().replace("-", " "),
+            "display_date": new_date,
+            "date": date,
+        }
+
+        single_series["values"][index_of_date] = 1
+
+        annotations["series"].append(single_series)
+
+    annotations["series"] = sorted(
+        annotations["series"], key=lambda k: k["date"]
+    )
+    return flask.jsonify(annotations)
+
+    
