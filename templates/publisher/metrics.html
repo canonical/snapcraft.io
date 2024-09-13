@@ -3,22 +3,6 @@
 {% block content %}
 <div id="root">
 </div>
-<div>
-  <strong>{{ format_number(latest_active_devices) }}</strong>
-</div>
-<script>
-  window.SNAP_METRICS_DATA = {
-    nodata: {% if nodata %}{ { nodata | tojson } } {% else %} false{% endif %},
-    latest_active_devices: {% if latest_active_devices %} { { format_number(latest_active_devices) | tojson } } {% else %} 0{% endif %}, 
-    active_devices_annotations: {{ active_devices_annotations | tojson }},
-   active_device_metric: {{ active_device_metric  | tojson}},
-   territories_total: {{ territories_total |tojson}},
-   territories: {{ territories | tojson }},
-   defaultTrack: {{  default_track | tojson }},
-   metric_period: {{ metric_period | tojson }},
-     territories_total: {{ metric_period | tojson }},
-      active_devices: {{ active_devices | tojson }},
-}
-</script>
+
 <script src="{{ static_url('js/dist/metrics.js') }}"></script>
 {% endblock %}

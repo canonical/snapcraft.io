@@ -8,8 +8,12 @@ import {
 } from "@canonical/react-components";
 
 import SectionNav from "../../components/SectionNav";
-import { useEffect, ChangeEventHandler } from "react";
-import { renderMetrics } from "../../../publisher/metrics/metrics";
+import { useEffect, ChangeEventHandler, useState } from "react";
+import {
+  renderMetrics,
+  renderActiveDevicesMetrics,
+} from "../../../publisher/metrics/metrics";
+import { select } from "d3-selection";
 
 const EmptyData = () => {
   return (
@@ -34,113 +38,137 @@ const EmptyData = () => {
 function Metrics(): JSX.Element {
   const { snapId } = useParams();
   const [searchParams, setSearchParams] = useSearchParams();
+  const [latestActiveDevices, setLatestActiveDevices] = useState<number | null>(
+    null
+  );
+  const [loadingActiveDeviceMetric, setLoadingActiveDeviceMetric] =
+    useState(true);
 
   const period = searchParams.get("period") ?? "30d";
   const type = searchParams.get("active-devices") ?? "version";
 
-  const {
-    nodata,
-    latest_active_devices,
-    active_devices_annotations,
-    territories_total,
-    default_track,
-    active_devices,
-    active_device_metric,
-    territories,
-  } = window.SNAP_METRICS_DATA;
+  //   const isEmpty = active_devices.buckets.length === 0;
+  const isEmpty = false;
 
-  useEffect(() => {
-    renderMetrics({
-      defaultTrack: default_track,
-      activeDevices: {
-        selector: "#activeDevices",
-        metrics: active_devices,
-        annotations: active_devices_annotations,
-        type: active_device_metric,
-      },
-      territories: {
-        selector: "#territories",
-        metrics: territories,
-      },
+  const fetchActiveDeviceMetric = async () => {
+    // clear chart
+    const selector = "#activeDevices";
+    const svg = select(`${selector} svg`);
+    svg.selectAll("*").remove();
+
+    setLoadingActiveDeviceMetric(true);
+    const response = await fetch(
+      `/${snapId}/metrics/active-devices?period=${period}&active-devices=${type}`
+    );
+
+    if (!response.ok) {
+      throw new Error("There was a problem fetching models");
+    }
+
+    const data = await response.json();
+    setLatestActiveDevices(parseFloat(data.latest_active_devices));
+    renderActiveDevicesMetrics({
+      selector,
+      metrics: data.active_devices,
+      type,
     });
-  }, []);
-
-  const onPeriodChange = (event: any) => {
-    setSearchParams({ period: event.target.value });
+    setLoadingActiveDeviceMetric(false);
   };
 
-  const onTypeChange = (event: any) => {
-    setSearchParams({ "active-devices": event.target.value });
+  useEffect(() => {
+    void fetchActiveDeviceMetric();
+  }, [period, type]);
+
+  const onChange = (key: string, value: string) => {
+    setSearchParams((searchParams) => {
+      searchParams.set(key, value);
+      return searchParams;
+    });
   };
 
   return (
     <>
       <SectionNav snapName={snapId} activeTab="metrics" />
-      {nodata && <EmptyData />}
+      {isEmpty && <EmptyData />}
 
-      <section className={`p-strip is-shallow ${nodata ? "is-empty" : ""}`}>
+      <section className={`p-strip is-shallow ${isEmpty ? "is-empty" : ""}`}>
         <Row>
           <Col size={12} key="activeServices">
             <h4 className="u-float-left">Weekly active devices</h4>
             <div className="p-heading--4 u-float-right u-no-margin--top">
-              <strong>{latest_active_devices}</strong>
+              <strong>
+                {latestActiveDevices &&
+                  String(latestActiveDevices).replace(
+                    /(.)(?=(\d{3})+$)/g,
+                    "$1,"
+                  )}
+              </strong>
             </div>
           </Col>
           <Col size={12} key="spearator">
             <hr />
           </Col>
-          <Col size={3} key="periodFilter">
-            <Select
-              className="p-form__control"
-              disabled={nodata}
-              value={period}
-              onChange={onPeriodChange}
-              options={[
-                {
-                  label: "Past 7 days",
-                  value: "7d",
-                },
-                {
-                  label: "Past 30 days",
-                  value: "30d",
-                },
-                {
-                  label: "Past 3 months",
-                  value: "3m",
-                },
-                {
-                  label: "Past 6 months",
-                  value: "6m",
-                },
-                {
-                  label: "Past year",
-                  value: "1y",
-                },
-                {
-                  label: "Past 2 years",
-                  value: "2y",
-                },
-                {
-                  label: "Past 5 years",
-                  value: "5y",
-                },
-              ]}
-            />
-          </Col>
-          <Col size={3} key={"typeFilter"}>
-            <Select
-              className="p-form__control"
-              disabled={nodata}
-              value={type}
-              onChange={onTypeChange}
-              options={[
-                { label: "By version", value: "version" },
-                { label: "By OS", value: "os" },
-                { label: "By channel", value: "channel" },
-                { label: "By architecture", value: "architecture" },
-              ]}
-            />
-          </Col>
+          {loadingActiveDeviceMetric ? (
+            <div>Loading....</div>
+          ) : (
+            <>
+              <Col size={3} key="periodFilter">
+                <Select
+                  className="p-form__control"
+                  disabled={isEmpty}
+                  value={period}
+                  onChange={(event) => onChange("period", event.target.value)}
+                  options={[
+                    {
+                      label: "Past 7 days",
+                      value: "7d",
+                    },
+                    {
+                      label: "Past 30 days",
+                      value: "30d",
+                    },
+                    {
+                      label: "Past 3 months",
+                      value: "3m",
+                    },
+                    {
+                      label: "Past 6 months",
+                      value: "6m",
+                    },
+                    {
+                      label: "Past year",
+                      value: "1y",
+                    },
+                    {
+                      label: "Past 2 years",
+                      value: "2y",
+                    },
+                    {
+                      label: "Past 5 years",
+                      value: "5y",
+                    },
+                  ]}
+                />
+              </Col>
+              <Col size={3} key="typeFilter">
+                <Select
+                  className="p-form__control"
+                  disabled={isEmpty}
+                  value={type}
+                  onChange={(event) =>
+                    onChange("active-devices", event.target.value)
+                  }
+                  options={[
+                    { label: "By version", value: "version" },
+                    { label: "By OS", value: "os" },
+                    { label: "By channel", value: "channel" },
+                    { label: "By architecture", value: "architecture" },
+                  ]}
+                />
+              </Col>
+            </>
+          )}
+
           <Col size={12} key="info">
             <div
               id="activeDevices"
@@ -149,7 +177,7 @@ function Metrics(): JSX.Element {
               <div id="area-holder">
                 <svg width="100%" height="320"></svg>
               </div>
-              <Row data-js="annotations-hover">
+              {/* <Row data-js="annotations-hover">
                 {active_devices_annotations.series.map((category) => (
                   <Col size={4}>
                     <p
@@ -176,12 +204,12 @@ function Metrics(): JSX.Element {
                     </p>
                   </Col>
                 ))}
-              </Row>
+              </Row> */}
             </div>
           </Col>
         </Row>
       </section>
-      <section className={`p-strip is-shallow ${nodata ? "is-empty" : ""}`}>
+      {/* <section className={`p-strip is-shallow ${isEmpty ? "is-empty" : ""}`}>
         <Row>
           <Col size={12} key="territoriesInfo">
             <h1 className="u-float-left p-heading--4">Territories</h1>
@@ -196,7 +224,7 @@ function Metrics(): JSX.Element {
             <div id="territories" className="snapcraft-territories"></div>
           </Col>
         </Row>
-      </section>
+      </section> */}
     </>
   );
 }

@@ -9,11 +9,6 @@ type Series = {
 
 type Metrics = {
   activeDevices: {
-    annotations: {
-      buckets: Array<string>;
-      name: string;
-      series: Array<Series>;
-    };
     metrics: {
       buckets: Array<string>;
       series: Array<Series>;
@@ -21,7 +16,7 @@ type Metrics = {
     selector: string;
     type: string;
   };
-  defaultTrack: string;
+  // defaultTrack: string;
   territories: {
     metrics: {
       [key: string]: {
@@ -34,6 +29,15 @@ type Metrics = {
     };
     selector: string;
   };
+};
+
+type ActiveDeviceMetric = {
+  metrics: {
+    buckets: Array<string>;
+    series: Array<Series>;
+  };
+  selector: string;
+  type: string;
 };
 
 function renderMetrics(metrics: Metrics) {
@@ -62,8 +66,6 @@ function renderMetrics(metrics: Metrics) {
       stacked: true,
       area: true,
       graphType: metrics.activeDevices.type,
-      defaultTrack: metrics.defaultTrack,
-      annotations: metrics.activeDevices.annotations,
     }
   )
     .render()
@@ -98,7 +100,63 @@ function renderMetrics(metrics: Metrics) {
   }
 
   // Territories
-  territoriesMetrics(metrics.territories.selector, metrics.territories.metrics);
+  // territoriesMetrics(metrics.territories.selector, metrics.territories.metrics);
+}
+
+function renderActiveDevicesMetrics(metrics: ActiveDeviceMetric) {
+  let activeDevices: {
+    series: Array<Series>;
+    buckets: Array<string>;
+  } = {
+    series: [],
+    buckets: metrics.metrics.buckets,
+  };
+
+  metrics.metrics.series.forEach((series) => {
+    let fullSeries = series.values.map((value) => {
+      return value === null ? 0 : value;
+    });
+    activeDevices.series.push({
+      name: series.name,
+      values: fullSeries,
+    });
+  });
+
+  const graph = new ActiveDevicesGraph(metrics.selector, activeDevices, {
+    stacked: true,
+    area: true,
+    graphType: metrics.type,
+  })
+    .render()
+    // @ts-ignore
+    .enableTooltip()
+    .show();
+
+  // Add hovers for category annotations
+  const categories = document.querySelector(`[data-js="annotations-hover"]`);
+  if (categories) {
+    categories.addEventListener("mouseover", (e) => {
+      const target = e.target as HTMLElement;
+      const annotationHover = target.closest(
+        `[data-js="annotation-hover"]`
+      ) as HTMLElement;
+      if (annotationHover) {
+        const category = annotationHover.dataset.id;
+        graph.g.selectAll(`#${category}`).style("visibility", "visible");
+      }
+    });
+
+    categories.addEventListener("mouseout", (e) => {
+      const target = e.target as HTMLElement;
+      const annotationHover = target.closest(
+        `[data-js="annotation-hover"]`
+      ) as HTMLElement;
+      if (annotationHover) {
+        const category = annotationHover.dataset.id;
+        graph.g.selectAll(`#${category}`).style("visibility", "hidden");
+      }
+    });
+  }
 }
 
 /**
@@ -266,4 +324,4 @@ function renderPublisherMetrics(options: {
   getChunk(chunkedSnaps);
 }
 
-export { renderMetrics, renderPublisherMetrics };
+export { renderMetrics, renderActiveDevicesMetrics, renderPublisherMetrics };

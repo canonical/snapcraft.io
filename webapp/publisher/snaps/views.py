@@ -218,6 +218,11 @@ publisher_snaps.add_url_rule(
     view_func=metrics_views.publisher_snap_metrics,
 )
 
+publisher_snaps.add_url_rule(
+    "/<snap_name>/metrics/active-devices",
+    view_func=metrics_views.get_active_devices,
+)
+
 # Publice views
 publisher_snaps.add_url_rule(
     "/<snap_name>/publicise",

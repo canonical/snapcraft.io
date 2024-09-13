@@ -57,7 +57,7 @@ class ActiveDevicesGraph {
     this.g = undefined;
 
     this.transformedData = undefined;
-    this.annotationsData = undefined;
+    // this.annotationsData = undefined;
     this.data = undefined;
     this.keys = undefined;
     this.maxYValue = undefined;
@@ -138,9 +138,9 @@ class ActiveDevicesGraph {
 
     prepareScales.call(this);
 
-    if (this.options.annotations) {
-      prepareAnnotationsData.call(this);
-    }
+    // if (this.options.annotations) {
+    //   prepareAnnotationsData.call(this);
+    // }
 
     prepareAxis.call(this);
 
