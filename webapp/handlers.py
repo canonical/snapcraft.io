@@ -119,8 +119,8 @@ CSP = {
     ],
     "media-src": [
         "'self'",
-        "res.cloudinary.com"
-    ]
+        "res.cloudinary.com",
+    ],
 }
 
 CSP_SCRIPT_SRC = [
