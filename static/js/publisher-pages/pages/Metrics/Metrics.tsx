@@ -1,8 +1,9 @@
-import { useParams } from "react-router-dom";
+import { useParams, useSearchParams } from "react-router-dom";
 import { Row, Col } from "@canonical/react-components";
 
 import SectionNav from "../../components/SectionNav";
 import ActiveDeviceMetric from "./ActiveDeviceMetirc";
+import { TerritoryMetric } from "./TerritoryMetric";
 
 const EmptyData = () => {
   return (
@@ -36,22 +37,7 @@ function Metrics(): JSX.Element {
       {isEmpty && <EmptyData />}
 
       <ActiveDeviceMetric isEmpty={isEmpty} />
-      {/* <section className={`p-strip is-shallow ${isEmpty ? "is-empty" : ""}`}>
-        <Row>
-          <Col size={12} key="territoriesInfo">
-            <h1 className="u-float-left p-heading--4">Territories</h1>
-            <div className="p-heading--4 u-float-right u-no-margin--top">
-              <strong>{territories_total}</strong>
-            </div>
-          </Col>
-          <Col size={12} key="territoriesSeparator">
-            <hr />
-          </Col>
-          <Col size={12} key="territories">
-            <div id="territories" className="snapcraft-territories"></div>
-          </Col>
-        </Row>
-      </section> */}
+      <TerritoryMetric isEmpty={isEmpty} />
     </>
   );
 }

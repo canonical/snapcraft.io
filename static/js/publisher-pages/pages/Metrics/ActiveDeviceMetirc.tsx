@@ -1,10 +1,17 @@
 import { useParams, useSearchParams } from "react-router-dom";
-import { Row, Col, Select } from "@canonical/react-components";
+import {
+  Row,
+  Col,
+  Select,
+  Spinner,
+  CodeSnippet,
+} from "@canonical/react-components";
 
 import { useEffect, useState } from "react";
 import { renderActiveDevicesMetrics } from "../../../publisher/metrics/metrics";
 import { select } from "d3-selection";
 import ActiveDeviceAnnotation from "./ActiveDeviceAnnotation";
+import { ActiveDeviceMetricFilter } from "./ActiveDeviceMetricFilter";
 
 function ActiveDeviceMetric({ isEmpty }: { isEmpty: boolean }): JSX.Element {
   const { snapId } = useParams();
@@ -75,65 +82,25 @@ function ActiveDeviceMetric({ isEmpty }: { isEmpty: boolean }): JSX.Element {
           <hr />
         </Col>
         {loadingActiveDeviceMetric ? (
-          <div>Loading....</div>
-        ) : errorOnActiveDeviceMetric ? (
-          <div>Error on loading metrics...</div>
+          <Spinner />
         ) : (
           <>
-            <Col size={3} key="periodFilter">
-              <Select
-                className="p-form__control"
-                disabled={isEmpty}
-                value={period}
-                onChange={(event) => onChange("period", event.target.value)}
-                options={[
+            <ActiveDeviceMetricFilter
+              isEmpty={isEmpty}
+              onChange={onChange}
+              period={period}
+              type={type}
+            />
+            {errorOnActiveDeviceMetric && (
+              <CodeSnippet
+                blocks={[
                   {
-                    label: "Past 7 days",
-                    value: "7d",
-                  },
-                  {
-                    label: "Past 30 days",
-                    value: "30d",
-                  },
-                  {
-                    label: "Past 3 months",
-                    value: "3m",
-                  },
-                  {
-                    label: "Past 6 months",
-                    value: "6m",
-                  },
-                  {
-                    label: "Past year",
-                    value: "1y",
-                  },
-                  {
-                    label: "Past 2 years",
-                    value: "2y",
-                  },
-                  {
-                    label: "Past 5 years",
-                    value: "5y",
+                    code: <div>Error on loading metrics...</div>,
+                    wrapLines: true,
                   },
                 ]}
               />
-            </Col>
-            <Col size={3} key="typeFilter">
-              <Select
-                className="p-form__control"
-                disabled={isEmpty}
-                value={type}
-                onChange={(event) =>
-                  onChange("active-devices", event.target.value)
-                }
-                options={[
-                  { label: "By version", value: "version" },
-                  { label: "By OS", value: "os" },
-                  { label: "By channel", value: "channel" },
-                  { label: "By architecture", value: "architecture" },
-                ]}
-              />
-            </Col>
+            )}
           </>
         )}
 

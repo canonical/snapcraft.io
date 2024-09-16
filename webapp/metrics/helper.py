@@ -101,6 +101,33 @@ def build_metric_query_installed_base(
     }
 
 
+def build_metric_query_country(
+    snap_id
+):
+    """Build the json that will be requested to the API
+
+    :param snap_id The snap id
+    :param installed_base_metric The base metric requested
+    :param metric_period The metric period requested, by default 30
+    :param metric_bucket The metric bucket, by default 'd'
+
+    :returns A dictionary with the filters for the metrics API, by default
+    returns also the 'weekly_installed_base_by_country'.
+    """
+    end = get_last_metrics_processed_date()
+
+    return {
+        "filters": [
+            get_filter(
+                metric_name="weekly_installed_base_by_country",
+                snap_id=snap_id,
+                start=end,
+                end=end,
+            ),
+        ]
+    }
+
+
 def find_metric(full_response, name):
     """Find a named metric in a metric response
 

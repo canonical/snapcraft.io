@@ -316,4 +316,36 @@ def get_metric_annotaion(snap_name):
     )
     return flask.jsonify(annotations)
 
-    
+@login_required
+def get_country_metric(snap_name):
+
+    # details = publisher_api.get_snap_info(snap_name, flask.session)
+    snap_details = store_api.get_item_details(snap_name, api_version=2, fields=["snap-id"])
+    snap_id = snap_details["snap-id"]
+    metrics_query_json = metrics_helper.build_metric_query_country(
+        snap_id=snap_id,
+    )
+
+    metrics_response = publisher_api.get_publisher_metrics(
+        flask.session, json=metrics_query_json
+    )
+
+    country_metric = metrics_helper.find_metric(
+        metrics_response["metrics"], "weekly_installed_base_by_country"
+    )
+    country_devices = metrics.CountryDevices(
+        name=country_metric["metric_name"],
+        series=country_metric["series"],
+        buckets=country_metric["buckets"],
+        status=country_metric["status"],
+        private=True,
+    )
+
+    territories_total = 0
+    if country_devices:
+        territories_total = country_devices.get_number_territories()
+
+    return flask.jsonify({
+        "active_devices": country_devices.country_data,
+        "territories_total": territories_total,
+    })

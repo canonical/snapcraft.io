@@ -228,6 +228,11 @@ publisher_snaps.add_url_rule(
     view_func=metrics_views.get_metric_annotaion,
 )
 
+publisher_snaps.add_url_rule(
+    "/<snap_name>/metrics/country-metric",
+    view_func=metrics_views.get_country_metric,
+)
+
 # Publice views
 publisher_snaps.add_url_rule(
     "/<snap_name>/publicise",

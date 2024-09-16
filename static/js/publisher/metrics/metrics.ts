@@ -40,6 +40,19 @@ type ActiveDeviceMetric = {
   type: string;
 };
 
+type TerritoriesMetric = {
+  metrics: {
+    [key: string]: {
+      code: string;
+      color_rgb: string;
+      name: string;
+      number_of_users: number;
+      percentage_of_users: number;
+    };
+  };
+  selector: string;
+};
+
 function renderMetrics(metrics: Metrics) {
   let activeDevices: {
     series: Array<Series>;
@@ -157,6 +170,10 @@ function renderActiveDevicesMetrics(metrics: ActiveDeviceMetric) {
       }
     });
   }
+}
+
+function renderTerritoriesMetrics(metrics: TerritoriesMetric) {
+  territoriesMetrics(metrics.selector, metrics.metrics);
 }
 
 /**
@@ -324,4 +341,9 @@ function renderPublisherMetrics(options: {
   getChunk(chunkedSnaps);
 }
 
-export { renderMetrics, renderActiveDevicesMetrics, renderPublisherMetrics };
+export {
+  renderMetrics,
+  renderActiveDevicesMetrics,
+  renderPublisherMetrics,
+  renderTerritoriesMetrics,
+};
