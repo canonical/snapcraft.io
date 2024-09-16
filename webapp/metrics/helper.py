@@ -22,49 +22,6 @@ def get_last_metrics_processed_date():
     return last_metrics_processed.date() - one_day
 
 
-def build_metrics_json(
-    snap_id, installed_base, metric_period=30, metric_bucket="d"
-):
-    """Build the json that will be requested to the API
-
-    :param snap_id The snap id
-    :param installed_base_metric The base metric requested
-    :param metric_period The metric period requested, by default 30
-    :param metric_bucket The metric bucket, by default 'd'
-
-    :returns A dictionary with the filters for the metrics API, by default
-    returns also the 'weekly_installed_base_by_country'.
-    """
-    end = get_last_metrics_processed_date()
-
-    if metric_bucket == "d":
-        start = end + relativedelta.relativedelta(days=-metric_period)
-    elif metric_bucket == "m":
-        start = end + relativedelta.relativedelta(months=-metric_period)
-    elif metric_bucket == "y":
-        # Go back an extra day to ensure the granularity increases
-        start = end + relativedelta.relativedelta(
-            years=-metric_period, days=-1
-        )
-
-    return {
-        "filters": [
-            get_filter(
-                metric_name=installed_base,
-                snap_id=snap_id,
-                start=start,
-                end=end,
-            ),
-            get_filter(
-                metric_name="weekly_installed_base_by_country",
-                snap_id=snap_id,
-                start=end,
-                end=end,
-            ),
-        ]
-    }
-
-
 def build_metric_query_installed_base(
     snap_id, installed_base, metric_period=30, metric_bucket="d"
 ):
@@ -101,9 +58,7 @@ def build_metric_query_installed_base(
     }
 
 
-def build_metric_query_country(
-    snap_id
-):
+def build_metric_query_country(snap_id):
     """Build the json that will be requested to the API
 
     :param snap_id The snap id

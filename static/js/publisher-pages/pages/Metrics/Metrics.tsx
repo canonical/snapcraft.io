@@ -4,6 +4,7 @@ import { Row, Col } from "@canonical/react-components";
 import SectionNav from "../../components/SectionNav";
 import ActiveDeviceMetric from "./ActiveDeviceMetirc";
 import { TerritoryMetric } from "./TerritoryMetric";
+import { useState } from "react";
 
 const EmptyData = () => {
   return (
@@ -28,16 +29,28 @@ const EmptyData = () => {
 function Metrics(): JSX.Element {
   const { snapId } = useParams();
 
-  //   const isEmpty = active_devices.buckets.length === 0;
-  const isEmpty = false;
+  const [isAcitveDeviceMetricEmpty, setIsAcitveDeviceMetricEmpty] = useState<
+    boolean | null
+  >(null);
+  const [isCountryMetricEmpty, setIsCountryMetricEmpty] = useState<
+    boolean | null
+  >(null);
+  const isEmpty =
+    Boolean(isAcitveDeviceMetricEmpty) && Boolean(isCountryMetricEmpty);
 
   return (
     <>
       <SectionNav snapName={snapId} activeTab="metrics" />
       {isEmpty && <EmptyData />}
 
-      <ActiveDeviceMetric isEmpty={isEmpty} />
-      <TerritoryMetric isEmpty={isEmpty} />
+      <ActiveDeviceMetric
+        isEmpty={isEmpty}
+        onDataLoad={(dataLength) => setIsAcitveDeviceMetricEmpty(!dataLength)}
+      />
+      <TerritoryMetric
+        isEmpty={isEmpty}
+        onDataLoad={(dataLength) => setIsCountryMetricEmpty(!dataLength)}
+      />
     </>
   );
 }

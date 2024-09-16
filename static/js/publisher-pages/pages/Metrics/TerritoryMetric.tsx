@@ -12,8 +12,10 @@ import { renderTerritoriesMetrics } from "../../../publisher/metrics/metrics";
 
 export const TerritoryMetric = ({
   isEmpty,
+  onDataLoad,
 }: {
   isEmpty: boolean;
+  onDataLoad: (dataLength: number | undefined) => void;
 }): JSX.Element => {
   const { snapId } = useParams();
   const [countryInfo, setCountryInfo] = useState<{
@@ -21,19 +23,17 @@ export const TerritoryMetric = ({
     territories_total: number;
   } | null>(null);
 
-  const [loadingActiveDeviceMetric, setLoadingActiveDeviceMetric] =
-    useState(true);
-  const [errorOnActiveDeviceMetric, setErrorOnActiveDeviceMetric] =
-    useState(false);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
 
   const fetchActiveDeviceMetric = async () => {
-    setErrorOnActiveDeviceMetric(false);
-    setLoadingActiveDeviceMetric(true);
+    setError(false);
+    setLoading(true);
     const response = await fetch(`/${snapId}/metrics/country-metric`);
 
     if (!response.ok) {
-      setErrorOnActiveDeviceMetric(true);
-      setLoadingActiveDeviceMetric(false);
+      setError(true);
+      setLoading(false);
       return;
     }
 
@@ -43,8 +43,8 @@ export const TerritoryMetric = ({
       selector: "#territories",
       metrics: data.active_devices,
     });
-
-    setLoadingActiveDeviceMetric(false);
+    onDataLoad(data?.active_devices?.length);
+    setLoading(false);
   };
 
   useEffect(() => {
@@ -63,10 +63,10 @@ export const TerritoryMetric = ({
         <Col size={12} key="territoriesSeparator">
           <hr />
         </Col>
-        {loadingActiveDeviceMetric ? (
+        {loading ? (
           <Spinner />
         ) : (
-          errorOnActiveDeviceMetric && (
+          error && (
             <CodeSnippet
               blocks={[
                 {

@@ -1,11 +1,5 @@
 import { useParams, useSearchParams } from "react-router-dom";
-import {
-  Row,
-  Col,
-  Select,
-  Spinner,
-  CodeSnippet,
-} from "@canonical/react-components";
+import { Row, Col, Spinner, CodeSnippet } from "@canonical/react-components";
 
 import { useEffect, useState } from "react";
 import { renderActiveDevicesMetrics } from "../../../publisher/metrics/metrics";
@@ -13,35 +7,39 @@ import { select } from "d3-selection";
 import ActiveDeviceAnnotation from "./ActiveDeviceAnnotation";
 import { ActiveDeviceMetricFilter } from "./ActiveDeviceMetricFilter";
 
-function ActiveDeviceMetric({ isEmpty }: { isEmpty: boolean }): JSX.Element {
+function ActiveDeviceMetric({
+  isEmpty,
+  onDataLoad,
+}: {
+  isEmpty: boolean;
+  onDataLoad: (dataLength: number | undefined) => void;
+}): JSX.Element {
   const { snapId } = useParams();
   const [searchParams, setSearchParams] = useSearchParams();
   const [latestActiveDevices, setLatestActiveDevices] = useState<number | null>(
     null
   );
-  const [loadingActiveDeviceMetric, setLoadingActiveDeviceMetric] =
-    useState(true);
-  const [errorOnActiveDeviceMetric, setErrorOnActiveDeviceMetric] =
-    useState(false);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
 
   const period = searchParams.get("period") ?? "30d";
   const type = searchParams.get("active-devices") ?? "version";
 
   const fetchActiveDeviceMetric = async () => {
-    // clear chart
+    // clear the chart
     const selector = "#activeDevices";
     const svg = select(`${selector} svg`);
     svg.selectAll("*").remove();
 
-    setErrorOnActiveDeviceMetric(false);
-    setLoadingActiveDeviceMetric(true);
+    setError(false);
+    setLoading(true);
     const response = await fetch(
       `/${snapId}/metrics/active-devices?period=${period}&active-devices=${type}`
     );
 
     if (!response.ok) {
-      setErrorOnActiveDeviceMetric(true);
-      setLoadingActiveDeviceMetric(false);
+      setError(true);
+      setLoading(false);
       return;
     }
 
@@ -52,7 +50,9 @@ function ActiveDeviceMetric({ isEmpty }: { isEmpty: boolean }): JSX.Element {
       metrics: data.active_devices,
       type,
     });
-    setLoadingActiveDeviceMetric(false);
+
+    onDataLoad(data.active_devices?.buckets?.length);
+    setLoading(false);
   };
 
   useEffect(() => {
@@ -81,7 +81,7 @@ function ActiveDeviceMetric({ isEmpty }: { isEmpty: boolean }): JSX.Element {
         <Col size={12} key="spearator">
           <hr />
         </Col>
-        {loadingActiveDeviceMetric ? (
+        {loading ? (
           <Spinner />
         ) : (
           <>
@@ -91,7 +91,7 @@ function ActiveDeviceMetric({ isEmpty }: { isEmpty: boolean }): JSX.Element {
               period={period}
               type={type}
             />
-            {errorOnActiveDeviceMetric && (
+            {error && (
               <CodeSnippet
                 blocks={[
                   {
@@ -105,13 +105,16 @@ function ActiveDeviceMetric({ isEmpty }: { isEmpty: boolean }): JSX.Element {
         )}
 
         <Col size={12} key="info">
-          <div
-            id="activeDevices"
-            className="snapcraft-metrics__graph snapcraft-metrics__active-devices"
-          >
-            <div id="area-holder">
-              <svg width="100%" height="320"></svg>
+          <div>
+            <div
+              id="activeDevices"
+              className="snapcraft-metrics__graph snapcraft-metrics__active-devices"
+            >
+              <div id="area-holder">
+                <svg width="100%" height="320"></svg>
+              </div>
             </div>
+
             <ActiveDeviceAnnotation />
           </div>
         </Col>
