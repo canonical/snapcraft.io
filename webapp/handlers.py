@@ -117,6 +117,10 @@ CSP = {
         "'self'",
         "'unsafe-inline'",
     ],
+    "media-src": [
+        "'self'",
+        "res.cloudinary.com",
+    ],
 }
 
 CSP_SCRIPT_SRC = [
