@@ -1,20 +1,14 @@
 import { MASK_OFFSET } from "./constants";
 
+import type { Step } from "../listing/types";
+
 // check if element is part of the DOM and is visible
 export const isVisibleInDocument = (el: HTMLElement): boolean =>
   document.contains(el) && !(el.offsetWidth === 0 && el.offsetHeight === 0);
 
 // find DOM elements for each step, ignore steps with no elements
 // set default position to "bottom-left"
-export function prepareSteps(
-  steps: Array<{
-    id: string;
-    position: string;
-    elements: HTMLElement[];
-    content: string;
-    title: string;
-  }>
-): Array<{
+export function prepareSteps(steps: Step[]): Array<{
   id: string;
   position: string;
   elements: HTMLElement[];

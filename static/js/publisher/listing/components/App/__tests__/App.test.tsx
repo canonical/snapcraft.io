@@ -1,72 +1,150 @@
-import { QueryClient, QueryClientProvider } from "react-query";
+import { BrowserRouter } from "react-router-dom";
+import { QueryClient, QueryClientProvider, useQuery } from "react-query";
 import { render, screen } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
 import "@testing-library/jest-dom";
 
 import App from "../App";
 
-import mockListingData from "../mocks/mockListingData";
+import { mockData } from "../../../test-utils";
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+      refetchOnReconnect: false,
+    },
+  },
+});
 
-const renderComponent = () =>
-  render(
-    <QueryClientProvider client={queryClient}>
-      <App />
-    </QueryClientProvider>
+jest.mock("react-query", () => ({
+  ...jest.requireActual("react-query"),
+  useQuery: jest.fn(),
+}));
+
+jest.mock("react-router-dom", () => ({
+  ...jest.requireActual("react-router-dom"),
+  useParams: () => ({
+    snapName: "test-snap",
+  }),
+}));
+
+const renderComponent = () => {
+  return render(
+    <BrowserRouter>
+      <QueryClientProvider client={queryClient}>
+        <App />
+      </QueryClientProvider>
+    </BrowserRouter>
   );
-
-window.listingData = mockListingData;
-window.tourSteps = mockListingData.tour_steps;
+};
 
 describe("App", () => {
-  it("shows 'Save' button as disabled by default", () => {
+  test("renders page header", () => {
+    // @ts-ignore
+    useQuery.mockReturnValue({
+      isLoading: true,
+      data: undefined,
+      refetch: jest.fn(),
+    });
+
     renderComponent();
-    expect(screen.getByRole("button", { name: "Save" })).toHaveAttribute("aria-disabled","true");
+
+    expect(
+      screen.getByRole("heading", { level: 1, name: "test-snap" })
+    ).toBeInTheDocument();
   });
 
-  it("shows 'Revert' button as disabled by default", () => {
+  test("renders loading state", () => {
+    // @ts-ignore
+    useQuery.mockReturnValue({
+      isLoading: true,
+      data: undefined,
+      refetch: jest.fn(),
+    });
+
     renderComponent();
-    expect(screen.getByRole("button", { name: "Revert" })).toHaveAttribute("aria-disabled","true");
+
+    expect(
+      screen.getByText(/Loading test-snap listing data/)
+    ).toBeInTheDocument();
   });
 
-  it("enables 'Save' button if a change is made to the form", async () => {
-    const user = userEvent.setup();
+  test("renders listing details section", () => {
+    // @ts-ignore
+    useQuery.mockReturnValue({
+      isLoading: false,
+      data: mockData,
+      refetch: jest.fn(),
+    });
+
     renderComponent();
-    await user.type(
-      screen.getByRole("textbox", { name: "Title:" }),
-      "new-name"
-    );
-    expect(screen.getByRole("button", { name: "Save" })).not.toBeDisabled();
+
+    expect(
+      screen.getByRole("heading", { level: 2, name: "Listing details" })
+    ).toBeInTheDocument();
   });
 
-  it("enables 'Revert' button if a change is made to the form", async () => {
-    const user = userEvent.setup();
+  test("renders contact section", () => {
+    // @ts-ignore
+    useQuery.mockReturnValue({
+      isLoading: false,
+      data: mockData,
+      refetch: jest.fn(),
+    });
+
     renderComponent();
-    await user.type(
-      screen.getByRole("textbox", { name: "Title:" }),
-      "new-name"
-    );
-    expect(screen.getByRole("button", { name: "Revert" })).not.toBeDisabled();
+
+    expect(
+      screen.getByRole("heading", { level: 2, name: "Contact information" })
+    ).toBeInTheDocument();
   });
 
-  it("disables 'Save' button if a change is made to the form and then reset", async () => {
-    const user = userEvent.setup();
+  test("renders additional information section", () => {
+    // @ts-ignore
+    useQuery.mockReturnValue({
+      isLoading: false,
+      data: mockData,
+      refetch: jest.fn(),
+    });
+
     renderComponent();
-    const input = screen.getByRole("textbox", { name: "Title:" });
-    await user.type(input, "new-name");
-    await user.clear(input);
-    await user.type(input, mockListingData.snap_title);
-    expect(screen.getByRole("button", { name: "Save" })).toHaveAttribute("aria-disabled","true");
+
+    expect(
+      screen.getByRole("heading", { level: 2, name: "Additional information" })
+    ).toBeInTheDocument();
   });
 
-  it("disables 'Revert' button if a change is made to the form and then reset", async () => {
-    const user = userEvent.setup();
+  test("shows 'Update metadata' notification", () => {
+    // @ts-ignore
+    useQuery.mockReturnValue({
+      isLoading: false,
+      data: { ...mockData, update_metadata_on_release: true },
+      refetch: jest.fn(),
+    });
+
     renderComponent();
-    const input = screen.getByRole("textbox", { name: "Title:" });
-    await user.type(input, "new-name");
-    await user.clear(input);
-    await user.type(input, mockListingData.snap_title);
-    expect(screen.getByRole("button", { name: "Revert" })).toHaveAttribute("aria-disabled","true");
+
+    expect(
+      screen.getByText(
+        /Information here was automatically updated to the latest version of the snapcraft.yaml released to the stable channel/
+      )
+    ).toBeInTheDocument();
+  });
+
+  test("doesn't show 'Update metadata' nofitication", () => {
+    // @ts-ignore
+    useQuery.mockReturnValue({
+      isLoading: false,
+      data: mockData,
+      refetch: jest.fn(),
+    });
+
+    renderComponent();
+
+    expect(
+      screen.queryByText(
+        /Information here was automatically updated to the latest version of the snapcraft.yaml released to the stable channel/
+      )
+    ).not.toBeInTheDocument();
   });
 });

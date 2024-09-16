@@ -4,7 +4,6 @@ from json import loads
 # Packages
 import bleach
 import flask
-from flask import json
 from canonicalwebteam.store_api.stores.snapstore import (
     SnapPublisher,
     SnapStore,
@@ -32,29 +31,48 @@ publisher_api = SnapPublisher(api_publisher_session)
 
 def get_market_snap(snap_name):
     return flask.redirect(
-        flask.url_for(".get_listing_snap", snap_name=snap_name)
+        flask.url_for(".get_listing_data", snap_name=snap_name)
     )
 
 
 def redirect_post_market_snap(snap_name):
     return flask.redirect(
-        flask.url_for(".post_listing_snap", snap_name=snap_name)
+        flask.url_for(".post_listing_data", snap_name=snap_name)
     )
 
 
 @login_required
-def get_listing_snap(snap_name, is_json=False):
+def get_listing_data(snap_name):
     snap_details = publisher_api.get_snap_info(snap_name, flask.session)
 
     details_metrics_enabled = snap_details["public_metrics_enabled"]
     details_blacklist = snap_details.get("public_metrics_blacklist", [])
 
-    is_on_stable = logic.is_snap_on_stable(snap_details["channel_maps_list"])
-
     # Filter icon & screenshot urls from the media set.
     icon_urls, screenshot_urls, banner_urls = logic.categorise_media(
         snap_details["media"]
     )
+
+    primary_website = ""
+    if (
+        "website" in snap_details["links"]
+        and len(snap_details["links"]["website"]) > 0
+    ):
+        primary_website = snap_details["links"]["website"][0]
+
+    websites = []
+    if "website" in snap_details["links"]:
+        if len(snap_details["links"]["website"]) > 1:
+            snap_details["links"]["website"].pop(0)
+            for website in snap_details["links"]["website"]:
+                websites.append({"url": website})
+
+    def format_links(key):
+        result = []
+        if key in snap_details["links"]:
+            for url in snap_details["links"][key]:
+                result.append({"url": url})
+        return result
 
     licenses = []
     for license in helpers.get_licenses():
@@ -65,11 +83,6 @@ def get_listing_snap(snap_name, is_json=False):
 
     if " AND " not in license.upper() and " WITH " not in license.upper():
         license_type = "simple"
-
-    referrer = None
-
-    if flask.request.args.get("from"):
-        referrer = flask.request.args.get("from")
 
     try:
         categories_results = store_api.get_categories()
@@ -94,56 +107,73 @@ def get_listing_snap(snap_name, is_json=False):
     filename = "publisher/content/listing_tour.yaml"
     tour_steps = helpers.get_yaml(filename, typ="rt")
 
+    primary_category = ""
+    if len(snap_categories["categories"]) > 0:
+        primary_category = snap_categories["categories"][0]
+
+    secondary_category = ""
+    if len(snap_categories["categories"]) > 1:
+        secondary_category = snap_categories["categories"][1]
+
+    video_urls = None
+
+    if len(snap_details["video_urls"]) > 0:
+        video_urls = snap_details["video_urls"][0]
+
     context = {
-        "snap_id": snap_details["snap_id"],
-        "snap_name": snap_details["snap_name"],
-        "snap_title": snap_details["title"],
-        "snap_categories": snap_categories,
+        "title": snap_details["title"],
+        "video_urls": video_urls,
         "summary": snap_details["summary"],
         "description": snap_details["description"],
-        "icon_url": icon_urls[0] if icon_urls else None,
-        "publisher_name": snap_details["publisher"]["display-name"],
-        "username": snap_details["publisher"]["username"],
-        "screenshot_urls": screenshot_urls,
-        "banner_urls": banner_urls,
-        "contact": snap_details["contact"],
-        "private": snap_details["private"],
-        "website": snap_details["website"] or "",
+        "categories": categories,
+        "primary_category": primary_category,
+        "secondary_category": secondary_category,
+        "websites": websites,
+        "contacts": format_links("contact"),
+        "donations": format_links("donations"),
+        "source_code": format_links("source"),
+        "issues": format_links("issues"),
+        "primary_website": primary_website,
+        "snap_id": snap_details["snap_id"],
         "public_metrics_enabled": details_metrics_enabled,
         "public_metrics_blacklist": details_blacklist,
         "license": license,
         "license_type": license_type,
         "licenses": licenses,
-        "video_urls": snap_details["video_urls"],
-        "is_on_stable": is_on_stable,
-        "from": referrer,
-        "categories": categories,
-        "tour_steps": tour_steps,
-        "status": snap_details["status"],
+        "icon_url": icon_urls[0] if icon_urls else None,
+        "screenshot_urls": screenshot_urls,
+        "banner_urls": banner_urls,
         "update_metadata_on_release": snap_details[
             "update_metadata_on_release"
         ],
-        "links": snap_details["links"],
+        "tour_steps": tour_steps,
     }
 
-    if is_json:
-        return flask.jsonify(context)
-    else:
-        token = ""
-        if snap_details["links"]["website"]:
-            token = helpers.get_dns_verification_token(
-                snap_details["snap_name"], snap_details["links"]["website"][0]
-            )
-        return flask.render_template(
-            "publisher/listing.html",
-            **context,
-            listing_data=json.dumps(context),
-            dns_verification_token=token
-        )
+    res = {}
+    res["data"] = context
+    res["message"] = ""
+    res["success"] = True
+
+    return flask.jsonify(res)
 
 
 @login_required
-def post_listing_snap(snap_name, is_json=False):
+def get_listing_snap(snap_name):
+    snap_details = publisher_api.get_snap_info(snap_name, flask.session)
+    token = ""
+    if snap_details["links"]["website"]:
+        token = helpers.get_dns_verification_token(
+            snap_details["snap_name"], snap_details["links"]["website"][0]
+        )
+    return flask.render_template(
+        "publisher/listing.html",
+        snap_name=snap_name,
+        dns_verification_token=token,
+    )
+
+
+@login_required
+def post_listing_data(snap_name):
     changes = None
     changed_fields = flask.request.form.get("changes")
 
@@ -218,22 +248,6 @@ def post_listing_snap(snap_name, is_json=False):
                 else:
                     error_list = error_list + api_response_error_list.errors
 
-            field_errors, other_errors = logic.invalid_field_errors(error_list)
-
-            details_metrics_enabled = snap_details["public_metrics_enabled"]
-            details_blacklist = snap_details.get(
-                "public_metrics_blacklist", []
-            )
-
-            is_on_stable = logic.is_snap_on_stable(
-                snap_details["channel_maps_list"]
-            )
-
-            # Filter icon & screenshot urls from the media set.
-            icon_urls, screenshot_urls, banner_urls = logic.categorise_media(
-                snap_details["media"]
-            )
-
             licenses = []
             for license in helpers.get_licenses():
                 licenses.append(
@@ -241,20 +255,6 @@ def post_listing_snap(snap_name, is_json=False):
                 )
 
             license = snap_details["license"]
-            license_type = "custom"
-
-            if (
-                " AND " not in license.upper()
-                and " WITH " not in license.upper()
-            ):
-                license_type = "simple"
-
-            try:
-                categories_results = store_api.get_categories()
-            except StoreApiError:
-                categories_results = []
-
-            categories = get_categories(categories_results)
 
             snap_categories = logic.replace_reserved_categories_key(
                 snap_details["categories"]
@@ -262,77 +262,11 @@ def post_listing_snap(snap_name, is_json=False):
 
             snap_categories = logic.filter_categories(snap_categories)
 
-            filename = "publisher/content/listing_tour.yaml"
-            tour_steps = helpers.get_yaml(filename, typ="rt")
+            res = {"success", True}
 
-            context = {
-                # read-only values from details API
-                "snap_id": snap_details["snap_id"],
-                "snap_name": snap_details["snap_name"],
-                "snap_categories": snap_categories,
-                "icon_url": icon_urls[0] if icon_urls else None,
-                "username": snap_details["publisher"]["username"],
-                "screenshot_urls": screenshot_urls,
-                "banner_urls": banner_urls,
-                "display_title": snap_details["title"],
-                # values posted by user
-                "snap_title": (
-                    changes["title"]
-                    if "title" in changes
-                    else snap_details["title"] or ""
-                ),
-                "summary": (
-                    changes["summary"]
-                    if "summary" in changes
-                    else snap_details["summary"] or ""
-                ),
-                "description": (
-                    changes["description"]
-                    if "description" in changes
-                    else snap_details["description"] or ""
-                ),
-                "contact": (
-                    changes["contact"]
-                    if "contact" in changes
-                    else snap_details["contact"] or ""
-                ),
-                "private": snap_details["private"],
-                "website": (
-                    changes["website"]
-                    if "website" in changes
-                    else snap_details["website"] or ""
-                ),
-                "public_metrics_enabled": details_metrics_enabled,
-                "video_urls": (
-                    [changes["video_urls"]]
-                    if "video_urls" in changes
-                    else snap_details["video_urls"]
-                ),
-                "public_metrics_blacklist": details_blacklist,
-                "license": license,
-                "license_type": license_type,
-                "licenses": licenses,
-                "is_on_stable": is_on_stable,
-                "categories": categories,
-                "publisher_name": snap_details["publisher"]["display-name"],
-                "links": snap_details["links"],
-                # errors
-                "error_list": error_list,
-                "field_errors": field_errors,
-                "other_errors": other_errors,
-                "tour_steps": tour_steps,
-            }
+            return flask.make_response(res, 200)
 
-            if is_json:
-                return flask.jsonify(context)
-            else:
-                return flask.render_template(
-                    "publisher/listing.html", **context
-                )
-
-    return flask.redirect(
-        flask.url_for(".get_listing_snap", snap_name=snap_name, is_json=True)
-    )
+    return flask.make_response({}, 200)
 
 
 @login_required
