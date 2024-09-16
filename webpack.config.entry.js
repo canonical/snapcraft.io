@@ -18,7 +18,6 @@ module.exports = {
   "publisher-details": "./static/js/public/publisher-details.ts",
   "brand-store": "./static/js/brand-store/brand-store.tsx",
   "publisher-listing": "./static/js/publisher/listing/index.tsx",
-  "publisher-settings": "./static/js/publisher/settings/index.tsx",
   "about-listing": "./static/js/public/about/listing.ts",
   store: "./static/js/store/index.tsx",
   "publisher-pages": "./static/js/publisher-pages/index.tsx",
