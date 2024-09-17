@@ -29,14 +29,14 @@ const EmptyData = () => {
 function Metrics(): JSX.Element {
   const { snapId } = useParams();
 
-  const [isAcitveDeviceMetricEmpty, setIsAcitveDeviceMetricEmpty] = useState<
+  const [isActiveDeviceMetricEmpty, setIsActiveDeviceMetricEmpty] = useState<
     boolean | null
   >(null);
   const [isCountryMetricEmpty, setIsCountryMetricEmpty] = useState<
     boolean | null
   >(null);
   const isEmpty =
-    Boolean(isAcitveDeviceMetricEmpty) && Boolean(isCountryMetricEmpty);
+    Boolean(isActiveDeviceMetricEmpty) && Boolean(isCountryMetricEmpty);
 
   return (
     <>
@@ -45,7 +45,7 @@ function Metrics(): JSX.Element {
 
       <ActiveDeviceMetric
         isEmpty={isEmpty}
-        onDataLoad={(dataLength) => setIsAcitveDeviceMetricEmpty(!dataLength)}
+        onDataLoad={(dataLength) => setIsActiveDeviceMetricEmpty(!dataLength)}
       />
       <TerritoryMetric
         isEmpty={isEmpty}

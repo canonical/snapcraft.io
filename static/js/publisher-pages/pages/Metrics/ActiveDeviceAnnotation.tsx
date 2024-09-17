@@ -22,7 +22,7 @@ function ActiveDeviceAnnotation(): JSX.Element {
   );
 
   const fetchActiveDeviceMetric = async () => {
-    const response = await fetch(`/${snapId}/metrics/active_device_annotaion`);
+    const response = await fetch(`/${snapId}/metrics/active_device_annotation`);
 
     if (!response.ok) {
       return;

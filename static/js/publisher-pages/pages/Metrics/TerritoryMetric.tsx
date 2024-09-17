@@ -23,17 +23,21 @@ export const TerritoryMetric = ({
     territories_total: number;
   } | null>(null);
 
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(false);
+  const [requestStatus, setRequestStatus] = useState<
+    "loading" | "error" | "successful"
+  >("loading");
 
   const fetchActiveDeviceMetric = async () => {
-    setError(false);
-    setLoading(true);
+    setRequestStatus("loading");
     const response = await fetch(`/${snapId}/metrics/country-metric`);
 
     if (!response.ok) {
-      setError(true);
-      setLoading(false);
+      if (response.status === 404) {
+        onDataLoad(0);
+        setRequestStatus("successful");
+      } else {
+        setRequestStatus("error");
+      }
       return;
     }
 
@@ -44,7 +48,7 @@ export const TerritoryMetric = ({
       metrics: data.active_devices,
     });
     onDataLoad(data?.active_devices?.length);
-    setLoading(false);
+    setRequestStatus("successful");
   };
 
   useEffect(() => {
@@ -63,19 +67,22 @@ export const TerritoryMetric = ({
         <Col size={12} key="territoriesSeparator">
           <hr />
         </Col>
-        {loading ? (
+        {requestStatus === "loading" ? (
           <Spinner />
         ) : (
-          error && (
-            <CodeSnippet
-              blocks={[
-                {
-                  code: <div>Error on loading metrics...</div>,
-                  wrapLines: true,
-                },
-              ]}
-            />
-          )
+          <>
+            {isEmpty && <div>No data</div>}
+            {requestStatus === "error" && (
+              <CodeSnippet
+                blocks={[
+                  {
+                    code: <div>Error on loading metrics...</div>,
+                    wrapLines: true,
+                  },
+                ]}
+              />
+            )}
+          </>
         )}
 
         <Col size={12} key="territories">

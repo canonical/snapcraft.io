@@ -19,8 +19,9 @@ function ActiveDeviceMetric({
   const [latestActiveDevices, setLatestActiveDevices] = useState<number | null>(
     null
   );
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(false);
+  const [requestStatus, setRequestStatus] = useState<
+    "loading" | "error" | "successful"
+  >("loading");
 
   const period = searchParams.get("period") ?? "30d";
   const type = searchParams.get("active-devices") ?? "version";
@@ -31,15 +32,18 @@ function ActiveDeviceMetric({
     const svg = select(`${selector} svg`);
     svg.selectAll("*").remove();
 
-    setError(false);
-    setLoading(true);
+    setRequestStatus("loading");
+
     const response = await fetch(
       `/${snapId}/metrics/active-devices?period=${period}&active-devices=${type}`
     );
-
     if (!response.ok) {
-      setError(true);
-      setLoading(false);
+      if (response.status === 404) {
+        onDataLoad(0);
+        setRequestStatus("successful");
+      } else {
+        setRequestStatus("error");
+      }
       return;
     }
 
@@ -52,7 +56,7 @@ function ActiveDeviceMetric({
     });
 
     onDataLoad(data.active_devices?.buckets?.length);
-    setLoading(false);
+    setRequestStatus("successful");
   };
 
   useEffect(() => {
@@ -81,7 +85,7 @@ function ActiveDeviceMetric({
         <Col size={12} key="spearator">
           <hr />
         </Col>
-        {loading ? (
+        {requestStatus === "loading" ? (
           <Spinner />
         ) : (
           <>
@@ -91,7 +95,8 @@ function ActiveDeviceMetric({
               period={period}
               type={type}
             />
-            {error && (
+            {isEmpty && <div>No data</div>}
+            {requestStatus === "error" && (
               <CodeSnippet
                 blocks={[
                   {
