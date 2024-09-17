@@ -56,7 +56,6 @@ def publisher_snap_metrics(snap_name):
     """
     A view to display the snap metrics page for specific snaps.
     """
-
     context = {
         # Data direct from details API
         "snap_name": snap_name,
@@ -116,7 +115,7 @@ def get_active_devices(snap_name):
         status=active_metrics["status"],
     )
 
-    ## get latest active devices
+    # get latest active devices
     latest_day_period = logic.extract_metrics_period("1d")
     latest_installed_base = logic.get_installed_based_metric("version")
     latest_day_query_json = metrics_helper.build_metric_query_installed_base(

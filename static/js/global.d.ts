@@ -21,21 +21,7 @@ declare interface Window {
     private: boolean;
     trending: boolean;
   };
-  SNAP_METRICS_DATA: {
-    nodata: boolean;
-    latest_active_devices: number;
-    metric_period: string;
-    active_devices_annotations: {
-      buckets: string[];
-      name: string;
-      series: Series[];
-    };
-    territories_total: number;
-    default_track: any;
-    active_devices: any;
-    active_device_metric: any;
-    territories: any;
-  };
+
   SNAP_SETTINGS_DATA: {
     blacklist_countries: string[];
     blacklist_country_keys: string;
