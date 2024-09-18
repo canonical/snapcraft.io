@@ -5,8 +5,6 @@ from webapp.app import create_app
 
 
 class GetPublisherPageTest(TestCase):
-    render_templates = False
-
     def setUp(self):
         self.publisher = "jetbrains"
         self.api_url = "".join(

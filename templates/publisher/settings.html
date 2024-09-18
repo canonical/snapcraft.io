@@ -22,7 +22,7 @@ Settings for {% if display_title %}{{ display_title }}{% else %}{{ snap_title }}
     unlisted: {{ unlisted|tojson }},
     whitelist_countries: {{ whitelist_country_codes|tojson }},
     blacklist_countries: {{ blacklist_country_codes|tojson }},
-    visibility_locked: {{ visibility_locked|tojson }},
+    visibility_locked: {{ visibility_locked|default(false)|tojson }},
   };
 </script>
 <script src="{{ static_url('js/dist/publisher-settings.js') }}"></script>

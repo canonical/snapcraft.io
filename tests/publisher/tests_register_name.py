@@ -151,7 +151,7 @@ class PostRegisterNamePage(BaseTestCases.EndpointLoggedIn):
         self.assertEqual(b'{"snap_name": "test-snap"}', called.request.body)
 
         assert response.status_code == 302
-        self.assertEqual(response.location, "http://localhost/account/")
+        self.assertEqual(response.location, "/account/")
 
     @responses.activate
     def test_post_store(self):
@@ -170,7 +170,7 @@ class PostRegisterNamePage(BaseTestCases.EndpointLoggedIn):
         self.assertIn(b'"store": "store"', called.request.body)
 
         assert response.status_code == 302
-        self.assertEqual(response.location, "http://localhost/account/")
+        self.assertEqual(response.location, "/account/")
 
     @responses.activate
     def test_post_private(self):
@@ -189,7 +189,7 @@ class PostRegisterNamePage(BaseTestCases.EndpointLoggedIn):
         self.assertIn(b'"is_private": true', called.request.body)
 
         assert response.status_code == 302
-        self.assertEqual(response.location, "http://localhost/account/")
+        self.assertEqual(response.location, "/account/")
 
     @responses.activate
     def test_post_registrant_comment(self):
@@ -208,7 +208,7 @@ class PostRegisterNamePage(BaseTestCases.EndpointLoggedIn):
         self.assertIn(b'"registrant_comment": "comment"', called.request.body)
 
         assert response.status_code == 302
-        self.assertEqual(response.location, "http://localhost/account/")
+        self.assertEqual(response.location, "/account/")
 
     @responses.activate
     def test_error_from_api(self):
@@ -240,7 +240,7 @@ class PostRegisterNamePage(BaseTestCases.EndpointLoggedIn):
         assert response.status_code == 302
         self.assertIn("snap_name=test-snap", response.location)
         self.assertIn("is_private=False", response.location)
-        self.assertIn("http://localhost/register-snap", response.location)
+        self.assertIn("/register-snap", response.location)
 
     @responses.activate
     def test_name_reserved(self):
@@ -257,7 +257,7 @@ class PostRegisterNamePage(BaseTestCases.EndpointLoggedIn):
         assert response.status_code == 302
         self.assertIn("snap_name=test-snap", response.location)
         self.assertIn("is_private=False", response.location)
-        self.assertIn("http://localhost/register-snap", response.location)
+        self.assertIn("/register-snap", response.location)
 
     @responses.activate
     def test_claim_dispute(self):
@@ -272,7 +272,7 @@ class PostRegisterNamePage(BaseTestCases.EndpointLoggedIn):
         response = self.client.post(self.endpoint_url, data=self.data)
 
         assert response.status_code == 302
-        self.assertEqual(response.location, "http://localhost/admin/account")
+        self.assertEqual(response.location, "/admin/account")
 
     @responses.activate
     def test_post_error_user_error(self):

@@ -97,7 +97,7 @@ class PostDefaultTrack(BaseTestCases.EndpointLoggedIn):
         self.assert_template_used("404.html")
 
     def test_post_no_data(self):
-        response = self.client.post(self.endpoint_url)
+        response = self.client.post(self.endpoint_url, json={})
 
         assert response.status_code == 400
         assert response.get_json() == {}
