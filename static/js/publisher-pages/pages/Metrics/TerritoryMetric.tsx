@@ -76,7 +76,7 @@ export const TerritoryMetric = ({
               <CodeSnippet
                 blocks={[
                   {
-                    code: <div>Error on loading metrics...</div>,
+                    code: <div>An error occurred. Please try again.</div>,
                     wrapLines: true,
                   },
                 ]}

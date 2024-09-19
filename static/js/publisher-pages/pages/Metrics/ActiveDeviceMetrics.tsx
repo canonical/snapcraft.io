@@ -6,8 +6,9 @@ import { renderActiveDevicesMetrics } from "../../../publisher/metrics/metrics";
 import { select } from "d3-selection";
 import ActiveDeviceAnnotation from "./ActiveDeviceAnnotation";
 import { ActiveDeviceMetricFilter } from "./ActiveDeviceMetricFilter";
+import useActiveDeviceMetrics from "../../hooks/useActiveDeviceMetrics";
 
-function ActiveDeviceMetric({
+function ActiveDeviceMetrics({
   isEmpty,
   onDataLoad,
 }: {
@@ -16,52 +17,38 @@ function ActiveDeviceMetric({
 }): JSX.Element {
   const { snapId } = useParams();
   const [searchParams, setSearchParams] = useSearchParams();
-  const [latestActiveDevices, setLatestActiveDevices] = useState<number | null>(
+  const [latestActiveDevices, setLatestActiveDevices] = useState<string | null>(
     null
   );
-  const [requestStatus, setRequestStatus] = useState<
-    "loading" | "error" | "successful"
-  >("loading");
 
   const period = searchParams.get("period") ?? "30d";
   const type = searchParams.get("active-devices") ?? "version";
 
-  const fetchActiveDeviceMetric = async () => {
-    // clear the chart
-    const selector = "#activeDevices";
-    const svg = select(`${selector} svg`);
-    svg.selectAll("*").remove();
-
-    setRequestStatus("loading");
-
-    const response = await fetch(
-      `/${snapId}/metrics/active-devices?period=${period}&active-devices=${type}`
-    );
-    if (!response.ok) {
-      if (response.status === 404) {
-        onDataLoad(0);
-        setRequestStatus("successful");
-      } else {
-        setRequestStatus("error");
-      }
-      return;
-    }
-
-    const data = await response.json();
-    setLatestActiveDevices(parseFloat(data.latest_active_devices));
-    renderActiveDevicesMetrics({
-      selector,
-      metrics: data.active_devices,
-      type,
-    });
-
-    onDataLoad(data.active_devices?.buckets?.length);
-    setRequestStatus("successful");
-  };
+  const { status, data, isFetching } = useActiveDeviceMetrics({
+    snapId,
+    period,
+    type,
+  });
 
   useEffect(() => {
-    void fetchActiveDeviceMetric();
-  }, [period, type]);
+    if (data) {
+      // clear the chart
+      const selector = "#activeDevices";
+      const svg = select(`${selector} svg`);
+      svg.selectAll("*").remove();
+
+      setLatestActiveDevices(
+        String(data.latest_active_devices).replace(/(.)(?=(\d{3})+$)/g, "$1,")
+      );
+
+      renderActiveDevicesMetrics({
+        selector,
+        metrics: data.active_devices,
+        type,
+      });
+      onDataLoad(data.active_devices?.buckets?.length);
+    }
+  }, [data]);
 
   const onChange = (key: string, value: string) => {
     setSearchParams((searchParams) => {
@@ -76,16 +63,13 @@ function ActiveDeviceMetric({
         <Col size={12} key="activeServices">
           <h4 className="u-float-left">Weekly active devices</h4>
           <div className="p-heading--4 u-float-right u-no-margin--top">
-            <strong>
-              {latestActiveDevices &&
-                String(latestActiveDevices).replace(/(.)(?=(\d{3})+$)/g, "$1,")}
-            </strong>
+            <strong>{latestActiveDevices}</strong>
           </div>
         </Col>
         <Col size={12} key="spearator">
           <hr />
         </Col>
-        {requestStatus === "loading" ? (
+        {isFetching ? (
           <Spinner />
         ) : (
           <>
@@ -95,12 +79,12 @@ function ActiveDeviceMetric({
               period={period}
               type={type}
             />
-            {isEmpty && <div>No data</div>}
-            {requestStatus === "error" && (
+            {isEmpty && <div>No data found.</div>}
+            {status === "error" && (
               <CodeSnippet
                 blocks={[
                   {
-                    code: <div>Error on loading metrics...</div>,
+                    code: <div>An error occurred. Please try again.</div>,
                     wrapLines: true,
                   },
                 ]}
@@ -120,7 +104,7 @@ function ActiveDeviceMetric({
               </div>
             </div>
 
-            <ActiveDeviceAnnotation />
+            <ActiveDeviceAnnotation snapId={snapId} />
           </div>
         </Col>
       </Row>
@@ -128,4 +112,4 @@ function ActiveDeviceMetric({
   );
 }
 
-export default ActiveDeviceMetric;
+export default ActiveDeviceMetrics;

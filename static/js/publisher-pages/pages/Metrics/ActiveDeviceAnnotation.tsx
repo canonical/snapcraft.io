@@ -1,7 +1,5 @@
-import { useParams, useSearchParams } from "react-router-dom";
 import { Row, Col } from "@canonical/react-components";
-
-import { useEffect, useState } from "react";
+import useMetricsAnnotation from "../../hooks/useMetricsAnnotation";
 
 interface IActiveDeviceAnnotation {
   buckets: string[];
@@ -15,26 +13,9 @@ interface IActiveDeviceAnnotation {
   }>;
 }
 
-function ActiveDeviceAnnotation(): JSX.Element {
-  const { snapId } = useParams();
-  const [annotation, setAnnotation] = useState<IActiveDeviceAnnotation | null>(
-    null
-  );
-
-  const fetchActiveDeviceMetric = async () => {
-    const response = await fetch(`/${snapId}/metrics/active-device-annotation`);
-
-    if (!response.ok) {
-      return;
-    }
-
-    const data = await response.json();
-    setAnnotation(data);
-  };
-
-  useEffect(() => {
-    void fetchActiveDeviceMetric();
-  }, []);
+function ActiveDeviceAnnotation({ snapId }: { snapId?: string }): JSX.Element {
+  const { data: annotation }: { data: IActiveDeviceAnnotation | undefined } =
+    useMetricsAnnotation(snapId);
 
   return (
     <Row data-js="annotations-hover">

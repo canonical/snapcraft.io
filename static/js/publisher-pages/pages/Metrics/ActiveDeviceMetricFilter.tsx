@@ -13,7 +13,6 @@ export const ActiveDeviceMetricFilter = ({
   period,
   type,
 }: IActiveDeviceMetricFilterProps) => {
-  console.log();
   return (
     <>
       <Col size={3} key="periodFilter">

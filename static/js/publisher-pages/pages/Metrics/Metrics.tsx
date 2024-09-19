@@ -2,7 +2,7 @@ import { useParams, useSearchParams } from "react-router-dom";
 import { Row, Col } from "@canonical/react-components";
 
 import SectionNav from "../../components/SectionNav";
-import ActiveDeviceMetric from "./ActiveDeviceMetirc";
+import ActiveDeviceMetrics from "./ActiveDeviceMetrics";
 import { TerritoryMetric } from "./TerritoryMetric";
 import { useState } from "react";
 
@@ -43,7 +43,7 @@ function Metrics(): JSX.Element {
       <SectionNav snapName={snapId} activeTab="metrics" />
       {isEmpty && <EmptyData />}
 
-      <ActiveDeviceMetric
+      <ActiveDeviceMetrics
         isEmpty={isEmpty}
         onDataLoad={(dataLength) => setIsActiveDeviceMetricEmpty(!dataLength)}
       />

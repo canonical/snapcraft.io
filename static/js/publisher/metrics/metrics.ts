@@ -53,69 +53,6 @@ type TerritoriesMetric = {
   selector: string;
 };
 
-function renderMetrics(metrics: Metrics) {
-  let activeDevices: {
-    series: Array<Series>;
-    buckets: Array<string>;
-  } = {
-    series: [],
-    buckets: metrics.activeDevices.metrics.buckets,
-  };
-
-  metrics.activeDevices.metrics.series.forEach((series) => {
-    let fullSeries = series.values.map((value) => {
-      return value === null ? 0 : value;
-    });
-    activeDevices.series.push({
-      name: series.name,
-      values: fullSeries,
-    });
-  });
-
-  const graph = new ActiveDevicesGraph(
-    metrics.activeDevices.selector,
-    activeDevices,
-    {
-      stacked: true,
-      area: true,
-      graphType: metrics.activeDevices.type,
-    }
-  )
-    .render()
-    // @ts-ignore
-    .enableTooltip()
-    .show();
-
-  // Add hovers for category annotations
-  const categories = document.querySelector(`[data-js="annotations-hover"]`);
-  if (categories) {
-    categories.addEventListener("mouseover", (e) => {
-      const target = e.target as HTMLElement;
-      const annotationHover = target.closest(
-        `[data-js="annotation-hover"]`
-      ) as HTMLElement;
-      if (annotationHover) {
-        const category = annotationHover.dataset.id;
-        graph.g.selectAll(`#${category}`).style("visibility", "visible");
-      }
-    });
-
-    categories.addEventListener("mouseout", (e) => {
-      const target = e.target as HTMLElement;
-      const annotationHover = target.closest(
-        `[data-js="annotation-hover"]`
-      ) as HTMLElement;
-      if (annotationHover) {
-        const category = annotationHover.dataset.id;
-        graph.g.selectAll(`#${category}`).style("visibility", "hidden");
-      }
-    });
-  }
-
-  // Territories
-  // territoriesMetrics(metrics.territories.selector, metrics.territories.metrics);
-}
-
 function renderActiveDevicesMetrics(metrics: ActiveDeviceMetric) {
   let activeDevices: {
     series: Array<Series>;
@@ -342,7 +279,6 @@ function renderPublisherMetrics(options: {
 }
 
 export {
-  renderMetrics,
   renderActiveDevicesMetrics,
   renderPublisherMetrics,
   renderTerritoriesMetrics,

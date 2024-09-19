@@ -138,10 +138,6 @@ class ActiveDevicesGraph {
 
     prepareScales.call(this);
 
-    // if (this.options.annotations) {
-    //   prepareAnnotationsData.call(this);
-    // }
-
     prepareAxis.call(this);
 
     return this;
