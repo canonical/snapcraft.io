@@ -7,10 +7,11 @@ import {
   CodeSnippet,
 } from "@canonical/react-components";
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { renderTerritoriesMetrics } from "../../../publisher/metrics/metrics";
+import useCountryMetrics from "../../hooks/useCountryMetrics";
 
-export const TerritoryMetric = ({
+export const TerritoryMetrics = ({
   isEmpty,
   onDataLoad,
 }: {
@@ -18,42 +19,31 @@ export const TerritoryMetric = ({
   onDataLoad: (dataLength: number | undefined) => void;
 }): JSX.Element => {
   const { snapId } = useParams();
-  const [countryInfo, setCountryInfo] = useState<{
-    active_devices: any;
-    territories_total: number;
-  } | null>(null);
-
-  const [requestStatus, setRequestStatus] = useState<
-    "loading" | "error" | "successful"
-  >("loading");
-
-  const fetchActiveDeviceMetric = async () => {
-    setRequestStatus("loading");
-    const response = await fetch(`/${snapId}/metrics/country-metric`);
-
-    if (!response.ok) {
-      if (response.status === 404) {
-        onDataLoad(0);
-        setRequestStatus("successful");
-      } else {
-        setRequestStatus("error");
-      }
-      return;
-    }
-
-    const data = await response.json();
-    setCountryInfo(data);
-    renderTerritoriesMetrics({
-      selector: "#territories",
-      metrics: data.active_devices,
-    });
-    onDataLoad(data?.active_devices?.length);
-    setRequestStatus("successful");
-  };
+  const {
+    status,
+    data: countryInfo,
+    isFetching,
+  }: {
+    status: string;
+    data:
+      | {
+          active_devices: any;
+          territories_total: number;
+        }
+      | undefined;
+    isFetching: boolean;
+  } = useCountryMetrics(snapId);
 
   useEffect(() => {
-    void fetchActiveDeviceMetric();
-  }, []);
+    if (countryInfo && countryInfo.active_devices) {
+      renderTerritoriesMetrics({
+        selector: "#territories",
+        metrics: countryInfo.active_devices,
+      });
+    }
+
+    !isFetching && onDataLoad(countryInfo?.active_devices?.length);
+  }, [countryInfo, isFetching]);
 
   return (
     <section className={`p-strip is-shallow ${isEmpty ? "is-empty" : ""}`}>
@@ -67,12 +57,12 @@ export const TerritoryMetric = ({
         <Col size={12} key="territoriesSeparator">
           <hr />
         </Col>
-        {requestStatus === "loading" ? (
+        {isFetching ? (
           <Spinner />
         ) : (
           <>
-            {isEmpty && <div>No data</div>}
-            {requestStatus === "error" && (
+            {isEmpty && <div>No data found.</div>}
+            {status === "error" && (
               <CodeSnippet
                 blocks={[
                   {

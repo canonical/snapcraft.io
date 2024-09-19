@@ -7,30 +7,6 @@ type Series = {
   values: Array<number>;
 };
 
-type Metrics = {
-  activeDevices: {
-    metrics: {
-      buckets: Array<string>;
-      series: Array<Series>;
-    };
-    selector: string;
-    type: string;
-  };
-  // defaultTrack: string;
-  territories: {
-    metrics: {
-      [key: string]: {
-        code: string;
-        color_rgb: string;
-        name: string;
-        number_of_users: number;
-        percentage_of_users: number;
-      };
-    };
-    selector: string;
-  };
-};
-
 type ActiveDeviceMetric = {
   metrics: {
     buckets: Array<string>;

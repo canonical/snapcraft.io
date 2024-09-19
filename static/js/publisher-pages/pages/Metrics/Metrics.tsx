@@ -3,7 +3,7 @@ import { Row, Col } from "@canonical/react-components";
 
 import SectionNav from "../../components/SectionNav";
 import ActiveDeviceMetrics from "./ActiveDeviceMetrics";
-import { TerritoryMetric } from "./TerritoryMetric";
+import { TerritoryMetrics } from "./TerritoryMetrics";
 import { useState } from "react";
 
 const EmptyData = () => {
@@ -47,7 +47,7 @@ function Metrics(): JSX.Element {
         isEmpty={isEmpty}
         onDataLoad={(dataLength) => setIsActiveDeviceMetricEmpty(!dataLength)}
       />
-      <TerritoryMetric
+      <TerritoryMetrics
         isEmpty={isEmpty}
         onDataLoad={(dataLength) => setIsCountryMetricEmpty(!dataLength)}
       />

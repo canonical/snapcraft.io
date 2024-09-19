@@ -20,18 +20,20 @@ function useActiveDeviceMetrics({
         if (response.status === 404) {
           return {
             latest_active_devices: 0,
-            active_devices: [],
+            active_devices: {
+              series: [],
+              buckets: [],
+            },
           };
         } else {
           throw new Error("Unable to fetch active device metrics");
         }
       }
 
-      const data = await response.json();
-
-      return data;
+      return await response.json();
     },
     retry: 0,
+    refetchOnWindowFocus: false,
   });
 }
 

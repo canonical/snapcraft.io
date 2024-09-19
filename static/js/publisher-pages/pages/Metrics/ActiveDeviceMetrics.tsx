@@ -23,6 +23,7 @@ function ActiveDeviceMetrics({
 
   const period = searchParams.get("period") ?? "30d";
   const type = searchParams.get("active-devices") ?? "version";
+  const selector = "#activeDevices";
 
   const { status, data, isFetching } = useActiveDeviceMetrics({
     snapId,
@@ -31,26 +32,27 @@ function ActiveDeviceMetrics({
   });
 
   useEffect(() => {
-    if (data) {
-      // clear the chart
-      const selector = "#activeDevices";
-      const svg = select(`${selector} svg`);
-      svg.selectAll("*").remove();
-
-      setLatestActiveDevices(
-        String(data.latest_active_devices).replace(/(.)(?=(\d{3})+$)/g, "$1,")
-      );
+    if (data && data.active_devices) {
+      const activeDevices = data.latest_active_devices;
+      activeDevices &&
+        setLatestActiveDevices(
+          String(activeDevices).replace(/(.)(?=(\d{3})+$)/g, "$1,")
+        );
 
       renderActiveDevicesMetrics({
         selector,
         metrics: data.active_devices,
         type,
       });
-      onDataLoad(data.active_devices?.buckets?.length);
     }
-  }, [data]);
+    !isFetching && onDataLoad(data.active_devices?.buckets?.length);
+  }, [data, isFetching]);
 
   const onChange = (key: string, value: string) => {
+    // clear the chart
+    const svg = select(`${selector} svg`);
+    svg.selectAll("*").remove();
+
     setSearchParams((searchParams) => {
       searchParams.set(key, value);
       return searchParams;
