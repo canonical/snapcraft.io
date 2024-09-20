@@ -7,6 +7,7 @@ import Publicise from "./pages/Publicise";
 import Settings from "./pages/Settings";
 import ValidationSets from "./pages/ValidationSets";
 import ValidationSet from "./pages/ValidationSet";
+import Metrics from "./pages/Metrics";
 
 const router = createBrowserRouter([
   {
@@ -36,6 +37,10 @@ const router = createBrowserRouter([
       {
         path: "/validation-sets/:validationSetId",
         element: <ValidationSet />,
+      },
+      {
+        path: "/:snapId/metrics",
+        element: <Metrics />,
       },
     ],
   },
