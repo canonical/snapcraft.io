@@ -7,33 +7,13 @@ type Series = {
   values: Array<number>;
 };
 
-type Metrics = {
-  activeDevices: {
-    annotations: {
-      buckets: Array<string>;
-      name: string;
-      series: Array<Series>;
-    };
-    metrics: {
-      buckets: Array<string>;
-      series: Array<Series>;
-    };
-    selector: string;
-    type: string;
+type ActiveDeviceMetric = {
+  metrics: {
+    buckets: Array<string>;
+    series: Array<Series>;
   };
-  defaultTrack: string;
-  territories: {
-    metrics: {
-      [key: string]: {
-        code: string;
-        color_rgb: string;
-        name: string;
-        number_of_users: number;
-        percentage_of_users: number;
-      };
-    };
-    selector: string;
-  };
+  selector: string;
+  type: string;
 };
 
 function renderMetrics(metrics: Metrics) {
@@ -42,7 +22,7 @@ function renderMetrics(metrics: Metrics) {
     buckets: Array<string>;
   } = {
     series: [],
-    buckets: metrics.activeDevices.metrics.buckets,
+    buckets: metrics.metrics.buckets,
   };
 
   metrics.activeDevices.metrics.series.forEach((series) => {
@@ -96,9 +76,10 @@ function renderMetrics(metrics: Metrics) {
       }
     });
   }
+}
 
-  // Territories
-  territoriesMetrics(metrics.territories.selector, metrics.territories.metrics);
+function renderTerritoriesMetrics(metrics: TerritoriesMetric) {
+  territoriesMetrics(metrics.selector, metrics.metrics);
 }
 
 /**
@@ -266,4 +247,4 @@ function renderPublisherMetrics(options: {
   getChunk(chunkedSnaps);
 }
 
-export { renderMetrics, renderPublisherMetrics };
+export { renderPublisherMetrics, renderTerritoriesMetrics };
