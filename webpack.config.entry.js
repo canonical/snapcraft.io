@@ -21,4 +21,5 @@ module.exports = {
   "about-listing": "./static/js/public/about/listing.ts",
   store: "./static/js/store/index.tsx",
   "publisher-pages": "./static/js/publisher-pages/index.tsx",
+  metrics: "./static/js/publisher-pages/index.tsx",
 };

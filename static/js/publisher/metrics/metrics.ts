@@ -7,45 +7,38 @@ type Series = {
   values: Array<number>;
 };
 
-type Metrics = {
-  activeDevices: {
-    annotations: {
-      buckets: Array<string>;
-      name: string;
-      series: Array<Series>;
-    };
-    metrics: {
-      buckets: Array<string>;
-      series: Array<Series>;
-    };
-    selector: string;
-    type: string;
+type ActiveDeviceMetric = {
+  metrics: {
+    buckets: Array<string>;
+    series: Array<Series>;
   };
-  defaultTrack: string;
-  territories: {
-    metrics: {
-      [key: string]: {
-        code: string;
-        color_rgb: string;
-        name: string;
-        number_of_users: number;
-        percentage_of_users: number;
-      };
-    };
-    selector: string;
-  };
+  selector: string;
+  type: string;
 };
 
-function renderMetrics(metrics: Metrics) {
+type TerritoriesMetric = {
+  metrics: {
+    [key: string]: {
+      code: string;
+      color_rgb: string;
+      name: string;
+      number_of_users: number;
+      percentage_of_users: number;
+    };
+  };
+  selector: string;
+};
+
+function renderActiveDevicesMetrics(metrics: ActiveDeviceMetric) {
   let activeDevices: {
     series: Array<Series>;
     buckets: Array<string>;
   } = {
     series: [],
-    buckets: metrics.activeDevices.metrics.buckets,
+    buckets: metrics.metrics.buckets,
   };
 
-  metrics.activeDevices.metrics.series.forEach((series) => {
+  metrics.metrics.series.forEach((series) => {
     let fullSeries = series.values.map((value) => {
       return value === null ? 0 : value;
     });
@@ -55,17 +48,11 @@ function renderMetrics(metrics: Metrics) {
     });
   });
 
-  const graph = new ActiveDevicesGraph(
-    metrics.activeDevices.selector,
-    activeDevices,
-    {
-      stacked: true,
-      area: true,
-      graphType: metrics.activeDevices.type,
-      defaultTrack: metrics.defaultTrack,
-      annotations: metrics.activeDevices.annotations,
-    }
-  )
+  const graph = new ActiveDevicesGraph(metrics.selector, activeDevices, {
+    stacked: true,
+    area: true,
+    graphType: metrics.type,
+  })
     .render()
     // @ts-ignore
     .enableTooltip()
@@ -96,9 +83,10 @@ function renderMetrics(metrics: Metrics) {
       }
     });
   }
+}
 
-  // Territories
-  territoriesMetrics(metrics.territories.selector, metrics.territories.metrics);
+function renderTerritoriesMetrics(metrics: TerritoriesMetric) {
+  territoriesMetrics(metrics.selector, metrics.metrics);
 }
 
 /**
@@ -266,4 +254,8 @@ function renderPublisherMetrics(options: {
   getChunk(chunkedSnaps);
 }
 
-export { renderMetrics, renderPublisherMetrics };
+export {
+  renderActiveDevicesMetrics,
+  renderPublisherMetrics,
+  renderTerritoriesMetrics,
+};
