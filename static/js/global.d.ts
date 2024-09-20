@@ -21,7 +21,6 @@ declare interface Window {
     private: boolean;
     trending: boolean;
   };
-
   SNAP_SETTINGS_DATA: {
     blacklist_countries: string[];
     blacklist_country_keys: string;

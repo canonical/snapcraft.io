@@ -57,7 +57,6 @@ class ActiveDevicesGraph {
     this.g = undefined;
 
     this.transformedData = undefined;
-    // this.annotationsData = undefined;
     this.data = undefined;
     this.keys = undefined;
     this.maxYValue = undefined;
