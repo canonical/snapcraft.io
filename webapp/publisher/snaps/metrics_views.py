@@ -5,7 +5,10 @@ from json import loads
 import flask
 import webapp.metrics.helper as metrics_helper
 import webapp.metrics.metrics as metrics
-from canonicalwebteam.store_api.stores.snapstore import SnapPublisher
+from canonicalwebteam.store_api.stores.snapstore import (
+    SnapPublisher,
+    SnapStore,
+)
 
 # Local
 from webapp.helpers import api_publisher_session
@@ -13,6 +16,7 @@ from webapp.decorators import login_required
 from webapp.publisher.snaps import logic
 
 publisher_api = SnapPublisher(api_publisher_session)
+store_api = SnapStore(api_publisher_session)
 
 
 @login_required
@@ -51,14 +55,23 @@ def get_measure_snap(snap_name):
 def publisher_snap_metrics(snap_name):
     """
     A view to display the snap metrics page for specific snaps.
-
-    This queries the snapcraft API (api.snapcraft.io) and passes
-    some of the data through to the publisher/metrics.html template,
-    with appropriate sanitation.
     """
-    details = publisher_api.get_snap_info(snap_name, flask.session)
-    default_track = details.get("default_track", "latest")
+    context = {
+        # Data direct from details API
+        "snap_name": snap_name,
+        # pass snap id from here?
+        "is_linux": "Linux" in flask.request.headers["User-Agent"],
+    }
 
+    return flask.render_template("publisher/metrics.html", **context)
+
+
+@login_required
+def get_active_devices(snap_name):
+    snap_details = store_api.get_item_details(
+        snap_name, api_version=2, fields=["snap-id"]
+    )
+    snap_id = snap_details["snap-id"]
     metric_requested = logic.extract_metrics_period(
         flask.request.args.get("period", default="30d", type=str)
     )
@@ -68,8 +81,8 @@ def publisher_snap_metrics(snap_name):
     )
 
     installed_base = logic.get_installed_based_metric(installed_base_metric)
-    metrics_query_json = metrics_helper.build_metrics_json(
-        snap_id=details["snap_id"],
+    metrics_query_json = metrics_helper.build_metric_query_installed_base(
+        snap_id=snap_id,
         installed_base=installed_base,
         metric_period=metric_requested["int"],
         metric_bucket=metric_requested["bucket"],
@@ -79,24 +92,11 @@ def publisher_snap_metrics(snap_name):
         flask.session, json=metrics_query_json
     )
 
-    latest_day_period = logic.extract_metrics_period("1d")
-    latest_installed_base = logic.get_installed_based_metric("version")
-    latest_day_query_json = metrics_helper.build_metrics_json(
-        snap_id=details["snap_id"],
-        installed_base=latest_installed_base,
-        metric_period=latest_day_period["int"],
-        metric_bucket=latest_day_period["bucket"],
-    )
-    latest_day_response = publisher_api.get_publisher_metrics(
-        flask.session, json=latest_day_query_json
-    )
-
     active_metrics = metrics_helper.find_metric(
         metrics_response["metrics"], installed_base
     )
 
     series = active_metrics["series"]
-
     if active_metrics["metric_name"] == "weekly_installed_base_by_channel":
         for s in series:
             if "/" not in s["name"]:
@@ -115,8 +115,19 @@ def publisher_snap_metrics(snap_name):
         status=active_metrics["status"],
     )
 
+    # get latest active devices
+    latest_day_period = logic.extract_metrics_period("1d")
+    latest_installed_base = logic.get_installed_based_metric("version")
+    latest_day_query_json = metrics_helper.build_metric_query_installed_base(
+        snap_id=snap_id,
+        installed_base=latest_installed_base,
+        metric_period=latest_day_period["int"],
+        metric_bucket=latest_day_period["bucket"],
+    )
+    latest_day_response = publisher_api.get_publisher_metrics(
+        flask.session, json=latest_day_query_json
+    )
     latest_active = 0
-
     if active_devices:
         latest_active = active_devices.get_number_latest_active_devices()
 
@@ -135,23 +146,17 @@ def publisher_snap_metrics(snap_name):
                 latest_active_devices.get_number_latest_active_devices()
             )
 
-    country_metric = metrics_helper.find_metric(
-        metrics_response["metrics"], "weekly_installed_base_by_country"
-    )
-    country_devices = metrics.CountryDevices(
-        name=country_metric["metric_name"],
-        series=country_metric["series"],
-        buckets=country_metric["buckets"],
-        status=country_metric["status"],
-        private=True,
+    return flask.jsonify(
+        {
+            "active_devices": dict(active_devices),
+            "latest_active_devices": latest_active,
+        }
     )
 
-    territories_total = 0
-    if country_devices:
-        territories_total = country_devices.get_number_territories()
 
-    nodata = not any([country_devices, active_devices])
-
+@login_required
+def get_metric_annotaion(snap_name):
+    details = publisher_api.get_snap_info(snap_name, flask.session)
     annotations = {"name": "annotations", "series": [], "buckets": []}
 
     for category in details["categories"]["items"]:
@@ -178,25 +183,41 @@ def publisher_snap_metrics(snap_name):
     annotations["series"] = sorted(
         annotations["series"], key=lambda k: k["date"]
     )
+    return flask.jsonify(annotations)
 
-    context = {
-        # Data direct from details API
-        "snap_name": snap_name,
-        "snap_title": details["title"],
-        "publisher_name": details["publisher"]["display-name"],
-        "metric_period": metric_requested["period"],
-        "active_device_metric": installed_base_metric,
-        "default_track": default_track,
-        "private": details["private"],
-        # Metrics data
-        "nodata": nodata,
-        "latest_active_devices": latest_active,
-        "active_devices": dict(active_devices),
-        "territories_total": territories_total,
-        "territories": country_devices.country_data,
-        "active_devices_annotations": annotations,
-        # Context info
-        "is_linux": "Linux" in flask.request.headers["User-Agent"],
-    }
 
-    return flask.render_template("publisher/metrics.html", **context)
+@login_required
+def get_country_metric(snap_name):
+    snap_details = store_api.get_item_details(
+        snap_name, api_version=2, fields=["snap-id"]
+    )
+    snap_id = snap_details["snap-id"]
+    metrics_query_json = metrics_helper.build_metric_query_country(
+        snap_id=snap_id,
+    )
+
+    metrics_response = publisher_api.get_publisher_metrics(
+        flask.session, json=metrics_query_json
+    )
+
+    country_metric = metrics_helper.find_metric(
+        metrics_response["metrics"], "weekly_installed_base_by_country"
+    )
+    country_devices = metrics.CountryDevices(
+        name=country_metric["metric_name"],
+        series=country_metric["series"],
+        buckets=country_metric["buckets"],
+        status=country_metric["status"],
+        private=True,
+    )
+
+    territories_total = 0
+    if country_devices:
+        territories_total = country_devices.get_number_territories()
+
+    return flask.jsonify(
+        {
+            "active_devices": country_devices.country_data,
+            "territories_total": territories_total,
+        }
+    )
