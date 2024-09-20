@@ -45,7 +45,7 @@ function ActiveDeviceMetrics({
         type,
       });
     }
-    !isFetching && onDataLoad(data.active_devices?.buckets?.length);
+    !isFetching && onDataLoad(data?.active_devices?.buckets?.length);
   }, [data, isFetching]);
 
   const onChange = (key: string, value: string) => {
