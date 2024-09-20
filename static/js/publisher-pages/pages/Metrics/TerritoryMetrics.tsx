@@ -35,15 +35,15 @@ export const TerritoryMetrics = ({
   } = useCountryMetrics(snapId);
 
   useEffect(() => {
-    if (countryInfo && countryInfo.active_devices) {
-      renderTerritoriesMetrics({
-        selector: "#territories",
-        metrics: countryInfo.active_devices,
-      });
+    if (countryInfo) {
+      countryInfo.active_devices &&
+        renderTerritoriesMetrics({
+          selector: "#territories",
+          metrics: countryInfo.active_devices,
+        });
+      onDataLoad(countryInfo.active_devices?.length);
     }
-
-    !isFetching && onDataLoad(countryInfo?.active_devices?.length);
-  }, [countryInfo, isFetching]);
+  }, [countryInfo]);
 
   return (
     <section className={`p-strip is-shallow ${isEmpty ? "is-empty" : ""}`}>

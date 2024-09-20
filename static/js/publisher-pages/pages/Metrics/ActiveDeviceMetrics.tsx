@@ -32,21 +32,22 @@ function ActiveDeviceMetrics({
   });
 
   useEffect(() => {
-    if (data && data.active_devices) {
+    if (data) {
       const activeDevices = data.latest_active_devices;
       activeDevices &&
         setLatestActiveDevices(
           String(activeDevices).replace(/(.)(?=(\d{3})+$)/g, "$1,")
         );
 
-      renderActiveDevicesMetrics({
-        selector,
-        metrics: data.active_devices,
-        type,
-      });
+      data.active_devices &&
+        renderActiveDevicesMetrics({
+          selector,
+          metrics: data.active_devices,
+          type,
+        });
+      onDataLoad(data.active_devices?.buckets?.length);
     }
-    !isFetching && onDataLoad(data?.active_devices?.buckets?.length);
-  }, [data, isFetching]);
+  }, [data]);
 
   const onChange = (key: string, value: string) => {
     // clear the chart
