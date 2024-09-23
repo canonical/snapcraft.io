@@ -151,7 +151,7 @@
     <p id="t97" class="run"><span class="n"><a href="#t97">97</a></span><span class="t">        <span class="nam">self</span><span class="op">.</span><span class="nam">assert_template_used</span><span class="op">(</span><span class="str">"404.html"</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p id="t98" class="pln"><span class="n"><a href="#t98">98</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p id="t99" class="run"><span class="n"><a href="#t99">99</a></span><span class="t">    <span class="key">def</span> <span class="nam">test_post_no_data</span><span class="op">(</span><span class="nam">self</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t100" class="run"><span class="n"><a href="#t100">100</a></span><span class="t">        <span class="nam">response</span> <span class="op">=</span> <span class="nam">self</span><span class="op">.</span><span class="nam">client</span><span class="op">.</span><span class="nam">post</span><span class="op">(</span><span class="nam">self</span><span class="op">.</span><span class="nam">endpoint_url</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t100" class="run"><span class="n"><a href="#t100">100</a></span><span class="t">        <span class="nam">response</span> <span class="op">=</span> <span class="nam">self</span><span class="op">.</span><span class="nam">client</span><span class="op">.</span><span class="nam">post</span><span class="op">(</span><span class="nam">self</span><span class="op">.</span><span class="nam">endpoint_url</span><span class="op">,</span> <span class="nam">json</span><span class="op">=</span><span class="op">{</span><span class="op">}</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p id="t101" class="pln"><span class="n"><a href="#t101">101</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p id="t102" class="run"><span class="n"><a href="#t102">102</a></span><span class="t">        <span class="key">assert</span> <span class="nam">response</span><span class="op">.</span><span class="nam">status_code</span> <span class="op">==</span> <span class="num">400</span>&nbsp;</span><span class="r"></span></p>
     <p id="t103" class="run"><span class="n"><a href="#t103">103</a></span><span class="t">        <span class="key">assert</span> <span class="nam">response</span><span class="op">.</span><span class="nam">get_json</span><span class="op">(</span><span class="op">)</span> <span class="op">==</span> <span class="op">{</span><span class="op">}</span>&nbsp;</span><span class="r"></span></p>
@@ -199,7 +199,7 @@
     <div class="content">
         <p>
             <a class="nav" href="index.html">&#xab; index</a> &nbsp; &nbsp; <a class="nav" href="https://coverage.readthedocs.io">coverage.py v5.5</a>,
-            created at 2024-09-22 22:06 +0000
+            created at 2024-09-23 22:06 +0000
         </p>
     </div>
 </div>

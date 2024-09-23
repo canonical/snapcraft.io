@@ -104,13 +104,13 @@
     <p id="t50" class="run"><span class="n"><a href="#t50">50</a></span><span class="t">        <span class="nam">response</span> <span class="op">=</span> <span class="nam">self</span><span class="op">.</span><span class="nam">client</span><span class="op">.</span><span class="nam">get</span><span class="op">(</span><span class="nam">self</span><span class="op">.</span><span class="nam">endpoint_url</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p id="t51" class="pln"><span class="n"><a href="#t51">51</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p id="t52" class="run"><span class="n"><a href="#t52">52</a></span><span class="t">        <span class="nam">self</span><span class="op">.</span><span class="nam">assertEqual</span><span class="op">(</span><span class="nam">response</span><span class="op">.</span><span class="nam">status_code</span><span class="op">,</span> <span class="num">302</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t53" class="run"><span class="n"><a href="#t53">53</a></span><span class="t">        <span class="nam">self</span><span class="op">.</span><span class="nam">assertRedirects</span><span class="op">(</span><span class="nam">response</span><span class="op">,</span> <span class="str">"/register-snap"</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t53" class="run"><span class="n"><a href="#t53">53</a></span><span class="t">        <span class="nam">self</span><span class="op">.</span><span class="nam">assertEqual</span><span class="op">(</span><span class="nam">response</span><span class="op">.</span><span class="nam">headers</span><span class="op">[</span><span class="str">"Location"</span><span class="op">]</span><span class="op">,</span> <span class="str">"/register-snap"</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
 </div>
 <div id="footer">
     <div class="content">
         <p>
             <a class="nav" href="index.html">&#xab; index</a> &nbsp; &nbsp; <a class="nav" href="https://coverage.readthedocs.io">coverage.py v5.5</a>,
-            created at 2024-09-22 22:06 +0000
+            created at 2024-09-23 22:06 +0000
         </p>
     </div>
 </div>

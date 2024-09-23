@@ -3,7 +3,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=emulateIE7" />
-    <title>Coverage for webapp/app.py: 89%</title>
+    <title>Coverage for webapp/app.py: 90%</title>
     <link rel="icon" sizes="32x32" href="favicon_32.png">
     <link rel="stylesheet" href="style.css" type="text/css">
     <script type="text/javascript" src="jquery.min.js"></script>
@@ -18,12 +18,12 @@
 <div id="header">
     <div class="content">
         <h1>Coverage for <b>webapp/app.py</b> :
-            <span class="pc_cov">89%</span>
+            <span class="pc_cov">90%</span>
         </h1>
         <img id="keyboard_icon" src="keybd_closed.png" alt="Show keyboard shortcuts" />
         <h2 class="stats">
-            47 statements &nbsp;
-            <button type="button" class="run shortkey_r button_toggle_run" title="Toggle lines run">42 run</button>
+            51 statements &nbsp;
+            <button type="button" class="run shortkey_r button_toggle_run" title="Toggle lines run">46 run</button>
             <button type="button" class="mis show_mis shortkey_m button_toggle_mis" title="Toggle lines missing">5 missing</button>
             <button type="button" class="exc show_exc shortkey_x button_toggle_exc" title="Toggle lines excluded">0 excluded</button>
         </h2>
@@ -103,33 +103,39 @@
     <p id="t49" class="mis show_mis"><span class="n"><a href="#t49">49</a></span><span class="t">        <span class="nam">talisker</span><span class="op">.</span><span class="nam">requests</span><span class="op">.</span><span class="nam">configure</span><span class="op">(</span><span class="nam">webapp</span><span class="op">.</span><span class="nam">helpers</span><span class="op">.</span><span class="nam">api_session</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p id="t50" class="mis show_mis"><span class="n"><a href="#t50">50</a></span><span class="t">        <span class="nam">talisker</span><span class="op">.</span><span class="nam">requests</span><span class="op">.</span><span class="nam">configure</span><span class="op">(</span><span class="nam">webapp</span><span class="op">.</span><span class="nam">helpers</span><span class="op">.</span><span class="nam">api_publisher_session</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p id="t51" class="pln"><span class="n"><a href="#t51">51</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
-    <p id="t52" class="run"><span class="n"><a href="#t52">52</a></span><span class="t">    <span class="nam">set_handlers</span><span class="op">(</span><span class="nam">app</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t52" class="run"><span class="n"><a href="#t52">52</a></span><span class="t">    <span class="key">if</span> <span class="nam">testing</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
     <p id="t53" class="pln"><span class="n"><a href="#t53">53</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
-    <p id="t54" class="run"><span class="n"><a href="#t54">54</a></span><span class="t">    <span class="nam">app</span><span class="op">.</span><span class="nam">register_blueprint</span><span class="op">(</span><span class="nam">snapcraft_blueprint</span><span class="op">(</span><span class="op">)</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t55" class="run"><span class="n"><a href="#t55">55</a></span><span class="t">    <span class="nam">app</span><span class="op">.</span><span class="nam">register_blueprint</span><span class="op">(</span><span class="nam">store_packages</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t56" class="run"><span class="n"><a href="#t56">56</a></span><span class="t">    <span class="nam">app</span><span class="op">.</span><span class="nam">register_blueprint</span><span class="op">(</span><span class="nam">first_snap</span><span class="op">,</span> <span class="nam">url_prefix</span><span class="op">=</span><span class="str">"/first-snap"</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t57" class="run"><span class="n"><a href="#t57">57</a></span><span class="t">    <span class="nam">app</span><span class="op">.</span><span class="nam">register_blueprint</span><span class="op">(</span><span class="nam">login</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t58" class="run"><span class="n"><a href="#t58">58</a></span><span class="t">    <span class="nam">app</span><span class="op">.</span><span class="nam">register_blueprint</span><span class="op">(</span><span class="nam">oauth</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t59" class="run"><span class="n"><a href="#t59">59</a></span><span class="t">    <span class="nam">app</span><span class="op">.</span><span class="nam">register_blueprint</span><span class="op">(</span><span class="nam">store_blueprint</span><span class="op">(</span><span class="op">)</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t60" class="run"><span class="n"><a href="#t60">60</a></span><span class="t">    <span class="nam">app</span><span class="op">.</span><span class="nam">register_blueprint</span><span class="op">(</span><span class="nam">account</span><span class="op">,</span> <span class="nam">url_prefix</span><span class="op">=</span><span class="str">"/account"</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t61" class="run"><span class="n"><a href="#t61">61</a></span><span class="t">    <span class="nam">app</span><span class="op">.</span><span class="nam">register_blueprint</span><span class="op">(</span><span class="nam">publisher_snaps</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t62" class="run"><span class="n"><a href="#t62">62</a></span><span class="t">    <span class="nam">app</span><span class="op">.</span><span class="nam">register_blueprint</span><span class="op">(</span><span class="nam">publisher_github</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t63" class="run"><span class="n"><a href="#t63">63</a></span><span class="t">    <span class="nam">app</span><span class="op">.</span><span class="nam">register_blueprint</span><span class="op">(</span><span class="nam">admin</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t64" class="run"><span class="n"><a href="#t64">64</a></span><span class="t">    <span class="nam">init_docs</span><span class="op">(</span><span class="nam">app</span><span class="op">,</span> <span class="str">"/docs"</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t65" class="run"><span class="n"><a href="#t65">65</a></span><span class="t">    <span class="nam">init_blog</span><span class="op">(</span><span class="nam">app</span><span class="op">,</span> <span class="str">"/blog"</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t66" class="run"><span class="n"><a href="#t66">66</a></span><span class="t">    <span class="nam">init_tutorials</span><span class="op">(</span><span class="nam">app</span><span class="op">,</span> <span class="str">"/tutorials"</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t67" class="pln"><span class="n"><a href="#t67">67</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
-    <p id="t68" class="run"><span class="n"><a href="#t68">68</a></span><span class="t">    <span class="key">return</span> <span class="nam">app</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t69" class="pln"><span class="n"><a href="#t69">69</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
-    <p id="t70" class="pln"><span class="n"><a href="#t70">70</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
-    <p id="t71" class="run"><span class="n"><a href="#t71">71</a></span><span class="t"><span class="key">def</span> <span class="nam">init_extensions</span><span class="op">(</span><span class="nam">app</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t72" class="mis show_mis"><span class="n"><a href="#t72">72</a></span><span class="t">    <span class="nam">csrf</span><span class="op">.</span><span class="nam">init_app</span><span class="op">(</span><span class="nam">app</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t54" class="run"><span class="n"><a href="#t54">54</a></span><span class="t">        <span class="op">@</span><span class="nam">app</span><span class="op">.</span><span class="nam">context_processor</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t55" class="run"><span class="n"><a href="#t55">55</a></span><span class="t">        <span class="key">def</span> <span class="nam">inject_csrf_token</span><span class="op">(</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t56" class="run"><span class="n"><a href="#t56">56</a></span><span class="t">            <span class="key">return</span> <span class="nam">dict</span><span class="op">(</span><span class="nam">csrf_token</span><span class="op">=</span><span class="key">lambda</span><span class="op">:</span> <span class="str">"mocked_csrf_token"</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t57" class="pln"><span class="n"><a href="#t57">57</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p id="t58" class="run"><span class="n"><a href="#t58">58</a></span><span class="t">    <span class="nam">set_handlers</span><span class="op">(</span><span class="nam">app</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t59" class="pln"><span class="n"><a href="#t59">59</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p id="t60" class="run"><span class="n"><a href="#t60">60</a></span><span class="t">    <span class="nam">app</span><span class="op">.</span><span class="nam">register_blueprint</span><span class="op">(</span><span class="nam">snapcraft_blueprint</span><span class="op">(</span><span class="op">)</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t61" class="run"><span class="n"><a href="#t61">61</a></span><span class="t">    <span class="nam">app</span><span class="op">.</span><span class="nam">register_blueprint</span><span class="op">(</span><span class="nam">store_packages</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t62" class="run"><span class="n"><a href="#t62">62</a></span><span class="t">    <span class="nam">app</span><span class="op">.</span><span class="nam">register_blueprint</span><span class="op">(</span><span class="nam">first_snap</span><span class="op">,</span> <span class="nam">url_prefix</span><span class="op">=</span><span class="str">"/first-snap"</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t63" class="run"><span class="n"><a href="#t63">63</a></span><span class="t">    <span class="nam">app</span><span class="op">.</span><span class="nam">register_blueprint</span><span class="op">(</span><span class="nam">login</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t64" class="run"><span class="n"><a href="#t64">64</a></span><span class="t">    <span class="nam">app</span><span class="op">.</span><span class="nam">register_blueprint</span><span class="op">(</span><span class="nam">oauth</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t65" class="run"><span class="n"><a href="#t65">65</a></span><span class="t">    <span class="nam">app</span><span class="op">.</span><span class="nam">register_blueprint</span><span class="op">(</span><span class="nam">store_blueprint</span><span class="op">(</span><span class="op">)</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t66" class="run"><span class="n"><a href="#t66">66</a></span><span class="t">    <span class="nam">app</span><span class="op">.</span><span class="nam">register_blueprint</span><span class="op">(</span><span class="nam">account</span><span class="op">,</span> <span class="nam">url_prefix</span><span class="op">=</span><span class="str">"/account"</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t67" class="run"><span class="n"><a href="#t67">67</a></span><span class="t">    <span class="nam">app</span><span class="op">.</span><span class="nam">register_blueprint</span><span class="op">(</span><span class="nam">publisher_snaps</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t68" class="run"><span class="n"><a href="#t68">68</a></span><span class="t">    <span class="nam">app</span><span class="op">.</span><span class="nam">register_blueprint</span><span class="op">(</span><span class="nam">publisher_github</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t69" class="run"><span class="n"><a href="#t69">69</a></span><span class="t">    <span class="nam">app</span><span class="op">.</span><span class="nam">register_blueprint</span><span class="op">(</span><span class="nam">admin</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t70" class="run"><span class="n"><a href="#t70">70</a></span><span class="t">    <span class="nam">init_docs</span><span class="op">(</span><span class="nam">app</span><span class="op">,</span> <span class="str">"/docs"</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t71" class="run"><span class="n"><a href="#t71">71</a></span><span class="t">    <span class="nam">init_blog</span><span class="op">(</span><span class="nam">app</span><span class="op">,</span> <span class="str">"/blog"</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t72" class="run"><span class="n"><a href="#t72">72</a></span><span class="t">    <span class="nam">init_tutorials</span><span class="op">(</span><span class="nam">app</span><span class="op">,</span> <span class="str">"/tutorials"</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t73" class="pln"><span class="n"><a href="#t73">73</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p id="t74" class="run"><span class="n"><a href="#t74">74</a></span><span class="t">    <span class="key">return</span> <span class="nam">app</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t75" class="pln"><span class="n"><a href="#t75">75</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p id="t76" class="pln"><span class="n"><a href="#t76">76</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p id="t77" class="run"><span class="n"><a href="#t77">77</a></span><span class="t"><span class="key">def</span> <span class="nam">init_extensions</span><span class="op">(</span><span class="nam">app</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t78" class="mis show_mis"><span class="n"><a href="#t78">78</a></span><span class="t">    <span class="nam">csrf</span><span class="op">.</span><span class="nam">init_app</span><span class="op">(</span><span class="nam">app</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
 </div>
 <div id="footer">
     <div class="content">
         <p>
             <a class="nav" href="index.html">&#xab; index</a> &nbsp; &nbsp; <a class="nav" href="https://coverage.readthedocs.io">coverage.py v5.5</a>,
-            created at 2024-09-22 22:06 +0000
+            created at 2024-09-23 22:06 +0000
         </p>
     </div>
 </div>
