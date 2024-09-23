@@ -10,7 +10,7 @@ Listing details for {% if display_title %}{{ display_title }}{% else %}{{ snap_t
   window.DNS_VERIFICATION_TOKEN = "{{ dns_verification_token }}"
   window.SENTRY_DSN = "{{ SENTRY_DSN }}";
   window.CSRF_TOKEN = "{{ csrf_token() }}";
-  window.listingData = JSON.parse({{ listing_data|tojson }});
+  window.listingData = JSON.parse({{ listing_data|default({})|tojson }});
   window.tourSteps = {{ tour_steps|tojson }};
 </script>
 <script src="{{ static_url('js/dist/publisher-listing.js') }}"></script>

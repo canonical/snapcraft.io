@@ -49,13 +49,11 @@ class PostAgreementPage(BaseTestCases.EndpointLoggedIn):
         self.assertEqual(b'{"latest_tos_accepted": true}', called.request.body)
 
         self.assertEqual(302, response.status_code)
-        self.assertEqual("http://localhost/account/", response.location)
+        self.assertEqual("/account/", response.location)
 
     @responses.activate
     def test_post_agreement_off(self):
         response = self.client.post(self.endpoint_url, data={"i_agree": "off"})
 
         self.assertEqual(302, response.status_code)
-        self.assertEqual(
-            "http://localhost/account/agreement", response.location
-        )
+        self.assertEqual("/account/agreement", response.location)

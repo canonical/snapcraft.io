@@ -50,4 +50,4 @@ class GetRequestReservedName(BaseTestCases.BaseAppTesting):
         response = self.client.get(self.endpoint_url)
 
         self.assertEqual(response.status_code, 302)
-        self.assertRedirects(response, "/register-snap")
+        self.assertEqual(response.headers["Location"], "/register-snap")

@@ -7,8 +7,6 @@ from webapp.app import create_app
 
 
 class LoginHandlerTest(TestCase):
-    render_templates = False
-
     def setUp(self):
         self.api_url = "https://dashboard.snapcraft.io/dev/api/acl/"
         self.endpoint_url = "/login"
@@ -38,7 +36,7 @@ class LoginHandlerTest(TestCase):
 
         response = self.client.get(self.endpoint_url + "?next=/test")
         assert response.status_code == 302
-        self.assertEqual("http://localhost/test", response.location)
+        self.assertEqual("/test", response.location)
 
     @responses.activate
     def test_login_handler_redirect(self):
@@ -82,7 +80,7 @@ class LoginHandlerTest(TestCase):
 
         assert len(responses.calls) == 1
         assert response.status_code == 302
-        self.assertEqual("http://localhost/logout", response.location)
+        self.assertEqual("/logout", response.location)
 
     @responses.activate
     def test_login_connection_error(self):

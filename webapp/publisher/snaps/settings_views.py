@@ -71,7 +71,7 @@ def get_settings(snap_name, return_json=False):
         "update_metadata_on_release": snap_details[
             "update_metadata_on_release"
         ],
-        "visibility_locked": snap_details["visibility_locked"],
+        "visibility_locked": snap_details["visibility_locked"] | False,
     }
 
     if return_json:

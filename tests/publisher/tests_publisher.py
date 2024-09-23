@@ -45,8 +45,6 @@ class TestCache(BaseTestCases.EndpointLoggedInErrorHandling):
 
 
 class PublisherPage(TestCase):
-    render_templates = False
-
     def create_app(self):
         app = create_app(testing=True)
         app.secret_key = "secret_key"
@@ -56,7 +54,7 @@ class PublisherPage(TestCase):
 
     def test_account(self):
         local_redirect = self.client.get("/account")
-        redirect_url = "http://localhost/login?next=/account"
+        redirect_url = "/login?next=/account"
         assert local_redirect.status_code == 302
         assert local_redirect.headers.get("Location") == redirect_url
 
@@ -90,16 +88,12 @@ class PublisherPage(TestCase):
     def test_username_not_logged_in(self):
         response = self.client.get("/account/username")
         self.assertEqual(302, response.status_code)
-        self.assertEqual(
-            "http://localhost/login?next=/account/username", response.location
-        )
+        self.assertEqual("/login?next=/account/username", response.location)
 
     def test_account_not_logged_in(self):
         response = self.client.get("/account")
         self.assertEqual(302, response.status_code)
-        self.assertEqual(
-            "http://localhost/login?next=/account", response.location
-        )
+        self.assertEqual("/login?next=/account", response.location)
 
     # /account endpoint
     # ===
@@ -108,7 +102,7 @@ class PublisherPage(TestCase):
         self._log_in(self.client)
         response = self.client.get("/account")
         self.assertEqual(302, response.status_code)
-        self.assertEqual("http://localhost/snaps", response.location)
+        self.assertEqual("/snaps", response.location)
 
     # /account/username endpoint
     # ===
@@ -126,7 +120,7 @@ class PublisherPage(TestCase):
             responses.PATCH,
             "https://dashboard.snapcraft.io/dev/api/account",
             json={},
-            status=204,
+            status=200,
         )
 
         authorization = self._log_in(self.client)
@@ -147,7 +141,7 @@ class PublisherPage(TestCase):
         self.assertEqual(b'{"short_namespace": "toto"}', called.request.body)
 
         self.assertEqual(302, response.status_code)
-        self.assertEqual("http://localhost/account/", response.location)
+        self.assertEqual("/account/", response.location)
 
     @responses.activate
     def test_post_no_username_logged_in(self):
@@ -157,9 +151,7 @@ class PublisherPage(TestCase):
         self.assertEqual(0, len(responses.calls))
 
         self.assertEqual(302, response.status_code)
-        self.assertEqual(
-            "http://localhost/account/username", response.location
-        )
+        self.assertEqual("/account/username", response.location)
 
     @responses.activate
     def test_post_bad_username_logged_in(self):

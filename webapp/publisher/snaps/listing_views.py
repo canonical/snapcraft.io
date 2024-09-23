@@ -343,6 +343,7 @@ def post_preview(snap_name):
         "publisher": snap_details["publisher"]["display-name"],
         "username": snap_details["publisher"]["username"],
         "developer_validation": snap_details["publisher"]["validation"],
+        "categories": [],
     }
 
     state = loads(flask.request.form["state"])
