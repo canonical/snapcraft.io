@@ -102,8 +102,8 @@ function LicenseInputs({ listingData, register, setValue, watch }: Props) {
 
               <small className="u-text-muted">
                 Visit{" "}
-                <a href="https://spdx.org/spdx-specification-21-web-version#h.jxpfx0ykyb60">
-                  SPDX Specification 21
+                <a href="https://spdx.github.io/spdx-spec/v2.3/">
+                  SPDX Specification 2.3
                 </a>{" "}
                 for more information.
               </small>
