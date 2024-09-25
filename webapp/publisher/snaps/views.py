@@ -224,6 +224,11 @@ publisher_snaps.add_url_rule(
 )
 
 publisher_snaps.add_url_rule(
+    "/<snap_name>/metrics/active-latest-devices",
+    view_func=metrics_views.get_latest_active_devices,
+)
+
+publisher_snaps.add_url_rule(
     "/<snap_name>/metrics/active-device-annotation",
     view_func=metrics_views.get_metric_annotaion,
 )
