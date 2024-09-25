@@ -15,6 +15,10 @@ from webapp.helpers import api_publisher_session
 from webapp.decorators import login_required
 from webapp.publisher.snaps import logic
 
+import time
+from dateutil import relativedelta
+from datetime import datetime
+
 publisher_api = SnapPublisher(api_publisher_session)
 store_api = SnapStore(api_publisher_session)
 
@@ -71,27 +75,43 @@ def get_active_devices(snap_name):
     snap_details = store_api.get_item_details(
         snap_name, api_version=2, fields=["snap-id"]
     )
+
     snap_id = snap_details["snap-id"]
-    metric_requested = logic.extract_metrics_period(
-        flask.request.args.get("period", default="30d", type=str)
-    )
 
     installed_base_metric = logic.verify_base_metrics(
         flask.request.args.get("active-devices", default="version", type=str)
     )
 
+    period_start = flask.request.args.get("start", type=str)
+    period_end = flask.request.args.get("end", type=str)
+
+    if period_end is None:
+        end_date = metrics_helper.get_last_metrics_processed_date()
+    else:
+        date_format = '%Y-%m-%d'
+        end_date = datetime.strptime(period_end, date_format)
+    
+
+    if period_start is None:
+        start_date = end_date + relativedelta.relativedelta(months=-1)
+    else:
+        date_format = '%Y-%m-%d'
+        start_date = datetime.strptime(period_start, date_format)
+
     installed_base = logic.get_installed_based_metric(installed_base_metric)
-    metrics_query_json = metrics_helper.build_metric_query_installed_base(
+
+    new_metrics_query = metrics_helper.build_metric_query_installed_base_new(
         snap_id=snap_id,
         installed_base=installed_base,
-        metric_period=metric_requested["int"],
-        metric_bucket=metric_requested["bucket"],
+        end=end_date,
+        start=start_date
     )
-
+    
     metrics_response = publisher_api.get_publisher_metrics(
-        flask.session, json=metrics_query_json
+        flask.session, json=new_metrics_query
     )
 
+    start = time.time()
     active_metrics = metrics_helper.find_metric(
         metrics_response["metrics"], installed_base
     )
@@ -115,6 +135,25 @@ def get_active_devices(snap_name):
         status=active_metrics["status"],
     )
 
+    latest_active = 0
+    if active_devices:
+        latest_active = active_devices.get_number_latest_active_devices()
+    
+    return flask.jsonify(
+        {
+            "active_devices": dict(active_devices),
+            "latest_active_devices": latest_active,
+        }
+    )
+
+
+@login_required
+def get_latest_active_devices(snap_name):
+    snap_details = store_api.get_item_details(
+        snap_name, api_version=2, fields=["snap-id"]
+    )
+
+    snap_id = snap_details["snap-id"]
     # get latest active devices
     latest_day_period = logic.extract_metrics_period("1d")
     latest_installed_base = logic.get_installed_based_metric("version")
@@ -124,12 +163,12 @@ def get_active_devices(snap_name):
         metric_period=latest_day_period["int"],
         metric_bucket=latest_day_period["bucket"],
     )
+
     latest_day_response = publisher_api.get_publisher_metrics(
         flask.session, json=latest_day_query_json
     )
+
     latest_active = 0
-    if active_devices:
-        latest_active = active_devices.get_number_latest_active_devices()
 
     if latest_day_response:
         latest_active_metrics = metrics_helper.find_metric(
@@ -145,14 +184,12 @@ def get_active_devices(snap_name):
             latest_active = (
                 latest_active_devices.get_number_latest_active_devices()
             )
-
     return flask.jsonify(
         {
-            "active_devices": dict(active_devices),
             "latest_active_devices": latest_active,
         }
     )
-
+    
 
 @login_required
 def get_metric_annotaion(snap_name):

@@ -46,6 +46,36 @@ def build_metric_query_installed_base(
             years=-metric_period, days=-1
         )
 
+    print("Start: ", start, " - End: ", end)
+
+    return {
+        "filters": [
+            get_filter(
+                metric_name=installed_base,
+                snap_id=snap_id,
+                start=start,
+                end=end,
+            ),
+        ]
+    }
+
+
+def build_metric_query_installed_base_new(
+    snap_id, installed_base, end, start
+):
+   
+    # end = get_last_metrics_processed_date()
+
+    # if metric_bucket == "d":
+    #     start = end + relativedelta.relativedelta(days=-metric_period)
+    # elif metric_bucket == "m":
+    #     start = end + relativedelta.relativedelta(months=-metric_period)
+    # elif metric_bucket == "y":
+    #     # Go back an extra day to ensure the granularity increases
+    #     start = end + relativedelta.relativedelta(
+    #         years=-metric_period, days=-1
+    #     )
+
     return {
         "filters": [
             get_filter(
