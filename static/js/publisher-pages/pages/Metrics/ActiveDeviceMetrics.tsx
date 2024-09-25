@@ -33,21 +33,29 @@ function ActiveDeviceMetrics({
 
   useEffect(() => {
     if (data) {
-      const activeDevices = data.latest_active_devices;
-      activeDevices &&
-        setLatestActiveDevices(
-          String(activeDevices).replace(/(.)(?=(\d{3})+$)/g, "$1,")
-        );
-
-      data.active_devices &&
+      data.activeDevices &&
         renderActiveDevicesMetrics({
           selector,
-          metrics: data.active_devices,
+          metrics: data.activeDevices,
           type,
         });
-      onDataLoad(data.active_devices?.buckets?.length);
+      onDataLoad(data.activeDevices?.buckets?.length);
     }
   }, [data]);
+
+  const fetchData = async () => {
+    const data = await fetch(`/${snapId}/metrics/active-latest-devices`);
+    const d = await data.json();
+    const activeDevices = d.latest_active_devices;
+    activeDevices &&
+      setLatestActiveDevices(
+        String(activeDevices).replace(/(.)(?=(\d{3})+$)/g, "$1,")
+      );
+  };
+
+  useEffect(() => {
+    void fetchData();
+  }, []);
 
   const onChange = (key: string, value: string) => {
     // clear the chart
