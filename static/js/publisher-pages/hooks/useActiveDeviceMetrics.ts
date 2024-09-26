@@ -94,7 +94,14 @@ function useActiveDeviceMetrics({
       const response = await fetch(
         `/${snapId}/metrics/active-devices?active-devices=${type}&start=${startDate.toISOString().split("T")[0]}&end=${endDate.toISOString().split("T")[0]}`
       );
-      console.log(response);
+      const data = await response.json();
+      setFetchedData({
+        activeDevices: {
+          buckets: data.active_devices.buckets,
+          name: data.active_devices.name,
+          series: data.active_devices.series,
+        },
+      });
     } else {
       // pagiante
       const numberOfIterations =
@@ -135,7 +142,6 @@ function useActiveDeviceMetrics({
 
       for (const result of results.reverse()) {
         const data = await result.json();
-        console.log(data);
 
         const activeDeviceBuckets = data.active_devices.buckets;
 
@@ -173,6 +179,8 @@ function useActiveDeviceMetrics({
         values: value,
       }));
 
+      console.log(resultArray);
+
       setFetchedData({
         activeDevices: {
           buckets,
@@ -182,6 +190,7 @@ function useActiveDeviceMetrics({
       });
     }
   };
+
   useEffect(() => {
     fetchData();
   }, []);
