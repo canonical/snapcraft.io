@@ -82,113 +82,75 @@ function useActiveDeviceMetrics({
   );
 
   const fetchData = async () => {
-    // const period = "1y";
-    let endDate = new Date();
-    const { periodLength, periodNumber } = parsePeriod(period);
-    if (
-      periodLength === "d" ||
-      (periodLength === "m" && MAX_PERIOD_BY_MONTH >= periodNumber)
-    ) {
-      // no need to paginate
-      const startDate = getStartDate(new Date(), period);
-      const response = await fetch(
-        `/${snapId}/metrics/active-devices?active-devices=${type}&start=${startDate.toISOString().split("T")[0]}&end=${endDate.toISOString().split("T")[0]}`
+    const response = await fetch(
+      `/${snapId}/metrics/active-devices?active-devices=${type}&period=2y&page=${1}`
+    );
+
+    const data = await response.json();
+
+    const responses = [];
+    for (let i = 2; i <= data.total_page_num; i++) {
+      responses.push(
+        fetch(
+          `/${snapId}/metrics/active-devices?active-devices=${type}&period=1y&page=${i}`
+        )
       );
-      const data = await response.json();
-      setFetchedData({
-        activeDevices: {
-          buckets: data.active_devices.buckets,
-          name: data.active_devices.name,
-          series: data.active_devices.series,
-        },
-      });
-    } else {
-      // pagiante
-      const numberOfIterations =
-        periodLength === "y"
-          ? Math.floor((periodNumber * 12) / MAX_PERIOD_BY_MONTH)
-          : Math.floor(periodNumber / MAX_PERIOD_BY_MONTH);
-
-      const responses = [];
-      let extraDay = 0;
-      for (let i = 0; i < numberOfIterations; i++) {
-        const startDate = getStartDate(
-          new Date(endDate),
-          `${MAX_PERIOD_BY_MONTH}m`
-        );
-        const endDateForRequest = new Date(
-          endDate.setDate(endDate.getDate() - extraDay)
-        );
-        console.log(
-          startDate.toISOString().split("T")[0],
-          endDateForRequest.toISOString().split("T")[0]
-        );
-
-        responses.push(
-          fetch(
-            `/${snapId}/metrics/active-devices?active-devices=${type}&start=${startDate.toISOString().split("T")[0]}&end=${endDateForRequest.toISOString().split("T")[0]}`
-          )
-        );
-        endDate = new Date(startDate);
-        extraDay = 1;
-      }
-
-      const results = await Promise.all(responses);
-
-      const buckets = [];
-      const series = new Map();
-
-      let seriesThatAreAddedBefore = 0;
-
-      for (const result of results.reverse()) {
-        const data = await result.json();
-
-        const activeDeviceBuckets = data.active_devices.buckets;
-
-        // merge data
-        buckets.push(...data.active_devices.buckets);
-        // fill the arr with 0's if the batch doesnt have that previous series
-        for (const seriesKey of series.keys()) {
-          if (
-            !data.active_devices.series.find(
-              (activeDeviceSeries: { name: string }) =>
-                activeDeviceSeries.name === seriesKey
-            )
-          ) {
-            series.set(seriesKey, [
-              ...series.get(seriesKey),
-              ...new Array(activeDeviceBuckets.length).fill(0),
-            ]);
-          }
-        }
-
-        for (const activeDeviceSeries of data.active_devices.series) {
-          const key = activeDeviceSeries.name;
-          const prevData = series.has(key)
-            ? series.get(key)
-            : new Array(seriesThatAreAddedBefore).fill(0);
-
-          series.set(key, [...prevData, ...activeDeviceSeries.values]);
-        }
-
-        seriesThatAreAddedBefore += activeDeviceBuckets.length;
-      }
-
-      const resultArray = Array.from(series.entries()).map(([key, value]) => ({
-        name: key,
-        values: value,
-      }));
-
-      console.log(resultArray);
-
-      setFetchedData({
-        activeDevices: {
-          buckets,
-          name: "",
-          series: resultArray,
-        },
-      });
     }
+
+    const results = await Promise.all(responses);
+
+    const buckets = [];
+    const series = new Map();
+
+    let seriesThatAreAddedBefore = 0;
+
+    for (const result of results.reverse()) {
+      const data = await result.json();
+
+      const activeDeviceBuckets = data.active_devices.buckets;
+
+      // merge data
+      buckets.push(...data.active_devices.buckets);
+      // fill the arr with 0's if the batch doesnt have that previous series
+      for (const seriesKey of series.keys()) {
+        if (
+          !data.active_devices.series.find(
+            (activeDeviceSeries: { name: string }) =>
+              activeDeviceSeries.name === seriesKey
+          )
+        ) {
+          series.set(seriesKey, [
+            ...series.get(seriesKey),
+            ...new Array(activeDeviceBuckets.length).fill(0),
+          ]);
+        }
+      }
+
+      for (const activeDeviceSeries of data.active_devices.series) {
+        const key = activeDeviceSeries.name;
+        const prevData = series.has(key)
+          ? series.get(key)
+          : new Array(seriesThatAreAddedBefore).fill(0);
+
+        series.set(key, [...prevData, ...activeDeviceSeries.values]);
+      }
+
+      seriesThatAreAddedBefore += activeDeviceBuckets.length;
+    }
+
+    const resultArray = Array.from(series.entries()).map(([key, value]) => ({
+      name: key,
+      values: value,
+    }));
+
+    setFetchedData({
+      activeDevices: {
+        buckets,
+        name: "",
+        series: resultArray,
+      },
+    });
+    // }
   };
 
   useEffect(() => {

@@ -18,6 +18,7 @@ from webapp.publisher.snaps import logic
 import time
 from dateutil import relativedelta
 from datetime import datetime
+import math
 
 publisher_api = SnapPublisher(api_publisher_session)
 store_api = SnapStore(api_publisher_session)
@@ -70,8 +71,87 @@ def publisher_snap_metrics(snap_name):
     return flask.render_template("publisher/metrics.html", **context)
 
 
+def lttb_select_indices(values, target_size):
+    """Selects indices using the LTTB algorithm for downsampling, treating None as 0."""
+    n = len(values)
+    if n <= target_size:
+        return list(range(n))
+
+    # Initialize bucket size
+    bucket_size = (n - 2) / (target_size - 2)
+    indices = []
+
+    current_bucket_start = 0
+    for i in range(1, target_size - 1):
+        # Ensure next_bucket_start doesn't exceed n - 1
+        next_bucket_start = min(math.ceil((i + 1) * bucket_size), n - 1)
+
+        max_area = 0
+        max_area_idx = current_bucket_start
+
+        # Get point1 and point2, treating None as 0
+        point1 = (current_bucket_start, values[current_bucket_start] if values[current_bucket_start] is not None else 0)
+        point2 = (next_bucket_start, values[next_bucket_start] if values[next_bucket_start] is not None else 0)
+
+        # Calculate the area for each valid index between current and next bucket
+        for j in range(current_bucket_start + 1, next_bucket_start):
+            val_j = values[j] if values[j] is not None else 0
+
+            # Area of triangle formed by point1, point2, and the current point
+            area = abs(
+                (point1[0] - point2[0]) * (val_j - point1[1])
+                - (point1[0] - j) * (point2[1] - point1[1])
+            )
+            if area > max_area:
+                max_area = area
+                max_area_idx = j
+
+        indices.append(max_area_idx)
+        current_bucket_start = next_bucket_start
+
+    indices.append(n - 1)  # Always keep the last point
+    return indices
+
+def normalize_series(series):
+    """Ensure all value arrays in the series have the same size by padding shorter arrays with None."""
+    max_length = max(len(item['values']) for item in series)
+
+    for item in series:
+        values = item['values']
+        # Extend the values with None if they are shorter than the max length
+        if len(values) < max_length:
+            values.extend([None] * (max_length - len(values)))
+
+def downsample_series(buckets, series, target_size):
+    """Downsample each series in the data, treating None as 0."""
+    downsampled_buckets = []
+    downsampled_series = []
+
+    # Normalize series first to make sure all series have the same length
+    normalize_series(series)
+
+    # Downsample each series independently
+    for item in series:
+        name = item['name']
+        values = item['values']
+        
+        # Get the LTTB-selected indices
+        selected_indices = lttb_select_indices(values, target_size)
+        
+        # Collect the downsampled buckets and values based on the selected indices
+        downsampled_buckets = [buckets[i] for i in selected_indices]
+        downsampled_values = [values[i] if values[i] is not None else 0 for i in selected_indices]
+
+        downsampled_series.append({
+            'name': name,
+            'values': downsampled_values
+        })
+
+    return downsampled_buckets, downsampled_series
+
 @login_required
 def get_active_devices(snap_name):
+
     snap_details = store_api.get_item_details(
         snap_name, api_version=2, fields=["snap-id"]
     )
@@ -82,57 +162,88 @@ def get_active_devices(snap_name):
         flask.request.args.get("active-devices", default="version", type=str)
     )
 
-    period_start = flask.request.args.get("start", type=str)
-    period_end = flask.request.args.get("end", type=str)
-
-    if period_end is None:
-        end_date = metrics_helper.get_last_metrics_processed_date()
-    else:
-        date_format = '%Y-%m-%d'
-        end_date = datetime.strptime(period_end, date_format)
+    period = flask.request.args.get("period", default="30d", type=str)
+    active_device_period = logic.extract_metrics_period(period)
     
+    page = flask.request.args.get("page", default=1, type=int)
 
-    if period_start is None:
-        start_date = end_date + relativedelta.relativedelta(months=-1)
+    metric_requested_length = active_device_period["int"]
+    metric_requested_bucket = active_device_period["bucket"]
+
+    page_time_length = 3
+    total_page_num = 1
+    if metric_requested_bucket == "d" or (metric_requested_bucket == "m" and page_time_length >= metric_requested_length):
+        end = metrics_helper.get_last_metrics_processed_date()
+
+        if metric_requested_bucket == "d":
+            start = end + relativedelta.relativedelta(days=-metric_requested_length)
+        elif metric_requested_bucket == "m":
+            start = end + relativedelta.relativedelta(months=-metric_requested_length)
+        elif metric_requested_bucket == "y":
+            # Go back an extra day to ensure the granularity increases
+            start = end + relativedelta.relativedelta(
+                years=-metric_requested_length, days=-1
+            )
     else:
-        date_format = '%Y-%m-%d'
-        start_date = datetime.strptime(period_start, date_format)
+        if metric_requested_bucket == 'y':
+            total_page_num = math.floor((metric_requested_length * 12) / page_time_length)
+        else:
+            total_page_num = math.floor(metric_requested_length / page_time_length)
+
+        end = metrics_helper.get_last_metrics_processed_date() + (relativedelta.relativedelta(months=-(page_time_length*(page -1))))
+        start = end + (relativedelta.relativedelta(months=-(page_time_length)))
+        if  page != 1:
+            end = end + relativedelta.relativedelta(days=-1)
+       
+    print(start, end, page, total_page_num)
 
     installed_base = logic.get_installed_based_metric(installed_base_metric)
 
     new_metrics_query = metrics_helper.build_metric_query_installed_base_new(
         snap_id=snap_id,
         installed_base=installed_base,
-        end=end_date,
-        start=start_date
+        end=end,
+        start=start
     )
     
     metrics_response = publisher_api.get_publisher_metrics(
         flask.session, json=new_metrics_query
     )
 
-    start = time.time()
     active_metrics = metrics_helper.find_metric(
         metrics_response["metrics"], installed_base
     )
+    # Extract buckets and series
+    metrics_data = active_metrics
+    buckets = metrics_data['buckets']
+    series = metrics_data['series']
+    metric_name = metrics_data['metric_name']
 
-    series = active_metrics["series"]
-    if active_metrics["metric_name"] == "weekly_installed_base_by_channel":
+    # Target size for downsampling
+    target_size = 100
+
+    # Perform downsampling
+    downsampled_buckets, downsampled_series = downsample_series(buckets, series, target_size)
+    print(len(downsampled_buckets), len(downsampled_series), target_size)
+    
+
+    series = downsampled_series
+    if metric_name == "weekly_installed_base_by_channel":
         for s in series:
             if "/" not in s["name"]:
                 s["name"] = f"latest/{s['name']}"
 
     if installed_base_metric == "os":
-        capitalized_series = active_metrics["series"]
+        capitalized_series = series
         for item in capitalized_series:
             item["name"] = metrics._capitalize_os_name(item["name"])
         series = capitalized_series
 
     active_devices = metrics.ActiveDevices(
-        name=active_metrics["metric_name"],
+        name=metric_name,
         series=series,
-        buckets=active_metrics["buckets"],
-        status=active_metrics["status"],
+        buckets=downsampled_buckets,
+        status=metrics_data["status"],
     )
 
     latest_active = 0
@@ -143,8 +254,16 @@ def get_active_devices(snap_name):
         {
             "active_devices": dict(active_devices),
             "latest_active_devices": latest_active,
+            "total_page_num": total_page_num
         }
     )
+    # return flask.jsonify(
+    #     {
+    #         "active_devices": dict({}),
+    #         "latest_active_devices": 0,
+    #         "total_page_num": total_page_num
+    #     }
+    # )
 
 
 @login_required
