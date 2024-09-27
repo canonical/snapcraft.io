@@ -82,17 +82,29 @@ function useActiveDeviceMetrics({
   );
 
   const fetchData = async () => {
-    const response = await fetch(
-      `/${snapId}/metrics/active-devices?active-devices=${type}&period=2y&page=${1}`
-    );
+    const periodLength = 5;
+    const period = "y";
+    const pagePeriodLength = 3;
+    const pagePeriod = "m";
 
-    const data = await response.json();
+    let totalPage = 1;
+    if (
+      period === "d" ||
+      (period === "m" && periodLength <= pagePeriodLength)
+    ) {
+      totalPage = 1;
+    } else {
+      totalPage =
+        period === "y"
+          ? Math.floor((periodLength * 12) / pagePeriodLength)
+          : Math.floor(periodLength / pagePeriodLength);
+    }
 
     const responses = [];
-    for (let i = 2; i <= data.total_page_num; i++) {
+    for (let i = 1; i <= totalPage; i++) {
       responses.push(
         fetch(
-          `/${snapId}/metrics/active-devices?active-devices=${type}&period=1y&page=${i}`
+          `/${snapId}/metrics/active-devices?active-devices=${type}&period=${periodLength}${period}&page=${i}`
         )
       );
     }
