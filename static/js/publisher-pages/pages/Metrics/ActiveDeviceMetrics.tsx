@@ -23,13 +23,19 @@ function ActiveDeviceMetrics({
 
   const period = searchParams.get("period") ?? "30d";
   const type = searchParams.get("active-devices") ?? "version";
+
   const selector = "#activeDevices";
 
-  const { status, data, isFetching } = useActiveDeviceMetrics({
+  const { data } = useActiveDeviceMetrics({
     snapId,
     period,
     type,
   });
+  // const { status, data, isFetching } = useActiveDeviceMetrics({
+  //   snapId,
+  //   period,
+  //   type,
+  // });
 
   useEffect(() => {
     if (data) {
@@ -80,29 +86,31 @@ function ActiveDeviceMetrics({
         <Col size={12} key="spearator">
           <hr />
         </Col>
-        {isFetching ? (
-          <Spinner />
-        ) : (
-          <>
-            <ActiveDeviceMetricFilter
-              isEmpty={isEmpty}
-              onChange={onChange}
-              period={period}
-              type={type}
-            />
-            {isEmpty && <div>No data found.</div>}
-            {status === "error" && (
-              <CodeSnippet
-                blocks={[
-                  {
-                    code: <div>An error occurred. Please try again.</div>,
-                    wrapLines: true,
-                  },
-                ]}
-              />
-            )}
-          </>
-        )}
+        {
+          // isFetching ? (
+          //   <Spinner />
+          // ) : (
+          //   <>
+          //     <ActiveDeviceMetricFilter
+          //       isEmpty={isEmpty}
+          //       onChange={onChange}
+          //       period={period}
+          //       type={type}
+          //     />
+          //     {isEmpty && <div>No data found.</div>}
+          //     {status === "error" && (
+          //       <CodeSnippet
+          //         blocks={[
+          //           {
+          //             code: <div>An error occurred. Please try again.</div>,
+          //             wrapLines: true,
+          //           },
+          //         ]}
+          //       />
+          //     )}
+          //   </>
+          // )
+        }
 
         <Col size={12} key="info">
           <div>
