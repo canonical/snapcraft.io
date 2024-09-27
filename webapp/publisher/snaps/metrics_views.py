@@ -219,8 +219,10 @@ def get_active_devices(snap_name):
     series = metrics_data['series']
     metric_name = metrics_data['metric_name']
 
+    print("bucket size: ", len(buckets), ", series: ", len(series))
+
     # Target size for downsampling
-    target_size = 100
+    target_size = 20
 
     # Perform downsampling
     downsampled_buckets, downsampled_series = downsample_series(buckets, series, target_size)
