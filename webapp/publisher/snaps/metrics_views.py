@@ -83,13 +83,11 @@ def lttb_select_indices(values, target_size):
 
     current_bucket_start = 0
     for i in range(1, target_size - 1):
-        # Ensure next_bucket_start doesn't exceed n - 1
         next_bucket_start = min(math.ceil((i + 1) * bucket_size), n - 1)
 
         max_area = 0
         max_area_idx = current_bucket_start
 
-        # Get point1 and point2, treating None as 0
         point1 = (current_bucket_start, values[current_bucket_start] if values[current_bucket_start] is not None else 0)
         point2 = (next_bucket_start, values[next_bucket_start] if values[next_bucket_start] is not None else 0)
 
@@ -109,33 +107,38 @@ def lttb_select_indices(values, target_size):
         indices.append(max_area_idx)
         current_bucket_start = next_bucket_start
 
-    indices.append(n - 1)  # Always keep the last point
+    indices.append(n - 1)
     return indices
 
-def normalize_series(series):
-    """Ensure all value arrays in the series have the same size by padding shorter arrays with None."""
-    max_length = max(len(item['values']) for item in series)
-
+def normalize_series(series, bucket_count):
+    """Ensure all value arrays in the series have the same size by padding with 0s."""
     for item in series:
         values = item['values']
-        # Extend the values with None if they are shorter than the max length
-        if len(values) < max_length:
-            values.extend([None] * (max_length - len(values)))
+        # If the series has no values, fill it with 0s
+        if not values:
+            item['values'] = [0] * bucket_count
+        # Extend the values with 0 if they are shorter than the bucket count
+        elif len(values) < bucket_count:
+            item['values'].extend([0] * (bucket_count - len(values)))
 
 def downsample_series(buckets, series, target_size):
     """Downsample each series in the data, treating None as 0."""
     downsampled_buckets = []
     downsampled_series = []
 
+    # Handle case where series is empty
+    if not series:
+        return buckets[:target_size], []
+
+    bucket_count = len(buckets)
     # Normalize series first to make sure all series have the same length
-    normalize_series(series)
+    normalize_series(series, bucket_count)
 
     # Downsample each series independently
     for item in series:
         name = item['name']
         values = item['values']
         
-        # Get the LTTB-selected indices
         selected_indices = lttb_select_indices(values, target_size)
         
         # Collect the downsampled buckets and values based on the selected indices
@@ -170,7 +173,7 @@ def get_active_devices(snap_name):
     metric_requested_length = active_device_period["int"]
     metric_requested_bucket = active_device_period["bucket"]
 
-    page_time_length = 3
+    page_time_length = flask.request.args.get("page-length", default=3, type=int)
     total_page_num = 1
     if metric_requested_bucket == "d" or (metric_requested_bucket == "m" and page_time_length >= metric_requested_length):
         end = metrics_helper.get_last_metrics_processed_date()
@@ -194,8 +197,6 @@ def get_active_devices(snap_name):
         start = end + (relativedelta.relativedelta(months=-(page_time_length)))
         if  page != 1:
             end = end + relativedelta.relativedelta(days=-1)
-       
-    print(start, end, page, total_page_num)
 
     installed_base = logic.get_installed_based_metric(installed_base_metric)
 
@@ -206,9 +207,11 @@ def get_active_devices(snap_name):
         start=start
     )
     
+    start_time = time.time()
     metrics_response = publisher_api.get_publisher_metrics(
         flask.session, json=new_metrics_query
     )
+    print("--- %s seconds ---" % (time.time() - start_time))
 
     active_metrics = metrics_helper.find_metric(
         metrics_response["metrics"], installed_base
@@ -222,12 +225,20 @@ def get_active_devices(snap_name):
     print("bucket size: ", len(buckets), ", series: ", len(series))
 
     # Target size for downsampling
-    target_size = 20
-
-    # Perform downsampling
-    downsampled_buckets, downsampled_series = downsample_series(buckets, series, target_size)
-    print(len(downsampled_buckets), len(downsampled_series), target_size)
-    
+    # not sure about the numbers 
+    if len(series) > 100:
+        start_time = time.time()
+        downsampled_buckets, downsampled_series = downsample_series(buckets, series, 15)
+        print("--- %s seconds ---" % (time.time() - start_time))
+        print(len(downsampled_buckets), len(downsampled_series), 15)
+    elif len(series) > 50:
+        start_time = time.time()
+        downsampled_buckets, downsampled_series = downsample_series(buckets, series, 30)
+        print("--- %s seconds ---" % (time.time() - start_time))
+        print(len(downsampled_buckets), len(downsampled_series), 30)
+    else:
+        downsampled_buckets = buckets
+        downsampled_series = series
 
     series = downsampled_series
     if metric_name == "weekly_installed_base_by_channel":
@@ -259,13 +270,6 @@ def get_active_devices(snap_name):
             "total_page_num": total_page_num
         }
     )
-    # return flask.jsonify(
-    #     {
-    #         "active_devices": dict({}),
-    #         "latest_active_devices": 0,
-    #         "total_page_num": total_page_num
-    #     }
-    # )
 
 
 @login_required
