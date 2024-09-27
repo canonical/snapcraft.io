@@ -46,8 +46,6 @@ def build_metric_query_installed_base(
             years=-metric_period, days=-1
         )
 
-    print("Start: ", start, " - End: ", end)
-
     return {
         "filters": [
             get_filter(
