@@ -176,17 +176,9 @@ def get_active_devices(snap_name):
     page_time_length = flask.request.args.get("page-length", default=3, type=int)
     total_page_num = 1
     if metric_requested_bucket == "d" or (metric_requested_bucket == "m" and page_time_length >= metric_requested_length):
-        end = metrics_helper.get_last_metrics_processed_date()
-
-        if metric_requested_bucket == "d":
-            start = end + relativedelta.relativedelta(days=-metric_requested_length)
-        elif metric_requested_bucket == "m":
-            start = end + relativedelta.relativedelta(months=-metric_requested_length)
-        elif metric_requested_bucket == "y":
-            # Go back an extra day to ensure the granularity increases
-            start = end + relativedelta.relativedelta(
-                years=-metric_requested_length, days=-1
-            )
+        dates = metrics_helper.get_dates_for_metric(metric_requested_length, metric_requested_bucket)
+        start = dates['start']
+        end = dates['end']
     else:
         if metric_requested_bucket == 'y':
             total_page_num = math.floor((metric_requested_length * 12) / page_time_length)
@@ -200,42 +192,28 @@ def get_active_devices(snap_name):
 
     installed_base = logic.get_installed_based_metric(installed_base_metric)
 
-    new_metrics_query = metrics_helper.build_metric_query_installed_base_new(
+    new_metrics_query = metrics_helper.build_active_device_metric_query(
         snap_id=snap_id,
         installed_base=installed_base,
         end=end,
         start=start
     )
     
-    start_time = time.time()
     metrics_response = publisher_api.get_publisher_metrics(
         flask.session, json=new_metrics_query
     )
-    print("--- %s seconds ---" % (time.time() - start_time))
 
     active_metrics = metrics_helper.find_metric(
         metrics_response["metrics"], installed_base
     )
-    # Extract buckets and series
+    
     metrics_data = active_metrics
     buckets = metrics_data['buckets']
     series = metrics_data['series']
     metric_name = metrics_data['metric_name']
 
-    print("bucket size: ", len(buckets), ", series: ", len(series))
-
-    # Target size for downsampling
-    # not sure about the numbers 
-    if len(series) > 100:
-        start_time = time.time()
+    if len(series) > 500:
         downsampled_buckets, downsampled_series = downsample_series(buckets, series, 15)
-        print("--- %s seconds ---" % (time.time() - start_time))
-        print(len(downsampled_buckets), len(downsampled_series), 15)
-    elif len(series) > 50:
-        start_time = time.time()
-        downsampled_buckets, downsampled_series = downsample_series(buckets, series, 30)
-        print("--- %s seconds ---" % (time.time() - start_time))
-        print(len(downsampled_buckets), len(downsampled_series), 30)
     else:
         downsampled_buckets = buckets
         downsampled_series = series
