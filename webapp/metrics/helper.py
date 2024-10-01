@@ -22,6 +22,21 @@ def get_last_metrics_processed_date():
     return last_metrics_processed.date() - one_day
 
 
+def get_dates_for_metric(metric_period=30, metric_bucket="d"):
+    end = get_last_metrics_processed_date()
+
+    if metric_bucket == "d":
+        start = end + relativedelta.relativedelta(days=-metric_period)
+    elif metric_bucket == "m":
+        start = end + relativedelta.relativedelta(months=-metric_period)
+    elif metric_bucket == "y":
+        # Go back an extra day to ensure the granularity increases
+        start = end + relativedelta.relativedelta(
+            years=-metric_period, days=-1
+        )
+    return { 'end': end, 'start': start }
+
+
 def build_metric_query_installed_base(
     snap_id, installed_base, metric_period=30, metric_bucket="d"
 ):
@@ -34,46 +49,23 @@ def build_metric_query_installed_base(
 
     :returns A dictionary with the filters for the metrics API.
     """
-    end = get_last_metrics_processed_date()
 
-    if metric_bucket == "d":
-        start = end + relativedelta.relativedelta(days=-metric_period)
-    elif metric_bucket == "m":
-        start = end + relativedelta.relativedelta(months=-metric_period)
-    elif metric_bucket == "y":
-        # Go back an extra day to ensure the granularity increases
-        start = end + relativedelta.relativedelta(
-            years=-metric_period, days=-1
-        )
-
+    dates = get_dates_for_metric(metric_period, metric_bucket)
     return {
         "filters": [
             get_filter(
                 metric_name=installed_base,
                 snap_id=snap_id,
-                start=start,
-                end=end,
+                start=dates['start'],
+                end=dates['end'],
             ),
         ]
     }
 
 
-def build_metric_query_installed_base_new(
+def build_active_device_metric_query(
     snap_id, installed_base, end, start
 ):
-   
-    # end = get_last_metrics_processed_date()
-
-    # if metric_bucket == "d":
-    #     start = end + relativedelta.relativedelta(days=-metric_period)
-    # elif metric_bucket == "m":
-    #     start = end + relativedelta.relativedelta(months=-metric_period)
-    # elif metric_bucket == "y":
-    #     # Go back an extra day to ensure the granularity increases
-    #     start = end + relativedelta.relativedelta(
-    #         years=-metric_period, days=-1
-    #     )
-
     return {
         "filters": [
             get_filter(
