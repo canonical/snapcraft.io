@@ -3,7 +3,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=emulateIE7" />
-    <title>Coverage for tests/publisher/endpoint_testing.py: 97%</title>
+    <title>Coverage for tests/publisher/endpoint_testing.py: 92%</title>
     <link rel="icon" sizes="32x32" href="favicon_32.png">
     <link rel="stylesheet" href="style.css" type="text/css">
     <script type="text/javascript" src="jquery.min.js"></script>
@@ -18,13 +18,13 @@
 <div id="header">
     <div class="content">
         <h1>Coverage for <b>tests/publisher/endpoint_testing.py</b> :
-            <span class="pc_cov">97%</span>
+            <span class="pc_cov">92%</span>
         </h1>
         <img id="keyboard_icon" src="keybd_closed.png" alt="Show keyboard shortcuts" />
         <h2 class="stats">
             156 statements &nbsp;
-            <button type="button" class="run shortkey_r button_toggle_run" title="Toggle lines run">152 run</button>
-            <button type="button" class="mis show_mis shortkey_m button_toggle_mis" title="Toggle lines missing">4 missing</button>
+            <button type="button" class="run shortkey_r button_toggle_run" title="Toggle lines run">144 run</button>
+            <button type="button" class="mis show_mis shortkey_m button_toggle_mis" title="Toggle lines missing">12 missing</button>
             <button type="button" class="exc show_exc shortkey_x button_toggle_exc" title="Toggle lines excluded">0 excluded</button>
         </h2>
     </div>
@@ -332,8 +332,8 @@
     <p id="t278" class="run"><span class="n"><a href="#t278">278</a></span><span class="t">            <span class="key">if</span> <span class="nam">self</span><span class="op">.</span><span class="nam">method_endpoint</span> <span class="op">==</span> <span class="str">"GET"</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
     <p id="t279" class="run"><span class="n"><a href="#t279">279</a></span><span class="t">                <span class="nam">response</span> <span class="op">=</span> <span class="nam">self</span><span class="op">.</span><span class="nam">client</span><span class="op">.</span><span class="nam">get</span><span class="op">(</span><span class="nam">self</span><span class="op">.</span><span class="nam">endpoint_url</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p id="t280" class="pln"><span class="n"><a href="#t280">280</a></span><span class="t">            <span class="key">else</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t281" class="run"><span class="n"><a href="#t281">281</a></span><span class="t">                <span class="key">if</span> <span class="nam">self</span><span class="op">.</span><span class="nam">data</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t282" class="run"><span class="n"><a href="#t282">282</a></span><span class="t">                    <span class="nam">response</span> <span class="op">=</span> <span class="nam">self</span><span class="op">.</span><span class="nam">client</span><span class="op">.</span><span class="nam">post</span><span class="op">(</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t281" class="mis show_mis"><span class="n"><a href="#t281">281</a></span><span class="t">                <span class="key">if</span> <span class="nam">self</span><span class="op">.</span><span class="nam">data</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t282" class="mis show_mis"><span class="n"><a href="#t282">282</a></span><span class="t">                    <span class="nam">response</span> <span class="op">=</span> <span class="nam">self</span><span class="op">.</span><span class="nam">client</span><span class="op">.</span><span class="nam">post</span><span class="op">(</span>&nbsp;</span><span class="r"></span></p>
     <p id="t283" class="pln"><span class="n"><a href="#t283">283</a></span><span class="t">                        <span class="nam">self</span><span class="op">.</span><span class="nam">endpoint_url</span><span class="op">,</span> <span class="nam">data</span><span class="op">=</span><span class="nam">self</span><span class="op">.</span><span class="nam">data</span>&nbsp;</span><span class="r"></span></p>
     <p id="t284" class="pln"><span class="n"><a href="#t284">284</a></span><span class="t">                    <span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p id="t285" class="pln"><span class="n"><a href="#t285">285</a></span><span class="t">                <span class="key">else</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
@@ -365,8 +365,8 @@
     <p id="t311" class="run"><span class="n"><a href="#t311">311</a></span><span class="t">            <span class="key">if</span> <span class="nam">self</span><span class="op">.</span><span class="nam">method_endpoint</span> <span class="op">==</span> <span class="str">"GET"</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
     <p id="t312" class="run"><span class="n"><a href="#t312">312</a></span><span class="t">                <span class="nam">response</span> <span class="op">=</span> <span class="nam">self</span><span class="op">.</span><span class="nam">client</span><span class="op">.</span><span class="nam">get</span><span class="op">(</span><span class="nam">self</span><span class="op">.</span><span class="nam">endpoint_url</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p id="t313" class="pln"><span class="n"><a href="#t313">313</a></span><span class="t">            <span class="key">else</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t314" class="run"><span class="n"><a href="#t314">314</a></span><span class="t">                <span class="key">if</span> <span class="nam">self</span><span class="op">.</span><span class="nam">data</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t315" class="run"><span class="n"><a href="#t315">315</a></span><span class="t">                    <span class="nam">response</span> <span class="op">=</span> <span class="nam">self</span><span class="op">.</span><span class="nam">client</span><span class="op">.</span><span class="nam">post</span><span class="op">(</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t314" class="mis show_mis"><span class="n"><a href="#t314">314</a></span><span class="t">                <span class="key">if</span> <span class="nam">self</span><span class="op">.</span><span class="nam">data</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t315" class="mis show_mis"><span class="n"><a href="#t315">315</a></span><span class="t">                    <span class="nam">response</span> <span class="op">=</span> <span class="nam">self</span><span class="op">.</span><span class="nam">client</span><span class="op">.</span><span class="nam">post</span><span class="op">(</span>&nbsp;</span><span class="r"></span></p>
     <p id="t316" class="pln"><span class="n"><a href="#t316">316</a></span><span class="t">                        <span class="nam">self</span><span class="op">.</span><span class="nam">endpoint_url</span><span class="op">,</span> <span class="nam">data</span><span class="op">=</span><span class="nam">self</span><span class="op">.</span><span class="nam">data</span>&nbsp;</span><span class="r"></span></p>
     <p id="t317" class="pln"><span class="n"><a href="#t317">317</a></span><span class="t">                    <span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p id="t318" class="pln"><span class="n"><a href="#t318">318</a></span><span class="t">                <span class="key">else</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
@@ -400,8 +400,8 @@
     <p id="t346" class="run"><span class="n"><a href="#t346">346</a></span><span class="t">            <span class="key">if</span> <span class="nam">self</span><span class="op">.</span><span class="nam">method_endpoint</span> <span class="op">==</span> <span class="str">"GET"</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
     <p id="t347" class="run"><span class="n"><a href="#t347">347</a></span><span class="t">                <span class="nam">response</span> <span class="op">=</span> <span class="nam">self</span><span class="op">.</span><span class="nam">client</span><span class="op">.</span><span class="nam">get</span><span class="op">(</span><span class="nam">self</span><span class="op">.</span><span class="nam">endpoint_url</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p id="t348" class="pln"><span class="n"><a href="#t348">348</a></span><span class="t">            <span class="key">else</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t349" class="run"><span class="n"><a href="#t349">349</a></span><span class="t">                <span class="key">if</span> <span class="nam">self</span><span class="op">.</span><span class="nam">data</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t350" class="run"><span class="n"><a href="#t350">350</a></span><span class="t">                    <span class="nam">response</span> <span class="op">=</span> <span class="nam">self</span><span class="op">.</span><span class="nam">client</span><span class="op">.</span><span class="nam">post</span><span class="op">(</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t349" class="mis show_mis"><span class="n"><a href="#t349">349</a></span><span class="t">                <span class="key">if</span> <span class="nam">self</span><span class="op">.</span><span class="nam">data</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t350" class="mis show_mis"><span class="n"><a href="#t350">350</a></span><span class="t">                    <span class="nam">response</span> <span class="op">=</span> <span class="nam">self</span><span class="op">.</span><span class="nam">client</span><span class="op">.</span><span class="nam">post</span><span class="op">(</span>&nbsp;</span><span class="r"></span></p>
     <p id="t351" class="pln"><span class="n"><a href="#t351">351</a></span><span class="t">                        <span class="nam">self</span><span class="op">.</span><span class="nam">endpoint_url</span><span class="op">,</span> <span class="nam">data</span><span class="op">=</span><span class="nam">self</span><span class="op">.</span><span class="nam">data</span>&nbsp;</span><span class="r"></span></p>
     <p id="t352" class="pln"><span class="n"><a href="#t352">352</a></span><span class="t">                    <span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p id="t353" class="pln"><span class="n"><a href="#t353">353</a></span><span class="t">                <span class="key">else</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
@@ -436,8 +436,8 @@
     <p id="t382" class="run"><span class="n"><a href="#t382">382</a></span><span class="t">            <span class="key">if</span> <span class="nam">self</span><span class="op">.</span><span class="nam">method_endpoint</span> <span class="op">==</span> <span class="str">"GET"</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
     <p id="t383" class="run"><span class="n"><a href="#t383">383</a></span><span class="t">                <span class="nam">response</span> <span class="op">=</span> <span class="nam">self</span><span class="op">.</span><span class="nam">client</span><span class="op">.</span><span class="nam">get</span><span class="op">(</span><span class="nam">self</span><span class="op">.</span><span class="nam">endpoint_url</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p id="t384" class="pln"><span class="n"><a href="#t384">384</a></span><span class="t">            <span class="key">else</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t385" class="run"><span class="n"><a href="#t385">385</a></span><span class="t">                <span class="key">if</span> <span class="nam">self</span><span class="op">.</span><span class="nam">data</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t386" class="run"><span class="n"><a href="#t386">386</a></span><span class="t">                    <span class="nam">response</span> <span class="op">=</span> <span class="nam">self</span><span class="op">.</span><span class="nam">client</span><span class="op">.</span><span class="nam">post</span><span class="op">(</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t385" class="mis show_mis"><span class="n"><a href="#t385">385</a></span><span class="t">                <span class="key">if</span> <span class="nam">self</span><span class="op">.</span><span class="nam">data</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t386" class="mis show_mis"><span class="n"><a href="#t386">386</a></span><span class="t">                    <span class="nam">response</span> <span class="op">=</span> <span class="nam">self</span><span class="op">.</span><span class="nam">client</span><span class="op">.</span><span class="nam">post</span><span class="op">(</span>&nbsp;</span><span class="r"></span></p>
     <p id="t387" class="pln"><span class="n"><a href="#t387">387</a></span><span class="t">                        <span class="nam">self</span><span class="op">.</span><span class="nam">endpoint_url</span><span class="op">,</span> <span class="nam">data</span><span class="op">=</span><span class="nam">self</span><span class="op">.</span><span class="nam">data</span>&nbsp;</span><span class="r"></span></p>
     <p id="t388" class="pln"><span class="n"><a href="#t388">388</a></span><span class="t">                    <span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p id="t389" class="pln"><span class="n"><a href="#t389">389</a></span><span class="t">                <span class="key">else</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
@@ -454,7 +454,7 @@
     <div class="content">
         <p>
             <a class="nav" href="index.html">&#xab; index</a> &nbsp; &nbsp; <a class="nav" href="https://coverage.readthedocs.io">coverage.py v5.5</a>,
-            created at 2024-10-01 22:06 +0000
+            created at 2024-10-02 22:06 +0000
         </p>
     </div>
 </div>

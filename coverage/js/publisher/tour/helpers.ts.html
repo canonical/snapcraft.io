@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">19.23% </span>
+                <span class="strong">42.3% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>5/26</span>
+                <span class='fraction'>11/26</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">42.85% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/14</span>
+                <span class='fraction'>6/14</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">50% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>0/10</span>
+                <span class='fraction'>5/10</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">20% </span>
+                <span class="strong">44% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>5/25</span>
+                <span class='fraction'>11/25</span>
             </div>
         
             
@@ -178,17 +178,13 @@
 <a name='L113'></a><a href='#L113'>113</a>
 <a name='L114'></a><a href='#L114'>114</a>
 <a name='L115'></a><a href='#L115'>115</a>
-<a name='L116'></a><a href='#L116'>116</a>
-<a name='L117'></a><a href='#L117'>117</a>
-<a name='L118'></a><a href='#L118'>118</a>
-<a name='L119'></a><a href='#L119'>119</a>
-<a name='L120'></a><a href='#L120'>120</a>
-<a name='L121'></a><a href='#L121'>121</a>
-<a name='L122'></a><a href='#L122'>122</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L116'></a><a href='#L116'>116</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -199,6 +195,9 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -206,18 +205,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -284,11 +272,11 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -307,30 +295,24 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { MASK_OFFSET } from "./constants";
 &nbsp;
+import type { Step } from "../listing/types";
+&nbsp;
 // check if element is part of the DOM and is visible
-export const isVisibleInDocument = <span class="fstat-no" title="function not covered" >(e</span>l: HTMLElement): boolean =&gt;
-<span class="cstat-no" title="statement not covered" >  document.contains(el) &amp;&amp; !(el.offsetWidth === 0 &amp;&amp; el.offsetHeight === 0);</span>
+export const isVisibleInDocument = (el: HTMLElement): boolean =&gt;
+  document.contains(el) &amp;&amp; !(el.offsetWidth === 0 &amp;&amp; el.offsetHeight === 0);
 &nbsp;
 // find DOM elements for each step, ignore steps with no elements
 // set default position to "bottom-left"
-export function <span class="fstat-no" title="function not covered" >prepareSteps(</span>
-  steps: Array&lt;{
-    id: string;
-    position: string;
-    elements: HTMLElement[];
-    content: string;
-    title: string;
-  }&gt;
-): Array&lt;{
+export function prepareSteps(steps: Step[]): Array&lt;{
   id: string;
   position: string;
   elements: HTMLElement[];
   title: string;
   content: string;
 }&gt; {
-<span class="cstat-no" title="statement not covered" >  return steps</span>
-    .map(<span class="fstat-no" title="function not covered" >(s</span>tep) =&gt; {
-<span class="cstat-no" title="statement not covered" >      return {</span>
+  return steps
+    .map((step) =&gt; {
+      return {
         ...step,
         elements: [].slice.apply(
           document.querySelectorAll(`[data-tour="${step.id}"]`)
@@ -338,7 +320,7 @@ export function <span class="fstat-no" title="function not covered" >prepareStep
         position: step.position || "bottom-left",
       };
     })
-    .filter(<span class="fstat-no" title="function not covered" >(s</span>tep) =&gt; <span class="cstat-no" title="statement not covered" >step.elements.length &gt; 0)</span>;
+    .filter((step) =&gt; step.elements.length &gt; 0);
 }
 &nbsp;
 // get rectangle of given DOM element
@@ -404,12 +386,12 @@ const getMaskFromEl = <span class="fstat-no" title="function not covered" >(e</s
 &nbsp;
 // get mask that is an union of all elements' masks
 // calculates the rectangle that contains each individual element rectangles
-export const getMaskFromElements = <span class="fstat-no" title="function not covered" >(e</span>lements: Array&lt;HTMLElement&gt;) =&gt; {
-  const masks = <span class="cstat-no" title="statement not covered" >elements</span>
+export const getMaskFromElements = (elements: Array&lt;HTMLElement&gt;) =&gt; {
+  const masks = elements
     .filter(isVisibleInDocument)
     .map(<span class="fstat-no" title="function not covered" >(e</span>l) =&gt; <span class="cstat-no" title="statement not covered" >getMaskFromEl(el))</span>;
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  return masks.reduce(</span>
+  return masks.reduce(
 <span class="fstat-no" title="function not covered" >    (u</span>nionMask, elMask) =&gt; {
 <span class="cstat-no" title="statement not covered" >      return {</span>
         top: Math.min(unionMask.top, elMask.top),
@@ -433,7 +415,7 @@ export const getMaskFromElements = <span class="fstat-no" title="function not co
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2024-10-01T22:04:57.443Z
+                at 2024-10-02T22:04:56.111Z
             </div>
         <script src="../../prettify.js"></script>
         <script>
