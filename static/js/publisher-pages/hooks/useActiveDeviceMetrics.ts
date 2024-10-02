@@ -1,13 +1,4 @@
-import { useEffect, useRef, useState } from "react";
 import { useQuery } from "react-query";
-
-export interface IActiveDevices {
-  activeDevices: {
-    buckets: string[];
-    name: string;
-    series: any[];
-  };
-}
 
 function useActiveDeviceMetrics({
   snapId,

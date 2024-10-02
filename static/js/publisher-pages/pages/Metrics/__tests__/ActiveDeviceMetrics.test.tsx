@@ -89,7 +89,6 @@ describe("ActiveDeviceMetrics", () => {
   test("renders the information correctly", async () => {
     // @ts-ignore
     useQuery.mockImplementation((params) => {
-      console.log(params);
       if (params) {
         if (params.queryKey[0] === "activeDeviceMetrics") {
           return {
