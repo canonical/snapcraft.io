@@ -1,5 +1,6 @@
 import datetime
 from dateutil import relativedelta
+import math
 
 
 def get_filter(metric_name, snap_id, start, end):
@@ -34,7 +35,7 @@ def get_dates_for_metric(metric_period=30, metric_bucket="d"):
         start = end + relativedelta.relativedelta(
             years=-metric_period, days=-1
         )
-    return { 'end': end, 'start': start }
+    return {"end": end, "start": start}
 
 
 def build_metric_query_installed_base(
@@ -56,16 +57,14 @@ def build_metric_query_installed_base(
             get_filter(
                 metric_name=installed_base,
                 snap_id=snap_id,
-                start=dates['start'],
-                end=dates['end'],
+                start=dates["start"],
+                end=dates["end"],
             ),
         ]
     }
 
 
-def build_active_device_metric_query(
-    snap_id, installed_base, end, start
-):
+def build_active_device_metric_query(snap_id, installed_base, end, start):
     return {
         "filters": [
             get_filter(
@@ -170,7 +169,10 @@ def transform_metrics(metrics, metrics_response, snaps):
 
 
 def lttb_select_indices(values, target_size):
-    """Selects indices using the LTTB algorithm for downsampling, treating None as 0."""
+    """
+    Selects indices using the LTTB algorithm for downsampling,
+    treating None as 0.
+    """
     n = len(values)
     if n <= target_size:
         return list(range(n))
@@ -186,10 +188,23 @@ def lttb_select_indices(values, target_size):
         max_area = 0
         max_area_idx = current_bucket_start
 
-        point1 = (current_bucket_start, values[current_bucket_start] if values[current_bucket_start] is not None else 0)
-        point2 = (next_bucket_start, values[next_bucket_start] if values[next_bucket_start] is not None else 0)
+        point1 = (
+            current_bucket_start,
+            (
+                values[current_bucket_start]
+                if values[current_bucket_start] is not None
+                else 0
+            ),
+        )
+        point2 = (
+            next_bucket_start,
+            (
+                values[next_bucket_start]
+                if values[next_bucket_start] is not None
+                else 0
+            ),
+        )
 
-        # Calculate the area for each valid index between current and next bucket
         for j in range(current_bucket_start + 1, next_bucket_start):
             val_j = values[j] if values[j] is not None else 0
 
@@ -208,16 +223,20 @@ def lttb_select_indices(values, target_size):
     indices.append(n - 1)
     return indices
 
+
 def normalize_series(series, bucket_count):
-    """Ensure all value arrays in the series have the same size by padding with 0s."""
+    """
+    Ensure all value arrays in the series have the same size
+    by padding with 0s.
+    """
     for item in series:
-        values = item['values']
+        values = item["values"]
         # If the series has no values, fill it with 0s
         if not values:
-            item['values'] = [0] * bucket_count
+            item["values"] = [0] * bucket_count
         # Extend the values with 0 if they are shorter than the bucket count
         elif len(values) < bucket_count:
-            item['values'].extend([0] * (bucket_count - len(values)))
+            item["values"].extend([0] * (bucket_count - len(values)))
 
 
 def downsample_series(buckets, series, target_size):
@@ -235,18 +254,17 @@ def downsample_series(buckets, series, target_size):
 
     # Downsample each series independently
     for item in series:
-        name = item['name']
-        values = item['values']
-        
-        selected_indices = lttb_select_indices(values, target_size)
-        
-        # Collect the downsampled buckets and values based on the selected indices
-        downsampled_buckets = [buckets[i] for i in selected_indices]
-        downsampled_values = [values[i] if values[i] is not None else 0 for i in selected_indices]
+        name = item["name"]
+        values = item["values"]
 
-        downsampled_series.append({
-            'name': name,
-            'values': downsampled_values
-        })
+        selected_indices = lttb_select_indices(values, target_size)
+
+        # Collect the buckets and values based on the selected indices
+        downsampled_buckets = [buckets[i] for i in selected_indices]
+        downsampled_values = [
+            values[i] if values[i] is not None else 0 for i in selected_indices
+        ]
+
+        downsampled_series.append({"name": name, "values": downsampled_values})
 
     return downsampled_buckets, downsampled_series
