@@ -1,5 +1,7 @@
 # Standard library
 from json import loads
+from dateutil import relativedelta
+import math
 
 # Packages
 import flask
@@ -15,14 +17,13 @@ from webapp.helpers import api_publisher_session
 from webapp.decorators import login_required
 from webapp.publisher.snaps import logic
 
-import time
-from dateutil import relativedelta
-from datetime import datetime
-import math
 
 publisher_api = SnapPublisher(api_publisher_session)
 store_api = SnapStore(api_publisher_session)
 
+downsample_data_limit = 500
+downsample_target_size = 15
+ 
 
 @login_required
 def get_account_snaps_metrics():
@@ -70,88 +71,6 @@ def publisher_snap_metrics(snap_name):
 
     return flask.render_template("publisher/metrics.html", **context)
 
-
-def lttb_select_indices(values, target_size):
-    """Selects indices using the LTTB algorithm for downsampling, treating None as 0."""
-    n = len(values)
-    if n <= target_size:
-        return list(range(n))
-
-    # Initialize bucket size
-    bucket_size = (n - 2) / (target_size - 2)
-    indices = []
-
-    current_bucket_start = 0
-    for i in range(1, target_size - 1):
-        next_bucket_start = min(math.ceil((i + 1) * bucket_size), n - 1)
-
-        max_area = 0
-        max_area_idx = current_bucket_start
-
-        point1 = (current_bucket_start, values[current_bucket_start] if values[current_bucket_start] is not None else 0)
-        point2 = (next_bucket_start, values[next_bucket_start] if values[next_bucket_start] is not None else 0)
-
-        # Calculate the area for each valid index between current and next bucket
-        for j in range(current_bucket_start + 1, next_bucket_start):
-            val_j = values[j] if values[j] is not None else 0
-
-            # Area of triangle formed by point1, point2, and the current point
-            area = abs(
-                (point1[0] - point2[0]) * (val_j - point1[1])
-                - (point1[0] - j) * (point2[1] - point1[1])
-            )
-            if area > max_area:
-                max_area = area
-                max_area_idx = j
-
-        indices.append(max_area_idx)
-        current_bucket_start = next_bucket_start
-
-    indices.append(n - 1)
-    return indices
-
-def normalize_series(series, bucket_count):
-    """Ensure all value arrays in the series have the same size by padding with 0s."""
-    for item in series:
-        values = item['values']
-        # If the series has no values, fill it with 0s
-        if not values:
-            item['values'] = [0] * bucket_count
-        # Extend the values with 0 if they are shorter than the bucket count
-        elif len(values) < bucket_count:
-            item['values'].extend([0] * (bucket_count - len(values)))
-
-def downsample_series(buckets, series, target_size):
-    """Downsample each series in the data, treating None as 0."""
-    downsampled_buckets = []
-    downsampled_series = []
-
-    # Handle case where series is empty
-    if not series:
-        return buckets[:target_size], []
-
-    bucket_count = len(buckets)
-    # Normalize series first to make sure all series have the same length
-    normalize_series(series, bucket_count)
-
-    # Downsample each series independently
-    for item in series:
-        name = item['name']
-        values = item['values']
-        
-        selected_indices = lttb_select_indices(values, target_size)
-        
-        # Collect the downsampled buckets and values based on the selected indices
-        downsampled_buckets = [buckets[i] for i in selected_indices]
-        downsampled_values = [values[i] if values[i] is not None else 0 for i in selected_indices]
-
-        downsampled_series.append({
-            'name': name,
-            'values': downsampled_values
-        })
-
-    return downsampled_buckets, downsampled_series
-
 @login_required
 def get_active_devices(snap_name):
 
@@ -180,13 +99,13 @@ def get_active_devices(snap_name):
         start = dates['start']
         end = dates['end']
     else:
-        if metric_requested_bucket == 'y':
-            total_page_num = math.floor((metric_requested_length * 12) / page_time_length)
-        else:
-            total_page_num = math.floor(metric_requested_length / page_time_length)
+        page_period_length = (metric_requested_length * 12) if metric_requested_bucket == 'y' else metric_requested_length
+        total_page_num = math.floor(page_period_length / page_time_length)
 
         end = metrics_helper.get_last_metrics_processed_date() + (relativedelta.relativedelta(months=-(page_time_length*(page -1))))
         start = end + (relativedelta.relativedelta(months=-(page_time_length)))
+
+        # decrease a day to make sure there is no overlapping dates across the pages.
         if  page != 1:
             end = end + relativedelta.relativedelta(days=-1)
 
@@ -206,14 +125,15 @@ def get_active_devices(snap_name):
     active_metrics = metrics_helper.find_metric(
         metrics_response["metrics"], installed_base
     )
-    
+
+   
     metrics_data = active_metrics
     buckets = metrics_data['buckets']
     series = metrics_data['series']
     metric_name = metrics_data['metric_name']
-
-    if len(series) > 500:
-        downsampled_buckets, downsampled_series = downsample_series(buckets, series, 15)
+    # Add constants to a variable
+    if len(series) > downsample_data_limit:
+        downsampled_buckets, downsampled_series = metrics_helper.downsample_series(buckets, series, downsample_target_size)
     else:
         downsampled_buckets = buckets
         downsampled_series = series
@@ -225,10 +145,8 @@ def get_active_devices(snap_name):
                 s["name"] = f"latest/{s['name']}"
 
     if installed_base_metric == "os":
-        capitalized_series = series
-        for item in capitalized_series:
+        for item in series:
             item["name"] = metrics._capitalize_os_name(item["name"])
-        series = capitalized_series
 
     active_devices = metrics.ActiveDevices(
         name=metric_name,
