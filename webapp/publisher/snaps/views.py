@@ -61,21 +61,14 @@ publisher_snaps.add_url_rule(
     methods=["GET"],
 )
 publisher_snaps.add_url_rule(
-    "/<snap_name>/listing.json",
-    view_func=listing_views.get_listing_snap,
+    "/api/<snap_name>/listing",
+    view_func=listing_views.get_listing_data,
     methods=["GET"],
-    defaults={"is_json": True},
 )
 publisher_snaps.add_url_rule(
-    "/<snap_name>/listing",
-    view_func=listing_views.post_listing_snap,
+    "/api/<snap_name>/listing",
+    view_func=listing_views.post_listing_data,
     methods=["POST"],
-)
-publisher_snaps.add_url_rule(
-    "/<snap_name>/listing.json",
-    view_func=listing_views.post_listing_snap,
-    methods=["POST"],
-    defaults={"is_json": True},
 )
 publisher_snaps.add_url_rule(
     "/<snap_name>/preview",

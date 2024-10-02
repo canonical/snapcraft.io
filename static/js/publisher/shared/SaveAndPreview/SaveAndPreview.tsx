@@ -4,7 +4,7 @@ import { Row, Col, Button } from "@canonical/react-components";
 import debounce from "../../../libs/debounce";
 
 type Props = {
-  snapName: string;
+  snapName: string | undefined;
   isDirty: boolean;
   reset: Function;
   isSaving: boolean;

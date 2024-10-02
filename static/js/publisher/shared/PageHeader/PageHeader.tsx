@@ -1,7 +1,7 @@
 import { Strip, Tabs } from "@canonical/react-components";
 
 type Props = {
-  snapName: string;
+  snapName: string | undefined;
   snapTitle?: string;
   activeTab: string;
   publisherName?: string;

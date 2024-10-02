@@ -14,18 +14,14 @@ import {
 
 import { animateScrollTo } from "../../public/scroll-to";
 
+import type { Step } from "../listing/types";
+
 export default function TourOverlay({
   steps,
   hideTour,
   currentStepIndex = 0,
 }: {
-  steps: Array<{
-    id: string;
-    position: string;
-    elements: HTMLElement[];
-    content: string;
-    title: string;
-  }>;
+  steps: Step[];
   hideTour: () => void;
   currentStepIndex?: number;
 }) {
@@ -43,7 +39,7 @@ export default function TourOverlay({
         window.pageYOffset || document.documentElement.scrollTop;
 
       // when tooltip is on top of the mask, scroll into view aligning to bottom
-      if (step.position.indexOf("top") === 0) {
+      if (step.position && step.position.indexOf("top") === 0) {
         // scroll element into view aligning it to bottom
         // only if it's below the bottom border of the screen
         // or it's in the top half of the screen
@@ -60,7 +56,7 @@ export default function TourOverlay({
         }
       }
       // when tooltip is on the bottom of the mask, scroll aligning to top
-      if (step.position.indexOf("bottom") === 0) {
+      if (step.position && step.position.indexOf("bottom") === 0) {
         // scroll element into view, but only if it's higher on page than top offset
         // or it is in the bottom half of screen
         if (
@@ -76,7 +72,7 @@ export default function TourOverlay({
 
   const overlayEl = useRef(null);
 
-  const mask = getMaskFromElements(step.elements);
+  const mask = getMaskFromElements(step.elements || []);
 
   // rerender on resize or scroll
   // it is an unusual use of useState to force rerender, but on resize or scroll

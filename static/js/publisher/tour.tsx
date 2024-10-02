@@ -4,6 +4,8 @@ import Tour from "./tour/tour";
 
 import { toggleShadowWhenSticky } from "./market/stickyListingBar";
 
+import type { Step } from "./listing/types";
+
 // returns true if % of truthy values in the array is above the threshold
 function isCompleted(fields: unknown[], threshold = 0.5): boolean {
   const completed = fields.filter((isCompleted) => isCompleted);
@@ -19,13 +21,7 @@ export function initTour({
   startTour,
 }: {
   container: HTMLElement;
-  steps: Array<{
-    id: string;
-    position: string;
-    elements: HTMLElement[];
-    title: string;
-    content: string;
-  }>;
+  steps: Step[];
   onTourStarted: () => void;
   onTourClosed: () => void;
   startTour: boolean;
@@ -56,13 +52,7 @@ export function initListingTour({
 }: {
   snapName: string;
   container: HTMLElement;
-  steps: Array<{
-    id: string;
-    position: string;
-    elements: HTMLElement[];
-    content: string;
-    title: string;
-  }>;
+  steps: Step[];
   formFields: {
     title: string;
     snap_name: string;
