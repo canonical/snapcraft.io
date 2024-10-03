@@ -1,11 +1,11 @@
 import formatImageChanges from "./formatImageChanges";
 
-import type { Data } from "../types";
+import type { ListingData } from "../types";
 
-export default function getChanges(
+export default function getListingChanges(
   dirtyFields: any,
   fieldValues: any,
-  data: Data,
+  data: ListingData,
 ): { [key: string]: any } {
   const changes: { [key: string]: any } = {};
 

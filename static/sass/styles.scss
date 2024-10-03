@@ -568,3 +568,7 @@ dl {
     flex-grow: 1;
   }
 }
+
+.publisher-app > .p-panel > .p-panel__content {
+  overflow: visible;
+}

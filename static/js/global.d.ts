@@ -44,4 +44,7 @@ declare interface Window {
     whitelist_countries: string[];
     whitelist_country_keys: string;
   };
+  SNAP_LISTING_DATA: {
+    DNS_VERIFICATION_TOKEN: string;
+  };
 }
