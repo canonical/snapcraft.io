@@ -22,7 +22,7 @@ publisher_api = SnapPublisher(api_publisher_session)
 store_api = SnapStore(api_publisher_session)
 
 downsample_data_limit = 500
-downsample_target_size = 15
+downsample_target_size = 10
 
 
 @login_required
