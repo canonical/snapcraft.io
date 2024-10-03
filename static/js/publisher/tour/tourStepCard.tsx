@@ -1,9 +1,9 @@
 import { ReactNode } from "react";
 
-import type { Step } from "../listing/types";
+import type { TourStep } from "../../publisher-pages/types";
 
 type Props = {
-  steps: Step[];
+  steps: TourStep[];
   currentStepIndex: number;
   mask: {
     top: number;

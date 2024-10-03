@@ -28,6 +28,10 @@
     blacklist_countries: {% if blacklist_country_codes %}{{ blacklist_country_codes|tojson }}{% else %}[]{% endif %},
     visibility_locked: {% if visibility_locked %}{{ visibility_locked|tojson }}{% else %}false{% endif %},
   }
+
+  window.SNAP_LISTING_DATA = {
+    DNS_VERIFICATION_TOKEN: "{{ dns_verification_token }}",
+  };
 </script>
 <script src="{{ static_url('js/dist/publisher-pages.js') }}"></script>
 {% endblock %}
