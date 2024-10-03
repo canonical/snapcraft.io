@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import { Row, Col, Button } from "@canonical/react-components";
 
 import debounce from "../../../libs/debounce";
@@ -20,6 +20,8 @@ function SaveAndPreview({
   showPreview,
 }: Props) {
   const stickyBar = useRef<HTMLDivElement>(null);
+  const mainPanel = document.querySelector(".l-main") as HTMLElement;
+
   const handleScroll = () => {
     stickyBar?.current?.classList.toggle(
       "sticky-shadow",
@@ -27,13 +29,17 @@ function SaveAndPreview({
     );
   };
 
-  useEffect(() => {
-    document.addEventListener("scroll", debounce(handleScroll, 10, false));
-  }, []);
+  if (mainPanel) {
+    mainPanel.addEventListener("scroll", debounce(handleScroll, 10, false));
+  }
 
   return (
     <>
-      <div className="snapcraft-p-sticky js-sticky-bar" ref={stickyBar}>
+      <div
+        className="snapcraft-p-sticky js-sticky-bar"
+        ref={stickyBar}
+        style={{ margin: "0 -1.5rem", padding: "0 1.5rem" }}
+      >
         <Row>
           <Col size={7}>
             <p className="u-no-margin--bottom">

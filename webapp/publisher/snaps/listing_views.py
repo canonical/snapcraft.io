@@ -166,7 +166,7 @@ def get_listing_snap(snap_name):
             snap_details["snap_name"], snap_details["links"]["website"][0]
         )
     return flask.render_template(
-        "publisher/listing.html",
+        "store/publisher.html",
         snap_name=snap_name,
         dns_verification_token=token,
     )

@@ -9,11 +9,13 @@ type Props = {
 function SectionNav({ activeTab, snapName }: Props) {
   return (
     <Tabs
+      listClassName="u-no-margin--bottom"
       links={[
         {
           label: "Listing",
           active: activeTab === "listing" || !activeTab,
-          href: `/${snapName}/listing`,
+          to: `/${snapName}/listing`,
+          component: Link,
         },
         {
           label: "Builds",
@@ -28,7 +30,8 @@ function SectionNav({ activeTab, snapName }: Props) {
         {
           label: "Metrics",
           active: activeTab === "metrics",
-          href: `/${snapName}/metrics`,
+          to: `/${snapName}/metrics`,
+          component: Link,
         },
         {
           label: "Publicise",

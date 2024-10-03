@@ -1,8 +1,9 @@
-import { useParams, NavLink, Link } from "react-router-dom";
+import { useParams, NavLink } from "react-router-dom";
 import {
   Row,
   Col,
   SideNavigation,
+  Strip,
   Notification,
 } from "@canonical/react-components";
 
@@ -39,49 +40,50 @@ function Publicise({ view }: Props): JSX.Element {
 
       <SectionNav snapName={snapId} activeTab="publicise" />
 
-      {disableView() && (
-        <Notification severity="information">
-          When your snap is public and has a release, you'll be able to share it
-          using Store buttons, badges and embeddable cards. Make your snap
-          public in its <a href={`/${snapId}/settings`}>settings page</a>.
-        </Notification>
-      )}
-
-      <Row className={window.SNAP_PUBLICISE_DATA.private ? "u-disabled" : ""}>
-        <Col size={3}>
-          <SideNavigation
-            items={[
-              {
-                items: [
-                  {
-                    "aria-current": !view,
-                    label: "Snap Store buttons",
-                    to: `/${snapId}/publicise`,
-                    component: NavLink,
-                  },
-                  {
-                    "aria-current": view === "badges",
-                    label: "GitHub badges",
-                    to: `/${snapId}/publicise/badges`,
-                    component: NavLink,
-                  },
-                  {
-                    "aria-current": view === "cards",
-                    label: "Embeddable cards",
-                    to: `/${snapId}/publicise/cards`,
-                    component: NavLink,
-                  },
-                ],
-              },
-            ]}
-          />
-        </Col>
-        <Col size={9}>
-          {!view && <PubliciseButtons />}
-          {view === "badges" && <PubliciseBadges />}
-          {view === "cards" && <PubliciseCards />}
-        </Col>
-      </Row>
+      <Strip shallow>
+        {disableView() && (
+          <Notification severity="information">
+            When your snap is public and has a release, you'll be able to share
+            it using Store buttons, badges and embeddable cards. Make your snap
+            public in its <a href={`/${snapId}/settings`}>settings page</a>.
+          </Notification>
+        )}
+        <Row className={window.SNAP_PUBLICISE_DATA.private ? "u-disabled" : ""}>
+          <Col size={3}>
+            <SideNavigation
+              items={[
+                {
+                  items: [
+                    {
+                      "aria-current": !view,
+                      label: "Snap Store buttons",
+                      to: `/${snapId}/publicise`,
+                      component: NavLink,
+                    },
+                    {
+                      "aria-current": view === "badges",
+                      label: "GitHub badges",
+                      to: `/${snapId}/publicise/badges`,
+                      component: NavLink,
+                    },
+                    {
+                      "aria-current": view === "cards",
+                      label: "Embeddable cards",
+                      to: `/${snapId}/publicise/cards`,
+                      component: NavLink,
+                    },
+                  ],
+                },
+              ]}
+            />
+          </Col>
+          <Col size={9}>
+            {!view && <PubliciseButtons />}
+            {view === "badges" && <PubliciseBadges />}
+            {view === "cards" && <PubliciseCards />}
+          </Col>
+        </Row>
+      </Strip>
     </>
   );
 }

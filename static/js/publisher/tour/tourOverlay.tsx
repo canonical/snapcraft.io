@@ -14,14 +14,14 @@ import {
 
 import { animateScrollTo } from "../../public/scroll-to";
 
-import type { Step } from "../listing/types";
+import type { TourStep } from "../../publisher-pages/types";
 
 export default function TourOverlay({
   steps,
   hideTour,
   currentStepIndex = 0,
 }: {
-  steps: Step[];
+  steps: TourStep[];
   hideTour: () => void;
   currentStepIndex?: number;
 }) {
