@@ -7,6 +7,7 @@ import { select } from "d3-selection";
 import ActiveDeviceAnnotation from "./ActiveDeviceAnnotation";
 import { ActiveDeviceMetricFilter } from "./ActiveDeviceMetricFilter";
 import useActiveDeviceMetrics from "../../hooks/useActiveDeviceMetrics";
+import useLatestActiveDevicesMetric from "../../hooks/useLatestActiveDevicesMetric";
 
 function ActiveDeviceMetrics({
   isEmpty,
@@ -17,12 +18,11 @@ function ActiveDeviceMetrics({
 }): JSX.Element {
   const { snapId } = useParams();
   const [searchParams, setSearchParams] = useSearchParams();
-  const [latestActiveDevices, setLatestActiveDevices] = useState<string | null>(
-    null
-  );
+  const { data: latestActiveDevices } = useLatestActiveDevicesMetric(snapId);
 
   const period = searchParams.get("period") ?? "30d";
   const type = searchParams.get("active-devices") ?? "version";
+
   const selector = "#activeDevices";
 
   const { status, data, isFetching } = useActiveDeviceMetrics({
@@ -33,19 +33,13 @@ function ActiveDeviceMetrics({
 
   useEffect(() => {
     if (data) {
-      const activeDevices = data.latest_active_devices;
-      activeDevices &&
-        setLatestActiveDevices(
-          String(activeDevices).replace(/(.)(?=(\d{3})+$)/g, "$1,")
-        );
-
-      data.active_devices &&
+      data.activeDevices &&
         renderActiveDevicesMetrics({
           selector,
-          metrics: data.active_devices,
+          metrics: data.activeDevices,
           type,
         });
-      onDataLoad(data.active_devices?.buckets?.length);
+      onDataLoad(data.activeDevices?.buckets?.length);
     }
   }, [data]);
 
