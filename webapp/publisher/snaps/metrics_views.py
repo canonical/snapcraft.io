@@ -1,5 +1,7 @@
 # Standard library
 from json import loads
+from dateutil import relativedelta
+import math
 
 # Packages
 import flask
@@ -15,8 +17,12 @@ from webapp.helpers import api_publisher_session
 from webapp.decorators import login_required
 from webapp.publisher.snaps import logic
 
+
 publisher_api = SnapPublisher(api_publisher_session)
 store_api = SnapStore(api_publisher_session)
+
+downsample_data_limit = 500
+downsample_target_size = 10
 
 
 @login_required
@@ -68,53 +74,124 @@ def publisher_snap_metrics(snap_name):
 
 @login_required
 def get_active_devices(snap_name):
+
     snap_details = store_api.get_item_details(
         snap_name, api_version=2, fields=["snap-id"]
     )
+
     snap_id = snap_details["snap-id"]
-    metric_requested = logic.extract_metrics_period(
-        flask.request.args.get("period", default="30d", type=str)
-    )
 
     installed_base_metric = logic.verify_base_metrics(
         flask.request.args.get("active-devices", default="version", type=str)
     )
 
+    period = flask.request.args.get("period", default="30d", type=str)
+    active_device_period = logic.extract_metrics_period(period)
+
+    page = flask.request.args.get("page", default=1, type=int)
+
+    metric_requested_length = active_device_period["int"]
+    metric_requested_bucket = active_device_period["bucket"]
+
+    page_time_length = flask.request.args.get(
+        "page-length", default=3, type=int
+    )
+    total_page_num = 1
+    if metric_requested_bucket == "d" or (
+        metric_requested_bucket == "m"
+        and page_time_length >= metric_requested_length
+    ):
+        dates = metrics_helper.get_dates_for_metric(
+            metric_requested_length, metric_requested_bucket
+        )
+        start = dates["start"]
+        end = dates["end"]
+    else:
+        page_period_length = (
+            (metric_requested_length * 12)
+            if metric_requested_bucket == "y"
+            else metric_requested_length
+        )
+        total_page_num = math.floor(page_period_length / page_time_length)
+
+        end = metrics_helper.get_last_metrics_processed_date() + (
+            relativedelta.relativedelta(
+                months=-(page_time_length * (page - 1))
+            )
+        )
+        start = end + (relativedelta.relativedelta(months=-(page_time_length)))
+
+        # Decrease the date by a day to make sure
+        # there is no overlapping dates across the pages.
+        if page != 1:
+            end = end + relativedelta.relativedelta(days=-1)
+
     installed_base = logic.get_installed_based_metric(installed_base_metric)
-    metrics_query_json = metrics_helper.build_metric_query_installed_base(
-        snap_id=snap_id,
-        installed_base=installed_base,
-        metric_period=metric_requested["int"],
-        metric_bucket=metric_requested["bucket"],
+
+    new_metrics_query = metrics_helper.build_active_device_metric_query(
+        snap_id=snap_id, installed_base=installed_base, end=end, start=start
     )
 
     metrics_response = publisher_api.get_publisher_metrics(
-        flask.session, json=metrics_query_json
+        flask.session, json=new_metrics_query
     )
 
     active_metrics = metrics_helper.find_metric(
         metrics_response["metrics"], installed_base
     )
 
-    series = active_metrics["series"]
-    if active_metrics["metric_name"] == "weekly_installed_base_by_channel":
+    metrics_data = active_metrics
+    buckets = metrics_data["buckets"]
+    series = metrics_data["series"]
+    metric_name = metrics_data["metric_name"]
+    # Add constants to a variable
+    if len(series) > downsample_data_limit:
+        downsampled_buckets, downsampled_series = (
+            metrics_helper.downsample_series(
+                buckets, series, downsample_target_size
+            )
+        )
+    else:
+        downsampled_buckets = buckets
+        downsampled_series = series
+
+    series = downsampled_series
+    if metric_name == "weekly_installed_base_by_channel":
         for s in series:
             if "/" not in s["name"]:
                 s["name"] = f"latest/{s['name']}"
 
     if installed_base_metric == "os":
-        capitalized_series = active_metrics["series"]
-        for item in capitalized_series:
+        for item in series:
             item["name"] = metrics._capitalize_os_name(item["name"])
-        series = capitalized_series
 
     active_devices = metrics.ActiveDevices(
-        name=active_metrics["metric_name"],
+        name=metric_name,
         series=series,
-        buckets=active_metrics["buckets"],
-        status=active_metrics["status"],
+        buckets=downsampled_buckets,
+        status=metrics_data["status"],
     )
 
+    latest_active = 0
+    if active_devices:
+        latest_active = active_devices.get_number_latest_active_devices()
+
+    return flask.jsonify(
+        {
+            "active_devices": dict(active_devices),
+            "latest_active_devices": latest_active,
+            "total_page_num": total_page_num,
+        }
+    )
+
+
+@login_required
+def get_latest_active_devices(snap_name):
+    snap_details = store_api.get_item_details(
+        snap_name, api_version=2, fields=["snap-id"]
+    )
+
+    snap_id = snap_details["snap-id"]
     # get latest active devices
     latest_day_period = logic.extract_metrics_period("1d")
     latest_installed_base = logic.get_installed_based_metric("version")
@@ -124,12 +201,12 @@ def get_active_devices(snap_name):
         metric_period=latest_day_period["int"],
         metric_bucket=latest_day_period["bucket"],
     )
+
     latest_day_response = publisher_api.get_publisher_metrics(
         flask.session, json=latest_day_query_json
     )
+
     latest_active = 0
-    if active_devices:
-        latest_active = active_devices.get_number_latest_active_devices()
 
     if latest_day_response:
         latest_active_metrics = metrics_helper.find_metric(
@@ -145,10 +222,8 @@ def get_active_devices(snap_name):
             latest_active = (
                 latest_active_devices.get_number_latest_active_devices()
             )
-
     return flask.jsonify(
         {
-            "active_devices": dict(active_devices),
             "latest_active_devices": latest_active,
         }
     )
