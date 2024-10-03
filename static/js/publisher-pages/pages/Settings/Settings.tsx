@@ -18,7 +18,7 @@ import UpdateMetadataModal from "../../components/UpdateMetadataModal";
 import SaveStateNotifications from "../../components/SaveStateNotifications";
 import { UnregisterSnapModal } from "./UnregisterSnapModal";
 
-import { getSettingsData, getFormData } from "../../utils";
+import { getSettingsData, getSettingsFormData } from "../../utils";
 
 function Settings() {
   const { snapId } = useParams();
@@ -92,7 +92,7 @@ function Settings() {
 
     const response = await fetch(`/${data.snap_name}/settings.json`, {
       method: "POST",
-      body: getFormData(settingsData, dirtyFields, data),
+      body: getSettingsFormData(settingsData, dirtyFields, data),
     });
 
     if (response.status !== 200) {

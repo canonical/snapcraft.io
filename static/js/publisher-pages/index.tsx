@@ -8,6 +8,7 @@ import Settings from "./pages/Settings";
 import ValidationSets from "./pages/ValidationSets";
 import ValidationSet from "./pages/ValidationSet";
 import Metrics from "./pages/Metrics";
+import Listing from "./pages/Listing";
 
 const router = createBrowserRouter([
   {
@@ -41,6 +42,10 @@ const router = createBrowserRouter([
       {
         path: "/:snapId/metrics",
         element: <Metrics />,
+      },
+      {
+        path: "/:snapId/listing",
+        element: <Listing />,
       },
     ],
   },

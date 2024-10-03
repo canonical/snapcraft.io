@@ -11,10 +11,10 @@ import { Row, Col, Button, Icon } from "@canonical/react-components";
 import ImageUpload from "./ImageUpload";
 import Screenshots from "./Screenshots";
 
-import type { Data } from "../../types";
+import type { ListingData } from "../../../types";
 
 type Props = {
-  data: Data;
+  data: ListingData;
   register: UseFormRegister<FieldValues>;
   getValues: UseFormGetValues<FieldValues>;
   setValue: UseFormSetValue<FieldValues>;

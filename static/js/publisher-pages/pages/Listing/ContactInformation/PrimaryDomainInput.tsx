@@ -9,12 +9,12 @@ import {
 import { nanoid } from "nanoid";
 import { Row, Col, Modal } from "@canonical/react-components";
 
-import { useVerified } from "../../hooks";
+import { useVerified } from "../../../hooks";
 
-import type { Data } from "../../types";
+import type { ListingData } from "../../../types";
 
 type Props = {
-  data: Data;
+  data: ListingData;
   register: UseFormRegister<FieldValues>;
   getFieldState: UseFormGetFieldState<FieldValues>;
   getValues: UseFormGetValues<FieldValues>;
@@ -26,14 +26,14 @@ function PrimaryDomainInput({
   getFieldState,
   getValues,
 }: Props) {
-  const { snapName } = useParams();
+  const { snapId } = useParams();
   const id = nanoid();
   const fieldState = getFieldState("primary_website");
   const [showVerifyModal, setShowVerifyModal] = useState(false);
-  const { isLoading, status, data: verifiedData } = useVerified(snapName);
+  const { isLoading, status, data: verifiedData } = useVerified(snapId);
   const domain = getValues("primary_website");
   const defaultDomain = data.primary_website;
-  const verificationToken = `SNAPCRAFT_IO_VERIFICATION=${window.DNS_VERIFICATION_TOKEN}`;
+  const verificationToken = `SNAPCRAFT_IO_VERIFICATION=${window.SNAP_LISTING_DATA.DNS_VERIFICATION_TOKEN}`;
 
   const noPathDomains = [
     "github.com",
