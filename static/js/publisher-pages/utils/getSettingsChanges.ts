@@ -1,4 +1,4 @@
-function getChanges(dirtyFields: { [key: string]: any }, data: any) {
+function getSettingsChanges(dirtyFields: { [key: string]: any }, data: any) {
   const changes: { [key: string]: any } = {};
 
   if (dirtyFields?.visibility) {
@@ -58,4 +58,4 @@ function getChanges(dirtyFields: { [key: string]: any }, data: any) {
   return changes;
 }
 
-export default getChanges;
+export default getSettingsChanges;

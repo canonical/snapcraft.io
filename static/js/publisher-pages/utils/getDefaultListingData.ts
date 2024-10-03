@@ -1,4 +1,4 @@
-import type { Data } from "../types";
+import type { ListingData } from "../types";
 
 function getPublicMetricsTerritoriesValue(
   publicMetricsBlacklist: string[],
@@ -36,7 +36,9 @@ function getPublicMetricsDistrosValue(
   return false;
 }
 
-export default function getDefaultData(data: Data): { [key: string]: any } {
+export default function getDefaultListingData(data: ListingData): {
+  [key: string]: any;
+} {
   return {
     contacts: data.contacts,
     description: data.description,

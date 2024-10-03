@@ -9,7 +9,7 @@ import {
   Icon,
 } from "@canonical/react-components";
 
-import { validateImageDimensions } from "../../utils";
+import { validateImageDimensions } from "../../../utils";
 
 type Props = {
   imageUrl: string | null;
@@ -236,12 +236,8 @@ function ImageUpload({
                 className="p-button--base snap-remove-icon"
                 onClick={() => {
                   setImageIsValid(true);
-                  setValue(imageUrlFieldKey, "", {
-                    shouldDirty: window?.listingData?.banner_urls[0] !== null,
-                  });
-                  setValue(imageFieldKey, new File([], ""), {
-                    shouldDirty: window?.listingData?.banner_urls[0] !== null,
-                  });
+                  setValue(imageUrlFieldKey, "");
+                  setValue(imageFieldKey, new File([], ""));
                   setPreviewImageUrl("");
                 }}
               >

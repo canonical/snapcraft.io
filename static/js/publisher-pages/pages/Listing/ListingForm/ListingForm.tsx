@@ -3,27 +3,30 @@ import { useParams } from "react-router-dom";
 import { useForm, useFormState, FieldValues } from "react-hook-form";
 import { Strip, Notification } from "@canonical/react-components";
 
-import SaveAndPreview from "../../../shared/SaveAndPreview";
+import SaveAndPreview from "../../../components/SaveAndPreview";
 import ListingDetails from "../ListingDetails";
 import ContactInformation from "../ContactInformation";
 import AdditionalInformation from "../AdditionalInformation";
 import PreviewForm from "../PreviewForm";
-import UpdateMetadataModal from "../../../shared/UpdateMetadataModal";
+import UpdateMetadataModal from "../../../components/UpdateMetadataModal";
 
-import { shouldShowUpdateMetadataWarning, getDefaultData } from "../../utils";
-import { initListingTour } from "../../../tour";
+import {
+  shouldShowUpdateMetadataWarning,
+  getDefaultListingData,
+} from "../../../utils";
+import { initListingTour } from "../../../../publisher/tour";
 
-import { useMutateListingData } from "../../hooks";
+import { useMutateListingData } from "../../../hooks";
 
-import type { Data } from "../../types";
+import type { ListingData } from "../../../types";
 
 type Props = {
-  data: Data;
+  data: ListingData;
   refetch: Function;
 };
 
 function ListingForm({ data, refetch }: Props): JSX.Element {
-  const { snapName } = useParams();
+  const { snapId } = useParams();
 
   const {
     register,
@@ -36,7 +39,7 @@ function ListingForm({ data, refetch }: Props): JSX.Element {
     handleSubmit,
     watch,
   } = useForm<FieldValues>({
-    defaultValues: getDefaultData(data),
+    defaultValues: getDefaultListingData(data),
   });
 
   const { dirtyFields } = useFormState({ control });
@@ -57,13 +60,13 @@ function ListingForm({ data, refetch }: Props): JSX.Element {
   const { mutate, isLoading } = useMutateListingData({
     data,
     dirtyFields,
-    getDefaultData,
+    getDefaultData: getDefaultListingData,
     refetch,
     reset,
     setShowSuccessNotification,
     setUpdateMetadataOnRelease,
     shouldShowUpdateMetadataWarning,
-    snapName,
+    snapName: snapId,
   });
 
   useEffect(() => {
@@ -71,13 +74,13 @@ function ListingForm({ data, refetch }: Props): JSX.Element {
       "tour-container",
     ) as HTMLElement;
 
-    if (snapName) {
+    if (snapId) {
       initListingTour({
-        snapName,
+        snapName: snapId,
         container: tourContainer,
         formFields: {
           title: data.title,
-          snap_name: snapName,
+          snap_name: snapId,
           categories: [],
           video_urls: [],
           images: [],
@@ -107,7 +110,7 @@ function ListingForm({ data, refetch }: Props): JSX.Element {
         })}
       >
         <SaveAndPreview
-          snapName={snapName}
+          snapName={snapId || ""}
           isDirty={formState.isDirty}
           reset={reset}
           isSaving={isLoading}
@@ -195,7 +198,7 @@ function ListingForm({ data, refetch }: Props): JSX.Element {
           />
         </Strip>
       </form>
-      {snapName && <PreviewForm snapName={snapName} getValues={getValues} />}
+      {snapId && <PreviewForm snapName={snapId} getValues={getValues} />}
       <div id="tour-container" />
     </>
   );

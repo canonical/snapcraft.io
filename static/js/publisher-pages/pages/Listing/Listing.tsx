@@ -2,15 +2,15 @@ import { useParams } from "react-router-dom";
 import { useQuery } from "react-query";
 import { Strip } from "@canonical/react-components";
 
-import PageHeader from "../../../shared/PageHeader";
-import ListingForm from "../ListingForm";
+import SectionNav from "../../components/SectionNav";
+import ListingForm from "./ListingForm";
 
-function App(): JSX.Element {
-  const { snapName } = useParams();
+function Listing(): JSX.Element {
+  const { snapId } = useParams();
   const { data, isLoading, refetch } = useQuery({
     queryKey: ["listing"],
     queryFn: async () => {
-      const response = await fetch(`/api/${snapName}/listing`);
+      const response = await fetch(`/api/${snapId}/listing`);
 
       if (!response.ok) {
         throw new Error("There was a problem fetching listing data");
@@ -28,17 +28,18 @@ function App(): JSX.Element {
 
   return (
     <>
-      <PageHeader
-        snapName={snapName}
-        snapTitle={snapName}
-        activeTab="listing"
-      />
+      <h1 className="p-heading--4">
+        <a href="/snaps">My snaps</a> / <a href={`/${snapId}`}>{snapId}</a> /
+        Listing
+      </h1>
+
+      <SectionNav snapName={snapId} activeTab="listing" />
 
       {isLoading && (
         <Strip shallow>
           <p>
             <i className="p-icon--spinner u-animation--spin"></i>&nbsp;Loading{" "}
-            {snapName} listing data
+            {snapId} listing data
           </p>
         </Strip>
       )}
@@ -48,4 +49,4 @@ function App(): JSX.Element {
   );
 }
 
-export default App;
+export default Listing;
