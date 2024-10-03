@@ -95,14 +95,15 @@ describe("ActiveDeviceMetrics", () => {
             status: "success",
             data: mockActiveDeviceMetrics,
           };
+        } else if (params.queryKey[0] === "latestActiveDevicesMetric") {
+          return {
+            status: "success",
+            data: 5,
+          };
         } else {
           return {
             status: "success",
-            data: {
-              buckets: [],
-              name: "annotations",
-              series: [],
-            },
+            data: undefined,
           };
         }
       }
@@ -130,6 +131,11 @@ describe("ActiveDeviceMetrics", () => {
           return {
             status: "error",
             data: undefined,
+          };
+        } else if (params.queryKey[0] === "latestActiveDevicesMetric") {
+          return {
+            status: "success",
+            data: 5,
           };
         } else {
           return {
@@ -166,6 +172,11 @@ describe("ActiveDeviceMetrics", () => {
             isFetching: true,
             data: undefined,
           };
+        } else if (params.queryKey[0] === "latestActiveDevicesMetric") {
+          return {
+            status: "success",
+            data: 5,
+          };
         } else {
           return {
             status: "success",
@@ -198,6 +209,11 @@ describe("ActiveDeviceMetrics", () => {
           return {
             status: "success",
             data: undefined,
+          };
+        } else if (params.queryKey[0] === "latestActiveDevicesMetric") {
+          return {
+            status: "success",
+            data: 0,
           };
         } else {
           return {
