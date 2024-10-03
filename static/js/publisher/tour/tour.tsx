@@ -5,10 +5,10 @@ import TourBar from "./tourBar";
 
 import { tourStartedAutomatically } from "./metricsEvents";
 
-import type { Step } from "../listing/types";
+import type { TourStep } from "../../publisher-pages/types";
 
 type Props = {
-  steps: Step[];
+  steps: TourStep[];
   startTour: boolean;
   onTourStarted: () => void;
   onTourClosed: () => void;
