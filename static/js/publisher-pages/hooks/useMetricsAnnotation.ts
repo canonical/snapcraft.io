@@ -16,6 +16,8 @@ function useMetricsAnnotation(snapId?: string) {
 
       return data;
     },
+    retry: 0,
+    refetchOnWindowFocus: false,
   });
 }
 
