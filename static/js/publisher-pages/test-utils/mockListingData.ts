@@ -1,4 +1,4 @@
-export const mockData = {
+export const mockListingData = {
   banner_urls: ["https://example.com/screenshot"],
   categories: [
     { name: "Test category 1", slug: "test-category-1" },

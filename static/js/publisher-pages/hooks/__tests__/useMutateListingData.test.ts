@@ -3,14 +3,14 @@ import { renderHook } from "@testing-library/react";
 
 import useMutateListingData from "../useMutateListingData";
 
-import { mockData } from "../../test-utils";
+import { mockListingData } from "../../test-utils";
 
 describe("useMutateListingData", () => {
   test("Calls useMutatation", () => {
     jest.spyOn(ReactQuery, "useMutation").mockImplementation(jest.fn());
     renderHook(() =>
       useMutateListingData({
-        data: mockData,
+        data: mockListingData,
         dirtyFields: {},
         getDefaultData: jest.fn(),
         refetch: jest.fn(),

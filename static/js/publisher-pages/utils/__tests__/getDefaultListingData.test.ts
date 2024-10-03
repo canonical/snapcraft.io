@@ -1,10 +1,10 @@
-import getDefaultData from "../getDefaultData";
+import getDefaultListingData from "../getDefaultListingData";
 
-import { mockData } from "../../test-utils";
+import { mockListingData } from "../../test-utils";
 
 describe("getDefaultData", () => {
   test("returns default data", () => {
-    const defaultData = getDefaultData(mockData);
+    const defaultData = getDefaultListingData(mockListingData);
 
     expect(defaultData.contacts).toBeDefined();
     expect(defaultData.description).toBeDefined();

@@ -1,6 +1,6 @@
 import { MASK_OFFSET } from "./constants";
 
-import type { Step } from "../listing/types";
+import type { TourStep } from "../../publisher-pages/types";
 
 // check if element is part of the DOM and is visible
 export const isVisibleInDocument = (el: HTMLElement): boolean =>
@@ -8,7 +8,7 @@ export const isVisibleInDocument = (el: HTMLElement): boolean =>
 
 // find DOM elements for each step, ignore steps with no elements
 // set default position to "bottom-left"
-export function prepareSteps(steps: Step[]): Array<{
+export function prepareSteps(steps: TourStep[]): Array<{
   id: string;
   position: string;
   elements: HTMLElement[];

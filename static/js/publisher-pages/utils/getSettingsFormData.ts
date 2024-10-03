@@ -1,13 +1,13 @@
-import getChanges from "./getChanges";
+import getSettingsChanges from "./getSettingsChanges";
 
 import type { SettingsData } from "../types";
 
-function getFormData(
+function getSettingsFormData(
   settingsData: SettingsData,
   dirtyFields: { [key: string]: any },
   data: any,
 ) {
-  const changes = getChanges(dirtyFields, data);
+  const changes = getSettingsChanges(dirtyFields, data);
   const formData = new FormData();
 
   formData.set("csrf_token", window.CSRF_TOKEN);
@@ -51,4 +51,4 @@ function getFormData(
   return formData;
 }
 
-export default getFormData;
+export default getSettingsFormData;

@@ -7,11 +7,13 @@ import "@testing-library/jest-dom";
 
 import PrimaryDomainInput from "../PrimaryDomainInput";
 
-import { mockData } from "../../../test-utils";
+import { mockListingData } from "../../../../test-utils";
 
-import type { Data } from "../../../types";
+import type { ListingData } from "../../../../types";
 
-window.DNS_VERIFICATION_TOKEN = "abc123";
+window.SNAP_LISTING_DATA = {
+  DNS_VERIFICATION_TOKEN: "abc123",
+};
 
 jest.mock("react-query", () => ({
   ...jest.requireActual("react-query"),
@@ -38,7 +40,10 @@ const mockUseFormReturnValue = {
   getValues: jest.fn().mockReturnValue("https://example.com"),
 };
 
-const renderComponent = (data: Data, defaultValues: { [key: string]: any }) => {
+const renderComponent = (
+  data: ListingData,
+  defaultValues: { [key: string]: any },
+) => {
   const Component = () => {
     const { register, getFieldState, getValues } = useForm({
       defaultValues,
@@ -71,7 +76,9 @@ describe("PrimaryDomainInput", () => {
     // @ts-ignore
     useForm.mockImplementation(() => mockUseFormReturnValue);
 
-    renderComponent(mockData, { primary_website: "https://example.com" });
+    renderComponent(mockListingData, {
+      primary_website: "https://example.com",
+    });
     expect(screen.getByText("Verified ownership")).toBeInTheDocument();
   });
 
@@ -92,7 +99,9 @@ describe("PrimaryDomainInput", () => {
     useForm.mockImplementation(() => mockUseFormReturnValue);
 
     const user = userEvent.setup();
-    renderComponent(mockData, { primary_website: "https://example.com" });
+    renderComponent(mockListingData, {
+      primary_website: "https://example.com",
+    });
     const input = screen.getByRole("textbox", { name: "Primary website:" });
     await user.type(input, "https://example.comabc");
     expect(input).toHaveValue("https://example.comabc");
@@ -120,7 +129,9 @@ describe("PrimaryDomainInput", () => {
     useForm.mockImplementation(() => mockUseFormReturnValue);
 
     const user = userEvent.setup();
-    renderComponent(mockData, { primary_website: "https://example.com" });
+    renderComponent(mockListingData, {
+      primary_website: "https://example.com",
+    });
     const input = screen.getByRole("textbox", { name: "Primary website:" });
     await user.clear(input);
     await user.type(input, "/path");
@@ -141,7 +152,7 @@ describe("PrimaryDomainInput", () => {
     useForm.mockImplementation(() => mockUseFormReturnValue);
     const user = userEvent.setup();
     renderComponent(
-      { ...mockData, primary_website: "https://launchpad.net" },
+      { ...mockListingData, primary_website: "https://launchpad.net" },
       { primary_website: "https://launchpad.net" },
     );
     await user.type(
@@ -166,7 +177,9 @@ describe("PrimaryDomainInput", () => {
     useForm.mockImplementation(() => mockUseFormReturnValue);
 
     const user = userEvent.setup();
-    renderComponent(mockData, { primary_website: "https://example.com" });
+    renderComponent(mockListingData, {
+      primary_website: "https://example.com",
+    });
     await user.click(
       screen.getByRole("button", { name: "Verified ownership" }),
     );
@@ -187,7 +200,9 @@ describe("PrimaryDomainInput", () => {
     // @ts-ignore
     useForm.mockImplementation(() => mockUseFormReturnValue);
 
-    renderComponent(mockData, { primary_website: "https://example.com" });
+    renderComponent(mockListingData, {
+      primary_website: "https://example.com",
+    });
     expect(screen.queryByText("Verified ownership")).not.toBeInTheDocument();
     expect(
       screen.getByRole("button", { name: "Verify ownership" }),
@@ -209,7 +224,9 @@ describe("PrimaryDomainInput", () => {
     useForm.mockImplementation(() => mockUseFormReturnValue);
 
     const user = userEvent.setup();
-    renderComponent(mockData, { primary_website: "https://example.com" });
+    renderComponent(mockListingData, {
+      primary_website: "https://example.com",
+    });
     await user.click(screen.getByRole("button", { name: "Verify ownership" }));
     expect(
       screen.getByRole("heading", { level: 2, name: "Verify ownership" }),
@@ -234,7 +251,9 @@ describe("PrimaryDomainInput", () => {
     useForm.mockImplementation(() => mockUseFormReturnValue);
 
     const user = userEvent.setup();
-    renderComponent(mockData, { primary_website: "https://example.com" });
+    renderComponent(mockListingData, {
+      primary_website: "https://example.com",
+    });
     expect(
       screen.getByRole("button", { name: "Verify ownership" }),
     ).toBeDisabled();

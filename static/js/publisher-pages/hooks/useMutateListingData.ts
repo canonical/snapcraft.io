@@ -1,11 +1,11 @@
 import { useMutation } from "react-query";
 
-import { addDateToFilename, getChanges } from "../utils";
+import { addDateToFilename, getListingChanges } from "../utils";
 
-import type { Data } from "../types";
+import type { ListingData } from "../types";
 
 type Options = {
-  data: Data;
+  data: ListingData;
   dirtyFields: any;
   getDefaultData: Function;
   refetch: Function;
@@ -31,7 +31,7 @@ function useMutateListingData({
     mutationFn: async (values: any) => {
       const formData = new FormData();
 
-      const changes = getChanges(dirtyFields, values, data);
+      const changes = getListingChanges(dirtyFields, values, data);
 
       formData.set("csrf_token", window.CSRF_TOKEN);
       formData.set("snap_id", data.snap_id);
@@ -77,9 +77,12 @@ function useMutateListingData({
       }
     },
     onSuccess: async () => {
-      setShowSuccessNotification(true);
       const response = await refetch();
+      setShowSuccessNotification(true);
       reset(getDefaultData(response.data));
+
+      const mainPanel = document.querySelector(".l-main") as HTMLElement;
+      mainPanel.scrollTo({ top: 0, left: 0, behavior: "smooth" });
     },
   });
 }

@@ -9,10 +9,10 @@ import { Row, Col } from "@canonical/react-components";
 
 import LicenseInputs from "./LicenseInputs";
 
-import type { Data } from "../../types";
+import type { ListingData } from "../../../types";
 
 type Props = {
-  data: Data;
+  data: ListingData;
   register: UseFormRegister<FieldValues>;
   getValues: UseFormGetValues<FieldValues>;
   setValue: UseFormSetValue<FieldValues>;

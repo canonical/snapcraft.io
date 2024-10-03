@@ -9,10 +9,10 @@ import {
 import PrimaryDomainInput from "./PrimaryDomainInput";
 import ContactFields from "./ContactFields";
 
-import type { Data } from "../../types";
+import type { ListingData } from "../../../types";
 
 type Props = {
-  data: Data;
+  data: ListingData;
   register: UseFormRegister<FieldValues>;
   control: Control<FieldValues>;
   getFieldState: UseFormGetFieldState<FieldValues>;
