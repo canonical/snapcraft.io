@@ -390,7 +390,7 @@ def set_handlers(app):
         resources
         - Cross-Origin-Opener-Policy: enable the page to open pop-ups while
         maintaining same-origin policy
-        - Cross-Origin-Resource-Policy: allowing only same-origin requests to
+        - Cross-Origin-Resource-Policy: allowing cross-origin requests to
         access the resource
         - X-Permitted-Cross-Domain-Policies: disallows cross-domain access to
         resources
@@ -421,6 +421,6 @@ def set_handlers(app):
         response.headers["Cross-Origin-Opener-Policy"] = (
             "same-origin-allow-popups"
         )
-        response.headers["Cross-Origin-Resource-Policy"] = "same-site"
+        response.headers["Cross-Origin-Resource-Policy"] = "cross-origin"
         response.headers["X-Permitted-Cross-Domain-Policies"] = "none"
         return response
