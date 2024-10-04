@@ -444,7 +444,7 @@
     <p id="t390" class="pln"><span class="n"><a href="#t390">390</a></span><span class="t"><span class="str">        resources</span>&nbsp;</span><span class="r"></span></p>
     <p id="t391" class="pln"><span class="n"><a href="#t391">391</a></span><span class="t"><span class="str">        - Cross-Origin-Opener-Policy: enable the page to open pop-ups while</span>&nbsp;</span><span class="r"></span></p>
     <p id="t392" class="pln"><span class="n"><a href="#t392">392</a></span><span class="t"><span class="str">        maintaining same-origin policy</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t393" class="pln"><span class="n"><a href="#t393">393</a></span><span class="t"><span class="str">        - Cross-Origin-Resource-Policy: allowing only same-origin requests to</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t393" class="pln"><span class="n"><a href="#t393">393</a></span><span class="t"><span class="str">        - Cross-Origin-Resource-Policy: allowing cross-origin requests to</span>&nbsp;</span><span class="r"></span></p>
     <p id="t394" class="pln"><span class="n"><a href="#t394">394</a></span><span class="t"><span class="str">        access the resource</span>&nbsp;</span><span class="r"></span></p>
     <p id="t395" class="pln"><span class="n"><a href="#t395">395</a></span><span class="t"><span class="str">        - X-Permitted-Cross-Domain-Policies: disallows cross-domain access to</span>&nbsp;</span><span class="r"></span></p>
     <p id="t396" class="pln"><span class="n"><a href="#t396">396</a></span><span class="t"><span class="str">        resources</span>&nbsp;</span><span class="r"></span></p>
@@ -475,7 +475,7 @@
     <p id="t421" class="run"><span class="n"><a href="#t421">421</a></span><span class="t">        <span class="nam">response</span><span class="op">.</span><span class="nam">headers</span><span class="op">[</span><span class="str">"Cross-Origin-Opener-Policy"</span><span class="op">]</span> <span class="op">=</span> <span class="op">(</span>&nbsp;</span><span class="r"></span></p>
     <p id="t422" class="pln"><span class="n"><a href="#t422">422</a></span><span class="t">            <span class="str">"same-origin-allow-popups"</span>&nbsp;</span><span class="r"></span></p>
     <p id="t423" class="pln"><span class="n"><a href="#t423">423</a></span><span class="t">        <span class="op">)</span>&nbsp;</span><span class="r"></span></p>
-    <p id="t424" class="run"><span class="n"><a href="#t424">424</a></span><span class="t">        <span class="nam">response</span><span class="op">.</span><span class="nam">headers</span><span class="op">[</span><span class="str">"Cross-Origin-Resource-Policy"</span><span class="op">]</span> <span class="op">=</span> <span class="str">"same-site"</span>&nbsp;</span><span class="r"></span></p>
+    <p id="t424" class="run"><span class="n"><a href="#t424">424</a></span><span class="t">        <span class="nam">response</span><span class="op">.</span><span class="nam">headers</span><span class="op">[</span><span class="str">"Cross-Origin-Resource-Policy"</span><span class="op">]</span> <span class="op">=</span> <span class="str">"cross-origin"</span>&nbsp;</span><span class="r"></span></p>
     <p id="t425" class="run"><span class="n"><a href="#t425">425</a></span><span class="t">        <span class="nam">response</span><span class="op">.</span><span class="nam">headers</span><span class="op">[</span><span class="str">"X-Permitted-Cross-Domain-Policies"</span><span class="op">]</span> <span class="op">=</span> <span class="str">"none"</span>&nbsp;</span><span class="r"></span></p>
     <p id="t426" class="run"><span class="n"><a href="#t426">426</a></span><span class="t">        <span class="key">return</span> <span class="nam">response</span>&nbsp;</span><span class="r"></span></p>
 </div>
@@ -483,7 +483,7 @@
     <div class="content">
         <p>
             <a class="nav" href="index.html">&#xab; index</a> &nbsp; &nbsp; <a class="nav" href="https://coverage.readthedocs.io">coverage.py v5.5</a>,
-            created at 2024-10-03 22:06 +0000
+            created at 2024-10-04 22:06 +0000
         </p>
     </div>
 </div>
