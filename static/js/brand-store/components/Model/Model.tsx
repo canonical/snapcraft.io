@@ -21,6 +21,7 @@ import Navigation from "../Navigation";
 
 import { useModels } from "../../hooks";
 import { setPageTitle } from "../../utils";
+import type { Model } from "../../types/shared";
 
 function Model() {
   const { id, model_id } = useParams();
@@ -29,7 +30,7 @@ function Model() {
   const [newApiKey, setNewApiKey] = useState("");
   const [showSuccessNotification, setShowSuccessNotificaton] = useState(false);
   const [showErrorNotification, setShowErrorNotificaton] = useState(false);
-  const setModelsList = useSetRecoilState<any>(modelsListState);
+  const setModelsList = useSetRecoilState<Model[]>(modelsListState);
   const brandStore = useRecoilValue(brandStoreState(id));
 
   const mutation = useMutation({
@@ -66,7 +67,7 @@ function Model() {
     data: models,
     isLoading: modelsIsLoading,
     error: modelsError,
-  }: any = useModels(brandId);
+  }: { data: Model[] | undefined; isLoading: boolean; error: unknown } = useModels(brandId);
 
   const handleError = () => {
     setShowErrorNotificaton(true);
@@ -80,8 +81,14 @@ function Model() {
     : setPageTitle("Model");
 
   useEffect(() => {
-    if (!currentModel && !modelsIsLoading && !modelsError && models) {
+    if (!currentModel && !modelsIsLoading && models) {
       setModelsList(models);
+    }
+
+    if (modelsError) {
+      if (modelsError instanceof Error) {
+        console.error(modelsError.message);
+      }
     }
   }, [currentModel, modelsIsLoading, modelsError, models]);
 

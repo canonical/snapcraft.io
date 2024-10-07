@@ -40,14 +40,14 @@ const renderComponent = () => {
 
 describe("CreatePolicyForm", () => {
   it("shows a message if there are no available signing keys", () => {
-    // @ts-ignore
+    // @ts-expect-error
     useQuery.mockReturnValue({ data: [] });
     renderComponent();
     expect(screen.getByText(/No signing keys available/)).toBeInTheDocument();
   });
 
   it("disables the 'Add policy' button if there is no selected signing key", () => {
-    // @ts-ignore
+    // @ts-expect-error
     useQuery.mockReturnValue({
       data: [
         {
@@ -63,7 +63,7 @@ describe("CreatePolicyForm", () => {
   });
 
   it("enables the 'Add policy' button if a signing key is selected", async () => {
-    // @ts-ignore
+    // @ts-expect-error
     useQuery.mockReturnValue({
       data: [
         {

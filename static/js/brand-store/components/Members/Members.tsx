@@ -28,6 +28,7 @@ import { fetchMembers } from "../../slices/membersSlice";
 import { fetchInvites } from "../../slices/invitesSlice";
 
 import { setPageTitle } from "../../utils";
+import { AppDispatch } from "../../store/index";
 
 import type { InvitesSlice } from "../../types/shared";
 
@@ -60,7 +61,7 @@ function Members(): ReactNode {
   const invitesNotFound = useSelector(
     (state: InvitesSlice) => state.invites.notFound,
   );
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   const { id } = useParams();
   const [filteredMembers, setFilteredMembers] = useState<Member[]>([]);
   const [sidePanelOpen, setSidePanelOpen] = useState(false);
@@ -72,7 +73,7 @@ function Members(): ReactNode {
   const [showInviteForm, setShowInviteForm] = useState(false);
   const [storeName, setStoreName] = useState<string | undefined>("");
   const [memberButtonDisabled, setMemberButtonDisabled] = useState(false);
-  const [changedMembers, setChangedMembers] = useState([]);
+  const [changedMembers, setChangedMembers] = useState<Member[]>([]);
   const [notificationText, setNotificationText] = useState(
     "Changes have been saved",
   );
@@ -116,8 +117,8 @@ function Members(): ReactNode {
             setSidePanelOpen(false);
             setNewMemberEmail("");
             setNewMemberRoles([]);
-            dispatch(fetchMembers(id as string) as any);
-            dispatch(fetchInvites(id as string) as any);
+            dispatch(fetchMembers(id as string));
+            dispatch(fetchInvites(id as string));
             setShowSuccessNotification(true);
             setNotificationText("Member has been added to the store");
             setShowInviteForm(false);
@@ -155,8 +156,8 @@ function Members(): ReactNode {
     currentMember?.roles.length === 1 && currentMember?.roles.includes("view");
 
   useEffect(() => {
-    dispatch(fetchMembers(id as string) as any);
-    dispatch(fetchInvites(id as string) as any);
+    dispatch(fetchMembers(id as string));
+    dispatch(fetchInvites(id as string));
     setStoreName((): string | undefined => {
       const store = brandStoresList.find((item) => item.id === id);
 
