@@ -8,6 +8,7 @@ import {
   useSearchParams,
 } from "react-router-dom";
 import { Row, Col, Notification, Icon } from "@canonical/react-components";
+import { UseQueryResult } from "react-query";
 
 import {
   modelsListFilterState,
@@ -37,7 +38,7 @@ function Models(): ReactNode {
     isLoading: modelsIsLoading,
     error: modelsError,
     isError: modelsIsError,
-  }: any = useModels(brandId);
+  }: UseQueryResult<Model[]> = useModels(brandId);
 
   const location = useLocation();
   const navigate = useNavigate();
@@ -122,7 +123,7 @@ function Models(): ReactNode {
             </Row>
             <div className="u-fixed-width u-flex-column u-flex-grow">
               <div>
-                {modelsIsError && modelsError && (
+                {modelsIsError && modelsError instanceof Error && (
                   <Notification severity="negative">
                     Error: {modelsError.message}
                   </Notification>

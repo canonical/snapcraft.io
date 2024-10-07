@@ -1,16 +1,13 @@
 import { Dispatch, ReactNode, SetStateAction } from "react";
 import { Modal, Button } from "@canonical/react-components";
+import type { Invite, InviteActionData } from "../../types/shared";
 
-type InviteActionData = {
-  action: "resend" | "revoke" | "open";
-  email: string;
-};
 
 type Props = {
-  inviteActionData: InviteActionData;
+  inviteActionData: InviteActionData | null;
   inviteModalOpen: boolean;
   setInviteModalOpen: Dispatch<SetStateAction<boolean>>;
-  updateInvite: Function;
+  updateInvite: (data: InviteActionData) => void;
   inviteModalIsSaving: boolean;
 };
 
@@ -21,6 +18,10 @@ function InviteModal({
   updateInvite,
   inviteModalIsSaving,
 }: Props): ReactNode {
+  if (!inviteModalOpen || !inviteActionData) {
+    return null;
+  }
+
   const ACTIONS = {
     resend: "Resend",
     revoke: "Revoke",

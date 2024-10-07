@@ -26,7 +26,7 @@ import Navigation from "../Navigation";
 
 import { setPageTitle } from "../../utils";
 
-import type { RouteParams, Member } from "../../types/shared";
+import type { RouteParams, Member, Store } from "../../types/shared";
 
 export type RootState = {
   currentStore: {
@@ -40,12 +40,12 @@ export type RootState = {
     notFound: boolean;
   };
   members: {
-    members: Array<{}>;
+    members: Array<Member>;
     loading: boolean;
     notFound: boolean;
   };
   brandStores: {
-    brandStoresList: Array<{}>;
+    brandStoresList: Array<Store>;
     loading: boolean;
     notFound: boolean;
   };

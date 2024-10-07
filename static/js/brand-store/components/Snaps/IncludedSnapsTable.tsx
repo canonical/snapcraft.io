@@ -5,13 +5,17 @@ import { Input, MainTable } from "@canonical/react-components";
 
 import type { SnapsList, Store, Snap } from "../../types/shared";
 
+type GetStoreNameFunc = (storeId: string) => string | undefined;
+type IsOnlyViewerFunc = () => boolean;
+type SetSnapsToRemoveFunc = (snaps: SnapsList) => void;
+
 type IncludedSnapsTableRowsProps = {
   snaps: Array<Snap>;
-  getStoreName?: Function;
+  getStoreName?: GetStoreNameFunc;
   isGlobal?: boolean;
-  isOnlyViewer: Function;
+  isOnlyViewer: IsOnlyViewerFunc;
   snapsToRemove: SnapsList;
-  setSnapsToRemove: Function;
+  setSnapsToRemove: SetSnapsToRemoveFunc;
 };
 
 function SnapTableRows({
@@ -108,12 +112,12 @@ function SnapTableRows({
 }
 
 type IncludedSnapsTableProps = {
-  isOnlyViewer: Function;
+  isOnlyViewer: IsOnlyViewerFunc;
   snapsToRemove: SnapsList;
-  setSnapsToRemove: Function;
-  globalStore: Store;
-  nonEssentialSnapIds: SnapsList;
-  getStoreName: Function;
+  setSnapsToRemove: SetSnapsToRemoveFunc;
+  globalStore: Store | null;
+  nonEssentialSnapIds: string[];
+  getStoreName: GetStoreNameFunc;
   otherStores: Array<{
     id: string;
     name: string;
@@ -180,7 +184,7 @@ function IncludedSnapsTable({
                 disabled={!nonEssentialSnapIds.length}
                 label="Name"
                 checked={isChecked}
-                // @ts-ignore
+                // @ts-expect-error
                 indeterminate={isIndeterminate}
               />
             </div>

@@ -3,13 +3,15 @@ import { Button, Icon, Input, Select } from "@canonical/react-components";
 
 import type { Model, Policy, SigningKey } from "../../types/shared";
 
-type Props = {
+export type ItemType = SigningKey | Policy | Model;
+
+type Props<T extends ItemType> = {
   keyword: string;
-  items: Model[] | Policy[] | SigningKey[];
-  setItemsToShow: Function;
+  items: T[];
+  setItemsToShow: (items: T[]) => void;
 };
 
-function AppPagination({ keyword, items, setItemsToShow }: Props): ReactNode {
+function AppPagination<T extends ItemType>({ keyword, items, setItemsToShow }: Props<T>): ReactNode {
   const paginationOptions = [
     {
       label: "25/page",

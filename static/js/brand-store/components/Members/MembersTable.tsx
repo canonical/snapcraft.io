@@ -7,7 +7,7 @@ import type { Member } from "../../types/shared";
 type Props = {
   filteredMembers: Array<Member>;
   changedMembers: Array<Member>;
-  setChangedMembers: Function;
+  setChangedMembers: (members: Array<Member>) => void;
 };
 
 function MembersTable({

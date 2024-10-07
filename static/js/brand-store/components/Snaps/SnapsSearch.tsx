@@ -6,10 +6,12 @@ import debounce from "../../../libs/debounce";
 
 import type { SnapsList, Snap } from "../../types/shared";
 
+type SetSelectedSnapsFunc = (snaps: SnapsList) => void;
+
 type Props = {
   storeId: string;
   selectedSnaps: SnapsList;
-  setSelectedSnaps: Function;
+  setSelectedSnaps: SetSelectedSnapsFunc;
   nonEssentialSnapIds: Array<string>;
 };
 
@@ -124,8 +126,8 @@ function SnapsSearch({
                 {suggestions.map((item: Snap, index: number) => (
                   <li
                     className="p-list__item"
+                    key={item.id}
                     {...getItemProps({
-                      key: item.id,
                       index,
                       item,
                       style: {

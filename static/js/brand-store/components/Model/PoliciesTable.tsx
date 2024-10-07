@@ -6,7 +6,7 @@ import { MainTable, Button, Modal, Icon } from "@canonical/react-components";
 
 import AppPagination from "../AppPagination";
 
-import { usePolicies } from "../../hooks";
+import { usePolicies, UsePoliciesResponse, } from "../../hooks";
 import { brandIdState } from "../../atoms";
 import { filteredPoliciesListState } from "../../selectors";
 
@@ -30,7 +30,7 @@ function ModelsTable({
   const [showModal, setShowModal] = useState<boolean>(false);
   const [selectedPolicy, setSelectedPolicy] = useState<number | undefined>();
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const { refetch }: any = usePolicies(brandId, model_id);
+  const { refetch } = usePolicies(brandId, model_id) as UsePoliciesResponse;
 
   const deletePolicy = async (policyRevision: number | undefined) => {
     if (policyRevision === undefined) {

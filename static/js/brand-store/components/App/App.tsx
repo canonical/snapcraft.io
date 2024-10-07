@@ -44,6 +44,7 @@ function App(): ReactNode {
   const setRecoilBrandStores = useSetRecoilState(brandStoresState);
 
   useEffect(() => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     dispatch(fetchStores() as any);
   }, []);
 

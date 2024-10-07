@@ -18,7 +18,7 @@ import type { SigningKey } from "../../types/shared";
 type Props = {
   setShowNotification: Dispatch<SetStateAction<boolean>>;
   setErrorMessage: Dispatch<SetStateAction<string>>;
-  refetch: Function;
+  refetch: () => void;
 };
 
 function CreateSigningKeyForm({

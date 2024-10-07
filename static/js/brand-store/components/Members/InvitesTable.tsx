@@ -15,10 +15,10 @@ import InviteModal from "./InviteModal";
 import { fetchInvites } from "../../slices/invitesSlice";
 import ROLES from "./memberRoles";
 
-import type { Invite, InvitesList, Status } from "../../types/shared";
+import type { Invite, InvitesList, Status, InviteActionData } from "../../types/shared";
 
 type Props = {
-  invites: any;
+  invites: InvitesList;
   setShowSuccessNotification: Dispatch<SetStateAction<boolean>>;
   setNotificationText: Dispatch<SetStateAction<string>>;
   setShowErrorNotification: Dispatch<SetStateAction<boolean>>;
@@ -30,11 +30,11 @@ function InvitesTable({
   setNotificationText,
   setShowErrorNotification,
 }: Props): ReactNode {
-  const [pendingInvites, setPendingInvites] = useState([]);
-  const [expiredInvites, setExpiredInvites] = useState([]);
-  const [revokedInvites, setRevokedInvites] = useState([]);
+  const [pendingInvites, setPendingInvites] = useState<Invite[]>([]);
+  const [expiredInvites, setExpiredInvites] = useState<Invite[]>([]);
+  const [revokedInvites, setRevokedInvites] = useState<Invite[]>([]);
   const [inviteModalOpen, setInviteModalOpen] = useState(false);
-  const [inviteActionData, setInviteActionData]: any = useState({});
+  const [inviteActionData, setInviteActionData] = useState<InviteActionData | null>(null);
   const [inviteModalIsSaving, setInviteModalIsSaving] = useState(false);
   const { id } = useParams();
   const dispatch = useDispatch();
@@ -51,7 +51,7 @@ function InvitesTable({
     );
   }, [invites]);
 
-  const updateInvite = (inviteData: Invite) => {
+  const updateInvite = (inviteData: InviteActionData) => {
     const data = new FormData();
 
     data.set("csrf_token", window.CSRF_TOKEN);
@@ -71,11 +71,12 @@ function InvitesTable({
         }
       })
       .then(() => {
+        // @ts-ignore
         dispatch(fetchInvites(id as string) as any);
         setTimeout(() => {
           setInviteModalOpen(false);
           setInviteModalIsSaving(false);
-          setInviteActionData({});
+          setInviteActionData(null);
           setNotificationText("The invite status has been updated");
           setShowSuccessNotification(true);
         }, 1500);
@@ -83,7 +84,7 @@ function InvitesTable({
       .catch(() => {
         setInviteModalOpen(false);
         setInviteModalIsSaving(false);
-        setInviteActionData({});
+        setInviteActionData(null);
         setShowErrorNotification(true);
       });
   };
@@ -228,7 +229,7 @@ function InvitesTable({
         ]}
       />
       <InviteModal
-        inviteActionData={inviteActionData}
+        inviteActionData={inviteActionData ?? { email: '', action: 'resend' }}
         inviteModalOpen={inviteModalOpen}
         setInviteModalOpen={setInviteModalOpen}
         updateInvite={updateInvite}
