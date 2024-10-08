@@ -83,13 +83,13 @@ publisher_snaps.add_url_rule(
 
 # Build views
 publisher_snaps.add_url_rule(
-    "/<snap_name>/builds",
-    view_func=build_views.get_snap_builds,
+    "/api/<snap_name>/repo",
+    view_func=build_views.get_snap_repo,
     methods=["GET"],
 )
 publisher_snaps.add_url_rule(
-    "/<snap_name>/builds.json",
-    view_func=build_views.get_snap_builds_json,
+    "/api/<snap_name>/builds",
+    view_func=build_views.get_snap_builds,
     methods=["GET"],
 )
 publisher_snaps.add_url_rule(
