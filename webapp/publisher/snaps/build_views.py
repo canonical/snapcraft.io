@@ -66,6 +66,11 @@ def get_builds(lp_snap, selection):
 
 
 @login_required
+def get_snap_build_page(snap_name):
+    return flask.render_template("store/publisher.html", snap_name=snap_name)
+
+
+@login_required
 def get_snap_repo(snap_name):
     res = {"message": "", "success": True}
     data = {"github_orgs": [], "github_repository": None, "github_user": None}
