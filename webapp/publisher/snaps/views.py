@@ -83,6 +83,11 @@ publisher_snaps.add_url_rule(
 
 # Build views
 publisher_snaps.add_url_rule(
+    "/<snap_name>/builds",
+    view_func=build_views.get_snap_build_page,
+    methods=["GET"],
+)
+publisher_snaps.add_url_rule(
     "/api/<snap_name>/repo",
     view_func=build_views.get_snap_repo,
     methods=["GET"],
@@ -93,7 +98,7 @@ publisher_snaps.add_url_rule(
     methods=["GET"],
 )
 publisher_snaps.add_url_rule(
-    "/<snap_name>/builds",
+    "/api/<snap_name>/builds",
     view_func=build_views.post_snap_builds,
     methods=["POST"],
 )
@@ -134,7 +139,7 @@ publisher_snaps.add_url_rule(
     methods=["GET"],
 )
 publisher_snaps.add_url_rule(
-    "/<snap_name>/builds/disconnect/",
+    "/api/<snap_name>/builds/disconnect/",
     view_func=build_views.post_disconnect_repo,
     methods=["POST"],
 )

@@ -66,6 +66,11 @@ def get_builds(lp_snap, selection):
 
 
 @login_required
+def get_snap_build_page(snap_name):
+    return flask.render_template("store/publisher.html", snap_name=snap_name)
+
+
+@login_required
 def get_snap_repo(snap_name):
     res = {"message": "", "success": True}
     data = {"github_orgs": [], "github_repository": None, "github_user": None}
@@ -243,40 +248,37 @@ def get_validate_repo(snap_name):
 
 @login_required
 def post_snap_builds(snap_name):
+    res = {}
+
     details = publisher_api.get_snap_info(snap_name, flask.session)
 
     # Don't allow changes from Admins that are no contributors
     account_snaps = publisher_api.get_account_snaps(flask.session)
 
     if snap_name not in account_snaps:
-        flask.flash(
-            "You do not have permissions to modify this Snap", "negative"
-        )
-        return flask.redirect(
-            flask.url_for(".get_snap_builds", snap_name=snap_name)
-        )
-
-    redirect_url = flask.url_for(".get_snap_builds", snap_name=snap_name)
+        res["success"] = False
+        res["message"] = "You do not have permissions to modify this Snap"
+        return flask.make_response(res, 200)
 
     # Get built snap in launchpad with this store name
     github = GitHub(flask.session.get("github_auth_secret"))
     owner, repo = flask.request.form.get("github_repository").split("/")
 
     if not github.check_permissions_over_repo(owner, repo):
-        flask.flash(
-            "The repository doesn't exist or you don't have"
-            " enough permissions",
-            "negative",
+        res["success"] = False
+        res["message"] = (
+            "The repository doesn't exist or you don't have enough permissions"
         )
-        return flask.redirect(redirect_url)
+        return flask.make_response(res, 200)
 
     repo_validation = validate_repo(
         flask.session.get("github_auth_secret"), snap_name, owner, repo
     )
 
     if not repo_validation["success"]:
-        flask.flash(repo_validation["error"]["message"], "negative")
-        return flask.redirect(redirect_url)
+        res["success"] = False
+        res["message"] = repo_validation["error"]["message"]
+        return flask.make_response(res, 200)
 
     lp_snap = launchpad.get_snap_by_store_name(details["snap_name"])
     git_url = f"https://github.com/{owner}/{repo}"
@@ -293,12 +295,12 @@ def post_snap_builds(snap_name):
                 raise e
 
         if repo_exist:
-            flask.flash(
+            res["success"] = False
+            res["message"] = (
                 "The specified repository is being used by another snap:"
-                f" {repo_exist['store_name']}",
-                "negative",
+                f" {repo_exist['store_name']}"
             )
-            return flask.redirect(redirect_url)
+            return flask.make_response(res, 200)
 
         macaroon = publisher_api.get_package_upload_macaroon(
             session=flask.session, snap_name=snap_name, channels=["edge"]
@@ -306,9 +308,8 @@ def post_snap_builds(snap_name):
 
         launchpad.create_snap(snap_name, git_url, macaroon)
 
-        flask.flash(
-            "The GitHub repository was linked successfully.", "positive"
-        )
+        res["success"] = True
+        res["message"] = "The GitHub repository was linked successfully"
 
         # Create webhook in the repo, it should also trigger the first build
         github_hook_url = (
@@ -321,11 +322,12 @@ def post_snap_builds(snap_name):
             if not hook:
                 github.create_hook(owner, repo, github_hook_url)
         except HTTPError:
-            flask.flash(
+            res["success"] = False
+            res["message"] = (
                 "The GitHub Webhook could not be created. "
-                "Please trigger a new build manually.",
-                "caution",
+                "Please trigger a new build manually."
             )
+            return flask.make_response(res, 200)
 
     elif lp_snap["git_repository_url"] != git_url:
         # In the future, create a new record, delete the old one
@@ -333,7 +335,7 @@ def post_snap_builds(snap_name):
             f"Snap {snap_name} already has a build repository associated"
         )
 
-    return flask.redirect(redirect_url)
+    return flask.make_response(res, 200)
 
 
 @login_required
