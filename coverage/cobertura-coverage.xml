@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 <!DOCTYPE coverage SYSTEM "http://cobertura.sourceforge.net/xml/coverage-04.dtd">
-<coverage lines-valid="3551" lines-covered="2314" line-rate="0.6516" branches-valid="2101" branches-covered="1275" branch-rate="0.6068" timestamp="1728338710153" complexity="0" version="0.1">
+<coverage lines-valid="3556" lines-covered="2316" line-rate="0.6512" branches-valid="2103" branches-covered="1276" branch-rate="0.6067" timestamp="1728425092228" complexity="0" version="0.1">
   <sources>
     <source>/home/runner/work/snapcraft.io/snapcraft.io</source>
   </sources>
@@ -7103,7 +7103,7 @@
         </class>
       </classes>
     </package>
-    <package name="publisher.release.actions" line-rate="0.9695999999999999" branch-rate="0.862">
+    <package name="publisher.release.actions" line-rate="0.9576" branch-rate="0.8539">
       <classes>
         <class name="architectures.js" filename="static/js/publisher/release/actions/architectures.js" line-rate="1" branch-rate="1">
           <methods>
@@ -7291,68 +7291,83 @@
             <line number="4" hits="2" branch="false"/>
           </lines>
         </class>
-        <class name="defaultTrack.js" filename="static/js/publisher/release/actions/defaultTrack.js" line-rate="1" branch-rate="1">
+        <class name="defaultTrack.js" filename="static/js/publisher/release/actions/defaultTrack.js" line-rate="0.8695" branch-rate="0.5">
           <methods>
             <method name="(anonymous_0)" hits="2" signature="()V">
               <lines>
-                <line number="8" hits="2"/>
+                <line number="9" hits="2"/>
               </lines>
             </method>
             <method name="(anonymous_1)" hits="2" signature="()V">
               <lines>
-                <line number="21" hits="2"/>
+                <line number="22" hits="2"/>
               </lines>
             </method>
             <method name="clearDefaultTrack" hits="1" signature="()V">
               <lines>
-                <line number="24" hits="1"/>
+                <line number="30" hits="1"/>
               </lines>
             </method>
             <method name="(anonymous_3)" hits="1" signature="()V">
               <lines>
-                <line number="25" hits="1"/>
+                <line number="31" hits="1"/>
               </lines>
             </method>
             <method name="(anonymous_4)" hits="1" signature="()V">
               <lines>
-                <line number="29" hits="1"/>
+                <line number="35" hits="1"/>
               </lines>
             </method>
             <method name="setDefaultTrack" hits="1" signature="()V">
               <lines>
-                <line number="49" hits="1"/>
+                <line number="55" hits="1"/>
               </lines>
             </method>
             <method name="(anonymous_6)" hits="1" signature="()V">
               <lines>
-                <line number="50" hits="1"/>
+                <line number="56" hits="1"/>
               </lines>
             </method>
             <method name="(anonymous_7)" hits="1" signature="()V">
               <lines>
-                <line number="54" hits="1"/>
+                <line number="61" hits="1"/>
+              </lines>
+            </method>
+            <method name="(anonymous_8)" hits="0" signature="()V">
+              <lines>
+                <line number="75" hits="0"/>
+              </lines>
+            </method>
+            <method name="(anonymous_9)" hits="1" signature="()V">
+              <lines>
+                <line number="88" hits="1"/>
               </lines>
             </method>
           </methods>
           <lines>
             <line number="6" hits="4" branch="false"/>
-            <line number="8" hits="4" branch="false"/>
-            <line number="9" hits="2" branch="false"/>
-            <line number="21" hits="2" branch="false"/>
-            <line number="25" hits="1" branch="false"/>
-            <line number="26" hits="1" branch="false"/>
-            <line number="27" hits="1" branch="false"/>
-            <line number="29" hits="1" branch="false"/>
-            <line number="30" hits="1" branch="false"/>
-            <line number="34" hits="1" branch="false"/>
-            <line number="37" hits="1" branch="false"/>
-            <line number="50" hits="1" branch="false"/>
-            <line number="51" hits="1" branch="false"/>
-            <line number="52" hits="1" branch="false"/>
-            <line number="54" hits="1" branch="false"/>
-            <line number="55" hits="1" branch="false"/>
-            <line number="59" hits="1" branch="false"/>
+            <line number="7" hits="4" branch="false"/>
+            <line number="9" hits="4" branch="false"/>
+            <line number="10" hits="2" branch="false"/>
+            <line number="23" hits="2" branch="true" condition-coverage="50% (1/2)"/>
+            <line number="24" hits="0" branch="false"/>
+            <line number="26" hits="2" branch="false"/>
+            <line number="31" hits="1" branch="false"/>
+            <line number="32" hits="1" branch="false"/>
+            <line number="33" hits="1" branch="false"/>
+            <line number="35" hits="1" branch="false"/>
+            <line number="36" hits="1" branch="false"/>
+            <line number="40" hits="1" branch="false"/>
+            <line number="43" hits="1" branch="false"/>
+            <line number="56" hits="1" branch="false"/>
+            <line number="57" hits="1" branch="false"/>
+            <line number="58" hits="1" branch="false"/>
+            <line number="60" hits="1" branch="false"/>
             <line number="62" hits="1" branch="false"/>
+            <line number="66" hits="1" branch="false"/>
+            <line number="76" hits="0" branch="false"/>
+            <line number="79" hits="0" branch="false"/>
+            <line number="89" hits="1" branch="false"/>
           </lines>
         </class>
         <class name="gaEventTracking.js" filename="static/js/publisher/release/actions/gaEventTracking.js" line-rate="0.8332999999999999" branch-rate="0.5">
