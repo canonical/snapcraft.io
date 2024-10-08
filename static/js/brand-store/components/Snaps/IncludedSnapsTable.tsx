@@ -138,7 +138,7 @@ function IncludedSnapsTable({
   const [isIndeterminate, setIsIndeterminate] = useState(false);
 
   const otherStoresSnaps = otherStores.map((item) => item?.snaps);
-  const allSnaps = otherStoresSnaps.flat().concat(globalStore?.snaps);
+  const allSnaps = otherStoresSnaps.flat().concat(globalStore?.snaps ?? []);
 
   const deDupedSnaps = (snaps: Array<Snap>, sourceStoreId: string) => {
     return snaps.filter((snap) => snap.store === sourceStoreId);
@@ -226,7 +226,7 @@ function IncludedSnapsTable({
         .flat()
         .concat(
           ...SnapTableRows({
-            snaps: deDupedSnaps(globalStore.snaps, "ubuntu"),
+            snaps: globalStore ? deDupedSnaps(globalStore.snaps, "ubuntu") : [],
             isGlobal: true,
             isOnlyViewer,
             snapsToRemove,
