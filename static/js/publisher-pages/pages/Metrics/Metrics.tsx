@@ -8,7 +8,7 @@ import { useState } from "react";
 
 const EmptyData = () => {
   return (
-    <section className="p-strip--light is-shallow">
+    <section className="p-strip--light is-shallow snapcraft-metrics__info">
       <Row>
         <Col size={6}>
           <h2 className="p-heading--4" style={{ marginLeft: "1.5rem" }}>
@@ -40,6 +40,11 @@ function Metrics(): JSX.Element {
 
   return (
     <>
+      <h1 className="p-heading--4">
+        <a href="/snaps">My snaps</a> / <a href={`/${snapId}`}>{snapId}</a> /
+        Metrics
+      </h1>
+
       <SectionNav snapName={snapId} activeTab="metrics" />
       {isEmpty && <EmptyData />}
 
