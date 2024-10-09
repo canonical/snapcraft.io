@@ -4,6 +4,7 @@ import thunk from "redux-thunk";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { Provider } from "react-redux";
 import { DndProvider } from "react-dnd";
+import { QueryClient, QueryClientProvider } from "react-query";
 import ReleasesController from "./release/releasesController";
 import releases from "./release/reducers";
 import { ReleasesData, ChannelMap, Track, Options } from "./types/releaseTypes"
@@ -34,19 +35,24 @@ const initReleases = (
     },
     composeEnhancers(applyMiddleware(thunk))
   );
+
+  const queryClient = new QueryClient();
+
   const container = document.querySelector(id);
   if (!container) throw new Error(`Container with id ${id} not found`);
   const root = createRoot(container);
   root.render(
     <Provider store={store}>
       <DndProvider backend={HTML5Backend}>
-        <ReleasesController
-          snapName={snapName}
-          releasesData={releasesData}
-          channelMap={channelMap}
-          // @ts-expect-error
-          options={options}
-        />
+        <QueryClientProvider client={queryClient}>
+          <ReleasesController
+            snapName={snapName}
+            releasesData={releasesData}
+            channelMap={channelMap}
+            // @ts-expect-error
+            options={options}
+          />
+        </QueryClientProvider>
       </DndProvider>
     </Provider>
   );
