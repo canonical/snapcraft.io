@@ -100,7 +100,7 @@ export function validatePhasingPercentage(value: string) {
 
 export function resizeAsidePanel(panelType: string) {
   useEffect(() => {
-    function adjustAsidePanelHeight() {
+    const adjustAsidePanelHeight = () => {
       const targetComponent = document.querySelector("#main-content");
       let asidePanel;
 
@@ -174,9 +174,4 @@ export async function getPackageMetadata(snap: string) {
   } catch (e) {
     return { "error": e };
   }
-}
-
-export async function getTrackGuardrails(snap: string) {
-  const snapMetadata: any = await getPackageMetadata(snap);
-  return { "track-guardrails": snapMetadata["track-guardrails"] };
 }
