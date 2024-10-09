@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 <!DOCTYPE coverage SYSTEM "http://cobertura.sourceforge.net/xml/coverage-04.dtd">
-<coverage lines-valid="3556" lines-covered="2316" line-rate="0.6512" branches-valid="2103" branches-covered="1276" branch-rate="0.6067" timestamp="1728425092228" complexity="0" version="0.1">
+<coverage lines-valid="3555" lines-covered="2314" line-rate="0.6509" branches-valid="2103" branches-covered="1276" branch-rate="0.6067" timestamp="1728511509378" complexity="0" version="0.1">
   <sources>
     <source>/home/runner/work/snapcraft.io/snapcraft.io</source>
   </sources>
@@ -6757,7 +6757,7 @@
         </class>
       </classes>
     </package>
-    <package name="publisher.release" line-rate="0.4305" branch-rate="0.2875">
+    <package name="publisher.release" line-rate="0.41950000000000004" branch-rate="0.2875">
       <classes>
         <class name="constants.js" filename="static/js/publisher/release/constants.js" line-rate="1" branch-rate="1">
           <methods>
@@ -6779,7 +6779,7 @@
             <line number="22" hits="10" branch="false"/>
           </lines>
         </class>
-        <class name="helpers.ts" filename="static/js/publisher/release/helpers.ts" line-rate="0.4324" branch-rate="0.3023">
+        <class name="helpers.ts" filename="static/js/publisher/release/helpers.ts" line-rate="0.41090000000000004" branch-rate="0.3023">
           <methods>
             <method name="isInDevmode" hits="7" signature="()V">
               <lines>
@@ -6846,7 +6846,7 @@
                 <line number="102" hits="0"/>
               </lines>
             </method>
-            <method name="adjustAsidePanelHeight" hits="0" signature="()V">
+            <method name="(anonymous_13)" hits="0" signature="()V">
               <lines>
                 <line number="103" hits="0"/>
               </lines>
@@ -6864,11 +6864,6 @@
             <method name="getPackageMetadata" hits="2" signature="()V">
               <lines>
                 <line number="159" hits="2"/>
-              </lines>
-            </method>
-            <method name="getTrackGuardrails" hits="2" signature="()V">
-              <lines>
-                <line number="179" hits="2"/>
               </lines>
             </method>
           </methods>
@@ -6907,6 +6902,7 @@
             <line number="94" hits="0" branch="false"/>
             <line number="98" hits="0" branch="false"/>
             <line number="102" hits="0" branch="false"/>
+            <line number="103" hits="0" branch="false"/>
             <line number="104" hits="0" branch="false"/>
             <line number="107" hits="0" branch="true" condition-coverage="0% (0/2)"/>
             <line number="108" hits="0" branch="false"/>
@@ -6945,8 +6941,6 @@
             <line number="172" hits="2" branch="false"/>
             <line number="173" hits="2" branch="false"/>
             <line number="175" hits="0" branch="false"/>
-            <line number="180" hits="2" branch="false"/>
-            <line number="181" hits="2" branch="false"/>
           </lines>
         </class>
         <class name="releasesState.js" filename="static/js/publisher/release/releasesState.js" line-rate="0.2857" branch-rate="0.2702">
