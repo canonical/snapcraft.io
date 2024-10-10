@@ -1,13 +1,9 @@
 import { ReactNode } from "react";
 
+import type { Step } from "../listing/types";
+
 type Props = {
-  steps: Array<{
-    id: string;
-    position: string;
-    elements: HTMLElement[];
-    content: string;
-    title: string;
-  }>;
+  steps: Step[];
   currentStepIndex: number;
   mask: {
     top: number;

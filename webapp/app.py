@@ -49,6 +49,12 @@ def create_app(testing=False):
         talisker.requests.configure(webapp.helpers.api_session)
         talisker.requests.configure(webapp.helpers.api_publisher_session)
 
+    if testing:
+
+        @app.context_processor
+        def inject_csrf_token():
+            return dict(csrf_token=lambda: "mocked_csrf_token")
+
     set_handlers(app)
 
     app.register_blueprint(snapcraft_blueprint())

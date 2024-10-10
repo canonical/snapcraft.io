@@ -139,11 +139,11 @@ const renderComponent = (
 };
 
 describe("Packages", () => {
-  test("featured categories are called by deafult", async () => {
+  test("featured categories are called by default", async () => {
     renderComponent();
     await waitFor(() => {
       expect(global.fetch).toHaveBeenCalledWith(
-        "/store.json?categories=featured"
+        "/store.json?categories=featured&page=1"
       );
     });
   });
@@ -154,7 +154,7 @@ describe("Packages", () => {
     await user.click(screen.getByLabelText("Development"));
     await waitFor(() => {
       expect(global.fetch).toHaveBeenCalledWith(
-        "/store.json?categories=development"
+        "/store.json?categories=development&page=1"
       );
     });
   });
@@ -167,7 +167,7 @@ describe("Packages", () => {
     await user.click(screen.getByLabelText("Development"));
     await waitFor(() => {
       expect(global.fetch).toHaveBeenCalledWith(
-        "/store.json?categories=development&q=code"
+        "/store.json?categories=development&q=code&page=1"
       );
     });
   });
@@ -178,7 +178,7 @@ describe("Packages", () => {
     await user.type(screen.getByLabelText("Search Snapcraft"), "code");
     await user.click(screen.getByRole("button", { name: "Search" }));
     await waitFor(() => {
-      expect(global.fetch).toHaveBeenCalledWith("/store.json?q=code");
+      expect(global.fetch).toHaveBeenCalledWith("/store.json?q=code&page=1");
     });
   });
 
@@ -262,7 +262,7 @@ describe("Packages", () => {
     await user.click(screen.getByLabelText("Development"));
     await waitFor(() => {
       expect(global.fetch).toHaveBeenCalledWith(
-        "/store.json?categories=development"
+        "/store.json?categories=development&page=1"
       );
     });
   });

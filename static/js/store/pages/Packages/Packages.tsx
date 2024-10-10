@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, ReactNode } from "react";
+import { useState, useRef, ReactNode } from "react";
 import { useQuery } from "react-query";
 import { useLocation, useSearchParams } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
@@ -48,17 +48,18 @@ function Packages(): ReactNode {
 
   const { search } = useLocation();
   const [searchParams, setSearchParams] = useSearchParams();
-  const [initialLoad, setInitialLoad] = useState(true);
 
   const [hideFilters, setHideFilters] = useState(true);
   const currentPage = searchParams.get("page") || "1";
 
   let queryString = search;
   if (!search || (!searchParams.get("categories") && !searchParams.get("q") && !searchParams.get("architecture"))) {
-    queryString = "?categories=featured";
+    queryString = `?categories=featured&page=${currentPage}`;
+  } else {
+    queryString += `&page=${currentPage}`;
   }
 
-  const { data, status, refetch, isFetching } = useQuery(
+  const { data, status, isFetching } = useQuery(
     ["data", queryString],
     () => getData(queryString),
     {
@@ -68,17 +69,6 @@ function Packages(): ReactNode {
 
   const searchRef = useRef<HTMLInputElement | null>(null);
   const searchSummaryRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (initialLoad) {
-      if (!searchParams.get("categories") && !searchParams.get("q") && !searchParams.get("architecture")) {
-        searchParams.set("categories", "featured");
-        setSearchParams(searchParams);
-      }
-      setInitialLoad(false);
-    }
-    refetch();
-  }, [searchParams]);
 
   const packagesCount = data?.packages ? data?.packages.length : 0;
 
@@ -141,6 +131,10 @@ function Packages(): ReactNode {
   }
 
   const getResultsTitle = () => {
+    if (searchParams.get("q")) {
+      return "Snaps";
+    }
+
     if (isFeatured) {
       return "Featured snaps";
     }

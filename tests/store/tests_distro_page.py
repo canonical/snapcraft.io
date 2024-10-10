@@ -5,8 +5,6 @@ from webapp.app import create_app
 
 
 class GetDistroPageTest(TestCase):
-    render_templates = False
-
     snap_payload = {
         "snap-id": "id",
         "name": "snapName",

@@ -9,7 +9,7 @@
   {% with featured_categories = featured_categories %}
     {% include "home/_featured-snaps.html" %}
   {% endwith %}
-  
+
   <section class="p-section">
     <hr class="p-rule is-fixed-width">
     <div class="u-fixed-width">
@@ -112,12 +112,65 @@
         <h2 class="p-muted-heading">Latest news from <a href="/blog">our blog&nbsp;&rsaquo;</a></h2>
       </div>
       <div class="col-9 col-medium-4">
-        <div id="horizontal-latest-articles">
-          <div class="u-align--center" style="min-height: 9.1rem;"><i class="p-icon--spinner u-animation--spin">Loading...</i></div>
+        <!-- Hardcoded article content for A/B test -->
+        <div class="p-section">
+          <div class="row">
+            <div class="col-6">
+              <h3 class="p-heading--2">
+                <a href="https://snapcraft.io/blog/creating-snaps-on-ubuntu-touch" class="article-link article-title">Creating Snaps on Ubuntu Touch</a>
+              </h3>
+            </div>
+            <div class="col-2 col-start-large-8">
+              <footer>
+                <p class="u-no-margin--bottom">
+                  <time pubdate datetime="POST_UPDATED" class="article-time">3 April 2024</time><br>
+                </p>
+                <em class="article-author">Aaron Prisk</em>
+              </footer>
+            </div>
+          </div>
+        </div>
+        <div class="p-section">
+          <hr class="p-rule">
+          <div class="row">
+            <div class="col-6">
+              <h3 class="p-heading--2">
+                <a href="https://snapcraft.io/blog/managing-software-snap-store-proxy" class="article-link article-title">Managing software in complex network environments: the Snap Store Proxy</a>
+              </h3>
+            </div>
+            <div class="col-2 col-start-large-8">
+              <footer>
+                <p class="u-no-margin--bottom">
+                  <time pubdate datetime="POST_UPDATED" class="article-time">15 January 2024</time><br>
+                </p>
+                <em class="article-author">Holly Hall</em>
+              </footer>
+            </div>
+          </div>
+        </div>
+        <div class="p-section">
+          <hr class="p-rule">
+          <div class="row">
+            <div class="col-6">
+              <h3 class="p-heading--2">
+                <a href="https://snapcraft.io/blog/we-wish-you-risc-v-holidays" class="article-link article-title">We wish you RISC-V holidays!</a>
+              </h3>
+            </div>
+            <div class="col-2 col-start-large-8">
+              <footer>
+                <p class="u-no-margin--bottom">
+                  <time pubdate datetime="POST_UPDATED" class="article-time">21 December 2023</time><br>
+                </p>
+                <em class="article-author">Igor Ljubuncic</em>
+              </footer>
+            </div>
+          </div>
         </div>
       </div>
     </div>
-    <template style="display: none;" id="horizontal-articles-template">
+  </section>
+    <!-- Temporarily replace js content with static HTML content for A/B testing. -->
+    <!-- <template style="display: none;" id="horizontal-articles-template">
       <div class="p-section">
         <hr class="p-rule">
         <div class="row">
@@ -134,8 +187,8 @@
           </div>
         </div>
       </div>
-    </template>
-    <script src="/static/js/dist/latest-news.js"></script>
+    </template> -->
+    <!-- <script src="/static/js/dist/latest-news.js"></script>
     <script>
       canonicalLatestNews.fetchLatestNews({
         articlesContainerSelector: "#horizontal-latest-articles",
@@ -143,13 +196,13 @@
         tagId: "2996",
         limit: 3,
       });
-    </script>
+    </script> -->
   </section>
 
   <section class="p-strip--white u-no-padding--top u-no-padding--bottom">
     {% include "partials/fsf_language.html" %}
   </section>
-  
+
   <section class="p-strip is-deep">
     {% include "home/_testimonials.html" %}
   </section>

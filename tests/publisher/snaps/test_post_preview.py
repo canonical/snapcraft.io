@@ -54,6 +54,7 @@ class PostPreviewPage(BaseTestCases.EndpointLoggedIn):
                 "snap_name": self.snap_name,
                 "images": [],
                 "title": self.snap_name,
+                "categories": [{"slug": "devices-and-iot"}],
             }
         )
 

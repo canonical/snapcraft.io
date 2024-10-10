@@ -8,8 +8,6 @@ from webapp.app import create_app
 
 
 class FirstSnap(TestCase):
-    render_templates = False
-
     def create_app(self):
         app = create_app(testing=True)
         app.secret_key = "secret_key"
@@ -55,7 +53,7 @@ class FirstSnap(TestCase):
 
     def test_get_package_snap_name(self):
         self.client.set_cookie(
-            "snapcraft.io", "fsf_snap_name_python", "test-snap-name-python"
+            "localhost", "fsf_snap_name_python", "test-snap-name-python"
         )
         response = self.client.get(
             "/first-snap/python/linux-auto/package",
@@ -100,7 +98,7 @@ class FirstSnap(TestCase):
         assert response.status_code == 200
         self.assert_context("language", "python")
         self.assert_context("os", "linux-auto")
-        self.assert_context("snap_name", "test-snap-name-python")
+        self.assert_context("snap_name", "test-offlineimap-{name}")
         self.assert_template_used("first-snap/build-and-test.html")
 
     def test_get_build_and_test_404_language(self):
@@ -127,7 +125,7 @@ class FirstSnap(TestCase):
 
     def test_get_upload_snap_name(self):
         self.client.set_cookie(
-            "snapcraft.io", "fsf_snap_name_python", "test-snap-name-python"
+            "localhost", "fsf_snap_name_python", "test-snap-name-python"
         )
         response = self.client.get(
             "/first-snap/python/linux/upload",

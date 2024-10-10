@@ -97,6 +97,7 @@ class AccountSnapsPage(BaseTestCases.EndpointLoggedInErrorHandling):
                                 "channels": [],
                             }
                         ],
+                        "publisher": {"username": "Toto"},
                     }
                 }
             }
@@ -136,6 +137,7 @@ class AccountSnapsPage(BaseTestCases.EndpointLoggedInErrorHandling):
                                 "channels": ["edge"],
                             }
                         ],
+                        "publisher": {"username": "Toto"},
                     }
                 }
             }
@@ -180,6 +182,7 @@ class AccountSnapsPage(BaseTestCases.EndpointLoggedInErrorHandling):
                                 "channels": [],
                             }
                         ],
+                        "publisher": {"username": "Toto"},
                     },
                     "test2": {
                         "status": "Approved",
@@ -224,6 +227,7 @@ class AccountSnapsPage(BaseTestCases.EndpointLoggedInErrorHandling):
                         "channels": [],
                     }
                 ],
+                "publisher": {"username": "Toto"},
             }
         }
 
@@ -249,6 +253,7 @@ class AccountSnapsPage(BaseTestCases.EndpointLoggedInErrorHandling):
                                 "channels": [],
                             }
                         ],
+                        "publisher": {"username": "Toto"},
                     },
                     "test2": {
                         "status": "Approved",
@@ -311,6 +316,7 @@ class AccountSnapsPage(BaseTestCases.EndpointLoggedInErrorHandling):
                         "channels": [],
                     }
                 ],
+                "publisher": {"username": "Toto"},
             }
         }
 

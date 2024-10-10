@@ -117,6 +117,10 @@ CSP = {
         "'self'",
         "'unsafe-inline'",
     ],
+    "media-src": [
+        "'self'",
+        "res.cloudinary.com",
+    ],
 }
 
 CSP_SCRIPT_SRC = [
@@ -380,6 +384,16 @@ def set_handlers(app):
         - Cache-Control: Add cache-control headers for public and private pages
         - Content-Security-Policy: Restrict resources (e.g., JavaScript, CSS,
         Images) and URLs
+        - Referrer-Policy: Limit referrer data for security while preserving
+        full referrer for same-origin requests
+        - Cross-Origin-Embedder-Policy: allows embedding cross-origin
+        resources
+        - Cross-Origin-Opener-Policy: enable the page to open pop-ups while
+        maintaining same-origin policy
+        - Cross-Origin-Resource-Policy: allowing cross-origin requests to
+        access the resource
+        - X-Permitted-Cross-Domain-Policies: disallows cross-domain access to
+        resources
         """
 
         response.headers["X-Hostname"] = socket.gethostname()
@@ -402,5 +416,11 @@ def set_handlers(app):
         response.headers["Content-Security-Policy"] = helpers.get_csp_as_str(
             csp
         )
-
+        response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
+        response.headers["Cross-Origin-Embedder-Policy"] = "unsafe-none"
+        response.headers["Cross-Origin-Opener-Policy"] = (
+            "same-origin-allow-popups"
+        )
+        response.headers["Cross-Origin-Resource-Policy"] = "cross-origin"
+        response.headers["X-Permitted-Cross-Domain-Policies"] = "none"
         return response
