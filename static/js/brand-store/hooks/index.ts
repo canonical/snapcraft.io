@@ -1,7 +1,7 @@
 import { useQuery, UseQueryResult } from "react-query";
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
 import type { AppDispatch, RootState } from "../store";
-import type { Model, SigningKey, Policy } from "../types/shared";
+import type { Model as ModelType, SigningKey, Policy } from "../types/shared";
 
 export const useAppDispatch: () => AppDispatch = useDispatch;
 export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
@@ -21,7 +21,7 @@ export interface UsePoliciesResponse {
 export function usePolicies(
   brandId: string | undefined,
   modelId: string | undefined,
-):UsePoliciesResponse {
+): UsePoliciesResponse {
   return useQuery<Policy[], ApiError>({
     queryKey: ["policies", brandId],
     queryFn: async () => {
@@ -44,7 +44,9 @@ export function usePolicies(
   });
 }
 
-export const useSigningKeys = (brandId: string | undefined): UseQueryResult<SigningKey[], Error> => {
+export const useSigningKeys = (
+  brandId: string | undefined,
+): UseQueryResult<SigningKey[], Error> => {
   return useQuery<SigningKey[], Error>({
     queryKey: ["signingKeys", brandId],
     queryFn: async () => {
@@ -63,7 +65,7 @@ export const useSigningKeys = (brandId: string | undefined): UseQueryResult<Sign
       return signingKeysData.data;
     },
   });
-}
+};
 
 export function useBrand(id: string | undefined) {
   return useQuery({
@@ -86,8 +88,10 @@ export function useBrand(id: string | undefined) {
   });
 }
 
-export const useModels = (brandId: string | undefined): UseQueryResult<Model[], Error> => {
-  return useQuery<Model[], Error>({
+export const useModels = (
+  brandId: string | undefined,
+): UseQueryResult<ModelType[], Error> => {
+  return useQuery<ModelType[], Error>({
     queryKey: ["models", brandId],
     queryFn: async () => {
       const response = await fetch(`/admin/store/${brandId}/models`);

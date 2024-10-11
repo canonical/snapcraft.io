@@ -1,9 +1,9 @@
 import { Dispatch, SetStateAction } from "react";
 import { SetterOrUpdater } from "recoil";
-import type { Model, Policy } from "../types/shared";
+import type { Model as ModelType, Policy } from "../types/shared";
 
 type Options = {
-  models: Model[];
+  models: ModelType[];
   id: string | undefined;
   setPolicies: SetterOrUpdater<Policy[]>;
   signal?: AbortSignal;
@@ -22,7 +22,7 @@ const getPolicies = async ({
       return fetch(`/admin/store/${id}/models/${model.name}/policies`, {
         signal,
       });
-    })
+    }),
   );
 
   const allPolicies = await Promise.all(

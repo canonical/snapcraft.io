@@ -27,7 +27,7 @@ import Navigation from "../Navigation";
 import { useModels } from "../../hooks";
 import { isClosedPanel, setPageTitle, getPolicies } from "../../utils";
 
-import type { Model, Policy } from "../../types/shared";
+import type { Model as ModelType, Policy } from "../../types/shared";
 
 function Models(): ReactNode {
   const { id } = useParams();
@@ -38,11 +38,11 @@ function Models(): ReactNode {
     isLoading: modelsIsLoading,
     error: modelsError,
     isError: modelsIsError,
-  }: UseQueryResult<Model[]> = useModels(brandId);
+  }: UseQueryResult<ModelType[]> = useModels(brandId);
 
   const location = useLocation();
   const navigate = useNavigate();
-  const setModelsList = useSetRecoilState<Array<Model>>(modelsListState);
+  const setModelsList = useSetRecoilState<Array<ModelType>>(modelsListState);
   const setPolicies = useSetRecoilState<Array<Policy>>(policiesListState);
   const setNewModel = useSetRecoilState(newModelState);
   const setFilter = useSetRecoilState<string>(modelsListFilterState);

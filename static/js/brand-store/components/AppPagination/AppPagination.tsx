@@ -1,9 +1,13 @@
 import { useState, useEffect, ReactNode } from "react";
 import { Button, Icon, Input, Select } from "@canonical/react-components";
 
-import type { Model, Policy, SigningKey } from "../../types/shared";
+import type {
+  Model as ModelType,
+  Policy,
+  SigningKey,
+} from "../../types/shared";
 
-export type ItemType = SigningKey | Policy | Model;
+export type ItemType = SigningKey | Policy | ModelType;
 
 type Props<T extends ItemType> = {
   keyword: string;
@@ -11,7 +15,11 @@ type Props<T extends ItemType> = {
   setItemsToShow: (items: T[]) => void;
 };
 
-function AppPagination<T extends ItemType>({ keyword, items, setItemsToShow }: Props<T>): ReactNode {
+function AppPagination<T extends ItemType>({
+  keyword,
+  items,
+  setItemsToShow,
+}: Props<T>): ReactNode {
   const paginationOptions = [
     {
       label: "25/page",
@@ -35,7 +43,7 @@ function AppPagination<T extends ItemType>({ keyword, items, setItemsToShow }: P
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [visibleItemsCount, setVisibleItemsCount] = useState<number>(0);
   const [totalPages, setTotalPages] = useState<number>(
-    Math.ceil(items.length / pageSize),
+    Math.ceil(items.length / pageSize)
   );
 
   useEffect(() => {
@@ -51,7 +59,7 @@ function AppPagination<T extends ItemType>({ keyword, items, setItemsToShow }: P
     const multiplier = currentPage - 1;
     const itemsToShow = items.slice(
       pageSize * multiplier,
-      pageSize * multiplier + pageSize,
+      pageSize * multiplier + pageSize
     );
 
     setItemsToShow(itemsToShow);
@@ -88,7 +96,7 @@ function AppPagination<T extends ItemType>({ keyword, items, setItemsToShow }: P
           labelClassName="u-off-screen u-off-screen--top"
           onChange={(e) => {
             setCurrentPage(
-              Math.min(totalPages, Math.max(1, parseInt(e.target.value))),
+              Math.min(totalPages, Math.max(1, parseInt(e.target.value)))
             );
           }}
         />{" "}
