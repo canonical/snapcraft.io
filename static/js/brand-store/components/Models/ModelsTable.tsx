@@ -10,12 +10,12 @@ import { maskString } from "../../utils";
 
 import { filteredModelsListState } from "../../selectors";
 
-import type { Model } from "../../types/shared";
+import type { Model as ModelType } from "../../types/shared";
 
 function ModelsTable(): ReactNode {
   const { id } = useParams();
-  const modelsList = useRecoilValue<Array<Model>>(filteredModelsListState);
-  const [itemsToShow, setItemsToShow] = useState<Array<Model>>(modelsList);
+  const modelsList = useRecoilValue<Array<ModelType>>(filteredModelsListState);
+  const [itemsToShow, setItemsToShow] = useState<Array<ModelType>>(modelsList);
 
   return (
     <>
@@ -57,7 +57,7 @@ function ModelsTable(): ReactNode {
               },
             },
           ]}
-          rows={itemsToShow.map((model: Model) => {
+          rows={itemsToShow.map((model: ModelType) => {
             return {
               columns: [
                 {

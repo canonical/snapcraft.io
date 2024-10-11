@@ -21,7 +21,7 @@ import Navigation from "../Navigation";
 
 import { useModels } from "../../hooks";
 import { setPageTitle } from "../../utils";
-import type { Model } from "../../types/shared";
+import type { Model as ModelType } from "../../types/shared";
 
 function Model() {
   const { id, model_id } = useParams();
@@ -30,7 +30,7 @@ function Model() {
   const [newApiKey, setNewApiKey] = useState("");
   const [showSuccessNotification, setShowSuccessNotificaton] = useState(false);
   const [showErrorNotification, setShowErrorNotificaton] = useState(false);
-  const setModelsList = useSetRecoilState<Model[]>(modelsListState);
+  const setModelsList = useSetRecoilState<ModelType[]>(modelsListState);
   const brandStore = useRecoilValue(brandStoreState(id));
 
   const mutation = useMutation({
@@ -67,7 +67,11 @@ function Model() {
     data: models,
     isLoading: modelsIsLoading,
     error: modelsError,
-  }: { data: Model[] | undefined; isLoading: boolean; error: unknown } = useModels(brandId);
+  }: {
+    data: ModelType[] | undefined;
+    isLoading: boolean;
+    error: unknown;
+  } = useModels(brandId);
 
   const handleError = () => {
     setShowErrorNotificaton(true);
@@ -205,7 +209,7 @@ function Model() {
                         setNewApiKey(
                           randomstring.generate({
                             length: 50,
-                          }),
+                          })
                         );
                       }}
                     >
@@ -224,7 +228,7 @@ function Model() {
                     <p>
                       {format(
                         new Date(currentModel["created-at"]),
-                        "dd/MM/yyyy",
+                        "dd/MM/yyyy"
                       )}
                     </p>
                   </Col>
@@ -257,7 +261,7 @@ function Model() {
                         <p>
                           {format(
                             new Date(currentModel["modified-at"]),
-                            "dd/MM/yyyy",
+                            "dd/MM/yyyy"
                           )}
                         </p>
                       </Col>
