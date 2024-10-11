@@ -60,6 +60,9 @@ function getInitialState(): RootState {
           id: "testid",
           current_user: true,
           roles: ["admin"],
+          displayname: "",
+          email: "",
+          username: ""
         },
       ],
       loading: false,
@@ -77,7 +80,7 @@ let initialState: RootState = getInitialState();
 
 const mockSelector = jest.spyOn(reactRedux, "useSelector");
 const setupMockSelector = (state: RootState) => {
-  mockSelector.mockImplementation((callback: any) => {
+  mockSelector.mockImplementation((callback: (state: RootState) => unknown) => {
     return callback(state);
   });
 };

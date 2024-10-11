@@ -1,4 +1,5 @@
-import { useState, useEffect, ReactNode } from "react";
+import { useState, useEffect } from "react";
+import type { ReactNode } from "react";
 import { useParams, Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { AsyncThunkAction } from "@reduxjs/toolkit";
@@ -36,6 +37,8 @@ import { setPageTitle } from "../../utils";
 import type {
   StoresSlice,
   Snap,
+  SnapsList,
+  Store,
   Member,
   SnapsSlice,
   MembersSlice,
@@ -60,30 +63,31 @@ function Snaps(): ReactNode {
   );
   const dispatch = useAppDispatch();
   const { id } = useParams();
-  const [snapsInStore, setSnapsInStore]: any = useState([]);
-  const [otherStoreIds, setOtherStoreIds]: any = useState([]);
-  const [otherStores, setOtherStores] = useState([]);
-  const [selectedSnaps, setSelectedSnaps] = useState([]);
+  const [snapsInStore, setSnapsInStore] = useState<Snap[]>([]);
+  const [otherStoreIds, setOtherStoreIds] = useState<string[]>([]);
+  const [otherStores, setOtherStores] = useState<Store[]>([]);
+  const [selectedSnaps, setSelectedSnaps] = useState<SnapsList>([]);
   const [sidePanelOpen, setSidePanelOpen] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
-  const [snapsToRemove, setSnapsToRemove]: any = useState([]);
+  const [snapsToRemove, setSnapsToRemove] = useState<Snap[]>([]);
   const [showAddSuccessNotification, setShowAddSuccessNotification] =
     useState(false);
   const [showErrorNotification, setShowErrorNotification] = useState(false);
   const [showRemoveSuccessNotification, setShowRemoveSuccessNotification] =
     useState(false);
   const [removeSnapSaving, setRemoveSnapSaving] = useState(false);
-  const [nonEssentialSnapIds, setNonEssentialSnapIds]: any = useState([]);
+  const [nonEssentialSnapIds, setNonEssentialSnapIds] = useState<string[]>([]);
   const [isReloading, setIsReloading] = useState(false);
-  const [currentMember, setCurrentMember]: any = useState(null);
-  const [currentStore, setCurrentStore]: any = useState(null);
+  const [currentMember, setCurrentMember] = useState<Member | null>(null);
+  const [currentStore, setCurrentStore] = useState<Store | null>(null);
   const [isPublisherOnly, setIsPublisherOnly] = useState(false);
   const [isReviewerOnly, setIsReviewerOnly] = useState(false);
   const [isReviewerAndPublisherOnly, setIsReviewerAndPublisherOnly] =
     useState(false);
   const [showRemoveSnapsConfirmation, setShowRemoveSnapsConfirmation] =
     useState(false);
-  const [globalStore, setGlobalStore]: any = useState(null);
+  // @ts-ignore
+  const [globalStore, setGlobalStore] = useState<Store | null>(null);
   const [fetchSnapsByStoreIdPromise, setFetchSnapsByStoreIdPromise] = useState<
     ReturnType<AsyncThunkAction<Snap[], string, {}>> | undefined
   >();
@@ -127,7 +131,7 @@ function Snaps(): ReactNode {
         }
       })
       .then((data) => {
-        dispatch(fetchSnaps(id as string) as any);
+        dispatch(fetchSnaps(id as string));
 
         // Add timeout so that the user has time to notice the save action
         // in the event of it happening very fast
@@ -188,7 +192,7 @@ function Snaps(): ReactNode {
         }
       })
       .then(() => {
-        dispatch(fetchSnaps(id as string) as any);
+        dispatch(fetchSnaps(id as string));
 
         // Add timeout so that the user has time to notice the save action
         // in the event of it happening very fast
@@ -266,7 +270,7 @@ function Snaps(): ReactNode {
     setSnapsInStore(snaps.filter((snap) => snap.store === id));
     setOtherStoreIds(getOtherStoreIds());
 
-    const nonEssentialSnaps = snaps.filter((item) => {
+    const nonEssentialSnaps = snaps.filter((item: Snap) => {
       return item.store !== id && !item.essential;
     });
 
@@ -313,30 +317,39 @@ function Snaps(): ReactNode {
   }, [otherStoreIds]);
 
   useEffect(() => {
-    setCurrentMember(members.find((member) => member.current_user));
+    const currentMember = members.find((member) => member.current_user) ?? null;
+    setCurrentMember(currentMember);
   }, [snaps, members, snapsLoading, membersLoading]);
 
   useEffect(() => {
-    setCurrentStore(brandStoresList.find((store) => store.id === id));
+    const store = brandStoresList.find((store) => store.id === id);
+    setCurrentStore(store || null);
   }, [brandStoresList, id]);
 
   useEffect(() => {
-    setIsPublisherOnly(
-      currentStore?.roles.length === 1 &&
-        currentStore?.roles.includes("access"),
-    );
+  if (currentStore) {
+    const roles = currentStore.roles;
 
-    setIsReviewerOnly(
-      currentStore?.roles.length === 1 &&
-        currentStore?.roles.includes("review"),
-    );
+    if (roles) {
+      setIsPublisherOnly(roles.length === 1 && roles.includes("access"));
+      setIsReviewerOnly(roles.length === 1 && roles.includes("review"));
+      setIsReviewerAndPublisherOnly(
+        roles.length === 2 &&
+        roles.includes("access") &&
+        roles.includes("review")
+      );
+    } else {
+      setIsPublisherOnly(false);
+      setIsReviewerOnly(false);
+      setIsReviewerAndPublisherOnly(false);
+    }
+  } else {
+    setIsPublisherOnly(false);
+    setIsReviewerOnly(false);
+    setIsReviewerAndPublisherOnly(false);
+  }
+}, [currentStore, id]);
 
-    setIsReviewerAndPublisherOnly(
-      currentStore?.roles.length === 2 &&
-        currentStore?.roles.includes("access") &&
-        currentStore?.roles.includes("review"),
-    );
-  }, [currentStore, id]);
 
   const getSectionName = () => {
     if (!isReloading && !isOnlyViewer() && !snapsNotFound && !membersNotFound) {

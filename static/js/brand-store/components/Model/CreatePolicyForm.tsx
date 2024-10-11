@@ -35,7 +35,7 @@ function CreatePolicyForm({
   const brandId = useRecoilValue(brandIdState);
   const navigate = useNavigate();
   const location = useLocation();
-  const { isLoading, isError, error, data }: any = useSigningKeys(brandId);
+  const { isLoading, isError, error, data } = useSigningKeys(brandId);
   const [signingKeys, setSigningKeys] = useRecoilState(signingKeysListState);
   const [newSigningKey, setNewSigningKey] = useRecoilState(newSigningKeyState);
   const brandStore = useRecoilValue(brandStoreState(id));
@@ -98,7 +98,7 @@ function CreatePolicyForm({
   }
 
   useEffect(() => {
-    if (!isLoading && !error) {
+    if (!isLoading && !error && data) {
       setSigningKeys(data);
     }
   }, [isLoading, error, data]);
@@ -118,8 +118,7 @@ function CreatePolicyForm({
         <div className="p-panel__content">
           <div className="u-fixed-width" style={{ marginBottom: "30px" }}>
             {isLoading && <p>Fetching signing keys...</p>}
-            {isError && error && <p>Error: {error.message}</p>}
-
+            {isError && error instanceof Error && <p>Error: {error.message}</p>}
             {isSaving && (
               <p>
                 <Icon name="spinner" className="u-animation--spin" />

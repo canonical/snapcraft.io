@@ -1,15 +1,28 @@
-import { useQuery } from "react-query";
+import { useQuery, UseQueryResult } from "react-query";
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
 import type { AppDispatch, RootState } from "../store";
+import type { Model as ModelType, SigningKey, Policy } from "../types/shared";
 
 export const useAppDispatch: () => AppDispatch = useDispatch;
 export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
 
+export interface ApiError {
+  message: string;
+}
+
+export interface UsePoliciesResponse {
+  isLoading: boolean;
+  isError: boolean;
+  error: unknown;
+  refetch: () => void;
+  data: Policy[] | undefined;
+}
+
 export function usePolicies(
   brandId: string | undefined,
   modelId: string | undefined,
-) {
-  return useQuery({
+): UsePoliciesResponse {
+  return useQuery<Policy[], ApiError>({
     queryKey: ["policies", brandId],
     queryFn: async () => {
       const response = await fetch(
@@ -31,8 +44,10 @@ export function usePolicies(
   });
 }
 
-export function useSigningKeys(brandId: string | undefined) {
-  return useQuery({
+export const useSigningKeys = (
+  brandId: string | undefined,
+): UseQueryResult<SigningKey[], Error> => {
+  return useQuery<SigningKey[], Error>({
     queryKey: ["signingKeys", brandId],
     queryFn: async () => {
       const response = await fetch(`/admin/store/${brandId}/signing-keys`);
@@ -50,7 +65,7 @@ export function useSigningKeys(brandId: string | undefined) {
       return signingKeysData.data;
     },
   });
-}
+};
 
 export function useBrand(id: string | undefined) {
   return useQuery({
@@ -73,8 +88,10 @@ export function useBrand(id: string | undefined) {
   });
 }
 
-export function useModels(brandId: string | undefined) {
-  return useQuery({
+export const useModels = (
+  brandId: string | undefined,
+): UseQueryResult<ModelType[], Error> => {
+  return useQuery<ModelType[], Error>({
     queryKey: ["models", brandId],
     queryFn: async () => {
       const response = await fetch(`/admin/store/${brandId}/models`);

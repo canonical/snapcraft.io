@@ -16,7 +16,7 @@ import PoliciesTable from "./PoliciesTable";
 import CreatePolicyForm from "./CreatePolicyForm";
 import Navigation from "../Navigation";
 
-import { usePolicies, useSigningKeys } from "../../hooks";
+import { ApiError, UsePoliciesResponse, usePolicies, useSigningKeys } from "../../hooks";
 import {
   policiesListFilterState,
   policiesListState,
@@ -35,7 +35,7 @@ function Policies(): ReactNode {
   const brandId = useRecoilValue(brandIdState);
   const location = useLocation();
   const navigate = useNavigate();
-  const { isLoading, isError, error, refetch, data }: any = usePolicies(
+  const { isLoading, isError, error, refetch, data }: UsePoliciesResponse = usePolicies(
     brandId,
     model_id,
   );
@@ -59,13 +59,19 @@ function Policies(): ReactNode {
 
   useEffect(() => {
     if (!signingKeys.isLoading && !signingKeys.isError) {
-      setSigningKeysList(signingKeys.data);
+      if (signingKeys.data) {
+        setSigningKeysList(signingKeys.data);
+      } else {
+        setSigningKeysList([]);
+      }
     }
   }, [signingKeys]);
 
   useEffect(() => {
     if (!isLoading && !isError) {
-      setPoliciesList(data);
+      if (data) {
+        setPoliciesList(data);
+      }
       setFilter(searchParams.get("filter") || "");
     } else {
       setPoliciesList([]);
@@ -158,7 +164,7 @@ function Policies(): ReactNode {
               <>
                 {isError && error && (
                   <Notification severity="negative">
-                    Error: {error.message}
+                    Error: {(error as ApiError).message}
                   </Notification>
                 )}
                 {isLoading ? (
