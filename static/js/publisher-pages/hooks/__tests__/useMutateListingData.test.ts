@@ -19,6 +19,7 @@ describe("useMutateListingData", () => {
         setUpdateMetadataOnRelease: jest.fn(),
         shouldShowUpdateMetadataWarning: jest.fn(),
         snapName: "test-snap",
+        setShowUpdateMetadataMessage: jest.fn(),
       }),
     );
     expect(ReactQuery.useMutation).toHaveBeenCalled();

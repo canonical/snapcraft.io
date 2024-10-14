@@ -174,6 +174,7 @@ def get_listing_snap(snap_name):
 
 @login_required
 def post_listing_data(snap_name):
+    res = {}
     changes = None
     changed_fields = flask.request.form.get("changes")
 
@@ -230,7 +231,11 @@ def post_listing_data(snap_name):
                 )
 
             try:
-                publisher_api.snap_metadata(snap_id, flask.session, body_json)
+                response = publisher_api.snap_metadata(
+                    snap_id, flask.session, body_json
+                )
+                res["success"] = True
+                res["data"] = response
             except StoreApiResponseErrorList as api_response_error_list:
                 if api_response_error_list.status_code != 404:
                     error_list = error_list + api_response_error_list.errors
@@ -266,7 +271,7 @@ def post_listing_data(snap_name):
 
             return flask.make_response(res, 200)
 
-    return flask.make_response({}, 200)
+    return flask.make_response(res, 200)
 
 
 @login_required
