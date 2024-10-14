@@ -44,6 +44,9 @@ function ListingForm({ data, refetch }: Props): JSX.Element {
   const [showSuccessNotification, setShowSuccessNotification] =
     useState<boolean>(false);
 
+  const [showUpdateMetadataMessage, setShowUpdateMetadataMessage] =
+    useState<boolean>(false);
+
   const [updateMetadataOnRelease, setUpdateMetadataOnRelease] =
     useState<boolean>(data.update_metadata_on_release);
 
@@ -51,7 +54,7 @@ function ListingForm({ data, refetch }: Props): JSX.Element {
     useState<boolean>(false);
 
   const [formValues, setFormValues] = useState<{ [key: string]: any } | null>(
-    null
+    null,
   );
 
   const { mutate, isLoading } = useMutateListingData({
@@ -64,11 +67,12 @@ function ListingForm({ data, refetch }: Props): JSX.Element {
     setUpdateMetadataOnRelease,
     shouldShowUpdateMetadataWarning,
     snapName,
+    setShowUpdateMetadataMessage,
   });
 
   useEffect(() => {
     const tourContainer = document.getElementById(
-      "tour-container"
+      "tour-container",
     ) as HTMLElement;
 
     if (snapName) {
@@ -153,6 +157,14 @@ function ListingForm({ data, refetch }: Props): JSX.Element {
               className="u-no-margin--bottom"
             >
               Changes applied successfully.
+            </Notification>
+          </Strip>
+        )}
+
+        {showUpdateMetadataMessage && (
+          <Strip shallow className="u-no-padding--bottom">
+            <Notification severity="information">
+              Metadata updates will be processed and applied shortly
             </Notification>
           </Strip>
         )}
