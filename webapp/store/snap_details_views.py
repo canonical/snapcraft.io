@@ -370,10 +370,25 @@ def snap_details_views(store, api):
 
     @store.route("/<lang>/<theme>/install.svg")
     def snap_install_badge(lang, theme):
-        allowed_langs = {"ar", "bg", "bn", "de", "en", "es", "fr", "it", "jp", "pl", "pt", "ro", "ru", "tw"}
+        allowed_langs = {
+            "ar",
+            "bg",
+            "bn",
+            "de",
+            "en",
+            "es",
+            "fr",
+            "it",
+            "jp",
+            "pl",
+            "pt",
+            "ro",
+            "ru",
+            "tw",
+        }
         if lang not in allowed_langs:
             return Response("Invalid language", status=400)
-	
+
         file_name = (
             "snap-store-white.svg"
             if theme == "light"
