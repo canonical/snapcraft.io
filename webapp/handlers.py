@@ -397,7 +397,9 @@ def set_handlers(app):
 
         response.headers["X-Hostname"] = socket.gethostname()
 
-        response.headers["Cache-Control"] = "no-store, no-cache, must-revalidate, max-age=0"
+        response.headers["Cache-Control"] = (
+            "no-store, no-cache, must-revalidate, max-age=0"
+        )
 
         # if response.status_code == 200:
         #     if flask.session:
