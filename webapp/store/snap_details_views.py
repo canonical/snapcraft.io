@@ -2,6 +2,7 @@ import flask
 import humanize
 import dns.resolver
 import re
+import os
 
 import webapp.helpers as helpers
 import webapp.metrics.helper as metrics_helper
@@ -9,7 +10,7 @@ import webapp.metrics.metrics as metrics
 import webapp.store.logic as logic
 from webapp import authentication
 from webapp.markdown import parse_markdown_description
-from flask import make_response
+from flask import make_response, Response
 
 from canonicalwebteam.flask_base.decorators import (
     exclude_xframe_options_header,
@@ -366,6 +367,28 @@ def snap_details_views(store, api):
         )
 
         return svg, 200, {"Content-Type": "image/svg+xml"}
+
+    @store.route("/<lang>/<theme>/install.svg")
+    def snap_install_badge(lang, theme):
+        file_name = (
+            "snap-store-white.svg"
+            if theme == "light"
+            else "snap-store-black.svg"
+        )
+        svg_path = os.path.join("static/images/badges/", lang, file_name)
+        # Check if the file exists
+        if os.path.exists(svg_path):
+            with open(svg_path, "r") as svg_file:
+                svg_content = svg_file.read()
+            return Response(svg_content, mimetype="image/svg+xml")
+        else:
+            # default to empty SVG
+            svg = (
+                '<svg height="20" width="1" '
+                'xmlns="http://www.w3.org/2000/svg" '
+                'xmlns:xlink="http://www.w3.org/1999/xlink"></svg>'
+            )
+            return Response(svg, mimetype="image/svg+xml"), 404
 
     @store.route('/<regex("' + snap_regex + '"):snap_name>/trending.svg')
     def snap_details_badge_trending(snap_name):
