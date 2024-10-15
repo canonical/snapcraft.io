@@ -62,7 +62,7 @@ function getInitialState(): RootState {
           roles: ["admin"],
           displayname: "",
           email: "",
-          username: ""
+          username: "",
         },
       ],
       loading: false,

@@ -86,11 +86,14 @@ function Snaps(): ReactNode {
     useState(false);
   const [showRemoveSnapsConfirmation, setShowRemoveSnapsConfirmation] =
     useState(false);
-  // @ts-ignore
   const [globalStore, setGlobalStore] = useState<Store | null>(null);
+
+  // @ts-expect-error: Expected an error here for {}
   const [fetchSnapsByStoreIdPromise, setFetchSnapsByStoreIdPromise] = useState<
     ReturnType<AsyncThunkAction<Snap[], string, {}>> | undefined
   >();
+
+  // @ts-expect-error: Expected an error here for {}
   const [fetchMembersByStoreIdPromise, setFetchMembersByStoreIdPromise] =
     useState<ReturnType<AsyncThunkAction<Member[], string, {}>> | undefined>();
 
@@ -327,29 +330,28 @@ function Snaps(): ReactNode {
   }, [brandStoresList, id]);
 
   useEffect(() => {
-  if (currentStore) {
-    const roles = currentStore.roles;
+    if (currentStore) {
+      const roles = currentStore.roles;
 
-    if (roles) {
-      setIsPublisherOnly(roles.length === 1 && roles.includes("access"));
-      setIsReviewerOnly(roles.length === 1 && roles.includes("review"));
-      setIsReviewerAndPublisherOnly(
-        roles.length === 2 &&
-        roles.includes("access") &&
-        roles.includes("review")
-      );
+      if (roles) {
+        setIsPublisherOnly(roles.length === 1 && roles.includes("access"));
+        setIsReviewerOnly(roles.length === 1 && roles.includes("review"));
+        setIsReviewerAndPublisherOnly(
+          roles.length === 2 &&
+            roles.includes("access") &&
+            roles.includes("review"),
+        );
+      } else {
+        setIsPublisherOnly(false);
+        setIsReviewerOnly(false);
+        setIsReviewerAndPublisherOnly(false);
+      }
     } else {
       setIsPublisherOnly(false);
       setIsReviewerOnly(false);
       setIsReviewerAndPublisherOnly(false);
     }
-  } else {
-    setIsPublisherOnly(false);
-    setIsReviewerOnly(false);
-    setIsReviewerAndPublisherOnly(false);
-  }
-}, [currentStore, id]);
-
+  }, [currentStore, id]);
 
   const getSectionName = () => {
     if (!isReloading && !isOnlyViewer() && !snapsNotFound && !membersNotFound) {
@@ -501,7 +503,7 @@ function Snaps(): ReactNode {
                                       included in {getStoreName(id || "")}.
                                     </p>
                                     <ul>
-                                      {includedStores.map((store: any) => (
+                                      {includedStores.map((store) => (
                                         <li key={store.id}>
                                           {store.userHasAccess ? (
                                             <Link
