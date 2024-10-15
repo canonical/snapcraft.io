@@ -12,7 +12,6 @@ import user_agents
 import webapp.template_utils as template_utils
 from canonicalwebteam import image_template
 from webapp import authentication
-from webapp import helpers
 from webapp.config import (
     BSI_URL,
     LOGIN_URL,
@@ -412,15 +411,19 @@ def set_handlers(app):
                             "stale-if-error=86400",
                         }
                     )
-        csp = add_script_hashes_to_csp(response)
-        response.headers["Content-Security-Policy"] = helpers.get_csp_as_str(
-            csp
-        )
-        response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
-        response.headers["Cross-Origin-Embedder-Policy"] = "unsafe-none"
-        response.headers["Cross-Origin-Opener-Policy"] = (
-            "same-origin-allow-popups"
-        )
-        response.headers["Cross-Origin-Resource-Policy"] = "cross-origin"
-        response.headers["X-Permitted-Cross-Domain-Policies"] = "none"
+        # csp = add_script_hashes_to_csp(response)
+        # response.headers["Content-Security-Policy"] = helpers.get_csp_as_str(
+        #     csp
+        # )
+        # response.headers["Referrer-Policy"] = (
+        #   "strict-origin-when-cross-origin"
+        # )
+        # response.headers["Cross-Origin-Embedder-Policy"] = (
+        #    "unsafe-none"
+        # )
+        # response.headers["Cross-Origin-Opener-Policy"] = (
+        #    "same-origin-allow-popups"
+        # )
+        # response.headers["Cross-Origin-Resource-Policy"] = "cross-origin"
+        # response.headers["X-Permitted-Cross-Domain-Policies"] = "none"
         return response
