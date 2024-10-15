@@ -16,7 +16,12 @@ import PoliciesTable from "./PoliciesTable";
 import CreatePolicyForm from "./CreatePolicyForm";
 import Navigation from "../Navigation";
 
-import { ApiError, UsePoliciesResponse, usePolicies, useSigningKeys } from "../../hooks";
+import {
+  ApiError,
+  UsePoliciesResponse,
+  usePolicies,
+  useSigningKeys,
+} from "../../hooks";
 import {
   policiesListFilterState,
   policiesListState,
@@ -35,10 +40,8 @@ function Policies(): ReactNode {
   const brandId = useRecoilValue(brandIdState);
   const location = useLocation();
   const navigate = useNavigate();
-  const { isLoading, isError, error, refetch, data }: UsePoliciesResponse = usePolicies(
-    brandId,
-    model_id,
-  );
+  const { isLoading, isError, error, refetch, data }: UsePoliciesResponse =
+    usePolicies(brandId, model_id);
   const signingKeys = useSigningKeys(brandId);
   const setPoliciesList = useSetRecoilState<Array<Policy>>(policiesListState);
   const setFilter = useSetRecoilState<string>(policiesListFilterState);

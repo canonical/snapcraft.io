@@ -110,7 +110,7 @@ export const useModels = (
     },
     enabled: !!brandId,
   });
-}
+};
 
 export function usePublisher() {
   return useQuery("publisher", async () => {

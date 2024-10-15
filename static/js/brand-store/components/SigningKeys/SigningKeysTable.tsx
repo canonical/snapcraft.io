@@ -219,7 +219,7 @@ function SigningKeysTable({
         keyword="signing key"
         items={signingKeysList}
         setItemsToShow={(items: ItemType[]) => {
-          if (items.length > 0 && 'name' in items[0]) {
+          if (items.length > 0 && "name" in items[0]) {
             setItemsToShow(items as SigningKey[]);
           } else {
             console.error("Invalid item types.");

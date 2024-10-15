@@ -6,6 +6,7 @@ import {
   SetStateAction,
 } from "react";
 import { useDispatch } from "react-redux";
+import { AppDispatch } from "../../store/index";
 import { useParams } from "react-router-dom";
 import { format } from "date-fns";
 import { MainTable, Button } from "@canonical/react-components";
@@ -15,7 +16,12 @@ import InviteModal from "./InviteModal";
 import { fetchInvites } from "../../slices/invitesSlice";
 import ROLES from "./memberRoles";
 
-import type { Invite, InvitesList, Status, InviteActionData } from "../../types/shared";
+import type {
+  Invite,
+  InvitesList,
+  Status,
+  InviteActionData,
+} from "../../types/shared";
 
 type Props = {
   invites: InvitesList;
@@ -34,10 +40,11 @@ function InvitesTable({
   const [expiredInvites, setExpiredInvites] = useState<Invite[]>([]);
   const [revokedInvites, setRevokedInvites] = useState<Invite[]>([]);
   const [inviteModalOpen, setInviteModalOpen] = useState(false);
-  const [inviteActionData, setInviteActionData] = useState<InviteActionData | null>(null);
+  const [inviteActionData, setInviteActionData] =
+    useState<InviteActionData | null>(null);
   const [inviteModalIsSaving, setInviteModalIsSaving] = useState(false);
   const { id } = useParams();
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
     setPendingInvites(
@@ -71,8 +78,7 @@ function InvitesTable({
         }
       })
       .then(() => {
-        // @ts-ignore
-        dispatch(fetchInvites(id as string) as any);
+        dispatch(fetchInvites(id as string));
         setTimeout(() => {
           setInviteModalOpen(false);
           setInviteModalIsSaving(false);
@@ -229,7 +235,7 @@ function InvitesTable({
         ]}
       />
       <InviteModal
-        inviteActionData={inviteActionData ?? { email: '', action: 'resend' }}
+        inviteActionData={inviteActionData ?? { email: "", action: "resend" }}
         inviteModalOpen={inviteModalOpen}
         setInviteModalOpen={setInviteModalOpen}
         updateInvite={updateInvite}
