@@ -1,4 +1,5 @@
 // based on https://github.com/vanilla-framework/vanilla-framework/pull/2051
+@use 'sass:color';
 
 @mixin snapcraft-p-strip {
   $horizontal-edge-padding: $spv--strip-regular;
@@ -81,7 +82,7 @@
         rgba(225, 225, 225, 0) 50%,
         rgba(225, 225, 225, 0) 100%
       ),
-      linear-gradient(10deg, $color-brand, lighten($color-brand, 10%));
+      linear-gradient(10deg, $color-brand, color.adjust($color-brand, $lightness: 10%));
     // stylelint-enable
     background-position:
       top right,
