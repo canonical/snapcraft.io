@@ -1,5 +1,7 @@
+@use 'sass:color';
+
 @mixin snapcraft-tour {
-  $color-overlay: transparentize($color-dark, 0.35);
+  $color-overlay: color.adjust($color-dark, $alpha: -0.35);
   $triangle-height: $sp-unit;
   $triangle-spacing: 2 * $triangle-height;
 
