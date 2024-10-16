@@ -3,7 +3,9 @@ import { KeyboardEvent, ReactNode } from "react";
 import type { SnapsList } from "../../types/shared";
 
 type SetSnapsInStoreFunc = (snaps: SnapsList) => void;
-type SetOtherStoresFunc = (stores: Array<{ id: string; name: string; snaps: SnapsList }>) => void;
+type SetOtherStoresFunc = (
+  stores: Array<{ id: string; name: string; snaps: SnapsList }>,
+) => void;
 type GetStoreNameFunc = (storeId: string) => string;
 
 type Props = {

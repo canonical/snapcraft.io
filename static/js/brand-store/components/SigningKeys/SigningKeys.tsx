@@ -39,8 +39,13 @@ function SigningKeys(): ReactNode {
   const brandId = useRecoilValue(brandIdState);
   const location = useLocation();
   const navigate = useNavigate();
-  const { isLoading, isError, error, data, refetch }: UseQueryResult<SigningKey[], Error> =
-    useSigningKeys(brandId);
+  const {
+    isLoading,
+    isError,
+    error,
+    data,
+    refetch,
+  }: UseQueryResult<SigningKey[], Error> = useSigningKeys(brandId);
   const setSigningKeysList =
     useSetRecoilState<Array<SigningKey>>(signingKeysListState);
   const setPolicies = useSetRecoilState<Array<Policy>>(policiesListState);

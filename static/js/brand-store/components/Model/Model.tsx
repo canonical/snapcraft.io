@@ -209,7 +209,7 @@ function Model() {
                         setNewApiKey(
                           randomstring.generate({
                             length: 50,
-                          })
+                          }),
                         );
                       }}
                     >
@@ -228,7 +228,7 @@ function Model() {
                     <p>
                       {format(
                         new Date(currentModel["created-at"]),
-                        "dd/MM/yyyy"
+                        "dd/MM/yyyy",
                       )}
                     </p>
                   </Col>
@@ -261,7 +261,7 @@ function Model() {
                         <p>
                           {format(
                             new Date(currentModel["modified-at"]),
-                            "dd/MM/yyyy"
+                            "dd/MM/yyyy",
                           )}
                         </p>
                       </Col>

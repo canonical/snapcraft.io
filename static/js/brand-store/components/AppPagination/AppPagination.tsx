@@ -43,7 +43,7 @@ function AppPagination<T extends ItemType>({
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [visibleItemsCount, setVisibleItemsCount] = useState<number>(0);
   const [totalPages, setTotalPages] = useState<number>(
-    Math.ceil(items.length / pageSize)
+    Math.ceil(items.length / pageSize),
   );
 
   useEffect(() => {
@@ -59,7 +59,7 @@ function AppPagination<T extends ItemType>({
     const multiplier = currentPage - 1;
     const itemsToShow = items.slice(
       pageSize * multiplier,
-      pageSize * multiplier + pageSize
+      pageSize * multiplier + pageSize,
     );
 
     setItemsToShow(itemsToShow);
@@ -96,7 +96,7 @@ function AppPagination<T extends ItemType>({
           labelClassName="u-off-screen u-off-screen--top"
           onChange={(e) => {
             setCurrentPage(
-              Math.min(totalPages, Math.max(1, parseInt(e.target.value)))
+              Math.min(totalPages, Math.max(1, parseInt(e.target.value))),
             );
           }}
         />{" "}

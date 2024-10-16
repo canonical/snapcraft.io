@@ -23,7 +23,7 @@ import { brandStoreState } from "../../selectors";
 type Props = {
   setShowNotification: Dispatch<SetStateAction<boolean>>;
   setShowErrorNotification: Dispatch<SetStateAction<boolean>>;
-  refetchPolicies: Function;
+  refetchPolicies: () => void;
 };
 
 function CreatePolicyForm({

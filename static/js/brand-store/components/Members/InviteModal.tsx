@@ -1,7 +1,6 @@
 import { Dispatch, ReactNode, SetStateAction } from "react";
 import { Modal, Button } from "@canonical/react-components";
-import type { Invite, InviteActionData } from "../../types/shared";
-
+import type { InviteActionData } from "../../types/shared";
 
 type Props = {
   inviteActionData: InviteActionData | null;

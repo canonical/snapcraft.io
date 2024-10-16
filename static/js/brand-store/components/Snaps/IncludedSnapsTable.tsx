@@ -184,7 +184,7 @@ function IncludedSnapsTable({
                 disabled={!nonEssentialSnapIds.length}
                 label="Name"
                 checked={isChecked}
-                // @ts-expect-error
+                // @ts-expect-error - The Input component does not support the 'indeterminate' prop.
                 indeterminate={isIndeterminate}
               />
             </div>
