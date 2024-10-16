@@ -152,3 +152,11 @@ def get_csp_as_str(csp={}):
         csp_value = " ".join(values)
         csp_str += f"{key} {csp_value}; "
     return csp_str.strip()
+
+
+def list_folders(directory):
+    return [
+        item
+        for item in os.listdir(directory)
+        if os.path.isdir(os.path.join(directory, item))
+    ]
