@@ -12,7 +12,6 @@ import user_agents
 import webapp.template_utils as template_utils
 from canonicalwebteam import image_template
 from webapp import authentication
-from webapp import helpers
 from webapp.config import (
     BSI_URL,
     LOGIN_URL,
@@ -398,29 +397,37 @@ def set_handlers(app):
 
         response.headers["X-Hostname"] = socket.gethostname()
 
-        if response.status_code == 200:
-            if flask.session:
-                response.headers["Cache-Control"] = "private"
-            else:
-                # Only add caching headers to successful responses
-                if not response.headers.get("Cache-Control"):
-                    response.headers["Cache-Control"] = ", ".join(
-                        {
-                            "public",
-                            "max-age=61",
-                            "stale-while-revalidate=300",
-                            "stale-if-error=86400",
-                        }
-                    )
-        csp = add_script_hashes_to_csp(response)
-        response.headers["Content-Security-Policy"] = helpers.get_csp_as_str(
-            csp
+        response.headers["Cache-Control"] = (
+            "no-store, no-cache, must-revalidate, max-age=0"
         )
-        response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
-        response.headers["Cross-Origin-Embedder-Policy"] = "unsafe-none"
-        response.headers["Cross-Origin-Opener-Policy"] = (
-            "same-origin-allow-popups"
-        )
-        response.headers["Cross-Origin-Resource-Policy"] = "cross-origin"
-        response.headers["X-Permitted-Cross-Domain-Policies"] = "none"
+
+        # if response.status_code == 200:
+        #     if flask.session:
+        #         response.headers["Cache-Control"] = "private"
+        #     else:
+        #         # Only add caching headers to successful responses
+        #         if not response.headers.get("Cache-Control"):
+        #             response.headers["Cache-Control"] = ", ".join(
+        #                 {
+        #                     "public",
+        #                     "max-age=61",
+        #                     "stale-while-revalidate=300",
+        #                     "stale-if-error=86400",
+        #                 }
+        #             )
+        # csp = add_script_hashes_to_csp(response)
+        # response.headers["Content-Security-Policy"] = helpers.get_csp_as_str(
+        #     csp
+        # )
+        # response.headers["Referrer-Policy"] = (
+        #   "strict-origin-when-cross-origin"
+        # )
+        # response.headers["Cross-Origin-Embedder-Policy"] = (
+        #    "unsafe-none"
+        # )
+        # response.headers["Cross-Origin-Opener-Policy"] = (
+        #    "same-origin-allow-popups"
+        # )
+        # response.headers["Cross-Origin-Resource-Policy"] = "cross-origin"
+        # response.headers["X-Permitted-Cross-Domain-Policies"] = "none"
         return response
