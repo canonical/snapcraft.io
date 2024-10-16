@@ -370,22 +370,9 @@ def snap_details_views(store, api):
 
     @store.route("/<lang>/<theme>/install.svg")
     def snap_install_badge(lang, theme):
-        allowed_langs = {
-            "ar",
-            "bg",
-            "bn",
-            "de",
-            "en",
-            "es",
-            "fr",
-            "it",
-            "jp",
-            "pl",
-            "pt",
-            "ro",
-            "ru",
-            "tw",
-        }
+        base_path = "static/images/badges/"
+        allowed_langs = helpers.list_folders(base_path)
+
         if lang not in allowed_langs:
             return Response("Invalid language", status=400)
 
@@ -394,13 +381,14 @@ def snap_details_views(store, api):
             if theme == "light"
             else "snap-store-black.svg"
         )
-        base_path = "static/images/badges/"
+
         svg_path = os.path.normpath(os.path.join(base_path, lang, file_name))
 
         # Ensure the path is within the base path
         if not svg_path.startswith(base_path) or not os.path.exists(svg_path):
             return Response(
-                '<svg height="20" width="1" xmlns="http://www.w3.org/2000/svg" '
+                '<svg height="20" width="1" '
+                'xmlns="http://www.w3.org/2000/svg" '
                 'xmlns:xlink="http://www.w3.org/1999/xlink"></svg>',
                 mimetype="image/svg+xml",
                 status=404,
