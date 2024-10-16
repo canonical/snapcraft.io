@@ -91,6 +91,7 @@ export type Snap = {
   private: boolean;
   store: string;
   users: Array<Member>;
+  userHasAccess?: boolean;
 };
 
 export type Store = {
