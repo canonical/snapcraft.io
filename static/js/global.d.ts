@@ -8,9 +8,12 @@ type DataLayerEvent = {
 
 declare interface Window {
   dataLayer: Array<DataLayerEvent>;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   chrome: any;
   __REDUX_DEVTOOLS_EXTENSION_COMPOSE__?: typeof compose;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   MktoForms2: any;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   Vimeo: any;
   DNS_VERIFICATION_TOKEN: string;
 }
