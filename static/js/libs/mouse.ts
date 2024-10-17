@@ -6,10 +6,10 @@ class Mouse {
     window.addEventListener("mousemove", this.updatePosition.bind(this));
   }
 
-  updatePosition(e: { x: any; y: any }) {
+  updatePosition(e: MouseEvent) {
     this.position = {
-      x: e.x,
-      y: e.y,
+      x: e.clientX,
+      y: e.clientY,
     };
   }
 }

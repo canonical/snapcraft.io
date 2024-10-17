@@ -8,6 +8,10 @@ import { initMedia } from "./market/initMedia";
 import { initIcon } from "./market/initIcon";
 import { initBanner } from "./market/initBanner";
 
+interface Image {
+  type: "icon" | "screenshot" | "banner";
+}
+
 // https://gist.github.com/dperini/729294
 // Luke 07-06-2018 made the protocol optional
 const URL_REGEXP =
@@ -21,6 +25,19 @@ const IS_CHROMIUM =
   window.chrome !== null &&
   typeof window.chrome !== "undefined" &&
   window.navigator.userAgent.indexOf("Edge") === -1; // Edge pretends to have window.chrome
+
+interface InitFormConfig {
+  form: string;
+  snapIconHolder: HTMLElement | null;
+  formNotification: string;
+  mediaHolder: HTMLElement | null;
+  bannerHolder: HTMLElement | null;
+  licenseRadioContent: HTMLElement | null;
+}
+
+interface InitialState {
+  [key: string]: unknown;
+}
 
 function initFormNotification(formElId: string, notificationElId: string) {
   const form = document.getElementById(formElId) as HTMLFormElement;
@@ -44,16 +61,9 @@ function initFormNotification(formElId: string, notificationElId: string) {
 }
 
 function initForm(
-  config: {
-    form: string;
-    snapIconHolder: any;
-    formNotification: string;
-    mediaHolder: any;
-    bannerHolder: any;
-    licenseRadioContent: any;
-  },
-  initialState: any,
-  errors: string | any[] | undefined,
+  config: InitFormConfig,
+  initialState: InitialState,
+  errors: string | string[] | undefined,
 ) {
   // if there are errors focus first error
   if (errors && errors.length) {
@@ -77,7 +87,7 @@ function initForm(
   }
 
   // setup form functionality
-  const formEl = document.getElementById(config.form) as any;
+  const formEl = document.getElementById(config.form) as HTMLFormElement;
   const submitButton = formEl.querySelector(
     ".js-form-submit",
   ) as HTMLButtonElement;
@@ -123,23 +133,28 @@ function initForm(
     const icons = state.images.filter(
       (image: { type: string }) => image.type === "icon",
     );
-    initIcon(config.snapIconHolder, icons[0], state.title, (newIcon: any) => {
-      let noneIcons = state.images.filter(
-        (image: { type: string }) => image.type !== "icon",
-      );
+    initIcon(
+      config.snapIconHolder,
+      icons[0],
+      state.title,
+      (newIcon: Image | null) => {
+        let noneIcons = state.images.filter(
+          (image: { type: string }) => image.type !== "icon",
+        );
 
-      if (newIcon) {
-        noneIcons = noneIcons.concat([newIcon]);
-      }
+        if (newIcon) {
+          noneIcons = noneIcons.concat([newIcon]);
+        }
 
-      const newState = {
-        ...state,
-        images: noneIcons,
-      };
+        const newState = {
+          ...state,
+          images: noneIcons,
+        };
 
-      updateState(state, newState);
-      updateFormState();
-    });
+        updateState(state, newState);
+        updateFormState();
+      },
+    );
   }
 
   initFormNotification(config.form, config.formNotification);
@@ -148,7 +163,7 @@ function initForm(
     const screenshots = state.images.filter(
       (image: { type: string }) => image.type === "screenshot",
     );
-    initMedia(config.mediaHolder, screenshots, (newImages: any) => {
+    initMedia(config.mediaHolder, screenshots, (newImages: Image[]) => {
       const noneScreenshots = state.images.filter(
         (item: { type: string }) => item.type !== "screenshot",
       );
@@ -165,7 +180,7 @@ function initForm(
     const banners = state.images.filter(
       (image: { type: string }) => image.type === "banner",
     );
-    initBanner(config.bannerHolder, banners, (image: any) => {
+    initBanner(config.bannerHolder, banners, (image: Image | null) => {
       let newImages = state.images.filter(
         (image: { type: string }) => image.type !== "banner",
       );
@@ -237,7 +252,15 @@ function initForm(
     }
   }
 
-  function metadata(field: { checked: any }, state: { [x: string]: any }) {
+  interface Field {
+    checked: boolean;
+  }
+
+  interface State {
+    [key: string]: unknown;
+  }
+
+  function metadata(field: Field, state: State) {
     state["update_metadata_on_release"] = field.checked;
   }
 
@@ -252,12 +275,18 @@ function initForm(
     if (formEl["license"]) {
       license(formEl);
     }
-    if (formEl.elements["primary_category"]) {
+    const primaryCategoryElement =
+      formEl.elements.namedItem("primary_category");
+    if (primaryCategoryElement) {
       categories(formEl, state);
     }
 
-    if (formEl.elements["update_metadata_on_release"]) {
-      metadata(formEl.elements["update_metadata_on_release"], state);
+    const updateMetadataElement = formEl.elements.namedItem(
+      "update_metadata_on_release",
+    ) as HTMLInputElement;
+    if (updateMetadataElement) {
+      const fieldValue: Field = { checked: updateMetadataElement.checked };
+      metadata(fieldValue, state);
     }
 
     const formData = new FormData(formEl);
@@ -338,10 +367,10 @@ function initForm(
           const saveChangesButton = updateMetadataModal.querySelector(
             ".js-save-changes",
           ) as HTMLButtonElement;
-          const closeModalButtons =
-            updateMetadataModal.querySelectorAll(".js-close-modal");
+          const closeModalButtons: NodeListOf<HTMLElement> =
+            document.querySelectorAll(".close-modal-button");
 
-          closeModalButtons.forEach((closeModalButton: any) => {
+          closeModalButtons.forEach((closeModalButton: HTMLElement) => {
             closeModalButton.addEventListener("click", () => {
               updateMetadataModal.classList.add("u-hide");
             });
@@ -370,17 +399,25 @@ function initForm(
 
   // client side validation
 
-  const validation: { [key: string]: any } = {};
+  interface InputValidation {
+    isValid: boolean;
+    required?: boolean;
+    maxLength?: number;
+    counterEl?: HTMLElement;
+    mailto?: boolean;
+    url?: boolean;
+  }
+  const validation: { [key: string]: InputValidation } = {};
   const validateInputs = Array.from(formEl.querySelectorAll("input,textarea"));
 
   function isFormValid() {
     // form is valid if every validated input is valid
     return Object.keys(validation).every(
-      (name: any) => validation[name].isValid,
+      (name: string) => validation[name].isValid,
     );
   }
 
-  function validateInput(input: any) {
+  function validateInput(input: HTMLInputElement | HTMLTextAreaElement) {
     const field = input.closest(".p-form-validation");
 
     if (field) {
@@ -403,12 +440,14 @@ function initForm(
 
       if (inputValidation.maxLength) {
         if (validation[input.name].maxLength === input.value.length) {
-          inputValidation.counterEl.innerHTML = `The maximum number of characters for this field is ${
-            validation[input.name].maxLength
-          }.`;
+          if (inputValidation.counterEl) {
+            inputValidation.counterEl.innerHTML = `The maximum number of characters for this field is ${inputValidation.maxLength}.`;
+          }
           showCounter = true;
         } else {
-          inputValidation.counterEl.innerHTML = "";
+          if (inputValidation.counterEl) {
+            inputValidation.counterEl.innerHTML = "";
+          }
           showCounter = false;
         }
       }
@@ -446,45 +485,68 @@ function initForm(
   }
 
   // prepare validation of inputs based on their HTML attributes
-  validateInputs.forEach((input: any) => {
-    const inputValidation: any = { isValid: true };
+  validateInputs.forEach((input) => {
+    const inputValidation: InputValidation = { isValid: true };
 
-    if (input.maxLength > 0) {
-      // save max length, but remove it from input so more chars can be entered
-      inputValidation.maxLength = input.maxLength;
+    if (
+      input instanceof HTMLInputElement ||
+      input instanceof HTMLTextAreaElement
+    ) {
+      if (input.maxLength > 0) {
+        // save max length, but remove it from input so more chars can be entered
+        inputValidation.maxLength = input.maxLength;
 
-      // prepare counter element to show how many chars need to be removed
-      const counter = document.createElement("p");
-      counter.className = "p-form-help-text";
-      inputValidation.counterEl = counter;
-      input.parentNode.appendChild(counter);
+        // prepare counter element to show how many chars need to be removed
+        const counter = document.createElement("p");
+        counter.className = "p-form-help-text";
+        inputValidation.counterEl = counter;
+        if (input.parentNode) {
+          input.parentNode.appendChild(counter);
+        }
+      }
+
+      if (input.required) {
+        inputValidation.required = true;
+      }
+
+      if (input.type === "url") {
+        inputValidation.url = true;
+      }
+
+      // allow mailto: addresses for contact field
+      if (input.name === "contact") {
+        inputValidation.mailto = true;
+      }
+
+      validation[input.name] = inputValidation;
     }
-
-    if (input.required) {
-      inputValidation.required = true;
-    }
-
-    if (input.type === "url") {
-      inputValidation.url = true;
-    }
-
-    // allow mailto: addresses for contact field
-    if (input.name === "contact") {
-      inputValidation.mailto = true;
-    }
-
-    validation[input.name] = inputValidation;
   });
 
   // validate inputs on change
-  formEl.addEventListener("input", function (event: { target: any }) {
-    validateInput(event.target);
-    updateFormState();
+  formEl.addEventListener("input", function (event: Event) {
+    const target = event.target as unknown as
+      | HTMLInputElement
+      | HTMLTextAreaElement
+      | null;
+
+    if (
+      target &&
+      (target instanceof HTMLInputElement ||
+        target instanceof HTMLTextAreaElement)
+    ) {
+      validateInput(target);
+      updateFormState();
+    }
   });
 
-  const previewForm = document.getElementById("preview-form") as any;
+  const previewForm = document.getElementById(
+    "preview-form",
+  ) as HTMLFormElement;
+
   const openPreview = () => {
-    const stateInput = previewForm.elements.state;
+    const stateInput = previewForm.elements.namedItem(
+      "state",
+    ) as HTMLInputElement;
     stateInput.value = JSON.stringify(state);
   };
 
@@ -493,7 +555,7 @@ function initForm(
   }
 
   // Prefix contact and website fields on blur if the user doesn't provide the protocol
-  function prefixInput(input: any) {
+  function prefixInput(input: HTMLInputElement) {
     if (["website", "contact"].includes(input.name)) {
       if (
         validation[input.name].isValid &&
@@ -516,13 +578,14 @@ function initForm(
   }
 
   const prefixableFields = ["website", "contact"];
-  prefixableFields.forEach((inputName: any) => {
+  prefixableFields.forEach((inputName: string) => {
     const input = formEl[inputName];
     if (input) {
       input.addEventListener(
         "blur",
         function (event: { target: EventTarget | null }) {
-          prefixInput(event.target);
+          const target = event.target as HTMLInputElement;
+          prefixInput(target);
         },
       );
     }
