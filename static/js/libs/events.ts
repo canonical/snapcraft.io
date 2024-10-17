@@ -1,7 +1,17 @@
+interface EventHandler {
+  (event: Event, target: HTMLElement): void;
+}
+
+interface EventRegistration {
+  selector: string | HTMLElement;
+  func: EventHandler;
+}
+
 class Events {
-  events: any;
-  availableHandles: any;
-  defaultBindTarget: any;
+  events: Record<string, EventRegistration[]>;
+  availableHandles: string[];
+  defaultBindTarget: ParentNode;
+
   constructor(defaultBindTarget: ParentNode | null | undefined) {
     this.defaultBindTarget = defaultBindTarget || document.body;
     this.events = {};
@@ -19,28 +29,21 @@ class Events {
   _handleEvent(type: string, event: Event) {
     const eventTarget = event.target as HTMLElement;
 
-    this.events[type].forEach(
-      (ev: {
-        selector: string;
-        func: (ar1: unknown, arg2: unknown) => void;
-      }) => {
-        const target =
-          typeof ev.selector === "string"
-            ? eventTarget.closest(ev.selector)
-            : ev.selector;
+    if (!this.events[type]) return;
 
-        if (target) {
-          ev.func(event, target);
-        }
-      },
-    );
+    this.events[type].forEach((ev: EventRegistration) => {
+      const target =
+        typeof ev.selector === "string"
+          ? eventTarget.closest(ev.selector)
+          : ev.selector;
+
+      if (target) {
+        ev.func(event, target as HTMLElement);
+      }
+    });
   }
 
-  addEvent(
-    type: string,
-    selector: string | HTMLElement | Window,
-    func: unknown,
-  ) {
+  addEvent(type: string, selector: string | HTMLElement, func: EventHandler) {
     if (!this.events[type]) {
       this.events[type] = [];
     }
@@ -56,7 +59,13 @@ class Events {
     }
   }
 
-  addEvents(eventTypes: { [key: string]: { [key: string]: unknown } }) {
+  addWindowEvent(type: string, func: EventHandler) {
+    window.addEventListener(type, (event) => {
+      func(event, window as unknown as HTMLElement);
+    });
+  }
+
+  addEvents(eventTypes: { [key: string]: { [key: string]: EventHandler } }) {
     Object.keys(eventTypes).forEach((type) => {
       Object.keys(eventTypes[type]).forEach((selector) => {
         this.addEvent(type, selector, eventTypes[type][selector]);
