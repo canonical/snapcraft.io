@@ -119,6 +119,11 @@ def get_snap_repo(snap_name):
 
 
 @login_required
+def get_snap_builds_page(snap_name):
+    return flask.render_template("store/publisher.html", snap_name=snap_name)
+
+
+@login_required
 def get_snap_builds(snap_name):
     res = {"message": "", "success": True}
     data = {"snap_builds": [], "total_builds": 0}
