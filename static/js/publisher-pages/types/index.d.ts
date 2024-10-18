@@ -70,3 +70,13 @@ export type ListingData = {
   update_metadata_on_release: boolean;
   tour_steps: Step[];
 };
+
+export type GithubData = {
+  github_orgs: { name: string }[];
+  github_repository: string | null;
+  github_user: {
+    avatarUrl: string;
+    login: string;
+    name: string;
+  };
+};
