@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { useParams } from "react-router-dom";
-import { useRecoilValue } from "recoil";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import { Strip, Select, Row, Col, Button } from "@canonical/react-components";
 
-import { githubDataState } from "../../state/atoms";
+import { buildRepoConnectedState, githubDataState } from "../../state/atoms";
 
 import type { GithubData } from "../../types/";
 
@@ -21,6 +21,7 @@ function RepoNotConnected(): JSX.Element {
   const [repos, setRepos] = useState<Repo[]>([]);
   const [selectedRepo, setSelectedRepo] = useState<Repo | undefined>();
   const [building, setBuilding] = useState<boolean>(false);
+  const setRepoConnected = useSetRecoilState(buildRepoConnectedState);
 
   const validateRepo = async (repo: Repo | undefined) => {
     if (!repo) {
@@ -233,6 +234,8 @@ function RepoNotConnected(): JSX.Element {
                     if (!response.ok) {
                       throw new Error("There was a problem linking this repo");
                     }
+
+                    setRepoConnected(true);
                   }}
                 >
                   Start building

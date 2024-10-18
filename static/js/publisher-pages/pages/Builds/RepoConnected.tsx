@@ -11,14 +11,13 @@ import {
   MainTable,
 } from "@canonical/react-components";
 
-import { githubDataState, buildRepoConnectedState } from "../../state/atoms";
-
-import type { GithubData } from "../../types";
+import { buildRepoConnectedState, githubDataState } from "../../state/atoms";
 
 function RepoConnected(): JSX.Element {
   const { snapId } = useParams();
-  const githubData = useRecoilValue<GithubData | null>(githubDataState);
   const setRepoConnected = useSetRecoilState(buildRepoConnectedState);
+  const githubData = useRecoilValue(githubDataState);
+  const [disconnecting, setDisconnecting] = useState<boolean>(false);
   const [disconnectModalOpen, setDisconnectModalOpen] =
     useState<boolean>(false);
   const { isLoading, isFetched, data } = useQuery({
@@ -132,7 +131,9 @@ function RepoConnected(): JSX.Element {
               <Button
                 appearance="positive"
                 className="u-no-margin--bottom u-no-margin--right"
+                disabled={disconnecting}
                 onClick={async () => {
+                  setDisconnecting(true);
                   const formData = new FormData();
                   formData.set("csrf_token", window.CSRF_TOKEN);
                   const response = await fetch(
@@ -144,10 +145,14 @@ function RepoConnected(): JSX.Element {
                   );
 
                   if (!response.ok) {
-                    setRepoConnected(false);
+                    if (githubData !== null) {
+                      setRepoConnected(false);
+                    }
                   }
 
                   setRepoConnected(false);
+                  setDisconnectModalOpen(false);
+                  setDisconnecting(false);
                 }}
               >
                 Confirm

@@ -8,13 +8,19 @@ import LoggedOut from "./LoggedOut";
 import RepoNotConnected from "./RepoNotConnected";
 import RepoConnected from "./RepoConnected";
 
-import { githubDataState } from "../../state/atoms";
-
-import type { GithubData } from "../../types";
+import {
+  buildLoggedInState,
+  buildRepoConnectedState,
+  githubDataState,
+} from "../../state/atoms";
 
 function Builds(): JSX.Element {
   const { snapId } = useParams();
   const [githubData, setGithubData] = useRecoilState(githubDataState);
+  const [loggedIn, setLoggedIn] = useRecoilState(buildLoggedInState);
+  const [repoConnected, setRepoConnected] = useRecoilState(
+    buildRepoConnectedState,
+  );
   const { isLoading } = useQuery({
     queryKey: ["githubData"],
     queryFn: async () => {
@@ -26,27 +32,16 @@ function Builds(): JSX.Element {
 
       const responseData = await response.json();
 
+      const githubData = responseData.data;
+
+      setLoggedIn(githubData.github_user !== null);
+      setRepoConnected(githubData.github_repository !== null);
       setGithubData(responseData.data);
+
       return responseData.data;
     },
     retry: 0,
   });
-
-  const isLoggedIn = (data: GithubData | null) => {
-    if (!data) {
-      return false;
-    }
-
-    return data.github_user !== null;
-  };
-
-  const repoConnected = (data: GithubData | null) => {
-    if (!data) {
-      return false;
-    }
-
-    return data.github_repository !== null;
-  };
 
   return (
     <>
@@ -66,14 +61,9 @@ function Builds(): JSX.Element {
         </Strip>
       )}
 
-      {!isLoading && !isLoggedIn(githubData) && <LoggedOut />}
-
-      {!isLoading && isLoggedIn(githubData) && !repoConnected(githubData) && (
-        <RepoNotConnected />
-      )}
-      {githubData && isLoggedIn(githubData) && repoConnected(githubData) && (
-        <RepoConnected />
-      )}
+      {!isLoading && !loggedIn && <LoggedOut />}
+      {!isLoading && loggedIn && !repoConnected && <RepoNotConnected />}
+      {githubData && loggedIn && repoConnected && <RepoConnected />}
     </>
   );
 }

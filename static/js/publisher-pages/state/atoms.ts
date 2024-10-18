@@ -1,5 +1,7 @@
 import { atom } from "recoil";
 
+import type { GithubData } from "../types";
+
 export const buildLoggedInState = atom({
   key: "buildLoggedInstate",
   default: false,
@@ -10,7 +12,7 @@ export const buildRepoConnectedState = atom({
   default: false,
 });
 
-export const githubDataState = atom({
+export const githubDataState = atom<GithubData | null>({
   key: "githubDataState",
   default: null,
 });
