@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { useQuery } from "react-query";
 import { useRecoilValue, useSetRecoilState } from "recoil";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
+import { formatDistanceToNow, formatDuration } from "date-fns";
 import {
   Strip,
   Button,
@@ -28,6 +29,16 @@ function RepoConnected(): JSX.Element {
       return data.data;
     },
   });
+
+  const formatDurationString = (duration: string): string => {
+    const durationParts = duration.split(":");
+
+    return formatDuration({
+      hours: parseInt(durationParts[0]),
+      minutes: parseInt(durationParts[1]),
+      seconds: Math.floor(parseInt(durationParts[2])),
+    });
+  };
 
   return (
     <>
@@ -96,15 +107,24 @@ function RepoConnected(): JSX.Element {
                 return {
                   columns: [
                     {
-                      content: build.id,
+                      content: (
+                        <Link to={`/admin/${snapId}/models/${build.id}`}>
+                          {build.id}
+                        </Link>
+                      ),
                     },
                     { content: build.arch_tag },
-                    { content: build.duration },
+                    { content: formatDurationString(build.duration) },
                     {
                       content: build.status,
                       style: { textTransform: "capitalize" },
                     },
-                    { content: build.datebuilt },
+                    {
+                      content: formatDistanceToNow(build.datebuilt, {
+                        addSuffix: true,
+                      }),
+                      className: "u-align--right",
+                    },
                   ],
                 };
               },
