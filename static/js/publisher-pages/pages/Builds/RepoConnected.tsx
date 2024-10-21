@@ -30,7 +30,11 @@ function RepoConnected(): JSX.Element {
     },
   });
 
-  const formatDurationString = (duration: string): string => {
+  const formatDurationString = (duration?: string): string => {
+    if (!duration) {
+      return "-";
+    }
+
     const durationParts = duration.split(":");
 
     return formatDuration({
@@ -38,6 +42,44 @@ function RepoConnected(): JSX.Element {
       minutes: parseInt(durationParts[1]),
       seconds: Math.floor(parseInt(durationParts[2])),
     });
+  };
+
+  const formatStatus = (status: string): JSX.Element => {
+    switch (status) {
+      case "never_built":
+        return <>Never built</>;
+      case "building_soon":
+        return <>Building soon</>;
+      case "wont_release":
+        return <>Won't release</>;
+      case "released":
+        return <>Released</>;
+      case "release_failed":
+        return <>Release failed</>;
+      case "releasing_soon":
+        return <>Releasing soon</>;
+      case "in_progress":
+        return (
+          <>
+            <i className="p-icon--spinner u-animation--spin" />
+            In progress
+          </>
+        );
+      case "failed_to_build":
+        return <>Failed to build</>;
+      case "cancelled":
+        return <>Cancelled</>;
+      case "unknown":
+        return <>Unknown</>;
+      case "ERROR":
+        return <>Error</>;
+      case "SUCCESS":
+        return <>Success</>;
+      case "IDLE":
+        return <>Idle</>;
+      default:
+        return <>{status}</>;
+    }
   };
 
   return (
@@ -80,7 +122,19 @@ function RepoConnected(): JSX.Element {
               <h2 className="p-heading--4">Latest builds</h2>
             </Col>
             <Col size={6} className="u-align--right">
-              <Button>Trigger new build</Button>
+              <Button
+                onClick={() => {
+                  fetch(`/api/${snapId}/builds/trigger-build`, {
+                    method: "POST",
+                    headers: {
+                      "Content-Type": "application/json",
+                      "X-CSRFToken": window.CSRF_TOKEN,
+                    },
+                  });
+                }}
+              >
+                Trigger new build
+              </Button>
             </Col>
           </Row>
           <MainTable
@@ -89,7 +143,11 @@ function RepoConnected(): JSX.Element {
               { content: "ID", sortKey: "id" },
               { content: "Architecture", sortKey: "arch" },
               { content: "Build duration", sortKey: "duration" },
-              { content: "Result", sortKey: "result" },
+              {
+                content: "Result",
+                sortKey: "result",
+                className: "p-table__cell--icon-placeholder",
+              },
               {
                 content: "Build finished",
                 sortKey: "status",
@@ -116,13 +174,15 @@ function RepoConnected(): JSX.Element {
                     { content: build.arch_tag },
                     { content: formatDurationString(build.duration) },
                     {
-                      content: build.status,
-                      style: { textTransform: "capitalize" },
+                      content: formatStatus(build.status),
+                      className: "p-table__cell--icon-placeholder",
                     },
                     {
-                      content: formatDistanceToNow(build.datebuilt, {
-                        addSuffix: true,
-                      }),
+                      content: build.datebuilt
+                        ? formatDistanceToNow(build.datebuilt, {
+                            addSuffix: true,
+                          })
+                        : "-",
                       className: "u-align--right",
                     },
                   ],
