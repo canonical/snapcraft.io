@@ -23,20 +23,23 @@ function PubliciseButtons(): JSX.Element {
   const { snapId } = useParams();
   const [selectedLanguage, setSelectedLanguage] = useState<string>("en");
 
+  const darkBadgeSource = `https://snapcraft.io/${selectedLanguage}/dark/install.svg`;
+  const lightBadgeSource = `https://snapcraft.io/${selectedLanguage}/light/install.svg`;
+
   const htmlSnippetBlack = `<a href="https://snapcraft.io/${snapId}">
-  <img alt="Get it from the Snap Store" src="https://snapcraft.io/static/images/badges/${selectedLanguage}/snap-store-black.svg" />
+  <img alt="Get it from the Snap Store" src=${darkBadgeSource} />
 </a>
 `;
 
   const htmlSnippetWhite = `<a href="https://snapcraft.io/${snapId}">
-  <img alt="Get it from the Snap Store" src="https://snapcraft.io/static/images/badges/${selectedLanguage}/snap-store-white.svg" />
+  <img alt="Get it from the Snap Store" src=${lightBadgeSource} />
 </a>
 `;
 
-  const markdownSnippetBlack = `[![Get it from the Snap Store](https://snapcraft.io/static/images/badges/${selectedLanguage}/snap-store-black.svg)](https://snapcraft.io/${snapId})
+  const markdownSnippetBlack = `[![Get it from the Snap Store](${darkBadgeSource})](https://snapcraft.io/${snapId})
 `;
 
-  const markdownSnippetWhite = `[![Get it from the Snap Store](https://snapcraft.io/static/images/badges/${selectedLanguage}/snap-store-white.svg)](https://snapcraft.io/${snapId})
+  const markdownSnippetWhite = `[![Get it from the Snap Store](${lightBadgeSource})](https://snapcraft.io/${snapId})
 `;
 
   return (
@@ -73,7 +76,7 @@ function PubliciseButtons(): JSX.Element {
         <Col size={10}>
           <p>
             <img
-              src={`https://snapcraft.io/static/images/badges/${selectedLanguage}/snap-store-black.svg`}
+              src={darkBadgeSource}
               alt="Get it from the Snap Store"
               width="182"
               height="56"
@@ -108,7 +111,7 @@ function PubliciseButtons(): JSX.Element {
         <Col size={10}>
           <p>
             <img
-              src={`https://snapcraft.io/static/images/badges/${selectedLanguage}/snap-store-white.svg`}
+              src={lightBadgeSource}
               alt="Get it from the Snap Store"
               width="182"
               height="56"
