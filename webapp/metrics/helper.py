@@ -17,10 +17,18 @@ def get_last_metrics_processed_date():
     # since the metrics are processed during the night
     # https://github.com/canonical-web-and-design/snapcraft.io/pull/616
     three_hours = relativedelta.relativedelta(hours=3)
-    last_metrics_processed = datetime.datetime.utcnow() - three_hours
+    last_metrics_processed = datetime.datetime.now() - three_hours
 
-    one_day = relativedelta.relativedelta(days=1)
-    return last_metrics_processed.date() - one_day
+    # Add an extra day on Mondays and Sundays to prevent the reset issue.
+    if (
+        last_metrics_processed.weekday() == 0
+        or last_metrics_processed.weekday() == 6
+    ):
+        days_to_skip = relativedelta.relativedelta(days=2)
+    else:
+        days_to_skip = relativedelta.relativedelta(days=1)
+
+    return last_metrics_processed.date() - days_to_skip
 
 
 def get_dates_for_metric(metric_period=30, metric_bucket="d"):
