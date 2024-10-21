@@ -20,7 +20,8 @@ function SectionNav({ activeTab, snapName }: Props) {
         {
           label: "Builds",
           active: activeTab === "builds",
-          href: `/${snapName}/builds`,
+          to: `/${snapName}/builds`,
+          component: Link,
         },
         {
           label: "Releases",
