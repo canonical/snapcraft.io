@@ -2,6 +2,27 @@
 import SnapEvents from "../../libs/events";
 import { triggerEvent } from "../../base/ga";
 
+interface SnapElement extends HTMLElement {
+  dataset: {
+    snap: string;
+  };
+}
+
+function isSnapElement(target: HTMLElement): target is SnapElement {
+  return (
+    (target as SnapElement).dataset &&
+    (target as SnapElement).dataset.snap !== undefined
+  );
+}
+
+interface SlideInstallInstructionsElement extends HTMLElement {
+  dataset: {
+    channel: string;
+    confinement: string;
+  } & DOMStringMap;
+  closest: (selector: string) => Element | null;
+}
+
 interface ChannelData {
   track: string;
   confinement: string;
@@ -153,7 +174,6 @@ class ChannelMap {
   ): target is HTMLElement & { dataset: { tab: string } } {
     return "tab" in target.dataset;
   }
-
   bindEvents() {
     this.events.addEvents({
       click: {
@@ -208,42 +228,46 @@ class ChannelMap {
           }
         },
 
-        '[data-js="open-desktop"]': (
-          event: Event,
-          target: HTMLElement & {
-            dataset: {
-              snap: string;
-            };
-          },
-        ) => {
-          event.preventDefault();
-          this.openDesktop(target);
-          triggerEvent(
-            "cta-1",
-            window.location.href,
-            `snap://${target.dataset.snap}`,
-            target.innerText,
-          );
+        '[data-js="open-desktop"]': (event: Event, target: HTMLElement) => {
+          if (isSnapElement(target)) {
+            event.preventDefault();
+            this.openDesktop(target);
+            triggerEvent(
+              "cta-1",
+              window.location.href,
+              `snap://${target.dataset.snap}`,
+              target.innerText,
+            );
+          } else {
+            console.error("Target is not a SnapElement");
+          }
         },
 
         '[data-js="slide-install-instructions"]': (
-          event: { preventDefault: () => void },
-          target: HTMLElement & {
-            dataset: {
-              channel: string;
-              confinement: string;
-            };
-            closest: (selector: string) => Element | null;
-          },
+          event: Event & { preventDefault: () => void },
+          target: HTMLElement,
         ) => {
           event.preventDefault();
-          this.slideToInstructions(target);
+
+          if (
+            target instanceof HTMLElement &&
+            target.dataset.channel &&
+            target.dataset.confinement
+          ) {
+            const slideTarget = target as SlideInstallInstructionsElement;
+            this.slideToInstructions(slideTarget);
+          } else {
+            console.error("Target is not a SlideInstallInstructionsElement");
+          }
         },
       },
-
       change: {
-        '[data-js="arch-select"]': (target: HTMLSelectElement) => {
+        '[data-js="arch-select"]': (
+          _event: Event,
+          target: HTMLSelectElement,
+        ) => {
           const selectedArch = target.value;
+
           if (selectedArch in this.channelMapData) {
             this.prepareTable(this.channelMapData[selectedArch]);
           } else {
