@@ -238,7 +238,7 @@ function validateRestrictions(
       .then((file) => imageRestrictions(file, restrictions))
       .then(resolve)
       .catch((errors) => {
-        // @ts-expect-error
+        // @ts-expect-error - Ignoring TypeScript error because we are attaching an 'errors' property to the 'file' object for validation purposes
         file.errors = errors;
         resolve(file);
       });

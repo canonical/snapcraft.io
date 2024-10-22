@@ -4,7 +4,6 @@ import { json } from "d3-fetch";
 import { geoNaturalEarth1, geoPath } from "d3-geo";
 import { feature, mesh } from "topojson-client";
 
-import SnapEvents from "../../libs/events";
 import { GeoJsonProperties } from "geojson";
 import { Topology, Objects } from "topojson-specification";
 
@@ -176,10 +175,7 @@ export default function renderMap(
 
     let resizeTimeout: string | number | NodeJS.Timeout | undefined;
 
-    // @ts-expect-error
-    const events = new SnapEvents();
-
-    events.addEvent("resize", window, () => {
+    window.addEventListener("resize", () => {
       clearTimeout(resizeTimeout);
       resizeTimeout = setTimeout(function () {
         render(mapEl, snapData, world);
