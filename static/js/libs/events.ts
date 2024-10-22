@@ -2,56 +2,85 @@ interface EventHandler {
   (event: Event, target: HTMLElement): void;
 }
 
-interface EventRegistration {
+interface SelectChangeHandler {
+  (event: Event, target: HTMLSelectElement): void;
+}
+
+type ValidEventTypes = "change" | "click" | "keyup" | "resize";
+
+type EventHandlerMap = {
+  change: SelectChangeHandler;
+  click: EventHandler;
+  keyup: EventHandler;
+  resize: EventHandler;
+};
+
+interface EventRegistration<T extends ValidEventTypes> {
   selector: string | HTMLElement;
-  func: EventHandler;
+  func: EventHandlerMap[T];
 }
 
 class Events {
-  events: Record<string, EventRegistration[]>;
-  availableHandles: string[];
+  events: Partial<{
+    [T in ValidEventTypes]: EventRegistration<T>[];
+  }> = {};
+  availableHandles: ValidEventTypes[];
   defaultBindTarget: ParentNode;
 
   constructor(defaultBindTarget: ParentNode | null | undefined) {
     this.defaultBindTarget = defaultBindTarget || document.body;
     this.events = {};
     this.availableHandles = [];
-
     return this;
   }
 
-  _addListener(type: string, selector: string | HTMLElement | Window) {
+  _addListener(
+    type: ValidEventTypes,
+    selector: string | HTMLElement | HTMLSelectElement | Window,
+  ) {
     const bindTarget =
       typeof selector === "string" ? this.defaultBindTarget : selector;
-    bindTarget.addEventListener(type, this._handleEvent.bind(this, type));
+    bindTarget.addEventListener(type, (e) => this._handleEvent(type, e));
   }
 
-  _handleEvent(type: string, event: Event) {
-    const eventTarget = event.target as HTMLElement;
+  _handleEvent(type: ValidEventTypes, event: Event) {
+    const eventTarget = event.target as HTMLElement | HTMLSelectElement;
+    const eventRegistrations = this.events[type];
 
-    if (!this.events[type]) return;
+    if (!eventRegistrations) return;
 
-    this.events[type].forEach((ev: EventRegistration) => {
+    eventRegistrations.forEach((ev) => {
       const target =
         typeof ev.selector === "string"
           ? eventTarget.closest(ev.selector)
           : ev.selector;
 
       if (target) {
-        ev.func(event, target as HTMLElement);
+        if (type === "change" && target instanceof HTMLSelectElement) {
+          (ev.func as SelectChangeHandler)(event, target);
+        } else if (target instanceof HTMLElement) {
+          (ev.func as EventHandler)(event, target);
+        }
       }
     });
   }
 
-  addEvent(type: string, selector: string | HTMLElement, func: EventHandler) {
+  addEvent<T extends ValidEventTypes>(
+    type: T,
+    selector: string | HTMLElement | HTMLSelectElement,
+    func: EventHandlerMap[T],
+  ): void {
     if (!this.events[type]) {
       this.events[type] = [];
     }
 
-    this.events[type].push({
-      selector: selector,
-      func: func,
-    });
+    const eventArray = this.events[type];
+    if (eventArray) {
+      eventArray.push({
+        selector: selector as string | HTMLElement,
+        func,
+      });
+    }
 
     if (!this.availableHandles.includes(type)) {
       this._addListener(type, selector);
@@ -59,17 +88,28 @@ class Events {
     }
   }
 
-  addWindowEvent(type: string, func: EventHandler) {
+  addWindowEvent(type: ValidEventTypes, func: EventHandler) {
     window.addEventListener(type, (event) => {
       func(event, window as unknown as HTMLElement);
     });
   }
 
-  addEvents(eventTypes: { [key: string]: { [key: string]: EventHandler } }) {
-    Object.keys(eventTypes).forEach((type) => {
-      Object.keys(eventTypes[type]).forEach((selector) => {
-        this.addEvent(type, selector, eventTypes[type][selector]);
-      });
+  addEvents(
+    eventTypes: Partial<{
+      [T in ValidEventTypes]: {
+        [selector: string]: EventHandlerMap[T];
+      };
+    }>,
+  ) {
+    (Object.keys(eventTypes) as ValidEventTypes[]).forEach((type) => {
+      const handlers = eventTypes[type];
+
+      if (handlers) {
+        Object.keys(handlers).forEach((selector) => {
+          const handler = handlers[selector];
+          this.addEvent(type, selector, handler);
+        });
+      }
     });
   }
 }
