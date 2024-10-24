@@ -1,5 +1,6 @@
 import { createRoot } from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { RecoilRoot } from "recoil";
 import { QueryClient, QueryClientProvider } from "react-query";
 
 import Root from "./routes/root";
@@ -9,6 +10,8 @@ import ValidationSets from "./pages/ValidationSets";
 import ValidationSet from "./pages/ValidationSet";
 import Metrics from "./pages/Metrics";
 import Listing from "./pages/Listing";
+import Builds from "./pages/Builds";
+import Build from "./pages/Build";
 
 const router = createBrowserRouter([
   {
@@ -47,6 +50,14 @@ const router = createBrowserRouter([
         path: "/:snapId/listing",
         element: <Listing />,
       },
+      {
+        path: "/:snapId/builds",
+        element: <Builds />,
+      },
+      {
+        path: "/:snapId/builds/:buildId",
+        element: <Build />,
+      },
     ],
   },
 ]);
@@ -54,10 +65,19 @@ const router = createBrowserRouter([
 const rootEl = document.getElementById("root") as HTMLElement;
 const root = createRoot(rootEl);
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+      refetchOnReconnect: false,
+    },
+  },
+});
 
 root.render(
-  <QueryClientProvider client={queryClient}>
-    <RouterProvider router={router} />
-  </QueryClientProvider>
+  <RecoilRoot>
+    <QueryClientProvider client={queryClient}>
+      <RouterProvider router={router} />
+    </QueryClientProvider>
+  </RecoilRoot>,
 );

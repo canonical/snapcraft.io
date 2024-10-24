@@ -119,6 +119,18 @@ def get_snap_repo(snap_name):
 
 
 @login_required
+def get_snap_builds_page(snap_name):
+    return flask.render_template("store/publisher.html", snap_name=snap_name)
+
+
+@login_required
+def get_snap_build_page(snap_name, build_id):
+    return flask.render_template(
+        "store/publisher.html", snap_name=snap_name, build_id=build_id
+    )
+
+
+@login_required
 def get_snap_builds(snap_name):
     res = {"message": "", "success": True}
     data = {"snap_builds": [], "total_builds": 0}
@@ -173,7 +185,7 @@ def get_snap_build(snap_name, build_id):
                 details["snap_name"], build_id
             )
 
-    return flask.render_template("publisher/build.html", **context)
+    return flask.jsonify({"data": context, "success": True})
 
 
 def validate_repo(github_token, snap_name, gh_owner, gh_repo):
