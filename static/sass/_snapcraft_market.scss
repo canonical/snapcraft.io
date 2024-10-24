@@ -108,7 +108,8 @@
       position: static;
     }
 
-    & .row {
+    & .row,
+    & .u-fixed-width {
       padding-bottom: $sp-medium;
       padding-top: $sp-medium;
     }
