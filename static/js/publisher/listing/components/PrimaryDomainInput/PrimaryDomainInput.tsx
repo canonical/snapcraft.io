@@ -24,6 +24,7 @@ function PrimaryDomainInput({
   const [showVerifyModal, setShowVerifyModal] = useState(false);
   const { isLoading, status, data } = useVerified(snapName);
   const domain = getValues("primary_website");
+  const defaultDomain = formState.defaultValues.primary_website;
   const verificationToken = `SNAPCRAFT_IO_VERIFICATION=${window.DNS_VERIFICATION_TOKEN}`;
 
   const noPathDomains = [
@@ -49,7 +50,7 @@ function PrimaryDomainInput({
       return false;
     }
 
-    const initialUrl = new URL(formState.defaultValues.primary_website);
+    const initialUrl = new URL(defaultDomain);
 
     try {
       const newUrl = new URL(getValues("primary_website"));
@@ -64,7 +65,7 @@ function PrimaryDomainInput({
       return false;
     }
 
-    const initialUrl = new URL(formState.defaultValues.primary_website);
+    const initialUrl = new URL(defaultDomain);
 
     try {
       const newUrl = new URL(getValues("primary_website"));
@@ -131,7 +132,7 @@ function PrimaryDomainInput({
                             Unable to verify{" "}
                             <strong>
                               {getHostname(
-                                formState.defaultValues.primary_website
+                                formState.defaultValues.primary_website,
                               )}
                             </strong>{" "}
                             with a path
@@ -193,19 +194,21 @@ function PrimaryDomainInput({
                 </>
               )}
 
-              {!data.primary_domain && (
-                <button
-                  type="button"
-                  className="p-button has-icon"
-                  onClick={() => {
-                    setShowVerifyModal(true);
-                  }}
-                  disabled={fieldState.isDirty}
-                >
-                  <span>Verify ownership</span>
-                  <i className="p-icon--chevron-right"></i>
-                </button>
-              )}
+              {defaultDomain &&
+                getValues("primary_website") &&
+                !data.primary_domain && (
+                  <button
+                    type="button"
+                    className="p-button has-icon"
+                    onClick={() => {
+                      setShowVerifyModal(true);
+                    }}
+                    disabled={fieldState.isDirty}
+                  >
+                    <span>Verify ownership</span>
+                    <i className="p-icon--chevron-right"></i>
+                  </button>
+                )}
             </>
           )}
         </Col>

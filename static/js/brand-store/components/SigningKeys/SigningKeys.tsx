@@ -8,6 +8,7 @@ import {
   useLocation,
 } from "react-router-dom";
 import { Row, Col, Notification, Icon } from "@canonical/react-components";
+import { UseQueryResult } from "react-query";
 
 import { useSigningKeys, useModels } from "../../hooks";
 import {
@@ -15,6 +16,7 @@ import {
   signingKeysListFilterState,
   policiesListState,
   newSigningKeyState,
+  brandIdState,
 } from "../../atoms";
 import { brandStoreState } from "../../selectors";
 
@@ -30,13 +32,20 @@ import {
   getPolicies,
 } from "../../utils";
 
-import type { SigningKey, Policy } from "../../types/shared";
+import type { SigningKey, Policy, Model } from "../../types/shared";
 
 function SigningKeys(): ReactNode {
   const { id } = useParams();
+  const brandId = useRecoilValue(brandIdState);
   const location = useLocation();
   const navigate = useNavigate();
-  const { isLoading, isError, error, data, refetch }: any = useSigningKeys(id);
+  const {
+    isLoading,
+    isError,
+    error,
+    data,
+    refetch,
+  }: UseQueryResult<SigningKey[], Error> = useSigningKeys(brandId);
   const setSigningKeysList =
     useSetRecoilState<Array<SigningKey>>(signingKeysListState);
   const setPolicies = useSetRecoilState<Array<Policy>>(policiesListState);
@@ -54,18 +63,35 @@ function SigningKeys(): ReactNode {
     ? setPageTitle(`Signing keys in ${brandStore.name}`)
     : setPageTitle("Signing keys");
 
-  const models = useModels(id);
+  const {
+    data: models,
+    isLoading: modelsIsLoading,
+    isError: modelsIsError,
+  }: UseQueryResult<Model[], Error> = useModels(brandId);
 
   useEffect(() => {
-    if (!isLoading && !error) {
-      setSigningKeysList(data.sort(sortByDateDescending));
+    if (!isLoading && !error && data) {
+      setSigningKeysList([...data.sort(sortByDateDescending)]);
       setFilter(searchParams.get("filter") || "");
     }
   }, [isLoading, error, data]);
 
   useEffect(() => {
-    if (!models.isLoading && !models.isError) {
-      getPolicies(models.data, id, setPolicies, setEnableTableActions);
+    const controller = new AbortController();
+    const signal = controller.signal;
+
+    if (!modelsIsLoading && !modelsIsError && models) {
+      getPolicies({
+        models,
+        id,
+        setPolicies,
+        signal,
+        setEnableTableActions,
+      });
+
+      return () => {
+        controller.abort();
+      };
     }
   }, [models]);
 

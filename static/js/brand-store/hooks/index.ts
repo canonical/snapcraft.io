@@ -1,89 +1,116 @@
-import { useQuery } from "react-query";
+import { useQuery, UseQueryResult } from "react-query";
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
 import type { AppDispatch, RootState } from "../store";
-import type { Model } from "../types/shared";
+import type { Model as ModelType, SigningKey, Policy } from "../types/shared";
 
 export const useAppDispatch: () => AppDispatch = useDispatch;
 export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
 
-export function useModels(id: string | undefined) {
-  return useQuery("models", async () => {
-    const response = await fetch(`/admin/store/${id}/models`);
+export interface ApiError {
+  message: string;
+}
 
-    if (!response.ok) {
-      throw new Error("There was a problem fetching models");
-    }
-
-    const modelsData = await response.json();
-
-    if (!modelsData.success) {
-      throw new Error(modelsData.message);
-    }
-
-    return modelsData.data.sort((a: Model, b: Model) => {
-      // Always show most recently created model first
-      return new Date(a["created-at"]) < new Date(b["created-at"]) ? 1 : -1;
-    });
-  });
+export interface UsePoliciesResponse {
+  isLoading: boolean;
+  isError: boolean;
+  error: unknown;
+  refetch: () => void;
+  data: Policy[] | undefined;
 }
 
 export function usePolicies(
-  id: string | undefined,
-  modelId: string | undefined
-) {
-  return useQuery("policies", async () => {
-    const response = await fetch(
-      `/admin/store/${id}/models/${modelId}/policies`
-    );
+  brandId: string | undefined,
+  modelId: string | undefined,
+): UsePoliciesResponse {
+  return useQuery<Policy[], ApiError>({
+    queryKey: ["policies", brandId],
+    queryFn: async () => {
+      const response = await fetch(
+        `/admin/store/${brandId}/models/${modelId}/policies`,
+      );
 
-    if (!response.ok) {
-      throw new Error("There was a problem fetching policies");
-    }
+      if (!response.ok) {
+        throw new Error("There was a problem fetching policies");
+      }
 
-    const policiesData = await response.json();
+      const policiesData = await response.json();
 
-    if (!policiesData.success) {
-      throw new Error(policiesData.message);
-    }
+      if (!policiesData.success) {
+        throw new Error(policiesData.message);
+      }
 
-    return policiesData.data;
+      return policiesData.data;
+    },
   });
 }
 
-export function useSigningKeys(id: string | undefined) {
-  return useQuery("signingKeys", async () => {
-    const response = await fetch(`/admin/store/${id}/signing-keys`);
+export const useSigningKeys = (
+  brandId: string | undefined,
+): UseQueryResult<SigningKey[], Error> => {
+  return useQuery<SigningKey[], Error>({
+    queryKey: ["signingKeys", brandId],
+    queryFn: async () => {
+      const response = await fetch(`/admin/store/${brandId}/signing-keys`);
 
-    if (!response.ok) {
-      throw new Error("There was a problem fetching signing keys");
-    }
+      if (!response.ok) {
+        throw new Error("There was a problem fetching signing keys");
+      }
 
-    const signingKeysData = await response.json();
+      const signingKeysData = await response.json();
 
-    if (!signingKeysData.success) {
-      throw new Error(signingKeysData.message);
-    }
+      if (!signingKeysData.success) {
+        throw new Error(signingKeysData.message);
+      }
 
-    return signingKeysData.data;
+      return signingKeysData.data;
+    },
   });
-}
+};
 
 export function useBrand(id: string | undefined) {
-  return useQuery("brand", async () => {
-    const response = await fetch(`/admin/store/${id}/brand`);
+  return useQuery({
+    queryKey: ["brand", id],
+    queryFn: async () => {
+      const response = await fetch(`/admin/store/${id}/brand`);
 
-    if (!response.ok) {
-      return {
-        success: false,
-        message: "Brand not found",
-      };
-    }
+      if (!response.ok) {
+        throw new Error("There was a problem fetching models");
+      }
 
-    const brand = await response.json();
+      const brandData = await response.json();
 
-    return brand;
+      if (!brandData.success) {
+        throw new Error(brandData.message);
+      }
+
+      return brandData.data;
+    },
   });
 }
+
+export const useModels = (
+  brandId: string | undefined,
+): UseQueryResult<ModelType[], Error> => {
+  return useQuery<ModelType[], Error>({
+    queryKey: ["models", brandId],
+    queryFn: async () => {
+      const response = await fetch(`/admin/store/${brandId}/models`);
+
+      if (!response.ok) {
+        throw new Error("There was a problem fetching models");
+      }
+
+      const modelsData = await response.json();
+
+      if (!modelsData.success) {
+        throw new Error(modelsData.message);
+      }
+
+      return modelsData.data;
+    },
+    enabled: !!brandId,
+  });
+};
 
 export function usePublisher() {
   return useQuery("publisher", async () => {

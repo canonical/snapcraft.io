@@ -2,7 +2,7 @@ import shallowDiff from "../libs/shallowDiff";
 
 function submitEnabler(
   formSelector: string | undefined,
-  buttonSelectors: any[] | undefined
+  buttonSelectors: any[] | undefined,
 ) {
   if (!formSelector) {
     throw new TypeError("`formSelector` argument is required");
@@ -19,7 +19,7 @@ function submitEnabler(
   }
 
   const buttonEls = buttonSelectors.map((selector) =>
-    document.querySelector(selector)
+    document.querySelector(selector),
   );
 
   const initialState = new FormData(formEl);

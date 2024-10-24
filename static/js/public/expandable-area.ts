@@ -1,16 +1,10 @@
-/**
-   Initializes an expandable area
-
-   @param {string} overflowSelector - CSS Selector for the element that can overflow
-   @param {string} heightMatchSelector - CSS Selector for the element that overflowSelector's height should be compared against
-*/
 export default function initExpandableArea(
-  overflowSelector,
-  heightMatchSelector,
-) {
+  overflowSelector: string,
+  heightMatchSelector: string,
+): void {
   const showMoreContainer = [].slice.call(
     document.querySelectorAll("[data-js='js-show-more']"),
-  );
+  ) as Array<HTMLElement>;
 
   if (showMoreContainer && showMoreContainer.length > 0) {
     showMoreContainer.forEach((el) => {
@@ -18,8 +12,10 @@ export default function initExpandableArea(
       const linkEl = el.querySelector(".p-show-more__link");
 
       if (overflowSelector && heightMatchSelector) {
-        const overflowEl = el.querySelector(overflowSelector);
-        const heightMatchEl = el.querySelector(heightMatchSelector);
+        const overflowEl = el.querySelector(overflowSelector) as HTMLElement;
+        const heightMatchEl = el.querySelector(
+          heightMatchSelector,
+        ) as HTMLElement;
 
         if (overflowEl.scrollHeight <= heightMatchEl.scrollHeight) {
           el.removeAttribute("data-js");

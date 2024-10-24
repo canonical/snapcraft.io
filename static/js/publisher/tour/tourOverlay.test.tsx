@@ -1,4 +1,3 @@
-import React from "react";
 import { render, fireEvent, cleanup } from "@testing-library/react";
 
 import TourOverlay from "./tourOverlay";
@@ -17,8 +16,10 @@ import {
 import { tourSkipped, tourFinished } from "./metricsEvents";
 import { animateScrollTo } from "../../public/scroll-to";
 
+// @ts-expect-error
 isVisibleInDocument.mockReturnValue(true);
 
+// @ts-expect-error
 getMaskFromElements.mockReturnValue({
   top: 10,
   left: 20,
@@ -26,7 +27,18 @@ getMaskFromElements.mockReturnValue({
   right: 40,
 });
 
-prepareSteps.mockImplementation((steps) => steps);
+// @ts-expect-error
+prepareSteps.mockImplementation(
+  (
+    steps: Array<{
+      id: string;
+      position: string;
+      elements: HTMLElement[];
+      content: string;
+      title: string;
+    }>,
+  ) => steps,
+);
 
 describe("TourOverlay", () => {
   const steps = [
@@ -34,11 +46,15 @@ describe("TourOverlay", () => {
       id: "test-step-1",
       title: "Test step 1",
       position: "bottom-left",
+      elements: [],
+      content: "",
     },
     {
       id: "test-step-2",
       title: "Test step 2",
       position: "top-left",
+      elements: [],
+      content: "",
     },
   ];
 
@@ -48,14 +64,18 @@ describe("TourOverlay", () => {
   });
 
   it("should render TourStepCard for first step", () => {
-    const { getByText } = render(<TourOverlay steps={steps} />);
+    const { getByText } = render(
+      <TourOverlay steps={steps} hideTour={jest.fn()} />,
+    );
 
     expect(getByText(steps[0].title)).toBeDefined();
   });
 
   describe("when moving to next step", () => {
     it("should render TourStepCard for next step", () => {
-      const { getByText } = render(<TourOverlay steps={steps} />);
+      const { getByText } = render(
+        <TourOverlay steps={steps} hideTour={jest.fn()} />,
+      );
 
       fireEvent.click(getByText("Next step"));
 
@@ -63,7 +83,9 @@ describe("TourOverlay", () => {
     });
 
     it("should scroll next step into view", () => {
-      const { getByText } = render(<TourOverlay steps={steps} />);
+      const { getByText } = render(
+        <TourOverlay steps={steps} hideTour={jest.fn()} />,
+      );
 
       fireEvent.click(getByText("Next step"));
 
@@ -74,7 +96,7 @@ describe("TourOverlay", () => {
   describe("when moving to previous step", () => {
     it("should render TourStepCard for previous step", () => {
       const { getByText } = render(
-        <TourOverlay steps={steps} currentStepIndex={1} />,
+        <TourOverlay steps={steps} currentStepIndex={1} hideTour={jest.fn()} />,
       );
 
       fireEvent.click(getByText("Previous step"));
@@ -84,7 +106,7 @@ describe("TourOverlay", () => {
 
     it("should scroll previous step into view", () => {
       const { getByText } = render(
-        <TourOverlay steps={steps} currentStepIndex={1} />,
+        <TourOverlay steps={steps} currentStepIndex={1} hideTour={jest.fn()} />,
       );
 
       fireEvent.click(getByText("Previous step"));

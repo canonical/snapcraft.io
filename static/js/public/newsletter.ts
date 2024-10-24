@@ -9,7 +9,7 @@ function newsletter() {
     return;
   }
 
-  const button = form.querySelector("button");
+  const button = form.querySelector("button") as HTMLButtonElement;
 
   form.addEventListener("submit", () => {
     buttonLoading(button, "");

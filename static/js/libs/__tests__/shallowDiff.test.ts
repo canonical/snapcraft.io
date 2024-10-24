@@ -1,4 +1,4 @@
-import shallowDiff from "./shallowDiff";
+import shallowDiff from "../shallowDiff";
 
 describe("shallowDiff", () => {
   it("should return false if nothing is different", () => {
@@ -6,10 +6,10 @@ describe("shallowDiff", () => {
   });
 
   it("should return true if different", () => {
-    let initialState = { test: true };
-    let addedState = { ...initialState, added: true };
-    let removedState = {};
-    let changeState = { test: false };
+    const initialState = { test: true };
+    const addedState = { ...initialState, added: true };
+    const removedState = {};
+    const changeState = { test: false };
 
     expect(shallowDiff(initialState, addedState)).toEqual(true);
     expect(shallowDiff(initialState, removedState)).toEqual(true);

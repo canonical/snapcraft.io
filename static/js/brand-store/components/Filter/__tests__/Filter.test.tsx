@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { BrowserRouter } from "react-router-dom";
-import { RecoilRoot, useRecoilValue, atom } from "recoil";
+import { RecoilRoot, RecoilValue, useRecoilValue, atom } from "recoil";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { render, screen, fireEvent } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
@@ -35,8 +35,8 @@ export const RecoilObserver = ({
   node,
   onChange,
 }: {
-  node: any;
-  onChange: Function;
+  node: RecoilValue<string>;
+  onChange: (value: string) => void;
 }) => {
   const value = useRecoilValue(node);
   useEffect(() => onChange(value), [onChange, value]);
@@ -60,7 +60,7 @@ const renderComponent = (filterQuery?: string) => {
           />
         </QueryClientProvider>
       </BrowserRouter>
-    </RecoilRoot>
+    </RecoilRoot>,
   );
 };
 

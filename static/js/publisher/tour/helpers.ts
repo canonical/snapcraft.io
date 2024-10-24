@@ -1,12 +1,26 @@
 import { MASK_OFFSET } from "./constants";
 
 // check if element is part of the DOM and is visible
-export const isVisibleInDocument = (el) =>
+export const isVisibleInDocument = (el: HTMLElement): boolean =>
   document.contains(el) && !(el.offsetWidth === 0 && el.offsetHeight === 0);
 
 // find DOM elements for each step, ignore steps with no elements
 // set default position to "bottom-left"
-export function prepareSteps(steps) {
+export function prepareSteps(
+  steps: Array<{
+    id: string;
+    position: string;
+    elements: HTMLElement[];
+    content: string;
+    title: string;
+  }>,
+): Array<{
+  id: string;
+  position: string;
+  elements: HTMLElement[];
+  title: string;
+  content: string;
+}> {
   return steps
     .map((step) => {
       return {
@@ -22,9 +36,16 @@ export function prepareSteps(steps) {
 
 // get rectangle of given DOM element
 // relative to the page, taking scroll into account
-const getRectFromEl = (el) => {
-  let clientRect = el.getBoundingClientRect();
-  let ret = {
+const getRectFromEl = (
+  el: HTMLElement,
+): {
+  top: number;
+  left: number;
+  width: number;
+  height: number;
+} => {
+  const clientRect = el.getBoundingClientRect();
+  const ret = {
     top:
       clientRect.top +
       (window.pageYOffset || document.documentElement.scrollTop),
@@ -39,7 +60,17 @@ const getRectFromEl = (el) => {
 };
 
 // get mask based on rectangle
-const getMaskFromRect = (rect) => {
+const getMaskFromRect = (rect: {
+  top: number;
+  left: number;
+  width: number;
+  height: number;
+}): {
+  top: number;
+  bottom: number;
+  left: number;
+  right: number;
+} => {
   let top = rect.top - MASK_OFFSET;
   if (top < 0) {
     top = 0;
@@ -50,8 +81,8 @@ const getMaskFromRect = (rect) => {
     left = 0;
   }
 
-  let bottom = rect.top + rect.height + MASK_OFFSET;
-  let right = rect.left + rect.width + MASK_OFFSET;
+  const bottom = rect.top + rect.height + MASK_OFFSET;
+  const right = rect.left + rect.width + MASK_OFFSET;
 
   return {
     top,
@@ -62,11 +93,11 @@ const getMaskFromRect = (rect) => {
 };
 
 // calculate mask for given element
-const getMaskFromEl = (el) => getMaskFromRect(getRectFromEl(el));
+const getMaskFromEl = (el: HTMLElement) => getMaskFromRect(getRectFromEl(el));
 
 // get mask that is an union of all elements' masks
 // calculates the rectangle that contains each individual element rectangles
-export const getMaskFromElements = (elements) => {
+export const getMaskFromElements = (elements: Array<HTMLElement>) => {
   const masks = elements
     .filter(isVisibleInDocument)
     .map((el) => getMaskFromEl(el));

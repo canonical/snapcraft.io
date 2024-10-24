@@ -13,13 +13,17 @@ import { Button, Icon } from "@canonical/react-components";
 import { setPageTitle } from "../../utils";
 
 import { useSigningKeys } from "../../hooks";
-import { signingKeysListState, newSigningKeyState } from "../../atoms";
+import {
+  signingKeysListState,
+  newSigningKeyState,
+  brandIdState,
+} from "../../atoms";
 import { brandStoreState } from "../../selectors";
 
 type Props = {
   setShowNotification: Dispatch<SetStateAction<boolean>>;
   setShowErrorNotification: Dispatch<SetStateAction<boolean>>;
-  refetchPolicies: Function;
+  refetchPolicies: () => void;
 };
 
 function CreatePolicyForm({
@@ -28,9 +32,10 @@ function CreatePolicyForm({
   refetchPolicies,
 }: Props): ReactNode {
   const { id, model_id } = useParams();
+  const brandId = useRecoilValue(brandIdState);
   const navigate = useNavigate();
   const location = useLocation();
-  const { isLoading, isError, error, data }: any = useSigningKeys(id);
+  const { isLoading, isError, error, data } = useSigningKeys(brandId);
   const [signingKeys, setSigningKeys] = useRecoilState(signingKeysListState);
   const [newSigningKey, setNewSigningKey] = useRecoilState(newSigningKeyState);
   const brandStore = useRecoilValue(brandStoreState(id));
@@ -58,7 +63,7 @@ function CreatePolicyForm({
 
       setNewSigningKey({ name: "" });
 
-      return fetch(`/admin/store/${id}/models/${model_id}/policies`, {
+      return fetch(`/admin/store/${brandId}/models/${model_id}/policies`, {
         method: "POST",
         body: formData,
       });
@@ -93,7 +98,7 @@ function CreatePolicyForm({
   }
 
   useEffect(() => {
-    if (!isLoading && !error) {
+    if (!isLoading && !error && data) {
       setSigningKeys(data);
     }
   }, [isLoading, error, data]);
@@ -113,8 +118,7 @@ function CreatePolicyForm({
         <div className="p-panel__content">
           <div className="u-fixed-width" style={{ marginBottom: "30px" }}>
             {isLoading && <p>Fetching signing keys...</p>}
-            {isError && error && <p>Error: {error.message}</p>}
-
+            {isError && error instanceof Error && <p>Error: {error.message}</p>}
             {isSaving && (
               <p>
                 <Icon name="spinner" className="u-animation--spin" />

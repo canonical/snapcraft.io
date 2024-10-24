@@ -16,7 +16,7 @@ export const tourStartedAutomatically = () =>
     `Tour started automatically on "${document.title}" page`,
   );
 
-export const tourFinished = (stepId) =>
+export const tourFinished = (stepId: string) =>
   triggerEvent(
     "tour-finished",
     window.location.href,
@@ -24,7 +24,7 @@ export const tourFinished = (stepId) =>
     `Tour finished on "${document.title}" page on step ${stepId}`,
   );
 
-export const tourSkipped = (stepId) =>
+export const tourSkipped = (stepId: string) =>
   triggerEvent(
     "tour-skipped",
     window.location.href,

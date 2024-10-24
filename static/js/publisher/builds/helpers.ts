@@ -13,7 +13,15 @@ const ERROR = "ERROR";
 const SUCCESS = "SUCCESS";
 const IDLE = "IDLE";
 
-export const UserFacingStatus = {
+export const UserFacingStatus: {
+  [key: string]: {
+    statusMessage: string;
+    shortStatusMessage: string;
+    icon: string | undefined;
+    priority: number;
+    badge: string;
+  };
+} = {
   // Used only when there is no build returned from LP.
   // When build is returned from LP (scheduled) it's 'Building soon' for BSI.
   [NEVER_BUILT]: createStatus("Never built", "Never built", 8, NEVER_BUILT),
@@ -44,10 +52,10 @@ export const UserFacingStatus = {
 };
 
 export function createStatus(
-  statusMessage,
-  shortStatusMessage,
-  priority,
-  badge,
+  statusMessage: string,
+  shortStatusMessage: string,
+  priority: number,
+  badge: string,
 ) {
   const loadingStatus = [IN_PROGRESS, RELEASING_SOON];
   let icon;
@@ -66,7 +74,7 @@ export function createStatus(
   };
 }
 
-export function createDuration(duration) {
+export function createDuration(duration: string) {
   if (duration) {
     const durationParts = duration.split(":");
     const hours = parseInt(durationParts[0]);

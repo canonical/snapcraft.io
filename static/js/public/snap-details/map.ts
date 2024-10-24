@@ -1,20 +1,46 @@
-import { select, pointer } from "d3-selection";
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+import { select, pointer, Selection, BaseType } from "d3-selection";
 import { json } from "d3-fetch";
 import { geoNaturalEarth1, geoPath } from "d3-geo";
 import { feature, mesh } from "topojson-client";
 
-import SnapEvents from "../../libs/events";
+import { GeoJsonProperties } from "geojson";
+import { Topology, Objects } from "topojson-specification";
 
-export default function renderMap(el, snapData) {
+export default function renderMap(
+  el: string,
+  snapData: {
+    [key: number]: {
+      code: string;
+      color_rgb: number[];
+      name: string;
+      number_of_users: number;
+      percentage_of_users: number;
+    };
+  },
+) {
   const mapEl = select(el);
 
   json("/static/js/world-110m.v1.json")
+    // @ts-expect-error
     .then(ready)
     .catch((error) => {
       throw new Error(error);
     });
 
-  function render(mapEl, snapData, world) {
+  function render(
+    mapEl: Selection<BaseType, unknown, HTMLElement, unknown>,
+    snapData: {
+      [key: number]: {
+        code: string;
+        color_rgb: number[];
+        name: string;
+        number_of_users: number;
+        percentage_of_users: number;
+      };
+    },
+    world: Topology<Objects<GeoJsonProperties>>,
+  ) {
     const width = mapEl.property("clientWidth");
     const height = width * 0.5;
     // some offset position center of the map properly
@@ -43,12 +69,24 @@ export default function renderMap(el, snapData) {
       .append("div")
       .attr("class", "p-tooltip__message");
 
+    // @ts-expect-error
     const countries = feature(world, world.objects.countries).features;
 
     const g = svg.append("g");
-    const country = g
-      .selectAll(".snapcraft-territories__country")
-      .data(countries);
+    const country: Selection<
+      BaseType,
+      {
+        geometry: {
+          type: string;
+          coordinates: Array<Array<number>>;
+        };
+        id: number;
+        properties: object;
+        type: string;
+      },
+      SVGGElement,
+      unknown
+    > = g.selectAll(".snapcraft-territories__country").data(countries);
 
     country
       .enter()
@@ -62,6 +100,7 @@ export default function renderMap(el, snapData) {
 
         return "snapcraft-territories__country";
       })
+      // @ts-expect-error
       .attr("style", (countryData) => {
         const countrySnapData = snapData[countryData.id];
 
@@ -79,11 +118,13 @@ export default function renderMap(el, snapData) {
           }
         }
       })
+      // @ts-expect-error
       .attr("d", path)
       .attr("id", function (d) {
         return d.id;
       })
       .attr("title", function (d) {
+        // @ts-expect-error
         return d.properties.name;
       })
       .on("mousemove", (event) => {
@@ -96,7 +137,7 @@ export default function renderMap(el, snapData) {
             .style("left", pos[0] + "px")
             .style("display", "block");
 
-          let content = [
+          const content = [
             '<span class="u-no-margin--top">',
             countrySnapData.name,
           ];
@@ -120,6 +161,7 @@ export default function renderMap(el, snapData) {
 
     g.append("path")
       .datum(
+        // @ts-expect-error
         mesh(world, world.objects.countries, function (a, b) {
           return a !== b;
         }),
@@ -128,14 +170,12 @@ export default function renderMap(el, snapData) {
       .attr("d", path);
   }
 
-  function ready(world) {
+  function ready(world: Topology<Objects<GeoJsonProperties>>) {
     render(mapEl, snapData, world);
 
-    let resizeTimeout;
+    let resizeTimeout: string | number | NodeJS.Timeout | undefined;
 
-    const events = new SnapEvents();
-
-    events.addEvent("resize", window, () => {
+    window.addEventListener("resize", () => {
       clearTimeout(resizeTimeout);
       resizeTimeout = setTimeout(function () {
         render(mapEl, snapData, world);

@@ -8,7 +8,7 @@ const renderComponent = () => {
   return render(
     <BrowserRouter>
       <ModelNav sectionName="policies" />
-    </BrowserRouter>
+    </BrowserRouter>,
   );
 };
 

@@ -1,4 +1,4 @@
-import { arraysEqual, arrayChunk, arraysMerge } from "./arrays";
+import { arraysEqual, arrayChunk, arraysMerge } from "../arrays";
 
 describe("arraysEqual", () => {
   it("should return empty arrays as equal", () => {
@@ -47,10 +47,10 @@ describe("arraysEqual", () => {
   });
 
   it("should fail if an array is modified", () => {
-    let arr1 = ["test1", 1];
-    let arr1Copy = [...arr1];
-    let arr2 = ["test2", 2];
-    let arr2Copy = [...arr2];
+    const arr1 = ["test1", 1];
+    const arr1Copy = [...arr1];
+    const arr2 = ["test2", 2];
+    const arr2Copy = [...arr2];
     arraysEqual(arr1, arr2);
     expect(
       JSON.stringify(arr1) === JSON.stringify(arr1Copy) &&

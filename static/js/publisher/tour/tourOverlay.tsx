@@ -1,5 +1,4 @@
 import { useState, useRef, useEffect } from "react";
-import PropTypes from "prop-types";
 
 import debounce from "../../libs/debounce";
 
@@ -20,9 +19,15 @@ export default function TourOverlay({
   hideTour,
   currentStepIndex = 0,
 }: {
-  steps: any;
-  hideTour: any;
-  currentStepIndex: number;
+  steps: Array<{
+    id: string;
+    position: string;
+    elements: HTMLElement[];
+    content: string;
+    title: string;
+  }>;
+  hideTour: () => void;
+  currentStepIndex?: number;
 }) {
   steps = prepareSteps(steps);
 
@@ -50,7 +55,7 @@ export default function TourOverlay({
             // we scroll relative to top of the screen, but we want to stick to bottom
             // so we need to substract the window height
             mask.bottom - window.innerHeight,
-            -SCROLL_OFFSET_BOTTOM
+            -SCROLL_OFFSET_BOTTOM,
           );
         }
       }
@@ -66,7 +71,7 @@ export default function TourOverlay({
         }
       }
     },
-    [currentStepIndex] // refresh effect on step changes, to scroll to correct step
+    [currentStepIndex], // refresh effect on step changes, to scroll to correct step
   );
 
   const overlayEl = useRef(null);
@@ -77,7 +82,7 @@ export default function TourOverlay({
   // it is an unusual use of useState to force rerender, but on resize or scroll
   // the state of component doesn't change, it's the position of elements
   // in DOM that changes and component needs to rerender to adapt
-  const [, forceUpdate] = useState<any>();
+  const [, forceUpdate] = useState<object>();
   const rerender = () => forceUpdate({});
 
   const [isResizing, setIsResizing] = useState(false);
@@ -93,7 +98,7 @@ export default function TourOverlay({
         window.removeEventListener("scroll", afterScroll);
       };
     },
-    [] // don't refresh the effect on every render
+    [], // don't refresh the effect on every render
   );
 
   // rerender after resize (to adjust to new positions of elements)
@@ -117,7 +122,7 @@ export default function TourOverlay({
         window.removeEventListener("resize", afterResize);
       };
     },
-    [] // don't refresh the effect on every render
+    [], // don't refresh the effect on every render
   );
 
   const onNextClick = () =>
@@ -154,7 +159,7 @@ export default function TourOverlay({
         window.removeEventListener("keyup", escClick);
       };
     },
-    [currentStepIndex] // refresh effect when step changes, to pass correct step id into skip metrics
+    [currentStepIndex], // refresh effect when step changes, to pass correct step id into skip metrics
   );
 
   return (
@@ -172,9 +177,3 @@ export default function TourOverlay({
     </div>
   );
 }
-
-TourOverlay.propTypes = {
-  steps: PropTypes.array,
-  currentStepIndex: PropTypes.number,
-  hideTour: PropTypes.func,
-};

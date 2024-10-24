@@ -175,7 +175,11 @@ def snap_details_views(store, api):
     def dns_verified_status(snap_name):
         res = {"primary_domain": False}
         context = _get_snap_link_fields(snap_name)
-        primary_domain = context["links"]["website"][0]
+
+        primary_domain = None
+
+        if "website" in context["links"]:
+            primary_domain = context["links"]["website"][0]
 
         if primary_domain:
             token = helpers.get_dns_verification_token(

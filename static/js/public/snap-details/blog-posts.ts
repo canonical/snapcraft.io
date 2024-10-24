@@ -1,7 +1,29 @@
 import "whatwg-fetch";
 
+interface Post {
+  slug: string;
+  [key: string]: string | undefined;
+}
+
+interface PostWithClassName extends Post {
+  className: string;
+}
+
+type Modifier = (posts: Post[]) => Post[];
+
 class BlogPosts {
-  constructor(url, holderSelector, templateSelector) {
+  url: string;
+  path: string;
+  holder: HTMLElement;
+  template: HTMLTemplateElement;
+  limit: number;
+  modifiers?: Modifier[];
+
+  constructor(
+    url: string | undefined,
+    holderSelector: string,
+    templateSelector: string,
+  ) {
     if (!url) {
       throw new Error("`url` must be defined");
     }
@@ -14,8 +36,10 @@ class BlogPosts {
 
     this.url = url;
     this.path = "";
-    this.holder = document.querySelector(holderSelector);
-    this.template = document.querySelector(templateSelector);
+    this.holder = document.querySelector(holderSelector) as HTMLElement;
+    this.template = document.querySelector(
+      templateSelector,
+    ) as HTMLTemplateElement;
 
     this.limit = 3;
 
@@ -28,7 +52,7 @@ class BlogPosts {
     }
   }
 
-  setResultModifiers(modifiers) {
+  setResultModifiers(modifiers: Modifier[]) {
     this.modifiers = modifiers;
   }
 
@@ -39,7 +63,7 @@ class BlogPosts {
         if (posts.length === 0) {
           return false;
         }
-        const postsHTML = [];
+        const postsHTML: unknown[] = [];
 
         if (this.modifiers) {
           this.modifiers.forEach((modifier) => {
@@ -49,7 +73,7 @@ class BlogPosts {
 
         const cols = 12 / this.limit;
 
-        posts.forEach((post, index) => {
+        posts.forEach((post: Post, index: number) => {
           if (index >= this.limit) {
             return;
           }
@@ -84,10 +108,10 @@ class BlogPosts {
 }
 
 function snapDetailsPosts(
-  holderSelector,
-  templateSelector,
-  showOnSuccessSelector,
-) {
+  holderSelector: string,
+  templateSelector: string,
+  showOnSuccessSelector: string,
+): void {
   const blogPosts = new BlogPosts(
     "/blog/api/snap-posts/",
     holderSelector,
@@ -100,7 +124,7 @@ function snapDetailsPosts(
   }
 
   if (blogPosts.holder.dataset.limit) {
-    blogPosts.limit = blogPosts.holder.dataset.limit;
+    blogPosts.limit = parseInt(blogPosts.holder.dataset.limit, 10);
   }
 
   blogPosts.path = snap;
@@ -115,14 +139,14 @@ function snapDetailsPosts(
   });
 }
 
-function seriesPosts(holderSelector, templateSelector) {
+function seriesPosts(holderSelector: string, templateSelector: string): void {
   const blogPosts = new BlogPosts(
     "/blog/api/series/",
     holderSelector,
     templateSelector,
   );
 
-  const series = blogPosts.holder.dataset.series;
+  const series = blogPosts.holder.dataset.series || "";
   const currentSlug = blogPosts.holder.dataset.currentslug;
 
   blogPosts.path = series;
@@ -132,13 +156,11 @@ function seriesPosts(holderSelector, templateSelector) {
       return posts.reverse();
     },
     function filter(posts) {
-      return posts.map((post) => {
-        if (post.slug === currentSlug) {
-          post.className = "is-current";
-        } else {
-          post.className = "";
-        }
-        return post;
+      return posts.map((post): PostWithClassName => {
+        return {
+          ...post,
+          className: post.slug === currentSlug ? "is-current" : "",
+        };
       });
     },
   ]);

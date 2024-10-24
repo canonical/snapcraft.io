@@ -12,24 +12,34 @@ import {
   Notification,
 } from "@canonical/react-components";
 
-import { useModels } from "../../hooks";
-import { modelsListState } from "../../atoms";
+import { modelsListState, brandIdState } from "../../atoms";
 import { currentModelState, brandStoreState } from "../../selectors";
 
 import ModelNav from "./ModelNav";
 import ModelBreadcrumb from "./ModelBreadcrumb";
 import Navigation from "../Navigation";
 
+import { useModels } from "../../hooks";
 import { setPageTitle } from "../../utils";
+import type { Model as ModelType } from "../../types/shared";
 
 function Model() {
+  const { id, model_id } = useParams();
+  const brandId = useRecoilValue(brandIdState);
+  const currentModel = useRecoilValue(currentModelState(model_id));
+  const [newApiKey, setNewApiKey] = useState("");
+  const [showSuccessNotification, setShowSuccessNotificaton] = useState(false);
+  const [showErrorNotification, setShowErrorNotificaton] = useState(false);
+  const setModelsList = useSetRecoilState<ModelType[]>(modelsListState);
+  const brandStore = useRecoilValue(brandStoreState(id));
+
   const mutation = useMutation({
     mutationFn: (apiKey: string) => {
       const formData = new FormData();
       formData.set("csrf_token", window.CSRF_TOKEN);
       formData.set("api_key", apiKey);
 
-      return fetch(`/admin/store/${id}/models/${model_id}`, {
+      return fetch(`/admin/store/${brandId}/models/${model_id}`, {
         method: "PATCH",
         body: formData,
       });
@@ -53,14 +63,15 @@ function Model() {
     },
   });
 
-  const { id, model_id } = useParams();
-  const currentModel = useRecoilValue(currentModelState(model_id));
-  const [newApiKey, setNewApiKey] = useState("");
-  const [showSuccessNotification, setShowSuccessNotificaton] = useState(false);
-  const [showErrorNotification, setShowErrorNotificaton] = useState(false);
-  const setModelsList = useSetRecoilState<any>(modelsListState);
-  const brandStore = useRecoilValue(brandStoreState(id));
-  const { isLoading, error, data } = useModels(id);
+  const {
+    data: models,
+    isLoading: modelsIsLoading,
+    error: modelsError,
+  }: {
+    data: ModelType[] | undefined;
+    isLoading: boolean;
+    error: unknown;
+  } = useModels(brandId);
 
   const handleError = () => {
     setShowErrorNotificaton(true);
@@ -74,10 +85,16 @@ function Model() {
     : setPageTitle("Model");
 
   useEffect(() => {
-    if (!currentModel && !isLoading && !error) {
-      setModelsList(data);
+    if (!currentModel && !modelsIsLoading && models) {
+      setModelsList(models);
     }
-  }, [currentModel, isLoading, error, data]);
+
+    if (modelsError) {
+      if (modelsError instanceof Error) {
+        console.error(modelsError.message);
+      }
+    }
+  }, [currentModel, modelsIsLoading, modelsError, models]);
 
   return (
     <div className="l-application" role="presentation">
@@ -192,7 +209,7 @@ function Model() {
                         setNewApiKey(
                           randomstring.generate({
                             length: 50,
-                          })
+                          }),
                         );
                       }}
                     >
@@ -211,7 +228,7 @@ function Model() {
                     <p>
                       {format(
                         new Date(currentModel["created-at"]),
-                        "dd/MM/yyyy"
+                        "dd/MM/yyyy",
                       )}
                     </p>
                   </Col>
@@ -244,7 +261,7 @@ function Model() {
                         <p>
                           {format(
                             new Date(currentModel["modified-at"]),
-                            "dd/MM/yyyy"
+                            "dd/MM/yyyy",
                           )}
                         </p>
                       </Col>
