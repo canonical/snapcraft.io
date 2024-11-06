@@ -50,16 +50,16 @@ function Snaps(): ReactNode {
   const members = useSelector(membersSelector);
   const snapsLoading = useSelector((state: SnapsSlice) => state.snaps.loading);
   const storesLoading = useSelector(
-    (state: StoresSlice) => state.brandStores.loading
+    (state: StoresSlice) => state.brandStores.loading,
   );
   const membersLoading = useSelector(
-    (state: MembersSlice) => state.members.loading
+    (state: MembersSlice) => state.members.loading,
   );
   const snapsNotFound = useSelector(
-    (state: SnapsSlice) => state.snaps.notFound
+    (state: SnapsSlice) => state.snaps.notFound,
   );
   const membersNotFound = useSelector(
-    (state: MembersSlice) => state.members.notFound
+    (state: MembersSlice) => state.members.notFound,
   );
   const dispatch = useAppDispatch();
   const { id } = useParams();
@@ -241,7 +241,7 @@ function Snaps(): ReactNode {
 
   const includedStores = snaps
     .filter(
-      (snap) => snap["included-stores"] && snap["included-stores"].length > 0
+      (snap) => snap["included-stores"] && snap["included-stores"].length > 0,
     )
     .map((snap) => ({
       id: snap.id,
@@ -320,7 +320,7 @@ function Snaps(): ReactNode {
             return false;
           }),
         };
-      })
+      }),
     );
   }, [otherStoreIds]);
 
@@ -344,7 +344,7 @@ function Snaps(): ReactNode {
         setIsReviewerAndPublisherOnly(
           roles.length === 2 &&
             roles.includes("access") &&
-            roles.includes("review")
+            roles.includes("review"),
         );
       } else {
         setIsPublisherOnly(false);
