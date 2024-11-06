@@ -53,7 +53,12 @@ function Packages(): ReactNode {
   const currentPage = searchParams.get("page") || "1";
 
   let queryString = search;
-  if (!search || (!searchParams.get("categories") && !searchParams.get("q") && !searchParams.get("architecture"))) {
+  if (
+    !search ||
+    (!searchParams.get("categories") &&
+      !searchParams.get("q") &&
+      !searchParams.get("architecture"))
+  ) {
     queryString = `?categories=featured&page=${currentPage}`;
   } else {
     queryString += `&page=${currentPage}`;

@@ -51,7 +51,7 @@ function ListingForm({ data, refetch }: Props): JSX.Element {
     useState<boolean>(false);
 
   const [formValues, setFormValues] = useState<{ [key: string]: any } | null>(
-    null
+    null,
   );
 
   const { mutate, isLoading } = useMutateListingData({
@@ -68,7 +68,7 @@ function ListingForm({ data, refetch }: Props): JSX.Element {
 
   useEffect(() => {
     const tourContainer = document.getElementById(
-      "tour-container"
+      "tour-container",
     ) as HTMLElement;
 
     if (snapName) {

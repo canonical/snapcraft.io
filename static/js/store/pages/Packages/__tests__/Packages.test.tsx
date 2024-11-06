@@ -143,7 +143,7 @@ describe("Packages", () => {
     renderComponent();
     await waitFor(() => {
       expect(global.fetch).toHaveBeenCalledWith(
-        "/store.json?categories=featured&page=1"
+        "/store.json?categories=featured&page=1",
       );
     });
   });
@@ -154,7 +154,7 @@ describe("Packages", () => {
     await user.click(screen.getByLabelText("Development"));
     await waitFor(() => {
       expect(global.fetch).toHaveBeenCalledWith(
-        "/store.json?categories=development&page=1"
+        "/store.json?categories=development&page=1",
       );
     });
   });
@@ -167,7 +167,7 @@ describe("Packages", () => {
     await user.click(screen.getByLabelText("Development"));
     await waitFor(() => {
       expect(global.fetch).toHaveBeenCalledWith(
-        "/store.json?categories=development&q=code&page=1"
+        "/store.json?categories=development&q=code&page=1",
       );
     });
   });
@@ -262,7 +262,7 @@ describe("Packages", () => {
     await user.click(screen.getByLabelText("Development"));
     await waitFor(() => {
       expect(global.fetch).toHaveBeenCalledWith(
-        "/store.json?categories=development&page=1"
+        "/store.json?categories=development&page=1",
       );
     });
   });

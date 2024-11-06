@@ -3,7 +3,7 @@ export default function formatImageChanges(
   iconUrl: string,
   screenshotUrls: string[],
   screenshots: FileList[],
-  dirtyFields: { [key: string]: boolean }
+  dirtyFields: { [key: string]: boolean },
 ) {
   const images = [];
 

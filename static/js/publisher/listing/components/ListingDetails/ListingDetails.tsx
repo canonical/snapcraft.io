@@ -32,7 +32,7 @@ function ListingDetails({
     useState<boolean>(false);
 
   const [hasSecondaryCategory, setHasSecondCategory] = useState<boolean>(
-    data.secondary_category ? true : false
+    data.secondary_category ? true : false,
   );
 
   const showSecondaryCategory = (): boolean => {

@@ -24,7 +24,10 @@ const renderComponent = (
 
 test("the 'Revert' button is disabled by default", () => {
   renderComponent(false, false, true);
-  expect(screen.getByRole("button", { name: "Revert" })).toHaveAttribute("aria-disabled","true");
+  expect(screen.getByRole("button", { name: "Revert" })).toHaveAttribute(
+    "aria-disabled",
+    "true",
+  );
 });
 
 test("the 'Revert' button is enabled is data is dirty", () => {
@@ -37,7 +40,10 @@ test("the 'Revert' button is enabled is data is dirty", () => {
 
 test("the 'Save' button is disabled by default", () => {
   renderComponent(false, false, true);
-  expect(screen.getByRole("button", { name: "Save" })).toHaveAttribute("aria-disabled","true");
+  expect(screen.getByRole("button", { name: "Save" })).toHaveAttribute(
+    "aria-disabled",
+    "true",
+  );
 });
 
 test("the 'Save' button is enabled is data is dirty", () => {
@@ -52,12 +58,18 @@ test("the 'Save' button shows loading state if saving", () => {
 
 test("the 'Save' button is disabled when saving", () => {
   renderComponent(true, true, true);
-  expect(screen.getByRole("button", { name: "Saving" })).toHaveAttribute("aria-disabled","true");
+  expect(screen.getByRole("button", { name: "Saving" })).toHaveAttribute(
+    "aria-disabled",
+    "true",
+  );
 });
 
 test("the 'Save' button is disabled if the form is invalid", () => {
   renderComponent(false, false, false);
-  expect(screen.getByRole("button", { name: "Save" })).toHaveAttribute("aria-disabled","true");
+  expect(screen.getByRole("button", { name: "Save" })).toHaveAttribute(
+    "aria-disabled",
+    "true",
+  );
 });
 
 test("revert button resets the form", async () => {

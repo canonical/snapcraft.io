@@ -142,7 +142,7 @@ describe("PrimaryDomainInput", () => {
     const user = userEvent.setup();
     renderComponent(
       { ...mockData, primary_website: "https://launchpad.net" },
-      { primary_website: "https://launchpad.net" }
+      { primary_website: "https://launchpad.net" },
     );
     await user.type(
       screen.getByRole("textbox", { name: "Primary website:" }),

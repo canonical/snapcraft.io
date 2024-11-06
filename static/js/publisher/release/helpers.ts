@@ -129,7 +129,7 @@ export function resizeAsidePanel(panelType: string) {
           asidePanel.style.top = `${targetTop}px`;
         }
       }
-    }
+    };
 
     adjustAsidePanelHeight();
 

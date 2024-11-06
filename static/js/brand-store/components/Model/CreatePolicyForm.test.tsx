@@ -59,7 +59,10 @@ describe("CreatePolicyForm", () => {
       ],
     });
     renderComponent();
-    expect(screen.getByRole("button", { name: "Add policy" })).toHaveAttribute("aria-disabled","true");
+    expect(screen.getByRole("button", { name: "Add policy" })).toHaveAttribute(
+      "aria-disabled",
+      "true",
+    );
   });
 
   it("enables the 'Add policy' button if a signing key is selected", async () => {

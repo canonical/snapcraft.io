@@ -48,8 +48,8 @@ describe("UnregisterSnapModal", () => {
     render(<UnregisterSnapModal {...defaultProps} />);
     const unregisterButton = screen.getByText("Unregister");
     await user.click(unregisterButton);
-    expect(unregisterButton).toHaveAttribute("aria-disabled","true");
-    expect(screen.getByText('Unregistering...')).toBeInTheDocument();
+    expect(unregisterButton).toHaveAttribute("aria-disabled", "true");
+    expect(screen.getByText("Unregistering...")).toBeInTheDocument();
   });
 
   test("calls fetch with correct parameters and redirects on success", async () => {

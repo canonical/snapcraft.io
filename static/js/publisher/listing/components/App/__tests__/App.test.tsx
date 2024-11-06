@@ -34,7 +34,7 @@ const renderComponent = () => {
       <QueryClientProvider client={queryClient}>
         <App />
       </QueryClientProvider>
-    </BrowserRouter>
+    </BrowserRouter>,
   );
 };
 
@@ -50,7 +50,7 @@ describe("App", () => {
     renderComponent();
 
     expect(
-      screen.getByRole("heading", { level: 1, name: "test-snap" })
+      screen.getByRole("heading", { level: 1, name: "test-snap" }),
     ).toBeInTheDocument();
   });
 
@@ -65,7 +65,7 @@ describe("App", () => {
     renderComponent();
 
     expect(
-      screen.getByText(/Loading test-snap listing data/)
+      screen.getByText(/Loading test-snap listing data/),
     ).toBeInTheDocument();
   });
 
@@ -80,7 +80,7 @@ describe("App", () => {
     renderComponent();
 
     expect(
-      screen.getByRole("heading", { level: 2, name: "Listing details" })
+      screen.getByRole("heading", { level: 2, name: "Listing details" }),
     ).toBeInTheDocument();
   });
 
@@ -95,7 +95,7 @@ describe("App", () => {
     renderComponent();
 
     expect(
-      screen.getByRole("heading", { level: 2, name: "Contact information" })
+      screen.getByRole("heading", { level: 2, name: "Contact information" }),
     ).toBeInTheDocument();
   });
 
@@ -110,7 +110,7 @@ describe("App", () => {
     renderComponent();
 
     expect(
-      screen.getByRole("heading", { level: 2, name: "Additional information" })
+      screen.getByRole("heading", { level: 2, name: "Additional information" }),
     ).toBeInTheDocument();
   });
 
@@ -126,8 +126,8 @@ describe("App", () => {
 
     expect(
       screen.getByText(
-        /Information here was automatically updated to the latest version of the snapcraft.yaml released to the stable channel/
-      )
+        /Information here was automatically updated to the latest version of the snapcraft.yaml released to the stable channel/,
+      ),
     ).toBeInTheDocument();
   });
 
@@ -143,8 +143,8 @@ describe("App", () => {
 
     expect(
       screen.queryByText(
-        /Information here was automatically updated to the latest version of the snapcraft.yaml released to the stable channel/
-      )
+        /Information here was automatically updated to the latest version of the snapcraft.yaml released to the stable channel/,
+      ),
     ).not.toBeInTheDocument();
   });
 });

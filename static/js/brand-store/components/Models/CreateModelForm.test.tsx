@@ -35,7 +35,10 @@ const renderComponent = () => {
 describe("CreateModelForm", () => {
   it("disables 'Add model' button if no new model name", async () => {
     renderComponent();
-    expect(screen.getByRole("button", { name: "Add model" })).toHaveAttribute("aria-disabled","true");
+    expect(screen.getByRole("button", { name: "Add model" })).toHaveAttribute(
+      "aria-disabled",
+      "true",
+    );
   });
 
   it("enables 'Add model' button if there is a new model name", async () => {

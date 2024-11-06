@@ -1,7 +1,7 @@
 import type { Data } from "../types";
 
 function getPublicMetricsTerritoriesValue(
-  publicMetricsBlacklist: string[]
+  publicMetricsBlacklist: string[],
 ): boolean {
   if (publicMetricsBlacklist.length === 0) {
     return true;
@@ -10,7 +10,7 @@ function getPublicMetricsTerritoriesValue(
   if (
     publicMetricsBlacklist.length === 1 &&
     publicMetricsBlacklist.includes(
-      "weekly_installed_base_by_operating_system_normalized"
+      "weekly_installed_base_by_operating_system_normalized",
     )
   ) {
     return true;
@@ -20,7 +20,7 @@ function getPublicMetricsTerritoriesValue(
 }
 
 function getPublicMetricsDistrosValue(
-  publicMetricsBlacklist: string[]
+  publicMetricsBlacklist: string[],
 ): boolean {
   if (publicMetricsBlacklist.length === 0) {
     return true;
@@ -49,11 +49,11 @@ export default function getDefaultData(data: Data): { [key: string]: any } {
     primary_category: data.primary_category,
     primary_website: data.primary_website,
     public_metrics_distros: getPublicMetricsDistrosValue(
-      data.public_metrics_blacklist
+      data.public_metrics_blacklist,
     ),
     public_metrics_enabled: data.public_metrics_enabled,
     public_metrics_territories: getPublicMetricsTerritoriesValue(
-      data.public_metrics_blacklist
+      data.public_metrics_blacklist,
     ),
     screenshots: [
       new File([], ""),
