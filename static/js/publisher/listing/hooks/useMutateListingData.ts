@@ -14,6 +14,7 @@ type Options = {
   setUpdateMetadataOnRelease: Function;
   shouldShowUpdateMetadataWarning: Function;
   snapName: string | undefined;
+  setShowUpdateMetadataMessage: Function;
 };
 
 function useMutateListingData({
@@ -26,6 +27,7 @@ function useMutateListingData({
   setUpdateMetadataOnRelease,
   shouldShowUpdateMetadataWarning,
   snapName,
+  setShowUpdateMetadataMessage,
 }: Options) {
   return useMutation({
     mutationFn: async (values: any) => {
@@ -53,7 +55,7 @@ function useMutateListingData({
             formData.append("screenshots", newFile);
 
             const imageIndex = changes.images.findIndex(
-              (image: any) => image.name === oldName
+              (image: any) => image.name === oldName,
             );
             changes.images[imageIndex].name = newFile.name;
             changes.images[imageIndex].url = URL.createObjectURL(newFile);
@@ -74,6 +76,12 @@ function useMutateListingData({
 
       if (!response.ok) {
         throw new Error("There was a problem saving listing data");
+      }
+
+      const responseData = await response.json();
+
+      if (!responseData.data.text_fields_updated) {
+        setShowUpdateMetadataMessage(true);
       }
     },
     onSuccess: async () => {
