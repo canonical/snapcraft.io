@@ -89,11 +89,13 @@ function Snaps(): ReactNode {
   const [globalStore, setGlobalStore] = useState<Store | null>(null);
 
   const [fetchSnapsByStoreIdPromise, setFetchSnapsByStoreIdPromise] = useState<
-    ReturnType<AsyncThunkAction<Snap[], string, {}>> | undefined
+    ReturnType<AsyncThunkAction<Snap[], string, object>> | undefined
   >();
 
   const [fetchMembersByStoreIdPromise, setFetchMembersByStoreIdPromise] =
-    useState<ReturnType<AsyncThunkAction<Member[], string, {}>> | undefined>();
+    useState<
+      ReturnType<AsyncThunkAction<Member[], string, object>> | undefined
+    >();
 
   const getStoreName = (storeId: string) => {
     const store = brandStoresList.find((item) => item.id === storeId);
