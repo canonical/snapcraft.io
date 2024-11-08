@@ -41,6 +41,7 @@ module.exports = {
         "@typescript-eslint/ban-types": "off",
         "prefer-const": "off",
         "react/no-children-prop": "off",
+        "no-sparse-arrays": "off",
       },
     },
   ],
