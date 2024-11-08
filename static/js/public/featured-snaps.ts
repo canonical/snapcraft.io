@@ -160,7 +160,7 @@ async function init(featuredCategories: Array<string>): Promise<void> {
 
       await buildCards(category);
 
-      viewCategoryLink?.setAttribute("href", `/search?category=${category}`);
+      viewCategoryLink?.setAttribute("href", `/search?categories=${category}`);
       viewCategoryLink.innerText = `View all ${category} snaps`;
     });
   });
