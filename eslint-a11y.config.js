@@ -17,6 +17,13 @@ module.exports = {
     },
     requireConfigFile: false,
   },
+  rules: {
+    "no-unused-vars": "off",
+    "no-non-null-assertion": "off",
+    "no-undef": "off",
+    "react/prop-types": "off",
+    "react/jsx-key": "off",
+  },
   overrides: [
     {
       files: ["*.ts", "*.tsx"],
@@ -25,6 +32,16 @@ module.exports = {
       extends: [
         "plugin:jsx-a11y/recommended",
       ],
+      rules: {
+        "@typescript-eslint/no-unused-vars": "off",
+        "@typescript-eslint/no-empty-function": "off",
+        "@typescript-eslint/explicit-function-return-type": "off",
+        "@typescript-eslint/ban-ts-comment": "off",
+        "@typescript-eslint/no-explicit-any": "off",
+        "@typescript-eslint/ban-types": "off",
+        "prefer-const": "off",
+        "react/no-children-prop": "off",
+      },
     },
   ],
 };

@@ -27,6 +27,7 @@ module.exports = {
     "prettier/prettier": "error",
     "react/react-in-jsx-scope": "off",
     "react/no-unescaped-entities": "off",
+    "jsx-a11y/*": "off", 
   },
   settings: {
     react: {
