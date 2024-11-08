@@ -295,6 +295,17 @@ function Members(): ReactNode {
           setNewMemberEmail("");
           setNewMemberRoles([]);
         }}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            setSidePanelOpen(false);
+            setShowInviteForm(false);
+            setNewMemberEmail("");
+            setNewMemberRoles([]);
+          }
+        }}
+        role="button"
+        tabIndex={0}
+        aria-label="Close the side panel"
       ></div>
       <aside
         className={`l-aside ${sidePanelOpen ? "" : "is-collapsed"}`}

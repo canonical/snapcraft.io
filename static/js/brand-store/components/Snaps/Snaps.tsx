@@ -546,6 +546,14 @@ function Snaps(): ReactNode {
         onClick={() => {
           setSidePanelOpen(false);
         }}
+        onKeyDown={(e) => {
+          if (e.key == "Enter" || e.key == " ") {
+            setSidePanelOpen(false);
+          }
+        }}
+        role="button"
+        tabIndex={0}
+        aria-label="Close side panel"
       ></div>
       <aside
         className={`l-aside ${sidePanelOpen ? "" : "is-collapsed"}`}

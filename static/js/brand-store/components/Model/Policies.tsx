@@ -201,6 +201,16 @@ function Policies(): ReactNode {
           setNewSigningKey({ name: "" });
           setShowErrorNotification(false);
         }}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            navigate(`/admin/${id}/models/${model_id}/policies`);
+            setNewSigningKey({ name: "" });
+            setShowErrorNotification(false);
+          }
+        }}
+        role="button"
+        tabIndex={0}
+        aria-label="Navigate to policies page"
       ></div>
       <aside
         className={`l-aside ${

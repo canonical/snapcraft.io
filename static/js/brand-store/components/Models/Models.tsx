@@ -152,6 +152,16 @@ function Models(): ReactNode {
           setShowErrorNotification(false);
           setNewModel({ name: "", apiKey: "" });
         }}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            navigate(`/admin/${id}/models`);
+            setShowErrorNotification(false);
+            setNewModel({ name: "", apiKey: "" });
+          }
+        }}
+        role="button"
+        tabIndex={0}
+        aria-label="Navigate to models page"
       ></div>
       <aside
         className={`l-aside ${

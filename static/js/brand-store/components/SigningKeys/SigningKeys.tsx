@@ -191,6 +191,16 @@ function SigningKeys(): ReactNode {
           setNewSigningKey({ name: "" });
           setErrorMessage("");
         }}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            navigate(`/admin/${id}/signing-keys`);
+            setNewSigningKey({ name: "" });
+            setErrorMessage("");
+          }
+        }}
+        role="button"
+        tabIndex={0}
+        aria-label="Navigate to signing keys"
       ></div>
       <aside
         className={`l-aside ${

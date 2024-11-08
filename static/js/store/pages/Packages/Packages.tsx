@@ -183,6 +183,14 @@ function Packages(): ReactNode {
               onClick={() => {
                 setHideFilters(true);
               }}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  setHideFilters(true);
+                }
+              }}
+              role="button"
+              tabIndex={0}
+              aria-label="Close filter panel"
             ></div>
 
             <div
