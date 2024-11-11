@@ -10,7 +10,6 @@ module.exports = {
     "plugin:jsx-a11y/recommended",
   ],
   parserOptions: {
-    ecmaVersion: 2020,
     sourceType: "module",
     ecmaFeatures: {
       jsx: true,
