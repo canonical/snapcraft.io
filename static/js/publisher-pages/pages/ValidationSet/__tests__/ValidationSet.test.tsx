@@ -1,6 +1,6 @@
 import { BrowserRouter, useSearchParams } from "react-router-dom";
 import { QueryClient, QueryClientProvider, useQuery } from "react-query";
-import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import "@testing-library/jest-dom";
 
 import ValidationSet from "../ValidationSet";
@@ -84,9 +84,9 @@ jest.mock("react-router-dom", () => ({
 
 describe("ValidationSet", () => {
   test("shows loading state when fetching validation set", () => {
-    // @ts-ignore
+    // @ts-expect-error Mocking useQuery with status loading
     useQuery.mockReturnValue({ status: "loading", data: undefined });
-    // @ts-ignore
+    // @ts-expect-error Mocking useSearchParams to return an empty URLSearchParams
     useSearchParams.mockReturnValue([new URLSearchParams()]);
     renderComponent();
     expect(
@@ -95,9 +95,9 @@ describe("ValidationSet", () => {
   });
 
   test("shows message if no validation set", () => {
-    // @ts-ignore
+    // @ts-expect-error Mocking useQuery to return an empty array for no validation sets
     useQuery.mockReturnValue({ status: "success", data: [] });
-    // @ts-ignore
+    // @ts-expect-error Mocking useSearchParams to return an empty URLSearchParams for the test
     useSearchParams.mockReturnValue([new URLSearchParams()]);
     renderComponent();
     expect(
@@ -106,9 +106,9 @@ describe("ValidationSet", () => {
   });
 
   test("shows message when there is an error fetching validation set", () => {
-    // @ts-ignore
+    // @ts-expect-error Mocking useQuery with an error status to simulate a failed request
     useQuery.mockReturnValue({ status: "error", data: undefined });
-    // @ts-ignore
+    // @ts-expect-error Mocking useSearchParams to return an empty URLSearchParams
     useSearchParams.mockReturnValue([new URLSearchParams()]);
     renderComponent();
     expect(
@@ -117,9 +117,9 @@ describe("ValidationSet", () => {
   });
 
   test("displays validation set snaps", () => {
-    // @ts-ignore
+    // @ts-expect-error Mocking useQuery to return mock data of validation sets
     useQuery.mockReturnValue({ status: "success", data: mockValidationSet });
-    // @ts-ignore
+    // @ts-expect-error Mocking useSearchParams to return an empty URLSearchParams for the test
     useSearchParams.mockReturnValue([new URLSearchParams()]);
     renderComponent();
     expect(
@@ -128,9 +128,9 @@ describe("ValidationSet", () => {
   });
 
   test("sequence selector defaults to latest sequence", () => {
-    // @ts-ignore
+    // @ts-expect-error Mocking useQuery to return mock data of validation sets
     useQuery.mockReturnValue({ status: "success", data: mockValidationSet });
-    // @ts-ignore
+    // @ts-expect-error Mocking useSearchParams to return an empty URLSearchParams for the test
     useSearchParams.mockReturnValue([new URLSearchParams()]);
     renderComponent();
     expect(screen.getByLabelText("Sequence")).toHaveValue("3");
@@ -138,9 +138,9 @@ describe("ValidationSet", () => {
   });
 
   test("sequence selector uses query string value", () => {
-    // @ts-ignore
+    // @ts-expect-error Mocking useQuery to return mock data of validation sets
     useQuery.mockReturnValue({ status: "success", data: mockValidationSet });
-    // @ts-ignore
+    // @ts-expect-error Mocking useSearchParams to return a query string value of sequence=2
     useSearchParams.mockReturnValue([new URLSearchParams({ sequence: "2" })]);
     renderComponent();
     expect(screen.getByLabelText("Sequence")).toHaveValue("2");
