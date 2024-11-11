@@ -45,4 +45,7 @@ module.exports = {
       },
     },
   ],
+  ignorePatterns: [
+    "/static/js/publisher" // skip linting any files in the publisher directory 
+  ],
 };

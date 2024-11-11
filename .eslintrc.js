@@ -42,4 +42,7 @@ module.exports = {
       extends: ["plugin:@typescript-eslint/recommended"],
     },
   ],
+  ignorePatterns: [
+    "/static/js/publisher" // skip linting any files in the publisher directory 
+  ],
 };
