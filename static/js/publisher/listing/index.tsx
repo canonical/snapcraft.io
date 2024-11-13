@@ -14,5 +14,5 @@ root.render(
         <Route path="/:snapName/listing" element={<App />} />
       </Routes>
     </QueryClientProvider>
-  </Router>
+  </Router>,
 );

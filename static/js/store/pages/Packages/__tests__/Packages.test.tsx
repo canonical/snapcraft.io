@@ -117,7 +117,7 @@ const queryClient = new QueryClient();
 
 const renderComponent = (
   useMemoryRouter?: boolean,
-  initialEntries?: Array<string>
+  initialEntries?: Array<string>,
 ) => {
   if (useMemoryRouter && initialEntries) {
     return render(
@@ -125,7 +125,7 @@ const renderComponent = (
         <QueryClientProvider client={queryClient}>
           <Packages />
         </QueryClientProvider>
-      </MemoryRouter>
+      </MemoryRouter>,
     );
   }
 
@@ -134,7 +134,7 @@ const renderComponent = (
       <QueryClientProvider client={queryClient}>
         <Packages />
       </QueryClientProvider>
-    </BrowserRouter>
+    </BrowserRouter>,
   );
 };
 
@@ -143,7 +143,7 @@ describe("Packages", () => {
     renderComponent();
     await waitFor(() => {
       expect(global.fetch).toHaveBeenCalledWith(
-        "/store.json?categories=featured&page=1"
+        "/store.json?categories=featured&page=1",
       );
     });
   });
@@ -154,7 +154,7 @@ describe("Packages", () => {
     await user.click(screen.getByLabelText("Development"));
     await waitFor(() => {
       expect(global.fetch).toHaveBeenCalledWith(
-        "/store.json?categories=development&page=1"
+        "/store.json?categories=development&page=1",
       );
     });
   });
@@ -167,7 +167,7 @@ describe("Packages", () => {
     await user.click(screen.getByLabelText("Development"));
     await waitFor(() => {
       expect(global.fetch).toHaveBeenCalledWith(
-        "/store.json?categories=development&q=code&page=1"
+        "/store.json?categories=development&q=code&page=1",
       );
     });
   });
@@ -186,10 +186,10 @@ describe("Packages", () => {
     renderComponent();
     await waitFor(() => {
       expect(
-        screen.getByRole("button", { name: /Show more/ })
+        screen.getByRole("button", { name: /Show more/ }),
       ).toBeInTheDocument();
       expect(
-        screen.queryByRole("button", { name: /Show less/ })
+        screen.queryByRole("button", { name: /Show less/ }),
       ).not.toBeInTheDocument();
     });
   });
@@ -200,10 +200,10 @@ describe("Packages", () => {
     await user.click(screen.getByRole("button", { name: /Show more/ }));
     await waitFor(() => {
       expect(
-        screen.queryByRole("button", { name: /Show more/ })
+        screen.queryByRole("button", { name: /Show more/ }),
       ).not.toBeInTheDocument();
       expect(
-        screen.getByRole("button", { name: /Show less/ })
+        screen.getByRole("button", { name: /Show less/ }),
       ).toBeInTheDocument();
     });
   });
@@ -222,10 +222,10 @@ describe("Packages", () => {
     renderComponent(true, ["?categories=science"]);
     await waitFor(() => {
       expect(
-        screen.queryByRole("button", { name: "Show more" })
+        screen.queryByRole("button", { name: "Show more" }),
       ).not.toBeInTheDocument();
       expect(
-        screen.getByRole("button", { name: "Show less" })
+        screen.getByRole("button", { name: "Show less" }),
       ).toBeInTheDocument();
     });
   });
@@ -237,7 +237,7 @@ describe("Packages", () => {
         screen.getByRole("heading", {
           level: 2,
           name: "Development and 1 more category",
-        })
+        }),
       ).toBeInTheDocument();
     });
   });
@@ -251,7 +251,7 @@ describe("Packages", () => {
         screen.getByRole("heading", {
           level: 2,
           name: "Development and 4 more categories",
-        })
+        }),
       ).toBeInTheDocument();
     });
   });
@@ -262,7 +262,7 @@ describe("Packages", () => {
     await user.click(screen.getByLabelText("Development"));
     await waitFor(() => {
       expect(global.fetch).toHaveBeenCalledWith(
-        "/store.json?categories=development&page=1"
+        "/store.json?categories=development&page=1",
       );
     });
   });

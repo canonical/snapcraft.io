@@ -4,14 +4,14 @@ function nps(): void {
   const MktoForms2 = window.MktoForms2 || (null as unknown | null);
 
   const toggle = document.querySelector(
-    ".js-nps-comment-toggle"
+    ".js-nps-comment-toggle",
   ) as HTMLElement;
   if (!MktoForms2) {
     toggle.classList.add("u-hide");
     return;
   }
   const commentHolder = document.querySelector(
-    ".js-nps-comment"
+    ".js-nps-comment",
   ) as HTMLElement;
   const form = commentHolder.querySelector("form") as HTMLFormElement;
   const button = form.querySelector("button") as HTMLButtonElement;
@@ -57,7 +57,7 @@ function nps(): void {
         button.innerHTML = `<i class="p-icon--spinner u-animation--spin"></i>`;
         mktoForm.submit();
       });
-    }
+    },
   );
 }
 

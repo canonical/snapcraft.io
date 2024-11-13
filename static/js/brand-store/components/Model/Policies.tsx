@@ -16,7 +16,12 @@ import PoliciesTable from "./PoliciesTable";
 import CreatePolicyForm from "./CreatePolicyForm";
 import Navigation from "../Navigation";
 
-import { usePolicies, useSigningKeys } from "../../hooks";
+import {
+  ApiError,
+  UsePoliciesResponse,
+  usePolicies,
+  useSigningKeys,
+} from "../../hooks";
 import {
   policiesListFilterState,
   policiesListState,
@@ -35,10 +40,8 @@ function Policies(): ReactNode {
   const brandId = useRecoilValue(brandIdState);
   const location = useLocation();
   const navigate = useNavigate();
-  const { isLoading, isError, error, refetch, data }: any = usePolicies(
-    brandId,
-    model_id
-  );
+  const { isLoading, isError, error, refetch, data }: UsePoliciesResponse =
+    usePolicies(brandId, model_id);
   const signingKeys = useSigningKeys(brandId);
   const setPoliciesList = useSetRecoilState<Array<Policy>>(policiesListState);
   const setFilter = useSetRecoilState<string>(policiesListFilterState);
@@ -59,13 +62,19 @@ function Policies(): ReactNode {
 
   useEffect(() => {
     if (!signingKeys.isLoading && !signingKeys.isError) {
-      setSigningKeysList(signingKeys.data);
+      if (signingKeys.data) {
+        setSigningKeysList(signingKeys.data);
+      } else {
+        setSigningKeysList([]);
+      }
     }
   }, [signingKeys]);
 
   useEffect(() => {
     if (!isLoading && !isError) {
-      setPoliciesList(data);
+      if (data) {
+        setPoliciesList(data);
+      }
       setFilter(searchParams.get("filter") || "");
     } else {
       setPoliciesList([]);
@@ -158,7 +167,7 @@ function Policies(): ReactNode {
               <>
                 {isError && error && (
                   <Notification severity="negative">
-                    Error: {error.message}
+                    Error: {(error as ApiError).message}
                   </Notification>
                 )}
                 {isLoading ? (
@@ -192,6 +201,16 @@ function Policies(): ReactNode {
           setNewSigningKey({ name: "" });
           setShowErrorNotification(false);
         }}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            navigate(`/admin/${id}/models/${model_id}/policies`);
+            setNewSigningKey({ name: "" });
+            setShowErrorNotification(false);
+          }
+        }}
+        role="button"
+        tabIndex={0}
+        aria-label="Navigate to policies page"
       ></div>
       <aside
         className={`l-aside ${

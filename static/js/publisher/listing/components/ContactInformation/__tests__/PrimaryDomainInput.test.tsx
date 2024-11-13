@@ -98,7 +98,7 @@ describe("PrimaryDomainInput", () => {
     expect(input).toHaveValue("https://example.comabc");
 
     expect(
-      screen.getByText(/Please save your changes to verify/)
+      screen.getByText(/Please save your changes to verify/),
     ).toBeInTheDocument();
   });
 
@@ -142,11 +142,11 @@ describe("PrimaryDomainInput", () => {
     const user = userEvent.setup();
     renderComponent(
       { ...mockData, primary_website: "https://launchpad.net" },
-      { primary_website: "https://launchpad.net" }
+      { primary_website: "https://launchpad.net" },
     );
     await user.type(
       screen.getByRole("textbox", { name: "Primary website:" }),
-      "/path"
+      "/path",
     );
     expect(screen.getByText(/Unable to verify/)).toBeInTheDocument();
   });
@@ -168,13 +168,13 @@ describe("PrimaryDomainInput", () => {
     const user = userEvent.setup();
     renderComponent(mockData, { primary_website: "https://example.com" });
     await user.click(
-      screen.getByRole("button", { name: "Verified ownership" })
+      screen.getByRole("button", { name: "Verified ownership" }),
     );
     expect(
-      screen.getByRole("heading", { level: 2, name: "Verify ownership" })
+      screen.getByRole("heading", { level: 2, name: "Verify ownership" }),
     ).toBeInTheDocument();
     expect(
-      screen.getByRole("textbox", { name: "DNS verification token" })
+      screen.getByRole("textbox", { name: "DNS verification token" }),
     ).toHaveValue("SNAPCRAFT_IO_VERIFICATION=abc123");
   });
 
@@ -190,7 +190,7 @@ describe("PrimaryDomainInput", () => {
     renderComponent(mockData, { primary_website: "https://example.com" });
     expect(screen.queryByText("Verified ownership")).not.toBeInTheDocument();
     expect(
-      screen.getByRole("button", { name: "Verify ownership" })
+      screen.getByRole("button", { name: "Verify ownership" }),
     ).toBeInTheDocument();
   });
 
@@ -212,10 +212,10 @@ describe("PrimaryDomainInput", () => {
     renderComponent(mockData, { primary_website: "https://example.com" });
     await user.click(screen.getByRole("button", { name: "Verify ownership" }));
     expect(
-      screen.getByRole("heading", { level: 2, name: "Verify ownership" })
+      screen.getByRole("heading", { level: 2, name: "Verify ownership" }),
     ).toBeInTheDocument();
     expect(
-      screen.getByRole("textbox", { name: "DNS verification token" })
+      screen.getByRole("textbox", { name: "DNS verification token" }),
     ).toHaveValue("SNAPCRAFT_IO_VERIFICATION=abc123");
   });
 
@@ -236,7 +236,7 @@ describe("PrimaryDomainInput", () => {
     const user = userEvent.setup();
     renderComponent(mockData, { primary_website: "https://example.com" });
     expect(
-      screen.getByRole("button", { name: "Verify ownership" })
+      screen.getByRole("button", { name: "Verify ownership" }),
     ).toBeDisabled();
   });
 });

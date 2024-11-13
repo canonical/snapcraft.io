@@ -1,9 +1,9 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import { select, pointer, Selection, BaseType } from "d3-selection";
 import { json } from "d3-fetch";
 import { geoNaturalEarth1, geoPath } from "d3-geo";
 import { feature, mesh } from "topojson-client";
 
-import SnapEvents from "../../libs/events";
 import { GeoJsonProperties } from "geojson";
 import { Topology, Objects } from "topojson-specification";
 
@@ -17,7 +17,7 @@ export default function renderMap(
       number_of_users: number;
       percentage_of_users: number;
     };
-  }
+  },
 ) {
   const mapEl = select(el);
 
@@ -39,7 +39,7 @@ export default function renderMap(
         percentage_of_users: number;
       };
     },
-    world: Topology<Objects<GeoJsonProperties>>
+    world: Topology<Objects<GeoJsonProperties>>,
   ) {
     const width = mapEl.property("clientWidth");
     const height = width * 0.5;
@@ -81,7 +81,7 @@ export default function renderMap(
           coordinates: Array<Array<number>>;
         };
         id: number;
-        properties: {};
+        properties: object;
         type: string;
       },
       SVGGElement,
@@ -137,7 +137,7 @@ export default function renderMap(
             .style("left", pos[0] + "px")
             .style("display", "block");
 
-          let content = [
+          const content = [
             '<span class="u-no-margin--top">',
             countrySnapData.name,
           ];
@@ -151,7 +151,7 @@ export default function renderMap(
                style="background-color: rgb(${countrySnapData.color_rgb[0]}, ${
                  countrySnapData.color_rgb[1]
                }, ${countrySnapData.color_rgb[2]})"></span>
-             ${content.join(" ")}`
+             ${content.join(" ")}`,
           );
         }
       })
@@ -164,7 +164,7 @@ export default function renderMap(
         // @ts-expect-error
         mesh(world, world.objects.countries, function (a, b) {
           return a !== b;
-        })
+        }),
       )
       .attr("class", "snapcraft-territories__boundary")
       .attr("d", path);
@@ -175,10 +175,7 @@ export default function renderMap(
 
     let resizeTimeout: string | number | NodeJS.Timeout | undefined;
 
-    // @ts-expect-error
-    const events = new SnapEvents();
-
-    events.addEvent("resize", window, () => {
+    window.addEventListener("resize", () => {
       clearTimeout(resizeTimeout);
       resizeTimeout = setTimeout(function () {
         render(mapEl, snapData, world);

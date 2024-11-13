@@ -53,7 +53,7 @@ function useMutateListingData({
             formData.append("screenshots", newFile);
 
             const imageIndex = changes.images.findIndex(
-              (image: any) => image.name === oldName
+              (image: any) => image.name === oldName,
             );
             changes.images[imageIndex].name = newFile.name;
             changes.images[imageIndex].url = URL.createObjectURL(newFile);

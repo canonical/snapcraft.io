@@ -34,20 +34,20 @@ const renderComponent = () => {
           />
         </QueryClientProvider>
       </BrowserRouter>
-    </RecoilRoot>
+    </RecoilRoot>,
   );
 };
 
 describe("CreatePolicyForm", () => {
   it("shows a message if there are no available signing keys", () => {
-    // @ts-ignore
+    // @ts-expect-error - Mocking useQuery without providing types for the mock data
     useQuery.mockReturnValue({ data: [] });
     renderComponent();
     expect(screen.getByText(/No signing keys available/)).toBeInTheDocument();
   });
 
   it("disables the 'Add policy' button if there is no selected signing key", () => {
-    // @ts-ignore
+    // @ts-expect-error - Mocking useQuery for a valid signing key but skipping type validation
     useQuery.mockReturnValue({
       data: [
         {
@@ -59,11 +59,14 @@ describe("CreatePolicyForm", () => {
       ],
     });
     renderComponent();
-    expect(screen.getByRole("button", { name: "Add policy" })).toHaveAttribute("aria-disabled","true");
+    expect(screen.getByRole("button", { name: "Add policy" })).toHaveAttribute(
+      "aria-disabled",
+      "true",
+    );
   });
 
   it("enables the 'Add policy' button if a signing key is selected", async () => {
-    // @ts-ignore
+    // @ts-expect-error - Mocking useQuery to test form behavior with a selected signing key
     useQuery.mockReturnValue({
       data: [
         {
@@ -80,7 +83,7 @@ describe("CreatePolicyForm", () => {
       "signing-key-1",
     ]);
     expect(
-      screen.getByRole("button", { name: "Add policy" })
+      screen.getByRole("button", { name: "Add policy" }),
     ).not.toBeDisabled();
   });
 });

@@ -62,6 +62,11 @@ export type Invite = {
   "expiration-date": string;
 };
 
+export type InviteActionData = {
+  action: "resend" | "revoke" | "open";
+  email: string;
+};
+
 export type Member = {
   displayname: string;
   email: string;
@@ -86,14 +91,15 @@ export type Snap = {
   private: boolean;
   store: string;
   users: Array<Member>;
+  userHasAccess?: boolean;
 };
 
 export type Store = {
   id: string;
   name: string;
-  roles: Array<"admin" | "review" | "view" | "access">;
+  roles?: Array<"admin" | "review" | "view" | "access">;
   snaps: SnapsList;
-  userHasAccess: boolean;
+  userHasAccess?: boolean;
 };
 
 export type Model = {

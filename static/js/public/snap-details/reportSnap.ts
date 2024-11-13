@@ -20,7 +20,7 @@ function toggleModal(modal: HTMLElement, show?: boolean): void {
 function initForm(modal: HTMLElement): void {
   buttonEnabled(
     modal.querySelector("button[type=submit]") as HTMLButtonElement,
-    "Submit report"
+    "Submit report",
   );
 
   showEl(modal.querySelector(".js-report-snap-form") as HTMLElement);
@@ -43,17 +43,17 @@ function showError(modal: HTMLElement): void {
 export default function initReportSnap(
   toggleSelector: string,
   modalSelector: string,
-  formURL: string
+  formURL: string,
 ): void {
   const toggle = document.querySelector(toggleSelector) as HTMLElement;
   const modal = document.querySelector(modalSelector) as HTMLElement;
   const reportForm = modal.querySelector("form") as HTMLFormElement;
 
   const honeypotField = reportForm.querySelector(
-    "#report-snap-confirm"
+    "#report-snap-confirm",
   ) as HTMLInputElement;
   const commentField = reportForm.querySelector(
-    "#report-snap-comment"
+    "#report-snap-comment",
   ) as HTMLInputElement;
 
   toggle.addEventListener("click", (event) => {
@@ -73,7 +73,7 @@ export default function initReportSnap(
     e.preventDefault();
     buttonLoading(
       reportForm.querySelector("button[type=submit]") as HTMLButtonElement,
-      "Submitting…"
+      "Submitting…",
     );
 
     if (

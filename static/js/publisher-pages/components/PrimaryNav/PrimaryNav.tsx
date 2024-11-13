@@ -10,7 +10,7 @@ function PrimaryNav({
   setCollapseNavigation,
 }: {
   collapseNavigation: boolean;
-  setCollapseNavigation: Function;
+  setCollapseNavigation: (value: boolean) => void;
 }): JSX.Element {
   const { data: publisherData } = usePublisher();
 
@@ -22,10 +22,10 @@ function PrimaryNav({
         items={[
           {
             items: [
-              <div className="nav-list-separator">
+              <div className="nav-list-separator" key="separator">
                 <hr />
               </div>,
-              <SideNavigationText>
+              <SideNavigationText key="unique-key">
                 <div
                   className="p-side-navigation__item--title p-muted-heading"
                   style={{ color: "#a8a8a8" }}
@@ -33,7 +33,6 @@ function PrimaryNav({
                   My snaps
                 </div>
               </SideNavigationText>,
-              ,
               {
                 label: "Overview",
                 href: "/snaps",

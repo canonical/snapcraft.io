@@ -69,7 +69,7 @@ function ValidationSet(): JSX.Element {
                     >
                       {validateSetSequence.sequence}
                     </option>
-                  )
+                  ),
                 )}
               </select>
             </div>
@@ -163,7 +163,7 @@ function ValidationSet(): JSX.Element {
                   releaseDate: "",
                 },
               };
-            }
+            },
           )}
         />
       )}

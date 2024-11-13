@@ -7,7 +7,7 @@ import type { Member } from "../../types/shared";
 type Props = {
   filteredMembers: Array<Member>;
   changedMembers: Array<Member>;
-  setChangedMembers: Function;
+  setChangedMembers: (members: Array<Member>) => void;
 };
 
 function MembersTable({
@@ -51,17 +51,17 @@ function MembersTable({
       }
 
       const changedMember = changedMembers.find(
-        (m: Member) => m.id === currentMember.id
+        (m: Member) => m.id === currentMember.id,
       );
 
       const originalMember = filteredMembers.find(
-        (m: Member) => m.id === currentMember.id
+        (m: Member) => m.id === currentMember.id,
       );
 
       if (changedMember && originalMember) {
         if (checkArrayEqual(originalMember.roles, updatedItem.roles)) {
           setChangedMembers(
-            changedMembers.filter((m) => m.id !== currentMember.id)
+            changedMembers.filter((m) => m.id !== currentMember.id),
           );
         } else {
           setChangedMembers([

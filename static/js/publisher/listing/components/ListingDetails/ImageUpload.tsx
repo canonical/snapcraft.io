@@ -41,7 +41,7 @@ type Props = {
 function validateAspectRatio(
   width: number,
   height: number,
-  ratio: { width: number; height: number }
+  ratio: { width: number; height: number },
 ): boolean {
   const aspectRatio = ratio.width / ratio.height;
   const expectedHeight = width / aspectRatio;
@@ -95,7 +95,7 @@ function ImageUpload({
       setImageValidationError(
         `${image.name} file size is over ${
           validationSchema?.maxFileSize / 1000
-        }KB`
+        }KB`,
       );
       return;
     }
@@ -113,7 +113,7 @@ function ImageUpload({
       ) {
         setImageIsValid(false);
         setImageValidationError(
-          `${image.name} (${renderedImage.width} x ${renderedImage.height} pixels) does not have the correct aspect ratio: it needs to be ${validationSchema?.aspectRatio?.width}:${validationSchema?.aspectRatio?.height} (e.g. ${validationSchema?.minWidth} x ${validationSchema?.minHeight}pixels)`
+          `${image.name} (${renderedImage.width} x ${renderedImage.height} pixels) does not have the correct aspect ratio: it needs to be ${validationSchema?.aspectRatio?.width}:${validationSchema?.aspectRatio?.height} (e.g. ${validationSchema?.minWidth} x ${validationSchema?.minHeight}pixels)`,
         );
       } else if (
         !validateImageDimensions(renderedImage.width, renderedImage.height, {
@@ -125,7 +125,7 @@ function ImageUpload({
       ) {
         setImageIsValid(false);
         setImageValidationError(
-          `${image.name} has dimension ${renderedImage.width} x ${renderedImage.height} pixels. It needs to be at least ${validationSchema?.minWidth} x ${validationSchema?.minHeight} and at most ${validationSchema?.maxWidth} x ${validationSchema?.maxHeight} pixels.`
+          `${image.name} has dimension ${renderedImage.width} x ${renderedImage.height} pixels. It needs to be at least ${validationSchema?.minWidth} x ${validationSchema?.minHeight} and at most ${validationSchema?.maxWidth} x ${validationSchema?.maxHeight} pixels.`,
         );
       } else {
         setImageIsValid(true);
@@ -220,7 +220,7 @@ function ImageUpload({
                   onChange: (
                     e: SyntheticEvent<HTMLInputElement> & {
                       target: HTMLInputElement;
-                    }
+                    },
                   ) => {
                     if (e.target.files) {
                       setImage(e.target.files[0]);
@@ -259,7 +259,7 @@ function ImageUpload({
                 onChange={(
                   e: SyntheticEvent<HTMLInputElement> & {
                     target: HTMLInputElement;
-                  }
+                  },
                 ) => {
                   if (e.target.checked) {
                     setDarkThemeEnabled(true);

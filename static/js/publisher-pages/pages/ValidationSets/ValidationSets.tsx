@@ -146,7 +146,7 @@ function ValidationSets(): JSX.Element {
                 {
                   content: format(
                     new Date(validationSet.timestamp),
-                    "dd/MM/yyyy"
+                    "dd/MM/yyyy",
                   ),
                   className: "u-align--right",
                 },

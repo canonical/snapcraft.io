@@ -9,7 +9,6 @@ export default function TrackInfo({
   versionPattern,
   automaticPhasingPercentage,
 }: TrackInfoProps) {
-
   if (!versionPattern && !automaticPhasingPercentage) return null;
 
   const progressiveReleases = automaticPhasingPercentage

@@ -1,6 +1,7 @@
 {
   "scripts": {
-    "lint-js": "eslint static/js",
+    "lint-js": "eslint static/js --ext .js,.jsx,.ts,.tsx",
+    "lint-a11y": "eslint -c eslint-a11y.config.js static/js --ext .js,.jsx,.ts,.tsx",
     "lint-scss": "stylelint static/**/*.scss",
     "lint-python": "flake8 webapp tests && black --diff --check --line-length 79 webapp tests",
     "test": "yarn run test-python && yarn run test-js-all && yarn run lint-scss",
@@ -111,11 +112,14 @@
     "@types/d3": "7.4.3",
     "@types/markdown-it": "14.1.1",
     "@types/uuid": "10.0.0",
+    "@typescript-eslint/eslint-plugin": "^7.17.0",
+    "@typescript-eslint/parser": "^7.17.0",
     "babel-jest": "29.7.0",
     "concurrently": "8.2.2",
     "eslint": "8.56.0",
     "eslint-config-prettier": "9.1.0",
     "eslint-plugin-jest": "27.6.1",
+    "eslint-plugin-jsx-a11y": "^6.9.0",
     "eslint-plugin-prettier": "5.1.3",
     "eslint-plugin-react": "7.33.2",
     "identity-obj-proxy": "3.0.0",

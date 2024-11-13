@@ -5,7 +5,7 @@ import type { Data } from "../types";
 export default function getChanges(
   dirtyFields: any,
   fieldValues: any,
-  data: Data
+  data: Data,
 ): { [key: string]: any } {
   const changes: { [key: string]: any } = {};
 
@@ -22,7 +22,7 @@ export default function getChanges(
       fieldValues.icon_url,
       fieldValues.screenshot_urls,
       fieldValues.screenshots,
-      dirtyFields
+      dirtyFields,
     );
   }
 

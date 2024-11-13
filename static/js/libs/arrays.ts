@@ -25,8 +25,8 @@ function arraysEqual(oldArray: unknown[], newArray: unknown[]): boolean {
   return true;
 }
 
-function arrayChunk(arr: unknown[], chunkSize: number): any[] {
-  const chunks = [];
+function arrayChunk<T>(arr: T[], chunkSize: number): T[][] {
+  const chunks: T[][] = [];
   const arrCopy = arr.slice(0);
 
   for (let i = 0, ii = arrCopy.length; i < ii; i += chunkSize) {
