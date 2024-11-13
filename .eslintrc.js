@@ -1,6 +1,6 @@
 module.exports = {
   parser: "@babel/eslint-parser",
-  plugins: ["jest", "react", "prettier"],
+  plugins: ["jest", "react", "prettier", "jsx-a11y"],
   globals: {},
   env: {
     browser: true,
@@ -12,6 +12,7 @@ module.exports = {
     "eslint:recommended",
     "plugin:react/recommended",
     "plugin:prettier/recommended",
+    "plugin:jsx-a11y/recommended",
   ],
   parserOptions: {
     sourceType: "module",
@@ -27,7 +28,6 @@ module.exports = {
     "prettier/prettier": "error",
     "react/react-in-jsx-scope": "off",
     "react/no-unescaped-entities": "off",
-    "jsx-a11y/*": "off", 
   },
   settings: {
     react: {
