@@ -32,7 +32,7 @@ interface ChannelData {
   channel?: string;
 }
 
-type ChannelMapData = Record<string, ChannelData[]>;
+type ChannelMapData = Record<string, Record<string, ChannelData[]>>;
 
 class ChannelMap {
   RISK_ORDER: string[];
@@ -518,9 +518,9 @@ class ChannelMap {
    * Prepare the channel map tables
    *
    * @param {Object} archData
-   * @param {Array.<{channel: string, confinement: string, 'released-at': string, risk: string, size: number, version: string}>} archData.track
+   * @param {Record<string, Array.<{channel: string, confinement: string, 'released-at': string, risk: string, size: number, version: string}>>} archData.track
    */
-  prepareTable(archData: ChannelData[]) {
+  prepareTable(archData: Record<string, ChannelData[]>) {
     const tbodyEl = this.channelMapEl.querySelector(
       '[data-js="channel-map-table"]',
     ) as HTMLElement;
@@ -529,35 +529,29 @@ class ChannelMap {
     // and [all tracks]/[highest risk], so filter out anything that isn't these
     const filtered = this.currentTab === "overview";
 
-    const numberOfTracks = new Set(archData.map((data) => data.channel)).size;
+    const numberOfTracks = Object.values(archData).flat().length;
+
     let trimmedNumberOfTracks = 0;
 
     const rows: Array<string[]> = [];
 
-    const trackList: Record<string, ChannelData[]> = archData.reduce(
-      (acc, data) => {
-        const track = data.channel || "unknown";
-        if (!acc[track]) acc[track] = [];
-        acc[track].push(data);
-        return acc;
-      },
-      {} as Record<string, ChannelData[]>,
-    );
+    const trackList = filtered ? {} : archData;
 
     if (filtered) {
-      Object.entries(trackList).forEach(([track, channelDataArray]) => {
-        // Sort the ChannelData array for this track
-        channelDataArray.sort(
-          (a, b) =>
-            this.RISK_ORDER.indexOf(a.risk) - this.RISK_ORDER.indexOf(b.risk),
-        );
-
+      Object.keys(archData).forEach((track) => {
+        // Sort by risk
+        archData[track].sort((a, b) => {
+          return (
+            this.RISK_ORDER.indexOf(a.risk) - this.RISK_ORDER.indexOf(b.risk)
+          );
+        });
+        // Only the default track has all risks
+        // Other tracks should show the highest risk
         if (track === this.defaultTrack) {
-          // Keep all risks for the default track
-          trimmedNumberOfTracks += channelDataArray.length;
+          trackList[track] = archData[track];
+          trimmedNumberOfTracks += trackList[track].length;
         } else {
-          // Only keep the highest risk for other tracks
-          trackList[track] = [channelDataArray[0]];
+          trackList[track] = [archData[track][0]];
           trimmedNumberOfTracks += 1;
         }
       });
