@@ -30,7 +30,7 @@ function SnapTableRows({
 
   return snaps.map((snap) => {
     const snapName = isGlobal ? (
-      <a href={`https://snapcraft.io/${snap.name}/listing`}>{snap.name}</a>
+      <a href={`https://snapcraft.io/${snap.name}`}>{snap.name}</a>
     ) : (
       snap.name || "-"
     );
