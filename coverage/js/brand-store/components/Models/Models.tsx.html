@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">72.41% </span>
+                <span class="strong">63.63% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>21/29</span>
-            </div>
-        
-            
-            <div class='fl pad1y space-right2'>
-                <span class="strong">59.09% </span>
-                <span class="quiet">Branches</span>
-                <span class='fraction'>13/22</span>
+                <span class='fraction'>21/33</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">50% </span>
-                <span class="quiet">Functions</span>
-                <span class='fraction'>3/6</span>
+                <span class="quiet">Branches</span>
+                <span class='fraction'>13/26</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">72.41% </span>
+                <span class="strong">42.85% </span>
+                <span class="quiet">Functions</span>
+                <span class='fraction'>3/7</span>
+            </div>
+        
+            
+            <div class='fl pad1y space-right2'>
+                <span class="strong">63.63% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>21/29</span>
+                <span class='fraction'>21/33</span>
             </div>
         
             
@@ -232,7 +232,19 @@
 <a name='L167'></a><a href='#L167'>167</a>
 <a name='L168'></a><a href='#L168'>168</a>
 <a name='L169'></a><a href='#L169'>169</a>
-<a name='L170'></a><a href='#L170'>170</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L170'></a><a href='#L170'>170</a>
+<a name='L171'></a><a href='#L171'>171</a>
+<a name='L172'></a><a href='#L172'>172</a>
+<a name='L173'></a><a href='#L173'>173</a>
+<a name='L174'></a><a href='#L174'>174</a>
+<a name='L175'></a><a href='#L175'>175</a>
+<a name='L176'></a><a href='#L176'>176</a>
+<a name='L177'></a><a href='#L177'>177</a>
+<a name='L178'></a><a href='#L178'>178</a>
+<a name='L179'></a><a href='#L179'>179</a>
+<a name='L180'></a><a href='#L180'>180</a>
+<a name='L181'></a><a href='#L181'>181</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -386,6 +398,16 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -411,6 +433,7 @@ import {
   useSearchParams,
 } from "react-router-dom";
 import { Row, Col, Notification, Icon } from "@canonical/react-components";
+import { UseQueryResult } from "react-query";
 &nbsp;
 import {
   modelsListFilterState,
@@ -429,7 +452,7 @@ import Navigation from "../Navigation";
 import { useModels } from "../../hooks";
 import { isClosedPanel, setPageTitle, getPolicies } from "../../utils";
 &nbsp;
-import type { Model, Policy } from "../../types/shared";
+import type { Model as ModelType, Policy } from "../../types/shared";
 &nbsp;
 function Models(): ReactNode {
   const { id } = useParams();
@@ -440,11 +463,11 @@ function Models(): ReactNode {
     isLoading: modelsIsLoading,
     error: modelsError,
     isError: modelsIsError,
-  }: any = useModels(brandId);
+  }: UseQueryResult&lt;ModelType[]&gt; = useModels(brandId);
 &nbsp;
   const location = useLocation();
   const navigate = useNavigate();
-  const setModelsList = useSetRecoilState&lt;Array&lt;Model&gt;&gt;(modelsListState);
+  const setModelsList = useSetRecoilState&lt;Array&lt;ModelType&gt;&gt;(modelsListState);
   const setPolicies = useSetRecoilState&lt;Array&lt;Policy&gt;&gt;(policiesListState);
   const setNewModel = useSetRecoilState(newModelState);
   const setFilter = useSetRecoilState&lt;string&gt;(modelsListFilterState);
@@ -525,7 +548,7 @@ function Models(): ReactNode {
             &lt;/Row&gt;
             &lt;div className="u-fixed-width u-flex-column u-flex-grow"&gt;
               &lt;div&gt;
-                {modelsIsError &amp;&amp; <span class="branch-1 cbranch-no" title="branch not covered" >modelsError </span>&amp;&amp; (
+                {modelsIsError &amp;&amp; <span class="branch-1 cbranch-no" title="branch not covered" >modelsError instanceof Error </span>&amp;&amp; (
 <span class="branch-2 cbranch-no" title="branch not covered" >                  &lt;Notification severity="negative"&gt;</span>
                     Error: {modelsError.message}
                   &lt;/Notification&gt;
@@ -554,6 +577,16 @@ function Models(): ReactNode {
 <span class="cstat-no" title="statement not covered" >          setShowErrorNotification(false);</span>
 <span class="cstat-no" title="statement not covered" >          setNewModel({ name: "", apiKey: "" });</span>
         }}
+        onKeyDown={<span class="fstat-no" title="function not covered" >(e</span>) =&gt; {
+<span class="cstat-no" title="statement not covered" >          if (e.key === "Enter" || e.key === " ") {</span>
+<span class="cstat-no" title="statement not covered" >            navigate(`/admin/${id}/models`);</span>
+<span class="cstat-no" title="statement not covered" >            setShowErrorNotification(false);</span>
+<span class="cstat-no" title="statement not covered" >            setNewModel({ name: "", apiKey: "" });</span>
+          }
+        }}
+        role="button"
+        tabIndex={0}
+        aria-label="Navigate to models page"
       &gt;&lt;/div&gt;
       &lt;aside
         className={`l-aside ${
@@ -577,7 +610,7 @@ export default Models;
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2024-11-09T22:04:02.941Z
+                at 2024-11-16T22:04:10.252Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>

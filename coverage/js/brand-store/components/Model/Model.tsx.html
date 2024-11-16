@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">47.36% </span>
+                <span class="strong">46.34% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>18/38</span>
+                <span class='fraction'>19/41</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">64.28% </span>
+                <span class="strong">58.06% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>18/28</span>
+                <span class='fraction'>18/31</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">47.36% </span>
+                <span class="strong">46.34% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>18/38</span>
+                <span class='fraction'>19/41</span>
             </div>
         
             
@@ -343,7 +343,19 @@
 <a name='L278'></a><a href='#L278'>278</a>
 <a name='L279'></a><a href='#L279'>279</a>
 <a name='L280'></a><a href='#L280'>280</a>
-<a name='L281'></a><a href='#L281'>281</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L281'></a><a href='#L281'>281</a>
+<a name='L282'></a><a href='#L282'>282</a>
+<a name='L283'></a><a href='#L283'>283</a>
+<a name='L284'></a><a href='#L284'>284</a>
+<a name='L285'></a><a href='#L285'>285</a>
+<a name='L286'></a><a href='#L286'>286</a>
+<a name='L287'></a><a href='#L287'>287</a>
+<a name='L288'></a><a href='#L288'>288</a>
+<a name='L289'></a><a href='#L289'>289</a>
+<a name='L290'></a><a href='#L290'>290</a>
+<a name='L291'></a><a href='#L291'>291</a>
+<a name='L292'></a><a href='#L292'>292</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -404,6 +416,10 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -427,6 +443,12 @@
 <span class="cline-any cline-yes">17x</span>
 <span class="cline-any cline-yes">12x</span>
 <span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">12x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -646,6 +668,7 @@ import Navigation from "../Navigation";
 &nbsp;
 import { useModels } from "../../hooks";
 import { setPageTitle } from "../../utils";
+import type { Model as ModelType } from "../../types/shared";
 &nbsp;
 function Model() {
   const { id, model_id } = useParams();
@@ -654,7 +677,7 @@ function Model() {
   const [newApiKey, setNewApiKey] = useState("");
   const [showSuccessNotification, setShowSuccessNotificaton] = useState(false);
   const [showErrorNotification, setShowErrorNotificaton] = useState(false);
-  const setModelsList = useSetRecoilState&lt;any&gt;(modelsListState);
+  const setModelsList = useSetRecoilState&lt;ModelType[]&gt;(modelsListState);
   const brandStore = useRecoilValue(brandStoreState(id));
 &nbsp;
   const mutation = useMutation({
@@ -691,7 +714,11 @@ function Model() {
     data: models,
     isLoading: modelsIsLoading,
     error: modelsError,
-  }: any = useModels(brandId);
+  }: {
+    data: ModelType[] | undefined;
+    isLoading: boolean;
+    error: unknown;
+  } = useModels(brandId);
 &nbsp;
   const handleError = <span class="fstat-no" title="function not covered" >()</span> =&gt; {
 <span class="cstat-no" title="statement not covered" >    setShowErrorNotificaton(true);</span>
@@ -705,8 +732,14 @@ function Model() {
     : setPageTitle("Model");
 &nbsp;
   useEffect(() =&gt; {
-    if (!currentModel &amp;&amp; !modelsIsLoading &amp;&amp; !modelsError &amp;&amp; models) {
+    if (!currentModel &amp;&amp; !modelsIsLoading &amp;&amp; models) {
       setModelsList(models);
+    }
+&nbsp;
+    <span class="missing-if-branch" title="if path not taken" >I</span>if (modelsError) {
+<span class="cstat-no" title="statement not covered" >      if (modelsError instanceof Error) {</span>
+<span class="cstat-no" title="statement not covered" >        console.error(modelsError.message);</span>
+      }
     }
   }, [currentModel, modelsIsLoading, modelsError, models]);
 &nbsp;
@@ -823,7 +856,7 @@ function Model() {
                         setNewApiKey(
                           randomstring.generate({
                             length: 50,
-                          })
+                          }),
                         );
                       }}
                     &gt;
@@ -842,7 +875,7 @@ function Model() {
                     &lt;p&gt;
                       {format(
                         new Date(currentModel["created-at"]),
-                        "dd/MM/yyyy"
+                        "dd/MM/yyyy",
                       )}
                     &lt;/p&gt;
                   &lt;/Col&gt;
@@ -875,7 +908,7 @@ function Model() {
                         &lt;p&gt;
                           {format(
                             new Date(currentModel["modified-at"]),
-                            "dd/MM/yyyy"
+                            "dd/MM/yyyy",
                           )}
                         &lt;/p&gt;
                       &lt;/Col&gt;
@@ -910,7 +943,7 @@ export default Model;
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2024-11-09T22:04:02.941Z
+                at 2024-11-16T22:04:10.252Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>
