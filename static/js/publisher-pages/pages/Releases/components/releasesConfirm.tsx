@@ -1,7 +1,7 @@
 import { Component, createRef } from "react";
 import { connect } from "react-redux";
 
-import debounce from "../../../libs/debounce";
+import debounce from "../../../../libs/debounce";
 
 import ReleasesConfirmDetails from "./releasesConfirmDetails/";
 import ReleasesConfirmActions from "./releasesConfirmActions";
@@ -51,7 +51,7 @@ class ReleasesConfirm extends Component<Props, State> {
         const topPosition = top + scrollX;
 
         this.stickyBar.current.classList.toggle("is-pinned", topPosition === 0);
-      }, 500)
+      }, 500),
     );
   }
 
@@ -90,7 +90,7 @@ class ReleasesConfirm extends Component<Props, State> {
 
   toggleDetails() {
     this.props.triggerGAEvent(
-      `click-${this.state.showDetails ? "hide" : "show"}-details`
+      `click-${this.state.showDetails ? "hide" : "show"}-details`,
     );
     this.setState({
       showDetails: !this.state.showDetails,

@@ -6,7 +6,7 @@ import { connect } from "react-redux";
 import { format } from "date-fns";
 
 import { canBeReleased } from "../helpers";
-import { getChannelString } from "../../../libs/channels";
+import { getChannelString } from "../../../../libs/channels.js";
 import { toggleRevision } from "../actions/channelMap";
 
 import {
@@ -104,8 +104,8 @@ const RevisionsListRow = (props) => {
           </span>
         )}
       </td>
-      <td 
-        data-heading="Version" 
+      <td
+        data-heading="Version"
         style={{ whiteSpace: "normal", wordWrap: "break-word" }}
       >
         {revision.version}
