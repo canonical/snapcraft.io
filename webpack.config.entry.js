@@ -2,7 +2,6 @@ module.exports = {
   "cookie-policy": "./static/js/base/cookie-policy.ts",
   "global-nav": "./static/js/base/global-nav.ts",
   base: "./static/js/base/base.ts",
-  release: "./static/js/publisher/release.tsx",
   about: "./static/js/public/about/index.ts",
   "featured-snaps": "./static/js/public/featured-snaps.ts",
   modal: "./static/js/public/modal.ts",

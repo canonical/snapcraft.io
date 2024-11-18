@@ -162,7 +162,12 @@ publisher_snaps.add_url_rule(
 )
 publisher_snaps.add_url_rule(
     "/<snap_name>/releases",
-    view_func=release_views.get_release_history,
+    view_func=release_views.get_releases,
+    methods=["GET"],
+)
+publisher_snaps.add_url_rule(
+    "/api/<snap_name>/releases",
+    view_func=release_views.get_release_history_data,
     methods=["GET"],
 )
 publisher_snaps.add_url_rule(

@@ -2,7 +2,7 @@ import { Fragment } from "react";
 import { connect } from "react-redux";
 import { format, formatDistanceToNow } from "date-fns";
 
-import { sortChannels } from "../../../../libs/channels";
+import { sortChannels } from "../../../../../libs/channels.js";
 
 import {
   getArchitectures,

@@ -1,4 +1,4 @@
-import { triggerEventReleaseUI } from "../../../base/ga";
+import { triggerEventReleaseUI } from "../../../../base/ga";
 
 export function triggerGAEvent() {
   const eventLabelItems = [...arguments];
