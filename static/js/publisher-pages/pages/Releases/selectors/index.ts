@@ -11,7 +11,7 @@ import {
   isRevisionBuiltOnLauchpad,
   jsonClone,
 } from "../helpers";
-import { sortAlphaNum, getChannelString } from "../../../libs/channels";
+import { sortAlphaNum, getChannelString } from "../../../../libs/channels";
 import { CombinedState } from "redux";
 
 // returns true if isProgressiveReleaseEnabled feature flag is enabled

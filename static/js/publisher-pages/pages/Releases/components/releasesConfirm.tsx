@@ -1,7 +1,7 @@
 import { Component, createRef } from "react";
 import { connect } from "react-redux";
 
-import debounce from "../../../libs/debounce";
+import debounce from "../../../../libs/debounce";
 
 import ReleasesConfirmDetails from "./releasesConfirmDetails/";
 import ReleasesConfirmActions from "./releasesConfirmActions";

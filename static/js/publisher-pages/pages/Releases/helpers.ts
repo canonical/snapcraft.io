@@ -1,5 +1,5 @@
 import { AVAILABLE, REVISION_STATUS } from "./constants";
-import { getChannelString } from "../../libs/channels";
+import { getChannelString } from "../../../libs/channels";
 import { useEffect } from "react";
 
 export function isInDevmode(revision: any) {
