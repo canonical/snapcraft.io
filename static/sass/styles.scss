@@ -126,6 +126,8 @@ $color-social-icon-foreground: $color-light;
 @include snapcraft-p-strip;
 @import "snapcraft_store";
 @include snapcraft-store;
+@import "snapcraft_packages";
+@include snapcraft-packages;
 @import "snapcraft_dispute-list";
 @include snapcraft-p-dispute-list;
 @import "snapcraft_embedded_card_modal";
@@ -511,6 +513,10 @@ dl {
 
 .p-search-box .p-search-box__input:placeholder-shown ~ .p-search-box__reset {
   display: none !important;
+}
+
+.p-search-box .p-button.p-search-box__button{
+  margin-right: 0;
 }
 
 .brand-store-accordion {
