@@ -5,7 +5,7 @@ import { v4 as uuidv4 } from "uuid";
 
 import type { Package, Store } from "../../types";
 import { PackageList } from "../../components/PackageList/PackageList";
-import { EmptyPackageSearch } from "./EmptyPackageSearch";
+import { EmptyResultSection } from "../../components/EmptyResultSection";
 
 function Packages(): ReactNode {
   const getData = async (queryString: string) => {
@@ -50,7 +50,7 @@ function Packages(): ReactNode {
     () => getData(queryString),
     {
       keepPreviousData: true,
-    },
+    }
   );
 
   const packagesCount = data?.packages ? data?.packages.length : 0;
@@ -59,7 +59,7 @@ function Packages(): ReactNode {
   return isResultExist || isFetching ? (
     <PackageList data={data} isFetching={isFetching} />
   ) : (
-    <EmptyPackageSearch
+    <EmptyResultSection
       searchTerm={searchTerm}
       data={data}
       isFetching={isFetching}

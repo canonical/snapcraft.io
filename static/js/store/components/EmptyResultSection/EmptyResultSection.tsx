@@ -1,9 +1,9 @@
 import { Col, Link, List, Row, Strip } from "@canonical/react-components";
-import { SearchInput } from "../../components/SearchInput";
-import { PackageFilter } from "../../components/PackageFilter";
+import { SearchInput } from "../SearchInput";
+import { PackageFilter } from "../PackageFilter";
 import { Store } from "../../types";
 
-export const EmptyPackageSearch = ({
+export const EmptyResultSection = ({
   searchTerm,
   data,
   isFetching,
@@ -22,7 +22,9 @@ export const EmptyPackageSearch = ({
         <Col size={9}>
           <Row>
             <Col size={9}>
-              <h1 className="p-heading--2">Search Results for {searchTerm}</h1>
+              <h1 className="p-heading--2">
+                Search results for "{searchTerm}"
+              </h1>
               <SearchInput />
             </Col>
           </Row>
