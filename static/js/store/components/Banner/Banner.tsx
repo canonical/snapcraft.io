@@ -3,7 +3,7 @@ import { Strip, Row, Col } from "@canonical/react-components";
 import { SearchInput } from "../SearchInput";
 
 type Props = {
-  searchRef?: RefObject<HTMLInputElement>;
+  searchRef: RefObject<HTMLInputElement>;
   searchSummaryRef?: RefObject<HTMLDivElement>;
 };
 

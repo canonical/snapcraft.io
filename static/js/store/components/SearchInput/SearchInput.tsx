@@ -3,7 +3,7 @@ import { ReactNode, RefObject } from "react";
 import { useSearchParams } from "react-router-dom";
 
 type Props = {
-  searchRef?: RefObject<HTMLInputElement>;
+  searchRef: RefObject<HTMLInputElement>;
   searchSummaryRef?: RefObject<HTMLDivElement>;
 };
 

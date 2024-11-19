@@ -2,6 +2,7 @@ import { Col, Link, List, Row, Strip } from "@canonical/react-components";
 import { SearchInput } from "../SearchInput";
 import { PackageFilter } from "../PackageFilter";
 import { Store } from "../../types";
+import { useRef } from "react";
 
 export const EmptyResultSection = ({
   searchTerm,
@@ -12,6 +13,8 @@ export const EmptyResultSection = ({
   data?: Store;
   isFetching: boolean;
 }) => {
+  const searchRef = useRef<HTMLInputElement | null>(null);
+
   return (
     <Strip>
       <Row>
@@ -25,7 +28,7 @@ export const EmptyResultSection = ({
               <h1 className="p-heading--2">
                 Search results for "{searchTerm}"
               </h1>
-              <SearchInput />
+              <SearchInput searchRef={searchRef} />
             </Col>
           </Row>
           <Row>
