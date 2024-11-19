@@ -50,7 +50,7 @@ function Packages(): ReactNode {
     () => getData(queryString),
     {
       keepPreviousData: true,
-    }
+    },
   );
 
   const packagesCount = data?.packages ? data?.packages.length : 0;
