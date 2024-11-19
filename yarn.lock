@@ -1082,10 +1082,10 @@
     react-table "7.8.0"
     react-useportal "1.0.19"
 
-"@canonical/store-components@0.51.0":
-  version "0.51.0"
-  resolved "https://registry.yarnpkg.com/@canonical/store-components/-/store-components-0.51.0.tgz#7bc97d42bf043784fdfc036c9e020e9cd70b194d"
-  integrity sha512-HkaFCpY3BWGL2DNCxF7M7wGTOwyHH96jvoWlzlgIkWeabfnGNV6fDOTIPvugAye3qr1mnJzQ2rwHjnvNJ74lrw==
+"@canonical/store-components@0.52.0":
+  version "0.52.0"
+  resolved "https://registry.yarnpkg.com/@canonical/store-components/-/store-components-0.52.0.tgz#04415a5c826601feb9cb554a1e5086c874b83ef6"
+  integrity sha512-VlUgr3l0pdlfYp/TTifSIjrqeftdu9t5jetN8NBPwtGAm30N45Evr++27oZDGQ1nNVW7LS2S7CY60Zp9H9qviw==
   dependencies:
     "@canonical/react-components" "1.7.0"
     "@types/jest" "27.5.2"
