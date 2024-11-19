@@ -1,0 +1,7 @@
+@mixin snapcraft-packages {
+  .snap-packages__empty-more-options {
+    .p-list__item {
+      padding-left: 0;
+    }
+  }
+}
