@@ -6,13 +6,6 @@
 <script>
   window.CSRF_TOKEN = "{{ csrf_token() }}";
   
-  window.SNAP_PUBLICISE_DATA = {
-    hasScreenshot: {% if has_screenshot %}{{ has_screenshot | tojson }}{% else %}false{% endif %},
-    isReleased: {% if is_released %}{{ is_released | tojson }}{% else %}false{% endif %},
-    private: {% if private %}{{ private | tojson }}{% else %}false{% endif %},
-    trending: {% if trending %}{{ trending | tojson }}{% else %}false{% endif %},
-  }
-
   window.SNAP_SETTINGS_DATA = {
     countries: {% if countries %}{{ countries|tojson }}{% else %}[]{% endif %},
     publisher_name: "{% if publisher_name %}{{ publisher_name }}{% endif %}",
