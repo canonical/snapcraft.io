@@ -7,7 +7,11 @@ import {
   Notification,
 } from "@canonical/react-components";
 
-function PubliciseBadges(): JSX.Element {
+type Props = {
+  trending: boolean;
+};
+
+function PubliciseBadges({ trending }: Props): JSX.Element {
   const { snapId } = useParams();
   const [showStableChannelBadge, setShowStableChannelBadge] =
     useState<boolean>(true);
@@ -40,7 +44,9 @@ function PubliciseBadges(): JSX.Element {
             label="Stable channel from default track"
             checked={showStableChannelBadge}
             onChange={(
-              e: SyntheticEvent<HTMLInputElement> & { target: HTMLInputElement }
+              e: SyntheticEvent<HTMLInputElement> & {
+                target: HTMLInputElement;
+              },
             ) => {
               setShowStableChannelBadge(e.target.checked);
             }}
@@ -50,7 +56,9 @@ function PubliciseBadges(): JSX.Element {
             labelClassName="u-no-margin--bottom"
             checked={showTrendingStatusBadge}
             onChange={(
-              e: SyntheticEvent<HTMLInputElement> & { target: HTMLInputElement }
+              e: SyntheticEvent<HTMLInputElement> & {
+                target: HTMLInputElement;
+              },
             ) => {
               setShowTrendingStatusBadge(e.target.checked);
             }}
@@ -92,14 +100,13 @@ function PubliciseBadges(): JSX.Element {
                 )}
               </p>
 
-              {!window?.SNAP_PUBLICISE_DATA?.trending &&
-                showTrendingStatusBadge && (
-                  <Notification severity="information" title="Trending badge">
-                    Your snap is not currently flagged as trending. Only when
-                    your snap becomes trending will the trending badge appear on
-                    external sites.
-                  </Notification>
-                )}
+              {!trending && showTrendingStatusBadge && (
+                <Notification severity="information" title="Trending badge">
+                  Your snap is not currently flagged as trending. Only when your
+                  snap becomes trending will the trending badge appear on
+                  external sites.
+                </Notification>
+              )}
             </Col>
           </Row>
           <Row>
