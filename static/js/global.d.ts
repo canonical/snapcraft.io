@@ -18,12 +18,6 @@ declare interface Window {
   DNS_VERIFICATION_TOKEN: string;
   SENTRY_DSN: string;
   CSRF_TOKEN: string;
-  SNAP_PUBLICISE_DATA: {
-    hasScreenshot: boolean;
-    isReleased: boolean;
-    private: boolean;
-    trending: boolean;
-  };
   SNAP_SETTINGS_DATA: {
     blacklist_countries: string[];
     blacklist_country_keys: string;
