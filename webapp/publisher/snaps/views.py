@@ -272,18 +272,13 @@ publisher_snaps.add_url_rule(
     view_func=settings_views.get_settings,
 )
 publisher_snaps.add_url_rule(
-    "/<snap_name>/settings.json",
-    view_func=settings_views.get_settings_json,
-)
-publisher_snaps.add_url_rule(
-    "/<snap_name>/settings",
-    view_func=settings_views.post_settings,
+    "/api/<snap_name>/settings",
+    view_func=settings_views.post_settings_data,
     methods=["POST"],
 )
 publisher_snaps.add_url_rule(
-    "/<snap_name>/settings.json",
-    view_func=settings_views.post_settings_json,
-    methods=["POST"],
+    "/api/<snap_name>/settings",
+    view_func=settings_views.get_settings_data,
 )
 
 
