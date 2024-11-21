@@ -4,7 +4,7 @@ import { Row, Col, Button } from "@canonical/react-components";
 import debounce from "../../../libs/debounce";
 
 type Props = {
-  snapName: string;
+  snapName: string | undefined;
   isDirty: boolean;
   reset: Function;
   isSaving: boolean;
@@ -23,7 +23,7 @@ function SaveAndPreview({
   const handleScroll = () => {
     stickyBar?.current?.classList.toggle(
       "sticky-shadow",
-      stickyBar?.current?.getBoundingClientRect()?.top === 0
+      stickyBar?.current?.getBoundingClientRect()?.top === 0,
     );
   };
 

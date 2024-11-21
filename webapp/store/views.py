@@ -106,7 +106,7 @@ def store_blueprint(store_query=None):
     @store.route("/validation-sets/<path:path>")
     @login_required
     def validation_sets(path):
-        return flask.render_template("store/validation-sets.html")
+        return flask.render_template("store/publisher.html")
 
     @store.route("/discover")
     def discover():
@@ -414,12 +414,12 @@ def store_blueprint(store_query=None):
     @exchange_required
     def post_create_track(snap_name):
         track_name = flask.request.form["track-name"]
-        version_pattern = flask.request.form["version-pattern"]
-        auto_phasing_percentage = flask.request.form[
+        version_pattern = flask.request.form.get("version-pattern")
+        auto_phasing_percentage = flask.request.form.get(
             "automatic-phasing-percentage"
-        ]
+        )
 
-        if auto_phasing_percentage:
+        if auto_phasing_percentage is not None:
             auto_phasing_percentage = float(auto_phasing_percentage)
 
         response = publisher_api.create_track(

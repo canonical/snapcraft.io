@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
+import { useQuery } from "react-query";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import {
@@ -18,7 +19,6 @@ import {
   validatePhasingPercentage,
   resizeAsidePanel,
   numericalSort,
-  getTrackGuardrails,
   getPackageMetadata,
 } from "../helpers";
 
@@ -75,32 +75,23 @@ function ReleasesHeading(props) {
   const [versionPattern, setVersionPattern] = useState("");
   const [phasingPercentage, setPhasingPercentage] = useState("");
   const [phasingPercentageError, setPhasingPercentageError] = useState("");
-  const [trackGuardrailsStatus, setTrackGuardrailsStatus] = useState(null);
-  const [guardrailsLoading, setGuardrailsLoading] = useState(true);
 
-  const [isTrackNameFilled, setIsTrackNameFilled] = useState(false);
+  const isTrackNameFilled = trackName.trim().length > 0;
   const [isLoading, setIsLoading] = useState(false);
   const [notification, setNotification] = useState(null);
 
-  const [storedTracks, setStoredTracks] = useState([]);
+  const { data, guardrailsLoading, error } = useQuery(
+    ["snapData", props.snapName],
+    async () => {
+      const response = await getPackageMetadata(props.snapName);
+      return response;
+    },
+    { enabled: !!props.snapName },
+  );
 
-  // Fetch tracks once
-  useEffect(() => {
-    const fetchTracks = async () => {
-      try {
-        const snapMetadata = await getPackageMetadata(props.snapName);
-        if (snapMetadata.tracks) {
-          setStoredTracks(snapMetadata.tracks);
-        }
-      } catch (error) {
-        console.error("Failed to fetch tracks:", error.message);
-      }
-    };
+  const storedTracks = data?.tracks || [];
+  const trackGuardrailsData = data?.["track-guardrails"];
 
-    fetchTracks();
-  }, [props.snapName]);
-
-  // Update track info when currentTrack changes
   const trackInfo = storedTracks.find(
     (track) => track.name === props.currentTrack,
   );
@@ -108,33 +99,24 @@ function ReleasesHeading(props) {
   const currentPhasingPercentage =
     trackInfo?.["automatic-phasing-percentage"] || null;
 
-  useEffect(() => {
-    const fetchTrackGuardrails = async () => {
-      try {
-        const response = await getTrackGuardrails(props.snapName);
-        if (response["track-guardrails"].length === 0) {
-          setTrackGuardrailsStatus("request");
-        } else if (response["track-guardrails"].length > 0) {
-          setTrackGuardrailsStatus("add");
-        } else if (response["error"]) {
-          setTrackGuardrailsStatus("error");
-        }
-      } catch (error) {
-        console.error("Error:", error.message);
-        setTrackGuardrailsStatus("error");
-      } finally {
-        setGuardrailsLoading(false);
-      }
-    };
+  let trackGuardrailsStatus = null;
 
-    fetchTrackGuardrails();
-  }, [props.snapName]);
+  if (guardrailsLoading) {
+    trackGuardrailsStatus = null;
+  } else if (error) {
+    trackGuardrailsStatus = "error";
+  } else if (!trackGuardrailsData) {
+    trackGuardrailsStatus = "no-guardrails";
+  } else if (trackGuardrailsData.length === 0) {
+    trackGuardrailsStatus = "request";
+  } else {
+    trackGuardrailsStatus = "add";
+  }
 
   const handleTrackNameChange = (event) => {
     setTrackNameError("");
     const { value } = event.target;
     setTrackName(value);
-    setIsTrackNameFilled(value.trim().length > 0);
   };
 
   const handleVersionPatternChange = (event) => {
@@ -241,50 +223,51 @@ function ReleasesHeading(props) {
                               </div>
                             ))}
                           </div>
-                          {trackGuardrailsStatus !== "error" && (
-                            <div className="track-button-wrapper">
-                              {guardrailsLoading ? (
-                                <div>
-                                  <Icon
-                                    name="spinner"
-                                    className="u-animation--spin"
-                                  />
-                                  &nbsp;Loading...
-                                </div>
-                              ) : (
-                                <div className="track-button">
-                                  {trackGuardrailsStatus === "request" && (
-                                    <Button
-                                      className="p-button has-icon new-track-button"
-                                      onClick={() => {
-                                        openRequestTrackSidePanel();
-                                        if (isOpen) {
-                                          handleToggle();
-                                        }
-                                      }}
-                                    >
-                                      <i className="p-icon--plus"></i>
-                                      <span>Request track</span>
-                                    </Button>
-                                  )}
-                                  {trackGuardrailsStatus === "add" && (
-                                    <Button
-                                      className="p-button has-icon new-track-button"
-                                      onClick={() => {
-                                        openAddTrackSidePanel();
-                                        if (isOpen) {
-                                          handleToggle();
-                                        }
-                                      }}
-                                    >
-                                      <i className="p-icon--plus"></i>
-                                      <span>Add track</span>
-                                    </Button>
-                                  )}
-                                </div>
-                              )}
-                            </div>
-                          )}
+                          {trackGuardrailsStatus !== "error" &&
+                            trackGuardrailsStatus !== "no-guardrails" && (
+                              <div className="track-button-wrapper">
+                                {guardrailsLoading ? (
+                                  <div>
+                                    <Icon
+                                      name="spinner"
+                                      className="u-animation--spin"
+                                    />
+                                    &nbsp;Loading...
+                                  </div>
+                                ) : (
+                                  <div className="track-button">
+                                    {trackGuardrailsStatus === "request" && (
+                                      <Button
+                                        className="p-button has-icon new-track-button"
+                                        onClick={() => {
+                                          openRequestTrackSidePanel();
+                                          if (isOpen) {
+                                            handleToggle();
+                                          }
+                                        }}
+                                      >
+                                        <i className="p-icon--plus"></i>
+                                        <span>Request track</span>
+                                      </Button>
+                                    )}
+                                    {trackGuardrailsStatus === "add" && (
+                                      <Button
+                                        className="p-button has-icon new-track-button"
+                                        onClick={() => {
+                                          openAddTrackSidePanel();
+                                          if (isOpen) {
+                                            handleToggle();
+                                          }
+                                        }}
+                                      >
+                                        <i className="p-icon--plus"></i>
+                                        <span>Add track</span>
+                                      </Button>
+                                    )}
+                                  </div>
+                                )}
+                              </div>
+                            )}
                         </div>
                       )}
                     </div>

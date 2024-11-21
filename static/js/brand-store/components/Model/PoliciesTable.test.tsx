@@ -27,7 +27,7 @@ const renderComponent = () => {
           />
         </QueryClientProvider>
       </BrowserRouter>
-    </RecoilRoot>
+    </RecoilRoot>,
   );
 };
 
@@ -41,19 +41,19 @@ describe("PoliciesTable", () => {
     renderComponent();
 
     expect(
-      screen.getByRole("columnheader", { name: "Revision" })
+      screen.getByRole("columnheader", { name: "Revision" }),
     ).toBeInTheDocument();
 
     expect(
-      screen.getByRole("columnheader", { name: "Signing key" })
+      screen.getByRole("columnheader", { name: "Signing key" }),
     ).toBeInTheDocument();
 
     expect(
-      screen.getByRole("columnheader", { name: "Creation date" })
+      screen.getByRole("columnheader", { name: "Creation date" }),
     ).toBeInTheDocument();
 
     expect(
-      screen.getByRole("columnheader", { name: "Last updated" })
+      screen.getByRole("columnheader", { name: "Last updated" }),
     ).toBeInTheDocument();
   });
 

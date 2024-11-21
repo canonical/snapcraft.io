@@ -6,12 +6,12 @@ function shouldShowUpdateMetadataWarning(dirtyFields: DirtyField) {
   const filteredDirtyFields = [];
 
   for (const [key, value] of Object.entries(dirtyFields)) {
-    if (value === true && key !== "banner_url" && key !== "icon_url") {
+    if (value === true && key !== "banner_urls" && key !== "icon_url") {
       filteredDirtyFields.push(key);
     }
 
     if (
-      key === "banner_url" &&
+      key === "banner_urls" &&
       value === true &&
       !filteredDirtyFields.includes("banner") &&
       !filteredDirtyFields.includes("screenshot_urls")

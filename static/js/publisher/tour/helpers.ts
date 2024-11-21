@@ -1,20 +1,14 @@
 import { MASK_OFFSET } from "./constants";
 
+import type { Step } from "../listing/types";
+
 // check if element is part of the DOM and is visible
 export const isVisibleInDocument = (el: HTMLElement): boolean =>
   document.contains(el) && !(el.offsetWidth === 0 && el.offsetHeight === 0);
 
 // find DOM elements for each step, ignore steps with no elements
 // set default position to "bottom-left"
-export function prepareSteps(
-  steps: Array<{
-    id: string;
-    position: string;
-    elements: HTMLElement[];
-    content: string;
-    title: string;
-  }>
-): Array<{
+export function prepareSteps(steps: Step[]): Array<{
   id: string;
   position: string;
   elements: HTMLElement[];
@@ -26,7 +20,7 @@ export function prepareSteps(
       return {
         ...step,
         elements: [].slice.apply(
-          document.querySelectorAll(`[data-tour="${step.id}"]`)
+          document.querySelectorAll(`[data-tour="${step.id}"]`),
         ),
         position: step.position || "bottom-left",
       };
@@ -37,15 +31,15 @@ export function prepareSteps(
 // get rectangle of given DOM element
 // relative to the page, taking scroll into account
 const getRectFromEl = (
-  el: HTMLElement
+  el: HTMLElement,
 ): {
   top: number;
   left: number;
   width: number;
   height: number;
 } => {
-  let clientRect = el.getBoundingClientRect();
-  let ret = {
+  const clientRect = el.getBoundingClientRect();
+  const ret = {
     top:
       clientRect.top +
       (window.pageYOffset || document.documentElement.scrollTop),
@@ -81,8 +75,8 @@ const getMaskFromRect = (rect: {
     left = 0;
   }
 
-  let bottom = rect.top + rect.height + MASK_OFFSET;
-  let right = rect.left + rect.width + MASK_OFFSET;
+  const bottom = rect.top + rect.height + MASK_OFFSET;
+  const right = rect.left + rect.width + MASK_OFFSET;
 
   return {
     top,
@@ -116,6 +110,6 @@ export const getMaskFromElements = (elements: Array<HTMLElement>) => {
       left: Infinity,
       right: 0,
       bottom: 0,
-    }
+    },
   );
 };

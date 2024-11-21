@@ -6,7 +6,7 @@ type Props = {
 };
 
 type ListingData = {
-  categories: Array<string>;
+  categories: { name: string; slug: string }[];
   links: {
     website: Array<string>;
     contact: Array<string>;
@@ -21,6 +21,8 @@ type ListingData = {
     type: string;
     status: string;
   }>;
+  summary: string;
+  description: string;
 };
 
 function PreviewForm({ snapName, getValues }: Props) {
@@ -30,9 +32,9 @@ function PreviewForm({ snapName, getValues }: Props) {
       website: getValues("websites").map((item: { url: string }) => item.url),
       contact: getValues("contacts").map((item: { url: string }) => item.url),
       donations: getValues("donations").map(
-        (item: { url: string }) => item.url
+        (item: { url: string }) => item.url,
       ),
-      source: getValues("source-code").map((item: { url: string }) => item.url),
+      source: getValues("source_code").map((item: { url: string }) => item.url),
       issues: getValues("issues").map((item: { url: string }) => item.url),
     },
     snap_name: snapName,
@@ -49,6 +51,8 @@ function PreviewForm({ snapName, getValues }: Props) {
         status: "uploaded",
       },
     ],
+    summary: getValues("summary"),
+    description: getValues("description"),
   };
 
   const screenshotUrls = getValues("screenshot_urls");
@@ -63,20 +67,26 @@ function PreviewForm({ snapName, getValues }: Props) {
     });
   }
 
-  const primaryCategory = getValues("primary-category");
-  const secondaryCategory = getValues("secondary-category");
+  const primaryCategory = getValues("primary_category");
+  const secondaryCategory = getValues("secondary_category");
 
   if (primaryCategory) {
-    listingData.categories.push(primaryCategory);
+    listingData.categories.push({
+      name: primaryCategory,
+      slug: primaryCategory,
+    });
   }
 
   if (secondaryCategory) {
-    listingData.categories.push(secondaryCategory);
+    listingData.categories.push({
+      name: secondaryCategory,
+      slug: secondaryCategory,
+    });
   }
 
   window.localStorage.setItem(
     `${snapName}-initial`,
-    JSON.stringify(listingData)
+    JSON.stringify(listingData),
   );
 
   window.localStorage.setItem(snapName, JSON.stringify(listingData));

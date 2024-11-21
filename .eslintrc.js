@@ -1,6 +1,6 @@
 module.exports = {
   parser: "@babel/eslint-parser",
-  plugins: ["jest", "react"],
+  plugins: ["jest", "react", "prettier", "jsx-a11y"],
   globals: {},
   env: {
     browser: true,
@@ -12,21 +12,37 @@ module.exports = {
     "eslint:recommended",
     "plugin:react/recommended",
     "plugin:prettier/recommended",
+    "plugin:jsx-a11y/recommended",
   ],
   parserOptions: {
     sourceType: "module",
     ecmaFeatures: {
       jsx: true,
     },
+    requireConfigFile: false,
   },
   rules: {
     "linebreak-style": ["error", "unix"],
     semi: ["error", "always"],
     "object-curly-spacing": ["error", "always"],
+    "prettier/prettier": "error",
+    "react/react-in-jsx-scope": "off",
+    "react/no-unescaped-entities": "off",
   },
   settings: {
     react: {
-      version: "detect"
-    }
-  }
+      version: "detect",
+    },
+  },
+  overrides: [
+    {
+      files: ["*.ts", "*.tsx"],
+      parser: "@typescript-eslint/parser",
+      plugins: ["@typescript-eslint"],
+      extends: ["plugin:@typescript-eslint/recommended"],
+    },
+  ],
+  ignorePatterns: [
+    "/static/js/publisher" // skip linting any files in the publisher directory 
+  ],
 };

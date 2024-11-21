@@ -5,7 +5,7 @@ import type { SettingsData } from "../types/SettingsData";
 function getFormData(
   settingsData: SettingsData,
   dirtyFields: { [key: string]: any },
-  data: any
+  data: any,
 ) {
   const changes = getChanges(dirtyFields, data);
   const formData = new FormData();

@@ -28,14 +28,17 @@ const renderComponent = () => {
           />
         </QueryClientProvider>
       </BrowserRouter>
-    </RecoilRoot>
+    </RecoilRoot>,
   );
 };
 
 describe("CreateModelForm", () => {
   it("disables 'Add model' button if no new model name", async () => {
     renderComponent();
-    expect(screen.getByRole("button", { name: "Add model" })).toHaveAttribute("aria-disabled","true");
+    expect(screen.getByRole("button", { name: "Add model" })).toHaveAttribute(
+      "aria-disabled",
+      "true",
+    );
   });
 
   it("enables 'Add model' button if there is a new model name", async () => {
@@ -43,10 +46,10 @@ describe("CreateModelForm", () => {
     renderComponent();
     await user.type(
       screen.getByRole("textbox", { name: "Name" }),
-      "test-model-name"
+      "test-model-name",
     );
     expect(
-      screen.getByRole("button", { name: "Add model" })
+      screen.getByRole("button", { name: "Add model" }),
     ).not.toBeDisabled();
   });
 

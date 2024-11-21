@@ -5,8 +5,6 @@ from webapp.app import create_app
 
 
 class GetDetailsPageTest(TestCase):
-    render_templates = False
-
     def setUp(self):
         self.snap_name = "toto"
         self.api_url = "".join(

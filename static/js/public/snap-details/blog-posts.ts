@@ -1,17 +1,28 @@
 import "whatwg-fetch";
 
+interface Post {
+  slug: string;
+  [key: string]: string | undefined;
+}
+
+interface PostWithClassName extends Post {
+  className: string;
+}
+
+type Modifier = (posts: Post[]) => Post[];
+
 class BlogPosts {
   url: string;
   path: string;
-  holder: any;
-  template: any;
+  holder: HTMLElement;
+  template: HTMLTemplateElement;
   limit: number;
-  modifiers?: ((posts: any) => any)[];
+  modifiers?: Modifier[];
 
   constructor(
     url: string | undefined,
     holderSelector: string,
-    templateSelector: string
+    templateSelector: string,
   ) {
     if (!url) {
       throw new Error("`url` must be defined");
@@ -25,8 +36,10 @@ class BlogPosts {
 
     this.url = url;
     this.path = "";
-    this.holder = document.querySelector(holderSelector);
-    this.template = document.querySelector(templateSelector);
+    this.holder = document.querySelector(holderSelector) as HTMLElement;
+    this.template = document.querySelector(
+      templateSelector,
+    ) as HTMLTemplateElement;
 
     this.limit = 3;
 
@@ -39,7 +52,7 @@ class BlogPosts {
     }
   }
 
-  setResultModifiers(modifiers: ((posts: any) => any)[]) {
+  setResultModifiers(modifiers: Modifier[]) {
     this.modifiers = modifiers;
   }
 
@@ -60,29 +73,27 @@ class BlogPosts {
 
         const cols = 12 / this.limit;
 
-        posts.forEach(
-          (post: { [x: string]: any; slug?: any }, index: number) => {
-            if (index >= this.limit) {
-              return;
-            }
-            let postHTML = this.template.innerHTML;
-            Object.keys(post).forEach((key) => {
-              if (post[key]) {
-                postHTML = postHTML.split("${" + key + "}").join(post[key]);
-              } else {
-                postHTML = postHTML.split("${" + key + "}").join("");
-              }
-            });
-            const containerClasses = [`col-${cols}`];
-            if (post.slug.indexOf("http") === 0) {
-              containerClasses.push(`p-blog-post--guest-post`);
-            }
-            postHTML = postHTML
-              .split("${container_class}")
-              .join(containerClasses.join(" "));
-            postsHTML.push(postHTML);
+        posts.forEach((post: Post, index: number) => {
+          if (index >= this.limit) {
+            return;
           }
-        );
+          let postHTML = this.template.innerHTML;
+          Object.keys(post).forEach((key) => {
+            if (post[key]) {
+              postHTML = postHTML.split("${" + key + "}").join(post[key]);
+            } else {
+              postHTML = postHTML.split("${" + key + "}").join("");
+            }
+          });
+          const containerClasses = [`col-${cols}`];
+          if (post.slug.indexOf("http") === 0) {
+            containerClasses.push(`p-blog-post--guest-post`);
+          }
+          postHTML = postHTML
+            .split("${container_class}")
+            .join(containerClasses.join(" "));
+          postsHTML.push(postHTML);
+        });
 
         if (postsHTML.length > 0) {
           this.holder.innerHTML = postsHTML.join("");
@@ -99,12 +110,12 @@ class BlogPosts {
 function snapDetailsPosts(
   holderSelector: string,
   templateSelector: string,
-  showOnSuccessSelector: string
+  showOnSuccessSelector: string,
 ): void {
   const blogPosts = new BlogPosts(
     "/blog/api/snap-posts/",
     holderSelector,
-    templateSelector
+    templateSelector,
   );
 
   const snap = blogPosts.holder.dataset.snap;
@@ -113,7 +124,7 @@ function snapDetailsPosts(
   }
 
   if (blogPosts.holder.dataset.limit) {
-    blogPosts.limit = blogPosts.holder.dataset.limit;
+    blogPosts.limit = parseInt(blogPosts.holder.dataset.limit, 10);
   }
 
   blogPosts.path = snap;
@@ -132,10 +143,10 @@ function seriesPosts(holderSelector: string, templateSelector: string): void {
   const blogPosts = new BlogPosts(
     "/blog/api/series/",
     holderSelector,
-    templateSelector
+    templateSelector,
   );
 
-  const series = blogPosts.holder.dataset.series;
+  const series = blogPosts.holder.dataset.series || "";
   const currentSlug = blogPosts.holder.dataset.currentslug;
 
   blogPosts.path = series;
@@ -145,13 +156,11 @@ function seriesPosts(holderSelector: string, templateSelector: string): void {
       return posts.reverse();
     },
     function filter(posts) {
-      return posts.map((post: { slug: any; className: string }) => {
-        if (post.slug === currentSlug) {
-          post.className = "is-current";
-        } else {
-          post.className = "";
-        }
-        return post;
+      return posts.map((post): PostWithClassName => {
+        return {
+          ...post,
+          className: post.slug === currentSlug ? "is-current" : "",
+        };
       });
     },
   ]);

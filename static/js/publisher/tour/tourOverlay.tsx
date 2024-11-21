@@ -14,18 +14,14 @@ import {
 
 import { animateScrollTo } from "../../public/scroll-to";
 
+import type { Step } from "../listing/types";
+
 export default function TourOverlay({
   steps,
   hideTour,
   currentStepIndex = 0,
 }: {
-  steps: Array<{
-    id: string;
-    position: string;
-    elements: HTMLElement[];
-    content: string;
-    title: string;
-  }>;
+  steps: Step[];
   hideTour: () => void;
   currentStepIndex?: number;
 }) {
@@ -43,7 +39,7 @@ export default function TourOverlay({
         window.pageYOffset || document.documentElement.scrollTop;
 
       // when tooltip is on top of the mask, scroll into view aligning to bottom
-      if (step.position.indexOf("top") === 0) {
+      if (step.position && step.position.indexOf("top") === 0) {
         // scroll element into view aligning it to bottom
         // only if it's below the bottom border of the screen
         // or it's in the top half of the screen
@@ -55,12 +51,12 @@ export default function TourOverlay({
             // we scroll relative to top of the screen, but we want to stick to bottom
             // so we need to substract the window height
             mask.bottom - window.innerHeight,
-            -SCROLL_OFFSET_BOTTOM
+            -SCROLL_OFFSET_BOTTOM,
           );
         }
       }
       // when tooltip is on the bottom of the mask, scroll aligning to top
-      if (step.position.indexOf("bottom") === 0) {
+      if (step.position && step.position.indexOf("bottom") === 0) {
         // scroll element into view, but only if it's higher on page than top offset
         // or it is in the bottom half of screen
         if (
@@ -71,12 +67,12 @@ export default function TourOverlay({
         }
       }
     },
-    [currentStepIndex] // refresh effect on step changes, to scroll to correct step
+    [currentStepIndex], // refresh effect on step changes, to scroll to correct step
   );
 
   const overlayEl = useRef(null);
 
-  const mask = getMaskFromElements(step.elements);
+  const mask = getMaskFromElements(step.elements || []);
 
   // rerender on resize or scroll
   // it is an unusual use of useState to force rerender, but on resize or scroll
@@ -98,7 +94,7 @@ export default function TourOverlay({
         window.removeEventListener("scroll", afterScroll);
       };
     },
-    [] // don't refresh the effect on every render
+    [], // don't refresh the effect on every render
   );
 
   // rerender after resize (to adjust to new positions of elements)
@@ -122,7 +118,7 @@ export default function TourOverlay({
         window.removeEventListener("resize", afterResize);
       };
     },
-    [] // don't refresh the effect on every render
+    [], // don't refresh the effect on every render
   );
 
   const onNextClick = () =>
@@ -159,7 +155,7 @@ export default function TourOverlay({
         window.removeEventListener("keyup", escClick);
       };
     },
-    [currentStepIndex] // refresh effect when step changes, to pass correct step id into skip metrics
+    [currentStepIndex], // refresh effect when step changes, to pass correct step id into skip metrics
   );
 
   return (

@@ -8,6 +8,7 @@ import {
   useLocation,
 } from "react-router-dom";
 import { Row, Col, Notification, Icon } from "@canonical/react-components";
+import { UseQueryResult } from "react-query";
 
 import { useSigningKeys, useModels } from "../../hooks";
 import {
@@ -31,15 +32,20 @@ import {
   getPolicies,
 } from "../../utils";
 
-import type { SigningKey, Policy } from "../../types/shared";
+import type { SigningKey, Policy, Model } from "../../types/shared";
 
 function SigningKeys(): ReactNode {
   const { id } = useParams();
   const brandId = useRecoilValue(brandIdState);
   const location = useLocation();
   const navigate = useNavigate();
-  const { isLoading, isError, error, data, refetch }: any =
-    useSigningKeys(brandId);
+  const {
+    isLoading,
+    isError,
+    error,
+    data,
+    refetch,
+  }: UseQueryResult<SigningKey[], Error> = useSigningKeys(brandId);
   const setSigningKeysList =
     useSetRecoilState<Array<SigningKey>>(signingKeysListState);
   const setPolicies = useSetRecoilState<Array<Policy>>(policiesListState);
@@ -61,10 +67,10 @@ function SigningKeys(): ReactNode {
     data: models,
     isLoading: modelsIsLoading,
     isError: modelsIsError,
-  }: any = useModels(brandId);
+  }: UseQueryResult<Model[], Error> = useModels(brandId);
 
   useEffect(() => {
-    if (!isLoading && !error) {
+    if (!isLoading && !error && data) {
       setSigningKeysList([...data.sort(sortByDateDescending)]);
       setFilter(searchParams.get("filter") || "");
     }
@@ -185,6 +191,16 @@ function SigningKeys(): ReactNode {
           setNewSigningKey({ name: "" });
           setErrorMessage("");
         }}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            navigate(`/admin/${id}/signing-keys`);
+            setNewSigningKey({ name: "" });
+            setErrorMessage("");
+          }
+        }}
+        role="button"
+        tabIndex={0}
+        aria-label="Navigate to signing keys"
       ></div>
       <aside
         className={`l-aside ${

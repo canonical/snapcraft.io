@@ -1,116 +1,16 @@
-const formatImageChanges = (
-  bannerUrl: [string],
-  iconUrl: string,
-  screenshotUrls: [string],
-  screenshots: [FileList]
-) => {
-  const images = [];
+import formatImageChanges from "./formatImageChanges";
 
-  if (bannerUrl) {
-    images.push({
-      url: bannerUrl,
-      type: "banner",
-      status: "uploaded",
-    });
-  }
+import type { Data } from "../types";
 
-  if (iconUrl) {
-    images.push({
-      url: iconUrl,
-      type: "icon",
-      status: "uploaded",
-    });
-  }
-
-  if (screenshotUrls.length) {
-    screenshotUrls.forEach((url) => {
-      images.push({
-        url,
-        type: "screenshot",
-        status: "uploaded",
-      });
-    });
-  }
-
-  if (screenshots) {
-    screenshots.forEach((screenshot) => {
-      if (screenshot[0]) {
-        images.push({
-          url: URL.createObjectURL(screenshot[0]),
-          type: "screenshot",
-          status: "new",
-          name: screenshot[0].name,
-        });
-      }
-    });
-  }
-
-  return images;
-};
-
-function getChanges(
-  dirtyFields: { [key: string]: any },
-  data: { [key: string]: any }
-) {
+export default function getChanges(
+  dirtyFields: any,
+  fieldValues: any,
+  data: Data,
+): { [key: string]: any } {
   const changes: { [key: string]: any } = {};
-  const keys = Object.keys(dirtyFields);
-  const forbiddenKeys = [
-    "primary-category",
-    "secondary-category",
-    "contacts",
-    "donations",
-    "issues",
-    "source-code",
-    "websites",
-    "licenses",
-  ];
-
-  const removeEmptyUrls = (urls: Array<{ url: string }>) => {
-    return urls.filter((url) => url.url !== "");
-  };
-
-  const combineWebsites = (
-    primaryWebsite: string,
-    websites: Array<{ url: string }>
-  ) => {
-    return [{ url: primaryWebsite }].concat(websites);
-  };
 
   if (
-    dirtyFields.primary_website ||
-    dirtyFields.contacts ||
-    dirtyFields.donations ||
-    dirtyFields.issues ||
-    dirtyFields.license ||
-    dirtyFields["source-code"] ||
-    dirtyFields.website
-  ) {
-    combineWebsites(data.primary_website, data.websites);
-    changes.links = {
-      contact: data.contacts
-        ? removeEmptyUrls(data.contacts).map((url: { url: string }) => url.url)
-        : [],
-      donations: data.donations
-        ? removeEmptyUrls(data.donations).map((url: { url: string }) => url.url)
-        : [],
-      issues: data.issues
-        ? removeEmptyUrls(data.issues).map((url: { url: string }) => url.url)
-        : [],
-      website: data.websites
-        ? removeEmptyUrls(
-            combineWebsites(data.primary_website, data.websites)
-          ).map((url: { url: string }) => url.url)
-        : [],
-      source: data["source-code"]
-        ? removeEmptyUrls(data["source-code"]).map(
-            (url: { url: string }) => url.url
-          )
-        : [],
-    };
-  }
-
-  if (
-    dirtyFields.banner_url ||
+    dirtyFields.banner_urls ||
     dirtyFields.icon_url ||
     dirtyFields.screenshot_urls ||
     dirtyFields.icon ||
@@ -118,32 +18,102 @@ function getChanges(
     dirtyFields.screenshots
   ) {
     changes.images = formatImageChanges(
-      data?.banner_url,
-      data?.icon_url,
-      data?.screenshot_urls,
-      data?.screenshots
+      data.banner_urls,
+      fieldValues.icon_url,
+      fieldValues.screenshot_urls,
+      fieldValues.screenshots,
+      dirtyFields,
     );
   }
 
-  keys.forEach((key) => {
-    if (!forbiddenKeys.includes(key) && dirtyFields[key] === true) {
-      changes[key] = data[key];
+  const forbiddenKeys = [
+    "primary_category",
+    "secondary_category",
+    "websites",
+    "contacts",
+    "donations",
+    "source_code",
+    "issues",
+    "icon",
+    "icon_url",
+  ];
+
+  const linksKeys = [
+    "websites",
+    "contacts",
+    "donations",
+    "source_code",
+    "issues",
+    "primary_website",
+  ];
+
+  const getUrls = (item: { url: string }) => item.url;
+
+  for (const [key, value] of Object.entries(dirtyFields)) {
+    if (!forbiddenKeys.includes(key) && value !== false) {
+      changes[key] = fieldValues[key];
     }
 
-    if (dirtyFields["primary-category"] || dirtyFields["secondary-category"]) {
-      changes.categories = [];
+    if (linksKeys.includes(key)) {
+      changes.links = {
+        contact: fieldValues.contacts.map(getUrls),
+        donations: fieldValues.donations.map(getUrls),
+        issues: fieldValues.issues.map(getUrls),
+        source: fieldValues.source_code.map(getUrls),
+        website: fieldValues.websites.map(getUrls),
+      };
 
-      if (data["primary-category"]) {
-        changes.categories.push(data["primary-category"]);
-      }
-
-      if (data["secondary-category"]) {
-        changes.categories.push(data["secondary-category"]);
+      if (fieldValues.primary_website) {
+        changes.links.website.unshift(fieldValues.primary_website);
       }
     }
-  });
+  }
+
+  if (dirtyFields.primary_category || dirtyFields.secondary_category) {
+    const categories = [];
+
+    if (fieldValues.primary_category) {
+      categories.push(fieldValues.primary_category);
+    }
+
+    if (fieldValues.secondary_category) {
+      categories.push(fieldValues.secondary_category);
+    }
+
+    changes.categories = categories;
+  }
+
+  if (
+    dirtyFields.public_metrics_territories ||
+    dirtyFields.public_metrics_distros
+  ) {
+    if (fieldValues.public_metrics_territories === true) {
+      changes.public_metrics_blacklist = [
+        "weekly_installed_base_by_operating_system_normalized",
+      ];
+    }
+
+    if (fieldValues.public_metrics_distros === true) {
+      changes.public_metrics_blacklist = ["installed_base_by_country_percent"];
+    }
+
+    if (
+      fieldValues.public_metrics_territories === true &&
+      fieldValues.public_metrics_distros === true
+    ) {
+      changes.public_metrics_blacklist = [];
+    }
+
+    if (
+      fieldValues.public_metrics_territories === false &&
+      fieldValues.public_metrics_distros === false
+    ) {
+      changes.public_metrics_blacklist = [
+        "installed_base_by_country_percent",
+        "weekly_installed_base_by_operating_system_normalized",
+      ];
+    }
+  }
 
   return changes;
 }
-
-export default getChanges;

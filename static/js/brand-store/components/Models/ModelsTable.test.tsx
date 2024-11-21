@@ -12,7 +12,7 @@ const renderComponent = () => {
       <BrowserRouter>
         <ModelsTable />
       </BrowserRouter>
-    </RecoilRoot>
+    </RecoilRoot>,
   );
 };
 
@@ -26,23 +26,23 @@ describe("ModelsTable", () => {
     renderComponent();
 
     expect(
-      screen.getByRole("columnheader", { name: /Name/ })
+      screen.getByRole("columnheader", { name: /Name/ }),
     ).toBeInTheDocument();
 
     expect(
-      screen.getByRole("columnheader", { name: "API key" })
+      screen.getByRole("columnheader", { name: "API key" }),
     ).toBeInTheDocument();
 
     expect(
-      screen.getByRole("columnheader", { name: "Policy revision" })
+      screen.getByRole("columnheader", { name: "Policy revision" }),
     ).toBeInTheDocument();
 
     expect(
-      screen.getByRole("columnheader", { name: "Last updated" })
+      screen.getByRole("columnheader", { name: "Last updated" }),
     ).toBeInTheDocument();
 
     expect(
-      screen.getByRole("columnheader", { name: "Created date" })
+      screen.getByRole("columnheader", { name: "Created date" }),
     ).toBeInTheDocument();
   });
 

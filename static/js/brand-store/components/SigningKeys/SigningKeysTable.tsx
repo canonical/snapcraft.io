@@ -13,6 +13,7 @@ import { filteredSigningKeysListState } from "../../selectors";
 import { signingKeysListState, brandIdState } from "../../atoms";
 
 import type { SigningKey } from "../../types/shared";
+import type { ItemType } from "../AppPagination/AppPagination";
 
 type Props = {
   setShowDisableSuccessNotification: Dispatch<SetStateAction<boolean>>;
@@ -23,10 +24,10 @@ function SigningKeysTable({
   setShowDisableSuccessNotification,
   enableTableActions,
 }: Props): ReactNode {
-  const { id } = useParams();
+  useParams();
   const brandId = useRecoilValue(brandIdState);
   const signingKeysList = useRecoilValue<Array<SigningKey>>(
-    filteredSigningKeysListState
+    filteredSigningKeysListState,
   );
   const [itemsToShow, setItemsToShow] =
     useState<Array<SigningKey>>(signingKeysList);
@@ -55,7 +56,7 @@ function SigningKeysTable({
       {
         method: "DELETE",
         body: formData,
-      }
+      },
     );
 
     if (!response.ok) {
@@ -217,7 +218,13 @@ function SigningKeysTable({
       <AppPagination
         keyword="signing key"
         items={signingKeysList}
-        setItemsToShow={setItemsToShow}
+        setItemsToShow={(items: ItemType[]) => {
+          if (items.length > 0 && "name" in items[0]) {
+            setItemsToShow(items as SigningKey[]);
+          } else {
+            console.error("Invalid item types.");
+          }
+        }}
       />
     </>
   );

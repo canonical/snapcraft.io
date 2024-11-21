@@ -5,13 +5,17 @@ import { Input, MainTable } from "@canonical/react-components";
 
 import type { SnapsList, Store, Snap } from "../../types/shared";
 
+type GetStoreNameFunc = (storeId: string) => string | undefined;
+type IsOnlyViewerFunc = () => boolean;
+type SetSnapsToRemoveFunc = (snaps: SnapsList) => void;
+
 type IncludedSnapsTableRowsProps = {
   snaps: Array<Snap>;
-  getStoreName?: Function;
+  getStoreName?: GetStoreNameFunc;
   isGlobal?: boolean;
-  isOnlyViewer: Function;
+  isOnlyViewer: IsOnlyViewerFunc;
   snapsToRemove: SnapsList;
-  setSnapsToRemove: Function;
+  setSnapsToRemove: SetSnapsToRemoveFunc;
 };
 
 function SnapTableRows({
@@ -26,7 +30,7 @@ function SnapTableRows({
 
   return snaps.map((snap) => {
     const snapName = isGlobal ? (
-      <a href={`https://snapcraft.io/${snap.name}/listing`}>{snap.name}</a>
+      <a href={`https://snapcraft.io/${snap.name}`}>{snap.name}</a>
     ) : (
       snap.name || "-"
     );
@@ -60,7 +64,7 @@ function SnapTableRows({
                       setSnapsToRemove([...snapsToRemove, snap]);
                     } else {
                       setSnapsToRemove(
-                        snapsToRemove.filter((item) => item.id !== snap.id)
+                        snapsToRemove.filter((item) => item.id !== snap.id),
                       );
                     }
                   }}
@@ -108,12 +112,12 @@ function SnapTableRows({
 }
 
 type IncludedSnapsTableProps = {
-  isOnlyViewer: Function;
+  isOnlyViewer: IsOnlyViewerFunc;
   snapsToRemove: SnapsList;
-  setSnapsToRemove: Function;
-  globalStore: Store;
-  nonEssentialSnapIds: SnapsList;
-  getStoreName: Function;
+  setSnapsToRemove: SetSnapsToRemoveFunc;
+  globalStore: Store | null;
+  nonEssentialSnapIds: string[];
+  getStoreName: GetStoreNameFunc;
   otherStores: Array<{
     id: string;
     name: string;
@@ -134,7 +138,7 @@ function IncludedSnapsTable({
   const [isIndeterminate, setIsIndeterminate] = useState(false);
 
   const otherStoresSnaps = otherStores.map((item) => item?.snaps);
-  const allSnaps = otherStoresSnaps.flat().concat(globalStore?.snaps);
+  const allSnaps = otherStoresSnaps.flat().concat(globalStore?.snaps ?? []);
 
   const deDupedSnaps = (snaps: Array<Snap>, sourceStoreId: string) => {
     return snaps.filter((snap) => snap.store === sourceStoreId);
@@ -169,7 +173,7 @@ function IncludedSnapsTable({
                 onChange={(e) => {
                   if (e.target.checked) {
                     setSnapsToRemove(
-                      allSnaps.filter((item) => !item.essential)
+                      allSnaps.filter((item) => !item.essential),
                     );
                     setIsChecked(true);
                   } else {
@@ -180,7 +184,7 @@ function IncludedSnapsTable({
                 disabled={!nonEssentialSnapIds.length}
                 label="Name"
                 checked={isChecked}
-                // @ts-ignore
+                // @ts-expect-error - The Input component does not support the 'indeterminate' prop.
                 indeterminate={isIndeterminate}
               />
             </div>
@@ -217,17 +221,17 @@ function IncludedSnapsTable({
             isOnlyViewer,
             snapsToRemove,
             setSnapsToRemove,
-          })
+          }),
         )
         .flat()
         .concat(
           ...SnapTableRows({
-            snaps: deDupedSnaps(globalStore.snaps, "ubuntu"),
+            snaps: globalStore ? deDupedSnaps(globalStore.snaps, "ubuntu") : [],
             isGlobal: true,
             isOnlyViewer,
             snapsToRemove,
             setSnapsToRemove,
-          })
+          }),
         )}
     />
   );

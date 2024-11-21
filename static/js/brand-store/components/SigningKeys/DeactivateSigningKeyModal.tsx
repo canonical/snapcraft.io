@@ -6,7 +6,7 @@ import { Dispatch, ReactNode, SetStateAction } from "react";
 
 type Props = {
   setModalOpen: Dispatch<SetStateAction<boolean>>;
-  handleDisable: Function;
+  handleDisable: (signingKey: SigningKey) => void;
   isDeleting: boolean;
   signingKey: SigningKey;
 };

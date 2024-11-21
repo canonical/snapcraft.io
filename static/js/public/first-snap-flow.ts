@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 /* globals ClipboardJS, ga */
 
 import "whatwg-fetch";
@@ -6,10 +7,10 @@ import { toggleAccordion } from "./accordion";
 
 function install(language: unknown, fsfFlow: string): void {
   const osPickers = Array.from(
-    document.querySelectorAll(".js-os-select")
+    document.querySelectorAll(".js-os-select"),
   ) as Array<HTMLElement>;
   const osWrappers = Array.from(
-    document.querySelectorAll(".js-os-wrapper")
+    document.querySelectorAll(".js-os-wrapper"),
   ) as Array<HTMLElement>;
 
   function select(selectedOs: string) {
@@ -25,7 +26,7 @@ function install(language: unknown, fsfFlow: string): void {
 
     if (!document.querySelector(".js-linux-manual")) {
       const paginationBtn = document.querySelector(
-        `#js-pagination-next`
+        `#js-pagination-next`,
       ) as HTMLLinkElement;
       if (paginationBtn) {
         paginationBtn.classList.remove("is-disabled");
@@ -74,7 +75,7 @@ function install(language: unknown, fsfFlow: string): void {
     const os = type.split("-")[0];
     const selected = document.querySelector(".js-" + type) as HTMLElement;
     const unselected = document.querySelector(
-      "[class*='js-" + os + "-']:not(.js-" + type + ")"
+      "[class*='js-" + os + "-']:not(.js-" + type + ")",
     ) as HTMLElement;
 
     if (!selected && !unselected) {
@@ -96,7 +97,7 @@ function install(language: unknown, fsfFlow: string): void {
     unselected.classList.add("u-hide");
 
     const paginationBtn = document.querySelector(
-      `#js-pagination-next`
+      `#js-pagination-next`,
     ) as HTMLLinkElement;
     if (paginationBtn) {
       const paginationBtnLink: string = `/${fsfFlow}/${language}/${type}/package`;
@@ -116,8 +117,7 @@ function install(language: unknown, fsfFlow: string): void {
 
 function getSnapCount(cb: {
   (data: { count: number; snaps: string[] }): void;
-  (arg0: any): void;
-}) {
+}): void {
   fetch("/snaps/api/snap-count")
     .then((r) => r.json())
     .then((data) => {
@@ -126,11 +126,11 @@ function getSnapCount(cb: {
     .catch();
 }
 
-function getArrayDiff(arr1: [], arr2: []) {
+function getArrayDiff(arr1: string[], arr2: string[]): string[] {
   let newArr: string[];
   let oldArr: string[];
   if (arr1.length === arr2.length) {
-    return false;
+    return [];
   }
 
   if (arr1.length > arr2.length) {
@@ -141,7 +141,7 @@ function getArrayDiff(arr1: [], arr2: []) {
     oldArr = arr1;
   }
 
-  let newValues: Array<string> = [];
+  const newValues: Array<string> = [];
 
   newArr.forEach((item: string) => {
     if (!oldArr.includes(item)) {
@@ -154,7 +154,7 @@ function getArrayDiff(arr1: [], arr2: []) {
 
 function push(): void {
   let initialCount: number | null = null;
-  let initialSnaps: [] = [];
+  let initialSnaps: string[] = [];
   let timer: string | number | NodeJS.Timeout | undefined;
   let ready = false;
 
@@ -198,7 +198,7 @@ function push(): void {
   getCount((snapName) => {
     // Enable "Continue" button
     const continueBtn = document.querySelector(
-      ".js-continue"
+      ".js-continue",
     ) as HTMLLinkElement;
     if (continueBtn) {
       continueBtn.href = `/${snapName}/releases`;
@@ -209,7 +209,7 @@ function push(): void {
     }
     // Update "Go to listing" button for a published snap
     const paginationBtn = document.querySelector(
-      "#js-pagination-next"
+      "#js-pagination-next",
     ) as HTMLLinkElement;
     if (paginationBtn) {
       paginationBtn.href = `/${snapName}/listing?from=first-snap`;
@@ -221,33 +221,26 @@ function push(): void {
 function updateNotification(
   notificationEl: {
     className: string;
-    querySelector: (arg0: string) => {
-      (): HTMLElement;
-      new (): any;
-      innerHTML: string;
-    };
+    querySelector: (arg0: string) => HTMLElement;
   },
   className: string,
-  message: string | undefined
+  message: string | undefined,
 ) {
   notificationEl.className = className;
-
   if (message) {
-    notificationEl.querySelector(".p-notification__message").innerHTML =
-      message;
+    const messageEl = notificationEl.querySelector(".p-notification__message");
+    if (messageEl) {
+      messageEl.innerHTML = message;
+    }
   }
 }
 
 function successNotification(
   notificationEl: {
     className: string;
-    querySelector: (arg0: string) => {
-      (): HTMLElement;
-      new (): any;
-      innerHTML: string;
-    };
+    querySelector: (arg0: string) => HTMLElement;
   },
-  message: string | undefined
+  message: string | undefined,
 ) {
   updateNotification(notificationEl, "p-notification--positive", message);
 }
@@ -255,13 +248,9 @@ function successNotification(
 function errorNotification(
   notificationEl: {
     className: string;
-    querySelector: (arg0: string) => {
-      (): HTMLElement;
-      new (): any;
-      innerHTML: string;
-    };
+    querySelector: (arg0: string) => HTMLElement;
   },
-  message: string
+  message: string,
 ) {
   updateNotification(notificationEl, "p-notification--negative", message);
 }
@@ -272,26 +261,39 @@ function validateSnapName(name: string) {
 
 function initChooseName(
   formEl: {
-    querySelector: (arg0: string) => {
-      (): HTMLElement;
-      new (): any;
-      disabled: boolean;
-    };
+    querySelector: (arg0: string) => HTMLElement;
     addEventListener: (arg0: string, arg1: (event: Event) => void) => void;
   },
-  language: string
+  language: string,
 ): void {
-  const snapNameInput = formEl.querySelector("[name=snap-name]") as any;
+  const snapNameInput = formEl.querySelector(
+    "[name=snap-name]",
+  ) as HTMLInputElement;
 
   snapNameInput.addEventListener("keyup", () => {
     const isValid = validateSnapName(snapNameInput.value);
 
-    if (!isValid) {
-      snapNameInput.parentNode.classList.add("is-error");
-      formEl.querySelector("button").disabled = true;
-    } else {
-      snapNameInput.parentNode.classList.remove("is-error");
-      formEl.querySelector("button").disabled = false;
+    const parent = snapNameInput.parentNode as HTMLElement | null;
+    if (parent) {
+      if (!isValid) {
+        parent.classList.add("is-error");
+
+        const submitButton = formEl.querySelector(
+          "button",
+        ) as HTMLButtonElement;
+        if (submitButton) {
+          submitButton.disabled = true;
+        }
+      } else {
+        parent.classList.remove("is-error");
+
+        const submitButton = formEl.querySelector(
+          "button",
+        ) as HTMLButtonElement;
+        if (submitButton) {
+          submitButton.disabled = false;
+        }
+      }
     }
   });
 
@@ -307,10 +309,10 @@ function initChooseName(
 function initRegisterName(
   formEl: HTMLFormElement,
   notificationEl: HTMLElement,
-  successEl: { classList: { remove: (arg0: string) => void } }
+  successEl: { classList: { remove: (arg0: string) => void } },
 ): void {
   const snapNameInput = formEl.querySelector(
-    "[name=snap-name]"
+    "[name=snap-name]",
   ) as HTMLInputElement;
 
   snapNameInput.addEventListener("keyup", () => {
@@ -345,20 +347,20 @@ function initRegisterName(
 
   formEl.addEventListener("submit", (event) => {
     event.preventDefault();
-    let formData = new FormData(formEl);
+    const formData = new FormData(formEl);
     const submitButton = formEl.querySelector(
-      "[data-js='js-snap-name-register']"
+      "[data-js='js-snap-name-register']",
     ) as HTMLButtonElement;
 
     const currentPanel = formEl.closest(
-      ".p-accordion__group"
+      ".p-accordion__group",
     ) as HTMLFormElement;
     const currentToggle = currentPanel.querySelector(
-      ".p-accordion__tab"
+      ".p-accordion__tab",
     ) as HTMLElement;
     const nextPanel = currentPanel.nextElementSibling as HTMLElement;
     const nextToggle = nextPanel.querySelector(
-      ".p-accordion__tab"
+      ".p-accordion__tab",
     ) as HTMLElement;
 
     const enableButton = () => {
@@ -371,11 +373,11 @@ function initRegisterName(
     // Enable "Go to listing" button for an unpublished app
     const enableGoToListingButton = () => {
       const formField = formEl.querySelector(
-        "[name=snap-name]"
+        "[name=snap-name]",
       ) as HTMLInputElement;
       const snapName = formField.value;
       const paginationBtn = document.querySelector(
-        "#js-pagination-next"
+        "#js-pagination-next",
       ) as HTMLLinkElement;
       if (paginationBtn) {
         paginationBtn.href = `/${snapName}/listing?from=first-snap-unpublished`;
@@ -425,7 +427,7 @@ function initRegisterName(
         }
         errorNotification(
           notificationEl,
-          "There was some problem registering name. Please try again."
+          "There was some problem registering name. Please try again.",
         );
       });
   });

@@ -4,10 +4,10 @@ describe("shouldShowUpdateMetadataWarning", () => {
   test("returns false if only allowed keys have changed", () => {
     expect(
       shouldShowUpdateMetadataWarning({
-        banner_url: true,
+        banner_urls: true,
         icon_url: true,
         screenshot_urls: true,
-      })
+      }),
     ).toBe(false);
   });
 

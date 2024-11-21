@@ -36,8 +36,8 @@ prepareSteps.mockImplementation(
       elements: HTMLElement[];
       content: string;
       title: string;
-    }>
-  ) => steps
+    }>,
+  ) => steps,
 );
 
 describe("TourOverlay", () => {
@@ -65,7 +65,7 @@ describe("TourOverlay", () => {
 
   it("should render TourStepCard for first step", () => {
     const { getByText } = render(
-      <TourOverlay steps={steps} hideTour={jest.fn()} />
+      <TourOverlay steps={steps} hideTour={jest.fn()} />,
     );
 
     expect(getByText(steps[0].title)).toBeDefined();
@@ -74,7 +74,7 @@ describe("TourOverlay", () => {
   describe("when moving to next step", () => {
     it("should render TourStepCard for next step", () => {
       const { getByText } = render(
-        <TourOverlay steps={steps} hideTour={jest.fn()} />
+        <TourOverlay steps={steps} hideTour={jest.fn()} />,
       );
 
       fireEvent.click(getByText("Next step"));
@@ -84,7 +84,7 @@ describe("TourOverlay", () => {
 
     it("should scroll next step into view", () => {
       const { getByText } = render(
-        <TourOverlay steps={steps} hideTour={jest.fn()} />
+        <TourOverlay steps={steps} hideTour={jest.fn()} />,
       );
 
       fireEvent.click(getByText("Next step"));
@@ -96,7 +96,7 @@ describe("TourOverlay", () => {
   describe("when moving to previous step", () => {
     it("should render TourStepCard for previous step", () => {
       const { getByText } = render(
-        <TourOverlay steps={steps} currentStepIndex={1} hideTour={jest.fn()} />
+        <TourOverlay steps={steps} currentStepIndex={1} hideTour={jest.fn()} />,
       );
 
       fireEvent.click(getByText("Previous step"));
@@ -106,7 +106,7 @@ describe("TourOverlay", () => {
 
     it("should scroll previous step into view", () => {
       const { getByText } = render(
-        <TourOverlay steps={steps} currentStepIndex={1} hideTour={jest.fn()} />
+        <TourOverlay steps={steps} currentStepIndex={1} hideTour={jest.fn()} />,
       );
 
       fireEvent.click(getByText("Previous step"));
@@ -120,7 +120,7 @@ describe("TourOverlay", () => {
       const hideTour = jest.fn();
 
       const { getByText } = render(
-        <TourOverlay steps={steps} hideTour={hideTour} />
+        <TourOverlay steps={steps} hideTour={hideTour} />,
       );
 
       fireEvent.click(getByText("Skip tour"));
@@ -132,7 +132,7 @@ describe("TourOverlay", () => {
       const hideTour = jest.fn();
 
       const { getByText } = render(
-        <TourOverlay steps={steps} hideTour={hideTour} />
+        <TourOverlay steps={steps} hideTour={hideTour} />,
       );
 
       fireEvent.click(getByText("Skip tour"));
@@ -147,7 +147,7 @@ describe("TourOverlay", () => {
       const hideTour = jest.fn();
 
       const { getByText } = render(
-        <TourOverlay steps={steps} currentStepIndex={1} hideTour={hideTour} />
+        <TourOverlay steps={steps} currentStepIndex={1} hideTour={hideTour} />,
       );
 
       fireEvent.click(getByText("Finish tour"));
@@ -159,7 +159,7 @@ describe("TourOverlay", () => {
       const hideTour = jest.fn();
 
       const { getByText } = render(
-        <TourOverlay steps={steps} currentStepIndex={1} hideTour={hideTour} />
+        <TourOverlay steps={steps} currentStepIndex={1} hideTour={hideTour} />,
       );
 
       fireEvent.click(getByText("Finish tour"));
@@ -195,7 +195,7 @@ describe("TourOverlay", () => {
       const hideTour = jest.fn();
 
       render(
-        <TourOverlay steps={steps} currentStepIndex={1} hideTour={hideTour} />
+        <TourOverlay steps={steps} currentStepIndex={1} hideTour={hideTour} />,
       );
 
       fireEvent.keyUp(document, { key: "Escape", keyCode: 27 });

@@ -1,3 +1,5 @@
+@use 'sass:color';
+
 @mixin button-overrides {
   .p-button--outline {
     @extend %vf-button-base;
@@ -39,7 +41,7 @@
       margin-top: 0;
 
       &:hover {
-        background-color: transparentize($color-x-light, 0.8);
+        background-color: color.adjust($color-x-light, $alpha: -0.8);
       }
     }
   }

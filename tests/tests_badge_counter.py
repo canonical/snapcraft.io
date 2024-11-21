@@ -4,8 +4,6 @@ from webapp.handlers import badge_counter, badge_logged_in_counter
 
 
 class TestsBadgePrometheusCounter(TestCase):
-    render_templates = False
-
     def setUp(self):
         self.endpoint_url = "/static/images/badges/en/snap-store-black.svg"
         badge_counter._value.set(0.0)

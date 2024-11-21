@@ -144,3 +144,19 @@ def get_dns_verification_token(snap_name, domain):
     token_string = f"{domain}:{snap_name}:{salt}"
     token = hashlib.sha256(token_string.encode("utf-8")).hexdigest()
     return token
+
+
+def get_csp_as_str(csp={}):
+    csp_str = ""
+    for key, values in csp.items():
+        csp_value = " ".join(values)
+        csp_str += f"{key} {csp_value}; "
+    return csp_str.strip()
+
+
+def list_folders(directory):
+    return [
+        item
+        for item in os.listdir(directory)
+        if os.path.isdir(os.path.join(directory, item))
+    ]

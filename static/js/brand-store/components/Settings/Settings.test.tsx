@@ -38,7 +38,7 @@ function renderComponent() {
           </QueryClientProvider>
         </Router>
       </RecoilRoot>
-    </Provider>
+    </Provider>,
   );
 }
 
@@ -60,6 +60,9 @@ function getInitialState(): RootState {
           id: "testid",
           current_user: true,
           roles: ["admin"],
+          displayname: "",
+          email: "",
+          username: "",
         },
       ],
       loading: false,
@@ -77,7 +80,7 @@ let initialState: RootState = getInitialState();
 
 const mockSelector = jest.spyOn(reactRedux, "useSelector");
 const setupMockSelector = (state: RootState) => {
-  mockSelector.mockImplementation((callback: any) => {
+  mockSelector.mockImplementation((callback: (state: RootState) => unknown) => {
     return callback(state);
   });
 };
@@ -90,7 +93,7 @@ test("the 'is public' checkbox should not be checked when the current store is s
   setupMockSelector(initialState);
   renderComponent();
   expect(
-    screen.getByLabelText("Include this store in public lists")
+    screen.getByLabelText("Include this store in public lists"),
   ).not.toBeChecked();
 });
 
@@ -99,7 +102,7 @@ test("the 'is public' checkbox should be checked when the current store is not s
   setupMockSelector(initialState);
   renderComponent();
   expect(
-    screen.getByLabelText("Include this store in public lists")
+    screen.getByLabelText("Include this store in public lists"),
   ).toBeChecked();
 });
 
@@ -117,14 +120,17 @@ test("the correct radio button is checked by default for manual review policy", 
     checked: true,
   }) as HTMLInputElement;
   expect(checkedRadioButton.value).toEqual(
-    initialState.currentStore.currentStore["manual-review-policy"]
+    initialState.currentStore.currentStore["manual-review-policy"],
   );
 });
 
 test("the save button is disabled by default", () => {
   setupMockSelector(initialState);
   renderComponent();
-  expect(screen.getByText("Save changes")).toHaveAttribute("aria-disabled","true");
+  expect(screen.getByText("Save changes")).toHaveAttribute(
+    "aria-disabled",
+    "true",
+  );
 });
 
 test("the save button is enabled when the data changes", () => {

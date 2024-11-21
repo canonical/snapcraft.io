@@ -2,7 +2,7 @@ import { screen, render, waitFor } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import { Provider } from "react-redux";
 import { BrowserRouter } from "react-router-dom";
-import { MutableSnapshot, RecoilRoot } from "recoil";
+import { MutableSnapshot, RecoilRoot, RecoilValue } from "recoil";
 import { useEffect } from "react";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { useRecoilValue } from "recoil";
@@ -12,7 +12,28 @@ import { publisherState } from "../../../atoms";
 
 const queryClient = new QueryClient();
 
-const RecoilObserver = ({ node, event }: { node: any; event: Function }) => {
+type PublisherState = {
+  email: string;
+  fullname: string;
+  has_stores?: boolean;
+  identity_url: string;
+  image: string | null;
+  is_canonical: boolean;
+  nickname: string;
+  subscriptions: {
+    newsletter: boolean;
+  } | null;
+};
+
+type EventFunction<T> = (value: T) => void;
+
+const RecoilObserver = <T,>({
+  node,
+  event,
+}: {
+  node: RecoilValue<T>;
+  event: EventFunction<T>;
+}) => {
   const value = useRecoilValue(node);
 
   useEffect(() => {
@@ -22,7 +43,13 @@ const RecoilObserver = ({ node, event }: { node: any; event: Function }) => {
   return null;
 };
 
-const renderComponent = ({ event, state }: { event: Function; state: any }) => {
+const renderComponent = ({
+  event,
+  state,
+}: {
+  event: EventFunction<PublisherState | null>;
+  state: RecoilValue<PublisherState | null>;
+}) => {
   render(
     <RecoilRoot
       initializeState={(snapshot: MutableSnapshot) => {
@@ -48,7 +75,7 @@ const renderComponent = ({ event, state }: { event: Function; state: any }) => {
           </QueryClientProvider>
         </Provider>
       </BrowserRouter>
-    </RecoilRoot>
+    </RecoilRoot>,
   );
 };
 

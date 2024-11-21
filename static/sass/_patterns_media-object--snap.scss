@@ -82,5 +82,15 @@
         }
       }
     }
+
+    .developer-link {
+      color: $color-link;
+      cursor: pointer;
+      text-decoration: none;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
   }
 }
