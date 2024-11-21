@@ -6,22 +6,6 @@
 <script>
   window.CSRF_TOKEN = "{{ csrf_token() }}";
   
-  window.SNAP_SETTINGS_DATA = {
-    countries: {% if countries %}{{ countries|tojson }}{% else %}[]{% endif %},
-    publisher_name: "{% if publisher_name %}{{ publisher_name }}{% endif %}",
-    snap_title: "{% if snap_title %}{{ snap_title }}{% endif %}",
-    snap_name: "{% if snap_name %}{{ snap_name }}{% endif %}",
-    snap_id: "{% if snap_id %}{{ snap_id }}{% endif %}",
-    store: "{% if store %}{{ store }}{% endif %}",
-    status: "{% if status %}{{ status }}{% endif %}",
-    update_metadata_on_release: {% if update_metadata_on_release %}{{ update_metadata_on_release|tojson }}{% else %}false{% endif %},
-    private: {% if private %}{{ private|tojson }}{% else %}false{% endif %},
-    unlisted: {% if unlisted %}{{ unlisted|tojson }}{% else %}false{% endif %},
-    whitelist_countries: {% if whitelist_country_codes %}{{ whitelist_country_codes|tojson }}{% else %}[]{% endif %},
-    blacklist_countries: {% if blacklist_country_codes %}{{ blacklist_country_codes|tojson }}{% else %}[]{% endif %},
-    visibility_locked: {% if visibility_locked %}{{ visibility_locked|tojson }}{% else %}false{% endif %},
-  }
-
   window.SNAP_LISTING_DATA = {
     DNS_VERIFICATION_TOKEN: "{{ dns_verification_token }}",
   };
