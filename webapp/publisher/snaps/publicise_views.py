@@ -4,6 +4,7 @@ from canonicalwebteam.store_api.stores.snapstore import (
     SnapStore,
     SnapPublisher,
 )
+from canonicalwebteam.store_api.exceptions import StoreApiError
 
 # Local
 from webapp.helpers import api_publisher_session
@@ -17,13 +18,21 @@ publisher_api = SnapPublisher(api_publisher_session)
 def get_publicise_data(snap_name):
 
     snap_details = publisher_api.get_snap_info(snap_name, flask.session)
-    snap_public_details = store_api.get_item_details(snap_name, api_version=2)
+
+    try:
+        snap_public_details = store_api.get_item_details(
+            snap_name, api_version=2
+        )
+        trending = snap_public_details["snap"]["trending"]
+    except StoreApiError:
+        trending = False
 
     is_released = len(snap_details["channel_maps_list"]) > 0
 
+    print(snap_details)
     context = {
         "is_released": is_released,
-        "trending": snap_public_details["snap"]["trending"],
+        "trending": trending,
         "private": snap_details["private"],
     }
 
@@ -32,10 +41,4 @@ def get_publicise_data(snap_name):
 
 @login_required
 def get_publicise(snap_name):
-
-    snap_details = publisher_api.get_snap_info(snap_name, flask.session)
-
-    if snap_details["private"]:
-        return flask.abort(404, "No snap named {}".format(snap_name))
-
     return flask.render_template("store/publisher.html", snap_name=snap_name)
