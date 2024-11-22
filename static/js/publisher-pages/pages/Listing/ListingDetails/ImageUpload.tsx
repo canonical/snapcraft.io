@@ -136,8 +136,8 @@ function ImageUpload({
   };
 
   return (
-    <Row className="p-form__group p-form__group--top">
-      <Col size={2} data-tour={tourLabel}>
+    <Row className="p-form__group p-form__group--top" data-tour={tourLabel}>
+      <Col size={2}>
         <label htmlFor={fieldId} className="p-form__label">
           {label}:
         </label>
@@ -149,7 +149,7 @@ function ImageUpload({
 
         <input type="hidden" {...register(imageUrlFieldKey)} />
         <div style={hasDarkThemePreview ? darkThemeStyles : {}}>
-          <div className="snap-image-upload-container" data-tour={tourLabel}>
+          <div className="snap-image-upload-container">
             <div
               className={`snap-image-upload-drop-area ${
                 isDragging ? "is-dragging" : ""

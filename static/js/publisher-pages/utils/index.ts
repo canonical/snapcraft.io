@@ -7,6 +7,7 @@ import getDefaultListingData from "./getDefaultListingData";
 import shouldShowUpdateMetadataWarning from "./shouldShowUpdateMetadataWarning";
 import validateImageDimensions from "./validateImageDimensions";
 import addDateToFilename from "./addDateToFilename";
+import listingTourSteps from "./listingTourSteps";
 
 export {
   getSettingsData,
@@ -18,4 +19,5 @@ export {
   shouldShowUpdateMetadataWarning,
   validateImageDimensions,
   addDateToFilename,
+  listingTourSteps,
 };
