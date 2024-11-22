@@ -16,8 +16,21 @@ type ActiveDeviceMetric = {
   type: string;
 };
 
-function renderMetrics(metrics: Metrics) {
-  const activeDevices: {
+type TerritoriesMetric = {
+  metrics: {
+    [key: string]: {
+      code: string;
+      color_rgb: string;
+      name: string;
+      number_of_users: number;
+      percentage_of_users: number;
+    };
+  };
+  selector: string;
+};
+
+function renderActiveDevicesMetrics(metrics: ActiveDeviceMetric) {
+  let activeDevices: {
     series: Array<Series>;
     buckets: Array<string>;
   } = {
@@ -25,8 +38,8 @@ function renderMetrics(metrics: Metrics) {
     buckets: metrics.metrics.buckets,
   };
 
-  metrics.activeDevices.metrics.series.forEach((series) => {
-    const fullSeries = series.values.map((value) => {
+  metrics.metrics.series.forEach((series) => {
+    let fullSeries = series.values.map((value) => {
       return value === null ? 0 : value;
     });
     activeDevices.series.push({
@@ -35,17 +48,11 @@ function renderMetrics(metrics: Metrics) {
     });
   });
 
-  const graph = new ActiveDevicesGraph(
-    metrics.activeDevices.selector,
-    activeDevices,
-    {
-      stacked: true,
-      area: true,
-      graphType: metrics.activeDevices.type,
-      defaultTrack: metrics.defaultTrack,
-      annotations: metrics.activeDevices.annotations,
-    },
-  )
+  const graph = new ActiveDevicesGraph(metrics.selector, activeDevices, {
+    stacked: true,
+    area: true,
+    graphType: metrics.type,
+  })
     .render()
     // @ts-ignore
     .enableTooltip()
@@ -57,7 +64,7 @@ function renderMetrics(metrics: Metrics) {
     categories.addEventListener("mouseover", (e) => {
       const target = e.target as HTMLElement;
       const annotationHover = target.closest(
-        `[data-js="annotation-hover"]`,
+        `[data-js="annotation-hover"]`
       ) as HTMLElement;
       if (annotationHover) {
         const category = annotationHover.dataset.id;
@@ -68,7 +75,7 @@ function renderMetrics(metrics: Metrics) {
     categories.addEventListener("mouseout", (e) => {
       const target = e.target as HTMLElement;
       const annotationHover = target.closest(
-        `[data-js="annotation-hover"]`,
+        `[data-js="annotation-hover"]`
       ) as HTMLElement;
       if (annotationHover) {
         const category = annotationHover.dataset.id;
@@ -101,11 +108,11 @@ function renderPublisherMetrics(options: {
     {
       stacked: false,
       area: false,
-    },
+    }
   );
 
   const loader = document.querySelector(
-    ".snapcraft-metrics__loader",
+    ".snapcraft-metrics__loader"
   ) as HTMLElement;
 
   function getSnapDevices(snapList: any) {
@@ -137,10 +144,10 @@ function renderPublisherMetrics(options: {
           json.snaps.forEach(
             (snap: { series: Array<Series>; name: string }) => {
               const continuedDevices = snap.series.filter(
-                (singleSeries) => singleSeries.name === "continued",
+                (singleSeries) => singleSeries.name === "continued"
               )[0];
               const newDevices = snap.series.filter(
-                (singleSeries) => singleSeries.name === "new",
+                (singleSeries) => singleSeries.name === "new"
               )[0];
 
               let totalSeries: Array<number> = [];
@@ -149,12 +156,12 @@ function renderPublisherMetrics(options: {
                 totalSeries = continuedDevices.values.map(
                   (continuedValue, index) => {
                     return continuedValue + newDevices.values[index];
-                  },
+                  }
                 );
               } else {
                 console.log(
                   "There is no information available for continued or new devices.",
-                  snap.series,
+                  snap.series
                 );
               }
 
@@ -162,7 +169,7 @@ function renderPublisherMetrics(options: {
                 name: snap.name,
                 values: totalSeries,
               });
-            },
+            }
           );
 
           resolve(snaps);
@@ -172,7 +179,7 @@ function renderPublisherMetrics(options: {
   }
 
   const snaps_arr: Array<{ name: string; id: string }> = Object.keys(
-    options.snaps,
+    options.snaps
   ).map((key) => {
     return {
       name: key,
@@ -206,7 +213,7 @@ function renderPublisherMetrics(options: {
         _graph.rawData.buckets.length === 0
       ) {
         const dashboardMetrics = document.querySelector(
-          `[data-js="dashboard-metrics"]`,
+          `[data-js="dashboard-metrics"]`
         ) as HTMLElement;
 
         dashboardMetrics.classList.add("u-hide");
@@ -247,4 +254,8 @@ function renderPublisherMetrics(options: {
   getChunk(chunkedSnaps);
 }
 
-export { renderPublisherMetrics, renderTerritoriesMetrics };
+export {
+  renderActiveDevicesMetrics,
+  renderPublisherMetrics,
+  renderTerritoriesMetrics,
+};
