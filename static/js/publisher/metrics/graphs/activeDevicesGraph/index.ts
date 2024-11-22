@@ -37,7 +37,7 @@ class ActiveDevicesGraph {
         bottom: 30,
         left: 50,
       },
-      options.margin || {},
+      options.margin || {}
     );
 
     this.padding = Object.assign(
@@ -47,7 +47,7 @@ class ActiveDevicesGraph {
         bottom: 16,
         left: 16,
       },
-      options.padding || {},
+      options.padding || {}
     );
 
     this.width;
