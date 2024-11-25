@@ -2,32 +2,37 @@ import * as ReactQuery from "react-query";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { renderHook, waitFor } from "@testing-library/react";
 import useActiveDeviceMetrics from "../useActiveDeviceMetrics";
+import { ReactElement } from "react";
 
 describe("useActiveDeviceMetrics", () => {
   test("Calls useQuery", () => {
     const spy = jest.spyOn(ReactQuery, "useQuery").mockReturnValue({
       data: [],
       status: "success",
-      isFetcing: false,
-    } as any);
+      isFetching: false,
+    } as ReactQuery.UseQueryResult<unknown, unknown>);
 
     renderHook(() =>
       useActiveDeviceMetrics({
         period: "30d",
         snapId: "test-id",
         type: "version",
-      })
+      }),
     );
     expect(ReactQuery.useQuery).toHaveBeenCalled();
     spy.mockRestore();
   });
 
-  const createWrapper = () => {
+  function createWrapper(): ({
+    children,
+  }: {
+    children: ReactElement;
+  }) => JSX.Element {
     const queryClient = new QueryClient();
-    return ({ children }: any) => (
+    return ({ children }: { children: ReactElement }) => (
       <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
     );
-  };
+  }
 
   test("if the page size is set to less than 3 months, do not paginate ", async () => {
     global.fetch = jest.fn(() =>
@@ -54,7 +59,7 @@ describe("useActiveDeviceMetrics", () => {
             total_page_num: 1,
           }),
         ok: true,
-      })
+      }),
     ) as jest.Mock;
 
     const { result } = renderHook(
@@ -66,7 +71,7 @@ describe("useActiveDeviceMetrics", () => {
         }),
       {
         wrapper: createWrapper(),
-      }
+      },
     );
 
     await waitFor(() => expect(result.current.status).toBe("success"));
@@ -112,7 +117,7 @@ describe("useActiveDeviceMetrics", () => {
             total_page_num: 1,
           }),
         ok: true,
-      })
+      }),
     ) as jest.Mock;
 
     const { result } = renderHook(
@@ -124,7 +129,7 @@ describe("useActiveDeviceMetrics", () => {
         }),
       {
         wrapper: createWrapper(),
-      }
+      },
     );
 
     await waitFor(() => expect(result.current.status).toBe("success"));
@@ -139,7 +144,7 @@ describe("useActiveDeviceMetrics", () => {
         json: () => Promise.resolve(undefined),
         ok: false,
         status: 404,
-      })
+      }),
     ) as jest.Mock;
 
     const { result } = renderHook(
@@ -151,7 +156,7 @@ describe("useActiveDeviceMetrics", () => {
         }),
       {
         wrapper: createWrapper(),
-      }
+      },
     );
     await waitFor(() => expect(result.current.status).toBe("success"));
 

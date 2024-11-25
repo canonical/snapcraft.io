@@ -1,18 +1,26 @@
 import { useMutation } from "react-query";
+import { UseFormReset, FieldValues } from "react-hook-form";
 
 import { addDateToFilename, getListingChanges } from "../utils";
 
-import type { ListingData } from "../types";
+import type { SetStateBoolean, ListingData } from "../types";
+
+interface DirtyField {
+  [key: string]: unknown;
+}
 
 type Options = {
-  data: ListingData;
-  dirtyFields: any;
-  getDefaultData: Function;
-  refetch: Function;
-  reset: Function;
-  setShowSuccessNotification: Function;
-  setUpdateMetadataOnRelease: Function;
-  shouldShowUpdateMetadataWarning: Function;
+  data: {
+    banner_urls: string[];
+    snap_id: string;
+  };
+  dirtyFields: { [key: string]: boolean };
+  getDefaultData: (data: ListingData) => { [key: string]: unknown };
+  refetch: () => { data: ListingData };
+  reset: UseFormReset<FieldValues>;
+  setShowSuccessNotification: SetStateBoolean;
+  setUpdateMetadataOnRelease: SetStateBoolean;
+  shouldShowUpdateMetadataWarning: (dirtyFields: DirtyField) => boolean;
   snapName: string | undefined;
 };
 
@@ -28,7 +36,7 @@ function useMutateListingData({
   snapName,
 }: Options) {
   return useMutation({
-    mutationFn: async (values: any) => {
+    mutationFn: async (values: FieldValues) => {
       const formData = new FormData();
 
       const changes = getListingChanges(dirtyFields, values, data);
@@ -52,11 +60,16 @@ function useMutateListingData({
 
             formData.append("screenshots", newFile);
 
-            const imageIndex = changes.images.findIndex(
-              (image: any) => image.name === oldName,
-            );
-            changes.images[imageIndex].name = newFile.name;
-            changes.images[imageIndex].url = URL.createObjectURL(newFile);
+            const imageIndex =
+              changes?.images?.findIndex(
+                (image: { [key: string]: unknown }): boolean =>
+                  image.name === oldName,
+              ) || 0;
+
+            if (changes.images) {
+              changes.images[imageIndex].name = newFile.name;
+              changes.images[imageIndex].url = URL.createObjectURL(newFile);
+            }
           }
         });
       }
@@ -76,8 +89,8 @@ function useMutateListingData({
         throw new Error("There was a problem saving listing data");
       }
     },
-    onSuccess: async () => {
-      const response = await refetch();
+    onSuccess: () => {
+      const response = refetch();
       setShowSuccessNotification(true);
       reset(getDefaultData(response.data));
 

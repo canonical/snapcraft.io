@@ -17,7 +17,7 @@ const renderComponent = (isEmpty: boolean) => {
       <BrowserRouter>
         <ActiveDeviceMetrics isEmpty={isEmpty} onDataLoad={jest.fn()} />
       </BrowserRouter>
-    </QueryClientProvider>
+    </QueryClientProvider>,
   );
 };
 
@@ -82,12 +82,12 @@ jest.mock("react-router-dom", () => ({
 
 describe("ActiveDeviceMetrics", () => {
   beforeEach(() => {
-    // @ts-ignore
+    // @ts-expect-error Mock functions
     useSearchParams.mockReturnValue([new URLSearchParams()]);
   });
 
   test("renders the information correctly", async () => {
-    // @ts-ignore
+    // @ts-expect-error Mock functions
     useQuery.mockImplementation((params) => {
       if (params) {
         if (params.queryKey[0] === "activeDeviceMetrics") {
@@ -124,7 +124,7 @@ describe("ActiveDeviceMetrics", () => {
   });
 
   test("renders the error state", async () => {
-    // @ts-ignore
+    // @ts-expect-error Mock functions
     useQuery.mockImplementation((params) => {
       if (params) {
         if (params.queryKey[0] === "activeDeviceMetrics") {
@@ -158,13 +158,13 @@ describe("ActiveDeviceMetrics", () => {
 
     await waitFor(() => {
       expect(
-        screen.getByText("An error occurred. Please try again.")
+        screen.getByText("An error occurred. Please try again."),
       ).toBeInTheDocument();
     });
   });
 
   test("renders the loading state", async () => {
-    // @ts-ignore
+    // @ts-expect-error Mock functions
     useQuery.mockImplementation((params) => {
       if (params) {
         if (params.queryKey[0] === "activeDeviceMetrics") {
@@ -202,7 +202,7 @@ describe("ActiveDeviceMetrics", () => {
   });
 
   test("renders the empty state", async () => {
-    // @ts-ignore
+    // @ts-expect-error Mock functions
     useQuery.mockImplementation((params) => {
       if (params) {
         if (params.queryKey[0] === "activeDeviceMetrics") {

@@ -24,7 +24,7 @@ export default function formatImageChanges(
   }
 
   if (screenshotUrls.length) {
-    screenshotUrls.forEach((url, i) => {
+    screenshotUrls.forEach((url) => {
       images.push({
         url,
         type: "screenshot",

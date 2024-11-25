@@ -44,6 +44,7 @@ function Listing(): JSX.Element {
         </Strip>
       )}
 
+      {/* @ts-expect-error React Query and React Form aren't playing nicely */}
       {data && <ListingForm data={data} refetch={refetch} />}
     </>
   );

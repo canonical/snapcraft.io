@@ -9,7 +9,7 @@ global.fetch = jest.fn(() =>
   Promise.resolve({
     ok: true,
     json: () => Promise.resolve({}),
-  })
+  }),
 ) as jest.Mock;
 
 const mockSetUnregisterModalOpen = jest.fn();
@@ -68,7 +68,7 @@ describe("UnregisterSnapModal", () => {
           headers: {
             "X-CSRFToken": window["CSRF_TOKEN"],
           },
-        })
+        }),
       );
       expect(window.location.href).toBe("/snaps");
     });
@@ -80,7 +80,7 @@ describe("UnregisterSnapModal", () => {
       Promise.resolve({
         ok: false,
         json: () => Promise.resolve({ error: "Some error occurred" }),
-      })
+      }),
     );
     render(<UnregisterSnapModal {...defaultProps} />);
     await user.click(screen.getByText("Unregister"));
@@ -88,7 +88,7 @@ describe("UnregisterSnapModal", () => {
       expect(mockSetUnregisterModalOpen).toHaveBeenCalledWith(false);
       expect(mockSetUnregisterError).toHaveBeenCalledWith(true);
       expect(mockSetUnregisterErrorMessage).toHaveBeenCalledWith(
-        "Some error occurred"
+        "Some error occurred",
       );
     });
   });
@@ -97,7 +97,7 @@ describe("UnregisterSnapModal", () => {
     const user = userEvent.setup();
     console.error = jest.fn();
     (global.fetch as jest.Mock).mockImplementationOnce(() =>
-      Promise.reject("Fetch error")
+      Promise.reject("Fetch error"),
     );
     render(<UnregisterSnapModal {...defaultProps} />);
     await user.click(screen.getByText("Unregister"));

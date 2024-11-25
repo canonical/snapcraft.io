@@ -16,12 +16,14 @@ import DisconnectRepoActions from "./DisconnectRepoActions";
 
 import { githubDataState } from "../../state/atoms";
 
+import type { SetStateBoolean } from "../../types";
+
 function RepoConnected({
   autoTriggerBuild,
   setAutoTriggerBuild,
 }: {
   autoTriggerBuild: boolean;
-  setAutoTriggerBuild: Function;
+  setAutoTriggerBuild: SetStateBoolean;
 }): JSX.Element {
   const { snapId } = useParams();
   const githubData = useRecoilValue(githubDataState);

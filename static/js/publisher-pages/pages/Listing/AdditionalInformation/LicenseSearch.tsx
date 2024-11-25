@@ -4,6 +4,8 @@ import Downshift from "downshift";
 
 import debounce from "../../../../libs/debounce";
 
+import type { SetStateString } from "../../../types";
+
 type License = {
   key: string;
   name: string;
@@ -14,7 +16,7 @@ type Props = {
   license: string | undefined;
   register: UseFormRegister<FieldValues>;
   setValue: UseFormSetValue<FieldValues>;
-  setLicense: Function;
+  setLicense: SetStateString;
   originalLicense: string;
 };
 
@@ -170,9 +172,9 @@ function LicenseSearch({
             >
               {suggestions.map((item: License, index) => (
                 <li
+                  key={item.key}
                   className="p-list__item p-autocomplete__suggestion"
                   {...getItemProps({
-                    key: item.key,
                     index,
                     item,
                     style: {

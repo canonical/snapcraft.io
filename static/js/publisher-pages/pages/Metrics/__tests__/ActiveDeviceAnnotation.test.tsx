@@ -13,7 +13,7 @@ const renderComponent = () => {
       <BrowserRouter>
         <ActiveDeviceAnnotation snapId="test" />
       </BrowserRouter>
-    </QueryClientProvider>
+    </QueryClientProvider>,
   );
 };
 
@@ -52,7 +52,7 @@ jest.mock("react-query", () => ({
 
 describe("ActiveDeviceAnnotation", () => {
   test("renders the information correctly", async () => {
-    // @ts-ignore
+    // @ts-expect-error Mock functions
     useQuery.mockReturnValue({
       status: "success",
       data: mockMetricsAnnotation,
@@ -62,33 +62,33 @@ describe("ActiveDeviceAnnotation", () => {
 
     await waitFor(() => {
       const serverAndCloudElement = container.querySelector(
-        '[data-id="category-server-and-cloud"]'
+        '[data-id="category-server-and-cloud"]',
       );
       expect(serverAndCloudElement).toBeInTheDocument();
       expect(serverAndCloudElement).toHaveTextContent(
-        "Added to Server and cloud in January 2019"
+        "Added to Server and cloud in January 2019",
       );
 
       const categoryDevelopmentElement = container.querySelector(
-        '[data-id="category-development"]'
+        '[data-id="category-development"]',
       );
       expect(categoryDevelopmentElement).toBeInTheDocument();
       expect(categoryDevelopmentElement).toHaveTextContent(
-        "Added to Development in February 2019"
+        "Added to Development in February 2019",
       );
 
       const categoryFeaturedElement = container.querySelector(
-        '[data-id="category-featured"]'
+        '[data-id="category-featured"]',
       );
       expect(categoryFeaturedElement).toBeInTheDocument();
       expect(categoryFeaturedElement).toHaveTextContent(
-        "Featured snap since July 2024"
+        "Featured snap since July 2024",
       );
     });
   });
 
   test("renders empty annotations if the data is returned empty", async () => {
-    // @ts-ignore
+    // @ts-expect-error Mock functions
     useQuery.mockReturnValue({
       status: "success",
       data: {
@@ -102,7 +102,7 @@ describe("ActiveDeviceAnnotation", () => {
 
     await waitFor(() => {
       const serverAndCloudElement = container.querySelector(
-        '[data-id="category-server-and-cloud"]'
+        '[data-id="category-server-and-cloud"]',
       );
       expect(serverAndCloudElement).not.toBeInTheDocument();
     });

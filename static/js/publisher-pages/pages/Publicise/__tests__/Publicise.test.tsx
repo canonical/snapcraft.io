@@ -18,7 +18,7 @@ const renderComponent = (view?: "badges" | "cards" | undefined) => {
   );
 };
 
-let mockPubliciseData = {
+const mockPubliciseData = {
   is_released: true,
   private: false,
   trending: false,

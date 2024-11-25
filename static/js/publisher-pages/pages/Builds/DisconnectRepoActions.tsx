@@ -5,10 +5,10 @@ import { Button } from "@canonical/react-components";
 
 import { buildRepoConnectedState } from "../../state/atoms";
 
-import type { GithubData } from "../../types";
+import type { GithubData, SetStateBoolean } from "../../types";
 
 type Props = {
-  setDisconnectModalOpen: Function;
+  setDisconnectModalOpen: SetStateBoolean;
   githubData: GithubData | null;
 };
 

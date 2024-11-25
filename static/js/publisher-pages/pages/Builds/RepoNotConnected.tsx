@@ -5,12 +5,12 @@ import RepoSelector from "./RepoSelector";
 
 import { githubDataState } from "../../state/atoms";
 
-import type { GithubData } from "../../types/";
+import type { GithubData, SetStateBoolean } from "../../types/";
 
 function RepoNotConnected({
   setAutoTriggerBuild,
 }: {
-  setAutoTriggerBuild: Function;
+  setAutoTriggerBuild: SetStateBoolean;
 }): JSX.Element {
   const githubData = useRecoilValue<GithubData | null>(githubDataState);
 

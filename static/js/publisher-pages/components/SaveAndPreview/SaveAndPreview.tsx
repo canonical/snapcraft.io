@@ -1,12 +1,15 @@
 import { useRef } from "react";
+import { UseFormReset, FieldValues } from "react-hook-form";
 import { Row, Col, Button } from "@canonical/react-components";
 
 import debounce from "../../../libs/debounce";
 
+import type { SettingsData } from "../../types";
+
 type Props = {
   snapName: string;
   isDirty: boolean;
-  reset: Function;
+  reset: UseFormReset<FieldValues> | UseFormReset<SettingsData>;
   isSaving: boolean;
   isValid: boolean;
   showPreview?: boolean;
@@ -25,7 +28,7 @@ function SaveAndPreview({
   const handleScroll = () => {
     stickyBar?.current?.classList.toggle(
       "sticky-shadow",
-      stickyBar?.current?.getBoundingClientRect()?.top === 0
+      stickyBar?.current?.getBoundingClientRect()?.top === 0,
     );
   };
 

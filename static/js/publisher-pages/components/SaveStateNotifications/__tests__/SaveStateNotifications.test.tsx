@@ -4,11 +4,13 @@ import "@testing-library/jest-dom";
 
 import SaveStateNotifications from "../SaveStateNotifications";
 
+import type { SetStateBoolean } from "../../../types";
+
 type Options = {
   hasSaved?: boolean;
-  setHasSaved?: Function;
+  setHasSaved?: SetStateBoolean;
   savedError?: boolean | Array<{ message: string }>;
-  setSavedError?: Function;
+  setSavedError?: SetStateBoolean;
 };
 
 const renderComponent = (options: Options) => {
@@ -17,8 +19,9 @@ const renderComponent = (options: Options) => {
       hasSaved={options.hasSaved || false}
       setHasSaved={options.setHasSaved || jest.fn()}
       savedError={options.savedError || false}
+      // @ts-expect-error: This is a mock for testing purposes
       setSavedError={options.setSavedError || jest.fn()}
-    />
+    />,
   );
 };
 
@@ -26,14 +29,14 @@ describe("SaveStateNotifications", () => {
   test("shows success notification if saved", () => {
     renderComponent({ hasSaved: true });
     expect(
-      screen.getByRole("heading", { name: "Changes applied successfully." })
+      screen.getByRole("heading", { name: "Changes applied successfully." }),
     ).toBeInTheDocument();
   });
 
   test("doesn't show success notification if not saved", () => {
     renderComponent({ hasSaved: false });
     expect(
-      screen.queryByRole("heading", { name: "Changes applied successfully." })
+      screen.queryByRole("heading", { name: "Changes applied successfully." }),
     ).not.toBeInTheDocument();
   });
 
@@ -42,7 +45,7 @@ describe("SaveStateNotifications", () => {
     const setHasSaved = jest.fn();
     renderComponent({ hasSaved: true, setHasSaved });
     await user.click(
-      screen.getByRole("button", { name: "Close notification" })
+      screen.getByRole("button", { name: "Close notification" }),
     );
     expect(setHasSaved).toHaveBeenCalled();
   });
@@ -50,14 +53,14 @@ describe("SaveStateNotifications", () => {
   test("shows error notification if saved", () => {
     renderComponent({ savedError: true });
     expect(
-      screen.getByText(/Changes have not been saved./)
+      screen.getByText(/Changes have not been saved./),
     ).toBeInTheDocument();
   });
 
   test("doesn't show error notification if not saved", () => {
     renderComponent({ savedError: false });
     expect(
-      screen.queryByText(/Changes have not been saved./)
+      screen.queryByText(/Changes have not been saved./),
     ).not.toBeInTheDocument();
   });
 
@@ -82,7 +85,7 @@ describe("SaveStateNotifications", () => {
     const setHasSaved = jest.fn();
     renderComponent({ savedError: true, setHasSaved });
     await user.click(
-      screen.getByRole("button", { name: "Close notification" })
+      screen.getByRole("button", { name: "Close notification" }),
     );
     expect(setHasSaved).toHaveBeenCalled();
   });
@@ -92,7 +95,7 @@ describe("SaveStateNotifications", () => {
     const setSavedError = jest.fn();
     renderComponent({ savedError: true, setSavedError });
     await user.click(
-      screen.getByRole("button", { name: "Close notification" })
+      screen.getByRole("button", { name: "Close notification" }),
     );
     expect(setSavedError).toHaveBeenCalled();
   });

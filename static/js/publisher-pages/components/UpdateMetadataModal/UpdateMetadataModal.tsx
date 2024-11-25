@@ -1,9 +1,11 @@
+import { Dispatch, SetStateAction } from "react";
 import { Modal, Button } from "@canonical/react-components";
+import { FieldValues, SubmitHandler } from "react-hook-form";
 
 type Props = {
-  setShowMetadataWarningModal: Function;
-  submitForm: Function;
-  formData: any;
+  setShowMetadataWarningModal: Dispatch<SetStateAction<boolean>>;
+  submitForm: SubmitHandler<FieldValues>;
+  formData: FieldValues | null;
 };
 
 function UpdateMetadataModal({
@@ -33,7 +35,9 @@ function UpdateMetadataModal({
             className="u-no-margin--bottom u-no-margin--right"
             appearance="positive"
             onClick={() => {
-              submitForm(formData);
+              if (formData !== null) {
+                submitForm(formData);
+              }
               setShowMetadataWarningModal(false);
             }}
           >

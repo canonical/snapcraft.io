@@ -23,7 +23,7 @@ import type { ListingData } from "../../../types";
 
 type Props = {
   data: ListingData;
-  refetch: Function;
+  refetch: () => { data: ListingData };
 };
 
 function ListingForm({ data, refetch }: Props): JSX.Element {
@@ -54,9 +54,9 @@ function ListingForm({ data, refetch }: Props): JSX.Element {
   const [showMetadataWarningModal, setShowMetadataWarningModal] =
     useState<boolean>(false);
 
-  const [formValues, setFormValues] = useState<{ [key: string]: any } | null>(
-    null,
-  );
+  const [formValues, setFormValues] = useState<{
+    [key: string]: FieldValues;
+  } | null>(null);
 
   const { mutate, isLoading } = useMutateListingData({
     data,
@@ -74,7 +74,7 @@ function ListingForm({ data, refetch }: Props): JSX.Element {
     <>
       <form
         className="p-form"
-        onSubmit={handleSubmit((values: any) => {
+        onSubmit={handleSubmit((values: FieldValues) => {
           if (
             data.update_metadata_on_release &&
             shouldShowUpdateMetadataWarning(dirtyFields)
@@ -117,6 +117,7 @@ function ListingForm({ data, refetch }: Props): JSX.Element {
             {showMetadataWarningModal ? (
               <UpdateMetadataModal
                 setShowMetadataWarningModal={setShowMetadataWarningModal}
+                // @ts-expect-error React Query and React Form aren't playing nicely
                 submitForm={mutate}
                 formData={formValues}
               />

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useForm, useWatch } from "react-hook-form";
+import { FieldValues, useForm, useWatch } from "react-hook-form";
 import {
   Button,
   Form,
@@ -37,7 +37,7 @@ function SettingsForm({ settings }: Props) {
   const [unregisterErrorMessage, setUnregisterErrorMessage] = useState("");
   const [unregisterModalOpen, setUnregisterModalOpen] = useState(false);
   const [isUsersSnap, setIsUsersSnap] = useState(false);
-  const [formData, setFormData] = useState({});
+  const [formData, setFormData] = useState(settings);
   const [showMetadataWarningModal, setShowMetadataWarningModal] =
     useState(false);
 
@@ -49,14 +49,14 @@ function SettingsForm({ settings }: Props) {
     getValues,
     setValue,
     control,
-  } = useForm({
+  } = useForm<FieldValues>({
     defaultValues: settingsData,
     mode: "onChange",
   });
 
   const isDirty = formState.isDirty;
   const isValid = formState.isValid;
-  const dirtyFields: { [key: string]: any } = formState.dirtyFields;
+  const dirtyFields: { [key: string]: unknown } = formState.dirtyFields;
 
   const whitelistCountryKeyValues = useWatch({
     control,
@@ -68,7 +68,7 @@ function SettingsForm({ settings }: Props) {
     name: "blacklist_country_keys",
   });
 
-  const onSubmit = (data: any) => {
+  const onSubmit = (data: SettingsData) => {
     if (getValues("update_metadata_on_release") && dirtyFields.visibility) {
       setShowMetadataWarningModal(true);
       setFormData(data);
@@ -77,7 +77,7 @@ function SettingsForm({ settings }: Props) {
     }
   };
 
-  const submitForm = async (data: any) => {
+  const submitForm = async (data: SettingsData) => {
     setIsSaving(true);
     setHasSaved(false);
     setSavedError(false);
@@ -129,6 +129,14 @@ function SettingsForm({ settings }: Props) {
     window.scrollTo(0, 0);
   };
 
+  const uppercaseStatusString = (status: string | undefined) => {
+    if (!status) {
+      return "";
+    }
+
+    return status.charAt(0).toUpperCase() + status.slice(1);
+  };
+
   useEffect(() => {
     if (whitelistCountryKeyValues) {
       setValue("blacklist_country_keys", "");
@@ -170,6 +178,7 @@ function SettingsForm({ settings }: Props) {
           </Notification>
         </div>
       )}
+      {/* @ts-expect-error React Query and React Form aren't playing nicely */}
       <Form onSubmit={handleSubmit(onSubmit)} stacked={true}>
         <SaveAndPreview
           snapName={settingsData?.snap_name}
@@ -399,9 +408,9 @@ function SettingsForm({ settings }: Props) {
 
           <Row className="p-form__group">
             <Col size={2}>
-              <label className="p-form__label" id="collaboration-label">
+              <span className="p-form__label" id="collaboration-label">
                 Collaboration:
-              </label>
+              </span>
             </Col>
             <Col size={8}>
               <div
@@ -423,9 +432,9 @@ function SettingsForm({ settings }: Props) {
 
           <Row className="p-form__group">
             <Col size={2}>
-              <label className="p-form__label" id="store-label">
+              <span className="p-form__label" id="store-label">
                 Store:
-              </label>
+              </span>
             </Col>
             <Col size={8}>
               <div className="p-form__control" aria-labelledby="store-label">
@@ -448,9 +457,9 @@ function SettingsForm({ settings }: Props) {
               />
             )}
             <Col size={2}>
-              <label className="p-form__label" id="status-label">
+              <span className="p-form__label" id="status-label">
                 Status:
-              </label>
+              </span>
             </Col>
             <Col size={8}>
               <div className="p-form__control" aria-labelledby="status-label">
@@ -481,8 +490,7 @@ function SettingsForm({ settings }: Props) {
                     )}
                   </div>
                 ) : (
-                  (settingsData?.status).charAt(0).toUpperCase() +
-                  (settingsData?.status).slice(1)
+                  uppercaseStatusString(settingsData?.status)
                 )}
               </div>
             </Col>
@@ -500,10 +508,10 @@ function SettingsForm({ settings }: Props) {
           </Row>
         </Strip>
       </Form>
-
       {showMetadataWarningModal ? (
         <UpdateMetadataModal
           setShowMetadataWarningModal={setShowMetadataWarningModal}
+          // @ts-expect-error React Query and React Form aren't playing nicely
           submitForm={submitForm}
           formData={formData}
         />

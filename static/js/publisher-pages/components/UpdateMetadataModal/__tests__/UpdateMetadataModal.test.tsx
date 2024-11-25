@@ -6,7 +6,26 @@ import UpdateMetadataModal from "../UpdateMetadataModal";
 
 const setShowMetadataWarningModal = jest.fn();
 const submitForm = jest.fn();
-const formData = {};
+const formData = {
+  blacklist_countries: [],
+  blacklist_country_keys: "",
+  countries: [],
+  country_keys_status: "",
+  private: false,
+  publisher_name: "",
+  snap_id: "",
+  snap_name: "",
+  snap_title: "",
+  status: "",
+  store: "",
+  territory_distribution_status: "",
+  unlisted: false,
+  update_metadata_on_release: false,
+  visibility: "",
+  visibility_locked: false,
+  whitelist_countries: [],
+  whitelist_country_keys: "",
+};
 
 const renderComponent = () => {
   return render(
@@ -14,7 +33,7 @@ const renderComponent = () => {
       setShowMetadataWarningModal={setShowMetadataWarningModal}
       submitForm={submitForm}
       formData={formData}
-    />
+    />,
   );
 };
 

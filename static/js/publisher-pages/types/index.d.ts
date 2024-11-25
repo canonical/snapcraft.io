@@ -80,3 +80,11 @@ export type GithubData = {
     name: string;
   };
 };
+
+export type SetStateBoolean = (
+  value: boolean | ((prevVar: boolean) => boolean),
+) => void;
+
+export type SetStateString = (
+  value: string | ((prevVar: string) => string),
+) => void;

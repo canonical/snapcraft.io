@@ -17,7 +17,7 @@ const renderComponent = (isEmpty: boolean) => {
       <BrowserRouter>
         <TerritoryMetrics isEmpty={isEmpty} onDataLoad={jest.fn()} />
       </BrowserRouter>
-    </QueryClientProvider>
+    </QueryClientProvider>,
   );
 };
 
@@ -53,12 +53,12 @@ jest.mock("react-router-dom", () => ({
 
 describe("ActiveDeviceMetrics", () => {
   beforeEach(() => {
-    // @ts-ignore
+    // @ts-expect-error Mock functions
     useSearchParams.mockReturnValue([new URLSearchParams()]);
   });
 
   test("renders the information correctly", async () => {
-    // @ts-ignore
+    // @ts-expect-error Mock functions
     useQuery.mockImplementation(() => ({
       status: "success",
       data: mockTerritoryMetrics,
@@ -73,7 +73,7 @@ describe("ActiveDeviceMetrics", () => {
   });
 
   test("renders the error state", async () => {
-    // @ts-ignore
+    // @ts-expect-error Mock functions
     useQuery.mockImplementation(() => ({
       status: "error",
       data: undefined,
@@ -83,13 +83,13 @@ describe("ActiveDeviceMetrics", () => {
 
     await waitFor(() => {
       expect(
-        screen.getByText("An error occurred. Please try again.")
+        screen.getByText("An error occurred. Please try again."),
       ).toBeInTheDocument();
     });
   });
 
   test("renders the loading state", async () => {
-    // @ts-ignore
+    // @ts-expect-error Mock functions
     useQuery.mockImplementation(() => ({
       isFetching: true,
       data: undefined,
@@ -103,7 +103,7 @@ describe("ActiveDeviceMetrics", () => {
   });
 
   test("renders the empty state", async () => {
-    // @ts-ignore
+    // @ts-expect-error Mock functions
     useQuery.mockImplementation(() => ({
       status: "success",
       data: undefined,

@@ -1,17 +1,17 @@
-import { ChangeEvent, ChangeEventHandler, useState } from "react";
+import { ChangeEvent, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useSetRecoilState } from "recoil";
 import { Strip, Row, Col, Select, Button } from "@canonical/react-components";
 
 import { buildRepoConnectedState } from "../../state/atoms";
 
-import type { GithubData } from "../../types/";
+import type { GithubData, SetStateBoolean } from "../../types/";
 
 type Repo = { name: string; nameWithOwner: string };
 
 type Props = {
   githubData: GithubData;
-  setAutoTriggerBuild: Function;
+  setAutoTriggerBuild: SetStateBoolean;
 };
 
 function RepoSelector({ githubData, setAutoTriggerBuild }: Props) {
