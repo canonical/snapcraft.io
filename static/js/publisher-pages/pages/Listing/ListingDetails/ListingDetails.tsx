@@ -73,14 +73,14 @@ function ListingDetails({
         hasDarkThemePreview={true}
       />
 
-      <Row className="p-form__group">
-        <Col size={2} data-tour="listing-title">
+      <Row className="p-form__group" data-tour="listing-title">
+        <Col size={2}>
           <label htmlFor="title" className="p-form__label">
             Title:
           </label>
         </Col>
         <Col size={8}>
-          <div className="p-form__control" data-tour="listing-title">
+          <div className="p-form__control">
             <input
               type="text"
               id="title"
@@ -91,14 +91,14 @@ function ListingDetails({
         </Col>
       </Row>
 
-      <Row className="p-form__group">
-        <Col size={2} data-tour="listing-category">
+      <Row className="p-form__group" data-tour="listing-category">
+        <Col size={2}>
           <label htmlFor="primary_category" className="p-form__label">
             Category:
           </label>
         </Col>
         <Col size={5}>
-          <div className="p-form__control" data-tour="listing-category">
+          <div className="p-form__control">
             <select
               id="primary_category"
               defaultValue={data.primary_category}
@@ -191,7 +191,7 @@ function ListingDetails({
           <label htmlFor="video_urls">Video:</label>
         </Col>
         <Col size={8}>
-          <div className="p-form__control" data-tour="listing-video">
+          <div className="p-form__control">
             <input
               type="url"
               id="video_urls"
@@ -235,12 +235,12 @@ function ListingDetails({
         tourLabel="listing-banner"
       />
 
-      <Row className="p-form__group">
-        <Col size={2} data-tour="listing-summary">
+      <Row className="p-form__group" data-tour="listing-summary">
+        <Col size={2}>
           <label htmlFor="video_urls">Summary:</label>
         </Col>
         <Col size={8}>
-          <div className="p-form__control" data-tour="listing-summary">
+          <div className="p-form__control">
             <input
               type="text"
               id="summary"
@@ -258,7 +258,6 @@ function ListingDetails({
         <Col size={8}>
           <div className="p-form__control">
             <textarea
-              data-tour="listing-description"
               id="description"
               defaultValue={data.description}
               rows={10}

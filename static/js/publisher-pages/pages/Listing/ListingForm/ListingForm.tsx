@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { useForm, useFormState, FieldValues } from "react-hook-form";
 import { Strip, Notification } from "@canonical/react-components";
@@ -9,12 +9,13 @@ import ContactInformation from "../ContactInformation";
 import AdditionalInformation from "../AdditionalInformation";
 import PreviewForm from "../PreviewForm";
 import UpdateMetadataModal from "../../../components/UpdateMetadataModal";
+import Tour from "../../../components/Tour";
 
 import {
   shouldShowUpdateMetadataWarning,
   getDefaultListingData,
+  listingTourSteps,
 } from "../../../utils";
-import { initListingTour } from "../../../../publisher/tour";
 
 import { useMutateListingData } from "../../../hooks";
 
@@ -69,30 +70,6 @@ function ListingForm({ data, refetch }: Props): JSX.Element {
     snapName: snapId,
   });
 
-  useEffect(() => {
-    const tourContainer = document.getElementById(
-      "tour-container",
-    ) as HTMLElement;
-
-    if (snapId) {
-      initListingTour({
-        snapName: snapId,
-        container: tourContainer,
-        formFields: {
-          title: data.title,
-          snap_name: snapId,
-          categories: [],
-          video_urls: [],
-          images: [],
-          summary: data.summary,
-          website: [],
-          contact: [],
-        },
-        steps: data.tour_steps,
-      });
-    }
-  }, []);
-
   return (
     <>
       <form
@@ -109,6 +86,7 @@ function ListingForm({ data, refetch }: Props): JSX.Element {
           }
         })}
       >
+        <Tour steps={listingTourSteps} />
         <SaveAndPreview
           snapName={snapId || ""}
           isDirty={formState.isDirty}
@@ -199,7 +177,6 @@ function ListingForm({ data, refetch }: Props): JSX.Element {
         </Strip>
       </form>
       {snapId && <PreviewForm snapName={snapId} getValues={getValues} />}
-      <div id="tour-container" />
     </>
   );
 }

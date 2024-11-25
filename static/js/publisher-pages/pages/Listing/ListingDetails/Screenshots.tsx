@@ -79,13 +79,16 @@ function Screenshots({ register, control, getValues, setValue }: Props) {
   };
 
   return (
-    <Row className="p-form__group p-form__group--top">
-      <Col size={2} data-tour="listing-images">
+    <Row
+      className="p-form__group p-form__group--top"
+      data-tour="listing-images"
+    >
+      <Col size={2}>
         <label htmlFor={fieldId} className="p-form__label">
           Images:
         </label>
       </Col>
-      <Col size={8} data-tour="listing-images">
+      <Col size={8}>
         {!imageIsValid && (
           <Notification severity="negative">{imageVaidationError}</Notification>
         )}
