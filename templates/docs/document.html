@@ -125,6 +125,13 @@
               <li class="p-table-of-contents__item">
                 <a class="p-table-of-contents__link" href="#{{ heading.heading_slug }}">{{ heading.heading_text }}</a>
               </li>
+              {% if heading.children %}
+                <ul class="p-table-of-contents__list">
+                {% for child in heading.children %}
+                  <li class="p-table-of-contents__item"><a class="p-table-of-contents__link" href="#{{ child.heading_slug }}">{{ child.heading_text }}</a></li>
+                  {% endfor %}
+                </ul>
+              {% endif %}
               {% endfor %}
             </ul>
           </nav>
