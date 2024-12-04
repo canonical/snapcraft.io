@@ -5,18 +5,19 @@ import useActiveDeviceMetrics from "../useActiveDeviceMetrics";
 
 describe("useActiveDeviceMetrics", () => {
   test("Calls useQuery", () => {
+    // @ts-expect-error Mock for tests
     const spy = jest.spyOn(ReactQuery, "useQuery").mockReturnValue({
       data: [],
       status: "success",
       isFetcing: false,
-    } as any);
+    } as { data: []; status: string; isFetching: boolean });
 
     renderHook(() =>
       useActiveDeviceMetrics({
         period: "30d",
         snapId: "test-id",
         type: "version",
-      })
+      }),
     );
     expect(ReactQuery.useQuery).toHaveBeenCalled();
     spy.mockRestore();
@@ -24,7 +25,7 @@ describe("useActiveDeviceMetrics", () => {
 
   const createWrapper = () => {
     const queryClient = new QueryClient();
-    return ({ children }: any) => (
+    return ({ children }: { children: JSX.Element }) => (
       <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
     );
   };
@@ -54,7 +55,7 @@ describe("useActiveDeviceMetrics", () => {
             total_page_num: 1,
           }),
         ok: true,
-      })
+      }),
     ) as jest.Mock;
 
     const { result } = renderHook(
@@ -66,7 +67,7 @@ describe("useActiveDeviceMetrics", () => {
         }),
       {
         wrapper: createWrapper(),
-      }
+      },
     );
 
     await waitFor(() => expect(result.current.status).toBe("success"));
@@ -112,7 +113,7 @@ describe("useActiveDeviceMetrics", () => {
             total_page_num: 1,
           }),
         ok: true,
-      })
+      }),
     ) as jest.Mock;
 
     const { result } = renderHook(
@@ -124,7 +125,7 @@ describe("useActiveDeviceMetrics", () => {
         }),
       {
         wrapper: createWrapper(),
-      }
+      },
     );
 
     await waitFor(() => expect(result.current.status).toBe("success"));
@@ -139,7 +140,7 @@ describe("useActiveDeviceMetrics", () => {
         json: () => Promise.resolve(undefined),
         ok: false,
         status: 404,
-      })
+      }),
     ) as jest.Mock;
 
     const { result } = renderHook(
@@ -151,7 +152,7 @@ describe("useActiveDeviceMetrics", () => {
         }),
       {
         wrapper: createWrapper(),
-      }
+      },
     );
     await waitFor(() => expect(result.current.status).toBe("success"));
 

@@ -1,6 +1,13 @@
 import { useState, useEffect } from "react";
 import Downshift from "downshift";
-import { useWatch } from "react-hook-form";
+import {
+  useWatch,
+  UseFormRegister,
+  UseFormSetValue,
+  UseFormGetValues,
+  Control,
+  FieldValues,
+} from "react-hook-form";
 
 type DataItem = {
   key: string;
@@ -11,10 +18,10 @@ type Props = {
   data: Array<DataItem>;
   field: string;
   currentValues: Array<string>;
-  register: Function;
-  setValue: Function;
-  getValues: Function;
-  control: any;
+  register: UseFormRegister<FieldValues>;
+  setValue: UseFormSetValue<FieldValues>;
+  getValues: UseFormGetValues<FieldValues>;
+  control: Control<FieldValues>;
   disabled?: boolean;
 };
 
@@ -83,7 +90,7 @@ function SearchAutocomplete({
                 className="p-icon--close p-multiselect__item-remove"
                 onClick={() => {
                   const newSelections = selections.filter(
-                    (item: DataItem) => item.key !== suggestion.key
+                    (item: DataItem) => item.key !== suggestion.key,
                   );
 
                   const newSelectionsKeys = getNewSelectionKeys(newSelections);
@@ -115,13 +122,13 @@ function SearchAutocomplete({
                   (item) =>
                     !inputValue ||
                     item.key.toLowerCase().includes(inputValue) ||
-                    item.name.toLowerCase().includes(inputValue)
+                    item.name.toLowerCase().includes(inputValue),
                 )
                 .map((item, index) => (
                   <li
+                    key={item.key}
                     className="p-multiselect__option"
                     {...getItemProps({
-                      key: item.key,
                       index,
                       item,
                       style: {

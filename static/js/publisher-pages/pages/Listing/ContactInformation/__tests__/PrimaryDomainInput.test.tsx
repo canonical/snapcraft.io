@@ -42,7 +42,7 @@ const mockUseFormReturnValue = {
 
 const renderComponent = (
   data: ListingData,
-  defaultValues: { [key: string]: any },
+  defaultValues: { [key: string]: unknown },
 ) => {
   const Component = () => {
     const { register, getFieldState, getValues } = useForm({
@@ -70,10 +70,10 @@ const renderComponent = (
 describe("PrimaryDomainInput", () => {
   it("shows as verified if domain is verified", () => {
     mockUseQueryReturnValue.data.primary_domain = true;
-    // @ts-ignore
+    // @ts-expect-error mocks
     useQuery.mockImplementation(() => mockUseQueryReturnValue);
 
-    // @ts-ignore
+    // @ts-expect-error mocks
     useForm.mockImplementation(() => mockUseFormReturnValue);
 
     renderComponent(mockListingData, {
@@ -84,7 +84,7 @@ describe("PrimaryDomainInput", () => {
 
   it("shows message if verified domain is changed", async () => {
     mockUseQueryReturnValue.data.primary_domain = true;
-    // @ts-ignore
+    // @ts-expect-error mocks
     useQuery.mockImplementation(() => mockUseQueryReturnValue);
 
     mockUseFormReturnValue.getFieldState = jest.fn().mockReturnValue({
@@ -95,7 +95,7 @@ describe("PrimaryDomainInput", () => {
     mockUseFormReturnValue.getValues = jest
       .fn()
       .mockReturnValue("https://example.comabc");
-    // @ts-ignore
+    // @ts-expect-error mocks
     useForm.mockImplementation(() => mockUseFormReturnValue);
 
     const user = userEvent.setup();
@@ -113,7 +113,7 @@ describe("PrimaryDomainInput", () => {
 
   it("doesn't show message if only verified domain path is changed", async () => {
     mockUseQueryReturnValue.data.primary_domain = true;
-    // @ts-ignore
+    // @ts-expect-error mocks
     useQuery.mockImplementation(() => mockUseQueryReturnValue);
 
     mockUseFormReturnValue.getFieldState = jest.fn().mockReturnValue({
@@ -125,7 +125,7 @@ describe("PrimaryDomainInput", () => {
       .fn()
       .mockReturnValue("https://example.com");
 
-    // @ts-ignore
+    // @ts-expect-error mocks
     useForm.mockImplementation(() => mockUseFormReturnValue);
 
     const user = userEvent.setup();
@@ -141,14 +141,14 @@ describe("PrimaryDomainInput", () => {
   it("shows message if verified domain is in no path list", async () => {
     mockUseQueryReturnValue.data.primary_domain = true;
 
-    // @ts-ignore
+    // @ts-expect-error mocks
     useQuery.mockImplementation(() => mockUseQueryReturnValue);
 
     mockUseFormReturnValue.getValues = jest
       .fn()
       .mockReturnValue("https://launchpad.net/path");
 
-    // @ts-ignore
+    // @ts-expect-error mocks
     useForm.mockImplementation(() => mockUseFormReturnValue);
     const user = userEvent.setup();
     renderComponent(
@@ -165,7 +165,7 @@ describe("PrimaryDomainInput", () => {
   it("'Verified ownership' button opens modal with token", async () => {
     mockUseQueryReturnValue.data.primary_domain = true;
 
-    // @ts-ignore
+    // @ts-expect-error mocks
     useQuery.mockImplementation(() => mockUseQueryReturnValue);
 
     mockUseFormReturnValue.getFieldState = jest.fn().mockReturnValue({
@@ -173,7 +173,7 @@ describe("PrimaryDomainInput", () => {
       isDirty: false,
     });
 
-    // @ts-ignore
+    // @ts-expect-error mocks
     useForm.mockImplementation(() => mockUseFormReturnValue);
 
     const user = userEvent.setup();
@@ -194,10 +194,10 @@ describe("PrimaryDomainInput", () => {
   it("shows 'Verify ownership' button if not verified", () => {
     mockUseQueryReturnValue.data.primary_domain = false;
 
-    // @ts-ignore
+    // @ts-expect-error mocks
     useQuery.mockImplementation(() => mockUseQueryReturnValue);
 
-    // @ts-ignore
+    // @ts-expect-error mocks
     useForm.mockImplementation(() => mockUseFormReturnValue);
 
     renderComponent(mockListingData, {
@@ -212,7 +212,7 @@ describe("PrimaryDomainInput", () => {
   it("'Verify ownership' button opens modal with token", async () => {
     mockUseQueryReturnValue.data.primary_domain = false;
 
-    // @ts-ignore
+    // @ts-expect-error mocks
     useQuery.mockImplementation(() => mockUseQueryReturnValue);
 
     mockUseFormReturnValue.getFieldState = jest.fn().mockReturnValue({
@@ -220,7 +220,7 @@ describe("PrimaryDomainInput", () => {
       isDirty: false,
     });
 
-    // @ts-ignore
+    // @ts-expect-error mocks
     useForm.mockImplementation(() => mockUseFormReturnValue);
 
     const user = userEvent.setup();
@@ -239,7 +239,7 @@ describe("PrimaryDomainInput", () => {
   it("'Verify ownership' button is disabled if field is dirty", async () => {
     mockUseQueryReturnValue.data.primary_domain = false;
 
-    // @ts-ignore
+    // @ts-expect-error mocks
     useQuery.mockImplementation(() => mockUseQueryReturnValue);
 
     mockUseFormReturnValue.getFieldState = jest.fn().mockReturnValue({
@@ -247,10 +247,9 @@ describe("PrimaryDomainInput", () => {
       isDirty: true,
     });
 
-    // @ts-ignore
+    // @ts-expect-error mocks
     useForm.mockImplementation(() => mockUseFormReturnValue);
 
-    const user = userEvent.setup();
     renderComponent(mockListingData, {
       primary_website: "https://example.com",
     });

@@ -56,7 +56,7 @@ function SettingsForm({ settings }: Props) {
 
   const isDirty = formState.isDirty;
   const isValid = formState.isValid;
-  const dirtyFields: { [key: string]: any } = formState.dirtyFields;
+  const dirtyFields: { [key: string]: unknown } = formState.dirtyFields;
 
   const whitelistCountryKeyValues = useWatch({
     control,
@@ -68,7 +68,7 @@ function SettingsForm({ settings }: Props) {
     name: "blacklist_country_keys",
   });
 
-  const onSubmit = (data: any) => {
+  const onSubmit = (data: SettingsData) => {
     if (getValues("update_metadata_on_release") && dirtyFields.visibility) {
       setShowMetadataWarningModal(true);
       setFormData(data);
@@ -77,7 +77,7 @@ function SettingsForm({ settings }: Props) {
     }
   };
 
-  const submitForm = async (data: any) => {
+  const submitForm = async (data: SettingsData) => {
     setIsSaving(true);
     setHasSaved(false);
     setSavedError(false);
@@ -312,9 +312,13 @@ function SettingsForm({ settings }: Props) {
                     data={countries}
                     field="whitelist_country_keys"
                     currentValues={settingsData?.whitelist_countries}
+                    // @ts-expect-error Conflict between React Query and React Hook Form
                     register={register}
+                    // @ts-expect-error Conflict between React Query and React Hook Form
                     setValue={setValue}
+                    // @ts-expect-error Conflict between React Query and React Hook Form
                     getValues={getValues}
+                    // @ts-expect-error Conflict between React Query and React Hook Form
                     control={control}
                     disabled={getValues("country_keys_status") === "exclude"}
                   />
@@ -335,9 +339,13 @@ function SettingsForm({ settings }: Props) {
                     data={countries}
                     field="blacklist_country_keys"
                     currentValues={settingsData?.blacklist_countries}
+                    // @ts-expect-error Conflict between React Query and React Hook Form
                     register={register}
+                    // @ts-expect-error Conflict between React Query and React Hook Form
                     setValue={setValue}
+                    // @ts-expect-error Conflict between React Query and React Hook Form
                     getValues={getValues}
+                    // @ts-expect-error Conflict between React Query and React Hook Form
                     control={control}
                     disabled={getValues("country_keys_status") === "include"}
                   />
@@ -504,6 +512,7 @@ function SettingsForm({ settings }: Props) {
       {showMetadataWarningModal ? (
         <UpdateMetadataModal
           setShowMetadataWarningModal={setShowMetadataWarningModal}
+          // @ts-expect-error Conflict between React Query and React Hook Form
           submitForm={submitForm}
           formData={formData}
         />

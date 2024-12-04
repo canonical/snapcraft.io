@@ -1,4 +1,11 @@
 import { SyntheticEvent } from "react";
+import {
+  UseFormGetValues,
+  UseFieldArrayRemove,
+  UseFormSetValue,
+  UseFormRegister,
+  FieldValues,
+} from "react-hook-form";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 
@@ -6,11 +13,11 @@ type Props = {
   field: { id: string };
   index: number;
   screenshotUrls: Array<string>;
-  getValues: Function;
-  removeScreenshotUrl: Function;
-  setValue: Function;
-  register: Function;
-  setImage: Function;
+  getValues: UseFormGetValues<FieldValues>;
+  removeScreenshotUrl: UseFieldArrayRemove;
+  setValue: UseFormSetValue<FieldValues>;
+  register: UseFormRegister<FieldValues>;
+  setImage: (arg: File) => void;
 };
 
 function Screenshot({

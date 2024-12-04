@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useSetRecoilState } from "recoil";
 import { Button } from "@canonical/react-components";
@@ -8,7 +8,7 @@ import { buildRepoConnectedState } from "../../state/atoms";
 import type { GithubData } from "../../types";
 
 type Props = {
-  setDisconnectModalOpen: Function;
+  setDisconnectModalOpen: Dispatch<SetStateAction<boolean>>;
   githubData: GithubData | null;
 };
 
