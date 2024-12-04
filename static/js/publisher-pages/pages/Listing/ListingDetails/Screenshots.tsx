@@ -1,5 +1,12 @@
 import { useState } from "react";
-import { useFieldArray } from "react-hook-form";
+import {
+  useFieldArray,
+  UseFormRegister,
+  UseFormGetValues,
+  UseFormSetValue,
+  FieldValues,
+  Control,
+} from "react-hook-form";
 import { nanoid } from "nanoid";
 import { Row, Col, Notification } from "@canonical/react-components";
 
@@ -8,10 +15,10 @@ import { validateImageDimensions } from "../../../utils";
 import ScreenshotList from "./ScreenshotList";
 
 type Props = {
-  register: Function;
-  control: any;
-  getValues: Function;
-  setValue: Function;
+  register: UseFormRegister<FieldValues>;
+  control: Control<FieldValues>;
+  getValues: UseFormGetValues<FieldValues>;
+  setValue: UseFormSetValue<FieldValues>;
 };
 
 function Screenshots({ register, control, getValues, setValue }: Props) {

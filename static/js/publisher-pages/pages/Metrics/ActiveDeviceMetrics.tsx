@@ -1,7 +1,7 @@
 import { useParams, useSearchParams } from "react-router-dom";
 import { Row, Col, Spinner, CodeSnippet } from "@canonical/react-components";
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { renderActiveDevicesMetrics } from "../../../publisher/metrics/metrics";
 import { select } from "d3-selection";
 import ActiveDeviceAnnotation from "./ActiveDeviceAnnotation";

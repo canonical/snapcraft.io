@@ -1,9 +1,10 @@
+import { Dispatch, SetStateAction } from "react";
 import { Modal, Button } from "@canonical/react-components";
 
 type Props = {
-  setShowMetadataWarningModal: Function;
-  submitForm: Function;
-  formData: any;
+  setShowMetadataWarningModal: Dispatch<SetStateAction<boolean>>;
+  submitForm: (arg: { [key: string]: unknown }) => void;
+  formData: { [key: string]: unknown };
 };
 
 function UpdateMetadataModal({

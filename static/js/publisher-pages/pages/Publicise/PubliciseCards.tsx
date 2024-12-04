@@ -10,7 +10,7 @@ import {
 function PubliciseCards(): JSX.Element {
   const { snapId } = useParams();
   const [buttonType, setButtonType] = useState<"black" | "white" | "hidden">(
-    "black"
+    "black",
   );
   const [showAllChannels, setShowAllChannels] = useState<boolean>(true);
   const [showSummary, setShowSummary] = useState<boolean>(true);
@@ -35,7 +35,7 @@ function PubliciseCards(): JSX.Element {
   }
 
   const iframeQueryString = new URLSearchParams(
-    iframeQueryParameters
+    iframeQueryParameters,
   ).toString();
 
   const htmlSnippet = `<iframe src="https://snapcraft.io/${snapId}/embedded?${iframeQueryString}"width="100%" height="990px" style="border: 1px solid #CCC; border-radius: 2px;"></iframe>`;
@@ -87,7 +87,7 @@ function PubliciseCards(): JSX.Element {
               onChange={(
                 e: SyntheticEvent<HTMLInputElement> & {
                   target: HTMLInputElement;
-                }
+                },
               ) => {
                 setShowAllChannels(e.target.checked);
               }}
@@ -98,7 +98,7 @@ function PubliciseCards(): JSX.Element {
               onChange={(
                 e: SyntheticEvent<HTMLInputElement> & {
                   target: HTMLInputElement;
-                }
+                },
               ) => {
                 setShowSummary(e.target.checked);
               }}
@@ -109,7 +109,7 @@ function PubliciseCards(): JSX.Element {
               onChange={(
                 e: SyntheticEvent<HTMLInputElement> & {
                   target: HTMLInputElement;
-                }
+                },
               ) => {
                 setShowScreenshot(e.target.checked);
               }}

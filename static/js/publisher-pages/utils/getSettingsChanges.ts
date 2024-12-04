@@ -1,5 +1,10 @@
-function getSettingsChanges(dirtyFields: { [key: string]: any }, data: any) {
-  const changes: { [key: string]: any } = {};
+import type { SettingsData } from "../types";
+
+function getSettingsChanges(
+  dirtyFields: { [key: string]: unknown },
+  data: SettingsData,
+) {
+  const changes: { [key: string]: unknown } = {};
 
   if (dirtyFields?.visibility) {
     if (data?.visibility === "public") {

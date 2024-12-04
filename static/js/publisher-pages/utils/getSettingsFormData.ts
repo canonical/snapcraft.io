@@ -4,8 +4,8 @@ import type { SettingsData } from "../types";
 
 function getSettingsFormData(
   settingsData: SettingsData,
-  dirtyFields: { [key: string]: any },
-  data: any,
+  dirtyFields: { [key: string]: unknown },
+  data: SettingsData,
 ) {
   const changes = getSettingsChanges(dirtyFields, data);
   const formData = new FormData();

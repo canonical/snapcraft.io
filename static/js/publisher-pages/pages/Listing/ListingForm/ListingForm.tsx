@@ -23,7 +23,7 @@ import type { ListingData } from "../../../types";
 
 type Props = {
   data: ListingData;
-  refetch: Function;
+  refetch: () => void;
 };
 
 function ListingForm({ data, refetch }: Props): JSX.Element {
@@ -54,9 +54,9 @@ function ListingForm({ data, refetch }: Props): JSX.Element {
   const [showMetadataWarningModal, setShowMetadataWarningModal] =
     useState<boolean>(false);
 
-  const [formValues, setFormValues] = useState<{ [key: string]: any } | null>(
-    null,
-  );
+  const [formValues, setFormValues] = useState<{
+    [key: string]: unknown;
+  } | null>(null);
 
   const { mutate, isLoading } = useMutateListingData({
     data,
@@ -74,7 +74,8 @@ function ListingForm({ data, refetch }: Props): JSX.Element {
     <>
       <form
         className="p-form"
-        onSubmit={handleSubmit((values: any) => {
+        // @ts-expect-error Conflict between React Query and Reach Hook Form
+        onSubmit={handleSubmit((values: ListingData) => {
           if (
             data.update_metadata_on_release &&
             shouldShowUpdateMetadataWarning(dirtyFields)
@@ -118,6 +119,7 @@ function ListingForm({ data, refetch }: Props): JSX.Element {
               <UpdateMetadataModal
                 setShowMetadataWarningModal={setShowMetadataWarningModal}
                 submitForm={mutate}
+                // @ts-expect-error Conflict between React Query and React Hook Form
                 formData={formValues}
               />
             ) : null}

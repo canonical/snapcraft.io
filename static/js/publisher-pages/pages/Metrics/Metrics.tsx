@@ -1,4 +1,4 @@
-import { useParams, useSearchParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { Row, Col } from "@canonical/react-components";
 
 import SectionNav from "../../components/SectionNav";

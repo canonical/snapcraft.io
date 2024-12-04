@@ -5,7 +5,7 @@ function useMetricsAnnotation(snapId?: string) {
     queryKey: ["annotationMetrics", snapId],
     queryFn: async () => {
       const response = await fetch(
-        `/${snapId}/metrics/active-device-annotation`
+        `/${snapId}/metrics/active-device-annotation`,
       );
 
       if (!response.ok) {

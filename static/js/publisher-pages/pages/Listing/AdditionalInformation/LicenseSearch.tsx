@@ -1,4 +1,10 @@
-import { useState, SyntheticEvent, useEffect } from "react";
+import {
+  useState,
+  SyntheticEvent,
+  useEffect,
+  Dispatch,
+  SetStateAction,
+} from "react";
 import { UseFormRegister, UseFormSetValue, FieldValues } from "react-hook-form";
 import Downshift from "downshift";
 
@@ -14,7 +20,7 @@ type Props = {
   license: string | undefined;
   register: UseFormRegister<FieldValues>;
   setValue: UseFormSetValue<FieldValues>;
-  setLicense: Function;
+  setLicense: Dispatch<SetStateAction<string>>;
   originalLicense: string;
 };
 
@@ -170,9 +176,9 @@ function LicenseSearch({
             >
               {suggestions.map((item: License, index) => (
                 <li
+                  key={item.key}
                   className="p-list__item p-autocomplete__suggestion"
                   {...getItemProps({
-                    key: item.key,
                     index,
                     item,
                     style: {

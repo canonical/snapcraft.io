@@ -1,8 +1,9 @@
+import { UseFormGetValues, FieldValues } from "react-hook-form";
 import { Form } from "@canonical/react-components";
 
 type Props = {
   snapName: string;
-  getValues: Function;
+  getValues: UseFormGetValues<FieldValues>;
 };
 
 type ListingData = {

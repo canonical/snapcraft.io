@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, SetStateAction } from "react";
 import {
   UseFormRegister,
   UseFormSetValue,
@@ -29,9 +29,11 @@ function LicenseInputs({ listingData, register, setValue, watch }: Props) {
   const customLicenseId = nanoid();
 
   useEffect(() => {
-    const subscription = watch((value: { [index: string]: any }) => {
-      setLicense(value?.license);
-    });
+    const subscription = watch(
+      (value: { [index: string]: SetStateAction<string> }) => {
+        setLicense(value?.license);
+      },
+    );
     return () => subscription.unsubscribe();
   }, [watch]);
 

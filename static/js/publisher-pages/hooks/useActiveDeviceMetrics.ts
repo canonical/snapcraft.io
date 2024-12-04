@@ -19,6 +19,7 @@ function useActiveDeviceMetrics({
   });
 
   const parsePeriod = (period: string) => {
+    /* eslint-disable @typescript-eslint/no-unused-vars */
     const [_, periodLength, periodTime] = period.trim().split(/(\d+)/);
     return { periodLength: +periodLength, periodTime };
   };
@@ -44,8 +45,8 @@ function useActiveDeviceMetrics({
     for (let i = 1; i <= totalPage; i++) {
       responses.push(
         fetch(
-          `/${snapId}/metrics/active-devices?active-devices=${type}&period=${period}&page=${i}&page-length=${pagePeriodLengthInMonths}`
-        )
+          `/${snapId}/metrics/active-devices?active-devices=${type}&period=${period}&page=${i}&page-length=${pagePeriodLengthInMonths}`,
+        ),
       );
     }
 
@@ -88,7 +89,7 @@ function useActiveDeviceMetrics({
       for (const seriesKey of series.keys()) {
         const seriesExistInBatch = data.active_devices.series.find(
           (activeDeviceSeries: { name: string }) =>
-            activeDeviceSeries.name === seriesKey
+            activeDeviceSeries.name === seriesKey,
         );
         if (!seriesExistInBatch) {
           series.set(seriesKey, [
