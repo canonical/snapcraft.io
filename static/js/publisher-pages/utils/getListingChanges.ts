@@ -1,13 +1,32 @@
+import { FieldValues } from "react-hook-form";
+
 import formatImageChanges from "./formatImageChanges";
 
 import type { ListingData } from "../types";
 
 export default function getListingChanges(
-  dirtyFields: any,
-  fieldValues: any,
+  dirtyFields: { [key: string]: boolean },
+  fieldValues: FieldValues,
   data: ListingData,
-): { [key: string]: any } {
-  const changes: { [key: string]: any } = {};
+) {
+  const changes: {
+    [key: string]: unknown;
+    images?: {
+      url: string;
+      type: string;
+      status: string;
+      name?: string;
+    }[];
+    links?: {
+      website: string[];
+      donations: string[];
+      contact: string[];
+      issues: string[];
+      source: string[];
+    };
+    categories?: string[] | undefined;
+    public_metrics_blacklist?: string[];
+  } = {};
 
   if (
     dirtyFields.banner_urls ||

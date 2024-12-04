@@ -1,3 +1,5 @@
+import { Dispatch, SetStateAction } from "react";
+import { UseFormReset, FieldValues } from "react-hook-form";
 import { useMutation } from "react-query";
 
 import { addDateToFilename, getListingChanges } from "../utils";
@@ -6,13 +8,13 @@ import type { ListingData } from "../types";
 
 type Options = {
   data: ListingData;
-  dirtyFields: any;
-  getDefaultData: Function;
-  refetch: Function;
-  reset: Function;
-  setShowSuccessNotification: Function;
-  setUpdateMetadataOnRelease: Function;
-  shouldShowUpdateMetadataWarning: Function;
+  dirtyFields: { [key: string]: boolean };
+  getDefaultData: (arg: ListingData) => { [key: string]: unknown };
+  refetch: () => void;
+  reset: UseFormReset<FieldValues>;
+  setShowSuccessNotification: Dispatch<SetStateAction<boolean>>;
+  setUpdateMetadataOnRelease: Dispatch<SetStateAction<boolean>>;
+  shouldShowUpdateMetadataWarning: (arg: FieldValues) => boolean;
   snapName: string | undefined;
 };
 
@@ -28,7 +30,7 @@ function useMutateListingData({
   snapName,
 }: Options) {
   return useMutation({
-    mutationFn: async (values: any) => {
+    mutationFn: async (values: FieldValues) => {
       const formData = new FormData();
 
       const changes = getListingChanges(dirtyFields, values, data);
@@ -52,11 +54,18 @@ function useMutateListingData({
 
             formData.append("screenshots", newFile);
 
-            const imageIndex = changes.images.findIndex(
-              (image: any) => image.name === oldName,
+            const imageIndex = changes?.images?.findIndex(
+              (image: {
+                url: string;
+                type: string;
+                status: string;
+                name?: string;
+              }) => image.name === oldName,
             );
-            changes.images[imageIndex].name = newFile.name;
-            changes.images[imageIndex].url = URL.createObjectURL(newFile);
+            if (changes.images && imageIndex) {
+              changes.images[imageIndex].name = newFile.name;
+              changes.images[imageIndex].url = URL.createObjectURL(newFile);
+            }
           }
         });
       }
@@ -76,9 +85,10 @@ function useMutateListingData({
         throw new Error("There was a problem saving listing data");
       }
     },
-    onSuccess: async () => {
-      const response = await refetch();
+    onSuccess: () => {
+      const response = refetch();
       setShowSuccessNotification(true);
+      // @ts-expect-error Conflict between React Query and React Hook Form
       reset(getDefaultData(response.data));
 
       const mainPanel = document.querySelector(".l-main") as HTMLElement;

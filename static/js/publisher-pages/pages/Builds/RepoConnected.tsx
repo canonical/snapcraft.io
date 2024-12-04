@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, Dispatch, SetStateAction } from "react";
 import { useQuery } from "react-query";
 import { useRecoilValue } from "recoil";
 import { useParams, Link } from "react-router-dom";
@@ -21,7 +21,7 @@ function RepoConnected({
   setAutoTriggerBuild,
 }: {
   autoTriggerBuild: boolean;
-  setAutoTriggerBuild: Function;
+  setAutoTriggerBuild: Dispatch<SetStateAction<boolean>>;
 }): JSX.Element {
   const { snapId } = useParams();
   const githubData = useRecoilValue(githubDataState);

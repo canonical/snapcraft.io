@@ -1,10 +1,13 @@
+import { Dispatch, SetStateAction } from "react";
 import { Notification } from "@canonical/react-components";
 
 type Props = {
   hasSaved: boolean;
-  setHasSaved: Function;
+  setHasSaved: Dispatch<SetStateAction<boolean>>;
   savedError: boolean | Array<{ message: string }>;
-  setSavedError: Function;
+  setSavedError: Dispatch<
+    SetStateAction<boolean | { code: string; message: string }[]>
+  >;
 };
 
 function SaveStateNotifications({
