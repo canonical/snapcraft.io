@@ -1,3 +1,4 @@
+import { Dispatch, SetStateAction } from "react";
 import { useRecoilValue } from "recoil";
 import { Strip } from "@canonical/react-components";
 
@@ -10,7 +11,7 @@ import type { GithubData } from "../../types/";
 function RepoNotConnected({
   setAutoTriggerBuild,
 }: {
-  setAutoTriggerBuild: Function;
+  setAutoTriggerBuild: Dispatch<SetStateAction<boolean>>;
 }): JSX.Element {
   const githubData = useRecoilValue<GithubData | null>(githubDataState);
 

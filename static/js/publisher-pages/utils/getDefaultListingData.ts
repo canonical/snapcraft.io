@@ -37,7 +37,7 @@ function getPublicMetricsDistrosValue(
 }
 
 export default function getDefaultListingData(data: ListingData): {
-  [key: string]: any;
+  [key: string]: unknown;
 } {
   return {
     contacts: data.contacts,

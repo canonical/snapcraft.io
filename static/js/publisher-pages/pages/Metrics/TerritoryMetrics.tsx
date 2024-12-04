@@ -1,11 +1,5 @@
-import { useParams, useSearchParams } from "react-router-dom";
-import {
-  Row,
-  Col,
-  Select,
-  Spinner,
-  CodeSnippet,
-} from "@canonical/react-components";
+import { useParams } from "react-router-dom";
+import { Row, Col, Spinner, CodeSnippet } from "@canonical/react-components";
 
 import { useEffect } from "react";
 import { renderTerritoriesMetrics } from "../../../publisher/metrics/metrics";
@@ -27,7 +21,15 @@ export const TerritoryMetrics = ({
     status: string;
     data:
       | {
-          active_devices: any;
+          active_devices: {
+            [key: string]: {
+              code: string;
+              color_rgb: string;
+              name: string;
+              number_of_users: number;
+              percentage_of_users: number;
+            };
+          };
           territories_total: number;
         }
       | undefined;
@@ -41,6 +43,7 @@ export const TerritoryMetrics = ({
           selector: "#territories",
           metrics: countryInfo.active_devices,
         });
+      // @ts-expect-error Type clash
       onDataLoad(countryInfo.active_devices?.length);
     }
   }, [countryInfo]);

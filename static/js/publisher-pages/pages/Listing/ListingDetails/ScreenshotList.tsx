@@ -1,10 +1,19 @@
 import { useState } from "react";
 import {
+  UseFormGetValues,
+  UseFormSetValue,
+  UseFormRegister,
+  FieldValues,
+  UseFieldArrayRemove,
+  UseFieldArrayMove,
+} from "react-hook-form";
+import {
   DndContext,
   closestCenter,
   PointerSensor,
   useSensor,
   useSensors,
+  DragEndEvent,
 } from "@dnd-kit/core";
 import {
   arrayMove,
@@ -17,12 +26,12 @@ import Screenshot from "./Screenshot";
 type Props = {
   screenshots: Array<{ id: string }>;
   screenshotUrls: Array<string>;
-  getValues: Function;
-  removeScreenshotUrl: Function;
-  setValue: Function;
-  register: Function;
-  setImage: Function;
-  moveScreenshotUrl: Function;
+  getValues: UseFormGetValues<FieldValues>;
+  removeScreenshotUrl: UseFieldArrayRemove;
+  setValue: UseFormSetValue<FieldValues>;
+  register: UseFormRegister<FieldValues>;
+  setImage: (arg: File) => void;
+  moveScreenshotUrl: UseFieldArrayMove;
 };
 
 function ScreenshotList({
@@ -38,7 +47,7 @@ function ScreenshotList({
   const [items, setItems] = useState(screenshots);
   const sensors = useSensors(useSensor(PointerSensor));
 
-  const handleDragEnd = (e: any) => {
+  const handleDragEnd = (e: DragEndEvent) => {
     const { active, over } = e;
 
     if (active && over && active?.id !== over?.id) {

@@ -1,5 +1,5 @@
 interface DirtyField {
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 function shouldShowUpdateMetadataWarning(dirtyFields: DirtyField) {

@@ -6,7 +6,7 @@ import debounce from "../../../libs/debounce";
 type Props = {
   snapName: string;
   isDirty: boolean;
-  reset: Function;
+  reset: () => void;
   isSaving: boolean;
   isValid: boolean;
   showPreview?: boolean;
@@ -25,7 +25,7 @@ function SaveAndPreview({
   const handleScroll = () => {
     stickyBar?.current?.classList.toggle(
       "sticky-shadow",
-      stickyBar?.current?.getBoundingClientRect()?.top === 0
+      stickyBar?.current?.getBoundingClientRect()?.top === 0,
     );
   };
 

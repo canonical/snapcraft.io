@@ -1,11 +1,11 @@
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { Button, Modal } from "@canonical/react-components";
 
 type UnregisterSnapModalProps = {
   snapName: string;
-  setUnregisterModalOpen: Function;
-  setUnregisterError: Function;
-  setUnregisterErrorMessage: Function;
+  setUnregisterModalOpen: Dispatch<SetStateAction<boolean>>;
+  setUnregisterError: Dispatch<SetStateAction<boolean>>;
+  setUnregisterErrorMessage: Dispatch<SetStateAction<string>>;
 };
 
 export function UnregisterSnapModal({

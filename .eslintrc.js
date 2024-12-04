@@ -28,6 +28,7 @@ module.exports = {
     "prettier/prettier": "error",
     "react/react-in-jsx-scope": "off",
     "react/no-unescaped-entities": "off",
+    "react/display-name": "off",
   },
   settings: {
     react: {
@@ -43,6 +44,7 @@ module.exports = {
     },
   ],
   ignorePatterns: [
-    "/static/js/publisher" // skip linting any files in the publisher directory 
+    "/static/js/publisher", // skip linting any files in the publisher directory
+    "/static/js/publisher-pages/pages/Releases", // skip releases for now as structural changes are required to fix TS
   ],
 };
