@@ -304,9 +304,9 @@ function ListingDetails({
                 </p>
                 <p>
                   <small>
-                    <strong>Code</strong>: Text indented with 3 spaces of{" "}
+                    <strong>Code</strong>: Text indented with 3 spaces or inside single backticks
                   </small>
-                  <code>`</code> inside
+                  <code>`code`</code> 
                 </p>
               </Col>
             </Row>
