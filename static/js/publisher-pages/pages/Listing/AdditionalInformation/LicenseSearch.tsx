@@ -7,6 +7,7 @@ import {
 } from "react";
 import { UseFormRegister, UseFormSetValue, FieldValues } from "react-hook-form";
 import Downshift from "downshift";
+import { Button } from "@canonical/react-components";
 
 import debounce from "../../../../libs/debounce";
 
@@ -109,8 +110,15 @@ function LicenseSearch({
                 key={selectedLicense?.key}
               >
                 {selectedLicense?.name}
-                <i
-                  className="p-icon--close p-multiselect__item-remove"
+                <Button
+                  type="button"
+                  style={{
+                    backgroundColor: "transparent",
+                    border: 0,
+                    color: "inherit",
+                    margin: 0,
+                    padding: 0,
+                  }}
                   onClick={() => {
                     const newSelectedLicenses: (License | undefined)[] =
                       selectedLicenses.filter(
@@ -127,8 +135,10 @@ function LicenseSearch({
                     });
                   }}
                 >
-                  Remove license
-                </i>
+                  <i className="p-icon--close p-multiselect__item-remove">
+                    Remove license
+                  </i>
+                </Button>
               </span>
             ))}
             <input
