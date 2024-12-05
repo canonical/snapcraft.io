@@ -37,7 +37,7 @@ function PubliciseBadges({ trending }: Props): JSX.Element {
     <>
       <Row>
         <Col size={2}>
-          <label>Display:</label>
+          <p>Display:</p>
         </Col>
         <Col size={10}>
           <CheckboxInput
@@ -81,7 +81,7 @@ function PubliciseBadges({ trending }: Props): JSX.Element {
         <>
           <Row>
             <Col size={2}>
-              <label>Preview:</label>
+              <p>Preview:</p>
             </Col>
             <Col size={10}>
               <p>
@@ -111,7 +111,7 @@ function PubliciseBadges({ trending }: Props): JSX.Element {
           </Row>
           <Row>
             <Col size={2}>
-              <label>HTML:</label>
+              <p>HTML:</p>
             </Col>
             <Col size={10}>
               <div className="p-code-snippet">
@@ -125,7 +125,7 @@ function PubliciseBadges({ trending }: Props): JSX.Element {
           </Row>
           <Row>
             <Col size={2}>
-              <label>Markdown:</label>
+              <p>Markdown:</p>
             </Col>
             <Col size={10}>
               <div className="p-code-snippet">
