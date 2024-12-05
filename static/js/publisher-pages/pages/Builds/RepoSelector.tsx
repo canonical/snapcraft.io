@@ -1,7 +1,14 @@
 import { ChangeEvent, Dispatch, SetStateAction, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useSetRecoilState } from "recoil";
-import { Strip, Row, Col, Select, Button } from "@canonical/react-components";
+import {
+  Strip,
+  Row,
+  Col,
+  Select,
+  Button,
+  Input,
+} from "@canonical/react-components";
 
 import { buildRepoConnectedState } from "../../state/atoms";
 
@@ -170,10 +177,10 @@ function RepoSelector({ githubData, setAutoTriggerBuild }: Props) {
         Your repo needs a snapcraft.yaml file, so that Snapcraft can make it
         buildable, installable, and runnable.
       </p>
-      <label className="p-form__label">Select a repository:</label>
       <Row>
         <Col size={4}>
           <Select
+            label="Select an organization"
             defaultValue=""
             options={[
               { label: "Select organization", value: "" },
@@ -191,8 +198,9 @@ function RepoSelector({ githubData, setAutoTriggerBuild }: Props) {
           className={`p-form-validation ${getValidationStatusClassName()}`}
           style={{ position: "relative" }}
         >
-          <input
+          <Input
             type="text"
+            label="Select a repository"
             list="repo-list"
             placeholder="Search your repos"
             disabled={selectedOrg === null || validating}
