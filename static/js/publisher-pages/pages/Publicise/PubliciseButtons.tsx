@@ -46,7 +46,7 @@ function PubliciseButtons(): JSX.Element {
     <>
       <Row>
         <Col size={2}>
-          <label>Language:</label>
+          <p>Language:</p>
         </Col>
         <Col size={10}>
           <Select
@@ -86,7 +86,7 @@ function PubliciseButtons(): JSX.Element {
       </Row>
       <Row>
         <Col size={2}>
-          <label>HTML:</label>
+          <p>HTML:</p>
         </Col>
         <Col size={10}>
           <div className="p-code-snippet">
@@ -96,7 +96,7 @@ function PubliciseButtons(): JSX.Element {
       </Row>
       <Row>
         <Col size={2}>
-          <label>Markdown:</label>
+          <p>Markdown:</p>
         </Col>
         <Col size={10}>
           <div className="p-code-snippet">
@@ -121,7 +121,7 @@ function PubliciseButtons(): JSX.Element {
       </Row>
       <Row>
         <Col size={2}>
-          <label>HTML:</label>
+          <p>HTML:</p>
         </Col>
         <Col size={10}>
           <div className="p-code-snippet">
@@ -131,7 +131,7 @@ function PubliciseButtons(): JSX.Element {
       </Row>
       <Row>
         <Col size={2}>
-          <label>Markdown:</label>
+          <p>Markdown:</p>
         </Col>
         <Col size={10}>
           <div className="p-code-snippet">
@@ -144,7 +144,7 @@ function PubliciseButtons(): JSX.Element {
       <hr />
       <Row>
         <Col size={2}>
-          <label>Download all:</label>
+          <p>Download all:</p>
         </Col>
         <Col size={10}>
           <a
