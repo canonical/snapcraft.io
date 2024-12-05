@@ -129,6 +129,16 @@ function SettingsForm({ settings }: Props) {
     window.scrollTo(0, 0);
   };
 
+  const getPublishedStatus = () => {
+    if (!settingsData || !settingsData.status) {
+      return "No status";
+    }
+
+    return (
+      settingsData.status.charAt(0).toUpperCase() + settingsData.status.slice(1)
+    );
+  };
+
   useEffect(() => {
     if (whitelistCountryKeyValues) {
       setValue("blacklist_country_keys", "");
@@ -407,9 +417,9 @@ function SettingsForm({ settings }: Props) {
 
           <Row className="p-form__group">
             <Col size={2}>
-              <label className="p-form__label" id="collaboration-label">
+              <p id="collaboration-label" style={{ marginBottom: ".625rem" }}>
                 Collaboration:
-              </label>
+              </p>
             </Col>
             <Col size={8}>
               <div
@@ -431,9 +441,9 @@ function SettingsForm({ settings }: Props) {
 
           <Row className="p-form__group">
             <Col size={2}>
-              <label className="p-form__label" id="store-label">
+              <p id="store-label" style={{ marginBottom: ".625rem" }}>
                 Store:
-              </label>
+              </p>
             </Col>
             <Col size={8}>
               <div className="p-form__control" aria-labelledby="store-label">
@@ -456,9 +466,9 @@ function SettingsForm({ settings }: Props) {
               />
             )}
             <Col size={2}>
-              <label className="p-form__label" id="status-label">
+              <p id="status-label" style={{ marginBottom: ".625rem" }}>
                 Status:
-              </label>
+              </p>
             </Col>
             <Col size={8}>
               <div className="p-form__control" aria-labelledby="status-label">
@@ -489,8 +499,7 @@ function SettingsForm({ settings }: Props) {
                     )}
                   </div>
                 ) : (
-                  (settingsData?.status).charAt(0).toUpperCase() +
-                  (settingsData?.status).slice(1)
+                  getPublishedStatus()
                 )}
               </div>
             </Col>
