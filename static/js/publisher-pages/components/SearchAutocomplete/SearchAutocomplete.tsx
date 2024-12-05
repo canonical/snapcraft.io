@@ -8,6 +8,7 @@ import {
   Control,
   FieldValues,
 } from "react-hook-form";
+import { Button } from "@canonical/react-components";
 
 type DataItem = {
   key: string;
@@ -86,8 +87,15 @@ function SearchAutocomplete({
           {selections.map((suggestion: DataItem) => (
             <span key={suggestion.key} className="p-multiselect__item">
               {suggestion.name}
-              <i
-                className="p-icon--close p-multiselect__item-remove"
+              <Button
+                type="button"
+                style={{
+                  backgroundColor: "transparent",
+                  border: 0,
+                  color: "inherit",
+                  margin: 0,
+                  padding: 0,
+                }}
                 onClick={() => {
                   const newSelections = selections.filter(
                     (item: DataItem) => item.key !== suggestion.key,
@@ -101,8 +109,10 @@ function SearchAutocomplete({
                   });
                 }}
               >
-                Remove suggestion
-              </i>
+                <i className="p-icon--close p-multiselect__item-remove">
+                  Remove suggestion
+                </i>
+              </Button>
             </span>
           ))}
 
