@@ -38,13 +38,13 @@ function PubliciseCards(): JSX.Element {
     iframeQueryParameters,
   ).toString();
 
-  const htmlSnippet = `<iframe src="https://snapcraft.io/${snapId}/embedded?${iframeQueryString}"width="100%" height="990px" style="border: 1px solid #CCC; border-radius: 2px;"></iframe>`;
+  const htmlSnippet = `<iframe title="Publicise card" src="https://snapcraft.io/${snapId}/embedded?${iframeQueryString}"width="100%" height="990px" style="border: 1px solid #CCC; border-radius: 2px;"></iframe>`;
 
   return (
     <>
       <Row>
         <Col size={2}>
-          <label>Snap Store button:</label>
+          <p>Snap Store button:</p>
         </Col>
         <Col size={10}>
           <p>
@@ -77,7 +77,7 @@ function PubliciseCards(): JSX.Element {
       </Row>
       <Row>
         <Col size={2}>
-          <label>Options:</label>
+          <p>Options:</p>
         </Col>
         <Col size={10}>
           <p>
@@ -119,11 +119,12 @@ function PubliciseCards(): JSX.Element {
       </Row>
       <Row>
         <Col size={2}>
-          <label>Preview:</label>
+          <p>Preview:</p>
         </Col>
         <Col size={8}>
           <p>
             <iframe
+              title="Card preview"
               src={`/${snapId}/embedded?${iframeQueryString}`}
               width="100%"
               style={{
@@ -137,7 +138,7 @@ function PubliciseCards(): JSX.Element {
       </Row>
       <Row>
         <Col size={2}>
-          <label>HTML:</label>
+          <p>HTML:</p>
         </Col>
         <Col size={10}>
           <div className="p-code-snippet">
