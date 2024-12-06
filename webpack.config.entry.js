@@ -5,10 +5,6 @@ module.exports = {
   about: "./static/js/public/about/index.ts",
   "featured-snaps": "./static/js/public/featured-snaps.ts",
   modal: "./static/js/public/modal.ts",
-  // TODO:
-  // publisher bundle is big (webpack warning) - try to chunk it down
-  // https://github.com/canonical-web-and-design/snapcraft.io/issues/1246
-  publisher: "./static/js/publisher/publisher.ts",
   homepage: "./static/js/public/homepage.ts",
   blog: "./static/js/public/blog.ts",
   "store-details": "./static/js/public/store-details.ts",

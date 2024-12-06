@@ -1,8 +1,8 @@
 import { select } from "d3-selection";
 import { format } from "d3-format";
 import { area, curveMonotoneX, line } from "d3-shape";
-import debounce from "../../../../libs/debounce";
-import { arraysMerge } from "../../../../libs/arrays";
+import debounce from "../../../../../../libs/debounce";
+import { arraysMerge } from "../../arrays";
 
 import {
   prepareStackedData,
@@ -37,7 +37,7 @@ class ActiveDevicesGraph {
         bottom: 30,
         left: 50,
       },
-      options.margin || {}
+      options.margin || {},
     );
 
     this.padding = Object.assign(
@@ -47,7 +47,7 @@ class ActiveDevicesGraph {
         bottom: 16,
         left: 16,
       },
-      options.padding || {}
+      options.padding || {},
     );
 
     this.width;

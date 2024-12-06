@@ -1,4 +1,4 @@
-import { arraysEqual, arrayChunk, arraysMerge } from "../arrays";
+import { arraysEqual, arrayChunk, arraysMerge } from "../metrics/arrays";
 
 describe("arraysEqual", () => {
   it("should return empty arrays as equal", () => {

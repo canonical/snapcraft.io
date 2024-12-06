@@ -5,7 +5,7 @@ import {
   formatXAxisTickLabels,
   formatYAxisTickLabels,
 } from "../axis";
-import debounce from "../../../libs/debounce";
+import debounce from "../../../../../libs/debounce";
 import { COLORS, PADDING } from "../config";
 
 function showGraph(el: HTMLElement) {
