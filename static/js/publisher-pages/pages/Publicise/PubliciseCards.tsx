@@ -1,4 +1,4 @@
-import { useState, SyntheticEvent } from "react";
+import { useState, useRef, SyntheticEvent } from "react";
 import { useParams } from "react-router-dom";
 import {
   Row,
@@ -16,6 +16,7 @@ function PubliciseCards(): JSX.Element {
   const [showSummary, setShowSummary] = useState<boolean>(true);
   const [showScreenshot, setShowScreenshot] = useState<boolean>(true);
 
+  const iframeRef = useRef<HTMLIFrameElement>(null);
   const iframeQueryParameters: { [key: string]: string } = {};
 
   if (buttonType !== "hidden") {
@@ -38,7 +39,22 @@ function PubliciseCards(): JSX.Element {
     iframeQueryParameters,
   ).toString();
 
-  const htmlSnippet = `<iframe title="Publicise card" src="https://snapcraft.io/${snapId}/embedded?${iframeQueryString}"width="100%" height="990px" style="border: 1px solid #CCC; border-radius: 2px;"></iframe>`;
+  const htmlSnippet = `<iframe title="Publicise card" src="https://snapcraft.io/${snapId}/embedded?${iframeQueryString}" style="width: 100%; height: 100%; border: 1px solid #CCC; border-radius: 2px;"></iframe>`;
+
+  const adjustIframeHeight = () => {
+    const iframe = iframeRef.current;
+    if (iframe) {
+      try {
+        iframe.style.height =
+          iframe.contentWindow?.document.body.scrollHeight + "px";
+      } catch (error) {
+        console.warn(
+          "Unable to access iframe content for height adjustment:",
+          error,
+        );
+      }
+    }
+  };
 
   return (
     <>
@@ -124,14 +140,16 @@ function PubliciseCards(): JSX.Element {
         <Col size={8}>
           <p>
             <iframe
+              ref={iframeRef}
               title="Card preview"
               src={`/${snapId}/embedded?${iframeQueryString}`}
               width="100%"
               style={{
                 border: "1px solid rgb(204, 204, 204)",
                 borderRadius: "2px",
-                height: "990px",
+                height: "auto",
               }}
+              onLoad={adjustIframeHeight}
             ></iframe>
           </p>
         </Col>

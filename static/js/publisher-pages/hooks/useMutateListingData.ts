@@ -21,7 +21,6 @@ type Options = {
 function useMutateListingData({
   data,
   dirtyFields,
-  getDefaultData,
   refetch,
   reset,
   setShowSuccessNotification,
@@ -86,13 +85,17 @@ function useMutateListingData({
       }
     },
     onSuccess: () => {
-      const response = refetch();
-      setShowSuccessNotification(true);
-      // @ts-expect-error Conflict between React Query and React Hook Form
-      reset(getDefaultData(response.data));
-
       const mainPanel = document.querySelector(".l-main") as HTMLElement;
       mainPanel.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+      refetch();
+      setShowSuccessNotification(true);
+    },
+    onSettled: (_error, _context, data) => {
+      if (data) {
+        reset(data);
+      } else {
+        reset();
+      }
     },
   });
 }

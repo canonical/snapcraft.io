@@ -3,11 +3,10 @@ export default function formatImageChanges(
   iconUrl: string,
   screenshotUrls: string[],
   screenshots: FileList[],
-  dirtyFields: { [key: string]: boolean },
 ) {
   const images = [];
 
-  if (!dirtyFields.banner_urls && bannerUrls.length > 0) {
+  if (bannerUrls.length > 0) {
     images.push({
       url: bannerUrls[0],
       type: "banner",

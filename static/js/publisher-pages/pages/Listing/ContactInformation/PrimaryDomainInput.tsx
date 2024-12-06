@@ -121,6 +121,7 @@ function PrimaryDomainInput({
             <input
               type="url"
               id={id}
+              defaultValue={defaultDomain}
               className="p-form-validation__input"
               {...register("primary_website")}
             />

@@ -1,5 +1,10 @@
 import { useState, SyntheticEvent } from "react";
-import { UseFormRegister, UseFormSetValue, FieldValues } from "react-hook-form";
+import {
+  UseFormRegister,
+  UseFormSetValue,
+  FieldValues,
+  UseFormGetValues,
+} from "react-hook-form";
 import { nanoid } from "nanoid";
 import {
   Row,
@@ -15,6 +20,7 @@ type Props = {
   imageUrl: string | null;
   register: UseFormRegister<FieldValues>;
   setValue: UseFormSetValue<FieldValues>;
+  getValues: UseFormGetValues<FieldValues>;
   validationSchema: {
     maxFileSize: number;
     minWidth: number;
@@ -61,6 +67,7 @@ function ImageUpload({
   imageUrl,
   register,
   setValue,
+  getValues,
   validationSchema,
   label,
   imageUrlFieldKey,
@@ -77,7 +84,9 @@ function ImageUpload({
   const [imageIsValid, setImageIsValid] = useState(true);
   const [isDragging, setIsDragging] = useState(false);
   const [darkThemeEnabled, setDarkThemeEnabled] = useState(false);
-  const [previewImageUrl, setPreviewImageUrl] = useState(imageUrl);
+  const [previewImageUrl, setPreviewImageUrl] = useState(
+    getValues(imageUrlFieldKey),
+  );
 
   const fieldId = nanoid();
   const isDark = hasDarkThemePreview && darkThemeEnabled;
@@ -135,6 +144,16 @@ function ImageUpload({
     };
   };
 
+  const showDeleteButton = (): boolean => {
+    const fieldValue = getValues(imageUrlFieldKey);
+
+    if (fieldValue && fieldValue.length > 0) {
+      return true;
+    }
+
+    return false;
+  };
+
   return (
     <Row className="p-form__group p-form__group--top" data-tour={tourLabel}>
       <Col size={2}>
@@ -170,7 +189,8 @@ function ImageUpload({
                 setIsDragging(false);
               }}
             >
-              {previewImageUrl ? (
+              {getValues(imageUrlFieldKey) &&
+              getValues(imageUrlFieldKey).length > 0 ? (
                 <div
                   className="snap-image-upload-preview"
                   style={{
@@ -179,7 +199,7 @@ function ImageUpload({
                   }}
                 >
                   <img
-                    src={previewImageUrl}
+                    src={getValues(imageUrlFieldKey)}
                     width={previewWidth}
                     height={previewHeight}
                     alt=""
@@ -230,13 +250,15 @@ function ImageUpload({
               />
             </div>
 
-            {previewImageUrl && (
+            {showDeleteButton() && (
               <button
                 type="button"
                 className="p-button--base snap-remove-icon"
                 onClick={() => {
                   setImageIsValid(true);
-                  setValue(imageUrlFieldKey, "");
+                  setValue(imageUrlFieldKey, "", {
+                    shouldDirty: imageUrl !== "",
+                  });
                   setValue(imageFieldKey, new File([], ""));
                   setPreviewImageUrl("");
                 }}

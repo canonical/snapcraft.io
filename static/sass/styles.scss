@@ -572,3 +572,18 @@ dl {
 .publisher-app > .p-panel > .p-panel__content {
   overflow: visible;
 }
+
+.releases-track-aside {
+  height: 100%;
+  position: fixed !important;
+  right: 0;
+  top: 0;
+}
+
+@media (max-width: $breakpoint-small) {
+  .releases-track-aside {
+    .is-flex-column {
+      min-height: calc(100% - 56px);
+    }
+  }
+}
