@@ -2,7 +2,7 @@ import { useParams } from "react-router-dom";
 import { Row, Col, Spinner, CodeSnippet } from "@canonical/react-components";
 
 import { useEffect } from "react";
-import { renderTerritoriesMetrics } from "../../../publisher/metrics/metrics";
+import { renderTerritoriesMetrics } from "./metrics/metrics";
 import useCountryMetrics from "../../hooks/useCountryMetrics";
 
 export const TerritoryMetrics = ({

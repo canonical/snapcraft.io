@@ -1,4 +1,4 @@
-import { initEmbeddedCardPicker } from "../../publisher/publicise";
+import { initEmbeddedCardPicker } from "./publicise";
 
 const showEl = (el: { classList: { remove: (arg0: string) => void } }) =>
   el.classList.remove("u-hide");
