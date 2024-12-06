@@ -3,7 +3,7 @@ import { utcParse } from "d3-time-format";
 import { scaleLinear, scaleOrdinal } from "d3-scale";
 import { extent } from "d3-array";
 import { schemePaired } from "d3-scale-chromatic";
-import { isMobile } from "../../../../libs/mobile";
+import { isMobile } from "../../../../../../libs/mobile";
 import { axisBottom, axisLeft } from "d3-axis";
 
 function prepareStackedData(this: any) {
@@ -18,7 +18,7 @@ function prepareStackedData(this: any) {
   };
 
   this.rawData.buckets.forEach((bucket: any, i: number) => {
-    let obj: {
+    const obj: {
       [key: string]: any;
     } = {
       date: utcParse("%Y-%m-%d")(bucket),
@@ -30,7 +30,7 @@ function prepareStackedData(this: any) {
         if (_keys.indexOf(series.name) < 0) {
           _keys.push(series.name);
         }
-      }
+      },
     );
 
     _data.push(obj);
@@ -74,7 +74,7 @@ function prepareLineData(this: any) {
         });
       });
       data.push(obj);
-    }
+    },
   );
 
   this.rawData.buckets.forEach((bucket: any, i: number) => {
@@ -97,7 +97,7 @@ function prepareLineData(this: any) {
     (acc: Array<any>, current: { values: Array<number> }) => {
       return acc.concat(current.values);
     },
-    []
+    [],
   );
 
   this.data = _data;
@@ -141,7 +141,7 @@ function prepareAnnotationsData(this: any) {
   let annotationsData: Array<any>;
   annotationsData = [];
   this.options.annotations.buckets.forEach((bucket: any, i: number) => {
-    let obj: {
+    const obj: {
       [key: string]: any;
     } = {
       date: utcParse("%Y-%m-%d")(bucket),
@@ -153,7 +153,7 @@ function prepareAnnotationsData(this: any) {
         if (this.keys.indexOf(series.name) < 0) {
           this.keys.push(series.name);
         }
-      }
+      },
     );
 
     annotationsData.push(obj);
@@ -168,7 +168,7 @@ function prepareAnnotationsData(this: any) {
   if (annotationsData) {
     annotationsData = annotationsData
       .map((annotation) => {
-        let x = this.xScale(annotation.date);
+        const x = this.xScale(annotation.date);
 
         if (x < 0 + this.padding.left) {
           return false;
@@ -221,7 +221,7 @@ function prepareAxis(this: any) {
   this.xAxis = axisBottom(this.xScale).tickValues(tickValues).tickPadding(16);
 
   this.yAxis = axisLeft(this.yScale).tickFormat((d) =>
-    d === 0 ? "0" : this.shortValue(d)
+    d === 0 ? "0" : this.shortValue(d),
   );
 }
 

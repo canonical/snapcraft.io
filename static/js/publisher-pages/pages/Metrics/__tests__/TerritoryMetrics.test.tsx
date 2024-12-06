@@ -2,7 +2,7 @@ import { BrowserRouter, useSearchParams } from "react-router-dom";
 import { render, screen, waitFor } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import { QueryClient, QueryClientProvider, useQuery } from "react-query";
-import * as MetricsRenderMethods from "../../../../publisher/metrics/metrics";
+import * as MetricsRenderMethods from "../metrics/metrics";
 
 import { TerritoryMetrics } from "../TerritoryMetrics";
 

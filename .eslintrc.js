@@ -44,7 +44,6 @@ module.exports = {
     },
   ],
   ignorePatterns: [
-    "/static/js/publisher", // skip linting any files in the publisher directory
     "/static/js/publisher-pages/pages/Releases", // skip releases for now as structural changes are required to fix TS
   ],
 };
