@@ -1082,6 +1082,23 @@
     react-table "7.8.0"
     react-useportal "1.0.19"
 
+"@canonical/react-components@1.7.1":
+  version "1.7.1"
+  resolved "https://registry.yarnpkg.com/@canonical/react-components/-/react-components-1.7.1.tgz#5202774abac6d858896a857cd24ae3746f7fcabb"
+  integrity sha512-ekd7tE+yiABdFikTyqr7n6Rwggo02b2tEvnNvEtY01S56qRBnhJFilDgebe8nZX/A/1ukzs0PYOzi2kD8SwIKA==
+  dependencies:
+    "@types/jest" "29.5.12"
+    "@types/node" "20.16.3"
+    "@types/react" "18.3.5"
+    "@types/react-dom" "18.3.0"
+    "@types/react-table" "7.7.20"
+    classnames "2.5.1"
+    jest-environment-jsdom "29.7.0"
+    lodash.isequal "4.5.0"
+    prop-types "15.8.1"
+    react-table "7.8.0"
+    react-useportal "1.0.19"
+
 "@canonical/store-components@0.52.0":
   version "0.52.0"
   resolved "https://registry.yarnpkg.com/@canonical/store-components/-/store-components-0.52.0.tgz#04415a5c826601feb9cb554a1e5086c874b83ef6"
@@ -8019,10 +8036,10 @@ v8-to-istanbul@^9.0.1:
     "@types/istanbul-lib-coverage" "^2.0.1"
     convert-source-map "^2.0.0"
 
-vanilla-framework@4.17.1:
-  version "4.17.1"
-  resolved "https://registry.yarnpkg.com/vanilla-framework/-/vanilla-framework-4.17.1.tgz#8f0913e51bbe14ec3ed0686fe4f91ab7685eda41"
-  integrity sha512-vmjx08LnGnNC37GF4shnrknmWhjV1Xq2LciBvzIBZFy4zCVbDO7O2HJbPvXzLkWClgICk7zkpnKJMVBAUk4wjA==
+vanilla-framework@4.18.4:
+  version "4.18.4"
+  resolved "https://registry.yarnpkg.com/vanilla-framework/-/vanilla-framework-4.18.4.tgz#8f740cd369d9a61d1cc3c34d3119660db4030e4a"
+  integrity sha512-g5jotlb6ENcK1+9hF3QsP5y8hGIXkgEdwjnDGTMEJ3vmtmwSJNa3KWp0QaFBE59nIZq71VGxTbYh+GI+9dzlLQ==
 
 vanilla-framework@4.9.0:
   version "4.9.0"
