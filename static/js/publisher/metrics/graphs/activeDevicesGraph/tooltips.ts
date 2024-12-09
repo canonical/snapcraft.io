@@ -163,6 +163,19 @@ export function tooltips(this: any) {
       .node()
       .getBoundingClientRect();
 
+    const windowWidth = window.innerWidth;
+    let adjustedLeft = mousePosition[0] + this.margin.left;
+
+    if (tooltipBounding.right > (windowWidth - 15)) {
+      adjustedLeft -= (tooltipBounding.right - windowWidth) + 15;
+    }
+
+    if (tooltipBounding.left < 0) {
+      adjustedLeft -= tooltipBounding.left;
+    }
+
+    this.tooltip.style("left", `${adjustedLeft}px`);
+
     if (tooltipBounding.top < 0) {
       this.tooltip
         .select(".p-tooltip")
