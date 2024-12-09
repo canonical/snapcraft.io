@@ -56,9 +56,8 @@
         <h4 class="p-embedded-description__summary">{{ summary }}</h4>
       {% endif %}
       {% if button %}
-      <div class="p-embedded-description__badge">
-        <img alt="Get it from the Snap Store" src="https://snapcraft.io/en/{% if button == 'white' %}light{% else %}dark{% endif %}/install.svg" />
-      </div>
+      <img alt="Get it from the Snap Store"
+        src="https://snapcraft.io/en/{% if button == 'white' %}light{% else %}dark{% endif %}/install.svg" />
       {% endif %}
     </div>
   </div>
