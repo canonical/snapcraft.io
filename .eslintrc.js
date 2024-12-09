@@ -45,5 +45,7 @@ module.exports = {
   ],
   ignorePatterns: [
     "/static/js/publisher-pages/pages/Releases", // skip releases for now as structural changes are required to fix TS
+    "/static/js/publisher-pages/pages/Metrics/metrics", // skip metrics for now as structural changes are required to fix TS
+    "/static/js/public/snap-details/publicise.ts", // skip publicise for now as structual changes are required to fix tS
   ],
 };

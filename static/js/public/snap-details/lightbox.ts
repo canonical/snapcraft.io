@@ -1,4 +1,4 @@
-function openLightbox(url: string, images: Array<any>) {
+function openLightbox(url: string, images: (string | undefined)[]) {
   const lightboxEl = initLightboxEl();
 
   openLightboxEl(lightboxEl, url, images);
@@ -60,7 +60,7 @@ const initLightboxEl = () => {
 const loadLightboxImage = (
   lightboxEl: HTMLElement,
   url: string | undefined,
-  images: Array<any>,
+  images: (string | undefined)[],
 ) => {
   const contentEl = lightboxEl.querySelector(".vbox-content") as HTMLElement;
 
@@ -156,7 +156,7 @@ const loadLightboxImage = (
 const openLightboxEl = (
   lightboxEl: HTMLElement,
   url: string,
-  images: Array<any>,
+  images: (string | undefined)[],
 ) => {
   // prepare navigating to next/prev images
   if (images && images.length) {
