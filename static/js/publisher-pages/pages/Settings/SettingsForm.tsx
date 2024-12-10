@@ -211,6 +211,7 @@ function SettingsForm({ settings }: Props) {
                     className="p-radio__input"
                     value="public"
                     disabled={settingsData?.visibility_locked}
+                    defaultChecked={settingsData.visibility === "public"}
                     {...register("visibility")}
                   />
                   <span className="p-radio__label">Public</span>
@@ -228,6 +229,7 @@ function SettingsForm({ settings }: Props) {
                     className="p-radio__input"
                     value="unlisted"
                     disabled={settingsData?.visibility_locked}
+                    defaultChecked={settingsData.visibility === "unlisted"}
                     {...register("visibility")}
                   />
                   <span className="p-radio__label">Unlisted</span>
@@ -246,6 +248,7 @@ function SettingsForm({ settings }: Props) {
                     className="p-radio__input"
                     value="private"
                     disabled={settingsData?.visibility_locked}
+                    defaultChecked={settingsData.visibility === "private"}
                     {...register("visibility")}
                   />
                   <span className="p-radio__label">Private</span>
@@ -283,6 +286,9 @@ function SettingsForm({ settings }: Props) {
                       type="radio"
                       className="p-radio__input"
                       value="all"
+                      defaultChecked={
+                        settingsData.territory_distribution_status === "all"
+                      }
                       {...register("territory_distribution_status")}
                     />
                     <span className="p-radio__label">All territories</span>
@@ -297,6 +303,9 @@ function SettingsForm({ settings }: Props) {
                       type="radio"
                       className="p-radio__input"
                       value="custom"
+                      defaultChecked={
+                        settingsData.territory_distribution_status === "custom"
+                      }
                       {...register("territory_distribution_status")}
                     />
                     <span className="p-radio__label">Selected territories</span>
@@ -311,6 +320,9 @@ function SettingsForm({ settings }: Props) {
                       type="radio"
                       className="p-radio__input"
                       value="include"
+                      defaultChecked={
+                        settingsData.country_keys_status === "include"
+                      }
                       {...register("country_keys_status")}
                     />
                     <span className="p-radio__label">
@@ -338,6 +350,9 @@ function SettingsForm({ settings }: Props) {
                       type="radio"
                       className="p-radio__input"
                       value="exclude"
+                      defaultChecked={
+                        settingsData.country_keys_status === "exclude"
+                      }
                       {...register("country_keys_status")}
                     />
                     <span className="p-radio__label">
@@ -383,6 +398,7 @@ function SettingsForm({ settings }: Props) {
                   <input
                     type="checkbox"
                     className="p-checkbox__input"
+                    defaultChecked={settingsData.update_metadata_on_release}
                     {...register("update_metadata_on_release", {
                       setValueAs: (value) => value === "on" || value === true,
                     })}
