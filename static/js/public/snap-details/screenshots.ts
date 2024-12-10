@@ -1,4 +1,4 @@
-import lightbox from "./../../publisher/market/lightbox";
+import lightbox from "./lightbox";
 import Swiper from "swiper";
 import { Navigation } from "swiper/modules";
 import { SCREENSHOTS_CONFIG } from "../../config/swiper.config";

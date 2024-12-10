@@ -14,7 +14,7 @@ from webapp.api.github import GitHub, InvalidYAML
 from webapp.decorators import login_required
 from webapp.extensions import csrf
 from webapp.publisher.snaps.builds import map_build_and_upload_states
-from werkzeug.exceptions import Unauthorized, Forbidden
+from werkzeug.exceptions import Unauthorized
 
 GITHUB_SNAPCRAFT_USER_TOKEN = os.getenv("GITHUB_SNAPCRAFT_USER_TOKEN")
 GITHUB_WEBHOOK_HOST_URL = os.getenv("GITHUB_WEBHOOK_HOST_URL")
@@ -66,7 +66,10 @@ def get_builds(lp_snap, selection):
 
 
 @login_required
-def get_snap_builds(snap_name):
+def get_snap_repo(snap_name):
+    res = {"message": "", "success": True}
+    data = {"github_orgs": [], "github_repository": None, "github_user": None}
+
     details = publisher_api.get_snap_info(snap_name, flask.session)
 
     # API call to make users without needed permissions refresh the session
@@ -74,16 +77,6 @@ def get_snap_builds(snap_name):
     publisher_api.get_package_upload_macaroon(
         session=flask.session, snap_name=snap_name, channels=["edge"]
     )
-
-    context = {
-        "publisher_name": details["publisher"]["display-name"],
-        "snap_id": details["snap_id"],
-        "snap_name": details["snap_name"],
-        "snap_title": details["title"],
-        "snap_builds_enabled": False,
-        "snap_builds": [],
-        "total_builds": 0,
-    }
 
     # Get built snap in launchpad with this store name
     lp_snap = launchpad.get_snap_by_store_name(details["snap_name"])
@@ -98,67 +91,64 @@ def get_snap_builds(snap_name):
         )
 
         # Git repository without GitHub hostname
-        context["github_repository"] = lp_snap["git_repository_url"][19:]
-        github_owner, github_repo = context["github_repository"].split("/")
-        gh_snap_base = None
+        data["github_repository"] = lp_snap["git_repository_url"][19:]
+        github_owner, github_repo = data["github_repository"].split("/")
 
-        try:
-            context["github_repository_exists"] = github.check_if_repo_exists(
-                github_owner, github_repo
-            )
-            context["yaml_file_exists"] = github.get_snapcraft_yaml_location(
-                github_owner, github_repo
-            )
+        if not github.check_if_repo_exists(github_owner, github_repo):
+            data["success"] = False
+            data["message"] = "This app has been revoked"
 
-            if context["yaml_file_exists"]:
-                try:
-                    yaml_data = github.get_snapcraft_yaml_data(
-                        github_owner,
-                        github_repo,
-                        location=context["yaml_file_exists"],
-                    )
-                    gh_snap_base = yaml_data.get(
-                        "build-base", yaml_data.get("base", None)
-                    )
-                except InvalidYAML:
-                    # If we can't parse the yaml we don't
-                    # want to cause an error
-                    pass
+        if github.get_user():
+            data["github_user"] = github.get_user()
+            data["github_orgs"] = github.get_orgs()
 
-        except Unauthorized:
-            context["github_app_revoked"] = True
-
-        builds = get_builds(lp_snap, slice(0, BUILDS_PER_PAGE))
-        context.update(builds)
-
-        # Notify about i386 arch
-        if gh_snap_base and (
-            not gh_snap_base.startswith("core")
-            or (
-                gh_snap_base.startswith("core")
-                and gh_snap_base.replace("core", "")
-                and int(gh_snap_base.replace("core", "")) >= 20
-            )
-        ):
-            # Check if this publisher was building for i386 recently
-            for build in builds["snap_builds"]:
-                if build["arch_tag"] == "i386":
-                    context["dropped_i386"] = True
-                    break
-
-        context["snap_builds_enabled"] = bool(context["snap_builds"])
     else:
+        data["github_repository"] = None
         github = GitHub(flask.session.get("github_auth_secret"))
 
-        try:
-            context["github_user"] = github.get_user()
-        except (Unauthorized, Forbidden):
-            context["github_user"] = None
+        if github.get_user():
+            data["github_user"] = github.get_user()
+            data["github_orgs"] = github.get_orgs()
+        else:
+            data["success"] = False
+            data["message"] = "Unauthorized"
 
-        if context["github_user"]:
-            context["github_orgs"] = github.get_orgs()
+    res["data"] = data
 
-    return flask.render_template("publisher/builds.html", **context)
+    return flask.jsonify(res)
+
+
+@login_required
+def get_snap_builds_page(snap_name):
+    return flask.render_template("store/publisher.html", snap_name=snap_name)
+
+
+@login_required
+def get_snap_build_page(snap_name, build_id):
+    return flask.render_template(
+        "store/publisher.html", snap_name=snap_name, build_id=build_id
+    )
+
+
+@login_required
+def get_snap_builds(snap_name):
+    res = {"message": "", "success": True}
+    data = {"snap_builds": [], "total_builds": 0}
+
+    details = publisher_api.get_snap_info(snap_name, flask.session)
+    start = flask.request.args.get("start", 0, type=int)
+    size = flask.request.args.get("size", 15, type=int)
+    build_slice = slice(start, size)
+
+    # Get built snap in launchpad with this store name
+    lp_snap = launchpad.get_snap_by_store_name(details["snap_name"])
+
+    if lp_snap:
+        data.update(get_builds(lp_snap, build_slice))
+
+    res["data"] = data
+
+    return flask.jsonify(res)
 
 
 @login_required
@@ -195,7 +185,7 @@ def get_snap_build(snap_name, build_id):
                 details["snap_name"], build_id
             )
 
-    return flask.render_template("publisher/build.html", **context)
+    return flask.jsonify({"data": context, "success": True})
 
 
 def validate_repo(github_token, snap_name, gh_owner, gh_repo):
@@ -245,25 +235,6 @@ def validate_repo(github_token, snap_name, gh_owner, gh_repo):
             }
 
     return result
-
-
-@login_required
-def get_snap_builds_json(snap_name):
-    details = publisher_api.get_snap_info(snap_name, flask.session)
-
-    context = {"snap_builds": []}
-
-    start = flask.request.args.get("start", 0, type=int)
-    size = flask.request.args.get("size", 15, type=int)
-    build_slice = slice(start, size)
-
-    # Get built snap in launchpad with this store name
-    lp_snap = launchpad.get_snap_by_store_name(details["snap_name"])
-
-    if lp_snap:
-        context.update(get_builds(lp_snap, build_slice))
-
-    return flask.jsonify(context)
 
 
 @login_required
