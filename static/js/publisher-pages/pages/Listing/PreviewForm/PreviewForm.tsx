@@ -100,6 +100,7 @@ function PreviewForm({ snapName, getValues }: Props) {
       encType="multipart/form-data"
       className="u-hide"
       target="_blank"
+      rel="opener"
     >
       <input type="hidden" name="csrf_token" defaultValue={window.CSRF_TOKEN} />
       <input
