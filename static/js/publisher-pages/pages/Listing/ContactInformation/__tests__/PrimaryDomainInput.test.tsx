@@ -103,7 +103,7 @@ describe("PrimaryDomainInput", () => {
       primary_website: "https://example.com",
     });
     const input = screen.getByRole("textbox", { name: "Primary website:" });
-    await user.type(input, "https://example.comabc");
+    await user.type(input, "abc");
     expect(input).toHaveValue("https://example.comabc");
 
     expect(
