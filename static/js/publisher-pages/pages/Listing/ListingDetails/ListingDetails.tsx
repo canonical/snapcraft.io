@@ -51,6 +51,7 @@ function ListingDetails({
         imageUrl={data.icon_url}
         register={register}
         setValue={setValue}
+        getValues={getValues}
         validationSchema={{
           maxFileSize: 256000,
           minWidth: 40,
@@ -213,6 +214,7 @@ function ListingDetails({
         imageUrl={data.banner_urls[0]}
         register={register}
         setValue={setValue}
+        getValues={getValues}
         validationSchema={{
           maxFileSize: 2000000,
           minWidth: 720,
