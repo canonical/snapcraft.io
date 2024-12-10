@@ -376,6 +376,14 @@
         {% if is_preview %}
           snapcraft.publisher.preview({{ package_name|tojson }});
         {% endif %}
+
+        {% if is_preview %}
+          const editButton = document.querySelector('.js-edit');
+          editButton.addEventListener("click", (e) => {
+            e.preventDefault();
+            window.close();
+          });
+        {% endif %}
       });
     });
   </script>
