@@ -19,28 +19,26 @@ const LANGUAGES = {
   tw: { title: "中文（台灣）", text: "安裝軟體敬請移駕 Snap Store" },
 };
 
+type LanguageKey = keyof typeof LANGUAGES;
+
 function PubliciseButtons(): JSX.Element {
   const { snapId } = useParams();
-  const [selectedLanguage, setSelectedLanguage] = useState<string>("en");
+  const [selectedLanguage, setSelectedLanguage] = useState<LanguageKey>("en");
 
   const darkBadgeSource = `https://snapcraft.io/${selectedLanguage}/dark/install.svg`;
   const lightBadgeSource = `https://snapcraft.io/${selectedLanguage}/light/install.svg`;
 
   const htmlSnippetBlack = `<a href="https://snapcraft.io/${snapId}">
-  <img alt="Get it from the Snap Store" src=${darkBadgeSource} />
-</a>
-`;
+    <img alt="${LANGUAGES[selectedLanguage].text}" src=${darkBadgeSource} />
+  </a>`;
 
   const htmlSnippetWhite = `<a href="https://snapcraft.io/${snapId}">
-  <img alt="Get it from the Snap Store" src=${lightBadgeSource} />
-</a>
-`;
+    <img alt="${LANGUAGES[selectedLanguage].text}" src=${lightBadgeSource} />
+  </a>`;
 
-  const markdownSnippetBlack = `[![Get it from the Snap Store](${darkBadgeSource})](https://snapcraft.io/${snapId})
-`;
+  const markdownSnippetBlack = `[![${LANGUAGES[selectedLanguage].text}](${darkBadgeSource})](https://snapcraft.io/${snapId})`;
 
-  const markdownSnippetWhite = `[![Get it from the Snap Store](${lightBadgeSource})](https://snapcraft.io/${snapId})
-`;
+  const markdownSnippetWhite = `[![${LANGUAGES[selectedLanguage].text}](${lightBadgeSource})](https://snapcraft.io/${snapId})`;
 
   return (
     <>
@@ -58,7 +56,7 @@ function PubliciseButtons(): JSX.Element {
               };
             })}
             onChange={(e) => {
-              setSelectedLanguage(e.target.value);
+              setSelectedLanguage(e.target.value as LanguageKey);
             }}
             style={{ maxWidth: "180px" }}
           />
