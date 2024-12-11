@@ -1,9 +1,10 @@
-import { UseFormGetValues, FieldValues } from "react-hook-form";
+import { UseFormGetValues, FieldValues, UseFormWatch } from "react-hook-form";
 import { Form } from "@canonical/react-components";
 
 type Props = {
   snapName: string;
   getValues: UseFormGetValues<FieldValues>;
+  watch: UseFormWatch<FieldValues>;
 };
 
 type ListingData = {
@@ -26,17 +27,31 @@ type ListingData = {
   description: string;
 };
 
-function PreviewForm({ snapName, getValues }: Props) {
+function PreviewForm({ snapName, getValues, watch }: Props) {
+  const watchWebsites = watch("websites");
+  const watchContacts = watch("contacts");
+  const watchDonations = watch("donations");
+  const watchSource = watch("source");
+  const watchIssues = watch("issues");
+
   const listingData: ListingData = {
     categories: [],
     links: {
-      website: getValues("websites").map((item: { url: string }) => item.url),
-      contact: getValues("contacts").map((item: { url: string }) => item.url),
-      donations: getValues("donations").map(
-        (item: { url: string }) => item.url,
-      ),
-      source: getValues("source_code").map((item: { url: string }) => item.url),
-      issues: getValues("issues").map((item: { url: string }) => item.url),
+      website: watchWebsites
+        ? watchWebsites.map((item: { url: string }) => item.url)
+        : [],
+      contact: watchContacts
+        ? watchContacts.map((item: { url: string }) => item.url)
+        : [],
+      donations: watchDonations
+        ? watchDonations.map((item: { url: string }) => item.url)
+        : [],
+      source: watchSource
+        ? watchSource.map((item: { url: string }) => item.url)
+        : [],
+      issues: watchIssues
+        ? watchIssues.map((item: { url: string }) => item.url)
+        : [],
     },
     snap_name: snapName,
     title: getValues("title"),
