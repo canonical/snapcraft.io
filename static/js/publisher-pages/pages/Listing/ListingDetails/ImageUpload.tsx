@@ -1,5 +1,10 @@
 import { useState, SyntheticEvent } from "react";
-import { UseFormRegister, UseFormSetValue, FieldValues } from "react-hook-form";
+import {
+  UseFormRegister,
+  UseFormSetValue,
+  FieldValues,
+  UseFormGetValues,
+} from "react-hook-form";
 import { nanoid } from "nanoid";
 import {
   Row,
@@ -15,6 +20,7 @@ type Props = {
   imageUrl: string | null;
   register: UseFormRegister<FieldValues>;
   setValue: UseFormSetValue<FieldValues>;
+  getValues: UseFormGetValues<FieldValues>;
   validationSchema: {
     maxFileSize: number;
     minWidth: number;
@@ -61,6 +67,7 @@ function ImageUpload({
   imageUrl,
   register,
   setValue,
+  getValues,
   validationSchema,
   label,
   imageUrlFieldKey,
@@ -77,7 +84,9 @@ function ImageUpload({
   const [imageIsValid, setImageIsValid] = useState(true);
   const [isDragging, setIsDragging] = useState(false);
   const [darkThemeEnabled, setDarkThemeEnabled] = useState(false);
-  const [previewImageUrl, setPreviewImageUrl] = useState(imageUrl);
+  const [previewImageUrl, setPreviewImageUrl] = useState(
+    getValues(imageUrlFieldKey),
+  );
 
   const fieldId = nanoid();
   const isDark = hasDarkThemePreview && darkThemeEnabled;
@@ -170,7 +179,7 @@ function ImageUpload({
                 setIsDragging(false);
               }}
             >
-              {previewImageUrl ? (
+              {getValues(imageUrlFieldKey) ? (
                 <div
                   className="snap-image-upload-preview"
                   style={{
@@ -179,7 +188,7 @@ function ImageUpload({
                   }}
                 >
                   <img
-                    src={previewImageUrl}
+                    src={getValues(imageUrlFieldKey)}
                     width={previewWidth}
                     height={previewHeight}
                     alt=""
@@ -236,7 +245,9 @@ function ImageUpload({
                 className="p-button--base snap-remove-icon"
                 onClick={() => {
                   setImageIsValid(true);
-                  setValue(imageUrlFieldKey, "");
+                  setValue(imageUrlFieldKey, "", {
+                    shouldDirty: imageUrl !== "",
+                  });
                   setValue(imageFieldKey, new File([], ""));
                   setPreviewImageUrl("");
                 }}
