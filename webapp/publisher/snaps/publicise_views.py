@@ -29,7 +29,6 @@ def get_publicise_data(snap_name):
 
     is_released = len(snap_details["channel_maps_list"]) > 0
 
-    print(snap_details)
     context = {
         "is_released": is_released,
         "trending": trending,
