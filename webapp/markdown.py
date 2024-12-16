@@ -1,4 +1,5 @@
 import re
+import html
 
 from mistune import HTMLRenderer, Markdown
 from mistune.block_parser import (
@@ -59,4 +60,5 @@ parser = Markdown(
 
 
 def parse_markdown_description(content):
-    return parser(content)
+    unescaped_content = html.unescape(content)
+    return parser(unescaped_content)
