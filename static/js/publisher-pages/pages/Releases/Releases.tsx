@@ -39,7 +39,7 @@ function Releases(): JSX.Element {
         <Strip shallow>
           <p>
             <i className="p-icon--spinner u-animation--spin"></i>&nbsp;Loading{" "}
-            {snapId} releases data
+            {snapId} builds data
           </p>
         </Strip>
       )}
