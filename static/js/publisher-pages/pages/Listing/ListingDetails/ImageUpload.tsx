@@ -144,6 +144,16 @@ function ImageUpload({
     };
   };
 
+  const showDeleteButton = (): boolean => {
+    const fieldValue = getValues(imageUrlFieldKey);
+
+    if (fieldValue && fieldValue.length > 0) {
+      return true;
+    }
+
+    return false;
+  };
+
   return (
     <Row className="p-form__group p-form__group--top" data-tour={tourLabel}>
       <Col size={2}>
@@ -179,7 +189,8 @@ function ImageUpload({
                 setIsDragging(false);
               }}
             >
-              {getValues(imageUrlFieldKey) ? (
+              {getValues(imageUrlFieldKey) &&
+              getValues(imageUrlFieldKey).length > 0 ? (
                 <div
                   className="snap-image-upload-preview"
                   style={{
@@ -239,7 +250,7 @@ function ImageUpload({
               />
             </div>
 
-            {previewImageUrl && (
+            {showDeleteButton() && (
               <button
                 type="button"
                 className="p-button--base snap-remove-icon"

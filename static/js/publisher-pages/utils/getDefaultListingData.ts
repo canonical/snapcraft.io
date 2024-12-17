@@ -40,6 +40,7 @@ export default function getDefaultListingData(data: ListingData): {
   [key: string]: unknown;
 } {
   return {
+    banner_urls: data.banner_urls,
     contacts: data.contacts,
     description: data.description,
     donations: data.donations,
