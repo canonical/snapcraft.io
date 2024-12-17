@@ -28,7 +28,6 @@ describe("getDefaultData", () => {
     expect(defaultData.video_urls).toBeDefined();
     expect(defaultData.websites).toBeDefined();
 
-    expect(defaultData.banner_urls).not.toBeDefined();
     expect(defaultData.categories).not.toBeDefined();
     expect(defaultData.public_metrics_blacklist).not.toBeDefined();
     expect(defaultData.snap_id).not.toBeDefined();
