@@ -16,4 +16,9 @@ declare interface Window {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   Vimeo: any;
   DNS_VERIFICATION_TOKEN: string;
+  SENTRY_DSN: string;
+  CSRF_TOKEN: string;
+  SNAP_LISTING_DATA: {
+    DNS_VERIFICATION_TOKEN: string;
+  };
 }

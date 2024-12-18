@@ -309,9 +309,6 @@
 
 {% block scripts_includes %}
   <script src="{{ static_url('js/dist/store-details.js') }}" defer></script>
-  {% if is_preview %}
-    <script src="{{ static_url('js/dist/publisher.js') }}" defer></script>
-  {% endif %}
 {% endblock %}
 
 {% block scripts %}
@@ -374,7 +371,15 @@
         {% endif %}
 
         {% if is_preview %}
-          snapcraft.publisher.preview({{ package_name|tojson }});
+          const editButton = document.querySelector('.js-edit');
+          if (editButton) {
+            editButton.addEventListener("click", (e) => {
+              if (window.opener) {
+                e.preventDefault();
+                window.close();
+              }
+            });
+          }
         {% endif %}
       });
     });

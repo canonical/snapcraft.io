@@ -18,7 +18,7 @@ def redirect_get_release_history(snap_name):
 
 
 @login_required
-def get_release_history(snap_name):
+def get_release_history_data(snap_name):
     release_history = publisher_api.snap_release_history(
         flask.session, snap_name
     )
@@ -33,12 +33,21 @@ def get_release_history(snap_name):
         "publisher_name": snap.get("publisher", {}).get("display-name", {}),
         "release_history": release_history,
         "private": snap.get("private"),
-        "default_track": snap.get("default-track"),
+        "default_track": (
+            snap.get("default-track")
+            if snap.get("default-track") is not None
+            else "latest"
+        ),
         "channel_map": channel_map.get("channel-map"),
         "tracks": snap.get("tracks"),
     }
 
-    return flask.render_template("publisher/release-history.html", **context)
+    return flask.jsonify({"success": True, "data": context})
+
+
+@login_required
+def get_releases(snap_name):
+    return flask.render_template("store/publisher.html")
 
 
 @login_required

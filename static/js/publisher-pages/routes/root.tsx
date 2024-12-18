@@ -25,7 +25,7 @@ function Root(): JSX.Element {
         />
       }
     >
-      <div id="main-content">
+      <div id="main-content" className="publisher-app">
         <Panel>
           <Row>
             <Col size={12}>

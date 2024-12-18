@@ -84,57 +84,69 @@ publisher_snaps.add_url_rule(
 # Build views
 publisher_snaps.add_url_rule(
     "/<snap_name>/builds",
+    view_func=build_views.get_snap_builds_page,
+    methods=["GET"],
+),
+
+publisher_snaps.add_url_rule(
+    "/<snap_name>/builds/<build_id>",
+    view_func=build_views.get_snap_build_page,
+    methods=["GET"],
+),
+
+publisher_snaps.add_url_rule(
+    "/api/<snap_name>/repo",
+    view_func=build_views.get_snap_repo,
+    methods=["GET"],
+)
+publisher_snaps.add_url_rule(
+    "/api/<snap_name>/builds",
     view_func=build_views.get_snap_builds,
     methods=["GET"],
 )
 publisher_snaps.add_url_rule(
-    "/<snap_name>/builds.json",
-    view_func=build_views.get_snap_builds_json,
-    methods=["GET"],
-)
-publisher_snaps.add_url_rule(
-    "/<snap_name>/builds",
+    "/api/<snap_name>/builds",
     view_func=build_views.post_snap_builds,
     methods=["POST"],
 )
 publisher_snaps.add_url_rule(
-    "/<snap_name>/builds/<build_id>",
+    "/api/<snap_name>/builds/<build_id>",
     view_func=build_views.get_snap_build,
     methods=["GET"],
 )
 publisher_snaps.add_url_rule(
-    "/<snap_name>/builds/validate-repo",
+    "/api/<snap_name>/builds/validate-repo",
     view_func=build_views.get_validate_repo,
     methods=["GET"],
 )
 publisher_snaps.add_url_rule(
-    "/<snap_name>/builds/trigger-build",
+    "/api/<snap_name>/builds/trigger-build",
     view_func=build_views.post_build,
     methods=["POST"],
 )
 publisher_snaps.add_url_rule(
-    "/<snap_name>/builds/check-build-request/<build_id>",
+    "/api/<snap_name>/builds/check-build-request/<build_id>",
     view_func=build_views.check_build_request,
     methods=["GET"],
 )
 publisher_snaps.add_url_rule(
-    "/<snap_name>/webhook/notify",
+    "/api/<snap_name>/webhook/notify",
     view_func=build_views.post_github_webhook,
     methods=["POST"],
 )
 # This route is to support previous webhooks from build.snapcraft.io
 publisher_snaps.add_url_rule(
-    "/<github_owner>/<github_repo>/webhook/notify",
+    "/api/<github_owner>/<github_repo>/webhook/notify",
     view_func=build_views.post_github_webhook,
     methods=["POST"],
 )
 publisher_snaps.add_url_rule(
-    "/<snap_name>/builds/update-webhook",
+    "/api/<snap_name>/builds/update-webhook",
     view_func=build_views.get_update_gh_webhooks,
     methods=["GET"],
 )
 publisher_snaps.add_url_rule(
-    "/<snap_name>/builds/disconnect/",
+    "/api/<snap_name>/builds/disconnect/",
     view_func=build_views.post_disconnect_repo,
     methods=["POST"],
 )
@@ -150,7 +162,12 @@ publisher_snaps.add_url_rule(
 )
 publisher_snaps.add_url_rule(
     "/<snap_name>/releases",
-    view_func=release_views.get_release_history,
+    view_func=release_views.get_releases,
+    methods=["GET"],
+)
+publisher_snaps.add_url_rule(
+    "/api/<snap_name>/releases",
+    view_func=release_views.get_release_history_data,
     methods=["GET"],
 )
 publisher_snaps.add_url_rule(
@@ -211,6 +228,26 @@ publisher_snaps.add_url_rule(
     view_func=metrics_views.publisher_snap_metrics,
 )
 
+publisher_snaps.add_url_rule(
+    "/<snap_name>/metrics/active-devices",
+    view_func=metrics_views.get_active_devices,
+)
+
+publisher_snaps.add_url_rule(
+    "/<snap_name>/metrics/active-latest-devices",
+    view_func=metrics_views.get_latest_active_devices,
+)
+
+publisher_snaps.add_url_rule(
+    "/<snap_name>/metrics/active-device-annotation",
+    view_func=metrics_views.get_metric_annotaion,
+)
+
+publisher_snaps.add_url_rule(
+    "/<snap_name>/metrics/country-metric",
+    view_func=metrics_views.get_country_metric,
+)
+
 # Publice views
 publisher_snaps.add_url_rule(
     "/<snap_name>/publicise",
@@ -218,11 +255,15 @@ publisher_snaps.add_url_rule(
 )
 publisher_snaps.add_url_rule(
     "/<snap_name>/publicise/badges",
-    view_func=publicise_views.get_publicise_badges,
+    view_func=publicise_views.get_publicise,
 )
 publisher_snaps.add_url_rule(
     "/<snap_name>/publicise/cards",
-    view_func=publicise_views.get_publicise_cards,
+    view_func=publicise_views.get_publicise,
+)
+publisher_snaps.add_url_rule(
+    "/api/<snap_name>/publicise",
+    view_func=publicise_views.get_publicise_data,
 )
 
 # Settings views
@@ -231,18 +272,13 @@ publisher_snaps.add_url_rule(
     view_func=settings_views.get_settings,
 )
 publisher_snaps.add_url_rule(
-    "/<snap_name>/settings.json",
-    view_func=settings_views.get_settings_json,
-)
-publisher_snaps.add_url_rule(
-    "/<snap_name>/settings",
-    view_func=settings_views.post_settings,
+    "/api/<snap_name>/settings",
+    view_func=settings_views.post_settings_data,
     methods=["POST"],
 )
 publisher_snaps.add_url_rule(
-    "/<snap_name>/settings.json",
-    view_func=settings_views.post_settings_json,
-    methods=["POST"],
+    "/api/<snap_name>/settings",
+    view_func=settings_views.get_settings_data,
 )
 
 

@@ -58,7 +58,9 @@ body {
 // responsive styles for summary + badge
 @media screen and (min-width: $breakpoint-x-small) {
   .p-embedded-description {
+    align-items: center;
     display: flex;
+    justify-content: space-between;
   }
 
   .p-embedded-description__summary {
