@@ -7,7 +7,6 @@ describe("formatImageChanges", () => {
       "https://example.com/icon",
       ["https://example.com/screenshot"],
       [],
-      {},
     );
 
     expect(imageChanges[0].url).toBe("https://example.com/banner");

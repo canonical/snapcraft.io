@@ -41,7 +41,6 @@ export default function getListingChanges(
       fieldValues.icon_url,
       fieldValues.screenshot_urls,
       fieldValues.screenshots,
-      dirtyFields,
     );
   }
 
