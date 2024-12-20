@@ -68,6 +68,38 @@ My published snaps — Linux software in the Snap Store
     </div>
   </div>
   {% endif %}
+
+
+    <!-- {% for snap in snaps %}
+      <section class="p-strip--light is-shallow p-snapcraft-first-snap__notification">
+        <div class="row">
+          <div class="col-9">
+            {% if snaps[snap].latest_release %}
+            <p>
+              You've released {{ snap }} to the "{{ snaps[snap].latest_release.channels[0] }}" channel!
+            </p>
+            {% else %}
+            <p>
+              You've uploaded {{ snap }}!
+            </p>
+            {% endif %}
+            <p>
+              Want to improve the listing in stores?
+              <a href="/{{ snap }}/listing">Edit Store listing</a>
+              {% if not snaps[snap].latest_release %}
+              <br />
+              Is your snap ready to release?
+              <a href="/docs/releasing-your-app" target="_blank">Release it</a>
+              {% endif %}
+            </p>
+          </div>
+          <div class="col-3 p-snapcraft-first-snap__rocket">
+            <img alt="Rocket among stars" src="https://assets.ubuntu.com/v1/abd70be7-Rocket+V2.png" height="100px"/>
+          </div>
+        </div>
+      </section>
+    {% endfor %} -->
+
   {% if snaps %}
   {% if snaps|length == 1 %}
   {% for snap in snaps %}
@@ -186,6 +218,10 @@ My published snaps — Linux software in the Snap Store
   </div>
   {% endif %}
 </section>
+
+
+
+
 {% if registered_snaps %}
 <section class="p-strip is-shallow u-no-padding--top">
   <div class="row">

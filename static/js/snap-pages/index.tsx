@@ -3,8 +3,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "react-query";
 
 import Root from "./routes/root";
-import ValidationSets from "./pages/ValidationSets";
-import ValidationSet from "./pages/ValidationSet";
+import { AccountSnaps } from "./pages/AccountSnaps";
 
 const router = createBrowserRouter([
   {
@@ -12,12 +11,8 @@ const router = createBrowserRouter([
     element: <Root />,
     children: [
       {
-        path: "/validation-sets",
-        element: <ValidationSets />,
-      },
-      {
-        path: "/validation-sets/:validationSetId",
-        element: <ValidationSet />,
+        path: "/snaps",
+        element: <AccountSnaps />,
       },
     ],
   },
