@@ -56,7 +56,6 @@ def create_app(testing=False):
             return dict(csrf_token=lambda: "mocked_csrf_token")
 
     set_handlers(app)
-
     app.register_blueprint(snapcraft_blueprint())
     app.register_blueprint(store_packages)
     app.register_blueprint(first_snap, url_prefix="/first-snap")
