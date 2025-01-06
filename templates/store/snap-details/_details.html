@@ -24,9 +24,11 @@
     <h5 class="p-muted-heading">Websites</h5>
     <ul class="p-list">
       {% for link in links["website"] %}
+        {% if format_link(link) != None %}
         <li {% if loop.index == 1 %}data-js="primary-domain"{% endif %}>
           <a class="js-external-link" title="{{ link }}" href="{{ link }}" aria-controls="modal">{{ format_link(link) }}</a>
         </li>
+        {% endif %}
       {% endfor %}
     </ul>  
     <hr>
@@ -36,9 +38,11 @@
     <h5 class="p-muted-heading">Contact</h5>
     <ul class="p-list">
       {% for link in links["contact"] %}
+        {% if format_link(link) != None %}
         <li>
           <a class="js-external-link" title="{{ link }}" href="{{ link }}" aria-controls="modal">{{ format_link(link) }}</a>
         </li>
+        {% endif %}
       {% endfor %}
     </ul>  
     <hr>
@@ -48,9 +52,11 @@
     <h5 class="p-muted-heading">Donations</h5>
     <ul class="p-list">
       {% for link in links["donations"] %}
+        {% if format_link(link) != None %}
         <li>
           <a class="js-external-link" title="{{ link }}" href="{{ link }}" aria-controls="modal">{{ format_link(link) }}</a>
         </li>
+        {% endif %}
       {% endfor %}
     </ul>  
     <hr>
@@ -60,9 +66,11 @@
     <h5 class="p-muted-heading">Source code</h5>
     <ul class="p-list">
       {% for link in links["source"] %}
+        {% if format_link(link) != None %}
         <li>
           <a class="js-external-link" title="{{ link }}" href="{{ link }}" aria-controls="modal">{{ format_link(link) }}</a>
         </li>
+        {% endif %}
       {% endfor %}
     </ul>  
     <hr>
@@ -72,9 +80,11 @@
     <h5 class="p-muted-heading">Report a bug</h5>
     <ul class="p-list">
       {% for link in links["issues"] %}
+        {% if format_link(link) != None %}
         <li>
           <a class="js-external-link" title="{{ link }}" href="{{ link }}" aria-controls="modal">{{ format_link(link) }}</a>
         </li>
+        {% endif %}
       {% endfor %}
     </ul>  
     <hr>
