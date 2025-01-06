@@ -5,9 +5,9 @@
         }
 
         &__metrics-empty-message {
+            left: 50%;
             position: absolute;
             top: 50%;
-            left: 50%;
             transform: translate(-50%, -50%);
         }
 
@@ -16,14 +16,14 @@
             display: flex;
 
             &-icon {
-                margin-right: 0.5rem;
                 font-size: 2rem;
+                margin-right: 0.5rem;
             }
         }
 
         &__account-snaps-loading {
-            display: flex; 
             align-items: center;
+            display: flex; 
             gap: 0.5rem;
 
             &-text {

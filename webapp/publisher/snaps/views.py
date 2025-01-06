@@ -308,12 +308,14 @@ def get_user_snaps():
         for snap_name in registered_snaps
     }
 
-    return flask.jsonify({
-        "snaps": user_snaps,
-        "current_user": flask_user["nickname"],
-        "registered_snaps": registered_snaps,
-        "is_users_snap": is_users_snap,
-    })
+    return flask.jsonify(
+        {
+            "snaps": user_snaps,
+            "current_user": flask_user["nickname"],
+            "registered_snaps": registered_snaps,
+            "is_users_snap": is_users_snap,
+        }
+    )
 
 
 @publisher_snaps.route("/snap-builds.json")
