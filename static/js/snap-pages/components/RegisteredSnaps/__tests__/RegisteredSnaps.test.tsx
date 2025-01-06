@@ -1,8 +1,8 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 
 import { ISnap } from "../../../types";
-import { PublishedSnapSection } from "../PublishedSnapSection";
-import { QueryClient, QueryClientProvider, useQuery } from "react-query";
+import { RegisteredSnaps } from "../RegisteredSnaps";
+import "@testing-library/jest-dom";
 
 const BASE_SNAP_DATA = {
   snapName: "test-snap-1",
@@ -41,20 +41,15 @@ const BASE_SNAP_DATA = {
   unlisted: false,
 };
 
-const queryClient = new QueryClient();
-
 const renderComponent = (snaps: ISnap[]) => {
   return render(
-    <QueryClientProvider client={queryClient}>
-      <PublishedSnapSection currentUser="test-user" snaps={snaps} />
-    </QueryClientProvider>,
+    <RegisteredSnaps
+      currentUser="test-user"
+      snaps={snaps}
+      refetchSnaps={jest.fn()}
+    />,
   );
 };
-
-jest.mock("react-query", () => ({
-  ...jest.requireActual("react-query"),
-  useQuery: jest.fn(),
-}));
 
 const generateSnaps = () => {
   const snaps: ISnap[] = [];
@@ -69,17 +64,12 @@ const generateSnaps = () => {
   return snaps;
 };
 
-describe("PublishedSnapSection", () => {
-  beforeAll(() => {
-    // @ts-expect-error Mocking useQuery with status loading
-    useQuery.mockReturnValue({ status: "loading", data: undefined });
-  });
-
+describe("RegisteredSnaps", () => {
   test("should show correct number of snaps in a page", () => {
     const snaps: ISnap[] = generateSnaps();
 
     renderComponent(snaps);
-    expect(screen.getAllByRole("row").length).toBe(11);
+    expect(screen.getAllByRole("row").length).toBe(10);
   });
 
   test("should paginate correctly", () => {
@@ -89,6 +79,49 @@ describe("PublishedSnapSection", () => {
 
     const paginationButtons = screen.getAllByRole("button");
     fireEvent.click(paginationButtons[paginationButtons.length - 1]);
-    expect(screen.getAllByRole("row").length).toBe(6);
+    expect(screen.getAllByRole("row").length).toBe(5);
+  });
+
+  test("should show dispute pending label", () => {
+    renderComponent([
+      {
+        ...BASE_SNAP_DATA,
+        status: "DisputePending",
+      },
+    ]);
+    expect(screen.getByLabelText("Name dispute in progress")).not.toBeNull();
+    expect(screen.getByText("(Name dispute in progress)")).not.toBeNull();
+  });
+
+  test("should show the snap name correctly", () => {
+    renderComponent([
+      {
+        ...BASE_SNAP_DATA,
+        snapName: "test-snap",
+      },
+    ]);
+    expect(screen.queryByLabelText("Name dispute in progress")).toBeNull();
+    expect(screen.getByText("test-snap")).not.toBeNull();
+  });
+
+  test("should render the unregister button disabled if the snap doesn't belong to the current user", () => {
+    renderComponent([BASE_SNAP_DATA]);
+
+    expect(screen.getByRole("button", { name: "Unregister" })).toBeDisabled();
+  });
+
+  test("should call the refresh function when a snap name is unregistered", () => {
+    renderComponent([
+      {
+        ...BASE_SNAP_DATA,
+        publisher: {
+          ...BASE_SNAP_DATA.publisher,
+          username: "test-user",
+        },
+      },
+    ]);
+
+    const unregisterButton = screen.getByRole("button", { name: "Unregister" });
+    expect(unregisterButton).not.toBeDisabled();
   });
 });

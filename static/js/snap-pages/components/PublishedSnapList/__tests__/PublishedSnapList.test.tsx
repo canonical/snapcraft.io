@@ -48,7 +48,7 @@ const renderComponent = (snaps: ISnap[]) => {
       setCurrentPage={() => {}}
       snaps={snaps}
       totalItems={snaps.length}
-    />
+    />,
   );
 };
 
@@ -97,7 +97,7 @@ describe("PublishedSnapList", () => {
 
     renderComponent([snap]);
     expect(
-      screen.getByText(`You've released test-snap-1 to the "edge" channel!`)
+      screen.getByText(`You've released test-snap-1 to the "edge" channel!`),
     ).not.toBeNull();
   });
 

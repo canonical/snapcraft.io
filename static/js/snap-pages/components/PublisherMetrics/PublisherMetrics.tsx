@@ -27,14 +27,7 @@ export const PublisherMetrics = ({ snaps }: { snaps: ISnap[] }) => {
         >
           <svg width="100%" height="240"></svg>
           {metricsData && metricsData.buckets.length === 0 && (
-            <div
-              style={{
-                position: "absolute",
-                top: "50%",
-                left: "50%",
-                transform: "translate(-50%, -50%)",
-              }}
-            >
+            <div className="p-snap-list__metrics-empty-message">
               No data found for{" "}
               {snaps
                 .map((snap) => snap.snapName)

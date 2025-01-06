@@ -16,7 +16,7 @@ export const PublishedSnapSection = ({
   const firstItemOfPage = (currentPage - 1) * PAGE_NUMBER;
   const snapsInPage = snaps.slice(
     firstItemOfPage,
-    firstItemOfPage + PAGE_NUMBER
+    firstItemOfPage + PAGE_NUMBER,
   );
 
   return (

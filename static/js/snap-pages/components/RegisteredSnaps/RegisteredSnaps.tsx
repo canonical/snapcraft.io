@@ -20,7 +20,7 @@ export const RegisteredSnaps = ({
   refetchSnaps: () => void;
 }) => {
   const [unregisterSnapModal, setUnregisterSnapModal] = useState<string | null>(
-    null
+    null,
   );
   const [isError, setIsError] = useState<boolean>(false);
   const [unregisterLoading, setUnregisterLoading] = useState<boolean>(false);
@@ -42,7 +42,10 @@ export const RegisteredSnaps = ({
                 {isDisputePending && (
                   <>
                     &nbsp;
-                    <i className="p-icon--warning p-snapcraft-dispute-list__icon"></i>
+                    <i
+                      className="p-icon--warning p-snapcraft-dispute-list__icon"
+                      aria-label="Name dispute in progress"
+                    ></i>
                   </>
                 )}
               </>
@@ -110,7 +113,6 @@ export const RegisteredSnaps = ({
           "X-CSRFToken": window.CSRF_TOKEN,
         },
       });
-
       if (response.ok) {
         void refetchSnaps();
       } else {
@@ -129,11 +131,8 @@ export const RegisteredSnaps = ({
       {unregisterSnapModal && (
         <ConfirmationModal
           title={
-            <div style={{ alignItems: "center", display: "flex" }}>
-              <i
-                className="p-icon--warning"
-                style={{ marginRight: "0.5rem", fontSize: "2rem" }}
-              ></i>
+            <div className="p-snap-list__confirmation-modal">
+              <i className="p-icon--warning p-snap-list__confirmation-modal-icon"></i>
               Unregister “<span>{unregisterSnapModal}</span>”
             </div>
           }
@@ -146,7 +145,7 @@ export const RegisteredSnaps = ({
         >
           <p>
             Are you sure you want to unregister “
-            <span data-js="package-name">{unregisterSnapModal}</span>”?
+            <span>{unregisterSnapModal}</span>”?
             <br />
             This name will be removed from your registered names and become
             available to others. This action is permanent and cannot be undone.

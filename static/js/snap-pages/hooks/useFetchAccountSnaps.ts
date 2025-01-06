@@ -12,14 +12,14 @@ function useFetchAccountSnaps() {
         ([snapName, value]) => ({
           snapName,
           ...(value as Omit<ISnap, "snapName">),
-        })
+        }),
       );
 
       const registeredSnaps = Object.entries(snapsData["registered_snaps"]).map(
         ([snapName, value]) => ({
           snapName,
           ...(value as Omit<ISnap, "snapName">),
-        })
+        }),
       );
 
       return {

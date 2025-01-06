@@ -19,9 +19,11 @@ export const AccountSnaps = () => {
         <div className="u-fixed-width u-clearfix">
           <h1 className="p-heading--3">Snaps</h1>
           {isLoading && (
-            <div>
+            <div className="p-snap-list__account-snaps-loading">
               <i className="p-icon--spinner u-animation--spin"></i>
-              <p>Fetching snaps</p>
+              <p className="p-snap-list__account-snaps-loading-text">
+                Fetching snaps
+              </p>
             </div>
           )}
 
@@ -46,7 +48,7 @@ export const AccountSnaps = () => {
         data.registeredSnaps.length > 0 &&
         !isLoading && (
           <RegisteredSnaps
-            snaps={data.registeredSnaps}
+            snaps={data.snaps}
             currentUser={data.currentUser}
             refetchSnaps={() => {
               refetch({ queryKey: "accountSnaps" });

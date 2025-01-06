@@ -20,7 +20,7 @@ function useFetchPublishedSnapMetrics(snaps: ISnap[]) {
           acc[item.snapName] = item["snap-id"];
           return acc;
         },
-        {} as { [name: string]: string }
+        {} as { [name: string]: string },
       );
 
       const response = await fetch("/snaps/metrics/json", {
@@ -44,10 +44,10 @@ function useFetchPublishedSnapMetrics(snaps: ISnap[]) {
 
       data.snaps.forEach((snap: { series: Array<Series>; name: string }) => {
         const continuedDevices = snap.series.filter(
-          (singleSeries) => singleSeries.name === "continued"
+          (singleSeries) => singleSeries.name === "continued",
         )[0];
         const newDevices = snap.series.filter(
-          (singleSeries) => singleSeries.name === "new"
+          (singleSeries) => singleSeries.name === "new",
         )[0];
 
         let totalSeries: Array<number> = [];

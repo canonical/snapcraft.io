@@ -10,7 +10,7 @@ const renderComponent = () => {
   return render(
     <QueryClientProvider client={queryClient}>
       <AccountSnaps />
-    </QueryClientProvider>
+    </QueryClientProvider>,
   );
 };
 
@@ -47,7 +47,7 @@ describe("AccountSnaps", () => {
     useQuery.mockReturnValue({ status: "error", data: undefined });
     renderComponent();
     expect(
-      screen.getByText(/Something went wrong. Please try again later./)
+      screen.getByText(/Something went wrong. Please try again later./),
     ).toBeInTheDocument();
   });
 });

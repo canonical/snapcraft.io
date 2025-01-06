@@ -12,4 +12,7 @@ module.exports = {
   moduleNameMapper: {
     "\\.(scss|sass|css)$": "identity-obj-proxy",
   },
+  globals: {
+    fetch: global.fetch,
+  },
 };

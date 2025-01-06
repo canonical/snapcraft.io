@@ -14,7 +14,10 @@ export const NewSnapNotification = ({ snap }: { snap: ISnap }) => {
       <Notification severity="information" title={title}>
         <p>
           Want to improve the listing in stores?
-          <Link href={`/${snapName}/listing`} style={{ marginLeft: "0.25rem" }}>
+          <Link
+            href={`/${snapName}/listing`}
+            className="p-snap-list__notification-link"
+          >
             Edit store listing
           </Link>
           {!latestRelease && (
@@ -24,7 +27,7 @@ export const NewSnapNotification = ({ snap }: { snap: ISnap }) => {
               <Link
                 href="/docs/releasing-your-app"
                 target="_blank"
-                style={{ marginLeft: "0.25rem" }}
+                className="p-snap-list__notification-link"
               >
                 Release it
               </Link>

@@ -10,7 +10,7 @@ export interface IReleaseInfo {
 export interface ISnap {
   snapName: string;
   icon_url: string | null;
-  latest_comments: any[];
+  latest_comments: Array<[string: string]>;
   latest_release: IReleaseInfo | null;
   latest_revisions: IReleaseInfo[];
   price: string | null;
@@ -19,7 +19,7 @@ export interface ISnap {
     "display-name": string;
     id: string;
     username: string;
-    validation: null | any;
+    validation: null | Array<[string: string]>;
   };
   since: string;
   "snap-id": string;
