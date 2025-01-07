@@ -3,12 +3,6 @@ import { RegisteredSnaps } from "../../components/RegisteredSnaps";
 import { PublishedSnapSection } from "../../components/PublishedSnapSection";
 import { useFetchAccountSnaps } from "../../hooks";
 
-// add pagination (done)
-// show only that page's graph (done)
-// try to get 500 error with graph? tried with 1500 snaps
-// no need - optimize graph? where the limited amount of snap is shown bu only some important data is shown in the graph less data points
-// kinda done - clear out the code (react query updated, error loading states updated)
-// tests => today
 export const AccountSnaps = () => {
   const { status, data, refetch, isRefetching } = useFetchAccountSnaps();
   const isLoading = isRefetching || status === "loading";
@@ -48,7 +42,7 @@ export const AccountSnaps = () => {
         data.registeredSnaps.length > 0 &&
         !isLoading && (
           <RegisteredSnaps
-            snaps={data.snaps}
+            snaps={data.registeredSnaps}
             currentUser={data.currentUser}
             refetchSnaps={() => {
               refetch({ queryKey: "accountSnaps" });
