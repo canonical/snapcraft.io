@@ -16,4 +16,5 @@ module.exports = {
   store: "./static/js/store/index.tsx",
   "publisher-pages": "./static/js/publisher-pages/index.tsx",
   metrics: "./static/js/publisher-pages/index.tsx",
+  "snap-pages": "./static/js/snap-pages/index.tsx",
 };

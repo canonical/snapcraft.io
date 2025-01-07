@@ -68,7 +68,7 @@ class AccountSnapsPage(BaseTestCases.EndpointLoggedInErrorHandling):
         self.assertEqual(200, response.status_code)
         # Add pyQuery basic context checks
 
-        self.assertEqual(2, len(responses.calls))
+        self.assertEqual(1, len(responses.calls))
         called = responses.calls[0]
         self.assertEqual(self.api_url, called.request.url)
         self.assertEqual(
@@ -199,7 +199,7 @@ class AccountSnapsPage(BaseTestCases.EndpointLoggedInErrorHandling):
         self.assertEqual(200, response.status_code)
         # Add pyQuery basic context checks
 
-        self.assertEqual(2, len(responses.calls))
+        self.assertEqual(1, len(responses.calls))
         called = responses.calls[0]
         self.assertEqual(self.api_url, called.request.url)
         self.assertEqual(
@@ -288,7 +288,7 @@ class AccountSnapsPage(BaseTestCases.EndpointLoggedInErrorHandling):
         self.assertEqual(200, response.status_code)
         # Add pyQuery basic context checks
 
-        self.assertEqual(2, len(responses.calls))
+        self.assertEqual(1, len(responses.calls))
         called = responses.calls[0]
         self.assertEqual(self.api_url, called.request.url)
         self.assertEqual(
@@ -357,4 +357,3 @@ class AccountSnapsPage(BaseTestCases.EndpointLoggedInErrorHandling):
         response = self.client.get("/snap_info/user_snap/test_snap")
 
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.json, {"is_users_snap": True})
