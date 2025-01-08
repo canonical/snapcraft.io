@@ -57,6 +57,8 @@ jobs:
         if: ${{ steps.filter.outputs.py == 'true' }}
         run: |
           python3 -m pip install --upgrade pip
+          python3 -V
+          pip3 -V
           sudo pip3 install -r requirements.txt
 
       - name: Lint Python
