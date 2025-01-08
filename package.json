@@ -72,7 +72,7 @@
     "expose-loader": "5.0.0",
     "fast-average-color": "9.4.0",
     "markdown-it": "14.0.0",
-    "nanoid": "5.0.5",
+    "nanoid": "5.0.9",
     "polylabel": "1.1.0",
     "postcss": "8.4.32",
     "postcss-cli": "11.0.0",
