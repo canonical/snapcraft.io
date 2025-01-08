@@ -5,7 +5,7 @@ import type { Member } from "../types/shared";
 export const fetchMembers = createAsyncThunk<Member[], string>(
   "members/fetchMembers",
   async (storeId: string) => {
-    const response = await fetch(`/admin/store/${storeId}/members`);
+    const response = await fetch(`/api/store/${storeId}/members`);
     const data = await response.json();
 
     return data;

@@ -26,7 +26,7 @@ class TestGetModels(TestModelServiceEndpoints):
             "models": [{"name": "test_model"}]
         }
 
-        response = self.client.get("/admin/store/1/models")
+        response = self.client.get("/api/store/1/models")
         data = response.json
 
         self.assertEqual(response.status_code, 200)
@@ -36,7 +36,7 @@ class TestGetModels(TestModelServiceEndpoints):
     def test_store_has_no_models(self, mock_get_store_models):
         mock_get_store_models.return_value = {"models": []}
 
-        response = self.client.get("/admin/store/2/models")
+        response = self.client.get("/api/store/2/models")
         data = response.json["data"]
 
         success = response.json["success"]
@@ -52,7 +52,7 @@ class TestGetModels(TestModelServiceEndpoints):
             [{"message": "Store not found"}],
         )
 
-        response = self.client.get("/admin/store/3/models")
+        response = self.client.get("/api/store/3/models")
         data = response.json
 
         self.assertEqual(response.status_code, 500)
@@ -65,7 +65,7 @@ class TestGetModels(TestModelServiceEndpoints):
             "unauthorized", 401, [{"message": "unauthorized"}]
         )
 
-        response = self.client.get("/admin/store/1/models")
+        response = self.client.get("/api/store/1/models")
         data = response.json
 
         self.assertEqual(response.status_code, 500)
@@ -79,7 +79,7 @@ class TestCreateModel(TestModelServiceEndpoints):
         mock_create_store_model.return_value = None
 
         payload = {"name": "Test Model", "api_key": self.api_key}
-        response = self.client.post("/admin/store/1/models", data=payload)
+        response = self.client.post("/api/store/1/models", data=payload)
         data = response.json
 
         self.assertEqual(response.status_code, 201)
@@ -87,7 +87,7 @@ class TestCreateModel(TestModelServiceEndpoints):
 
     def test_create_model_with_invalid_api_key(self):
         payload = {"name": "Test Model", "api_key": "invalid_api_key"}
-        response = self.client.post("/admin/store/1/models", data=payload)
+        response = self.client.post("/api/store/1/models", data=payload)
         data = response.json
 
         self.assertEqual(response.status_code, 500)
@@ -96,7 +96,7 @@ class TestCreateModel(TestModelServiceEndpoints):
 
     def test_name_too_long(self):
         payload = {"name": "some_random_long_name" * 7}
-        response = self.client.post("/admin/store/1/models", data=payload)
+        response = self.client.post("/api/store/1/models", data=payload)
         data = response.json
 
         self.assertEqual(response.status_code, 500)
@@ -107,7 +107,7 @@ class TestCreateModel(TestModelServiceEndpoints):
 
     def test_missing_name(self):
         payload = {"api_key": self.api_key}
-        response = self.client.post("/admin/store/1/models", data=payload)
+        response = self.client.post("/api/store/1/models", data=payload)
         data = response.json
 
         self.assertEqual(response.status_code, 500)
@@ -122,7 +122,7 @@ class TestUpdateModel(TestModelServiceEndpoints):
 
         payload = {"api_key": self.api_key}
         response = self.client.patch(
-            "/admin/store/1/models/Model1", data=payload
+            "/api/store/1/models/Model1", data=payload
         )
         data = response.json
 
@@ -132,7 +132,7 @@ class TestUpdateModel(TestModelServiceEndpoints):
     def test_update_model_with_invalid_api_key(self):
         payload = {"api_key": "invalid_api_key"}
         response = self.client.patch(
-            "/admin/store/1/models/Model1", data=payload
+            "/api/store/1/models/Model1", data=payload
         )
         data = response.json
 
@@ -148,7 +148,7 @@ class TestUpdateModel(TestModelServiceEndpoints):
 
         payload = {"api_key": self.api_key}
         response = self.client.patch(
-            "/admin/store/1/models/Model1", data=payload
+            "/api/store/1/models/Model1", data=payload
         )
         data = response.json
 

@@ -11,7 +11,7 @@ class TestGetSigningKeys(TestModelServiceEndpoints):
             {"sha3-384": "key2"},
         ]
 
-        response = self.client.get("/admin/store/1/signing-keys")
+        response = self.client.get("/api/store/1/signing-keys")
         data = response.json
 
         self.assertEqual(response.status_code, 200)
@@ -27,7 +27,7 @@ class TestGetSigningKeys(TestModelServiceEndpoints):
             "error", 502, [{"message": "An error occurred"}]
         )
 
-        response = self.client.get("/admin/store/1/signing-keys")
+        response = self.client.get("/api/store/1/signing-keys")
         data = response.json
 
         self.assertEqual(response.status_code, 500)
@@ -42,7 +42,7 @@ class TestCreateSigningKeys(TestModelServiceEndpoints):
 
         payload = {"name": "test_signing_key"}
         response = self.client.post(
-            "/admin/store/1/signing-keys",
+            "/api/store/1/signing-keys",
             data=payload,
         )
         self.assertEqual(response.status_code, 200)
@@ -51,9 +51,7 @@ class TestCreateSigningKeys(TestModelServiceEndpoints):
 
     def test_name_too_long_create_signing_key(self):
         payload = {"name": "random name" * 12}
-        response = self.client.post(
-            "/admin/store/1/signing-keys", data=payload
-        )
+        response = self.client.post("/api/store/1/signing-keys", data=payload)
         data = response.json
 
         self.assertEqual(response.status_code, 500)
@@ -74,7 +72,7 @@ class TestCreateSigningKeys(TestModelServiceEndpoints):
 
         payload = {"name": "test_signing_key"}
         response = self.client.post(
-            "/admin/store/1/signing-keys",
+            "/api/store/1/signing-keys",
             data=payload,
         )
         data = response.json
@@ -93,7 +91,7 @@ class TestDeleteSigningKeys(TestModelServiceEndpoints):
         mock_delete_store_signing_key.return_value = Mock(status_code=204)
 
         response = self.client.delete(
-            "/admin/store/1/signing-keys/signing_key_sha3_384"
+            "/api/store/1/signing-keys/signing_key_sha3_384"
         )
         data = response.json
 
@@ -116,7 +114,7 @@ class TestDeleteSigningKeys(TestModelServiceEndpoints):
             {"revision": "1", "signing-key-sha3-384": "valid_key"}
         ]
 
-        response = self.client.delete("/admin/store/1/signing-keys/valid_key")
+        response = self.client.delete("/api/store/1/signing-keys/valid_key")
         data = response.json
 
         self.assertEqual(response.status_code, 500)
@@ -133,9 +131,7 @@ class TestDeleteSigningKeys(TestModelServiceEndpoints):
     def test_signing_key_not_found(self, mock_delete_store_signing_key):
         mock_delete_store_signing_key.return_value = Mock(status_code=404)
 
-        response = self.client.delete(
-            "/admin/store/1/signing-keys/invalid_key"
-        )
+        response = self.client.delete("/api/store/1/signing-keys/invalid_key")
         data = response.json
 
         self.assertEqual(response.status_code, 404)

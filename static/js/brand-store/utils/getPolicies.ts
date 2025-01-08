@@ -19,7 +19,7 @@ const getPolicies = async ({
 }: Options) => {
   const data = await Promise.all(
     models.map((model) => {
-      return fetch(`/admin/store/${id}/models/${model.name}/policies`, {
+      return fetch(`/api/store/${id}/models/${model.name}/policies`, {
         signal,
       });
     }),

@@ -94,7 +94,7 @@ function Members(): ReactNode {
     memberData.set("csrf_token", window.CSRF_TOKEN);
     memberData.set("members", JSON.stringify(member));
 
-    fetch(`/admin/store/${id}/${action}`, {
+    fetch(`/api/store/${id}/${action}`, {
       method: "POST",
       body: memberData,
     })
@@ -457,7 +457,7 @@ function Members(): ReactNode {
                 memberData.set("csrf_token", window.CSRF_TOKEN);
                 memberData.set("members", JSON.stringify(members));
 
-                fetch(`/admin/store/${id}/members`, {
+                fetch(`/api/store/${id}/members`, {
                   method: "POST",
                   body: memberData,
                 })
