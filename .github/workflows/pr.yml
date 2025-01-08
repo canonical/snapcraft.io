@@ -59,7 +59,7 @@ jobs:
           python3 -m pip install --upgrade pip
           python3 -V
           pip3 -V
-          sudo pip3 install -r requirements.txt --no-deps
+          sudo pip3 install -r requirements.txt
 
       - name: Lint Python
         if: ${{ steps.filter.outputs.py == 'true' }}
