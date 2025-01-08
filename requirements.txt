@@ -25,8 +25,8 @@
 # user-agents==2.2.0
 dnspython==2.6.1
 
-# # Development dependencies
-# Flask-Testing==0.8.1
-# freezegun==1.4.0
-# black==24.3.0
-# flake8==6.1.0
+# Development dependencies
+Flask-Testing==0.8.1
+freezegun==1.4.0
+black==24.3.0
+flake8==6.1.0
