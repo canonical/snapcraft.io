@@ -1,6 +1,6 @@
 import { useQuery, UseQueryResult } from "react-query";
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
-import type { AppDispatch, RootState } from "../store";
+import type { AppDispatch, RootState } from "../state/store";
 import type { Model as ModelType, SigningKey, Policy } from "../types/shared";
 
 export const useAppDispatch: () => AppDispatch = useDispatch;
