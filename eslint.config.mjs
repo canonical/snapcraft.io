@@ -46,7 +46,6 @@ export default [{
             ...globals.node,
             ...jest.environments.globals.globals,
         },
-
         parser: babelParser,
         ecmaVersion: 5,
         sourceType: "module",
