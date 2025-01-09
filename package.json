@@ -1,7 +1,7 @@
 {
   "scripts": {
-    "lint-js": "eslint static/js --ext .js,.jsx,.ts,.tsx",
-    "lint-a11y": "eslint -c eslint-a11y.config.js static/js --ext .js,.jsx,.ts,.tsx",
+    "lint-js": "eslint static/js",
+    "lint-a11y": "eslint -c eslint-a11y.config.js static/js",
     "lint-scss": "stylelint static/**/*.scss",
     "lint-python": "flake8 webapp tests && black --diff --check --line-length 79 webapp tests",
     "test": "yarn run test-python && yarn run test-js-all && yarn run lint-scss",
