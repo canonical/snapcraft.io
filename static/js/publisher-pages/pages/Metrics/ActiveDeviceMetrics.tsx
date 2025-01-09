@@ -33,12 +33,14 @@ function ActiveDeviceMetrics({
 
   useEffect(() => {
     if (data) {
-      data.activeDevices &&
+      if (data.activeDevices) {
         renderActiveDevicesMetrics({
           selector,
           metrics: data.activeDevices,
           type,
         });
+      }
+
       onDataLoad(data.activeDevices?.buckets?.length);
     }
   }, [data]);

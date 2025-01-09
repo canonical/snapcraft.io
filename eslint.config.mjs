@@ -19,72 +19,85 @@ const compat = new FlatCompat({
     allConfig: js.configs.all
 });
 
-export default [{
-    ignores: [
-        "static/js/publisher-pages/pages/Releases",
-        "static/js/publisher-pages/pages/Metrics/metrics",
-        "static/js/public/snap-details/publicise.ts",
-        "static/js/modules",
-        "static/js/dist",
-    ],
-}, ...compat.extends(
-    "eslint:recommended",
-    "plugin:react/recommended",
-    "plugin:prettier/recommended",
-    "plugin:jsx-a11y/recommended",
-), {
-    plugins: {
-        jest,
-        react,
-        prettier,
-        "jsx-a11y": jsxA11Y,
+export default [
+    {
+        ignores: [
+            "static/js/publisher-pages/pages/Releases",
+            "static/js/publisher-pages/pages/Metrics/metrics",
+            "static/js/public/snap-details/publicise.ts",
+            "static/js/modules",
+            "static/js/dist",
+            "node_modules/*",
+        ],
     },
-
-    languageOptions: {
-        globals: {
-            ...globals.browser,
-            ...globals.node,
-            ...jest.environments.globals.globals,
+    ...compat.extends(
+        "eslint:recommended",
+        "plugin:react/recommended",
+        "plugin:prettier/recommended",
+        "plugin:jsx-a11y/recommended"
+    ),
+    {
+        plugins: {
+            jest,
+            react,
+            prettier,
+            "jsx-a11y": jsxA11Y,
         },
-        parser: babelParser,
-        ecmaVersion: 5,
-        sourceType: "module",
-
-        parserOptions: {
-            ecmaFeatures: {
-                jsx: true,
+        languageOptions: {
+            globals: Object.fromEntries(
+                Object.entries({
+                    ...globals.browser,
+                    ...globals.node,
+                    ...jest.environments.globals.globals,
+                }).map(([key, value]) => [key.trim(), value])
+            ),
+            parser: babelParser,
+            ecmaVersion: 2020,
+            sourceType: "module",
+            parserOptions: {
+                ecmaFeatures: {
+                    jsx: true,
+                },
+                requireConfigFile: false,
             },
-
-            requireConfigFile: false,
+        },
+        settings: {
+            react: {
+                version: "detect",
+            },
+        },
+        rules: {
+            "linebreak-style": ["error", "unix"],
+            semi: ["error", "always"],
+            "object-curly-spacing": ["error", "always"],
+            "prettier/prettier": "error",
+            "react/react-in-jsx-scope": "off",
+            "react/no-unescaped-entities": "off",
+            "react/display-name": "off",
         },
     },
-
-    settings: {
-        react: {
-            version: "detect",
+    {
+        files: ["**/*.ts", "**/*.tsx"],
+        plugins: {
+            "@typescript-eslint": typescriptEslint,
+        },
+        languageOptions: {
+            parser: tsParser,
+             ecmaVersion: 2020, 
+        },
+        rules: {
+            ...compat.extends("plugin:@typescript-eslint/recommended").reduce(
+                (rules, config) => ({ ...rules, ...config.rules }),
+                {}
+            ),
+            "@typescript-eslint/no-unused-expressions": ["error", { allowTernary: true }],
+            "@typescript-eslint/no-unused-vars": [
+                "error",
+                {
+                     "argsIgnorePattern": "^_", // Ignore variables starting with an underscore
+                    "caughtErrorsIgnorePattern": "^_" // Ignore `catch` block errors starting with an underscore
+                }
+            ]
         },
     },
-
-    rules: {
-        "linebreak-style": ["error", "unix"],
-        semi: ["error", "always"],
-        "object-curly-spacing": ["error", "always"],
-        "prettier/prettier": "error",
-        "react/react-in-jsx-scope": "off",
-        "react/no-unescaped-entities": "off",
-        "react/display-name": "off",
-    },
-}, ...compat.extends("plugin:@typescript-eslint/recommended").map(config => ({
-    ...config,
-    files: ["**/*.ts", "**/*.tsx"],
-})), {
-    files: ["**/*.ts", "**/*.tsx"],
-
-    plugins: {
-        "@typescript-eslint": typescriptEslint,
-    },
-
-    languageOptions: {
-        parser: tsParser,
-    },
-}];
+];

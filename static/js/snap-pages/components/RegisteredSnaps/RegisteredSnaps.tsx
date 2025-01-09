@@ -118,7 +118,7 @@ export const RegisteredSnaps = ({
       } else {
         setIsError(true);
       }
-    } catch (error) {
+    } catch (_) {
       setIsError(true);
     } finally {
       setUnregisterLoading(false);
