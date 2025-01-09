@@ -15,4 +15,5 @@ module.exports = {
   globals: {
     fetch: global.fetch,
   },
+  setupFilesAfterEnv: ["<rootDir>/jest.setup.js"],
 };
