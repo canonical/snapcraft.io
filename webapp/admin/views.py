@@ -39,7 +39,7 @@ def get_admin(path):
     return flask.render_template("admin/admin.html", **context)
 
 
-@admin.route("/admin/stores")
+@admin.route("/api/stores")
 @login_required
 @exchange_required
 def get_stores():
@@ -51,7 +51,7 @@ def get_stores():
     return jsonify(stores)
 
 
-@admin.route("/admin/store/<store_id>")
+@admin.route("/api/store/<store_id>")
 @login_required
 @exchange_required
 def get_settings(store_id):
@@ -60,7 +60,7 @@ def get_settings(store_id):
     return jsonify(store)
 
 
-@admin.route("/admin/store/<store_id>/settings", methods=["PUT"])
+@admin.route("/api/store/<store_id>/settings", methods=["PUT"])
 @login_required
 @exchange_required
 def post_settings(store_id):
@@ -78,7 +78,7 @@ def post_settings(store_id):
     return jsonify({"success": True})
 
 
-@admin.route("/admin/<store_id>/snaps/search")
+@admin.route("/api/<store_id>/snaps/search")
 @login_required
 @exchange_required
 def get_snaps_search(store_id):
@@ -92,7 +92,7 @@ def get_snaps_search(store_id):
     return jsonify(snaps)
 
 
-@admin.route("/admin/store/<store_id>/snaps")
+@admin.route("/api/store/<store_id>/snaps")
 @login_required
 @exchange_required
 def get_store_snaps(store_id):
@@ -125,7 +125,7 @@ def get_store_snaps(store_id):
     return jsonify(snaps)
 
 
-@admin.route("/admin/store/<store_id>/snaps", methods=["POST"])
+@admin.route("/api/store/<store_id>/snaps", methods=["POST"])
 @login_required
 @exchange_required
 def post_manage_store_snaps(store_id):
@@ -139,7 +139,7 @@ def post_manage_store_snaps(store_id):
     return jsonify({"success": True})
 
 
-@admin.route("/admin/store/<store_id>/members")
+@admin.route("/api/store/<store_id>/members")
 @login_required
 @exchange_required
 def get_manage_members(store_id):
@@ -152,7 +152,7 @@ def get_manage_members(store_id):
     return jsonify(members)
 
 
-@admin.route("/admin/store/<store_id>/members", methods=["POST"])
+@admin.route("/api/store/<store_id>/members", methods=["POST"])
 @login_required
 @exchange_required
 def post_manage_members(store_id):
@@ -189,7 +189,7 @@ def post_manage_members(store_id):
     return jsonify(res)
 
 
-@admin.route("/admin/store/<store_id>/invites")
+@admin.route("/api/store/<store_id>/invites")
 @login_required
 @exchange_required
 def get_invites(store_id):
@@ -198,7 +198,7 @@ def get_invites(store_id):
     return jsonify(invites)
 
 
-@admin.route("/admin/store/<store_id>/invite", methods=["POST"])
+@admin.route("/api/store/<store_id>/invite", methods=["POST"])
 @login_required
 @exchange_required
 def post_invite_members(store_id):
@@ -223,7 +223,7 @@ def post_invite_members(store_id):
     return jsonify(res)
 
 
-@admin.route("/admin/store/<store_id>/invite/update", methods=["POST"])
+@admin.route("/api/store/<store_id>/invite/update", methods=["POST"])
 @login_required
 @exchange_required
 def update_invite_status(store_id):
@@ -249,7 +249,7 @@ def update_invite_status(store_id):
 
 
 # ---------------------- MODELS SERVICES ----------------------
-@admin.route("/admin/store/<store_id>/models")
+@admin.route("/api/store/<store_id>/models")
 @login_required
 @exchange_required
 def get_models(store_id):
@@ -285,7 +285,7 @@ def get_models(store_id):
     return response
 
 
-@admin.route("/admin/store/<store_id>/models", methods=["POST"])
+@admin.route("/api/store/<store_id>/models", methods=["POST"])
 @login_required
 @exchange_required
 def create_models(store_id: str):
@@ -337,7 +337,7 @@ def create_models(store_id: str):
     return make_response(res, 500)
 
 
-@admin.route("/admin/store/<store_id>/models/<model_name>", methods=["PATCH"])
+@admin.route("/api/store/<store_id>/models/<model_name>", methods=["PATCH"])
 @login_required
 @exchange_required
 def update_model(store_id: str, model_name: str):
@@ -379,7 +379,7 @@ def update_model(store_id: str, model_name: str):
     return make_response(res, 500)
 
 
-@admin.route("/admin/store/<store_id>/models/<model_name>/policies")
+@admin.route("/api/store/<store_id>/models/<model_name>/policies")
 @login_required
 @exchange_required
 def get_policies(store_id: str, model_name: str):
@@ -420,7 +420,7 @@ def get_policies(store_id: str, model_name: str):
 
 
 @admin.route(
-    "/admin/store/<store_id>/models/<model_name>/policies", methods=["POST"]
+    "/api/store/<store_id>/models/<model_name>/policies", methods=["POST"]
 )
 @login_required
 @exchange_required
@@ -466,7 +466,7 @@ def create_policy(store_id: str, model_name: str):
 
 
 @admin.route(
-    "/admin/store/<store_id>/models/<model_name>/policies/<revision>",
+    "/api/store/<store_id>/models/<model_name>/policies/<revision>",
     methods=["DELETE"],
 )
 @login_required
@@ -489,7 +489,7 @@ def delete_policy(store_id: str, model_name: str, revision: str):
     return make_response(res, 500)
 
 
-@admin.route("/admin/store/<store_id>/brand")
+@admin.route("/api/store/<store_id>/brand")
 @login_required
 @exchange_required
 def get_brand_store(store_id: str):
@@ -516,7 +516,7 @@ def get_brand_store(store_id: str):
     return response
 
 
-@admin.route("/admin/store/<store_id>/signing-keys")
+@admin.route("/api/store/<store_id>/signing-keys")
 @login_required
 @exchange_required
 def get_signing_keys(store_id: str):
@@ -543,7 +543,7 @@ def get_signing_keys(store_id: str):
         return make_response(res, 500)
 
 
-@admin.route("/admin/store/<store_id>/signing-keys", methods=["POST"])
+@admin.route("/api/store/<store_id>/signing-keys", methods=["POST"])
 @login_required
 @exchange_required
 def create_signing_key(store_id: str):
@@ -567,7 +567,7 @@ def create_signing_key(store_id: str):
 
 
 @admin.route(
-    "/admin/store/<store_id>/signing-keys/<signing_key_sha3_384>",
+    "/api/store/<store_id>/signing-keys/<signing_key_sha3_384>",
     methods=["DELETE"],
 )
 @login_required

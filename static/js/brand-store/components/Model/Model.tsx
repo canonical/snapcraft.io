@@ -39,7 +39,7 @@ function Model() {
       formData.set("csrf_token", window.CSRF_TOKEN);
       formData.set("api_key", apiKey);
 
-      return fetch(`/admin/store/${brandId}/models/${model_id}`, {
+      return fetch(`/api/store/${brandId}/models/${model_id}`, {
         method: "PATCH",
         body: formData,
       });

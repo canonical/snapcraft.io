@@ -26,7 +26,7 @@ export function usePolicies(
     queryKey: ["policies", brandId],
     queryFn: async () => {
       const response = await fetch(
-        `/admin/store/${brandId}/models/${modelId}/policies`,
+        `/api/store/${brandId}/models/${modelId}/policies`,
       );
 
       if (!response.ok) {
@@ -50,7 +50,7 @@ export const useSigningKeys = (
   return useQuery<SigningKey[], Error>({
     queryKey: ["signingKeys", brandId],
     queryFn: async () => {
-      const response = await fetch(`/admin/store/${brandId}/signing-keys`);
+      const response = await fetch(`/api/store/${brandId}/signing-keys`);
 
       if (!response.ok) {
         throw new Error("There was a problem fetching signing keys");
@@ -71,7 +71,7 @@ export function useBrand(id: string | undefined) {
   return useQuery({
     queryKey: ["brand", id],
     queryFn: async () => {
-      const response = await fetch(`/admin/store/${id}/brand`);
+      const response = await fetch(`/api/store/${id}/brand`);
 
       if (!response.ok) {
         throw new Error("There was a problem fetching models");
@@ -94,7 +94,7 @@ export const useModels = (
   return useQuery<ModelType[], Error>({
     queryKey: ["models", brandId],
     queryFn: async () => {
-      const response = await fetch(`/admin/store/${brandId}/models`);
+      const response = await fetch(`/api/store/${brandId}/models`);
 
       if (!response.ok) {
         throw new Error("There was a problem fetching models");

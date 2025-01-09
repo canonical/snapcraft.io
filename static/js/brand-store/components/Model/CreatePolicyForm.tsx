@@ -63,7 +63,7 @@ function CreatePolicyForm({
 
       setNewSigningKey({ name: "" });
 
-      return fetch(`/admin/store/${brandId}/models/${model_id}/policies`, {
+      return fetch(`/api/store/${brandId}/models/${model_id}/policies`, {
         method: "POST",
         body: formData,
       });

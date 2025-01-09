@@ -9,7 +9,7 @@ class TestGetBrandStoreEndpoint(TestModelServiceEndpoints):
     def test_successful_get_brand_store(self, mock_get_brand):
         mock_get_brand.return_value = {"name": "BrandName"}
 
-        response = self.client.get("/admin/store/1/brand")
+        response = self.client.get("/api/store/1/brand")
         data = response.get_json()
 
         self.assertEqual(response.status_code, 200)
@@ -22,7 +22,7 @@ class TestGetBrandStoreEndpoint(TestModelServiceEndpoints):
             "error", 400, [{"message": "error"}]
         )
 
-        response = self.client.get("/admin/store/1/brand")
+        response = self.client.get("/api/store/1/brand")
         data = response.get_json()
 
         self.assertEqual(response.status_code, 200)

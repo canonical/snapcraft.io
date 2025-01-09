@@ -74,7 +74,7 @@ function CreateSigningKeyForm({
         ];
       });
 
-      return fetch(`/admin/store/${brandId}/signing-keys`, {
+      return fetch(`/api/store/${brandId}/signing-keys`, {
         method: "POST",
         body: formData,
       });

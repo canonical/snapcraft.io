@@ -52,7 +52,7 @@ function SigningKeysTable({
     formData.set("csrf_token", window.CSRF_TOKEN);
 
     const response = await fetch(
-      `/admin/store/${brandId}/signing-keys/${signingKey["sha3-384"]}`,
+      `/api/store/${brandId}/signing-keys/${signingKey["sha3-384"]}`,
       {
         method: "DELETE",
         body: formData,

@@ -122,7 +122,7 @@ function Snaps(): ReactNode {
     snapsData.set("csrf_token", window.CSRF_TOKEN);
     snapsData.set("snaps", JSON.stringify(snapsToAdd));
 
-    fetch(`/admin/store/${id}/snaps`, {
+    fetch(`/api/store/${id}/snaps`, {
       method: "POST",
       body: snapsData,
     })
@@ -183,7 +183,7 @@ function Snaps(): ReactNode {
     snapsData.set("csrf_token", window.CSRF_TOKEN);
     snapsData.set("snaps", JSON.stringify(removingSnaps));
 
-    fetch(`/admin/store/${id}/snaps`, {
+    fetch(`/api/store/${id}/snaps`, {
       method: "POST",
       body: snapsData,
     })

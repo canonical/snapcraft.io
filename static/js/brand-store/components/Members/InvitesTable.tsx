@@ -66,7 +66,7 @@ function InvitesTable({
 
     setInviteModalIsSaving(true);
 
-    fetch(`/admin/store/${id}/invite/update`, {
+    fetch(`/api/store/${id}/invite/update`, {
       method: "POST",
       body: data,
     })

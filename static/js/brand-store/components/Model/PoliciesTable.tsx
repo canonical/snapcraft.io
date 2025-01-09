@@ -47,7 +47,7 @@ function ModelsTable({
     formData.set("csrf_token", window.CSRF_TOKEN);
 
     const response = await fetch(
-      `/admin/store/${brandId}/models/${model_id}/policies/${policyRevision}`,
+      `/api/store/${brandId}/models/${model_id}/policies/${policyRevision}`,
       {
         method: "DELETE",
         body: formData,
