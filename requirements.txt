@@ -1,4 +1,5 @@
 # App dependencies
+greenlet==3.1.1
 canonicalwebteam.flask-base==2.0.0
 canonicalwebteam.candid==0.9.0
 canonicalwebteam.discourse==5.7.2
@@ -24,7 +25,6 @@ ruamel.yaml==0.18.5
 vcrpy-unittest==0.1.7
 user-agents==2.2.0
 dnspython==2.6.1
-greenlet==3.1.1
 
 # Development dependencies
 Flask-Testing==0.8.1
