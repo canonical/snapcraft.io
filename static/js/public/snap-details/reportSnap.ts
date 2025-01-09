@@ -104,7 +104,7 @@ export default function initReportSnap(
       }
 
       showSuccess(modal);
-    } catch (e) {
+    } catch (_) {
       showError(modal);
     }
   });
