@@ -49,7 +49,7 @@
     }
 
     &.is-open::after {
-      border-color: transparent transparent $color-x-light transparent;
+      border-color: transparent transparent $color-x-light;
       border-width: 0.75rem;
       bottom: -1px;
       left: 50%;
@@ -57,7 +57,7 @@
     }
 
     &.is-open::before {
-      border-color: transparent transparent $color-mid-light transparent;
+      border-color: transparent transparent $color-mid-light;
       border-width: 0.75rem;
       bottom: 0;
       left: 50%;

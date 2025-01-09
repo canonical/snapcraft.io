@@ -382,7 +382,6 @@ function initRegisterName(
       if (paginationBtn) {
         paginationBtn.href = `/${snapName}/listing?from=first-snap-unpublished`;
         paginationBtn.classList.remove("is-disabled");
-        ``;
       }
     };
 

@@ -38,11 +38,12 @@ export const TerritoryMetrics = ({
 
   useEffect(() => {
     if (countryInfo) {
-      countryInfo.active_devices &&
+      if (countryInfo.active_devices) {
         renderTerritoriesMetrics({
           selector: "#territories",
           metrics: countryInfo.active_devices,
         });
+      }
       // @ts-expect-error Type clash
       onDataLoad(countryInfo.active_devices?.length);
     }

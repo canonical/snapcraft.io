@@ -102,7 +102,7 @@ const loadLightboxImage = (
           media.src = mp4.src;
         }
       }
-    } catch (e) {
+    } catch (_) {
       if (media && media.parentNode) {
         media.parentNode.removeChild(media);
       }
