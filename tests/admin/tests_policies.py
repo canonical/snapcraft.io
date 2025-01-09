@@ -9,7 +9,7 @@ class TestGetPolicies(TestModelServiceEndpoints):
     def test_get_policies(self, mock_get_store_model_policies):
         mock_get_store_model_policies.return_value = ["policy1", "policy2"]
 
-        response = self.client.get("/admin/store/1/models/Model1/policies")
+        response = self.client.get("/api/store/1/models/Model1/policies")
         data = response.json
 
         self.assertEqual(response.status_code, 200)
@@ -22,7 +22,7 @@ class TestGetPolicies(TestModelServiceEndpoints):
             "An error occurred", 500, [{"message": "An error occurred"}]
         )
 
-        response = self.client.get("/admin/store/1/models/Model1/policies")
+        response = self.client.get("/api/store/1/models/Model1/policies")
         data = response.json
 
         self.assertEqual(response.status_code, 500)
@@ -43,7 +43,7 @@ class TestCreatePolicies(TestModelServiceEndpoints):
 
         payload = {"signing_key": "valid_signing_key"}
         response = self.client.post(
-            "/admin/store/1/models/Model1/policies", data=payload
+            "/api/store/1/models/Model1/policies", data=payload
         )
         data = response.json
 
@@ -58,7 +58,7 @@ class TestCreatePolicies(TestModelServiceEndpoints):
 
         payload = {}
         response = self.client.post(
-            "/admin/store/1/models/Model1/policies", data=payload
+            "/api/store/1/models/Model1/policies", data=payload
         )
         data = response.json
 
@@ -72,7 +72,7 @@ class TestCreatePolicies(TestModelServiceEndpoints):
 
         payload = {"signing_key": "invalid_key"}
         response = self.client.post(
-            "/admin/store/1/models/Model1/policies", data=payload
+            "/api/store/1/models/Model1/policies", data=payload
         )
         data = response.json
 
@@ -94,7 +94,7 @@ class TestCreatePolicies(TestModelServiceEndpoints):
 
         payload = {"signing_key": "valid_key"}
         response = self.client.post(
-            "/admin/store/1/models/Model1/policies", data=payload
+            "/api/store/1/models/Model1/policies", data=payload
         )
         data = response.json
 
@@ -108,9 +108,7 @@ class TestDeletePolicies(TestModelServiceEndpoints):
     def test_successful_delete_policy(self, mock_delete_store_model_policy):
         mock_delete_store_model_policy.return_value = Mock(status_code=204)
 
-        response = self.client.delete(
-            "/admin/store/1/models/Model1/policies/1"
-        )
+        response = self.client.delete("/api/store/1/models/Model1/policies/1")
         data = response.json
 
         self.assertEqual(response.status_code, 200)
@@ -120,9 +118,7 @@ class TestDeletePolicies(TestModelServiceEndpoints):
     def test_policy_not_found(self, mock_delete_store_model_policy):
         mock_delete_store_model_policy.return_value = Mock(status_code=404)
 
-        response = self.client.delete(
-            "/admin/store/1/models/Model1/policies/1"
-        )
+        response = self.client.delete("/api/store/1/models/Model1/policies/1")
         data = response.json
 
         self.assertEqual(response.status_code, 500)
@@ -135,9 +131,7 @@ class TestDeletePolicies(TestModelServiceEndpoints):
             "An error occured", 500, [{"message": "An error occurred"}]
         )
 
-        response = self.client.delete(
-            "/admin/store/1/models/Model1/policies/1"
-        )
+        response = self.client.delete("/api/store/1/models/Model1/policies/1")
         data = response.json
 
         self.assertEqual(response.status_code, 500)

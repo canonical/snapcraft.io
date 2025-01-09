@@ -5,7 +5,7 @@ import type { Snap } from "../types/shared";
 export const fetchSnaps = createAsyncThunk<Snap[], string>(
   "snaps/fetchSnaps",
   async (storeId: string) => {
-    const response = await fetch(`/admin/store/${storeId}/snaps`);
+    const response = await fetch(`/api/store/${storeId}/snaps`);
     const data = await response.json();
 
     return data;

@@ -76,7 +76,7 @@ function CreateModelForm({
         ];
       });
 
-      return fetch(`/admin/store/${brandId}/models`, {
+      return fetch(`/api/store/${brandId}/models`, {
         method: "POST",
         body: formData,
       });

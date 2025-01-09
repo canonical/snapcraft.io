@@ -92,7 +92,7 @@ function Settings(): ReactNode {
     settingsData.set("private", isPrivateStore.toString());
     settingsData.set("manual-review-policy", manualReviewPolicy);
 
-    fetch(`/admin/store/${id}/settings`, {
+    fetch(`/api/store/${id}/settings`, {
       method: "PUT",
       body: settingsData,
     })
