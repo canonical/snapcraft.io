@@ -1,1 +1,1 @@
-export { PublishedSnapList } from "./PublishedSnapList";
+export { default } from "./PublishedSnapList";

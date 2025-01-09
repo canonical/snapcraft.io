@@ -5,12 +5,12 @@ import {
   Strip,
 } from "@canonical/react-components";
 import { ISnap } from "../../types";
-import { SnapNameEntry } from "./SnapNameEntry";
-import { NewSnapNotification } from "../NewSnapNotification";
-import { EmptySnapList } from "../EmptySnapList";
+import SnapNameEntry from "./SnapNameEntry";
+import NewSnapNotification from "../NewSnapNotification";
+import EmptySnapList from "../EmptySnapList";
 import { PAGE_NUMBER } from "../../types/constants";
 
-export const PublishedSnapList = ({
+function PublishedSnapList({
   snaps,
   currentUser,
   currentPage,
@@ -22,7 +22,7 @@ export const PublishedSnapList = ({
   currentPage: number;
   setCurrentPage: (page: number) => void;
   totalItems: number;
-}) => {
+}) {
   const shouldShowNewSnapNotification =
     snaps && snaps.length === 1 && snaps[0].is_new;
 
@@ -135,4 +135,6 @@ export const PublishedSnapList = ({
       )}
     </Strip>
   );
-};
+}
+
+export default PublishedSnapList;

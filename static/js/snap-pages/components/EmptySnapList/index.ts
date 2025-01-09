@@ -1,1 +1,1 @@
-export { EmptySnapList } from "./EmptySnapList";
+export { default } from "./EmptySnapList";

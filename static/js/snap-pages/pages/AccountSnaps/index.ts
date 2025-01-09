@@ -1,1 +1,1 @@
-export { AccountSnaps } from "./AccountSnaps";
+export { default } from "./AccountSnaps";

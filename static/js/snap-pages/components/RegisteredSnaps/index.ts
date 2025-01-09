@@ -1,1 +1,1 @@
-export { RegisteredSnaps } from "./RegisteredSnaps";
+export { default } from "./RegisteredSnaps";

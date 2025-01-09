@@ -1,1 +1,1 @@
-export { PublishedSnapSection } from "./PublishedSnapSection";
+export { default } from "./PublishedSnapSection";

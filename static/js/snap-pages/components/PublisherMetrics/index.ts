@@ -1,1 +1,1 @@
-export { PublisherMetrics } from "./PublisherMetrics";
+export { default } from "./PublisherMetrics";

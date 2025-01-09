@@ -1,6 +1,6 @@
 import { render, screen } from "@testing-library/react";
 
-import { PublishedSnapList } from "../PublishedSnapList";
+import PublishedSnapList from "../PublishedSnapList";
 import { ISnap } from "../../../types";
 
 const BASE_SNAP_DATA = {

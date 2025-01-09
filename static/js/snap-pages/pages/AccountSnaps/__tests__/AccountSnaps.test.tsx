@@ -2,7 +2,7 @@ import { QueryClient, QueryClientProvider, useQuery } from "react-query";
 import { render, screen } from "@testing-library/react";
 import "@testing-library/jest-dom";
 
-import { AccountSnaps } from "../AccountSnaps";
+import AccountSnaps from "../AccountSnaps";
 
 const queryClient = new QueryClient();
 

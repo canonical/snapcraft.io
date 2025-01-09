@@ -3,7 +3,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "react-query";
 
 import Root from "./routes/root";
-import { AccountSnaps } from "./pages/AccountSnaps";
+import AccountSnaps from "./pages/AccountSnaps";
 
 const router = createBrowserRouter([
   {

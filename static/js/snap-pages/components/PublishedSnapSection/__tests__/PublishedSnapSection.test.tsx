@@ -1,7 +1,7 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 
 import { ISnap } from "../../../types";
-import { PublishedSnapSection } from "../PublishedSnapSection";
+import PublishedSnapSection from "../PublishedSnapSection";
 import { QueryClient, QueryClientProvider, useQuery } from "react-query";
 
 const BASE_SNAP_DATA = {

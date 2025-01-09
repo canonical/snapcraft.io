@@ -4,7 +4,7 @@ import { renderPublisherMetrics } from "../../../publisher-pages/pages/Metrics/m
 import { useEffect } from "react";
 import { useFetchPublishedSnapMetrics } from "../../hooks";
 
-export const PublisherMetrics = ({ snaps }: { snaps: ISnap[] }) => {
+function PublisherMetrics({ snaps }: { snaps: ISnap[] }) {
   const { status, data: metricsData } = useFetchPublishedSnapMetrics(snaps);
 
   useEffect(() => {
@@ -51,4 +51,6 @@ export const PublisherMetrics = ({ snaps }: { snaps: ISnap[] }) => {
       </Row>
     </Strip>
   );
-};
+}
+
+export default PublisherMetrics;

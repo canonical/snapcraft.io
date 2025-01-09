@@ -1,16 +1,16 @@
 import { useState } from "react";
 import { ISnap } from "../../types";
-import { PublishedSnapList } from "../PublishedSnapList";
-import { PublisherMetrics } from "../PublisherMetrics";
+import PublishedSnapList from "../PublishedSnapList";
+import PublisherMetrics from "../PublisherMetrics";
 import { PAGE_NUMBER } from "../../types/constants";
 
-export const PublishedSnapSection = ({
+function PublishedSnapSection({
   snaps,
   currentUser,
 }: {
   snaps: ISnap[];
   currentUser: string;
-}) => {
+}) {
   const [currentPage, setCurrentPage] = useState<number>(1);
 
   const firstItemOfPage = (currentPage - 1) * PAGE_NUMBER;
@@ -32,4 +32,6 @@ export const PublishedSnapSection = ({
       />
     </>
   );
-};
+}
+
+export default PublishedSnapSection;

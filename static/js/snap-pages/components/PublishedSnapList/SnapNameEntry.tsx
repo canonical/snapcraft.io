@@ -1,7 +1,7 @@
 import { Link, Tooltip } from "@canonical/react-components";
 import { ISnap } from "../../types";
 
-export const SnapNameEntry = ({ snap }: { snap: ISnap }) => {
+function SnapNameEntry({ snap }: { snap: ISnap }) {
   const { snapName, status, icon_url } = snap;
   return (
     <Link href={`/${snapName}/listing`} className="p-heading-icon--small">
@@ -32,4 +32,6 @@ export const SnapNameEntry = ({ snap }: { snap: ISnap }) => {
       </span>
     </Link>
   );
-};
+}
+
+export default SnapNameEntry;

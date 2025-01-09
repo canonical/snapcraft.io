@@ -1,6 +1,6 @@
 import { Col, Link, Row } from "@canonical/react-components";
 
-export const EmptySnapList = () => {
+function EmptySnapList() {
   return (
     <>
       <div className="u-fixed-width">
@@ -66,4 +66,6 @@ export const EmptySnapList = () => {
       </Row>
     </>
   );
-};
+}
+
+export default EmptySnapList;

@@ -1,1 +1,1 @@
-export { NewSnapNotification } from "./NewSnapNotification";
+export { default } from "./NewSnapNotification";

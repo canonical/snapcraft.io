@@ -1,7 +1,7 @@
 import { Link, Notification } from "@canonical/react-components";
 import { ISnap } from "../../types";
 
-export const NewSnapNotification = ({ snap }: { snap: ISnap }) => {
+function NewSnapNotification({ snap }: { snap: ISnap }) {
   const latestRelease = snap.latest_release;
   const snapName = snap.snapName;
 
@@ -37,4 +37,6 @@ export const NewSnapNotification = ({ snap }: { snap: ISnap }) => {
       </Notification>
     </>
   );
-};
+}
+
+export default NewSnapNotification;

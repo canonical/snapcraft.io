@@ -10,7 +10,7 @@ import { ISnap } from "../../types";
 import { useState } from "react";
 import { PAGE_NUMBER } from "../../types/constants";
 
-export const RegisteredSnaps = ({
+function RegisteredSnaps({
   snaps,
   currentUser,
   refetchSnaps,
@@ -18,7 +18,7 @@ export const RegisteredSnaps = ({
   snaps: ISnap[];
   currentUser: string;
   refetchSnaps: () => void;
-}) => {
+}) {
   const [unregisterSnapModal, setUnregisterSnapModal] = useState<string | null>(
     null,
   );
@@ -118,7 +118,7 @@ export const RegisteredSnaps = ({
       } else {
         setIsError(true);
       }
-    } catch (error) {
+    } catch (_) {
       setIsError(true);
     } finally {
       setUnregisterLoading(false);
@@ -172,4 +172,6 @@ export const RegisteredSnaps = ({
       </Row>
     </>
   );
-};
+}
+
+export default RegisteredSnaps;

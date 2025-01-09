@@ -1,7 +1,7 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 
 import { ISnap } from "../../../types";
-import { RegisteredSnaps } from "../RegisteredSnaps";
+import RegisteredSnaps from "../RegisteredSnaps";
 import "@testing-library/jest-dom";
 
 const BASE_SNAP_DATA = {

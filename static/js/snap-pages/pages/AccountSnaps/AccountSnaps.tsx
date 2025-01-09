@@ -1,9 +1,9 @@
 import { Notification, Strip } from "@canonical/react-components";
-import { RegisteredSnaps } from "../../components/RegisteredSnaps";
-import { PublishedSnapSection } from "../../components/PublishedSnapSection";
+import RegisteredSnaps from "../../components/RegisteredSnaps";
+import PublishedSnapSection from "../../components/PublishedSnapSection";
 import { useFetchAccountSnaps } from "../../hooks";
 
-export const AccountSnaps = () => {
+function AccountSnaps() {
   const { status, data, refetch, isRefetching } = useFetchAccountSnaps();
   const isLoading = isRefetching || status === "loading";
 
@@ -51,4 +51,6 @@ export const AccountSnaps = () => {
         )}
     </div>
   );
-};
+}
+
+export default AccountSnaps;
