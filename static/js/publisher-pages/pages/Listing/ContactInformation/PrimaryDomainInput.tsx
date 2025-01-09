@@ -63,7 +63,7 @@ function PrimaryDomainInput({
     try {
       const newUrl = new URL(getValues("primary_website"));
       return initialUrl.hostname !== newUrl.hostname;
-    } catch (e) {
+    } catch (_) {
       return false;
     }
   };
@@ -78,7 +78,7 @@ function PrimaryDomainInput({
     try {
       const newUrl = new URL(getValues("primary_website"));
       return initialUrl.pathname !== newUrl.pathname;
-    } catch (e) {
+    } catch (_) {
       return false;
     }
   };
@@ -91,7 +91,7 @@ function PrimaryDomainInput({
     try {
       const newUrl = new URL(getValues("primary_website"));
       return noPathDomains.includes(newUrl.hostname);
-    } catch (e) {
+    } catch (_) {
       return false;
     }
   };

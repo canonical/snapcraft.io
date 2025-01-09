@@ -42,7 +42,7 @@ export function fetchInvites(storeId: string) {
       const response = await fetch(`/admin/store/${storeId}/invites`);
       const data = await response.json();
       dispatch(getInvitesSuccess(data));
-    } catch (error) {
+    } catch (_) {
       dispatch(getMembersNotFound());
       dispatch(getInvitesError());
     }

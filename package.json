@@ -1,7 +1,7 @@
 {
   "scripts": {
-    "lint-js": "eslint static/js --ext .js,.jsx,.ts,.tsx",
-    "lint-a11y": "eslint -c eslint-a11y.config.js static/js --ext .js,.jsx,.ts,.tsx",
+    "lint-js": "eslint static/js",
+    "lint-a11y": "eslint -c eslint-a11y.config.js static/js",
     "lint-scss": "stylelint static/**/*.scss",
     "lint-python": "flake8 webapp tests && black --diff --check --line-length 79 webapp tests",
     "test": "yarn run test-python && yarn run test-js-all && yarn run lint-scss",
@@ -113,8 +113,8 @@
     "@types/d3": "7.4.3",
     "@types/markdown-it": "14.1.2",
     "@types/uuid": "10.0.0",
-    "@typescript-eslint/eslint-plugin": "8.0.0",
-    "@typescript-eslint/parser": "8.0.0",
+    "@typescript-eslint/eslint-plugin": "^8.19.1",
+    "@typescript-eslint/parser": "^8.19.1",
     "babel-jest": "29.7.0",
     "concurrently": "9.1.2",
     "eslint": "9.17.0",

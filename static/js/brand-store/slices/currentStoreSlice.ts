@@ -41,7 +41,7 @@ export function fetchStore(storeId: string) {
       const response = await fetch(`/admin/store/${storeId}`);
       const data = await response.json();
       dispatch(getCurrentStoreSuccess(data));
-    } catch (error) {
+    } catch (_) {
       dispatch(getCurrentStoreNotFound());
       dispatch(getCurrentStoreError());
     }
