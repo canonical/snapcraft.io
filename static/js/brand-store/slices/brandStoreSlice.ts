@@ -39,8 +39,8 @@ export function fetchStores() {
 
     try {
       const response = await fetch("/api/stores");
-      const data = await response.json();
-      dispatch(getBrandStoresSuccess(data));
+      const responseData = await response.json();
+      dispatch(getBrandStoresSuccess(responseData.data));
     } catch (_) {
       dispatch(getBrandStoresNotFound());
       dispatch(getBrandStoresError());
