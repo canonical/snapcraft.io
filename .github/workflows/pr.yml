@@ -132,11 +132,15 @@ jobs:
             py:
               - '**/*.py'
 
-      - name: Install requirements
+      - name: Install dotrun
+        if: ${{ steps.filter.outputs.py == 'true' }}
+        run: sudo pip3 install dotrun
+
+      - name: Install dependencies
         if: ${{ steps.filter.outputs.py == 'true' }}
         run: |
-          sudo apt-get update && sudo apt-get install --yes python3-setuptools
-          sudo pip3 install -r requirements.txt
+          sudo chmod -R 777 .
+          dotrun install
 
       - name: Install dependencies
         if: ${{ steps.filter.outputs.py == 'true' }}
@@ -148,7 +152,7 @@ jobs:
 
       - name: Build resources
         if: ${{ steps.filter.outputs.py == 'true' }}
-        run: yarn build
+        run: dotrun build
 
       - name: Run python tests with coverage
         if: ${{ steps.filter.outputs.py == 'true' }}
