@@ -72,9 +72,11 @@ class GitHub:
     def decompress_data(self, data, encoding):
         if encoding == "gzip":
             with gzip.GzipFile(fileobj=BytesIO(data)) as f:
-                return f.read().decode("utf-8")  # Decompress and decode as UTF-8
+                return f.read().decode(
+                    "utf-8"
+                )  # Decompress and decode as UTF-8
         return data.decode("utf-8")
-    
+
     def get_data_from_response(self, response):
         content_encoding = response.headers.get("Content-Encoding", "")
         if content_encoding == "gzip":
@@ -107,7 +109,7 @@ class GitHub:
             raise Forbidden
 
         response.raise_for_status()
-        
+
         data = self.get_data_from_response(response)
         return data["data"]
 
