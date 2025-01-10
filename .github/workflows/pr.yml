@@ -152,8 +152,7 @@ jobs:
 
       - name: Run python tests with coverage
         if: ${{ steps.filter.outputs.py == 'true' }}
-        run: |
-          SECRET_KEY=insecure_secret_key coverage run  --source=. -m unittest discover tests
+        run: dotrun test-python-job
 
       - name: Upload coverage to Codecov
         if: ${{ steps.filter.outputs.py == 'true' }}
