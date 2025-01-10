@@ -48,7 +48,9 @@ def get_stores():
     """
     stores = admin_api.get_stores(flask.session)
 
-    return jsonify(stores)
+    res = {"success": True, "data": stores}
+
+    return jsonify(res)
 
 
 @admin.route("/api/store/<store_id>")
@@ -56,8 +58,19 @@ def get_stores():
 @exchange_required
 def get_settings(store_id):
     store = admin_api.get_store(flask.session, store_id)
+    store["links"] = []
 
-    return jsonify(store)
+    if any(role["role"] == "admin" for role in store["roles"]):
+        store["links"].append(
+            {"name": "Members", "path": f'/admin/{store["id"]}/members'}
+        )
+        store["links"].append(
+            {"name": "Settings", "path": f'/admin/${store["id"]}/settings'}
+        )
+
+    res = {"success": True, "data": store}
+
+    return jsonify(res)
 
 
 @admin.route("/api/store/<store_id>/settings", methods=["PUT"])
