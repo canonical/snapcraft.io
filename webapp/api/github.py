@@ -242,9 +242,6 @@ class GitHub:
         }"""
         )
 
-        response = self._gql_request(gql)
-        response.raise_for_status()  # Raise HTTPError for bad responses (4xx and 5xx)
-
         response = self._gql_request(gql)["viewer"]["organization"][
             "repositories"
         ]
