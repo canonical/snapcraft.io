@@ -42,27 +42,23 @@ jobs:
 
   lint-python:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - uses: dorny/paths-filter@v3
-        id: filter
-        with:
-          filters: |
-            py:
-              - '**/*.py'
+      - name: Install dotrun
+        run: sudo pip3 install dotrun
 
-      - name: Install Python dependencies
-        if: ${{ steps.filter.outputs.py == 'true' }}
+      - name: Install dependencies
         run: |
-          python3 -m pip install --upgrade pip
-          sudo pip3 install -r requirements.txt
+          sudo chmod -R 777 .
+          dotrun install
 
-      - name: Lint Python
-        if: ${{ steps.filter.outputs.py == 'true' }}
-        run: |
-          yarn lint-python
+      - name: Build assets
+        run: dotrun build
+
+      - name: Lint python
+        run: dotrun lint-python
 
   lint-scss:
     runs-on: ubuntu-latest
