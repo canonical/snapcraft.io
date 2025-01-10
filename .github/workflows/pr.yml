@@ -146,10 +146,6 @@ jobs:
         if: ${{ steps.filter.outputs.py == 'true' }}
         run: sudo pip3 install coverage
 
-      - name: Install node dependencies
-        if: ${{ steps.filter.outputs.py == 'true' }}
-        run: yarn install --immutable
-
       - name: Build resources
         if: ${{ steps.filter.outputs.py == 'true' }}
         run: dotrun build
