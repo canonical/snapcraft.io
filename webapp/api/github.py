@@ -219,6 +219,12 @@ class GitHub:
           }
         }"""
         )
+
+        response = self._gql_request(gql)
+        print(f"Response content: {response.text}")  # Log raw response content
+        print(f"Response status code: {response.status_code}")  # Log status code
+        response.raise_for_status()  # Raise HTTPError for bad responses (4xx and 5xx)
+
         response = self._gql_request(gql)["viewer"]["organization"][
             "repositories"
         ]
