@@ -16,7 +16,7 @@ class TestGetPackageMetadata(BaseTestCases):
         "SnapPublisher.get_package_metadata"
     )
     def test_get_package_metadata(self, mock_get_package_metadata):
-        # testing for track guardrails.
+        # testing for track guardrails
         mock_metadata = {
             "track-guardrails": {
                 "created-at": "2024-03-26T11:54:50.062999",
