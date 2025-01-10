@@ -4,7 +4,7 @@ import { Provider } from "react-redux";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { BrowserRouter } from "react-router-dom";
 import { RecoilRoot } from "recoil";
-import { store } from "../../../store";
+import { store } from "../../../state/store";
 import Navigation from "../Navigation";
 
 const queryClient = new QueryClient();
