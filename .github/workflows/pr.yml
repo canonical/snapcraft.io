@@ -44,8 +44,14 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
-
+      - name: Checkout
+        uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            py:
+              - '**/*.py'
       - name: Install dotrun
         run: sudo pip3 install dotrun
 
@@ -58,6 +64,7 @@ jobs:
         run: dotrun build
 
       - name: Lint python
+        if: ${{ steps.filter.outputs.py == 'true' }}
         run: dotrun lint-python
 
   lint-scss:
