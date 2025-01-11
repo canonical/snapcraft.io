@@ -16,6 +16,7 @@ type Options = {
   setUpdateMetadataOnRelease: Dispatch<SetStateAction<boolean>>;
   shouldShowUpdateMetadataWarning: (arg: FieldValues) => boolean;
   snapName: string | undefined;
+  setShowUpdateMetadataMessage: Dispatch<SetStateAction<boolean>>;
 };
 
 function useMutateListingData({
@@ -27,6 +28,7 @@ function useMutateListingData({
   setUpdateMetadataOnRelease,
   shouldShowUpdateMetadataWarning,
   snapName,
+  setShowUpdateMetadataMessage,
 }: Options) {
   return useMutation({
     mutationFn: async (values: FieldValues) => {
@@ -82,6 +84,12 @@ function useMutateListingData({
 
       if (!response.ok) {
         throw new Error("There was a problem saving listing data");
+      }
+
+      const responseData = await response.json();
+
+      if (!responseData.data.text_fields_updated) {
+        setShowUpdateMetadataMessage(true);
       }
     },
     onSuccess: () => {
