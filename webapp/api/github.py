@@ -7,6 +7,10 @@ from webapp.helpers import get_yaml_loader
 from werkzeug.exceptions import Unauthorized, Forbidden
 from requests.exceptions import HTTPError
 
+import gzip
+from io import BytesIO
+import json
+
 GITHUB_WEBHOOK_SECRET = getenv("GITHUB_WEBHOOK_SECRET")
 
 
@@ -65,6 +69,24 @@ class GitHub:
 
         return response
 
+    def decompress_data(self, data, encoding):
+        if encoding == "gzip":
+            with gzip.GzipFile(fileobj=BytesIO(data)) as f:
+                return f.read().decode(
+                    "utf-8"
+                )  # Decompress and decode as UTF-8
+        return data.decode("utf-8")
+
+    def get_data_from_response(self, response):
+        content_encoding = response.headers.get("Content-Encoding", "")
+        if content_encoding == "gzip":
+            content = response.content
+            decompressed_data = self.decompress_data(content, content_encoding)
+            data = json.loads(decompressed_data)
+        else:
+            data = response.json()
+        return data
+
     def _gql_request(self, query={}):
         """
         Makes a raw HTTP request and returns the response.
@@ -87,7 +109,9 @@ class GitHub:
             raise Forbidden
 
         response.raise_for_status()
-        return response.json()["data"]
+
+        data = self.get_data_from_response(response)
+        return data["data"]
 
     def _get_nodes(self, edges):
         """
@@ -219,6 +243,7 @@ class GitHub:
           }
         }"""
         )
+
         response = self._gql_request(gql)["viewer"]["organization"][
             "repositories"
         ]
@@ -253,7 +278,8 @@ class GitHub:
             if e.response.status_code == 404:
                 return False
 
-        response_permissions = response.json()["permissions"]
+        data = self.get_data_from_response(response)
+        response_permissions = data["permissions"]
         user_permissions = [
             p for p in response_permissions if response_permissions[p]
         ]
@@ -308,7 +334,8 @@ class GitHub:
 
     def get_default_branch(self, owner, repo):
         response = self._request("GET", f"repos/{owner}/{repo}")
-        return response.json()["default_branch"]
+        data = self.get_data_from_response(response)
+        return data["default_branch"]
 
     def get_last_commit(self, owner, repo, branch=None):
         if not branch:
@@ -317,7 +344,8 @@ class GitHub:
         response = self._request(
             "GET", f"repos/{owner}/{repo}/commits/{branch}"
         )
-        return response.json()["sha"]
+        data = self.get_data_from_response(response)
+        return data["sha"]
 
     def get_snapcraft_yaml_data(self, owner, repo, location=None):
         """
@@ -337,9 +365,14 @@ class GitHub:
             )
 
             yaml = get_yaml_loader()
-
             try:
-                return yaml.load(response.content)
+                content_encoding = response.headers.get("Content-Encoding", "")
+                if content_encoding == "gzip":
+                    content = response.content
+                    data = self.decompress_data(content, content_encoding)
+                else:
+                    data = response.content
+                return yaml.load(data)
             except Exception:
                 raise InvalidYAML
 

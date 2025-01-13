@@ -297,19 +297,31 @@ def get_account_snaps():
 
     flask_user = flask.session["publisher"]
 
-    is_users_snap = {
-        snap_name: get_is_user_snap(snap_name)
-        for snap_name in registered_snaps
-    }
-
     context = {
         "snaps": user_snaps,
         "current_user": flask_user["nickname"],
         "registered_snaps": registered_snaps,
-        "is_users_snap": is_users_snap,
     }
 
     return flask.render_template("publisher/account-snaps.html", **context)
+
+
+@publisher_snaps.route("/snaps.json")
+@login_required
+def get_user_snaps():
+    account_info = publisher_api.get_account(flask.session)
+
+    user_snaps, registered_snaps = logic.get_snaps_account_info(account_info)
+
+    flask_user = flask.session["publisher"]
+
+    return flask.jsonify(
+        {
+            "snaps": user_snaps,
+            "current_user": flask_user["nickname"],
+            "registered_snaps": registered_snaps,
+        }
+    )
 
 
 @publisher_snaps.route("/snap-builds.json")

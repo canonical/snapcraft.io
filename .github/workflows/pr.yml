@@ -42,10 +42,10 @@ jobs:
 
   lint-python:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
       - uses: dorny/paths-filter@v3
         id: filter
         with:
@@ -53,16 +53,23 @@ jobs:
             py:
               - '**/*.py'
 
-      - name: Install Python dependencies
+      - name: Install dotrun
         if: ${{ steps.filter.outputs.py == 'true' }}
-        run: |
-          python3 -m pip install --upgrade pip
-          sudo pip3 install -r requirements.txt
+        run: sudo pip3 install dotrun
 
-      - name: Lint Python
+      - name: Install dependencies
         if: ${{ steps.filter.outputs.py == 'true' }}
         run: |
-          yarn lint-python
+          sudo chmod -R 777 .
+          dotrun install
+
+      - name: Build assets
+        if: ${{ steps.filter.outputs.py == 'true' }}
+        run: dotrun build
+
+      - name: Lint python
+        if: ${{ steps.filter.outputs.py == 'true' }}
+        run: dotrun lint-python
 
   lint-scss:
     runs-on: ubuntu-latest
@@ -125,28 +132,27 @@ jobs:
             py:
               - '**/*.py'
 
-      - name: Install requirements
+      - name: Install dotrun
+        if: ${{ steps.filter.outputs.py == 'true' }}
+        run: sudo pip3 install dotrun
+
+      - name: Install dependencies
         if: ${{ steps.filter.outputs.py == 'true' }}
         run: |
-          sudo apt-get update && sudo apt-get install --yes python3-setuptools
-          sudo pip3 install -r requirements.txt
+          sudo chmod -R 777 .
+          dotrun install
 
       - name: Install dependencies
         if: ${{ steps.filter.outputs.py == 'true' }}
         run: sudo pip3 install coverage
 
-      - name: Install node dependencies
-        if: ${{ steps.filter.outputs.py == 'true' }}
-        run: yarn install --immutable
-
       - name: Build resources
         if: ${{ steps.filter.outputs.py == 'true' }}
-        run: yarn build
+        run: dotrun build
 
       - name: Run python tests with coverage
         if: ${{ steps.filter.outputs.py == 'true' }}
-        run: |
-          SECRET_KEY=insecure_secret_key coverage run  --source=. -m unittest discover tests
+        run: dotrun test-python-job
 
       - name: Upload coverage to Codecov
         if: ${{ steps.filter.outputs.py == 'true' }}
