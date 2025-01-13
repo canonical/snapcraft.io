@@ -1,0 +1,36 @@
+@mixin snapcraft-p-snap-list {
+    .p-snap-list {
+        &__notification-link {
+            margin-left: 0.25rem;
+        }
+
+        &__metrics-empty-message {
+            left: 50%;
+            position: absolute;
+            top: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        &__confirmation-modal {
+            align-items: center;
+            display: flex;
+
+            &-icon {
+                font-size: 2rem;
+                margin-right: 0.5rem;
+            }
+        }
+
+        &__account-snaps-loading {
+            align-items: center;
+            display: flex;
+            gap: 0.5rem;
+
+            &-text {
+                line-height: unset;
+                margin-top: revert;
+                padding-top: unset;
+            }
+        }
+    }
+}
