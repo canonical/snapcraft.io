@@ -16,9 +16,8 @@ import { useSigningKeys } from "../../hooks";
 import {
   signingKeysListState,
   newSigningKeyState,
-  brandIdState,
-} from "../../state/atoms";
-import { brandStoreState } from "../../state/selectors";
+} from "../../state/signingKeysState";
+import { brandIdState, brandStoreState } from "../../state/brandStoreState";
 
 type Props = {
   setShowNotification: Dispatch<SetStateAction<boolean>>;

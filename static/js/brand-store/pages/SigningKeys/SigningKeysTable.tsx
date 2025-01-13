@@ -9,8 +9,11 @@ import DeactivateSigningKeyModal from "./DeactivateSigningKeyModal";
 
 import { sortByDateDescending } from "../../utils";
 
-import { filteredSigningKeysListState } from "../../state/selectors";
-import { signingKeysListState, brandIdState } from "../../state/atoms";
+import {
+  filteredSigningKeysListState,
+  signingKeysListState,
+} from "../../state/signingKeysState";
+import { brandIdState } from "../../state/brandStoreState";
 
 import type { SigningKey } from "../../types/shared";
 import type { ItemType } from "../../components/AppPagination/AppPagination";

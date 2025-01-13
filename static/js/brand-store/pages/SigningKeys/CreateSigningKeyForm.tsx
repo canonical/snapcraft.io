@@ -8,13 +8,10 @@ import { checkSigningKeyExists, setPageTitle } from "../../utils";
 
 import {
   signingKeysListState,
-  newSigningKeyState,
-  brandIdState,
-} from "../../state/atoms";
-import {
   filteredSigningKeysListState,
-  brandStoreState,
-} from "../../state/selectors";
+  newSigningKeyState,
+} from "../../state/signingKeysState";
+import { brandIdState, brandStoreState } from "../../state/brandStoreState";
 
 import type { SigningKey } from "../../types/shared";
 

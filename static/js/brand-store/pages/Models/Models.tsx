@@ -13,11 +13,10 @@ import { UseQueryResult } from "react-query";
 import {
   modelsListFilterState,
   modelsListState,
-  policiesListState,
   newModelState,
-  brandIdState,
-} from "../../state/atoms";
-import { brandStoreState } from "../../state/selectors";
+} from "../../state/modelsState";
+import { policiesListState } from "../../state/policiesState";
+import { brandIdState, brandStoreState } from "../../state/brandStoreState";
 
 import Filter from "../../components/Filter";
 import ModelsTable from "./ModelsTable";

@@ -11,7 +11,7 @@ import {
 
 import Navigation from "../../components/Navigation";
 
-import { publisherState } from "../../state/atoms";
+import { publisherState } from "../../state/publisherState";
 
 function AccountDetails(): ReactNode {
   const [subscriptionPreferencesChanged, setSubscriptionPreferencesChanged] =
