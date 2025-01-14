@@ -1,234 +1,125 @@
-import { ChangeEvent, ReactNode, useEffect, useState } from "react";
-import { useSelector } from "react-redux";
-import { useParams, Navigate } from "react-router-dom";
-import { useAppDispatch } from "../../hooks";
+import { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
+import { useQuery } from "react-query";
 import {
-  Form,
-  Input,
   Row,
   Col,
-  Button,
   Spinner,
-  Notification,
+  Form,
+  Input,
   PasswordToggle,
+  Button,
 } from "@canonical/react-components";
 
-import {
-  currentStoreSelector,
-  membersSelector,
-  brandStoresListSelector,
-} from "../../state/selectors";
-import { fetchMembers } from "../../state/slices/membersSlice";
-import { fetchStore } from "../../state/slices/currentStoreSlice";
-
-import StoreNotFound from "../StoreNotFound";
 import Navigation from "../../components/Navigation";
 
-import { setPageTitle } from "../../utils";
+function Settings() {
+  const { id } = useParams();
+  const [isPrivate, setIsPrivate] = useState<boolean>(false);
+  const [manualReviewPolicy, setManualReviewPolicy] = useState<string>();
+  const [isSaving, setIsSaving] = useState<boolean>(false);
+  const { data, isLoading, status, refetch } = useQuery({
+    queryKey: ["currentStore"],
+    queryFn: async () => {
+      const response = await fetch(`/api/store/${id}`);
 
-import type { RouteParams, Member, Store } from "../../types/shared";
+      if (!response.ok) {
+        throw new Error("Unable to fetch store");
+      }
 
-export type RootState = {
-  currentStore: {
-    currentStore: {
-      name: string;
-      id: string;
-      private: boolean;
-      "manual-review-policy": string;
-    };
-    loading: boolean;
-    notFound: boolean;
-  };
-  members: {
-    members: Array<Member>;
-    loading: boolean;
-    notFound: boolean;
-  };
-  brandStores: {
-    brandStoresList: Array<Store>;
-    loading: boolean;
-    notFound: boolean;
-  };
-};
+      const responseData = await response.json();
 
-function Settings(): ReactNode {
-  const currentStore = useSelector(currentStoreSelector);
-  const members = useSelector(membersSelector);
-  const storeLoading = useSelector(
-    (state: RootState) => state.currentStore.loading,
-  );
-  const membersLoading = useSelector(
-    (state: RootState) => state.members.loading,
-  );
-  const storeNotFound = useSelector(
-    (state: RootState) => state.currentStore.notFound,
-  );
-  const membersNotFound = useSelector(
-    (state: RootState) => state.members.notFound,
-  );
-  const dispatch = useAppDispatch();
-  const { id } = useParams<RouteParams>();
+      if (!responseData.success) {
+        throw new Error("Unable to fetch store");
+      }
 
-  const [isPrivateStore, setIsPrivateStore] = useState(true);
-  const [manualReviewPolicy, setManualReviewPolicy] = useState("");
-  const [isSaving, setIsSaving] = useState(false);
-  const [showSuccessNotification, setShowSuccessNotification] = useState(false);
-  const [showErrorNotification, setShowErrorNotification] = useState(false);
-  const [currentMember, setCurrentMember] = useState<Member | undefined>();
-  const brandStoresList = useSelector(brandStoresListSelector);
+      return responseData.data;
+    },
+  });
 
-  currentStore
-    ? setPageTitle(`Settings for ${currentStore.name}`)
-    : setPageTitle("Settings");
-
-  const handleFormSubmit = (e: ChangeEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    setIsSaving(true);
-
-    const settingsData = new FormData();
-    settingsData.set("csrf_token", window.CSRF_TOKEN);
-    settingsData.set("store-id", id!);
-    settingsData.set("private", isPrivateStore.toString());
-    settingsData.set("manual-review-policy", manualReviewPolicy);
-
-    fetch(`/api/store/${id}/settings`, {
-      method: "PUT",
-      body: settingsData,
-    })
-      .then((response) => {
-        if (response.status === 200) {
-          return response.json();
-        } else {
-          throw Error();
-        }
-      })
-      .then((data) => {
-        dispatch(fetchStore(id!));
-
-        // Add timeout so that the user has time to notice the save action
-        // in the event of it happening very fast
-        setTimeout(() => {
-          setIsSaving(false);
-
-          if (data.success) {
-            setShowSuccessNotification(true);
-          }
-
-          if (data.error) {
-            setShowErrorNotification(true);
-          }
-        }, 1500);
-      })
-      .catch(() => {
-        setShowErrorNotification(true);
-        setIsSaving(false);
-      });
-  };
-
-  const handleCheckboxChange = () => {
-    setIsPrivateStore(!isPrivateStore);
-  };
-
-  const handleRadioButtonChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setManualReviewPolicy(e.currentTarget.value);
-  };
-
-  const getDisabledState = () => {
-    return (
-      isPrivateStore === currentStore.private &&
-      manualReviewPolicy === currentStore["manual-review-policy"]
-    );
-  };
-
-  const isOnlyViewer = () =>
-    currentMember?.roles.length === 1 && currentMember?.roles.includes("view");
-
-  useEffect(() => {
-    dispatch(fetchMembers(id!));
-    dispatch(fetchStore(id!));
-  }, [id]);
-
-  useEffect(() => {
-    setIsPrivateStore(currentStore.private);
-    setManualReviewPolicy(currentStore["manual-review-policy"]);
-  }, [currentStore.private, currentStore["manual-review-policy"]]);
-
-  useEffect(() => {
-    setCurrentMember(members.find((member: Member) => member.current_user));
-  }, [members, storeLoading, membersLoading]);
-
-  const getSectionName = () => {
-    if (!storeNotFound && !membersNotFound) {
-      return "settings";
-    } else {
-      return null;
+  const formDisabled = () => {
+    if (!data) {
+      return true;
     }
-  };
 
-  const getStoreName = (storeId: string) => {
-    const store = brandStoresList.find((item) => item.id === storeId);
-
-    if (store) {
-      return store.name;
-    } else {
-      return storeId;
+    if (isPrivate !== data.private) {
+      return false;
     }
+
+    if (manualReviewPolicy !== data["manual-review-policy"]) {
+      return false;
+    }
+
+    return true;
   };
+
+  useEffect(() => {
+    if (data) {
+      setIsPrivate(data.private);
+      setManualReviewPolicy(data["manual-review-policy"]);
+    }
+  }, [data]);
 
   return (
-    <div className="l-application" role="presentation">
-      <Navigation sectionName={getSectionName()} />
+    <div className="l-application">
+      <Navigation sectionName="settings" />
       <main className="l-main">
         <div className="p-panel--settings">
           <div className="p-panel__content">
-            {storeLoading && membersLoading && !isSaving ? (
+            {isLoading && (
               <div className="u-fixed-width">
-                <Spinner text="Loading&hellip;" />
+                <Spinner text="Loading..." />
               </div>
-            ) : storeNotFound || membersNotFound ? (
-              <StoreNotFound />
-            ) : isOnlyViewer() ? (
-              <Navigate to={`/admin/${id}/snaps`} />
-            ) : (
+            )}
+
+            {!isLoading && status === "success" && data && (
               <>
                 <div className="u-fixed-width">
-                  <h1 className="p-heading--4">
-                    {getStoreName(id || "")} / Settings
-                  </h1>
+                  <h1 className="p-heading--4">{data.name} / Settings</h1>
                 </div>
                 <Row>
                   <Col size={7}>
-                    {showSuccessNotification && (
-                      <Notification
-                        severity="positive"
-                        title="Success"
-                        onDismiss={() => setShowSuccessNotification(false)}
-                      >
-                        Settings have been updated
-                      </Notification>
-                    )}
-                    {showErrorNotification && (
-                      <Notification
-                        severity="negative"
-                        title="Error"
-                        onDismiss={() => setShowErrorNotification(false)}
-                      >
-                        Something went wrong.{" "}
-                        <a href="https://github.com/canonical-web-and-design/snapcraft.io/issues/new">
-                          Report a bug
-                        </a>
-                        .
-                      </Notification>
-                    )}
-                    <Form onSubmit={handleFormSubmit} autoComplete="off">
+                    <Form
+                      onSubmit={async (e) => {
+                        e.preventDefault();
+
+                        setIsSaving(true);
+
+                        const formData = new FormData();
+                        formData.set("csrf_token", window.CSRF_TOKEN);
+                        formData.set("store-id", id || "");
+                        formData.set("private", isPrivate.toString());
+                        formData.set(
+                          "manual-review-policy",
+                          manualReviewPolicy || "",
+                        );
+
+                        const response = await fetch(
+                          `/api/store/${id}/settings`,
+                          { method: "PUT", body: formData },
+                        );
+
+                        if (!response.ok) {
+                          throw new Error("Unable to save settings");
+                        }
+
+                        setTimeout(() => {
+                          setIsSaving(false);
+                        }, 1500);
+
+                        refetch();
+                      }}
+                      autoComplete="off"
+                    >
                       <Input
                         id="is_public"
                         label="Include this store in public lists"
                         type="checkbox"
                         help="This store will not be listed in the store dropdowns like the one in the snap name registration form."
-                        onChange={handleCheckboxChange}
-                        checked={!isPrivateStore}
+                        onChange={() => {
+                          setIsPrivate(!isPrivate);
+                        }}
+                        checked={!isPrivate}
                       />
 
                       <PasswordToggle
@@ -249,7 +140,9 @@ function Settings(): ReactNode {
                         id="manual-review-policy-label-allow"
                         aria-labelledby="store-id-label"
                         value="allow"
-                        onChange={handleRadioButtonChange}
+                        onChange={(e) => {
+                          setManualReviewPolicy(e.target.value);
+                        }}
                         checked={manualReviewPolicy === "allow"}
                       />
                       <Input
@@ -259,7 +152,9 @@ function Settings(): ReactNode {
                         name="manual-review-policy"
                         id="manual-review-policy-label-avoid"
                         value="avoid"
-                        onChange={handleRadioButtonChange}
+                        onChange={(e) => {
+                          setManualReviewPolicy(e.target.value);
+                        }}
                         checked={manualReviewPolicy === "avoid"}
                       />
                       <Input
@@ -269,7 +164,9 @@ function Settings(): ReactNode {
                         name="manual-review-policy"
                         id="manual-review-policy-label-require"
                         value="require"
-                        onChange={handleRadioButtonChange}
+                        onChange={(e) => {
+                          setManualReviewPolicy(e.target.value);
+                        }}
                         checked={manualReviewPolicy === "require"}
                       />
 
@@ -279,7 +176,7 @@ function Settings(): ReactNode {
                         <Button
                           appearance="positive"
                           type="submit"
-                          disabled={getDisabledState() || isSaving}
+                          disabled={formDisabled() || isSaving}
                           className={isSaving ? "has-icon" : ""}
                         >
                           {isSaving ? (
