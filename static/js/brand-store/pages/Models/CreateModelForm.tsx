@@ -8,15 +8,15 @@ import randomstring from "randomstring";
 import { checkModelNameExists, setPageTitle } from "../../utils";
 
 import {
-  brandStoresState,
   modelsListState,
   newModelState,
-  brandIdState,
-} from "../../state/atoms";
-import {
   filteredModelsListState,
+} from "../../state/modelsState";
+import {
+  brandStoresState,
+  brandIdState,
   brandStoreState,
-} from "../../state/selectors";
+} from "../../state/brandStoreState";
 
 import type { Store, Model } from "../../types/shared";
 

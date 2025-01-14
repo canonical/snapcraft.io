@@ -14,11 +14,10 @@ import { useSigningKeys, useModels } from "../../hooks";
 import {
   signingKeysListState,
   signingKeysListFilterState,
-  policiesListState,
   newSigningKeyState,
-  brandIdState,
-} from "../../state/atoms";
-import { brandStoreState } from "../../state/selectors";
+} from "../../state/signingKeysState";
+import { policiesListState } from "../../state/policiesState";
+import { brandIdState, brandStoreState } from "../../state/brandStoreState";
 
 import Filter from "../../components/Filter";
 import SigningKeysTable from "./SigningKeysTable";
