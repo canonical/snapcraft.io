@@ -58,7 +58,7 @@ function SnapsSearch({
                 setIsSearching(true);
 
                 fetch(
-                  `/admin/${storeId}/snaps/search?q=${e.target.value}&allowed_for_inclusion=${storeId}`,
+                  `/api/${storeId}/snaps/search?q=${e.target.value}&allowed_for_inclusion=${storeId}`,
                 )
                   .then((response) => {
                     if (response.status !== 200) {
@@ -135,6 +135,8 @@ function SnapsSearch({
                         style: {
                           backgroundColor:
                             highlightedIndex === index ? "#f7f7f7" : "#fff",
+                          paddingLeft: "1rem",
+                          paddingRight: "1rem",
                         },
                       })}
                     >
