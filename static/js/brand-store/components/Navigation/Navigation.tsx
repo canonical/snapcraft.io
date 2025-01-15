@@ -1,14 +1,14 @@
 import { useState, useEffect, ReactNode } from "react";
-import { useSelector } from "react-redux";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { useParams, NavLink } from "react-router-dom";
 
 import Logo from "./Logo";
 
 import { publisherState } from "../../state/publisherState";
 import { brandIdState } from "../../state/brandStoreState";
-import { brandStoresListSelector } from "../../state/selectors";
 import { useBrand, usePublisher } from "../../hooks";
+
+import { brandStoresState } from "../../state/brandStoreState";
 
 import type { Store } from "../../types/shared";
 
@@ -17,7 +17,7 @@ function Navigation({
 }: {
   sectionName: string | null;
 }): ReactNode {
-  const brandStoresList = useSelector(brandStoresListSelector);
+  const brandStoresList = useRecoilValue(brandStoresState);
   const { id } = useParams();
   const { data: brand } = useBrand(id);
   const { data: publisherData } = usePublisher();
