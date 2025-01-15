@@ -82,9 +82,11 @@ class GitHub:
         if content_encoding == "gzip":
             try:
                 content = response.content
-                decompressed_data = self.decompress_data(content, content_encoding)
+                decompressed_data = self.decompress_data(
+                    content, content_encoding
+                )
                 data = json.loads(decompressed_data)
-            except:
+            except Exception:
                 data = response.json()
         else:
             data = response.json()
@@ -374,7 +376,7 @@ class GitHub:
                     try:
                         content = response.content
                         data = self.decompress_data(content, content_encoding)
-                    except:
+                    except Exception:
                         data = response.content
                 else:
                     data = response.content
