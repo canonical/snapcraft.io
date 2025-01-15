@@ -12,8 +12,8 @@ import {
   Notification,
 } from "@canonical/react-components";
 
-import { modelsListState, brandIdState } from "../../state/atoms";
-import { currentModelState, brandStoreState } from "../../state/selectors";
+import { modelsListState, currentModelState } from "../../state/modelsState";
+import { brandIdState, brandStoreState } from "../../state/brandStoreState";
 
 import ModelNav from "./ModelNav";
 import ModelBreadcrumb from "./ModelBreadcrumb";

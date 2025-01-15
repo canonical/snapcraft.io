@@ -8,7 +8,7 @@ import { QueryClient, QueryClientProvider } from "react-query";
 import { useRecoilValue } from "recoil";
 import { store } from "../../../state/store";
 import AccountDetails from "../AccountDetails";
-import { publisherState } from "../../../state/atoms";
+import { publisherState } from "../../../state/publisherState";
 
 const queryClient = new QueryClient();
 

@@ -8,7 +8,7 @@ import AppPagination from "../../components/AppPagination";
 
 import { maskString } from "../../utils";
 
-import { filteredModelsListState } from "../../state/selectors";
+import { filteredModelsListState } from "../../state/modelsState";
 
 import type { Model as ModelType } from "../../types/shared";
 

@@ -5,7 +5,8 @@ import { useParams, NavLink } from "react-router-dom";
 
 import Logo from "./Logo";
 
-import { publisherState, brandIdState } from "../../state/atoms";
+import { publisherState } from "../../state/publisherState";
+import { brandIdState } from "../../state/brandStoreState";
 import { brandStoresListSelector } from "../../state/selectors";
 import { useBrand, usePublisher } from "../../hooks";
 

@@ -11,7 +11,7 @@ import {
 
 import { fetchStores } from "../../state/slices/brandStoreSlice";
 import { brandStoresListSelector } from "../../state/selectors";
-import { brandStoresState } from "../../state/atoms";
+import { brandStoresState } from "../../state/brandStoreState";
 
 import AccountDetails from "../../pages/AccountDetails";
 import Snaps from "../../pages/Snaps";

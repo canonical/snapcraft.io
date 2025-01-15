@@ -25,11 +25,12 @@ import {
 import {
   policiesListFilterState,
   policiesListState,
+} from "../../state/policiesState";
+import {
   signingKeysListState,
   newSigningKeyState,
-  brandIdState,
-} from "../../state/atoms";
-import { brandStoreState } from "../../state/selectors";
+} from "../../state/signingKeysState";
+import { brandIdState, brandStoreState } from "../../state/brandStoreState";
 
 import { isClosedPanel, setPageTitle } from "../../utils";
 
