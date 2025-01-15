@@ -80,9 +80,14 @@ class GitHub:
     def get_data_from_response(self, response):
         content_encoding = response.headers.get("Content-Encoding", "")
         if content_encoding == "gzip":
-            content = response.content
-            decompressed_data = self.decompress_data(content, content_encoding)
-            data = json.loads(decompressed_data)
+            try:
+                content = response.content
+                decompressed_data = self.decompress_data(
+                    content, content_encoding
+                )
+                data = json.loads(decompressed_data)
+            except Exception:
+                data = response.json()
         else:
             data = response.json()
         return data
@@ -368,8 +373,11 @@ class GitHub:
             try:
                 content_encoding = response.headers.get("Content-Encoding", "")
                 if content_encoding == "gzip":
-                    content = response.content
-                    data = self.decompress_data(content, content_encoding)
+                    try:
+                        content = response.content
+                        data = self.decompress_data(content, content_encoding)
+                    except Exception:
+                        data = response.content
                 else:
                     data = response.content
                 return yaml.load(data)

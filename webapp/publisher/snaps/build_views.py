@@ -324,7 +324,7 @@ def post_snap_builds(snap_name):
 
         # Create webhook in the repo, it should also trigger the first build
         github_hook_url = (
-            f"{GITHUB_WEBHOOK_HOST_URL}{snap_name}/webhook/notify"
+            f"{GITHUB_WEBHOOK_HOST_URL}api/{snap_name}/webhook/notify"
         )
         try:
             hook = github.get_hook_by_url(owner, repo, github_hook_url)
@@ -450,7 +450,7 @@ def post_disconnect_repo(snap_name):
             old_hook = github.get_hook_by_url(
                 gh_owner,
                 gh_repo,
-                f"{GITHUB_WEBHOOK_HOST_URL}{snap_name}/webhook/notify",
+                f"{GITHUB_WEBHOOK_HOST_URL}api/{snap_name}/webhook/notify",
             )
 
             if old_hook:
@@ -564,7 +564,7 @@ def get_update_gh_webhooks(snap_name):
 
         # Remove current hook
         github_hook_url = (
-            f"{GITHUB_WEBHOOK_HOST_URL}{snap_name}/webhook/notify"
+            f"{GITHUB_WEBHOOK_HOST_URL}api/{snap_name}/webhook/notify"
         )
         snapcraft_hook = github.get_hook_by_url(
             gh_owner, gh_repo, github_hook_url
