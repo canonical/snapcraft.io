@@ -1,6 +1,6 @@
 import { ChangeEvent, ReactNode, useEffect, useState } from "react";
 import { useParams, Navigate } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
+import { useRecoilValue } from "recoil";
 import {
   Spinner,
   Accordion,
@@ -19,18 +19,10 @@ import InvitesTable from "./InvitesTable";
 import StoreNotFound from "../StoreNotFound";
 import Navigation from "../../components/Navigation";
 
-import {
-  membersSelector,
-  invitesSelector,
-  brandStoresListSelector,
-} from "../../state/selectors";
-import { fetchMembers } from "../../state/slices/membersSlice";
-import { fetchInvites } from "../../state/slices/invitesSlice";
+import { brandStoresState } from "../../state/brandStoreState";
+import { useMembers, useInvites } from "../../hooks";
 
 import { setPageTitle } from "../../utils";
-import { AppDispatch } from "../../state/store/index";
-
-import type { InvitesSlice } from "../../types/shared";
 
 type Members = {
   members: {
@@ -50,19 +42,18 @@ type Member = {
 };
 
 function Members(): ReactNode {
-  const members = useSelector(membersSelector);
-  const membersLoading = useSelector((state: Members) => state.members.loading);
-  const invites = useSelector(invitesSelector);
-  const brandStoresList = useSelector(brandStoresListSelector);
-  const invitesLoading = useSelector((state: Members) => state.members.loading);
-  const membersNotFound = useSelector(
-    (state: Members) => state.members.notFound,
-  );
-  const invitesNotFound = useSelector(
-    (state: InvitesSlice) => state.invites.notFound,
-  );
-  const dispatch = useDispatch<AppDispatch>();
+  const brandStoresList = useRecoilValue(brandStoresState);
   const { id } = useParams();
+  const {
+    data: members,
+    isLoading: membersLoading,
+    refetch: refetchMembers,
+  } = useMembers(id || "");
+  const {
+    data: invites,
+    isLoading: invitesLoading,
+    refetch: refetchInvites,
+  } = useInvites(id || "");
   const [filteredMembers, setFilteredMembers] = useState<Member[]>([]);
   const [sidePanelOpen, setSidePanelOpen] = useState(false);
   const [newMemberEmail, setNewMemberEmail] = useState("");
@@ -117,8 +108,8 @@ function Members(): ReactNode {
             setSidePanelOpen(false);
             setNewMemberEmail("");
             setNewMemberRoles([]);
-            dispatch(fetchMembers(id as string));
-            dispatch(fetchInvites(id as string));
+            refetchMembers();
+            refetchInvites();
             setShowSuccessNotification(true);
             setNotificationText("Member has been added to the store");
             setShowInviteForm(false);
@@ -156,8 +147,8 @@ function Members(): ReactNode {
     currentMember?.roles.length === 1 && currentMember?.roles.includes("view");
 
   useEffect(() => {
-    dispatch(fetchMembers(id as string));
-    dispatch(fetchInvites(id as string));
+    refetchMembers();
+    refetchInvites();
     setStoreName((): string | undefined => {
       const store = brandStoresList.find((item) => item.id === id);
 
@@ -170,7 +161,9 @@ function Members(): ReactNode {
   }, [id]);
 
   useEffect(() => {
-    setFilteredMembers(members);
+    if (members) {
+      setFilteredMembers(members);
+    }
   }, [members]);
 
   useEffect(() => {
@@ -178,11 +171,13 @@ function Members(): ReactNode {
   }, [newMemberEmail, newMemberRoles]);
 
   useEffect(() => {
-    setCurrentMember(members.find((member) => member.current_user));
+    if (members) {
+      setCurrentMember(members.find((member: Member) => member.current_user));
+    }
   }, [members, membersLoading, invitesLoading]);
 
   const getSectionName = () => {
-    if (!membersNotFound && !invitesNotFound) {
+    if (members && invites) {
       return "members";
     } else {
       return null;
@@ -209,7 +204,8 @@ function Members(): ReactNode {
               <div className="u-fixed-width">
                 <Spinner text="Loading&hellip;" />
               </div>
-            ) : membersNotFound || invitesNotFound ? (
+            ) : (!members && !membersLoading) ||
+              (!invites && !invitesLoading) ? (
               <StoreNotFound />
             ) : isOnlyViewer() ? (
               <Navigate to={`/admin/${id}/snaps`} />
@@ -229,7 +225,7 @@ function Members(): ReactNode {
                         if (query) {
                           setFilteredMembers(
                             members.filter(
-                              (member) =>
+                              (member: Member) =>
                                 member.displayname.includes(query) ||
                                 member.email.includes(query),
                             ),
@@ -267,10 +263,11 @@ function Members(): ReactNode {
                       },
                       {
                         key: "invites-table",
-                        title: `${invites.length} invites`,
+                        title: `${invites ? invites.length : 0} invites`,
                         content: (
                           <InvitesTable
                             invites={invites}
+                            refetchInvites={refetchInvites}
                             setNotificationText={setNotificationText}
                             setShowSuccessNotification={
                               setShowSuccessNotification

@@ -349,7 +349,7 @@ function Snaps() {
               <Reviewer />
             ) : currentStore && isPublisherOnly ? (
               <Publisher />
-            ) : !snaps ? (
+            ) : !snapsLoading && !snaps ? (
               <StoreNotFound />
             ) : (
               <>

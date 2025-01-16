@@ -6,6 +6,7 @@ import type { Model as ModelType, SigningKey, Policy } from "../types/shared";
 import useBrandStores from "./useBrandStores";
 import useSnaps from "./useSnaps";
 import useMembers from "./useMembers";
+import useInvites from "./useInvites";
 
 export const useAppDispatch: () => AppDispatch = useDispatch;
 export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
@@ -132,4 +133,4 @@ export function usePublisher() {
   });
 }
 
-export { useBrandStores, useSnaps, useMembers };
+export { useBrandStores, useSnaps, useMembers, useInvites };
