@@ -69,7 +69,7 @@ def publisher_snap_metrics(snap_name):
         "is_linux": "Linux" in flask.request.headers["User-Agent"],
     }
 
-    return flask.render_template("publisher/metrics.html", **context)
+    return flask.render_template("store/publisher.html", **context)
 
 
 @login_required
