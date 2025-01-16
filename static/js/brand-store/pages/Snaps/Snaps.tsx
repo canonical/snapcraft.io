@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import type { ReactNode } from "react";
 import { useParams, Link } from "react-router-dom";
+import { useRecoilValue } from "recoil";
 import { useSelector } from "react-redux";
 import { AsyncThunkAction } from "@reduxjs/toolkit";
 import { useAppDispatch } from "../../state/store";
@@ -14,13 +14,11 @@ import {
   Accordion,
 } from "@canonical/react-components";
 
-import {
-  snapsSelector,
-  brandStoresListSelector,
-  membersSelector,
-} from "../../state/selectors";
+import { snapsSelector, membersSelector } from "../../state/selectors";
 import { fetchSnaps } from "../../state/slices/snapsSlice";
 import { fetchMembers } from "../../state/slices/membersSlice";
+
+import { brandStoresState } from "../../state/brandStoreState";
 
 import Publisher from "../Publisher";
 import Reviewer from "../Reviewer";
@@ -35,23 +33,19 @@ import IncludedSnapsTable from "./IncludedSnapsTable";
 import { setPageTitle } from "../../utils";
 
 import type {
-  StoresSlice,
+  Store,
   Snap,
   SnapsList,
-  Store,
   Member,
   SnapsSlice,
   MembersSlice,
 } from "../../types/shared";
 
-function Snaps(): ReactNode {
-  const brandStoresList = useSelector(brandStoresListSelector);
+function Snaps() {
+  const brandStoresList = useRecoilValue(brandStoresState);
   const snaps = useSelector(snapsSelector);
   const members = useSelector(membersSelector);
   const snapsLoading = useSelector((state: SnapsSlice) => state.snaps.loading);
-  const storesLoading = useSelector(
-    (state: StoresSlice) => state.brandStores.loading,
-  );
   const membersLoading = useSelector(
     (state: MembersSlice) => state.members.loading,
   );
@@ -86,7 +80,7 @@ function Snaps(): ReactNode {
     useState(false);
   const [showRemoveSnapsConfirmation, setShowRemoveSnapsConfirmation] =
     useState(false);
-  const [globalStore, setGlobalStore] = useState<Store | null>(null);
+  const [globalStore, setGlobalStore] = useState<Store>();
 
   const [fetchSnapsByStoreIdPromise, setFetchSnapsByStoreIdPromise] = useState<
     ReturnType<AsyncThunkAction<Snap[], string, object>> | undefined
@@ -374,7 +368,7 @@ function Snaps(): ReactNode {
       <main className="l-main">
         <div className="p-panel">
           <div className="p-panel__content">
-            {snapsLoading && storesLoading && membersLoading ? (
+            {snapsLoading && membersLoading ? (
               <div className="u-fixed-width">
                 <Spinner text="Loading&hellip;" />
               </div>
@@ -479,7 +473,7 @@ function Snaps(): ReactNode {
                               content: (
                                 <IncludedSnapsTable
                                   otherStores={otherStores}
-                                  globalStore={globalStore}
+                                  globalStore={globalStore || null}
                                   getStoreName={getStoreName}
                                   isOnlyViewer={isOnlyViewer}
                                   snapsToRemove={snapsToRemove}
