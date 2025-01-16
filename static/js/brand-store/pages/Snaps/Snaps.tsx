@@ -1,9 +1,6 @@
 import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { useRecoilValue } from "recoil";
-import { useSelector } from "react-redux";
-import { AsyncThunkAction } from "@reduxjs/toolkit";
-import { useAppDispatch } from "../../state/store";
 import {
   Spinner,
   Row,
@@ -14,9 +11,7 @@ import {
   Accordion,
 } from "@canonical/react-components";
 
-import { snapsSelector, membersSelector } from "../../state/selectors";
-import { fetchSnaps } from "../../state/slices/snapsSlice";
-import { fetchMembers } from "../../state/slices/membersSlice";
+import { useSnaps, useMembers } from "../../hooks";
 
 import { brandStoresState } from "../../state/brandStoreState";
 
@@ -32,31 +27,21 @@ import IncludedSnapsTable from "./IncludedSnapsTable";
 
 import { setPageTitle } from "../../utils";
 
-import type {
-  Store,
-  Snap,
-  SnapsList,
-  Member,
-  SnapsSlice,
-  MembersSlice,
-} from "../../types/shared";
+import type { Store, Snap, SnapsList, Member } from "../../types/shared";
 
 function Snaps() {
-  const brandStoresList = useRecoilValue(brandStoresState);
-  const snaps = useSelector(snapsSelector);
-  const members = useSelector(membersSelector);
-  const snapsLoading = useSelector((state: SnapsSlice) => state.snaps.loading);
-  const membersLoading = useSelector(
-    (state: MembersSlice) => state.members.loading,
-  );
-  const snapsNotFound = useSelector(
-    (state: SnapsSlice) => state.snaps.notFound,
-  );
-  const membersNotFound = useSelector(
-    (state: MembersSlice) => state.members.notFound,
-  );
-  const dispatch = useAppDispatch();
   const { id } = useParams();
+  const brandStoresList = useRecoilValue(brandStoresState);
+  const {
+    data: snaps,
+    isLoading: snapsLoading,
+    refetch: refetchSnaps,
+  } = useSnaps(id || "");
+  const {
+    data: members,
+    isLoading: membersLoading,
+    refetch: refetchMembers,
+  } = useMembers(id || "");
   const [snapsInStore, setSnapsInStore] = useState<Snap[]>([]);
   const [otherStoreIds, setOtherStoreIds] = useState<string[]>([]);
   const [otherStores, setOtherStores] = useState<Store[]>([]);
@@ -81,15 +66,6 @@ function Snaps() {
   const [showRemoveSnapsConfirmation, setShowRemoveSnapsConfirmation] =
     useState(false);
   const [globalStore, setGlobalStore] = useState<Store>();
-
-  const [fetchSnapsByStoreIdPromise, setFetchSnapsByStoreIdPromise] = useState<
-    ReturnType<AsyncThunkAction<Snap[], string, object>> | undefined
-  >();
-
-  const [fetchMembersByStoreIdPromise, setFetchMembersByStoreIdPromise] =
-    useState<
-      ReturnType<AsyncThunkAction<Member[], string, object>> | undefined
-    >();
 
   const getStoreName = (storeId: string) => {
     const store = brandStoresList.find((item) => item.id === storeId);
@@ -128,7 +104,7 @@ function Snaps() {
         }
       })
       .then((data) => {
-        dispatch(fetchSnaps(id as string));
+        refetchSnaps();
 
         // Add timeout so that the user has time to notice the save action
         // in the event of it happening very fast
@@ -189,8 +165,7 @@ function Snaps() {
         }
       })
       .then(() => {
-        dispatch(fetchSnaps(id as string));
-
+        refetchSnaps();
         // Add timeout so that the user has time to notice the save action
         // in the event of it happening very fast
         setTimeout(() => {
@@ -214,73 +189,67 @@ function Snaps() {
   const getOtherStoreIds = () => {
     const storeIds: Array<string> = [];
 
-    snaps.forEach((snap) => {
-      if (!snap.store || snap.store === "ubuntu" || snap.store === id) {
-        return;
-      }
+    if (snaps) {
+      snaps.forEach((snap: Snap) => {
+        if (!snap.store || snap.store === "ubuntu" || snap.store === id) {
+          return;
+        }
 
-      if (!storeIds.includes(snap.store)) {
-        storeIds.push(snap.store);
-      }
+        if (!storeIds.includes(snap.store)) {
+          storeIds.push(snap.store);
+        }
 
-      if (snap?.["other-stores"]?.length) {
-        snap["other-stores"].forEach((otherStoreId) => {
-          if (otherStoreId !== id && !storeIds.includes(otherStoreId)) {
-            storeIds.push(otherStoreId);
-          }
-        });
-      }
-    });
+        if (snap?.["other-stores"]?.length) {
+          snap["other-stores"].forEach((otherStoreId) => {
+            if (otherStoreId !== id && !storeIds.includes(otherStoreId)) {
+              storeIds.push(otherStoreId);
+            }
+          });
+        }
+      });
+    }
 
     return storeIds;
   };
 
   const includedStores = snaps
-    .filter(
-      (snap) => snap["included-stores"] && snap["included-stores"].length > 0,
-    )
-    .map((snap) => ({
-      id: snap.id,
-      name: snap.name,
-      userHasAccess: snap.userHasAccess,
-      includedStore: snap["included-stores"][0],
-    }));
+    ? snaps
+        .filter(
+          (snap: Snap) =>
+            snap["included-stores"] && snap["included-stores"].length > 0,
+        )
+        .map((snap: Snap) => ({
+          id: snap.id,
+          name: snap.name,
+          userHasAccess: snap.userHasAccess,
+          includedStore: snap["included-stores"][0],
+        }))
+    : [];
 
   useEffect(() => {
     setSnapsInStore([]);
     setOtherStores([]);
     setIsReloading(true);
 
-    if (fetchSnapsByStoreIdPromise) {
-      fetchSnapsByStoreIdPromise?.abort();
-    }
-
-    dispatch(fetchSnaps(id as string));
-
-    const fetchSnapsPromise = dispatch(fetchSnaps(id as string));
-    setFetchSnapsByStoreIdPromise(fetchSnapsPromise);
-
-    if (fetchMembersByStoreIdPromise) {
-      fetchMembersByStoreIdPromise?.abort();
-    }
-
-    dispatch(fetchMembers(id as string));
-
-    const fetchMembersPromise = dispatch(fetchMembers(id as string));
-    setFetchMembersByStoreIdPromise(fetchMembersPromise);
+    refetchSnaps();
+    refetchMembers();
   }, [id]);
 
   useEffect(() => {
-    setSnapsInStore(snaps.filter((snap) => snap.store === id));
+    setSnapsInStore(
+      snaps ? snaps.filter((snap: Snap) => snap.store === id) : [],
+    );
     setOtherStoreIds(getOtherStoreIds());
 
-    const nonEssentialSnaps = snaps.filter((item: Snap) => {
-      return item.store !== id && !item.essential;
-    });
+    const nonEssentialSnaps = snaps
+      ? snaps.filter((item: Snap) => {
+          return item.store !== id && !item.essential;
+        })
+      : [];
 
-    setNonEssentialSnapIds(nonEssentialSnaps.map((item) => item.id));
+    setNonEssentialSnapIds(nonEssentialSnaps.map((item: Snap) => item.id));
 
-    if (snaps.length) {
+    if (snaps && snaps.length > 0) {
       setIsReloading(false);
     }
   }, [snaps]);
@@ -289,7 +258,7 @@ function Snaps() {
     setGlobalStore({
       id: "ubuntu",
       name: "Global",
-      snaps: snaps.filter((snap) => snap.store === "ubuntu"),
+      snaps: snaps ? snaps.filter((snap: Snap) => snap.store === "ubuntu") : [],
     });
 
     setOtherStores(
@@ -297,7 +266,7 @@ function Snaps() {
         return {
           id: storeId,
           name: getStoreName(storeId),
-          snaps: snaps.filter((snap) => {
+          snaps: snaps.filter((snap: Snap) => {
             if (storeId === "ubuntu") {
               return false;
             }
@@ -321,7 +290,9 @@ function Snaps() {
   }, [otherStoreIds]);
 
   useEffect(() => {
-    const currentMember = members.find((member) => member.current_user) ?? null;
+    const currentMember = members
+      ? (members.find((member: Member) => member.current_user) ?? null)
+      : null;
     setCurrentMember(currentMember);
   }, [snaps, members, snapsLoading, membersLoading]);
 
@@ -355,7 +326,7 @@ function Snaps() {
   }, [currentStore, id]);
 
   const getSectionName = () => {
-    if (!isReloading && !isOnlyViewer() && !snapsNotFound && !membersNotFound) {
+    if (!isReloading && !isOnlyViewer() && snaps && members) {
       return "snaps";
     } else {
       return null;
@@ -378,7 +349,7 @@ function Snaps() {
               <Reviewer />
             ) : currentStore && isPublisherOnly ? (
               <Publisher />
-            ) : snapsNotFound ? (
+            ) : !snaps ? (
               <StoreNotFound />
             ) : (
               <>
@@ -504,7 +475,7 @@ function Snaps() {
                                       included in {getStoreName(id || "")}.
                                     </p>
                                     <ul>
-                                      {includedStores.map((store) => (
+                                      {includedStores.map((store: Store) => (
                                         <li key={store.id}>
                                           {store.userHasAccess ? (
                                             <Link
