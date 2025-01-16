@@ -5,15 +5,12 @@ import {
   Dispatch,
   SetStateAction,
 } from "react";
-import { useDispatch } from "react-redux";
-import { AppDispatch } from "../../state/store/index";
 import { useParams } from "react-router-dom";
 import { format } from "date-fns";
 import { MainTable, Button } from "@canonical/react-components";
 
 import InviteModal from "./InviteModal";
 
-import { fetchInvites } from "../../state/slices/invitesSlice";
 import ROLES from "./memberRoles";
 
 import type {
@@ -25,6 +22,7 @@ import type {
 
 type Props = {
   invites: InvitesList;
+  refetchInvites: () => void;
   setShowSuccessNotification: Dispatch<SetStateAction<boolean>>;
   setNotificationText: Dispatch<SetStateAction<string>>;
   setShowErrorNotification: Dispatch<SetStateAction<boolean>>;
@@ -32,6 +30,7 @@ type Props = {
 
 function InvitesTable({
   invites,
+  refetchInvites,
   setShowSuccessNotification,
   setNotificationText,
   setShowErrorNotification,
@@ -44,17 +43,22 @@ function InvitesTable({
     useState<InviteActionData | null>(null);
   const [inviteModalIsSaving, setInviteModalIsSaving] = useState(false);
   const { id } = useParams();
-  const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
     setPendingInvites(
-      invites.filter((invite: Invite) => invite.status === "Pending"),
+      invites
+        ? invites.filter((invite: Invite) => invite.status === "Pending")
+        : [],
     );
     setExpiredInvites(
-      invites.filter((invite: Invite) => invite.status === "Expired"),
+      invites
+        ? invites.filter((invite: Invite) => invite.status === "Expired")
+        : [],
     );
     setRevokedInvites(
-      invites.filter((invite: Invite) => invite.status === "Revoked"),
+      invites
+        ? invites.filter((invite: Invite) => invite.status === "Revoked")
+        : [],
     );
   }, [invites]);
 
@@ -78,7 +82,7 @@ function InvitesTable({
         }
       })
       .then(() => {
-        dispatch(fetchInvites(id as string));
+        refetchInvites();
         setTimeout(() => {
           setInviteModalOpen(false);
           setInviteModalIsSaving(false);
