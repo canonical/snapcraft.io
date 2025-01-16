@@ -1,4 +1,3 @@
-import { Provider } from "react-redux";
 import { BrowserRouter } from "react-router-dom";
 import { RecoilRoot } from "recoil";
 import { QueryClient, QueryClientProvider } from "react-query";
@@ -7,7 +6,6 @@ import userEvent from "@testing-library/user-event";
 import "@testing-library/jest-dom";
 
 import Model from "../Model";
-import { store } from "../../../state/store";
 
 jest.mock("react-redux", () => ({
   ...jest.requireActual("react-redux"),
@@ -32,15 +30,13 @@ const queryClient = new QueryClient({
 
 const renderComponent = () => {
   return render(
-    <Provider store={store}>
-      <RecoilRoot>
-        <BrowserRouter>
-          <QueryClientProvider client={queryClient}>
-            <Model />
-          </QueryClientProvider>
-        </BrowserRouter>
-      </RecoilRoot>
-    </Provider>,
+    <RecoilRoot>
+      <BrowserRouter>
+        <QueryClientProvider client={queryClient}>
+          <Model />
+        </QueryClientProvider>
+      </BrowserRouter>
+    </RecoilRoot>,
   );
 };
 
