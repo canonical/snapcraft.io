@@ -1,6 +1,6 @@
 import { Col, Notification, Row, Strip } from "@canonical/react-components";
 import { ISnap } from "../../types";
-import { renderPublisherMetrics } from "../../../publisher-pages/pages/Metrics/metrics/metrics";
+import { renderPublisherMetrics } from "../../../publisher/pages/Metrics/metrics/metrics";
 import { useEffect } from "react";
 import { useFetchPublishedSnapMetrics } from "../../hooks";
 
