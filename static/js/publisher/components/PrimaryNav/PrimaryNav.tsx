@@ -4,7 +4,7 @@ import {
   SideNavigationText,
 } from "@canonical/react-components";
 
-import { usePublisher } from "../../../brand-store/hooks";
+import { usePublisher } from "../../hooks";
 
 function PrimaryNav({
   collapseNavigation,

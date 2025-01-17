@@ -6,7 +6,8 @@ import { MainTable, Button, Modal, Icon } from "@canonical/react-components";
 
 import AppPagination from "../../components/AppPagination";
 
-import { usePolicies, UsePoliciesResponse } from "../../hooks";
+import { usePolicies } from "../../hooks";
+import { UsePoliciesResponse } from "../../types/interfaces";
 import { brandIdState } from "../../state/brandStoreState";
 import { filteredPoliciesListState } from "../../state/policiesState";
 

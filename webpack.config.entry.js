@@ -11,9 +11,9 @@ module.exports = {
   fsf: "./static/js/public/fsf.ts",
   "distro-install": "./static/js/public/distro-install.ts",
   "publisher-details": "./static/js/public/publisher-details.ts",
-  "brand-store": "./static/js/brand-store/brand-store.tsx",
   "about-listing": "./static/js/public/about/listing.ts",
   store: "./static/js/store/index.tsx",
   publisher: "./static/js/publisher/publisher.tsx",
+  "brand-store": "./static/js/publisher/brand-store.tsx",
   "snap-pages": "./static/js/snap-pages/index.tsx",
 };

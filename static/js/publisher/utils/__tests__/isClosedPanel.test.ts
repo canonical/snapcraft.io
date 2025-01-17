@@ -1,4 +1,4 @@
-import isClosedPanel from "./isClosedPanel";
+import isClosedPanel from "../isClosedPanel";
 
 describe("isClosedPanel", () => {
   it("returns true if key isn't at the end of the path", () => {

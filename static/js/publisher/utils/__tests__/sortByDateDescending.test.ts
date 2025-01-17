@@ -1,4 +1,4 @@
-import sortByDateDescending from "./sortByDateDescending";
+import sortByDateDescending from "../sortByDateDescending";
 
 const earlyItem = { "created-at": "2023-06-21T14:10:07.108051" };
 const lateItem = { "created-at": "2023-06-22T12:45:28.301419" };
