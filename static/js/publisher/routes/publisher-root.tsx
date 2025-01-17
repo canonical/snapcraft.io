@@ -10,7 +10,7 @@ import {
 import Logo from "../components/Logo";
 import PrimaryNav from "../components/PrimaryNav";
 
-function Root(): JSX.Element {
+function PublisherRoot(): JSX.Element {
   const [collapseNavigation, setCollapseNavigation] = useState<boolean>(false);
 
   return (
@@ -38,4 +38,4 @@ function Root(): JSX.Element {
   );
 }
 
-export default Root;
+export default PublisherRoot;

@@ -3,7 +3,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { RecoilRoot } from "recoil";
 import { QueryClient, QueryClientProvider } from "react-query";
 
-import Root from "./routes/root";
+import PublisherRoot from "./routes/publisher-root";
 import Publicise from "./pages/Publicise";
 import PublisherSettings from "./pages/PublisherSettings";
 import ValidationSets from "./pages/ValidationSets";
@@ -17,7 +17,7 @@ import Releases from "./pages/Releases";
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <Root />,
+    element: <PublisherRoot />,
     children: [
       {
         path: "/:snapId/publicise",
