@@ -1,4 +1,3 @@
-import { Provider } from "react-redux";
 import { BrowserRouter } from "react-router-dom";
 import { RecoilRoot } from "recoil";
 import { QueryClient, QueryClientProvider } from "react-query";
@@ -8,7 +7,6 @@ import userEvent from "@testing-library/user-event";
 import "@testing-library/jest-dom";
 
 import Models from "../Models";
-import { store } from "../../../state/store";
 
 const mockFilterQuery = "model-1";
 
@@ -30,15 +28,13 @@ const queryClient = new QueryClient({
 
 function renderComponent() {
   return render(
-    <Provider store={store}>
-      <RecoilRoot>
-        <BrowserRouter>
-          <QueryClientProvider client={queryClient}>
-            <Models />
-          </QueryClientProvider>
-        </BrowserRouter>
-      </RecoilRoot>
-    </Provider>,
+    <RecoilRoot>
+      <BrowserRouter>
+        <QueryClientProvider client={queryClient}>
+          <Models />
+        </QueryClientProvider>
+      </BrowserRouter>
+    </RecoilRoot>,
   );
 }
 

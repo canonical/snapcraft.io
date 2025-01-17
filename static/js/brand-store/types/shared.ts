@@ -16,38 +16,6 @@ export type CurrentStoreSlice = {
   };
 };
 
-export type InvitesSlice = {
-  invites: {
-    invites: InvitesList;
-    loading: boolean;
-    notFound: boolean;
-  };
-};
-
-export type MembersSlice = {
-  members: {
-    members: MembersList;
-    loading: boolean;
-    notFound: boolean;
-  };
-};
-
-export type SnapsSlice = {
-  snaps: {
-    snaps: SnapsList;
-    loading: boolean;
-    notFound: boolean;
-  };
-};
-
-export type StoresSlice = {
-  brandStores: {
-    brandStoresList: StoresList;
-    loading: boolean;
-    notFound: boolean;
-  };
-};
-
 // Item lists
 export type InvitesList = Array<Invite>;
 export type MembersList = Array<Member>;

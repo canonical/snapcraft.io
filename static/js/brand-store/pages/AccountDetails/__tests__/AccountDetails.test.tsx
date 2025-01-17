@@ -1,12 +1,10 @@
 import { screen, render, waitFor } from "@testing-library/react";
 import "@testing-library/jest-dom";
-import { Provider } from "react-redux";
 import { BrowserRouter } from "react-router-dom";
 import { MutableSnapshot, RecoilRoot, RecoilValue } from "recoil";
 import { useEffect } from "react";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { useRecoilValue } from "recoil";
-import { store } from "../../../state/store";
 import AccountDetails from "../AccountDetails";
 import { publisherState } from "../../../state/publisherState";
 
@@ -68,12 +66,10 @@ const renderComponent = ({
       }}
     >
       <BrowserRouter>
-        <Provider store={store}>
-          <QueryClientProvider client={queryClient}>
-            <RecoilObserver node={state} event={event} />
-            <AccountDetails />
-          </QueryClientProvider>
-        </Provider>
+        <QueryClientProvider client={queryClient}>
+          <RecoilObserver node={state} event={event} />
+          <AccountDetails />
+        </QueryClientProvider>
       </BrowserRouter>
     </RecoilRoot>,
   );
