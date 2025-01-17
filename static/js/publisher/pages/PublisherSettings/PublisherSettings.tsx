@@ -3,9 +3,9 @@ import { useQuery } from "react-query";
 import { Strip, Icon } from "@canonical/react-components";
 
 import SectionNav from "../../components/SectionNav";
-import SettingsForm from "./SettingsForm";
+import PublisherSettingsForm from "./PublisherSettingsForm";
 
-function Settings() {
+function PublisherSettings() {
   const { snapId } = useParams();
   const { data, isLoading, isFetched } = useQuery({
     queryKey: ["settingsData"],
@@ -38,9 +38,11 @@ function Settings() {
           </p>
         </Strip>
       )}
-      {!isLoading && isFetched && data && <SettingsForm settings={data} />}
+      {!isLoading && isFetched && data && (
+        <PublisherSettingsForm settings={data} />
+      )}
     </>
   );
 }
 
-export default Settings;
+export default PublisherSettings;

@@ -14,7 +14,7 @@ import { useBrandStores } from "../../hooks";
 import AccountDetails from "../../pages/AccountDetails";
 import Snaps from "../../pages/Snaps";
 import Members from "../../pages/Members";
-import Settings from "../../pages/Settings";
+import BrandStoreSettings from "../../pages/BrandStoreSettings";
 import Models from "../../pages/Models";
 import Model from "../../pages/Model";
 import Policies from "../../pages/Model/Policies";
@@ -57,7 +57,7 @@ function App() {
         <Route path="/admin/account" element={<AccountDetails />} />
         <Route path="/admin/:id/snaps" element={<Snaps />} />
         <Route path="/admin/:id/members" element={<Members />} />
-        <Route path="/admin/:id/settings" element={<Settings />} />
+        <Route path="/admin/:id/settings" element={<BrandStoreSettings />} />
         <Route path="/admin/:id/models" element={<Models />} />
         <Route path="/admin/:id/models/create" element={<Models />} />
         <Route path="/admin/:id/models/:model_id" element={<Model />} />

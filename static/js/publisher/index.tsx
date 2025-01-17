@@ -5,7 +5,7 @@ import { QueryClient, QueryClientProvider } from "react-query";
 
 import Root from "./routes/root";
 import Publicise from "./pages/Publicise";
-import Settings from "./pages/Settings";
+import PublisherSettings from "./pages/PublisherSettings";
 import ValidationSets from "./pages/ValidationSets";
 import ValidationSet from "./pages/ValidationSet";
 import Metrics from "./pages/Metrics";
@@ -33,7 +33,7 @@ const router = createBrowserRouter([
       },
       {
         path: "/:snapId/settings",
-        element: <Settings />,
+        element: <PublisherSettings />,
       },
       {
         path: "/validation-sets",

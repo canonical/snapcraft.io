@@ -13,7 +13,7 @@ import {
 
 import Navigation from "../../components/Navigation";
 
-function Settings() {
+function BrandStoreSettings() {
   const { id } = useParams();
   const [isPrivate, setIsPrivate] = useState<boolean>(false);
   const [manualReviewPolicy, setManualReviewPolicy] = useState<string>();
@@ -201,4 +201,4 @@ function Settings() {
   );
 }
 
-export default Settings;
+export default BrandStoreSettings;
