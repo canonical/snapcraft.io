@@ -29,3 +29,5 @@ jobs:
           cat ~/.ssh/config
           chmod 700 ~/.ssh
           chmod 600 ~/.ssh/config
+
+          git clone -b master git+ssh://ilaydacavusoglu21@git.launchpad.net/software-center-agent
