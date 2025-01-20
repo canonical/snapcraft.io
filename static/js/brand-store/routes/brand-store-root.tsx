@@ -7,21 +7,21 @@ import {
   Navigate,
 } from "react-router-dom";
 
-import { brandStoresState } from "../../state/brandStoreState";
+import { brandStoresState } from "../state/brandStoreState";
 
-import { useBrandStores } from "../../hooks";
+import { useBrandStores } from "../hooks";
 
-import AccountDetails from "../../pages/AccountDetails";
-import Snaps from "../../pages/Snaps";
-import Members from "../../pages/Members";
-import BrandStoreSettings from "../../pages/BrandStoreSettings";
-import Models from "../../pages/Models";
-import Model from "../../pages/Model";
-import Policies from "../../pages/Model/Policies";
-import SigningKeys from "../../pages/SigningKeys";
-import StoreNotFound from "../../pages/StoreNotFound";
+import AccountDetails from "../pages/AccountDetails";
+import Snaps from "../pages/Snaps";
+import Members from "../pages/Members";
+import BrandStoreSettings from "../pages/BrandStoreSettings";
+import Models from "../pages/Models";
+import Model from "../pages/Model";
+import Policies from "../pages/Model/Policies";
+import SigningKeys from "../pages/SigningKeys";
+import StoreNotFound from "../pages/StoreNotFound";
 
-function App() {
+function BrandStoreRoot() {
   const { data: brandStoresList, isLoading } = useBrandStores();
 
   const setRecoilBrandStores = useSetRecoilState(brandStoresState);
@@ -79,4 +79,4 @@ function App() {
   );
 }
 
-export default App;
+export default BrandStoreRoot;
