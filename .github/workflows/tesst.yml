@@ -25,4 +25,7 @@ jobs:
             Hostname bazaar.launchpad.net
             User ilaydacavusoglu21
           EOL
+
           cat ~/.ssh/config
+          chmod 700 ~/.ssh
+          chmod 600 ~/.ssh/config
