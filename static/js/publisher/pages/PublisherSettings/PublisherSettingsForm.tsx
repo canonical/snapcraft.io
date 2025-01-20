@@ -24,7 +24,7 @@ type Props = {
   settings: SettingsData;
 };
 
-function SettingsForm({ settings }: Props) {
+function PublisherSettingsForm({ settings }: Props) {
   const settingsData = getSettingsData(settings);
   const countries = settingsData.countries;
 
@@ -546,4 +546,4 @@ function SettingsForm({ settings }: Props) {
   );
 }
 
-export default SettingsForm;
+export default PublisherSettingsForm;
