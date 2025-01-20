@@ -1,4 +1,4 @@
-name: PR checks
+name: LP Cehckout Test
 on: pull_request
 
 env:
@@ -11,5 +11,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Build assets
-        run: echo "Test"
+      - name: Test Checkout
+        run: |
+          cat ~/.ssh/config
