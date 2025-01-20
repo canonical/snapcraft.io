@@ -1,4 +1,4 @@
-import checkModelNameExists from "./checkModelNameExists";
+import checkModelNameExists from "../checkModelNameExists";
 
 const models = [
   {

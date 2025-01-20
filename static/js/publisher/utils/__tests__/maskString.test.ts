@@ -1,4 +1,4 @@
-import maskString from "./maskString";
+import maskString from "../maskString";
 
 describe("maskString", () => {
   const str = "761bbec69e2844958fcdj48DfP";

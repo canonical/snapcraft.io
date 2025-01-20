@@ -1,4 +1,4 @@
-import checkSigningKeyExists from "./checkSigningKeyExists";
+import checkSigningKeyExists from "../checkSigningKeyExists";
 
 const signingKeys = [
   {
