@@ -20,7 +20,7 @@ $font-display-option: swap;
 $breakpoint-medium: 619px;
 
 // vanilla patterns
-@import "vanilla-framework/scss/vanilla";
+@import "vanilla-framework";
 @include vanilla;
 
 // import cookie policy
