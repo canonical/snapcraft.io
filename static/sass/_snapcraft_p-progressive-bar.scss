@@ -1,7 +1,9 @@
+@use "sass:color";
+
 @mixin snapcraft-p-progressive-bar {
-  $inactive: scale-color($color-link, $lightness: 90%);
+  $inactive: color.scale($color-link, $lightness: 90%);
   $active: $color-link;
-  $target: scale-color($color-link, $lightness: -20%);
+  $target: color.scale($color-link, $lightness: -20%);
 
   %bar {
     border-radius: 9px 0 0 9px;
@@ -45,11 +47,11 @@
     pointer-events: none;
 
     .progressive-bar__current {
-      background: lighten(grayscale($active), 20);
+      background: color.adjust(color.grayscale($active), $lightness: 20%, $space: hsl);
     }
 
     .progressive-bar__target {
-      background: lighten(grayscale($target), 20);
+      background: color.adjust(color.grayscale($target), $lightness: 20%, $space: hsl);
     }
   }
 

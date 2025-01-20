@@ -1,3 +1,5 @@
+@use "sass:map";
+
 // colour definitions
 $ubuntu-orange: #e95420;
 $color-brand: #00302f;
@@ -20,7 +22,7 @@ $font-display-option: swap;
 $breakpoint-medium: 619px;
 
 // vanilla patterns
-@import "vanilla-framework/scss/vanilla";
+@import "vanilla-framework";
 @include vanilla;
 
 // import cookie policy
@@ -416,7 +418,7 @@ dl {
     background-color: $colors--light-theme--border-default;
     display: block;
     height: 100%;
-    left: map-get($grid-gutter-widths, default) * -0.5;
+    left: map.get($grid-gutter-widths, default) * -0.5;
     position: absolute;
     width: 1px;
   }
