@@ -1,0 +1,33 @@
+name: LP Cehckout Test
+on: pull_request
+
+env:
+  SECRET_KEY: insecure_test_key
+  LP_API_USERNAME: test_lp_user
+
+jobs:
+  lp-test-checkout:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Test Checkout
+        run: |
+          mkdir ~/.ssh
+          cat >  ~/.ssh/config << EOL
+          # launchpad git
+          Host git.launchpad.net
+            User ilaydacavusoglu21
+
+          # launchpad bazaar
+          Host bazaar.launchpad.net*
+          Host bazaar.ubunet
+            Hostname bazaar.launchpad.net
+            User ilaydacavusoglu21
+          EOL
+
+          cat ~/.ssh/config
+          chmod 700 ~/.ssh
+          chmod 600 ~/.ssh/config
+
+          git clone -b main git+ssh://ilaydacavusoglu21@git.launchpad.net/snap-cves
