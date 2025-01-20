@@ -14,13 +14,15 @@ jobs:
       - name: Test Checkout
         run: |
           mkdir ~/.ssh
-          echo "# launchpad git
-Host git.launchpad.net
-    User ilaydacavusoglu21
+          cat >  ~/.ssh/config << EOL
+          # launchpad git
+          Host git.launchpad.net
+            User ilaydacavusoglu21
 
-# launchpad bazaar
-Host bazaar.launchpad.net*
-Host bazaar.ubunet
-    Hostname bazaar.launchpad.net
-    User ilaydacavusoglu21" >> config
+          # launchpad bazaar
+          Host bazaar.launchpad.net*
+          Host bazaar.ubunet
+            Hostname bazaar.launchpad.net
+            User ilaydacavusoglu21
+          EOL
           cat ~/.ssh/config
