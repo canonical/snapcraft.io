@@ -1,3 +1,5 @@
+@use "sass:map";
+
 // colour definitions
 $ubuntu-orange: #e95420;
 $color-brand: #00302f;
@@ -416,7 +418,7 @@ dl {
     background-color: $colors--light-theme--border-default;
     display: block;
     height: 100%;
-    left: map-get($grid-gutter-widths, default) * -0.5;
+    left: map.get($grid-gutter-widths, default) * -0.5;
     position: absolute;
     width: 1px;
   }
