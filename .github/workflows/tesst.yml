@@ -1,0 +1,15 @@
+name: PR checks
+on: pull_request
+
+env:
+  SECRET_KEY: insecure_test_key
+  LP_API_USERNAME: test_lp_user
+
+jobs:
+  run-image:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Build assets
+        run: echo "Test"
