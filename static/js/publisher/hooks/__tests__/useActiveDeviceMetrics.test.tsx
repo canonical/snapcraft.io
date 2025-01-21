@@ -1,3 +1,4 @@
+import { ReactNode, JSXElementConstructor } from "react";
 import * as ReactQuery from "react-query";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { renderHook, waitFor } from "@testing-library/react";
@@ -23,9 +24,11 @@ describe("useActiveDeviceMetrics", () => {
     spy.mockRestore();
   });
 
-  const createWrapper = () => {
+  const createWrapper = ():
+    | JSXElementConstructor<{ children: ReactNode }>
+    | undefined => {
     const queryClient = new QueryClient();
-    return ({ children }: { children: JSX.Element }) => (
+    return ({ children }: { children: ReactNode }) => (
       <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
     );
   };
