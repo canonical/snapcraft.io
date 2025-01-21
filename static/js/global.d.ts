@@ -8,17 +8,31 @@ type DataLayerEvent = {
 
 declare interface Window {
   dataLayer: Array<DataLayerEvent>;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  chrome: any;
   __REDUX_DEVTOOLS_EXTENSION_COMPOSE__?: typeof compose;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  MktoForms2: any;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  Vimeo: any;
+  MktoForms2: {
+    loadForm: (
+      baseUrl: string,
+      munchkinId: string,
+      formId: number,
+      callback: (form: HTMLFormElement) => void,
+    ) => void;
+  };
+  Vimeo: {
+    Player: new (iframe: HTMLIFrameElement) => {
+      on: (method: string, callback: () => void) => void;
+      play: () => void;
+      setVolume: (level: number) => void;
+    };
+  };
   DNS_VERIFICATION_TOKEN: string;
   SENTRY_DSN: string;
   CSRF_TOKEN: string;
   SNAP_LISTING_DATA: {
     DNS_VERIFICATION_TOKEN: string;
   };
+  API_URL: string;
 }
+
+declare module "@canonical/cookie-policy";
+
+declare module "@canonical/global-nav";

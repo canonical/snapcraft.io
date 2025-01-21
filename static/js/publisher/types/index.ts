@@ -68,7 +68,7 @@ export type ListingData = {
   screenshot_urls: string[];
   banner_urls: string[];
   update_metadata_on_release: boolean;
-  tour_steps: Step[];
+  tour_steps: { content: string; id: string; title: string }[];
 };
 
 export type GithubData = {

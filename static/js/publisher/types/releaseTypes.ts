@@ -1,10 +1,10 @@
-export interface Progressive {
+export type Progressive = {
   "current-percentage": number | null;
   paused: boolean | null;
   percentage: number | null;
-}
+};
 
-export interface Release {
+export type Release = {
   architecture: string;
   branch: string | null;
   channel: string;
@@ -14,9 +14,9 @@ export interface Release {
   risk: string;
   track: string;
   when: string;
-}
+};
 
-export interface Revision {
+export type Revision = {
   architectures: string[];
   attributes: { [key: string]: string };
   base: string;
@@ -33,24 +33,24 @@ export interface Revision {
   size: number;
   status: string;
   version: string;
-}
+};
 
-export interface Channel {
+export type Channel = {
   branch: string | null;
   fallback: string | null;
   name: string;
   risk: string;
   track: string;
-}
+};
 
-export interface Track {
+export type Track = {
   "creation-date": string | null;
   name: string;
   status: string;
   "version-pattern": string | null;
-}
+};
 
-export interface Snap {
+export type Snap = {
   channels: Channel[];
   "default-track": string | null;
   id: string;
@@ -63,30 +63,30 @@ export interface Snap {
   };
   title: string;
   tracks: Track[];
-}
+};
 
-export interface ReleasesData {
+export type ReleasesData = {
   _links: {
     self: string;
   };
   releases: Release[];
   revisions: Revision[];
   snap: Snap;
-}
+};
 
-export interface ChannelMap {
+export type ChannelMap = {
   architecture: string;
   channel: string;
   "expiration-date": string | null;
   progressive: Progressive;
   revision: number | null;
   when: string;
-}
+};
 
-export interface Options {
+export type Options = {
   defaultTrack: string;
   csrfToken: string;
   flags: {
     isProgressiveReleaseEnabled: boolean;
   };
-}
+};

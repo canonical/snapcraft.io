@@ -17,7 +17,7 @@ import CreatePolicyForm from "./CreatePolicyForm";
 import Navigation from "../../components/Navigation";
 
 import { usePolicies, useSigningKeys } from "../../hooks";
-import { ApiError, UsePoliciesResponse } from "../../types/interfaces";
+import { ApiError, UsePoliciesResponse } from "../../types/shared";
 import {
   policiesListFilterState,
   policiesListState,
