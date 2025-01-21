@@ -152,3 +152,15 @@ export type Publisher = {
     newsletter: boolean;
   } | null;
 } | null;
+
+export type UsePoliciesResponse = {
+  isLoading: boolean;
+  isError: boolean;
+  error: unknown;
+  refetch: () => void;
+  data: Policy[] | undefined;
+};
+
+export type ApiError = {
+  message: string;
+};

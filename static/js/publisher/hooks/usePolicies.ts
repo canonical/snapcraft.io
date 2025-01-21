@@ -1,6 +1,6 @@
 import { useQuery } from "react-query";
 import type { Policy } from "../types/shared";
-import { UsePoliciesResponse, ApiError } from "../types/interfaces";
+import { UsePoliciesResponse, ApiError } from "../types/shared";
 
 function usePolicies(
   brandId: string | undefined,
