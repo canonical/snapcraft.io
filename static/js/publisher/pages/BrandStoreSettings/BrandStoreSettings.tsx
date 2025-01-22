@@ -138,7 +138,6 @@ function BrandStoreSettings() {
                         help="Normal review behaviour will be applied, using the result from the automatic review tool checks."
                         name="manual-review-policy"
                         id="manual-review-policy-label-allow"
-                        aria-labelledby="store-id-label"
                         value="allow"
                         onChange={(e) => {
                           setManualReviewPolicy(e.target.value);
