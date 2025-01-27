@@ -50,7 +50,7 @@ class GetActiveDeviceMetrics(TestCase):
     @patch("webapp.publisher.snaps.views.authentication.is_authenticated")
     @patch(
         "canonicalwebteam.store_api.stores."
-        "snapstore.SnapStore.get_item_details"
+        "snapstore.SnapPublisher.get_snap_info"
     )
     @patch(
         "canonicalwebteam.store_api.stores."
@@ -64,7 +64,7 @@ class GetActiveDeviceMetrics(TestCase):
     ):
         mock_is_authenticated.return_value = True
 
-        mock_get_item_details.return_value = {"snap-id": "id"}
+        mock_get_item_details.return_value = {"snap_id": "id"}
         random_values = random.sample(range(1, 30), 29)
         dates = [
             datetime(2018, 3, day).strftime("%Y-%m-%d") for day in range(1, 30)
@@ -103,7 +103,7 @@ class GetActiveDeviceMetrics(TestCase):
     @patch("webapp.publisher.snaps.views.authentication.is_authenticated")
     @patch(
         "canonicalwebteam.store_api.stores."
-        "snapstore.SnapStore.get_item_details"
+        "snapstore.SnapPublisher.get_snap_info"
     )
     @patch(
         "canonicalwebteam.store_api.stores."
@@ -116,7 +116,7 @@ class GetActiveDeviceMetrics(TestCase):
         mock_is_authenticated,
     ):
         mock_is_authenticated.return_value = True
-        mock_get_item_details.return_value = {"snap-id": "id"}
+        mock_get_item_details.return_value = {"snap_id": "id"}
         random_values = random.sample(range(1, 30), 29)
         dates = [
             datetime(2018, 3, day).strftime("%Y-%m-%d") for day in range(1, 30)
@@ -155,7 +155,7 @@ class GetActiveDeviceMetrics(TestCase):
     @patch("webapp.publisher.snaps.views.authentication.is_authenticated")
     @patch(
         "canonicalwebteam.store_api.stores."
-        "snapstore.SnapStore.get_item_details"
+        "snapstore.SnapPublisher.get_snap_info"
     )
     @patch(
         "canonicalwebteam.store_api.stores."
@@ -168,7 +168,7 @@ class GetActiveDeviceMetrics(TestCase):
         mock_is_authenticated,
     ):
         mock_is_authenticated.return_value = True
-        mock_get_item_details.return_value = {"snap-id": "id"}
+        mock_get_item_details.return_value = {"snap_id": "id"}
         random_values = random.sample(range(1, 30), 29)
         dates = [
             datetime(2018, 3, day).strftime("%Y-%m-%d") for day in range(1, 30)
@@ -204,7 +204,7 @@ class GetActiveDeviceMetrics(TestCase):
     @patch("webapp.publisher.snaps.views.authentication.is_authenticated")
     @patch(
         "canonicalwebteam.store_api.stores."
-        "snapstore.SnapStore.get_item_details"
+        "snapstore.SnapPublisher.get_snap_info"
     )
     @patch(
         "canonicalwebteam.store_api.stores."
@@ -217,7 +217,7 @@ class GetActiveDeviceMetrics(TestCase):
         mock_is_authenticated,
     ):
         mock_is_authenticated.return_value = True
-        mock_get_item_details.return_value = {"snap-id": "id"}
+        mock_get_item_details.return_value = {"snap_id": "id"}
         random_values = random.sample(range(1, 30), 29)
         dates = [
             datetime(2018, 3, day).strftime("%Y-%m-%d") for day in range(1, 30)
@@ -257,7 +257,7 @@ class GetMetricAnnotation(TestCase):
     snap_name = "test-snap"
     snap_payload = {
         "snap_name": snap_name,
-        "snap_id": "snap-id",
+        "snap_id": "snap_id",
         "categories": {
             "locked": False,
             "items": [
@@ -353,7 +353,7 @@ class GetCountryMetric(TestCase):
     @patch("webapp.publisher.snaps.views.authentication.is_authenticated")
     @patch(
         "canonicalwebteam.store_api.stores."
-        "snapstore.SnapStore.get_item_details"
+        "snapstore.SnapPublisher.get_snap_info"
     )
     @patch(
         "canonicalwebteam.store_api.stores."
@@ -372,7 +372,7 @@ class GetCountryMetric(TestCase):
             {"values": [2], "name": "FR"},
             {"values": [3], "name": "GB"},
         ]
-        mock_get_item_details.return_value = {"snap-id": "id"}
+        mock_get_item_details.return_value = {"snap_id": "id"}
         mock_get_publisher_metrics.return_value = {
             "metrics": [
                 {
