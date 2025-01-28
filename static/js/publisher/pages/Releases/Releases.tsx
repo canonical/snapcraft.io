@@ -5,6 +5,8 @@ import { Strip, Link } from "@canonical/react-components";
 import SectionNav from "../../components/SectionNav";
 import Release from "./Release";
 
+import { setPageTitle } from "../../utils";
+
 function Releases(): JSX.Element {
   const { snapId } = useParams();
   const { isLoading, isFetched, data } = useQuery({
@@ -26,9 +28,11 @@ function Releases(): JSX.Element {
     },
   });
 
+  setPageTitle(`Releases for ${snapId}`);
+
   return (
     <>
-      <h1 className="p-heading--4">
+      <h1 className="p-heading--4" aria-live="polite">
         <Link href="/snaps">My snaps</Link> /{" "}
         <Link href={`/${snapId}`}>{snapId}</Link> / Releases
       </h1>

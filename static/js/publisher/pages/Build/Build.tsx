@@ -5,6 +5,8 @@ import { formatDistanceToNow } from "date-fns";
 
 import SectionNav from "../../components/SectionNav";
 
+import { setPageTitle } from "../../utils";
+
 function Build(): JSX.Element {
   const { buildId, snapId } = useParams();
   const { data, isFetched, isLoading, isFetching } = useQuery({
@@ -33,9 +35,11 @@ function Build(): JSX.Element {
     !data ||
     (data.snap_build && data.snap_build.id.toString() !== buildId);
 
+  setPageTitle(`Build ${buildId} for ${snapId}`);
+
   return (
     <>
-      <h1 className="p-heading--4">
+      <h1 className="p-heading--4" aria-live="polite">
         <a href="/snaps">My snaps</a> / <a href={`/${snapId}`}>{snapId}</a> /{" "}
         <Link to={`/${snapId}/builds`}>Builds</Link> / Build #{buildId}
       </h1>

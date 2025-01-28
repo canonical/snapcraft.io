@@ -5,6 +5,8 @@ import { Strip, Icon } from "@canonical/react-components";
 import SectionNav from "../../components/SectionNav";
 import PublisherSettingsForm from "./PublisherSettingsForm";
 
+import { setPageTitle } from "../../utils";
+
 function PublisherSettings() {
   const { snapId } = useParams();
   const { data, isLoading, isFetched } = useQuery({
@@ -22,9 +24,11 @@ function PublisherSettings() {
     },
   });
 
+  setPageTitle(`Settings for ${snapId}`);
+
   return (
     <>
-      <h1 className="p-heading--4">
+      <h1 className="p-heading--4" aria-live="polite">
         <a href="/snaps">My snaps</a> / <a href={`/${snapId}`}>{snapId}</a> /
         Settings
       </h1>

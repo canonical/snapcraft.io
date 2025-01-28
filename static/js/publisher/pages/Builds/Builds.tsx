@@ -15,6 +15,8 @@ import {
   githubDataState,
 } from "../../state/atoms";
 
+import { setPageTitle } from "../../utils";
+
 function Builds(): JSX.Element {
   const { snapId } = useParams();
   const [githubData, setGithubData] = useRecoilState(githubDataState);
@@ -45,9 +47,11 @@ function Builds(): JSX.Element {
     retry: 0,
   });
 
+  setPageTitle(`Builds for ${snapId}`);
+
   return (
     <>
-      <h1 className="p-heading--4">
+      <h1 className="p-heading--4" aria-live="polite">
         <a href="/snaps">My snaps</a> / <a href={`/${snapId}`}>{snapId}</a> /
         Builds
       </h1>
