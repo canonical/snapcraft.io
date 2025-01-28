@@ -102,7 +102,7 @@
     "ts-loader": "9.5.1",
     "typescript": "5.3.3",
     "uuid": "11.0.4",
-    "vanilla-framework": "4.20.0",
+    "vanilla-framework": "canonical/vanilla-framework#main",
     "watch-cli": "0.2.3",
     "webpack": "5.97.1",
     "webpack-cli": "6.0.1",
