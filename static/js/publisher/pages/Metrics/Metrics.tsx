@@ -6,6 +6,8 @@ import ActiveDeviceMetrics from "./ActiveDeviceMetrics";
 import { TerritoryMetrics } from "./TerritoryMetrics";
 import { useState } from "react";
 
+import { setPageTitle } from "../../utils";
+
 const EmptyData = () => {
   return (
     <section className="p-strip--light is-shallow snapcraft-metrics__info">
@@ -38,9 +40,11 @@ function Metrics(): JSX.Element {
   const isEmpty =
     Boolean(isActiveDeviceMetricEmpty) && Boolean(isCountryMetricEmpty);
 
+  setPageTitle(`Metrics for ${snapId}`);
+
   return (
     <>
-      <h1 className="p-heading--4">
+      <h1 className="p-heading--4" aria-live="polite">
         <a href="/snaps">My snaps</a> / <a href={`/${snapId}`}>{snapId}</a> /
         Metrics
       </h1>

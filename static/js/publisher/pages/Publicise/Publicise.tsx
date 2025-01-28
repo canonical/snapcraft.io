@@ -14,6 +14,8 @@ import PubliciseButtons from "./PubliciseButtons";
 import PubliciseBadges from "./PubliciseBadges";
 import PubliciseCards from "./PubliciseCards";
 
+import { setPageTitle } from "../../utils";
+
 type Props = {
   view?: undefined | "badges" | "cards";
 };
@@ -48,9 +50,11 @@ function Publicise({ view }: Props): JSX.Element {
     return false;
   };
 
+  setPageTitle(`Publicise ${snapId}`);
+
   return (
     <>
-      <h1 className="p-heading--4">
+      <h1 className="p-heading--4" aria-live="polite">
         <a href="/snaps">My snaps</a> / <a href={`/${snapId}`}>{snapId}</a> /
         Publicise
       </h1>

@@ -5,6 +5,8 @@ import { Strip } from "@canonical/react-components";
 import SectionNav from "../../components/SectionNav";
 import ListingForm from "./ListingForm";
 
+import { setPageTitle } from "../../utils";
+
 function Listing(): JSX.Element {
   const { snapId } = useParams();
   const { data, isLoading, refetch } = useQuery({
@@ -26,9 +28,11 @@ function Listing(): JSX.Element {
     },
   });
 
+  setPageTitle(`Listing data for ${snapId}`);
+
   return (
     <>
-      <h1 className="p-heading--4">
+      <h1 className="p-heading--4" aria-live="polite">
         <a href="/snaps">My snaps</a> / <a href={`/${snapId}`}>{snapId}</a> /
         Listing
       </h1>
