@@ -15,7 +15,6 @@ $color-paper: #f3f3f3;
 }
 
 // navigation variables
-$breakpoint-navigation-threshold: 1175px; // keep it in sync with global-nav.ts
 $font-display-option: swap;
 
 // responsive
@@ -458,17 +457,6 @@ dl {
 
 .p-navigation__row.is-full-width {
   max-width: 100%;
-}
-
-// Vanilla override - documentaion layout
-.l-docs__subgrid {
-  @media (width >= 1036px) {
-    grid-template-columns: 15rem minmax(0, 1fr) 15rem;
-  }
-
-  @media (width >= calc(1036px + 15rem)) {
-    grid-template-columns: 15rem minmax(0, 1fr) 15rem;
-  }
 }
 
 // Vanilla override
