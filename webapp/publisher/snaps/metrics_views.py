@@ -62,6 +62,9 @@ def publisher_snap_metrics(snap_name):
     """
     A view to display the snap metrics page for specific snaps.
     """
+    # If this fails, the page will 404
+    publisher_api.get_snap_info(snap_name, flask.session)
+
     context = {
         # Data direct from details API
         "snap_name": snap_name,

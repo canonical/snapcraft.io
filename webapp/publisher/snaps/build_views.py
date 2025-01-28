@@ -120,11 +120,15 @@ def get_snap_repo(snap_name):
 
 @login_required
 def get_snap_builds_page(snap_name):
+    # If this fails, the page will 404
+    publisher_api.get_snap_info(snap_name, flask.session)
     return flask.render_template("store/publisher.html", snap_name=snap_name)
 
 
 @login_required
 def get_snap_build_page(snap_name, build_id):
+    # If this fails, the page will 404
+    publisher_api.get_snap_info(snap_name, flask.session)
     return flask.render_template(
         "store/publisher.html", snap_name=snap_name, build_id=build_id
     )

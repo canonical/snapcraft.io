@@ -47,6 +47,8 @@ def get_release_history_data(snap_name):
 
 @login_required
 def get_releases(snap_name):
+    # If this fails, the page will 404
+    publisher_api.get_snap_info(snap_name, flask.session)
     return flask.render_template("store/publisher.html")
 
 
