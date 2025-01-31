@@ -26,6 +26,7 @@ from webapp.publisher.snaps import (
     release_views,
     settings_views,
     collaboration_views,
+    cve_views,
 )
 from webapp.publisher.snaps.builds import map_snap_build_status
 
@@ -281,6 +282,11 @@ publisher_snaps.add_url_rule(
     view_func=settings_views.get_settings_data,
 )
 
+# CVE API
+publisher_snaps.add_url_rule(
+    "/api/snaps/cve/<snap_name>/<revision>",
+    view_func=cve_views.get_cves,
+)
 
 @publisher_snaps.route("/account/snaps")
 @login_required

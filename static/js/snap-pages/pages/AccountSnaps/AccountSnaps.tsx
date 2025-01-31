@@ -2,10 +2,21 @@ import { Notification, Strip } from "@canonical/react-components";
 import RegisteredSnaps from "../../components/RegisteredSnaps";
 import PublishedSnapSection from "../../components/PublishedSnapSection";
 import { useFetchAccountSnaps } from "../../hooks";
+import { useEffect } from "react";
 
 function AccountSnaps() {
   const { status, data, refetch, isRefetching } = useFetchAccountSnaps();
   const isLoading = isRefetching || status === "loading";
+
+  useEffect(() => {
+    void get();
+  }, []);
+
+  const get = async () => {
+    const response = await fetch("/api/snaps/cve/docker/3053");
+    const snapsData = await response.json();
+    console.log(snapsData);
+  };
 
   return (
     <div>
