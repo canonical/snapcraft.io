@@ -1,11 +1,9 @@
 import type { Category } from "./Category";
-import Package from "./Package";
+import type { Package } from "./Package";
 
-type Store = {
+export type Packages = {
   total_items: number;
   total_pages: number;
   packages: Package[];
   categories: Category[];
 };
-
-export default Store;

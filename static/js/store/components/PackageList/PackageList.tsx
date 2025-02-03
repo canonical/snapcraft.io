@@ -1,3 +1,6 @@
+import { ReactNode, RefObject } from "react";
+import { useSearchParams } from "react-router-dom";
+import { DefaultCard, LoadingCard } from "@canonical/store-components";
 import {
   Button,
   Col,
@@ -5,25 +8,24 @@ import {
   Row,
   Strip,
 } from "@canonical/react-components";
-import Banner from "../Banner";
-import { useRef } from "react";
-import { useSearchParams } from "react-router-dom";
-import { Category, Package, Store } from "../../types";
+
 import { PackageFilter } from "../PackageFilter";
-import { DefaultCard, LoadingCard } from "@canonical/store-components";
+
+import type { Category, Package, Packages } from "../../types";
 
 const ITEMS_PER_PAGE = 15;
 
-export const PackageList = ({
+function PackageList({
   data,
   isFetching,
+  searchRef,
+  searchSummaryRef,
 }: {
-  data?: Store;
+  data?: Packages;
   isFetching: boolean;
-}) => {
-  const searchRef = useRef<HTMLInputElement | null>(null);
-  const searchSummaryRef = useRef<HTMLDivElement>(null);
-
+  searchRef: RefObject<HTMLInputElement>;
+  searchSummaryRef: RefObject<HTMLDivElement>;
+}): ReactNode {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const selectedCategories =
@@ -87,7 +89,6 @@ export const PackageList = ({
 
   return (
     <>
-      <Banner searchRef={searchRef} searchSummaryRef={searchSummaryRef} />
       <Strip>
         <Row>
           <Col size={3}>
@@ -153,4 +154,6 @@ export const PackageList = ({
       </Strip>
     </>
   );
-};
+}
+
+export default PackageList;

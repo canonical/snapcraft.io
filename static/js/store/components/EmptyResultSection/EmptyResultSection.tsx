@@ -1,18 +1,20 @@
+import { ReactNode, useRef } from "react";
 import { Col, Link, List, Row, Strip } from "@canonical/react-components";
+
 import { SearchInput } from "../SearchInput";
 import { PackageFilter } from "../PackageFilter";
-import { Store } from "../../types";
-import { useRef } from "react";
 
-export const EmptyResultSection = ({
+import type { Packages } from "../../types";
+
+function EmptyResultSection({
   searchTerm,
   data,
   isFetching,
 }: {
   searchTerm: string | null;
-  data?: Store;
+  data?: Packages;
   isFetching: boolean;
-}) => {
+}): ReactNode {
   const searchRef = useRef<HTMLInputElement | null>(null);
 
   return (
@@ -87,4 +89,6 @@ export const EmptyResultSection = ({
       </Row>
     </Strip>
   );
-};
+}
+
+export default EmptyResultSection;

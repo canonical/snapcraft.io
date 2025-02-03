@@ -1,1 +1,1 @@
-export { EmptyResultSection } from "./EmptyResultSection";
+export { default } from "./EmptyResultSection";

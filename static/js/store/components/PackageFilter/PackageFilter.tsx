@@ -1,6 +1,6 @@
 import { Button } from "@canonical/react-components";
 import { useState } from "react";
-import type { Category, Store } from "../../types";
+import type { Category, Packages } from "../../types";
 import { Filters } from "@canonical/store-components";
 import { useSearchParams } from "react-router-dom";
 import { getArchitectures, getCategoryOrder } from "../../utils";
@@ -16,7 +16,7 @@ const SHOW_MORE_COUNT = 10;
 const CATEGORY_ORDER = getCategoryOrder();
 
 interface IProps {
-  data?: Store;
+  data?: Packages;
   disabled: boolean;
 }
 
