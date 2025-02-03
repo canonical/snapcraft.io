@@ -42,8 +42,12 @@ function RepoSelector({ githubData, setAutoTriggerBuild }: Props) {
 
     setValidating(true);
 
+    const repoName = selectedOrg
+      ? `${selectedOrg}/${repo.name}`
+      : repo.nameWithOwner;
+
     const response = await fetch(
-      `/api/${snapId}/builds/validate-repo?repo=${repo.nameWithOwner}`,
+      `/api/${snapId}/builds/validate-repo?repo=${repoName}`,
     );
 
     if (!response.ok) {
@@ -93,7 +97,7 @@ function RepoSelector({ githubData, setAutoTriggerBuild }: Props) {
       return githubData.github_orgs.map((org) => {
         return {
           label: org.name,
-          value: org.name,
+          value: org.login,
         };
       });
     }
@@ -185,7 +189,7 @@ function RepoSelector({ githubData, setAutoTriggerBuild }: Props) {
             options={[
               { label: "Select organization", value: "" },
               {
-                label: githubData.github_user.name,
+                label: githubData?.github_user.name,
                 value: githubData?.github_user.login,
               },
               ...getOrgs(),
