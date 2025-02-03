@@ -216,19 +216,6 @@ dl {
   transition: opacity 0.5s ease-in;
 }
 
-// Vanilla bug: https://github.com/canonical-web-and-design/vanilla-framework/issues/3321
-
-.u-show--small {
-  @media screen and (max-width: $breakpoint-large - 1) {
-    // we duplicate display to support IE
-    // sass-lint:disable no-duplicate-properties
-    display: inherit !important;
-    display: initial !important;
-
-    // sass-lint:enable no-duplicate-properties
-  }
-}
-
 .u-line-clamp--3 {
   -webkit-box-orient: vertical;
   display: flex;
