@@ -17,6 +17,7 @@ from webapp import authentication
 from webapp.helpers import api_publisher_session, launchpad
 from webapp.api.exceptions import ApiError
 from webapp.decorators import exchange_required, login_required
+from webapp.publisher.cve import cve_views
 from webapp.publisher.snaps import (
     build_views,
     listing_views,
@@ -26,7 +27,6 @@ from webapp.publisher.snaps import (
     release_views,
     settings_views,
     collaboration_views,
-    cve_views,
 )
 from webapp.publisher.snaps.builds import map_snap_build_status
 
