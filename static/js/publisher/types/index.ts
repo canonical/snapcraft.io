@@ -72,7 +72,7 @@ export type ListingData = {
 };
 
 export type GithubData = {
-  github_orgs: { name: string }[];
+  github_orgs: { name: string; login: string }[];
   github_repository: string | null;
   github_user: {
     avatarUrl: string;
