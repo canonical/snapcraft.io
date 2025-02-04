@@ -374,19 +374,19 @@ def post_build(snap_name):
             launchpad.cancel_snap_builds(snap_name)
 
         build_id = launchpad.build_snap(snap_name)
+
     except HTTPError as e:
-        # Timeout or not found from Launchpad
-        if e.response.status_code in [408, 404]:
-            return flask.jsonify(
-                {
-                    "success": False,
-                    "error": {
-                        "message": "An error happened building "
-                        "this snap, please try again."
-                    },
-                }
-            )
-        raise e
+        return flask.jsonify(
+            {
+                "success": False,
+                "error": {
+                    "message": "An error happened building "
+                    "this snap, please try again."
+                },
+                "details": e.response.text,
+                "status_code": e.response.status_code,
+            }
+        )
 
     return flask.jsonify({"success": True, "build_id": build_id})
 
