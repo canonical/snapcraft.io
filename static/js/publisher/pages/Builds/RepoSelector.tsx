@@ -160,7 +160,14 @@ function RepoSelector({ githubData, setAutoTriggerBuild }: Props) {
     const formData = new FormData();
     formData.set("csrf_token", window.CSRF_TOKEN);
     if (selectedRepo) {
-      formData.set("github_repository", selectedRepo.nameWithOwner);
+      if (selectedRepo.nameWithOwner) {
+        formData.set("github_repository", selectedRepo.nameWithOwner);
+      } else {
+        formData.set(
+          "github_repository",
+          `${selectedOrg}/${selectedRepo.name}`,
+        );
+      }
     }
 
     const response = await fetch(`/api/${snapId}/builds`, {
