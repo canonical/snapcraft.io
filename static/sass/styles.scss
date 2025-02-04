@@ -222,13 +222,6 @@ dl {
   text-overflow: ellipsis;
 }
 
-// This should be removed once vanilla is upgraded to v2.22.2
-.p-code-snippet__block--icon.is-wrapped,
-.p-code-snippet__block--numbered.is-wrapped,
-.p-code-snippet__block.is-wrapped {
-  white-space: pre-wrap;
-}
-
 .p-modal__dialog {
   @media only screen and (min-width: $breakpoint-small) {
     min-width: 400px;
