@@ -4,7 +4,7 @@ import { render, waitFor, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import "@testing-library/jest-dom";
 
-import Packages from "../Packages";
+import Store from "../Store";
 
 global.fetch = jest.fn(() => {
   return Promise.resolve({
@@ -123,7 +123,7 @@ const renderComponent = (
     return render(
       <MemoryRouter initialEntries={initialEntries}>
         <QueryClientProvider client={queryClient}>
-          <Packages />
+          <Store />
         </QueryClientProvider>
       </MemoryRouter>,
     );
@@ -132,13 +132,13 @@ const renderComponent = (
   return render(
     <BrowserRouter>
       <QueryClientProvider client={queryClient}>
-        <Packages />
+        <Store />
       </QueryClientProvider>
     </BrowserRouter>,
   );
 };
 
-describe("Packages", () => {
+describe("Store", () => {
   test("featured categories are called by default", async () => {
     renderComponent();
     await waitFor(() => {
