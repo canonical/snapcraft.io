@@ -35,6 +35,10 @@ function RepoSelector({ githubData, setAutoTriggerBuild }: Props) {
   const [reposLoading, setReposLoading] = useState<boolean>(false);
   const [validRepo, setValidRepo] = useState<boolean | null>(null);
   const [validationError, setValidationError] = useState<boolean>(false);
+
+  const getRepoNameWithOwner = (repo: Repo) =>
+    selectedOrg ? `${selectedOrg}/${repo.name}` : repo.nameWithOwner;
+
   const validateRepo = async (repo: Repo | undefined) => {
     if (!repo) {
       return;
@@ -42,9 +46,7 @@ function RepoSelector({ githubData, setAutoTriggerBuild }: Props) {
 
     setValidating(true);
 
-    const repoName = selectedOrg
-      ? `${selectedOrg}/${repo.name}`
-      : repo.nameWithOwner;
+    const repoName = getRepoNameWithOwner(repo);
 
     const response = await fetch(
       `/api/${snapId}/builds/validate-repo?repo=${repoName}`,
@@ -160,7 +162,8 @@ function RepoSelector({ githubData, setAutoTriggerBuild }: Props) {
     const formData = new FormData();
     formData.set("csrf_token", window.CSRF_TOKEN);
     if (selectedRepo) {
-      formData.set("github_repository", selectedRepo.nameWithOwner);
+      const repoName = getRepoNameWithOwner(selectedRepo);
+      formData.set("github_repository", repoName);
     }
 
     const response = await fetch(`/api/${snapId}/builds`, {
