@@ -1,8 +1,19 @@
 import json
 from os import getenv
 import requests
+import flask
 
-from werkzeug.exceptions import Unauthorized, Forbidden, NotFound
+from werkzeug.exceptions import NotFound
+
+from canonicalwebteam.store_api.stores.snapstore import SnapPublisher
+
+from webapp.publisher.snaps import (
+    logic,
+)
+
+from webapp.helpers import api_publisher_session
+
+publisher_api = SnapPublisher(api_publisher_session)
 
 REST_API_URL = "https://api.github.com"
 GITHUB_SNAPCRAFT_BOT_USER_TOKEN = getenv("GITHUB_SNAPCRAFT_BOT_USER_TOKEN")
@@ -88,3 +99,43 @@ class CveHelper:
         if file_metadata:
             return self._fetch_file_content(snap_name, revision, file_metadata)
         return None
+    
+    def can_user_access_cve_data(self, snap_name):
+        snap_details = publisher_api.get_snap_info(snap_name, flask.session)
+        snap_store = snap_details['store']
+        snap_publisher = snap_details['publisher']
+
+        account_info = publisher_api.get_account(flask.session)
+
+        admin_user_stores = logic.get_stores(
+            account_info["stores"], roles=["admin"]
+        )
+        is_user_admin = [item for item in admin_user_stores if item["name"] == snap_store] 
+
+        GLOBAL_STORE= "Global"
+        is_snap_in_global_store = snap_store == GLOBAL_STORE
+
+        # check if the snap is publised by canonical
+        CANONICAL_PUBLISHER_ID = 'canonical'
+        is_snap_publisher_canonical = snap_publisher["id"] == CANONICAL_PUBLISHER_ID
+
+        # check if the user is the publisher
+        is_user_snap_publisher = snap_publisher["username"] == account_info["username"]
+
+        # check if user canonical
+        is_user_canonical = flask.session["publisher"].get(
+            "is_canonical", False
+        )
+        is_user_collaborator = snap_name in account_info["snaps"]["16"] 
+
+        can_view_cves = False
+        if is_user_snap_publisher or is_user_admin:
+            can_view_cves = True
+        elif is_snap_in_global_store:
+            if is_snap_publisher_canonical:
+                if is_user_canonical or is_user_collaborator:
+                    can_view_cves = True
+            elif is_user_collaborator:
+                can_view_cves = True
+
+        return can_view_cves
