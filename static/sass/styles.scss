@@ -139,8 +139,6 @@ $color-social-icon-foreground: $color-light;
 @include snapcraft-p-table;
 @import "utilities_no-limit";
 @include u-no-limit;
-@import "utilities_flex";
-@include u-flex;
 @import "utilities_disabled";
 @include u-disabled;
 @import "utilities_text-wrap";
