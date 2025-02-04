@@ -1,16 +1,13 @@
 import json
-from hashlib import sha1
 from os import getenv
 import requests
 
-from webapp import api
-from webapp.helpers import get_yaml_loader
 from werkzeug.exceptions import Unauthorized, Forbidden, NotFound
 
 REST_API_URL = "https://api.github.com"
 GITHUB_SNAPCRAFT_BOT_USER_TOKEN = getenv("GITHUB_SNAPCRAFT_BOT_USER_TOKEN")
 
-class Cve:
+class CveHelper:
     """
     Provides CVE data through GitHub by using snapcraft-web@canonical.com.
     """
@@ -31,8 +28,6 @@ class Cve:
             cve_detail = cve_details[cve_id]
             cve = cve_list[cve_id]
 
-            
-            
             cve_usns = []
             cve_usn_list = cve["usns"]
             if cve_usn_list:
@@ -75,8 +70,6 @@ class Cve:
 
                 cve_details = content['security_issues']['cves']
                 usn_details = content['security_issues']['usns']
-
-                
 
                 unfixed = self._format_cve_response(unfixed_cves, cve_details, usn_details)
                 fixed = self._format_cve_response(fixed_cves, cve_details, usn_details)
