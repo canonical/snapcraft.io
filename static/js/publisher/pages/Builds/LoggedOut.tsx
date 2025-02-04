@@ -42,7 +42,7 @@ function BuildsDefault() {
               alt=""
               width="343"
               height="288"
-              className="u-hide u-show--small"
+              className="u-hide--large"
             />
             <p>
               Start by creating a repo and pushing your code to GitHub. Make
@@ -55,7 +55,7 @@ function BuildsDefault() {
               alt=""
               width="343"
               height="288"
-              className="u-hide u-show--small"
+              className="u-hide--large"
             />
             <p>
               Register a name on Snapcraft and attach it to your repo to start
@@ -69,7 +69,7 @@ function BuildsDefault() {
               alt=""
               width="343"
               height="288"
-              className="u-hide u-show--small"
+              className="u-hide--large"
             />
             <p>
               Release your snap to your users. From here on, all the updates you
