@@ -414,10 +414,8 @@
     white-space: nowrap;
   }
 
-  // TODO[epic=vanilla]: LINK contextual menu
   .p-contextual-menu__dropdown {
     overflow: visible; // allow tooltips inside menu
-    z-index: 2; // workaround for https://github.com/canonical-web-and-design/vanilla-framework/issues/2577
 
     .p-tooltip {
       display: block;
