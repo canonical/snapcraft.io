@@ -69,8 +69,6 @@ $color-social-icon-foreground: $color-light;
 @include vf-p-testimonial;
 @import "button-overrides";
 @include button-overrides;
-@import "patterns_logo-links";
-@include p-logo-link;
 @import "snapcraft_market_screenshots";
 @include snapcraft-market-screenshots;
 
@@ -141,8 +139,6 @@ $color-social-icon-foreground: $color-light;
 @include snapcraft-p-table;
 @import "utilities_no-limit";
 @include u-no-limit;
-@import "utilities_flex";
-@include u-flex;
 @import "utilities_disabled";
 @include u-disabled;
 @import "utilities_text-wrap";
@@ -222,13 +218,6 @@ dl {
   -webkit-line-clamp: 3;
   overflow: hidden;
   text-overflow: ellipsis;
-}
-
-// This should be removed once vanilla is upgraded to v2.22.2
-.p-code-snippet__block--icon.is-wrapped,
-.p-code-snippet__block--numbered.is-wrapped,
-.p-code-snippet__block.is-wrapped {
-  white-space: pre-wrap;
 }
 
 .p-modal__dialog {
