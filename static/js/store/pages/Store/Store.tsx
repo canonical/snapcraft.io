@@ -35,7 +35,7 @@ function Store(): ReactNode {
 
   return isResultExist || isFetching ? (
     <>
-      <Banner searchRef={searchRef} searchSummaryRef={searchSummaryRef} />{" "}
+      <Banner searchRef={searchRef} searchSummaryRef={searchSummaryRef} />
       <PackageList
         data={data}
         isFetching={isFetching}

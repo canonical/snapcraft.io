@@ -31,6 +31,7 @@ declare interface Window {
     DNS_VERIFICATION_TOKEN: string;
   };
   API_URL: string;
+  RECOMMENDATIONS_API_URL: string;
 }
 
 declare module "@canonical/cookie-policy";

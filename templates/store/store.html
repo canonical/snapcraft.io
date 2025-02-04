@@ -25,5 +25,8 @@
 
 {% block content %}
 <main id="root"></main>
+<script>
+window.RECOMMENDATIONS_API_URL = "https://snap-recommendation-service-27.demos.haus/api"
+</script>
 <script src="{{ versioned_static('js/dist/store.js') }}" defer></script>
 {% endblock %}
