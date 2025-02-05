@@ -156,8 +156,6 @@ $color-social-icon-foreground: $color-light;
 @include snapcraft-p-release-details-row;
 @import "snapcraft-p-videos";
 @include snapcraft-p-videos;
-@import "pattern_p-button-group";
-@include p-snapcraft-button-group;
 @import "snapcraft_p-action-form";
 @include snapcraft-action-form;
 @import "snapcraft_custom-checkboxes";
