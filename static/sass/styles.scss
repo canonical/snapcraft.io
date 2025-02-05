@@ -67,8 +67,6 @@ $color-social-icon-foreground: $color-light;
 @include snapcraft-market;
 @import "patterns_testimonial";
 @include vf-p-testimonial;
-@import "button-overrides";
-@include button-overrides;
 @import "snapcraft_market_screenshots";
 @include snapcraft-market-screenshots;
 
