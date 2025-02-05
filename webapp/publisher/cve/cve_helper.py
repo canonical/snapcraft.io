@@ -116,7 +116,7 @@ class CveHelper:
 
         if file_metadata:
             return self._fetch_file_content(snap_name, revision, file_metadata)
-        return None
+        return []
 
     def can_user_access_cve_data(self, snap_name):
         snap_details = publisher_api.get_snap_info(snap_name, flask.session)
