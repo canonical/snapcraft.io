@@ -63,7 +63,17 @@ def get_cves(snap_name, revision):
 
     can_view_cves = cve.can_user_access_cve_data(snap_name=snap_name)
     if not can_view_cves:
-        return flask.jsonify({"success": False, "error": "User is not allowed to see snap's CVE data.".format(revision, snap_name)}), 403
+        return (
+            flask.jsonify(
+                {
+                    "success": False,
+                    "error": "User is not allowed to see snap's CVE data.".format(
+                        revision, snap_name
+                    ),
+                }
+            ),
+            403,
+        )
 
     cves = cve.get_cve_with_revision(snap_name, revision)
     cves = cve.filter_cve_data(

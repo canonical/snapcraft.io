@@ -259,18 +259,23 @@ class CveHelper:
 
         if sort_by == "cvss_severity":
             cves.sort(
-                key=lambda cve: priority_order.get(cve.get("cvss_severity"), -1),
+                key=lambda cve: priority_order.get(
+                    cve.get("cvss_severity"), -1
+                ),
                 reverse=is_reverse_order,
             )
 
         elif sort_by == "ubuntu_priority":
             cves.sort(
-                key=lambda cve: priority_order.get(cve.get("ubuntu_priority"), -1),
+                key=lambda cve: priority_order.get(
+                    cve.get("ubuntu_priority"), -1
+                ),
                 reverse=is_reverse_order,
             )
         elif sort_by == "cvss_score":
             cves.sort(
-                key=lambda cve: cve.get("cvss_score", 0), reverse=is_reverse_order
+                key=lambda cve: cve.get("cvss_score", 0),
+                reverse=is_reverse_order,
             )
         else:
             cves.sort(

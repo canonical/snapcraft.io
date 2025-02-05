@@ -288,6 +288,7 @@ publisher_snaps.add_url_rule(
     view_func=cve_views.get_cves,
 )
 
+
 @publisher_snaps.route("/account/snaps")
 @login_required
 def redirect_get_account_snaps():
