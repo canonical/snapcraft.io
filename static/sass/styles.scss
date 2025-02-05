@@ -30,15 +30,11 @@ $breakpoint-medium: 619px;
 // make social icons match footer p-strip--light color
 $color-social-icon-foreground: $color-light;
 
+// TODO[epic=styles]: comment?
 // vanilla layouts
 @import "patterns_icons";
 @import "snapcraft_custom-cols";
 @include snapcraft-custom-cols;
-
-// No drop-in replacement from vanilla, but perhaps we could use
-// p-button has-icon?
-@import "patterns_button_spinner";
-@include p-button-spinner;
 
 // Needs some TLC with the new code styling
 @import "patterns_annotated_code";
@@ -50,6 +46,7 @@ $color-social-icon-foreground: $color-light;
 @import "search-form";
 @include search-form;
 
+// TODO[epic=styles]: sticky footer
 // The footer pattern has been removed from vanilla
 // so there is little possibility this will be added
 @import "patterns_sticky_footer";
@@ -424,6 +421,7 @@ dl {
   max-width: 100%;
 }
 
+// TODO[epic=styles]: breadcrumb
 // Vanilla override
 .p-breadcrumbs__item:not(:first-of-type)::before {
   margin-left: -0.5rem;
