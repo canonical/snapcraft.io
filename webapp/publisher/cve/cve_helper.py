@@ -25,7 +25,10 @@ class CveHelper:
     """
 
     def _get_cve_file_metadata(self, file_path):
-        url = f"{REST_API_URL}/repos/canonical/canonicalwebteam.snap-cves/contents/{file_path}?ref=main"
+        url = (
+            f"{REST_API_URL}/repos/canonical/canonicalwebteam.snap-cves/"
+            f"contents/{file_path}?ref=main"
+        )
         headers = {"Authorization": f"token {GITHUB_SNAPCRAFT_BOT_USER_TOKEN}"}
         response = requests.get(url, headers=headers)
 

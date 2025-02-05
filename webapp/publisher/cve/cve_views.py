@@ -1,5 +1,3 @@
-import json
-
 import flask
 from canonicalwebteam.store_api.stores.snapstore import SnapPublisher
 
@@ -37,7 +35,10 @@ def get_cves(snap_name, revision):
             flask.jsonify(
                 {
                     "success": False,
-                    "error": "Data can only be sorted by id, cvss_severity, cvss_score, ubuntu_priority",
+                    "error": (
+                        "Data can only be sorted by id, "
+                        "cvss_severity, cvss_score, ubuntu_priority"
+                    ),
                 }
             ),
             400,
@@ -67,9 +68,7 @@ def get_cves(snap_name, revision):
             flask.jsonify(
                 {
                     "success": False,
-                    "error": "User is not allowed to see snap's CVE data.".format(
-                        revision, snap_name
-                    ),
+                    "error": "User is not allowed to see snap's CVE data.",
                 }
             ),
             403,
