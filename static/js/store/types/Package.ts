@@ -1,6 +1,6 @@
 import type { Category } from "./Category";
 
-type Package = {
+export type Package = {
   id?: string;
   package: {
     description: string;
@@ -25,5 +25,3 @@ type Package = {
     count: number | null;
   };
 };
-
-export default Package;

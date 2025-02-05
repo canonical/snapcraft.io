@@ -54,10 +54,6 @@ $color-social-icon-foreground: $color-light;
 // so there is little possibility this will be added
 @import "patterns_sticky_footer";
 @include p-sticky-footer;
-
-// some bugfixes for Vanilla navigation issues
-@import "snapcraft_p-navigation";
-@include snapcraft-p-navigation;
 @import "snapcraft_banner";
 @include snapcraft-banner;
 @import "snapcraft_graph-tooltip";
@@ -73,8 +69,6 @@ $color-social-icon-foreground: $color-light;
 @include vf-p-testimonial;
 @import "button-overrides";
 @include button-overrides;
-@import "patterns_logo-links";
-@include p-logo-link;
 @import "snapcraft_market_screenshots";
 @include snapcraft-market-screenshots;
 
@@ -145,8 +139,6 @@ $color-social-icon-foreground: $color-light;
 @include snapcraft-p-table;
 @import "utilities_no-limit";
 @include u-no-limit;
-@import "utilities_flex";
-@include u-flex;
 @import "utilities_disabled";
 @include u-disabled;
 @import "utilities_text-wrap";
@@ -220,32 +212,12 @@ dl {
   transition: opacity 0.5s ease-in;
 }
 
-// Vanilla bug: https://github.com/canonical-web-and-design/vanilla-framework/issues/3321
-
-.u-show--small {
-  @media screen and (max-width: $breakpoint-large - 1) {
-    // we duplicate display to support IE
-    // sass-lint:disable no-duplicate-properties
-    display: inherit !important;
-    display: initial !important;
-
-    // sass-lint:enable no-duplicate-properties
-  }
-}
-
 .u-line-clamp--3 {
   -webkit-box-orient: vertical;
   display: flex;
   -webkit-line-clamp: 3;
   overflow: hidden;
   text-overflow: ellipsis;
-}
-
-// This should be removed once vanilla is upgraded to v2.22.2
-.p-code-snippet__block--icon.is-wrapped,
-.p-code-snippet__block--numbered.is-wrapped,
-.p-code-snippet__block.is-wrapped {
-  white-space: pre-wrap;
 }
 
 .p-modal__dialog {
@@ -266,11 +238,6 @@ dl {
 
 .u-overflow-visible {
   overflow: visible !important;
-}
-
-// Vanilla bug: https://github.com/canonical-web-and-design/vanilla-framework/issues/3975
-.p-form-password-toggle + [readonly] {
-  color: $color-dark;
 }
 
 .table-cell--checkbox,
@@ -490,15 +457,6 @@ dl {
 // Breaks modals
 .p-accordion__panel[aria-hidden="false"] {
   transform: none;
-}
-
-// XXX - Related to https://github.com/canonical/vanilla-framework/issues/4887
-.p-search-box .p-search-box__button .p-icon--search {
-  background-image: url("data:image/svg+xml,%3Csvg width=%2716%27 height=%2716%27 xmlns=%27http://www.w3.org/2000/svg%27%3E%3Cpath d=%27M6.964 1a5.964 5.964 0 014.709 9.623l4.303 4.305-1.06 1.06-4.306-4.305A5.964 5.964 0 116.963 1zm0 1.5a4.464 4.464 0 100 8.927 4.464 4.464 0 000-8.927z%27 fill=%27%23666%27 fill-rule=%27nonzero%27/%3E%3C/svg%3E") !important;
-}
-
-.p-search-box .p-search-box__reset .p-icon--close {
-  background-image: url("data:image/svg+xml,%3Csvg width=%2716%27 height=%2716%27 xmlns=%27http://www.w3.org/2000/svg%27%3E%3Cpath fill=%27%23666%27 fill-rule=%27nonzero%27 d=%27M13.041 1.898l1.06 1.06L9.062 8l5.04 5.042-1.06 1.06L8 9.062 2.96 14.1l-1.06-1.06L6.938 8 1.9 2.96l1.06-1.06 5.04 5.04z%27/%3E%3C/svg%3E") !important;
 }
 
 .p-search-box .p-search-box__input:placeholder-shown ~ .p-search-box__reset {

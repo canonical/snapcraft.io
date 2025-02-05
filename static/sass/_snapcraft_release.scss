@@ -25,7 +25,7 @@
     min-width: 150px;
     width: auto;
   }
-    
+
   .dropdown-toggle {
       align-items: center;
       cursor: pointer;
@@ -34,7 +34,7 @@
       justify-content: space-between;
       padding: $sp-small;
   }
-    
+
   .dropdown-menu {
       background-color: $color-x-light;
       box-shadow: 0 3px 3px rgba(51, 51, 51, 0.2);
@@ -53,7 +53,7 @@
   .dropdown-menu.padding-bottom {
     padding: $sp-small;
   }
-  
+
   .dropdown-menu.no-padding-bottom {
     padding: $sp-small $sp-small 0 $sp-small;
   }
@@ -67,7 +67,7 @@
       justify-content: space-between;
       padding: $sp-small;
       width: 100%;
-      
+
       &:hover {
           background-color: $color-mid-light;
           border-radius: 4px;
@@ -416,7 +416,6 @@
 
   .p-contextual-menu__dropdown {
     overflow: visible; // allow tooltips inside menu
-    z-index: 2; // workaround for https://github.com/canonical-web-and-design/vanilla-framework/issues/2577
 
     .p-tooltip {
       display: block;
@@ -747,26 +746,6 @@
   .p-help {
     border-bottom: 1px dashed $color-mid-dark;
     cursor: help;
-  }
-
-  .p-icon-button {
-    padding: 0.1rem 0.35rem;
-
-    &:not(:last-of-type):not(:only-of-type) {
-      margin-right: 0.25rem;
-    }
-
-    // workaround for misaligned Vanilla icon
-    // https://github.com/vanilla-framework/vanilla-framework/issues/2085
-    & .p-icon--delete {
-      left: -1px;
-      top: -3px;
-    }
-
-    // don't grow these buttons to 100% width on mobile
-    @media (max-width: $breakpoint-small) {
-      width: auto;
-    }
   }
 
   .p-text-icon {
