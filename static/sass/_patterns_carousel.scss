@@ -72,19 +72,13 @@
     box-sizing: content-box;
     cursor: pointer;
     height: 3rem;
+    margin: 0;
     overflow: hidden;
     padding: 0;
     text-indent: -999px;
     transition: opacity 0.165s;
     width: 3rem;
     z-index: 10;
-    margin: {
-      bottom: 0;
-      left: 0;
-
-      // Overrides a rule in vanilla that adds margin to the right of buttons
-      right: 0 !important;
-    }
 
     &.swiper-button-disabled {
       cursor: default;
