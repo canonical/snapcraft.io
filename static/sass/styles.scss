@@ -30,9 +30,6 @@ $breakpoint-medium: 619px;
 // make social icons match footer p-strip--light color
 $color-social-icon-foreground: $color-light;
 
-// TODO[epic=styles]: comment?
-// vanilla layouts
-@import "patterns_icons";
 @import "snapcraft_custom-cols";
 @include snapcraft-custom-cols;
 
@@ -72,8 +69,6 @@ $color-social-icon-foreground: $color-light;
 @include maas-p-modal;
 @import "snapcraft_details_heading";
 @include snapcraft-details-heading;
-@import "snapcraft_patterns_icons";
-@include snapcraft-p-icon-top;
 @import "snapcraft_show-more";
 @include snapcraft-show-more;
 @import "snapcraft_snap-details";
@@ -112,8 +107,6 @@ $color-social-icon-foreground: $color-light;
 @include vf-p-modal-snapcraft;
 @import "patterns_strip_slanted";
 @include snapcraft-p-strip;
-@import "snapcraft_store";
-@include snapcraft-store;
 @import "snapcraft_packages";
 @include snapcraft-packages;
 @import "snapcraft_dispute-list";
@@ -168,7 +161,6 @@ $color-social-icon-foreground: $color-light;
 @include p-password-toggle-input;
 @import "snapcraft_p-autocomplete";
 @include snapcraft-autocomplete;
-@include snapcraft-p-icons;
 @include vf-p-form-password-toggle;
 @include vf-p-icon-status-waiting;
 @include vf-p-icon-submit-bug;
