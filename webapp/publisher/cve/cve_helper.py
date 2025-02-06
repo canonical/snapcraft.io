@@ -17,6 +17,8 @@ publisher_api = SnapPublisher(api_publisher_session)
 
 REST_API_URL = "https://api.github.com"
 GITHUB_SNAPCRAFT_BOT_USER_TOKEN = getenv("GITHUB_SNAPCRAFT_BOT_USER_TOKEN")
+GLOBAL_STORE = "Global"
+CANONICAL_PUBLISHER_ID = "canonical"
 
 
 class CveHelper:
@@ -39,9 +41,9 @@ class CveHelper:
 
     def _format_cve_response(self, cve_list, cve_details, usn_details):
         cves = []
-        for cve_id in cve_list:
+
+        for cve_id, cve in cve_list.items():
             cve_detail = cve_details[cve_id]
-            cve = cve_list[cve_id]
 
             cve_usns = []
             cve_usn_list = cve["usns"]
@@ -132,11 +134,9 @@ class CveHelper:
             item for item in admin_user_stores if item["name"] == snap_store
         ]
 
-        GLOBAL_STORE = "Global"
         is_snap_in_global_store = snap_store == GLOBAL_STORE
 
         # check if the snap is publised by canonical
-        CANONICAL_PUBLISHER_ID = "canonical"
         is_snap_publisher_canonical = (
             snap_publisher["id"] == CANONICAL_PUBLISHER_ID
         )
