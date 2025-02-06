@@ -101,6 +101,74 @@ mock_file_content = {
 
 
 class CveHelperTest(unittest.TestCase):
+
+    def setUp(self):
+        self.helper = CveHelper()
+        self.sample_cves = [
+            {
+                "id": "CVE-2023-12345",
+                "cvss_severity": "high",
+                "ubuntu_priority": "medium",
+                "usns": [{"id": "3009-1"}],
+                "affected_binaries": [
+                    {
+                        "name": "libssl",
+                        "status": "fixed",
+                        "version": "1.2.3",
+                        "fixed_version": "1.2.4",
+                    },
+                    {
+                        "name": "openssl",
+                        "status": "unfixed",
+                        "version": "1.1.1",
+                        "fixed_version": None,
+                    },
+                ],
+            },
+            {
+                "id": "CVE-2024-67890",
+                "cvss_severity": "critical",
+                "ubuntu_priority": "high",
+                "usns": [{"id": "3010-2"}],
+                "affected_binaries": [
+                    {
+                        "name": "bash",
+                        "status": "fixed",
+                        "version": "5.0",
+                        "fixed_version": "5.1",
+                    },
+                ],
+            },
+        ]
+
+        self.cves = [
+            {
+                "id": "CVE-2023-1001",
+                "cvss_severity": "high",
+                "ubuntu_priority": "medium",
+                "cvss_score": 7.5,
+            },
+            {
+                "id": "CVE-2023-1002",
+                "cvss_severity": "low",
+                "ubuntu_priority": "high",
+                "cvss_score": 4.3,
+            },
+            {
+                "id": "CVE-2023-1003",
+                "cvss_severity": "critical",
+                "ubuntu_priority": "low",
+                "cvss_score": 9.8,
+            },
+            {
+                "id": "CVE-2023-1004",
+                "cvss_severity": "medium",
+                "ubuntu_priority": "critical",
+                "cvss_score": 6.1,
+            },
+        ]
+
+    # Fetching cve data tests
     @patch("requests.get")
     def test_get_cve_with_revision(self, mock_get):
         mock_get.side_effect = [
@@ -108,9 +176,7 @@ class CveHelperTest(unittest.TestCase):
             MagicMock(status_code=200, text=json.dumps(mock_file_content)),
         ]
 
-        helper = CveHelper()
-        result = helper.get_cve_with_revision("my-snap", "3053")
-        # print(json.dumps(result, indent=2))
+        result = self.helper.get_cve_with_revision("my-snap", "3053")
 
         self.assertEqual(len(result), 3)
         self.assertEqual(result[0]["id"], "CVE-2014-9984")
@@ -176,9 +242,8 @@ class CveHelperTest(unittest.TestCase):
             MagicMock(status_code=404, json=lambda: {}),
             MagicMock(status_code=200, text=json.dumps(mock_file_content)),
         ]
-        helper = CveHelper()
         with self.assertRaises(NotFound):
-            helper.get_cve_with_revision("my-snap", "3053")
+            self.helper.get_cve_with_revision("my-snap", "3053")
 
     @patch("requests.get")
     def test_get_cve_with_revision_file_content_not_found(self, mock_get):
@@ -186,10 +251,10 @@ class CveHelperTest(unittest.TestCase):
             MagicMock(status_code=200, json=lambda: mock_file_metadata),
             MagicMock(status_code=404, text=json.dumps(mock_file_content)),
         ]
-        helper = CveHelper()
         with self.assertRaises(NotFound):
-            helper.get_cve_with_revision("my-snap", "3053")
+            self.helper.get_cve_with_revision("my-snap", "3053")
 
+    # User access tests
     def configure_user(
         self,
         mock_get_stores,
@@ -243,8 +308,7 @@ class CveHelperTest(unittest.TestCase):
             mock_get_stores=mock_get_stores,
         )
 
-        helper = CveHelper()
-        result = helper.can_user_access_cve_data("test-snap")
+        result = self.helper.can_user_access_cve_data("test-snap")
 
         self.assertTrue(result)
 
@@ -266,8 +330,7 @@ class CveHelperTest(unittest.TestCase):
             mock_get_stores=mock_get_stores,
         )
 
-        helper = CveHelper()
-        result = helper.can_user_access_cve_data("test-snap")
+        result = self.helper.can_user_access_cve_data("test-snap")
 
         self.assertTrue(result)
 
@@ -289,8 +352,7 @@ class CveHelperTest(unittest.TestCase):
             mock_get_stores=mock_get_stores,
         )
 
-        helper = CveHelper()
-        result = helper.can_user_access_cve_data("test-snap")
+        result = self.helper.can_user_access_cve_data("test-snap")
 
         self.assertTrue(result)
 
@@ -312,8 +374,7 @@ class CveHelperTest(unittest.TestCase):
             mock_get_stores=mock_get_stores,
         )
 
-        helper = CveHelper()
-        result = helper.can_user_access_cve_data("test-snap")
+        result = self.helper.can_user_access_cve_data("test-snap")
 
         self.assertTrue(result)
 
@@ -334,9 +395,7 @@ class CveHelperTest(unittest.TestCase):
             mock_get_snap_info=mock_get_snap_info,
             mock_get_stores=mock_get_stores,
         )
-
-        helper = CveHelper()
-        result = helper.can_user_access_cve_data("test-snap")
+        result = self.helper.can_user_access_cve_data("test-snap")
 
         self.assertFalse(result)
 
@@ -358,7 +417,163 @@ class CveHelperTest(unittest.TestCase):
             mock_get_stores=mock_get_stores,
         )
 
-        helper = CveHelper()
-        result = helper.can_user_access_cve_data("test-snap")
+        result = self.helper.can_user_access_cve_data("test-snap")
 
         self.assertFalse(result)
+
+    # Filtering tests
+    def test_filter_by_cvss_severity(self):
+        result = self.helper.filter_cve_data(
+            self.sample_cves,
+            usn_ids=None,
+            binary_statuses=None,
+            binary_versions=None,
+            binary_fixed_versions=None,
+            binary_names=None,
+            cvss_severities=["high"],
+            ubuntu_priorities=None,
+        )
+        self.assertEqual(len(result), 1)
+        self.assertEqual(result[0]["id"], "CVE-2023-12345")
+
+    def test_filter_by_ubuntu_priority(self):
+        result = self.helper.filter_cve_data(
+            self.sample_cves,
+            usn_ids=None,
+            binary_statuses=None,
+            binary_versions=None,
+            binary_fixed_versions=None,
+            binary_names=None,
+            cvss_severities=None,
+            ubuntu_priorities=["high"],
+        )
+        self.assertEqual(len(result), 1)
+        self.assertEqual(result[0]["id"], "CVE-2024-67890")
+
+    def test_filter_by_usn_id(self):
+        result = self.helper.filter_cve_data(
+            self.sample_cves,
+            usn_ids=["3009-1"],
+            binary_statuses=None,
+            binary_versions=None,
+            binary_fixed_versions=None,
+            binary_names=None,
+            cvss_severities=None,
+            ubuntu_priorities=None,
+        )
+        self.assertEqual(len(result), 1)
+        self.assertEqual(result[0]["id"], "CVE-2023-12345")
+
+    def test_filter_by_binary_name(self):
+        result = self.helper.filter_cve_data(
+            self.sample_cves,
+            usn_ids=None,
+            binary_statuses=None,
+            binary_versions=None,
+            binary_fixed_versions=None,
+            binary_names=["bash"],
+            cvss_severities=None,
+            ubuntu_priorities=None,
+        )
+        self.assertEqual(len(result), 1)
+        self.assertEqual(result[0]["id"], "CVE-2024-67890")
+
+    def test_filter_by_binary_status(self):
+        result = self.helper.filter_cve_data(
+            self.sample_cves,
+            usn_ids=None,
+            binary_statuses=["unfixed"],
+            binary_versions=None,
+            binary_fixed_versions=None,
+            binary_names=None,
+            cvss_severities=None,
+            ubuntu_priorities=None,
+        )
+        self.assertEqual(len(result), 1)
+        self.assertEqual(result[0]["id"], "CVE-2023-12345")
+
+    def test_no_matching_filters(self):
+        result = self.helper.filter_cve_data(
+            self.sample_cves,
+            usn_ids=["9999-9"],
+            binary_statuses=None,
+            binary_versions=None,
+            binary_fixed_versions=None,
+            binary_names=None,
+            cvss_severities=None,
+            ubuntu_priorities=None,
+        )
+        self.assertEqual(len(result), 0)
+
+    # add test to filter by 2 different fields and 2 same field
+
+    # Sorting tests
+    def test_sort_by_cvss_severity_asc(self):
+        sorted_cves = self.helper.sort_cve_data(
+            self.cves, "cvss_severity", "asc"
+        )
+        self.assertEqual(
+            [cve["id"] for cve in sorted_cves],
+            [
+                "CVE-2023-1002",
+                "CVE-2023-1004",
+                "CVE-2023-1001",
+                "CVE-2023-1003",
+            ],
+        )
+
+    def test_sort_by_cvss_severity_desc(self):
+        sorted_cves = self.helper.sort_cve_data(
+            self.cves, "cvss_severity", "desc"
+        )
+        self.assertEqual(
+            [cve["id"] for cve in sorted_cves],
+            [
+                "CVE-2023-1003",
+                "CVE-2023-1001",
+                "CVE-2023-1004",
+                "CVE-2023-1002",
+            ],
+        )
+
+    def test_sort_by_ubuntu_priority_asc(self):
+        sorted_cves = self.helper.sort_cve_data(
+            self.cves, "ubuntu_priority", "asc"
+        )
+        self.assertEqual(
+            [cve["id"] for cve in sorted_cves],
+            [
+                "CVE-2023-1003",
+                "CVE-2023-1001",
+                "CVE-2023-1002",
+                "CVE-2023-1004",
+            ],
+        )
+
+    def test_sort_by_cvss_score_desc(self):
+        sorted_cves = self.helper.sort_cve_data(
+            self.cves, "cvss_score", "desc"
+        )
+        self.assertEqual(
+            [cve["id"] for cve in sorted_cves],
+            [
+                "CVE-2023-1003",
+                "CVE-2023-1001",
+                "CVE-2023-1004",
+                "CVE-2023-1002",
+            ],
+        )
+
+    def test_sort_by_unknown_field(self):
+        sorted_cves = self.helper.sort_cve_data(self.cves, "id", "asc")
+        self.assertEqual(
+            [cve["id"] for cve in sorted_cves],
+            [
+                "CVE-2023-1001",
+                "CVE-2023-1002",
+                "CVE-2023-1003",
+                "CVE-2023-1004",
+            ],
+        )
+
+    # Pagination tests
