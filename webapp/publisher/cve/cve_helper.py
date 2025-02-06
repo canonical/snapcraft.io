@@ -156,10 +156,9 @@ class CveHelper:
         if is_user_snap_publisher or is_user_admin:
             can_view_cves = True
         elif is_snap_in_global_store:
-            if is_snap_publisher_canonical:
-                if is_user_canonical or is_user_collaborator:
-                    can_view_cves = True
-            elif is_user_collaborator:
+            if is_user_collaborator:
+                can_view_cves = True
+            elif is_snap_publisher_canonical and is_user_canonical:
                 can_view_cves = True
 
         return can_view_cves
