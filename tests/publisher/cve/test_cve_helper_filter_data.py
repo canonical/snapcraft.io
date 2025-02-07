@@ -112,6 +112,35 @@ class CveHelperFilterDataTest(unittest.TestCase):
         self.assertEqual(len(result), 1)
         self.assertEqual(result[0]["id"], "CVE-2023-12345")
 
+    def test_filter_by_two_different_fields(self):
+        result = self.helper.filter_cve_data(
+            self.cves,
+            usn_ids=["3010-2"],
+            binary_statuses=None,
+            binary_versions=None,
+            binary_fixed_versions=None,
+            binary_names=["bash"],
+            cvss_severities=None,
+            ubuntu_priorities=None,
+        )
+        self.assertEqual(len(result), 1)
+        self.assertEqual(result[0]["id"], "CVE-2024-67890")
+
+    def test_filter_by_two_same_fields(self):
+        result = self.helper.filter_cve_data(
+            self.cves,
+            usn_ids=None,
+            binary_statuses=None,
+            binary_versions=None,
+            binary_fixed_versions=["1.2.4", "5.1"],
+            binary_names=None,
+            cvss_severities=None,
+            ubuntu_priorities=None,
+        )
+        self.assertEqual(len(result), 2)
+        self.assertEqual(result[0]["id"], "CVE-2023-12345")
+        self.assertEqual(result[1]["id"], "CVE-2024-67890")
+
     def test_no_matching_filters(self):
         result = self.helper.filter_cve_data(
             self.cves,
@@ -124,5 +153,3 @@ class CveHelperFilterDataTest(unittest.TestCase):
             ubuntu_priorities=None,
         )
         self.assertEqual(len(result), 0)
-
-    # add test to filter by 2 different fields and 2 same field
