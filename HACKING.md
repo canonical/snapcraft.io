@@ -101,3 +101,8 @@ In case you need to update the license list:
 - Make sure the function `get_licenses()` in the [./webapp/helpers.py](./webapp/helpers.py) is still working
 
 We are supporting some custom licenses (like the Proprietary license). On update of the list, make sure that they have not been included since. This will avoid having duplicate licenses.
+
+
+## Fetching CVE Data
+When the app is run locally, a GitHub personal access token is required to fetch the CVE data. Make sure you have access to the [canonicalwebteam.snap-cves](https://github.com/canonical/canonicalwebteam.snap-cves) repository. After creating a GitHub classic personal access token, follow the steps described in [GitHub's documentation](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens#personal-access-tokens-classic).
+Then, add this token to the .env.local file with the key GITHUB_SNAPCRAFT_BOT_USER_TOKEN.
