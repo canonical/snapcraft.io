@@ -67,8 +67,6 @@ $color-social-icon-foreground: $color-light;
 @include snapcraft-show-more;
 @import "snapcraft_snap-details";
 @include snapcraft-snap-details;
-@import "snapcraft_p-form-validation";
-@include snapcraft-p-form-validation;
 @import "snapcraft_p-notifications";
 @include snapcraft-p-notification;
 @import "snapcraft_distro-chart";
