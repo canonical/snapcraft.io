@@ -103,9 +103,7 @@ class CveHelper:
                     fixed_cves, cve_details, usn_details
                 )
 
-                cves = fixed + unfixed
-
-                return cves
+                return fixed + unfixed
             else:
                 raise NotFound
         else:
@@ -136,17 +134,14 @@ class CveHelper:
 
         is_snap_in_global_store = snap_store == GLOBAL_STORE
 
-        # check if the snap is publised by canonical
         is_snap_publisher_canonical = (
             snap_publisher["id"] == CANONICAL_PUBLISHER_ID
         )
 
-        # check if the user is the publisher
         is_user_snap_publisher = (
             snap_publisher["username"] == account_info["username"]
         )
 
-        # check if user canonical
         is_user_canonical = flask.session["publisher"].get(
             "is_canonical", False
         )
@@ -156,9 +151,9 @@ class CveHelper:
         if is_user_snap_publisher or is_user_admin:
             can_view_cves = True
         elif is_snap_in_global_store:
-            if is_user_collaborator:
-                can_view_cves = True
-            elif is_snap_publisher_canonical and is_user_canonical:
+            if is_user_collaborator or (
+                is_snap_publisher_canonical and is_user_canonical
+            ):
                 can_view_cves = True
 
         return can_view_cves

@@ -11,7 +11,7 @@ publisher_api = SnapPublisher(api_publisher_session)
 @login_required
 def get_cves(snap_name, revision):
 
-    # Filter params
+    # Filtering params
     usn_ids = flask.request.args.getlist("usn_id")
     binary_statuses = flask.request.args.getlist("binary_status")
     binary_versions = flask.request.args.getlist("binary_version")
@@ -61,7 +61,6 @@ def get_cves(snap_name, revision):
     page_size = flask.request.args.get("page_size", default=10, type=int)
 
     cve = CveHelper()
-
     can_view_cves = cve.can_user_access_cve_data(snap_name=snap_name)
     if not can_view_cves:
         return (
