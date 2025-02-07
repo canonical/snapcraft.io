@@ -42,12 +42,6 @@ $color-social-icon-foreground: $color-light;
 // Again the new grid doesn't work to implement what happens here
 @import "search-form";
 @include search-form;
-
-// TODO[epic=styles]: sticky footer
-// The footer pattern has been removed from vanilla
-// so there is little possibility this will be added
-@import "patterns_sticky_footer";
-@include p-sticky-footer;
 @import "snapcraft_banner";
 @include snapcraft-banner;
 @import "snapcraft_graph-tooltip";
