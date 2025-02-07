@@ -338,7 +338,7 @@ function Navigation({
                       </li>
                       <li className="p-side-navigation__item">
                         <a href="/logout" className="p-side-navigation__link">
-                          <i className="p-icon--begin-downloading is-light p-side-navigation__icon"></i>
+                          <i className="p-icon--log-out is-light p-side-navigation__icon"></i>
                           <span className="p-side-navigation__label">
                             Logout
                           </span>
