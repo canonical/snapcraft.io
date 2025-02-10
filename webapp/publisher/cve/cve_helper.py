@@ -118,12 +118,11 @@ class CveHelper:
             return self._fetch_file_content(snap_name, revision, file_metadata)
         return []
 
-    def can_user_access_cve_data(self, snap_name):
-        snap_details = publisher_api.get_snap_info(snap_name, flask.session)
+    def can_user_access_cve_data(
+        self, snap_name, snap_details, account_info, is_user_canonical
+    ):
         snap_store = snap_details["store"]
         snap_publisher = snap_details["publisher"]
-
-        account_info = publisher_api.get_account(flask.session)
 
         admin_user_stores = logic.get_stores(
             account_info["stores"], roles=["admin"]
@@ -142,9 +141,6 @@ class CveHelper:
             snap_publisher["username"] == account_info["username"]
         )
 
-        is_user_canonical = flask.session["publisher"].get(
-            "is_canonical", False
-        )
         is_user_collaborator = snap_name in account_info["snaps"]["16"]
 
         can_view_cves = False

@@ -63,9 +63,27 @@ class CveHelperUserAccessTest(unittest.TestCase):
             mock_get_stores=mock_get_stores,
         )
 
-        result = self.helper.can_user_access_cve_data("test-snap")
+        snap_publisher_info = {"id": "some-user", "username": "user"}
+
+        snap_details = {
+            "store": "some-store",
+            "publisher": snap_publisher_info,
+        }
+        account_info = {
+            "username": "user",
+            "stores": ["some-store"],
+            "snaps": {"16": {"test-snap": {}}},
+        }
+
+        result = self.helper.can_user_access_cve_data(
+            "test-snap",
+            snap_details=snap_details,
+            account_info=account_info,
+            is_user_canonical=False,
+        )
 
         self.assertTrue(result)
+
 
 #     @patch("webapp.publisher.cve.cve_helper.publisher_api.get_snap_info")
 #     @patch("webapp.publisher.cve.cve_helper.publisher_api.get_account")
