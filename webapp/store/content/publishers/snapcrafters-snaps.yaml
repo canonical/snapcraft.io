@@ -47,7 +47,7 @@ snaps:
     },
     {
       "developer_validation": "verified",
-      "icon_url": "https://dashboard.snapcraft.io/site_media/appmedia/2017/04/mattermost-desktop.png",
+      "icon_url": "https://dashboard.snapcraft.io/site_media/appmedia/2025/02/mattermost-desktop.png",
       "origin": "snapcrafters",
       "package_name": "mattermost-desktop",
       "publisher": "Snapcrafters",
