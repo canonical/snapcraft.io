@@ -1,7 +1,6 @@
 import json
 from os import getenv
 import requests
-import flask
 
 from werkzeug.exceptions import NotFound
 

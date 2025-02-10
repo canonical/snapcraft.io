@@ -2,7 +2,7 @@ import unittest
 from webapp.publisher.cve.cve_helper import CveHelper
 
 
-class CveHelperSortDataTest(unittest.TestCase):
+class CveSortDataTest(unittest.TestCase):
     def setUp(self):
         self.helper = CveHelper()
         self.cves = [

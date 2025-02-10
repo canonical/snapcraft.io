@@ -5,7 +5,7 @@ from webapp.publisher.cve.cve_helper import CveHelper
 from werkzeug.exceptions import NotFound
 
 
-class CveHelperGetByRevisionTest(unittest.TestCase):
+class CveHGetByRevisionTest(unittest.TestCase):
 
     def setUp(self):
         self.helper = CveHelper()

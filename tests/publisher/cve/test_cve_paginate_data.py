@@ -2,7 +2,7 @@ import unittest
 from webapp.publisher.cve.cve_helper import CveHelper
 
 
-class CveHelperPaginateDataTest(unittest.TestCase):
+class CvePaginateDataTest(unittest.TestCase):
 
     def setUp(self):
         self.helper = CveHelper()
