@@ -399,12 +399,6 @@ dl {
   max-width: 100%;
 }
 
-// TODO[epic=styles]: breadcrumb
-// Vanilla override
-.p-breadcrumbs__item:not(:first-of-type)::before {
-  margin-left: -0.5rem;
-}
-
 // To prevent layout shift
 .brand-store-tabs {
   height: 48px;
