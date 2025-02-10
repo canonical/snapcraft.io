@@ -97,8 +97,6 @@ $color-social-icon-foreground: $color-light;
 @include snapcraft-publisher;
 @import "patterns_modal";
 @include vf-p-modal-snapcraft;
-@import "patterns_strip_slanted";
-@include snapcraft-p-strip;
 @import "snapcraft_packages";
 @include snapcraft-packages;
 @import "snapcraft_dispute-list";
