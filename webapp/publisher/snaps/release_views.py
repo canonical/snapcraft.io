@@ -1,13 +1,13 @@
 # Packages
 import flask
-from canonicalwebteam.store_api.stores.snapstore import SnapPublisher
-from canonicalwebteam.store_api.exceptions import StoreApiResponseErrorList
+from canonicalwebteam.store_api.dashboard import Dashboard
+from canonicalwebteam.exceptions import StoreApiResponseErrorList
 
 # Local
 from webapp.helpers import api_publisher_session
 from webapp.decorators import login_required
 
-publisher_api = SnapPublisher(api_publisher_session)
+dashboard = Dashboard(api_publisher_session)
 
 
 @login_required
@@ -19,11 +19,11 @@ def redirect_get_release_history(snap_name):
 
 @login_required
 def get_release_history_data(snap_name):
-    release_history = publisher_api.snap_release_history(
+    release_history = dashboard.snap_release_history(
         flask.session, snap_name
     )
 
-    channel_map = publisher_api.snap_channel_map(flask.session, snap_name)
+    channel_map = dashboard.snap_channel_map(flask.session, snap_name)
 
     snap = channel_map.get("snap", {})
 
@@ -48,7 +48,7 @@ def get_release_history_data(snap_name):
 @login_required
 def get_releases(snap_name):
     # If this fails, the page will 404
-    publisher_api.get_snap_info(snap_name, flask.session)
+    dashboard.get_snap_info(flask.session, snap_name)
     return flask.render_template("store/publisher.html")
 
 
@@ -64,7 +64,7 @@ def get_release_history_json(snap_name):
     page = flask.request.args.get("page", default=1, type=int)
 
     try:
-        release_history = publisher_api.snap_release_history(
+        release_history = dashboard.snap_release_history(
             flask.session, snap_name, page
         )
     except StoreApiResponseErrorList as api_response_error_list:
@@ -85,8 +85,8 @@ def post_release(snap_name):
         return flask.jsonify(response), 400
 
     try:
-        response = publisher_api.post_snap_release(
-            flask.session, snap_name, data
+        response = dashboard.post_snap_release(
+            flask.session, data
         )
     except StoreApiResponseErrorList as api_response_error_list:
         if api_response_error_list.status_code == 404:
@@ -115,7 +115,7 @@ def post_close_channel(snap_name):
         return flask.jsonify({}), 400
 
     try:
-        snap_id = publisher_api.get_snap_id(snap_name, flask.session)
+        snap_id = dashboard.get_snap_id(flask.session, snap_name)
     except StoreApiResponseErrorList as api_response_error_list:
         if api_response_error_list.status_code == 404:
             return flask.abort(404, "No snap named {}".format(snap_name))
@@ -123,7 +123,7 @@ def post_close_channel(snap_name):
             return flask.jsonify(api_response_error_list.errors), 400
 
     try:
-        response = publisher_api.post_close_channel(
+        response = dashboard.post_close_channel(
             flask.session, snap_id, data
         )
     except StoreApiResponseErrorList as api_response_error_list:
@@ -148,7 +148,7 @@ def post_default_track(snap_name):
         return flask.jsonify({}), 400
 
     try:
-        snap_id = publisher_api.get_snap_id(snap_name, flask.session)
+        snap_id = dashboard.get_snap_id(flask.session, snap_name)
     except StoreApiResponseErrorList as api_response_error_list:
         if api_response_error_list.status_code == 404:
             return flask.abort(404, "No snap named {}".format(snap_name))
@@ -156,7 +156,7 @@ def post_default_track(snap_name):
             return flask.jsonify(api_response_error_list.errors), 400
 
     try:
-        publisher_api.snap_metadata(snap_id, flask.session, data)
+        dashboard.snap_metadata(flask.session, snap_id, data)
     except StoreApiResponseErrorList as api_response_error_list:
         if api_response_error_list.status_code == 404:
             return flask.abort(404, "No snap named {}".format(snap_name))
@@ -175,7 +175,7 @@ def get_snap_revision_json(snap_name, revision):
     """
     Return JSON object from the publisher API
     """
-    revision = publisher_api.get_snap_revision(
+    revision = dashboard.get_snap_revision(
         flask.session, snap_name, revision
     )
 

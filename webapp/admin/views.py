@@ -3,22 +3,23 @@ import os
 import json
 import flask
 from flask import make_response
-from canonicalwebteam.store_api.exceptions import (
+from canonicalwebteam.exceptions import (
     StoreApiResponseErrorList,
     StoreApiResourceNotFound,
 )
-from canonicalwebteam.store_api.stores.snapstore import (
-    SnapStoreAdmin,
-    SnapPublisher,
-)
+from canonicalwebteam.store_api.dashboard import Dashboard
+from canonicalwebteam.store_api.publishergw import PublisherGW
+from canonicalwebteam.store_api.devicegw import DeviceGW
 from flask.json import jsonify
 
 # Local
 from webapp.decorators import login_required, exchange_required
-from webapp.helpers import api_publisher_session
+from webapp.helpers import api_publisher_session, api_session
 
-admin_api = SnapStoreAdmin(api_publisher_session)
-publisher_api = SnapPublisher(api_publisher_session)
+
+dashboard = Dashboard(api_session)
+publisher_gateway = PublisherGW("snap", api_publisher_session)
+device_gateway = DeviceGW("snap", api_session)
 
 admin = flask.Blueprint(
     "admin", __name__, template_folder="/templates", static_folder="/static"
@@ -46,7 +47,7 @@ def get_stores():
     """
     In this view we get all the stores the user is an admin or we show a 403
     """
-    stores = admin_api.get_stores(flask.session)
+    stores = dashboard.get_stores(flask.session)
 
     res = {"success": True, "data": stores}
 
@@ -57,7 +58,7 @@ def get_stores():
 @login_required
 @exchange_required
 def get_settings(store_id):
-    store = admin_api.get_store(flask.session, store_id)
+    store = dashboard.get_store(flask.session, store_id)
     store["links"] = []
 
     if any(role["role"] == "admin" for role in store["roles"]):
@@ -85,7 +86,7 @@ def post_settings(store_id):
 
     res = {}
 
-    admin_api.change_store_settings(flask.session, store_id, settings)
+    dashboard.change_store_settings(flask.session, store_id, settings)
     res["msg"] = "Changes saved"
 
     return jsonify({"success": True})
@@ -95,7 +96,7 @@ def post_settings(store_id):
 @login_required
 @exchange_required
 def get_snaps_search(store_id):
-    snaps = admin_api.get_store_snaps(
+    snaps = dashboard.get_store_snaps(
         flask.session,
         store_id,
         flask.request.args.get("q"),
@@ -109,13 +110,13 @@ def get_snaps_search(store_id):
 @login_required
 @exchange_required
 def get_store_snaps(store_id):
-    snaps = admin_api.get_store_snaps(flask.session, store_id)
-    store = admin_api.get_store(flask.session, store_id)
+    snaps = dashboard.get_store_snaps(flask.session, store_id)
+    store = dashboard.get_store(flask.session, store_id)
     if "store-whitelist" in store:
         included_stores = []
         for item in store["store-whitelist"]:
             try:
-                store_item = admin_api.get_store(flask.session, item)
+                store_item = dashboard.get_store(flask.session, item)
                 if store_item:
                     included_stores.append(
                         {
@@ -146,7 +147,7 @@ def post_manage_store_snaps(store_id):
 
     res = {}
 
-    admin_api.update_store_snaps(flask.session, store_id, snaps)
+    dashboard.update_store_snaps(flask.session, store_id, snaps)
     res["msg"] = "Changes saved"
 
     return jsonify({"success": True})
@@ -156,7 +157,7 @@ def post_manage_store_snaps(store_id):
 @login_required
 @exchange_required
 def get_manage_members(store_id):
-    members = admin_api.get_store_members(flask.session, store_id)
+    members = dashboard.get_store_members(flask.session, store_id)
 
     for item in members:
         if item["email"] == flask.session["publisher"]["email"]:
@@ -174,7 +175,7 @@ def post_manage_members(store_id):
     res = {}
 
     try:
-        admin_api.update_store_members(flask.session, store_id, members)
+        dashboard.update_store_members(flask.session, store_id, members)
         res["msg"] = "Changes saved"
     except StoreApiResponseErrorList as api_response_error_list:
         codes = [error.get("code") for error in api_response_error_list.errors]
@@ -206,7 +207,7 @@ def post_manage_members(store_id):
 @login_required
 @exchange_required
 def get_invites(store_id):
-    invites = admin_api.get_store_invites(flask.session, store_id)
+    invites = dashboard.get_store_invites(flask.session, store_id)
 
     return jsonify(invites)
 
@@ -220,7 +221,7 @@ def post_invite_members(store_id):
     res = {}
 
     try:
-        admin_api.invite_store_members(flask.session, store_id, members)
+        dashboard.invite_store_members(flask.session, store_id, members)
         res["msg"] = "Changes saved"
     except StoreApiResponseErrorList as api_response_error_list:
         msgs = [
@@ -245,7 +246,7 @@ def update_invite_status(store_id):
     res = {}
 
     try:
-        admin_api.update_store_invites(flask.session, store_id, invites)
+        dashboard.update_store_invites(flask.session, store_id, invites)
         res["msg"] = "Changes saved"
     except StoreApiResponseErrorList as api_response_error_list:
         msgs = [
@@ -278,7 +279,7 @@ def get_models(store_id):
     """
     res = {}
     try:
-        models = admin_api.get_store_models(flask.session, store_id)
+        models = publisher_gateway.get_store_models(flask.session, store_id)
         res["success"] = True
         res["data"] = models
         response = make_response(res, 200)
@@ -331,7 +332,7 @@ def create_models(store_id: str):
             res["success"] = False
             return make_response(res, 500)
 
-        admin_api.create_store_model(flask.session, store_id, name, api_key)
+        publisher_gateway.create_store_model(flask.session, store_id, name, api_key)
         res["success"] = True
 
         return make_response(res, 201)
@@ -375,7 +376,7 @@ def update_model(store_id: str, model_name: str):
             res["success"] = False
             return make_response(res, 500)
 
-        admin_api.update_store_model(
+        publisher_gateway.update_store_model(
             flask.session, store_id, model_name, api_key
         )
         res["success"] = True
@@ -409,7 +410,7 @@ def get_policies(store_id: str, model_name: str):
     res = {}
 
     try:
-        policies = admin_api.get_store_model_policies(
+        policies = publisher_gateway.get_store_model_policies(
             flask.session, store_id, model_name
         )
         res["success"] = True
@@ -451,7 +452,7 @@ def create_policy(store_id: str, model_name: str):
     signing_key = flask.request.form.get("signing_key")
     res = {}
     try:
-        signing_keys_data = admin_api.get_store_signing_keys(
+        signing_keys_data = publisher_gateway.get_store_signing_keys(
             flask.session, store_id
         )
         signing_keys = [key["sha3-384"] for key in signing_keys_data]
@@ -462,7 +463,7 @@ def create_policy(store_id: str, model_name: str):
             return make_response(res, 500)
 
         if signing_key in signing_keys:
-            admin_api.create_store_model_policy(
+            publisher_gateway.create_store_model_policy(
                 flask.session, store_id, model_name, signing_key
             )
             res["success"] = True
@@ -487,7 +488,7 @@ def create_policy(store_id: str, model_name: str):
 def delete_policy(store_id: str, model_name: str, revision: str):
     res = {}
     try:
-        response = admin_api.delete_store_model_policy(
+        response = publisher_gateway.delete_store_model_policy(
             flask.session, store_id, model_name, revision
         )
         if response.status_code == 204:
@@ -508,7 +509,7 @@ def delete_policy(store_id: str, model_name: str, revision: str):
 def get_brand_store(store_id: str):
     res = {}
     try:
-        brand = admin_api.get_brand(flask.session, store_id)
+        brand = publisher_gateway.get_brand(flask.session, store_id)
 
         res["data"] = brand
         res["success"] = True
@@ -535,7 +536,7 @@ def get_brand_store(store_id: str):
 def get_signing_keys(store_id: str):
     res = {}
     try:
-        signing_keys = admin_api.get_store_signing_keys(
+        signing_keys = publisher_gateway.get_store_signing_keys(
             flask.session, store_id
         )
         res["data"] = signing_keys
@@ -565,7 +566,7 @@ def create_signing_key(store_id: str):
 
     try:
         if name and len(name) <= 128:
-            admin_api.create_store_signing_key(flask.session, store_id, name)
+            publisher_gateway.create_store_signing_key(flask.session, store_id, name)
             res["success"] = True
             return make_response(res, 200)
         else:
@@ -604,7 +605,7 @@ def delete_signing_key(store_id: str, signing_key_sha3_384: str):
     res = {}
 
     try:
-        response = admin_api.delete_store_signing_key(
+        response = publisher_gateway.delete_store_signing_key(
             flask.session, store_id, signing_key_sha3_384
         )
 
@@ -687,7 +688,7 @@ def post_featured_snaps():
 
     next = True
     while next:
-        featured_snaps = admin_api.get_featured_snaps(flask.session)
+        featured_snaps = device_gateway.get_featured_snaps()
         currently_featured_snaps.extend(
             featured_snaps.get("_embedded", {}).get("clickindex:package", [])
         )
@@ -697,7 +698,7 @@ def post_featured_snaps():
         snap["snap_id"] for snap in currently_featured_snaps
     ]
 
-    delete_response = admin_api.delete_featured_snaps(
+    delete_response = publisher_gateway.delete_featured_snaps(
         flask.session, {"packages": currently_featured_snap_ids}
     )
     if delete_response.status_code != 201:
@@ -707,12 +708,12 @@ def post_featured_snaps():
         }
         return make_response(response, 500)
     snap_ids = [
-        publisher_api.get_snap_id(snap_name, flask.session)
+        dashboard.get_snap_id(flask.session, snap_name)
         for snap_name in new_featured_snaps
     ]
 
-    update_response = admin_api.update_featured_snaps(
-        flask.session, {"packages": snap_ids}
+    update_response = publisher_gateway.update_featured_snaps(
+        flask.session, snap_ids
     )
     if update_response.status_code != 201:
         response = {

@@ -1,7 +1,7 @@
 from unittest.mock import patch
 
 from canonicalwebteam.candid import CandidClient
-from canonicalwebteam.store_api.exceptions import (
+from canonicalwebteam.exceptions import (
     StoreApiResponseErrorList,
     StoreApiResourceNotFound,
 )

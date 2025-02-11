@@ -1,4 +1,6 @@
 import flask
+from flask import make_response, Response
+
 import humanize
 import dns.resolver
 import re
@@ -10,29 +12,48 @@ import webapp.metrics.metrics as metrics
 import webapp.store.logic as logic
 from webapp import authentication
 from webapp.markdown import parse_markdown_description
-from flask import make_response, Response
 
 from canonicalwebteam.flask_base.decorators import (
     exclude_xframe_options_header,
 )
-from canonicalwebteam.store_api.exceptions import StoreApiError
+from canonicalwebteam.exceptions import StoreApiError
+from canonicalwebteam.store_api.devicegw import DeviceGW
 from pybadges import badge
 
+device_gateway = DeviceGW("snap", helpers.api_session)
 
-def snap_details_views(store, api):
+FIELDS = [
+    "title",
+    "summary",
+    "description",
+    "license",
+    "contact",
+    "website",
+    "publisher",
+    "media",
+    "download",
+    "version",
+    "created-at",
+    "confinement",
+    "categories",
+    "trending",
+    "unlisted",
+    "links",
+ ]
+
+def snap_details_views(store):
     snap_regex = "[a-z0-9-]*[a-z][a-z0-9-]*"
     snap_regex_upercase = "[A-Za-z0-9-]*[A-Za-z][A-Za-z0-9-]*"
 
     def _get_snap_link_fields(snap_name):
-        details = api.get_item_details(snap_name, api_version=2)
+        details = device_gateway.get_item_details(snap_name, api_version=2)
         context = {
-            "links": details["snap"].get("links"),
+            "links": details["snap"].get("links", {}),
         }
         return context
 
     def _get_context_snap_details(snap_name):
-        details = api.get_item_details(snap_name, api_version=2)
-
+        details = device_gateway.get_item_details(snap_name, fields=FIELDS, api_version=2)
         # 404 for any snap under quarantine
         if details["snap"]["publisher"]["username"] == "snap-quarantine":
             flask.abort(404, "No snap named {}".format(snap_name))
@@ -45,7 +66,7 @@ def snap_details_views(store, api):
             flask.abort(404, "No snap named {}".format(snap_name))
 
         formatted_description = parse_markdown_description(
-            details["snap"]["description"]
+            details.get("snap", {}).get("description", "")
         )
 
         channel_maps_list = logic.convert_channel_maps(
@@ -77,9 +98,9 @@ def snap_details_views(store, api):
         binary_filesize = latest_channel["download"]["size"]
 
         # filter out banner and banner-icon images from screenshots
-        screenshots = logic.filter_screenshots(details["snap"]["media"])
+        screenshots = logic.filter_screenshots(details.get("snap", {}).get("media", []))
 
-        icon_url = helpers.get_icon(details["snap"]["media"])
+        icon_url = helpers.get_icon(details.get("snap", {}).get("media", []))
 
         publisher_info = helpers.get_yaml(
             "{}{}.yaml".format(
@@ -109,7 +130,7 @@ def snap_details_views(store, api):
                 publisher_snaps["snaps"], 4
             )
 
-        video = logic.get_video(details["snap"]["media"])
+        video = logic.get_video(details.get("snap", {}).get("media", []))
 
         is_users_snap = False
         if authentication.is_authenticated(flask.session):
@@ -120,7 +141,8 @@ def snap_details_views(store, api):
                 is_users_snap = True
 
         # build list of categories of a snap
-        categories = logic.get_snap_categories(details["snap"]["categories"])
+        categories = logic.get_snap_categories(details.get(
+            "snap", {}).get("categories", []))
 
         developer = logic.get_snap_developer(details["name"])
 
@@ -150,13 +172,13 @@ def snap_details_views(store, api):
             "default_track": default_track,
             "lowest_risk_available": lowest_risk_available,
             "confinement": extracted_info["confinement"],
-            "trending": details["snap"]["trending"],
+            "trending": details.get("snap", {}).get("trending", False),
             # Transformed API data
             "filesize": humanize.naturalsize(binary_filesize),
             "last_updated": logic.convert_date(last_updated),
             "last_updated_raw": last_updated,
             "is_users_snap": is_users_snap,
-            "unlisted": details["snap"]["unlisted"],
+            "unlisted": details.get("snap", {}).get("unlisted", False),
             "developer": developer,
             # TODO: This is horrible and hacky
             "appliances": {
@@ -241,7 +263,7 @@ def snap_details_views(store, api):
             ),
         ]
 
-        metrics_response = api.get_public_metrics(metrics_query_json)
+        metrics_response = device_gateway.get_public_metrics(metrics_query_json)
 
         os_metrics = None
         country_devices = None
@@ -455,7 +477,7 @@ def snap_details_views(store, api):
         )
 
         try:
-            featured_snaps_results = api.get_featured_items(
+            featured_snaps_results = device_gateway.get_featured_items(
                 size=13, page=1
             ).get("results", [])
 

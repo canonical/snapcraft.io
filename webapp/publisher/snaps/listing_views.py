@@ -4,18 +4,15 @@ from json import loads
 # Packages
 import bleach
 import flask
-from canonicalwebteam.store_api.stores.snapstore import (
-    SnapPublisher,
-    SnapStore,
-)
-from canonicalwebteam.store_api.exceptions import (
+from canonicalwebteam.exceptions import (
     StoreApiError,
     StoreApiResponseErrorList,
 )
-
+from canonicalwebteam.store_api.dashboard import Dashboard
+from canonicalwebteam.store_api.devicegw import DeviceGW
 # Local
 from webapp import helpers
-from webapp.helpers import api_publisher_session
+from webapp.helpers import api_session
 from webapp.decorators import login_required
 from webapp.markdown import parse_markdown_description
 from webapp.publisher.snaps import logic, preview_data
@@ -25,8 +22,10 @@ from webapp.store.logic import (
     get_video,
 )
 
-store_api = SnapStore(api_publisher_session)
-publisher_api = SnapPublisher(api_publisher_session)
+dashboard = Dashboard(api_session)
+device_gateway = DeviceGW("snap", api_session)
+
+
 
 
 def get_market_snap(snap_name):
@@ -43,7 +42,7 @@ def redirect_post_market_snap(snap_name):
 
 @login_required
 def get_listing_data(snap_name):
-    snap_details = publisher_api.get_snap_info(snap_name, flask.session)
+    snap_details = dashboard.get_snap_info(flask.session, snap_name)
 
     details_metrics_enabled = snap_details["public_metrics_enabled"]
     details_blacklist = snap_details.get("public_metrics_blacklist", [])
@@ -85,7 +84,7 @@ def get_listing_data(snap_name):
         license_type = "simple"
 
     try:
-        categories_results = store_api.get_categories()
+        categories_results = device_gateway.get_categories()
     except StoreApiError:
         categories_results = []
 
@@ -159,7 +158,7 @@ def get_listing_data(snap_name):
 
 @login_required
 def get_listing_snap(snap_name):
-    snap_details = publisher_api.get_snap_info(snap_name, flask.session)
+    snap_details = dashboard.get_snap_info(flask.session, snap_name)
     token = ""
     if snap_details["links"]["website"]:
         token = helpers.get_dns_verification_token(
@@ -186,8 +185,8 @@ def post_listing_data(snap_name):
 
         if "images" in changes:
             # Add existing screenshots
-            current_screenshots = publisher_api.snap_screenshots(
-                snap_id, flask.session
+            current_screenshots = dashboard.snap_screenshots(
+                flask.session, snap_id
             )
 
             icon_input = (
@@ -214,8 +213,8 @@ def post_listing_data(snap_name):
             )
 
             try:
-                publisher_api.snap_screenshots(
-                    snap_id, flask.session, images_json, images_files
+                dashboard.snap_screenshots(
+                    flask.session, snap_id, images_json, images_files
                 )
             except StoreApiResponseErrorList as api_response_error_list:
                 if api_response_error_list.status_code != 404:
@@ -230,15 +229,15 @@ def post_listing_data(snap_name):
                 )
 
             try:
-                publisher_api.snap_metadata(snap_id, flask.session, body_json)
+                dashboard.snap_metadata(flask.session, snap_id, body_json)
             except StoreApiResponseErrorList as api_response_error_list:
                 if api_response_error_list.status_code != 404:
                     error_list = error_list + api_response_error_list.errors
 
         if error_list:
             try:
-                snap_details = publisher_api.get_snap_info(
-                    snap_name, flask.session
+                snap_details = dashboard.get_snap_info(
+                    flask.session, snap_name
                 )
             except StoreApiResponseErrorList as api_response_error_list:
                 if api_response_error_list.status_code == 404:
@@ -271,7 +270,7 @@ def post_listing_data(snap_name):
 
 @login_required
 def post_preview(snap_name):
-    snap_details = publisher_api.get_snap_info(snap_name, flask.session)
+    snap_details = dashboard.get_snap_info(flask.session, snap_name)
 
     context = {
         "publisher": snap_details["publisher"]["display-name"],

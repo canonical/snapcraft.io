@@ -2,11 +2,9 @@
 import bleach
 import flask
 import re
-from canonicalwebteam.store_api.stores.snapstore import (
-    SnapPublisher,
-    SnapStoreAdmin,
-)
-from canonicalwebteam.store_api.exceptions import (
+from canonicalwebteam.store_api.dashboard import Dashboard
+from canonicalwebteam.store_api.publishergw import PublisherGW
+from canonicalwebteam.exceptions import (
     StoreApiError,
     StoreApiResponseErrorList,
 )
@@ -29,8 +27,8 @@ from webapp.publisher.snaps import (
 )
 from webapp.publisher.snaps.builds import map_snap_build_status
 
-publisher_api = SnapPublisher(api_publisher_session)
-admin_api = SnapStoreAdmin(api_publisher_session)
+dashboard = Dashboard(api_publisher_session)
+publisher_gateway = PublisherGW("snap", api_publisher_session)
 
 
 publisher_snaps = flask.Blueprint(
@@ -291,7 +289,7 @@ def redirect_get_account_snaps():
 @publisher_snaps.route("/snaps")
 @login_required
 def get_account_snaps():
-    account_info = publisher_api.get_account(flask.session)
+    account_info = dashboard.get_account(flask.session)
 
     user_snaps, registered_snaps = logic.get_snaps_account_info(account_info)
 
@@ -309,7 +307,7 @@ def get_account_snaps():
 @publisher_snaps.route("/snaps.json")
 @login_required
 def get_user_snaps():
-    account_info = publisher_api.get_account(flask.session)
+    account_info = dashboard.get_account(flask.session)
 
     user_snaps, registered_snaps = logic.get_snaps_account_info(account_info)
 
@@ -328,7 +326,7 @@ def get_user_snaps():
 @login_required
 def get_snap_build_status():
     try:
-        account_info = publisher_api.get_account(flask.session)
+        account_info = dashboard.get_account(flask.session)
     except (StoreApiError, ApiError) as api_error:
         return flask.jsonify(api_error), 400
 
@@ -352,7 +350,7 @@ def redirect_get_register_name():
 @publisher_snaps.route("/register-snap")
 @login_required
 def get_register_name():
-    stores = admin_api.get_stores(flask.session)
+    stores = dashboard.get_stores(flask.session)
 
     available_stores = logic.filter_available_stores(stores)
 
@@ -409,15 +407,15 @@ def post_register_name():
     registrant_comment = flask.request.form.get("registrant_comment")
 
     try:
-        publisher_api.post_register_name(
+        dashboard.post_register_name(
             session=flask.session,
             snap_name=snap_name,
+            registrant_comment=registrant_comment,
             is_private=is_private,
             store=store,
-            registrant_comment=registrant_comment,
         )
     except StoreApiResponseErrorList as api_response_error_list:
-        stores = admin_api.get_stores(flask.session)
+        stores = dashboard.get_stores(flask.session)
 
         available_stores = logic.filter_available_stores(stores)
 
@@ -491,8 +489,8 @@ def post_register_name():
 @login_required
 @exchange_required
 def get_package_metadata(snap_name):
-    package_metadata = publisher_api.get_package_metadata(
-        flask.session, "snap", snap_name
+    package_metadata = publisher_gateway.get_package_metadata(
+        flask.session, snap_name
     )
     if "metadata" in package_metadata and package_metadata["metadata"]:
         return jsonify({"data": package_metadata["metadata"], "success": True})
@@ -507,7 +505,7 @@ def get_package_metadata(snap_name):
 @login_required
 @exchange_required
 def delete_package(package_name):
-    response = publisher_api.unregister_package_name(
+    response = publisher_gateway.unregister_package_name(
         flask.session, package_name
     )
 
@@ -524,7 +522,7 @@ def delete_package(package_name):
 def get_is_user_snap(snap_name):
     is_users_snap = False
     try:
-        snap_info = publisher_api.get_snap_info(snap_name, flask.session)
+        snap_info = dashboard.get_snap_info(flask.session, snap_name)
     except (StoreApiError, ApiError) as api_error:
         return flask.jsonify({"error": str(api_error)}), 400
 
@@ -551,7 +549,7 @@ def post_register_name_json():
         )
 
     try:
-        response = publisher_api.post_register_name(
+        response = dashboard.post_register_name(
             session=flask.session, snap_name=snap_name
         )
     except StoreApiResponseErrorList as api_response_error_list:
@@ -574,7 +572,7 @@ def post_register_name_json():
 @publisher_snaps.route("/register-name-dispute")
 @login_required
 def get_register_name_dispute():
-    stores = admin_api.get_stores(flask.session)
+    stores = dashboard.get_stores(flask.session)
 
     snap_name = flask.request.args.get("snap-name")
     store_id = flask.request.args.get("store")
@@ -597,7 +595,7 @@ def post_register_name_dispute():
     try:
         snap_name = flask.request.form.get("snap-name", "")
         claim_comment = flask.request.form.get("claim-comment", "")
-        publisher_api.post_register_name_dispute(
+        dashboard.post_register_name_dispute(
             flask.session,
             bleach.clean(snap_name),
             bleach.clean(claim_comment),
@@ -619,7 +617,7 @@ def post_register_name_dispute():
 @publisher_snaps.route("/request-reserved-name")
 @login_required
 def get_request_reserved_name():
-    stores = admin_api.get_stores(flask.session)
+    stores = dashboard.get_stores(flask.session)
 
     snap_name = flask.request.args.get("snap_name")
     store_id = flask.request.args.get("store")
@@ -641,7 +639,7 @@ def get_request_reserved_name():
 @publisher_snaps.route("/snaps/api/snap-count")
 @login_required
 def snap_count():
-    account_info = publisher_api.get_account(flask.session)
+    account_info = dashboard.get_account(flask.session)
 
     user_snaps, registered_snaps = logic.get_snaps_account_info(account_info)
 

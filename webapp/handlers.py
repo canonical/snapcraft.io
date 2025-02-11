@@ -23,7 +23,7 @@ from webapp.config import (
     DNS_VERIFICATION_SALT,
 )
 
-from canonicalwebteam.store_api.exceptions import (
+from canonicalwebteam.exceptions import (
     StoreApiError,
     StoreApiConnectionError,
     StoreApiResourceNotFound,

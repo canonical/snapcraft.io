@@ -4,8 +4,8 @@ from json import loads
 # Packages
 import flask
 import pycountry
-from canonicalwebteam.store_api.stores.snapstore import SnapPublisher
-from canonicalwebteam.store_api.exceptions import (
+from canonicalwebteam.store_api.dashboard import Dashboard
+from canonicalwebteam.exceptions import (
     StoreApiResponseErrorList,
 )
 
@@ -14,7 +14,7 @@ from webapp.helpers import api_publisher_session, launchpad
 from webapp.decorators import login_required
 from webapp.publisher.snaps import logic
 
-publisher_api = SnapPublisher(api_publisher_session)
+dashboard = Dashboard(api_publisher_session)
 
 
 @login_required
@@ -24,7 +24,7 @@ def get_settings_json(snap_name):
 
 @login_required
 def get_settings_data(snap_name):
-    snap_details = publisher_api.get_snap_info(snap_name, flask.session)
+    snap_details = dashboard.get_snap_info(flask.session, snap_name)
 
     if "whitelist_country_codes" in snap_details:
         whitelist_country_codes = (
@@ -79,7 +79,7 @@ def get_settings_data(snap_name):
 
 @login_required
 def get_settings(snap_name, return_json=False):
-    snap_details = publisher_api.get_snap_info(snap_name, flask.session)
+    snap_details = dashboard.get_snap_info(flask.session, snap_name)
 
     if "whitelist_country_codes" in snap_details:
         whitelist_country_codes = (
@@ -151,8 +151,8 @@ def post_settings_data(snap_name):
 
         if body_json:
             try:
-                response = publisher_api.snap_metadata(
-                    snap_id, flask.session, body_json
+                response = dashboard.snap_metadata(
+                    flask.session, snap_id,  body_json
                 )
                 return flask.jsonify(response)
             except StoreApiResponseErrorList as api_response_error_list:
@@ -165,8 +165,8 @@ def post_settings_data(snap_name):
 
         if error_list:
             try:
-                snap_details = publisher_api.get_snap_info(
-                    snap_name, flask.session
+                snap_details = dashboard.get_snap_info(
+                    flask.session, snap_name
                 )
             except StoreApiResponseErrorList as api_response_error_list:
                 if api_response_error_list.status_code == 404:

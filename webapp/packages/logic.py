@@ -4,10 +4,14 @@ import talisker
 from flask import make_response
 from typing import List, Dict, TypedDict, Any, Union
 
-from canonicalwebteam.store_api.exceptions import StoreApiError
+from canonicalwebteam.exceptions import StoreApiError
+from canonicalwebteam.store_api.devicegw import DeviceGW
 
 from webapp.helpers import get_icon
+from webapp.helpers import api_session
 
+
+device_gateway = DeviceGW("snap", api_session)
 
 Packages = TypedDict(
     "Packages",
@@ -31,18 +35,16 @@ Package = TypedDict(
 )
 
 
-def fetch_packages(store_api, fields: List[str], query_params) -> Packages:
+def fetch_packages(fields: List[str], query_params) -> Packages:
     """
     Fetches packages from the store API based on the specified fields.
 
-    :param: store_api: The specific store API object.
     :param: fields (List[str]): A list of fields to include in the package
     data.
     :param: query_params: A search query
 
     :returns: a dictionary containing the list of fetched packages.
     """
-    store = store_api(talisker.requests.get_session())
 
     category = query_params.get("categories", "")
     query = query_params.get("q", "")
@@ -72,7 +74,7 @@ def fetch_packages(store_api, fields: List[str], query_params) -> Packages:
         requires = requires.split(",")
         args["requires"] = requires
 
-    packages = store.find(**args).get("results", [])
+    packages = device_gateway.find(**args).get("results", [])
 
     if platform and platform != "all":
         filtered_packages = []
@@ -86,23 +88,21 @@ def fetch_packages(store_api, fields: List[str], query_params) -> Packages:
 
     if architecture and architecture != "all":
         args["architecture"] = architecture
-        packages = store.find(**args).get("results", [])
+        packages = device_gateway.find(**args).get("results", [])
 
     return packages
 
 
-def fetch_package(store_api, package_name: str, fields: List[str]) -> Package:
+def fetch_package(package_name: str, fields: List[str]) -> Package:
     """
     Fetches a package from the store API based on the specified package name.
 
-    :param: store_api: The specific store API object.
     :param: package_name (str): The name of the package to fetch.
     :param: fields (List[str]): A list of fields to include in the package
 
     :returns: a dictionary containing the fetched package.
     """
-    store = store_api(talisker.requests.get_session())
-    package = store.get_item_details(
+    package = device_gateway.get_item_details(
         name=package_name,
         fields=fields,
         api_version=2,
@@ -113,11 +113,7 @@ def fetch_package(store_api, package_name: str, fields: List[str]) -> Package:
 
 
 def parse_package_for_card(
-    package: Dict[str, Any],
-    store_name: str,
-    store_api: Any,
-    publisher_api: Any,
-    libraries: bool = False,
+    package: Dict[str, Any]
 ) -> Package:
     """
     Parses a snap and returns the formatted package
@@ -131,7 +127,6 @@ def parse_package_for_card(
         so we won't have to check for the package type before parsing.
 
     """
-    publisher_api = publisher_api(talisker.requests.get_session())
     resp = {
         "package": {
             "description": "",
@@ -200,10 +195,6 @@ def paginate(
 
 
 def get_packages(
-    store,
-    publisher: Any,
-    store_name: str,
-    libraries: bool,
     fields: List[str],
     size: int = 10,
     query_params: Dict[str, Any] = {},
@@ -225,7 +216,7 @@ def get_packages(
             the total pages
     """
 
-    packages = fetch_packages(store, fields, query_params)
+    packages = fetch_packages(fields, query_params)
 
     total_pages = -(len(packages) // -size)
 
@@ -236,13 +227,11 @@ def get_packages(
     parsed_packages = []
     for package in packages_per_page:
         parsed_packages.append(
-            parse_package_for_card(
-                package, store_name, store, publisher, libraries
-            )
+            parse_package_for_card(package)
         )
     res = parsed_packages
 
-    categories = get_store_categories(store)
+    categories = get_store_categories()
 
     return {
         "packages": res,
@@ -286,17 +275,15 @@ def parse_categories(
     return categories
 
 
-def get_store_categories(store_api) -> List[Dict[str, str]]:
+def get_store_categories() -> List[Dict[str, str]]:
     """
     Fetches all store categories.
 
-    :param: store_api: The store API object used to fetch the categories.
     :returns: A list of categories in the format:
     [{"name": "Category", "slug": "category"}]
     """
-    store = store_api(talisker.requests.get_session())
     try:
-        all_categories = store.get_categories()
+        all_categories = device_gateway.get_categories()
     except StoreApiError:
         all_categories = []
 
@@ -359,12 +346,8 @@ def get_snaps_account_info(account_info):
 
 
 def get_package(
-    store,
-    publisher_api,
-    store_name: str,
     package_name: str,
     fields: List[str],
-    libraries: bool,
 ) -> Package:
     """Get a package by name
 
@@ -375,8 +358,8 @@ def get_package(
 
     :return: A dictionary containing the package.
     """
-    package = fetch_package(store, package_name, fields).get("package", {})
+    package = fetch_package(package_name, fields).get("package", {})
     resp = parse_package_for_card(
-        package, store_name, store, publisher_api, libraries
+        package
     )
     return {"package": resp}

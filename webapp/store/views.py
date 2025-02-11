@@ -6,14 +6,15 @@ from webapp.decorators import exchange_required, login_required
 import webapp.helpers as helpers
 import webapp.store.logic as logic
 from webapp.api import requests
-from canonicalwebteam.store_api.stores.snapstore import (
-    SnapStore,
-    SnapPublisher,
-)
-from canonicalwebteam.store_api.exceptions import StoreApiError
+
+from canonicalwebteam.exceptions import StoreApiError
+from canonicalwebteam.store_api.dashboard import Dashboard
+from canonicalwebteam.store_api.publishergw import PublisherGW
+from canonicalwebteam.store_api.devicegw import DeviceGW
+
 from webapp.api.exceptions import ApiError
 from webapp.store.snap_details_views import snap_details_views
-from webapp.helpers import api_publisher_session
+from webapp.helpers import api_publisher_session, api_session
 from flask.json import jsonify
 import os
 from webapp.extensions import csrf
@@ -21,11 +22,12 @@ from webapp.extensions import csrf
 session = talisker.requests.get_session(requests.Session)
 
 YOUTUBE_API_KEY = os.getenv("YOUTUBE_API_KEY")
-publisher_api = SnapPublisher(api_publisher_session)
+dashboard = Dashboard(api_session)
+publisher_gateway = PublisherGW("snap", api_publisher_session)
+device_gateway = DeviceGW("snap", api_session)
 
 
 def store_blueprint(store_query=None):
-    api = SnapStore(session, store_query)
 
     store = flask.Blueprint(
         "store",
@@ -33,7 +35,7 @@ def store_blueprint(store_query=None):
         template_folder="/templates",
         static_folder="/static",
     )
-    snap_details_views(store, api)
+    snap_details_views(store)
 
     def format_validation_set(validation_set):
         return validation_set["headers"]
@@ -44,7 +46,7 @@ def store_blueprint(store_query=None):
         res = {}
 
         try:
-            validation_sets = publisher_api.get_validation_sets(flask.session)
+            validation_sets = dashboard.get_validation_sets(flask.session)
             res["success"] = True
 
             if len(validation_sets["assertions"]) > 0:
@@ -75,7 +77,7 @@ def store_blueprint(store_query=None):
         res = {}
 
         try:
-            validation_set = publisher_api.get_validation_set(
+            validation_set = dashboard.get_validation_set(
                 flask.session, validation_set_id
             )
             res["success"] = True
@@ -117,7 +119,7 @@ def store_blueprint(store_query=None):
         status_code = 200
 
         try:
-            snaps = api.get_all_items(size=16)["results"]
+            snaps = device_gateway.get_all_items(size=16)["results"]
         except (StoreApiError, ApiError):
             snaps = []
 
@@ -151,7 +153,7 @@ def store_blueprint(store_query=None):
         error_info = {}
         searched_results = []
 
-        searched_results = api.search(snap_searched, size=size, page=page)
+        searched_results = device_gateway.search(snap_searched, size=size, page=page)
 
         snaps_results = searched_results["results"]
 
@@ -235,7 +237,7 @@ def store_blueprint(store_query=None):
                 for publisher in context["publishers"]:
                     snaps_results = []
                     try:
-                        snaps_results = api.get_publisher_items(
+                        snaps_results = device_gateway.get_publisher_items(
                             publisher, size=500, page=1
                         )["results"]
                     except StoreApiError:
@@ -273,7 +275,7 @@ def store_blueprint(store_query=None):
         snaps_count = 0
         publisher_details = {"display-name": publisher, "username": publisher}
 
-        snaps_results = api.find(
+        snaps_results = device_gateway.find(
             publisher=publisher,
             fields=[
                 "title",
@@ -314,7 +316,7 @@ def store_blueprint(store_query=None):
         error_info = {}
         snaps_results = []
 
-        snaps_results = api.get_category_items(
+        snaps_results = device_gateway.get_category_items(
             category=category, size=10, page=1
         )["results"]
         for snap in snaps_results:
@@ -346,9 +348,9 @@ def store_blueprint(store_query=None):
     def featured_snaps_in_category(category):
         snaps_results = []
 
-        snaps_results = api.get_category_items(
+        snaps_results = device_gateway.get_category_items(
             category=category, size=3, page=1
-        )["results"]
+        )["_embedded"]["clickindex:package"]
 
         for snap in snaps_results:
             snap["icon_url"] = helpers.get_icon(snap["media"])
@@ -422,7 +424,7 @@ def store_blueprint(store_query=None):
         if auto_phasing_percentage is not None:
             auto_phasing_percentage = float(auto_phasing_percentage)
 
-        response = publisher_api.create_track(
+        response = publisher_gateway.create_track(
             flask.session,
             snap_name,
             track_name,

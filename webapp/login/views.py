@@ -1,18 +1,15 @@
 import os
 
 import flask
-from canonicalwebteam.candid import CandidClient
-from canonicalwebteam.store_api.stores.snapstore import (
-    SnapPublisher,
-    SnapStoreAdmin,
-)
-from canonicalwebteam.store_api.stores.charmstore import CharmPublisher
+from canonicalwebteam.store_api.dashboard import Dashboard
+from canonicalwebteam.store_api.publishergw import PublisherGW
+from canonicalwebteam.store_api.devicegw import DeviceGW
 
 from django_openid_auth.teams import TeamsRequest, TeamsResponse
 from flask_openid import OpenID
 
 from webapp import authentication
-from webapp.helpers import api_publisher_session
+from webapp.helpers import api_publisher_session, api_session
 from webapp.api.exceptions import ApiResponseError
 from webapp.extensions import csrf
 from webapp.login.macaroon import MacaroonRequest, MacaroonResponse
@@ -32,10 +29,9 @@ open_id = OpenID(
     extension_responses=[MacaroonResponse, TeamsResponse],
 )
 
-publisher_api = SnapPublisher(api_publisher_session)
-admin_api = SnapStoreAdmin(api_publisher_session)
-candid = CandidClient(api_publisher_session)
-charm_publisher_api = CharmPublisher(api_publisher_session)
+dashboard = Dashboard(api_session)
+publisher_gateway = PublisherGW(api_publisher_session)
+device_gateway = DeviceGW("snap", api_session)
 
 
 @login.route("/login", methods=["GET", "POST"])
@@ -75,7 +71,7 @@ def after_login(resp):
     if not resp.nickname:
         return flask.redirect(LOGIN_URL)
 
-    account = publisher_api.get_account(flask.session)
+    account = dashboard.get_account(flask.session)
 
     if account:
         flask.session["publisher"] = {
@@ -92,7 +88,7 @@ def after_login(resp):
             account["stores"], roles=["admin", "review", "view"]
         ):
             flask.session["publisher"]["has_stores"] = (
-                len(admin_api.get_stores(flask.session)) > 0
+                len(dashboard.get_stores(flask.session)) > 0
             )
     else:
         flask.session["publisher"] = {

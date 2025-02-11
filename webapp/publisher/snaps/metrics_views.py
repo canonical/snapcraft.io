@@ -7,19 +7,17 @@ import math
 import flask
 import webapp.metrics.helper as metrics_helper
 import webapp.metrics.metrics as metrics
-from canonicalwebteam.store_api.stores.snapstore import (
-    SnapPublisher,
-    SnapStore,
-)
+from canonicalwebteam.store_api.dashboard import Dashboard
+from canonicalwebteam.store_api.devicegw import DeviceGW
 
 # Local
-from webapp.helpers import api_publisher_session
+from webapp.helpers import api_session
 from webapp.decorators import login_required
 from webapp.publisher.snaps import logic
 
 
-publisher_api = SnapPublisher(api_publisher_session)
-store_api = SnapStore(api_publisher_session)
+dashboard = Dashboard(api_session)
+device_gateway = DeviceGW("snap", api_session)
 
 downsample_data_limit = 500
 downsample_target_size = 10
@@ -38,7 +36,7 @@ def get_account_snaps_metrics():
         metrics_query = metrics_helper.build_snap_installs_metrics_query(snaps)
 
         if metrics_query:
-            snap_metrics = publisher_api.get_publisher_metrics(
+            snap_metrics = dashboard.get_publisher_metrics(
                 flask.session, json=metrics_query
             )
             metrics = metrics_helper.transform_metrics(
@@ -63,7 +61,7 @@ def publisher_snap_metrics(snap_name):
     A view to display the snap metrics page for specific snaps.
     """
     # If this fails, the page will 404
-    publisher_api.get_snap_info(snap_name, flask.session)
+    dashboard.get_snap_info(snap_name, flask.session)
 
     context = {
         # Data direct from details API
@@ -72,15 +70,17 @@ def publisher_snap_metrics(snap_name):
         "is_linux": "Linux" in flask.request.headers["User-Agent"],
     }
 
-    return flask.render_template("store/publisher.html", **context)
+    return flask.render_template("publisher/metrics.html", **context)
 
 
 @login_required
 def get_active_devices(snap_name):
 
-    snap_details = publisher_api.get_snap_info(snap_name, flask.session)
+    snap_details = device_gateway.get_item_details(
+        snap_name, api_version=2, fields=["snap-id"]
+    )
 
-    snap_id = snap_details["snap_id"]
+    snap_id = snap_details["snap-id"]
 
     installed_base_metric = logic.verify_base_metrics(
         flask.request.args.get("active-devices", default="version", type=str)
@@ -133,7 +133,7 @@ def get_active_devices(snap_name):
         snap_id=snap_id, installed_base=installed_base, end=end, start=start
     )
 
-    metrics_response = publisher_api.get_publisher_metrics(
+    metrics_response = dashboard.get_publisher_metrics(
         flask.session, json=new_metrics_query
     )
 
@@ -188,7 +188,9 @@ def get_active_devices(snap_name):
 
 @login_required
 def get_latest_active_devices(snap_name):
-    snap_details = publisher_api.get_snap_info(snap_name, flask.session)
+    snap_details = device_gateway.get_item_details(
+        snap_name, api_version=2, fields=["snap-id"]
+    )
 
     snap_id = snap_details["snap_id"]
     # get latest active devices
@@ -201,7 +203,7 @@ def get_latest_active_devices(snap_name):
         metric_bucket=latest_day_period["bucket"],
     )
 
-    latest_day_response = publisher_api.get_publisher_metrics(
+    latest_day_response = dashboard.get_publisher_metrics(
         flask.session, json=latest_day_query_json
     )
 
@@ -230,7 +232,7 @@ def get_latest_active_devices(snap_name):
 
 @login_required
 def get_metric_annotaion(snap_name):
-    details = publisher_api.get_snap_info(snap_name, flask.session)
+    details = dashboard.get_snap_info(flask.session, snap_name)
     annotations = {"name": "annotations", "series": [], "buckets": []}
 
     for category in details["categories"]["items"]:
@@ -262,13 +264,13 @@ def get_metric_annotaion(snap_name):
 
 @login_required
 def get_country_metric(snap_name):
-    snap_details = publisher_api.get_snap_info(snap_name, flask.session)
+    snap_details = dashboard.get_snap_info(flask.session, snap_name)
     snap_id = snap_details["snap_id"]
     metrics_query_json = metrics_helper.build_metric_query_country(
         snap_id=snap_id,
     )
 
-    metrics_response = publisher_api.get_publisher_metrics(
+    metrics_response = dashboard.get_publisher_metrics(
         flask.session, json=metrics_query_json
     )
 
