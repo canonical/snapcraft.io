@@ -1,5 +1,3 @@
-from talisker import requests
-
 from canonicalwebteam.store_api.dashboard import Dashboard
 
 from webapp.decorators import login_required
@@ -33,16 +31,12 @@ store_packages = Blueprint(
 
 dashboard = Dashboard(api_session)
 
+
 @store_packages.route("/store.json")
 def get_store_packages():
     args = dict(request.args)
-    libraries = bool(args.pop("fields", ""))
 
-    res = make_response(
-        get_packages(
-            FIELDS, 15, args
-        )
-    )
+    res = make_response(get_packages(FIELDS, 15, args))
     return res
 
 
@@ -75,7 +69,6 @@ def package(package_type):
 
 @store_packages.route("/<package_name>/card.json")
 def get_store_package(package_name):
-
     has_libraries = bool(request.args.get("fields", ""))
     res = make_response(
         get_package(

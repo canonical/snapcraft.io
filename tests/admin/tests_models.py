@@ -13,7 +13,6 @@ candid = CandidClient(api_publisher_session)
 
 
 class TestModelServiceEndpoints(TestAdminEndpoints):
-
     def setUp(self):
         self.api_key = "qwertyuioplkjhgfdsazxcvbnmkiopuytrewqasdfghjklmnbv"
         super().setUp()

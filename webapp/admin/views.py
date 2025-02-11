@@ -332,7 +332,9 @@ def create_models(store_id: str):
             res["success"] = False
             return make_response(res, 500)
 
-        publisher_gateway.create_store_model(flask.session, store_id, name, api_key)
+        publisher_gateway.create_store_model(
+            flask.session, store_id, name, api_key
+        )
         res["success"] = True
 
         return make_response(res, 201)
@@ -566,7 +568,9 @@ def create_signing_key(store_id: str):
 
     try:
         if name and len(name) <= 128:
-            publisher_gateway.create_store_signing_key(flask.session, store_id, name)
+            publisher_gateway.create_store_signing_key(
+                flask.session, store_id, name
+            )
             res["success"] = True
             return make_response(res, 200)
         else:

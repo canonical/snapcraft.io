@@ -39,7 +39,8 @@ FIELDS = [
     "trending",
     "unlisted",
     "links",
- ]
+]
+
 
 def snap_details_views(store):
     snap_regex = "[a-z0-9-]*[a-z][a-z0-9-]*"
@@ -53,7 +54,9 @@ def snap_details_views(store):
         return context
 
     def _get_context_snap_details(snap_name):
-        details = device_gateway.get_item_details(snap_name, fields=FIELDS, api_version=2)
+        details = device_gateway.get_item_details(
+            snap_name, fields=FIELDS, api_version=2
+        )
         # 404 for any snap under quarantine
         if details["snap"]["publisher"]["username"] == "snap-quarantine":
             flask.abort(404, "No snap named {}".format(snap_name))
@@ -98,7 +101,9 @@ def snap_details_views(store):
         binary_filesize = latest_channel["download"]["size"]
 
         # filter out banner and banner-icon images from screenshots
-        screenshots = logic.filter_screenshots(details.get("snap", {}).get("media", []))
+        screenshots = logic.filter_screenshots(
+            details.get("snap", {}).get("media", [])
+        )
 
         icon_url = helpers.get_icon(details.get("snap", {}).get("media", []))
 
@@ -141,8 +146,9 @@ def snap_details_views(store):
                 is_users_snap = True
 
         # build list of categories of a snap
-        categories = logic.get_snap_categories(details.get(
-            "snap", {}).get("categories", []))
+        categories = logic.get_snap_categories(
+            details.get("snap", {}).get("categories", [])
+        )
 
         developer = logic.get_snap_developer(details["name"])
 
@@ -263,7 +269,9 @@ def snap_details_views(store):
             ),
         ]
 
-        metrics_response = device_gateway.get_public_metrics(metrics_query_json)
+        metrics_response = device_gateway.get_public_metrics(
+            metrics_query_json
+        )
 
         os_metrics = None
         country_devices = None

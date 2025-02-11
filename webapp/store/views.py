@@ -28,7 +28,6 @@ device_gateway = DeviceGW("snap", api_session)
 
 
 def store_blueprint(store_query=None):
-
     store = flask.Blueprint(
         "store",
         __name__,
@@ -153,7 +152,9 @@ def store_blueprint(store_query=None):
         error_info = {}
         searched_results = []
 
-        searched_results = device_gateway.search(snap_searched, size=size, page=page)
+        searched_results = device_gateway.search(
+            snap_searched, size=size, page=page
+        )
 
         snaps_results = searched_results["results"]
 

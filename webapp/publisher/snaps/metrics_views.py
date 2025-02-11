@@ -75,7 +75,6 @@ def publisher_snap_metrics(snap_name):
 
 @login_required
 def get_active_devices(snap_name):
-
     snap_details = device_gateway.get_item_details(
         snap_name, api_version=2, fields=["snap-id"]
     )
@@ -147,10 +146,11 @@ def get_active_devices(snap_name):
     metric_name = metrics_data["metric_name"]
     # Add constants to a variable
     if len(series) > downsample_data_limit:
-        downsampled_buckets, downsampled_series = (
-            metrics_helper.downsample_series(
-                buckets, series, downsample_target_size
-            )
+        (
+            downsampled_buckets,
+            downsampled_series,
+        ) = metrics_helper.downsample_series(
+            buckets, series, downsample_target_size
         )
     else:
         downsampled_buckets = buckets

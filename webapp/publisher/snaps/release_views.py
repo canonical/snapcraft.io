@@ -19,9 +19,7 @@ def redirect_get_release_history(snap_name):
 
 @login_required
 def get_release_history_data(snap_name):
-    release_history = dashboard.snap_release_history(
-        flask.session, snap_name
-    )
+    release_history = dashboard.snap_release_history(flask.session, snap_name)
 
     channel_map = dashboard.snap_channel_map(flask.session, snap_name)
 
@@ -85,9 +83,7 @@ def post_release(snap_name):
         return flask.jsonify(response), 400
 
     try:
-        response = dashboard.post_snap_release(
-            flask.session, data
-        )
+        response = dashboard.post_snap_release(flask.session, data)
     except StoreApiResponseErrorList as api_response_error_list:
         if api_response_error_list.status_code == 404:
             return flask.abort(404, "No snap named {}".format(snap_name))
@@ -123,9 +119,7 @@ def post_close_channel(snap_name):
             return flask.jsonify(api_response_error_list.errors), 400
 
     try:
-        response = dashboard.post_close_channel(
-            flask.session, snap_id, data
-        )
+        response = dashboard.post_close_channel(flask.session, snap_id, data)
     except StoreApiResponseErrorList as api_response_error_list:
         if api_response_error_list.status_code == 404:
             return flask.abort(404, "No snap named {}".format(snap_name))
@@ -175,8 +169,6 @@ def get_snap_revision_json(snap_name, revision):
     """
     Return JSON object from the publisher API
     """
-    revision = dashboard.get_snap_revision(
-        flask.session, snap_name, revision
-    )
+    revision = dashboard.get_snap_revision(flask.session, snap_name, revision)
 
     return flask.jsonify(revision)

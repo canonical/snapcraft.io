@@ -5,7 +5,7 @@ from canonicalwebteam.store_api.devicegw import DeviceGW
 from canonicalwebteam.exceptions import StoreApiError
 
 # Local
-from webapp.helpers import api_publisher_session, api_session
+from webapp.helpers import api_session
 from webapp.decorators import login_required
 
 dashboard = Dashboard(api_session)
@@ -14,7 +14,6 @@ device_gateway = DeviceGW("snap", api_session)
 
 @login_required
 def get_publicise_data(snap_name):
-
     snap_details = dashboard.get_snap_info(flask.session, snap_name)
 
     try:

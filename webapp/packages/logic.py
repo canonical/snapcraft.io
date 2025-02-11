@@ -1,6 +1,5 @@
 import datetime
 
-import talisker
 from flask import make_response
 from typing import List, Dict, TypedDict, Any, Union
 
@@ -112,9 +111,7 @@ def fetch_package(package_name: str, fields: List[str]) -> Package:
     return response.json
 
 
-def parse_package_for_card(
-    package: Dict[str, Any]
-) -> Package:
+def parse_package_for_card(package: Dict[str, Any]) -> Package:
     """
     Parses a snap and returns the formatted package
     based on the given card schema.
@@ -226,9 +223,7 @@ def get_packages(
     packages_per_page = paginate(packages, page, size, total_pages)
     parsed_packages = []
     for package in packages_per_page:
-        parsed_packages.append(
-            parse_package_for_card(package)
-        )
+        parsed_packages.append(parse_package_for_card(package))
     res = parsed_packages
 
     categories = get_store_categories()
@@ -359,7 +354,5 @@ def get_package(
     :return: A dictionary containing the package.
     """
     package = fetch_package(package_name, fields).get("package", {})
-    resp = parse_package_for_card(
-        package
-    )
+    resp = parse_package_for_card(package)
     return {"package": resp}

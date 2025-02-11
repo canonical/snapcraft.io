@@ -152,7 +152,7 @@ def post_settings_data(snap_name):
         if body_json:
             try:
                 response = dashboard.snap_metadata(
-                    flask.session, snap_id,  body_json
+                    flask.session, snap_id, body_json
                 )
                 return flask.jsonify(response)
             except StoreApiResponseErrorList as api_response_error_list:

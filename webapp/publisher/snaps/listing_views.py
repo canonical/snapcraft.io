@@ -10,6 +10,7 @@ from canonicalwebteam.exceptions import (
 )
 from canonicalwebteam.store_api.dashboard import Dashboard
 from canonicalwebteam.store_api.devicegw import DeviceGW
+
 # Local
 from webapp import helpers
 from webapp.helpers import api_session
@@ -24,8 +25,6 @@ from webapp.store.logic import (
 
 dashboard = Dashboard(api_session)
 device_gateway = DeviceGW("snap", api_session)
-
-
 
 
 def get_market_snap(snap_name):
