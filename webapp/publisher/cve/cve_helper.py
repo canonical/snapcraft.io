@@ -86,8 +86,12 @@ class CveHelper:
 
             if response.status_code == 200:
                 content = json.loads(response.text)
+                revisions = content["snaps"][snap_name]["revisions"]
 
-                cve_list = content["snaps"][snap_name]["revisions"][revision]
+                if revision not in revisions:
+                    raise NotFound
+
+                cve_list = revisions[revision]
 
                 fixed_cves = cve_list["fixed-cves"]
                 unfixed_cves = cve_list["unfixed-cves"]
