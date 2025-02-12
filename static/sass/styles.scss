@@ -42,12 +42,6 @@ $color-social-icon-foreground: $color-light;
 // Again the new grid doesn't work to implement what happens here
 @import "search-form";
 @include search-form;
-
-// TODO[epic=styles]: sticky footer
-// The footer pattern has been removed from vanilla
-// so there is little possibility this will be added
-@import "patterns_sticky_footer";
-@include p-sticky-footer;
 @import "snapcraft_banner";
 @include snapcraft-banner;
 @import "snapcraft_graph-tooltip";
@@ -73,8 +67,6 @@ $color-social-icon-foreground: $color-light;
 @include snapcraft-show-more;
 @import "snapcraft_snap-details";
 @include snapcraft-snap-details;
-@import "snapcraft_p-form-validation";
-@include snapcraft-p-form-validation;
 @import "snapcraft_p-notifications";
 @include snapcraft-p-notification;
 @import "snapcraft_distro-chart";
@@ -105,8 +97,6 @@ $color-social-icon-foreground: $color-light;
 @include snapcraft-publisher;
 @import "patterns_modal";
 @include vf-p-modal-snapcraft;
-@import "patterns_strip_slanted";
-@include snapcraft-p-strip;
 @import "snapcraft_packages";
 @include snapcraft-packages;
 @import "snapcraft_dispute-list";
@@ -125,8 +115,6 @@ $color-social-icon-foreground: $color-light;
 @include snapcraft-pattern-docs;
 @import "patterns_table";
 @include snapcraft-p-table;
-@import "utilities_no-limit";
-@include u-no-limit;
 @import "utilities_disabled";
 @include u-disabled;
 @import "utilities_text-wrap";
@@ -410,12 +398,6 @@ dl {
 
 .p-navigation__row.is-full-width {
   max-width: 100%;
-}
-
-// TODO[epic=styles]: breadcrumb
-// Vanilla override
-.p-breadcrumbs__item:not(:first-of-type)::before {
-  margin-left: -0.5rem;
 }
 
 // To prevent layout shift

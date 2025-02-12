@@ -55,6 +55,7 @@ class PostPreviewPage(BaseTestCases.EndpointLoggedIn):
                 "images": [],
                 "title": self.snap_name,
                 "categories": [{"slug": "devices-and-iot"}],
+                "video": [],
             }
         )
 
@@ -66,5 +67,5 @@ class PostPreviewPage(BaseTestCases.EndpointLoggedIn):
         self.assertContext("is_preview", True)
         self.assertContext("screenshots", [])
         self.assertContext("icon_url", "")
-        self.assertContext("video", None)
+        self.assertContext("video", [])
         self.assertContext("package_name", self.snap_name)

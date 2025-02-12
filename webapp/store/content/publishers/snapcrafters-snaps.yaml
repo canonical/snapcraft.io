@@ -29,7 +29,7 @@ snaps:
     },
     {
       "developer_validation": "verified",
-      "icon_url": "https://dashboard.snapcraft.io/site_media/appmedia/2017/04/discord.png",
+      "icon_url": "https://dashboard.snapcraft.io/site_media/appmedia/2023/10/com.discordapp.Discord_1.png",
       "origin": "snapcrafters",
       "package_name": "discord",
       "publisher": "Snapcrafters",
@@ -38,7 +38,7 @@ snaps:
     },
     {
       "developer_validation": "verified",
-      "icon_url": "https://dashboard.snapcraft.io/site_media/appmedia/2021/04/icon_512.png",
+      "icon_url": "https://dashboard.snapcraft.io/site_media/appmedia/2022/11/signal-logo.svg_8Yxi5gs.png",
       "origin": "snapcrafters",
       "package_name": "signal-desktop",
       "publisher": "Snapcrafters",
@@ -56,7 +56,7 @@ snaps:
     },
     {
       "developer_validation": "verified",
-      "icon_url": "https://dashboard.snapcraft.io/site_media/appmedia/2018/03/rsz_android_studio_icon.png",
+      "icon_url": "https://dashboard.snapcraft.io/site_media/appmedia/2022/02/studio.svg.png",
       "origin": "snapcrafters",
       "package_name": "android-studio",
       "publisher": "Snapcrafters",
