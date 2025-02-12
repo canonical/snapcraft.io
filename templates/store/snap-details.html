@@ -321,13 +321,11 @@
           Raven.captureException(e);
         }
 
-        {% if not is_preview %}
         try {
           snapcraft.public.storeDetails.screenshots('#js-snap-screenshots');
         } catch(e) {
           Raven.captureException(e);
         }
-        {% endif %}
 
         try {
           snapcraft.public.storeDetails.videos('.js-video-slide');

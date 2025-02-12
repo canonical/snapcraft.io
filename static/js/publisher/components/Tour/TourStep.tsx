@@ -39,7 +39,7 @@ function TourStep(props: TooltipRenderProps) {
             className="u-no-margin--bottom"
             style={{ marginLeft: "1rem" }}
           >
-            <Icon name="chevron-up" style={{ transform: "rotate(90deg)" }} />
+            <Icon name="chevron-left" />
             <span className="u-off-screen">{backProps.title}</span>
           </Button>
 
@@ -54,11 +54,7 @@ function TourStep(props: TooltipRenderProps) {
                   <>Finish tour</>
                 ) : (
                   <>
-                    <Icon
-                      name="chevron-up"
-                      light
-                      style={{ transform: "rotate(-90deg)" }}
-                    />
+                    <Icon name="chevron-right" light />
                     <span className="u-off-screen">{primaryProps.title}</span>
                   </>
                 )}

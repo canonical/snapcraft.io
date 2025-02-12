@@ -5,6 +5,9 @@ type Props = {
   snapName: string;
   getValues: UseFormGetValues<FieldValues>;
   watch: UseFormWatch<FieldValues>;
+  data: {
+    categories: { name: string; slug: string }[];
+  };
 };
 
 type ListingData = {
@@ -25,13 +28,15 @@ type ListingData = {
   }>;
   summary: string;
   description: string;
+  video: { type: string; status: string; url: string }[] | null;
+  license: string;
 };
 
-function PreviewForm({ snapName, getValues, watch }: Props) {
+function PreviewForm({ snapName, getValues, watch, data }: Props) {
   const watchWebsites = watch("websites");
   const watchContacts = watch("contacts");
   const watchDonations = watch("donations");
-  const watchSource = watch("source");
+  const watchSource = watch("source_code");
   const watchIssues = watch("issues");
 
   const listingData: ListingData = {
@@ -69,6 +74,8 @@ function PreviewForm({ snapName, getValues, watch }: Props) {
     ],
     summary: getValues("summary"),
     description: getValues("description"),
+    video: null,
+    license: "",
   };
 
   const screenshotUrls = getValues("screenshot_urls");
@@ -87,25 +94,36 @@ function PreviewForm({ snapName, getValues, watch }: Props) {
   const secondaryCategory = getValues("secondary_category");
 
   if (primaryCategory) {
-    listingData.categories.push({
-      name: primaryCategory,
-      slug: primaryCategory,
-    });
+    const primaryCategoryData = data.categories.find(
+      (cat) => cat.slug === primaryCategory,
+    );
+
+    if (primaryCategoryData) {
+      listingData.categories.push(primaryCategoryData);
+    }
   }
 
   if (secondaryCategory) {
-    listingData.categories.push({
-      name: secondaryCategory,
-      slug: secondaryCategory,
-    });
+    const secondaryCategoryData = data.categories.find(
+      (cat) => cat.slug === secondaryCategory,
+    );
+
+    if (secondaryCategoryData) {
+      listingData.categories.push(secondaryCategoryData);
+    }
   }
 
-  window.localStorage.setItem(
-    `${snapName}-initial`,
-    JSON.stringify(listingData),
-  );
+  const videoUrl = getValues("video_urls");
 
-  window.localStorage.setItem(snapName, JSON.stringify(listingData));
+  if (videoUrl) {
+    listingData.video = [{ type: "video", status: "uploaded", url: videoUrl }];
+  }
+
+  listingData.license = getValues("license");
+
+  if (getValues("primary_website")) {
+    listingData.links.website.unshift(getValues("primary_website"));
+  }
 
   return (
     <Form

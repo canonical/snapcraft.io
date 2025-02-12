@@ -19,7 +19,7 @@
                     {% for step in build_steps %}
                     {% if not step.warning %}
                     <li class="p-stepped-list__item">
-                      <h4 class="p-stepped-list__title u-no-limit">
+                      <h4 class="p-stepped-list__title">
                         {{ step.action|safe }}
                       </h4>
                       {% if step.command %}
@@ -64,7 +64,7 @@
                   <ol class="p-stepped-list has-margin">
                     {% for step in test_steps %}
                     <li class="p-stepped-list__item">
-                      <h4 class="p-stepped-list__title u-no-limit">
+                      <h4 class="p-stepped-list__title">
                         {{ step.action|safe }}
                       </h4>
                       {% if step.command %}

@@ -263,33 +263,4 @@
       @extend %triangle--on-bottom;
     }
   }
-
-  .p-tour-controls {
-    align-items: center;
-    display: flex;
-    justify-content: space-between;
-    margin-top: $spv--large;
-
-    // based on pagination pattern from Vanilla this turns contextual menu
-    // chevron icon into < > arrows
-    // let's hope Vanilla doesn't change this icon to something else ;)
-    .p-icon--chevron-up.is-next {
-      transform: rotate(-90deg);
-    }
-
-    .p-icon--chevron-up.is-prev {
-      transform: rotate(90deg);
-    }
-  }
-
-  .p-tour-controls__buttons {
-    display: flex;
-    margin-left: $sph--small;
-  }
-
-  .p-tour-controls__step {
-    margin-bottom: 0;
-    margin-left: auto; // align right in flex parent
-    margin-right: $sph--large;
-  }
 }
