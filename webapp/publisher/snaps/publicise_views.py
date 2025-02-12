@@ -18,7 +18,7 @@ def get_publicise_data(snap_name):
 
     try:
         snap_public_details = device_gateway.get_item_details(
-            snap_name, api_version=2
+            snap_name, api_version=2, fields=["trending", "private"]
         )
         trending = snap_public_details["snap"]["trending"]
     except StoreApiError:
@@ -38,5 +38,5 @@ def get_publicise_data(snap_name):
 @login_required
 def get_publicise(snap_name):
     # If this fails, the page will 404
-    dashboard.get_snap_info(snap_name, flask.session)
+    dashboard.get_snap_info(flask.session, snap_name)
     return flask.render_template("store/publisher.html", snap_name=snap_name)

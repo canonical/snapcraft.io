@@ -61,7 +61,7 @@ def publisher_snap_metrics(snap_name):
     A view to display the snap metrics page for specific snaps.
     """
     # If this fails, the page will 404
-    dashboard.get_snap_info(snap_name, flask.session)
+    dashboard.get_snap_info(flask.session, snap_name)
 
     context = {
         # Data direct from details API
@@ -191,8 +191,7 @@ def get_latest_active_devices(snap_name):
     snap_details = device_gateway.get_item_details(
         snap_name, api_version=2, fields=["snap-id"]
     )
-
-    snap_id = snap_details["snap_id"]
+    snap_id = snap_details["snap-id"]
     # get latest active devices
     latest_day_period = logic.extract_metrics_period("1d")
     latest_installed_base = logic.get_installed_based_metric("version")

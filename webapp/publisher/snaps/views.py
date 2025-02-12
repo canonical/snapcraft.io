@@ -489,12 +489,13 @@ def post_register_name():
 @login_required
 @exchange_required
 def get_package_metadata(snap_name):
-    package_metadata = publisher_gateway.get_package_metadata(
-        flask.session, snap_name
-    )
-    if "metadata" in package_metadata and package_metadata["metadata"]:
-        return jsonify({"data": package_metadata["metadata"], "success": True})
-    else:
+    try:
+        package_metadata = publisher_gateway.get_package_metadata(
+            flask.session, snap_name
+        )
+   
+        return jsonify({"data": package_metadata, "success": True})
+    except StoreApiError:
         return (
             jsonify({"error": "Package metadata not found", "success": False}),
             404,
