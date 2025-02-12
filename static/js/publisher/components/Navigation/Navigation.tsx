@@ -139,7 +139,7 @@ function Navigation({
                     <ul className="p-side-navigation__list u-no-margin--bottom">
                       <li className="p-side-navigation__item--title p-muted-heading">
                         <span className="p-side-navigation__link">
-                          <i className="p-icon--pods is-light p-side-navigation__icon"></i>
+                          <i className="p-icon--units is-light p-side-navigation__icon"></i>
                           <span className="p-side-navigation__label">
                             My stores
                           </span>
