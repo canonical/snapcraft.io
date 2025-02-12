@@ -8,7 +8,6 @@ from werkzeug.exceptions import NotFound
 class CveHGetByRevisionTest(unittest.TestCase):
 
     def setUp(self):
-        self.helper = CveHelper()
 
         self.file_metadata = {"download_url": "https://example.com/file.json"}
 
@@ -109,7 +108,7 @@ class CveHGetByRevisionTest(unittest.TestCase):
             MagicMock(status_code=200, text=json.dumps(self.file_content)),
         ]
 
-        result = self.helper.get_cve_with_revision("my-snap", "3053")
+        result = CveHelper.get_cve_with_revision("my-snap", "3053")
 
         self.assertEqual(len(result), 3)
         self.assertEqual(result[0]["id"], "CVE-2014-9984")
@@ -176,7 +175,7 @@ class CveHGetByRevisionTest(unittest.TestCase):
             MagicMock(status_code=200, text=json.dumps(self.file_content)),
         ]
         with self.assertRaises(NotFound):
-            self.helper.get_cve_with_revision("my-snap", "3053")
+            CveHelper.get_cve_with_revision("my-snap", "3053")
 
     @patch("requests.get")
     def test_get_cve_by_revision_file_content_not_found(self, mock_get):
@@ -185,4 +184,4 @@ class CveHGetByRevisionTest(unittest.TestCase):
             MagicMock(status_code=404, text=json.dumps(self.file_content)),
         ]
         with self.assertRaises(NotFound):
-            self.helper.get_cve_with_revision("my-snap", "3053")
+            CveHelper.get_cve_with_revision("my-snap", "3053")

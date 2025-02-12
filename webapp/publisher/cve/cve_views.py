@@ -60,11 +60,10 @@ def get_cves(snap_name, revision):
     page = flask.request.args.get("page", default=1, type=int)
     page_size = flask.request.args.get("page_size", default=10, type=int)
 
-    cve = CveHelper()
     snap_details = publisher_api.get_snap_info(snap_name, flask.session)
     account_info = publisher_api.get_account(flask.session)
     is_user_canonical = flask.session["publisher"].get("is_canonical", False)
-    can_view_cves = cve.can_user_access_cve_data(
+    can_view_cves = CveHelper.can_user_access_cve_data(
         snap_name=snap_name,
         snap_details=snap_details,
         account_info=account_info,
@@ -81,8 +80,8 @@ def get_cves(snap_name, revision):
             403,
         )
 
-    cves = cve.get_cve_with_revision(snap_name, revision)
-    cves = cve.filter_cve_data(
+    cves = CveHelper.get_cve_with_revision(snap_name, revision)
+    cves = CveHelper.filter_cve_data(
         cves,
         usn_ids,
         binary_statuses,
@@ -92,7 +91,7 @@ def get_cves(snap_name, revision):
         cvss_severities,
         ubuntu_priorities,
     )
-    cves = cve.sort_cve_data(cves=cves, order=order, sort_by=sort_by)
-    cves = cve.paginate_cve_list(cves=cves, page=page, page_size=page_size)
+    cves = CveHelper.sort_cve_data(cves=cves, order=order, sort_by=sort_by)
+    cves = CveHelper.paginate_cve_list(cves=cves, page=page, page_size=page_size)
 
     return flask.jsonify({"success": True, **cves})

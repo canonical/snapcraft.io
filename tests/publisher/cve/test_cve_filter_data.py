@@ -4,7 +4,6 @@ from webapp.publisher.cve.cve_helper import CveHelper
 
 class CveFilterDataTest(unittest.TestCase):
     def setUp(self):
-        self.helper = CveHelper()
         self.cves = [
             {
                 "id": "CVE-2023-12345",
@@ -43,7 +42,7 @@ class CveFilterDataTest(unittest.TestCase):
         ]
 
     def test_filter_by_cvss_severity(self):
-        result = self.helper.filter_cve_data(
+        result = CveHelper.filter_cve_data(
             self.cves,
             usn_ids=None,
             binary_statuses=None,
@@ -57,7 +56,7 @@ class CveFilterDataTest(unittest.TestCase):
         self.assertEqual(result[0]["id"], "CVE-2023-12345")
 
     def test_filter_by_ubuntu_priority(self):
-        result = self.helper.filter_cve_data(
+        result = CveHelper.filter_cve_data(
             self.cves,
             usn_ids=None,
             binary_statuses=None,
@@ -71,7 +70,7 @@ class CveFilterDataTest(unittest.TestCase):
         self.assertEqual(result[0]["id"], "CVE-2024-67890")
 
     def test_filter_by_usn_id(self):
-        result = self.helper.filter_cve_data(
+        result = CveHelper.filter_cve_data(
             self.cves,
             usn_ids=["3009-1"],
             binary_statuses=None,
@@ -85,7 +84,7 @@ class CveFilterDataTest(unittest.TestCase):
         self.assertEqual(result[0]["id"], "CVE-2023-12345")
 
     def test_filter_by_binary_name(self):
-        result = self.helper.filter_cve_data(
+        result = CveHelper.filter_cve_data(
             self.cves,
             usn_ids=None,
             binary_statuses=None,
@@ -99,7 +98,7 @@ class CveFilterDataTest(unittest.TestCase):
         self.assertEqual(result[0]["id"], "CVE-2024-67890")
 
     def test_filter_by_binary_status(self):
-        result = self.helper.filter_cve_data(
+        result = CveHelper.filter_cve_data(
             self.cves,
             usn_ids=None,
             binary_statuses=["unfixed"],
@@ -113,7 +112,7 @@ class CveFilterDataTest(unittest.TestCase):
         self.assertEqual(result[0]["id"], "CVE-2023-12345")
 
     def test_filter_by_two_different_fields(self):
-        result = self.helper.filter_cve_data(
+        result = CveHelper.filter_cve_data(
             self.cves,
             usn_ids=["3010-2"],
             binary_statuses=None,
@@ -127,7 +126,7 @@ class CveFilterDataTest(unittest.TestCase):
         self.assertEqual(result[0]["id"], "CVE-2024-67890")
 
     def test_filter_by_two_same_fields(self):
-        result = self.helper.filter_cve_data(
+        result = CveHelper.filter_cve_data(
             self.cves,
             usn_ids=None,
             binary_statuses=None,
@@ -142,7 +141,7 @@ class CveFilterDataTest(unittest.TestCase):
         self.assertEqual(result[1]["id"], "CVE-2024-67890")
 
     def test_no_matching_filters(self):
-        result = self.helper.filter_cve_data(
+        result = CveHelper.filter_cve_data(
             self.cves,
             usn_ids=["9999-9"],
             binary_statuses=None,

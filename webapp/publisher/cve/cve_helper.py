@@ -24,8 +24,8 @@ class CveHelper:
     """
     Provides CVE data through GitHub by using snapcraft-web@canonical.com.
     """
-
-    def _get_cve_file_metadata(self, file_path):
+    @staticmethod
+    def _get_cve_file_metadata(file_path):
         url = (
             f"{REST_API_URL}/repos/canonical/canonicalwebteam.snap-cves/"
             f"contents/{file_path}?ref=main"
@@ -38,7 +38,8 @@ class CveHelper:
         else:
             raise NotFound
 
-    def _format_cve_response(self, cve_list, cve_details, usn_details):
+    @staticmethod
+    def _format_cve_response(cve_list, cve_details, usn_details):
         cves = []
 
         for cve_id, cve in cve_list.items():
@@ -76,7 +77,8 @@ class CveHelper:
 
         return cves
 
-    def _fetch_file_content(self, snap_name, revision, file_metadata):
+    @staticmethod
+    def _fetch_file_content(snap_name, revision, file_metadata):
         if "download_url" in file_metadata:
             download_url = file_metadata["download_url"]
             headers = {
@@ -99,10 +101,10 @@ class CveHelper:
                 cve_details = content["security_issues"]["cves"]
                 usn_details = content["security_issues"]["usns"]
 
-                unfixed = self._format_cve_response(
+                unfixed = CveHelper._format_cve_response(
                     unfixed_cves, cve_details, usn_details
                 )
-                fixed = self._format_cve_response(
+                fixed = CveHelper._format_cve_response(
                     fixed_cves, cve_details, usn_details
                 )
 
@@ -112,17 +114,19 @@ class CveHelper:
         else:
             raise NotFound
 
-    def get_cve_with_revision(self, snap_name, revision):
-        file_metadata = self._get_cve_file_metadata(
+    @staticmethod
+    def get_cve_with_revision(snap_name, revision):
+        file_metadata = CveHelper._get_cve_file_metadata(
             "snap-cves/{}.json".format(snap_name)
         )
 
         if file_metadata:
-            return self._fetch_file_content(snap_name, revision, file_metadata)
+            return CveHelper._fetch_file_content(snap_name, revision, file_metadata)
         return []
 
+    @staticmethod
     def can_user_access_cve_data(
-        self, snap_name, snap_details, account_info, is_user_canonical
+        snap_name, snap_details, account_info, is_user_canonical
     ):
         snap_store = snap_details["store"]
         snap_publisher = snap_details["publisher"]
@@ -157,8 +161,8 @@ class CveHelper:
 
         return can_view_cves
 
+    @staticmethod
     def _match_filters(
-        self,
         cve,
         usn_ids,
         binary_statuses,
@@ -216,8 +220,8 @@ class CveHelper:
             return False
         return True
 
+    @staticmethod
     def filter_cve_data(
-        self,
         cves,
         usn_ids,
         binary_statuses,
@@ -230,7 +234,7 @@ class CveHelper:
         return [
             cve
             for cve in cves
-            if self._match_filters(
+            if CveHelper._match_filters(
                 cve,
                 usn_ids=usn_ids,
                 binary_fixed_versions=binary_fixed_versions,
@@ -242,7 +246,8 @@ class CveHelper:
             )
         ]
 
-    def sort_cve_data(self, cves, sort_by, order):
+    @staticmethod
+    def sort_cve_data(cves, sort_by, order):
         priority_order = {
             "negligible": 0,
             "low": 1,
@@ -279,7 +284,8 @@ class CveHelper:
             )
         return cves
 
-    def paginate_cve_list(self, cves, page, page_size):
+    @staticmethod
+    def paginate_cve_list(cves, page, page_size):
         total_items = len(cves)
         start = (page - 1) * page_size
         end = start + page_size

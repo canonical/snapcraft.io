@@ -5,7 +5,6 @@ from webapp.publisher.cve.cve_helper import CveHelper
 class CvePaginateDataTest(unittest.TestCase):
 
     def setUp(self):
-        self.helper = CveHelper()
         self.cves = [
             {
                 "id": "CVE-2023-1001",
@@ -34,7 +33,7 @@ class CvePaginateDataTest(unittest.TestCase):
         ]
 
     def test_paginate_cve_list(self):
-        paginated_cves = self.helper.paginate_cve_list(
+        paginated_cves = CveHelper.paginate_cve_list(
             self.cves, page=1, page_size=2
         )
         self.assertEqual(paginated_cves["page"], 1)

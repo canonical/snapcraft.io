@@ -4,7 +4,6 @@ from webapp.publisher.cve.cve_helper import CveHelper
 
 class CveSortDataTest(unittest.TestCase):
     def setUp(self):
-        self.helper = CveHelper()
         self.cves = [
             {
                 "id": "CVE-2023-1001",
@@ -33,7 +32,7 @@ class CveSortDataTest(unittest.TestCase):
         ]
 
     def test_sort_by_cvss_severity_asc(self):
-        sorted_cves = self.helper.sort_cve_data(
+        sorted_cves = CveHelper.sort_cve_data(
             self.cves, "cvss_severity", "asc"
         )
         self.assertEqual(
@@ -47,7 +46,7 @@ class CveSortDataTest(unittest.TestCase):
         )
 
     def test_sort_by_cvss_severity_desc(self):
-        sorted_cves = self.helper.sort_cve_data(
+        sorted_cves = CveHelper.sort_cve_data(
             self.cves, "cvss_severity", "desc"
         )
         self.assertEqual(
@@ -61,7 +60,7 @@ class CveSortDataTest(unittest.TestCase):
         )
 
     def test_sort_by_ubuntu_priority_asc(self):
-        sorted_cves = self.helper.sort_cve_data(
+        sorted_cves = CveHelper.sort_cve_data(
             self.cves, "ubuntu_priority", "asc"
         )
         self.assertEqual(
@@ -75,7 +74,7 @@ class CveSortDataTest(unittest.TestCase):
         )
 
     def test_sort_by_cvss_score_desc(self):
-        sorted_cves = self.helper.sort_cve_data(
+        sorted_cves = CveHelper.sort_cve_data(
             self.cves, "cvss_score", "desc"
         )
         self.assertEqual(
@@ -89,7 +88,7 @@ class CveSortDataTest(unittest.TestCase):
         )
 
     def test_sort_by_unknown_field(self):
-        sorted_cves = self.helper.sort_cve_data(self.cves, "id", "asc")
+        sorted_cves = CveHelper.sort_cve_data(self.cves, "id", "asc")
         self.assertEqual(
             [cve["id"] for cve in sorted_cves],
             [
