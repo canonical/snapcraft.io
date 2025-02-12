@@ -299,7 +299,9 @@ def post_preview(snap_name):
     icon = helpers.get_icon(context["images"])
     context["screenshots"] = filter_screenshots(context["images"])
     context["icon_url"] = icon
-    context["video"] = get_video(context["images"])
+
+    if context["video"]:
+        context["video"] = get_video(context["video"])
 
     # Channel map
     context["channel_map"] = []
