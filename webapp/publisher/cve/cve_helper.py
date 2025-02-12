@@ -24,6 +24,7 @@ class CveHelper:
     """
     Provides CVE data through GitHub by using snapcraft-web@canonical.com.
     """
+
     @staticmethod
     def _get_cve_file_metadata(file_path):
         url = (
@@ -121,7 +122,9 @@ class CveHelper:
         )
 
         if file_metadata:
-            return CveHelper._fetch_file_content(snap_name, revision, file_metadata)
+            return CveHelper._fetch_file_content(
+                snap_name, revision, file_metadata
+            )
         return []
 
     @staticmethod

@@ -92,6 +92,8 @@ def get_cves(snap_name, revision):
         ubuntu_priorities,
     )
     cves = CveHelper.sort_cve_data(cves=cves, order=order, sort_by=sort_by)
-    cves = CveHelper.paginate_cve_list(cves=cves, page=page, page_size=page_size)
+    cves = CveHelper.paginate_cve_list(
+        cves=cves, page=page, page_size=page_size
+    )
 
     return flask.jsonify({"success": True, **cves})

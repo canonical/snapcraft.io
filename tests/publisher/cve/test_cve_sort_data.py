@@ -74,9 +74,7 @@ class CveSortDataTest(unittest.TestCase):
         )
 
     def test_sort_by_cvss_score_desc(self):
-        sorted_cves = CveHelper.sort_cve_data(
-            self.cves, "cvss_score", "desc"
-        )
+        sorted_cves = CveHelper.sort_cve_data(self.cves, "cvss_score", "desc")
         self.assertEqual(
             [cve["id"] for cve in sorted_cves],
             [
