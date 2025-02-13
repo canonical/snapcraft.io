@@ -153,14 +153,23 @@ class CveHelper:
 
         is_user_collaborator = snap_name in account_info["snaps"]["16"]
 
-        can_view_cves = False
-        if is_user_snap_publisher or is_user_admin:
-            can_view_cves = True
-        elif is_snap_in_global_store:
-            if is_user_collaborator or (
-                is_snap_publisher_canonical and is_user_canonical
-            ):
-                can_view_cves = True
+        is_privileged_user = is_user_snap_publisher or is_user_admin
+        is_user_canonical_publisher = (
+            is_snap_publisher_canonical and is_user_canonical
+        )
+        has_store_access = is_snap_in_global_store and (
+            is_user_collaborator or is_user_canonical_publisher
+        )
+
+        # To access the CVE data of a snap, a user must meet
+        # the following criteria:
+        # - For all stores, the user must be
+        #   the publisher of the snap or have admin privileges.
+        # - For non-Canonical snaps published
+        #   in the global store, the user must be a collaborator.
+        # - For Canonical snaps published
+        #   in the global store, the user must be a Canonical publisher.
+        can_view_cves = is_privileged_user or has_store_access
 
         return can_view_cves
 
