@@ -70,7 +70,7 @@ Register new Snap name
       {% endfor %}
     </div>
   {% endif %}
- 
+
   <div class="u-fixed-width toggle-nofication">
     <div class="p-notification--information">
       <div class="p-notification__content">
@@ -88,46 +88,36 @@ Register new Snap name
       <div class="row">
         <div class="col-8">
           <label for="snap-store">Store</label>
-          <div class="p-form-validation__field">
-            <select name="store" id="snap-store">
-              <option value="ubuntu" {% if store=="ubuntu" %} selected {% endif %}>Global</option>
-              {% for available_store in available_stores %}
-                <option value="{{ available_store.id }}" {% if store==available_store.id %} selected {% endif %}>{{ available_store.name }}</option>
-              {% endfor %}
-            </select>
-          </div>
+          <select name="store" id="snap-store">
+            <option value="ubuntu" {% if store=="ubuntu" %} selected {% endif %}>Global</option>
+            {% for available_store in available_stores %}
+              <option value="{{ available_store.id }}" {% if store==available_store.id %} selected {% endif %}>{{ available_store.name }}</option>
+            {% endfor %}
+          </select>
         </div>
       </div>
     {% endif %}
-    
+
     <div class="row">
       <div class="col-8">
         <div class="p-form-validation">
           <label for="snap-name">Snap name</label>
-          <div class="p-form-validation__field">
-            <input class="p-form-validation__input" type="text" name="snap-name" id="snap-name" required maxlength="40" value="{{ snap_name }}" />
-          </div>
+          <input class="p-form-validation__input" type="text" name="snap-name" id="snap-name" required maxlength="40" value="{{ snap_name }}" />
         </div>
 
         {% if available_stores %}
           <div class="p-form-validation">
             <label for="public">Snap privacy</label>
             <p class="p-form-help-text">This can be changed at any time after the initial upload</p>
-            <div class="p-form-validation__field">
-              <div>
-                <label>
-                  <input type="radio" name="is_private" value="public" class="p-form-validation__input" id="public" aria-labelledby="register-snap-public">
-                  <span id="register-snap-public">Public</span>
-                </label>
-              </div>
-              <div>
-                <label>
-                  <input type="radio" name="is_private" value="private" class="p-form-validation__input" id="private" aria-labelledby="register-snap-private">
-                  <span id="register-snap-private">Private</span>
-                </label>
-                <p class="p-form-help-text" style="margin-left: 1.5rem;">Snap is hidden in stores and only accessible by the publisher and collaborators</p>
-              </div>
-            </div>
+            <label class="p-radio">
+              <input type="radio" name="is_private" value="public" class="p-radio__input" id="public" aria-labelledby="register-snap-public">
+              <span class="p-radio__label" id="register-snap-public">Public</span>
+            </label>
+            <label class="p-radio">
+              <input type="radio" name="is_private" value="private" class="p-radio__input" id="private" aria-labelledby="register-snap-private">
+              <span class="p-radio__label" id="register-snap-private">Private</span>
+            </label>
+            <p class="p-form-help-text is-tick-element">Snap is hidden in stores and only accessible by the publisher and collaborators</p>
           </div>
         {% endif %}
 
@@ -140,8 +130,8 @@ Register new Snap name
 
     <div class="u-fixed-width">
       <div class="u-clearfix u-align--right">
-        <input type="submit" class="p-button--positive u-no-margin--top u-float-right" value="Register"/>
-        <a class="p-button u-float-right" href="/account/snaps">Cancel</a>
+        <input type="submit" class="p-button--positive" value="Register"/>
+        <a class="p-button" href="/account/snaps">Cancel</a>
       </div>
     </div>
   </form>
@@ -177,7 +167,7 @@ Register new Snap name
       toggleNotification.style.display = "none"
       publicRadioButton.disabled = false
       privateRadioButton.disabled = false
-    
+
     }
   })
 </script>
