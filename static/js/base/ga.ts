@@ -8,7 +8,7 @@ type Events = {
 const events: Events = {
   ".global-nav a": "nav-0",
   ".p-navigation a": "nav-1",
-  ".p-sticky-footer a": "footer-0",
+  "#footer a": "footer-0",
   "#main-content .p-button--positive": "content-cta-0",
   ".p-strip .p-button--positive": "content-cta-0",
   "#main-content .p-button": "content-cta-1",

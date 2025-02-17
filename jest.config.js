@@ -1,5 +1,5 @@
 module.exports = {
-  testEnvironment: "jsdom",
+  testEnvironment: "jest-fixed-jsdom",
   testEnvironmentOptions: {
     url: "http://localhost.test",
   },

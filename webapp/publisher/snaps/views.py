@@ -15,6 +15,7 @@ from webapp import authentication
 from webapp.helpers import api_publisher_session, launchpad
 from webapp.api.exceptions import ApiError
 from webapp.decorators import exchange_required, login_required
+from webapp.publisher.cve import cve_views
 from webapp.publisher.snaps import (
     build_views,
     listing_views,
@@ -277,6 +278,12 @@ publisher_snaps.add_url_rule(
 publisher_snaps.add_url_rule(
     "/api/<snap_name>/settings",
     view_func=settings_views.get_settings_data,
+)
+
+# CVE API
+publisher_snaps.add_url_rule(
+    "/api/snaps/cve/<snap_name>/<revision>",
+    view_func=cve_views.get_cves,
 )
 
 

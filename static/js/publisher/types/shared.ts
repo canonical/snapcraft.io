@@ -164,3 +164,5 @@ export type UsePoliciesResponse = {
 export type ApiError = {
   message: string;
 };
+
+export type EventFunction<T> = (value: T) => void;

@@ -179,7 +179,12 @@ function ListingForm({ data, refetch }: Props): JSX.Element {
         </Strip>
       </form>
       {snapId && (
-        <PreviewForm snapName={snapId} getValues={getValues} watch={watch} />
+        <PreviewForm
+          snapName={snapId}
+          getValues={getValues}
+          watch={watch}
+          data={data}
+        />
       )}
     </>
   );
