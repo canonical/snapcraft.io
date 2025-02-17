@@ -72,6 +72,7 @@ function ListingDetails({
         fileTypes="image/png, image/jpeg, image/svg+xml"
         tourLabel="listing-icon"
         hasDarkThemePreview={true}
+        type="icon"
       />
 
       <Row className="p-form__group" data-tour="listing-title">
@@ -235,6 +236,7 @@ function ListingDetails({
         fileTypes="image/png, image/jpeg"
         helpText="Adding a featured banner will increase your chances of being featured on snapcraft.io and in GNOME software but does not immediately make you eligible to be featured."
         tourLabel="listing-banner"
+        type="banner"
       />
 
       <Row className="p-form__group" data-tour="listing-summary">
