@@ -29,6 +29,9 @@ function SnapsFilter({
 }: Props): ReactNode {
   return (
     <div className="p-search-box">
+      <label htmlFor="search-snaps" className="u-off-screen">
+        Search snaps
+      </label>
       <input
         type="search"
         className="p-search-box__input"
