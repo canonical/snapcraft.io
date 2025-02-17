@@ -2,8 +2,8 @@
 import flask
 from flask.json import jsonify
 
-from canonicalwebteam.store_api.stores.snapstore import SnapPublisher
-from canonicalwebteam.store_api.exceptions import StoreApiResponseErrorList
+from canonicalwebteam.store_api.dashboard import Dashboard
+from canonicalwebteam.exceptions import StoreApiResponseErrorList
 
 # Local
 import webapp.api.marketo as marketo_api
@@ -16,7 +16,7 @@ account = flask.Blueprint(
 )
 
 marketo = marketo_api.Marketo()
-publisher_api = SnapPublisher(api_publisher_session)
+dashboard = Dashboard(api_publisher_session)
 
 
 @account.route("/")
@@ -66,7 +66,7 @@ def get_agreement():
 def post_agreement():
     agreed = flask.request.form.get("i_agree")
     if agreed == "on":
-        publisher_api.post_agreement(flask.session, True)
+        dashboard.post_agreement(flask.session, True)
         return flask.redirect(flask.url_for(".get_account"))
     else:
         return flask.redirect(flask.url_for(".get_agreement"))
@@ -86,7 +86,7 @@ def post_account_name():
     if username:
         errors = []
         try:
-            publisher_api.post_username(flask.session, username)
+            dashboard.post_username(flask.session, username)
         except StoreApiResponseErrorList as api_response_error_list:
             errors = errors + api_response_error_list.errors
 

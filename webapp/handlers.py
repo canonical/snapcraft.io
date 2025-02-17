@@ -23,7 +23,7 @@ from webapp.config import (
     DNS_VERIFICATION_SALT,
 )
 
-from canonicalwebteam.store_api.exceptions import (
+from canonicalwebteam.exceptions import (
     StoreApiError,
     StoreApiConnectionError,
     StoreApiResourceNotFound,
@@ -418,9 +418,9 @@ def set_handlers(app):
         )
         response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
         response.headers["Cross-Origin-Embedder-Policy"] = "unsafe-none"
-        response.headers["Cross-Origin-Opener-Policy"] = (
-            "same-origin-allow-popups"
-        )
+        response.headers[
+            "Cross-Origin-Opener-Policy"
+        ] = "same-origin-allow-popups"
         response.headers["Cross-Origin-Resource-Policy"] = "cross-origin"
         response.headers["X-Permitted-Cross-Domain-Policies"] = "none"
         return response

@@ -1,27 +1,24 @@
 # Packages
 import flask
-from canonicalwebteam.store_api.stores.snapstore import (
-    SnapStore,
-    SnapPublisher,
-)
-from canonicalwebteam.store_api.exceptions import StoreApiError
+from canonicalwebteam.store_api.dashboard import Dashboard
+from canonicalwebteam.store_api.devicegw import DeviceGW
+from canonicalwebteam.exceptions import StoreApiError
 
 # Local
-from webapp.helpers import api_publisher_session
+from webapp.helpers import api_session
 from webapp.decorators import login_required
 
-store_api = SnapStore(api_publisher_session)
-publisher_api = SnapPublisher(api_publisher_session)
+dashboard = Dashboard(api_session)
+device_gateway = DeviceGW("snap", api_session)
 
 
 @login_required
 def get_publicise_data(snap_name):
-
-    snap_details = publisher_api.get_snap_info(snap_name, flask.session)
+    snap_details = dashboard.get_snap_info(flask.session, snap_name)
 
     try:
-        snap_public_details = store_api.get_item_details(
-            snap_name, api_version=2
+        snap_public_details = device_gateway.get_item_details(
+            snap_name, api_version=2, fields=["trending", "private"]
         )
         trending = snap_public_details["snap"]["trending"]
     except StoreApiError:
@@ -41,5 +38,5 @@ def get_publicise_data(snap_name):
 @login_required
 def get_publicise(snap_name):
     # If this fails, the page will 404
-    publisher_api.get_snap_info(snap_name, flask.session)
+    dashboard.get_snap_info(flask.session, snap_name)
     return flask.render_template("store/publisher.html", snap_name=snap_name)

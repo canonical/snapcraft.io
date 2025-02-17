@@ -1,4 +1,5 @@
-import talisker
+from canonicalwebteam.store_api.dashboard import Dashboard
+
 from webapp.decorators import login_required
 import flask
 from flask import (
@@ -12,12 +13,8 @@ from webapp.packages.logic import (
     get_package,
     get_snaps_account_info,
 )
-from webapp.config import APP_NAME
+from webapp.helpers import api_session
 
-from canonicalwebteam.store_api.stores.snapstore import (
-    SnapStore,
-    SnapPublisher,
-)
 
 FIELDS = [
     "title",
@@ -31,38 +28,15 @@ store_packages = Blueprint(
     "package",
     __name__,
 )
-#    "store": SnapStore,
-#         "publisher": SnapPublisher,
-#         "fields": [
-#             "title",
-#             "summary",
-#             "media",
-#             "publisher",
-#             "categories",
-#         ],
-#         "permissions": [
-#             "edit_account",
-#             "package_access",
-#             "package_metrics",
-#             "package_register",
-#             "package_release",
-#             "package_update",
-#             "package_upload_request",
-#             "store_admin",
-#         ],
-#         "size": 15,
+
+dashboard = Dashboard(api_session)
 
 
 @store_packages.route("/store.json")
 def get_store_packages():
     args = dict(request.args)
-    libraries = bool(args.pop("fields", ""))
 
-    res = make_response(
-        get_packages(
-            SnapStore, SnapPublisher, APP_NAME, libraries, FIELDS, 15, args
-        )
-    )
+    res = make_response(get_packages(FIELDS, 15, args))
     return res
 
 
@@ -77,9 +51,7 @@ def package(package_type):
     packages.
     """
 
-    publisher_api = SnapPublisher(talisker.requests.get_session())
-
-    account_info = publisher_api.get_account(flask.session)
+    account_info = dashboard.get_account(flask.session)
 
     user_snaps, registered_snaps = get_snaps_account_info(account_info)
     flask_user = flask.session["publisher"]
@@ -97,13 +69,9 @@ def package(package_type):
 
 @store_packages.route("/<package_name>/card.json")
 def get_store_package(package_name):
-
     has_libraries = bool(request.args.get("fields", ""))
     res = make_response(
         get_package(
-            SnapStore,
-            SnapPublisher,
-            APP_NAME,
             package_name,
             FIELDS,
             has_libraries,

@@ -4,7 +4,7 @@ from hashlib import md5
 
 # Packages
 import flask
-from canonicalwebteam.store_api.stores.snapstore import SnapPublisher
+from canonicalwebteam.store_api.dashboard import Dashboard
 
 from requests.exceptions import HTTPError
 
@@ -19,7 +19,7 @@ from werkzeug.exceptions import Unauthorized
 GITHUB_SNAPCRAFT_USER_TOKEN = os.getenv("GITHUB_SNAPCRAFT_USER_TOKEN")
 GITHUB_WEBHOOK_HOST_URL = os.getenv("GITHUB_WEBHOOK_HOST_URL")
 BUILDS_PER_PAGE = 15
-publisher_api = SnapPublisher(api_publisher_session)
+dashboard = Dashboard(api_publisher_session)
 
 
 def get_builds(lp_snap, selection):
@@ -70,11 +70,11 @@ def get_snap_repo(snap_name):
     res = {"message": "", "success": True}
     data = {"github_orgs": [], "github_repository": None, "github_user": None}
 
-    details = publisher_api.get_snap_info(snap_name, flask.session)
+    details = dashboard.get_snap_info(flask.session, snap_name)
 
     # API call to make users without needed permissions refresh the session
     # Users needs package_upload_request permission to use this feature
-    publisher_api.get_package_upload_macaroon(
+    dashboard.get_package_upload_macaroon(
         session=flask.session, snap_name=snap_name, channels=["edge"]
     )
 
@@ -121,14 +121,14 @@ def get_snap_repo(snap_name):
 @login_required
 def get_snap_builds_page(snap_name):
     # If this fails, the page will 404
-    publisher_api.get_snap_info(snap_name, flask.session)
+    dashboard.get_snap_info(flask.session, snap_name)
     return flask.render_template("store/publisher.html", snap_name=snap_name)
 
 
 @login_required
 def get_snap_build_page(snap_name, build_id):
     # If this fails, the page will 404
-    publisher_api.get_snap_info(snap_name, flask.session)
+    dashboard.get_snap_info(flask.session, snap_name)
     return flask.render_template(
         "store/publisher.html", snap_name=snap_name, build_id=build_id
     )
@@ -139,7 +139,7 @@ def get_snap_builds(snap_name):
     res = {"message": "", "success": True}
     data = {"snap_builds": [], "total_builds": 0}
 
-    details = publisher_api.get_snap_info(snap_name, flask.session)
+    details = dashboard.get_snap_info(flask.session, snap_name)
     start = flask.request.args.get("start", 0, type=int)
     size = flask.request.args.get("size", 15, type=int)
     build_slice = slice(start, size)
@@ -157,7 +157,7 @@ def get_snap_builds(snap_name):
 
 @login_required
 def get_snap_build(snap_name, build_id):
-    details = publisher_api.get_snap_info(snap_name, flask.session)
+    details = dashboard.get_snap_info(flask.session, snap_name)
 
     context = {
         "snap_id": details["snap_id"],
@@ -243,7 +243,7 @@ def validate_repo(github_token, snap_name, gh_owner, gh_repo):
 
 @login_required
 def get_validate_repo(snap_name):
-    details = publisher_api.get_snap_info(snap_name, flask.session)
+    details = dashboard.get_snap_info(flask.session, snap_name)
 
     owner, repo = flask.request.args.get("repo").split("/")
 
@@ -259,10 +259,10 @@ def get_validate_repo(snap_name):
 
 @login_required
 def post_snap_builds(snap_name):
-    details = publisher_api.get_snap_info(snap_name, flask.session)
+    details = dashboard.get_snap_info(flask.session, snap_name)
 
     # Don't allow changes from Admins that are no contributors
-    account_snaps = publisher_api.get_account_snaps(flask.session)
+    account_snaps = dashboard.get_account_snaps(flask.session)
 
     if snap_name not in account_snaps:
         flask.flash(
@@ -316,7 +316,7 @@ def post_snap_builds(snap_name):
             )
             return flask.redirect(redirect_url)
 
-        macaroon = publisher_api.get_package_upload_macaroon(
+        macaroon = dashboard.get_package_upload_macaroon(
             session=flask.session, snap_name=snap_name, channels=["edge"]
         )["macaroon"]
 
@@ -355,7 +355,7 @@ def post_snap_builds(snap_name):
 @login_required
 def post_build(snap_name):
     # Don't allow builds from no contributors
-    account_snaps = publisher_api.get_account_snaps(flask.session)
+    account_snaps = dashboard.get_account_snaps(flask.session)
 
     if snap_name not in account_snaps:
         return flask.jsonify(
@@ -394,7 +394,7 @@ def post_build(snap_name):
 @login_required
 def check_build_request(snap_name, build_id):
     # Don't allow builds from no contributors
-    account_snaps = publisher_api.get_account_snaps(flask.session)
+    account_snaps = dashboard.get_account_snaps(flask.session)
 
     if snap_name not in account_snaps:
         return flask.jsonify(
@@ -439,7 +439,7 @@ def check_build_request(snap_name, build_id):
 
 @login_required
 def post_disconnect_repo(snap_name):
-    details = publisher_api.get_snap_info(snap_name, flask.session)
+    details = dashboard.get_snap_info(flask.session, snap_name)
 
     lp_snap = launchpad.get_snap_by_store_name(snap_name)
     launchpad.delete_snap(details["snap_name"])
@@ -529,7 +529,7 @@ def post_github_webhook(snap_name=None, github_owner=None, github_repo=None):
 
 @login_required
 def get_update_gh_webhooks(snap_name):
-    details = publisher_api.get_snap_info(snap_name, flask.session)
+    details = dashboard.get_snap_info(flask.session, snap_name)
 
     lp_snap = launchpad.get_snap_by_store_name(details["snap_name"])
 

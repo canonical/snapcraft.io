@@ -365,7 +365,6 @@ class GetCountryMetric(TestCase):
         mock_get_item_details,
         mock_is_authenticated,
     ):
-
         mock_is_authenticated.return_value = True
 
         countries = [

@@ -6,7 +6,7 @@ import flask
 from canonicalwebteam.launchpad import Launchpad
 from ruamel.yaml import YAML
 from webapp.api.requests import PublisherSession, Session
-from canonicalwebteam.store_api.stores.snapstore import SnapPublisher
+from canonicalwebteam.store_api.dashboard import Dashboard
 import webapp.api.marketo as marketo_api
 
 _yaml = YAML(typ="rt")
@@ -14,7 +14,7 @@ _yaml_safe = YAML(typ="safe")
 api_session = Session()
 api_publisher_session = PublisherSession()
 marketo = marketo_api.Marketo()
-publisher_api = SnapPublisher(api_publisher_session)
+dashboard = Dashboard(api_session)
 
 launchpad = Launchpad(
     username=os.getenv("LP_API_USERNAME"),
@@ -109,7 +109,7 @@ def get_publisher_data():
     # We don't use the data from this endpoint.
     # It is mostly used to make sure the user has signed
     # the terms and conditions.
-    publisher_api.get_account(flask.session)
+    dashboard.get_account(flask.session)
 
     flask_user = flask.session["publisher"]
 

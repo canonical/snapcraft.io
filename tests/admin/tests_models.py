@@ -1,7 +1,7 @@
 from unittest.mock import patch
 
 from canonicalwebteam.candid import CandidClient
-from canonicalwebteam.store_api.exceptions import (
+from canonicalwebteam.exceptions import (
     StoreApiResponseErrorList,
     StoreApiResourceNotFound,
 )
@@ -13,7 +13,6 @@ candid = CandidClient(api_publisher_session)
 
 
 class TestModelServiceEndpoints(TestAdminEndpoints):
-
     def setUp(self):
         self.api_key = "qwertyuioplkjhgfdsazxcvbnmkiopuytrewqasdfghjklmnbv"
         super().setUp()
