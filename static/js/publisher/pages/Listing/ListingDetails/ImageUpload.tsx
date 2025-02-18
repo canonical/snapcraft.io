@@ -1,4 +1,5 @@
 import { useState, SyntheticEvent } from "react";
+import { useParams } from "react-router-dom";
 import {
   UseFormRegister,
   UseFormSetValue,
@@ -42,6 +43,7 @@ type Props = {
   fileTypes: string;
   tourLabel: string;
   hasDarkThemePreview?: boolean;
+  type: string;
 };
 
 function validateAspectRatio(
@@ -78,7 +80,9 @@ function ImageUpload({
   fileTypes,
   tourLabel,
   hasDarkThemePreview,
+  type,
 }: Props) {
+  const { snapId } = useParams();
   const [showImageRestrictions, setShowImageRestrictions] = useState(false);
   const [imageVaidationError, setImageValidationError] = useState("");
   const [imageIsValid, setImageIsValid] = useState(true);
@@ -202,7 +206,7 @@ function ImageUpload({
                     src={getValues(imageUrlFieldKey)}
                     width={previewWidth}
                     height={previewHeight}
-                    alt=""
+                    alt={`${snapId} icon`}
                   />
                   <div
                     className="snap-image-upload-edit"
@@ -263,9 +267,8 @@ function ImageUpload({
                   setPreviewImageUrl("");
                 }}
               >
-                <Icon name="delete" light={isDark}>
-                  Remove image
-                </Icon>
+                <Icon name="delete" light={isDark} />
+                <span className="u-off-screen">Remove {type}</span>
               </button>
             )}
           </div>
@@ -304,9 +307,19 @@ function ImageUpload({
           }}
         >
           <small>
-            {showImageRestrictions
-              ? "Hide image restrictions"
-              : "Show image restrictions"}
+            {showImageRestrictions && (
+              <>
+                Hide image restrictions{" "}
+                <span className="u-off-screen">for {type}</span>
+              </>
+            )}
+
+            {!showImageRestrictions && (
+              <>
+                Show image restrictions{" "}
+                <span className="u-off-screen">for {type}</span>
+              </>
+            )}
           </small>
         </button>
         {showImageRestrictions && (
