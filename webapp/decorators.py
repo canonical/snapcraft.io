@@ -4,12 +4,12 @@ import functools
 # Third party packages
 import flask
 
-from canonicalwebteam.store_api.stores.snapstore import SnapPublisher
+from canonicalwebteam.store_api.publishergw import PublisherGW
 
 from webapp import authentication
 from webapp.helpers import api_publisher_session
 
-publisher_api = SnapPublisher(api_publisher_session)
+publisher_gateway = PublisherGW(api_publisher_session)
 
 
 def login_required(func):
@@ -33,7 +33,9 @@ def exchange_required(func):
     @functools.wraps(func)
     def is_exchanged(*args, **kwargs):
         if "exchanged_developer_token" not in flask.session:
-            result = publisher_api.exchange_dashboard_macaroons(flask.session)
+            result = publisher_gateway.exchange_dashboard_macaroons(
+                flask.session
+            )
             flask.session["developer_token"] = result
             flask.session["exchanged_developer_token"] = True
         return func(*args, **kwargs)

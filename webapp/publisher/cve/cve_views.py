@@ -1,11 +1,11 @@
 import flask
-from canonicalwebteam.store_api.stores.snapstore import SnapPublisher
+from canonicalwebteam.store_api.dashboard import Dashboard
 
 from webapp.helpers import api_publisher_session
 from webapp.decorators import login_required
 from webapp.publisher.cve.cve_helper import CveHelper
 
-publisher_api = SnapPublisher(api_publisher_session)
+dashboard = Dashboard(api_publisher_session)
 
 
 @login_required
@@ -60,8 +60,8 @@ def get_cves(snap_name, revision):
     page = flask.request.args.get("page", default=1, type=int)
     page_size = flask.request.args.get("page_size", default=10, type=int)
 
-    snap_details = publisher_api.get_snap_info(snap_name, flask.session)
-    account_info = publisher_api.get_account(flask.session)
+    snap_details = dashboard.get_snap_info(snap_name, flask.session)
+    account_info = dashboard.get_account(flask.session)
     is_user_canonical = flask.session["publisher"].get("is_canonical", False)
     can_view_cves = CveHelper.can_user_access_cve_data(
         snap_name=snap_name,

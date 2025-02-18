@@ -1,11 +1,11 @@
 from unittest.mock import patch
-from canonicalwebteam.store_api.exceptions import StoreApiResponseErrorList
+from canonicalwebteam.exceptions import StoreApiResponseErrorList
 
 from tests.admin.tests_models import TestModelServiceEndpoints
 
 
 class TestGetBrandStoreEndpoint(TestModelServiceEndpoints):
-    @patch("webapp.admin.views.admin_api.get_brand")
+    @patch("canonicalwebteam.store_api.publishergw.PublisherGW.get_brand")
     def test_successful_get_brand_store(self, mock_get_brand):
         mock_get_brand.return_value = {"name": "BrandName"}
 
@@ -16,7 +16,7 @@ class TestGetBrandStoreEndpoint(TestModelServiceEndpoints):
         self.assertTrue(data["success"])
         self.assertEqual(data["data"], {"name": "BrandName"})
 
-    @patch("webapp.admin.views.admin_api.get_brand")
+    @patch("canonicalwebteam.store_api.publishergw.PublisherGW.get_brand")
     def test_failed_get_brand_store(self, mock_get_brand):
         mock_get_brand.side_effect = StoreApiResponseErrorList(
             "error", 400, [{"message": "error"}]

@@ -6,16 +6,16 @@ class TestUpdateFeaturedSnaps(TestAdminEndpoints):
     def setUp(self):
         self.mock_flask = patch("webapp.admin.views.flask").start()
         self.mock_get_snap_id = patch(
-            "webapp.admin.views.publisher_api.get_snap_id"
+            "webapp.admin.views.dashboard.get_snap_id"
         ).start()
         self.mock_get_featured_snaps = patch(
-            "webapp.admin.views.admin_api.get_featured_snaps"
+            "webapp.admin.views.device_gateway.get_featured_snaps"
         ).start()
         self.mock_delete_featured_snaps = patch(
-            "webapp.admin.views.admin_api.delete_featured_snaps"
+            "webapp.admin.views.publisher_gateway.delete_featured_snaps"
         ).start()
         self.mock_update_featured_snaps = patch(
-            "webapp.admin.views.admin_api.update_featured_snaps"
+            "webapp.admin.views.publisher_gateway.update_featured_snaps"
         ).start()
         super().setUp()
 

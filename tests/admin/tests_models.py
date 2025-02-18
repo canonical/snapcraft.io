@@ -1,7 +1,7 @@
 from unittest.mock import patch
 
 from canonicalwebteam.candid import CandidClient
-from canonicalwebteam.store_api.exceptions import (
+from canonicalwebteam.exceptions import (
     StoreApiResponseErrorList,
     StoreApiResourceNotFound,
 )
@@ -13,14 +13,15 @@ candid = CandidClient(api_publisher_session)
 
 
 class TestModelServiceEndpoints(TestAdminEndpoints):
-
     def setUp(self):
         self.api_key = "qwertyuioplkjhgfdsazxcvbnmkiopuytrewqasdfghjklmnbv"
         super().setUp()
 
 
 class TestGetModels(TestModelServiceEndpoints):
-    @patch("webapp.admin.views.admin_api.get_store_models")
+    @patch(
+        "canonicalwebteam.store_api.publishergw.PublisherGW.get_store_models"
+    )
     def test_get_models(self, mock_get_store_models):
         mock_get_store_models.return_value = {
             "models": [{"name": "test_model"}]
@@ -32,7 +33,9 @@ class TestGetModels(TestModelServiceEndpoints):
         self.assertEqual(response.status_code, 200)
         self.assertIsNotNone(data["data"])
 
-    @patch("webapp.admin.views.admin_api.get_store_models")
+    @patch(
+        "canonicalwebteam.store_api.publishergw.PublisherGW.get_store_models"
+    )
     def test_store_has_no_models(self, mock_get_store_models):
         mock_get_store_models.return_value = {"models": []}
 
@@ -44,7 +47,9 @@ class TestGetModels(TestModelServiceEndpoints):
         self.assertTrue(success)
         self.assertEqual(data["models"], [])
 
-    @patch("webapp.admin.views.admin_api.get_store_models")
+    @patch(
+        "canonicalwebteam.store_api.publishergw.PublisherGW.get_store_models"
+    )
     def test_invalid_store_id(self, mock_get_store_models):
         mock_get_store_models.side_effect = StoreApiResponseErrorList(
             "Store not found",
@@ -59,7 +64,9 @@ class TestGetModels(TestModelServiceEndpoints):
         self.assertFalse(data["success"])
         self.assertIn("Store not found", data["message"])
 
-    @patch("webapp.admin.views.admin_api.get_store_models")
+    @patch(
+        "canonicalwebteam.store_api.publishergw.PublisherGW.get_store_models"
+    )
     def test_unauthorized_user(self, mock_get_store_models):
         mock_get_store_models.side_effect = StoreApiResponseErrorList(
             "unauthorized", 401, [{"message": "unauthorized"}]
@@ -74,7 +81,9 @@ class TestGetModels(TestModelServiceEndpoints):
 
 
 class TestCreateModel(TestModelServiceEndpoints):
-    @patch("webapp.admin.views.admin_api.create_store_model")
+    @patch(
+        "canonicalwebteam.store_api.publishergw.PublisherGW.create_store_model"
+    )
     def test_create_model(self, mock_create_store_model):
         mock_create_store_model.return_value = None
 
@@ -116,7 +125,9 @@ class TestCreateModel(TestModelServiceEndpoints):
 
 
 class TestUpdateModel(TestModelServiceEndpoints):
-    @patch("webapp.admin.views.admin_api.update_store_model")
+    @patch(
+        "canonicalwebteam.store_api.publishergw.PublisherGW.update_store_model"
+    )
     def test_update_model(self, mock_update_store_model):
         mock_update_store_model.return_value = None
 
@@ -140,7 +151,9 @@ class TestUpdateModel(TestModelServiceEndpoints):
         self.assertFalse(data["success"])
         self.assertEqual(data["message"], "Invalid API key")
 
-    @patch("webapp.admin.views.admin_api.update_store_model")
+    @patch(
+        "canonicalwebteam.store_api.publishergw.PublisherGW.update_store_model"
+    )
     def test_model_not_found(self, mock_update_store_model):
         mock_update_store_model.side_effect = StoreApiResourceNotFound(
             "Model not found", 404, [{"message": "Model not found"}]

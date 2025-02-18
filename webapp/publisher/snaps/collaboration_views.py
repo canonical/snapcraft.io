@@ -1,22 +1,18 @@
 # Packages
 import flask
 from flask import json
-from canonicalwebteam.store_api.stores.snapstore import (
-    SnapPublisher,
-    SnapStore,
-)
+from canonicalwebteam.store_api.dashboard import Dashboard
 
 # Local
 from webapp.helpers import api_publisher_session
 from webapp.decorators import login_required
 
-store_api = SnapStore(api_publisher_session)
-publisher_api = SnapPublisher(api_publisher_session)
+dashboard = Dashboard(api_publisher_session)
 
 
 @login_required
 def get_collaboration_snap(snap_name):
-    snap_details = publisher_api.get_snap_info(snap_name, flask.session)
+    snap_details = dashboard.get_snap_info(flask.session, snap_name)
 
     context = {
         "snap_id": snap_details["snap_id"],
