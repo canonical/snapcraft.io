@@ -5,7 +5,10 @@ from tests.admin.tests_models import TestModelServiceEndpoints
 
 
 class TestGetPolicies(TestModelServiceEndpoints):
-    @patch("webapp.admin.views.admin_api.get_store_model_policies")
+    @patch(
+        "canonicalwebteam.store_api.publishergw."
+        "PublisherGW.get_store_model_policies"
+    )
     def test_get_policies(self, mock_get_store_model_policies):
         mock_get_store_model_policies.return_value = ["policy1", "policy2"]
 
@@ -16,7 +19,10 @@ class TestGetPolicies(TestModelServiceEndpoints):
         self.assertTrue(data["success"])
         self.assertEqual(data["data"], ["policy1", "policy2"])
 
-    @patch("webapp.admin.views.admin_api.get_store_model_policies")
+    @patch(
+        "canonicalwebteam.store_api.publishergw."
+        "PublisherGW.get_store_model_policies"
+    )
     def test_failed_get_policies(self, mock_get_store_model_policies):
         mock_get_store_model_policies.side_effect = StoreApiResponseErrorList(
             "An error occurred", 500, [{"message": "An error occurred"}]
@@ -31,8 +37,14 @@ class TestGetPolicies(TestModelServiceEndpoints):
 
 
 class TestCreatePolicies(TestModelServiceEndpoints):
-    @patch("webapp.admin.views.admin_api.get_store_signing_keys")
-    @patch("webapp.admin.views.admin_api.create_store_model_policy")
+    @patch(
+        "canonicalwebteam.store_api.publishergw."
+        "PublisherGW.get_store_signing_keys"
+    )
+    @patch(
+        "canonicalwebteam.store_api.publishergw."
+        "PublisherGW.create_store_model_policy"
+    )
     def test_create_policy(
         self, mock_create_store_model_policy, mock_get_store_signing_keys
     ):
@@ -50,7 +62,10 @@ class TestCreatePolicies(TestModelServiceEndpoints):
         self.assertEqual(response.status_code, 200)
         self.assertTrue(data["success"])
 
-    @patch("webapp.admin.views.admin_api.get_store_signing_keys")
+    @patch(
+        "canonicalwebteam.store_api.publishergw."
+        "PublisherGW.get_store_signing_keys"
+    )
     def test_missing_signing_key(self, mock_get_store_signing_keys):
         mock_get_store_signing_keys.return_value = [
             {"sha3-384": "valid_signing_key"}
@@ -66,7 +81,10 @@ class TestCreatePolicies(TestModelServiceEndpoints):
         self.assertFalse(data["success"])
         self.assertEqual(data["message"], "Signing key required")
 
-    @patch("webapp.admin.views.admin_api.get_store_signing_keys")
+    @patch(
+        "canonicalwebteam.store_api.publishergw."
+        "PublisherGW.get_store_signing_keys"
+    )
     def test_invalid_signing_key(self, mock_get_store_signing_keys):
         mock_get_store_signing_keys.return_value = [{"sha3-384": "valid_key"}]
 
@@ -80,8 +98,14 @@ class TestCreatePolicies(TestModelServiceEndpoints):
         self.assertFalse(data["success"])
         self.assertEqual(data["message"], "Invalid signing key")
 
-    @patch("webapp.admin.views.admin_api.get_store_signing_keys")
-    @patch("webapp.admin.views.admin_api.create_store_model_policy")
+    @patch(
+        "canonicalwebteam.store_api.publishergw."
+        "PublisherGW.get_store_signing_keys"
+    )
+    @patch(
+        "canonicalwebteam.store_api.publishergw."
+        "PublisherGW.create_store_model_policy"
+    )
     def test_exception_in_create_policy(
         self,
         mock_create_store_model_policy,
@@ -104,7 +128,10 @@ class TestCreatePolicies(TestModelServiceEndpoints):
 
 
 class TestDeletePolicies(TestModelServiceEndpoints):
-    @patch("webapp.admin.views.admin_api.delete_store_model_policy")
+    @patch(
+        "canonicalwebteam.store_api.publishergw."
+        "PublisherGW.delete_store_model_policy"
+    )
     def test_successful_delete_policy(self, mock_delete_store_model_policy):
         mock_delete_store_model_policy.return_value = Mock(status_code=204)
 
@@ -114,7 +141,10 @@ class TestDeletePolicies(TestModelServiceEndpoints):
         self.assertEqual(response.status_code, 200)
         self.assertTrue(data["success"])
 
-    @patch("webapp.admin.views.admin_api.delete_store_model_policy")
+    @patch(
+        "canonicalwebteam.store_api.publishergw."
+        "PublisherGW.delete_store_model_policy"
+    )
     def test_policy_not_found(self, mock_delete_store_model_policy):
         mock_delete_store_model_policy.return_value = Mock(status_code=404)
 
@@ -125,7 +155,10 @@ class TestDeletePolicies(TestModelServiceEndpoints):
         self.assertFalse(data["success"])
         self.assertEqual(data["message"], "Policy not found")
 
-    @patch("webapp.admin.views.admin_api.delete_store_model_policy")
+    @patch(
+        "canonicalwebteam.store_api.publishergw."
+        "PublisherGW.delete_store_model_policy"
+    )
     def test_exception_in_delete_policy(self, mock_delete_store_model_policy):
         mock_delete_store_model_policy.side_effect = StoreApiResponseErrorList(
             "An error occured", 500, [{"message": "An error occurred"}]

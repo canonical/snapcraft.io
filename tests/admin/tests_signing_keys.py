@@ -4,7 +4,10 @@ from canonicalwebteam.exceptions import StoreApiResponseErrorList
 
 
 class TestGetSigningKeys(TestModelServiceEndpoints):
-    @patch("webapp.admin.views.admin_api.get_store_signing_keys")
+    @patch(
+        "canonicalwebteam.store_api.publishergw."
+        "PublisherGW.get_store_signing_keys"
+    )
     def test_get_signing_keys(self, mock_get_store_signing_keys):
         mock_get_store_signing_keys.return_value = [
             {"sha3-384": "key1"},
@@ -21,7 +24,10 @@ class TestGetSigningKeys(TestModelServiceEndpoints):
             [{"sha3-384": "key1"}, {"sha3-384": "key2"}],
         )
 
-    @patch("webapp.admin.views.admin_api.get_store_signing_keys")
+    @patch(
+        "canonicalwebteam.store_api.publishergw."
+        "PublisherGW.get_store_signing_keys"
+    )
     def test_failed_get_signing_keys(self, mock_get_store_signing_keys):
         mock_get_store_signing_keys.side_effect = StoreApiResponseErrorList(
             "error", 502, [{"message": "An error occurred"}]
@@ -36,7 +42,10 @@ class TestGetSigningKeys(TestModelServiceEndpoints):
 
 
 class TestCreateSigningKeys(TestModelServiceEndpoints):
-    @patch("webapp.admin.views.admin_api.create_store_signing_key")
+    @patch(
+        "canonicalwebteam.store_api.publishergw."
+        "PublisherGW.create_store_signing_key"
+    )
     def test_create_signing_key(self, mock_create_store_signing_key):
         mock_create_store_signing_key.return_value = None
 
@@ -61,7 +70,10 @@ class TestCreateSigningKeys(TestModelServiceEndpoints):
             "Invalid signing key. Limit 128 characters",
         )
 
-    @patch("webapp.admin.views.admin_api.create_store_signing_key")
+    @patch(
+        "canonicalwebteam.store_api.publishergw."
+        "PublisherGW.create_store_signing_key"
+    )
     def test_exception_in_create_signing_key(
         self,
         mock_create_store_signing_key,
@@ -83,7 +95,10 @@ class TestCreateSigningKeys(TestModelServiceEndpoints):
 
 
 class TestDeleteSigningKeys(TestModelServiceEndpoints):
-    @patch("webapp.admin.views.admin_api.delete_store_signing_key")
+    @patch(
+        "canonicalwebteam.store_api.publishergw."
+        "PublisherGW.delete_store_signing_key"
+    )
     def test_successful_delete_signing_key(
         self,
         mock_delete_store_signing_key,
@@ -98,9 +113,18 @@ class TestDeleteSigningKeys(TestModelServiceEndpoints):
         self.assertEqual(response.status_code, 200)
         self.assertTrue(data["success"])
 
-    @patch("webapp.admin.views.admin_api.delete_store_signing_key")
-    @patch("webapp.admin.views.admin_api.get_store_models")
-    @patch("webapp.admin.views.admin_api.get_store_model_policies")
+    @patch(
+        "canonicalwebteam.store_api.publishergw."
+        "PublisherGW.delete_store_signing_key"
+    )
+    @patch(
+        "canonicalwebteam.store_api.publishergw."
+        "PublisherGW.get_store_models"
+    )
+    @patch(
+        "canonicalwebteam.store_api.publishergw."
+        "PublisherGW.get_store_model_policies"
+    )
     def test_signing_key_in_use(
         self, mock_get_policies, mock_get_models, mock_delete_store_signing_key
     ):
@@ -127,7 +151,10 @@ class TestDeleteSigningKeys(TestModelServiceEndpoints):
             [{"name": "Model1", "policies": [{"revision": "1"}]}],
         )
 
-    @patch("webapp.admin.views.admin_api.delete_store_signing_key")
+    @patch(
+        "canonicalwebteam.store_api.publishergw."
+        "PublisherGW.delete_store_signing_key"
+    )
     def test_signing_key_not_found(self, mock_delete_store_signing_key):
         mock_delete_store_signing_key.return_value = Mock(status_code=404)
 

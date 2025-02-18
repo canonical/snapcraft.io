@@ -48,13 +48,9 @@ class GetActiveDeviceMetrics(TestCase):
 
     @responses.activate
     @patch("webapp.publisher.snaps.views.authentication.is_authenticated")
+    @patch("canonicalwebteam.store_api.dashboard.Dashboard.get_snap_info")
     @patch(
-        "canonicalwebteam.store_api.stores."
-        "snapstore.SnapPublisher.get_snap_info"
-    )
-    @patch(
-        "canonicalwebteam.store_api.stores."
-        "snapstore.SnapPublisher.get_publisher_metrics"
+        "canonicalwebteam.store_api.dashboard.Dashboard.get_publisher_metrics"
     )
     def test_get_active_devices_weekly_installed_by_version(
         self,
@@ -101,13 +97,9 @@ class GetActiveDeviceMetrics(TestCase):
 
     @responses.activate
     @patch("webapp.publisher.snaps.views.authentication.is_authenticated")
+    @patch("canonicalwebteam.store_api.dashboard.Dashboard.get_snap_info")
     @patch(
-        "canonicalwebteam.store_api.stores."
-        "snapstore.SnapPublisher.get_snap_info"
-    )
-    @patch(
-        "canonicalwebteam.store_api.stores."
-        "snapstore.SnapPublisher.get_publisher_metrics"
+        "canonicalwebteam.store_api.dashboard.Dashboard.get_publisher_metrics"
     )
     def test_get_active_devices_weekly_installed_by_channel(
         self,
@@ -153,13 +145,9 @@ class GetActiveDeviceMetrics(TestCase):
 
     @responses.activate
     @patch("webapp.publisher.snaps.views.authentication.is_authenticated")
+    @patch("canonicalwebteam.store_api.dashboard.Dashboard.get_snap_info")
     @patch(
-        "canonicalwebteam.store_api.stores."
-        "snapstore.SnapPublisher.get_snap_info"
-    )
-    @patch(
-        "canonicalwebteam.store_api.stores."
-        "snapstore.SnapPublisher.get_publisher_metrics"
+        "canonicalwebteam.store_api.dashboard.Dashboard.get_publisher_metrics"
     )
     def test_get_active_devices_weekly_installed_by_os(
         self,
@@ -202,13 +190,9 @@ class GetActiveDeviceMetrics(TestCase):
 
     @responses.activate
     @patch("webapp.publisher.snaps.views.authentication.is_authenticated")
+    @patch("canonicalwebteam.store_api.dashboard.Dashboard.get_snap_info")
     @patch(
-        "canonicalwebteam.store_api.stores."
-        "snapstore.SnapPublisher.get_snap_info"
-    )
-    @patch(
-        "canonicalwebteam.store_api.stores."
-        "snapstore.SnapPublisher.get_publisher_metrics"
+        "canonicalwebteam.store_api.dashboard.Dashboard.get_publisher_metrics"
     )
     def test_get_active_devices_in_3_months_period(
         self,
@@ -289,10 +273,7 @@ class GetMetricAnnotation(TestCase):
 
     @responses.activate
     @patch("webapp.publisher.snaps.views.authentication.is_authenticated")
-    @patch(
-        "canonicalwebteam.store_api.stores."
-        "snapstore.SnapPublisher.get_snap_info"
-    )
+    @patch("canonicalwebteam.store_api.dashboard.Dashboard.get_snap_info")
     def test_get_active_devices_weekly_installed_by_version(
         self, mock_get_snap_info, mock_is_authenticated
     ):
@@ -351,13 +332,9 @@ class GetCountryMetric(TestCase):
 
     @responses.activate
     @patch("webapp.publisher.snaps.views.authentication.is_authenticated")
+    @patch("canonicalwebteam.store_api.dashboard.Dashboard.get_snap_info")
     @patch(
-        "canonicalwebteam.store_api.stores."
-        "snapstore.SnapPublisher.get_snap_info"
-    )
-    @patch(
-        "canonicalwebteam.store_api.stores."
-        "snapstore.SnapPublisher.get_publisher_metrics"
+        "canonicalwebteam.store_api.dashboard.Dashboard.get_publisher_metrics"
     )
     def test_get_active_devices_weekly_installed_by_version(
         self,

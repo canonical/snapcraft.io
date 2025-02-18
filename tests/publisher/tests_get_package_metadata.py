@@ -12,8 +12,8 @@ class TestGetPackageMetadata(BaseTestCases):
 
     @responses.activate
     @patch(
-        "canonicalwebteam.store_api.stores.snapstore."
-        "SnapPublisher.get_package_metadata"
+        "canonicalwebteam.store_api.publishergw."
+        "PublisherGW.get_package_metadata"
     )
     def test_get_package_metadata(self, mock_get_package_metadata):
         # testing for track guardrails

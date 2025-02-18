@@ -500,7 +500,7 @@ def get_package_metadata(snap_name):
         package_metadata = publisher_gateway.get_package_metadata(
             flask.session, snap_name
         )
-   
+
         return jsonify({"data": package_metadata, "success": True})
     except StoreApiError:
         return (

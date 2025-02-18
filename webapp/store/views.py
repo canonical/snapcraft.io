@@ -240,7 +240,7 @@ def store_blueprint(store_query=None):
                     try:
                         snaps_results = device_gateway.get_publisher_items(
                             publisher, size=500, page=1
-                        )["results"]
+                        )["_embedded"]["clickindex:package"]
                     except StoreApiError:
                         pass
 

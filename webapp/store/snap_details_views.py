@@ -47,7 +47,9 @@ def snap_details_views(store):
     snap_regex_upercase = "[A-Za-z0-9-]*[A-Za-z][A-Za-z0-9-]*"
 
     def _get_snap_link_fields(snap_name):
-        details = device_gateway.get_item_details(snap_name, api_version=2, fields=FIELDS)
+        details = device_gateway.get_item_details(
+            snap_name, api_version=2, fields=FIELDS
+        )
         context = {
             "links": details["snap"].get("links", {}),
         }

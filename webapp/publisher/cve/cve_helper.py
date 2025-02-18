@@ -4,15 +4,9 @@ import requests
 
 from werkzeug.exceptions import NotFound
 
-from canonicalwebteam.store_api.stores.snapstore import SnapPublisher
-
 from webapp.publisher.snaps import (
     logic,
 )
-
-from webapp.helpers import api_publisher_session
-
-publisher_api = SnapPublisher(api_publisher_session)
 
 REST_API_URL = "https://api.github.com"
 GITHUB_SNAPCRAFT_BOT_USER_TOKEN = getenv("GITHUB_SNAPCRAFT_BOT_USER_TOKEN")

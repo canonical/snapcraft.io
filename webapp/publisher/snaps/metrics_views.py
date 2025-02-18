@@ -75,11 +75,9 @@ def publisher_snap_metrics(snap_name):
 
 @login_required
 def get_active_devices(snap_name):
-    snap_details = device_gateway.get_item_details(
-        snap_name, api_version=2, fields=["snap-id"]
-    )
+    snap_details = dashboard.get_snap_info(flask.session, snap_name)
 
-    snap_id = snap_details["snap-id"]
+    snap_id = snap_details["snap_id"]
 
     installed_base_metric = logic.verify_base_metrics(
         flask.request.args.get("active-devices", default="version", type=str)
@@ -188,10 +186,8 @@ def get_active_devices(snap_name):
 
 @login_required
 def get_latest_active_devices(snap_name):
-    snap_details = device_gateway.get_item_details(
-        snap_name, api_version=2, fields=["snap-id"]
-    )
-    snap_id = snap_details["snap-id"]
+    snap_details = dashboard.get_snap_info(flask.session, snap_name)
+    snap_id = snap_details["snap_id"]
     # get latest active devices
     latest_day_period = logic.extract_metrics_period("1d")
     latest_installed_base = logic.get_installed_based_metric("version")

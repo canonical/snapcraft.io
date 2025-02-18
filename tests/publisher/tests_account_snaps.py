@@ -328,7 +328,7 @@ class AccountSnapsPage(BaseTestCases.EndpointLoggedInErrorHandling):
 
     @responses.activate
     @patch("webapp.publisher.snaps.views.authentication.is_authenticated")
-    @patch("canonicalwebteam.store_api.publisher.Publisher.get_snap_info")
+    @patch("canonicalwebteam.store_api.dashboard.Dashboard.get_snap_info")
     def test_get_is_user_snap(self, mock_get_snap_info, mock_is_authenticated):
         mock_is_authenticated.return_value = True
         mock_get_snap_info.return_value = {
