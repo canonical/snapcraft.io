@@ -1032,23 +1032,6 @@
   resolved "https://registry.yarnpkg.com/@canonical/latest-news/-/latest-news-1.5.0.tgz#22b0c211114ef8d0b9a10d495d035411b21e1a86"
   integrity sha512-pNCNhBn/LFnCe9Fp3Dm4WJwVkGrJMlL6lZft1SnLqufE5k6+ihZVr03revNxyMwnSu5EPpDcEduqYrTuQQGM4A==
 
-"@canonical/react-components@1.7.0":
-  version "1.7.0"
-  resolved "https://registry.yarnpkg.com/@canonical/react-components/-/react-components-1.7.0.tgz#e1863b92a0115e9a1d64d894b32197cb4b19b912"
-  integrity sha512-L+H99qfv6lIpHDfiMLQutN7VPYBCyu8SezWvOkomfixL4OsdFPw0Whr92l85p553BN9FyXjtEyqX8s+D1U0JlQ==
-  dependencies:
-    "@types/jest" "29.5.12"
-    "@types/node" "20.16.3"
-    "@types/react" "18.3.5"
-    "@types/react-dom" "18.3.0"
-    "@types/react-table" "7.7.20"
-    classnames "2.5.1"
-    jest-environment-jsdom "29.7.0"
-    lodash.isequal "4.5.0"
-    prop-types "15.8.1"
-    react-table "7.8.0"
-    react-useportal "1.0.19"
-
 "@canonical/react-components@1.9.0":
   version "1.9.0"
   resolved "https://registry.yarnpkg.com/@canonical/react-components/-/react-components-1.9.0.tgz#9337b35e632d7419eddf51823a5243156893185e"
@@ -1066,20 +1049,20 @@
     react-table "7.8.0"
     react-useportal "1.0.19"
 
-"@canonical/store-components@0.52.0":
-  version "0.52.0"
-  resolved "https://registry.yarnpkg.com/@canonical/store-components/-/store-components-0.52.0.tgz#04415a5c826601feb9cb554a1e5086c874b83ef6"
-  integrity sha512-VlUgr3l0pdlfYp/TTifSIjrqeftdu9t5jetN8NBPwtGAm30N45Evr++27oZDGQ1nNVW7LS2S7CY60Zp9H9qviw==
+"@canonical/store-components@0.53.0":
+  version "0.53.0"
+  resolved "https://registry.yarnpkg.com/@canonical/store-components/-/store-components-0.53.0.tgz#f2180571ec364cbd6854b8038c11f4c8dffdc558"
+  integrity sha512-2rSkfn5aIQAhMuzJyE3eg8dQptnk2/1oLaUg/wCpk0UtnWy6jISAZ1sLYSr3AFIx2z1nqG+7VbTG6FbjcFFIDQ==
   dependencies:
-    "@canonical/react-components" "1.7.0"
+    "@canonical/react-components" "1.9.0"
     "@types/jest" "27.5.2"
-    "@types/node" "18.19.55"
+    "@types/node" "18.19.71"
     "@types/react" "17.0.83"
-    "@types/react-dom" "17.0.25"
+    "@types/react-dom" "17.0.26"
     "@types/react-table" "7.7.20"
     classnames "2.5.1"
     formik "2.4.6"
-    nanoid "5.0.7"
+    nanoid "5.0.9"
     prop-types "15.8.1"
     react-table "7.8.0"
     react-useportal "1.0.19"
@@ -2417,10 +2400,10 @@
   dependencies:
     undici-types "~6.20.0"
 
-"@types/node@18.19.55":
-  version "18.19.55"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-18.19.55.tgz#29c3f8e1485a92ec96636957ddec55aabc6e856e"
-  integrity sha512-zzw5Vw52205Zr/nmErSEkN5FLqXPuKX/k5d1D7RKHATGqU7y6YfX9QxZraUzUrFGqH6XzOzG196BC35ltJC4Cw==
+"@types/node@18.19.71":
+  version "18.19.71"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-18.19.71.tgz#96d4f0a0be735ead6c8998c62a4b2c0012a5d09a"
+  integrity sha512-evXpcgtZm8FY4jqBSN8+DmOTcVkkvTmAayeo4Wf3m1xAruyVGzGuDh/Fb/WWX2yLItUiho42ozyJjB0dw//Tkw==
   dependencies:
     undici-types "~5.26.4"
 
@@ -2441,12 +2424,10 @@
   resolved "https://registry.yarnpkg.com/@types/randomstring/-/randomstring-1.3.0.tgz#2953e8de350c27c10eb1aa011fbca8d88c327d79"
   integrity sha512-kCP61wludjY7oNUeFiMxfswHB3Wn/aC03Cu82oQsNTO6OCuhVN/rCbBs68Cq6Nkgjmp2Sh3Js6HearJPkk7KQA==
 
-"@types/react-dom@17.0.25":
-  version "17.0.25"
-  resolved "https://registry.yarnpkg.com/@types/react-dom/-/react-dom-17.0.25.tgz#e0e5b3571e1069625b3a3da2b279379aa33a0cb5"
-  integrity sha512-urx7A7UxkZQmThYA4So0NelOVjx3V4rNFVJwp0WZlbIK5eM4rNJDiN3R/E9ix0MBh6kAEojk/9YL+Te6D9zHNA==
-  dependencies:
-    "@types/react" "^17"
+"@types/react-dom@17.0.26":
+  version "17.0.26"
+  resolved "https://registry.yarnpkg.com/@types/react-dom/-/react-dom-17.0.26.tgz#fa7891ba70fd39ddbaa7e85b6ff9175bb546bc1b"
+  integrity sha512-Z+2VcYXJwOqQ79HreLU/1fyQ88eXSSFh6I3JdrEHQIfYSI0kCQpTGvOrbE6jFGGYXKsHuwY9tBa/w5Uo6KzrEg==
 
 "@types/react-dom@18.3.0":
   version "18.3.0"
@@ -2501,7 +2482,7 @@
   dependencies:
     csstype "^3.0.2"
 
-"@types/react@17.0.83", "@types/react@^17":
+"@types/react@17.0.83":
   version "17.0.83"
   resolved "https://registry.yarnpkg.com/@types/react/-/react-17.0.83.tgz#b477c56387b74279281149dcf5ba2a1e2216d131"
   integrity sha512-l0m4ArKJvmFtR4e8UmKrj1pB4tUgOhJITf+mADyF/p69Ts1YAR/E+G9XEM0mHXKVRa1dQNHseyyDNzeuAXfXQw==
@@ -6434,11 +6415,6 @@ nano-time@1.0.0:
   integrity sha512-flnngywOoQ0lLQOTRNexn2gGSNuM9bKj9RZAWSzhQ+UJYaAFG9bac4DW9VHjUAzrOaIcajHybCTHe/bkvozQqA==
   dependencies:
     big-integer "^1.6.16"
-
-nanoid@5.0.7:
-  version "5.0.7"
-  resolved "https://registry.yarnpkg.com/nanoid/-/nanoid-5.0.7.tgz#6452e8c5a816861fd9d2b898399f7e5fd6944cc6"
-  integrity sha512-oLxFY2gd2IqnjcYyOXD8XGCftpGtZP2AbHbOkthDkvRywH5ayNtPVy9YlOPcHckXzbLTCHpkb7FB+yuxKV13pQ==
 
 nanoid@5.0.9:
   version "5.0.9"

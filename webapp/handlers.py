@@ -102,6 +102,8 @@ CSP = {
         "*.crazyegg.com",
         "www.facebook.com",
         "px.ads.linkedin.com",
+        # This is temporary until the API is available on staging or prod
+        "snap-recommendation-service-27.demos.haus",
     ],
     "frame-src": [
         "'self'",
