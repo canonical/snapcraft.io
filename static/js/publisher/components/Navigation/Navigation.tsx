@@ -1,12 +1,13 @@
 import { useState, useEffect, ReactNode } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { useParams, NavLink } from "react-router-dom";
+import { Icon } from "@canonical/react-components";
 
 import Logo from "./Logo";
 
 import { publisherState } from "../../state/publisherState";
 import { brandIdState } from "../../state/brandStoreState";
-import { useBrand, usePublisher } from "../../hooks";
+import { useBrand, usePublisher, useValidationSets } from "../../hooks";
 
 import { brandStoresState } from "../../state/brandStoreState";
 
@@ -21,6 +22,7 @@ function Navigation({
   const { id } = useParams();
   const { data: brand } = useBrand(id);
   const { data: publisherData } = usePublisher();
+  const { data: validationSetsData } = useValidationSets();
   const [pinSideNavigation, setPinSideNavigation] = useState<boolean>(false);
   const [collapseNavigation, setCollapseNavigation] = useState<boolean>(false);
   const [showStoreSelector, setShowStoreSelector] = useState<boolean>(false);
@@ -129,6 +131,25 @@ function Navigation({
                     </a>
                   </li>
                 </ul>
+                {validationSetsData && validationSetsData.length > 0 && (
+                  <ul className="p-side-navigation__list">
+                    <li className="p-side-navigation__item">
+                      <NavLink
+                        to="/validation-sets"
+                        className="p-side-navigation__link"
+                      >
+                        <Icon
+                          name="topic"
+                          light
+                          className="p-side-navigation__icon"
+                        />
+                        <span className="p-side-navigation__label">
+                          My validation sets
+                        </span>
+                      </NavLink>
+                    </li>
+                  </ul>
+                )}
               </div>
               {publisher?.has_stores && (
                 <>

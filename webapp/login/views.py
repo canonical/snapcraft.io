@@ -72,6 +72,7 @@ def after_login(resp):
         return flask.redirect(LOGIN_URL)
 
     account = dashboard.get_account(flask.session)
+    validation_sets = dashboard.get_validation_sets(flask.session)
 
     if account:
         flask.session["publisher"] = {
@@ -90,6 +91,11 @@ def after_login(resp):
             flask.session["publisher"]["has_stores"] = (
                 len(dashboard.get_stores(flask.session)) > 0
             )
+
+        flask.session["publisher"]["has_validation_sets"] = (
+            validation_sets is not None
+            and len(validation_sets["assertions"]) > 0
+        )
     else:
         flask.session["publisher"] = {
             "identity_url": resp.identity_url,
