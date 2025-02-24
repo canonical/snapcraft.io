@@ -4,7 +4,7 @@ import {
   SideNavigationText,
 } from "@canonical/react-components";
 
-import { usePublisher } from "../../hooks";
+import { usePublisher, useValidationSets } from "../../hooks";
 
 function PrimaryNav({
   collapseNavigation,
@@ -15,6 +15,7 @@ function PrimaryNav({
 }): JSX.Element {
   const location = useLocation();
   const { data: publisherData } = usePublisher();
+  const { data: validationSetsData } = useValidationSets();
 
   return (
     <>
@@ -43,14 +44,18 @@ function PrimaryNav({
             ],
           },
           {
-            items: [
-              {
-                label: "My validation sets",
-                href: "/validation-sets",
-                icon: "topic",
-                "aria-current": location.pathname.includes("/validation-sets"),
-              },
-            ],
+            items:
+              validationSetsData && validationSetsData.length > 0
+                ? [
+                    {
+                      label: "My validation sets",
+                      href: "/validation-sets",
+                      icon: "topic",
+                      "aria-current":
+                        location.pathname.includes("/validation-sets"),
+                    },
+                  ]
+                : [],
           },
         ]}
       />
