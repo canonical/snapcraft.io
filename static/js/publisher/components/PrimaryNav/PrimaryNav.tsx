@@ -40,6 +40,7 @@ function PrimaryNav({
                 label: "Overview",
                 href: "/snaps",
                 icon: "pods",
+                "aria-current": location.pathname === "/snaps",
               },
             ],
           },

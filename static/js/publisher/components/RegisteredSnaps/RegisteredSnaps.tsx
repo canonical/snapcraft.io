@@ -1,3 +1,5 @@
+import { useState } from "react";
+import { Link } from "react-router-dom";
 import {
   ConfirmationModal,
   MainTable,
@@ -6,8 +8,8 @@ import {
   Strip,
   Tooltip,
 } from "@canonical/react-components";
+
 import { ISnap } from "../../types";
-import { useState } from "react";
 import { PAGE_NUMBER } from "../../types/constants";
 
 function RegisteredSnaps({
@@ -38,7 +40,7 @@ function RegisteredSnaps({
             width: "25%",
             content: (
               <>
-                <a href={`/${snap.snapName}/listing`}>{snap.snapName}</a>
+                <Link to={`/${snap.snapName}/listing`}>{snap.snapName}</Link>
                 {isDisputePending && (
                   <>
                     &nbsp;
@@ -88,11 +90,9 @@ function RegisteredSnaps({
                 (Name dispute in progress)
               </span>
             ) : (
-              <button className="p-button--link u-no-margin--bottom">
-                <a href="/docs/releasing-your-app" target="_blank">
-                  Publish to this name
-                </a>
-              </button>
+              <Link to="/docs/releasing-your-app" target="_blank">
+                Publish to this name
+              </Link>
             ),
             className: "u-align--right",
           },
