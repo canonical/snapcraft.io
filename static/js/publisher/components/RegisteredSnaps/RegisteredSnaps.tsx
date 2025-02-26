@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import {
+  Accordion,
   ConfirmationModal,
   MainTable,
   Notification,
   Row,
-  Strip,
   Tooltip,
 } from "@canonical/react-components";
 
@@ -153,12 +153,6 @@ function RegisteredSnaps({
         </ConfirmationModal>
       )}
 
-      <Strip shallow>
-        <Row>
-          <h3 className="p-heading--5">Registered names ({snaps.length})</h3>
-        </Row>
-      </Strip>
-
       {isError && (
         <div className="u-fixed-width">
           <Notification severity="negative" title="Error:">
@@ -168,7 +162,17 @@ function RegisteredSnaps({
       )}
 
       <Row>
-        <MainTable rows={getData()} paginate={PAGE_NUMBER} />
+        <Accordion
+          className="accordion-bold-titles"
+          sections={[
+            {
+              key: "registered-snap-names",
+              title: `Registered snap names (${snaps.length})`,
+              content: <MainTable rows={getData()} paginate={PAGE_NUMBER} />,
+            },
+          ]}
+          expanded="registered-snap-names"
+        />
       </Row>
     </>
   );

@@ -16,10 +16,12 @@ function PublisherMetrics({ snaps }: { snaps: ISnap[] }) {
   }, [metricsData]);
 
   return (
-    <Strip element="section" shallow data-js="dashboard-metrics">
-      <div className="u-fixed-width">
-        <h2 className="p-heading--4">Snap installs</h2>
-      </div>
+    <Strip
+      className="u-no-padding--top"
+      element="section"
+      shallow
+      data-js="dashboard-metrics"
+    >
       <Row>
         <Col
           size={12}

@@ -79,14 +79,8 @@ function PublishedSnapList({
 
   return (
     <Strip element="section" shallow>
-      <div className="u-fixed-width u-clearfix">
+      <div className="u-fixed-width">
         <h2 className="p-heading--4 u-float-left">My published snaps</h2>
-        <a
-          href="/account/register-snap"
-          className="p-button u-float-right p-snap-list__register u-no-margin--top"
-        >
-          Register a snap name
-        </a>
       </div>
       {isEmpty && <EmptySnapList />}
 

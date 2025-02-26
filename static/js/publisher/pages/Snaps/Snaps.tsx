@@ -381,7 +381,7 @@ function Snaps() {
                   {!isReloading && currentStore && (
                     <>
                       <Accordion
-                        className="brand-store-accordion"
+                        className="accordion-bold-titles"
                         sections={[
                           {
                             key: "published-snaps",
@@ -436,7 +436,7 @@ function Snaps() {
                           </div>
                         )}
                         <Accordion
-                          className="brand-store-accordion"
+                          className="accordion-bold-titles"
                           sections={[
                             {
                               key: "included-snaps",
@@ -461,7 +461,7 @@ function Snaps() {
                         <>
                           <hr className="u-no-margin--bottom" />
                           <Accordion
-                            className="brand-store-accordion"
+                            className="accordion-bold-titles"
                             sections={[
                               {
                                 key: "included-stores",
