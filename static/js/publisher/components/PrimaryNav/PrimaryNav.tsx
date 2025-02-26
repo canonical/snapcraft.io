@@ -1,10 +1,16 @@
+import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
+import { useSetRecoilState } from "recoil";
 import {
   SideNavigation,
   SideNavigationText,
 } from "@canonical/react-components";
 
-import { usePublisher, useValidationSets } from "../../hooks";
+import StoreSelector from "../StoreSelector";
+
+import { usePublisher, useValidationSets, useBrandStores } from "../../hooks";
+
+import { brandStoresState } from "../../state/brandStoreState";
 
 function PrimaryNav({
   collapseNavigation,
@@ -16,6 +22,15 @@ function PrimaryNav({
   const location = useLocation();
   const { data: publisherData } = usePublisher();
   const { data: validationSetsData } = useValidationSets();
+  const { data: brandStoresList } = useBrandStores();
+
+  const setRecoilBrandStores = useSetRecoilState(brandStoresState);
+
+  useEffect(() => {
+    if (brandStoresList) {
+      setRecoilBrandStores(brandStoresList);
+    }
+  }, [brandStoresList]);
 
   return (
     <>
@@ -59,6 +74,37 @@ function PrimaryNav({
           },
         ]}
       />
+
+      {publisherData &&
+        publisherData.publisher &&
+        publisherData.publisher.has_stores && (
+          <>
+            <div className="nav-list-separator">
+              <hr />
+            </div>
+            <div className="p-side-navigation--icons hide-collapsed is-dark">
+              <ul className="p-side-navigation__list u-no-margin--bottom">
+                <li className="p-side-navigation__item--title p-muted-heading">
+                  <span className="p-side-navigation__link">
+                    <i className="p-icon--units is-light p-side-navigation__icon"></i>
+                    <span className="p-side-navigation__label">My stores</span>
+                  </span>
+                </li>
+              </ul>
+            </div>
+            <div className="p-side-navigation is-dark">
+              <ul className="p-side-navigation__list">
+                <li className="p-side-navigation__item">
+                  <span className="p-side-navigation__link">
+                    <span className="p-side-navigation__label">
+                      <StoreSelector nativeNavLink={true} />
+                    </span>
+                  </span>
+                </li>
+              </ul>
+            </div>
+          </>
+        )}
 
       {publisherData && publisherData.publisher && (
         <div className="p-side-navigation--icons is-dark">
