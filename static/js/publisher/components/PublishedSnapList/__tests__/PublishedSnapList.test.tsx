@@ -1,3 +1,5 @@
+import { BrowserRouter } from "react-router-dom";
+import { QueryClient, QueryClientProvider } from "react-query";
 import { render, screen } from "@testing-library/react";
 
 import PublishedSnapList from "../PublishedSnapList";
@@ -40,15 +42,21 @@ const BASE_SNAP_DATA = {
   unlisted: false,
 };
 
+const queryClient = new QueryClient();
+
 const renderComponent = (snaps: ISnap[]) => {
   return render(
-    <PublishedSnapList
-      currentPage={1}
-      currentUser="test-user-1"
-      setCurrentPage={() => {}}
-      snaps={snaps}
-      totalItems={snaps.length}
-    />,
+    <BrowserRouter>
+      <QueryClientProvider client={queryClient}>
+        <PublishedSnapList
+          currentPage={1}
+          currentUser="test-user-1"
+          setCurrentPage={() => {}}
+          snaps={snaps}
+          totalItems={snaps.length}
+        />
+      </QueryClientProvider>
+    </BrowserRouter>,
   );
 };
 

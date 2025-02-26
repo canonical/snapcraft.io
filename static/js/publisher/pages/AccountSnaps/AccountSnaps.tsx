@@ -7,6 +7,8 @@ function AccountSnaps() {
   const { status, data, refetch, isRefetching } = useFetchAccountSnaps();
   const isLoading = isRefetching || status === "loading";
 
+  document.title = "My published snaps — Linux software in the Snap Store";
+
   return (
     <div>
       <Strip element="section" shallow>

@@ -43,7 +43,7 @@ class AccountSnapsPage(BaseTestCases.EndpointLoggedInErrorHandling):
         )
 
         assert response.status_code == 200
-        self.assert_template_used("publisher/account-snaps.html")
+        self.assert_template_used("store/publisher.html")
         self.assert_context("current_user", "Toto")
         self.assert_context("snaps", {})
         self.assert_context("registered_snaps", {})
@@ -76,7 +76,7 @@ class AccountSnapsPage(BaseTestCases.EndpointLoggedInErrorHandling):
         )
 
         assert response.status_code == 200
-        self.assert_template_used("publisher/account-snaps.html")
+        self.assert_template_used("store/publisher.html")
         self.assert_context("current_user", "Toto")
         self.assert_context("snaps", {})
         self.assert_context("registered_snaps", payload["snaps"]["16"])
@@ -116,7 +116,7 @@ class AccountSnapsPage(BaseTestCases.EndpointLoggedInErrorHandling):
         )
 
         assert response.status_code == 200
-        self.assert_template_used("publisher/account-snaps.html")
+        self.assert_template_used("store/publisher.html")
         self.assert_context("current_user", "Toto")
         self.assert_context("snaps", payload["snaps"]["16"])
         self.assert_context("registered_snaps", {})
@@ -161,7 +161,7 @@ class AccountSnapsPage(BaseTestCases.EndpointLoggedInErrorHandling):
         ][0]
 
         assert response.status_code == 200
-        self.assert_template_used("publisher/account-snaps.html")
+        self.assert_template_used("store/publisher.html")
         self.assert_context("current_user", "Toto")
         self.assert_context("snaps", result_snaps)
         self.assert_context("registered_snaps", {})
@@ -232,7 +232,7 @@ class AccountSnapsPage(BaseTestCases.EndpointLoggedInErrorHandling):
         }
 
         assert response.status_code == 200
-        self.assert_template_used("publisher/account-snaps.html")
+        self.assert_template_used("store/publisher.html")
         self.assert_context("current_user", "Toto")
         self.assert_context("snaps", uploaded_snaps)
         self.assert_context("registered_snaps", registered_snaps)
@@ -321,7 +321,7 @@ class AccountSnapsPage(BaseTestCases.EndpointLoggedInErrorHandling):
         }
 
         assert response.status_code == 200
-        self.assert_template_used("publisher/account-snaps.html")
+        self.assert_template_used("store/publisher.html")
         self.assert_context("current_user", "Toto")
         self.assert_context("snaps", uploaded_snaps)
         self.assert_context("registered_snaps", registered_snaps)

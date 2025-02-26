@@ -13,6 +13,7 @@ import Listing from "./pages/Listing";
 import Builds from "./pages/Builds";
 import Build from "./pages/Build";
 import Releases from "./pages/Releases";
+import AccountSnaps from "./pages/AccountSnaps";
 
 const router = createBrowserRouter([
   {
@@ -62,6 +63,10 @@ const router = createBrowserRouter([
       {
         path: "/:snapId/releases",
         element: <Releases />,
+      },
+      {
+        path: "/snaps",
+        element: <AccountSnaps />,
       },
     ],
   },
