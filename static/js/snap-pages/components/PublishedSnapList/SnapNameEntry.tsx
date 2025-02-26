@@ -1,12 +1,10 @@
-import { Link } from "react-router-dom";
-import { Tooltip } from "@canonical/react-components";
-
+import { Link, Tooltip } from "@canonical/react-components";
 import { ISnap } from "../../types";
 
 function SnapNameEntry({ snap }: { snap: ISnap }) {
   const { snapName, status, icon_url } = snap;
   return (
-    <Link to={`/${snapName}/listing`} className="p-heading-icon--small">
+    <Link href={`/${snapName}/listing`} className="p-heading-icon--small">
       <span className="p-heading-icon__header">
         <img
           src={

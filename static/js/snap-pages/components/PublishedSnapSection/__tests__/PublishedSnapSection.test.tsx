@@ -1,9 +1,8 @@
-import { BrowserRouter } from "react-router-dom";
-import { QueryClient, QueryClientProvider, useQuery } from "react-query";
 import { fireEvent, render, screen } from "@testing-library/react";
 
 import { ISnap } from "../../../types";
 import PublishedSnapSection from "../PublishedSnapSection";
+import { QueryClient, QueryClientProvider, useQuery } from "react-query";
 
 const BASE_SNAP_DATA = {
   snapName: "test-snap-1",
@@ -46,11 +45,9 @@ const queryClient = new QueryClient();
 
 const renderComponent = (snaps: ISnap[]) => {
   return render(
-    <BrowserRouter>
-      <QueryClientProvider client={queryClient}>
-        <PublishedSnapSection currentUser="test-user" snaps={snaps} />
-      </QueryClientProvider>
-    </BrowserRouter>,
+    <QueryClientProvider client={queryClient}>
+      <PublishedSnapSection currentUser="test-user" snaps={snaps} />
+    </QueryClientProvider>,
   );
 };
 

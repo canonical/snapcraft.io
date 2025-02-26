@@ -1,4 +1,3 @@
-import { BrowserRouter } from "react-router-dom";
 import { QueryClient, QueryClientProvider, useQuery } from "react-query";
 import { render, screen } from "@testing-library/react";
 import "@testing-library/jest-dom";
@@ -9,11 +8,9 @@ const queryClient = new QueryClient();
 
 const renderComponent = () => {
   return render(
-    <BrowserRouter>
-      <QueryClientProvider client={queryClient}>
-        <AccountSnaps />
-      </QueryClientProvider>
-    </BrowserRouter>,
+    <QueryClientProvider client={queryClient}>
+      <AccountSnaps />
+    </QueryClientProvider>,
   );
 };
 

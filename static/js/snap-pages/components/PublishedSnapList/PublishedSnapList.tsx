@@ -1,5 +1,9 @@
-import { Link } from "react-router-dom";
-import { MainTable, Pagination, Strip } from "@canonical/react-components";
+import {
+  Link,
+  MainTable,
+  Pagination,
+  Strip,
+} from "@canonical/react-components";
 import { ISnap } from "../../types";
 import SnapNameEntry from "./SnapNameEntry";
 import NewSnapNotification from "../NewSnapNotification";
@@ -51,7 +55,7 @@ function PublishedSnapList({
               {snap.latest_release?.status == "Published" ? (
                 snap.latest_release?.channels[0]
               ) : (
-                <Link to={`/${snap.snapName}/releases`}>Not released</Link>
+                <Link href={`/${snap.snapName}/releases`}>Not released</Link>
               )}
             </div>
           ),
@@ -61,7 +65,7 @@ function PublishedSnapList({
           content: (
             <div>
               {snap.latest_release?.status == "Published" ? (
-                <Link to={`/${snap.snapName}/releases`}>
+                <Link href={`/${snap.snapName}/releases`}>
                   {snap.latest_release?.version}
                 </Link>
               ) : (
@@ -82,7 +86,7 @@ function PublishedSnapList({
       <div className="u-fixed-width u-clearfix">
         <h2 className="p-heading--4 u-float-left">My published snaps</h2>
         <Link
-          to="/account/register-snap"
+          href="/account/register-snap"
           className="p-button u-float-right p-snap-list__register u-no-margin--top"
         >
           Register a snap name
@@ -122,7 +126,9 @@ function PublishedSnapList({
           <Pagination
             currentPage={currentPage}
             itemsPerPage={PAGE_NUMBER}
-            paginate={(page) => setCurrentPage(page)}
+            paginate={(page) => {
+              setCurrentPage(page);
+            }}
             totalItems={totalItems}
           />
         </div>

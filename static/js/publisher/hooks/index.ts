@@ -11,8 +11,6 @@ import useModels from "./useModels";
 import useBrand from "./useBrand";
 import usePolicies from "./usePolicies";
 import usePublisher from "./usePublisher";
-import useFetchAccountSnaps from "./useFetchAccountSnaps";
-import useFetchPublishedSnapMetrics from "./useFetchPublishedSnapMetrics";
 
 export {
   useValidationSets,
@@ -28,6 +26,4 @@ export {
   useBrand,
   usePolicies,
   usePublisher,
-  useFetchAccountSnaps,
-  useFetchPublishedSnapMetrics,
 };

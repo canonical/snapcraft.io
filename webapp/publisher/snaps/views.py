@@ -308,7 +308,7 @@ def get_account_snaps():
         "registered_snaps": registered_snaps,
     }
 
-    return flask.render_template("store/publisher.html", **context)
+    return flask.render_template("publisher/account-snaps.html", **context)
 
 
 @publisher_snaps.route("/snaps.json")

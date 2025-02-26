@@ -1,5 +1,3 @@
-import { BrowserRouter } from "react-router-dom";
-import { QueryClient, QueryClientProvider } from "react-query";
 import { fireEvent, render, screen } from "@testing-library/react";
 
 import { ISnap } from "../../../types";
@@ -43,20 +41,13 @@ const BASE_SNAP_DATA = {
   unlisted: false,
 };
 
-const queryClient = new QueryClient();
-
 const renderComponent = (snaps: ISnap[]) => {
   return render(
-    <BrowserRouter>
-      <QueryClientProvider client={queryClient}>
-        <RegisteredSnaps
-          currentUser="test-user"
-          snaps={snaps}
-          refetchSnaps={jest.fn()}
-        />
-        ,
-      </QueryClientProvider>
-    </BrowserRouter>,
+    <RegisteredSnaps
+      currentUser="test-user"
+      snaps={snaps}
+      refetchSnaps={jest.fn()}
+    />,
   );
 };
 
