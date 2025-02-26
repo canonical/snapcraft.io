@@ -81,12 +81,12 @@ function PublishedSnapList({
     <Strip element="section" shallow>
       <div className="u-fixed-width u-clearfix">
         <h2 className="p-heading--4 u-float-left">My published snaps</h2>
-        <Link
-          to="/account/register-snap"
+        <a
+          href="/account/register-snap"
           className="p-button u-float-right p-snap-list__register u-no-margin--top"
         >
           Register a snap name
-        </Link>
+        </a>
       </div>
       {isEmpty && <EmptySnapList />}
 
