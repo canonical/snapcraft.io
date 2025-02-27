@@ -436,14 +436,16 @@ dl {
   margin-right: 0;
 }
 
-.brand-store-accordion {
+.accordion-bold-titles {
   .p-accordion__heading button {
     font-weight: bold;
     text-transform: uppercase;
   }
 
   .p-accordion__panel {
-    padding-left: 1rem;
+    padding-left: 0;
+    position: relative;
+    z-index: 1;
   }
 
   .p-accordion__list {
@@ -474,7 +476,7 @@ dl {
     margin-top: 0;
     position: absolute;
     right: 0;
-    top: 0.25rem;
+    top: 0.35rem;
     z-index: 10;
   }
 }
