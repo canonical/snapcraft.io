@@ -1049,22 +1049,21 @@
     react-table "7.8.0"
     react-useportal "1.0.19"
 
-"@canonical/react-components@1.9.0":
-  version "1.9.0"
-  resolved "https://registry.yarnpkg.com/@canonical/react-components/-/react-components-1.9.0.tgz#9337b35e632d7419eddf51823a5243156893185e"
-  integrity sha512-CB2xHvGs/KFsCAbh79pSsJfg+j5Pxmye1qXCeAoirTWj1WIwRiDVV32R07Xys/bAafzINy6kStqJHkq8XUld/g==
+"@canonical/react-components@2.1.0":
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/@canonical/react-components/-/react-components-2.1.0.tgz#439d5ca03b009b0c0ad72c8bb5170857bbecce86"
+  integrity sha512-OaZcQmwoXj25kCvOxYhaJQhUc4CX8t5pVbuqb+t2ELfREVRvlTnKAxMHeuAyihK81FQ712M8ziiKfybp2mNZYg==
   dependencies:
-    "@types/jest" "29.5.12"
-    "@types/node" "20.16.3"
-    "@types/react" "18.3.5"
-    "@types/react-dom" "18.3.0"
+    "@types/jest" "29.5.14"
+    "@types/node" "20.17.13"
+    "@types/react" "19.0.8"
+    "@types/react-dom" "19.0.3"
     "@types/react-table" "7.7.20"
     classnames "2.5.1"
     jest-environment-jsdom "29.7.0"
     lodash.isequal "4.5.0"
     prop-types "15.8.1"
     react-table "7.8.0"
-    react-useportal "1.0.19"
 
 "@canonical/store-components@0.52.0":
   version "0.52.0"
@@ -2431,6 +2430,13 @@
   dependencies:
     undici-types "~6.19.2"
 
+"@types/node@20.17.13":
+  version "20.17.13"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-20.17.13.tgz#26a7d3e72724ed73bc2fd39a66a2ab17e6e19a00"
+  integrity sha512-RNf+4dEeV69PIvyp++4IKM2vnLXtmp/JovfeQm5P5+qpKb6wHoH7INywLdZ7z+gVX46kgBP/fwJJvZYaHxtdyw==
+  dependencies:
+    undici-types "~6.19.2"
+
 "@types/prop-types@*":
   version "15.7.14"
   resolved "https://registry.yarnpkg.com/@types/prop-types/-/prop-types-15.7.14.tgz#1433419d73b2a7ebfc6918dcefd2ec0d5cd698f2"
@@ -2459,6 +2465,11 @@
   version "18.3.5"
   resolved "https://registry.yarnpkg.com/@types/react-dom/-/react-dom-18.3.5.tgz#45f9f87398c5dcea085b715c58ddcf1faf65f716"
   integrity sha512-P4t6saawp+b/dFrUr2cvkVsfvPguwsxtH6dNIYRllMsefqFzkZk5UIjzyDOv5g1dXIPdG4Sp1yCR4Z6RCUsG/Q==
+
+"@types/react-dom@19.0.3":
+  version "19.0.3"
+  resolved "https://registry.yarnpkg.com/@types/react-dom/-/react-dom-19.0.3.tgz#0804dfd279a165d5a0ad8b53a5b9e65f338050a4"
+  integrity sha512-0Knk+HJiMP/qOZgMyNFamlIjw9OFCsyC2ZbigmEEyXXixgre6IQpm/4V+r3qH4GC1JPvRJKInw+on2rV6YZLeA==
 
 "@types/react-redux@7.1.34":
   version "7.1.34"
@@ -2524,6 +2535,13 @@
   integrity sha512-WeqMfGJLGuLCqHGYRGHxnKrXcTitc6L/nBUWfWPcTarG3t9PsquqUMuVeXZeca+mglY4Vo5GZjCi0A3Or2lnxA==
   dependencies:
     "@types/prop-types" "*"
+    csstype "^3.0.2"
+
+"@types/react@19.0.8":
+  version "19.0.8"
+  resolved "https://registry.yarnpkg.com/@types/react/-/react-19.0.8.tgz#7098e6159f2a61e4f4cef2c1223c044a9bec590e"
+  integrity sha512-9P/o1IGdfmQxrujGbIMDyYaaCykhLKc0NGCtYcECNUr9UAaDe4gwvV9bR6tvd5Br1SG0j+PBpbKr2UYY8CwqSw==
+  dependencies:
     csstype "^3.0.2"
 
 "@types/scheduler@^0.16":
