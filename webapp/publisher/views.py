@@ -56,7 +56,6 @@ def post_publisher_details():
 
 
 @account.route("/agreement")
-@login_required
 def get_agreement():
     return flask.render_template("store/publisher.html")
 
