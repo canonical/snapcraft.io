@@ -1,7 +1,6 @@
 # Packages
 import bleach
 import flask
-import re
 from canonicalwebteam.store_api.dashboard import Dashboard
 from canonicalwebteam.store_api.publishergw import PublisherGW
 from canonicalwebteam.exceptions import (
@@ -354,46 +353,18 @@ def redirect_get_register_name():
     return flask.redirect(flask.url_for(".get_register_name"))
 
 
+@publisher_snaps.route("/api/available-stores")
+@login_required
+def get_available_stores():
+    stores = dashboard.get_stores(flask.session)
+    available_stores = logic.filter_available_stores(stores)
+    return jsonify({"success": True, "data": available_stores})
+
+
 @publisher_snaps.route("/register-snap")
 @login_required
 def get_register_name():
-    stores = dashboard.get_stores(flask.session)
-
-    available_stores = logic.filter_available_stores(stores)
-
-    snap_name = flask.request.args.get("snap_name", default="", type=str)
-    store = flask.request.args.get("store", default="", type=str)
-
-    conflict_str = flask.request.args.get(
-        "conflict", default="False", type=str
-    )
-    conflict = conflict_str == "True"
-
-    already_owned_str = flask.request.args.get(
-        "already_owned", default="False", type=str
-    )
-    already_owned = already_owned_str == "True"
-
-    reserved_str = flask.request.args.get(
-        "reserved", default="False", type=str
-    )
-    reserved = reserved_str == "True"
-
-    is_private_str = flask.request.args.get(
-        "is_private", default="False", type=str
-    )
-    is_private = is_private_str == "True"
-
-    context = {
-        "snap_name": snap_name,
-        "is_private": is_private,
-        "conflict": conflict,
-        "already_owned": already_owned,
-        "reserved": reserved,
-        "store": store,
-        "available_stores": available_stores,
-    }
-    return flask.render_template("publisher/register-snap.html", **context)
+    return flask.render_template("store/publisher.html")
 
 
 @publisher_snaps.route("/account/register-snap", methods=["POST"])
@@ -401,95 +372,42 @@ def redirect_post_register_name():
     return flask.redirect(flask.url_for(".post_register_name"), 307)
 
 
-@publisher_snaps.route("/register-snap", methods=["POST"])
+@publisher_snaps.route("/api/register-snap", methods=["POST"])
 @login_required
 def post_register_name():
-    snap_name = flask.request.form.get("snap-name")
+    register_snap_data = flask.json.loads(flask.request.data)
+
+    snap_name = register_snap_data["snap_name"]
 
     if not snap_name:
         return flask.redirect(flask.url_for(".get_register_name"))
 
-    is_private = flask.request.form.get("is_private") == "private"
-    store = flask.request.form.get("store")
-    registrant_comment = flask.request.form.get("registrant_comment")
+    is_private = register_snap_data["is_private"] == "private"
+    store = register_snap_data["store"]
 
     try:
         dashboard.post_register_name(
             session=flask.session,
             snap_name=snap_name,
-            registrant_comment=registrant_comment,
             is_private=is_private,
             store=store,
         )
     except StoreApiResponseErrorList as api_response_error_list:
-        stores = dashboard.get_stores(flask.session)
-
-        available_stores = logic.filter_available_stores(stores)
-
         if api_response_error_list.status_code == 409:
-            for error in api_response_error_list.errors:
-                if error["code"] == "already_claimed":
-                    return flask.redirect("/admin/account")
-                elif error["code"] == "already_registered":
-                    return flask.redirect(
-                        flask.url_for(
-                            ".get_register_name",
-                            snap_name=snap_name,
-                            is_private=is_private,
-                            store=store,
-                            conflict=True,
-                        )
-                    )
-                elif error["code"] == "already_owned":
-                    return flask.redirect(
-                        flask.url_for(
-                            ".get_register_name",
-                            snap_name=snap_name,
-                            is_private=is_private,
-                            store=store,
-                            already_owned=True,
-                        )
-                    )
-                elif error["code"] == "reserved_name":
-                    return flask.redirect(
-                        flask.url_for(
-                            ".get_register_name",
-                            snap_name=snap_name,
-                            is_private=is_private,
-                            store=store,
-                            reserved=True,
-                        )
-                    )
-                elif error["code"] == "name-review-required":
-                    formatted_error = re.sub(
-                        r"(https?://\S+)",
-                        r'<a href="\1">\1</a>',
-                        error["message"],
-                    )
-                    error["message"] = formatted_error
+            res = {
+                "success": False,
+                "data": {
+                    "snap_name": snap_name,
+                    "error_code": api_response_error_list.errors[0]["code"],
+                },
+                "message": "There is a conflict with this name",
+            }
 
-        context = {
-            "snap_name": snap_name,
-            "is_private": is_private,
-            "available_stores": available_stores,
-            "errors": api_response_error_list.errors,
-        }
+            return jsonify(res)
 
-        return flask.render_template("publisher/register-snap.html", **context)
-
-    flask.flash(
-        "".join(
-            [
-                snap_name,
-                " registered.",
-                ' <a href="https://docs.snapcraft.io/build-snaps/upload"',
-                " ",
-                ' target="blank">How to upload a Snap</a>',
-            ]
-        )
+    return jsonify(
+        {"success": True, "data": {"snap_name": snap_name}, "message": ""}
     )
-
-    return flask.redirect(flask.url_for("account.get_account"))
 
 
 @publisher_snaps.route("/api/packages/<snap_name>", methods=["GET"])
@@ -582,7 +500,7 @@ def post_register_name_json():
 def get_register_name_dispute():
     stores = dashboard.get_stores(flask.session)
 
-    snap_name = flask.request.args.get("snap-name")
+    snap_name = flask.request.args.get("snap_name")
     store_id = flask.request.args.get("store")
     store_name = logic.get_store_name(store_id, stores)
 

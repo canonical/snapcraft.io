@@ -4,24 +4,25 @@ import { useSearchParams } from "react-router-dom";
 import RegisterNameDisputeForm from "./RegisterNameDisputeForm";
 import RegisterNameDisputeSuccess from "./RegisterNameDisputeSuccess";
 
-import { useBrandStores } from "../../hooks";
+import { useAvailableStores } from "../../hooks";
 
 import { setPageTitle } from "../../utils";
-
-import type { Store } from "../../types/shared";
 
 function RegisterNameDispute(): ReactNode {
   setPageTitle("Register name dispute");
 
   const [searchParams] = useSearchParams();
-  const snapName = searchParams.get("snap-name");
+  const snapName = searchParams.get("snap_name");
   const store = searchParams.get("store");
 
   const [claimSubmitted, setClaimSubmitted] = useState<boolean>(false);
 
-  const { data, isLoading } = useBrandStores();
+  const { data, isLoading } = useAvailableStores();
 
-  const getStoreName = (storeId: string | null, stores: Store[]) => {
+  const getStoreName = (
+    storeId: string | null,
+    stores: { name: string; id: string }[],
+  ) => {
     if (!storeId) {
       return;
     }

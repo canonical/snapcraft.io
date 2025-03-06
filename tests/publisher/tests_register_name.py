@@ -26,21 +26,7 @@ class GetRegisterNamePage(BaseTestCases.BaseAppTesting):
         response = self.client.get(self.endpoint_url)
 
         assert response.status_code == 200
-        self.assert_template_used("publisher/register-snap.html")
-
-    @responses.activate
-    def test_register_name_user_api_error(self):
-        self._log_in(self.client)
-
-        user_payload = {"error_list": []}
-        responses.add(
-            responses.GET, self.user_url, json=user_payload, status=502
-        )
-
-        response = self.client.get(self.endpoint_url)
-
-        assert response.status_code == 502
-        self.assert_template_used("50X.html")
+        self.assert_template_used("store/publisher.html")
 
 
 class GetReserveNamePage(BaseTestCases.BaseAppTesting):
@@ -64,10 +50,7 @@ class GetReserveNamePage(BaseTestCases.BaseAppTesting):
         response = self.client.get(self.endpoint_url)
 
         assert response.status_code == 200
-        self.assert_template_used("publisher/register-snap.html")
-        self.assert_context("snap_name", "test-snap")
-        self.assert_context("is_private", False)
-        self.assert_context("conflict", True)
+        self.assert_template_used("store/publisher.html")
 
     @responses.activate
     def test_reserve_name_with_stores(self):
@@ -97,10 +80,6 @@ class GetReserveNamePage(BaseTestCases.BaseAppTesting):
         response = self.client.get(self.endpoint_url)
 
         assert response.status_code == 200
-        self.assert_context(
-            "available_stores",
-            [{"id": "testing123", "name": "Test Store", "roles": ["access"]}],
-        )
 
 
 class PostRegisterNamePageNotAuth(BaseTestCases.EndpointLoggedOut):
@@ -222,7 +201,7 @@ class PostRegisterNamePage(BaseTestCases.EndpointLoggedIn):
 
         self.client.post(self.endpoint_url, data=self.data)
 
-        self.assert_template_used("publisher/register-snap.html")
+        self.assert_template_used("store/publisher.html")
         self.assert_context("errors", payload["error_list"])
 
     @responses.activate

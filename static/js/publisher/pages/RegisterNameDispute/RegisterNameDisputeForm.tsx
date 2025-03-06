@@ -1,4 +1,5 @@
 import { ReactNode, useState, Dispatch, SetStateAction } from "react";
+import { Link } from "react-router-dom";
 import {
   Form,
   Input,
@@ -87,9 +88,9 @@ function RegisterNameDisputeForm({
         </Row>
         <hr />
         <div className="u-align--right">
-          <a className="p-button" href="/register-snap">
+          <Link className="p-button" to="/register-snap">
             Register a new name
-          </a>
+          </Link>
           <Button type="submit" appearance="positive" disabled={isSending}>
             {isSending ? (
               <>

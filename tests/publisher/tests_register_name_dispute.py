@@ -34,7 +34,7 @@ class GetRegisterNameDisputePage(BaseTestCases.BaseAppTesting):
         responses.add(
             responses.GET, self.user_url, json=self.user_payload, status=200
         )
-        endpoint_url = "{}?snap-name={}&store={}".format(
+        endpoint_url = "{}?snap_name={}&store={}".format(
             self.endpoint_url, self.snap_name, self.store
         )
         response = self.client.get(endpoint_url)
