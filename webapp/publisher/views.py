@@ -57,15 +57,19 @@ def post_publisher_details():
 
 @account.route("/agreement")
 def get_agreement():
-    return flask.render_template("store/publisher.html")
+    return flask.render_template(
+        "publisher/developer_programme_agreement.html"
+    )
 
 
 @account.route("/agreement", methods=["POST"])
 def post_agreement():
-    agreed = flask.json.loads(flask.request.data)
-    if agreed["i_agree"] == "on":
+    agreed = flask.request.form.get("i_agree")
+    if agreed == "on":
         dashboard.post_agreement(flask.session, True)
-        return jsonify({"success": True})
+        return flask.redirect(flask.url_for(".get_account"))
+    else:
+        return flask.redirect(flask.url_for(".get_agreement"))
 
 
 @account.route("/username")
