@@ -591,19 +591,18 @@ def get_register_name_dispute():
             flask.url_for(".get_register_name", snap_name=snap_name)
         )
     return flask.render_template(
-        "store/publisher.html",
+        "publisher/register-name-dispute.html",
         snap_name=snap_name,
         store=store_name,
     )
 
 
-@publisher_snaps.route("/api/register-name-dispute", methods=["POST"])
+@publisher_snaps.route("/register-name-dispute", methods=["POST"])
 @login_required
 def post_register_name_dispute():
     try:
-        claim = flask.json.loads(flask.request.data)
-        snap_name = claim["snap-name"]
-        claim_comment = claim["claim-comment"]
+        snap_name = flask.request.form.get("snap-name", "")
+        claim_comment = flask.request.form.get("claim-comment", "")
         dashboard.post_register_name_dispute(
             flask.session,
             bleach.clean(snap_name),
@@ -611,15 +610,16 @@ def post_register_name_dispute():
         )
     except StoreApiResponseErrorList as api_response_error_list:
         if api_response_error_list.status_code in [400, 409]:
-            return jsonify(
-                {
-                    "success": False,
-                    "data": api_response_error_list.errors,
-                    "message": api_response_error_list.errors[0]["message"],
-                }
+            return flask.render_template(
+                "publisher/register-name-dispute.html",
+                snap_name=snap_name,
+                errors=api_response_error_list.errors,
             )
 
-    return jsonify({"success": True})
+    return flask.render_template(
+        "publisher/register-name-dispute-success.html",
+        snap_name=snap_name,
+    )
 
 
 @publisher_snaps.route("/request-reserved-name")
