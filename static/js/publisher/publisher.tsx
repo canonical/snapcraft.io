@@ -14,6 +14,7 @@ import Builds from "./pages/Builds";
 import Build from "./pages/Build";
 import Releases from "./pages/Releases";
 import AccountSnaps from "./pages/AccountSnaps";
+import DeveloperAgreement from "./pages/DeveloperAgreement";
 
 const router = createBrowserRouter([
   {
@@ -67,6 +68,10 @@ const router = createBrowserRouter([
       {
         path: "/snaps",
         element: <AccountSnaps />,
+      },
+      {
+        path: "/account/agreement",
+        element: <DeveloperAgreement />,
       },
     ],
   },

@@ -13,15 +13,13 @@ class GetAgreementPage(BaseTestCases.BaseAppTesting):
         response = self.client.get("/account/agreement")
 
         assert response.status_code == 200
-        self.assert_template_used(
-            "publisher/developer_programme_agreement.html"
-        )
+        self.assert_template_used("store/publisher.html")
 
 
 class PostAgreementPage(BaseTestCases.EndpointLoggedIn):
     def setUp(self):
         api_url = "https://dashboard.snapcraft.io/dev/api/agreement/"
-        data = {"i_agree": "on"}
+        data = {"agreed": True}
         endpoint_url = "/account/agreement"
 
         super().setUp(
@@ -30,14 +28,16 @@ class PostAgreementPage(BaseTestCases.EndpointLoggedIn):
             api_url=api_url,
             method_endpoint="POST",
             method_api="POST",
-            data=data,
+            json=data,
         )
 
     @responses.activate
     def test_post_agreement_on(self):
-        responses.add(responses.POST, self.api_url, json={}, status=200)
+        responses.add(
+            responses.POST, self.api_url, json={"success": True}, status=200
+        )
 
-        response = self.client.post(self.endpoint_url, data={"i_agree": "on"})
+        response = self.client.post(self.endpoint_url, json={"agreed": True})
 
         self.assertEqual(1, len(responses.calls))
         called = responses.calls[0]
@@ -45,15 +45,6 @@ class PostAgreementPage(BaseTestCases.EndpointLoggedIn):
         self.assertEqual(
             self.authorization, called.request.headers.get("Authorization")
         )
-        self.assertEqual(called.response.json(), {})
         self.assertEqual(b'{"latest_tos_accepted": true}', called.request.body)
 
-        self.assertEqual(302, response.status_code)
-        self.assertEqual("/account/", response.location)
-
-    @responses.activate
-    def test_post_agreement_off(self):
-        response = self.client.post(self.endpoint_url, data={"i_agree": "off"})
-
-        self.assertEqual(302, response.status_code)
-        self.assertEqual("/account/agreement", response.location)
+        self.assertEqual(response.json, {"success": True})
