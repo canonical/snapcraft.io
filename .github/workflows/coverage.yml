@@ -125,7 +125,7 @@ jobs:
         shell: bash
         run: |
           set -x
-          export TICSAUTHTOKEN=${{ secrets.TICS_AUTH_TOKEN }}
+          export TICSAUTHTOKEN=${{ secrets.TICSAUTHTOKEN }}
           curl --silent --show-error "https://canonical.tiobe.com/tiobeweb/TICS/api/public/v1/fapi/installtics/Script?cfg=default&platform=linux&url=https://canonical.tiobe.com/tiobeweb/TICS/" > install_tics.sh
           . ./install_tics.sh
           TICSQServer -project snapcraft.io -tmpdir /tmp/tics -branchdir .
