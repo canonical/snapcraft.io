@@ -1,0 +1,61 @@
+{% extends "publisher/_publisher_layout.html" %}
+
+{% block meta_title %}
+    Developer Program Agreement — Linux software in the Snap Store
+{% endblock %}
+
+{% block content %}
+<section class="p-strip">
+  <div class="row">
+    <h1 class="p-heading--2">Developer Programme Agreement</h1>
+  </div>
+
+  <div class="row">
+    <div class="p-card">
+      <h2 class="p-heading--4">Snap Store Terms of Service and Privacy Notice</h2>
+      <p class="p-card__content">
+        <a  href="https://ubuntu.com/legal/terms-and-policies/snap-store-terms" target="_blank">Snap Store Terms of Service</a>
+      </p>
+      <p class="p-card__content">
+        <a  href="https://www.ubuntu.com/legal/data-privacy/snap-store" target="_blank">Privacy Notice</a>
+      </p>
+    </div>
+  </div>
+
+  <div class="row u-no-margin--top">
+    <form method="POST" action="/account/agreement">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+      <div class="row">
+        <div class="col-8">
+          <div class="p-form-validation">
+            <input name="i_agree" id="id_i_agree" class="p-form-validation__input" type="checkbox">
+            <label for="id_i_agree">I agree to the terms and privacy notice</label>
+          </div>
+        </div>
+        <div class="col-4 u-align--right">
+          <a class="p-button" href="/">Cancel</a>
+          <button class="p-button--positive" disabled="disabled" type="submit">Continue</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  window.addEventListener("DOMContentLoaded", function() {
+   Raven.context(function() {
+     var checkbox = document.querySelector('#id_i_agree');
+     var button = document.querySelector('button[type="submit"]');
+     checkbox.addEventListener('change', function (event) {
+       if (this.checked) {
+         button.removeAttribute('disabled');
+       } else {
+         button.setAttribute('disabled', 'disabled');
+       }
+     });
+   });
+  });
+</script>
+{% endblock %}
