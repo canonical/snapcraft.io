@@ -15,6 +15,7 @@ import Build from "./pages/Build";
 import Releases from "./pages/Releases";
 import AccountSnaps from "./pages/AccountSnaps";
 import RegisterNameDispute from "./pages/RegisterNameDispute";
+import DeveloperAgreementProgramme from "./pages/DeveloperAgreementProgramme";
 
 const router = createBrowserRouter([
   {
@@ -72,6 +73,10 @@ const router = createBrowserRouter([
       {
         path: "/register-name-dispute",
         element: <RegisterNameDispute />,
+      },
+      {
+        path: "/account/agreement",
+        element: <DeveloperAgreementProgramme />,
       },
     ],
   },

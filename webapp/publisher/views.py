@@ -57,9 +57,7 @@ def post_publisher_details():
 
 @account.route("/agreement")
 def get_agreement():
-    return flask.render_template(
-        "publisher/developer_programme_agreement.html"
-    )
+    return flask.render_template("store/publisher.html")
 
 
 @account.route("/agreement", methods=["POST"])
