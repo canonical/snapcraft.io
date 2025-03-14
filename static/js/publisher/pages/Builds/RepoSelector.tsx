@@ -192,7 +192,8 @@ function RepoSelector({ githubData, setAutoTriggerBuild }: Props) {
             options={[
               { label: "Select organization", value: "" },
               {
-                label: githubData?.github_user.name,
+                label:
+                  githubData?.github_user.name || githubData?.github_user.login,
                 value: githubData?.github_user.login,
               },
               ...getOrgs(),
