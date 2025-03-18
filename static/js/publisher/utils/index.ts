@@ -15,6 +15,7 @@ import setPageTitle from "./setPageTitle";
 import checkSigningKeyExists from "./checkSigningKeyExists";
 import sortByDateDescending from "./sortByDateDescending";
 import getPolicies from "./getPolicies";
+import filterAvailableStores from "./filterAvailableStores";
 
 export {
   getSettingsData,
@@ -34,4 +35,5 @@ export {
   checkSigningKeyExists,
   sortByDateDescending,
   getPolicies,
+  filterAvailableStores,
 };
