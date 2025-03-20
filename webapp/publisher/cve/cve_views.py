@@ -60,7 +60,7 @@ def get_cves(snap_name, revision):
     page = flask.request.args.get("page", default=1, type=int)
     page_size = flask.request.args.get("page_size", default=10, type=int)
 
-    snap_details = dashboard.get_snap_info(snap_name, flask.session)
+    snap_details = dashboard.get_snap_info(flask.session, snap_name)
     account_info = dashboard.get_account(flask.session)
     is_user_canonical = flask.session["publisher"].get("is_canonical", False)
     can_view_cves = CveHelper.can_user_access_cve_data(
