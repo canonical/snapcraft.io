@@ -580,11 +580,7 @@ def post_register_name_json():
 @publisher_snaps.route("/register-name-dispute")
 @login_required
 def get_register_name_dispute():
-    stores = dashboard.get_stores(flask.session)
-
     snap_name = flask.request.args.get("snap-name")
-    store_id = flask.request.args.get("store")
-    store_name = logic.get_store_name(store_id, stores)
 
     if not snap_name:
         return flask.redirect(
@@ -592,8 +588,6 @@ def get_register_name_dispute():
         )
     return flask.render_template(
         "store/publisher.html",
-        snap_name=snap_name,
-        store=store_name,
     )
 
 
@@ -637,7 +631,7 @@ def get_request_reserved_name():
             )
         )
     return flask.render_template(
-        "publisher/request-reserved-name.html",
+        "store/publisher.html",
         snap_name=snap_name,
         store=store_name,
     )
