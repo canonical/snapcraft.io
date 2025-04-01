@@ -2,6 +2,12 @@ import responses
 from tests.publisher.endpoint_testing import BaseTestCases
 
 
+class GetRegisterNamePageNotAuth(BaseTestCases.EndpointLoggedOut):
+    def setUp(self):
+        endpoint_url = "/register-snap"
+        super().setUp(snap_name=None, endpoint_url=endpoint_url)
+
+
 class GetRegisterNamePage(BaseTestCases.BaseAppTesting):
     def setUp(self):
         endpoint_url = "/register-snap"
@@ -111,6 +117,9 @@ class PostRegisterNamePage(BaseTestCases.EndpointLoggedIn):
         response = self.client.post(self.endpoint_url, data=self.data)
 
         assert response.status_code == 200
+        assert (
+            response.get_json()["data"]["error_code"] == "already_registered"
+        )
 
     @responses.activate
     def test_name_reserved(self):
@@ -125,6 +134,7 @@ class PostRegisterNamePage(BaseTestCases.EndpointLoggedIn):
         response = self.client.post(self.endpoint_url, data=self.data)
 
         assert response.status_code == 200
+        assert response.get_json()["data"]["error_code"] == "reserved_name"
 
     @responses.activate
     def test_claim_dispute(self):
@@ -142,3 +152,4 @@ class PostRegisterNamePage(BaseTestCases.EndpointLoggedIn):
         response = self.client.post(self.endpoint_url, data=self.data)
 
         assert response.status_code == 200
+        assert response.get_json()["success"] is True

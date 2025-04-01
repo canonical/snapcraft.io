@@ -1,4 +1,10 @@
-import { ReactNode, useState, Dispatch, SetStateAction } from "react";
+import {
+  ReactNode,
+  useState,
+  Dispatch,
+  SetStateAction,
+  FormEvent,
+} from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
   Form,
@@ -19,6 +25,8 @@ type Props = {
     SetStateAction<RegistrationResponse | undefined>
   >;
   availableStores: { name: string; id: string }[];
+  selectedStore: string;
+  setSelectedStore: Dispatch<SetStateAction<string>>;
 };
 
 function RegisterSnapForm({
@@ -26,50 +34,51 @@ function RegisterSnapForm({
   setIsSending,
   setRegistrationResponse,
   availableStores,
+  selectedStore,
+  setSelectedStore,
 }: Props): ReactNode {
   const [snapName, setSnapName] = useState<string>();
-  const [selectedStore, setSelectedStore] = useState<string>("ubuntu");
-  const [isPrivate, setIsPrivate] = useState<string>("private");
+  const [privacy, setPrivacy] = useState<string>("private");
 
   const navigate = useNavigate();
 
+  const handleSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+
+    setIsSending(true);
+
+    const formData = new FormData();
+    formData.set("csrf_token", window.CSRF_TOKEN);
+    formData.set("snap_name", snapName || "");
+    formData.set("store", selectedStore);
+
+    const response = await fetch("/api/register-snap", {
+      method: "POST",
+      headers: {
+        "X-CSRFToken": window.CSRF_TOKEN,
+      },
+      body: formData,
+    });
+
+    if (!response.ok) {
+      setIsSending(false);
+      throw new Error("Unable to register snap name");
+    }
+
+    const responseData = await response.json();
+
+    setTimeout(() => {
+      if (responseData.success) {
+        navigate("/snaps");
+      } else {
+        setRegistrationResponse(responseData.data);
+        setIsSending(false);
+      }
+    }, 1000);
+  };
+
   return (
-    <Form
-      onSubmit={async (e) => {
-        e.preventDefault();
-
-        setIsSending(true);
-
-        const formData = new FormData();
-        formData.set("csrf_token", window.CSRF_TOKEN);
-        formData.set("snap_name", snapName || "");
-        formData.set("store", selectedStore);
-
-        const response = await fetch("/api/register-snap", {
-          method: "POST",
-          headers: {
-            "X-CSRFToken": window.CSRF_TOKEN,
-          },
-          body: formData,
-        });
-
-        if (!response.ok) {
-          setIsSending(false);
-          throw new Error("Unable to register snap name");
-        }
-
-        const responseData = await response.json();
-
-        setTimeout(() => {
-          if (responseData.success) {
-            navigate("/snaps");
-          } else {
-            setRegistrationResponse(responseData.data);
-            setIsSending(false);
-          }
-        }, 1000);
-      }}
-    >
+    <Form onSubmit={handleSubmit}>
       <Row>
         <Col size={8}>
           <Select
@@ -82,7 +91,7 @@ function RegisterSnapForm({
               setSelectedStore(e.target.value);
 
               if (e.target.value === "ubuntu") {
-                setIsPrivate("private");
+                setPrivacy("private");
               }
             }}
             required
@@ -106,9 +115,9 @@ function RegisterSnapForm({
             name="public"
             disabled={selectedStore === "ubuntu"}
             value="public"
-            checked={isPrivate === "public"}
+            checked={privacy === "public"}
             onChange={(e) => {
-              setIsPrivate(e.target.value);
+              setPrivacy(e.target.value);
             }}
           />
           <Input
@@ -118,9 +127,9 @@ function RegisterSnapForm({
             help="Snap is hidden in stores and only accessible by the publisher and collaborators"
             disabled={selectedStore === "ubuntu"}
             value="private"
-            checked={isPrivate === "private" || selectedStore === "ubuntu"}
+            checked={privacy === "private" || selectedStore === "ubuntu"}
             onChange={(e) => {
-              setIsPrivate(e.target.value);
+              setPrivacy(e.target.value);
             }}
           />
         </Col>

@@ -131,7 +131,7 @@ describe("RegisterSnap", () => {
     });
   });
 
-  test("enabled public and private fields if not global store", async () => {
+  test("enables public and private fields if not global store", async () => {
     const user = userEvent.setup();
 
     server.use(

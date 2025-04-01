@@ -2,6 +2,7 @@ import { ReactNode, useState } from "react";
 import { Link } from "react-router-dom";
 import { Notification } from "@canonical/react-components";
 
+import RegistrationError from "./RegistrationError";
 import RegisterSnapForm from "./RegisterSnapForm";
 
 import { filterAvailableStores } from "../../utils";
@@ -17,6 +18,7 @@ function RegisterSnap(): ReactNode {
   const { data, isLoading } = useBrandStores();
 
   const availableStores = filterAvailableStores(data || []);
+  const [selectedStore, setSelectedStore] = useState<string>("ubuntu");
 
   return (
     <div className="u-fixed-width">
@@ -42,59 +44,28 @@ function RegisterSnap(): ReactNode {
         <h1 className="p-heading--2">Register snap</h1>
       )}
 
-      {registrationResponse?.error_code === "name-review-required" && (
-        <Notification severity="positive">
-          <strong>{registrationResponse?.snap_name}</strong> has been submitted
-          for review
+      {registrationResponse?.error_code && (
+        <RegistrationError
+          snapName={registrationResponse.snap_name}
+          isPrivate={registrationResponse.is_private}
+          store={registrationResponse.store}
+          errorCode={registrationResponse.error_code}
+        />
+      )}
+
+      {selectedStore === "ubuntu" && (
+        <Notification severity="information">
+          Snap name registrations are subject to manual review. You will be able
+          to upload your snap and update its metadata, but you will not be able
+          to make the Snap public until the review has been completed. We aim to
+          review all registrations within 30 days
         </Notification>
       )}
-
-      {registrationResponse?.error_code === "already_owned" && (
-        <Notification severity="caution">
-          You already own '
-          <Link to={`/${registrationResponse.snap_name}/listing`}>
-            <strong>{registrationResponse.snap_name}</strong>
-          </Link>
-          '.
-        </Notification>
-      )}
-
-      {registrationResponse?.error_code === "reserved_name" && (
-        <Notification severity="caution">
-          '<strong>{registrationResponse.snap_name}</strong>' is reserved. You
-          can{" "}
-          <a
-            href={`/request-reserved-name?snap_name=${registrationResponse.snap_name}&store=${registrationResponse.store}&is_private=${registrationResponse.is_private}`}
-          >
-            request a reserved name
-          </a>{" "}
-          or register a new name below.
-        </Notification>
-      )}
-
-      {registrationResponse?.error_code === "no-permission" && (
-        <Notification severity="caution">
-          You do not have permission to register snaps to this store. Contact
-          the store administrator.
-        </Notification>
-      )}
-
-      {registrationResponse?.error_code !== "already_registered" && (
-        <p>
-          Before you can push your snap to the store, its name must be
-          registered
-        </p>
-      )}
-
-      <Notification severity="information">
-        Snap name registrations are subject to manual review. You will be able
-        to upload your snap and update its metadata, but you will not be able to
-        make the Snap public until the review has been completed. We aim to
-        review all registrations within 30 days
-      </Notification>
 
       {!isLoading && availableStores.length > 0 && (
         <RegisterSnapForm
+          selectedStore={selectedStore}
+          setSelectedStore={setSelectedStore}
           isSending={isSending}
           setIsSending={setIsSending}
           setRegistrationResponse={setRegistrationResponse}
