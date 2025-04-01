@@ -95,7 +95,7 @@ describe("RegisterSnap", () => {
     });
   });
 
-  test("register button is enabled by default", async () => {
+  test("register button is disabled by default", async () => {
     server.use(
       http.get("/api/stores", () => {
         return HttpResponse.json(storesApiResponse);
