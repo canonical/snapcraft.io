@@ -1,10 +1,4 @@
-import {
-  useState,
-  useEffect,
-  ReactNode,
-  Dispatch,
-  SetStateAction,
-} from "react";
+import { useState, useEffect, Dispatch, SetStateAction } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { useParams, Link, useNavigate, useLocation } from "react-router-dom";
 import { useMutation, useQueryClient } from "react-query";
@@ -29,7 +23,7 @@ function CreatePolicyForm({
   setShowNotification,
   setShowErrorNotification,
   refetchPolicies,
-}: Props): ReactNode {
+}: Props): React.JSX.Element {
   const { id, model_id } = useParams();
   const brandId = useRecoilValue(brandIdState);
   const navigate = useNavigate();

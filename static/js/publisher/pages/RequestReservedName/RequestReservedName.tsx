@@ -1,4 +1,4 @@
-import { ReactNode, useState } from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import {
@@ -14,7 +14,7 @@ import {
 
 import { brandStoresState } from "../../state/brandStoreState";
 
-function RequestReservedName(): ReactNode {
+function RequestReservedName(): React.JSX.Element {
   const [claimComment, setClaimComment] = useState<string>();
   const [isSubmitting, setIsSubmitting] = useState<boolean>();
   const [showSuccessNotification, setShowSuccessNotification] =

@@ -17,7 +17,7 @@ import {
 
 import { setPageTitle } from "../../utils";
 
-function Builds(): JSX.Element {
+function Builds(): React.JSX.Element {
   const { snapId } = useParams();
   const [githubData, setGithubData] = useRecoilState(githubDataState);
   const [loggedIn, setLoggedIn] = useRecoilState(buildLoggedInState);

@@ -180,6 +180,7 @@ const ReleasesTableDroppableRow = (props: {
           {versionCountString}
         </small>
       </div>
+      {/* @ts-ignore */}
       <div className="p-releases-table__row--container" ref={drop}>
         <ReleasesTableChannelRow
           risk={risk}

@@ -7,7 +7,7 @@ import {
   CheckboxInput,
 } from "@canonical/react-components";
 
-function PubliciseCards(): JSX.Element {
+function PubliciseCards(): React.JSX.Element {
   const { snapId } = useParams();
   const [buttonType, setButtonType] = useState<"black" | "white" | "hidden">(
     "black",

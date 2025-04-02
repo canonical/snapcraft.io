@@ -1,4 +1,4 @@
-import { useState, useEffect, ReactNode } from "react";
+import { useState, useEffect } from "react";
 import {
   Link,
   useParams,
@@ -32,7 +32,7 @@ import { isClosedPanel, setPageTitle } from "../../utils";
 
 import type { Policy, SigningKey } from "../../types/shared";
 
-function Policies(): ReactNode {
+function Policies(): React.JSX.Element {
   const { id, model_id } = useParams();
   const brandId = useRecoilValue(brandIdState);
   const location = useLocation();

@@ -28,7 +28,7 @@ const EmptyData = () => {
   );
 };
 
-function Metrics(): JSX.Element {
+function Metrics(): React.JSX.Element {
   const { snapId } = useParams();
 
   const [isActiveDeviceMetricEmpty, setIsActiveDeviceMetricEmpty] = useState<

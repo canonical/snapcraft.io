@@ -1,10 +1,4 @@
-import {
-  ReactNode,
-  useState,
-  Dispatch,
-  SetStateAction,
-  FormEvent,
-} from "react";
+import { useState, Dispatch, SetStateAction, FormEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
   Form,
@@ -36,7 +30,7 @@ function RegisterSnapForm({
   availableStores,
   selectedStore,
   setSelectedStore,
-}: Props): ReactNode {
+}: Props): React.JSX.Element {
   const [snapName, setSnapName] = useState<string>();
   const [privacy, setPrivacy] = useState<string>("private");
 

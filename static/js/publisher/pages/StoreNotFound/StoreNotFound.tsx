@@ -1,7 +1,6 @@
-import { ReactNode } from "react";
 import { setPageTitle } from "../../utils";
 
-function StoreNotFound(): ReactNode {
+function StoreNotFound(): React.JSX.Element {
   setPageTitle("Store not found");
 
   return (

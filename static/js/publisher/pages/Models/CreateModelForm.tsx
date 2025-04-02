@@ -1,4 +1,4 @@
-import { Dispatch, ReactNode, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { useNavigate, useParams, useLocation, Link } from "react-router-dom";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { useMutation, useQueryClient } from "react-query";
@@ -28,7 +28,7 @@ type Props = {
 function CreateModelForm({
   setShowNotification,
   setShowErrorNotification,
-}: Props): ReactNode {
+}: Props): React.JSX.Element {
   const navigate = useNavigate();
   const location = useLocation();
   const { id } = useParams();

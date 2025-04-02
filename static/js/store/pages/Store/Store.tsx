@@ -1,4 +1,4 @@
-import { useRef, ReactNode } from "react";
+import { useRef } from "react";
 import { useLocation, useSearchParams } from "react-router-dom";
 
 import Banner from "../../components/Banner";
@@ -7,7 +7,7 @@ import EmptyResultSection from "../../components/EmptyResultSection";
 
 import { usePackages } from "../../hooks";
 
-function Store(): ReactNode {
+function Store(): React.JSX.Element {
   const { search } = useLocation();
   const [searchParams] = useSearchParams();
   const currentPage = searchParams.get("page") || "1";
@@ -30,8 +30,8 @@ function Store(): ReactNode {
   const packagesCount = data?.packages ? data?.packages.length : 0;
   const isResultExist = status === "success" && packagesCount > 0;
 
-  const searchRef = useRef<HTMLInputElement | null>(null);
-  const searchSummaryRef = useRef<HTMLDivElement>(null);
+  const searchRef = useRef(null);
+  const searchSummaryRef = useRef(null);
 
   return isResultExist || isFetching ? (
     <>

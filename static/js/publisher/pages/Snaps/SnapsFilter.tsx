@@ -1,4 +1,4 @@
-import { KeyboardEvent, ReactNode } from "react";
+import { KeyboardEvent } from "react";
 
 import type { SnapsList } from "../../types/shared";
 
@@ -26,7 +26,7 @@ function SnapsFilter({
   getStoreName,
   snaps,
   id,
-}: Props): ReactNode {
+}: Props): React.JSX.Element {
   return (
     <div className="p-search-box">
       <label htmlFor="search-snaps" className="u-off-screen">

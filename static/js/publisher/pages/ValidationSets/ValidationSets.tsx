@@ -13,7 +13,7 @@ import { useValidationSets } from "../../hooks";
 
 import type { ValidationSet } from "../../types";
 
-function ValidationSets(): JSX.Element {
+function ValidationSets(): React.JSX.Element {
   const { status, data: validationSets } = useValidationSets();
   const [searchParams, setSearchParams] = useSearchParams();
 

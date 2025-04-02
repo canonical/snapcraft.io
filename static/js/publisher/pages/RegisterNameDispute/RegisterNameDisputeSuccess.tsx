@@ -1,11 +1,10 @@
-import { ReactNode } from "react";
 import { Link } from "react-router-dom";
 
 type Props = {
   snapName: string | null;
 };
 
-function RegisterNameDisputeSuccess({ snapName }: Props): ReactNode {
+function RegisterNameDisputeSuccess({ snapName }: Props): React.JSX.Element {
   return (
     <>
       <h1 className="p-heading--2">

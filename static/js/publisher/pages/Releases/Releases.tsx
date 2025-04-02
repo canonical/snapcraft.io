@@ -7,7 +7,7 @@ import Release from "./Release";
 
 import { setPageTitle } from "../../utils";
 
-function Releases(): JSX.Element {
+function Releases(): React.JSX.Element {
   const { snapId } = useParams();
   const { isLoading, isFetched, data } = useQuery({
     queryKey: ["releases"],

@@ -11,7 +11,7 @@ export const TerritoryMetrics = ({
 }: {
   isEmpty: boolean;
   onDataLoad: (dataLength: number | undefined) => void;
-}): JSX.Element => {
+}): React.JSX.Element => {
   const { snapId } = useParams();
   const {
     status,

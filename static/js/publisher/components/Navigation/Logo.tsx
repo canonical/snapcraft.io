@@ -1,6 +1,4 @@
-import { ReactNode } from "react";
-
-function Logo(): ReactNode {
+function Logo(): React.JSX.Element {
   return (
     <a href="/" className="p-panel__logo">
       <img
