@@ -40,7 +40,7 @@ function RegisteredSnaps({
             width: "25%",
             content: (
               <>
-                <Link to={`/${snap.snapName}/listing`}>{snap.snapName}</Link>
+                {snap.snapName}
                 {isDisputePending && (
                   <>
                     &nbsp;
@@ -62,7 +62,7 @@ function RegisteredSnaps({
           {
             content: isUsersSnap ? (
               <button
-                className="p-button--base u-no-margin--bottom"
+                className="p-button--base u-no-margin--bottom is-dense"
                 onClick={() => {
                   setUnregisterSnapModal(snap.snapName);
                 }}
@@ -75,7 +75,7 @@ function RegisteredSnaps({
                   message={"Snaps can only be unregistered by their owner."}
                 >
                   <button
-                    className="u-no-margin--bottom u-no-margin--right"
+                    className="u-no-margin--bottom u-no-margin--right is-dense"
                     disabled
                   >
                     Unregister
