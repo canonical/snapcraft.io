@@ -1032,23 +1032,6 @@
   resolved "https://registry.yarnpkg.com/@canonical/latest-news/-/latest-news-1.5.0.tgz#22b0c211114ef8d0b9a10d495d035411b21e1a86"
   integrity sha512-pNCNhBn/LFnCe9Fp3Dm4WJwVkGrJMlL6lZft1SnLqufE5k6+ihZVr03revNxyMwnSu5EPpDcEduqYrTuQQGM4A==
 
-"@canonical/react-components@1.10.0":
-  version "1.10.0"
-  resolved "https://registry.yarnpkg.com/@canonical/react-components/-/react-components-1.10.0.tgz#ee9ec026932b592b4ea6f11a4820a05dadcfd97f"
-  integrity sha512-BQHnVJ1qLB/bGC1ZcyVCLYsJ1QzweEZMlMVZWTTq9lCJ+J+SJe9x5Zg+chheH6LfZlVaLHR2hkOUPYQRU20FIg==
-  dependencies:
-    "@types/jest" "29.5.14"
-    "@types/node" "20.17.13"
-    "@types/react" "18.3.18"
-    "@types/react-dom" "18.3.5"
-    "@types/react-table" "7.7.20"
-    classnames "2.5.1"
-    jest-environment-jsdom "29.7.0"
-    lodash.isequal "4.5.0"
-    prop-types "15.8.1"
-    react-table "7.8.0"
-    react-useportal "1.0.19"
-
 "@canonical/react-components@1.9.0":
   version "1.9.0"
   resolved "https://registry.yarnpkg.com/@canonical/react-components/-/react-components-1.9.0.tgz#9337b35e632d7419eddf51823a5243156893185e"
@@ -1065,6 +1048,22 @@
     prop-types "15.8.1"
     react-table "7.8.0"
     react-useportal "1.0.19"
+
+"@canonical/react-components@2.2.0":
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/@canonical/react-components/-/react-components-2.2.0.tgz#9ede438018e5ea04ea5a7da7ac9a0bb7fa318b9f"
+  integrity sha512-mHx/DOGXwHNmH9xhvmxzwADgzzX4HcFqFFET2SpcqM14tLjD8CzsEhaw+Ua+fIji47OODUSDCfrd/vU85/M8PA==
+  dependencies:
+    "@types/jest" "29.5.14"
+    "@types/node" "20.17.19"
+    "@types/react" "19.0.10"
+    "@types/react-dom" "19.0.4"
+    "@types/react-table" "7.7.20"
+    classnames "2.5.1"
+    fast-deep-equal "3.1.3"
+    jest-environment-jsdom "29.7.0"
+    prop-types "15.8.1"
+    react-table "7.8.0"
 
 "@canonical/store-components@0.53.0":
   version "0.53.0"
@@ -2431,10 +2430,10 @@
   dependencies:
     undici-types "~6.19.2"
 
-"@types/node@20.17.13":
-  version "20.17.13"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-20.17.13.tgz#26a7d3e72724ed73bc2fd39a66a2ab17e6e19a00"
-  integrity sha512-RNf+4dEeV69PIvyp++4IKM2vnLXtmp/JovfeQm5P5+qpKb6wHoH7INywLdZ7z+gVX46kgBP/fwJJvZYaHxtdyw==
+"@types/node@20.17.19":
+  version "20.17.19"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-20.17.19.tgz#0f2869555719bef266ca6e1827fcdca903c1a697"
+  integrity sha512-LEwC7o1ifqg/6r2gn9Dns0f1rhK+fPFDoMiceTJ6kWmVk6bgXBI/9IOWfVan4WiAavK9pIVWdX0/e3J+eEUh5A==
   dependencies:
     undici-types "~6.19.2"
 
@@ -2448,19 +2447,7 @@
   resolved "https://registry.yarnpkg.com/@types/randomstring/-/randomstring-1.3.0.tgz#2953e8de350c27c10eb1aa011fbca8d88c327d79"
   integrity sha512-kCP61wludjY7oNUeFiMxfswHB3Wn/aC03Cu82oQsNTO6OCuhVN/rCbBs68Cq6Nkgjmp2Sh3Js6HearJPkk7KQA==
 
-"@types/react-dom@17.0.26":
-  version "17.0.26"
-  resolved "https://registry.yarnpkg.com/@types/react-dom/-/react-dom-17.0.26.tgz#fa7891ba70fd39ddbaa7e85b6ff9175bb546bc1b"
-  integrity sha512-Z+2VcYXJwOqQ79HreLU/1fyQ88eXSSFh6I3JdrEHQIfYSI0kCQpTGvOrbE6jFGGYXKsHuwY9tBa/w5Uo6KzrEg==
-
-"@types/react-dom@18.3.0":
-  version "18.3.0"
-  resolved "https://registry.yarnpkg.com/@types/react-dom/-/react-dom-18.3.0.tgz#0cbc818755d87066ab6ca74fbedb2547d74a82b0"
-  integrity sha512-EhwApuTmMBmXuFOikhQLIBUn6uFg81SwLMOAUgodJF14SOBOCMdU04gDoYi0WOJJHD144TL32z4yDqCW3dnkQg==
-  dependencies:
-    "@types/react" "*"
-
-"@types/react-dom@18.3.5":
+"@types/react-dom@17.0.26", "@types/react-dom@18.3.0", "@types/react-dom@18.3.5", "@types/react-dom@19.0.4":
   version "18.3.5"
   resolved "https://registry.yarnpkg.com/@types/react-dom/-/react-dom-18.3.5.tgz#45f9f87398c5dcea085b715c58ddcf1faf65f716"
   integrity sha512-P4t6saawp+b/dFrUr2cvkVsfvPguwsxtH6dNIYRllMsefqFzkZk5UIjzyDOv5g1dXIPdG4Sp1yCR4Z6RCUsG/Q==
@@ -2499,42 +2486,13 @@
   dependencies:
     "@types/react" "*"
 
-"@types/react@*":
-  version "19.0.3"
-  resolved "https://registry.yarnpkg.com/@types/react/-/react-19.0.3.tgz#7867240defc1a3686f151644ac886a7e8e0868f4"
-  integrity sha512-UavfHguIjnnuq9O67uXfgy/h3SRJbidAYvNjLceB+2RIKVRBzVsh0QO+Pw6BCSQqFS9xwzKfwstXx0m6AbAREA==
-  dependencies:
-    csstype "^3.0.2"
-
-"@types/react@17.0.83":
-  version "17.0.83"
-  resolved "https://registry.yarnpkg.com/@types/react/-/react-17.0.83.tgz#b477c56387b74279281149dcf5ba2a1e2216d131"
-  integrity sha512-l0m4ArKJvmFtR4e8UmKrj1pB4tUgOhJITf+mADyF/p69Ts1YAR/E+G9XEM0mHXKVRa1dQNHseyyDNzeuAXfXQw==
-  dependencies:
-    "@types/prop-types" "*"
-    "@types/scheduler" "^0.16"
-    csstype "^3.0.2"
-
-"@types/react@18.3.18":
+"@types/react@*", "@types/react@17.0.83", "@types/react@18.3.18", "@types/react@18.3.5", "@types/react@19.0.10":
   version "18.3.18"
   resolved "https://registry.yarnpkg.com/@types/react/-/react-18.3.18.tgz#9b382c4cd32e13e463f97df07c2ee3bbcd26904b"
   integrity sha512-t4yC+vtgnkYjNSKlFx1jkAhH8LgTo2N/7Qvi83kdEaUtMDiwpbLAktKDaAMlRcJ5eSxZkH74eEGt1ky31d7kfQ==
   dependencies:
     "@types/prop-types" "*"
     csstype "^3.0.2"
-
-"@types/react@18.3.5":
-  version "18.3.5"
-  resolved "https://registry.yarnpkg.com/@types/react/-/react-18.3.5.tgz#5f524c2ad2089c0ff372bbdabc77ca2c4dbadf8f"
-  integrity sha512-WeqMfGJLGuLCqHGYRGHxnKrXcTitc6L/nBUWfWPcTarG3t9PsquqUMuVeXZeca+mglY4Vo5GZjCi0A3Or2lnxA==
-  dependencies:
-    "@types/prop-types" "*"
-    csstype "^3.0.2"
-
-"@types/scheduler@^0.16":
-  version "0.16.8"
-  resolved "https://registry.yarnpkg.com/@types/scheduler/-/scheduler-0.16.8.tgz#ce5ace04cfeabe7ef87c0091e50752e36707deff"
-  integrity sha512-WZLiwShhwLRmeV6zH+GkbOFT6Z6VklCItrDioxUnv+u4Ll+8vKeFySoFyK/0ctcRpOmwAicELfmys1sDc/Rw+A==
 
 "@types/stack-utils@^2.0.0":
   version "2.0.3"
@@ -4546,7 +4504,7 @@ fast-average-color@9.4.0:
   resolved "https://registry.yarnpkg.com/fast-average-color/-/fast-average-color-9.4.0.tgz#eea0182fa8818ea0c70dcc7a85b945f3c716b11b"
   integrity sha512-bvM8vV6YwK07dPbzFz77zJaBcfF6ABVfgNwaxVgXc2G+o0e/tzLCF9WU8Ryp1r0Nkk6JuJNsWCzbb4cLOMlB+Q==
 
-fast-deep-equal@^3.1.1, fast-deep-equal@^3.1.3:
+fast-deep-equal@3.1.3, fast-deep-equal@^3.1.1, fast-deep-equal@^3.1.3:
   version "3.1.3"
   resolved "https://registry.yarnpkg.com/fast-deep-equal/-/fast-deep-equal-3.1.3.tgz#3a7d56b559d6cbc3eb512325244e619a65c6c525"
   integrity sha512-f3qQ9oQy9j2AhBe/H9VC91wLmKBCCU/gDOnKNAYG5hswO7BLKj09Hc5HYNz9cGI++xlpDCIgDaitVs03ATR84Q==

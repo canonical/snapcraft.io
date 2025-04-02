@@ -34,7 +34,7 @@
     "@canonical/cookie-policy": "3.6.5",
     "@canonical/global-nav": "3.6.4",
     "@canonical/latest-news": "1.5.0",
-    "@canonical/react-components": "1.10.0",
+    "@canonical/react-components": "2.2.0",
     "@canonical/store-components": "0.53.0",
     "@dnd-kit/core": "6.3.1",
     "@dnd-kit/sortable": "8.0.0",
@@ -134,5 +134,9 @@
     "stylelint-config-standard-scss": "14.0.0",
     "stylelint-order": "6.0.4",
     "ts-jest": "29.2.5"
+  },
+  "resolutions": {
+    "@types/react": "18.3.18",
+    "@types/react-dom": "18.3.5"
   }
 }
