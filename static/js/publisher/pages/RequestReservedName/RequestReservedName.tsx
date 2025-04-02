@@ -1,4 +1,5 @@
 import { ReactNode, useState } from "react";
+import { Link } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import {
   Form,
@@ -128,9 +129,9 @@ function RequestReservedName(): ReactNode {
           </Row>
           <hr />
           <div className="u-align--right">
-            <a className="p-button" href="/register-snap">
+            <Link to="/register-snap" className="p-button">
               Register snap
-            </a>
+            </Link>
             <Button
               type="submit"
               appearance="positive"

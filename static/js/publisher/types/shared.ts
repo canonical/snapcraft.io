@@ -166,3 +166,9 @@ export type ApiError = {
 };
 
 export type EventFunction<T> = (value: T) => void;
+
+export type AvailableStores = {
+  name: string;
+  id: string;
+  roles: string[];
+}[];
