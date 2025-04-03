@@ -11,7 +11,7 @@ type Props = {
   trending: boolean;
 };
 
-function PubliciseBadges({ trending }: Props): JSX.Element {
+function PubliciseBadges({ trending }: Props): React.JSX.Element {
   const { snapId } = useParams();
   const [showStableChannelBadge, setShowStableChannelBadge] =
     useState<boolean>(true);

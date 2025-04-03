@@ -1,4 +1,4 @@
-import { useState, useEffect, ReactNode } from "react";
+import { useState, useEffect } from "react";
 import { useRecoilValue } from "recoil";
 import { useParams, NavLink } from "react-router-dom";
 
@@ -10,7 +10,7 @@ type Props = {
   nativeNavLink?: boolean;
 };
 
-function StoreSelector({ nativeNavLink }: Props): ReactNode {
+function StoreSelector({ nativeNavLink }: Props): React.JSX.Element {
   const { id } = useParams();
   const brandStoresList = useRecoilValue(brandStoresState);
   const [showStoreSelector, setShowStoreSelector] = useState<boolean>(false);

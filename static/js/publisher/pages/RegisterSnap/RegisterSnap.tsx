@@ -1,4 +1,4 @@
-import { ReactNode, useState } from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Notification } from "@canonical/react-components";
 
@@ -11,7 +11,7 @@ import { useBrandStores } from "../../hooks";
 
 import type { RegistrationResponse } from "./local-types";
 
-function RegisterSnap(): ReactNode {
+function RegisterSnap(): React.JSX.Element {
   const [isSending, setIsSending] = useState<boolean>(false);
   const [registrationResponse, setRegistrationResponse] =
     useState<RegistrationResponse>();

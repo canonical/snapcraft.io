@@ -1,4 +1,4 @@
-import { ReactNode, useState, Dispatch, SetStateAction } from "react";
+import { useState, Dispatch, SetStateAction } from "react";
 import {
   Form,
   Input,
@@ -18,7 +18,7 @@ function RegisterNameDisputeForm({
   snapName,
   store,
   setClaimSubmitted,
-}: Props): ReactNode {
+}: Props): React.JSX.Element {
   const [claimComment, setClaimComment] = useState<string>();
   const [isSending, setIsSending] = useState<boolean>();
 

@@ -13,7 +13,11 @@ interface IActiveDeviceAnnotation {
   }>;
 }
 
-function ActiveDeviceAnnotation({ snapId }: { snapId?: string }): JSX.Element {
+function ActiveDeviceAnnotation({
+  snapId,
+}: {
+  snapId?: string;
+}): React.JSX.Element {
   const { data: annotation }: { data: IActiveDeviceAnnotation | undefined } =
     useMetricsAnnotation(snapId);
 

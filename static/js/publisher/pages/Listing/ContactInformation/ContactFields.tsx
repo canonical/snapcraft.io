@@ -21,7 +21,7 @@ function ContactFields({
   labelName,
   fieldName,
   getValues,
-}: Props): JSX.Element {
+}: Props): React.JSX.Element {
   const { fields, append, remove } = useFieldArray({
     control,
     name: fieldName,

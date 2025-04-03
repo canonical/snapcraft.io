@@ -1,10 +1,4 @@
-import {
-  useState,
-  useEffect,
-  ReactNode,
-  Dispatch,
-  SetStateAction,
-} from "react";
+import { useState, useEffect, Dispatch, SetStateAction } from "react";
 import { useParams } from "react-router-dom";
 import { format } from "date-fns";
 import { MainTable, Button } from "@canonical/react-components";
@@ -34,7 +28,7 @@ function InvitesTable({
   setShowSuccessNotification,
   setNotificationText,
   setShowErrorNotification,
-}: Props): ReactNode {
+}: Props): React.JSX.Element {
   const [pendingInvites, setPendingInvites] = useState<Invite[]>([]);
   const [expiredInvites, setExpiredInvites] = useState<Invite[]>([]);
   const [revokedInvites, setRevokedInvites] = useState<Invite[]>([]);

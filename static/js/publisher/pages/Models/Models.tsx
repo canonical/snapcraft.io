@@ -1,4 +1,4 @@
-import { useState, useEffect, ReactNode } from "react";
+import { useState, useEffect } from "react";
 import { useSetRecoilState, useRecoilValue } from "recoil";
 import {
   Link,
@@ -28,7 +28,7 @@ import { isClosedPanel, setPageTitle, getPolicies } from "../../utils";
 
 import type { Model as ModelType, Policy } from "../../types/shared";
 
-function Models(): ReactNode {
+function Models(): React.JSX.Element {
   const { id } = useParams();
   const brandId = useRecoilValue(brandIdState);
 

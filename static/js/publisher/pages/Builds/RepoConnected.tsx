@@ -22,7 +22,7 @@ function RepoConnected({
 }: {
   autoTriggerBuild: boolean;
   setAutoTriggerBuild: Dispatch<SetStateAction<boolean>>;
-}): JSX.Element {
+}): React.JSX.Element {
   const { snapId } = useParams();
   const githubData = useRecoilValue(githubDataState);
   const [disconnectModalOpen, setDisconnectModalOpen] =
@@ -54,7 +54,7 @@ function RepoConnected({
     });
   };
 
-  const formatStatus = (status: string): JSX.Element => {
+  const formatStatus = (status: string): React.JSX.Element => {
     switch (status) {
       case "never_built":
         return <>Never built</>;

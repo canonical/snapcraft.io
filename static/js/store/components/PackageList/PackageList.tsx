@@ -1,4 +1,4 @@
-import { ReactNode, RefObject } from "react";
+import { RefObject } from "react";
 import { useSearchParams } from "react-router-dom";
 import { DefaultCard, LoadingCard } from "@canonical/store-components";
 import {
@@ -25,7 +25,7 @@ function PackageList({
   isFetching: boolean;
   searchRef: RefObject<HTMLInputElement>;
   searchSummaryRef: RefObject<HTMLDivElement>;
-}): ReactNode {
+}): React.JSX.Element {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const selectedCategories =

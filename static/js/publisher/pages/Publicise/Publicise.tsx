@@ -20,7 +20,7 @@ type Props = {
   view?: undefined | "badges" | "cards";
 };
 
-function Publicise({ view }: Props): JSX.Element {
+function Publicise({ view }: Props): React.JSX.Element {
   const { snapId } = useParams();
 
   const { data, isLoading, isFetched } = useQuery({

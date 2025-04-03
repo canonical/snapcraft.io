@@ -1,4 +1,4 @@
-import { ReactNode, useState } from "react";
+import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import { format } from "date-fns";
@@ -12,7 +12,7 @@ import { filteredModelsListState } from "../../state/modelsState";
 
 import type { Model as ModelType } from "../../types/shared";
 
-function ModelsTable(): ReactNode {
+function ModelsTable(): React.JSX.Element {
   const { id } = useParams();
   const modelsList = useRecoilValue<Array<ModelType>>(filteredModelsListState);
   const [itemsToShow, setItemsToShow] = useState<Array<ModelType>>(modelsList);

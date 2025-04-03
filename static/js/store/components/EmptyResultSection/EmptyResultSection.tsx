@@ -1,4 +1,4 @@
-import { ReactNode, useRef } from "react";
+import { useRef } from "react";
 import { Col, Link, List, Row, Strip } from "@canonical/react-components";
 
 import { SearchInput } from "../SearchInput";
@@ -14,7 +14,7 @@ function EmptyResultSection({
   searchTerm: string | null;
   data?: Packages;
   isFetching: boolean;
-}): ReactNode {
+}): React.JSX.Element {
   const searchRef = useRef<HTMLInputElement | null>(null);
 
   return (

@@ -15,7 +15,7 @@ type Props = {
 function DisconnectRepoActions({
   setDisconnectModalOpen,
   githubData,
-}: Props): JSX.Element {
+}: Props): React.JSX.Element {
   const { snapId } = useParams();
   const setRepoConnected = useSetRecoilState(buildRepoConnectedState);
   const [disconnecting, setDisconnecting] = useState<boolean>(false);

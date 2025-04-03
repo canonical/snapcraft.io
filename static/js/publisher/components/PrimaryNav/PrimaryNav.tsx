@@ -18,7 +18,7 @@ function PrimaryNav({
 }: {
   collapseNavigation: boolean;
   setCollapseNavigation: (value: boolean) => void;
-}): JSX.Element {
+}): React.JSX.Element {
   const location = useLocation();
   const { data: publisherData } = usePublisher();
   const { data: validationSetsData } = useValidationSets();

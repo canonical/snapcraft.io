@@ -1,4 +1,4 @@
-import { ReactNode, RefObject } from "react";
+import { RefObject } from "react";
 import { Strip, Row, Col } from "@canonical/react-components";
 import { SearchInput } from "../SearchInput";
 
@@ -7,7 +7,7 @@ type Props = {
   searchSummaryRef?: RefObject<HTMLDivElement>;
 };
 
-function Banner({ searchRef, searchSummaryRef }: Props): ReactNode {
+function Banner({ searchRef, searchSummaryRef }: Props): React.JSX.Element {
   return (
     <Strip type="dark">
       <Row>

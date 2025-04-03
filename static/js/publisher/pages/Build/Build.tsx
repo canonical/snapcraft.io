@@ -7,7 +7,7 @@ import SectionNav from "../../components/SectionNav";
 
 import { setPageTitle } from "../../utils";
 
-function Build(): JSX.Element {
+function Build(): React.JSX.Element {
   const { buildId, snapId } = useParams();
   const { data, isFetched, isLoading, isFetching } = useQuery({
     queryKey: ["build", snapId, buildId],

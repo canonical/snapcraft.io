@@ -4,7 +4,7 @@ interface RouteParams {
   id?: string;
   model_id?: string;
 }
-function ModelBreadcrumb(): JSX.Element {
+function ModelBreadcrumb(): React.JSX.Element {
   const { id, model_id } = useParams() as RouteParams;
 
   return (

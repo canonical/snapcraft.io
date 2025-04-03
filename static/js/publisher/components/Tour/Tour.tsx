@@ -8,7 +8,7 @@ type Props = {
   steps: {
     target: string;
     title: string;
-    content: JSX.Element;
+    content: React.JSX.Element;
     disableBeacon?: boolean;
   }[];
 };

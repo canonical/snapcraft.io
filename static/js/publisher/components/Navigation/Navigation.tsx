@@ -1,4 +1,4 @@
-import { useState, useEffect, ReactNode } from "react";
+import { useState, useEffect } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { useParams, NavLink } from "react-router-dom";
 import { Icon } from "@canonical/react-components";
@@ -16,7 +16,7 @@ function Navigation({
   sectionName,
 }: {
   sectionName: string | null;
-}): ReactNode {
+}): React.JSX.Element {
   const brandStoresList = useRecoilValue(brandStoresState);
   const { id } = useParams();
   const { data: brand } = useBrand(id);
