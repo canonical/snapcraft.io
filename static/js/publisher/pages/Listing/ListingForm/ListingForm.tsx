@@ -26,7 +26,7 @@ type Props = {
   refetch: () => void;
 };
 
-function ListingForm({ data, refetch }: Props): JSX.Element {
+function ListingForm({ data, refetch }: Props): React.JSX.Element {
   const { snapId } = useParams();
 
   const {

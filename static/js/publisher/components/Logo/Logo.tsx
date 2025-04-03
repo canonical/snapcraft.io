@@ -1,4 +1,4 @@
-function Logo(): JSX.Element {
+function Logo(): React.JSX.Element {
   return (
     <a href="/" className="p-panel__logo tag-logo">
       <img

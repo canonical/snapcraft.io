@@ -21,7 +21,7 @@ const LANGUAGES = {
 
 type LanguageKey = keyof typeof LANGUAGES;
 
-function PubliciseButtons(): JSX.Element {
+function PubliciseButtons(): React.JSX.Element {
   const { snapId } = useParams();
   const [selectedLanguage, setSelectedLanguage] = useState<LanguageKey>("en");
 

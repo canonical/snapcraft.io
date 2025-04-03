@@ -1,4 +1,4 @@
-import { useState, useEffect, ReactNode } from "react";
+import { useState, useEffect } from "react";
 import { Button, Icon, Input, Select } from "@canonical/react-components";
 
 import type {
@@ -19,7 +19,7 @@ function AppPagination<T extends ItemType>({
   keyword,
   items,
   setItemsToShow,
-}: Props<T>): ReactNode {
+}: Props<T>): React.JSX.Element {
   const paginationOptions = [
     {
       label: "25/page",

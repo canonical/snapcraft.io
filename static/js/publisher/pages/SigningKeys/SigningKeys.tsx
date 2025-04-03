@@ -1,4 +1,4 @@
-import { useState, useEffect, ReactNode } from "react";
+import { useState, useEffect } from "react";
 import { useSetRecoilState, useRecoilValue } from "recoil";
 import {
   Link,
@@ -33,7 +33,7 @@ import {
 
 import type { SigningKey, Policy, Model } from "../../types/shared";
 
-function SigningKeys(): ReactNode {
+function SigningKeys(): React.JSX.Element {
   const { id } = useParams();
   const brandId = useRecoilValue(brandIdState);
   const location = useLocation();

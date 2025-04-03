@@ -11,7 +11,7 @@ import { useValidationSet } from "../../hooks";
 
 import type { ValidationSet, Snap } from "../../types";
 
-function ValidationSet(): JSX.Element {
+function ValidationSet(): React.JSX.Element {
   const { validationSetId } = useParams();
   const [searchParams, setSearchParams] = useSearchParams();
   const {

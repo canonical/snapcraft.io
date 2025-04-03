@@ -1,5 +1,5 @@
 import { Button } from "@canonical/react-components";
-import { ReactNode, RefObject } from "react";
+import { RefObject } from "react";
 import { useSearchParams } from "react-router-dom";
 
 type Props = {
@@ -10,7 +10,7 @@ type Props = {
 export const SearchInput = ({
   searchRef,
   searchSummaryRef,
-}: Props): ReactNode => {
+}: Props): React.JSX.Element => {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {

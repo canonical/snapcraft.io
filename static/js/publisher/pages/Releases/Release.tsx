@@ -30,7 +30,7 @@ function Release({
   channelMap,
   tracks,
   options,
-}: Props): JSX.Element {
+}: Props): React.JSX.Element {
   const store = createStore(
     releases,
     {

@@ -15,7 +15,7 @@ function ActiveDeviceMetrics({
 }: {
   isEmpty: boolean;
   onDataLoad: (dataLength: number | undefined) => void;
-}): JSX.Element {
+}): React.JSX.Element {
   const { snapId } = useParams();
   const [searchParams, setSearchParams] = useSearchParams();
   const { data: latestActiveDevices } = useLatestActiveDevicesMetric(snapId);

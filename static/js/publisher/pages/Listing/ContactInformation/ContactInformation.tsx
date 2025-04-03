@@ -25,7 +25,7 @@ function ContactInformation({
   control,
   getFieldState,
   getValues,
-}: Props): JSX.Element {
+}: Props): React.JSX.Element {
   return (
     <>
       <h2 className="p-heading--4">Contact information</h2>

@@ -1,4 +1,4 @@
-import { useState, useEffect, SyntheticEvent, ReactNode } from "react";
+import { useState, useEffect, SyntheticEvent } from "react";
 import { useRecoilValue } from "recoil";
 import {
   Row,
@@ -13,7 +13,7 @@ import Navigation from "../../components/Navigation";
 
 import { publisherState } from "../../state/publisherState";
 
-function AccountDetails(): ReactNode {
+function AccountDetails(): React.JSX.Element {
   const [subscriptionPreferencesChanged, setSubscriptionPreferencesChanged] =
     useState(false);
   const [subscribeToNewsletter, setSubscribeToNewsletter] = useState(false);

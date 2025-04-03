@@ -7,7 +7,7 @@ import ListingForm from "./ListingForm";
 
 import { setPageTitle } from "../../utils";
 
-function Listing(): JSX.Element {
+function Listing(): React.JSX.Element {
   const { snapId } = useParams();
   const { data, isLoading, refetch, status } = useQuery({
     queryKey: ["listing"],

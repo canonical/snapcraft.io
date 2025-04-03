@@ -1,4 +1,4 @@
-import { useRef, ReactNode } from "react";
+import { useRef } from "react";
 import { useLocation, useSearchParams } from "react-router-dom";
 
 import Banner from "../../components/Banner";
@@ -7,7 +7,7 @@ import EmptyResultSection from "../../components/EmptyResultSection";
 
 import { usePackages } from "../../hooks";
 
-function Store(): ReactNode {
+function Store(): React.JSX.Element {
   const { search } = useLocation();
   const [searchParams] = useSearchParams();
   const currentPage = searchParams.get("page") || "1";

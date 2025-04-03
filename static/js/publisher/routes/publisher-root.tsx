@@ -10,7 +10,7 @@ import {
 import Logo from "../components/Logo";
 import PrimaryNav from "../components/PrimaryNav";
 
-function PublisherRoot(): JSX.Element {
+function PublisherRoot(): React.JSX.Element {
   const [collapseNavigation, setCollapseNavigation] = useState<boolean>(false);
 
   return (

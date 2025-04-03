@@ -1,15 +1,13 @@
 import { useSearchParams } from "react-router-dom";
 import { RecoilState, useSetRecoilState } from "recoil";
 import { Button, Icon } from "@canonical/react-components";
-import { ReactNode } from "react";
-
 type Props = {
   state: RecoilState<string>;
   label: string;
   placeholder: string;
 };
 
-function Filter({ state, label, placeholder }: Props): ReactNode {
+function Filter({ state, label, placeholder }: Props): React.JSX.Element {
   const [searchParams, setSearchParams] = useSearchParams();
   const setFilter = useSetRecoilState(state);
 

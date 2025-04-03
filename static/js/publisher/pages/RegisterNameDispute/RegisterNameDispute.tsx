@@ -1,4 +1,4 @@
-import { ReactNode, useState } from "react";
+import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
 import RegisterNameDisputeForm from "./RegisterNameDisputeForm";
@@ -10,7 +10,7 @@ import { setPageTitle } from "../../utils";
 
 import type { Store } from "../../types/shared";
 
-function RegisterNameDispute(): ReactNode {
+function RegisterNameDispute(): React.JSX.Element {
   setPageTitle("Register name dispute");
 
   const [searchParams] = useSearchParams();

@@ -1,4 +1,4 @@
-import { ReactNode, SetStateAction, useState, Dispatch } from "react";
+import { SetStateAction, useState, Dispatch } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { useParams } from "react-router-dom";
 import { format } from "date-fns";
@@ -21,7 +21,7 @@ type Props = {
 function ModelsTable({
   setShowDeletePolicyNotification,
   setShowDeletePolicyErrorNotification,
-}: Props): ReactNode {
+}: Props): React.JSX.Element {
   const { model_id } = useParams();
   const brandId = useRecoilValue(brandIdState);
   const [policiesList, setPoliciesList] = useRecoilState(

@@ -1,4 +1,4 @@
-import { Dispatch, ReactNode, SetStateAction } from "react";
+import { Dispatch, SetStateAction } from "react";
 import { Modal, Button } from "@canonical/react-components";
 import type { InviteActionData } from "../../types/shared";
 
@@ -16,7 +16,7 @@ function InviteModal({
   setInviteModalOpen,
   updateInvite,
   inviteModalIsSaving,
-}: Props): ReactNode {
+}: Props): React.JSX.Element | null {
   if (!inviteModalOpen || !inviteActionData) {
     return null;
   }

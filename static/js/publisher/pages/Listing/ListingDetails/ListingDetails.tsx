@@ -27,7 +27,7 @@ function ListingDetails({
   getValues,
   setValue,
   control,
-}: Props): JSX.Element {
+}: Props): React.JSX.Element {
   const [showSupportedMarkdownSyntax, setShowSupportedMarkdownSyntax] =
     useState<boolean>(false);
 

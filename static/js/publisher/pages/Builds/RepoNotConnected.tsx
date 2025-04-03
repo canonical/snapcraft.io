@@ -12,7 +12,7 @@ function RepoNotConnected({
   setAutoTriggerBuild,
 }: {
   setAutoTriggerBuild: Dispatch<SetStateAction<boolean>>;
-}): JSX.Element {
+}): React.JSX.Element {
   const githubData = useRecoilValue<GithubData | null>(githubDataState);
 
   return (
