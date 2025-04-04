@@ -4,7 +4,7 @@ import { ISnap } from "../../types";
 import SnapNameEntry from "./SnapNameEntry";
 import NewSnapNotification from "../NewSnapNotification";
 import EmptySnapList from "../EmptySnapList";
-import { PAGE_NUMBER } from "../../types/constants";
+import { ITEMS_PER_PAGE } from "../../constants";
 
 function PublishedSnapList({
   snaps,
@@ -115,7 +115,7 @@ function PublishedSnapList({
           />
           <Pagination
             currentPage={currentPage}
-            itemsPerPage={PAGE_NUMBER}
+            itemsPerPage={ITEMS_PER_PAGE}
             paginate={(page) => setCurrentPage(page)}
             totalItems={totalItems}
           />

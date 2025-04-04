@@ -10,7 +10,7 @@ import {
 } from "@canonical/react-components";
 
 import { ISnap } from "../../types";
-import { PAGE_NUMBER } from "../../types/constants";
+import { ITEMS_PER_PAGE } from "../../constants";
 
 function RegisteredSnaps({
   snaps,
@@ -168,7 +168,7 @@ function RegisteredSnaps({
             {
               key: "registered-snap-names",
               title: `Registered snap names (${snaps.length})`,
-              content: <MainTable rows={getData()} paginate={PAGE_NUMBER} />,
+              content: <MainTable rows={getData()} paginate={ITEMS_PER_PAGE} />,
             },
           ]}
           expanded="registered-snap-names"
