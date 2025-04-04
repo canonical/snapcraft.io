@@ -79,10 +79,13 @@ function PublishedSnapList({
 
   return (
     <Strip element="section" shallow>
-      <div className="u-fixed-width">
-        <h2 className="p-heading--4 u-float-left">My published snaps</h2>
-      </div>
       {isEmpty && <EmptySnapList />}
+
+      {!isEmpty && (
+        <div className="u-fixed-width">
+          <h2 className="p-heading--4">My published snaps</h2>
+        </div>
+      )}
 
       {shouldShowNewSnapNotification && <NewSnapNotification snap={snaps[0]} />}
 
