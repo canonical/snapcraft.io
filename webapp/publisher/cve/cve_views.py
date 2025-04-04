@@ -59,17 +59,28 @@ def get_cves(snap_name, revision):
     # Pagination params
     page = flask.request.args.get("page", default=1, type=int)
     page_size = flask.request.args.get("page_size", default=10, type=int)
+    is_user_canonical = flask.session["publisher"].get("is_canonical", False)
 
     snap_details = dashboard.get_snap_info(flask.session, snap_name)
+    if not snap_details:
+        return (
+            flask.jsonify(
+                {
+                    "success": False,
+                    "error": "Snap not found.",
+                }
+            ),
+            404,
+        )
+
     account_info = dashboard.get_account(flask.session)
-    is_user_canonical = flask.session["publisher"].get("is_canonical", False)
     can_view_cves = CveHelper.can_user_access_cve_data(
         snap_name=snap_name,
         snap_details=snap_details,
         account_info=account_info,
         is_user_canonical=is_user_canonical,
     )
-    if not can_view_cves:
+    if not is_user_canonical:
         return (
             flask.jsonify(
                 {
