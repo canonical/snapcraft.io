@@ -41,6 +41,11 @@ env: &env
       key: github-snapcraft-user-token
       name: snapcraft-io
 
+  - name: GITHUB_SNAPCRAFT_BOT_USER_TOKEN
+    secretKeyRef:
+      key: github-snapcraft-bot-user-token
+      name: snapcraft-io
+
   - name: GITHUB_WEBHOOK_SECRET
     secretKeyRef:
       key: github-webhook-secret
@@ -80,7 +85,7 @@ env: &env
     secretKeyRef:
       key: discourse-api-username
       name: snapcraft-io
-  
+
   - name: DNS_VERIFICATION_SALT
     secretKeyRef:
       key: dns-verification-salt
