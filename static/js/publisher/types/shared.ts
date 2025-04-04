@@ -4,18 +4,6 @@ export type RouteParams = {
 
 export type Status = "Pending" | "Expired" | "Revoked";
 
-// Slices
-export type CurrentStoreSlice = {
-  currentStore: {
-    currentStore: {
-      id: string;
-      "manual-review-policy": string;
-      private: boolean;
-      name: string;
-    };
-  };
-};
-
 // Item lists
 export type InvitesList = Array<Invite>;
 export type MembersList = Array<Member>;

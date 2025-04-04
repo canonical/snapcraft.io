@@ -3,7 +3,7 @@ import { Accordion } from "@canonical/react-components";
 import { ISnap } from "../../types";
 import PublishedSnapList from "../PublishedSnapList";
 import PublisherMetrics from "../PublisherMetrics";
-import { PAGE_NUMBER } from "../../types/constants";
+import { ITEMS_PER_PAGE } from "../../constants";
 
 function PublishedSnapSection({
   snaps,
@@ -14,10 +14,10 @@ function PublishedSnapSection({
 }) {
   const [currentPage, setCurrentPage] = useState<number>(1);
 
-  const firstItemOfPage = (currentPage - 1) * PAGE_NUMBER;
+  const firstItemOfPage = (currentPage - 1) * ITEMS_PER_PAGE;
   const snapsInPage = snaps.slice(
     firstItemOfPage,
-    firstItemOfPage + PAGE_NUMBER,
+    firstItemOfPage + ITEMS_PER_PAGE,
   );
 
   return (
