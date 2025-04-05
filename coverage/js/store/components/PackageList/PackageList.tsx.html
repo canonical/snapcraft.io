@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">79.48% </span>
+                <span class="strong">77.77% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>31/39</span>
+                <span class='fraction'>28/36</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">79.48% </span>
+                <span class="strong">77.77% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>31/39</span>
+                <span class='fraction'>28/36</span>
             </div>
         
             
@@ -219,7 +219,11 @@
 <a name='L154'></a><a href='#L154'>154</a>
 <a name='L155'></a><a href='#L155'>155</a>
 <a name='L156'></a><a href='#L156'>156</a>
-<a name='L157'></a><a href='#L157'>157</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L157'></a><a href='#L157'>157</a>
+<a name='L158'></a><a href='#L158'>158</a>
+<a name='L159'></a><a href='#L159'>159</a>
+<a name='L160'></a><a href='#L160'>160</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -235,15 +239,16 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">32x</span>
-<span class="cline-any cline-yes">32x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">32x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -340,7 +345,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">255x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -375,32 +379,36 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import {
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { RefObject } from "react";
+import { useSearchParams } from "react-router-dom";
+import { DefaultCard, LoadingCard } from "@canonical/store-components";
+import {
   Button,
   Col,
   Pagination,
   Row,
   Strip,
 } from "@canonical/react-components";
-import Banner from "../Banner";
-import { useRef } from "react";
-import { useSearchParams } from "react-router-dom";
-import { Category, Package, Store } from "../../types";
+&nbsp;
 import { PackageFilter } from "../PackageFilter";
-import { DefaultCard, LoadingCard } from "@canonical/store-components";
+&nbsp;
+import type { Category, Package, Packages } from "../../types";
 &nbsp;
 const ITEMS_PER_PAGE = 15;
 &nbsp;
-export const PackageList = ({
+function PackageList({
   data,
   isFetching,
+  searchRef,
+  searchSummaryRef,
 }: {
-  data?: Store;
+  data?: Packages;
   isFetching: boolean;
-}) =&gt; {
-  const searchRef = useRef&lt;HTMLInputElement | null&gt;(null);
-  const searchSummaryRef = useRef&lt;HTMLDivElement&gt;(null);
-&nbsp;
+  searchRef: RefObject&lt;HTMLInputElement&gt;;
+  searchSummaryRef: RefObject&lt;HTMLDivElement&gt;;
+}): React.JSX.Element {
   const [searchParams, setSearchParams] = useSearchParams();
 &nbsp;
   const selectedCategories =
@@ -464,7 +472,6 @@ export const PackageList = ({
 &nbsp;
   return (
     &lt;&gt;
-      &lt;Banner searchRef={searchRef} searchSummaryRef={searchSummaryRef} /&gt;
       &lt;Strip&gt;
         &lt;Row&gt;
           &lt;Col size={3}&gt;
@@ -530,7 +537,9 @@ export const PackageList = ({
       &lt;/Strip&gt;
     &lt;/&gt;
   );
-};
+}
+&nbsp;
+export default PackageList;
 &nbsp;</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
@@ -538,7 +547,7 @@ export const PackageList = ({
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2024-12-14T22:04:23.483Z
+                at 2025-04-05T22:06:01.734Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>
