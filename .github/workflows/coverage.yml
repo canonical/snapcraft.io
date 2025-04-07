@@ -1,7 +1,7 @@
 name: Test coverage
 on:
   schedule:
-    - cron: "0 22 * * 6"
+    - cron: "0 22 * * 5"
 
 jobs:
   test:
@@ -119,7 +119,7 @@ jobs:
         run: sudo pip3 install pylint
 
       - name: Install JS dependencies
-        run: yarn install --immutable
+        run: yarn install
 
       - name: Produce TICS report
         shell: bash
