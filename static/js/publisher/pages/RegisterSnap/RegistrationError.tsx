@@ -59,6 +59,8 @@ function RegistrationError({ snapName, errorCode, isPrivate, store }: Props) {
       </Notification>
     );
   }
+
+  return null;
 }
 
 export default RegistrationError;
