@@ -20,6 +20,14 @@ login = flask.Blueprint(
 )
 
 LOGIN_URL = os.getenv("LOGIN_URL", "https://login.ubuntu.com")
+ENVIRONMENT = os.getenv("ENVIRONMENT", "devel")
+
+
+# getter for ENVIRONMENT variable
+# this allows the value to be mocked in tests
+def get_environment():
+    return ENVIRONMENT
+
 
 LP_CANONICAL_TEAM = "canonical"
 
@@ -75,14 +83,23 @@ def after_login(resp):
     validation_sets = dashboard.get_validation_sets(flask.session)
 
     if account:
+        is_canonical = LP_CANONICAL_TEAM in resp.extensions["lp"].is_member
+
+        # in environments other than production, for testing purposes,
+        # we detect if the user is Canonical by checking
+        # if the email ends with @canonical.com
+        if (not is_canonical) and get_environment() != "production":
+            is_canonical = account["email"] and account["email"].endswith(
+                "@canonical.com"
+            )
+
         flask.session["publisher"] = {
             "identity_url": resp.identity_url,
             "nickname": account["username"],
             "fullname": account["displayname"],
             "image": resp.image,
             "email": account["email"],
-            "is_canonical": LP_CANONICAL_TEAM
-            in resp.extensions["lp"].is_member,
+            "is_canonical": is_canonical,
         }
 
         if logic.get_stores(
