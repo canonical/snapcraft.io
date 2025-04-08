@@ -87,11 +87,11 @@ function SigningKeys(): React.JSX.Element {
         signal,
         setEnableTableActions,
       });
-
-      return () => {
-        controller.abort();
-      };
     }
+
+    return () => {
+      controller.abort();
+    };
   }, [models]);
 
   return (
