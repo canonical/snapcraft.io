@@ -5,6 +5,8 @@ import { useEffect } from "react";
 import { renderTerritoriesMetrics } from "./metrics/metrics";
 import useCountryMetrics from "../../hooks/useCountryMetrics";
 
+import type { TerritoriesMetricsData } from "../../types/shared";
+
 export const TerritoryMetrics = ({
   isEmpty,
   onDataLoad,
@@ -21,15 +23,7 @@ export const TerritoryMetrics = ({
     status: string;
     data:
       | {
-          active_devices: {
-            [key: string]: {
-              code: string;
-              color_rgb: string;
-              name: string;
-              number_of_users: number;
-              percentage_of_users: number;
-            };
-          };
+          active_devices: TerritoriesMetricsData;
           territories_total: number;
         }
       | undefined;

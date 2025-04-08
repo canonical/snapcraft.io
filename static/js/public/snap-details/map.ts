@@ -7,17 +7,11 @@ import { feature, mesh } from "topojson-client";
 import { GeoJsonProperties } from "geojson";
 import { Topology, Objects } from "topojson-specification";
 
+import type { TerritoriesMetricsData } from "../../publisher/types/shared";
+
 export default function renderMap(
   el: string,
-  snapData: {
-    [key: number]: {
-      code: string;
-      color_rgb: number[];
-      name: string;
-      number_of_users: number;
-      percentage_of_users: number;
-    };
-  },
+  snapData: TerritoriesMetricsData,
 ) {
   const mapEl = select(el);
 
@@ -30,15 +24,7 @@ export default function renderMap(
 
   function render(
     mapEl: Selection<BaseType, unknown, HTMLElement, unknown>,
-    snapData: {
-      [key: number]: {
-        code: string;
-        color_rgb: number[];
-        name: string;
-        number_of_users: number;
-        percentage_of_users: number;
-      };
-    },
+    snapData: TerritoriesMetricsData,
     world: Topology<Objects<GeoJsonProperties>>,
   ) {
     const width = mapEl.property("clientWidth");
