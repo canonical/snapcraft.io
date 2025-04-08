@@ -160,3 +160,13 @@ export type AvailableStores = {
   id: string;
   roles: string[];
 }[];
+
+export type TerritoriesMetricsData = {
+  [key: string]: {
+    code: string;
+    color_rgb: number[];
+    name: string;
+    number_of_users: number;
+    percentage_of_users: number;
+  };
+};

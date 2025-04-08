@@ -8,7 +8,6 @@ import {
   prepareStackedData,
   prepareLineData,
   prepareScales,
-  prepareAnnotationsData,
   prepareAxis,
 } from "./dataProcessing";
 import {

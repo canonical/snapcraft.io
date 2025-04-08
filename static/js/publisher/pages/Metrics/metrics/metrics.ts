@@ -1,6 +1,7 @@
-import { arrayChunk } from "./arrays";
 import { ActiveDevicesGraph } from "./graphs/activeDevicesGraph/";
 import territoriesMetrics from "./graphs/territories";
+
+import type { TerritoriesMetricsData } from "../../../types/shared";
 
 type Series = {
   name: string;
@@ -14,19 +15,6 @@ type ActiveDeviceMetric = {
   };
   selector: string;
   type: string;
-};
-
-type TerritoriesMetric = {
-  metrics: {
-    [key: string]: {
-      code: string;
-      color_rgb: string;
-      name: string;
-      number_of_users: number;
-      percentage_of_users: number;
-    };
-  };
-  selector: string;
 };
 
 function renderActiveDevicesMetrics(metrics: ActiveDeviceMetric) {
@@ -64,7 +52,7 @@ function renderActiveDevicesMetrics(metrics: ActiveDeviceMetric) {
     categories.addEventListener("mouseover", (e) => {
       const target = e.target as HTMLElement;
       const annotationHover = target.closest(
-        `[data-js="annotation-hover"]`
+        `[data-js="annotation-hover"]`,
       ) as HTMLElement;
       if (annotationHover) {
         const category = annotationHover.dataset.id;
@@ -75,7 +63,7 @@ function renderActiveDevicesMetrics(metrics: ActiveDeviceMetric) {
     categories.addEventListener("mouseout", (e) => {
       const target = e.target as HTMLElement;
       const annotationHover = target.closest(
-        `[data-js="annotation-hover"]`
+        `[data-js="annotation-hover"]`,
       ) as HTMLElement;
       if (annotationHover) {
         const category = annotationHover.dataset.id;
@@ -85,7 +73,10 @@ function renderActiveDevicesMetrics(metrics: ActiveDeviceMetric) {
   }
 }
 
-function renderTerritoriesMetrics(metrics: TerritoriesMetric) {
+function renderTerritoriesMetrics(metrics: {
+  metrics: TerritoriesMetricsData;
+  selector: string;
+}) {
   territoriesMetrics(metrics.selector, metrics.metrics);
 }
 
@@ -105,7 +96,7 @@ function renderPublisherMetrics(options: {
     {
       stacked: false,
       area: false,
-    }
+    },
   );
   _graph.updateData(options.snaps).render().show();
   _graph.enableTooltip();
