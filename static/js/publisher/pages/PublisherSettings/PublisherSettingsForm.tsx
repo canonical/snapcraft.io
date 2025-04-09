@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useForm, useWatch } from "react-hook-form";
+import { FieldValues, useForm, useWatch } from "react-hook-form";
 import {
   Button,
   Form,
@@ -18,10 +18,8 @@ import { UnregisterSnapModal } from "./UnregisterSnapModal";
 
 import { getSettingsData, getSettingsFormData } from "../../utils";
 
-import type { SettingsData } from "../../types";
-
 type Props = {
-  settings: SettingsData;
+  settings: FieldValues;
 };
 
 function PublisherSettingsForm({ settings }: Props) {
@@ -68,7 +66,7 @@ function PublisherSettingsForm({ settings }: Props) {
     name: "blacklist_country_keys",
   });
 
-  const onSubmit = (data: SettingsData) => {
+  const onSubmit = (data: FieldValues) => {
     if (getValues("update_metadata_on_release") && dirtyFields.visibility) {
       setShowMetadataWarningModal(true);
       setFormData(data);
@@ -77,7 +75,7 @@ function PublisherSettingsForm({ settings }: Props) {
     }
   };
 
-  const submitForm = async (data: SettingsData) => {
+  const submitForm = async (data: FieldValues) => {
     setIsSaving(true);
     setHasSaved(false);
     setSavedError(false);
@@ -334,13 +332,9 @@ function PublisherSettingsForm({ settings }: Props) {
                     data={countries}
                     field="whitelist_country_keys"
                     currentValues={settingsData?.whitelist_countries}
-                    // @ts-expect-error Conflict between React Query and React Hook Form
                     register={register}
-                    // @ts-expect-error Conflict between React Query and React Hook Form
                     setValue={setValue}
-                    // @ts-expect-error Conflict between React Query and React Hook Form
                     getValues={getValues}
-                    // @ts-expect-error Conflict between React Query and React Hook Form
                     control={control}
                     disabled={getValues("country_keys_status") === "exclude"}
                   />
@@ -364,13 +358,9 @@ function PublisherSettingsForm({ settings }: Props) {
                     data={countries}
                     field="blacklist_country_keys"
                     currentValues={settingsData?.blacklist_countries}
-                    // @ts-expect-error Conflict between React Query and React Hook Form
                     register={register}
-                    // @ts-expect-error Conflict between React Query and React Hook Form
                     setValue={setValue}
-                    // @ts-expect-error Conflict between React Query and React Hook Form
                     getValues={getValues}
-                    // @ts-expect-error Conflict between React Query and React Hook Form
                     control={control}
                     disabled={getValues("country_keys_status") === "include"}
                   />
@@ -537,7 +527,6 @@ function PublisherSettingsForm({ settings }: Props) {
       {showMetadataWarningModal ? (
         <UpdateMetadataModal
           setShowMetadataWarningModal={setShowMetadataWarningModal}
-          // @ts-expect-error Conflict between React Query and React Hook Form
           submitForm={submitForm}
           formData={formData}
         />

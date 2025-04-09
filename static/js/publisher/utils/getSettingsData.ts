@@ -1,6 +1,6 @@
-import type { SettingsData } from "../types";
+import { FieldValues } from "react-hook-form";
 
-function getCountryKeysStatus(settingsData: SettingsData) {
+function getCountryKeysStatus(settingsData: FieldValues) {
   if (settingsData?.blacklist_country_keys) {
     return "exclude";
   }
@@ -8,7 +8,7 @@ function getCountryKeysStatus(settingsData: SettingsData) {
   return "include";
 }
 
-function getTerritoryDistributionStatus(data: SettingsData) {
+function getTerritoryDistributionStatus(data: FieldValues) {
   if (
     data?.whitelist_countries.length > 0 ||
     data?.blacklist_countries.length > 0
@@ -19,7 +19,7 @@ function getTerritoryDistributionStatus(data: SettingsData) {
   }
 }
 
-function getVisibilityStatus(data: SettingsData) {
+function getVisibilityStatus(data: FieldValues) {
   if (data?.unlisted) {
     return "unlisted";
   }
@@ -31,7 +31,7 @@ function getVisibilityStatus(data: SettingsData) {
   return "public";
 }
 
-function getSettingsData(settingsData: SettingsData) {
+function getSettingsData(settingsData: FieldValues) {
   settingsData.visibility = getVisibilityStatus(settingsData);
   settingsData.territory_distribution_status =
     getTerritoryDistributionStatus(settingsData);

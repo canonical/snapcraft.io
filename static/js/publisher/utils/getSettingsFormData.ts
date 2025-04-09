@@ -1,11 +1,11 @@
 import getSettingsChanges from "./getSettingsChanges";
 
-import type { SettingsData } from "../types";
+import { FieldValues } from "react-hook-form";
 
 function getSettingsFormData(
-  settingsData: SettingsData,
+  settingsData: FieldValues,
   dirtyFields: { [key: string]: unknown },
-  data: SettingsData,
+  data: FieldValues,
 ) {
   const changes = getSettingsChanges(dirtyFields, data);
   const formData = new FormData();
