@@ -74,8 +74,7 @@ function ListingForm({ data, refetch }: Props): React.JSX.Element {
     <>
       <form
         className="p-form"
-        // @ts-expect-error Conflict between React Query and Reach Hook Form
-        onSubmit={handleSubmit((values: ListingData) => {
+        onSubmit={handleSubmit((values: FieldValues) => {
           if (
             data.update_metadata_on_release &&
             shouldShowUpdateMetadataWarning(dirtyFields)

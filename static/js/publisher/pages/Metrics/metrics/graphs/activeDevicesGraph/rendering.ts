@@ -18,7 +18,7 @@ function renderXAxis(this: any) {
 
   let monthCache: string;
 
-  xAxis.selectAll(".tick").each((d: any, i: number, nodes: string | any[]) => {
+  xAxis.selectAll(".tick").each((_d: any, i: number, nodes: string | any[]) => {
     const node = select(nodes[i]);
     if (i % freq !== 0 && nodes.length > 7) {
       node.select("text").attr("opacity", "0");
@@ -50,7 +50,7 @@ function renderYAxis(this: any) {
 
   yAxis
     .selectAll(".tick")
-    .each((d: any, i: number, nodes: { [x: string]: any }) => {
+    .each((_d: any, i: number, nodes: { [x: string]: any }) => {
       const node = select(nodes[i]);
       if (i % freq === 0) {
         node.classed("active", true);
@@ -153,7 +153,7 @@ function renderAnnotations(this: any) {
             .attr("transform", `translate(${annotation.x - textBox.width},10)`)
             .attr("x", 0);
         }
-      }
+      },
     );
   }
 }

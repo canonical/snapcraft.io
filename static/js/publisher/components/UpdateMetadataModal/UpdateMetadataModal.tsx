@@ -1,9 +1,12 @@
 import { Dispatch, SetStateAction } from "react";
+import { FieldValues } from "react-hook-form";
 import { Modal, Button } from "@canonical/react-components";
+
+import { UseMutateFunction } from "react-query";
 
 type Props = {
   setShowMetadataWarningModal: Dispatch<SetStateAction<boolean>>;
-  submitForm: (arg: { [key: string]: unknown }) => void;
+  submitForm: UseMutateFunction<void, unknown, FieldValues, unknown>;
   formData: { [key: string]: unknown };
 };
 
