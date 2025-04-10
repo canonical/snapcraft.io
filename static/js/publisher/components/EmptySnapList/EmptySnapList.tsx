@@ -1,6 +1,6 @@
 import { Col, Link, Row } from "@canonical/react-components";
 
-function EmptySnapList() {
+function EmptySnapList(): React.JSX.Element {
   return (
     <>
       <div className="u-fixed-width">

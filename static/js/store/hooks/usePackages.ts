@@ -1,9 +1,10 @@
 import { useQuery } from "react-query";
 import { v4 as uuidv4 } from "uuid";
 
+import type { UseQueryResult } from "react-query";
 import type { Packages, Package } from "../types";
 
-function usePackages(queryString: string) {
+function usePackages(queryString: string): UseQueryResult<Packages, Error> {
   return useQuery({
     queryKey: ["data", queryString],
     queryFn: async () => {

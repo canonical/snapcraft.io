@@ -5,11 +5,7 @@ const SCREENSHOTS: {
   roundLengths: boolean;
   spaceBetween: number;
   resizeObserver: boolean;
-  breakpoints: {
-    [key: number]: {
-      spaceBetween: number;
-    };
-  };
+  breakpoints: Record<string, { spaceBetween: number }>;
   navigation: {
     nextEl: string;
     prevEl: string;
@@ -22,7 +18,7 @@ const SCREENSHOTS: {
   spaceBetween: 32,
   resizeObserver: true,
   breakpoints: {
-    620: {
+    "620": {
       spaceBetween: 16,
     },
   },

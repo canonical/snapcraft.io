@@ -1,7 +1,8 @@
 import { Link, Notification } from "@canonical/react-components";
-import { ISnap } from "../../types";
 
-function NewSnapNotification({ snap }: { snap: ISnap }) {
+import type { ISnap } from "../../types";
+
+function NewSnapNotification({ snap }: { snap: ISnap }): React.JSX.Element {
   const latestRelease = snap.latest_release;
   const snapName = snap.snapName;
 

@@ -6,7 +6,7 @@ type Props = {
   snapName: string | undefined;
 };
 
-function SectionNav({ activeTab, snapName }: Props) {
+function SectionNav({ activeTab, snapName }: Props): React.JSX.Element {
   return (
     <Tabs
       listClassName="u-no-margin--bottom"

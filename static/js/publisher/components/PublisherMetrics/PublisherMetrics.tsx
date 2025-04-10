@@ -1,10 +1,11 @@
 import { Col, Notification, Row, Strip } from "@canonical/react-components";
-import { ISnap } from "../../types";
 import { renderPublisherMetrics } from "../../../publisher/pages/Metrics/metrics/metrics";
 import { useEffect } from "react";
 import { useFetchPublishedSnapMetrics } from "../../hooks";
 
-function PublisherMetrics({ snaps }: { snaps: ISnap[] }) {
+import type { ISnap } from "../../types";
+
+function PublisherMetrics({ snaps }: { snaps: ISnap[] }): React.JSX.Element {
   const { status, data: metricsData } = useFetchPublishedSnapMetrics(snaps);
 
   useEffect(() => {

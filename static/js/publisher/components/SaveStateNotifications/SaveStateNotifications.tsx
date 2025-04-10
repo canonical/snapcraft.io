@@ -1,10 +1,11 @@
-import { Dispatch, SetStateAction } from "react";
 import { Notification } from "@canonical/react-components";
+
+import type { Dispatch, SetStateAction } from "react";
 
 type Props = {
   hasSaved: boolean;
   setHasSaved: Dispatch<SetStateAction<boolean>>;
-  savedError: boolean | Array<{ message: string }>;
+  savedError: boolean | { message: string }[];
   setSavedError: Dispatch<
     SetStateAction<boolean | { code: string; message: string }[]>
   >;
@@ -15,7 +16,7 @@ function SaveStateNotifications({
   setHasSaved,
   savedError,
   setSavedError,
-}: Props) {
+}: Props): React.JSX.Element {
   return (
     <>
       {hasSaved && (

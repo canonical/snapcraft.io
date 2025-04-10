@@ -1,8 +1,10 @@
 import { useState } from "react";
-import Joyride, { CallBackProps, STATUS } from "react-joyride";
+import Joyride, { STATUS } from "react-joyride";
 import { Button, Icon } from "@canonical/react-components";
 
 import TourStep from "./TourStep";
+
+import type { CallBackProps } from "react-joyride";
 
 type Props = {
   steps: {
@@ -12,11 +14,12 @@ type Props = {
     disableBeacon?: boolean;
   }[];
 };
-function Tour({ steps }: Props) {
+
+function Tour({ steps }: Props): React.JSX.Element {
   const firstVisit = !localStorage.getItem("tourSeen");
   const [run, setRun] = useState<boolean>(firstVisit);
 
-  const handleClickStart = () => {
+  const handleClickStart = (): void => {
     setRun(true);
   };
 
@@ -24,7 +27,7 @@ function Tour({ steps }: Props) {
     localStorage.setItem("tourSeen", "true");
   }
 
-  const handleJoyrideCallback = (data: CallBackProps) => {
+  const handleJoyrideCallback = (data: CallBackProps): void => {
     const { status, action } = data;
 
     if (action === "close") {
@@ -37,6 +40,7 @@ function Tour({ steps }: Props) {
       setRun(false);
     }
   };
+
   return (
     <>
       <Button

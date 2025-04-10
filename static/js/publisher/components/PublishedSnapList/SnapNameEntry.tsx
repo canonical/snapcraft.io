@@ -1,9 +1,9 @@
 import { Link } from "react-router-dom";
 import { Tooltip } from "@canonical/react-components";
 
-import { ISnap } from "../../types";
+import type { ISnap } from "../../types";
 
-function SnapNameEntry({ snap }: { snap: ISnap }) {
+function SnapNameEntry({ snap }: { snap: ISnap }): React.JSX.Element {
   const { snapName, status, icon_url } = snap;
   return (
     <Link to={`/${snapName}/listing`} className="p-heading-icon--small">
