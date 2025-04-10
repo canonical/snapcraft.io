@@ -8,9 +8,9 @@ import {
   Row,
   Tooltip,
 } from "@canonical/react-components";
-
-import { ISnap } from "../../types";
 import { ITEMS_PER_PAGE } from "../../constants";
+
+import type { ISnap } from "../../types";
 
 function RegisteredSnaps({
   snaps,
@@ -20,14 +20,16 @@ function RegisteredSnaps({
   snaps: ISnap[];
   currentUser: string;
   refetchSnaps: () => void;
-}) {
+}): React.JSX.Element {
   const [unregisterSnapModal, setUnregisterSnapModal] = useState<string | null>(
     null,
   );
   const [isError, setIsError] = useState<boolean>(false);
   const [unregisterLoading, setUnregisterLoading] = useState<boolean>(false);
 
-  const closeModal = () => setUnregisterSnapModal(null);
+  const closeModal = (): void => {
+    setUnregisterSnapModal(null);
+  };
 
   const getData = () => {
     return snaps.map((snap) => {

@@ -1,7 +1,8 @@
-import { TooltipRenderProps } from "react-joyride";
 import { Card, Button, Icon } from "@canonical/react-components";
 
-function TourStep(props: TooltipRenderProps) {
+import type { TooltipRenderProps } from "react-joyride";
+
+function TourStep(props: TooltipRenderProps): React.JSX.Element {
   const {
     backProps,
     closeProps,

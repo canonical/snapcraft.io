@@ -1,4 +1,3 @@
-import { RefObject } from "react";
 import { useSearchParams } from "react-router-dom";
 import { DefaultCard, LoadingCard } from "@canonical/store-components";
 import {
@@ -11,6 +10,7 @@ import {
 
 import { PackageFilter } from "../PackageFilter";
 
+import type { RefObject } from "react";
 import type { Category, Package, Packages } from "../../types";
 
 const ITEMS_PER_PAGE = 15;
@@ -41,7 +41,7 @@ function PackageList({
   const lastResultNumber =
     (parseInt(currentPage) - 1) * ITEMS_PER_PAGE + packagesCount;
 
-  const getCategoryDisplayName = (name: string) => {
+  const getCategoryDisplayName = (name: string): string | undefined => {
     const category = data?.categories?.find(
       (cat: Category) => cat.name === name,
     );
@@ -72,7 +72,7 @@ function PackageList({
     return getCategoryDisplayName(selectedCategories[0]);
   };
 
-  const onClear = () => {
+  const onClear = (): void => {
     searchParams.delete("q");
     searchParams.delete("page");
     setSearchParams(searchParams);

@@ -19,7 +19,7 @@ const router = createBrowserRouter([
 ]);
 
 const rootElement = document.getElementById("root") as HTMLElement;
-const root = createRoot(rootElement);
+const root = createRoot(rootElement)!;
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {

@@ -7,7 +7,7 @@ import type {
   SigningKey,
 } from "../../types/shared";
 
-export type ItemType = SigningKey | Policy | ModelType;
+export type ItemType = ModelType | Policy | SigningKey;
 
 type Props<T extends ItemType> = {
   keyword: string;

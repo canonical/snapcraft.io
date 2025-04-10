@@ -1,6 +1,7 @@
 import { Button } from "@canonical/react-components";
-import { RefObject } from "react";
 import { useSearchParams } from "react-router-dom";
+
+import type { RefObject } from "react";
 
 type Props = {
   searchRef: RefObject<HTMLInputElement>;
@@ -13,7 +14,7 @@ export const SearchInput = ({
 }: Props): React.JSX.Element => {
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const onSubmit = (event: React.FormEvent<HTMLFormElement>): void => {
     event.preventDefault();
     if (searchRef?.current && searchRef.current.value) {
       searchParams.delete("page");
@@ -27,7 +28,7 @@ export const SearchInput = ({
     }
   };
 
-  const onReset = () => {
+  const onReset = (): void => {
     searchParams.delete("q");
     setSearchParams(searchParams);
   };

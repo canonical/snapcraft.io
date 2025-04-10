@@ -1,14 +1,15 @@
 import { useState, useEffect } from "react";
 import Downshift from "downshift";
-import {
-  useWatch,
+import { useWatch } from "react-hook-form";
+import { Button } from "@canonical/react-components";
+
+import type {
   UseFormRegister,
   UseFormSetValue,
   UseFormGetValues,
   Control,
   FieldValues,
 } from "react-hook-form";
-import { Button } from "@canonical/react-components";
 
 type DataItem = {
   key: string;
@@ -16,9 +17,9 @@ type DataItem = {
 };
 
 type Props = {
-  data: Array<DataItem>;
+  data: DataItem[];
   field: string;
-  currentValues: Array<string>;
+  currentValues: string[];
   register: UseFormRegister<FieldValues>;
   setValue: UseFormSetValue<FieldValues>;
   getValues: UseFormGetValues<FieldValues>;
@@ -35,12 +36,12 @@ function SearchAutocomplete({
   getValues,
   control,
   disabled,
-}: Props) {
+}: Props): React.JSX.Element {
   const [selections, setSelections] = useState(() => {
     return data.filter((value) => currentValues.includes(value.key));
   });
 
-  const getNewSelectionKeys = (newSelections: Array<DataItem>) => {
+  const getNewSelectionKeys = (newSelections: DataItem[]): string => {
     return newSelections
       .map((selection: DataItem) => selection.key)
       .sort()

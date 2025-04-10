@@ -15,7 +15,7 @@ function StoreSelector({ nativeNavLink }: Props): React.JSX.Element {
   const brandStoresList = useRecoilValue(brandStoresState);
   const [showStoreSelector, setShowStoreSelector] = useState<boolean>(false);
   const [filteredBrandStores, setFilteredBrandstores] =
-    useState<Array<Store>>(brandStoresList);
+    useState<Store[]>(brandStoresList);
 
   const getStoreName = (id: string | undefined) => {
     if (!id) {

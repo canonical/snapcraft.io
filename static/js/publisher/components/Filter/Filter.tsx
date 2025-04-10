@@ -1,6 +1,9 @@
 import { useSearchParams } from "react-router-dom";
-import { RecoilState, useSetRecoilState } from "recoil";
+import { useSetRecoilState } from "recoil";
 import { Button, Icon } from "@canonical/react-components";
+
+import type { RecoilState } from "recoil";
+
 type Props = {
   state: RecoilState<string>;
   label: string;

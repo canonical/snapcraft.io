@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { Accordion } from "@canonical/react-components";
-import { ISnap } from "../../types";
 import PublishedSnapList from "../PublishedSnapList";
 import PublisherMetrics from "../PublisherMetrics";
 import { ITEMS_PER_PAGE } from "../../constants";
+
+import type { ISnap } from "../../types";
 
 function PublishedSnapSection({
   snaps,
@@ -11,7 +12,7 @@ function PublishedSnapSection({
 }: {
   snaps: ISnap[];
   currentUser: string;
-}) {
+}): React.JSX.Element {
   const [currentPage, setCurrentPage] = useState<number>(1);
 
   const firstItemOfPage = (currentPage - 1) * ITEMS_PER_PAGE;

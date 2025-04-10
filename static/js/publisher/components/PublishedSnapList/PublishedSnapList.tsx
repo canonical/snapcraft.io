@@ -1,10 +1,11 @@
 import { Link } from "react-router-dom";
 import { MainTable, Pagination, Strip } from "@canonical/react-components";
-import { ISnap } from "../../types";
 import SnapNameEntry from "./SnapNameEntry";
 import NewSnapNotification from "../NewSnapNotification";
 import EmptySnapList from "../EmptySnapList";
 import { ITEMS_PER_PAGE } from "../../constants";
+
+import type { ISnap } from "../../types";
 
 function PublishedSnapList({
   snaps,
@@ -18,7 +19,7 @@ function PublishedSnapList({
   currentPage: number;
   setCurrentPage: (page: number) => void;
   totalItems: number;
-}) {
+}): React.JSX.Element {
   const shouldShowNewSnapNotification =
     snaps && snaps.length === 1 && snaps[0].is_new;
 
@@ -119,7 +120,9 @@ function PublishedSnapList({
           <Pagination
             currentPage={currentPage}
             itemsPerPage={ITEMS_PER_PAGE}
-            paginate={(page) => setCurrentPage(page)}
+            paginate={(page) => {
+              setCurrentPage(page);
+            }}
             totalItems={totalItems}
           />
         </div>

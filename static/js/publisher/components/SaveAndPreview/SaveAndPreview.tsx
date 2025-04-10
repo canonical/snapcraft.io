@@ -18,11 +18,11 @@ function SaveAndPreview({
   reset,
   isSaving,
   showPreview,
-}: Props) {
+}: Props): React.JSX.Element {
   const stickyBar = useRef<HTMLDivElement>(null);
   const mainPanel = document.querySelector(".l-main") as HTMLElement;
 
-  const handleScroll = () => {
+  const handleScroll = (): void => {
     stickyBar?.current?.classList.toggle(
       "sticky-shadow",
       stickyBar?.current?.getBoundingClientRect()?.top === 0,

@@ -1,20 +1,20 @@
-import { Dispatch, SetStateAction } from "react";
-import { FieldValues } from "react-hook-form";
 import { Modal, Button } from "@canonical/react-components";
 
-import { UseMutateFunction } from "react-query";
+import type { Dispatch, SetStateAction } from "react";
+import type { FieldValues } from "react-hook-form";
+import type { UseMutateFunction } from "react-query";
 
 type Props = {
   setShowMetadataWarningModal: Dispatch<SetStateAction<boolean>>;
   submitForm: UseMutateFunction<void, unknown, FieldValues, unknown>;
-  formData: { [key: string]: unknown };
+  formData: Record<string, unknown>;
 };
 
 function UpdateMetadataModal({
   setShowMetadataWarningModal,
   submitForm,
   formData,
-}: Props) {
+}: Props): React.JSX.Element {
   return (
     <Modal
       close={() => {

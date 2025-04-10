@@ -6,10 +6,10 @@ import { useSearchParams } from "react-router-dom";
 import { getArchitectures, getCategoryOrder } from "../../utils";
 
 export type ICategoryList =
-  | Array<{
+  | {
       display_name: string;
       name: string;
-    }>
+    }[]
   | string[];
 
 const SHOW_MORE_COUNT = 10;
@@ -20,14 +20,17 @@ interface IProps {
   disabled: boolean;
 }
 
-export const PackageFilter = ({ data, disabled }: IProps) => {
+export const PackageFilter = ({
+  data,
+  disabled,
+}: IProps): React.JSX.Element => {
   const [hideFilters, setHideFilters] = useState(true);
   const [searchParams, setSearchParams] = useSearchParams();
 
   const selectedCategories =
     searchParams.get("categories")?.split(",").filter(Boolean) || [];
 
-  const onCategoryChange = (items: ICategoryList) => {
+  const onCategoryChange = (items: ICategoryList): void => {
     const categoryNames = items
       .map((item) => (typeof item === "string" ? item : item.name))
       .filter(Boolean);
@@ -44,7 +47,7 @@ export const PackageFilter = ({ data, disabled }: IProps) => {
     setSearchParams(searchParams);
   };
 
-  const onArchitectureChange = (item: string) => {
+  const onArchitectureChange = (item: string): void => {
     if (item) {
       searchParams.set("architecture", item);
       if (searchParams.get("categories") === "featured") {
@@ -59,10 +62,10 @@ export const PackageFilter = ({ data, disabled }: IProps) => {
   };
 
   const selectedFiltersNotVisible = (
-    selectedFilters: Array<string>,
-    allFilters: Array<Category>,
-  ) => {
-    const sortedFilters = [] as Array<Category>;
+    selectedFilters: string[],
+    allFilters: Category[],
+  ): boolean | undefined => {
+    const sortedFilters = [] as Category[];
 
     CATEGORY_ORDER.forEach((item) => {
       const filter = allFilters.find((category) => category.name === item);

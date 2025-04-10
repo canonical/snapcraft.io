@@ -1,6 +1,7 @@
-import { RefObject } from "react";
 import { Strip, Row, Col } from "@canonical/react-components";
 import { SearchInput } from "../SearchInput";
+
+import type { RefObject } from "react";
 
 type Props = {
   searchRef: RefObject<HTMLInputElement>;
