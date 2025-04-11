@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 <!DOCTYPE coverage SYSTEM "http://cobertura.sourceforge.net/xml/coverage-04.dtd">
-<coverage lines-valid="3789" lines-covered="2076" line-rate="0.5478999999999999" branches-valid="2470" branches-covered="1351" branch-rate="0.5468999999999999" timestamp="1744322636480" complexity="0" version="0.1">
+<coverage lines-valid="3789" lines-covered="2086" line-rate="0.5505" branches-valid="2470" branches-covered="1360" branch-rate="0.5506" timestamp="1744409041493" complexity="0" version="0.1">
   <sources>
     <source>/home/runner/work/snapcraft.io/snapcraft.io</source>
   </sources>
@@ -6080,7 +6080,7 @@
         </class>
       </classes>
     </package>
-    <package name="publisher.pages.RegisterSnap" line-rate="0.3333" branch-rate="0.4324">
+    <package name="publisher.pages.RegisterSnap" line-rate="0.5555" branch-rate="0.6756">
       <classes>
         <class name="RegisterSnap.tsx" filename="static/js/publisher/pages/RegisterSnap/RegisterSnap.tsx" line-rate="1" branch-rate="0.8461">
           <methods>
@@ -6173,26 +6173,26 @@
             <line number="126" hits="0" branch="false"/>
           </lines>
         </class>
-        <class name="RegistrationError.tsx" filename="static/js/publisher/pages/RegisterSnap/RegistrationError.tsx" line-rate="0" branch-rate="0">
+        <class name="RegistrationError.tsx" filename="static/js/publisher/pages/RegisterSnap/RegistrationError.tsx" line-rate="0.909" branch-rate="0.9">
           <methods>
-            <method name="RegistrationError" hits="0" signature="()V">
+            <method name="RegistrationError" hits="5" signature="()V">
               <lines>
-                <line number="11" hits="0"/>
+                <line number="11" hits="5"/>
               </lines>
             </method>
           </methods>
           <lines>
-            <line number="12" hits="0" branch="true" condition-coverage="0% (0/2)"/>
-            <line number="13" hits="0" branch="false"/>
-            <line number="20" hits="0" branch="true" condition-coverage="0% (0/2)"/>
-            <line number="21" hits="0" branch="false"/>
-            <line number="32" hits="0" branch="true" condition-coverage="0% (0/2)"/>
-            <line number="33" hits="0" branch="false"/>
-            <line number="46" hits="0" branch="true" condition-coverage="0% (0/2)"/>
-            <line number="47" hits="0" branch="false"/>
-            <line number="55" hits="0" branch="true" condition-coverage="0% (0/2)"/>
-            <line number="56" hits="0" branch="false"/>
-            <line number="63" hits="0" branch="false"/>
+            <line number="12" hits="5" branch="true" condition-coverage="100% (2/2)"/>
+            <line number="13" hits="1" branch="false"/>
+            <line number="27" hits="4" branch="true" condition-coverage="100% (2/2)"/>
+            <line number="28" hits="1" branch="false"/>
+            <line number="39" hits="3" branch="true" condition-coverage="100% (2/2)"/>
+            <line number="40" hits="1" branch="false"/>
+            <line number="53" hits="2" branch="true" condition-coverage="100% (2/2)"/>
+            <line number="54" hits="1" branch="false"/>
+            <line number="62" hits="1" branch="true" condition-coverage="50% (1/2)"/>
+            <line number="63" hits="1" branch="false"/>
+            <line number="70" hits="0" branch="false"/>
           </lines>
         </class>
       </classes>
