@@ -59,17 +59,13 @@ def get_cves(snap_name, revision):
     # Pagination params
     page = flask.request.args.get("page", default=1, type=int)
     page_size = flask.request.args.get("page_size", default=10, type=int)
-
-    snap_details = dashboard.get_snap_info(flask.session, snap_name)
-    account_info = dashboard.get_account(flask.session)
     is_user_canonical = flask.session["publisher"].get("is_canonical", False)
-    can_view_cves = CveHelper.can_user_access_cve_data(
-        snap_name=snap_name,
-        snap_details=snap_details,
-        account_info=account_info,
-        is_user_canonical=is_user_canonical,
-    )
-    if not can_view_cves:
+
+    # TODO: in future with brand store support we will need more specific
+    # checks, such as those implemented in CveHelper.can_user_access_cve_data
+    # For now, we only check if user is Canonical member and has
+    # publisher access to the snap.
+    if not is_user_canonical:
         return (
             flask.jsonify(
                 {
@@ -78,6 +74,18 @@ def get_cves(snap_name, revision):
                 }
             ),
             403,
+        )
+
+    snap_details = dashboard.get_snap_info(flask.session, snap_name)
+    if not snap_details:
+        return (
+            flask.jsonify(
+                {
+                    "success": False,
+                    "error": f"Snap '{snap_name}' not found.",
+                }
+            ),
+            404,
         )
 
     cves = CveHelper.get_cve_with_revision(snap_name, revision)
