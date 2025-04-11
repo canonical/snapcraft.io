@@ -11,8 +11,15 @@ type Props = {
 function RegistrationError({ snapName, errorCode, isPrivate, store }: Props) {
   if (errorCode === "name-review-required") {
     return (
-      <Notification severity="information">
-        <strong>{snapName}</strong> has been submitted for review
+      <Notification severity="caution">
+        All snap names are currently subject to a review. Please see{" "}
+        <a href="https://forum.snapcraft.io/t/manual-review-of-all-new-snap-name-registrations/39440">
+          https://forum.snapcraft.io/t/manual-review-of-all-new-snap-name-registrations/39440
+        </a>{" "}
+        for details. Follow this link to submit a name request for your snap:
+        <a href="https://dashboard.snapcraft.io/register-snap">
+          https://dashboard.snapcraft.io/register-snap
+        </a>
       </Notification>
     );
   }
