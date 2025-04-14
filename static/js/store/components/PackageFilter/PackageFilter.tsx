@@ -1,9 +1,10 @@
 import { Button } from "@canonical/react-components";
 import { useState } from "react";
-import type { Category, Packages } from "../../types";
 import { Filters } from "@canonical/store-components";
 import { useSearchParams } from "react-router-dom";
 import { getArchitectures, getCategoryOrder } from "../../utils";
+
+import type { Category, Packages } from "../../types";
 
 export type ICategoryList =
   | {
