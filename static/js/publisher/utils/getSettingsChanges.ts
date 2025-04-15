@@ -32,7 +32,10 @@ function getSettingsChanges(
 
   if (data?.territory_distribution_status === "custom") {
     if (dirtyFields?.whitelist_country_keys) {
-      if (!data?.whitelist_country_keys.length) {
+      if (
+        !data?.whitelist_country_keys ||
+        !data?.whitelist_country_keys.length
+      ) {
         changes.whitelist_countries = [];
       } else {
         changes.whitelist_countries = data?.whitelist_country_keys.split(" ");
@@ -42,7 +45,10 @@ function getSettingsChanges(
     }
 
     if (dirtyFields?.blacklist_country_keys) {
-      if (!data?.blacklist_country_keys.length) {
+      if (
+        !data?.blacklist_country_keys ||
+        !data?.blacklist_country_keys.length
+      ) {
         changes.blacklist_countries = [];
       } else {
         changes.blacklist_countries = data?.blacklist_country_keys.split(" ");
