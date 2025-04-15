@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import {
   Form,
@@ -21,9 +21,9 @@ function RequestReservedName(): React.JSX.Element {
     useState<boolean>(false);
   const [errorNotification, setErrorNotification] = useState<string>();
   const stores = useRecoilValue(brandStoresState);
-  const params = new URLSearchParams(document.location.search);
-  const snapName = params.get("snap_name");
-  const store = params.get("store");
+  const [searchParams] = useSearchParams();
+  const snapName = searchParams.get("snap_name");
+  const store = searchParams.get("store");
 
   const selectedStore = stores.find((s) => s.name === store) || {
     name: "Global",
@@ -78,15 +78,13 @@ function RequestReservedName(): React.JSX.Element {
 
             const responseData = await response.json();
 
-            setTimeout(() => {
-              if (!responseData.success) {
-                setErrorNotification(responseData.message);
-              } else {
-                setShowSuccessNotification(true);
-              }
+            if (!responseData.success) {
+              setErrorNotification(responseData.message);
+            } else {
+              setShowSuccessNotification(true);
+            }
 
-              setIsSubmitting(false);
-            }, 1500);
+            setIsSubmitting(false);
           }}
         >
           <Row>
