@@ -52,10 +52,8 @@ function RegisterNameDisputeForm({
             throw new Error("Unable to register name dispute");
           }
 
-          setTimeout(() => {
-            setIsSending(false);
-            setClaimSubmitted(true);
-          }, 1000);
+          setIsSending(false);
+          setClaimSubmitted(true);
         }}
       >
         <Row>
