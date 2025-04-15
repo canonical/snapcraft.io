@@ -1,16 +1,19 @@
 import { useQuery } from "react-query";
 
 function useVerified(snapName: string | undefined) {
-  return useQuery("verified", async () => {
-    const response = await fetch(`/api/${snapName}/verify`);
+  return useQuery({
+    queryKey: ["verified", snapName],
+    queryFn: async () => {
+      const response = await fetch(`/api/${snapName}/verify`);
 
-    if (!response.ok) {
-      throw new Error("There was a problem verifying this domain");
-    }
+      if (!response.ok) {
+        throw new Error("There was a problem verifying this domain");
+      }
 
-    const responseData = await response.json();
+      const responseData = await response.json();
 
-    return responseData;
+      return responseData;
+    },
   });
 }
 
