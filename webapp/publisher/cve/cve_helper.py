@@ -110,6 +110,14 @@ class CveHelper:
             raise NotFound
 
     @staticmethod
+    def has_cve_data(snap_name):
+        file_metadata = CveHelper._get_cve_file_metadata(
+            "snap-cves/{}.json".format(snap_name)
+        )
+
+        return bool(file_metadata)
+
+    @staticmethod
     def get_cve_with_revision(snap_name, revision):
         file_metadata = CveHelper._get_cve_file_metadata(
             "snap-cves/{}.json".format(snap_name)

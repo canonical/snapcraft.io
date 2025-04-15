@@ -285,6 +285,11 @@ publisher_snaps.add_url_rule(
     view_func=cve_views.get_cves,
 )
 
+publisher_snaps.add_url_rule(
+    "/api/snaps/cve/<snap_name>",
+    view_func=cve_views.has_cves,
+)
+
 
 @publisher_snaps.route("/account/snaps")
 @login_required
