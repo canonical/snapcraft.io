@@ -54,13 +54,12 @@ def has_cves(snap_name):
 
     snap_has_cves = CveHelper.has_cve_data(snap_name)
     if snap_has_cves:
-        return flask.jsonify({"success": True, "has_cves": True})
+        return flask.jsonify({"success": True})
     else:
         return (
             flask.jsonify(
                 {
-                    "success": True,
-                    "has_cves": False,
+                    "success": False,
                     "error": f"No CVEs data available for '{snap_name}' snap.",
                 }
             ),
