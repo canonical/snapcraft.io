@@ -3,7 +3,7 @@ import { http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
 import { renderHook, waitFor } from "@testing-library/react";
 
-import { useInvites } from "../index";
+import useVerified from "../useVerified";
 
 import type { ReactNode } from "react";
 
@@ -15,20 +15,13 @@ const createWrapper = () => {
   );
 };
 
-const invitesResponse = [
-  {
-    email: "john.doe@canonical.com",
-    "expiration-date": "2025-04-13T12:40:55Z",
-    roles: ["admin"],
-    status: "Expired",
-  },
-];
-
 const handlers = [
-  http.get("/api/store/test-id-success/invites", () => {
-    return HttpResponse.json(invitesResponse);
+  http.get("/api/test-snap-verified/verify", () => {
+    return HttpResponse.json({
+      primary_domain: true,
+    });
   }),
-  http.get("/api/store/test-id-error/invites", () => {
+  http.get("/api/test-snap-unverified/verify", () => {
     return HttpResponse.error();
   }),
 ];
@@ -48,25 +41,25 @@ afterAll(() => {
   server.close();
 });
 
-describe("useInvites", () => {
-  test("returns invites data", async () => {
-    const { result } = renderHook(() => useInvites("test-id-success"), {
+describe("useVerified", () => {
+  test("returns verified data", async () => {
+    const { result } = renderHook(() => useVerified("test-snap-verified"), {
       wrapper: createWrapper(),
     });
 
     await waitFor(() => result.current.isSuccess);
 
     await waitFor(() => {
-      expect(result.current.data).toEqual(invitesResponse);
+      expect(result.current.data).toEqual({ primary_domain: true });
     });
   });
 
   test("returns no data if error", async () => {
-    const { result } = renderHook(() => useInvites("test-id-error"), {
+    const { result } = renderHook(() => useVerified("test-snap-unverified"), {
       wrapper: createWrapper(),
     });
 
-    await waitFor(() => result.current.isError);
+    await waitFor(() => result.current.isSuccess);
 
     await waitFor(() => {
       expect(result.current.data).toBeUndefined();

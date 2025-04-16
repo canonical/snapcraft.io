@@ -146,6 +146,7 @@ export type UsePoliciesResponse = {
   isError: boolean;
   error: unknown;
   refetch: () => void;
+  isSuccess: boolean;
   data: Policy[] | undefined;
 };
 

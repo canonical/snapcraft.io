@@ -7,7 +7,7 @@ function useBrand(id: string | undefined) {
       const response = await fetch(`/api/store/${id}/brand`);
 
       if (!response.ok) {
-        throw new Error("There was a problem fetching models");
+        throw new Error("There was a problem fetching brand data");
       }
 
       const brandData = await response.json();
