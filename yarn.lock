@@ -1049,10 +1049,10 @@
     react-table "7.8.0"
     react-useportal "1.0.19"
 
-"@canonical/react-components@2.2.1":
-  version "2.2.1"
-  resolved "https://registry.yarnpkg.com/@canonical/react-components/-/react-components-2.2.1.tgz#17cbe37afdbf4a29d9d4b1506436b8fcffca1962"
-  integrity sha512-E1msLURjEGCGuFWt2tdYLmDZUr7q6YMPB2b5G9DnaRVWsee/XLZItL1qOFLbSWmL5wIzc0yKWbgek6rL6B5edg==
+"@canonical/react-components@2.2.3":
+  version "2.2.3"
+  resolved "https://registry.yarnpkg.com/@canonical/react-components/-/react-components-2.2.3.tgz#fcdaf4b25a87fce88ba0c6cbba49582ebaf1f445"
+  integrity sha512-KiHUq9utEcEJTLm5ku09ERYsRQR8XArRXjq0oEsX9LasNzIiwfO48gUd415QBhVxWexG0H6g69T7zBpjeu0Jcw==
   dependencies:
     "@types/jest" "29.5.14"
     "@types/node" "20.17.19"
