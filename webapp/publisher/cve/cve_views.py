@@ -4,7 +4,6 @@ from canonicalwebteam.exceptions import StoreApiResourceNotFound, StoreApiError
 from webapp.helpers import api_publisher_session
 from webapp.decorators import login_required
 from webapp.publisher.cve.cve_helper import CveHelper
-from werkzeug.exceptions import NotFound
 
 dashboard = Dashboard(api_publisher_session)
 
@@ -53,10 +52,7 @@ def has_cves(snap_name):
             status_code,
         )
 
-    try:
-        snap_has_cves = CveHelper.has_cve_data(snap_name)
-    except NotFound:
-        snap_has_cves = False
+    snap_has_cves = CveHelper.has_cve_data(snap_name)
     if snap_has_cves:
         return flask.jsonify({"success": True})
     else:
