@@ -64,7 +64,7 @@ def has_cves(snap_name):
             flask.jsonify(
                 {
                     "success": False,
-                    "error": f"No CVEs data available for '{snap_name}' snap.",
+                    "error": f"CVEs data for '{snap_name}' snap not found.",
                 }
             ),
             404,
