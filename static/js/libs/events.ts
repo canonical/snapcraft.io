@@ -16,7 +16,7 @@ type EventHandlerMap = {
 };
 
 interface EventRegistration<T extends ValidEventTypes> {
-  selector: string | HTMLElement;
+  selector: HTMLElement | string;
   func: EventHandlerMap[T];
 }
 
@@ -36,14 +36,16 @@ class Events {
 
   _addListener(
     type: ValidEventTypes,
-    selector: string | HTMLElement | HTMLSelectElement | Window,
-  ) {
+    selector: HTMLElement | HTMLSelectElement | string | Window,
+  ): void {
     const bindTarget =
       typeof selector === "string" ? this.defaultBindTarget : selector;
-    bindTarget.addEventListener(type, (e) => this._handleEvent(type, e));
+    bindTarget.addEventListener(type, (e) => {
+      this._handleEvent(type, e);
+    });
   }
 
-  _handleEvent(type: ValidEventTypes, event: Event) {
+  _handleEvent(type: ValidEventTypes, event: Event): void {
     const eventTarget = event.target as HTMLElement | HTMLSelectElement;
     const eventRegistrations = this.events[type];
 
@@ -67,7 +69,7 @@ class Events {
 
   addEvent<T extends ValidEventTypes>(
     type: T,
-    selector: string | HTMLElement | HTMLSelectElement,
+    selector: HTMLElement | HTMLSelectElement | string,
     func: EventHandlerMap[T],
   ): void {
     if (!this.events[type]) {
@@ -77,7 +79,7 @@ class Events {
     const eventArray = this.events[type];
     if (eventArray) {
       eventArray.push({
-        selector: selector as string | HTMLElement,
+        selector: selector as HTMLElement | string,
         func,
       });
     }
@@ -88,7 +90,7 @@ class Events {
     }
   }
 
-  addWindowEvent(type: ValidEventTypes, func: EventHandler) {
+  addWindowEvent(type: ValidEventTypes, func: EventHandler): void {
     window.addEventListener(type, (event) => {
       func(event, window as unknown as HTMLElement);
     });
@@ -96,11 +98,9 @@ class Events {
 
   addEvents(
     eventTypes: Partial<{
-      [T in ValidEventTypes]: {
-        [selector: string]: EventHandlerMap[T];
-      };
+      [T in ValidEventTypes]: Record<string, EventHandlerMap[T]>;
     }>,
-  ) {
+  ): void {
     (Object.keys(eventTypes) as ValidEventTypes[]).forEach((type) => {
       const handlers = eventTypes[type];
 
