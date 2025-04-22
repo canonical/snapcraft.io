@@ -1,11 +1,7 @@
-const origin = window.location.href;
+const urlLocation = window.location.href;
 const categoryPrefix = "snapcraft.io-";
 
-type Events = {
-  [key: string]: string;
-};
-
-const events: Events = {
+const events: Record<string, string> = {
   ".global-nav a": "nav-0",
   ".p-navigation a": "nav-1",
   "#footer a": "footer-0",
@@ -21,12 +17,14 @@ const events: Events = {
   ".p-strip a": "content-link",
 };
 
-function triggerEvent(
-  category: string,
-  from: string,
-  to: string,
-  label: string,
-): void {
+type Event = {
+  category: string;
+  from: string;
+  to: string;
+  label: string;
+};
+
+function triggerEvent({ category, from, to, label }: Event): void {
   if (window.dataLayer) {
     window.dataLayer.push({
       event: "GAEvent",
@@ -56,14 +54,14 @@ if (typeof window.dataLayer !== "undefined") {
 
     const eventTarget = e.target as HTMLElement;
 
-    if (!eventTarget || !eventTarget.closest) {
+    if (!eventTarget?.closest) {
       return;
     }
 
-    target = eventTarget.closest("a") as HTMLAnchorElement;
+    target = eventTarget.closest("a")!;
 
     if (!target) {
-      target = eventTarget.closest("button") as HTMLButtonElement;
+      target = eventTarget.closest("button")!;
     }
 
     if (!target) {
@@ -91,7 +89,12 @@ if (typeof window.dataLayer !== "undefined") {
         }
 
         if (target instanceof HTMLAnchorElement) {
-          triggerEvent(events[key], origin, target.href, label);
+          triggerEvent({
+            category: events[key],
+            from: urlLocation,
+            to: target.href,
+            label,
+          });
         }
 
         break;

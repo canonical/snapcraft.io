@@ -1,45 +1,51 @@
-(function () {
-  function toggleDropdown(toggle: HTMLElement, open: boolean) {
+(function (): void {
+  function toggleDropdown(toggle: HTMLElement, open: boolean): void {
     const parentElement = toggle.parentNode as HTMLElement;
-    const dropdownElId = toggle.getAttribute("aria-controls") as string;
+    const dropdownElId = toggle.getAttribute("aria-controls") as
+      | string
+      | undefined;
 
-    const dropdown = document.getElementById(dropdownElId) as HTMLElement;
+    if (dropdownElId) {
+      const dropdown = document.getElementById(dropdownElId) as
+        | HTMLElement
+        | undefined;
 
-    const openMenu = !open;
+      const openMenu = !open;
 
-    dropdown.setAttribute("aria-hidden", openMenu.toString());
+      if (dropdown) {
+        dropdown.setAttribute("aria-hidden", openMenu.toString());
 
-    if (open) {
-      parentElement.classList.add("is-active");
-      parentElement.classList.add("is-selected");
-    } else {
-      parentElement.classList.remove("is-active");
-      parentElement.classList.remove("is-selected");
+        if (open) {
+          parentElement.classList.add("is-active");
+          parentElement.classList.add("is-selected");
+        } else {
+          parentElement.classList.remove("is-active");
+          parentElement.classList.remove("is-selected");
+        }
+      }
     }
   }
 
-  function closeAllDropdowns(toggles: Array<HTMLElement>) {
+  function closeAllDropdowns(toggles: HTMLElement[]): void {
     toggles.forEach(function (toggle) {
       toggleDropdown(toggle, false);
     });
   }
 
   function handleClickOutside(
-    toggles: Array<HTMLElement>,
+    toggles: HTMLElement[],
     containerClass: string,
-  ) {
+  ): void {
     document.addEventListener("click", function (event) {
       const target = event.target as HTMLElement;
 
-      if (target.closest) {
-        if (!target.closest(containerClass)) {
-          closeAllDropdowns(toggles);
-        }
+      if (!target.closest(containerClass)) {
+        closeAllDropdowns(toggles);
       }
     });
   }
 
-  function initNavDropdowns(containerClass: string) {
+  function initNavDropdowns(containerClass: string): void {
     const toggles = [].slice.call(
       document.querySelectorAll(containerClass + " [aria-controls]"),
     );

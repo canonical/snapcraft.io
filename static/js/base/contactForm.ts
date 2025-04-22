@@ -2,13 +2,19 @@ const contactFormTriggers = document.querySelectorAll(
   "[data-js='contact-form-trigger']",
 ) as NodeListOf<Element>;
 
-const modal = document.getElementById("contact-form-modal") as HTMLElement;
-const modalBody = document.getElementById("modal-body") as HTMLElement;
+const modal = document.getElementById("contact-form-modal") as
+  | HTMLElement
+  | undefined;
+const modalBody = document.getElementById("modal-body") as
+  | HTMLElement
+  | undefined;
 
 if (modal) {
   const closeModal = modal.querySelector(".p-modal__close");
   if (closeModal) {
-    closeModal.addEventListener("click", () => modal.classList.add("u-hide"));
+    closeModal.addEventListener("click", () => {
+      modal.classList.add("u-hide");
+    });
   }
 }
 
@@ -24,12 +30,17 @@ function handleClick(event: Event): void {
 
   let formTemplate = formEl.innerText;
 
-  Object.keys(args).forEach((arg) => {
+  Object.keys(args).forEach((arg: string) => {
     formTemplate = formTemplate.split(`{{${arg}}}`).join(`${args[arg]}`);
   });
 
-  modalBody.innerHTML = formTemplate;
-  modal.classList.remove("u-hide");
+  if (modalBody) {
+    modalBody.innerHTML = formTemplate;
+  }
+
+  if (modal) {
+    modal.classList.remove("u-hide");
+  }
 }
 
 function attachClickHandler(element: Element): void {
