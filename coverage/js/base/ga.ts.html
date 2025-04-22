@@ -30,9 +30,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">11.53% </span>
+                <span class="strong">12.5% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>3/26</span>
+                <span class='fraction'>3/24</span>
             </div>
         
             
@@ -166,14 +166,15 @@
 <a name='L101'></a><a href='#L101'>101</a>
 <a name='L102'></a><a href='#L102'>102</a>
 <a name='L103'></a><a href='#L103'>103</a>
-<a name='L104'></a><a href='#L104'>104</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">10x</span>
+<a name='L104'></a><a href='#L104'>104</a>
+<a name='L105'></a><a href='#L105'>105</a>
+<a name='L106'></a><a href='#L106'>106</a>
+<a name='L107'></a><a href='#L107'>107</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">10x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">10x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -262,6 +263,11 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -269,14 +275,10 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">const origin = window.location.href;
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">const urlLocation = window.location.href;
 const categoryPrefix = "snapcraft.io-";
 &nbsp;
-type Events = {
-  [key: string]: string;
-};
-&nbsp;
-const events: Events = {
+const events: Record&lt;string, string&gt; = {
   ".global-nav a": "nav-0",
   ".p-navigation a": "nav-1",
   "#footer a": "footer-0",
@@ -292,12 +294,14 @@ const events: Events = {
   ".p-strip a": "content-link",
 };
 &nbsp;
-function triggerEvent(
-  category: string,
-  from: string,
-  to: string,
-  label: string,
-): void {
+type Event = {
+  category: string;
+  from: string;
+  to: string;
+  label: string;
+};
+&nbsp;
+function triggerEvent({ category, from, to, label }: Event): void {
   <span class="missing-if-branch" title="else path not taken" >E</span>if (window.dataLayer) {
     window.dataLayer.push({
       event: "GAEvent",
@@ -327,14 +331,14 @@ function triggerEventReleaseUI(action: string, label: string): void {
 &nbsp;
     const eventTarget = <span class="cstat-no" title="statement not covered" >e.target as HTMLElement;</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >    if (!eventTarget || !eventTarget.closest) {</span>
+<span class="cstat-no" title="statement not covered" >    if (!eventTarget?.closest) {</span>
 <span class="cstat-no" title="statement not covered" >      return;</span>
     }
 &nbsp;
 <span class="cstat-no" title="statement not covered" >    target = eventTarget.closest("a") as HTMLAnchorElement;</span>
 &nbsp;
 <span class="cstat-no" title="statement not covered" >    if (!target) {</span>
-<span class="cstat-no" title="statement not covered" >      target = eventTarget.closest("button") as HTMLButtonElement;</span>
+<span class="cstat-no" title="statement not covered" >      target = eventTarget.closest("button")!;</span>
     }
 &nbsp;
 <span class="cstat-no" title="statement not covered" >    if (!target) {</span>
@@ -362,7 +366,12 @@ function triggerEventReleaseUI(action: string, label: string): void {
         }
 &nbsp;
 <span class="cstat-no" title="statement not covered" >        if (target instanceof HTMLAnchorElement) {</span>
-<span class="cstat-no" title="statement not covered" >          triggerEvent(events[key], origin, target.href, label);</span>
+<span class="cstat-no" title="statement not covered" >          triggerEvent({</span>
+            category: events[key],
+            from: urlLocation,
+            to: target.href,
+            label,
+          });
         }
 &nbsp;
 <span class="cstat-no" title="statement not covered" >        break;</span>
@@ -379,7 +388,7 @@ export { triggerEvent, triggerEventReleaseUI };
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-04-21T22:04:00.346Z
+                at 2025-04-22T22:04:00.234Z
             </div>
         <script src="../prettify.js"></script>
         <script>
