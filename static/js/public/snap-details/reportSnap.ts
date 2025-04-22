@@ -1,8 +1,21 @@
 import "whatwg-fetch";
 import { buttonEnabled, buttonLoading } from "../../libs/formHelpers";
 
-const showEl = (el: HTMLElement) => el.classList.remove("u-hide");
-const hideEl = (el: HTMLElement) => el.classList.add("u-hide");
+const showEl = (el: HTMLElement): void => {
+  el.classList.remove("u-hide");
+};
+
+const hideEl = (el: HTMLElement): void => {
+  el.classList.add("u-hide");
+};
+
+function initForm(modal: HTMLElement): void {
+  buttonEnabled(modal.querySelector("button[type=submit]")!, "Submit report");
+
+  showEl(modal.querySelector(".js-report-snap-form")!);
+  hideEl(modal.querySelector(".js-report-snap-success")!);
+  hideEl(modal.querySelector(".js-report-snap-error")!);
+}
 
 function toggleModal(modal: HTMLElement, show?: boolean): void {
   if (typeof show === "undefined") {
@@ -17,27 +30,16 @@ function toggleModal(modal: HTMLElement, show?: boolean): void {
   }
 }
 
-function initForm(modal: HTMLElement): void {
-  buttonEnabled(
-    modal.querySelector("button[type=submit]") as HTMLButtonElement,
-    "Submit report",
-  );
-
-  showEl(modal.querySelector(".js-report-snap-form") as HTMLElement);
-  hideEl(modal.querySelector(".js-report-snap-success") as HTMLElement);
-  hideEl(modal.querySelector(".js-report-snap-error") as HTMLElement);
-}
-
 function showSuccess(modal: HTMLElement): void {
-  hideEl(modal.querySelector(".js-report-snap-form") as HTMLElement);
-  showEl(modal.querySelector(".js-report-snap-success") as HTMLElement);
-  hideEl(modal.querySelector(".js-report-snap-error") as HTMLElement);
+  hideEl(modal.querySelector(".js-report-snap-form")!);
+  showEl(modal.querySelector(".js-report-snap-success")!);
+  hideEl(modal.querySelector(".js-report-snap-error")!);
 }
 
 function showError(modal: HTMLElement): void {
-  hideEl(modal.querySelector(".js-report-snap-form") as HTMLElement);
-  hideEl(modal.querySelector(".js-report-snap-success") as HTMLElement);
-  showEl(modal.querySelector(".js-report-snap-error") as HTMLElement);
+  hideEl(modal.querySelector(".js-report-snap-form")!);
+  hideEl(modal.querySelector(".js-report-snap-success")!);
+  showEl(modal.querySelector(".js-report-snap-error")!);
 }
 
 export default function initReportSnap(
@@ -72,14 +74,11 @@ export default function initReportSnap(
   reportForm.addEventListener("submit", async (e) => {
     e.preventDefault();
     buttonLoading(
-      reportForm.querySelector("button[type=submit]") as HTMLButtonElement,
+      reportForm.querySelector("button[type=submit]")!,
       "Submitting…",
     );
 
-    if (
-      honeypotField.checked ||
-      (commentField.value && commentField.value.includes("http"))
-    ) {
+    if (honeypotField.checked || commentField?.value?.includes("http")) {
       showSuccess(modal);
       return;
     }
@@ -111,7 +110,7 @@ export default function initReportSnap(
 
   // close modal on ESC
   window.addEventListener("keyup", (event) => {
-    if (event.keyCode === 27) {
+    if (event.key === "Escape") {
       toggleModal(modal, false);
     }
   });

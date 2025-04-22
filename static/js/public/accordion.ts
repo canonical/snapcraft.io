@@ -3,8 +3,10 @@
 
 export const toggleAccordion = (element: HTMLElement, show: boolean): void => {
   element.setAttribute("aria-expanded", show.toString());
-  const controlElId: string = `#${element.getAttribute("aria-controls")}`;
-  const controlEl = document.querySelector(controlElId) as HTMLElement;
+
+  const controlElId = `#${element.getAttribute("aria-controls")}`;
+  const controlEl = document.querySelector(controlElId)!;
+
   controlEl.setAttribute("aria-hidden", `${show ? "false" : "true"}`);
 };
 
@@ -15,21 +17,25 @@ export default function initAccordion(
   // and removed and events do not need to be managed separately.
   const accordionContainer = document.querySelector(
     accordionContainerSelector,
-  ) as HTMLElement;
+  )!;
+
   accordionContainer.addEventListener("click", (e) => {
     const targetEl = e.target as HTMLElement;
     const target = targetEl.closest(
       "[class*='p-accordion__tab']",
     ) as HTMLButtonElement;
+
     if (target && !target.disabled) {
       // Find any open panels within the container and close them.
       const currentTarget = e.currentTarget as HTMLElement;
       const expandedElements = currentTarget.querySelectorAll(
         "[aria-expanded=true]",
       ) as NodeListOf<HTMLElement>;
-      Array.from(expandedElements).forEach((element: HTMLElement) =>
-        toggleAccordion(element, false),
-      );
+
+      Array.from(expandedElements).forEach((element: HTMLElement) => {
+        toggleAccordion(element, false);
+      });
+
       // Open the target.
       toggleAccordion(target, true);
     }
@@ -71,9 +77,7 @@ export function initAccordionButtons(continueButton: HTMLButtonElement): void {
   continueButton.addEventListener("click", (event) => {
     event.preventDefault();
 
-    const currentPanel = continueButton.closest(
-      ".p-accordion__group",
-    ) as HTMLElement;
+    const currentPanel = continueButton.closest(".p-accordion__group")!;
     const currentToggle = currentPanel.querySelector(
       "[class*='p-accordion__tab']",
     ) as HTMLElement;
@@ -81,12 +85,14 @@ export function initAccordionButtons(continueButton: HTMLButtonElement): void {
     const nextPanel = currentPanel.nextElementSibling as HTMLElement;
     const nextToggle = nextPanel.querySelector(
       "[class*='p-accordion__tab']",
-    ) as HTMLElement;
+    )! as HTMLElement;
 
     toggleAccordion(currentToggle, false);
+
     if (currentSuccess) {
       currentSuccess.classList.remove("u-hide");
     }
+
     toggleAccordion(nextToggle, true);
   });
 }

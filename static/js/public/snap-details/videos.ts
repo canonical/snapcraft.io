@@ -11,7 +11,7 @@ function vimeo(): void {
     "vimeoplayer",
   ) as HTMLIFrameElement | null;
 
-  const vimeoReady = () => {
+  const vimeoReady = (): void => {
     if (frame && window.Vimeo && window.Vimeo.Player) {
       const player = new window.Vimeo.Player(frame);
       player.on("play", function () {
@@ -21,7 +21,7 @@ function vimeo(): void {
     }
   };
 
-  const checkVimeo = () => {
+  const checkVimeo = (): void => {
     if (window.Vimeo && window.Vimeo.Player) {
       vimeoReady();
     } else {
@@ -36,7 +36,9 @@ function asciinema(holderEl: HTMLElement): void {
   const asciinemaPlayer = holderEl.querySelector("iframe");
 
   if (!asciinemaPlayer) {
-    setTimeout(() => asciinema(holderEl), 200);
+    setTimeout(() => {
+      asciinema(holderEl);
+    }, 200);
     return;
   }
 }
