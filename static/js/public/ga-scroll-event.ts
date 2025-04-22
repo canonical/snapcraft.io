@@ -19,24 +19,24 @@ export default function triggerEventWhenVisible(selector: string): void {
 
   if (el) {
     if (isInViewport(el)) {
-      triggerEvent(
-        "element-visible",
-        origin,
-        selector,
-        `Element visible on screen: ${selector}`,
-      );
+      triggerEvent({
+        category: "element-visible",
+        from: origin,
+        to: selector,
+        label: `Element visible on screen: ${selector}`,
+      });
     } else {
       let triggered = false;
       window.addEventListener(
         "scroll",
         debounce(() => {
           if (!triggered && isInViewport(el)) {
-            triggerEvent(
-              "element-visible",
-              origin,
-              selector,
-              `Element visible on screen: ${selector}`,
-            );
+            triggerEvent({
+              category: "element-visible",
+              from: origin,
+              to: selector,
+              label: `Element visible on screen: ${selector}`,
+            });
             triggered = true;
           }
         }, 500),

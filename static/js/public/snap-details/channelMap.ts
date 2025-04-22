@@ -194,12 +194,15 @@ class ChannelMap {
           } else {
             this.openChannelMap(target);
 
-            triggerEvent(
-              this.openScreenName === "channel-map-install" ? "cta-0" : "cta-1",
-              window.location.href,
-              target.dataset.controls ?? "",
-              target.innerText,
-            );
+            triggerEvent({
+              category:
+                this.openScreenName === "channel-map-install"
+                  ? "cta-0"
+                  : "cta-1",
+              from: window.location.href,
+              to: target.dataset.controls ?? "",
+              label: target.innerText,
+            });
           }
         },
 
@@ -232,12 +235,12 @@ class ChannelMap {
           if (isSnapElement(target)) {
             event.preventDefault();
             this.openDesktop(target);
-            triggerEvent(
-              "cta-1",
-              window.location.href,
-              `snap://${target.dataset.snap}`,
-              target.innerText,
-            );
+            triggerEvent({
+              category: "cta-1",
+              from: window.location.href,
+              to: `snap://${target.dataset.snap}`,
+              label: target.innerText,
+            });
           } else {
             console.error("Target is not a SnapElement");
           }

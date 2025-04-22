@@ -19,7 +19,12 @@ describe("triggerEvent", () => {
   test("pushes event to dataLayer", () => {
     window.dataLayer = [];
 
-    triggerEvent("category", "from", "to", "label");
+    triggerEvent({
+      category: "category",
+      from: "from",
+      to: "to",
+      label: "label",
+    });
 
     expect(window.dataLayer[0].event).toBe("GAEvent");
     expect(window.dataLayer[0].eventCategory).toBe("snapcraft.io-category");
