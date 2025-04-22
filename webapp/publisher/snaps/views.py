@@ -281,12 +281,12 @@ publisher_snaps.add_url_rule(
 
 # CVE API
 publisher_snaps.add_url_rule(
-    "/api/snaps/cve/<snap_name>/<revision>",
+    "/api/<snap_name>/<revision>/cves",
     view_func=cve_views.get_cves,
 )
 
 publisher_snaps.add_url_rule(
-    "/api/snaps/cve/<snap_name>",
+    "/api/<snap_name>/cves/available",
     view_func=cve_views.has_cves,
 )
 
