@@ -58,7 +58,7 @@ if (typeof window.dataLayer !== "undefined") {
       return;
     }
 
-    target = eventTarget.closest("a")!;
+    target = eventTarget.closest("a") as HTMLAnchorElement;
 
     if (!target) {
       target = eventTarget.closest("button")!;

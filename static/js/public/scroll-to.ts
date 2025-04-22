@@ -1,5 +1,8 @@
-export function animateScrollTo(to: string | number | HTMLElement, offset = 0) {
-  const element = (document.scrollingElement as HTMLElement) || window;
+export function animateScrollTo(
+  to: HTMLElement | number | string,
+  offset = 0,
+): void {
+  const element = document.scrollingElement!;
 
   if (typeof to === "string") {
     to = document.querySelector(to) as HTMLElement;
@@ -12,14 +15,13 @@ export function animateScrollTo(to: string | number | HTMLElement, offset = 0) {
   }
   to = to - offset;
 
-  if (element.scrollTo) {
-    element.scrollTo({ top: to, left: 0, behavior: "smooth" });
-  } else {
-    element.scrollTop = to;
-  }
+  element.scrollTo({ top: to, left: 0, behavior: "smooth" });
 }
 
-export function initLinkScroll(link: HTMLLinkElement, { offset = 0 }) {
+export function initLinkScroll(
+  link: HTMLLinkElement,
+  { offset = 0 }: { offset: number },
+): void {
   if (link && (link.dataset.scrollTo || link.href)) {
     const href =
       (link.dataset.scrollTo as string) ||
@@ -29,7 +31,9 @@ export function initLinkScroll(link: HTMLLinkElement, { offset = 0 }) {
       link.addEventListener("click", (event) => {
         event.preventDefault();
         animateScrollTo(target, offset);
-        setTimeout(() => window.history.pushState({}, "", href), 100);
+        setTimeout(() => {
+          window.history.pushState({}, "", href);
+        }, 100);
       });
     }
   }

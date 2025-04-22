@@ -1,15 +1,19 @@
 import { initEmbeddedCardPicker } from "./publicise";
 
-const showEl = (el: { classList: { remove: (arg0: string) => void } }) =>
+const showEl = (el: {
+  classList: { remove: (arg0: string) => void };
+}): void => {
   el.classList.remove("u-hide");
-const hideEl = (el: { classList: { add: (arg0: string) => void } }) =>
+};
+const hideEl = (el: { classList: { add: (arg0: string) => void } }): void => {
   el.classList.add("u-hide");
+};
 
 function toggleModal(
   modal: HTMLElement,
-  show?: boolean | undefined,
-  initCallback?: { (): void; (): void } | undefined,
-) {
+  show?: boolean,
+  initCallback?: { (): void; (): void },
+): void {
   if (typeof show === "undefined") {
     show = modal.classList.contains("u-hide");
   }
@@ -39,17 +43,13 @@ export default function initEmbeddedCardModal(snapName: string): void {
   const buttonRadios = modal.querySelectorAll("input[name=store-button]");
   const optionButtons = modal.querySelectorAll("input[type=checkbox]");
 
-  function updateHeightCallback() {
+  function updateHeightCallback(): void {
     // adjust the height of the modal to size of the frame
     dialog.style.minHeight = "";
 
     setTimeout(() => {
       dialog.style.minHeight = `${dialog.clientHeight}px`;
     }, 1);
-  }
-
-  function initFrame() {
-    renderCard();
   }
 
   const renderCard = initEmbeddedCardPicker({
@@ -60,6 +60,10 @@ export default function initEmbeddedCardModal(snapName: string): void {
     optionButtons,
     updateHeightCallback,
   });
+
+  function initFrame(): void {
+    renderCard();
+  }
 
   toggle.addEventListener("click", (event) => {
     event.preventDefault();
