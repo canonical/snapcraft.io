@@ -5,7 +5,7 @@ import formatImageChanges from "./formatImageChanges";
 import type { ListingData } from "../types";
 
 export default function getListingChanges(
-  dirtyFields: { [key: string]: boolean },
+  dirtyFields: Record<string, boolean>,
   fieldValues: FieldValues,
   data: ListingData,
 ) {
