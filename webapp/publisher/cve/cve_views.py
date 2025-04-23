@@ -48,21 +48,21 @@ def get_revisions_with_cves(snap_name):
     )
     if not has_access:
         return (
-            flask.jsonify({"success": False, "error": error_message}),
+            flask.jsonify({"success": False, "message": error_message}),
             status_code,
         )
 
     revisions_with_cves = CveHelper.get_revisions_with_cves(snap_name)
     if len(revisions_with_cves) > 0:
         return flask.jsonify(
-            {"success": True, "revisions": revisions_with_cves}
+            {"success": True, "data": {"revisions": revisions_with_cves}}
         )
     else:
         return (
             flask.jsonify(
                 {
                     "success": False,
-                    "error": f"CVEs data for '{snap_name}' snap not found.",
+                    "message": f"CVEs data for '{snap_name}' snap not found.",
                 }
             ),
             404,

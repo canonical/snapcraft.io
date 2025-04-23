@@ -46,6 +46,7 @@ class TestModelServiceEndpoints(TestEndpoints):
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(data["success"], True)
+        self.assertEqual(data["data"]["revisions"], [123, 321])
 
     @patch(
         "webapp.publisher.cve.cve_helper.CveHelper.get_revisions_with_cves",
