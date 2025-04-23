@@ -65,7 +65,7 @@
             <a id="nextFileLink" class="nav" href="z_1edce64d0f8bc5cf_views_py.html">&#xbb; next</a>
             &nbsp; &nbsp; &nbsp;
             <a class="nav" href="https://coverage.readthedocs.io/en/7.8.0">coverage.py v7.8.0</a>,
-            created at 2025-04-22 22:06 +0000
+            created at 2025-04-23 22:05 +0000
         </p>
         <aside class="hidden">
             <button type="button" class="button_next_chunk" data-shortcut="j"></button>
@@ -363,13 +363,13 @@
     <p class="pln"><span class="n"><a id="t281" href="#t281">281</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t282" href="#t282">282</a></span><span class="t"><span class="com"># CVE API</span>&nbsp;</span><span class="r"></span></p>
     <p class="run"><span class="n"><a id="t283" href="#t283">283</a></span><span class="t"><span class="nam">publisher_snaps</span><span class="op">.</span><span class="nam">add_url_rule</span><span class="op">(</span>&nbsp;</span><span class="r"></span></p>
-    <p class="pln"><span class="n"><a id="t284" href="#t284">284</a></span><span class="t">    <span class="str">"/api/snaps/cve/&lt;snap_name>/&lt;revision>"</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t284" href="#t284">284</a></span><span class="t">    <span class="str">"/api/&lt;snap_name>/&lt;revision>/cves"</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t285" href="#t285">285</a></span><span class="t">    <span class="nam">view_func</span><span class="op">=</span><span class="nam">cve_views</span><span class="op">.</span><span class="nam">get_cves</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t286" href="#t286">286</a></span><span class="t"><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t287" href="#t287">287</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p class="run"><span class="n"><a id="t288" href="#t288">288</a></span><span class="t"><span class="nam">publisher_snaps</span><span class="op">.</span><span class="nam">add_url_rule</span><span class="op">(</span>&nbsp;</span><span class="r"></span></p>
-    <p class="pln"><span class="n"><a id="t289" href="#t289">289</a></span><span class="t">    <span class="str">"/api/snaps/cve/&lt;snap_name>"</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
-    <p class="pln"><span class="n"><a id="t290" href="#t290">290</a></span><span class="t">    <span class="nam">view_func</span><span class="op">=</span><span class="nam">cve_views</span><span class="op">.</span><span class="nam">has_cves</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t289" href="#t289">289</a></span><span class="t">    <span class="str">"/api/&lt;snap_name>/cves"</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t290" href="#t290">290</a></span><span class="t">    <span class="nam">view_func</span><span class="op">=</span><span class="nam">cve_views</span><span class="op">.</span><span class="nam">get_revisions_with_cves</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t291" href="#t291">291</a></span><span class="t"><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t292" href="#t292">292</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t293" href="#t293">293</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
@@ -676,7 +676,7 @@
             <a class="nav" href="z_1edce64d0f8bc5cf_views_py.html">&#xbb; next</a>
             &nbsp; &nbsp; &nbsp;
             <a class="nav" href="https://coverage.readthedocs.io/en/7.8.0">coverage.py v7.8.0</a>,
-            created at 2025-04-22 22:06 +0000
+            created at 2025-04-23 22:05 +0000
         </p>
     </div>
 </footer>
