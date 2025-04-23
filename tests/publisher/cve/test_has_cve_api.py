@@ -31,7 +31,7 @@ class TestEndpoints(TestCase):
 
 class TestModelServiceEndpoints(TestEndpoints):
     @patch(
-        "webapp.publisher.cve.cve_helper.CveHelper.has_revisions_with_cves",
+        "webapp.publisher.cve.cve_helper.CveHelper.get_revisions_with_cves",
         return_value=[123, 321],
     )
     @patch(
@@ -48,7 +48,7 @@ class TestModelServiceEndpoints(TestEndpoints):
         self.assertEqual(data["success"], True)
 
     @patch(
-        "webapp.publisher.cve.cve_helper.CveHelper.has_revisions_with_cves",
+        "webapp.publisher.cve.cve_helper.CveHelper.get_revisions_with_cves",
         return_value=[],
     )
     @patch(

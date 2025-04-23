@@ -111,7 +111,7 @@ class CveHelper:
             raise NotFound
 
     @staticmethod
-    def has_revisions_with_cves(snap_name):
+    def get_revisions_with_cves(snap_name):
         try:
             contents = CveHelper._get_cve_file_metadata(
                 f"snap-cves/{snap_name}"

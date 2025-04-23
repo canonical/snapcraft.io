@@ -52,7 +52,7 @@ def get_revisions_with_cves(snap_name):
             status_code,
         )
 
-    revisions_with_cves = CveHelper.has_revisions_with_cves(snap_name)
+    revisions_with_cves = CveHelper.get_revisions_with_cves(snap_name)
     if len(revisions_with_cves) > 0:
         return flask.jsonify(
             {"success": True, "revisions": revisions_with_cves}

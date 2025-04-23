@@ -15,7 +15,7 @@ class HasRevisionsWithCvesTest(unittest.TestCase):
             {"name": "789.yaml"},
         ]
 
-        result = CveHelper.has_revisions_with_cves("my-snap")
+        result = CveHelper.get_revisions_with_cves("my-snap")
         self.assertEqual(result, [123, 456, 789])
 
     @patch("webapp.publisher.cve.cve_helper.CveHelper._get_cve_file_metadata")
@@ -28,7 +28,7 @@ class HasRevisionsWithCvesTest(unittest.TestCase):
             {"name": "data.txt"},
         ]
 
-        result = CveHelper.has_revisions_with_cves("my-snap")
+        result = CveHelper.get_revisions_with_cves("my-snap")
         self.assertEqual(result, [123, 456])
 
     @patch("webapp.publisher.cve.cve_helper.CveHelper._get_cve_file_metadata")
@@ -38,12 +38,12 @@ class HasRevisionsWithCvesTest(unittest.TestCase):
             {"name": "notes.txt"},
         ]
 
-        result = CveHelper.has_revisions_with_cves("my-snap")
+        result = CveHelper.get_revisions_with_cves("my-snap")
         self.assertEqual(result, [])
 
     @patch("webapp.publisher.cve.cve_helper.CveHelper._get_cve_file_metadata")
     def test_returns_empty_list_on_not_found(self, mock_get_metadata):
         mock_get_metadata.side_effect = NotFound()
 
-        result = CveHelper.has_revisions_with_cves("my-snap")
+        result = CveHelper.get_revisions_with_cves("my-snap")
         self.assertEqual(result, [])
