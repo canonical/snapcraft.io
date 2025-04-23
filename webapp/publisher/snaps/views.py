@@ -286,8 +286,8 @@ publisher_snaps.add_url_rule(
 )
 
 publisher_snaps.add_url_rule(
-    "/api/<snap_name>/cves/available",
-    view_func=cve_views.has_cves,
+    "/api/<snap_name>/cves",
+    view_func=cve_views.get_revisions_with_cves,
 )
 
 

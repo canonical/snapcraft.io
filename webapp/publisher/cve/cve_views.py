@@ -40,7 +40,7 @@ def can_user_access_cve_data(snap_name):
 
 
 @login_required
-def has_cves(snap_name):
+def get_revisions_with_cves(snap_name):
 
     # Check if the user has access to CVE data for the given snap
     has_access, error_message, status_code = can_user_access_cve_data(
@@ -52,9 +52,11 @@ def has_cves(snap_name):
             status_code,
         )
 
-    snap_has_cves = CveHelper.has_cve_data(snap_name)
-    if snap_has_cves:
-        return flask.jsonify({"success": True})
+    revisions_with_cves = CveHelper.has_revisions_with_cves(snap_name)
+    if len(revisions_with_cves) > 0:
+        return flask.jsonify(
+            {"success": True, "revisions": revisions_with_cves}
+        )
     else:
         return (
             flask.jsonify(

@@ -1,6 +1,7 @@
 import json
 from os import getenv
 import requests
+import re
 
 from werkzeug.exceptions import NotFound
 
@@ -110,14 +111,24 @@ class CveHelper:
             raise NotFound
 
     @staticmethod
-    def has_cve_data(snap_name):
+    def has_revisions_with_cves(snap_name):
         try:
-            CveHelper._get_cve_file_metadata(
-                "snap-cves/{}.json".format(snap_name)
+            contents = CveHelper._get_cve_file_metadata(
+                f"snap-cves/{snap_name}"
             )
-            return True
+
+            # find all revision YAML files in the folder
+            # e.g., 123.yaml, 456.yaml, 789.yaml
+            # and extract the revision numbers
+            revision_files = [
+                int(match.group(1))
+                for item in contents
+                if (match := re.match(r"(\d+)\.yaml$", item["name"]))
+            ]
+
+            return revision_files
         except NotFound:
-            return False
+            return []
 
     @staticmethod
     def get_cve_with_revision(snap_name, revision):

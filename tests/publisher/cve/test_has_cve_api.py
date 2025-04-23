@@ -31,8 +31,8 @@ class TestEndpoints(TestCase):
 
 class TestModelServiceEndpoints(TestEndpoints):
     @patch(
-        "webapp.publisher.cve.cve_helper.CveHelper.has_cve_data",
-        return_value=True,
+        "webapp.publisher.cve.cve_helper.CveHelper.has_revisions_with_cves",
+        return_value=[123, 321],
     )
     @patch(
         "canonicalwebteam.store_api.dashboard.Dashboard.get_snap_info",
@@ -41,15 +41,15 @@ class TestModelServiceEndpoints(TestEndpoints):
     def test_has_cves_for_canonical_user(self, mock_get_snap_info, mock_get):
         self._set_user_is_canonical(True)
 
-        response = self.client.get("api/test/cves/available")
+        response = self.client.get("api/test/cves")
         data = response.json
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(data["success"], True)
 
     @patch(
-        "webapp.publisher.cve.cve_helper.CveHelper.has_cve_data",
-        return_value=False,
+        "webapp.publisher.cve.cve_helper.CveHelper.has_revisions_with_cves",
+        return_value=[],
     )
     @patch(
         "canonicalwebteam.store_api.dashboard.Dashboard.get_snap_info",
@@ -58,14 +58,14 @@ class TestModelServiceEndpoints(TestEndpoints):
     def test_has_cves_no_data(self, mock_get_snap_info, mock_get):
         self._set_user_is_canonical(True)
 
-        response = self.client.get("api/test/cves/available")
+        response = self.client.get("api/test/cves")
         data = response.json
 
         self.assertEqual(response.status_code, 404)
         self.assertEqual(data["success"], False)
 
     def test_has_cves_for_non_canonical_user(self):
-        response = self.client.get("api/test/cves/available")
+        response = self.client.get("api/test/cves")
         data = response.json
 
         self.assertEqual(response.status_code, 403)
