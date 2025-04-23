@@ -386,6 +386,7 @@ function PublisherSettingsForm({ settings }: Props) {
               <div className="p-form__control">
                 <label className="p-checkbox">
                   <input
+                    id="update_metadata_on_release"
                     type="checkbox"
                     className="p-checkbox__input"
                     defaultChecked={settingsData.update_metadata_on_release}
