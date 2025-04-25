@@ -263,19 +263,10 @@
   {% include "store/snap-details/_templates.html" %}
 {% endblock %}
 
-{% block scripts_includes %}
-  <script src="{{ static_url('js/dist/distro-install.js') }}" defer></script>
-{% endblock %}
 {% block scripts %}
   <script>
     window.addEventListener("DOMContentLoaded", function() {
       Raven.context(function () {
-        try {
-          snapcraft.public.distroInstall.initLinkScroll(document.querySelector(".js-install"), { offset: 20 });
-        } catch(e) {
-          Raven.captureException(e);
-        }
-
         try {
           snapcraft.public.distroInstall.triggerEventWhenVisible("#snippet-snap-install-stable")
         } catch(e) {
