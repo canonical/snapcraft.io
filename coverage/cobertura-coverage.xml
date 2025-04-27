@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 <!DOCTYPE coverage SYSTEM "http://cobertura.sourceforge.net/xml/coverage-04.dtd">
-<coverage lines-valid="3952" lines-covered="2276" line-rate="0.5759000000000001" branches-valid="2574" branches-covered="1497" branch-rate="0.5815" timestamp="1745705029777" complexity="0" version="0.1">
+<coverage lines-valid="3952" lines-covered="2276" line-rate="0.5759000000000001" branches-valid="2574" branches-covered="1497" branch-rate="0.5815" timestamp="1745791444426" complexity="0" version="0.1">
   <sources>
     <source>/home/runner/work/snapcraft.io/snapcraft.io</source>
   </sources>
