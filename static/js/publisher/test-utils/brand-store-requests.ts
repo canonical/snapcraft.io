@@ -6,6 +6,7 @@ import {
   membersResponse,
   storesResponse,
   searchResponse,
+  invitesResponse,
 } from "./brand-store-responses";
 
 // @ts-expect-error - Unknown type
@@ -25,6 +26,12 @@ function brandStoreRequests(server) {
   server.use(
     http.get("/api/store/test-store-id/members", () => {
       return HttpResponse.json(membersResponse);
+    }),
+  );
+
+  server.use(
+    http.get("/api/store/test-store-id/invites", () => {
+      return HttpResponse.json(invitesResponse);
     }),
   );
 
