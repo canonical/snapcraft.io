@@ -35,7 +35,7 @@ class CveHelper:
             raise NotFound
 
     @staticmethod
-    def _format_cve_response(cve_list, cve_details, usn_details):
+    def _format_cve_response(cve_list, cve_details, usn_details, status):
         cves = []
 
         for cve_id, cve in cve_list.items():
@@ -61,6 +61,7 @@ class CveHelper:
             cves.append(
                 {
                     "id": cve_id,
+                    "status": status,
                     "cvss_score": cve_detail["cvss_score"],
                     "cvss_severity": cve_detail["cvss_severity"],
                     "description": cve_detail["description"],
@@ -98,10 +99,10 @@ class CveHelper:
                 usn_details = content["security_issues"]["usns"]
 
                 unfixed = CveHelper._format_cve_response(
-                    unfixed_cves, cve_details, usn_details
+                    unfixed_cves, cve_details, usn_details, "unfixed"
                 )
                 fixed = CveHelper._format_cve_response(
-                    fixed_cves, cve_details, usn_details
+                    fixed_cves, cve_details, usn_details, "fixed"
                 )
 
                 return fixed + unfixed

@@ -112,6 +112,7 @@ class CveHGetByRevisionTest(unittest.TestCase):
 
         self.assertEqual(len(result), 3)
         self.assertEqual(result[0]["id"], "CVE-2014-9984")
+        self.assertEqual(result[0]["status"], "fixed")
         self.assertEqual(result[0]["cvss_score"], 9)
         self.assertEqual(result[0]["cvss_severity"], "high")
         self.assertEqual(result[0]["description"], "description-2")
@@ -130,6 +131,7 @@ class CveHGetByRevisionTest(unittest.TestCase):
         )
 
         self.assertEqual(result[1]["id"], "CVE-2023-31486")
+        self.assertEqual(result[1]["status"], "fixed")
         self.assertEqual(result[1]["cvss_score"], 5.5)
         self.assertEqual(result[1]["cvss_severity"], "medium")
         self.assertEqual(result[1]["description"], "description-1")
@@ -150,6 +152,7 @@ class CveHGetByRevisionTest(unittest.TestCase):
         self.assertEqual(result[1]["usns"][0]["id"], "3009-1")
 
         self.assertEqual(result[2]["id"], "CVE-2024-52005")
+        self.assertEqual(result[2]["status"], "unfixed")
         self.assertEqual(result[2]["cvss_score"], 2.1)
         self.assertEqual(result[2]["cvss_severity"], "negligible")
         self.assertEqual(result[2]["description"], "description-3")
