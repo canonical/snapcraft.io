@@ -1,9 +1,8 @@
-import { UseFormGetValues, FieldValues, UseFormWatch } from "react-hook-form";
+import { FieldValues, UseFormWatch } from "react-hook-form";
 import { Form } from "@canonical/react-components";
 
 type Props = {
   snapName: string;
-  getValues: UseFormGetValues<FieldValues>;
   watch: UseFormWatch<FieldValues>;
   data: {
     categories: { name: string; slug: string }[];
@@ -32,12 +31,23 @@ type ListingData = {
   license: string;
 };
 
-function PreviewForm({ snapName, getValues, watch, data }: Props) {
+function PreviewForm({ snapName, watch, data }: Props) {
   const watchWebsites = watch("websites");
   const watchContacts = watch("contacts");
   const watchDonations = watch("donations");
   const watchSource = watch("source_code");
   const watchIssues = watch("issues");
+  const watchTitle = watch("title");
+  const watchBannerUrls = watch("banner_urls");
+  const watchIconUrl = watch("icon_url");
+  const watchSummary = watch("summary");
+  const watchDescription = watch("description");
+  const watchScreenshotUrls = watch("screenshot_urls");
+  const watchPrimaryCategory = watch("primary_category");
+  const watchSecondaryCategory = watch("secondary_category");
+  const watchVideoUrls = watch("video_urls");
+  const watchLicense = watch("license");
+  const watchPrimaryWebsite = watch("primary_website");
 
   const listingData: ListingData = {
     categories: [],
@@ -59,26 +69,26 @@ function PreviewForm({ snapName, getValues, watch, data }: Props) {
         : [],
     },
     snap_name: snapName,
-    title: getValues("title"),
+    title: watchTitle,
     images: [
       {
-        url: getValues("banner_url"),
+        url: watchBannerUrls ? watchBannerUrls : null,
         type: "banner",
         status: "uploaded",
       },
       {
-        url: getValues("icon_url"),
+        url: watchIconUrl,
         type: "icon",
         status: "uploaded",
       },
     ],
-    summary: getValues("summary"),
-    description: getValues("description"),
+    summary: watchSummary,
+    description: watchDescription,
     video: null,
     license: "",
   };
 
-  const screenshotUrls = getValues("screenshot_urls");
+  const screenshotUrls = watchScreenshotUrls;
 
   if (screenshotUrls.length) {
     screenshotUrls.forEach((screenshotUrl: string) => {
@@ -90,8 +100,8 @@ function PreviewForm({ snapName, getValues, watch, data }: Props) {
     });
   }
 
-  const primaryCategory = getValues("primary_category");
-  const secondaryCategory = getValues("secondary_category");
+  const primaryCategory = watchPrimaryCategory;
+  const secondaryCategory = watchSecondaryCategory;
 
   if (primaryCategory) {
     const primaryCategoryData = data.categories.find(
@@ -113,16 +123,17 @@ function PreviewForm({ snapName, getValues, watch, data }: Props) {
     }
   }
 
-  const videoUrl = getValues("video_urls");
+  const videoUrl = watchVideoUrls;
 
   if (videoUrl) {
     listingData.video = [{ type: "video", status: "uploaded", url: videoUrl }];
   }
 
-  listingData.license = getValues("license");
+  listingData.license = watchLicense;
 
-  if (getValues("primary_website")) {
-    listingData.links.website.unshift(getValues("primary_website"));
+  const primaryWebsite = watchPrimaryWebsite;
+  if (primaryWebsite) {
+    listingData.links.website.unshift(primaryWebsite);
   }
 
   return (

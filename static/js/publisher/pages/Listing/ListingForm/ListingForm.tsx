@@ -177,14 +177,7 @@ function ListingForm({ data, refetch }: Props): React.JSX.Element {
           />
         </Strip>
       </form>
-      {snapId && (
-        <PreviewForm
-          snapName={snapId}
-          getValues={getValues}
-          watch={watch}
-          data={data}
-        />
-      )}
+      {snapId && <PreviewForm snapName={snapId} watch={watch} data={data} />}
     </>
   );
 }
