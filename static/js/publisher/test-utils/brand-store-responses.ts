@@ -1,4 +1,4 @@
-import type { Snap, Member, Store } from "../types/shared";
+import type { Snap, Member, Store, Invite } from "../types/shared";
 
 export const accountResponse = {
   publisher: {
@@ -86,6 +86,13 @@ export const membersResponse = [
     roles: ["admin", "review", "view", "access"],
     username: "johndoe",
   },
+  {
+    displayname: "Jane Doe",
+    email: "jane.doe@canonical.com",
+    id: "jane-doe-id",
+    roles: ["admin"],
+    username: "janedoe",
+  },
 ] as Member[];
 
 export const storesResponse = [
@@ -126,3 +133,18 @@ export const searchResponse = [
     ],
   },
 ] as Snap[];
+
+export const invitesResponse = [
+  {
+    email: "john.doe@canonical.com",
+    "expiration-date": "2025-04-13T12:40:55Z",
+    roles: ["admin"],
+    status: "Expired",
+  },
+  {
+    email: "jane.doe@canonical.com",
+    "expiration-date": "2025-04-13T12:40:55Z",
+    roles: ["view"],
+    status: "Pending",
+  },
+] as Invite[];
