@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom";
 import { useQuery } from "react-query";
-import { Strip, Link } from "@canonical/react-components";
+import { Link, Strip } from "@canonical/react-components";
 
 import SectionNav from "../../components/SectionNav";
 import Release from "./Release";
