@@ -48,11 +48,10 @@ class RevisionsList extends Component {
     isPending,
     isActive,
     showBuildRequest,
-    progressiveBeingCancelled
+    progressiveBeingCancelled,
   ) {
-    const rowKey = `revision-row-${revision.revision}-${
-      revision.release ? revision.release.channel : new Date().getTime()
-    }`;
+    const rowKey = `revision-row-${revision.revision}-${revision.release ? revision.release.channel : new Date().getTime()
+      }`;
 
     const risk = this.props.filters.risk;
     const track = this.props.filters.track;
@@ -78,7 +77,7 @@ class RevisionsList extends Component {
   getSortedRevisions(activeRevision, revisions) {
     const activeRevisionIndex = revisions.findIndex(
       (revision) =>
-        activeRevision && revision.revision === activeRevision.revision
+        activeRevision && revision.revision === activeRevision.revision,
     );
 
     let indexToMove = 1;
@@ -95,7 +94,7 @@ class RevisionsList extends Component {
     activeRevision,
     showBuildRequest,
     hasPendingRelease,
-    progressiveReleaseBeingCancelled
+    progressiveReleaseBeingCancelled,
   ) {
     const sortedRevisions = this.getSortedRevisions(activeRevision, revisions);
 
@@ -105,7 +104,7 @@ class RevisionsList extends Component {
 
       const progressiveBeingCancelled =
         progressiveReleaseBeingCancelled &&
-        progressiveReleaseBeingCancelled.revision.revision === revision.revision
+          progressiveReleaseBeingCancelled.revision.revision === revision.revision
           ? true
           : false;
 
@@ -119,7 +118,7 @@ class RevisionsList extends Component {
         false,
         isActive,
         showBuildRequest,
-        progressiveBeingCancelled
+        progressiveBeingCancelled,
       );
     });
   }
@@ -163,7 +162,7 @@ class RevisionsList extends Component {
     if (filters && filters.arch) {
       if (filters.risk === AVAILABLE) {
         filteredRevisions = this.props.getFilteredAvailableRevisionsForArch(
-          filters.arch
+          filters.arch,
         );
 
         if (availableRevisionsSelect === AVAILABLE_REVISIONS_SELECT_ALL) {
@@ -214,7 +213,7 @@ class RevisionsList extends Component {
 
         pendingRelease = getPendingRelease(
           `${filters.track}/${filters.risk}`,
-          filters.arch
+          filters.arch,
         );
       }
 
@@ -226,25 +225,24 @@ class RevisionsList extends Component {
           if (
             revision.version === selectedRevision.version &&
             revision.architectures.some(
-              (arch) => selectedVersionRevisionsArchs.indexOf(arch) === -1
+              (arch) => selectedVersionRevisionsArchs.indexOf(arch) === -1,
             )
           ) {
             selectedVersionRevisions.push(revision);
-            selectedVersionRevisionsArchs = selectedVersionRevisionsArchs.concat(
-              revision.architectures
-            );
+            selectedVersionRevisionsArchs =
+              selectedVersionRevisionsArchs.concat(revision.architectures);
           }
         });
 
         // filter out revisions that are already selected
         selectedVersionRevisions = selectedVersionRevisions.filter(
           (revision) =>
-            this.props.selectedRevisions.indexOf(revision.revision) === -1
+            this.props.selectedRevisions.indexOf(revision.revision) === -1,
         );
 
         // filter out current architecture
         selectedVersionRevisions = selectedVersionRevisions.filter(
-          (revision) => revision.architectures.indexOf(filters.arch) === -1
+          (revision) => revision.architectures.indexOf(filters.arch) === -1,
         );
 
         // recalculate list of architectures from current list of revisions
@@ -252,7 +250,7 @@ class RevisionsList extends Component {
 
         selectedVersionRevisions.forEach((revision) => {
           selectedVersionRevisionsArchs = selectedVersionRevisionsArchs.concat(
-            revision.architectures
+            revision.architectures,
           );
         });
 
@@ -282,7 +280,7 @@ class RevisionsList extends Component {
     }
 
     const showBuildRequest = filteredRevisions.some((revision) =>
-      getBuildId(revision)
+      getBuildId(revision),
     );
 
     const showProgressiveReleases =
@@ -353,7 +351,7 @@ class RevisionsList extends Component {
                 className="p-button--positive is-inline u-no-margin--bottom"
                 onClick={this.selectVersionClick.bind(
                   this,
-                  selectedVersionRevisions
+                  selectedVersionRevisions,
                 )}
               >
                 {"Select in available architectures"}
@@ -392,7 +390,7 @@ class RevisionsList extends Component {
                 true,
                 activeRevision.revision === pendingRelease.revision.revision,
                 showBuildRequest,
-                false
+                false,
               )}
             {filteredRevisions.length > 0 ? (
               this.renderRows(
@@ -404,7 +402,7 @@ class RevisionsList extends Component {
                 activeRevision,
                 showBuildRequest,
                 showPendingRelease,
-                progressiveReleaseBeingCancelled
+                progressiveReleaseBeingCancelled,
               )
             ) : (
               <tr>
