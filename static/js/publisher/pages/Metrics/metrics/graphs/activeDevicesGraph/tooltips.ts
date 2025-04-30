@@ -166,8 +166,8 @@ export function tooltips(this: any) {
     const windowWidth = window.innerWidth;
     let adjustedLeft = mousePosition[0] + this.margin.left;
 
-    if (tooltipBounding.right > (windowWidth - 15)) {
-      adjustedLeft -= (tooltipBounding.right - windowWidth) + 15;
+    if (tooltipBounding.right > windowWidth - 15) {
+      adjustedLeft -= tooltipBounding.right - windowWidth + 15;
     }
 
     if (tooltipBounding.left < 0) {

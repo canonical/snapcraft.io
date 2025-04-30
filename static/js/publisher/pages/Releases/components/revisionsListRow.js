@@ -42,7 +42,8 @@ const RevisionsListRow = (props) => {
 
   const isProgressive =
     revision.prog_channels &&
-    revision.prog_channels.includes(`${track}/${risk}`)
+    revision.prog_channels.includes(`${track}/${risk}`) &&
+    revision.progressive
       ? true
       : false;
   const isPreviousProgressive =

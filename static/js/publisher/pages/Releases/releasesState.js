@@ -36,8 +36,8 @@ function initReleasesData(revisionsMap, releases) {
           if (
             rev.prog_channels.indexOf(channel) === -1 &&
             release.progressive &&
-            release.progressive.percentage &&
-            release.progressive["current-percentage"]
+            (release.progressive.percentage ||
+              release.progressive["current-percentage"])
           ) {
             rev.prog_channels.push(channel);
           }
@@ -150,9 +150,9 @@ function getUnassignedRevisions(revisionsMap, arch) {
 }
 
 export {
-  getUnassignedRevisions,
-  getTrackingChannel,
-  getRevisionsMap,
-  initReleasesData,
   getReleaseDataFromChannelMap,
+  getRevisionsMap,
+  getTrackingChannel,
+  getUnassignedRevisions,
+  initReleasesData,
 };
