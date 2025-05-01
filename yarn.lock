@@ -1027,11 +1027,6 @@
   dependencies:
     vanilla-framework "4.9.0"
 
-"@canonical/latest-news@1.5.0":
-  version "1.5.0"
-  resolved "https://registry.yarnpkg.com/@canonical/latest-news/-/latest-news-1.5.0.tgz#22b0c211114ef8d0b9a10d495d035411b21e1a86"
-  integrity sha512-pNCNhBn/LFnCe9Fp3Dm4WJwVkGrJMlL6lZft1SnLqufE5k6+ihZVr03revNxyMwnSu5EPpDcEduqYrTuQQGM4A==
-
 "@canonical/react-components@1.9.0":
   version "1.9.0"
   resolved "https://registry.yarnpkg.com/@canonical/react-components/-/react-components-1.9.0.tgz#9337b35e632d7419eddf51823a5243156893185e"
