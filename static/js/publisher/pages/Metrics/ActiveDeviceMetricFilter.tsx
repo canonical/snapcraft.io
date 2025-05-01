@@ -16,7 +16,11 @@ export const ActiveDeviceMetricFilter = ({
   return (
     <>
       <Col size={3} key="periodFilter">
+        <label className="u-off-screen" htmlFor="period-selector">
+          Period
+        </label>
         <Select
+          id="period-selector"
           className="p-form__control"
           disabled={isEmpty}
           value={period}
@@ -54,7 +58,11 @@ export const ActiveDeviceMetricFilter = ({
         />
       </Col>
       <Col size={3} key="typeFilter">
+        <label className="u-off-screen" htmlFor="category-selector">
+          Category
+        </label>
         <Select
+          id="category-selector"
           className="p-form__control"
           disabled={isEmpty}
           value={type}
