@@ -1,6 +1,6 @@
-import history from "./history";
-import { OPEN_HISTORY, CLOSE_HISTORY } from "../actions/history";
-import { CLOSE_CHANNEL } from "../actions/pendingCloses";
+import history from "../history";
+import { OPEN_HISTORY, CLOSE_HISTORY } from "../../actions/history";
+import { CLOSE_CHANNEL } from "../../actions/pendingCloses";
 
 describe("history", () => {
   it("should return the initial state", () => {

@@ -1,6 +1,6 @@
-import modal from "./modal";
+import modal from "../modal";
 
-import { OPEN_MODAL, CLOSE_MODAL } from "../actions/modal";
+import { OPEN_MODAL, CLOSE_MODAL } from "../../actions/modal";
 
 describe("modal", () => {
   it("should return the initial state", () => {

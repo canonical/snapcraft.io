@@ -4,7 +4,7 @@ import thunk from "redux-thunk";
 const middlewares = [thunk];
 const mockStore = configureStore(middlewares);
 
-import { DEFAULT_ERROR_MESSAGE as ERROR_MESSAGE } from "../constants";
+import { DEFAULT_ERROR_MESSAGE as ERROR_MESSAGE } from "../../constants";
 
 import {
   UPDATE_RELEASES,
@@ -13,7 +13,7 @@ import {
   handleReleaseResponse,
   updateReleases,
   releaseRevisions,
-} from "./releases";
+} from "../releases";
 
 describe("releases actions", () => {
   describe("updateReleases", () => {

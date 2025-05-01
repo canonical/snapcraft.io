@@ -10,7 +10,7 @@ import {
   clearSelectedRevisions,
   releaseRevisionSuccess,
   closeChannelSuccess,
-} from "./channelMap";
+} from "../channelMap";
 
 describe("channelMap actions", () => {
   const channelMap = {

@@ -1,10 +1,10 @@
-import pendingCloses from "./pendingCloses";
+import pendingCloses from "../pendingCloses";
 
-import { CLOSE_CHANNEL } from "../actions/pendingCloses";
+import { CLOSE_CHANNEL } from "../../actions/pendingCloses";
 import {
   RELEASE_REVISION,
   CANCEL_PENDING_RELEASES,
-} from "../actions/pendingReleases";
+} from "../../actions/pendingReleases";
 
 describe("pendingCloses", () => {
   it("should return the initial state", () => {

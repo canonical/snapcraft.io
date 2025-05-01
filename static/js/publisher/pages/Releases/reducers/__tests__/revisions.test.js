@@ -1,5 +1,5 @@
-import revisions from "./revisions";
-import { UPDATE_REVISIONS } from "../actions/revisions";
+import revisions from "../revisions";
+import { UPDATE_REVISIONS } from "../../actions/revisions";
 
 describe("revisions", () => {
   it("should return the initial state", () => {

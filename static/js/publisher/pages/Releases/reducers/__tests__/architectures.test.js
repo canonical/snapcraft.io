@@ -1,5 +1,5 @@
-import architectures from "./architectures";
-import { UPDATE_ARCHITECTURES } from "../actions/architectures";
+import architectures from "../architectures";
+import { UPDATE_ARCHITECTURES } from "../../actions/architectures";
 
 describe("architectures", () => {
   it("should return the initial state", () => {

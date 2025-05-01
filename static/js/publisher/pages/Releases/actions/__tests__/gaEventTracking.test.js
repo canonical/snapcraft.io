@@ -3,7 +3,7 @@ import thunk from "redux-thunk";
 
 const mockStore = configureMockStore([thunk]);
 
-import { triggerGAEvent } from "./gaEventTracking";
+import { triggerGAEvent } from "../gaEventTracking";
 
 describe("triggerGAEvent", () => {
   beforeEach(() => {

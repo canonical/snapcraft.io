@@ -1,5 +1,5 @@
-import releases from "./releases";
-import { UPDATE_RELEASES } from "../actions/releases";
+import releases from "../releases";
+import { UPDATE_RELEASES } from "../../actions/releases";
 
 describe("releases", () => {
   it("should return the initial state", () => {

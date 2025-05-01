@@ -1,4 +1,4 @@
-import { OPEN_MODAL, CLOSE_MODAL, openModal, closeModal } from "./modal";
+import { OPEN_MODAL, CLOSE_MODAL, openModal, closeModal } from "../modal";
 
 describe("modal actions", () => {
   const dummyPayload = {

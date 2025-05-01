@@ -4,7 +4,7 @@ import {
   AVAILABLE_REVISIONS_SELECT_RECENT,
   AVAILABLE_REVISIONS_SELECT_UNRELEASED,
   AVAILABLE_REVISIONS_SELECT_LAUNCHPAD,
-} from "../constants";
+} from "../../constants";
 import {
   getFilteredReleaseHistory,
   getSelectedRevision,
@@ -28,9 +28,9 @@ import {
   getSeparatePendingReleases,
   getPendingRelease,
   getReleases,
-} from "./index";
+} from "../index";
 
-import reducers from "../reducers";
+import reducers from "../../reducers";
 
 describe("getFilteredReleaseHistory", () => {
   const initialState = reducers(undefined, {});

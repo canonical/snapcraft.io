@@ -3,7 +3,7 @@ import thunk from "redux-thunk";
 
 const mockStore = configureMockStore([thunk]);
 
-import reducers from "../reducers";
+import reducers from "../../reducers";
 
 import {
   RELEASE_REVISION,
@@ -24,7 +24,7 @@ import {
   pauseProgressiveRelease,
   resumeProgressiveRelease,
   cancelProgressiveRelease,
-} from "./pendingReleases";
+} from "../pendingReleases";
 
 describe("pendingReleases actions", () => {
   const revision = {

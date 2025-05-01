@@ -3,7 +3,7 @@ import {
   HIDE_NOTIFICATION,
   showNotification,
   hideNotification,
-} from "./globalNotification";
+} from "../globalNotification";
 
 describe("notification actions", () => {
   describe("showNotification", () => {
