@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">11.11% </span>
+                <span class="strong">66.66% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>1/9</span>
+                <span class='fraction'>6/9</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">25% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/4</span>
+                <span class='fraction'>1/4</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">50% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>1/2</span>
+                <span class='fraction'>2/2</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">11.11% </span>
+                <span class="strong">66.66% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>1/9</span>
+                <span class='fraction'>6/9</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line low'></div>
+    <div class='status-line medium'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -92,22 +92,22 @@
 <a name='L27'></a><a href='#L27'>27</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">18x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-yes">7x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -120,10 +120,10 @@
 function useLatestActiveDevicesMetric(snapId?: string) {
   return useQuery({
     queryKey: ["latestActiveDevicesMetric", snapId],
-    queryFn: <span class="fstat-no" title="function not covered" >as</span>ync () =&gt; {
-      const response = <span class="cstat-no" title="statement not covered" >await fetch(`/${snapId}/metrics/active-latest-devices`);</span>
+    queryFn: async () =&gt; {
+      const response = await fetch(`/${snapId}/metrics/active-latest-devices`);
 &nbsp;
-<span class="cstat-no" title="statement not covered" >      if (!response.ok) {</span>
+      <span class="missing-if-branch" title="if path not taken" >I</span>if (!response.ok) {
 <span class="cstat-no" title="statement not covered" >        if (response.status === 404) {</span>
 <span class="cstat-no" title="statement not covered" >          return null;</span>
         } else {
@@ -131,9 +131,9 @@ function useLatestActiveDevicesMetric(snapId?: string) {
         }
       }
 &nbsp;
-      const data = <span class="cstat-no" title="statement not covered" >await response.json();</span>
-      const activeDevices = <span class="cstat-no" title="statement not covered" >data.latest_active_devices;</span>
-<span class="cstat-no" title="statement not covered" >      return String(activeDevices).replace(/(.)(?=(\d{3})+$)/g, "$1,");</span>
+      const data = await response.json();
+      const activeDevices = data.latest_active_devices;
+      return String(activeDevices).replace(/(.)(?=(\d{3})+$)/g, "$1,");
     },
     retry: 0,
     refetchOnWindowFocus: false,
@@ -148,7 +148,7 @@ export default useLatestActiveDevicesMetric;
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-04-30T22:04:01.317Z
+                at 2025-05-01T22:03:52.036Z
             </div>
         <script src="../../prettify.js"></script>
         <script>
