@@ -7,17 +7,17 @@ import {
   SET_AVAILABLE_REVISIONS_SELECT,
   setAvailableRevisionsSelect,
   selectAvailableRevisions,
-} from "./availableRevisionsSelect";
+} from "../availableRevisionsSelect";
 import {
   SELECT_REVISION,
   selectRevision,
   clearSelectedRevisions,
-} from "./channelMap";
+} from "../channelMap";
 import {
   AVAILABLE_REVISIONS_SELECT_RECENT,
   AVAILABLE_REVISIONS_SELECT_UNRELEASED,
   AVAILABLE_REVISIONS_SELECT_LAUNCHPAD,
-} from "../constants";
+} from "../../constants";
 
 describe("availableRevisionsSelect actions", () => {
   describe("setAvailableRevisionsSelect", () => {

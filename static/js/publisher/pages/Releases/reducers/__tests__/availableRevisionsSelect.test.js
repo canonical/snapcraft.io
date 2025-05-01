@@ -1,6 +1,6 @@
-import availableRevisionsSelect from "./availableRevisionsSelect";
-import { SET_AVAILABLE_REVISIONS_SELECT } from "../actions/availableRevisionsSelect";
-import { AVAILABLE_REVISIONS_SELECT_UNRELEASED } from "../constants";
+import availableRevisionsSelect from "../availableRevisionsSelect";
+import { SET_AVAILABLE_REVISIONS_SELECT } from "../../actions/availableRevisionsSelect";
+import { AVAILABLE_REVISIONS_SELECT_UNRELEASED } from "../../constants";
 
 describe("releases", () => {
   it("should return the initial state", () => {

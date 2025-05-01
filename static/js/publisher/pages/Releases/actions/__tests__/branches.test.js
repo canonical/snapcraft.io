@@ -9,7 +9,7 @@ import {
   openBranches,
   closeBranches,
   toggleBranches,
-} from "./branches";
+} from "../branches";
 
 describe("branches actions", () => {
   describe("openBranches", () => {

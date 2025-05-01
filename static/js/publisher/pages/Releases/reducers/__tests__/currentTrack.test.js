@@ -1,6 +1,6 @@
-import currentTrack from "./currentTrack";
+import currentTrack from "../currentTrack";
 
-import { SET_CURRENT_TRACK } from "../actions/currentTrack";
+import { SET_CURRENT_TRACK } from "../../actions/currentTrack";
 
 describe("currentTrack", () => {
   it("should return the initial state", () => {

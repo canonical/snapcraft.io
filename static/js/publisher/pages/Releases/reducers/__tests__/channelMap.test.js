@@ -1,12 +1,12 @@
-import channelMap from "./channelMap";
+import channelMap from "../channelMap";
 import {
   INIT_CHANNEL_MAP,
   SELECT_REVISION,
   CLEAR_SELECTED_REVISIONS,
   RELEASE_REVISION_SUCCESS,
   CLOSE_CHANNEL_SUCCESS,
-} from "../actions/channelMap";
-import { AVAILABLE } from "../constants";
+} from "../../actions/channelMap";
+import { AVAILABLE } from "../../constants";
 
 describe("channelMap", () => {
   it("should return the initial state", () => {

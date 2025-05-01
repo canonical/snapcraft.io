@@ -1,4 +1,4 @@
-import { UPDATE_ARCHITECTURES, updateArchitectures } from "./architectures";
+import { UPDATE_ARCHITECTURES, updateArchitectures } from "../architectures";
 
 describe("architectures actions", () => {
   describe("updateArchitectures", () => {

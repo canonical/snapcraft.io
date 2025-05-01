@@ -1,6 +1,6 @@
-import defaultTrack from "./defaultTrack";
+import defaultTrack from "../defaultTrack";
 
-import { SET_DEFAULT_TRACK_SUCCESS } from "../actions/defaultTrack";
+import { SET_DEFAULT_TRACK_SUCCESS } from "../../actions/defaultTrack";
 
 describe("defaultTrack", () => {
   it("should return the initial state", () => {

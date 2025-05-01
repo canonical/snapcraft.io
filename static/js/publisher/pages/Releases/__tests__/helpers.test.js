@@ -1,4 +1,4 @@
-import { AVAILABLE } from "./constants";
+import { AVAILABLE } from "../constants";
 import {
   getChannelName,
   isRevisionBuiltOnLauchpad,
@@ -6,7 +6,7 @@ import {
   isSameVersion,
   jsonClone,
   getPackageMetadata,
-} from "./helpers";
+} from "../helpers";
 
 global.fetch = jest.fn();
 

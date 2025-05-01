@@ -1,9 +1,9 @@
-import notification from "./globalNotification";
+import notification from "../globalNotification";
 
 import {
   SHOW_NOTIFICATION,
   HIDE_NOTIFICATION,
-} from "../actions/globalNotification";
+} from "../../actions/globalNotification";
 
 describe("notification", () => {
   it("should return the initial state", () => {

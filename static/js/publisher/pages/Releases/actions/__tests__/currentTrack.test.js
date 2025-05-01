@@ -1,4 +1,4 @@
-import { SET_CURRENT_TRACK, setCurrentTrack } from "./currentTrack";
+import { SET_CURRENT_TRACK, setCurrentTrack } from "../currentTrack";
 
 describe("setCurrentTrack actions", () => {
   const track = "test";

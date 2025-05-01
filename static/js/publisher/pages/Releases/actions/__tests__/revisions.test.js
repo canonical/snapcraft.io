@@ -1,4 +1,4 @@
-import { UPDATE_REVISIONS, updateRevisions } from "./revisions";
+import { UPDATE_REVISIONS, updateRevisions } from "../revisions";
 
 describe("revisions actions", () => {
   describe("updateRevisions", () => {

@@ -9,7 +9,7 @@ import {
   openHistory,
   closeHistory,
   toggleHistory,
-} from "./history";
+} from "../history";
 
 describe("history actions", () => {
   const dummyFilters = {

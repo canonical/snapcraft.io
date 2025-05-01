@@ -1,4 +1,4 @@
-import pendingReleases from "./pendingReleases";
+import pendingReleases from "../pendingReleases";
 import {
   RELEASE_REVISION,
   UNDO_RELEASE,
@@ -8,8 +8,8 @@ import {
   PAUSE_PROGRESSIVE_RELEASE,
   RESUME_PROGRESSIVE_RELEASE,
   CANCEL_PROGRESSIVE_RELEASE,
-} from "../actions/pendingReleases";
-import { CLOSE_CHANNEL } from "../actions/pendingCloses";
+} from "../../actions/pendingReleases";
+import { CLOSE_CHANNEL } from "../../actions/pendingCloses";
 
 describe("pendingReleases", () => {
   it("should return the initial state", () => {

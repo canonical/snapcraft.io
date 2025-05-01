@@ -1,5 +1,5 @@
-import branches from "./branches";
-import { OPEN_BRANCHES, CLOSE_BRANCHES } from "../actions/branches";
+import branches from "../branches";
+import { OPEN_BRANCHES, CLOSE_BRANCHES } from "../../actions/branches";
 
 describe("branches", () => {
   it("should return an initial empty state", () => {

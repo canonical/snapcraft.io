@@ -8,8 +8,8 @@ import {
   SET_DEFAULT_TRACK_SUCCESS,
   clearDefaultTrack,
   setDefaultTrack,
-} from "./defaultTrack";
-import { CLOSE_MODAL } from "./modal";
+} from "../defaultTrack";
+import { CLOSE_MODAL } from "../modal";
 
 describe("defaultTrack actions", () => {
   beforeEach(() => {

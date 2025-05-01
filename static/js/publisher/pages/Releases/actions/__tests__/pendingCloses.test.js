@@ -1,4 +1,4 @@
-import { CLOSE_CHANNEL, closeChannel } from "./pendingCloses";
+import { CLOSE_CHANNEL, closeChannel } from "../pendingCloses";
 
 describe("pendingCloses actions", () => {
   const channel = "test/edge";
