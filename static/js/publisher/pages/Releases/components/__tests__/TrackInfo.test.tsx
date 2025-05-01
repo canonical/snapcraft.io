@@ -1,5 +1,5 @@
 import { fireEvent, render, screen } from "@testing-library/react";
-import TrackInfo from "./TrackInfo";
+import TrackInfo from "../TrackInfo";
 import { Tooltip } from "@canonical/react-components";
 import "@testing-library/jest-dom";
 
