@@ -179,3 +179,16 @@ export async function getPackageMetadata(snap: string) {
     return { error: e };
   }
 }
+
+export const isProgressiveRelease = (revision: any, track: any, risk: any) =>
+  revision &&
+    revision.prog_channels &&
+    revision.prog_channels.includes(`${track}/${risk}`) &&
+    revision.progressive &&
+    revision.release &&
+    revision.release.progressive &&
+    (revision.release.progressive["current-percentage"] !== null ||
+      revision.release.progressive.paused !== null ||
+      revision.release.progressive.percentage !== null)
+    ? true
+    : false;

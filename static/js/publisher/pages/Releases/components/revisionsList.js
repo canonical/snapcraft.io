@@ -27,7 +27,7 @@ import {
   isProgressiveReleaseEnabled,
   getPendingRelease,
 } from "../selectors";
-import { relative } from "@sentry/utils";
+import { isProgressiveRelease } from "../helpers.ts";
 
 class RevisionsList extends Component {
   constructor() {

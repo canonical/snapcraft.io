@@ -111,11 +111,12 @@ export function promoteRevision(revision, channel) {
 
     // compare given revision with released revisions in this arch and channel
     const isAlreadyReleased = revision.architectures.every((arch) => {
-      const releasedRevision =
-        pendingChannelMap[channel] && pendingChannelMap[channel][arch];
+      const releasedRevision = pendingChannelMap[channel] &&
+        pendingChannelMap[channel][arch];
 
       return (
-        releasedRevision && releasedRevision.revision === revision.revision
+        releasedRevision && releasedRevision.revision === revision.revision &&
+        !releasedRevision.progressive
       );
     });
 

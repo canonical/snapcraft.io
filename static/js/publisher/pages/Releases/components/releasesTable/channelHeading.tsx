@@ -6,9 +6,9 @@ import { sortChannels } from "../../../../../libs/channels.js";
 
 import {
   getArchitectures,
+  getBranches,
   getPendingChannelMap,
   hasPendingRelease,
-  getBranches,
 } from "../../selectors";
 import { Handle } from "../dnd";
 
@@ -20,16 +20,16 @@ import { toggleBranches } from "../../actions/branches";
 import { triggerGAEvent } from "../../actions/gaEventTracking";
 
 import {
-  RISKS_WITH_AVAILABLE as RISKS,
   AVAILABLE,
-  BUILD,
-  STABLE,
-  CANDIDATE,
   BETA,
+  BUILD,
+  CANDIDATE,
   EDGE,
+  RISKS_WITH_AVAILABLE as RISKS,
+  STABLE,
 } from "../../constants";
 
-import { getChannelName, isInDevmode, canBeReleased } from "../../helpers";
+import { canBeReleased, getChannelName, isInDevmode } from "../../helpers";
 import ChannelMenu from "../channelMenu";
 
 const disabledBecauseDevmode = (
@@ -45,8 +45,8 @@ const disabledBecauseNotSelected = "Select some revisions to promote them.";
 
 // TODO: move to selectors or helpers?
 const compareRevisionsPerArch = (
-  currentRevisionsByArch: { [x: string]: { revision: any } },
-  targetRevisionsByArch: { [x: string]: { revision: any } },
+  currentRevisionsByArch: { [x: string]: { revision: any; progressive?: any } },
+  targetRevisionsByArch: { [x: string]: { revision: any; progressive?: any } },
 ) => {
   if (currentRevisionsByArch) {
     return Object.keys(currentRevisionsByArch).every((arch) => {
@@ -54,7 +54,8 @@ const compareRevisionsPerArch = (
         targetRevisionsByArch &&
         targetRevisionsByArch[arch] &&
         currentRevisionsByArch[arch].revision ===
-          targetRevisionsByArch[arch].revision
+          targetRevisionsByArch[arch].revision &&
+        !currentRevisionsByArch[arch].progressive
       );
     });
   }
@@ -96,8 +97,8 @@ const ReleasesTableChannelHeading = (props: {
 
   const channel = getChannelName(currentTrack, risk, branchName);
 
-  const rowRevisions: { [key: string]: any } =
-    revisions || pendingChannelMap[channel];
+  const rowRevisions: { [key: string]: any } = revisions ||
+    pendingChannelMap[channel];
 
   const hasOpenBranches = openBranches.includes(channel);
 
@@ -216,8 +217,8 @@ const ReleasesTableChannelHeading = (props: {
     }
   }
 
-  const filteredChannel =
-    props.filters && getChannelName(props.filters.track, props.filters.risk);
+  const filteredChannel = props.filters &&
+    getChannelName(props.filters.track, props.filters.risk);
 
   let hasSameVersion = false;
   let channelVersion = "";
@@ -238,8 +239,8 @@ const ReleasesTableChannelHeading = (props: {
       }
       versionsMap[version].push(arch);
 
-      const buildRequestId =
-        revision.attributes && revision.attributes["build-request-id"];
+      const buildRequestId = revision.attributes &&
+        revision.attributes["build-request-id"];
 
       if (buildRequestId) {
         if (!buildMap[buildRequestId]) {

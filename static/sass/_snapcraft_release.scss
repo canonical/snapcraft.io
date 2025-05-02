@@ -891,6 +891,10 @@
     }
   }
 
+  .previous-progressive-progress-chart .progressive-progress-bar__inner {
+    border-radius: 10px;
+  }
+
   .progressive-progress-bar__marker {
     background-color: #5a5a5a;
     height: 1.5rem;

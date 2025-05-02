@@ -5,7 +5,7 @@ import { connect } from "react-redux";
 
 import { format } from "date-fns";
 
-import { canBeReleased } from "../helpers";
+import { canBeReleased, isProgressiveRelease } from "../helpers";
 import { getChannelString } from "../../../../libs/channels.js";
 import { toggleRevision } from "../actions/channelMap";
 
@@ -40,18 +40,12 @@ const RevisionsListRow = (props) => {
 
   const isSelected = props.selectedRevisions.includes(revision.revision);
 
-  const isProgressive =
-    revision.prog_channels &&
-    revision.prog_channels.includes(`${track}/${risk}`) &&
-    revision.progressive
-      ? true
-      : false;
-  const isPreviousProgressive =
-    previousRevision &&
-    previousRevision.prog_channels &&
-    previousRevision.prog_channels.includes(`${track}/${risk}`)
-      ? true
-      : false;
+  const isProgressive = isProgressiveRelease(revision, track, risk);
+  const isPreviousProgressive = isProgressiveRelease(
+    previousRevision,
+    track,
+    risk,
+  );
 
   let channel;
   if (revision.release) {
