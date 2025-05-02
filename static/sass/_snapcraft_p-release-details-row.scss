@@ -28,14 +28,6 @@
       }
     }
 
-    &.is-global {
-      padding: 0.25rem;
-
-      .p-release-details-row__global-check {
-        grid-column-start: 4;
-      }
-    }
-
     &__join {
       text-align: center;
     }
