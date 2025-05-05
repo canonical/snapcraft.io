@@ -150,6 +150,7 @@ function PreviewForm({ snapName, watch, data }: Props) {
       <input
         type="hidden"
         name="state"
+        data-testid="state-input"
         defaultValue={JSON.stringify(listingData)}
       />
     </Form>
