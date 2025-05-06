@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 
 interface ICve {
   id: string;
+  status: string;
   description: string;
   cvss_score: number | null;
   cvss_severity: string | null;
@@ -63,15 +64,36 @@ function SnapCves(): JSX.Element {
     refetchOnWindowFocus: false,
   });
 
+  const [expandedRow, setExpandedRow] = useState<number | null>(null);
+
   const getData = () => {
-    return data.map((cve: ICve) => ({
+    return data.map((cve: ICve, index: number) => ({
       columns: [
         { content: cve.id },
+        { content: cve.status },
         { content: cve.cvss_score },
         { content: cve.cvss_severity },
         { content: cve.ubuntu_priority },
-        { content: cve.description },
+        {
+          content: (
+            <button
+              className="p-button is-dense"
+              onClick={() => {
+                if (expandedRow === index) {
+                  setExpandedRow(null);
+                } else {
+                  setExpandedRow(index);
+                }
+              }}
+              aria-expanded={expandedRow === index}
+            >
+              {expandedRow === index ? "Hide" : "Show"}
+            </button>
+          ),
+        },
       ],
+      expanded: expandedRow === index,
+      expandedContent: <p>{cve.description}</p>,
     }));
   };
 
@@ -120,12 +142,14 @@ function SnapCves(): JSX.Element {
             />
           </div>
           <MainTable
+            expanding
             headers={[
-              { content: "ID", width: "15%" },
+              { content: "ID", width: "20%" },
+              { content: "Status", width: "15%" },
               { content: "CVSS score", width: "15%" },
               { content: "CVSS severity", width: "15%" },
               { content: "Ubuntu priority", width: "15%" },
-              { content: "Description", width: "40%" },
+              { content: "Description", width: "15%" },
             ]}
             rows={getData()}
           />
