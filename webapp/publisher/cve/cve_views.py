@@ -147,3 +147,48 @@ def get_cves(snap_name, revision):
     )
 
     return flask.jsonify({"success": True, **cves})
+
+@login_required
+def get_binaries(snap_name, revision):
+    # Access check
+    has_access, error_message, status_code = can_user_access_cve_data(snap_name)
+    if not has_access:
+        return (
+            flask.jsonify({"success": False, "error": error_message}),
+            status_code,
+        )
+
+    # Pagination
+    page = flask.request.args.get("page", default=1, type=int)
+    page_size = flask.request.args.get("page_size", default=10, type=int)
+
+    # Load and flatten data
+    cves = CveHelper.get_cve_with_revision(snap_name, revision)
+
+    binaries = [
+        {
+            "id": cve["id"],
+            "cvss_score": cve["cvss_score"],
+            "cvss_severity": cve["cvss_severity"],
+            "description": cve["description"],
+            "ubuntu_priority": cve["ubuntu_priority"],
+            "channels_with_fix": cve["channels_with_fix"],
+            "usns": cve["usns"],
+            "name": binary["name"],
+            "status": binary["status"],
+            "version": binary["version"],
+            "fixed_version": binary.get("fixed_version"),
+        }
+        for cve in cves
+        for binary in cve.get("affected_binaries", [])
+    ]
+
+    # TODO: decide if we want to paginate on client (current) or server
+    # Currently we return all the binaries and paginate in the table on client side
+    return flask.jsonify({
+        "success": True,
+        "total": len(binaries),
+        "page": 1,
+        "page_size": len(binaries),
+        "data": binaries,
+    })

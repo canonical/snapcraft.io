@@ -12,6 +12,10 @@ interface ICve {
   cvss_score: number | null;
   cvss_severity: string | null;
   ubuntu_priority: string | null;
+  // affected binary
+  name: string;
+  version: string;
+  fixed_version: string;
 }
 
 function SnapCves(): JSX.Element {
@@ -66,14 +70,49 @@ function SnapCves(): JSX.Element {
 
   const [expandedRow, setExpandedRow] = useState<number | null>(null);
 
+  const headers = [
+    {
+      content: "CVE ID",
+      width: "15%",
+      style: { flexBasis: "15%" },
+    },
+    {
+      content: "Severity",
+      width: "15%",
+      style: { flexBasis: "15%" },
+    },
+    { content: "Status", width: "15%", style: { flexBasis: "15%" } },
+    {
+      content: "Revision",
+      width: "10%",
+      style: { flexBasis: "10%" },
+    },
+    {
+      content: "Affected source",
+      width: "15%",
+      style: { flexBasis: "15%" },
+    },
+    {
+      content: "Source version",
+      width: "20%",
+      style: { flexBasis: "20%" },
+    },
+    {
+      content: "Description",
+      width: "10%",
+      style: { flexBasis: "10%" },
+    },
+  ];
+
   const getData = () => {
-    return data.map((cve: ICve, index: number) => ({
-      columns: [
+    return data.map((cve: ICve, index: number) => {
+      const columns = [
         { content: cve.id },
-        { content: cve.status },
-        { content: cve.cvss_score },
         { content: cve.cvss_severity },
-        { content: cve.ubuntu_priority },
+        { content: cve.status },
+        { content: currentRevision },
+        { content: cve.name },
+        { content: cve.version },
         {
           content: (
             <button
@@ -91,10 +130,17 @@ function SnapCves(): JSX.Element {
             </button>
           ),
         },
-      ],
-      expanded: expandedRow === index,
-      expandedContent: <p>{cve.description}</p>,
-    }));
+      ] as { content: React.ReactNode; style?: React.CSSProperties }[];
+      columns.forEach((column, i) => {
+        column.style = headers[i].style;
+      });
+
+      return {
+        columns,
+        expanded: expandedRow === index,
+        expandedContent: <p>{cve.description}</p>,
+      };
+    });
   };
 
   console.table(data);
@@ -143,14 +189,8 @@ function SnapCves(): JSX.Element {
           </div>
           <MainTable
             expanding
-            headers={[
-              { content: "ID", width: "20%" },
-              { content: "Status", width: "15%" },
-              { content: "CVSS score", width: "15%" },
-              { content: "CVSS severity", width: "15%" },
-              { content: "Ubuntu priority", width: "15%" },
-              { content: "Description", width: "15%" },
-            ]}
+            paginate={20}
+            headers={headers}
             rows={getData()}
           />
         </>
