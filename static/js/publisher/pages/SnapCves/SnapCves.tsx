@@ -15,8 +15,59 @@ interface ICve {
   // affected binary
   name: string;
   version: string;
-  fixed_version: string;
+  fixed_version: string | null;
 }
+
+const SnapCveIdCell = ({ id }: { id: string }): JSX.Element => {
+  let link: string = "";
+
+  if (id.startsWith("http")) {
+    link = id;
+  } else if (id.startsWith("CVE")) {
+    link = `https://ubuntu.com/security/${id}`;
+  }
+
+  if (link) {
+    return <a href={link}>{id}</a>;
+  } else {
+    return <span>{id}</span>;
+  }
+};
+
+const SnapCveSeverityCell = ({ severity }: { severity: string | null }) => {
+  if (!severity) {
+    return (
+      <>
+        <i className="p-icon--help"></i> unknown
+      </>
+    );
+  }
+
+  const severityIcon = `p-icon--${severity}-priority`;
+
+  return (
+    <>
+      <i className={severityIcon}></i> {severity}
+    </>
+  );
+};
+
+const SnapCveStatusCell = ({
+  status,
+  fixedVersion,
+}: {
+  status: string;
+  fixedVersion: string | null;
+}) => {
+  const statusIcon = status === "fixed" ? `p-icon--success` : `p-icon--error`;
+  const statusLabel = status === "fixed" ? "fixed" : "vulnerable";
+  return (
+    <>
+      <i className={statusIcon}></i> {statusLabel}
+      {fixedVersion && <span className="u-text--muted"> {fixedVersion}</span>}
+    </>
+  );
+};
 
 function SnapCves(): JSX.Element {
   const { snapId } = useParams();
@@ -78,10 +129,10 @@ function SnapCves(): JSX.Element {
     },
     {
       content: "Severity",
-      width: "15%",
-      style: { flexBasis: "15%" },
+      width: "10%",
+      style: { flexBasis: "10%" },
     },
-    { content: "Status", width: "15%", style: { flexBasis: "15%" } },
+    { content: "Status", width: "20%", style: { flexBasis: "20%" } },
     {
       content: "Revision",
       width: "10%",
@@ -107,9 +158,16 @@ function SnapCves(): JSX.Element {
   const getData = () => {
     return data.map((cve: ICve, index: number) => {
       const columns = [
-        { content: cve.id },
-        { content: cve.cvss_severity },
-        { content: cve.status },
+        { content: <SnapCveIdCell id={cve.id} /> },
+        { content: <SnapCveSeverityCell severity={cve.cvss_severity} /> },
+        {
+          content: (
+            <SnapCveStatusCell
+              status={cve.status}
+              fixedVersion={cve.fixed_version}
+            />
+          ),
+        },
         { content: currentRevision },
         { content: cve.name },
         { content: cve.version },
