@@ -8,18 +8,6 @@ tutorials(.*?): /docs/snap-tutorials
 search(.*?): /store
 
 # documentation.ubuntu.com/snapcraft redirects
-docs/gnome-3-34-extension: https://documentation.ubuntu.com/snapcraft
-docs/store-listing-branding: https://documentation.ubuntu.com/snapcraft
-docs/using-the-snap-store: https://documentation.ubuntu.com/snapcraft
-docs/upload-deltas: https://documentation.ubuntu.com/snapcraft
-docs/build-private-repository: https://documentation.ubuntu.com/snapcraft
-docs/build-private-repository-workflow: https://documentation.ubuntu.com/snapcraft
-docs/snapcraft-checklist: https://documentation.ubuntu.com/snapcraft
-docs/creating-snapcraft-yaml: https://documentation.ubuntu.com/snapcraft
-docs/defining-a-command: https://documentation.ubuntu.com/snapcraft
-docs/services-and-daemons: https://documentation.ubuntu.com/snapcraft
-docs/snapcraft-interfaces: https://documentation.ubuntu.com/snapcraft
-
 docs/ros-architectures-with-snaps: https://canonical-robotics.readthedocs-hosted.com/en/latest/explanations/snaps/ros-architectures-with-snaps/
 docs/ros-with-github-actions: https://canonical-robotics.readthedocs-hosted.com/en/latest/how-to-guides/packaging/build-and-publish-snap-with-github-actions/
 docs/ros2-shared-memory-in-snaps: https://canonical-robotics.readthedocs-hosted.com/en/latest/how-to-guides/packaging/ros-2-shared-memory-in-snaps/
