@@ -43,7 +43,8 @@ def get_snaps_account_info(account_info):
             )
 
             if abs((revision_since - now).days) < 30 and (
-                not revisions[0]["channels"] or revisions[0]["channels"][0] == "edge"
+                not revisions[0]["channels"]
+                or revisions[0]["channels"][0] == "edge"
             ):
                 snap_info["is_new"] = True
 
@@ -237,7 +238,9 @@ def build_changed_images(
                 )
 
                 if is_same:
-                    image_built = build_image_info(new_screenshot, "screenshot")
+                    image_built = build_image_info(
+                        new_screenshot, "screenshot"
+                    )
                     if image_built not in info:
                         info.append(image_built)
                         images_files.append(new_screenshot)
