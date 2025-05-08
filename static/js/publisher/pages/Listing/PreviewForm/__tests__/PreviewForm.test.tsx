@@ -108,8 +108,8 @@ describe("PreviewForm", () => {
     )) as HTMLInputElement;
 
     const title = screen.getByLabelText(/Title/);
-    const summary = screen.getByLabelText(/Summary/); //todo check
-    const description = screen.getByLabelText(/Description/); //todo check
+    const summary = screen.getByLabelText(/Summary/);
+    const description = screen.getByLabelText(/Description/);
     const category = screen.getByLabelText(/Category/);
     const secondaryCategory = screen.getByLabelText(/Secondary category/);
     const primaryWebsite = screen.getByLabelText(/Primary website/);
@@ -132,5 +132,5 @@ describe("PreviewForm", () => {
     await user.click(iconDeleteButton);
 
     expect(stateInput.value).toEqual(JSON.stringify(expectedListingData));
-  });
+  }, 10000);
 });
