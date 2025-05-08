@@ -64,31 +64,71 @@ afterAll(() => {
   server.close();
 });
 
-const expectedListingData = {};
+const expectedListingData = {
+  categories: [
+    { name: "Test select", slug: "test-select" },
+    { name: "Test select secondary", slug: "test-select-secondary" },
+  ],
+  links: {
+    website: ["https://www.modified.com", "https://example.com"],
+    contact: ["https://example.com/contact"],
+    donations: ["https://example.com/donate"],
+    source: ["https://example.com/code"],
+    issues: ["https://example.com/issues"],
+  },
+  snap_name: "test_id",
+  title: "title modified",
+  images: [
+    {
+      url: ["https://example.com/screenshot"],
+      type: "banner",
+      status: "uploaded",
+    },
+    { url: "", type: "icon", status: "uploaded" },
+    {
+      url: "https://example.com/screenshot",
+      type: "screenshot",
+      status: "uploaded",
+    },
+  ],
+  summary: "summary modified",
+  description: "description modified",
+  video: [
+    { type: "video", status: "uploaded", url: "https://example.com/video" },
+  ],
+  license: "testing-license",
+};
 
-describe("PreviewForm", async () => {
+describe("PreviewForm", () => {
   test("PreviewForm status matches ListingForm data", async () => {
     const user = userEvent.setup();
     renderComponent();
-    const stateInput = screen.getByTestId("state-input") as HTMLInputElement;
+    const stateInput = (await screen.findByTestId(
+      "state-input",
+    )) as HTMLInputElement;
 
-    const title = screen.getByLabelText("Title");
-    const summary = screen.getByLabelText("Summary");
-    const description = screen.getByLabelText("Description");
-    const category = screen.getByLabelText("Category");
-    const secondaryCategory = screen.getByLabelText("Secondary category");
-    const primaryWebsite = screen.getByLabelText("Primary website");
+    const title = screen.getByLabelText(/Title/);
+    const summary = screen.getByLabelText(/Summary/); //todo check
+    const description = screen.getByLabelText(/Description/); //todo check
+    const category = screen.getByLabelText(/Category/);
+    const secondaryCategory = screen.getByLabelText(/Secondary category/);
+    const primaryWebsite = screen.getByLabelText(/Primary website/);
     const iconDeleteButton = screen.getByRole("button", {
       name: "Remove icon",
     });
 
     // change all the properties
+    await user.clear(title);
     await user.type(title, "title modified");
+    await user.clear(summary);
     await user.type(summary, "summary modified");
+    await user.clear(description);
     await user.type(description, "description modified");
+    await user.clear(primaryWebsite);
+    await user.type(primaryWebsite, "https://www.modified.com");
+
     await user.selectOptions(category, "test-select");
     await user.selectOptions(secondaryCategory, "test-select-secondary");
-    await user.type(primaryWebsite, "https://www.modified.com");
     await user.click(iconDeleteButton);
 
     expect(stateInput.value).toEqual(JSON.stringify(expectedListingData));

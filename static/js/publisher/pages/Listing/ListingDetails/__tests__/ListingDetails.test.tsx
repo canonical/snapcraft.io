@@ -7,24 +7,30 @@ import ListingDetails from "../ListingDetails";
 import { mockListingData } from "../../../../test-utils";
 import { getDefaultListingData } from "../../../../utils";
 
+function TestListingDetails() {
+  const { register, getValues, setValue, control } = useForm<FieldValues>({
+    defaultValues: getDefaultListingData(mockListingData),
+  });
+
+  return (
+    <form>
+      <ListingDetails
+        data={mockListingData}
+        register={register}
+        getValues={getValues}
+        setValue={setValue}
+        control={control}
+      />
+    </form>
+  );
+}
+
 function renderComponent() {
   window.SNAP_LISTING_DATA = {
     DNS_VERIFICATION_TOKEN: "test-dns-verification-token",
   };
 
-  const { register, getValues, setValue, control } = useForm<FieldValues>({
-    defaultValues: getDefaultListingData(mockListingData),
-  });
-
-  return render(
-    <ListingDetails
-      data={mockListingData}
-      register={register}
-      getValues={getValues}
-      setValue={setValue}
-      control={control}
-    />,
-  );
+  return render(<TestListingDetails />);
 }
 
 describe("ListingDetails", () => {

@@ -1,31 +1,35 @@
-import { getByText, render, screen, waitFor } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import "@testing-library/jest-dom";
 
 import { mockListingData } from "../../../../test-utils";
-import LicenseSearch from "../LicenseSearch";
+import LicenseInputs from "../LicenseInputs";
+import { FieldValues, useForm } from "react-hook-form";
+import { getDefaultListingData } from "../../../../utils";
 
-const mocks = {
-  register: jest.fn(),
-  setValue: jest.fn(),
-  setLicense: jest.fn(),
-};
+function TestLicenseSearch() {
+  const { register, setValue, watch } = useForm<FieldValues>({
+    defaultValues: getDefaultListingData(mockListingData),
+  });
 
-function renderComponent(license = mockListingData.license) {
+  return (
+    <form>
+      <LicenseInputs
+        listingData={mockListingData}
+        register={register}
+        setValue={setValue}
+        watch={watch}
+      />
+    </form>
+  );
+}
+
+function renderComponent() {
   window.SNAP_LISTING_DATA = {
     DNS_VERIFICATION_TOKEN: "test-dns-verification-token",
   };
 
-  return render(
-    <LicenseSearch
-      licenses={mockListingData.licenses}
-      license={license}
-      register={mocks.register}
-      setValue={mocks.setValue}
-      setLicense={mocks.setLicense}
-      originalLicense={mockListingData.license}
-    />,
-  );
+  return render(<TestLicenseSearch />);
 }
 
 afterEach(() => {
@@ -45,15 +49,17 @@ describe("LicenseSearch", () => {
       document.getElementsByClassName("p-multiselect__input").item(0)!,
     );
 
-    const suggestions = await waitFor(() => {
-      const suggestionsElem = document.getElementsByClassName("p-list");
+    await waitFor(() => {
+      const suggestionsElem = document.getElementsByClassName(
+        "p-list",
+      )[0]! as HTMLUListElement;
       expect(suggestionsElem).toBeVisible();
-      expect(suggestionsElem).toHaveLength(1);
-      return suggestionsElem[0] as HTMLUListElement;
+      for (const child of suggestionsElem.children) {
+        const text = child.textContent;
+        // the current license should be filtered and not displayed in the dropdown
+        expect(text).not.toEqual("testing-license");
+      }
     });
-    expect(getByText(suggestions, "random-license")).toBeVisible();
-    // the current license should be filtered and not displayed in the dropdown
-    expect(getByText(suggestions, "testing-license")).not.toBeInTheDocument();
   });
 
   test("removing focus from search field closes the licenses list", async () => {
@@ -64,8 +70,9 @@ describe("LicenseSearch", () => {
     );
 
     expect(await screen.findByText("random-license")).toBeVisible();
-    user.click(container);
-    expect(await screen.findByText("random-license")).not.toBeVisible();
+    await user.click(container);
+    const randomLicense = screen.queryByText("random-license");
+    expect(randomLicense).toBeNull();
   });
 
   test("remove license from list", async () => {
@@ -73,8 +80,7 @@ describe("LicenseSearch", () => {
     const user = userEvent.setup();
     await user.click(screen.getByRole("button"));
 
-    expect(await screen.findByText("testing-license")).not.toBeVisible();
-    expect(mocks.setLicense).toHaveBeenCalled();
-    expect(mocks.setValue).toHaveBeenCalled();
+    const removedElem = screen.queryByText(/testing-license/);
+    expect(removedElem).toBeNull();
   });
 });

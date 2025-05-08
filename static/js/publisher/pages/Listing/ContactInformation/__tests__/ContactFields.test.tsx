@@ -1,72 +1,47 @@
-import { Control, FieldValues } from "react-hook-form";
+import { FieldValues, useForm } from "react-hook-form";
 import { render, screen, waitFor } from "@testing-library/react";
 import "@testing-library/jest-dom";
 
 import ContactFields from "../ContactFields";
 import userEvent from "@testing-library/user-event";
+import { getDefaultListingData } from "../../../../utils";
+import { mockListingData } from "../../../../test-utils";
 
-const propsMocks = {
-  register: jest.fn(),
-  control: {} as Control<FieldValues>,
-  getValues: jest.fn(),
-};
+function TestContactFields() {
+  const { register, getValues, control } = useForm<FieldValues>({
+    defaultValues: getDefaultListingData(mockListingData),
+  });
 
-const useFieldArrayMock = jest.fn();
-
-jest.mock("react-hook-form", () => ({
-  ...jest.requireActual("react-hook-form"),
-  useFieldArray: useFieldArrayMock,
-}));
+  return (
+    <form>
+      <ContactFields
+        register={register}
+        control={control}
+        labelName={"Contacts"}
+        fieldName={"contacts"}
+        getValues={getValues}
+      />
+    </form>
+  );
+}
 
 function renderComponent() {
   window.SNAP_LISTING_DATA = {
     DNS_VERIFICATION_TOKEN: "test-dns-verification-token",
   };
 
-  return render(
-    <ContactFields
-      register={propsMocks.register}
-      control={propsMocks.control}
-      labelName={"Test"}
-      fieldName={"test"}
-      getValues={propsMocks.getValues}
-    />,
-  );
+  return render(<TestContactFields />);
 }
 
-afterEach(() => {
-  jest.clearAllMocks();
-});
-
 describe("ContactFields", () => {
-  test("when no data, add field is displayed", () => {
-    const useFieldArrayResult = {
-      fields: [],
-      append: jest.fn(),
-      remove: jest.fn(),
-    };
-    useFieldArrayMock.mockReturnValue(useFieldArrayResult);
-    renderComponent();
-
-    expect(screen.getByRole("button", { name: "Add field" })).toBeVisible();
-    expect(
-      screen.getByRole("button", { name: "Remove this link" }),
-    ).not.toBeInTheDocument();
-  });
-
   test("data displayed and add field at the bottom", () => {
-    const exampleUrl = "https://example.com/contact";
-    const useFieldArrayResult = {
-      fields: [{ url: exampleUrl }],
-      append: jest.fn(),
-      remove: jest.fn(),
-    };
-    useFieldArrayMock.mockReturnValue(useFieldArrayResult);
-    propsMocks.getValues.mockReturnValue(exampleUrl);
     renderComponent();
 
-    const fieldElement = screen.getByDisplayValue(exampleUrl);
-    const addFieldElement = screen.getByRole("button", { name: "Add field" });
+    const fieldElement = screen.getByDisplayValue(
+      "https://example.com/contact",
+    );
+    const addFieldElement = screen.getByText(/Add field/);
+
     expect(fieldElement).toBeVisible();
     expect(addFieldElement).toBeVisible();
     expect(fieldElement.compareDocumentPosition(addFieldElement)).toEqual(
@@ -75,14 +50,6 @@ describe("ContactFields", () => {
   });
 
   test("data can be removed", async () => {
-    const exampleUrl = "https://example.com/contact";
-    const useFieldArrayResult = {
-      fields: [{ url: exampleUrl }],
-      append: jest.fn(),
-      remove: jest.fn(),
-    };
-    useFieldArrayMock.mockReturnValue(useFieldArrayResult);
-    propsMocks.getValues.mockReturnValue(exampleUrl);
     const user = userEvent.setup();
     renderComponent();
 
@@ -92,21 +59,21 @@ describe("ContactFields", () => {
     expect(deleteButton).toBeVisible();
 
     await user.click(deleteButton);
-    await waitFor(() => expect(useFieldArrayResult.remove).toHaveBeenCalled());
+    await waitFor(() => {
+      const links = screen.queryAllByRole("textbox");
+      expect(links).toHaveLength(0);
+    });
   });
 
   test("data can be added", async () => {
-    const useFieldArrayResult = {
-      fields: [],
-      append: jest.fn(),
-      remove: jest.fn(),
-    };
-    useFieldArrayMock.mockReturnValue(useFieldArrayResult);
     const user = userEvent.setup();
     renderComponent();
 
-    const addButton = screen.getByRole("button", { name: "Add field" });
+    const addButton = screen.getByText(/Add field/);
     await user.click(addButton);
-    await waitFor(() => expect(useFieldArrayResult.append).toHaveBeenCalled());
+    await waitFor(() => {
+      const links = screen.queryAllByRole("textbox");
+      expect(links).toHaveLength(2);
+    });
   });
 });

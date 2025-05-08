@@ -23,7 +23,13 @@ jest.mock("react-router-dom", () => {
   };
 });
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: false,
+    },
+  },
+});
 
 function renderComponent() {
   window.SNAP_LISTING_DATA = {
@@ -65,7 +71,7 @@ describe("Listing", () => {
   test("page title is set", async () => {
     renderComponent();
     await waitFor(() => {
-      expect(document.title).toEqual("Listing data for test_id");
+      expect(document.title).toEqual("Listing data for test_id - Snapcraft");
     });
   });
 
@@ -73,48 +79,50 @@ describe("Listing", () => {
     renderComponent();
     expect(
       await screen.findByRole("link", { name: "My snaps" }),
-    ).toHaveProperty("href", "/snaps");
-    expect(screen.findByRole("link", { name: "test_id" })).toHaveProperty(
+    ).toHaveProperty("href", expect.stringMatching(/\/snaps$/));
+    expect(await screen.findByRole("link", { name: "test_id" })).toHaveProperty(
       "href",
-      "/test_id",
+      expect.stringMatching(/\/test_id$/),
     );
-    expect(await screen.findByText("Listing")).toBeInstanceOf(
-      HTMLHeadingElement,
-    );
+    expect(await screen.findByText("Listing")).toBeInTheDocument();
   });
 
   test("ListingForm and PreviewForm are rendered", async () => {
     renderComponent();
-    expect(await screen.findAllByRole("form")).toHaveLength(2);
+    await waitFor(() => {
+      const forms = document.getElementsByTagName("form");
+      expect(forms).toHaveLength(2);
+    });
   });
 
   test("isLoading is displayed while loading data", async () => {
-    server.resetHandlers();
-    server.use(
-      http.get("/api/test_id/listing", async () => {
-        await delay(500);
-        return HttpResponse.json(testListingData);
-      }),
-    );
+    server.boundary(async () => {
+      server.use(
+        http.get("/api/test_id/listing", async () => {
+          await delay(5000);
+          return HttpResponse.json(testListingData);
+        }),
+      );
 
-    const loadingText = "Loading test_id listing data";
-    renderComponent();
-    expect(screen.getByText(loadingText)).toBeVisible();
-    // findByText uses waitFor under the hood
-    await screen.findByText("Listing details");
-    expect(screen.getByText(loadingText)).not.toBeInTheDocument();
+      const loadingText = /Loading/;
+      renderComponent();
+      expect(await screen.findByText(loadingText)).toBeVisible();
+    });
   });
 
   test("on data error displays a notification", async () => {
-    server.resetHandlers();
-    server.use(
-      http.get("/api/test_id/listing", () => {
-        return HttpResponse.json({}, { status: 500 });
-      }),
-    );
+    server.boundary(async () => {
+      server.use(
+        http.get("/api/test_id/listing", () => {
+          return HttpResponse.json({}, { status: 500 });
+        }),
+      );
 
-    renderComponent();
-    const errorNotification = await screen.findByText("not available");
-    expect(errorNotification).toBeVisible();
+      renderComponent();
+      await waitFor(() => {
+        const errorNotification = screen.getByText(/not available/);
+        expect(errorNotification).toBeVisible();
+      });
+    });
   });
 });

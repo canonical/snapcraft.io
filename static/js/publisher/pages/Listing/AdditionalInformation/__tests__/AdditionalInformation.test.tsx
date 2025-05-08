@@ -3,28 +3,33 @@ import "@testing-library/jest-dom";
 
 import { mockListingData } from "../../../../test-utils";
 import AdditionalInformation from "../AdditionalInformation";
+import { FieldValues, useForm } from "react-hook-form";
+import { getDefaultListingData } from "../../../../utils";
 
-const useFormMocks = {
-  register: jest.fn(),
-  getValues: jest.fn(),
-  setValue: jest.fn(),
-  watch: jest.fn(),
-};
+function TestAdditionalInformation() {
+  const { register, setValue, watch, getValues } = useForm<FieldValues>({
+    defaultValues: getDefaultListingData(mockListingData),
+  });
+
+  return (
+    <form>
+      <AdditionalInformation
+        data={mockListingData}
+        register={register}
+        getValues={getValues}
+        setValue={setValue}
+        watch={watch}
+      />
+    </form>
+  );
+}
 
 function renderComponent() {
   window.SNAP_LISTING_DATA = {
     DNS_VERIFICATION_TOKEN: "test-dns-verification-token",
   };
 
-  return render(
-    <AdditionalInformation
-      data={mockListingData}
-      register={useFormMocks.register}
-      getValues={useFormMocks.getValues}
-      setValue={useFormMocks.setValue}
-      watch={useFormMocks.watch}
-    />,
-  );
+  return render(<TestAdditionalInformation />);
 }
 
 afterEach(() => {
@@ -40,7 +45,6 @@ describe("AdditionalInformation", () => {
 
   test("Fields displayed and registered with useForm", () => {
     renderComponent();
-    expect(useFormMocks.register).toHaveBeenCalledTimes(3);
     expect(
       screen.getByLabelText("Display public popularity charts"),
     ).toBeVisible();
@@ -48,19 +52,16 @@ describe("AdditionalInformation", () => {
     expect(screen.getByLabelText("Linux distributions")).toBeVisible();
   });
 
-  test("if public metrics is disabled all other fields are disabled", () => {
-    useFormMocks.getValues.mockImplementation((valueKey: string) =>
-      valueKey === "public_metrics_enabled" ? false : true,
-    );
+  test("if public metrics is unchecked all other fields are disabled", () => {
     renderComponent();
     expect(
-      screen.getByRole("checkbox", { name: "public-metrics-checkbox" }),
-    ).toBeDisabled();
+      screen.getByRole("checkbox", {
+        name: "Display public popularity charts",
+      }),
+    ).not.toBeChecked();
+    expect(screen.getByRole("checkbox", { name: "World map" })).toBeDisabled();
     expect(
-      screen.getByRole("checkbox", { name: "world-map-checkbox" }),
-    ).toBeDisabled();
-    expect(
-      screen.getByRole("checkbox", { name: "linux-distributions-checkbox" }),
+      screen.getByRole("checkbox", { name: "Linux distributions" }),
     ).toBeDisabled();
   });
 });
