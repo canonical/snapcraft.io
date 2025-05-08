@@ -2,7 +2,13 @@ import { useParams } from "react-router-dom";
 
 // import { setPageTitle } from "../../utils";
 import { useQuery } from "react-query";
-import { MainTable, Strip, Select } from "@canonical/react-components";
+import {
+  MainTable,
+  Strip,
+  Select,
+  Form,
+  Label,
+} from "@canonical/react-components";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 
 interface ICve {
@@ -243,7 +249,7 @@ function SnapCves(): JSX.Element {
     (revision: string) => ({
       label: revision,
       value: revision,
-    }),
+    })
   );
 
   return (
@@ -265,18 +271,18 @@ function SnapCves(): JSX.Element {
       {data && (
         <>
           <div>
-            <Select
-              //className="p-form__control"
-              //disabled={isEmpty}
-              value={currentRevision || ""}
-              onChange={(event) => {
-                const selectedRevision = event.target.value;
-                // Handle the revision change here
-                console.log("Selected revision:", selectedRevision);
-                setCurrentRevision(parseInt(selectedRevision));
-              }}
-              options={revisionSelectOptions}
-            />
+            <Form inline>
+              <Select
+                id="revision-selector"
+                label="Revision"
+                value={currentRevision || ""}
+                onChange={(event) => {
+                  const selectedRevision = event.target.value;
+                  setCurrentRevision(parseInt(selectedRevision));
+                }}
+                options={revisionSelectOptions}
+              />
+            </Form>
           </div>
           <MainTable
             expanding
