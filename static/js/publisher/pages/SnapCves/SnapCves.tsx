@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 // import { setPageTitle } from "../../utils";
 import { useQuery } from "react-query";
 import { MainTable, Strip, Select } from "@canonical/react-components";
-import { useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 
 interface ICve {
   id: string;
@@ -18,7 +18,19 @@ interface ICve {
   fixed_version: string | null;
 }
 
-const SnapCveIdCell = ({ id }: { id: string }): JSX.Element => {
+const SnapCveIdCell = ({
+  id,
+  isExpanded,
+  setExpandedRow,
+  index,
+  hasDescription = false,
+}: {
+  id: string;
+  isExpanded: boolean;
+  setExpandedRow: Dispatch<SetStateAction<number | null>>;
+  index: number;
+  hasDescription?: boolean;
+}): JSX.Element => {
   let link: string = "";
 
   if (id.startsWith("http")) {
@@ -27,11 +39,36 @@ const SnapCveIdCell = ({ id }: { id: string }): JSX.Element => {
     link = `https://ubuntu.com/security/${id}`;
   }
 
-  if (link) {
-    return <a href={link}>{id}</a>;
-  } else {
-    return <span>{id}</span>;
-  }
+  return (
+    <>
+      <button
+        className="p-button--base is-dense has-icon"
+        style={{ marginRight: "0.5rem", marginLeft: "-0.5rem" }}
+        onClick={() => {
+          if (isExpanded) {
+            setExpandedRow(null);
+          } else {
+            setExpandedRow(index);
+          }
+        }}
+        aria-expanded={isExpanded}
+        disabled={!hasDescription}
+      >
+        <i
+          className={
+            isExpanded ? "p-icon--chevron-down" : "p-icon--chevron-right"
+          }
+        ></i>
+      </button>
+      {link ? (
+        <a target="_blank" rel="noreferrer" href={link}>
+          {id}
+        </a>
+      ) : (
+        <span>{id}</span>
+      )}
+    </>
+  );
 };
 
 const SnapCveSeverityCell = ({ severity }: { severity: string | null }) => {
@@ -64,7 +101,14 @@ const SnapCveStatusCell = ({
   return (
     <>
       <i className={statusIcon}></i> {statusLabel}
-      {fixedVersion && <span className="u-text--muted"> {fixedVersion}</span>}
+      {fixedVersion && (
+        <>
+          {" "}
+          <span className="u-text--muted" style={{ whiteSpace: "nowrap" }}>
+            {fixedVersion}
+          </span>
+        </>
+      )}
     </>
   );
 };
@@ -124,15 +168,15 @@ function SnapCves(): JSX.Element {
   const headers = [
     {
       content: "CVE ID",
-      width: "15%",
-      style: { flexBasis: "15%" },
+      width: "20%",
+      style: { flexBasis: "20%" },
     },
     {
       content: "Severity",
       width: "10%",
       style: { flexBasis: "10%" },
     },
-    { content: "Status", width: "20%", style: { flexBasis: "20%" } },
+    { content: "Status", width: "25%", style: { flexBasis: "25%" } },
     {
       content: "Revision",
       width: "10%",
@@ -148,17 +192,23 @@ function SnapCves(): JSX.Element {
       width: "20%",
       style: { flexBasis: "20%" },
     },
-    {
-      content: "Description",
-      width: "10%",
-      style: { flexBasis: "10%" },
-    },
   ];
 
   const getData = () => {
     return data.map((cve: ICve, index: number) => {
       const columns = [
-        { content: <SnapCveIdCell id={cve.id} /> },
+        {
+          content: (
+            <SnapCveIdCell
+              id={cve.id}
+              index={index}
+              setExpandedRow={setExpandedRow}
+              isExpanded={expandedRow === index}
+              hasDescription={!!cve.description}
+            />
+          ),
+          className: "u-truncate",
+        },
         { content: <SnapCveSeverityCell severity={cve.cvss_severity} /> },
         {
           content: (
@@ -171,23 +221,6 @@ function SnapCves(): JSX.Element {
         { content: currentRevision },
         { content: cve.name },
         { content: cve.version },
-        {
-          content: (
-            <button
-              className="p-button is-dense"
-              onClick={() => {
-                if (expandedRow === index) {
-                  setExpandedRow(null);
-                } else {
-                  setExpandedRow(index);
-                }
-              }}
-              aria-expanded={expandedRow === index}
-            >
-              {expandedRow === index ? "Hide" : "Show"}
-            </button>
-          ),
-        },
       ] as { content: React.ReactNode; style?: React.CSSProperties }[];
       columns.forEach((column, i) => {
         column.style = headers[i].style;
@@ -210,7 +243,7 @@ function SnapCves(): JSX.Element {
     (revision: string) => ({
       label: revision,
       value: revision,
-    })
+    }),
   );
 
   return (
