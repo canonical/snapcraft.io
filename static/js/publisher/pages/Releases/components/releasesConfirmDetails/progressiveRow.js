@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import React from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 
@@ -67,14 +67,14 @@ class ProgressiveRow extends React.Component {
         (change) => change.key === "paused",
       ).value;
       progress = (
-        <Fragment>
+        <>
           <ProgressiveBar percentage={startingPercentage} />
           <span>{paused ? "Paused" : "Resumed"}</span>
-        </Fragment>
+        </>
       );
     } else {
       progress = (
-        <Fragment>
+        <>
           {!isInteractive && (
             <ProgressiveBar percentage={globalPercentage} disabled={true} />
           )}
@@ -102,7 +102,7 @@ class ProgressiveRow extends React.Component {
               </span>
             </span>
           </span>
-        </Fragment>
+        </>
       );
     }
 
@@ -117,6 +117,38 @@ class ProgressiveRow extends React.Component {
     }
 
     const displayType = type.charAt(0).toUpperCase() + type.slice(1);
+
+    if (this.props.showChart) {
+      return (
+        <>
+          {progress && (
+            <>
+              <span className="p-release-details-row__join">to</span>
+              <span className="p-release-details-row__progress">
+                {progress}
+              </span>
+            </>
+          )}
+          {!progress && showProgressiveReleases && (
+            <>
+              <span className="p-release-details-row__join">to</span>
+              <span className="p-release-details-row__progress">
+                <ProgressiveBar percentage={100} disabled={true} />
+                <span>100% of devices</span>
+              </span>
+              <span className="p-release-details-row__notes">
+                Cannot progressively release to an empty channel
+              </span>
+            </>
+          )}
+          {notes && (
+            <span className="p-release-details-row__notes">
+              <small>{notes}</small>
+            </span>
+          )}
+        </>
+      );
+    }
 
     return (
       <ReleaseRow
@@ -136,6 +168,7 @@ ProgressiveRow.propTypes = {
   globalPercentage: PropTypes.number,
   updateGlobalPercentage: PropTypes.func,
   updateProgressiveReleasePercentage: PropTypes.func,
+  showChart: PropTypes.bool,
 };
 
 const mapDispatchToProps = (dispatch) => {

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 
@@ -12,12 +12,7 @@ import ProgressiveRow from "./progressiveRow";
 import ProgressiveRowGroup from "./progressiveRowGroup";
 import CloseChannelsRow from "./closeChannelsRow";
 
-const ReleasesConfirmDetails = ({
-  updates,
-  isProgressiveReleaseEnabled,
-  updateProgressiveReleasePercentage,
-}) => {
-  const [useGlobal, setGlobal] = useState(true);
+const ReleasesConfirmDetails = ({ updates, isProgressiveReleaseEnabled }) => {
   const [globalPercentage, setGlobalPercentage] = useState(100);
 
   const progressiveReleases = updates.newReleasesToProgress;
@@ -36,11 +31,6 @@ const ReleasesConfirmDetails = ({
   const showNewReleases = Object.keys(newReleases).length > 0;
   const showPendingCloses = pendingCloses.length > 0;
 
-  const toggleGlobal = () => {
-    const newUseGlobal = !useGlobal;
-    setGlobal(newUseGlobal);
-  };
-
   const updatePercentage = (percentage) => {
     setGlobalPercentage(percentage);
     updateProgressiveReleasePercentage(percentage);
@@ -51,9 +41,7 @@ const ReleasesConfirmDetails = ({
       {showProgressiveReleases && (
         <ProgressiveRowGroup
           releases={progressiveReleases}
-          useGlobal={useGlobal}
           globalPercentage={globalPercentage}
-          toggleGlobal={toggleGlobal}
           updatePercentage={updatePercentage}
         />
       )}
@@ -92,6 +80,15 @@ const ReleasesConfirmDetails = ({
             />
           );
         })}
+      {showProgressiveReleases && (
+        <ProgressiveRow
+          globalPercentage={globalPercentage}
+          type={progressiveTypes.RELEASE}
+          release={progressiveReleases[Object.keys(progressiveReleases)[0]]}
+          updateGlobalPercentage={updatePercentage}
+          showChart={true}
+        />
+      )}
       {showPendingCloses && <CloseChannelsRow channels={pendingCloses} />}
     </div>
   );
