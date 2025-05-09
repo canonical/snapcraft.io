@@ -8,6 +8,20 @@ tutorials(.*?): /docs/snap-tutorials
 search(.*?): /store
 
 # documentation.ubuntu.com/snapcraft redirects
+docs/debug-snaps/?: https://documentation.ubuntu.com/snapcraft/stable/how-to/debugging/debug-a-snap/
+docs/using-gdb-gdbserver/?: https://documentation.ubuntu.com/snapcraft/stable/how-to/debugging/debug-with-gdb/
+docs/creating-a-snap/?: https://documentation.ubuntu.com/snapcraft/stable/how-to/integrations/
+docs/c-c-applications/?: https://documentation.ubuntu.com/snapcraft/stable/how-to/integrations/craft-a-c-or-cpp-app/
+docs/build-snaps/c/?: https://documentation.ubuntu.com/snapcraft/stable/how-to/integrations/craft-a-c-or-cpp-app/
+docs/python-apps/?: https://documentation.ubuntu.com/snapcraft/stable/how-to/integrations/craft-a-python-app/
+docs/build-snaps/python/?: https://documentation.ubuntu.com/snapcraft/stable/how-to/integrations/craft-a-python-app/
+docs/installing-snapcraft/?: https://documentation.ubuntu.com/snapcraft/stable/how-to/setup/set-up-snapcraft/
+https://forum.snapcraft.io/t/install-snapcraft-on-macos/9607/9/?: https://documentation.ubuntu.com/snapcraft/stable/how-to/setup/set-up-snapcraft/
+docs/package-repositories/?: https://documentation.ubuntu.com/snapcraft/stable/reference/package-repositories/
+docs/snapcraft-intermediate-example/?: https://documentation.ubuntu.com/snapcraft/stable/reference/project-file/anatomy-of-snapcraft-yaml/
+docs/snapcraft-yaml-schema/?: https://documentation.ubuntu.com/snapcraft/stable/reference/project-file/snapcraft-yaml/
+docs/create-a-new-snap/?: https://documentation.ubuntu.com/snapcraft/stable/tutorials/craft-a-snap/
+docs/creating-snapcraft-yaml/?: https://documentation.ubuntu.com/snapcraft/stable/tutorials/craft-a-snap/
 docs/ros-architectures-with-snaps/?: https://canonical-robotics.readthedocs-hosted.com/en/latest/explanations/snaps/ros-architectures-with-snaps/
 docs/ros-with-github-actions/?: https://canonical-robotics.readthedocs-hosted.com/en/latest/how-to-guides/packaging/build-and-publish-snap-with-github-actions/
 docs/ros2-shared-memory-in-snaps/?: https://canonical-robotics.readthedocs-hosted.com/en/latest/how-to-guides/packaging/ros-2-shared-memory-in-snaps/
@@ -54,13 +68,9 @@ docs/base-snaps/?: https://documentation.ubuntu.com/snapcraft/stable/how-to/craf
 docs/iterating-over-a-build/?: https://documentation.ubuntu.com/snapcraft/stable/how-to/debugging/debug-a-snap/
 docs/troubleshoot-snap-building/?: https://documentation.ubuntu.com/snapcraft/stable/how-to/debugging/debug-a-snap/
 docs/debugging-building-snaps/?: https://documentation.ubuntu.com/snapcraft/stable/how-to/debugging/debug-a-snap/
-docs/debug-snaps/?: https://documentation.ubuntu.com/snapcraft/stable/how-to/debugging/debug-a-snap/
-docs/using-gdb-gdbserver/?: https://documentation.ubuntu.com/snapcraft/stable/how-to/debugging/debug-with-gdb/
 docs/linters-classic/?: https://documentation.ubuntu.com/snapcraft/stable/how-to/debugging/use-the-classic-linter/
 docs/linters-library/?: https://documentation.ubuntu.com/snapcraft/stable/how-to/debugging/use-the-library-linter/
 docs/snapcraft-extensions/?: https://documentation.ubuntu.com/snapcraft/stable/how-to/extensions/
-docs/creating-a-snap/?: https://documentation.ubuntu.com/snapcraft/stable/how-to/integrations/
-docs/c-c-applications/?: https://documentation.ubuntu.com/snapcraft/stable/how-to/integrations/craft-a-c-or-cpp-app/
 docs/cross-compile-an-autotools-project/?: https://documentation.ubuntu.com/snapcraft/stable/how-to/integrations/craft-a-cross-compiled-app/
 docs/dotnet-apps/?: https://documentation.ubuntu.com/snapcraft/stable/how-to/integrations/craft-a-dotnet-app/
 docs/flutter-applications/?: https://documentation.ubuntu.com/snapcraft/stable/how-to/integrations/craft-a-flutter-app/
@@ -73,7 +83,6 @@ docs/moos-applications/?: https://documentation.ubuntu.com/snapcraft/stable/how-
 docs/node-apps/?: https://documentation.ubuntu.com/snapcraft/stable/how-to/integrations/craft-a-node-app/
 docs/pre-built-apps/?: https://documentation.ubuntu.com/snapcraft/stable/how-to/integrations/craft-a-pre-built-app/
 docs/python/?: https://documentation.ubuntu.com/snapcraft/stable/how-to/integrations/craft-a-python-app/
-docs/python-apps/?: https://documentation.ubuntu.com/snapcraft/stable/how-to/integrations/craft-a-python-app/
 docs/qt5-kde-applications/?: https://documentation.ubuntu.com/snapcraft/stable/how-to/integrations/craft-a-qt5-kde-app/
 docs/ruby-applications/?: https://documentation.ubuntu.com/snapcraft/stable/how-to/integrations/craft-a-ruby-app/
 docs/rust-applications/?: https://documentation.ubuntu.com/snapcraft/stable/how-to/integrations/craft-a-rust-app/
@@ -90,8 +99,6 @@ docs/release-management/?: https://documentation.ubuntu.com/snapcraft/stable/how
 docs/releasing-your-app/?: https://documentation.ubuntu.com/snapcraft/stable/how-to/publishing/publish-a-snap/
 docs/build-providers/?: https://documentation.ubuntu.com/snapcraft/stable/how-to/setup/select-a-build-provider/
 docs/snapcraft-setup/?: https://documentation.ubuntu.com/snapcraft/stable/how-to/setup/set-up-snapcraft/
-docs/installing-snapcraft/?: https://documentation.ubuntu.com/snapcraft/stable/how-to/setup/set-up-snapcraft/
-https://forum.snapcraft.io/t/install-snapcraft-on-macos/9607/9/?: https://documentation.ubuntu.com/snapcraft/stable/how-to/setup/set-up-snapcraft/
 docs/snapcraft-advanced-grammar/?: https://documentation.ubuntu.com/snapcraft/stable/reference/advanced-grammar/
 docs/reference-architectures/?: https://documentation.ubuntu.com/snapcraft/stable/reference/architectures/
 docs/build-options/?: https://documentation.ubuntu.com/snapcraft/stable/reference/build-environment-options/
@@ -112,7 +119,6 @@ docs/supported-snap-hooks/?: https://documentation.ubuntu.com/snapcraft/stable/r
 docs/snapcraft-hook-support/?: https://documentation.ubuntu.com/snapcraft/stable/reference/hooks/
 docs/snap-layouts/?: https://documentation.ubuntu.com/snapcraft/stable/reference/layouts/
 docs/linters/?: https://documentation.ubuntu.com/snapcraft/stable/reference/linters/
-docs/package-repositories/?: https://documentation.ubuntu.com/snapcraft/stable/reference/package-repositories/
 docs/parts-environment-variables/?: https://documentation.ubuntu.com/snapcraft/stable/reference/parts/part-environment-variables/
 docs/supported-plugins/?: https://documentation.ubuntu.com/snapcraft/stable/reference/plugins/
 docs/colcon-plugin/?: https://documentation.ubuntu.com/snapcraft/stable/reference/plugins/colcon_plugin/
@@ -122,15 +128,11 @@ docs/python-plugin/?: https://documentation.ubuntu.com/snapcraft/stable/referenc
 docs/how-snapcraft-builds/?: https://documentation.ubuntu.com/snapcraft/stable/reference/processes/snap-build-process/
 docs/build-configuration/?: https://documentation.ubuntu.com/snapcraft/stable/reference/project-file/
 docs/snapcraft-basic-example/?: https://documentation.ubuntu.com/snapcraft/stable/reference/project-file/anatomy-of-snapcraft-yaml/
-docs/snapcraft-intermediate-example/?: https://documentation.ubuntu.com/snapcraft/stable/reference/project-file/anatomy-of-snapcraft-yaml/
-docs/snapcraft-yaml-schema/?: https://documentation.ubuntu.com/snapcraft/stable/reference/project-file/snapcraft-yaml/
 docs/snapshots-exclude/?: https://documentation.ubuntu.com/snapcraft/stable/reference/snapshots/
 docs/snapcraft-release-notes/?: https://documentation.ubuntu.com/snapcraft/stable/release-notes/
-docs/create-a-new-snap/?: https://documentation.ubuntu.com/snapcraft/stable/tutorials/craft-a-snap/
 docs/snapcraft-overview/?: https://documentation.ubuntu.com/snapcraft/stable/tutorials/craft-a-snap/
 docs/snapcraft-quickstart/?: https://documentation.ubuntu.com/snapcraft/stable/tutorials/craft-a-snap/
 docs/snapcraft-checklist/?: https://documentation.ubuntu.com/snapcraft/stable/tutorials/craft-a-snap/
-docs/creating-snapcraft-yaml/?: https://documentation.ubuntu.com/snapcraft/stable/tutorials/craft-a-snap/
 docs/adding-parts/?: https://documentation.ubuntu.com/snapcraft/stable/tutorials/craft-a-snap/
 docs/defining-a-command/?: https://documentation.ubuntu.com/snapcraft/stable/tutorials/craft-a-snap/
 
@@ -139,7 +141,6 @@ docs/build-snaps: /docs/snap-format
 docs/build-snaps/build-for-another-arch: /docs/building-snaps
 docs/build-snaps/build-on-lxd-docker: /docs/build-snaps-on-docker
 docs/build-snaps/builders: /docs/t/building-the-snap/6800
-docs/build-snaps/c: /docs/c-c-applications
 docs/build-snaps/debugging: /docs/debugging-building-snaps
 docs/build-snaps/electron: /docs/electron-apps
 docs/build-snaps/go: /docs/go-applications
@@ -153,7 +154,6 @@ docs/build-snaps/parts: /docs/remote-reusable-parts
 docs/build-snaps/plugins: /docs/snapcraft-plugin-api
 docs/build-snaps/pre-built: /docs/t/pre-built-apps/6739
 docs/build-snaps/publish: /docs/releasing-to-the-snap-store
-docs/build-snaps/python: /docs/python-apps
 docs/build-snaps/register-snap: /docs/registering-your-app-name
 docs/build-snaps/release: /docs/releasing-your-app
 docs/build-snaps/remote-parts: /docs/remote-reusable-parts
