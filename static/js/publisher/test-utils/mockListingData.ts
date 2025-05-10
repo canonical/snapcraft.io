@@ -3,15 +3,20 @@ export const mockListingData = {
   categories: [
     { name: "Test category 1", slug: "test-category-1" },
     { name: "Test category 2", slug: "test-category-2" },
+    { name: "Test select", slug: "test-select" },
+    { name: "Test select secondary", slug: "test-select-secondary" },
   ],
   contacts: [{ url: "https://example.com/contact" }],
   description: "lorem ipsum dolor sit amet",
   donations: [{ url: "https://example.com/donate" }],
   icon_url: "https://example.com/icon",
   issues: [{ url: "https://example.com/issues" }],
-  license: "test-license",
-  license_type: "test",
-  licenses: [{ key: "test", name: "test" }],
+  license: "testing-license",
+  license_type: "simple",
+  licenses: [
+    { key: "testing-license", name: "testing-license" },
+    { key: "random-license", name: "random-license" },
+  ],
   primary_category: "test-category-1",
   primary_website: "https://example.com",
   public_metrics_blacklist: [

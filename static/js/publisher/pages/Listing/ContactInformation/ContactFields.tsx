@@ -58,6 +58,7 @@ function ContactFields({
           <Col size={5} emptyLarge={index === 0 ? undefined : 3}>
             <div className="p-form__control">
               <input
+                id={fieldName}
                 type="url"
                 {...register(`${fieldName}.${index}.url`)}
                 defaultValue={getValues(`${fieldName}.${index}.url`)}

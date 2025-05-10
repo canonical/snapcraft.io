@@ -241,7 +241,7 @@ function ListingDetails({
 
       <Row className="p-form__group" data-tour="listing-summary">
         <Col size={2}>
-          <label htmlFor="video_urls">Summary:</label>
+          <label htmlFor="summary">Summary:</label>
         </Col>
         <Col size={8}>
           <div className="p-form__control">
@@ -257,7 +257,7 @@ function ListingDetails({
 
       <Row className="p-form__group" data-tour="listing-description">
         <Col size={2}>
-          <label htmlFor="video_urls">Description:</label>
+          <label htmlFor="description">Description:</label>
         </Col>
         <Col size={8}>
           <div className="p-form__control">
