@@ -1,5 +1,5 @@
 export default {
-  RELEASE: "release",
-  UPDATE: "update",
-  CANCELLATION: "cancel",
+  RELEASE: "Release",
+  UPDATE: "Update",
+  CANCELLATION: "Cancel",
 };
