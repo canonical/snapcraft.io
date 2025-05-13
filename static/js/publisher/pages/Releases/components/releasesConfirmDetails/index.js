@@ -91,7 +91,7 @@ const ReleasesConfirmDetails = ({ updates, isProgressiveReleaseEnabled }) => {
           const release = progressiveReleasesByChannel[key];
 
           return (
-            <>
+            <div className="p-releases-channel-group">
               <h3 className="p-muted-heading u-no-margin--bottom">{key}</h3>
               <ReleaseRowGroup releases={release} />
               <Row>
@@ -106,7 +106,7 @@ const ReleasesConfirmDetails = ({ updates, isProgressiveReleaseEnabled }) => {
                   />
                 </Col>
               </Row>
-            </>
+            </div>
           );
         })}
 
@@ -115,7 +115,7 @@ const ReleasesConfirmDetails = ({ updates, isProgressiveReleaseEnabled }) => {
           const newRelease = newReleasesByChannel[key];
 
           return (
-            <>
+            <div className="p-releases-channel-group" key={key}>
               <h3 className="p-muted-heading u-no-margin--bottom">{key}</h3>
               {Object.keys(newRelease).map((releaseKey) => {
                 const release = newRelease[releaseKey];
@@ -131,7 +131,7 @@ const ReleasesConfirmDetails = ({ updates, isProgressiveReleaseEnabled }) => {
                   />
                 );
               })}
-            </>
+            </div>
           );
         })}
 

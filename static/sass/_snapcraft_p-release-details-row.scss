@@ -31,8 +31,12 @@
     padding-top: 0.5rem;
   }
 
+  .p-releases-channel-group:not(:last-child) {
+    border-bottom: 1px dashed $color-mid-light;
+  }
+
   .progressive-release-control {
-    padding-top: 1rem;
+    padding-block: 0.5rem;
   }
 
   .progressive-release-control__inner {
