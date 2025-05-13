@@ -50,6 +50,19 @@ const ReleasesConfirmDetails = ({ updates, isProgressiveReleaseEnabled }) => {
     }
   });
 
+  const progressiveReleasesByChannel = {};
+
+  Object.keys(progressiveReleases).forEach((key) => {
+    const release = progressiveReleases[key];
+    const channel = release.channel;
+
+    if (progressiveReleasesByChannel[channel]) {
+      progressiveReleasesByChannel[channel].push(release);
+    } else {
+      progressiveReleasesByChannel[channel] = [release];
+    }
+  });
+
   return (
     <div className="p-releases-confirm__details">
       {showProgressiveReleases && (
