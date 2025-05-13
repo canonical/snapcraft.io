@@ -94,6 +94,18 @@ const ReleasesConfirmDetails = ({ updates, isProgressiveReleaseEnabled }) => {
             <>
               <h3 className="p-muted-heading">{key}</h3>
               <ReleaseRowGroup releases={release} />
+              <Row>
+                <Col size={6}>
+                  <ProgressiveBarControl
+                    globalPercentage={globalPercentage}
+                    type={progressiveTypes.RELEASE}
+                    release={
+                      progressiveReleases[Object.keys(progressiveReleases)[0]]
+                    }
+                    updateGlobalPercentage={updatePercentage}
+                  />
+                </Col>
+              </Row>
             </>
           );
         })}
@@ -123,18 +135,6 @@ const ReleasesConfirmDetails = ({ updates, isProgressiveReleaseEnabled }) => {
           );
         })}
 
-      {showProgressiveReleases && (
-        <Row>
-          <Col size={6}>
-            <ProgressiveBarControl
-              globalPercentage={globalPercentage}
-              type={progressiveTypes.RELEASE}
-              release={progressiveReleases[Object.keys(progressiveReleases)[0]]}
-              updateGlobalPercentage={updatePercentage}
-            />
-          </Col>
-        </Row>
-      )}
       {showPendingCloses && <CloseChannelsRow channels={pendingCloses} />}
     </div>
   );
