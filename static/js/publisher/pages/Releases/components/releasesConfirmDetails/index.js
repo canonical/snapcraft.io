@@ -92,7 +92,7 @@ const ReleasesConfirmDetails = ({ updates, isProgressiveReleaseEnabled }) => {
 
           return (
             <>
-              <h3 className="p-muted-heading">{key}</h3>
+              <h3 className="p-muted-heading u-no-margin--bottom">{key}</h3>
               <ReleaseRowGroup releases={release} />
               <Row>
                 <Col size={6}>
@@ -116,7 +116,7 @@ const ReleasesConfirmDetails = ({ updates, isProgressiveReleaseEnabled }) => {
 
           return (
             <>
-              <h3 className="p-muted-heading">{key}</h3>
+              <h3 className="p-muted-heading u-no-margin--bottom">{key}</h3>
               {Object.keys(newRelease).map((releaseKey) => {
                 const release = newRelease[releaseKey];
                 const revisionInfo = release.revision;
