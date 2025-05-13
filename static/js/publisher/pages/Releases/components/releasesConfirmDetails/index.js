@@ -37,6 +37,19 @@ const ReleasesConfirmDetails = ({ updates, isProgressiveReleaseEnabled }) => {
     updateProgressiveReleasePercentage(percentage);
   };
 
+  const newReleasesByChannel = {};
+
+  Object.keys(newReleases).forEach((key) => {
+    const release = newReleases[key];
+    const channel = release.channel;
+
+    if (newReleasesByChannel[channel]) {
+      newReleasesByChannel[channel].push(release);
+    } else {
+      newReleasesByChannel[channel] = [release];
+    }
+  });
+
   return (
     <div className="p-releases-confirm__details">
       {showProgressiveReleases && (
@@ -46,6 +59,7 @@ const ReleasesConfirmDetails = ({ updates, isProgressiveReleaseEnabled }) => {
         Object.keys(progressiveUpdates).map((releaseKey) => {
           return (
             <ReleaseRow
+              key={releaseKey}
               type={progressiveTypes.UPDATE}
               revisionInfo={progressiveUpdates[releaseKey].revision}
               channel={progressiveUpdates[releaseKey].channel}
@@ -61,21 +75,32 @@ const ReleasesConfirmDetails = ({ updates, isProgressiveReleaseEnabled }) => {
             />
           );
         })}
+
       {showNewReleases &&
-        Object.keys(newReleases).map((releaseKey) => {
-          const release = newReleases[releaseKey];
-          const revisionInfo = release.revision;
-          const channel = release.channel;
+        Object.keys(newReleasesByChannel).map((key) => {
+          const newRelease = newReleasesByChannel[key];
 
           return (
-            <ReleaseRow
-              type="Release"
-              revisionInfo={revisionInfo}
-              channel={channel}
-              key={`${revisionInfo.revision}-{${channel}`}
-            />
+            <>
+              <h3 className="p-muted-heading">{key}</h3>
+              {Object.keys(newRelease).map((releaseKey) => {
+                const release = newRelease[releaseKey];
+                const revisionInfo = release.revision;
+                const channel = release.channel;
+
+                return (
+                  <ReleaseRow
+                    type="Release"
+                    revisionInfo={revisionInfo}
+                    channel={channel}
+                    key={`${revisionInfo.revision}-{${channel}`}
+                  />
+                );
+              })}
+            </>
           );
         })}
+
       {showProgressiveReleases && (
         <Row>
           <Col size={6}>
