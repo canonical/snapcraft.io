@@ -91,7 +91,7 @@ const ReleasesConfirmDetails = ({ updates, isProgressiveReleaseEnabled }) => {
           const release = progressiveReleasesByChannel[key];
 
           return (
-            <div className="p-releases-channel-group">
+            <div className="p-releases-channel-group" key={key}>
               <h3 className="p-muted-heading u-no-margin--bottom">{key}</h3>
               <ReleaseRowGroup releases={release} />
               <Row>
