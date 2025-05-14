@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { connect } from "react-redux";
+import { v4 as uuidv4 } from "uuid";
 import { Row, Col } from "@canonical/react-components";
 import PropTypes from "prop-types";
 
@@ -89,9 +90,10 @@ const ReleasesConfirmDetails = ({ updates, isProgressiveReleaseEnabled }) => {
       {showProgressiveReleases &&
         Object.keys(progressiveReleasesByChannel).map((key) => {
           const releases = progressiveReleasesByChannel[key];
+          const uniqueKey = uuidv4();
 
           return (
-            <div className="p-releases-channel-group" key={key}>
+            <div className="p-releases-channel-group" key={uniqueKey}>
               <h3 className="p-muted-heading u-no-margin--bottom">{key}</h3>
               <ReleaseRowGroup releases={releases} />
               <Row>
