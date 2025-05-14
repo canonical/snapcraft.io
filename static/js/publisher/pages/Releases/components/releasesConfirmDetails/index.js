@@ -73,7 +73,6 @@ const ReleasesConfirmDetails = ({ updates, isProgressiveReleaseEnabled }) => {
               key={releaseKey}
               type={progressiveTypes.UPDATE}
               revisionInfo={progressiveUpdates[releaseKey].revision}
-              channel={progressiveUpdates[releaseKey].channel}
             />
           );
         })}
@@ -128,7 +127,6 @@ const ReleasesConfirmDetails = ({ updates, isProgressiveReleaseEnabled }) => {
                   <ReleaseRow
                     type="Release"
                     revisionInfo={revisionInfo}
-                    channel={channel}
                     key={`${revisionInfo.revision}-{${channel}`}
                   />
                 );

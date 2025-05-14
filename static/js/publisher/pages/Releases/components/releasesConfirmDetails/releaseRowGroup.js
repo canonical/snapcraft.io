@@ -14,7 +14,6 @@ const ReleaseRowGroup = ({ releases }) => {
           <ReleaseRow
             type={progressiveTypes.RELEASE}
             revisionInfo={release.revision}
-            channel={release.channel}
             key={key}
           />
         );
