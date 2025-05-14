@@ -6,13 +6,13 @@ import ReleaseRow from "./releaseRow";
 const ReleaseRowGroup = ({ releases }) => {
   return (
     <div className="p-release-details-group">
-      {Object.keys(releases).map((releaseKey) => {
+      {releases.map((release) => {
         return (
           <ReleaseRow
             type={progressiveTypes.RELEASE}
-            revisionInfo={releases[releaseKey].revision}
-            channel={releases[releaseKey].channel}
-            key={releaseKey}
+            revisionInfo={release.revision}
+            channel={release.channel}
+            key={release.channel}
           />
         );
       })}
@@ -21,7 +21,7 @@ const ReleaseRowGroup = ({ releases }) => {
 };
 
 ReleaseRowGroup.propTypes = {
-  releases: PropTypes.object,
+  releases: PropTypes.array,
 };
 
 export default ReleaseRowGroup;

@@ -88,12 +88,12 @@ const ReleasesConfirmDetails = ({ updates, isProgressiveReleaseEnabled }) => {
 
       {showProgressiveReleases &&
         Object.keys(progressiveReleasesByChannel).map((key) => {
-          const release = progressiveReleasesByChannel[key];
+          const releases = progressiveReleasesByChannel[key];
 
           return (
             <div className="p-releases-channel-group" key={key}>
               <h3 className="p-muted-heading u-no-margin--bottom">{key}</h3>
-              <ReleaseRowGroup releases={release} />
+              <ReleaseRowGroup releases={releases} />
               <Row>
                 <Col size={6}>
                   <ProgressiveBarControl
