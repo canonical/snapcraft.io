@@ -64,6 +64,26 @@ const ReleasesConfirmDetails = ({ updates, isProgressiveReleaseEnabled }) => {
     }
   });
 
+  const orderReleaseByRisk = (releases) => {
+    const riskOrder = ["stable", "candidate", "beta", "edge"];
+    const orderedReleases = {};
+
+    const sortedKeys = Object.keys(releases).sort((a, b) => {
+      const aRiskName = a.split("/")[1];
+      const bRiskName = b.split("/")[1];
+
+      return riskOrder.indexOf(aRiskName) > riskOrder.indexOf(bRiskName)
+        ? 1
+        : -1;
+    });
+
+    sortedKeys.forEach((channelName) => {
+      orderedReleases[channelName] = releases[channelName];
+    });
+
+    return orderedReleases;
+  };
+
   return (
     <div className="p-releases-confirm__details">
       {showProgressiveUpdates &&
@@ -87,32 +107,34 @@ const ReleasesConfirmDetails = ({ updates, isProgressiveReleaseEnabled }) => {
         })}
 
       {showProgressiveReleases &&
-        Object.keys(progressiveReleasesByChannel).map((key) => {
-          const releases = progressiveReleasesByChannel[key];
-          const uniqueKey = uuidv4();
+        Object.keys(orderReleaseByRisk(progressiveReleasesByChannel)).map(
+          (key) => {
+            const releases = progressiveReleasesByChannel[key];
+            const uniqueKey = uuidv4();
 
-          return (
-            <div className="p-releases-channel-group" key={uniqueKey}>
-              <h3 className="p-muted-heading u-no-margin--bottom">{key}</h3>
-              <ReleaseRowGroup releases={releases} />
-              <Row>
-                <Col size={6}>
-                  <ProgressiveBarControl
-                    globalPercentage={globalPercentage}
-                    type={progressiveTypes.RELEASE}
-                    release={
-                      progressiveReleases[Object.keys(progressiveReleases)[0]]
-                    }
-                    updateGlobalPercentage={updatePercentage}
-                  />
-                </Col>
-              </Row>
-            </div>
-          );
-        })}
+            return (
+              <div className="p-releases-channel-group" key={uniqueKey}>
+                <h3 className="p-muted-heading u-no-margin--bottom">{key}</h3>
+                <ReleaseRowGroup releases={releases} />
+                <Row>
+                  <Col size={6}>
+                    <ProgressiveBarControl
+                      globalPercentage={globalPercentage}
+                      type={progressiveTypes.RELEASE}
+                      release={
+                        progressiveReleases[Object.keys(progressiveReleases)[0]]
+                      }
+                      updateGlobalPercentage={updatePercentage}
+                    />
+                  </Col>
+                </Row>
+              </div>
+            );
+          },
+        )}
 
       {showNewReleases &&
-        Object.keys(newReleasesByChannel).map((key) => {
+        Object.keys(orderReleaseByRisk(newReleasesByChannel)).map((key) => {
           const newRelease = newReleasesByChannel[key];
 
           return (
