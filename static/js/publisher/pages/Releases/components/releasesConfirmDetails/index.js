@@ -38,31 +38,25 @@ const ReleasesConfirmDetails = ({ updates, isProgressiveReleaseEnabled }) => {
     updateProgressiveReleasePercentage(percentage);
   };
 
-  const newReleasesByChannel = {};
+  const groupReleasesByChannel = (releases) => {
+    const releasesByChannel = {};
+    Object.keys(releases).forEach((key) => {
+      const release = releases[key];
+      const channel = release.channel;
 
-  Object.keys(newReleases).forEach((key) => {
-    const release = newReleases[key];
-    const channel = release.channel;
+      if (releasesByChannel[channel]) {
+        releasesByChannel[channel].push(release);
+      } else {
+        releasesByChannel[channel] = [release];
+      }
+    });
 
-    if (newReleasesByChannel[channel]) {
-      newReleasesByChannel[channel].push(release);
-    } else {
-      newReleasesByChannel[channel] = [release];
-    }
-  });
+    return releasesByChannel;
+  };
 
-  const progressiveReleasesByChannel = {};
-
-  Object.keys(progressiveReleases).forEach((key) => {
-    const release = progressiveReleases[key];
-    const channel = release.channel;
-
-    if (progressiveReleasesByChannel[channel]) {
-      progressiveReleasesByChannel[channel].push(release);
-    } else {
-      progressiveReleasesByChannel[channel] = [release];
-    }
-  });
+  const newReleasesByChannel = groupReleasesByChannel(newReleases);
+  const progressiveReleasesByChannel =
+    groupReleasesByChannel(progressiveReleases);
 
   const orderReleaseByRisk = (releases) => {
     const riskOrder = ["stable", "candidate", "beta", "edge"];
