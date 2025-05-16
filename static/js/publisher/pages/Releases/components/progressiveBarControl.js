@@ -8,87 +8,78 @@ import progressiveTypes from "./releasesConfirmDetails/types";
 
 import { InteractiveProgressiveBar } from "./progressiveBar";
 
-class ProgressiveBarControl extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.onChangeHandler = this.onChangeHandler.bind(this);
-  }
-
-  onChangeHandler(percentage) {
-    const { updateProgressiveReleasePercentage, updateGlobalPercentage } =
-      this.props;
-
+function ProgressiveBarControl({
+  updateProgressiveReleasePercentage,
+  updateGlobalPercentage,
+  release,
+  type,
+  globalPercentage,
+}) {
+  const onChangeHandler = (percentage) => {
     if (updateGlobalPercentage) {
       updateGlobalPercentage(percentage);
     }
     updateProgressiveReleasePercentage(percentage);
+  };
+
+  if (!release.progressive) {
+    return false;
   }
 
-  render() {
-    const { release, type, globalPercentage } = this.props;
+  let startingPercentage = 100;
+  let targetPercentage = 100;
 
-    if (!release.progressive) {
-      return false;
+  if (globalPercentage) {
+    startingPercentage = targetPercentage = globalPercentage;
+  } else {
+    switch (type) {
+      case progressiveTypes.RELEASE:
+        startingPercentage = targetPercentage = release.progressive.percentage;
+        break;
+      case progressiveTypes.UPDATE:
+        startingPercentage = release.revision.release.progressive.percentage;
+        targetPercentage = release.progressive.percentage;
+        break;
+      default:
     }
+  }
 
-    let startingPercentage = 100;
-    let targetPercentage = 100;
-
-    if (globalPercentage) {
-      startingPercentage = targetPercentage = globalPercentage;
-    } else {
-      switch (type) {
-        case progressiveTypes.RELEASE:
-          startingPercentage = targetPercentage =
-            release.progressive.percentage;
-          break;
-        case progressiveTypes.UPDATE:
-          startingPercentage = release.revision.release.progressive.percentage;
-          targetPercentage = release.progressive.percentage;
-          break;
-        default:
-      }
-    }
-
-    return (
-      <div className="progressive-release-control">
-        <div className="progressive-release-control__inner">
-          <div>Release all to</div>
-          <div className="p-release-details-row__progress">
-            <InteractiveProgressiveBar
-              percentage={startingPercentage}
-              onChange={this.onChangeHandler}
-              targetPercentage={targetPercentage}
-              minPercentage={1}
-              singleDirection={type === progressiveTypes.UPDATE ? 1 : 0}
-            />
-            <span>
-              <span className="p-tooltip--btm-center">
-                <span className="p-help">{targetPercentage}% of devices</span>
-                <span className="p-tooltip__message">
-                  Releases are delivered to devices via snap refreshes, as such,
-                  it may
-                  <br />
-                  take some time for devices to receive the new version. There
-                  is also no
-                  <br />
-                  guarantee that this release will achieve the entire target
-                  percentage.
-                </span>
+  return (
+    <div className="progressive-release-control">
+      <div className="progressive-release-control__inner">
+        <div>Release all to</div>
+        <div className="p-release-details-row__progress">
+          <InteractiveProgressiveBar
+            percentage={startingPercentage}
+            onChange={onChangeHandler}
+            targetPercentage={targetPercentage}
+            minPercentage={1}
+            singleDirection={type === progressiveTypes.UPDATE ? 1 : 0}
+          />
+          <span>
+            <span className="p-tooltip--btm-center">
+              <span className="p-help">{targetPercentage}% of devices</span>
+              <span className="p-tooltip__message">
+                Releases are delivered to devices via snap refreshes, as such,
+                it may
+                <br />
+                take some time for devices to receive the new version. There is
+                also no
+                <br />
+                guarantee that this release will achieve the entire target
+                percentage.
               </span>
             </span>
-          </div>
-        </div>
-        <div className="p-release-details-row__notes">
-          <small>
-            {100 - targetPercentage}% of devices will stay on the current
-            version
-          </small>
+          </span>
         </div>
       </div>
-    );
-  }
+      <div className="p-release-details-row__notes">
+        <small>
+          {100 - targetPercentage}% of devices will stay on the current version
+        </small>
+      </div>
+    </div>
+  );
 }
 
 ProgressiveBarControl.propTypes = {
