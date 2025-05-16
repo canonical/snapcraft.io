@@ -1,64 +1,38 @@
-import React from "react";
+import { useState } from "react";
 import { connect } from "react-redux";
+import { Slider } from "@canonical/react-components";
 import PropTypes from "prop-types";
 
 import { updateProgressiveReleasePercentage } from "../actions/pendingReleases";
 
-import progressiveTypes from "./releasesConfirmDetails/types";
+function ProgressiveBarControl({ releases }) {
+  const [percentageOfDevices, setPercentageOfDevices] = useState(100);
 
-import { InteractiveProgressiveBar } from "./progressiveBar";
-
-function ProgressiveBarControl({
-  updateProgressiveReleasePercentage,
-  updateGlobalPercentage,
-  release,
-  type,
-  globalPercentage,
-}) {
-  const onChangeHandler = (percentage) => {
-    if (updateGlobalPercentage) {
-      updateGlobalPercentage(percentage);
-    }
-    updateProgressiveReleasePercentage(percentage);
+  const setTargetPercentage = () => {
+    Object.keys(releases).forEach((key) => {
+      releases[key].progressive.percentage = percentageOfDevices;
+    });
   };
-
-  if (!release.progressive) {
-    return false;
-  }
-
-  let startingPercentage = 100;
-  let targetPercentage = 100;
-
-  if (globalPercentage) {
-    startingPercentage = targetPercentage = globalPercentage;
-  } else {
-    switch (type) {
-      case progressiveTypes.RELEASE:
-        startingPercentage = targetPercentage = release.progressive.percentage;
-        break;
-      case progressiveTypes.UPDATE:
-        startingPercentage = release.revision.release.progressive.percentage;
-        targetPercentage = release.progressive.percentage;
-        break;
-      default:
-    }
-  }
 
   return (
     <div className="progressive-release-control">
       <div className="progressive-release-control__inner">
         <div>Release all to</div>
         <div className="p-release-details-row__progress">
-          <InteractiveProgressiveBar
-            percentage={startingPercentage}
-            onChange={onChangeHandler}
-            targetPercentage={targetPercentage}
-            minPercentage={1}
-            singleDirection={type === progressiveTypes.UPDATE ? 1 : 0}
+          <Slider
+            label="Percentage of devices"
+            min={1}
+            max={100}
+            value={percentageOfDevices}
+            onChange={(e) => {
+              setPercentageOfDevices(e.target.value);
+              setTargetPercentage();
+              updateProgressiveReleasePercentage(e.target.value);
+            }}
           />
           <span>
             <span className="p-tooltip--btm-center">
-              <span className="p-help">{targetPercentage}% of devices</span>
+              <span className="p-help">{percentageOfDevices}% of devices</span>
               <span className="p-tooltip__message">
                 Releases are delivered to devices via snap refreshes, as such,
                 it may
@@ -75,7 +49,8 @@ function ProgressiveBarControl({
       </div>
       <div className="p-release-details-row__notes">
         <small>
-          {100 - targetPercentage}% of devices will stay on the current version
+          {100 - percentageOfDevices}% of devices will stay on the current
+          version
         </small>
       </div>
     </div>
@@ -83,11 +58,7 @@ function ProgressiveBarControl({
 }
 
 ProgressiveBarControl.propTypes = {
-  release: PropTypes.object,
-  type: PropTypes.string,
-  globalPercentage: PropTypes.number,
-  updateGlobalPercentage: PropTypes.func,
-  updateProgressiveReleasePercentage: PropTypes.func,
+  release: PropTypes.array,
 };
 
 const mapDispatchToProps = (dispatch) => {
