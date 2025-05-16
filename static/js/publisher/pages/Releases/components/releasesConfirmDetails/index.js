@@ -112,14 +112,7 @@ const ReleasesConfirmDetails = ({ updates, isProgressiveReleaseEnabled }) => {
                 <ReleaseRowGroup releases={releases} />
                 <Row>
                   <Col size={6}>
-                    <ProgressiveBarControl
-                      globalPercentage={globalPercentage}
-                      type={progressiveTypes.RELEASE}
-                      release={
-                        progressiveReleases[Object.keys(progressiveReleases)[0]]
-                      }
-                      updateGlobalPercentage={updatePercentage}
-                    />
+                    <ProgressiveBarControl releases={progressiveReleases} />
                   </Col>
                 </Row>
               </div>

@@ -23,6 +23,12 @@
     position: relative;
   }
 
+  .p-release-details-row__progress {
+    .p-form__label {
+      @extend %u-off-screen;
+    }
+  }
+
   .progressive-bar__interactive-wrapper.is-interactive {
     .progressive-bar {
       cursor: col-resize;
@@ -47,11 +53,19 @@
     pointer-events: none;
 
     .progressive-bar__current {
-      background: color.adjust(color.grayscale($active), $lightness: 20%, $space: hsl);
+      background: color.adjust(
+        color.grayscale($active),
+        $lightness: 20%,
+        $space: hsl
+      );
     }
 
     .progressive-bar__target {
-      background: color.adjust(color.grayscale($target), $lightness: 20%, $space: hsl);
+      background: color.adjust(
+        color.grayscale($target),
+        $lightness: 20%,
+        $space: hsl
+      );
     }
   }
 
@@ -84,7 +98,8 @@
   }
 
   .progressive-bar:hover .progressive-bar__target-adjust,
-  .progressive-bar__interactive-wrapper.is-scrubbing .progressive-bar__target-adjust {
+  .progressive-bar__interactive-wrapper.is-scrubbing
+    .progressive-bar__target-adjust {
     border-radius: 17px;
     transform: translate(7px);
     width: 17px;
