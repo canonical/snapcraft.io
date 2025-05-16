@@ -1,5 +1,7 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { connect } from "react-redux";
+import { v4 as uuidv4 } from "uuid";
+import { Row, Col } from "@canonical/react-components";
 import PropTypes from "prop-types";
 
 import { updateProgressiveReleasePercentage } from "../../actions/pendingReleases";
@@ -8,16 +10,11 @@ import { isProgressiveReleaseEnabled } from "../../selectors";
 import progressiveTypes from "./types";
 import ReleaseRow from "./releaseRow";
 import CancelProgressiveRow from "./cancelProgressiveRow";
-import ProgressiveRow from "./progressiveRow";
-import ProgressiveRowGroup from "./progressiveRowGroup";
+import ProgressiveBarControl from "../progressiveBarControl";
+import ReleaseRowGroup from "./releaseRowGroup";
 import CloseChannelsRow from "./closeChannelsRow";
 
-const ReleasesConfirmDetails = ({
-  updates,
-  isProgressiveReleaseEnabled,
-  updateProgressiveReleasePercentage,
-}) => {
-  const [useGlobal, setGlobal] = useState(true);
+const ReleasesConfirmDetails = ({ updates, isProgressiveReleaseEnabled }) => {
   const [globalPercentage, setGlobalPercentage] = useState(100);
 
   const progressiveReleases = updates.newReleasesToProgress;
@@ -36,34 +33,60 @@ const ReleasesConfirmDetails = ({
   const showNewReleases = Object.keys(newReleases).length > 0;
   const showPendingCloses = pendingCloses.length > 0;
 
-  const toggleGlobal = () => {
-    const newUseGlobal = !useGlobal;
-    setGlobal(newUseGlobal);
-  };
-
   const updatePercentage = (percentage) => {
     setGlobalPercentage(percentage);
     updateProgressiveReleasePercentage(percentage);
   };
 
+  const groupReleasesByChannel = (releases) => {
+    const releasesByChannel = {};
+    Object.keys(releases).forEach((key) => {
+      const release = releases[key];
+      const channel = release.channel;
+
+      if (releasesByChannel[channel]) {
+        releasesByChannel[channel].push(release);
+      } else {
+        releasesByChannel[channel] = [release];
+      }
+    });
+
+    return releasesByChannel;
+  };
+
+  const newReleasesByChannel = groupReleasesByChannel(newReleases);
+  const progressiveReleasesByChannel =
+    groupReleasesByChannel(progressiveReleases);
+
+  const orderReleaseByRisk = (releases) => {
+    const riskOrder = ["stable", "candidate", "beta", "edge"];
+    const orderedReleases = {};
+
+    const sortedKeys = Object.keys(releases).sort((a, b) => {
+      const aRiskName = a.split("/")[1];
+      const bRiskName = b.split("/")[1];
+
+      return riskOrder.indexOf(aRiskName) > riskOrder.indexOf(bRiskName)
+        ? 1
+        : -1;
+    });
+
+    sortedKeys.forEach((channelName) => {
+      orderedReleases[channelName] = releases[channelName];
+    });
+
+    return orderedReleases;
+  };
+
   return (
     <div className="p-releases-confirm__details">
-      {showProgressiveReleases && (
-        <ProgressiveRowGroup
-          releases={progressiveReleases}
-          useGlobal={useGlobal}
-          globalPercentage={globalPercentage}
-          toggleGlobal={toggleGlobal}
-          updatePercentage={updatePercentage}
-        />
-      )}
       {showProgressiveUpdates &&
         Object.keys(progressiveUpdates).map((releaseKey) => {
           return (
-            <ProgressiveRow
-              release={progressiveUpdates[releaseKey]}
-              type={progressiveTypes.UPDATE}
+            <ReleaseRow
               key={releaseKey}
+              type={progressiveTypes.UPDATE}
+              revisionInfo={progressiveUpdates[releaseKey].revision}
             />
           );
         })}
@@ -76,22 +99,51 @@ const ReleasesConfirmDetails = ({
             />
           );
         })}
+
+      {showProgressiveReleases &&
+        Object.keys(orderReleaseByRisk(progressiveReleasesByChannel)).map(
+          (key) => {
+            const releases = progressiveReleasesByChannel[key];
+            const uniqueKey = uuidv4();
+
+            return (
+              <div className="p-releases-channel-group" key={uniqueKey}>
+                <h3 className="p-muted-heading u-no-margin--bottom">{key}</h3>
+                <ReleaseRowGroup releases={releases} />
+                <Row>
+                  <Col size={6}>
+                    <ProgressiveBarControl releases={progressiveReleases} />
+                  </Col>
+                </Row>
+              </div>
+            );
+          },
+        )}
+
       {showNewReleases &&
-        Object.keys(newReleases).map((releaseKey) => {
-          const release = newReleases[releaseKey];
-          const revisionInfo = release.revision;
-          const channel = release.channel;
+        Object.keys(orderReleaseByRisk(newReleasesByChannel)).map((key) => {
+          const newRelease = newReleasesByChannel[key];
 
           return (
-            <ReleaseRow
-              type="Release"
-              revisionInfo={revisionInfo}
-              channel={channel}
-              key={`${revisionInfo.revision}-{${channel}`}
-              showBar={showProgressiveReleases}
-            />
+            <div className="p-releases-channel-group" key={key}>
+              <h3 className="p-muted-heading u-no-margin--bottom">{key}</h3>
+              {Object.keys(newRelease).map((releaseKey) => {
+                const release = newRelease[releaseKey];
+                const revisionInfo = release.revision;
+                const channel = release.channel;
+
+                return (
+                  <ReleaseRow
+                    type="Release"
+                    revisionInfo={revisionInfo}
+                    key={`${revisionInfo.revision}-{${channel}`}
+                  />
+                );
+              })}
+            </div>
           );
         })}
+
       {showPendingCloses && <CloseChannelsRow channels={pendingCloses} />}
     </div>
   );
