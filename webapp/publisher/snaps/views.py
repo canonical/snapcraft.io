@@ -59,6 +59,11 @@ publisher_snaps.add_url_rule(
     methods=["GET"],
 )
 publisher_snaps.add_url_rule(
+    "/<snap_name>/cves",
+    view_func=listing_views.get_listing_snap,
+    methods=["GET"],
+)
+publisher_snaps.add_url_rule(
     "/api/<snap_name>/listing",
     view_func=listing_views.get_listing_data,
     methods=["GET"],
@@ -282,7 +287,7 @@ publisher_snaps.add_url_rule(
 # CVE API
 publisher_snaps.add_url_rule(
     "/api/<snap_name>/<revision>/cves",
-    view_func=cve_views.get_cves,
+    view_func=cve_views.get_binaries,
 )
 
 publisher_snaps.add_url_rule(
