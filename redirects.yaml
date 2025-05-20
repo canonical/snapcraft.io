@@ -8,19 +8,19 @@ tutorials(.*?): /docs/snap-tutorials
 search(.*?): /store
 
 # documentation.ubuntu.com/snapcraft redirects
+docs/using-gdb-gdbserver/?: https://documentation.ubuntu.com/snapcraft/stable/how-to/debugging/debug-with-gdb/
+docs/python-apps/?: https://documentation.ubuntu.com/snapcraft/stable/how-to/integrations/craft-a-python-app/
+docs/snapcraft-yaml-schema/?: https://documentation.ubuntu.com/snapcraft/stable/reference/project-file/snapcraft-yaml/
+docs/create-a-new-snap/?: https://documentation.ubuntu.com/snapcraft/stable/tutorials/craft-a-snap/
 docs/debug-snaps/?: https://documentation.ubuntu.com/snapcraft/stable/how-to/debugging/debug-a-snap/
-docs/using-gdb-gdbserver: https://documentation.ubuntu.com/snapcraft/stable/how-to/debugging/debug-with-gdb/
 docs/creating-a-snap/?: https://documentation.ubuntu.com/snapcraft/stable/how-to/integrations/
 docs/c-c-applications/?: https://documentation.ubuntu.com/snapcraft/stable/how-to/integrations/craft-a-c-or-cpp-app/
 docs/build-snaps/c/?: https://documentation.ubuntu.com/snapcraft/stable/how-to/integrations/craft-a-c-or-cpp-app/
-docs/python-apps: https://documentation.ubuntu.com/snapcraft/stable/how-to/integrations/craft-a-python-app/
 docs/build-snaps/python/?: https://documentation.ubuntu.com/snapcraft/stable/how-to/integrations/craft-a-python-app/
 docs/installing-snapcraft/?: https://documentation.ubuntu.com/snapcraft/stable/how-to/setup/set-up-snapcraft/
 https://forum.snapcraft.io/t/install-snapcraft-on-macos/9607/?: https://documentation.ubuntu.com/snapcraft/stable/how-to/setup/set-up-snapcraft/
 docs/package-repositories/?: https://documentation.ubuntu.com/snapcraft/stable/reference/package-repositories/
 docs/snapcraft-intermediate-example/?: https://documentation.ubuntu.com/snapcraft/stable/reference/project-file/anatomy-of-snapcraft-yaml/
-docs/snapcraft-yaml-schema: https://documentation.ubuntu.com/snapcraft/stable/reference/project-file/snapcraft-yaml/
-docs/create-a-new-snap: https://documentation.ubuntu.com/snapcraft/stable/tutorials/craft-a-snap/
 docs/creating-snapcraft-yaml/?: https://documentation.ubuntu.com/snapcraft/stable/tutorials/craft-a-snap/
 docs/ros-architectures-with-snaps/?: https://canonical-robotics.readthedocs-hosted.com/en/latest/explanations/snaps/ros-architectures-with-snaps/
 docs/ros-with-github-actions/?: https://canonical-robotics.readthedocs-hosted.com/en/latest/how-to-guides/packaging/build-and-publish-snap-with-github-actions/
