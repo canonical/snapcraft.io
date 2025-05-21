@@ -35,7 +35,7 @@
       {% include 'store/_snap-header-information.html' %}
     </li>
     {% for category in categories %}<li class="p-inline-list__item">
-      <a href="/search?category={{category.slug}}">{{ category.name }}</a>
+      <a href="/search?categories={{category.slug}}">{{ category.name }}</a>
     </li>{% endfor %}
   </ul>
 </div>
