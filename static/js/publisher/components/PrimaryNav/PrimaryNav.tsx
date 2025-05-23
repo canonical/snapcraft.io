@@ -122,6 +122,16 @@ function PrimaryNav({
                   </span>
                 </a>
               </li>
+              {/* TODO: why is this different from Navigation.tsx? */}
+              <li className="p-side-navigation__item">
+                <a href="/admin/account-keys" className="p-side-navigation__link">
+                  <i className="p-icon--private-key is-light p-side-navigation__icon"></i>
+                  <span className="p-side-navigation__label">
+                    My keys
+                  </span>
+                </a>
+              </li>
+              
               <li className="p-side-navigation__item">
                 <a href="/logout" className="p-side-navigation__link">
                   <i className="p-icon--log-out is-light p-side-navigation__icon"></i>
