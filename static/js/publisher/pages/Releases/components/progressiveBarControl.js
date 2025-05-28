@@ -9,9 +9,9 @@ import { updateProgressiveReleasePercentage } from "../actions/pendingReleases";
 function ProgressiveBarControl({ releases, target }) {
   const [percentageOfDevices, setPercentageOfDevices] = useState(target);
 
-  const setTargetPercentage = () => {
+  const setTargetPercentage = (percentage) => {
     Object.keys(releases).forEach((key) => {
-      releases[key].progressive.percentage = percentageOfDevices;
+      releases[key].progressive.percentage = percentage;
     });
     updateReleases(releases);
   };
@@ -28,7 +28,7 @@ function ProgressiveBarControl({ releases, target }) {
             value={percentageOfDevices}
             onChange={(e) => {
               setPercentageOfDevices(e.target.value);
-              setTargetPercentage();
+              setTargetPercentage(e.target.value);
               updateProgressiveReleasePercentage(e.target.value);
             }}
           />
