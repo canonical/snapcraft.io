@@ -69,8 +69,4 @@ const ReleasesTableRow = (props: {
   );
 };
 
-ReleasesTableRow.defaultProps = {
-  canDrag: true,
-};
-
 export default ReleasesTableRow;
