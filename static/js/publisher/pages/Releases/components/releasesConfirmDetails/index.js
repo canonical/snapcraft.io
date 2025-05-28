@@ -37,9 +37,12 @@ const ReleasesConfirmDetails = ({ updates, isProgressiveReleaseEnabled }) => {
       const channel = release.channel;
 
       if (releasesByChannel[channel]) {
-        releasesByChannel[channel].push(release);
+        releasesByChannel[channel].releases.push(release);
       } else {
-        releasesByChannel[channel] = [release];
+        releasesByChannel[channel] = {
+          releases: [release],
+          percentage: release.progressive.percentage,
+        };
       }
     });
 
@@ -95,7 +98,7 @@ const ReleasesConfirmDetails = ({ updates, isProgressiveReleaseEnabled }) => {
       {showProgressiveReleases &&
         Object.keys(orderReleaseByRisk(progressiveReleasesByChannel)).map(
           (key) => {
-            const releases = progressiveReleasesByChannel[key];
+            const releases = progressiveReleasesByChannel[key].releases;
             const uniqueKey = uuidv4();
 
             return (
@@ -106,7 +109,7 @@ const ReleasesConfirmDetails = ({ updates, isProgressiveReleaseEnabled }) => {
                   <Col size={6}>
                     <ProgressiveBarControl
                       releases={progressiveReleases}
-                      target={100}
+                      target={progressiveReleasesByChannel[key].percentage}
                     />
                   </Col>
                 </Row>
@@ -117,7 +120,7 @@ const ReleasesConfirmDetails = ({ updates, isProgressiveReleaseEnabled }) => {
 
       {showNewReleases &&
         Object.keys(orderReleaseByRisk(newReleasesByChannel)).map((key) => {
-          const newRelease = newReleasesByChannel[key];
+          const newRelease = newReleasesByChannel[key].releases;
 
           return (
             <div className="p-releases-channel-group" key={key}>
