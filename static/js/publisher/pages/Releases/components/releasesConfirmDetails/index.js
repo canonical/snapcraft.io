@@ -108,7 +108,7 @@ const ReleasesConfirmDetails = ({ updates, isProgressiveReleaseEnabled }) => {
                 <Row>
                   <Col size={6}>
                     <ProgressiveBarControl
-                      releases={progressiveReleases}
+                      releases={releases}
                       target={progressiveReleasesByChannel[key].percentage}
                     />
                   </Col>
