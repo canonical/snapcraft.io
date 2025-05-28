@@ -27,9 +27,10 @@ function ProgressiveBarControl({ releases, target }) {
             max={100}
             value={percentageOfDevices}
             onChange={(e) => {
-              setPercentageOfDevices(e.target.value);
-              setTargetPercentage(e.target.value);
-              updateProgressiveReleasePercentage(e.target.value);
+              const targetValue = e.target.value;
+              setPercentageOfDevices(targetValue);
+              setTargetPercentage(targetValue);
+              updateProgressiveReleasePercentage(targetValue);
             }}
           />
           <span>
