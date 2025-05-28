@@ -104,7 +104,10 @@ const ReleasesConfirmDetails = ({ updates, isProgressiveReleaseEnabled }) => {
                 <ReleaseRowGroup releases={releases} />
                 <Row>
                   <Col size={6}>
-                    <ProgressiveBarControl releases={progressiveReleases} />
+                    <ProgressiveBarControl
+                      releases={progressiveReleases}
+                      target={100}
+                    />
                   </Col>
                 </Row>
               </div>

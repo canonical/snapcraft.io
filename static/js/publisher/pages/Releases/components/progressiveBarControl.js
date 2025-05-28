@@ -3,15 +3,17 @@ import { connect } from "react-redux";
 import { Slider } from "@canonical/react-components";
 import PropTypes from "prop-types";
 
+import { updateReleases } from "../actions/releases";
 import { updateProgressiveReleasePercentage } from "../actions/pendingReleases";
 
-function ProgressiveBarControl({ releases }) {
-  const [percentageOfDevices, setPercentageOfDevices] = useState(100);
+function ProgressiveBarControl({ releases, target }) {
+  const [percentageOfDevices, setPercentageOfDevices] = useState(target);
 
   const setTargetPercentage = () => {
     Object.keys(releases).forEach((key) => {
       releases[key].progressive.percentage = percentageOfDevices;
     });
+    updateReleases(releases);
   };
 
   return (
