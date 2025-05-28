@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { connect } from "react-redux";
 import { v4 as uuidv4 } from "uuid";
 import { Row, Col } from "@canonical/react-components";
@@ -15,8 +14,6 @@ import ReleaseRowGroup from "./releaseRowGroup";
 import CloseChannelsRow from "./closeChannelsRow";
 
 const ReleasesConfirmDetails = ({ updates, isProgressiveReleaseEnabled }) => {
-  const [globalPercentage, setGlobalPercentage] = useState(100);
-
   const progressiveReleases = updates.newReleasesToProgress;
   const progressiveUpdates = updates.progressiveUpdates;
   const progressiveCancellations = updates.cancelProgressive;
@@ -32,11 +29,6 @@ const ReleasesConfirmDetails = ({ updates, isProgressiveReleaseEnabled }) => {
     Object.keys(progressiveCancellations).length > 0;
   const showNewReleases = Object.keys(newReleases).length > 0;
   const showPendingCloses = pendingCloses.length > 0;
-
-  const updatePercentage = (percentage) => {
-    setGlobalPercentage(percentage);
-    updateProgressiveReleasePercentage(percentage);
-  };
 
   const groupReleasesByChannel = (releases) => {
     const releasesByChannel = {};
