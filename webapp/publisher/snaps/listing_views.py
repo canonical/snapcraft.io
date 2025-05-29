@@ -260,7 +260,7 @@ def post_listing_data(snap_name):
 
             snap_categories = logic.filter_categories(snap_categories)
 
-            res = {"success", True}
+            res = {"success": True}
 
             return flask.make_response(res, 200)
 
