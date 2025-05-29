@@ -2,14 +2,9 @@ import { useParams } from "react-router-dom";
 
 // import { setPageTitle } from "../../utils";
 import { useQuery } from "react-query";
-import {
-  MainTable,
-  Strip,
-  Select,
-  Form,
-  Label,
-} from "@canonical/react-components";
+import { MainTable, Strip, Select, Form } from "@canonical/react-components";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import SectionNav from "../../components/SectionNav";
 
 interface ICve {
   id: string;
@@ -270,7 +265,8 @@ function SnapCves(): JSX.Element {
 
       {data && (
         <>
-          <div>
+          <SectionNav activeTab="vulnerabilities" snapName={snapId} />
+          <Strip shallow>
             <Form inline>
               <Select
                 id="revision-selector"
@@ -283,7 +279,7 @@ function SnapCves(): JSX.Element {
                 options={revisionSelectOptions}
               />
             </Form>
-          </div>
+          </Strip>
           <MainTable
             expanding
             paginate={20}
