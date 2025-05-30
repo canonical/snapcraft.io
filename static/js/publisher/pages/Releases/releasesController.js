@@ -46,7 +46,7 @@ const ReleasesController = ({
         setReady(true);
       },
     );
-  }, []);
+  }, [releasesData]);
 
   const { visible } = notification;
   return (
