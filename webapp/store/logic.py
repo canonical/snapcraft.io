@@ -6,6 +6,7 @@ from urllib.parse import parse_qs, urlparse
 import humanize
 from dateutil import parser
 from webapp import helpers
+from webapp.observability.utils import trace_function
 
 
 def get_n_random_snaps(snaps, choice_number):
@@ -29,6 +30,7 @@ def get_snap_banner_url(snap_result):
     return snap_result
 
 
+@trace_function
 def get_pages_details(url, links):
     """Transform returned navigation links from search API from limit/offset
     to size/page
@@ -131,6 +133,7 @@ def build_pagination_link(snap_searched, snap_category, page):
     return "/search?" + "&".join(params)
 
 
+@trace_function
 def convert_channel_maps(channel_map):
     """Converts channel maps list to format easier to manipulate
 
@@ -234,6 +237,7 @@ def format_category_name(slug):
     )
 
 
+@trace_function
 def get_categories(categories_json):
     """Retrieve and flatten the nested array from the legacy API response.
 
@@ -257,6 +261,7 @@ def get_categories(categories_json):
     return categories
 
 
+@trace_function
 def get_snap_categories(snap_categories):
     """Retrieve list of categories with names for a snap.
 
@@ -277,6 +282,7 @@ def get_snap_categories(snap_categories):
     return categories
 
 
+@trace_function
 def get_latest_versions(channel_maps, default_track, lowest_risk):
     """Get the latest versions of both default/stable and the latest of
     all other channels, unless it's default/stable
@@ -309,6 +315,7 @@ def get_latest_versions(channel_maps, default_track, lowest_risk):
     return default_stable, other
 
 
+@trace_function
 def get_last_updated_versions(channel_maps):
     """Get all channels in order of updates
 
@@ -323,6 +330,7 @@ def get_last_updated_versions(channel_maps):
     return list(reversed(sorted(releases, key=lambda c: c["released-at"])))
 
 
+@trace_function
 def get_last_updated_version(channel_maps):
     """Get the oldest channel that was created
 
@@ -485,6 +493,7 @@ def promote_snap_with_icon(snaps):
     return snaps
 
 
+@trace_function
 def get_snap_developer(snap_name):
     """Is this a special snap published by Canonical?
     Show some developer information
