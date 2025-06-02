@@ -28,7 +28,7 @@ settings:
   sync_comments: true
 
   # (Optional) (Default: None) Parent Epic key to link the issue to
-  epic_key: "WD-16608" # Stores 25.04 Maintenance
+  epic_key: "WD-20989" # Stores 25.04 Maintenance
 
   # (Optional) Dictionary mapping GitHub issue labels to Jira issue types. 
   # If label on the issue is not in specified list, this issue will be created as a Bug
