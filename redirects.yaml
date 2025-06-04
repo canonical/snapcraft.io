@@ -8,6 +8,7 @@ tutorials(.*?): /docs/snap-tutorials
 search(.*?): /store
 
 # documentation.ubuntu.com/snapcraft redirects
+docs/snapcraft/?: https://documentation.ubuntu.com/snapcraft
 docs/using-gdb-gdbserver/?: https://documentation.ubuntu.com/snapcraft/stable/how-to/debugging/debug-with-gdb/
 docs/python-apps/?: https://documentation.ubuntu.com/snapcraft/stable/how-to/integrations/craft-a-python-app/
 docs/snapcraft-yaml-schema/?: https://documentation.ubuntu.com/snapcraft/stable/reference/project-file/snapcraft-yaml/
@@ -22,6 +23,7 @@ https://forum.snapcraft.io/t/install-snapcraft-on-macos/9607/?: https://document
 docs/package-repositories/?: https://documentation.ubuntu.com/snapcraft/stable/reference/package-repositories/
 docs/snapcraft-intermediate-example/?: https://documentation.ubuntu.com/snapcraft/stable/reference/project-file/anatomy-of-snapcraft-yaml/
 docs/creating-snapcraft-yaml/?: https://documentation.ubuntu.com/snapcraft/stable/tutorials/craft-a-snap/
+docs/robotics/?: https://canonical-robotics.readthedocs-hosted.com/en/latest/explanations/snaps/
 docs/ros-architectures-with-snaps/?: https://canonical-robotics.readthedocs-hosted.com/en/latest/explanations/snaps/ros-architectures-with-snaps/
 docs/ros-with-github-actions/?: https://canonical-robotics.readthedocs-hosted.com/en/latest/how-to-guides/packaging/build-and-publish-snap-with-github-actions/
 docs/ros2-shared-memory-in-snaps/?: https://canonical-robotics.readthedocs-hosted.com/en/latest/how-to-guides/packaging/ros-2-shared-memory-in-snaps/
