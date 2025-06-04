@@ -9,7 +9,7 @@ import { setPageTitle } from "../../utils";
 
 function Releases(): React.JSX.Element {
   const { snapId } = useParams();
-  const { isLoading, isFetched, data } = useQuery({
+  const { isLoading, isFetched, data, isRefetching } = useQuery({
     queryKey: ["releases"],
     queryFn: async () => {
       const response = await fetch(`/api/${snapId}/releases`);
@@ -39,16 +39,17 @@ function Releases(): React.JSX.Element {
 
       <SectionNav snapName={snapId} activeTab="releases" />
 
-      {isLoading && (
-        <Strip shallow>
-          <p>
-            <i className="p-icon--spinner u-animation--spin"></i>&nbsp;Loading{" "}
-            {snapId} builds data
-          </p>
-        </Strip>
-      )}
+      {isLoading ||
+        (isRefetching && (
+          <Strip shallow>
+            <p>
+              <i className="p-icon--spinner u-animation--spin"></i>&nbsp;Loading{" "}
+              {snapId} releases data
+            </p>
+          </Strip>
+        ))}
 
-      {isFetched && data && (
+      {isFetched && data && !isRefetching && (
         <Release
           snapName={snapId || ""}
           releasesData={data.release_history}
