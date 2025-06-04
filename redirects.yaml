@@ -55,7 +55,6 @@ docs/remote-build/?: https://documentation.ubuntu.com/snapcraft/stable/explanati
 docs/migrating-bases/?: https://documentation.ubuntu.com/snapcraft/stable/how-to/change-bases/
 docs/migrate-core22/?: https://documentation.ubuntu.com/snapcraft/stable/how-to/change-bases/change-from-core20-to-core22/
 docs/migrate-core24/?: https://documentation.ubuntu.com/snapcraft/stable/how-to/change-bases/change-from-core22-to-core24/
-docs/using-snapctl/?: https://documentation.ubuntu.com/snapcraft/stable/how-to/craft/customize-the-build
 docs/overrides/?: https://documentation.ubuntu.com/snapcraft/stable/how-to/craft/customize-the-build
 docs/adding-snap-configuration/?: https://documentation.ubuntu.com/snapcraft/stable/how-to/crafting/add-a-snap-configuration/
 docs/store-listing-branding/?: https://documentation.ubuntu.com/snapcraft/stable/how-to/crafting/configure-package-information/
