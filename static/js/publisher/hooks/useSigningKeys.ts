@@ -2,12 +2,12 @@ import { useQuery, UseQueryResult } from "react-query";
 import type { SigningKey } from "../types/shared";
 
 const useSigningKeys = (
-  brandId: string | undefined,
+  storeId: string | undefined,
 ): UseQueryResult<SigningKey[], Error> => {
   return useQuery<SigningKey[], Error>({
-    queryKey: ["signingKeys", brandId],
+    queryKey: ["signingKeys", storeId],
     queryFn: async () => {
-      const response = await fetch(`/api/store/${brandId}/signing-keys`);
+      const response = await fetch(`/api/store/${storeId}/signing-keys`);
 
       if (!response.ok) {
         throw new Error("There was a problem fetching signing keys");

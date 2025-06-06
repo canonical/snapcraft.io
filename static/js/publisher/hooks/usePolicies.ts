@@ -3,14 +3,14 @@ import type { Policy } from "../types/shared";
 import { UsePoliciesResponse, ApiError } from "../types/shared";
 
 function usePolicies(
-  brandId: string | undefined,
+  storeId: string | undefined,
   modelId: string | undefined,
 ): UsePoliciesResponse {
   return useQuery<Policy[], ApiError>({
-    queryKey: ["policies", brandId],
+    queryKey: ["policies", storeId],
     queryFn: async () => {
       const response = await fetch(
-        `/api/store/${brandId}/models/${modelId}/policies`,
+        `/api/store/${storeId}/models/${modelId}/policies`,
       );
 
       if (!response.ok) {

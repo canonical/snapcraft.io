@@ -1,4 +1,4 @@
-function sortByDateAscending(
+function sortByDateDescending(
   a: { "created-at": string },
   b: { "created-at": string },
 ) {
@@ -13,4 +13,4 @@ function sortByDateAscending(
   return 0;
 }
 
-export default sortByDateAscending;
+export default sortByDateDescending;

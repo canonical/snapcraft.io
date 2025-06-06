@@ -33,21 +33,21 @@ const policiesResponse = [
 ];
 
 const handlers = [
-  http.get("/api/store/test-brand-id/models/test-id-success/policies", () => {
+  http.get("/api/store/test-store-id/models/test-id-success/policies", () => {
     return HttpResponse.json({
       data: policiesResponse,
       message: "",
       success: true,
     });
   }),
-  http.get("/api/store/test-brand-id/models/test-id-fail/policies", () => {
+  http.get("/api/store/test-store-id/models/test-id-fail/policies", () => {
     return HttpResponse.json({
       data: [],
       message: "Unable to fetch policies",
       success: false,
     });
   }),
-  http.get("/api/store/test-brand-id/models/test-id-error/policies", () => {
+  http.get("/api/store/test-store-id/models/test-id-error/policies", () => {
     return HttpResponse.error();
   }),
 ];
@@ -70,7 +70,7 @@ afterAll(() => {
 describe("usePolicies", () => {
   test("returns policies data", async () => {
     const { result } = renderHook(
-      () => usePolicies("test-brand-id", "test-id-success"),
+      () => usePolicies("test-store-id", "test-id-success"),
       { wrapper: createWrapper() },
     );
 
@@ -83,7 +83,7 @@ describe("usePolicies", () => {
 
   test("returns no data if request fails", async () => {
     const { result } = renderHook(
-      () => usePolicies("test-brand-id", "test-id-fail"),
+      () => usePolicies("test-store-id", "test-id-fail"),
       { wrapper: createWrapper() },
     );
 
@@ -96,7 +96,7 @@ describe("usePolicies", () => {
 
   test("returns no data if error", async () => {
     const { result } = renderHook(
-      () => usePolicies("test-brand-id", "test-id-error"),
+      () => usePolicies("test-store-id", "test-id-error"),
       { wrapper: createWrapper() },
     );
 

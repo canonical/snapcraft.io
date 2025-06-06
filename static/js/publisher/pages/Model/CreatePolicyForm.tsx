@@ -28,7 +28,7 @@ function CreatePolicyForm({
   const brandId = useRecoilValue(brandIdState);
   const navigate = useNavigate();
   const location = useLocation();
-  const { isLoading, isError, error, data } = useSigningKeys(brandId);
+  const { isLoading, isError, error, data } = useSigningKeys(id);
   const [signingKeys, setSigningKeys] = useRecoilState(signingKeysListState);
   const [newSigningKey, setNewSigningKey] = useRecoilState(newSigningKeyState);
   const brandStore = useRecoilValue(brandStoreState(id));
