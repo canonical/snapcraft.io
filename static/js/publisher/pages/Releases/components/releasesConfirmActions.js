@@ -8,7 +8,7 @@ const ReleasesConfirmActions = ({
   applyPendingReleases,
   isLoading,
 }) => (
-  <div className="p-releases-confirm__buttons">
+  <div className="p-releases-confirm__buttons u-align--right">
     <button
       className="u-no-margin--bottom u-no-margin--right"
       disabled={!isCancelEnabled}

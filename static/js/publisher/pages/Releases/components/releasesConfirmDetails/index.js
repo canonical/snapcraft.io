@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { connect } from "react-redux";
+import { Row, Col } from "@canonical/react-components";
 import PropTypes from "prop-types";
 
 import { updateProgressiveReleasePercentage } from "../../actions/pendingReleases";
@@ -8,16 +9,11 @@ import { isProgressiveReleaseEnabled } from "../../selectors";
 import progressiveTypes from "./types";
 import ReleaseRow from "./releaseRow";
 import CancelProgressiveRow from "./cancelProgressiveRow";
-import ProgressiveRow from "./progressiveRow";
-import ProgressiveRowGroup from "./progressiveRowGroup";
+import ProgressiveBarControl from "../progressiveBarControl";
+import ReleaseRowGroup from "./releaseRowGroup";
 import CloseChannelsRow from "./closeChannelsRow";
 
-const ReleasesConfirmDetails = ({
-  updates,
-  isProgressiveReleaseEnabled,
-  updateProgressiveReleasePercentage,
-}) => {
-  const [useGlobal, setGlobal] = useState(true);
+const ReleasesConfirmDetails = ({ updates, isProgressiveReleaseEnabled }) => {
   const [globalPercentage, setGlobalPercentage] = useState(100);
 
   const progressiveReleases = updates.newReleasesToProgress;
@@ -36,11 +32,6 @@ const ReleasesConfirmDetails = ({
   const showNewReleases = Object.keys(newReleases).length > 0;
   const showPendingCloses = pendingCloses.length > 0;
 
-  const toggleGlobal = () => {
-    const newUseGlobal = !useGlobal;
-    setGlobal(newUseGlobal);
-  };
-
   const updatePercentage = (percentage) => {
     setGlobalPercentage(percentage);
     updateProgressiveReleasePercentage(percentage);
@@ -49,21 +40,15 @@ const ReleasesConfirmDetails = ({
   return (
     <div className="p-releases-confirm__details">
       {showProgressiveReleases && (
-        <ProgressiveRowGroup
-          releases={progressiveReleases}
-          useGlobal={useGlobal}
-          globalPercentage={globalPercentage}
-          toggleGlobal={toggleGlobal}
-          updatePercentage={updatePercentage}
-        />
+        <ReleaseRowGroup releases={progressiveReleases} />
       )}
       {showProgressiveUpdates &&
         Object.keys(progressiveUpdates).map((releaseKey) => {
           return (
-            <ProgressiveRow
-              release={progressiveUpdates[releaseKey]}
+            <ReleaseRow
               type={progressiveTypes.UPDATE}
-              key={releaseKey}
+              revisionInfo={progressiveUpdates[releaseKey].revision}
+              channel={progressiveUpdates[releaseKey].channel}
             />
           );
         })}
@@ -88,10 +73,21 @@ const ReleasesConfirmDetails = ({
               revisionInfo={revisionInfo}
               channel={channel}
               key={`${revisionInfo.revision}-{${channel}`}
-              showBar={showProgressiveReleases}
             />
           );
         })}
+      {showProgressiveReleases && (
+        <Row>
+          <Col size={6}>
+            <ProgressiveBarControl
+              globalPercentage={globalPercentage}
+              type={progressiveTypes.RELEASE}
+              release={progressiveReleases[Object.keys(progressiveReleases)[0]]}
+              updateGlobalPercentage={updatePercentage}
+            />
+          </Col>
+        </Row>
+      )}
       {showPendingCloses && <CloseChannelsRow channels={pendingCloses} />}
     </div>
   );
