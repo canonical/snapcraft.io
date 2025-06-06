@@ -1,10 +1,5 @@
 @mixin snapcraft-p-release-details-row {
   .p-release-details-row {
-    align-items: center;
-    display: flex;
-    gap: 0.25rem;
-    padding: 0.25rem 0;
-
     // Same as the global nav breakpoint
     @media screen and (width <= 875px) {
       &__notes {
