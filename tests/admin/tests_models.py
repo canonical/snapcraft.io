@@ -15,6 +15,9 @@ candid = CandidClient(api_publisher_session)
 class TestModelServiceEndpoints(TestAdminEndpoints):
     def setUp(self):
         self.api_key = "qwertyuioplkjhgfdsazxcvbnmkiopuytrewqasdfghjklmnbv"
+        self.mock_get_store = patch(
+            "webapp.admin.views.dashboard.get_store"
+        ).start()
         super().setUp()
 
 
