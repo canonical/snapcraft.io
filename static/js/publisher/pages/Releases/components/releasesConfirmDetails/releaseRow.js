@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
 
 const ReleaseRow = ({ type, revisionInfo, channel }) => (
-  <div className="p-release-details-row">
+  <p>
     <span className="p-release-details-row__type">{type}</span>
     <span className="p-release-details-row__info">
       <span className="p-tooltip--btm-center">
@@ -12,7 +12,7 @@ const ReleaseRow = ({ type, revisionInfo, channel }) => (
         <b>{channel}</b> on <b>{revisionInfo.architectures.join(", ")}</b>
       </span>
     </span>
-  </div>
+  </p>
 );
 
 ReleaseRow.propTypes = {
