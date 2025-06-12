@@ -74,7 +74,7 @@ function SigningKeys(): React.JSX.Element {
       setSigningKeysList(newData.sort(sortByDateDescending));
       setFilter(searchParams.get("filter") || "");
     }
-  }, [isLoading, error, data]);
+  }, [isLoading, error, data, brandId, id]);
 
   useEffect(() => {
     const controller = new AbortController();
