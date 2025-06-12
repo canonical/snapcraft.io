@@ -136,15 +136,6 @@
       z-index: 1;
     }
 
-    .p-search-box__input:focus {
-      color: $color-x-light;
-    }
-
-    .p-search-box__input:hover::placeholder,
-    .p-search-box__input:focus::placeholder {
-      color: $color-mid-dark;
-    }
-
     .store-selector__list {
       background-color: #2d2d2d;
       margin: 0;
