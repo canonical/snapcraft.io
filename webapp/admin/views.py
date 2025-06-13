@@ -32,6 +32,11 @@ SNAPSTORE_DASHBOARD_API_URL = os.getenv(
 context = {"api_url": SNAPSTORE_DASHBOARD_API_URL}
 
 
+def get_brand_id(session, store_id):
+    store = dashboard.get_store(session, store_id)
+    return store["brand-id"]
+
+
 @admin.route("/admin", defaults={"path": ""})
 @admin.route("/admin/<path:path>")
 @login_required
@@ -409,11 +414,12 @@ def get_policies(store_id: str, model_name: str):
     Returns:
         dict: A dictionary containing the response message and success
     """
+    brand_id = get_brand_id(flask.session, store_id)
     res = {}
 
     try:
         policies = publisher_gateway.get_store_model_policies(
-            flask.session, store_id, model_name
+            flask.session, brand_id, model_name
         )
         res["success"] = True
         res["data"] = policies
@@ -509,9 +515,10 @@ def delete_policy(store_id: str, model_name: str, revision: str):
 @login_required
 @exchange_required
 def get_brand_store(store_id: str):
+    brand_id = get_brand_id(flask.session, store_id)
     res = {}
     try:
-        brand = publisher_gateway.get_brand(flask.session, store_id)
+        brand = publisher_gateway.get_brand(flask.session, brand_id)
 
         res["data"] = brand
         res["success"] = True
@@ -536,10 +543,11 @@ def get_brand_store(store_id: str):
 @login_required
 @exchange_required
 def get_signing_keys(store_id: str):
+    brand_id = get_brand_id(flask.session, store_id)
     res = {}
     try:
         signing_keys = publisher_gateway.get_store_signing_keys(
-            flask.session, store_id
+            flask.session, brand_id
         )
         res["data"] = signing_keys
         res["success"] = True
