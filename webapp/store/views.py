@@ -119,6 +119,10 @@ def store_blueprint(store_query=None):
     def store_view():
         return flask.render_template("store/store.html")
 
+    @store.route("/explore")
+    def explore_view():
+        return flask.render_template("store/store.html")
+
     @store.route("/youtube", methods=["POST"])
     def get_video_thumbnail_data():
         body = flask.request.form
@@ -343,6 +347,8 @@ def store_blueprint(store_query=None):
         store.add_url_rule("/search", "search", brand_search_snap)
     else:
         store.add_url_rule("/store", "homepage", store_view)
+
+    store.add_url_rule("/explore", "explore", explore_view)
 
     @store.route("/<snap_name>/create-track", methods=["POST"])
     @login_required
