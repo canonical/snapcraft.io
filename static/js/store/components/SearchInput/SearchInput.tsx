@@ -1,5 +1,5 @@
 import { Button } from "@canonical/react-components";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, useNavigate, useLocation } from "react-router-dom";
 
 import type { RefObject } from "react";
 
@@ -13,9 +13,16 @@ export const SearchInput = ({
   searchSummaryRef,
 }: Props): React.JSX.Element => {
   const [searchParams, setSearchParams] = useSearchParams();
+  const { pathname } = useLocation();
+  const navigate = useNavigate();
 
   const onSubmit = (event: React.FormEvent<HTMLFormElement>): void => {
     event.preventDefault();
+
+    if (pathname !== "/store") {
+      navigate("/store");
+    }
+
     if (searchRef?.current && searchRef.current.value) {
       searchParams.delete("page");
       searchParams.set("q", searchRef.current.value);
