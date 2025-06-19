@@ -90,3 +90,8 @@ export interface ISnap {
   unlisted: boolean;
   is_new?: boolean;
 }
+
+export type StatusNotification = {
+  success?: boolean;
+  message?: string | string[];
+};
