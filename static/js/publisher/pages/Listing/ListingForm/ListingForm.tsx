@@ -19,7 +19,7 @@ import {
 
 import { useMutateListingData } from "../../../hooks";
 
-import type { ListingData } from "../../../types";
+import type { ListingData, StatusNotification } from "../../../types";
 
 type Props = {
   data: ListingData;
@@ -45,8 +45,8 @@ function ListingForm({ data, refetch }: Props): React.JSX.Element {
 
   const { dirtyFields } = useFormState({ control });
 
-  const [showSuccessNotification, setShowSuccessNotification] =
-    useState<boolean>(false);
+  const [notificationStrip, setNotificationStrip] =
+    useState<StatusNotification>({});
 
   const [updateMetadataOnRelease, setUpdateMetadataOnRelease] =
     useState<boolean>(data.update_metadata_on_release);
@@ -64,11 +64,26 @@ function ListingForm({ data, refetch }: Props): React.JSX.Element {
     getDefaultData: getDefaultListingData,
     refetch,
     reset,
-    setShowSuccessNotification,
+    setStatusNotification: setNotificationStrip,
     setUpdateMetadataOnRelease,
     shouldShowUpdateMetadataWarning,
     snapName: snapId,
   });
+
+  let notificationStripContent: string | JSX.Element | undefined;
+  if (notificationStrip.message) {
+    if (typeof notificationStrip.message === "string") {
+      notificationStripContent = notificationStrip.message;
+    } else {
+      notificationStripContent = (
+        <ul>
+          {notificationStrip.message.map((message, index) => (
+            <li key={index}>{message}</li>
+          ))}
+        </ul>
+      );
+    }
+  }
 
   return (
     <>
@@ -125,16 +140,16 @@ function ListingForm({ data, refetch }: Props): React.JSX.Element {
           </>
         )}
 
-        {showSuccessNotification && (
+        {notificationStrip.message !== undefined && (
           <Strip shallow className="u-no-padding--bottom">
             <Notification
-              severity="positive"
+              severity={notificationStrip.success ? "positive" : "negative"}
               onDismiss={() => {
-                setShowSuccessNotification(false);
+                setNotificationStrip({ message: undefined });
               }}
               className="u-no-margin--bottom"
             >
-              Changes applied successfully.
+              {notificationStripContent}
             </Notification>
           </Strip>
         )}

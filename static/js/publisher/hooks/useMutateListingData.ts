@@ -1,10 +1,10 @@
 import { Dispatch, SetStateAction } from "react";
 import { UseFormReset, FieldValues } from "react-hook-form";
-import { useMutation } from "react-query";
+import { useMutation, UseMutationOptions } from "react-query";
 
 import { addDateToFilename, getListingChanges } from "../utils";
 
-import type { ListingData } from "../types";
+import type { ListingData, StatusNotification } from "../types";
 
 type Options = {
   data: ListingData;
@@ -12,10 +12,15 @@ type Options = {
   getDefaultData: (arg: ListingData) => { [key: string]: unknown };
   refetch: () => void;
   reset: UseFormReset<FieldValues>;
-  setShowSuccessNotification: Dispatch<SetStateAction<boolean>>;
+  setStatusNotification: Dispatch<SetStateAction<StatusNotification>>;
   setUpdateMetadataOnRelease: Dispatch<SetStateAction<boolean>>;
   shouldShowUpdateMetadataWarning: (arg: FieldValues) => boolean;
   snapName: string | undefined;
+};
+
+export type MutationResponse = {
+  success: boolean;
+  errors: Array<{ code: string; message: string }>;
 };
 
 function useMutateListingData({
@@ -23,7 +28,7 @@ function useMutateListingData({
   dirtyFields,
   refetch,
   reset,
-  setShowSuccessNotification,
+  setStatusNotification,
   setUpdateMetadataOnRelease,
   shouldShowUpdateMetadataWarning,
   snapName,
@@ -83,21 +88,38 @@ function useMutateListingData({
       if (!response.ok) {
         throw new Error("There was a problem saving listing data");
       }
+      return (await response.json()) as MutationResponse;
     },
-    onSuccess: () => {
+    onSuccess: (data: MutationResponse) => {
       const mainPanel = document.querySelector(".l-main") as HTMLElement;
-      mainPanel.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+      if (mainPanel) {
+        mainPanel.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+      }
       refetch();
-      setShowSuccessNotification(true);
+      if (data.errors && data.errors.length > 0) {
+        setStatusNotification({
+          success: false,
+          message: data.errors.map((value) => value.message),
+        });
+      } else {
+        setStatusNotification({
+          success: true,
+          message: "Changes applied successfully.",
+        });
+      }
     },
-    onSettled: (_error, _context, data) => {
-      if (data) {
-        reset(data);
+    onSettled: (
+      _data: MutationResponse,
+      _error: unknown,
+      values: FieldValues,
+    ) => {
+      if (values) {
+        reset(values);
       } else {
         reset();
       }
     },
-  });
+  } as UseMutationOptions<MutationResponse, unknown, FieldValues, unknown>);
 }
 
 export default useMutateListingData;
