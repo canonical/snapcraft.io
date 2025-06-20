@@ -4,6 +4,8 @@ import { format, formatDistanceToNow } from "date-fns";
 
 import { sortChannels } from "../../../../../libs/channels.js";
 
+import { canPromote } from "../../helpers";
+
 import {
   getArchitectures,
   getBranches,
@@ -50,12 +52,16 @@ const compareRevisionsPerArch = (
 ) => {
   if (currentRevisionsByArch) {
     return Object.keys(currentRevisionsByArch).every((arch) => {
+      console.log(currentRevisionsByArch[arch]);
       return (
         targetRevisionsByArch &&
-        targetRevisionsByArch[arch] &&
+        //canPromote(currentRevisionsByArch[arch], targetRevisionsByArch[arch])
+        //targetRevisionsByArch[arch] &&
         currentRevisionsByArch[arch].revision ===
           targetRevisionsByArch[arch].revision &&
-        !currentRevisionsByArch[arch].progressive
+        (!currentRevisionsByArch[arch].progressive ||
+          currentRevisionsByArch[arch].progressive["current-percentage"] ===
+            100)
       );
     });
   }

@@ -114,9 +114,11 @@ export function promoteRevision(revision, channel) {
       const releasedRevision = pendingChannelMap[channel] &&
         pendingChannelMap[channel][arch];
 
+      console.log(releasedRevision);
       return (
         releasedRevision && releasedRevision.revision === revision.revision &&
-        !releasedRevision.progressive
+        (!releasedRevision.progressive ||
+          releasedRevision.progressive["current-percentage"] === 100)
       );
     });
 

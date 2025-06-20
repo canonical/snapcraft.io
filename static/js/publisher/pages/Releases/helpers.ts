@@ -192,3 +192,7 @@ export const isProgressiveRelease = (revision: any, track: any, risk: any) =>
       revision.release.progressive.percentage !== null)
     ? true
     : false;
+
+export const canPromote = (current: any, target: any) =>
+  current.revision !== target.revision &&
+  (!target.progressive || target.progressive["current-percentage"] !== 100);
