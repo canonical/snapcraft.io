@@ -15,6 +15,7 @@ import { useDragging, Handle } from "../dnd";
 import { promoteRevision } from "../../actions/pendingReleases";
 
 import ReleaseMenuItem from "./releaseMenuItem";
+import { isProgressiveRelease } from "../../helpers.ts";
 
 // content of a cell when channel is closed
 export const CloseChannelInfo = () => (
@@ -170,7 +171,9 @@ export const RevisionInfo = ({
   const isProgressive =
     revision.prog_channels &&
     revision.prog_channels.includes(`${track}/${risk}`) &&
-    risk !== "AVAILABLE"
+    risk !== "AVAILABLE" &&
+    previousRevision &&
+    previousRevision?.revision !== revision.revision
       ? true
       : false;
 

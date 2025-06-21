@@ -37,7 +37,7 @@ function initReleasesData(revisionsMap, releases) {
             rev.prog_channels.indexOf(channel) === -1 &&
             release.progressive &&
             (release.progressive.percentage ||
-              release.progressive["current-percentage"])
+              release.progressive["current-percentage"] !== null)
           ) {
             rev.prog_channels.push(channel);
           }
