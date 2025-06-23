@@ -16,6 +16,24 @@ import CloseChannelsRow from "./closeChannelsRow";
 const ReleasesConfirmDetails = ({ updates, isProgressiveReleaseEnabled }) => {
   const [globalPercentage, setGlobalPercentage] = useState(100);
 
+  // Find the lowest common percentage that all releases can be released to
+  let lowestPercentage = Object.entries(updates.newReleasesToProgress).reduce(
+    (min, u) => {
+      const channel = u[1];
+      if (
+        channel.revision &&
+        channel.revision.releases &&
+        channel.revision.releases[0] &&
+        channel.revision.releases[0].progressive &&
+        channel.revision.releases[0].progressive.percentage > min
+      ) {
+        min = channel.revision.releases[0].progressive.percentage;
+      }
+      return min;
+    },
+    1,
+  );
+
   const progressiveReleases = updates.newReleasesToProgress;
   const progressiveUpdates = updates.progressiveUpdates;
   const progressiveCancellations = updates.cancelProgressive;
@@ -84,6 +102,7 @@ const ReleasesConfirmDetails = ({ updates, isProgressiveReleaseEnabled }) => {
               type={progressiveTypes.RELEASE}
               release={progressiveReleases[Object.keys(progressiveReleases)[0]]}
               updateGlobalPercentage={updatePercentage}
+              minPercentage={lowestPercentage}
             />
           </Col>
         </Row>

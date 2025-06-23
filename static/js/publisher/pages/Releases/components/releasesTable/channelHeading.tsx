@@ -29,7 +29,12 @@ import {
   EDGE,
 } from "../../constants";
 
-import { getChannelName, isInDevmode, canBeReleased } from "../../helpers";
+import {
+  getChannelName,
+  isInDevmode,
+  canBeReleased,
+  getLatestChannelRevisionRelease,
+} from "../../helpers";
 import ChannelMenu from "../channelMenu";
 
 const disabledBecauseDevmode = (
@@ -44,17 +49,23 @@ const disabledBecauseReleased = "The same revisions are already promoted.";
 const disabledBecauseNotSelected = "Select some revisions to promote them.";
 
 // TODO: move to selectors or helpers?
-const compareRevisionsPerArch = (
+const canReleaseToChannel = (
   currentRevisionsByArch: { [x: string]: { revision: any } },
-  targetRevisionsByArch: { [x: string]: { revision: any } },
+  targetRevisionsByArch: { [x: string]: { revision: any; releases: any } },
+  targetChannel: string,
 ) => {
   if (currentRevisionsByArch) {
     return Object.keys(currentRevisionsByArch).every((arch) => {
+      if (!targetRevisionsByArch || !targetRevisionsByArch[arch]) {
+        return true;
+      }
+      const isProgressive = getLatestChannelRevisionRelease(
+        targetRevisionsByArch[arch],
+        targetChannel,
+      )?.isProgressive;
       return (
-        targetRevisionsByArch &&
-        targetRevisionsByArch[arch] &&
-        currentRevisionsByArch[arch].revision ===
-          targetRevisionsByArch[arch].revision
+        currentRevisionsByArch[arch].revision !==
+          targetRevisionsByArch[arch].revision || isProgressive
       );
     });
   }
@@ -188,11 +199,13 @@ const ReleasesTableChannelHeading = (props: {
     targetChannels = targetChannels.concat(targetChannelBranches);
 
     // filter out channels that have the same revisions already released
+    // that aren't progressive releases
     targetChannels.forEach((targetChannel) => {
       if (
-        compareRevisionsPerArch(
+        !canReleaseToChannel(
           rowRevisions,
           pendingChannelMap[targetChannel.channel],
+          targetChannel.channel,
         )
       ) {
         targetChannel.isDisabled = true;

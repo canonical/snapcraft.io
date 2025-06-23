@@ -6,7 +6,11 @@ import {
 import { updateArchitectures } from "./architectures";
 import { hideNotification, showNotification } from "./globalNotification";
 import { cancelPendingReleases } from "./pendingReleases";
-import { releaseRevisionSuccess, closeChannelSuccess } from "./channelMap";
+import {
+  releaseRevisionSuccess,
+  closeChannelSuccess,
+  updateChannelMap,
+} from "./channelMap";
 import { updateRevisions } from "./revisions";
 import { closeHistory } from "./history";
 
@@ -16,26 +20,49 @@ import {
   fetchCloses,
 } from "../api/releases";
 
-import { getRevisionsMap, initReleasesData } from "../releasesState";
+import {
+  getReleaseDataFromChannelMap,
+  getRevisionsMap,
+  initReleasesData,
+} from "../releasesState";
+import { Data } from "@dnd-kit/core";
 
 export const UPDATE_RELEASES = "UPDATE_RELEASES";
 
-function updateReleasesData(releasesData: { revisions: any; releases: any }) {
+function updateReleasesData(apiData: {
+  data: {
+    release_history: { revisions: any; releases: any };
+    channel_map: any;
+    snap_name: string;
+  };
+}) {
+  const releasesData = apiData.data.release_history;
+  const channelMap = apiData.data.channel_map;
+  const snapName = apiData.data.snap_name;
   return (
     dispatch: (arg0: {
       type: string;
       payload:
         | { releases: any }
         | { revisions: any }
-        | { architectures: any[] };
+        | { architectures: any[] }
+        | { channelMap: any };
     }) => void,
   ) => {
-    // init channel data in revisions list
-    const revisionsMap = getRevisionsMap(releasesData.revisions);
-    initReleasesData(revisionsMap, releasesData.releases);
-    dispatch(updateRevisions(revisionsMap));
-    dispatch(updateReleases(releasesData.releases));
-    dispatch(updateArchitectures(releasesData.revisions));
+    const revisionsList = releasesData.revisions;
+
+    getReleaseDataFromChannelMap(channelMap, revisionsList, snapName).then(
+      ([transformedChannelMap, revisionsListAdditions]) => {
+        Array.prototype.push.apply(revisionsList, revisionsListAdditions);
+        const revisionsMap = getRevisionsMap(revisionsList);
+
+        initReleasesData(revisionsMap, releasesData.releases, channelMap);
+        dispatch(updateRevisions(revisionsMap));
+        dispatch(updateReleases(releasesData.releases));
+        dispatch(updateArchitectures(revisionsList));
+        dispatch(updateChannelMap(transformedChannelMap));
+      },
+    );
   };
 }
 

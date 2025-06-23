@@ -22,7 +22,7 @@ export function fetchReleases(onComplete, releases, csrfToken, snapName) {
 }
 
 export function fetchReleasesHistory(csrfToken, snapName) {
-  return fetch(`/${snapName}/releases/json`, {
+  return fetch(`/api/${snapName}/releases`, {
     method: "GET",
     mode: "cors",
     cache: "no-cache",

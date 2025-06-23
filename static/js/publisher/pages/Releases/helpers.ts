@@ -47,6 +47,21 @@ export function getRevisionsArchitectures(revisions: any[]) {
   return archs;
 }
 
+export function getLatestChannelRevisionRelease(
+  revision: { releases?: any[] },
+  channel: string,
+) {
+  const releases = revision.releases;
+  if (!releases) {
+    return null;
+  }
+  const filteredReleases = releases.filter((r: any) => r.channel === channel);
+  if (filteredReleases.length === 0) {
+    return null;
+  }
+  return filteredReleases[0];
+}
+
 export function isSameVersion(revisions: { version: string }[]) {
   let hasSameVersion = false;
   const versionsMap: any = {};

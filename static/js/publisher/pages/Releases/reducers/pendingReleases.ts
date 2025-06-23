@@ -76,7 +76,11 @@ function releaseRevision(
     state[revision.revision][channel].previousRevisions = previousRevisions;
   }
 
-  if (progressive && !state[revision.revision][channel].progressive) {
+  if (
+    progressive &&
+    (!state[revision.revision][channel].progressive ||
+      state[revision.revision][channel].progressive !== progressive)
+  ) {
     state[revision.revision][channel].progressive = progressive;
   }
 

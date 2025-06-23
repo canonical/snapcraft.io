@@ -38,7 +38,7 @@ const ReleasesController = ({
         Array.prototype.push.apply(revisionsList, revisionsListAdditions);
         const revisionsMap = getRevisionsMap(revisionsList);
 
-        initReleasesData(revisionsMap, releasesData.releases);
+        initReleasesData(revisionsMap, releasesData.releases, channelMap);
         updateRevisions(revisionsMap);
         updateReleases(releasesData.releases);
         updateArchitectures(revisionsList);

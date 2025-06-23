@@ -3,6 +3,7 @@ export const SELECT_REVISION = "SELECT_REVISION";
 export const CLEAR_SELECTED_REVISIONS = "CLEAR_SELECTED_REVISIONS";
 export const RELEASE_REVISION_SUCCESS = "RELEASE_REVISION_SUCCESS";
 export const CLOSE_CHANNEL_SUCCESS = "CLOSE_CHANNEL_SUCCESS";
+export const UPDATE_CHANNEL_MAP = "UPDATE_CHANNEL_MAP";
 
 export function initChannelMap(channelMap) {
   return {
@@ -46,6 +47,15 @@ export function closeChannelSuccess(channel) {
     type: CLOSE_CHANNEL_SUCCESS,
     payload: {
       channel,
+    },
+  };
+}
+
+export function updateChannelMap(channelMap) {
+  return {
+    type: UPDATE_CHANNEL_MAP,
+    payload: {
+      channelMap,
     },
   };
 }
