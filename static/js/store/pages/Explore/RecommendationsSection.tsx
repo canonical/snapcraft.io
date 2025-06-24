@@ -1,5 +1,5 @@
-import { Strip, Row, Col } from "@canonical/react-components";
-import { DefaultCard } from "@canonical/store-components";
+import { Row, Col } from "@canonical/react-components";
+import { DefaultCard, BundleCard } from "@canonical/store-components";
 
 import CardsLoader from "./CardsLoader";
 
@@ -11,37 +11,40 @@ type Props = {
   isLoading: boolean;
   snaps: RecommendationData[];
   title: string;
+  cardType?: string;
 };
 
 function RecommendationsSection({
   isLoading,
   snaps,
   title,
+  cardType,
 }: Props): JSX.Element {
   return (
     <>
-      <Strip shallow className="u-no-padding--bottom">
-        <div className="u-fixed-width">
-          <h2>{title}</h2>
-        </div>
-      </Strip>
-      <Strip shallow>
-        {isLoading && <CardsLoader />}
+      <div className="u-fixed-width">
+        <h2>{title}</h2>
+      </div>
 
-        {!isLoading && (
-          <Row>
-            {snaps.map((item: RecommendationData) => (
-              <Col
-                size={4}
-                key={item.details.snap_id}
-                style={{ marginBottom: "1.5rem" }}
-              >
+      {isLoading && <CardsLoader />}
+
+      {!isLoading && (
+        <Row>
+          {snaps.map((item: RecommendationData) => (
+            <Col
+              size={4}
+              key={item.details.snap_id}
+              style={{ marginBottom: "1.5rem" }}
+            >
+              {cardType && cardType === "bundle" ? (
+                <BundleCard data={formatCardData(item)} />
+              ) : (
                 <DefaultCard data={formatCardData(item)} />
-              </Col>
-            ))}
-          </Row>
-        )}
-      </Strip>
+              )}
+            </Col>
+          ))}
+        </Row>
+      )}
     </>
   );
 }
