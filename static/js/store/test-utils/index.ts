@@ -1,3 +1,4 @@
 import { testPackageData } from "./testPackageData";
+import mockRecommendations from "./mockRecommendations";
 
-export { testPackageData };
+export { mockRecommendations, testPackageData };
