@@ -102,6 +102,7 @@ CSP = {
         "*.crazyegg.com",
         "www.facebook.com",
         "px.ads.linkedin.com",
+        "*.snapcraft.io",
     ],
     "frame-src": [
         "'self'",
