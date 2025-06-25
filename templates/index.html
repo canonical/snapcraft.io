@@ -6,6 +6,21 @@
 
 {% block content %}
 <main id="main-content" class="p-section is-paper">
+  <div class="u-fixed-width">
+    {#
+      The following line is a demonstration of using PythonMonkey to evaluate JavaScript.
+      It will display the current timestamp in the header.
+    #}
+    <h1>{{ js_eval("`Hello World from PythonMonkey eval! ${Date.now()}`") }}</h1>
+    {#
+      The following line is a demonstration of using PythonMonkey to render React component
+      and passing a prop to it.
+    #}
+    <h2>
+      {{ hello("from PythonMonkeyed React!") | safe }}
+    </h2>
+  </div>
+
   {% with featured_categories = featured_categories %}
     {% include "home/_featured-snaps.html" %}
   {% endwith %}

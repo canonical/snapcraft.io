@@ -46,6 +46,25 @@ from webapp.api.exceptions import (
 )
 
 from datetime import datetime
+from pythonmonkey import eval as js_eval
+js_eval("console.log")("Hello from PythonMonkey!")
+
+import pythonmonkey as pm
+# XXX:
+# For PythonMonkey to work properly with React, the React needs to be patched-up not to depend on Node.js globals.
+# This line below is one part of it, but there are changes needed to be made in React DOM code itself.
+# See the comment on GH issue below for more details.
+# https://github.com/Distributive-Network/PythonMonkey/issues/267#issuecomment-1987004749
+# Additional context is also provided in the document:
+# https://docs.google.com/document/d/1thu6NOBFpowzDBVKyqk-N-_CYV5qYYXvtHTU2Cjz_lg/edit?tab=t.pjdouz9iouzr
+pm.globalThis['process']  =  {'env':  {'NODE_ENV':  None}}
+
+# this exposes in Py the function implemented in react-test.js that renders a React component to string
+# as a Python function
+render_react_component = pm.require("./react-test")
+
+# prints the result of rendering a React component to the console
+print(render_react_component("React component rendered from PythonMonkey!"))
 
 badge_counter = prometheus_client.Counter(
     "badge_counter", "A counter of badges requests"
@@ -192,6 +211,9 @@ def snapcraft_utility_processor():
         "stores": stores,
         "format_link": template_utils.format_link,
         "DNS_VERIFICATION_SALT": DNS_VERIFICATION_SALT,
+        # exposes PythonMonkey eval, and React component rendering to Jinja templates
+        "js_eval": js_eval,
+        "hello": render_react_component,
     }
 
 
