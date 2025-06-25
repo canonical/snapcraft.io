@@ -36,7 +36,7 @@ function Explore(): JSX.Element {
     })),
   );
 
-  const slicesLoading: boolean = !slices || slices.some((s) => s.isLoading);
+  const slicesLoading: boolean = slices.some((s) => s.isLoading);
 
   const slicesData: Record<string, SlicesData> = {};
 
@@ -73,8 +73,9 @@ function Explore(): JSX.Element {
     })),
   );
 
-  const recommendationsLoading: boolean =
-    !recommendations || recommendations.some((r) => r.isLoading);
+  const recommendationsLoading: boolean = recommendations.some(
+    (r) => r.isLoading,
+  );
 
   const snaps: Record<string, RecommendationData[]> = {};
 
@@ -112,7 +113,7 @@ function Explore(): JSX.Element {
                 snaps={snaps.recent}
                 title="Recently updated snaps"
                 isLoading={recommendationsLoading}
-                cardType="bundle"
+                highlight={true}
               />
             </Strip>
           )}

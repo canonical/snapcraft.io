@@ -1,5 +1,5 @@
 import { Row, Col } from "@canonical/react-components";
-import { DefaultCard, BundleCard } from "@canonical/store-components";
+import { DefaultCard } from "@canonical/store-components";
 
 import CardsLoader from "./CardsLoader";
 
@@ -11,14 +11,14 @@ type Props = {
   isLoading: boolean;
   snaps: RecommendationData[];
   title: string;
-  cardType?: string;
+  highlight?: boolean;
 };
 
 function RecommendationsSection({
   isLoading,
   snaps,
   title,
-  cardType,
+  highlight,
 }: Props): JSX.Element {
   return (
     <>
@@ -36,11 +36,11 @@ function RecommendationsSection({
               key={item.details.snap_id}
               style={{ marginBottom: "1.5rem" }}
             >
-              {cardType && cardType === "bundle" ? (
-                <BundleCard data={formatCardData(item)} />
-              ) : (
-                <DefaultCard data={formatCardData(item)} />
-              )}
+              <DefaultCard
+                data={formatCardData(item)}
+                highlighted={highlight}
+                highlightColor="#0f95a1"
+              />
             </Col>
           ))}
         </Row>
