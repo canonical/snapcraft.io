@@ -7,7 +7,7 @@ function useCategories() {
       const response = await fetch("/store.json");
 
       if (!response.ok) {
-        throw new Error("There was a problem fetching new snaps");
+        throw new Error("There was a problem fetching categories");
       }
 
       const responseData = await response.json();
