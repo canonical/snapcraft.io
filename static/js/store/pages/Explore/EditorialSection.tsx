@@ -33,7 +33,7 @@ function EditorialSection({ isLoading, slice, gradient }: Props): JSX.Element {
       >
         {!isLoading && (
           <Row style={{ padding: "74px 78px" }}>
-            <Col size={6} className="u-vertially-center">
+            <Col size={6} className="u-vertically-center">
               <div>
                 <h2 className="p-heading--3">{slice.slice.name}</h2>
                 <p className="p-heading--4">{slice.slice.description}</p>
