@@ -15,7 +15,7 @@ describe("useMutateListingData", () => {
         getDefaultData: jest.fn(),
         refetch: jest.fn(),
         reset: jest.fn(),
-        setShowSuccessNotification: jest.fn(),
+        setStatusNotification: jest.fn(),
         setUpdateMetadataOnRelease: jest.fn(),
         shouldShowUpdateMetadataWarning: jest.fn(),
         snapName: "test-snap",

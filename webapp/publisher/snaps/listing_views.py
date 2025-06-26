@@ -260,11 +260,11 @@ def post_listing_data(snap_name):
 
             snap_categories = logic.filter_categories(snap_categories)
 
-            res = {"success": True}
+            res = {"success": True, "errors": error_list}
 
             return flask.make_response(res, 200)
 
-    return flask.make_response({}, 200)
+    return flask.make_response({"success": True}, 200)
 
 
 @login_required
