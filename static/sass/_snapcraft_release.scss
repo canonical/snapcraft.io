@@ -30,27 +30,27 @@
   }
 
   .dropdown-toggle {
-      align-items: center;
-      cursor: pointer;
-      display: flex;
-      height: inherit;
-      justify-content: space-between;
-      padding: $sp-small;
+    align-items: center;
+    cursor: pointer;
+    display: flex;
+    height: inherit;
+    justify-content: space-between;
+    padding: $sp-small;
   }
 
   .dropdown-menu {
-      background-color: $color-x-light;
-      box-shadow: 0 3px 3px rgba(51, 51, 51, 0.2);
-      display: flex;
-      flex-direction: column;
-      margin: $sp-small 0 $sp-small 0;
-      max-height: 250px;
-      min-width: 150px;
-      order: 1;
-      overflow-y: auto;
-      position: absolute;
-      width: auto;
-      z-index: 1000;
+    background-color: $color-x-light;
+    box-shadow: 0 3px 3px rgba(51, 51, 51, 0.2);
+    display: flex;
+    flex-direction: column;
+    margin: $sp-small 0 $sp-small 0;
+    max-height: 250px;
+    min-width: 150px;
+    order: 1;
+    overflow-y: auto;
+    position: absolute;
+    width: auto;
+    z-index: 1000;
   }
 
   .dropdown-menu.padding-bottom {
@@ -62,19 +62,19 @@
   }
 
   .dropdown-item {
-      align-items: center;
-      cursor: pointer;
-      display: flex;
-      flex: 1;
-      height: inherit;
-      justify-content: space-between;
-      padding: $sp-small;
-      width: 100%;
+    align-items: center;
+    cursor: pointer;
+    display: flex;
+    flex: 1;
+    height: inherit;
+    justify-content: space-between;
+    padding: $sp-small;
+    width: 100%;
 
-      &:hover {
-          background-color: $color-mid-light;
-          border-radius: 4px;
-      }
+    &:hover {
+      background-color: $color-mid-light;
+      border-radius: 4px;
+    }
   }
 
   .options-container {
@@ -113,7 +113,7 @@
   }
 
   .p-status-label {
-      margin: 0 $sp-small;
+    margin: 0 $sp-small;
   }
 
   // REQUEST / ADD TRACK ASIDE COMPONENT
@@ -144,29 +144,6 @@
   .p-releases-confirm__buttons {
     justify-self: end;
     margin-left: auto;
-  }
-
-  .p-releases-confirm__details-toggle {
-    cursor: pointer;
-    display: flex;
-    flex-grow: 1;
-    justify-content: flex-end;
-    margin-right: 1rem;
-
-    .p-icon--contextual-menu {
-      transform: rotate(0deg);
-    }
-
-    &.is-open {
-      .p-icon--contextual-menu {
-        transform: rotate(180deg);
-      }
-    }
-  }
-
-  .p-releases-confirm__actions {
-    display: flex;
-    justify-content: space-between;
   }
 
   .p-releases-confirm__details {

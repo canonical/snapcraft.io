@@ -119,8 +119,10 @@ const RevisionsListRow = (props) => {
       {canShowProgressiveReleases && isProgressive ? (
         <td data-heading="Release progress">
           <ProgressiveReleaseProgressChart
-            currentPercentage={revision?.progressive?.["current-percentage"]}
-            targetPercentage={revision?.progressive?.percentage}
+            currentPercentage={
+              revision?.release?.progressive?.["current-percentage"]
+            }
+            targetPercentage={revision?.release?.progressive?.percentage}
           />
         </td>
       ) : isPreviousProgressive ? (

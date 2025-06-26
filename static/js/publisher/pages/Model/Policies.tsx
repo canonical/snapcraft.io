@@ -26,7 +26,7 @@ import {
   signingKeysListState,
   newSigningKeyState,
 } from "../../state/signingKeysState";
-import { brandIdState, brandStoreState } from "../../state/brandStoreState";
+import { brandStoreState } from "../../state/brandStoreState";
 
 import { isClosedPanel, setPageTitle } from "../../utils";
 
@@ -34,12 +34,11 @@ import type { Policy, SigningKey } from "../../types/shared";
 
 function Policies(): React.JSX.Element {
   const { id, model_id } = useParams();
-  const brandId = useRecoilValue(brandIdState);
   const location = useLocation();
   const navigate = useNavigate();
   const { isLoading, isError, error, refetch, data }: UsePoliciesResponse =
-    usePolicies(brandId, model_id);
-  const signingKeys = useSigningKeys(brandId);
+    usePolicies(id, model_id);
+  const signingKeys = useSigningKeys(id);
   const setPoliciesList = useSetRecoilState<Array<Policy>>(policiesListState);
   const setFilter = useSetRecoilState<string>(policiesListFilterState);
   const setNewSigningKey = useSetRecoilState(newSigningKeyState);

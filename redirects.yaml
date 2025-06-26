@@ -72,6 +72,7 @@ docs/debugging-building-snaps/?: https://documentation.ubuntu.com/snapcraft/stab
 docs/linters-classic/?: https://documentation.ubuntu.com/snapcraft/stable/how-to/debugging/use-the-classic-linter/
 docs/linters-library/?: https://documentation.ubuntu.com/snapcraft/stable/how-to/debugging/use-the-library-linter/
 docs/snapcraft-extensions/?: https://documentation.ubuntu.com/snapcraft/stable/how-to/extensions/
+docs/supported-extensions/?: https://documentation.ubuntu.com/snapcraft/stable/reference/extensions/
 docs/cross-compile-an-autotools-project/?: https://documentation.ubuntu.com/snapcraft/stable/how-to/integrations/craft-a-cross-compiled-app/
 docs/dotnet-apps/?: https://documentation.ubuntu.com/snapcraft/stable/how-to/integrations/craft-a-dotnet-app/
 docs/flutter-applications/?: https://documentation.ubuntu.com/snapcraft/stable/how-to/integrations/craft-a-flutter-app/
@@ -116,7 +117,6 @@ docs/ros2-jazzy-content-extension/?: https://documentation.ubuntu.com/snapcraft/
 docs/ros2-foxy-extension/?: https://documentation.ubuntu.com/snapcraft/stable/reference/extensions/ros-2-extensions/
 docs/ros2-humble-extension/?: https://documentation.ubuntu.com/snapcraft/stable/reference/extensions/ros-2-extensions/
 docs/ros2-jazzy-extension/?: https://documentation.ubuntu.com/snapcraft/stable/reference/extensions/ros-2-extensions/
-docs/supported-snap-hooks/?: https://documentation.ubuntu.com/snapcraft/stable/reference/hooks/
 docs/snapcraft-hook-support/?: https://documentation.ubuntu.com/snapcraft/stable/reference/hooks/
 docs/snap-layouts/?: https://documentation.ubuntu.com/snapcraft/stable/reference/layouts/
 docs/linters/?: https://documentation.ubuntu.com/snapcraft/stable/reference/linters/

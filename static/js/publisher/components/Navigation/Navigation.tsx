@@ -32,6 +32,8 @@ function Navigation({
   useEffect(() => {
     if (brand) {
       setBrandId(brand?.["account-id"]);
+    } else {
+      setBrandId("");
     }
   }, [brand]);
 
