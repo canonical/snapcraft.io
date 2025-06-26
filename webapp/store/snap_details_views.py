@@ -9,6 +9,7 @@ import os
 import webapp.helpers as helpers
 import webapp.metrics.helper as metrics_helper
 import webapp.metrics.metrics as metrics
+from webapp.observability.utils import trace_function
 import webapp.store.logic as logic
 from webapp import authentication
 from webapp.markdown import parse_markdown_description
@@ -42,10 +43,12 @@ FIELDS = [
 ]
 
 
+@trace_function
 def snap_details_views(store):
     snap_regex = "[a-z0-9-]*[a-z][a-z0-9-]*"
     snap_regex_upercase = "[A-Za-z0-9-]*[A-Za-z][A-Za-z0-9-]*"
 
+    @trace_function
     def _get_snap_link_fields(snap_name):
         details = device_gateway.get_item_details(
             snap_name, api_version=2, fields=FIELDS
@@ -55,6 +58,7 @@ def snap_details_views(store):
         }
         return context
 
+    @trace_function
     def _get_context_snap_details(snap_name):
         details = device_gateway.get_item_details(
             snap_name, fields=FIELDS, api_version=2
