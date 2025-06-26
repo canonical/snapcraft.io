@@ -3,10 +3,16 @@ import { Modal, Button } from "@canonical/react-components";
 import type { Dispatch, SetStateAction } from "react";
 import type { FieldValues } from "react-hook-form";
 import type { UseMutateFunction } from "react-query";
+import { MutationResponse } from "../../hooks/useMutateListingData";
 
 type Props = {
   setShowMetadataWarningModal: Dispatch<SetStateAction<boolean>>;
-  submitForm: UseMutateFunction<void, unknown, FieldValues, unknown>;
+  submitForm: UseMutateFunction<
+    MutationResponse,
+    unknown,
+    FieldValues,
+    unknown
+  >;
   formData: Record<string, unknown>;
 };
 

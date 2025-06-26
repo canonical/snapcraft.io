@@ -1,4 +1,4 @@
-import { SetStateAction, useState, Dispatch } from "react";
+import { SetStateAction, useState, Dispatch, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { format } from "date-fns";
@@ -89,6 +89,12 @@ function SigningKeysTable({
       setShowDisableSuccessNotification(false);
     }, 5000);
   };
+
+  useEffect(() => {
+    return () => {
+      setSigningKeysList([]);
+    };
+  }, []);
 
   return (
     <>

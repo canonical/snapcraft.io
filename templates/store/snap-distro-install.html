@@ -263,6 +263,10 @@
   {% include "store/snap-details/_templates.html" %}
 {% endblock %}
 
+{% block scripts_includes %}
+  <script src="{{ static_url('js/dist/distro-install.js') }}" defer></script>
+{% endblock %}
+
 {% block scripts %}
   <script>
     window.addEventListener("DOMContentLoaded", function() {
