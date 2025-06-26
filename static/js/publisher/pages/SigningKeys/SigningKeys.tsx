@@ -44,7 +44,7 @@ function SigningKeys(): React.JSX.Element {
     error,
     data,
     refetch,
-  }: UseQueryResult<SigningKey[], Error> = useSigningKeys(brandId);
+  }: UseQueryResult<SigningKey[], Error> = useSigningKeys(id);
   const setSigningKeysList =
     useSetRecoilState<Array<SigningKey>>(signingKeysListState);
   const setPolicies = useSetRecoilState<Array<Policy>>(policiesListState);
@@ -70,10 +70,11 @@ function SigningKeys(): React.JSX.Element {
 
   useEffect(() => {
     if (!isLoading && !error && data) {
-      setSigningKeysList([...data.sort(sortByDateDescending)]);
+      const newData = [...data];
+      setSigningKeysList(newData.sort(sortByDateDescending));
       setFilter(searchParams.get("filter") || "");
     }
-  }, [isLoading, error, data]);
+  }, [isLoading, error, data, brandId, id]);
 
   useEffect(() => {
     const controller = new AbortController();

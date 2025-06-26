@@ -1,15 +1,19 @@
 {% if icon_url %}
-  {{
-    image(
-      url=icon_url,
-      alt=snap_title,
-      width=60,
-      height=60,
-      hi_def=True,
-      loading="eager",
-      attrs={"class": "p-snap-heading__icon", "data-live": "icon"}
-    ) | safe
-  }}
+  {% if icon_url.startswith("blob") %}
+    <img class="p-snap-heading__icon" src="{{ icon_url | safe }}" width="60" height="60" data-live="icon" />
+  {% else %}
+    {{
+      image(
+        url=icon_url,
+        alt=snap_title,
+        width=60,
+        height=60,
+        hi_def=True,
+        loading="eager",
+        attrs={"class": "p-snap-heading__icon", "data-live": "icon"}
+      ) | safe
+    }}
+  {% endif %}
 {% else %}
   <img class="p-snap-heading__icon" src="https://assets.ubuntu.com/v1/be6eb412-snapcraft-missing-icon.svg" alt="" data-live="icon" />
 {% endif %}
@@ -31,7 +35,7 @@
       {% include 'store/_snap-header-information.html' %}
     </li>
     {% for category in categories %}<li class="p-inline-list__item">
-      <a href="/search?category={{category.slug}}">{{ category.name }}</a>
+      <a href="/search?categories={{category.slug}}">{{ category.name }}</a>
     </li>{% endfor %}
   </ul>
 </div>

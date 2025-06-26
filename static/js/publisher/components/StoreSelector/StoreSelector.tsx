@@ -14,6 +14,7 @@ function StoreSelector({ nativeNavLink }: Props): React.JSX.Element {
   const { id } = useParams();
   const brandStoresList = useRecoilValue(brandStoresState);
   const [showStoreSelector, setShowStoreSelector] = useState<boolean>(false);
+  const [searchValue, setSearchValue] = useState("");
   const [filteredBrandStores, setFilteredBrandstores] =
     useState<Store[]>(brandStoresList);
 
@@ -57,9 +58,10 @@ function StoreSelector({ nativeNavLink }: Props): React.JSX.Element {
               id="search-stores"
               name="search-stores"
               placeholder="Search"
+              value={searchValue}
               onInput={(e) => {
                 const value = (e.target as HTMLInputElement).value;
-
+                setSearchValue(value);
                 if (value.length > 0) {
                   setFilteredBrandstores(
                     brandStoresList.filter((store) => {
@@ -72,7 +74,14 @@ function StoreSelector({ nativeNavLink }: Props): React.JSX.Element {
                 }
               }}
             />
-            <button type="reset" className="p-search-box__reset">
+            <button
+              type="reset"
+              className="p-search-box__reset"
+              onClick={() => {
+                setSearchValue("");
+                setFilteredBrandstores(brandStoresList);
+              }}
+            >
               <i className="p-icon--close">Close</i>
             </button>
             <button type="submit" className="p-search-box__button">

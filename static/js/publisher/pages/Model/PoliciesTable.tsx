@@ -22,7 +22,7 @@ function ModelsTable({
   setShowDeletePolicyNotification,
   setShowDeletePolicyErrorNotification,
 }: Props): React.JSX.Element {
-  const { model_id } = useParams();
+  const { id, model_id } = useParams();
   const brandId = useRecoilValue(brandIdState);
   const [policiesList, setPoliciesList] = useRecoilState(
     filteredPoliciesListState,
@@ -31,7 +31,7 @@ function ModelsTable({
   const [showModal, setShowModal] = useState<boolean>(false);
   const [selectedPolicy, setSelectedPolicy] = useState<number | undefined>();
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const { refetch } = usePolicies(brandId, model_id) as UsePoliciesResponse;
+  const { refetch } = usePolicies(id, model_id) as UsePoliciesResponse;
 
   const deletePolicy = async (policyRevision: number | undefined) => {
     if (policyRevision === undefined) {

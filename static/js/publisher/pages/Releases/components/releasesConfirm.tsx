@@ -121,40 +121,30 @@ class ReleasesConfirm extends Component<Props, State> {
           ref={this.stickyBar}
         >
           <div className="u-fixed-width">
-            <div className="row u-vertically-center p-releases-row">
-              <div className="col-6">
-                {updatesCount > 0 && (
-                  <>
+            <div className="p-releases-row u-align--right p-releases-confirm__buttons">
+              {updatesCount > 0 && (
+                <>
+                  {!showDetails && (
                     <button
-                      type="button"
-                      className="p-button--base u-no-margin--bottom has-icon"
-                      onClick={this.toggleDetails.bind(this)}
+                      className="p-button u-no-margin--bottom"
+                      onClick={this.onRevertClick.bind(this)}
                     >
-                      <i
-                        className={`${
-                          showDetails
-                            ? "p-icon--chevron-up"
-                            : "p-icon--chevron-down"
-                        }`}
-                      >
-                        {showDetails ? "Hide" : "Show"} details
-                      </i>
-                      <span>
-                        {updatesCount} update
-                        {updatesCount > 1 ? "s" : ""}
-                      </span>
+                      Revert
                     </button>
-                  </>
-                )}
-              </div>
-              <div className="col-6 p-releases-confirm__actions">
-                {updatesCount > 0 && (
-                  <div
-                    className={`p-releases-confirm__details-toggle ${
-                      showDetails ? "is-open" : ""
-                    }`}
-                  ></div>
-                )}
+                  )}
+                  <button
+                    type="button"
+                    className={`p-button--${showDetails ? "base" : "positive"} u-no-margin--bottom`}
+                    onClick={this.toggleDetails.bind(this)}
+                  >
+                    {showDetails ? "Hide changes" : "Review changes"}
+                  </button>
+                </>
+              )}
+            </div>
+            {showDetails && (
+              <>
+                <ReleasesConfirmDetails updates={updates} />
                 <ReleasesConfirmActions
                   isCancelEnabled={isCancelEnabled}
                   cancelPendingReleases={this.onRevertClick.bind(this)}
@@ -162,9 +152,8 @@ class ReleasesConfirm extends Component<Props, State> {
                   applyPendingReleases={this.onApplyClick.bind(this)}
                   isLoading={isLoading}
                 />
-              </div>
-            </div>
-            {showDetails && <ReleasesConfirmDetails updates={updates} />}
+              </>
+            )}
           </div>
         </div>
       </>
