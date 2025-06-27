@@ -11,7 +11,7 @@ function getRevisionsMap(revisions) {
 }
 
 // init channels data in revision history
-function initReleasesData(revisionsMap, releases) {
+function initReleasesData(revisionsMap, releases, channelMap) {
   // go through releases from older to newest
   releases
     .slice()
@@ -29,18 +29,36 @@ function initReleasesData(revisionsMap, releases) {
             rev.channels.push(channel);
           }
 
-          if (!rev.prog_channels) {
-            rev.prog_channels = [];
+          // Technically, we should not modify the release object,
+          // but to simply other parts of the code, we do it
+          // here - nice and early during initialization.
+          // It's double nasty, because we're actually modifying
+          // the revision, not the release.
+          // Sorry, love Luke xox.
+          release.isProgressive = false;
+          if (release.progressive && release.progressive.percentage) {
+            release.isProgressive = true;
+
+            // Based on the note at the top of
+            // https://dashboard.snapcraft.io/docs/reference/v1/snap.html#progressive-releases
+            // We need to get the current channelMap to hydrate the current percentage
+            if (channelMap) {
+              const currentChannel = channelMap.find(
+                (c) => c.channel === channel && c.revision === release.revision,
+              );
+
+              if (currentChannel) {
+                release.progressive["current-percentage"] =
+                  currentChannel.progressive["current-percentage"];
+              }
+            }
           }
 
-          if (
-            rev.prog_channels.indexOf(channel) === -1 &&
-            release.progressive &&
-            (release.progressive.percentage ||
-              release.progressive["current-percentage"])
-          ) {
-            rev.prog_channels.push(channel);
+          if (!rev.releases) {
+            rev.releases = [];
           }
+
+          rev.releases.unshift(release);
         }
       }
     });

@@ -1,4 +1,29 @@
 export const mockRevisionsMap = {
+   54: {
+    architectures: ["arm64"],
+    attributes: {},
+    base: null,
+    build_url: "https://example.com/build",
+    channels: [],
+    confinement: "strict",
+    created_at: "2025-05-01T06:45:23Z",
+    epoch: {
+      read: [0],
+      write: [0],
+    },
+    expiration: null,
+    grade: "stable",
+    progressive: {
+      "current-percentage": 30,
+      paused: null,
+      percentage: null
+    },
+    revision: 54,
+    "sha3-384": "shastring",
+    size: 46874624,
+    status: "Published",
+    version: "4.0.1",
+  },
   58: {
     architectures: ["arm64"],
     attributes: {},
@@ -13,9 +38,8 @@ export const mockRevisionsMap = {
     },
     expiration: null,
     grade: "stable",
-    prog_channels: [],
-    progressive: {
-      "current-percentage": 0.3,
+     progressive: {
+      "current-percentage": null,
       paused: null,
       percentage: null,
     },
@@ -39,9 +63,8 @@ export const mockRevisionsMap = {
     },
     expiration: null,
     grade: "stable",
-    prog_channels: [],
     progressive: {
-      "current-percentage": 0.08,
+      "current-percentage": null,
       paused: null,
       percentage: null,
     },

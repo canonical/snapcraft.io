@@ -134,7 +134,7 @@ const ReleasesTableReleaseCell = (props) => {
         isPending={pendingRelease ? true : false}
         previousRevision={previousRevision ? previousRevision : null}
         risk={risk}
-        track={track}
+        channel={channel}
       />
     );
   } else if (isUnassigned) {
