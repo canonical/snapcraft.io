@@ -106,7 +106,11 @@ function Navigation({
                   </li>
                   <li className="p-side-navigation__item">
                     <a className="p-side-navigation__link" href="/snaps">
-                      <i className="p-icon--pods is-light p-side-navigation__icon"></i>
+                      <Icon
+                        name="pods"
+                        light
+                        className="p-side-navigation__icon"
+                      />
                       <span className="p-side-navigation__label">Overview</span>
                     </a>
                   </li>
@@ -114,8 +118,8 @@ function Navigation({
                 {validationSetsData && validationSetsData.length > 0 && (
                   <ul className="p-side-navigation__list">
                     <li className="p-side-navigation__item">
-                      <NavLink
-                        to="/validation-sets"
+                      <a
+                        href="/validation-sets"
                         className="p-side-navigation__link"
                       >
                         <Icon
@@ -126,7 +130,7 @@ function Navigation({
                         <span className="p-side-navigation__label">
                           My validation sets
                         </span>
-                      </NavLink>
+                      </a>
                     </li>
                   </ul>
                 )}
