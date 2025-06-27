@@ -6,36 +6,69 @@ import {
 import { updateArchitectures } from "./architectures";
 import { hideNotification, showNotification } from "./globalNotification";
 import { cancelPendingReleases } from "./pendingReleases";
-import { releaseRevisionSuccess, closeChannelSuccess } from "./channelMap";
+import {
+  releaseRevisionSuccess,
+  closeChannelSuccess,
+  initChannelMap,
+} from "./channelMap";
 import { updateRevisions } from "./revisions";
 import { closeHistory } from "./history";
 
 import {
-  fetchReleasesHistory,
+  fetchSnapReleaseStatus,
   fetchReleases,
   fetchCloses,
 } from "../api/releases";
 
-import { getRevisionsMap, initReleasesData } from "../releasesState";
+import {
+  getReleaseDataFromChannelMap,
+  getRevisionsMap,
+  initReleasesData,
+} from "../releasesState";
 
 export const UPDATE_RELEASES = "UPDATE_RELEASES";
 
-function updateReleasesData(releasesData: { revisions: any; releases: any }) {
+interface FetchReleaseResponse {
+  data: {
+    release_history: {
+      revisions: any[];
+      releases: any[];
+    };
+    channel_map: any;
+    snap_name: string;
+  };
+}
+
+function updateReleasesData(apiData: FetchReleaseResponse) {
+  const {
+    release_history: releasesData,
+    channel_map: channelMap,
+    snap_name: snapName,
+  } = apiData.data;
   return (
     dispatch: (arg0: {
       type: string;
       payload:
         | { releases: any }
         | { revisions: any }
-        | { architectures: any[] };
+        | { architectures: any[] }
+        | { channelMap: any };
     }) => void,
   ) => {
-    // init channel data in revisions list
-    const revisionsMap = getRevisionsMap(releasesData.revisions);
-    initReleasesData(revisionsMap, releasesData.releases);
-    dispatch(updateRevisions(revisionsMap));
-    dispatch(updateReleases(releasesData.releases));
-    dispatch(updateArchitectures(releasesData.revisions));
+    const revisionsList = releasesData.revisions;
+    const releases = releasesData.releases;
+
+    getReleaseDataFromChannelMap(channelMap, revisionsList, snapName).then(
+      ([transformedChannelMap, revisionsListAdditions]) => {
+        revisionsList.push(...revisionsListAdditions);
+        const revisionsMap = getRevisionsMap(revisionsList);
+        initReleasesData(revisionsMap, releases);
+        dispatch(updateRevisions(revisionsMap));
+        dispatch(updateReleases(releases));
+        dispatch(updateArchitectures(revisionsList));
+        dispatch(initChannelMap(transformedChannelMap));
+      },
+    );
   };
 }
 
@@ -225,8 +258,10 @@ export function releaseRevisions() {
       .then(() =>
         fetchCloses(_handleCloseResponse, csrfToken, snapName, pendingCloses),
       )
-      .then(() => fetchReleasesHistory(csrfToken, snapName))
-      .then((json) => dispatch(updateReleasesData(json)))
+      .then(() => fetchSnapReleaseStatus(csrfToken, snapName))
+      .then((json) =>
+        dispatch(updateReleasesData(json as unknown as FetchReleaseResponse)),
+      )
       .catch((error) =>
         dispatch(
           showNotification({

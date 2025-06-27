@@ -21,8 +21,8 @@ export function fetchReleases(onComplete, releases, csrfToken, snapName) {
   return queue;
 }
 
-export function fetchReleasesHistory(csrfToken, snapName) {
-  return fetch(`/${snapName}/releases/json`, {
+export function fetchSnapReleaseStatus(csrfToken, snapName) {
+  return fetch(`/api/${snapName}/releases`, {
     method: "GET",
     mode: "cors",
     cache: "no-cache",
