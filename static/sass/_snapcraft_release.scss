@@ -882,8 +882,7 @@
 
   .progressive-progress-bar__inner {
     background-color: #652466;
-    border-bottom-left-radius: 10px;
-    border-top-left-radius: 10px;
+    border-radius: 10px;
     height: 10px;
 
     .previous-progressive-progress-chart & {
