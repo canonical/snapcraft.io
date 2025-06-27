@@ -42,7 +42,7 @@ class RevisionsList extends Component {
 
   renderRow(
     revision,
-    previousRevision,
+    releasedRevision,
     isSelectable,
     showChannels,
     isPending,
@@ -61,15 +61,13 @@ class RevisionsList extends Component {
       <RevisionsListRow
         key={rowKey}
         revision={revision}
-        previousRevision={previousRevision}
+        releasedRevision={releasedRevision}
         isSelectable={isSelectable}
         showChannels={showChannels}
         isPending={isPending}
         isActive={isActive}
         showBuildRequest={showBuildRequest}
         progressiveBeingCancelled={progressiveBeingCancelled}
-        risk={risk}
-        track={track}
       />
     );
   }
@@ -94,7 +92,6 @@ class RevisionsList extends Component {
     showChannels,
     activeRevision,
     showBuildRequest,
-    hasPendingRelease,
     progressiveReleaseBeingCancelled,
   ) {
     const sortedRevisions = this.getSortedRevisions(activeRevision, revisions);
@@ -109,11 +106,14 @@ class RevisionsList extends Component {
           ? true
           : false;
 
-      const previousRevision = revisions[index - 1];
+      let releasedRevision = sortedRevisions[index - 1];
+      if (index !== 1 || !releasedRevision?.release?.isProgressive) {
+        releasedRevision = null;
+      }
 
       return this.renderRow(
         revision,
-        previousRevision,
+        releasedRevision,
         isSelectable,
         showChannels,
         false,
@@ -402,7 +402,6 @@ class RevisionsList extends Component {
                 showChannels,
                 activeRevision,
                 showBuildRequest,
-                showPendingRelease,
                 progressiveReleaseBeingCancelled,
               )
             ) : (
