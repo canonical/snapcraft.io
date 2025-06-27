@@ -132,7 +132,7 @@ const ProgressiveTooltip = ({ revision, previousRevision }) => {
     <div className="row">
       <div className="col-4">{tooltipLabels}</div>
       <div className="col-4">{previousRevisionData}</div>
-      <div className="col-4">{currentRevisionData}</div>
+      <div className="col-4 u-truncate">{currentRevisionData}</div>
     </div>
   );
 };
