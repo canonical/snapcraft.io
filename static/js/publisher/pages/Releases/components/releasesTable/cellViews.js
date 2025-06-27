@@ -73,8 +73,8 @@ const ProgressiveTooltip = ({ revision, previousRevision }) => {
       <strong>{previousRevision?.revision || "Unknown"}</strong>
       <br />
       <strong>
-        {Math.round(100 - revision?.progressive?.["current-percentage"]) || 0}% →{" "}
-        {Math.round(100 - revision?.progressive?.percentage)}%
+        {Math.round(100 - revision?.progressive?.["current-percentage"]) || 0}%
+        → {Math.round(100 - revision?.progressive?.percentage)}%
       </strong>
       <br />
       <strong>{previousRevision?.version || "Unknown"}</strong>
