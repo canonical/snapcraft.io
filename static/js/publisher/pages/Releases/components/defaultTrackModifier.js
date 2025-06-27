@@ -138,7 +138,6 @@ DefaultTrackModifier.propTypes = {
   openModal: PropTypes.func.isRequired,
   showNotification: PropTypes.func.isRequired,
   latestTrackRevisions: PropTypes.array.isRequired,
-  csrfToken: PropTypes.string.isRequired,
   snapName: PropTypes.string.isRequired,
 };
 
@@ -146,7 +145,6 @@ const mapStateToProps = (state) => ({
   currentTrack: state.currentTrack,
   tracks: getTracks(state),
   latestTrackRevisions: getTrackRevisions(state, "latest"),
-  csrfToken: state.options.csrfToken,
   snapName: state.options.snapName,
   defaultTrack: state.defaultTrack,
 });

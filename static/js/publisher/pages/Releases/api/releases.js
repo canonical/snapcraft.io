@@ -2,14 +2,13 @@ import "whatwg-fetch";
 
 import { DEFAULT_ERROR_MESSAGE as ERROR_MESSAGE } from "../constants";
 
-export function fetchReleases(onComplete, releases, csrfToken, snapName) {
+export function fetchReleases(onComplete, releases, snapName) {
   let queue = Promise.resolve(); // Q() in q
 
   // handle releases as a queue
   releases.forEach((release) => {
     return (queue = queue.then(() => {
       return fetchRelease(
-        csrfToken,
         snapName,
         release.id,
         release.channels,
@@ -21,7 +20,7 @@ export function fetchReleases(onComplete, releases, csrfToken, snapName) {
   return queue;
 }
 
-export function fetchSnapReleaseStatus(csrfToken, snapName) {
+export function fetchSnapReleaseStatus(snapName) {
   return fetch(`/api/${snapName}/releases`, {
     method: "GET",
     mode: "cors",
@@ -29,7 +28,7 @@ export function fetchSnapReleaseStatus(csrfToken, snapName) {
     credentials: "same-origin",
     headers: {
       "Content-Type": "application/json; charset=utf-8",
-      "X-CSRFToken": csrfToken,
+      "X-CSRFToken": window.CSRF_TOKEN,
     },
     redirect: "follow",
     referrer: "no-referrer",
@@ -41,7 +40,6 @@ export function fetchSnapReleaseStatus(csrfToken, snapName) {
 }
 
 export function fetchRelease(
-  csrfToken,
   snapName,
   revision,
   channels,
@@ -64,7 +62,7 @@ export function fetchRelease(
     credentials: "same-origin",
     headers: {
       "Content-Type": "application/json; charset=utf-8",
-      "X-CSRFToken": csrfToken,
+      "X-CSRFToken": window.CSRF_TOKEN,
     },
     redirect: "follow",
     referrer: "no-referrer",
@@ -76,9 +74,9 @@ export function fetchRelease(
     });
 }
 
-export function fetchCloses(onComplete, csrfToken, snapName, channels) {
+export function fetchCloses(onComplete, snapName, channels) {
   if (channels && channels.length) {
-    return fetchClose(csrfToken, snapName, channels).then((json) => {
+    return fetchClose(snapName, channels).then((json) => {
       onComplete(json, channels);
     });
   } else {
@@ -86,7 +84,7 @@ export function fetchCloses(onComplete, csrfToken, snapName, channels) {
   }
 }
 
-export function fetchClose(csrfToken, snapName, channels) {
+export function fetchClose(snapName, channels) {
   return fetch(`/${snapName}/releases/close-channel`, {
     method: "POST",
     mode: "cors",
@@ -94,7 +92,7 @@ export function fetchClose(csrfToken, snapName, channels) {
     credentials: "same-origin",
     headers: {
       "Content-Type": "application/json; charset=utf-8",
-      "X-CSRFToken": csrfToken,
+      "X-CSRFToken": window.CSRF_TOKEN,
     },
     redirect: "follow",
     referrer: "no-referrer",

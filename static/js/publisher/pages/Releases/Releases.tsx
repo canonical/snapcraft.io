@@ -55,7 +55,6 @@ function Releases(): React.JSX.Element {
           channelMap={data.channel_map}
           tracks={data.tracks}
           options={{
-            csrfToken: window.CSRF_TOKEN,
             defaultTrack: data.default_track,
             flags: {
               isProgressiveReleaseEnabled: true,
