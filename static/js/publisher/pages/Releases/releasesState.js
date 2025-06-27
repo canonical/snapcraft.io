@@ -30,7 +30,7 @@ function initReleasesData(revisionsMap, releases, channelMap) {
           }
 
           // Technically, we should not modify the release object,
-          // but to simply other parts of the code, we do it
+          // but to simplify other parts of the code, we do it
           // here - nice and early during initialization.
           // It's double nasty, because we're actually modifying
           // the revision, not the release.
@@ -41,7 +41,7 @@ function initReleasesData(revisionsMap, releases, channelMap) {
 
             // Based on the note at the top of
             // https://dashboard.snapcraft.io/docs/reference/v1/snap.html#progressive-releases
-            // We need to get the current channelMap to hydrate the current percentage
+            // We need to get the channelMap to hydrate the current percentage
             if (channelMap) {
               const currentChannel = channelMap.find(
                 (c) => c.channel === channel && c.revision === release.revision,
