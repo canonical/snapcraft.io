@@ -47,7 +47,7 @@ export function getRevisionsArchitectures(revisions: any[]) {
   return archs;
 }
 
-export function getLatestChannelRevisionRelease(
+export function getLatestRelease(
   revision: { releases?: any[] },
   channel: string,
 ) {

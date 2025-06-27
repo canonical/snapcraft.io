@@ -20,13 +20,8 @@ const ReleasesConfirmDetails = ({ updates, isProgressiveReleaseEnabled }) => {
   let lowestPercentage = Object.entries(updates.newReleasesToProgress).reduce(
     (min, u) => {
       const channel = u[1];
-      if (
-        channel.revision &&
-        channel.revision.releases &&
-        channel.revision.releases[0] &&
-        channel.revision.releases[0].progressive &&
-        channel.revision.releases[0].progressive.percentage > min
-      ) {
+      const percentage = channel.revision?.releases?.[0]?.progressive?.percentage || 1;
+      if (percentage > min) {
         min = channel.revision.releases[0].progressive.percentage;
       }
       return min;

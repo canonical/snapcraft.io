@@ -13,7 +13,7 @@ import {
   getChannelName,
   isInDevmode,
   canBeReleased,
-  getLatestChannelRevisionRelease,
+  getLatestRelease,
 } from "../../helpers";
 
 import ReleasesTableChannelRow from "./channelRow";
@@ -31,7 +31,7 @@ const getRevisionsToDrop = (
       if (!targetChannelArchs || !targetChannelArchs[arch]) {
         return true;
       } else {
-        const isProgressive = getLatestChannelRevisionRelease(
+        const isProgressive = getLatestRelease(
           targetChannelArchs[arch],
           targetChannel,
         )?.isProgressive;

@@ -33,7 +33,7 @@ import {
   getChannelName,
   isInDevmode,
   canBeReleased,
-  getLatestChannelRevisionRelease,
+  getLatestRelease,
 } from "../../helpers";
 import ChannelMenu from "../channelMenu";
 
@@ -59,7 +59,7 @@ const canReleaseToChannel = (
       if (!targetRevisionsByArch || !targetRevisionsByArch[arch]) {
         return true;
       }
-      const isProgressive = getLatestChannelRevisionRelease(
+      const isProgressive = getLatestRelease(
         targetRevisionsByArch[arch],
         targetChannel,
       )?.isProgressive;

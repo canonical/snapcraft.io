@@ -21,9 +21,9 @@ const ReleasesTableRow = ({
   canDrop?: any;
   children?: any;
 }) => {
-  const _canDrag = !!revisions && canDrag;
+  canDrag = !!revisions && canDrag;
 
-  const draggedRevisions = _canDrag ? Object.values(revisions) : [];
+  const draggedRevisions = canDrag ? Object.values(revisions) : [];
 
   const [isDragging, isGrabbing, drag] = useDragging({
     item: {
@@ -33,7 +33,7 @@ const ReleasesTableRow = ({
       branch: branch ? branch.branch : null,
       type: DND_ITEM_REVISIONS,
     },
-    canDrag: _canDrag,
+    canDrag: canDrag,
   });
 
   const tableRow: any = useRef(null);

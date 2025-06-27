@@ -53,7 +53,7 @@ function updateReleasesData(apiData: {
 
     getReleaseDataFromChannelMap(channelMap, revisionsList, snapName).then(
       ([transformedChannelMap, revisionsListAdditions]) => {
-        Array.prototype.push.apply(revisionsList, revisionsListAdditions);
+        revisionsList.push(...revisionsListAdditions);
         const revisionsMap = getRevisionsMap(revisionsList);
 
         initReleasesData(revisionsMap, releasesData.releases, channelMap);
