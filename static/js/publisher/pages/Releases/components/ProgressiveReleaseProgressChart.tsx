@@ -1,5 +1,3 @@
-import React from "react";
-
 type ReleaseProgress = {
   currentPercentage: number;
   targetPercentage: number;
@@ -11,14 +9,6 @@ function ProgressiveReleaseProgressChart({
   targetPercentage,
   isPreviousRevision,
 }: ReleaseProgress) {
-  const roundedEnd = currentPercentage !== targetPercentage;
-  const innerStyle: React.CSSProperties = {
-    width: `${currentPercentage ? currentPercentage : 0}%`,
-  };
-
-  if (roundedEnd) {
-    innerStyle.borderRadius = "10px";
-  }
   return (
     <div
       className={
@@ -28,7 +18,7 @@ function ProgressiveReleaseProgressChart({
       <div className="progressive-progress-bar u-hide--small">
         <div
           className="progressive-progress-bar__inner"
-          style={innerStyle}
+          style={{ width: `${currentPercentage ? currentPercentage : 0}%` }}
         ></div>
         <div
           className="progressive-progress-bar__marker"
