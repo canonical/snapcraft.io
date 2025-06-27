@@ -37,6 +37,15 @@ def get_brand_id(session, store_id):
     return store["brand-id"]
 
 
+# Beta brand store with Jotai
+@admin.route("/admin-beta", defaults={"path": ""})
+@admin.route("/admin-beta/<path:path>")
+@login_required
+@exchange_required
+def get_admin_beta(path):
+    return flask.render_template("admin/admin-beta.html", **context)
+
+
 @admin.route("/admin", defaults={"path": ""})
 @admin.route("/admin/<path:path>")
 @login_required

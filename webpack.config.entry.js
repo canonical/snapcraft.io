@@ -15,4 +15,5 @@ module.exports = {
   store: "./static/js/store/index.tsx",
   publisher: "./static/js/publisher/publisher.tsx",
   "brand-store": "./static/js/publisher/brand-store.tsx",
+  "brand-store-beta": "./static/js/publisher/brand-store-beta.tsx",
 };
