@@ -215,7 +215,6 @@ describe("releases actions", () => {
       const store = mockStore({
         options: {
           snapName: "test",
-          csrfToken: "test",
           defaultTrack: "latest",
         },
         pendingReleases: {
@@ -249,7 +248,6 @@ describe("releases actions", () => {
       const store = mockStore({
         options: {
           snapName: "test",
-          csrfToken: "test",
           defaultTrack: "latest",
         },
         pendingReleases: {
@@ -320,7 +318,6 @@ describe("releases actions", () => {
       const store = mockStore({
         options: {
           snapName: "test",
-          csrfToken: "test",
           defaultTrack: "latest",
         },
         pendingReleases: {
@@ -449,7 +446,6 @@ describe("releases actions", () => {
       const store = mockStore({
         options: {
           snapName: "test",
-          csrfToken: "test",
           defaultTrack: "latest",
         },
         pendingReleases: {},
@@ -491,7 +487,6 @@ describe("releases actions", () => {
       const store = mockStore({
         options: {
           snapName: "test",
-          csrfToken: "test",
           defaultTrack: "latest",
         },
         pendingReleases: {

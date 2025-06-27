@@ -203,7 +203,7 @@ export function releaseRevisions() {
     },
   ) => {
     const { pendingReleases, pendingCloses, revisions, options } = getState();
-    const { csrfToken, snapName } = options;
+    const { snapName } = options;
 
     // To dedupe releases
     const progressiveReleases: {
@@ -254,11 +254,11 @@ export function releaseRevisions() {
     };
 
     dispatch(hideNotification());
-    return fetchReleases(_handleReleaseResponse, releases, csrfToken, snapName)
+    return fetchReleases(_handleReleaseResponse, releases, snapName)
       .then(() =>
-        fetchCloses(_handleCloseResponse, csrfToken, snapName, pendingCloses),
+        fetchCloses(_handleCloseResponse, snapName, pendingCloses),
       )
-      .then(() => fetchSnapReleaseStatus(csrfToken, snapName))
+      .then(() => fetchSnapReleaseStatus(snapName))
       .then((json) =>
         dispatch(updateReleasesData(json as unknown as FetchReleaseResponse)),
       )
