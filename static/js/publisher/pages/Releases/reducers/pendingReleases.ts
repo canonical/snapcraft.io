@@ -12,6 +12,7 @@ import {
 import { CLOSE_CHANNEL } from "../actions/pendingCloses";
 
 import { jsonClone } from "../helpers";
+import { Revision } from "../../../types/releaseTypes";
 
 function removePendingRelease(
   state: any,
@@ -36,8 +37,8 @@ function releaseRevision(
   state: any,
   revision: { architectures: any[]; revision: number },
   channel: string,
-  progressive: null,
-  previousRevisions: undefined,
+  progressive?: { percentage: number; paused?: boolean },
+  previousRevisions?: (Revision | undefined)[],
 ) {
   state = { ...state };
 
@@ -76,7 +77,11 @@ function releaseRevision(
     state[revision.revision][channel].previousRevisions = previousRevisions;
   }
 
-  if (progressive && !state[revision.revision][channel].progressive) {
+  if (
+    progressive &&
+    (!state[revision.revision][channel].progressive ||
+      state[revision.revision][channel].progressive !== progressive)
+  ) {
     state[revision.revision][channel].progressive = progressive;
   }
 

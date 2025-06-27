@@ -5,6 +5,7 @@ import {
   CLEAR_SELECTED_REVISIONS,
   RELEASE_REVISION_SUCCESS,
   CLOSE_CHANNEL_SUCCESS,
+  UPDATE_CHANNEL_MAP,
 } from "../actions/channelMap";
 
 function selectRevision(state, revision, toggle) {
@@ -66,6 +67,7 @@ function closeChannel(state, channel) {
 export default function channelMap(state = {}, action) {
   switch (action.type) {
     case INIT_CHANNEL_MAP:
+    case UPDATE_CHANNEL_MAP:
       return {
         ...action.payload.channelMap,
       };

@@ -135,6 +135,7 @@ const ReleasesTableReleaseCell = (props) => {
         previousRevision={previousRevision ? previousRevision : null}
         risk={risk}
         track={track}
+        channel={current}
       />
     );
   } else if (isUnassigned) {

@@ -35,6 +35,10 @@ describe("pendingReleases actions", () => {
     revision: 2,
     architectures: ["test64"],
   };
+  const revision3 = {
+    revision: 3,
+    architectures: ["test64"],
+  };
   const channel = "test/edge";
   const previousRevisions = [];
   const initialState = reducers(undefined, {});
@@ -43,6 +47,7 @@ describe("pendingReleases actions", () => {
     revisions: {
       [revision.revision]: revision,
       [revision2.revision]: revision2,
+      [revision3.revision]: revision3,
     },
   };
 
