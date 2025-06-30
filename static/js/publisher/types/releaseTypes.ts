@@ -85,7 +85,6 @@ export type ChannelMap = {
 
 export type Options = {
   defaultTrack: string;
-  csrfToken: string;
   flags: {
     isProgressiveReleaseEnabled: boolean;
   };
