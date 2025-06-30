@@ -26,8 +26,8 @@ parts:
       yarn install
       # build the UI
       yarn run build
-      # mkdir -p "$CRAFT_PART_INSTALL/flask/app"
-      # cp -r static "$CRAFT_PART_INSTALL/flask/app/"
+      mkdir -p "$CRAFT_PART_INSTALL/flask/app"
+      cp -r static "$CRAFT_PART_INSTALL/flask/app/"
   flask-framework/install-app:
     after:
       - build-ui
