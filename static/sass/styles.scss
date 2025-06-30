@@ -511,8 +511,6 @@ html {
   position: relative;
 }
 
-<<<<<<< HEAD
-=======
 @media (width < $breakpoint-navigation-threshold) {
   #navigation.p-navigation--sliding {
     @property --right {
@@ -645,7 +643,6 @@ html {
   }
 }
 
->>>>>>> 9e9dd039e (feat: Add editorial slices to explore page (#5178))
 .read-only-dark {
   color: $colors--theme--text-muted;
 }

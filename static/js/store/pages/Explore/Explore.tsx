@@ -15,7 +15,7 @@ function Explore(): JSX.Element {
   const searchRef = useRef<HTMLInputElement | null>(null);
   const searchSummaryRef = useRef<HTMLDivElement | null>(null);
   const categories: string[] = ["popular", "recent", "trending"];
-  const sliceIds: string[] = ["our_picks"];
+  const sliceIds: string[] = ["our_picks", "must_have_snaps"];
 
   const slices = useQueries(
     sliceIds.map((sliceId) => ({
@@ -137,11 +137,11 @@ function Explore(): JSX.Element {
       {/* Placeholder until content is decided */}
       {slices && (
         <>
-          {slicesData.our_picks && (
+          {slicesData.must_have_snaps && (
             <Strip shallow className="u-no-padding--top u-no-padding--bottom">
               <EditorialSection
                 isLoading={slicesLoading}
-                slice={slicesData.our_picks}
+                slice={slicesData.must_have_snaps}
                 gradient="blueGreen"
               />
             </Strip>
