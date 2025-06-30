@@ -31,7 +31,6 @@ describe("defaultTrack actions", () => {
         const store = mockStore({
           options: {
             snapName: "test",
-            csrfToken: "test",
           },
           currentTrack: "test",
           defaultTrack: "nope",
@@ -66,7 +65,6 @@ describe("defaultTrack actions", () => {
         const store = mockStore({
           options: {
             snapName: "test",
-            csrfToken: "test",
           },
         });
 

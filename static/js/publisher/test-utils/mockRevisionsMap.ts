@@ -1,5 +1,5 @@
 export const mockRevisionsMap = {
-   54: {
+  54: {
     architectures: ["arm64"],
     attributes: {},
     base: null,
@@ -16,7 +16,7 @@ export const mockRevisionsMap = {
     progressive: {
       "current-percentage": 30,
       paused: null,
-      percentage: null
+      percentage: null,
     },
     revision: 54,
     "sha3-384": "shastring",
@@ -38,7 +38,7 @@ export const mockRevisionsMap = {
     },
     expiration: null,
     grade: "stable",
-     progressive: {
+    progressive: {
       "current-percentage": null,
       paused: null,
       percentage: null,
