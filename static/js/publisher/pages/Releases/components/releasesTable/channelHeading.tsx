@@ -48,7 +48,6 @@ const disabledBecauseReleased = "The same revisions are already promoted.";
 
 const disabledBecauseNotSelected = "Select some revisions to promote them.";
 
-// TODO: move to selectors or helpers?
 const canReleaseToChannel = (
   currentRevisionsByArch: { [x: string]: { revision: any } },
   targetRevisionsByArch: { [x: string]: { revision: any; releases: any } },
