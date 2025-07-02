@@ -62,7 +62,7 @@ function updateReleasesData(apiData: FetchReleaseResponse) {
       ([transformedChannelMap, revisionsListAdditions]) => {
         revisionsList.push(...revisionsListAdditions);
         const revisionsMap = getRevisionsMap(revisionsList);
-        initReleasesData(revisionsMap, releases);
+        initReleasesData(revisionsMap, releases, channelMap);
         dispatch(updateRevisions(revisionsMap));
         dispatch(updateReleases(releases));
         dispatch(updateArchitectures(revisionsList));
