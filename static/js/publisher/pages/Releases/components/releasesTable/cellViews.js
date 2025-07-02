@@ -72,7 +72,6 @@ const ProgressiveTooltip = ({ revision, previousRevision }) => {
 
   if (!progressive) {
     return;
-
   }
 
   const previousRevisionData = (

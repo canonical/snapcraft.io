@@ -109,17 +109,33 @@ export function promoteRevision(revision, channel) {
   return (dispatch, getState) => {
     const pendingChannelMap = getPendingChannelMap(getState());
 
-    // compare given revision with released revisions in this arch and channel
-    const isAlreadyReleased = revision.architectures.every((arch) => {
-      const releasedRevision =
-        pendingChannelMap[channel] && pendingChannelMap[channel][arch];
+    const canPromoteRevision = revision.architectures.every((arch) => {
+      const releasedRevision = pendingChannelMap[channel]?.[arch];
+
+      const isNotReleased = !releasedRevision;
+      const isDifferentRevision =
+        releasedRevision && releasedRevision.revision !== revision.revision;
+
+      let releasedRevisionIsProgressive = false;
+      if (releasedRevision) {
+        const releasedRevisionReleaseHistory = releasedRevision.releases;
+
+        if (releasedRevisionReleaseHistory) {
+          const channelReleases = releasedRevisionReleaseHistory.filter(
+            (r) => r.channel === channel && r.architecture === arch,
+          );
+          if (channelReleases.length > 0 && channelReleases[0].isProgressive) {
+            releasedRevisionIsProgressive = true;
+          }
+        }
+      }
 
       return (
-        releasedRevision && releasedRevision.revision === revision.revision
+        isNotReleased || isDifferentRevision || releasedRevisionIsProgressive
       );
     });
 
-    if (!isAlreadyReleased) {
+    if (canPromoteRevision) {
       dispatch(releaseRevision(revision, channel, undefined));
     }
   };

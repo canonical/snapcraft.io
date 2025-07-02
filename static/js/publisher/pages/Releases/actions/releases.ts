@@ -255,9 +255,7 @@ export function releaseRevisions() {
 
     dispatch(hideNotification());
     return fetchReleases(_handleReleaseResponse, releases, snapName)
-      .then(() =>
-        fetchCloses(_handleCloseResponse, snapName, pendingCloses),
-      )
+      .then(() => fetchCloses(_handleCloseResponse, snapName, pendingCloses))
       .then(() => fetchSnapReleaseStatus(snapName))
       .then((json) =>
         dispatch(updateReleasesData(json as unknown as FetchReleaseResponse)),
