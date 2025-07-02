@@ -6,17 +6,22 @@ import { getRevisionsArchitectures } from "../../helpers";
 import ReleasesTableChannelHeading from "./channelHeading";
 
 // generic releases table row component
-const ReleasesTableRow = (props: {
-  canDrag?: any;
+const ReleasesTableRow = ({
+  canDrag = true,
+  risk,
+  branch,
+  revisions,
+  canDrop,
+  children,
+}: {
+  canDrag: boolean;
   risk?: any;
   branch?: any;
   revisions?: any;
   canDrop?: any;
   children?: any;
 }) => {
-  const { risk, branch, revisions, canDrop, children } = props;
-
-  const canDrag = !!revisions && props.canDrag;
+  canDrag = !!revisions && canDrag;
 
   const draggedRevisions = canDrag ? Object.values(revisions) : [];
 
@@ -67,10 +72,6 @@ const ReleasesTableRow = (props: {
       {children}
     </div>
   );
-};
-
-ReleasesTableRow.defaultProps = {
-  canDrag: true,
 };
 
 export default ReleasesTableRow;

@@ -39,12 +39,7 @@ export function fetchSnapReleaseStatus(snapName) {
     });
 }
 
-export function fetchRelease(
-  snapName,
-  revision,
-  channels,
-  progressive,
-) {
+export function fetchRelease(snapName, revision, channels, progressive) {
   const body = {
     name: snapName,
     revision,
