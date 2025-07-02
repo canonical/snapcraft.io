@@ -846,7 +846,7 @@ describe("getProgressiveState", () => {
         track: "latest",
         risk: "stable",
         revision: "1",
-        isProgiressive: false,
+        isProgressive: false,
         progressive: null,
       },
       {
