@@ -70,13 +70,18 @@ EmptyInfo.propTypes = {
 const ProgressiveTooltip = ({ revision, previousRevision }) => {
   const { progressive } = revision?.releases?.[0];
 
+  if (!progressive) {
+    return;
+
+  }
+
   const previousRevisionData = (
     <>
       <strong>{previousRevision?.revision || "Unknown"}</strong>
       <br />
       <strong>
-        {Math.round(100 - progressive?.["current-percentage"]) || 0}% →{" "}
-        {Math.round(100 - progressive?.percentage)}%
+        {Math.round(100 - progressive["current-percentage"]) || 0}% →{" "}
+        {Math.round(100 - progressive.percentage)}%
       </strong>
       <br />
       <strong>{previousRevision?.version || "Unknown"}</strong>
@@ -96,8 +101,8 @@ const ProgressiveTooltip = ({ revision, previousRevision }) => {
       <strong>{revision.revision} (progressive)</strong>
       <br />
       <strong>
-        {Math.round(progressive?.["current-percentage"]) || 0}% →{" "}
-        {Math.round(progressive?.percentage)}%
+        {Math.round(progressive["current-percentage"]) || 0}% →{" "}
+        {Math.round(progressive.percentage)}%
       </strong>
       <br />
       <strong>{revision.version}</strong>
