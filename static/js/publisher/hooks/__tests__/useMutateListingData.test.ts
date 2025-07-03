@@ -1,0 +1,26 @@
+import * as ReactQuery from "react-query";
+import { renderHook } from "@testing-library/react";
+
+import useMutateListingData from "../useMutateListingData";
+
+import { mockListingData } from "../../test-utils";
+
+describe("useMutateListingData", () => {
+  test("Calls useMutatation", () => {
+    jest.spyOn(ReactQuery, "useMutation").mockImplementation(jest.fn());
+    renderHook(() =>
+      useMutateListingData({
+        data: mockListingData,
+        dirtyFields: {},
+        getDefaultData: jest.fn(),
+        refetch: jest.fn(),
+        reset: jest.fn(),
+        setStatusNotification: jest.fn(),
+        setUpdateMetadataOnRelease: jest.fn(),
+        shouldShowUpdateMetadataWarning: jest.fn(),
+        snapName: "test-snap",
+      }),
+    );
+    expect(ReactQuery.useMutation).toHaveBeenCalled();
+  });
+});
