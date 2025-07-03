@@ -1,23 +1,17 @@
-import { atom, selectorFamily } from "recoil";
 import { atom as jotaiAtom } from "jotai";
+import { atomFamily } from "jotai/utils";
 
-import type { Store } from "../types/shared";
+import { Store } from "../types/shared";
 
-const brandStoresState = atom({
-  key: "brandStores",
-  default: [] as Array<Store>,
-});
+const brandStoresState = jotaiAtom([]);
 
 const brandIdState = jotaiAtom("");
 
-const brandStoreState = selectorFamily({
-  key: "brandStore",
-  get:
-    (storeId) =>
-    ({ get }) => {
-      const brandStores = get(brandStoresState);
-      return brandStores.find((store) => store.id === storeId);
-    },
-});
+const brandStoreState = atomFamily((storeId) =>
+  jotaiAtom((get) => {
+    const brandStores: Store[] = get(brandStoresState);
+    return brandStores.find((store) => store.id === storeId);
+  }),
+);
 
 export { brandStoresState, brandIdState, brandStoreState };

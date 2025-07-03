@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import { useRecoilState, useRecoilValue } from "recoil";
-import { useAtom } from "jotai";
+import { useRecoilState } from "recoil";
+import { useAtom, useAtomValue } from "jotai";
 import { useParams, NavLink } from "react-router-dom";
 import { Icon } from "@canonical/react-components";
 
@@ -13,12 +13,14 @@ import { useBrand, usePublisher, useValidationSets } from "../../hooks";
 
 import { brandStoresState } from "../../state/brandStoreState";
 
+import type { Store } from "../../types/shared";
+
 function Navigation({
   sectionName,
 }: {
   sectionName: string | null;
 }): React.JSX.Element {
-  const brandStoresList = useRecoilValue(brandStoresState);
+  const brandStoresList = useAtomValue<Store[]>(brandStoresState);
   const { id } = useParams();
   const { data: brand } = useBrand(id);
   const { data: publisherData } = usePublisher();
