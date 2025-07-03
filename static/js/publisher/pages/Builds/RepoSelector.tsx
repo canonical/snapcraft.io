@@ -1,6 +1,7 @@
 import { ChangeEvent, Dispatch, SetStateAction, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useSetRecoilState } from "recoil";
+import { useSetAtom } from "jotai";
 import {
   Strip,
   Row,
@@ -28,7 +29,7 @@ function RepoSelector({ githubData, setAutoTriggerBuild }: Props) {
   const [selectedOrg, setSelectedOrg] = useState<string | null>(null);
   const [selectedRepo, setSelectedRepo] = useState<Repo | undefined>();
   const [building, setBuilding] = useState<boolean>(false);
-  const setRepoConnected = useSetRecoilState(buildRepoConnectedState);
+  const setRepoConnected = useSetAtom(buildRepoConnectedState);
   const [validating, setValidating] = useState<boolean>(false);
   const [validationMessage, setValidationMessage] = useState<string>("");
   const [repos, setRepos] = useState<Repo[]>([]);

@@ -1,18 +1,9 @@
-import { atom } from "recoil";
+import { atom as jotaiAtom } from "jotai";
 
 import type { GithubData } from "../types";
 
-export const buildLoggedInState = atom({
-  key: "buildLoggedInstate",
-  default: false,
-});
+export const buildLoggedInState = jotaiAtom(false);
 
-export const buildRepoConnectedState = atom({
-  key: "buildRepoConnectedState",
-  default: false,
-});
+export const buildRepoConnectedState = jotaiAtom(false);
 
-export const githubDataState = atom<GithubData | null>({
-  key: "githubDataState",
-  default: null,
-});
+export const githubDataState = jotaiAtom<GithubData | null>(null);
