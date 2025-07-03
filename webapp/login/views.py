@@ -14,6 +14,7 @@ from webapp.api.exceptions import ApiResponseError
 from webapp.extensions import csrf
 from webapp.login.macaroon import MacaroonRequest, MacaroonResponse
 from webapp.publisher.snaps import logic
+import requests
 
 login = flask.Blueprint(
     "login", __name__, template_folder="/templates", static_folder="/static"
@@ -70,6 +71,62 @@ def login_handler():
         ask_for_optional=["fullname"],
         extensions=[openid_macaroon, lp_teams],
     )
+
+
+@login.route("/login2", methods=["GET", "POST"])
+@csrf.exempt
+@open_id.loginhandler
+def login2_handler():
+    if authentication.is_authenticated(flask.session):
+        return flask.redirect(open_id.get_next_url())
+
+    try:
+        root = authentication.request_macaroon()
+    except ApiResponseError as api_response_error:
+        if api_response_error.status_code == 401:
+            return flask.redirect(flask.url_for(".logout"))
+        else:
+            return flask.abort(502, str(api_response_error))
+
+    openid_macaroon = MacaroonRequest(
+        caveat_id=authentication.get_caveat_id(root)
+    )
+    flask.session["macaroon_root"] = root
+
+    lp_teams = TeamsRequest(query_membership=[LP_CANONICAL_TEAM])
+
+    response = open_id.try_login(
+        LOGIN_URL,
+        ask_for=["email", "nickname", "image"],
+        ask_for_optional=["fullname"],
+        extensions=[openid_macaroon, lp_teams],
+    )
+
+    location = response.headers['Location']
+    try:
+        openid_error = flask.session['openid_error']
+    except Exception:
+        openid_error = None
+
+
+    try:
+        response = requests.get("https://login.ubuntu.com/assets/vanilla-css/styles.31e541bac65173e36e0150005d21a631.css")
+        response = response.text
+    except Exception as e:
+        response = e
+
+    return f"""
+    <h1>/login2</h1>
+    <p>root:{root}</p>
+    <p>caveat_id:{authentication.get_caveat_id(root)}</p>
+    <p>login base url:{LOGIN_URL}</p>
+    <p>openid_macaroon:{openid_macaroon}</p>
+    <p>lp_teams:{lp_teams}</p>
+    <p>location:{location}</p>
+    <p>flask.session['openid_error']: {openid_error}</p>
+    <hr />
+    <p>login req text: {response}</p>
+    """
 
 
 @open_id.after_login
