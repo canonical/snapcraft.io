@@ -1,4 +1,4 @@
-import { atom as jotaiAtom } from "jotai";
+import { atom } from "jotai";
 import { atomFamily } from "jotai/utils";
 
 import { policiesListState } from "./policiesState";
@@ -24,16 +24,16 @@ function getFilteredModels(models: Array<Model>, filterQuery?: string | null) {
   });
 }
 
-const modelsListState = jotaiAtom([] as Model[]);
+const modelsListState = atom([] as Model[]);
 
-const modelsListFilterState = jotaiAtom("" as string);
+const modelsListFilterState = atom("" as string);
 
-const newModelState = jotaiAtom({ name: "", apiKey: "" } as {
+const newModelState = atom({ name: "", apiKey: "" } as {
   name: string;
   apiKey: string;
 });
 
-const filteredModelsListState = jotaiAtom((get) => {
+const filteredModelsListState = atom((get) => {
   const filter = get(modelsListFilterState);
   const models = get(modelsListState);
   const policies = get(policiesListState);
@@ -52,7 +52,7 @@ const filteredModelsListState = jotaiAtom((get) => {
 });
 
 const currentModelState = atomFamily((modelId) =>
-  jotaiAtom((get) => {
+  atom((get) => {
     const models = get(modelsListState);
     return models.find((model) => model.name === modelId);
   }),

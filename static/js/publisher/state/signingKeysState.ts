@@ -1,4 +1,4 @@
-import { atom as jotaiAtom } from "jotai";
+import { atom } from "jotai";
 
 import { SigningKey } from "../types/shared";
 
@@ -29,13 +29,13 @@ function getFilteredSigningKeys(
   });
 }
 
-const signingKeysListState = jotaiAtom([] as SigningKey[]);
+const signingKeysListState = atom([] as SigningKey[]);
 
-const signingKeysListFilterState = jotaiAtom("" as string);
+const signingKeysListFilterState = atom("" as string);
 
-const newSigningKeyState = jotaiAtom({ name: "" });
+const newSigningKeyState = atom({ name: "" });
 
-const filteredSigningKeysListState = jotaiAtom((get) => {
+const filteredSigningKeysListState = atom((get) => {
   const filter = get(signingKeysListFilterState);
   const policies = get(policiesListState);
   const signingKeys = get(signingKeysListState);

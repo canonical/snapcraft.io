@@ -1,14 +1,14 @@
-import { atom as jotaiAtom } from "jotai";
+import { atom } from "jotai";
 import { atomFamily } from "jotai/utils";
 
 import { Store } from "../types/shared";
 
-const brandStoresState = jotaiAtom([]);
+const brandStoresState = atom([]);
 
-const brandIdState = jotaiAtom("");
+const brandIdState = atom("");
 
 const brandStoreState = atomFamily((storeId) =>
-  jotaiAtom((get) => {
+  atom((get) => {
     const brandStores: Store[] = get(brandStoresState);
     return brandStores.find((store) => store.id === storeId);
   }),
