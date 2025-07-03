@@ -70,6 +70,7 @@
     "downshift": "9.0.8",
     "expose-loader": "5.0.0",
     "fast-average-color": "9.4.0",
+    "jotai": "2.12.5",
     "markdown-it": "14.1.0",
     "nanoid": "5.0.9",
     "polylabel": "2.0.1",
