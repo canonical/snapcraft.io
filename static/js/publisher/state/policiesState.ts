@@ -1,4 +1,4 @@
-import { atom, selector } from "recoil";
+import { atom } from "jotai";
 
 import { signingKeysListState } from "./signingKeysState";
 
@@ -27,19 +27,12 @@ function getFilteredPolicies(
   });
 }
 
-const policiesListState = atom({
-  key: "policiesList",
-  default: [] as Array<Policy>,
-});
+const policiesListState = atom([] as Policy[]);
 
-const policiesListFilterState = atom({
-  key: "policiesListFilter",
-  default: "" as string,
-});
+const policiesListFilterState = atom("" as string);
 
-const filteredPoliciesListState = selector<Array<Policy>>({
-  key: "filteredPoliciesList",
-  get: ({ get }) => {
+const filteredPoliciesListState = atom(
+  (get) => {
     const filter = get(policiesListFilterState);
     const policies = get(policiesListState);
     const signingKeys = get(signingKeysListState);
@@ -56,10 +49,10 @@ const filteredPoliciesListState = selector<Array<Policy>>({
 
     return getFilteredPolicies(policiesWithKeys, filter);
   },
-  set: ({ set }, newValue) => {
+  (_get, set, newValue: Policy[]) => {
     set(policiesListState, newValue);
   },
-});
+);
 
 export {
   policiesListState,

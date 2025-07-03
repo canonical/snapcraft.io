@@ -1,6 +1,6 @@
 import { createRoot } from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import { RecoilRoot } from "recoil";
+import { Provider } from "jotai";
 import { QueryClient, QueryClientProvider } from "react-query";
 
 import PublisherRoot from "./routes/publisher-root";
@@ -101,9 +101,9 @@ const queryClient = new QueryClient({
 });
 
 root.render(
-  <RecoilRoot>
+  <Provider>
     <QueryClientProvider client={queryClient}>
       <RouterProvider router={router} />
     </QueryClientProvider>
-  </RecoilRoot>,
+  </Provider>,
 );

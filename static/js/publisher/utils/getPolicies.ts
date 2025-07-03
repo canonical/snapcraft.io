@@ -1,11 +1,13 @@
 import { Dispatch, SetStateAction } from "react";
-import { SetterOrUpdater } from "recoil";
-import type { Model as ModelType, Policy } from "../types/shared";
+import { useSetAtom } from "jotai";
+
+import { policiesListState } from "../state/policiesState";
+
+import type { Model as ModelType } from "../types/shared";
 
 type Options = {
   models: ModelType[];
   id: string | undefined;
-  setPolicies: SetterOrUpdater<Policy[]>;
   signal?: AbortSignal;
   setEnableTableActions?: Dispatch<SetStateAction<boolean>>;
 };
@@ -13,10 +15,10 @@ type Options = {
 const getPolicies = async ({
   models,
   id,
-  setPolicies,
   signal,
   setEnableTableActions,
 }: Options) => {
+  const setPolicies = useSetAtom(policiesListState);
   const data = await Promise.all(
     models.map((model) => {
       return fetch(`/api/store/${id}/models/${model.name}/policies`, {

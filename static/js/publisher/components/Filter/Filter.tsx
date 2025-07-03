@@ -1,18 +1,18 @@
 import { useSearchParams } from "react-router-dom";
-import { useSetRecoilState } from "recoil";
+import { useSetAtom } from "jotai";
 import { Button, Icon } from "@canonical/react-components";
 
-import type { RecoilState } from "recoil";
+import type { PrimitiveAtom } from "jotai";
 
 type Props = {
-  state: RecoilState<string>;
+  state: PrimitiveAtom<string>;
   label: string;
   placeholder: string;
 };
 
 function Filter({ state, label, placeholder }: Props): React.JSX.Element {
   const [searchParams, setSearchParams] = useSearchParams();
-  const setFilter = useSetRecoilState(state);
+  const setFilter = useSetAtom(state);
 
   return (
     <div className="p-search-box">

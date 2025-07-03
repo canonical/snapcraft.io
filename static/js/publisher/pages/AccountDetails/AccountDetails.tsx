@@ -1,5 +1,5 @@
 import { useState, useEffect, SyntheticEvent } from "react";
-import { useRecoilValue } from "recoil";
+import { useAtomValue } from "jotai";
 import {
   Row,
   Col,
@@ -20,7 +20,7 @@ function AccountDetails(): React.JSX.Element {
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
   const [showErrorMessage, setShowErrorMessage] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
-  const publisher = useRecoilValue(publisherState);
+  const publisher = useAtomValue(publisherState);
 
   useEffect(() => {
     setSubscribeToNewsletter(

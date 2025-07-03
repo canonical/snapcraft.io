@@ -1,6 +1,6 @@
 import { ChangeEvent, useEffect, useState } from "react";
 import { useParams, Navigate } from "react-router-dom";
-import { useRecoilValue } from "recoil";
+import { useAtomValue } from "jotai";
 import {
   Spinner,
   Accordion,
@@ -24,6 +24,8 @@ import { useMembers, useInvites } from "../../hooks";
 
 import { setPageTitle } from "../../utils";
 
+import type { Store } from "../../types/shared";
+
 type Members = {
   members: {
     members: Array<Member>;
@@ -42,7 +44,7 @@ type Member = {
 };
 
 function Members(): React.JSX.Element {
-  const brandStoresList = useRecoilValue(brandStoresState);
+  const brandStoresList = useAtomValue<Store[]>(brandStoresState);
   const { id } = useParams();
   const {
     data: members,

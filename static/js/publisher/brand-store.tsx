@@ -3,7 +3,7 @@ import { QueryClient, QueryClientProvider } from "react-query";
 import * as Sentry from "@sentry/react";
 import { BrowserTracing } from "@sentry/browser";
 import BrandStoreRoot from "./routes/brand-store-root";
-import { RecoilRoot } from "recoil";
+import { Provider } from "jotai";
 Sentry.init({
   dsn: window.SENTRY_DSN,
   integrations: [new BrowserTracing()],
@@ -22,9 +22,9 @@ const queryClient = new QueryClient({
 });
 
 root.render(
-  <QueryClientProvider client={queryClient}>
-    <RecoilRoot>
+  <Provider>
+    <QueryClientProvider client={queryClient}>
       <BrandStoreRoot />
-    </RecoilRoot>
-  </QueryClientProvider>,
+    </QueryClientProvider>
+  </Provider>,
 );

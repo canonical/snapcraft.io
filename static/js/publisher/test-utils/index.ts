@@ -6,7 +6,6 @@ import { mockRevisions } from "./mockRevisions";
 import { mockReleasedChannels } from "./mockReleasedChannels";
 import { mockReleasesData } from "./mockReleasesData";
 import { mockRevisionsMap } from "./mockRevisionsMap";
-import RecoilObserver from "./RecoilObserver";
 import brandStoreRequests from "./brand-store-requests";
 import {
   accountResponse,
@@ -17,7 +16,6 @@ import {
 
 export {
   mockListingData,
-  RecoilObserver,
   brandStoreRequests,
   accountResponse,
   snapsResponse,

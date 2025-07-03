@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
-import { useSetRecoilState } from "recoil";
+import { useSetAtom } from "jotai";
 import {
   SideNavigation,
   SideNavigationText,
@@ -24,11 +24,11 @@ function PrimaryNav({
   const { data: validationSetsData } = useValidationSets();
   const { data: brandStoresList } = useBrandStores();
 
-  const setRecoilBrandStores = useSetRecoilState(brandStoresState);
+  const setBrandStores = useSetAtom(brandStoresState);
 
   useEffect(() => {
     if (brandStoresList) {
-      setRecoilBrandStores(brandStoresList);
+      setBrandStores(brandStoresList);
     }
   }, [brandStoresList]);
 

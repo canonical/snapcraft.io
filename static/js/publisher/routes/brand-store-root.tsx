@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useSetRecoilState } from "recoil";
+import { useSetAtom } from "jotai";
 import {
   BrowserRouter as Router,
   Routes,
@@ -24,11 +24,11 @@ import StoreNotFound from "../pages/StoreNotFound";
 function BrandStoreRoot() {
   const { data: brandStoresList, isLoading } = useBrandStores();
 
-  const setRecoilBrandStores = useSetRecoilState(brandStoresState);
+  const setJotaiBrandStores = useSetAtom(brandStoresState);
 
   useEffect(() => {
     if (brandStoresList) {
-      setRecoilBrandStores(brandStoresList);
+      setJotaiBrandStores(brandStoresList);
     }
   }, [brandStoresList]);
 
