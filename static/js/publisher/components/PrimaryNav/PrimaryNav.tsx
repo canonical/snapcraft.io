@@ -24,11 +24,11 @@ function PrimaryNav({
   const { data: validationSetsData } = useValidationSets();
   const { data: brandStoresList } = useBrandStores();
 
-  const setRecoilBrandStores = useSetAtom(brandStoresState);
+  const setBrandStores = useSetAtom(brandStoresState);
 
   useEffect(() => {
     if (brandStoresList) {
-      setRecoilBrandStores(brandStoresList);
+      setBrandStores(brandStoresList);
     }
   }, [brandStoresList]);
 

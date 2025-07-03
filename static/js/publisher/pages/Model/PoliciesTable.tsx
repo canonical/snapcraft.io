@@ -1,6 +1,5 @@
 import { SetStateAction, useState, Dispatch } from "react";
-import { useRecoilState } from "recoil";
-import { useAtomValue } from "jotai";
+import { useAtomValue, useAtom } from "jotai";
 import { useParams } from "react-router-dom";
 import { format } from "date-fns";
 import { MainTable, Button, Modal, Icon } from "@canonical/react-components";
@@ -25,9 +24,7 @@ function ModelsTable({
 }: Props): React.JSX.Element {
   const { id, model_id } = useParams();
   const brandId = useAtomValue(brandIdState);
-  const [policiesList, setPoliciesList] = useRecoilState(
-    filteredPoliciesListState,
-  );
+  const [policiesList, setPoliciesList] = useAtom(filteredPoliciesListState);
   const [itemsToShow, setItemsToShow] = useState<Array<Policy>>(policiesList);
   const [showModal, setShowModal] = useState<boolean>(false);
   const [selectedPolicy, setSelectedPolicy] = useState<number | undefined>();

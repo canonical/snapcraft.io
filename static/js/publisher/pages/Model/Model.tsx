@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { useRecoilValue, useSetRecoilState } from "recoil";
-import { useAtomValue } from "jotai";
+import { useAtomValue, useSetAtom } from "jotai";
 import { useMutation } from "react-query";
 import { format } from "date-fns";
 import randomstring from "randomstring";
@@ -27,11 +26,11 @@ import type { Model as ModelType } from "../../types/shared";
 function Model() {
   const { id, model_id } = useParams();
   const brandId = useAtomValue(brandIdState);
-  const currentModel = useRecoilValue(currentModelState(model_id));
+  const currentModel = useAtomValue(currentModelState(model_id));
   const [newApiKey, setNewApiKey] = useState("");
   const [showSuccessNotification, setShowSuccessNotificaton] = useState(false);
   const [showErrorNotification, setShowErrorNotificaton] = useState(false);
-  const setModelsList = useSetRecoilState<ModelType[]>(modelsListState);
+  const setModelsList = useSetAtom(modelsListState);
   const brandStore = useAtomValue(brandStoreState(id));
 
   const mutation = useMutation({
