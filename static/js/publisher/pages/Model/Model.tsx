@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useRecoilValue, useSetRecoilState } from "recoil";
+import { useAtomValue } from "jotai";
 import { useMutation } from "react-query";
 import { format } from "date-fns";
 import randomstring from "randomstring";
@@ -25,7 +26,7 @@ import type { Model as ModelType } from "../../types/shared";
 
 function Model() {
   const { id, model_id } = useParams();
-  const brandId = useRecoilValue(brandIdState);
+  const brandId = useAtomValue(brandIdState);
   const currentModel = useRecoilValue(currentModelState(model_id));
   const [newApiKey, setNewApiKey] = useState("");
   const [showSuccessNotification, setShowSuccessNotificaton] = useState(false);

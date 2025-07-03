@@ -1,6 +1,7 @@
 import { SetStateAction, useState, Dispatch, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useRecoilValue, useSetRecoilState } from "recoil";
+import { useAtomValue } from "jotai";
 import { format } from "date-fns";
 import { MainTable, Button, Tooltip } from "@canonical/react-components";
 
@@ -28,7 +29,7 @@ function SigningKeysTable({
   enableTableActions,
 }: Props): React.JSX.Element {
   useParams();
-  const brandId = useRecoilValue(brandIdState);
+  const brandId = useAtomValue(brandIdState);
   const signingKeysList = useRecoilValue<Array<SigningKey>>(
     filteredSigningKeysListState,
   );

@@ -1,5 +1,6 @@
 import { useState, useEffect, Dispatch, SetStateAction } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
+import { useAtomValue } from "jotai";
 import { useParams, Link, useNavigate, useLocation } from "react-router-dom";
 import { useMutation, useQueryClient } from "react-query";
 import { Button, Icon } from "@canonical/react-components";
@@ -25,7 +26,7 @@ function CreatePolicyForm({
   refetchPolicies,
 }: Props): React.JSX.Element {
   const { id, model_id } = useParams();
-  const brandId = useRecoilValue(brandIdState);
+  const brandId = useAtomValue(brandIdState);
   const navigate = useNavigate();
   const location = useLocation();
   const { isLoading, isError, error, data } = useSigningKeys(id);

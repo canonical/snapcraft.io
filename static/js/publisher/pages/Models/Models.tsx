@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useSetRecoilState, useRecoilValue } from "recoil";
+import { useAtomValue } from "jotai";
 import {
   Link,
   useParams,
@@ -30,7 +31,7 @@ import type { Model as ModelType, Policy } from "../../types/shared";
 
 function Models(): React.JSX.Element {
   const { id } = useParams();
-  const brandId = useRecoilValue(brandIdState);
+  const brandId = useAtomValue(brandIdState);
 
   const {
     data: models,

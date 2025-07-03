@@ -1,5 +1,6 @@
 import { SetStateAction, useState, Dispatch } from "react";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilState } from "recoil";
+import { useAtomValue } from "jotai";
 import { useParams } from "react-router-dom";
 import { format } from "date-fns";
 import { MainTable, Button, Modal, Icon } from "@canonical/react-components";
@@ -23,7 +24,7 @@ function ModelsTable({
   setShowDeletePolicyErrorNotification,
 }: Props): React.JSX.Element {
   const { id, model_id } = useParams();
-  const brandId = useRecoilValue(brandIdState);
+  const brandId = useAtomValue(brandIdState);
   const [policiesList, setPoliciesList] = useRecoilState(
     filteredPoliciesListState,
   );

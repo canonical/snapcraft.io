@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useSetRecoilState, useRecoilValue } from "recoil";
+import { useAtomValue } from "jotai";
 import {
   Link,
   useParams,
@@ -35,7 +36,7 @@ import type { SigningKey, Policy, Model } from "../../types/shared";
 
 function SigningKeys(): React.JSX.Element {
   const { id } = useParams();
-  const brandId = useRecoilValue(brandIdState);
+  const brandId = useAtomValue(brandIdState);
   const location = useLocation();
   const navigate = useNavigate();
   const {
