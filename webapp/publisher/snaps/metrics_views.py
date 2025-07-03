@@ -13,6 +13,7 @@ from canonicalwebteam.store_api.devicegw import DeviceGW
 # Local
 from webapp.helpers import api_session
 from webapp.decorators import login_required
+from webapp.observability.utils import trace_function
 from webapp.publisher.snaps import logic
 
 
@@ -23,6 +24,7 @@ downsample_data_limit = 500
 downsample_target_size = 10
 
 
+@trace_function
 @login_required
 def get_account_snaps_metrics():
     if not flask.request.data:
@@ -48,6 +50,7 @@ def get_account_snaps_metrics():
         return flask.jsonify(error), 500
 
 
+@trace_function
 @login_required
 def get_measure_snap(snap_name):
     return flask.redirect(
@@ -55,6 +58,7 @@ def get_measure_snap(snap_name):
     )
 
 
+@trace_function
 @login_required
 def publisher_snap_metrics(snap_name):
     """
@@ -73,6 +77,7 @@ def publisher_snap_metrics(snap_name):
     return flask.render_template("store/publisher.html", **context)
 
 
+@trace_function
 @login_required
 def get_active_devices(snap_name):
     snap_details = dashboard.get_snap_info(flask.session, snap_name)
@@ -184,6 +189,7 @@ def get_active_devices(snap_name):
     )
 
 
+@trace_function
 @login_required
 def get_latest_active_devices(snap_name):
     snap_details = dashboard.get_snap_info(flask.session, snap_name)
@@ -225,6 +231,7 @@ def get_latest_active_devices(snap_name):
     )
 
 
+@trace_function
 @login_required
 def get_metric_annotaion(snap_name):
     details = dashboard.get_snap_info(flask.session, snap_name)
@@ -257,6 +264,7 @@ def get_metric_annotaion(snap_name):
     return flask.jsonify(annotations)
 
 
+@trace_function
 @login_required
 def get_country_metric(snap_name):
     snap_details = dashboard.get_snap_info(flask.session, snap_name)
