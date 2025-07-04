@@ -25,9 +25,16 @@ from webapp.snapcraft.views import snapcraft_blueprint
 from webapp.store.views import store_blueprint
 from webapp.tutorials.views import init_tutorials
 from webapp.packages.store_packages import store_packages
-
+from jinja2 import ChoiceLoader, FileSystemLoader
 
 TALISKER_WSGI_LOGGER = logging.getLogger("talisker.wsgi")
+
+
+
+
+
+
+
 
 
 def create_app(testing=False):
@@ -54,6 +61,14 @@ def create_app(testing=False):
         @app.context_processor
         def inject_csrf_token():
             return dict(csrf_token=lambda: "mocked_csrf_token")
+
+    # Set up Jinja2 loaders to include both the local templates and the
+    # templates from the vanilla-framework package.
+    loader = ChoiceLoader([
+        FileSystemLoader('templates'),
+        FileSystemLoader('node_modules/vanilla-framework/templates/')
+    ])
+    app.jinja_loader = loader
 
     set_handlers(app)
 

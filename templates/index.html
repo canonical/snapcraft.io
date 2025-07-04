@@ -1,11 +1,32 @@
+{% from "_macros/vf_poc_scripting.jinja" import vf_context_module_alert with context %}
+
 {% extends "_layout.html" %}
 
 {% block meta_copydoc %}https://docs.google.com/document/d/1_uwPkHmAgV6_uE9ISqIgXjZGJxXPBD90vdeO95h7ikE/edit{% endblock %}
 
 {% set featured_categories = ["Featured", "Development", "Games", "Server"] %}
 
+
+
+
+{% macro shared_component(arg) %}
+  <div>{{ arg }}</div>
+  <section class="p-strip--white u-no-padding--top u-no-padding--bottom">
+    {% include "partials/fsf_language.html" %}
+  </section>
+{% endmacro %}
+
 {% block content %}
+
+
+
+
 <main id="main-content" class="p-section is-paper">
+    {{ vf_context_module_alert(
+    "Context module alert",
+    "test5",
+  ) }}
+
   {% with featured_categories = featured_categories %}
     {% include "home/_featured-snaps.html" %}
   {% endwith %}
