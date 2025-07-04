@@ -86,11 +86,36 @@ class TestGetPackageMetadata(BaseTestCases):
             403,
             [
                 {
-                    "code": "permission-required",
-                    "message": (
-                        "No publisher or collaborator "
-                        "permission for the teams-for-linux snap package"
-                    ),
-                }
+                    "code": "error-code-1",
+                    "message": "error 1",
+                },
+                {
+                    "code": "error-code-2",
+                    "message": "error 2",
+                },
             ],
+        )
+
+        self.client.set_session_data(
+            {"publisher": {"nickname": "test_username"}}
+        )
+
+        response = self.client.get("/api/packages/test_snap")
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(
+            response.json,
+            {
+                "error": "Error occurred while fetching snap metadata.",
+                "errors": [
+                    {
+                        "code": "error-code-1",
+                        "message": "error 1",
+                    },
+                    {
+                        "code": "error-code-2",
+                        "message": "error 2",
+                    },
+                ],
+                "success": False,
+            },
         )
