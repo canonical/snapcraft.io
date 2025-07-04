@@ -453,7 +453,7 @@ def get_package_metadata(snap_name):
             ),
             error.status_code,
         )
-    except StoreApiError as api_error:
+    except StoreApiError:
         return (
             jsonify(
                 {
