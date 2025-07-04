@@ -69,3 +69,7 @@ coverage/
 .webcache/
 .webcache_blog/
 .coverage
+
+# Charming artifacts
+*.charm
+*.rock
