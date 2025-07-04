@@ -6,6 +6,7 @@ from canonicalwebteam.store_api.publishergw import PublisherGW
 from canonicalwebteam.exceptions import (
     StoreApiError,
     StoreApiResponseErrorList,
+    StoreApiResponseError,
     StoreApiResourceNotFound,
 )
 from flask.json import jsonify
@@ -448,6 +449,16 @@ def get_package_metadata(snap_name):
                 {
                     "error": "Error occurred while fetching snap metadata.",
                     "errors": error.errors,
+                    "success": False,
+                }
+            ),
+            error.status_code,
+        )
+    except StoreApiResponseError as error:
+        return (
+            jsonify(
+                {
+                    "error": "Error occurred while fetching snap metadata.",
                     "success": False,
                 }
             ),
