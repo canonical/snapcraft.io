@@ -11,17 +11,13 @@ import { mockListingData } from "../../../../test-utils";
 
 import type { ListingData } from "../../../../types";
 
-window.SNAP_LISTING_DATA = {
-  DNS_VERIFICATION_TOKEN: "abc123",
-};
-
 jest.mock("react-query", () => ({
   ...jest.requireActual("react-query"),
   useQuery: jest.fn(),
 }));
 
 const mockUseQueryReturnValue = {
-  data: { primary_domain: true },
+  data: { primary_domain: true, token: "abc123" },
   isLoading: false,
   status: "success",
 };

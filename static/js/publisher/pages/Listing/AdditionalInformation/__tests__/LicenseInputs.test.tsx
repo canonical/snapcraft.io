@@ -1,4 +1,6 @@
 import { render, screen } from "@testing-library/react";
+import { http, HttpResponse } from "msw";
+import { setupServer } from "msw/node";
 import userEvent from "@testing-library/user-event";
 import "@testing-library/jest-dom";
 
@@ -28,15 +30,33 @@ function TestLicenseInputs() {
 }
 
 function renderComponent() {
-  window.SNAP_LISTING_DATA = {
-    DNS_VERIFICATION_TOKEN: "test-dns-verification-token",
-  };
-
   return render(<TestLicenseInputs />);
 }
 
+const server = setupServer();
+
+beforeAll(() => {
+  server.listen();
+});
+
+beforeEach(() => {
+  server.use(
+    http.get("/api/test_id/verify", () => {
+      return HttpResponse.json({
+        primary_domain: true,
+        token: "test-dns-verification-token",
+      });
+    }),
+  );
+});
+
 afterEach(() => {
   jest.clearAllMocks();
+  server.resetHandlers();
+});
+
+afterAll(() => {
+  server.close();
 });
 
 describe("LicenseInputs", () => {

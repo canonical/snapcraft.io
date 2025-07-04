@@ -24,12 +24,8 @@ declare interface Window {
       setVolume: (level: number) => void;
     };
   };
-  DNS_VERIFICATION_TOKEN: string;
   SENTRY_DSN: string;
   CSRF_TOKEN: string;
-  SNAP_LISTING_DATA: {
-    DNS_VERIFICATION_TOKEN: string;
-  };
   API_URL: string;
 }
 
