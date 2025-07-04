@@ -25,9 +25,6 @@ const testListingData = {
 };
 
 function renderComponent() {
-  window.SNAP_LISTING_DATA = {
-    DNS_VERIFICATION_TOKEN: "test-dns-verification-token",
-  };
   const queryClient = new QueryClient();
 
   return render(
@@ -52,6 +49,12 @@ beforeEach(() => {
     }),
     http.post("/api/test_id/listing", () => {
       return HttpResponse.json({ success: true }, { status: 200 });
+    }),
+    http.get("/api/test_id/verify", () => {
+      return HttpResponse.json({
+        primary_domain: true,
+        token: "test-dns-verification-token",
+      });
     }),
   );
 });
