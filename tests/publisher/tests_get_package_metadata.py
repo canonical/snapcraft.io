@@ -119,3 +119,25 @@ class TestGetPackageMetadata(BaseTestCases):
                 "success": False,
             },
         )
+
+    @responses.activate
+    @patch(
+        "canonicalwebteam.store_api.publishergw."
+        "PublisherGW.get_package_metadata"
+    )
+    def test_api_error(self, mock_get_package_metadata):
+        mock_get_package_metadata.side_effect = StoreApiError()
+
+        self.client.set_session_data(
+            {"publisher": {"nickname": "test_username"}}
+        )
+
+        response = self.client.get("/api/packages/test_snap")
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(
+            response.json,
+            {
+                "error": "Error occurred while fetching snap metadata.",
+                "success": False,
+            },
+        )
