@@ -33,7 +33,7 @@ function PrimaryDomainInput({
   const { isLoading, status, data: verifiedData } = useVerified(snapId);
   const domain = getValues("primary_website");
   const defaultDomain = data.primary_website;
-  const verificationToken = `SNAPCRAFT_IO_VERIFICATION=${window.SNAP_LISTING_DATA.DNS_VERIFICATION_TOKEN}`;
+  const verificationToken = `SNAPCRAFT_IO_VERIFICATION=${verifiedData && verifiedData.token}`;
 
   const noPathDomains = [
     "github.com",

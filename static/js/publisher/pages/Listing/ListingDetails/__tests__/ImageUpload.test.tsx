@@ -1,4 +1,6 @@
 import { FieldValues, useForm } from "react-hook-form";
+import { http, HttpResponse } from "msw";
+import { setupServer } from "msw/node";
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import "@testing-library/jest-dom";
@@ -26,12 +28,33 @@ function TestImageUpload() {
 }
 
 function renderComponent() {
-  window.SNAP_LISTING_DATA = {
-    DNS_VERIFICATION_TOKEN: "test-dns-verification-token",
-  };
-
   return render(<TestImageUpload />);
 }
+
+const server = setupServer();
+
+beforeAll(() => {
+  server.listen();
+});
+
+beforeEach(() => {
+  server.use(
+    http.get("/api/test_id/verify", () => {
+      return HttpResponse.json({
+        primary_domain: true,
+        token: "test-dns-verification-token",
+      });
+    }),
+  );
+});
+
+afterEach(() => {
+  server.resetHandlers();
+});
+
+afterAll(() => {
+  server.close();
+});
 
 describe("ImageUpload", () => {
   test("icon is displayed on page", () => {
