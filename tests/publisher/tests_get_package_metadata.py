@@ -87,7 +87,7 @@ class TestGetPackageMetadata(BaseTestCases):
             [
                 {
                     "code": "permission-required",
-                    "message": "No publisher or collaborator permission for the teams-for-linux snap package"
+                    "message": "No publisher or collaborator permission for the teams-for-linux snap package",
                 }
-            ]
+            ],
         )
