@@ -4,6 +4,7 @@ from tests.publisher.endpoint_testing import BaseTestCases
 from canonicalwebteam.exceptions import (
     StoreApiResourceNotFound,
     StoreApiResponseErrorList,
+    StoreApiError,
 )
 
 # Make sure tests fail on stray responses.
