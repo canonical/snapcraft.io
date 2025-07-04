@@ -20,7 +20,7 @@ import ProgressiveReleaseProgressChart from "./ProgressiveReleaseProgressChart";
 const RevisionsListRow = (props) => {
   const {
     revision,
-    previousRevision,
+    releasedRevision,
     isSelectable,
     showChannels,
     showBuildRequest,
@@ -31,7 +31,6 @@ const RevisionsListRow = (props) => {
     risk,
     track,
   } = props;
-
   const releasable = canBeReleased(revision);
 
   const revisionDate = revision.release
@@ -40,18 +39,12 @@ const RevisionsListRow = (props) => {
 
   const isSelected = props.selectedRevisions.includes(revision.revision);
 
+  const rowRelease = revision.release;
+  const currentRelease = releasedRevision && releasedRevision.release;
+
   const isProgressive =
-    revision.prog_channels &&
-    revision.prog_channels.includes(`${track}/${risk}`) &&
-    revision.progressive
-      ? true
-      : false;
-  const isPreviousProgressive =
-    previousRevision &&
-    previousRevision.prog_channels &&
-    previousRevision.prog_channels.includes(`${track}/${risk}`)
-      ? true
-      : false;
+    (rowRelease && rowRelease.isProgressive && isActive) ||
+    (currentRelease && currentRelease.isProgressive);
 
   let channel;
   if (revision.release) {
@@ -72,7 +65,10 @@ const RevisionsListRow = (props) => {
     revision.attributes && revision.attributes["build-request-id"];
 
   const canShowProgressiveReleases =
-    isProgressiveReleaseEnabled && !showChannels && !progressiveBeingCancelled;
+    isProgressiveReleaseEnabled &&
+    !showChannels &&
+    !progressiveBeingCancelled &&
+    (isActive || releasedRevision);
 
   return (
     <tr
@@ -99,7 +95,7 @@ const RevisionsListRow = (props) => {
         ) : (
           <span className="p-revisions-list__revision">
             <RevisionLabel revision={revision} showTooltip={true} />{" "}
-            {isProgressive && (
+            {isProgressive && isActive && (
               <span style={{ fontWeight: 300 }}>(Progressive)</span>
             )}
           </span>
@@ -120,19 +116,16 @@ const RevisionsListRow = (props) => {
         <td data-heading="Release progress">
           <ProgressiveReleaseProgressChart
             currentPercentage={
-              revision?.release?.progressive?.["current-percentage"]
+              currentRelease
+                ? 100 - currentRelease.progressive["current-percentage"]
+                : rowRelease.progressive["current-percentage"]
             }
-            targetPercentage={revision?.release?.progressive?.percentage}
-          />
-        </td>
-      ) : isPreviousProgressive ? (
-        <td data-heading="Release progress">
-          <ProgressiveReleaseProgressChart
-            currentPercentage={100 - previousRevision?.progressive?.percentage}
             targetPercentage={
-              100 - previousRevision?.progressive?.["current-percentage"]
+              currentRelease
+                ? 100 - currentRelease.progressive.percentage
+                : rowRelease.progressive.percentage
             }
-            isPreviousRevision={true}
+            isPreviousRevision={!isActive}
           />
         </td>
       ) : (
@@ -167,7 +160,7 @@ const RevisionsListRow = (props) => {
 RevisionsListRow.propTypes = {
   // props
   revision: PropTypes.object.isRequired,
-  previousRevision: PropTypes.object,
+  releasedRevision: PropTypes.object,
   isSelectable: PropTypes.bool,
   showChannels: PropTypes.bool,
   isPending: PropTypes.bool,

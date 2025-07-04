@@ -9,7 +9,12 @@ import { triggerGAEvent } from "../../actions/gaEventTracking";
 
 import { STABLE, CANDIDATE, BETA, EDGE } from "../../constants";
 
-import { getChannelName, isInDevmode, canBeReleased } from "../../helpers";
+import {
+  getChannelName,
+  isInDevmode,
+  canBeReleased,
+  getLatestRelease,
+} from "../../helpers";
 
 import ReleasesTableChannelRow from "./channelRow";
 
@@ -26,8 +31,16 @@ const getRevisionsToDrop = (
       if (!targetChannelArchs || !targetChannelArchs[arch]) {
         return true;
       } else {
+        const isProgressive = getLatestRelease(
+          targetChannelArchs[arch],
+          targetChannel,
+        )?.isProgressive;
         // if different revision released to an arch
-        if (revision.revision !== targetChannelArchs[arch].revision) {
+        // or if the current release in the target arch is progressive
+        if (
+          revision.revision !== targetChannelArchs[arch].revision ||
+          isProgressive
+        ) {
           return true;
         }
       }
