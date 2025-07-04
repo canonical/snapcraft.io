@@ -445,12 +445,24 @@ def get_package_metadata(snap_name):
     except StoreApiResponseErrorList as error:
         return (
             jsonify(
-                {"error": str(error), "errors": error.errors, "success": False}
+                {
+                    "error": "Error occurred while fetching snap metadata.",
+                    "errors": error.errors,
+                    "success": False,
+                }
             ),
             error.status_code,
         )
     except StoreApiError as api_error:
-        return (jsonify({"error": str(api_error), "success": False}), 500)
+        return (
+            jsonify(
+                {
+                    "error": "Error occurred while fetching snap metadata.",
+                    "success": False,
+                }
+            ),
+            500,
+        )
     except Exception:
         return (jsonify({"error": "Unexpected error", "success": False}), 500)
 
