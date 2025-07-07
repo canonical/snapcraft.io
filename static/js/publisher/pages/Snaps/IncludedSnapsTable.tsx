@@ -191,6 +191,7 @@ function IncludedSnapsTable({
           ) : (
             "Name"
           ),
+          sortKey: "name",
         },
         {
           content: "Source store",
