@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">57.14% </span>
+                <span class="strong">59.09% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>24/42</span>
+                <span class='fraction'>26/44</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">48.07% </span>
+                <span class="strong">48% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>25/52</span>
+                <span class='fraction'>24/50</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">58.97% </span>
+                <span class="strong">62.5% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>23/39</span>
+                <span class='fraction'>25/40</span>
             </div>
         
             
@@ -303,7 +303,10 @@
 <a name='L238'></a><a href='#L238'>238</a>
 <a name='L239'></a><a href='#L239'>239</a>
 <a name='L240'></a><a href='#L240'>240</a>
-<a name='L241'></a><a href='#L241'>241</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L241'></a><a href='#L241'>241</a>
+<a name='L242'></a><a href='#L242'>242</a>
+<a name='L243'></a><a href='#L243'>243</a>
+<a name='L244'></a><a href='#L244'>244</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -363,17 +366,11 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -469,6 +466,15 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">13x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">13x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -481,9 +487,9 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -599,50 +605,44 @@ function SnapTableRows({
         {
           content:
             snap.store !== id &amp;&amp; !snap.essential &amp;&amp; !isOnlyViewer() ? (
-              &lt;div
-                className={`u-truncate ${isOnlyViewer() ? <span class="branch-0 cbranch-no" title="branch not covered" >"" </span>: "table-cell-checkbox"}`}
-              &gt;
-                &lt;Input
-                  type="checkbox"
-                  onChange={<span class="fstat-no" title="function not covered" >(e</span>) =&gt; {
-<span class="cstat-no" title="statement not covered" >                    if (e.target.checked) {</span>
-<span class="cstat-no" title="statement not covered" >                      setSnapsToRemove([...snapsToRemove, snap]);</span>
-                    } else {
-<span class="cstat-no" title="statement not covered" >                      setSnapsToRemove(</span>
-                        snapsToRemove.filter(<span class="fstat-no" title="function not covered" >(i</span>tem) =&gt; <span class="cstat-no" title="statement not covered" >item.id !== snap.id)</span>,
-                      );
-                    }
-                  }}
-                  checked={isChecked}
-                  label={snapName}
-                /&gt;
-              &lt;/div&gt;
-            ) : (
-<span class="branch-1 cbranch-no" title="branch not covered" >              &lt;div className="brand-store-table-no-checkbox"&gt;</span>
-                &lt;span style={{ marginLeft: "2rem" }}&gt;{snapName}&lt;/span&gt;
-              &lt;/div&gt;
-            ),
+              &lt;Input
+                type="checkbox"
+                labelClassName="u-no-margin--bottom u-no-padding--top"
+                onChange={<span class="fstat-no" title="function not covered" >(e</span>) =&gt; {
+<span class="cstat-no" title="statement not covered" >                  if (e.target.checked) {</span>
+<span class="cstat-no" title="statement not covered" >                    setSnapsToRemove([...snapsToRemove, snap]);</span>
+                  } else {
+<span class="cstat-no" title="statement not covered" >                    setSnapsToRemove(</span>
+                      snapsToRemove.filter(<span class="fstat-no" title="function not covered" >(i</span>tem) =&gt; <span class="cstat-no" title="statement not covered" >item.id !== snap.id)</span>,
+                    );
+                  }
+                }}
+                checked={isChecked}
+                label=&lt;span className="table-cell-checkbox__label"&gt;
+                  {snap.name}
+                &lt;/span&gt;
+              /&gt;
+            ) : <span class="branch-1 cbranch-no" title="branch not covered" >null,</span>
+        },
+        {
+          content: &lt;div className="u-truncate"&gt;{snapName}&lt;/div&gt;,
         },
         {
           content: isGlobal
             ? "Global"
             : <span class="branch-1 cbranch-no" title="branch not covered" >(getStoreName &amp;&amp; getStoreName(snap.store)) || snap.store,</span>
-          className: "brand-store-table-content",
         },
         {
           content:
             snap["latest-release"] &amp;&amp; snap["latest-release"].version
               ? snap["latest-release"].version
               : <span class="branch-1 cbranch-no" title="branch not covered" >"-",</span>
-          className: "brand-store-table-content",
         },
         {
           content: releaseDate ? format(releaseDate, "dd/MM/yyyy") : <span class="branch-1 cbranch-no" title="branch not covered" >"-",</span>
-          className: "brand-store-table-content",
         },
         {
           content: snap.users[0].displayname,
-          className: "brand-store-table-content",
         },
       ],
       sortData: {
@@ -704,38 +704,47 @@ function IncludedSnapsTable({
     }
   }, [snapsToRemove]);
 &nbsp;
+  const withCheckboxStyles = {
+    paddingBottom: 0,
+    width: "2rem",
+  };
+&nbsp;
+  const withoutCheckboxStyles = {
+    padding: 0,
+    width: 0,
+  };
+&nbsp;
   return (
     &lt;MainTable
       sortable
       headers={[
         {
+          style: !isOnlyViewer() ? withCheckboxStyles : <span class="branch-1 cbranch-no" title="branch not covered" >withoutCheckboxStyles,</span>
           content: !isOnlyViewer() ? (
-            &lt;div
-              className={`u-truncate ${isOnlyViewer() ? <span class="branch-0 cbranch-no" title="branch not covered" >"" </span>: "table-cell-checkbox"}`}
-            &gt;
-              &lt;Input
-                type="checkbox"
-                onChange={<span class="fstat-no" title="function not covered" >(e</span>) =&gt; {
-<span class="cstat-no" title="statement not covered" >                  if (e.target.checked) {</span>
-<span class="cstat-no" title="statement not covered" >                    setSnapsToRemove(</span>
-                      allSnaps.filter(<span class="fstat-no" title="function not covered" >(i</span>tem) =&gt; <span class="cstat-no" title="statement not covered" >!item.essential)</span>,
-                    );
-<span class="cstat-no" title="statement not covered" >                    setIsChecked(true);</span>
-                  } else {
-<span class="cstat-no" title="statement not covered" >                    setSnapsToRemove([]);</span>
-<span class="cstat-no" title="statement not covered" >                    setIsChecked(false);</span>
-                  }
-                }}
-                disabled={!nonEssentialSnapIds.length}
-                label="Name"
-                checked={isChecked}
-                // @ts-expect-error - The Input component does not support the 'indeterminate' prop.
-                indeterminate={isIndeterminate}
-              /&gt;
-            &lt;/div&gt;
-          ) : (
-<span class="branch-1 cbranch-no" title="branch not covered" >            "Name"</span>
-          ),
+            &lt;Input
+              labelClassName="u-no-margin--bottom"
+              type="checkbox"
+              onChange={<span class="fstat-no" title="function not covered" >(e</span>) =&gt; {
+<span class="cstat-no" title="statement not covered" >                if (e.target.checked) {</span>
+<span class="cstat-no" title="statement not covered" >                  setSnapsToRemove(allSnaps.filter(<span class="fstat-no" title="function not covered" >(i</span>tem) =&gt; <span class="cstat-no" title="statement not covered" >!item.essential)</span>);</span>
+<span class="cstat-no" title="statement not covered" >                  setIsChecked(true);</span>
+                } else {
+<span class="cstat-no" title="statement not covered" >                  setSnapsToRemove([]);</span>
+<span class="cstat-no" title="statement not covered" >                  setIsChecked(false);</span>
+                }
+              }}
+              disabled={!nonEssentialSnapIds.length}
+              label=&lt;span className="table-cell-checkbox__label"&gt;Name&lt;/span&gt;
+              checked={isChecked}
+              // @ts-expect-error - The Input component does not support the 'indeterminate' prop.
+              indeterminate={isIndeterminate}
+            /&gt;
+          ) : <span class="branch-1 cbranch-no" title="branch not covered" >null,</span>
+        },
+        {
+          content: "Name",
+          sortKey: "name",
+          className: "brand-store-table-header",
         },
         {
           content: "Source store",
@@ -790,7 +799,7 @@ export default IncludedSnapsTable;
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-07-06T22:03:57.704Z
+                at 2025-07-07T22:04:16.779Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>
