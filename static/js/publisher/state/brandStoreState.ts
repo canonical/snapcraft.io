@@ -1,4 +1,5 @@
 import { atom, selectorFamily } from "recoil";
+import { atom as jotaiAtom } from "jotai";
 
 import type { Store } from "../types/shared";
 
@@ -7,10 +8,7 @@ const brandStoresState = atom({
   default: [] as Array<Store>,
 });
 
-const brandIdState = atom({
-  key: "brandId",
-  default: "",
-});
+const brandIdState = jotaiAtom("");
 
 const brandStoreState = selectorFamily({
   key: "brandStore",

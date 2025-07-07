@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
+import { useAtom as useJotaiState } from "jotai";
 import { useParams, NavLink } from "react-router-dom";
 import { Icon } from "@canonical/react-components";
 
@@ -25,7 +26,7 @@ function Navigation({
   const [pinSideNavigation, setPinSideNavigation] = useState<boolean>(false);
   const [collapseNavigation, setCollapseNavigation] = useState<boolean>(false);
   const [publisher, setPublisher] = useRecoilState(publisherState);
-  const [brandId, setBrandId] = useRecoilState(brandIdState);
+  const [brandId, setBrandId] = useJotaiState(brandIdState);
 
   const currentStore = brandStoresList.find((store) => store.id === id);
 
