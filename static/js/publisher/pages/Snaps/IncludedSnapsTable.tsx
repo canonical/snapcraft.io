@@ -54,50 +54,44 @@ function SnapTableRows({
         {
           content:
             snap.store !== id && !snap.essential && !isOnlyViewer() ? (
-              <div
-                className={`u-truncate ${isOnlyViewer() ? "" : "table-cell-checkbox"}`}
-              >
-                <Input
-                  type="checkbox"
-                  onChange={(e) => {
-                    if (e.target.checked) {
-                      setSnapsToRemove([...snapsToRemove, snap]);
-                    } else {
-                      setSnapsToRemove(
-                        snapsToRemove.filter((item) => item.id !== snap.id),
-                      );
-                    }
-                  }}
-                  checked={isChecked}
-                  label={snapName}
-                />
-              </div>
-            ) : (
-              <div className="brand-store-table-no-checkbox">
-                <span style={{ marginLeft: "2rem" }}>{snapName}</span>
-              </div>
-            ),
+              <Input
+                type="checkbox"
+                labelClassName="u-no-margin--bottom u-no-padding--top"
+                onChange={(e) => {
+                  if (e.target.checked) {
+                    setSnapsToRemove([...snapsToRemove, snap]);
+                  } else {
+                    setSnapsToRemove(
+                      snapsToRemove.filter((item) => item.id !== snap.id),
+                    );
+                  }
+                }}
+                checked={isChecked}
+                label=<span className="table-cell-checkbox__label">
+                  {snap.name}
+                </span>
+              />
+            ) : null,
+        },
+        {
+          content: <div className="u-truncate">{snapName}</div>,
         },
         {
           content: isGlobal
             ? "Global"
             : (getStoreName && getStoreName(snap.store)) || snap.store,
-          className: "brand-store-table-content",
         },
         {
           content:
             snap["latest-release"] && snap["latest-release"].version
               ? snap["latest-release"].version
               : "-",
-          className: "brand-store-table-content",
         },
         {
           content: releaseDate ? format(releaseDate, "dd/MM/yyyy") : "-",
-          className: "brand-store-table-content",
         },
         {
           content: snap.users[0].displayname,
-          className: "brand-store-table-content",
         },
       ],
       sortData: {
@@ -159,38 +153,47 @@ function IncludedSnapsTable({
     }
   }, [snapsToRemove]);
 
+  const withCheckboxStyles = {
+    paddingBottom: 0,
+    width: "2rem",
+  };
+
+  const withoutCheckboxStyles = {
+    padding: 0,
+    width: 0,
+  };
+
   return (
     <MainTable
       sortable
       headers={[
         {
+          style: !isOnlyViewer() ? withCheckboxStyles : withoutCheckboxStyles,
           content: !isOnlyViewer() ? (
-            <div
-              className={`u-truncate ${isOnlyViewer() ? "" : "table-cell-checkbox"}`}
-            >
-              <Input
-                type="checkbox"
-                onChange={(e) => {
-                  if (e.target.checked) {
-                    setSnapsToRemove(
-                      allSnaps.filter((item) => !item.essential),
-                    );
-                    setIsChecked(true);
-                  } else {
-                    setSnapsToRemove([]);
-                    setIsChecked(false);
-                  }
-                }}
-                disabled={!nonEssentialSnapIds.length}
-                label="Name"
-                checked={isChecked}
-                // @ts-expect-error - The Input component does not support the 'indeterminate' prop.
-                indeterminate={isIndeterminate}
-              />
-            </div>
-          ) : (
-            "Name"
-          ),
+            <Input
+              labelClassName="u-no-margin--bottom"
+              type="checkbox"
+              onChange={(e) => {
+                if (e.target.checked) {
+                  setSnapsToRemove(allSnaps.filter((item) => !item.essential));
+                  setIsChecked(true);
+                } else {
+                  setSnapsToRemove([]);
+                  setIsChecked(false);
+                }
+              }}
+              disabled={!nonEssentialSnapIds.length}
+              label=<span className="table-cell-checkbox__label">Name</span>
+              checked={isChecked}
+              // @ts-expect-error - The Input component does not support the 'indeterminate' prop.
+              indeterminate={isIndeterminate}
+            />
+          ) : null,
+        },
+        {
+          content: "Name",
+          sortKey: "name",
+          className: "brand-store-table-header",
         },
         {
           content: "Source store",
