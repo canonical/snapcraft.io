@@ -2,6 +2,7 @@ import { createRoot } from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { RecoilRoot } from "recoil";
 import { QueryClient, QueryClientProvider } from "react-query";
+import { ReactQueryDevtools } from "react-query/devtools";
 
 import PublisherRoot from "./routes/publisher-root";
 import Publicise from "./pages/Publicise";
@@ -17,6 +18,7 @@ import AccountSnaps from "./pages/AccountSnaps";
 import RegisterNameDispute from "./pages/RegisterNameDispute";
 import RequestReservedName from "./pages/RequestReservedName";
 import RegisterSnap from "./pages/RegisterSnap";
+import SnapCves from "./pages/SnapCves";
 
 const router = createBrowserRouter([
   {
@@ -68,6 +70,10 @@ const router = createBrowserRouter([
         element: <Releases />,
       },
       {
+        path: "/:snapId/cves",
+        element: <SnapCves />,
+      },
+      {
         path: "/snaps",
         element: <AccountSnaps />,
       },
@@ -104,6 +110,7 @@ root.render(
   <RecoilRoot>
     <QueryClientProvider client={queryClient}>
       <RouterProvider router={router} />
+      <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>
   </RecoilRoot>,
 );
