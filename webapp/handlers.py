@@ -192,7 +192,7 @@ def snapcraft_utility_processor():
         "stores": stores,
         "format_link": template_utils.format_link,
         "DNS_VERIFICATION_SALT": DNS_VERIFICATION_SALT,
-        "VANILLA_JS_MODULE_PATH": template_utils.static_url("js/dist/patterns.js"),
+        "VANILLA_JS_MODULE_PATH": template_utils.static_url("js/vanilla/index.js"),
     }
 
 
