@@ -618,6 +618,8 @@ export function getProgressiveState(
       if (previousRevision && previousRevision.revision) {
         previousRevision = revisions[previousRevision.revision];
       }
+    } else if (isPending) {
+      previousRevision = allReleases[0];
     }
 
     let pendingMatch: any;
@@ -719,9 +721,9 @@ export function getSeparatePendingReleases(
       } else if (
         isProgressiveEnabled &&
         pendingRelease.progressive &&
-        pendingRelease.previousRevisions &&
-        pendingRelease.previousRevisions.length > 0 &&
-        pendingRelease.previousRevisions[0]
+        pendingRelease.previousReleases &&
+        pendingRelease.previousReleases.length > 0 &&
+        pendingRelease.previousReleases[0]
       ) {
         // What are the differences between the previous progressive state
         // and the new state.

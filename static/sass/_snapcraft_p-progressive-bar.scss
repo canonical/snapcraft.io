@@ -1,9 +1,9 @@
 @use "sass:color";
 
 @mixin snapcraft-p-progressive-bar {
-  $inactive: color.scale($color-link, $lightness: 90%);
-  $active: $color-link;
-  $target: color.scale($color-link, $lightness: -20%);
+  $color-inactive: color.scale($color-link, $lightness: 90%);
+  $color-active: $color-link;
+  $color-target: color.scale($color-link, $lightness: -20%);
 
   %bar {
     border-radius: 9px 0 0 9px;
@@ -16,7 +16,7 @@
   }
 
   .progressive-bar {
-    background: $inactive;
+    background: $color-inactive;
     border-radius: 9px;
     height: 9px;
     margin-top: 7px;
@@ -33,13 +33,19 @@
   .progressive-bar__current {
     @extend %bar;
 
-    background: $active;
+    background: $color-active;
   }
 
   .progressive-bar__target {
     @extend %bar;
 
-    background: $target;
+    background: $color-target;
+  }
+
+  .progressive-bar__min {
+    @extend %bar;
+
+    background: $color-negative;
   }
 
   .progressive-bar.is-disabled {
@@ -47,11 +53,11 @@
     pointer-events: none;
 
     .progressive-bar__current {
-      background: color.adjust(color.grayscale($active), $lightness: 20%, $space: hsl);
+      background: color.adjust(color.grayscale($color-active), $lightness: 20%, $space: hsl);
     }
 
     .progressive-bar__target {
-      background: color.adjust(color.grayscale($target), $lightness: 20%, $space: hsl);
+      background: color.adjust(color.grayscale($color-target), $lightness: 20%, $space: hsl);
     }
   }
 

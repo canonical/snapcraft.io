@@ -18,17 +18,19 @@ export function releaseRevision(revision, channel, progressive) {
     const state = getState();
     const { revisions, pendingReleases } = state;
 
-    const previousRevisions = getReleases(
-      state,
-      revision.architectures,
-      channel,
-    )
-      .filter((release) => release.revision !== revision.revision)
+    const previousReleases = getReleases(state, revision.architectures, channel)
+      .reduce((acc, release) => {
+        if (!acc.length || acc[acc.length - 1].revision !== release.revision) {
+          acc.push(release);
+        }
+
+        return acc;
+      }, [])
       .map((release) => revisions[release.revision]);
 
     let revisionToRelease = revision;
 
-    if (!progressive && previousRevisions.length > 0 && previousRevisions[0]) {
+    if (!progressive && previousReleases.length > 0 && previousReleases[0]) {
       revisionToRelease = revisions[revision.revision];
 
       let percentage = 100;
@@ -60,7 +62,7 @@ export function releaseRevision(revision, channel, progressive) {
         revision: revisionToRelease,
         channel,
         progressive,
-        previousRevisions,
+        previousReleases: previousReleases,
       },
     });
   };

@@ -4,8 +4,9 @@ import PropTypes from "prop-types";
 const ProgressiveBar = ({
   percentage,
   targetPercentage,
-  readonly,
+  readonly = true,
   disabled,
+  minPercentage = 0,
 }) => {
   let current = percentage;
 
@@ -50,12 +51,14 @@ const ProgressiveBar = ({
         }`}
         style={{ width: `${current}%` }}
       />
+      {minPercentage > 1 && (
+        <div
+          className="progressive-bar__min"
+          style={{ width: `${minPercentage}%` }}
+        ></div>
+      )}
     </div>
   );
-};
-
-ProgressiveBar.defaultProps = {
-  readonly: true,
 };
 
 ProgressiveBar.propTypes = {
@@ -63,6 +66,7 @@ ProgressiveBar.propTypes = {
   targetPercentage: PropTypes.number,
   readonly: PropTypes.bool,
   disabled: PropTypes.bool,
+  minPercentage: PropTypes.number,
 };
 
 class InteractiveProgressiveBar extends React.Component {
@@ -218,7 +222,7 @@ class InteractiveProgressiveBar extends React.Component {
   }
 
   render() {
-    const { disabled, singleDirection } = this.props;
+    const { disabled, singleDirection, minPercentage } = this.props;
     const { current, scrubTarget, scrubStart } = this.state;
     const classes = ["progressive-bar__interactive-wrapper"];
     if (scrubStart) {
@@ -243,6 +247,7 @@ class InteractiveProgressiveBar extends React.Component {
           targetPercentage={scrubTarget}
           readonly={false}
           disabled={disabled}
+          minPercentage={minPercentage}
         />
       </div>
     );
