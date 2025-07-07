@@ -32,9 +32,8 @@ const ReleasesConfirmDetails = ({ updates, isProgressiveReleaseEnabled }) => {
   const showNewReleases = Object.keys(newReleases).length > 0;
   const showPendingCloses = pendingCloses.length > 0;
 
-  const lowestPercentage = Object.entries(updates.newReleasesToProgress).reduce(
-    (min, update) => {
-      const release = update[1];
+  const lowestPercentage = Object.values(updates.newReleasesToProgress).reduce(
+    (min, release) => {
       const previousRelease = release.previousReleases?.[0];
       if (previousRelease?.revision !== release.revision.revision) {
         return min;
