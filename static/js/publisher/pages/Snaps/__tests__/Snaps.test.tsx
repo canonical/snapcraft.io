@@ -91,7 +91,7 @@ describe("Snaps", () => {
 
     await waitFor(() => {
       expect(
-        screen.getByRole("gridcell", { name: "test-snap-name-included" }),
+        screen.getByLabelText("test-snap-name-included"),
       ).toBeInTheDocument();
     });
   });
