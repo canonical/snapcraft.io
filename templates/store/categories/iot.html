@@ -1,315 +1,243 @@
-{% extends webapp_config['LAYOUT'] %}
+{% extends "_layout.html" %}
 
 {% block meta_copydoc %}{% endblock %}
 
 {% block meta_title %}
-Snapcraft - Fast and secure publishing for IoT (Internet of Things)
+IoT Snaps
 {% endblock %}
 
 {% block meta_description %}
-Transactional updates, airtight security, and compatibility across architectures and operating systems make snaps a perfect solution for IoT.
+Transactional updates, airtight security, and compatibility across architectures and operating systems. Explore the IoT snaps that are available on the Snap Store.
 {% endblock %}
 
 {% block content %}
-  <section id="main-content" class="p-strip--image snapcraft-banner-background">
-    <div class="row">
-      <div class="col-7">
-        <h1 class="p-heading--2">Internet of Things</h1>
-        <p>Transactional updates, airtight security, and compatibility across architectures and operating systems make snaps a perfect solution for IoT.</p>
-        <p><a class="p-button--positive" href="https://ubuntu.com/internet-of-things">Getting started with IoT</a></p>
-        <p><a class="p-button--neutral" href="/docs/creating-a-snap">Publish IoT applications with Snapcraft &rsaquo;</a></p>
+<section id="main-content" class="p-section--hero">
+  <div class="row--50-50-on-large">
+    <div class="col">
+      <div class="p-section--shallow">
+        <h1 class="p-heading--2">
+          <strong>IoT Snaps</strong>
+        </h1>
       </div>
-      <div class="col-5 u-align--center">
-        {{
-          image(
-            url="https://assets.ubuntu.com/v1/2c5e93c5-fast-easy-safe-illustration.svg",
-            alt="",
-            height="244",
-            width="243",
-            hi_def=True,
-            loading="auto",
-          ) | safe
-        }}
+      <div class="p-section--shallow">
+        <p>Transactional updates, airtight security, and compatibility across architectures and operating systems make snaps a perfect solution for IoT. Explore the IoT snaps that are available on the Snap Store.</p>
       </div>
     </div>
-  </section>
+    <hr>
+    <div class="p-cta-block">
+      <a href="https://ubuntu.com/internet-of-things" class="p-button--positive">Get started with IoT</a>
+      <a href="/docs/creating-a-snap" style="margin-right: 1rem;">Publish app with Snapcraft&nbsp;&rsaquo;</a>
+      <a
+        href="https://ubuntu.com/internet-of-things/contact-us?product=appstore"
+        data-js="contact-form-trigger"
+        data-formid="2639">
+        Contact us&nbsp;&rsaquo;
+      </a>
+    </div>
+  </div>
+</section>
 
-  <section class="p-strip is-shallow">
-    <div class="u-fixed-width">
-      <h3 class="p-heading--4">Learn more about our IoT offerings</h3>
-    </div>
+<div class="u-fixed-width"><hr class="p-rule"></div>
 
-    <div class="row u-equal-height">
-      <div class="col-3 p-card--highlighted">
-      <h4 class="p-muted-heading">Whitepaper</h4>
-        {{
-          image(
-            url="https://assets.ubuntu.com/v1/1ed78747-one.jpg",
-            alt="",
-            height="900",
-            width="1600",
-            hi_def=True,
-            loading="auto",
-          ) | safe
-        }}
-        <div class="p-card__content">
-          <h3 class="p-heading--4"><a href="https://ubuntu.com/engage/iot-device-management-whitepaper">Secure IoT device management</a></h3>
-          <p>Open source operating systems and applications are making it easier than ever for businesses to develop and deploy IoT devices, but this is giving rise to a new challenge: how can organisations efficiently monitor and maintain their IoT fleets?</p>
-        </div>
-      </div>
-      <div class="col-3 p-card--highlighted">
-        <h4 class="p-muted-heading">Whitepaper</h4>
-        {{
-          image(
-            url="https://assets.ubuntu.com/v1/06190056-two.jpg",
-            alt="",
-            height="900",
-            width="1600",
-            hi_def=True,
-            loading="auto",
-          ) | safe
-        }}
-        <div class="p-card__content">
-          <h3 class="p-heading--4"><a href="https://ubuntu.com/engage/snapd-whitepaper">Solving the software update challenge for IoT devices</a></h3>
-          <p>Ubuntu Core solves the update problem for IoT devices regardless of fleet scale, with transactional over-the-air updates that are either 100% successful, or are not installed. Packages on Ubuntu Core are delivered through snaps.</p>
-        </div>
-      </div>
-      <div class="col-3 p-card--highlighted">
-        <h4 class="p-muted-heading">Whitepaper</h4>
-        {{
-          image(
-            url="https://assets.ubuntu.com/v1/8905c689-three.jpg",
-            alt="",
-            height="900",
-            width="1600",
-            hi_def=True,
-            loading="auto",
-          ) | safe
-        }}
-        <div class="p-card__content">
-          <h3 class="p-heading--4"><a href="https://ubuntu.com/engage/smart-start-whitepaper">Accelerating IoT device time to market</a></h3>
-          <p>This whitepaper draws findings from more than 30 case studies, project summaries, and business cases to identify the central IoT pitfalls and their solutions.</p>
-        </div>
-      </div>
-      <div class="col-3 p-card--highlighted">
-        <h4 class="p-muted-heading">Webinar</h4>
-        {{
-          image(
-            url="https://assets.ubuntu.com/v1/8999a96d-four.jpg",
-            alt="",
-            height="900",
-            width="1600",
-            hi_def=True,
-            loading="auto",
-          ) | safe
-        }}
-        <div class="p-card__content">
-          <h3 class="p-heading--4"><a href="https://ubuntu.com/engage/ubuntu-core-20-webinar">An introduction to Ubuntu Core 20</a></h3>
-          <p>Ubuntu Core enables innovators to create highly secure things and focus entirely on their own unique features and apps, with confinement and security updates built into the operating system.</p>
-        </div>
-      </div>
+<section class="p-strip u-no-padding--top u-no-padding--bottom">
+  <div class="row--25-25-50">
+    <div class="col">
+      <h2 class="p-heading--2">Devices</h2>
     </div>
-
-    <div class="u-fixed-width">
-      <hr />
+    <div class="col">
+      <h3 class="p-heading--5">Do more with your devices</h3>
     </div>
-
-    <div class="u-fixed-width">
-      <h3 class="p-heading--4">IoT tools and server</h3>
+    <div class="col">
+      <p><a href="https://ubuntu.com/blog/adopting-open-source-industrial-iot">Adopting open-source Industrial IoT software</a></p>
+      <p><a href="https://ubuntu.com/tutorials/how-to-install-ubuntu-on-risc-v-hifive-boards#1-overview">How to install Ubuntu on RISC-V HiFive boards</a></p>
+      <p><a href="https://mir-server.io/docs/make-a-secure-ubuntu-web-kiosk">Make a Secure Ubuntu Web Kiosk</a></p>
     </div>
-    <div class="row">
-      {% for snap in iot_tools_and_server %}
-        <div class="col-3 col-medium-3">
-          {% include "store/_media-object-snap-partial.html" %}
-        </div>
-      {% endfor %}
-    </div>
-
-    <div class="row u-equal-height">
-      <div class="col-6 p-card--highlighted">
-        <h4 class="p-muted-heading">Case study</h4>
-        <div class="p-card__content">
-          {{
-            image(
-              url="https://assets.ubuntu.com/v1/3f913e1d-0409_cyberdyne_top.jpg",
-              alt="",
-              height="352",
-              width="625",
-              hi_def=True,
-              loading="lazy",
-            ) | safe
-          }}
-          <h3 class="p-heading--4"><a href="https://ubuntu.com/engage/cyberdyne">Cyberdyne keeps cleaning robots up-to-date in the field with snaps</a></h3>
-          <p>As Japan&rsquo;s workforce ages, certain roles are being fulfilled by advanced robots to help bridge the gap. Cyberdyne, a Japanese robotics company, are building such robots&hellip;</p>
-        </div>
-      </div>
-      <div class="col-6 p-card--highlighted">
-        <h4 class="p-muted-heading">Case study</h4>
-        <div class="p-card__content">
-          {{
-            image(
-              url="https://assets.ubuntu.com/v1/177e5b6d-banner-1200x385.jpg",
-              alt="",
-              height="385",
-              width="685",
-              hi_def=True,
-              loading="lazy",
-            ) | safe
-          }}
-          <h3 class="p-heading--4"><a href="https://ubuntu.com/engage/case-study-rigado">Rigado cuts customers&rsquo; time-to-market</a></h3>
-          <p>In the fast-paced world of IoT, being able to reduce time-to-market is a priority. After looking at a number of container options that involved a lot of moving parts, Rigado decided to turn to Ubuntu Core and snaps.</p>
-        </div>
-      </div>
-    </div>
-
-    <div class="u-fixed-width">
-      <hr />
-    </div>
-
-    <div class="u-fixed-width">
-      <h3 class="p-heading--4">Industrial IoT</h3>
-    </div>
-    <div class="row">
-      {% for snap in industrial_iot %}
-        <div class="col-3 col-medium-3">
-          {% if not loop.last %}
-            {% set media_object_classname = "u-no-margin--bottom" %}
-          {% endif %}
-          {% include "store/_media-object-snap-partial.html" %}
-        </div>
-      {% endfor %}
-    </div>
-
-    <div class="u-fixed-width">
-      <hr />
-    </div>
-
-    <div class="u-fixed-width">
-      <h3 class="p-heading--4">Networking</h3>
-    </div>
-    <div class="row">
-      {% for snap in networking %}
-        <div class="col-3">
-          {% if not loop.last %}
-            {% set media_object_classname = "u-no-margin--bottom" %}
-          {% endif %}
-          {% include "store/_media-object-snap-partial.html" %}
-        </div>
-      {% endfor %}
-    </div>
-
-    <div class="u-fixed-width">
-      <hr />
-    </div>
-
-    <div class="u-fixed-width">
-      <h3 class="p-heading--4">Home gateway</h3>
-    </div>
-    <div class="row">
-      {% for snap in home_gateway %}
-        <div class="col-3">
-          {% if not loop.last %}
-            {% set media_object_classname = "u-no-margin--bottom" %}
-          {% endif %}
-          {% include "store/_media-object-snap-partial.html" %}
-        </div>
-      {% endfor %}
-    </div>
-
-    <div class="u-fixed-width">
-      <hr />
-    </div>
-
-    <div class="u-fixed-width">
-      <h3 class="p-heading--4">Board images</h3>
-    </div>
-    <div class="row">
-      {% for snap in board_images %}
-        <div class="col-3">
-          {% if not loop.last %}
-            {% set media_object_classname = "u-no-margin--bottom" %}
-          {% endif %}
-          {% include "store/_media-object-snap-partial.html" %}
-        </div>
-      {% endfor %}
-    </div>
-
-    <div class="u-fixed-width">
-      <hr />
-    </div>
-
-    <div class="u-fixed-width">
-      <h3 class="p-heading--4">More on IoT</h3>
-    </div>
-      <div class="row u-equal-height">
-        <div class="col-4 p-card--highlighted">
-          {{
-            image(
-              url="https://assets.ubuntu.com/v1/3e7e8ba0-Screen-Shot-2021-03-23-at-12.25.jpg",
-              alt="",
-              height="696",
-              width="1280",
-              hi_def=True,
-              loading="lazy",
-            ) | safe
-          }}
-          <div class="p-card__content">
-            <h3 class="p-heading--4">
-              <a href="https://ubuntu.com/blog/canonical-collabora-nextcloud-deliver-work-from-home-solution-to-raspberry-pi-and-enterprise-arm">Canonical, Collabora, Nextcloud deliver work-from-home solution to Raspberry Pi and enterprise ARM users</a>
-            </h3>
-            <p>Canonical, Collabora and Nextcloud announce the immediate availability of a content collaboration platform for 64bit ARM for both consumers and enterprises. Building on the prior Nextcloud Ubuntu Appliance it adds with Collabora Online, the first viable self-hosted web office solution on the popular Raspberry Pi 4 platform.</p>
-            <p class="u-no-padding--bottom">
-              <a href="https://ubuntu.com/blog/canonical-collabora-nextcloud-deliver-work-from-home-solution-to-raspberry-pi-and-enterprise-arm">Read more&nbsp;&rsaquo;</a>
-            </p>
+  </div>
+</section>
+<section class="p-strip is-shallow">
+  <div class="row">
+    <div class="col-9 col-start-large-4 col-medium-5 col-start-medium-2">
+      <hr>
+      <div class="row">
+        {% for snap in devices %}
+          <div class="col-3 col-medium-3">
+            {% include "store/_media-object-snap-partial.html" %}
           </div>
-        </div>
-
-        <div class="col-4 p-card--highlighted">
-          {{
-            image(
-              url="https://assets.ubuntu.com/v1/75b806a2-Screenshot-from-2021-03-17-16-38-55.png",
-              alt="",
-              height="656",
-              width="1162",
-              hi_def=True,
-              loading="lazy",
-            ) | safe
-          }}
-          <div class="p-card__content">
-            <h3 class="p-heading--4">
-              <a href="https://ubuntu.com/blog/ask-me-anything-ubuntu-core-20">Ask Me Anything: Ubuntu Core 20</a>
-            </h3>
-            <p>Ubuntu Core 20 was recently released. What can it do for IoT developers? How does it work? What’s new? If you are asking yourself any of these questions, or more, there is good news.</p>
-            <p class="u-no-padding--bottom">
-              <a href="https://ubuntu.com/blog/ask-me-anything-ubuntu-core-20">Watch the AMA&nbsp;&rsaquo;</a>
-            </p>
-          </div>
-        </div>
-
-        <div class="col-4 p-card--highlighted">
-          {{
-            image(
-              url="https://assets.ubuntu.com/v1/02a4472c-pasted+image.jpg",
-              alt="",
-              height="418",
-              width="743",
-              hi_def=True,
-              loading="lazy",
-            ) | safe
-          }}
-          <div class="p-card__content">
-            <h3 class="p-heading--4">
-              <a href="https://ubuntu.com/blog/build-smart-displays-with-mir-2-3-2">Build smart displays with mir 2.3.2</a>
-            </h3>
-            <p>Mir works across the whole stack of devices, from desktop computers, tablets and phones, to IoT devices. You can find mir in industry GUI applications to smart mirrors, enabling developers to design innovative user interfaces.</p>
-            <p class="u-no-padding--bottom">
-              <a href="https://ubuntu.com/blog/build-smart-displays-with-mir-2-3-2">Read more&nbsp;&rsaquo;</a>
-            </p>
-            <p class="u-no-padding--bottom">
-              <a href="https://ubuntu.com/blog/creating-graphical-shells-try-mir-in-a-virtual-machine">Try Mir for yourself&nbsp;&rsaquo;</a>
-            </p>
-          </div>
-        </div>
+        {% endfor %}
+      </div>
     </div>
-  </section>
+  </div>
+</section>
+
+<div class="u-fixed-width">
+  <hr class="p-rule">
+</div>
+
+<section class="p-strip u-no-padding--top u-no-padding--bottom">
+  <div class="row--25-25-50">
+    <div class="col">
+      <h2 class="p-heading--2"><a href="https://ubuntu.com/robotics">Robotics</a></h2>
+    </div>
+    <div class="col">
+      <h3 class="p-heading--5">Discover our robotics solutions</h3>
+    </div>
+    <div class="col">
+      <p><a href="https://ubuntu.com/blog/ubuntu-core-on-amd-kr260">AMD Kria™ KR260 Robotics Starter Kit and Ubuntu: an exploration into future robotics development</a></p>
+      <p><a href="https://ubuntu.com/blog/ros-architectures-with-snaps">ROS architectures with snaps</a></p>
+      <p><a href="https://ubuntu.com/tutorials/getting-started-with-ros-2">Getting Started with ROS 2</a></p>
+    </div>
+  </div>
+</section>
+
+<section class="p-strip is-shallow">
+  <div class="row">
+    <div class="col-9 col-start-large-4 col-medium-5 col-start-medium-2">
+      <hr>
+      <div class="row">
+        {% for snap in robotics %}
+          <div class="col-3 col-medium-3">
+            {% include "store/_media-object-snap-partial.html" %}
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="u-fixed-width">
+  <hr class="p-rule">
+</div>
+
+<section class="p-strip u-no-padding--top u-no-padding--bottom">
+  <div class="row--25-25-50">
+    <div class="col">
+      <h2 class="p-heading--2"><a href="https://ubuntu.com/internet-of-things/smart-home">Smart home</a></h2>
+    </div>
+    <div class="col">
+      <h3 class="p-heading--5">Start your next smart home project</h3>
+    </div>
+    <div class="col">
+      <p><a href="https://ubuntu.com/tutorials/install-home-assistant-on-ubuntu-core-and-create-a-motion-activated-light-automation#1-overview">Install Home Assistant on Ubuntu Core and create a motion-activated light automation</a></p>
+      <p><a href="https://ubuntu.com/blog/matter-on-ubuntu-getting-started">Matter on Ubuntu: getting started with the standard for smart home devices</a></p>
+      <p><a href="https://ubuntu.com/internet-of-things/smart-home#get-in-touch">Sign up to receive smart home and IoT news</a></p>
+    </div>
+  </div>
+</section>
+
+<section class="p-strip is-shallow">
+  <div class="row">
+    <div class="col-9 col-start-large-4 col-medium-5 col-start-medium-2">
+      <hr>
+      <div class="row">
+        {% for snap in smart_home %}
+          <div class="col-3 col-medium-3">
+            {% include "store/_media-object-snap-partial.html" %}
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="u-fixed-width">
+  <hr class="p-rule">
+</div>
+
+<section class="p-strip u-no-padding--top u-no-padding--bottom">
+  <div class="row--25-25-50">
+    <div class="col">
+      <h2 class="p-heading--2">Networking</h2>
+    </div>
+    <div class="col">
+      <h3 class="p-heading--5">Learn more about our IoT offerings</h3>
+    </div>
+    <div class="col">
+      <p><a href="https://ubuntu.com/engage/snapd-whitepaper">How to implement over-the-air updates</a></p>
+      <p><a href="https://ubuntu.com/engage/embedded-linux-make-or-buy">Embedded Linux: Make or buy?</a></p>
+      <p><a href="https://ubuntu.com/engage/top-five-iot-challenges">Top 5 IoT challenges and how to solve them</a></p>
+      <p><a href="https://ubuntu.com/engage/a-practical-guide-to-iot-lifecycle-management">A practical guide to IoT lifecycle management</a></p>
+    </div>
+  </div>
+</section>
+<section class="p-strip is-shallow">
+  <div class="row">
+    <div class="col-9 col-start-large-4 col-medium-5 col-start-medium-2">
+      <hr>
+      <div class="row">
+        {% for snap in networking %}
+          <div class="col-3 col-medium-3">
+            {% include "store/_media-object-snap-partial.html" %}
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="u-fixed-width">
+  <hr class="p-rule">
+</div>
+
+<section class="p-strip u-no-padding--top u-no-padding--bottom">
+  <div class="row--25-25-50">
+    <div class="col">
+      <h2 class="p-heading--2">Board images</h2>
+    </div>
+    <div class="col">
+      <h3 class="p-heading--5">Follow our Raspberry Pi tutorials</h3>
+    </div>
+    <div class="col">
+      <p><a href="https://ubuntu.com/tutorials/how-to-kubernetes-cluster-on-raspberry-pi#1-overview">How to build a Raspberry Pi Kubernetes cluster using MicroK8s</a></p>
+      <p><a href="https://ubuntu.com/tutorials/how-to-sdcard-ubuntu-server-raspberry-pi#1-overview">How to create an Ubuntu Server SDcard for Raspberry Pi</a></p>
+      <p><a href="https://ubuntu.com/tutorials/how-to-install-ubuntu-desktop-on-raspberry-pi-4">How to install Ubuntu Desktop on Raspberry Pi 4</a></p>
+    </div>
+  </div>
+</section>
+<section class="p-strip is-shallow">
+  <div class="row">
+    <div class="col-9 col-start-large-4 col-medium-5 col-start-medium-2">
+      <hr>
+      <div class="row">
+        {% for snap in board_images %}
+          <div class="col-3 col-medium-3">
+            {% include "store/_media-object-snap-partial.html" %}
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="p-strip is-shallow">
+  <div class="u-fixed-width">
+    <h2 class="p-muted-heading">Learn More</h2>
+  </div>
+  <div class="u-fixed-width">
+    <hr class="p-rule">
+  </div>
+  <div class="row--25-25-50">
+    <div class="col">
+      <h3 class="p-heading--4">Get in touch about your next project</h3>
+    </div>
+    <div class="col">
+      <h4 class="p-heading--5"><a href="https://ubuntu.com/internet-of-things/contact-us?product=appstore">Contact us</a></h4>
+    </div>
+    <div class="col">
+      <p>We are here to help. If you have a project you’d like support or advice on, contact us and our expert team can assist.</p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-9 col-start-large-4 col-medium-5 col-start-medium-2">
+      <hr>
+      <div class="row">
+        <div class="col-3">
+          <h4 class="p-heading--5"><a href="http://forum.snapcraft.io">Join the forum</a></h4>
+        </div>
+        <div class="col-6">
+          <p>Talk to our engineers and the community using the snapcraft forum. All discussion is welcome.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 {% endblock %}

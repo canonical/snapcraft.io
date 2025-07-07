@@ -9,7 +9,7 @@ jobs:
   run-image:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2.4.0
+      - uses: actions/checkout@v4
       - name: Build image
         run: DOCKER_BUILDKIT=1 docker build --tag snapcraft-io .
       - name: Run image
@@ -21,111 +21,189 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2.4.0
+      - uses: actions/checkout@v4
 
       - name: Install Dotrun
-        uses: canonical/install-dotrun@main
+        run: |
+          sudo pip3 install dotrun requests==2.31.0 # requests version is pinned to avoid breaking changes, can be removed once issue is resolved: https://github.com/docker/docker-py/issues/3256
 
       - name: Install dependencies
-        run: /snap/bin/dotrun install
+        run: |
+          sudo chmod -R 777 .
+          dotrun install
 
       - name: Build assets
-        run: /snap/bin/dotrun build
+        run: dotrun build
 
       - name: Run dotrun
         run: |
-          /snap/bin/dotrun &
-          curl --head --fail --retry-delay 1 --retry 30 --retry-connrefused http://localhost:8004
+          dotrun &
+          curl --head --fail --retry-delay 3 --retry 30 --retry-connrefused http://localhost:8004
 
   lint-python:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2.4.0
+      - name: Checkout
+        uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            py:
+              - '**/*.py'
 
-      - name: Install node dependencies
-        run: yarn install --immutable
+      - name: Install dotrun
+        if: ${{ steps.filter.outputs.py == 'true' }}
+        run: sudo pip3 install dotrun
 
-      - name: Install python dependencies
-        run: | 
-          python3 -m pip install --upgrade pip
-          sudo pip3 install flake8 black
+      - name: Install dependencies
+        if: ${{ steps.filter.outputs.py == 'true' }}
+        run: |
+          sudo chmod -R 777 .
+          dotrun install
+
+      - name: Build assets
+        if: ${{ steps.filter.outputs.py == 'true' }}
+        run: dotrun build
 
       - name: Lint python
-        run: yarn lint-python
+        if: ${{ steps.filter.outputs.py == 'true' }}
+        run: dotrun lint-python
 
   lint-scss:
     runs-on: ubuntu-latest
-
     steps:
-      - uses: actions/checkout@v2.4.0
+      - name: Checkout
+        uses: actions/checkout@v4
 
-      - name: Install dependencies
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            scss:
+              - '**/*.scss'
+
+      - name: Install SCSS dependencies
+        if: ${{ steps.filter.outputs.scss == 'true' }}
         run: yarn install --immutable
 
-      - name: Lint scss
+      - name: Lint SCSS
+        if: ${{ steps.filter.outputs.scss == 'true' }}
         run: yarn lint-scss
 
   lint-js:
     runs-on: ubuntu-latest
-
     steps:
-      - uses: actions/checkout@v2.4.0
+      - name: Checkout
+        uses: actions/checkout@v4
 
-      - name: Install dependencies
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            js:
+              - '**/*.js'
+            ts:
+              - '**/*.ts'
+            jsx:
+              - '**/*.jsx'
+            tsx:
+              - '**/*.tsx'
+
+      - name: Install JS dependencies
+        if: ${{ steps.filter.outputs.js == 'true' || steps.filter.outputs.ts == 'true' || steps.filter.outputs.jsx == 'true' || steps.filter.outputs.tsx == 'true' }}
         run: yarn install --immutable
 
-      - name: Lint js
+      - name: Lint JS
+        if: ${{ steps.filter.outputs.js == 'true' || steps.filter.outputs.ts == 'true' || steps.filter.outputs.jsx == 'true' || steps.filter.outputs.tsx == 'true' }}
         run: yarn lint-js
 
   test-python:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2.4.0
+      - uses: actions/checkout@v4
 
-      - name: Install requirements
-        run: |
-          sudo apt-get update && sudo apt-get install --yes python3-setuptools
-          sudo pip3 install -r requirements.txt
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            py:
+              - '**/*.py'
 
-      - name: Install Dotrun
-        uses: canonical/install-dotrun@main
+      - name: Install dotrun
+        if: ${{ steps.filter.outputs.py == 'true' }}
+        run: sudo pip3 install dotrun
 
       - name: Install dependencies
+        if: ${{ steps.filter.outputs.py == 'true' }}
+        run: |
+          sudo chmod -R 777 .
+          dotrun install
+
+      - name: Install dependencies
+        if: ${{ steps.filter.outputs.py == 'true' }}
         run: sudo pip3 install coverage
 
-      - name: Install node dependencies
-        run: /snap/bin/dotrun install
-
       - name: Build resources
-        run: /snap/bin/dotrun build
+        if: ${{ steps.filter.outputs.py == 'true' }}
+        run: dotrun build
 
       - name: Run python tests with coverage
-        run: |
-          /snap/bin/dotrun exec coverage run --source=. -m unittest discover tests
-          bash <(curl -s https://codecov.io/bash) -cF python
+        if: ${{ steps.filter.outputs.py == 'true' }}
+        run: dotrun test-python-job
+
+      - name: Upload coverage to Codecov
+        if: ${{ steps.filter.outputs.py == 'true' }}
+        uses: codecov/codecov-action@v5
+        with:
+          flags: python
 
   test-js:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2.4.0
+      - uses: actions/checkout@v4
+
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            js:
+              - '**/*.js'
+            ts:
+              - '**/*.ts'
+            jsx:
+              - '**/*.jsx'
+            tsx:
+              - '**/*.tsx'
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
 
       - name: Install dependencies
+        if: ${{ steps.filter.outputs.js == 'true' || steps.filter.outputs.ts == 'true' || steps.filter.outputs.jsx == 'true' || steps.filter.outputs.tsx == 'true' }}
         run: yarn install --immutable
 
       - name: Run JS tests with coverage
+        if: ${{ steps.filter.outputs.js == 'true' || steps.filter.outputs.ts == 'true' || steps.filter.outputs.jsx == 'true' || steps.filter.outputs.tsx == 'true' }}
         run: |
-          yarn test-js
-          bash <(curl -s https://codecov.io/bash) -cF javascript
-          
+          yarn test-js --coverage
+
+      - name: Upload coverage to Codecov
+        if: ${{ steps.filter.outputs.js == 'true' || steps.filter.outputs.ts == 'true' || steps.filter.outputs.jsx == 'true' || steps.filter.outputs.tsx == 'true' }}
+        uses: codecov/codecov-action@v5
+        with:
+          flags: javascript
+
   check-inclusive-naming:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v2.4.0
+        uses: actions/checkout@v4
 
       - name: Check inclusive naming
         uses: canonical-web-and-design/inclusive-naming@main

@@ -2,7 +2,7 @@
   .p-form--search {
     width: 60%;
 
-    @media screen and (max-width: $breakpoint-medium) {
+    @media screen and (max-width: $breakpoint-large - 1) {
       width: 100%;
 
       .p-button--positive {
@@ -17,8 +17,8 @@
         flex-grow: 0;
       }
 
-      @media screen and (max-width: $breakpoint-medium) {
-        margin-bottom: $spv-outer--medium;
+      @media screen and (max-width: $breakpoint-large - 1) {
+        margin-bottom: $spv--large;
       }
     }
 

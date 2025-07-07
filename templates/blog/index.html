@@ -1,4 +1,4 @@
-{% extends webapp_config['LAYOUT'] %}
+{% extends "_layout.html" %}
 
 {% block meta_title %}Blog | Snapcraft{% endblock %}
 {% block meta_copydoc %}https://docs.google.com/document/d/1YWhw_DlbXrq9CBUtMgjzlzZds0_m8xr-MZlXpXkMvIQ/edit{% endblock %}
@@ -20,7 +20,10 @@
   {% if newsletter_subscribed %}
     <div class="row">
       <div class="p-notification--positive">
-        <div class="p-notification__response"><b>Success:</b> Thanks for subscribing!</div>
+        <div class="p-notification__content">
+          <h5 class="p-notification__title">Success</h5>
+          <p class="p-notification__message">Thanks for subscribing!</p>
+        </div>
       </div>
     </div>
   {% endif %}
@@ -60,12 +63,12 @@
       {% if current_page > 1 %}
         <li class="p-pagination__item">
           <a class="p-pagination__link--previous" href="/blog?page={{ current_page - 1 }}" title="Previous page">
-            <i class="p-icon--contextual-menu">Previous page</i>
+            <i class="p-icon--chevron-up">Previous page</i>
           </a>
         </li>
       {% else %}
         <li class="p-pagination__item">
-          <span class="p-pagination__link--previous is-disabled"><i class="p-icon--contextual-menu">Previous page</i></span>
+          <span class="p-pagination__link--previous is-disabled"><i class="p-icon--chevron-up">Previous page</i></span>
         </li>
       {% endif %}
 
@@ -126,12 +129,12 @@
       {% if current_page != total_pages %}
         <li class="p-pagination__item">
           <a class="p-pagination__link--next" href="/blog?page={{ current_page + 1 }}" title="Next page">
-            <i class="p-icon--contextual-menu">Next page</i>
+            <i class="p-icon--chevron-up">Next page</i>
           </a>
         </li>
       {% else %}
         <li class="p-pagination__item">
-          <span class="p-pagination__link--next is-disabled"><i class="p-icon--contextual-menu">Next page</i></span>
+          <span class="p-pagination__link--next is-disabled"><i class="p-icon--chevron-up">Next page</i></span>
         </li>
       {% endif %}
     </ol>

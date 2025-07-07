@@ -1,3 +1,5 @@
+@use 'sass:color';
+
 @mixin snapcraft-details-heading {
   .p-snap-heading {
     display: flex;
@@ -22,7 +24,7 @@
         margin-bottom: 0;
       }
 
-      @media screen and (min-width: $breakpoint-medium) {
+      @media screen and (min-width: $breakpoint-small) {
         margin-bottom: 0;
       }
     }
@@ -36,7 +38,7 @@
       margin-top: -0.5rem;
     }
 
-    @media screen and (min-width: $breakpoint-medium) {
+    @media screen and (min-width: $breakpoint-small) {
       &__title {
         margin-top: -2 * $sp-x-small;
       }
@@ -54,7 +56,7 @@
       z-index: 5;
     }
 
-    @media screen and (min-width: $breakpoint-medium) {
+    @media screen and (min-width: $breakpoint-small) {
       margin-top: $sp-unit; // align with snap name baseline
     }
 
@@ -63,14 +65,23 @@
     }
 
     .p-snap-install-buttons__install {
+      @media screen and (max-width: $breakpoint-small - 1) {
+        width: 100%;
+      }
+
       &.is-active {
-        background-color: darken($color-positive, 10%);
+        background-color: color.adjust($color-positive, $lightness: -10%);
       }
     }
 
     .p-snap-install-buttons__versions {
+      @media screen and (max-width: $breakpoint-small - 1) {
+        margin-right: 0;
+        width: 100%;
+      }
+
       &.is-active {
-        background-color: darken($color-light, 10%);
+        background-color: color.adjust($color-light, $lightness: -10%);
       }
     }
   }
@@ -82,7 +93,7 @@
 
   .p-channel-map {
     background: $color-x-light;
-    box-shadow: 0 1px 5px 1px transparentize($color-x-dark, 0.8);
+    box-shadow: 0 1px 5px 1px color.adjust($color-x-dark, $alpha: -0.8);
     max-width: 45rem;
     overflow: hidden;
     position: absolute;
@@ -90,14 +101,14 @@
     top: 0;
     z-index: 11;
 
-    @media screen and (max-width: $breakpoint-medium) {
+    @media screen and (max-width: $breakpoint-large - 1) {
       border: {
         bottom: 1px solid $color-mid-light;
         top: 1px solid $color-mid-light;
       }
 
       box-shadow: none;
-      margin-top: -$spv-outer--shallow-scaleable;
+      margin-top: -$spv--x-large;
       max-width: 100%;
       overflow: visible;
       position: static;
@@ -108,7 +119,7 @@
     }
 
     label {
-      margin-bottom: $spv-outer--small + $spv-nudge-compensation;
+      margin-bottom: $spv--small + $spv-nudge-compensation;
     }
 
     &.is-closed {
@@ -173,7 +184,7 @@
       opacity: 0;
     }
 
-    @media screen and (max-width: $breakpoint-medium) {
+    @media screen and (max-width: $breakpoint-large - 1) {
       pointer-events: none;
     }
   }
@@ -211,11 +222,11 @@
   }
 
   .p-channel-map__version-table {
-    margin-bottom: $spv-outer--medium;
+    margin-bottom: $spv--large;
     max-height: 16rem;
     overflow: auto;
 
-    @media screen and (max-width: $breakpoint-medium) {
+    @media screen and (max-width: $breakpoint-large - 1) {
       max-height: 100%;
     }
 
@@ -250,7 +261,7 @@
       }
     }
 
-    @media screen and (max-width: $breakpoint-medium) {
+    @media screen and (max-width: $breakpoint-large - 1) {
       th:nth-child(4) {
         width: 20%;
       }

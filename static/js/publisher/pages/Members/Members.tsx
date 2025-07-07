@@ -1,0 +1,531 @@
+import { ChangeEvent, useEffect, useState } from "react";
+import { useParams, Navigate } from "react-router-dom";
+import { useRecoilValue } from "recoil";
+import {
+  Spinner,
+  Accordion,
+  Row,
+  Col,
+  Button,
+  SearchBox,
+  Input,
+  Notification,
+} from "@canonical/react-components";
+
+import ROLES from "./memberRoles";
+
+import MembersTable from "./MembersTable";
+import InvitesTable from "./InvitesTable";
+import StoreNotFound from "../StoreNotFound";
+import Navigation from "../../components/Navigation";
+
+import { brandStoresState } from "../../state/brandStoreState";
+import { useMembers, useInvites } from "../../hooks";
+
+import { setPageTitle } from "../../utils";
+
+type Members = {
+  members: {
+    members: Array<Member>;
+    loading: boolean;
+    notFound: boolean;
+  };
+};
+
+type Member = {
+  displayname: string;
+  email: string;
+  id: string;
+  roles: string[];
+  username: string;
+  current_user: boolean;
+};
+
+function Members(): React.JSX.Element {
+  const brandStoresList = useRecoilValue(brandStoresState);
+  const { id } = useParams();
+  const {
+    data: members,
+    isLoading: membersLoading,
+    refetch: refetchMembers,
+  } = useMembers(id || "");
+  const {
+    data: invites,
+    isLoading: invitesLoading,
+    refetch: refetchInvites,
+  } = useInvites(id || "");
+  const [filteredMembers, setFilteredMembers] = useState<Member[]>([]);
+  const [sidePanelOpen, setSidePanelOpen] = useState(false);
+  const [newMemberEmail, setNewMemberEmail] = useState("");
+  const [newMemberRoles, setNewMemberRoles] = useState<string[]>([]);
+  const [isSaving, setIsSaving] = useState(false);
+  const [showSuccessNotification, setShowSuccessNotification] = useState(false);
+  const [showErrorNotification, setShowErrorNotification] = useState(false);
+  const [showInviteForm, setShowInviteForm] = useState(false);
+  const [storeName, setStoreName] = useState<string | undefined>("");
+  const [memberButtonDisabled, setMemberButtonDisabled] = useState(false);
+  const [changedMembers, setChangedMembers] = useState<Member[]>([]);
+  const [notificationText, setNotificationText] = useState(
+    "Changes have been saved",
+  );
+  const [currentMember, setCurrentMember] = useState<Member | undefined>();
+
+  setPageTitle(`Members in ${storeName}`);
+
+  const handleInvite = (action: string) => {
+    setIsSaving(true);
+
+    const memberData = new FormData();
+    const member = [
+      {
+        email: newMemberEmail,
+        roles: newMemberRoles,
+      },
+    ];
+    memberData.set("csrf_token", window.CSRF_TOKEN);
+    memberData.set("members", JSON.stringify(member));
+
+    fetch(`/api/store/${id}/${action}`, {
+      method: "POST",
+      body: memberData,
+    })
+      .then((response) => {
+        if (response.status === 200) {
+          return response.json();
+        } else {
+          throw Error();
+        }
+      })
+      .then((data) => {
+        // Add timeout so that the user has time to notice the save action
+        // in the event of it happening very fast
+        setTimeout(() => {
+          setIsSaving(false);
+
+          if (data.msg === "invite") {
+            setShowInviteForm(true);
+          } else {
+            setSidePanelOpen(false);
+            setNewMemberEmail("");
+            setNewMemberRoles([]);
+            refetchMembers();
+            refetchInvites();
+            setShowSuccessNotification(true);
+            setNotificationText("Member has been added to the store");
+            setShowInviteForm(false);
+
+            setTimeout(() => {
+              setShowSuccessNotification(false);
+            }, 5000);
+          }
+        }, 1500);
+      })
+      .catch(() => {
+        setIsSaving(false);
+        setShowErrorNotification(true);
+
+        setTimeout(() => {
+          setShowErrorNotification(false);
+        }, 5000);
+      });
+  };
+
+  const handleRoleChange = (e: ChangeEvent) => {
+    const role = e.target.id;
+    let roles: Array<string> = newMemberRoles;
+
+    if (!roles.includes(role)) {
+      roles = [...roles, role];
+    } else {
+      roles = roles.filter((item) => item !== role);
+    }
+
+    setNewMemberRoles(roles);
+  };
+
+  const isOnlyViewer = () =>
+    currentMember?.roles.length === 1 && currentMember?.roles.includes("view");
+
+  useEffect(() => {
+    refetchMembers();
+    refetchInvites();
+    setStoreName((): string | undefined => {
+      const store = brandStoresList.find((item) => item.id === id);
+
+      if (store) {
+        return store.name;
+      } else {
+        return id;
+      }
+    });
+  }, [id]);
+
+  useEffect(() => {
+    if (members) {
+      setFilteredMembers(members);
+    }
+  }, [members]);
+
+  useEffect(() => {
+    setMemberButtonDisabled(!newMemberEmail || newMemberRoles.length === 0);
+  }, [newMemberEmail, newMemberRoles]);
+
+  useEffect(() => {
+    if (members) {
+      setCurrentMember(members.find((member: Member) => member.current_user));
+    }
+  }, [members, membersLoading, invitesLoading]);
+
+  const getSectionName = () => {
+    if (members && invites) {
+      return "members";
+    } else {
+      return null;
+    }
+  };
+
+  const getStoreName = (storeId: string) => {
+    const store = brandStoresList.find((item) => item.id === storeId);
+
+    if (store) {
+      return store.name;
+    } else {
+      return storeId;
+    }
+  };
+
+  return (
+    <div className="l-application" role="presentation">
+      <Navigation sectionName={getSectionName()} />
+      <main className="l-main">
+        <div className="p-panel">
+          <div className="p-panel__content">
+            {membersLoading && invitesLoading ? (
+              <div className="u-fixed-width">
+                <Spinner text="Loading&hellip;" />
+              </div>
+            ) : (!members && !membersLoading) ||
+              (!invites && !invitesLoading) ? (
+              <StoreNotFound />
+            ) : isOnlyViewer() ? (
+              <Navigate to={`/admin/${id}/snaps`} />
+            ) : (
+              <div>
+                <div className="u-fixed-width">
+                  <h1 className="p-heading--4">
+                    {getStoreName(id || "")} / Members
+                  </h1>
+                </div>
+                <Row>
+                  <Col size={6}>
+                    <SearchBox
+                      placeholder="Search and filter"
+                      autocomplete="off"
+                      onChange={(query) => {
+                        if (query) {
+                          setFilteredMembers(
+                            members.filter(
+                              (member: Member) =>
+                                member.displayname.includes(query) ||
+                                member.email.includes(query),
+                            ),
+                          );
+                        } else {
+                          setFilteredMembers(members);
+                        }
+                      }}
+                    />
+                  </Col>
+                  <Col size={6} className="u-align--right">
+                    <Button
+                      onClick={() => {
+                        setSidePanelOpen(true);
+                      }}
+                    >
+                      Add new member
+                    </Button>
+                  </Col>
+                </Row>
+                <div className="u-fixed-width app-accordion">
+                  <Accordion
+                    expanded="members-table"
+                    sections={[
+                      {
+                        key: "members-table",
+                        title: `${filteredMembers.length} members`,
+                        content: (
+                          <MembersTable
+                            filteredMembers={filteredMembers}
+                            changedMembers={changedMembers}
+                            setChangedMembers={setChangedMembers}
+                          />
+                        ),
+                      },
+                      {
+                        key: "invites-table",
+                        title: `${invites ? invites.length : 0} invites`,
+                        content: (
+                          <InvitesTable
+                            invites={invites}
+                            refetchInvites={refetchInvites}
+                            setNotificationText={setNotificationText}
+                            setShowSuccessNotification={
+                              setShowSuccessNotification
+                            }
+                            setShowErrorNotification={setShowErrorNotification}
+                          />
+                        ),
+                      },
+                    ]}
+                  />
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      </main>
+      <div
+        className={`l-aside__overlay ${sidePanelOpen ? "" : "u-hide"}`}
+        onClick={() => {
+          setSidePanelOpen(false);
+          setShowInviteForm(false);
+          setNewMemberEmail("");
+          setNewMemberRoles([]);
+        }}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            setSidePanelOpen(false);
+            setShowInviteForm(false);
+            setNewMemberEmail("");
+            setNewMemberRoles([]);
+          }
+        }}
+        role="button"
+        tabIndex={0}
+        aria-label="Close the side panel"
+      ></div>
+      <aside
+        className={`l-aside ${sidePanelOpen ? "" : "is-collapsed"}`}
+        id="aside-panel"
+      >
+        <div className="p-panel is-flex-column">
+          <div className="p-panel__header">
+            <h4 className="p-panel__title">
+              {showInviteForm
+                ? "Send invitation to join this store"
+                : "Add new member"}
+            </h4>
+          </div>
+          <div className="p-panel__content u-no-padding--top">
+            {showInviteForm && (
+              <div className="u-fixed-width">
+                <p>
+                  We couldn&rsquo;t find an existing user for the email{" "}
+                  <strong>{newMemberEmail}</strong>
+                </p>
+                <p>
+                  Would you like to send an email inviting them to join{" "}
+                  <strong>{storeName}</strong>?
+                </p>
+                <p>
+                  When they accept they will be granted the following
+                  permissions:
+                </p>
+                <ul>
+                  {newMemberRoles.map((role: string) => (
+                    <li key={role}>
+                      <div>{ROLES[role].name}</div>
+                      <small className="u-text-muted">
+                        {ROLES[role].description}
+                      </small>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+            {!showInviteForm && (
+              <div className="u-fixed-width">
+                <Input
+                  id="new-member-email"
+                  type="email"
+                  label="Email"
+                  placeholder="yourname@example.com"
+                  help="The primary email for the Ubuntu One account"
+                  value={newMemberEmail}
+                  onChange={(e) => {
+                    setNewMemberEmail(e.target.value);
+                  }}
+                />
+                <h4>Roles</h4>
+                {Object.keys(ROLES).map((role) => (
+                  <Input
+                    key={ROLES[role].name}
+                    type="checkbox"
+                    id={role}
+                    label={ROLES[role].name}
+                    help={ROLES[role].description}
+                    onChange={handleRoleChange}
+                    checked={newMemberRoles.includes(role)}
+                  />
+                ))}
+              </div>
+            )}
+          </div>
+          <div className="p-panel__footer u-align--right">
+            <div className="u-fixed-width">
+              <Button
+                className="u-no-margin--bottom"
+                onClick={() => {
+                  setSidePanelOpen(false);
+                  setNewMemberEmail("");
+                  setNewMemberRoles([]);
+                  setShowInviteForm(false);
+                }}
+              >
+                Cancel
+              </Button>
+
+              {!showInviteForm && (
+                <Button
+                  appearance="positive"
+                  className={`u-no-margin--bottom u-no-margin--right ${
+                    isSaving ? "has-icon is-dark" : ""
+                  }`}
+                  disabled={memberButtonDisabled}
+                  onClick={() => {
+                    handleInvite("members");
+                  }}
+                >
+                  {isSaving ? (
+                    <>
+                      <i className="p-icon--spinner u-animation--spin is-light"></i>
+                      <span>Saving...</span>
+                    </>
+                  ) : (
+                    "Add member"
+                  )}
+                </Button>
+              )}
+
+              {showInviteForm && (
+                <Button
+                  appearance="positive"
+                  className={`u-no-margin--bottom u-no-margin--right ${
+                    isSaving ? "has-icon is-dark" : ""
+                  }`}
+                  onClick={() => {
+                    handleInvite("invite");
+                  }}
+                >
+                  {isSaving ? (
+                    <>
+                      <i className="p-icon--spinner u-animation--spin is-light"></i>
+                      <span>Saving...</span>
+                    </>
+                  ) : (
+                    "Send invite"
+                  )}
+                </Button>
+              )}
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      {changedMembers.length ? (
+        <aside className="l-status">
+          <div className="u-fixed-width u-align--right">
+            <Button
+              className={`u-no-margin--bottom ${
+                isSaving ? "has-icon is-dark" : ""
+              }`}
+              appearance="positive"
+              onClick={() => {
+                setIsSaving(true);
+
+                const memberData = new FormData();
+                const members = changedMembers.map((m: Member) => {
+                  return {
+                    email: m.email,
+                    roles: m.roles,
+                  };
+                });
+
+                memberData.set("csrf_token", window.CSRF_TOKEN);
+                memberData.set("members", JSON.stringify(members));
+
+                fetch(`/api/store/${id}/members`, {
+                  method: "POST",
+                  body: memberData,
+                })
+                  .then((response) => {
+                    if (response.status === 200) {
+                      return response.json();
+                    } else {
+                      throw Error();
+                    }
+                  })
+                  .then(() => {
+                    // Add timeout so that the user has time to notice the save action
+                    // in the event of it happening very fast
+                    setTimeout(() => {
+                      setChangedMembers([]);
+                      setIsSaving(false);
+                      setShowSuccessNotification(true);
+                      setNotificationText("Member roles have been changed");
+
+                      setTimeout(() => {
+                        setShowSuccessNotification(false);
+                      }, 5000);
+                    }, 1500);
+                  })
+                  .catch(() => {
+                    setIsSaving(false);
+                    setShowErrorNotification(true);
+
+                    setTimeout(() => {
+                      setShowErrorNotification(false);
+                    }, 5000);
+                  });
+              }}
+            >
+              {isSaving ? (
+                <>
+                  <i className="p-icon--spinner u-animation--spin is-light"></i>
+                  <span>Saving...</span>
+                </>
+              ) : (
+                "Save changes"
+              )}
+            </Button>
+          </div>
+        </aside>
+      ) : null}
+
+      <div className="p-notification-center">
+        {showSuccessNotification && (
+          <Notification
+            severity="positive"
+            onDismiss={() => setShowSuccessNotification(false)}
+          >
+            {notificationText}
+          </Notification>
+        )}
+
+        {showErrorNotification && (
+          <Notification
+            severity="negative"
+            onDismiss={() => setShowErrorNotification(false)}
+          >
+            Something went wrong.{" "}
+            <a href="https://github.com/canonical-web-and-design/snapcraft.io/issues/new">
+              Report a bug
+            </a>
+          </Notification>
+        )}
+      </div>
+    </div>
+  );
+}
+
+export default Members;

@@ -2,7 +2,6 @@
   $semi-transparent-white: rgba(255, 255, 255, 0.8);
 
   .snapcraft-metrics__graph {
-    opacity: 0;
     position: relative;
     transition: opacity 0.333s;
 
@@ -46,7 +45,6 @@
   }
 
   .snapcraft-metrics__loader {
-    background: $semi-transparent-white;
     font-size: 0.75rem;
     left: 50%;
     line-height: 2rem;
@@ -60,5 +58,9 @@
       margin-right: 0.5rem;
       vertical-align: middle;
     }
+  }
+
+  .snapcraft-metrics__info {
+    margin-top: 1.5rem;
   }
 }

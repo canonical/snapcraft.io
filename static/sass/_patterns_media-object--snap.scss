@@ -2,10 +2,6 @@
   .p-media-object--snap {
     width: 100%;
 
-    .p-media-object__details {
-      overflow: hidden;
-    }
-
     .p-media-object__title {
       max-width: 100%;
       overflow: hidden;
@@ -19,17 +15,16 @@
       p {
         -webkit-box-orient: vertical;
         color: $color-mid-dark;
-        display: -webkit-box;
+        display: flex;
         -webkit-line-clamp: 2;
         max-height: 3.4rem;
-        overflow: hidden;
         text-decoration: none;
       }
 
       p + p {
         -webkit-box-orient: vertical;
         color: $color-dark;
-        display: -webkit-box;
+        display: flex;
         -webkit-line-clamp: 2;
         max-height: 3.4rem;
         overflow: hidden;
@@ -73,7 +68,7 @@
       .p-media-object__content {
         p {
           color: transparent;
-          display: -webkit-box;
+          display: flex;
           position: relative;
 
           &::before {
@@ -85,6 +80,16 @@
             top: 0;
           }
         }
+      }
+    }
+
+    .developer-link {
+      color: $color-link;
+      cursor: pointer;
+      text-decoration: none;
+
+      &:hover {
+        text-decoration: underline;
       }
     }
   }

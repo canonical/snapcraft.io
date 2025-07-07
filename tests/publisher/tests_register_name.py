@@ -18,94 +18,17 @@ class GetRegisterNamePage(BaseTestCases.BaseAppTesting):
     def test_register_name_logged_in(self):
         self._log_in(self.client)
 
-        user_payload = {"error_list": [], "stores": []}
-        responses.add(
-            responses.GET, self.user_url, json=user_payload, status=200
-        )
+        responses.add(responses.GET, self.user_url, status=200)
 
         response = self.client.get(self.endpoint_url)
 
         assert response.status_code == 200
-        self.assert_template_used("publisher/register-snap.html")
-
-    @responses.activate
-    def test_register_name_user_api_error(self):
-        self._log_in(self.client)
-
-        user_payload = {"error_list": []}
-        responses.add(
-            responses.GET, self.user_url, json=user_payload, status=502
-        )
-
-        response = self.client.get(self.endpoint_url)
-
-        assert response.status_code == 502
-        self.assert_template_used("50X.html")
-
-
-class GetReserveNamePage(BaseTestCases.BaseAppTesting):
-    def setUp(self):
-        endpoint_url = (
-            "/register-snap"
-            "?snap_name=test-snap&is_private=False&conflict=True"
-        )
-        super().setUp(snap_name=None, api_url=None, endpoint_url=endpoint_url)
-        self.user_url = "https://dashboard.snapcraft.io/dev/api/account"
-
-    @responses.activate
-    def test_reserve_name_logged_in(self):
-        self._log_in(self.client)
-
-        user_payload = {"error_list": [], "stores": []}
-        responses.add(
-            responses.GET, self.user_url, json=user_payload, status=200
-        )
-
-        response = self.client.get(self.endpoint_url)
-
-        assert response.status_code == 200
-        self.assert_template_used("publisher/register-snap.html")
-        self.assert_context("snap_name", "test-snap")
-        self.assert_context("is_private", False)
-        self.assert_context("conflict", True)
-
-    @responses.activate
-    def test_reserve_name_with_stores(self):
-        self._log_in(self.client)
-
-        user_payload = {
-            "error_list": [],
-            "stores": [
-                {
-                    "id": "ubuntu",
-                    "name": "Global",
-                    "roles": ["access", "read"],
-                },
-                {"id": "ubuntu2", "name": "Global2", "roles": ["read"]},
-                {
-                    "id": "testing123",
-                    "name": "Test Store",
-                    "roles": ["access"],
-                },
-            ],
-        }
-
-        responses.add(
-            responses.GET, self.user_url, json=user_payload, status=200
-        )
-
-        response = self.client.get(self.endpoint_url)
-
-        assert response.status_code == 200
-        self.assert_context(
-            "available_stores",
-            [{"id": "testing123", "name": "Test Store", "roles": ["access"]}],
-        )
+        self.assert_template_used("store/publisher.html")
 
 
 class PostRegisterNamePageNotAuth(BaseTestCases.EndpointLoggedOut):
     def setUp(self):
-        endpoint_url = "/register-snap"
+        endpoint_url = "/api/register-snap"
 
         super().setUp(
             snap_name=None, endpoint_url=endpoint_url, method_endpoint="POST"
@@ -114,10 +37,10 @@ class PostRegisterNamePageNotAuth(BaseTestCases.EndpointLoggedOut):
 
 class PostRegisterNamePage(BaseTestCases.EndpointLoggedIn):
     def setUp(self):
-        endpoint_url = "/register-snap"
+        endpoint_url = "/api/register-snap"
         api_url = "https://dashboard.snapcraft.io/dev/api/register-name/"
 
-        data = {"snap-name": "test-snap"}
+        data = {"snap_name": "test-snap"}
 
         super().setUp(
             snap_name=None,
@@ -128,13 +51,6 @@ class PostRegisterNamePage(BaseTestCases.EndpointLoggedIn):
             data=data,
         )
         self.user_url = "https://dashboard.snapcraft.io/dev/api/account"
-
-    @responses.activate
-    def test_post_no_data(self):
-        response = self.client.post(self.endpoint_url)
-
-        assert response.status_code == 302
-        assert response.location == self._get_location()
 
     @responses.activate
     def test_post_snap_name(self):
@@ -150,8 +66,7 @@ class PostRegisterNamePage(BaseTestCases.EndpointLoggedIn):
         )
         self.assertEqual(b'{"snap_name": "test-snap"}', called.request.body)
 
-        assert response.status_code == 302
-        self.assertEqual(response.location, "http://localhost/account/")
+        assert response.status_code == 200
 
     @responses.activate
     def test_post_store(self):
@@ -169,8 +84,7 @@ class PostRegisterNamePage(BaseTestCases.EndpointLoggedIn):
         self.assertIn(b'"snap_name": "test-snap"', called.request.body)
         self.assertIn(b'"store": "store"', called.request.body)
 
-        assert response.status_code == 302
-        self.assertEqual(response.location, "http://localhost/account/")
+        assert response.status_code == 200
 
     @responses.activate
     def test_post_private(self):
@@ -188,42 +102,7 @@ class PostRegisterNamePage(BaseTestCases.EndpointLoggedIn):
         self.assertIn(b'"snap_name": "test-snap"', called.request.body)
         self.assertIn(b'"is_private": true', called.request.body)
 
-        assert response.status_code == 302
-        self.assertEqual(response.location, "http://localhost/account/")
-
-    @responses.activate
-    def test_post_registrant_comment(self):
-        responses.add(responses.POST, self.api_url, json={}, status=200)
-
-        self.data["registrant_comment"] = "comment"
-        response = self.client.post(self.endpoint_url, data=self.data)
-
-        self.assertEqual(1, len(responses.calls))
-        called = responses.calls[0]
-        self.assertEqual(self.api_url, called.request.url)
-        self.assertEqual(
-            self.authorization, called.request.headers.get("Authorization")
-        )
-        self.assertIn(b'"snap_name": "test-snap"', called.request.body)
-        self.assertIn(b'"registrant_comment": "comment"', called.request.body)
-
-        assert response.status_code == 302
-        self.assertEqual(response.location, "http://localhost/account/")
-
-    @responses.activate
-    def test_error_from_api(self):
-        payload = {"error_list": [{"code": "error-code"}]}
-        responses.add(responses.POST, self.api_url, json=payload, status=400)
-
-        user_payload = {"error_list": [], "stores": []}
-        responses.add(
-            responses.GET, self.user_url, json=user_payload, status=200
-        )
-
-        self.client.post(self.endpoint_url, data=self.data)
-
-        self.assert_template_used("publisher/register-snap.html")
-        self.assert_context("errors", payload["error_list"])
+        assert response.status_code == 200
 
     @responses.activate
     def test_name_already_registered(self):
@@ -237,10 +116,10 @@ class PostRegisterNamePage(BaseTestCases.EndpointLoggedIn):
 
         response = self.client.post(self.endpoint_url, data=self.data)
 
-        assert response.status_code == 302
-        self.assertIn("snap_name=test-snap", response.location)
-        self.assertIn("is_private=False", response.location)
-        self.assertIn("http://localhost/register-snap", response.location)
+        assert response.status_code == 200
+        assert (
+            response.get_json()["data"]["error_code"] == "already_registered"
+        )
 
     @responses.activate
     def test_name_reserved(self):
@@ -254,37 +133,23 @@ class PostRegisterNamePage(BaseTestCases.EndpointLoggedIn):
 
         response = self.client.post(self.endpoint_url, data=self.data)
 
-        assert response.status_code == 302
-        self.assertIn("snap_name=test-snap", response.location)
-        self.assertIn("is_private=False", response.location)
-        self.assertIn("http://localhost/register-snap", response.location)
+        assert response.status_code == 200
+        assert response.get_json()["data"]["error_code"] == "reserved_name"
 
     @responses.activate
     def test_claim_dispute(self):
-        payload = {"error_list": [{"code": "already_claimed"}]}
-        responses.add(responses.POST, self.api_url, json=payload, status=409)
-
-        user_payload = {"error_list": [], "stores": []}
-        responses.add(
-            responses.GET, self.user_url, json=user_payload, status=200
-        )
-
-        response = self.client.post(self.endpoint_url, data=self.data)
-
-        assert response.status_code == 302
-        self.assertEqual(response.location, "http://localhost/account/details")
-
-    @responses.activate
-    def test_post_error_user_error(self):
-        payload = {"error_list": [{"code": "oops"}]}
-        responses.add(responses.POST, self.api_url, json=payload, status=409)
-
-        user_payload = {"error_list": [], "stores": []}
-        responses.add(
-            responses.GET, self.user_url, json=user_payload, status=502
-        )
+        payload = {
+            "success": False,
+            "data": {
+                "snap_name": "test-snap",
+                "is_private": "private",
+                "store": "store",
+                "error_code": "already_claimed",
+            },
+        }
+        responses.add(responses.POST, self.api_url, json=payload, status=200)
 
         response = self.client.post(self.endpoint_url, data=self.data)
 
-        assert response.status_code == 502
-        self.assert_template_used("50X.html")
+        assert response.status_code == 200
+        assert response.get_json()["success"] is True

@@ -55,10 +55,10 @@ class PostDataReleasePage(BaseTestCases.EndpointLoggedIn):
 
     @responses.activate
     def test_post_no_data(self):
-        response = self.client.post(self.endpoint_url)
+        response = self.client.post(self.endpoint_url, json={})
 
         assert response.status_code == 400
-        assert response.get_json() == {}
+        assert response.get_json() == {"errors": ["No changes were submitted"]}
 
     @responses.activate
     def test_post_data(self):

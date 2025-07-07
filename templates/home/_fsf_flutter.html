@@ -1,47 +1,54 @@
-<div class="col-{{ columns }} u-hide" data-flow-details="flutter">
+<div class="u-hide" data-flow-details="flutter">
+  <hr class="p-rule u-hide--large">
   <div class="row">
-    <div class="col-{{ (columns/2) | int }}">
-      <h3 class="p-heading--4">Why are snaps good for Flutter projects?</h3>
-      <ul>
-        <li>Snaps are easy to discover and install. Millions of users can browse and install snaps graphically in the Snap Store or from the command-line.</li>
-        <li>Snaps install and run the same across Linux. They bundle the exact versions of your app’s dependencies.</li>
-        <li>Snaps automatically update to the latest version. Four times a day, users’ systems will check for new versions and upgrade in the background.</li>
-        <li>Upgrades are not disruptive. Because upgrades are not in-place, users can keep your app open as it’s upgraded in the background.</li>
-        <li>Upgrades are safe. If your app fails to upgrade, users automatically roll back to the previous revision.</li>
-      </ul>
-
-      <div class="p-flow-details__continue">
-        <p>In just a few steps, you’ll have an example Flutter app in the Snap Store.</p>
-        <a class="p-button--positive" href="/first-snap/flutter/">Continue &rsaquo;</a>
-      </div>
+    <div class="col-3">
+      <h3 class="p-heading--5">Why are snaps good for Flutter projects?</h3>
     </div>
-
-    <div class="col-{{ (columns/2) | int }}">
-      <h3 class="p-heading--4">Here's how <a href="https://snapcraft.io/super-cool-app">super-cool-app</a> defines snapcraft.yaml:</h3>
-      <div class ="p-show-more is-collapsed" data-js="js-show-more">
-        <pre class="p-code-yaml"><b>name</b>: super-cool-app
-<b>version</b>: "1.0"
-<b>summary</b>: Super Cool App
+    <div class="col-6">
+      <ul class="p-list--divided">
+        <li class="p-list__item has-bullet">Snaps are easy to discover and install. Millions of users can browse and install snaps graphically in the Snap Store or from the command-line.</li>
+        <li class="p-list__item has-bullet">Snaps install and run the same across Linux. They bundle the exact versions of your app’s dependencies.</li>
+        <li class="p-list__item has-bullet">Snaps automatically update to the latest version. Four times a day, users’ systems will check for new versions and upgrade in the background.</li>
+        <li class="p-list__item has-bullet">Upgrades are not disruptive. Because upgrades are not in-place, users can keep your app open as it’s upgraded in the background.</li>
+        <li class="p-list__item has-bullet">Upgrades are safe. If your app fails to upgrade, users automatically roll back to the previous revision.</li>
+      </ul>
+      <p>In just a few steps, you’ll have an example Flutter app in the Snap Store.</p>
+    </div>
+  </div>
+  <hr class="p-rule">
+  <div class="row">
+    <div class="col-3">
+      <h3 class="p-heading--5">Here's how <a href="https://github.com/snapcraft-docs/my-flutter-app">my-flutter-app</a> defines snapcraft.yaml:</h3>
+    </div>
+    <div class ="p-show-more is-collapsed col-6" data-js="js-show-more">
+      <pre class="p-code-yaml"><b>name</b>: my-flutter-app
+<b>version</b>: '1.0'
+<b>summary</b>: An example Flutter snap
 <b>description</b>: |
-    Super Cool App that does everything! [&hellip;]
+  An example showing how Flutter programs can be packaged as snaps.
 
+<b>base</b>: core22
 <b>confinement</b>: strict
-<b>base</b>: core18
-
-<b>parts</b>:
-  <b>super-cool-app</b>:
-    <b>plugin</b>: flutter
-    <b>source</b>: https://github.com/kenvandine/super-cool-app.git
-    <b>flutter-target</b>: lib/main.dart
+<b>grade</b>: stable
 
 <b>apps</b>:
-  <b>super-cool-app</b>:
-    <b>command</b>: super_cool_app
-    <b>extensions</b>: [flutter-dev]</pre>
+  <b>my-flutter-app</b>:
+    <b>command</b>: my_flutter_app
+    <b>extensions</b>: [gnome]
 
-        {% include "home/_fsf_yaml_show_more.html" %}
+<b>parts</b>:
+  <b>my-flutter-app</b>:
+    <b>source</b>: .
+    <b>plugin: flutter</b>
+    <b>flutter-target</b>: lib/main.dart</pre>
 
-      </div>
+      {% include "home/_fsf_yaml_show_more.html" %}
+
     </div>
+  </div>
+
+  <div class="u-align--right">
+    <hr>
+    <a class="p-button--positive" href="/docs/flutter-applications">Continue &rsaquo;</a>
   </div>
 </div>

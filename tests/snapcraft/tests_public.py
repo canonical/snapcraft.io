@@ -7,9 +7,6 @@ responses.mock.assert_all_requests_are_fired = True
 
 
 class StorePage(TestCase):
-
-    render_templates = False
-
     def create_app(self):
         app = create_app(testing=True)
         app.secret_key = "secret_key"

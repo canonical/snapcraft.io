@@ -1,8 +1,8 @@
 domain: snapcraft.io
 
-image: prod-comms.docker-registry.canonical.com/snapcraft.io
+image: prod-comms.ps5.docker-registry.canonical.com/snapcraft.io
 
-env:  &env
+env: &env
   - name: SENTRY_DSN
     value: https://1e82fd54e08142c9978f623cb746b965@sentry.is.canonical.com//3
 
@@ -39,6 +39,11 @@ env:  &env
   - name: GITHUB_SNAPCRAFT_USER_TOKEN
     secretKeyRef:
       key: github-snapcraft-user-token
+      name: snapcraft-io
+
+  - name: GITHUB_SNAPCRAFT_BOT_USER_TOKEN
+    secretKeyRef:
+      key: github-snapcraft-bot-user-token
       name: snapcraft-io
 
   - name: GITHUB_WEBHOOK_SECRET
@@ -81,6 +86,11 @@ env:  &env
       key: discourse-api-username
       name: snapcraft-io
 
+  - name: DNS_VERIFICATION_SALT
+    secretKeyRef:
+      key: dns-verification-salt
+      name: snapcraft-io
+
 memoryLimit: 256Mi
 
 extraHosts:
@@ -97,13 +107,14 @@ production:
     if ($host != 'snapcraft.io' ) {
       rewrite ^ https://snapcraft.io$request_uri? permanent;
     }
+    more_set_headers "X-toto: otot";
     more_set_headers "Link: <https://assets.ubuntu.com>; rel=preconnect; crossorigin, <https://assets.ubuntu.com>; rel=preconnect, <https://res.cloudinary.com>; rel=preconnect, <https://dashboard.snapcraft.io>; rel=preconnect";
 
   routes:
     - paths: [/docs, /tutorials]
       name: snapcraft-io-discourse
       app_name: snapcraft.io-discourse
-      image: prod-comms.docker-registry.canonical.com/snapcraft.io
+      image: prod-comms.ps5.docker-registry.canonical.com/snapcraft.io
       replicas: 5
       memoryLimit: 256Mi
       env: *env
@@ -111,7 +122,7 @@ production:
     - paths: [/blog]
       name: snapcraft-io-blog
       app_name: snapcraft.io-blog
-      image: prod-comms.docker-registry.canonical.com/snapcraft.io
+      image: prod-comms.ps5.docker-registry.canonical.com/snapcraft.io
       replicas: 3
       memoryLimit: 256Mi
       env: *env
@@ -130,7 +141,7 @@ staging:
     - paths: [/docs, /tutorials]
       name: snapcraft-io-discourse
       app_name: snapcraft.io-discourse
-      image: prod-comms.docker-registry.canonical.com/snapcraft.io
+      image: prod-comms.ps5.docker-registry.canonical.com/snapcraft.io
       replicas: 3
       memoryLimit: 256Mi
       env: *env
@@ -138,7 +149,7 @@ staging:
     - paths: [/blog]
       name: snapcraft-io-blog
       app_name: snapcraft.io-blog
-      image: prod-comms.docker-registry.canonical.com/snapcraft.io
+      image: prod-comms.ps5.docker-registry.canonical.com/snapcraft.io
       replicas: 2
       memoryLimit: 256Mi
       env: *env

@@ -5,8 +5,6 @@ from webapp.app import create_app
 
 
 class GetDetailsPageTest(TestCase):
-    render_templates = False
-
     def setUp(self):
         self.snap_name = "toto"
         self.api_url = "".join(
@@ -26,7 +24,6 @@ class GetDetailsPageTest(TestCase):
                                 "contact",
                                 "website",
                                 "publisher",
-                                "prices",
                                 "media",
                                 "download",
                                 "version",
@@ -35,6 +32,7 @@ class GetDetailsPageTest(TestCase):
                                 "categories",
                                 "trending",
                                 "unlisted",
+                                "links",
                             ]
                         )
                     }
@@ -52,7 +50,7 @@ class GetDetailsPageTest(TestCase):
 
     @responses.activate
     def test_api_404(self):
-        payload = {"error-list": []}
+        payload = {"error-list": [{"code": "resource-not-found"}]}
         responses.add(
             responses.Response(
                 method="GET", url=self.api_url, json=payload, status=404
@@ -110,7 +108,6 @@ class GetDetailsPageTest(TestCase):
                 "description": "this is a description",
                 "media": [],
                 "license": "license",
-                "prices": 0,
                 "publisher": {
                     "display-name": "Toto",
                     "username": "toto",
@@ -119,6 +116,7 @@ class GetDetailsPageTest(TestCase):
                 "categories": [{"name": "test"}],
                 "trending": False,
                 "unlisted": False,
+                "links": {},
             },
         }
 
@@ -144,7 +142,6 @@ class GetDetailsPageTest(TestCase):
                 "description": "this is a description",
                 "media": [],
                 "license": "license",
-                "prices": 0,
                 "publisher": {
                     "display-name": "Toto",
                     "username": "toto",
@@ -153,6 +150,7 @@ class GetDetailsPageTest(TestCase):
                 "categories": [{"name": "test"}],
                 "trending": False,
                 "unlisted": False,
+                "links": {},
             },
             "channel-map": [
                 {
@@ -209,7 +207,6 @@ class GetDetailsPageTest(TestCase):
                 "description": "this is a description",
                 "media": [],
                 "license": "license",
-                "prices": 0,
                 "publisher": {
                     "display-name": "Toto",
                     "username": "toto",
@@ -218,6 +215,7 @@ class GetDetailsPageTest(TestCase):
                 "categories": [{"name": "test"}],
                 "trending": False,
                 "unlisted": False,
+                "links": {},
             },
             "channel-map": [
                 {
@@ -266,7 +264,6 @@ class GetDetailsPageTest(TestCase):
                 "description": "this is a description",
                 "media": [],
                 "license": "license",
-                "prices": 0,
                 "publisher": {
                     "display-name": "Toto",
                     "username": "toto",
@@ -275,6 +272,7 @@ class GetDetailsPageTest(TestCase):
                 "categories": [{"name": "test"}],
                 "trending": False,
                 "unlisted": False,
+                "links": {},
             },
             "channel-map": [
                 {

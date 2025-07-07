@@ -12,11 +12,13 @@ ENVIRONMENT = os.getenv("ENVIRONMENT", "devel")
 COMMIT_ID = os.getenv("COMMIT_ID", "commit_id")
 SENTRY_DSN = os.getenv("SENTRY_DSN", "").strip()
 SENTRY_CONFIG = {"release": COMMIT_ID, "environment": ENVIRONMENT}
+DNS_VERIFICATION_SALT = os.getenv("DNS_VERIFICATION_SALT")
 
-WEBAPP = os.getenv("WEBAPP", "snapcraft")
+if ENVIRONMENT != "devel":
+    SESSION_COOKIE_SAMESITE = "None"
+    SESSION_COOKIE_SECURE = True
 
-if not WEBAPP:
-    raise ConfigurationError("`WEBAPP` is not configured")
+WEBAPP_CONFIG = {"LAYOUT": "_layout.html", "STORE_NAME": "Snap store"}
 
 WEBAPP_EXTRA_HEADERS = {}
 
@@ -29,3 +31,5 @@ CONTENT_DIRECTORY = {"PUBLISHER_PAGES": "store/content/publishers/"}
 SEARCH_API_KEY = os.getenv("SEARCH_API_KEY")
 SEARCH_API_URL = "https://www.googleapis.com/customsearch/v1"
 SEARCH_CUSTOM_ID = "009048213575199080868:i3zoqdwqk8o"
+
+APP_NAME = "snapcraft"

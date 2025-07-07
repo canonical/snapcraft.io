@@ -1,4 +1,5 @@
 {% set page_slug = "admin" %}
+{% set show_header = False %}
 {% extends "_base-layout.html" %}
 {% block content %}
 <div id="root">
@@ -7,6 +8,7 @@
 <script>
   window.CSRF_TOKEN = "{{ csrf_token() }}";
   window.SENTRY_DSN = "{{ SENTRY_DSN }}";
+  window.API_URL = "{{ api_url }}";
 </script>
 <script src="{{ static_url('js/dist/brand-store.js') }}"></script>
 {% endblock %}

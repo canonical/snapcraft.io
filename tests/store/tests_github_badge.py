@@ -5,8 +5,6 @@ from webapp.app import create_app
 
 
 class GetGitHubBadgeTest(TestCase):
-    render_templates = False
-
     snap_payload = {
         "snap-id": "id",
         "name": "snapName",
@@ -17,7 +15,6 @@ class GetGitHubBadgeTest(TestCase):
             "description": "this is a description",
             "media": [],
             "license": "license",
-            "prices": 0,
             "publisher": {
                 "display-name": "Toto",
                 "username": "toto",
@@ -26,6 +23,7 @@ class GetGitHubBadgeTest(TestCase):
             "categories": [{"name": "test"}],
             "trending": False,
             "unlisted": False,
+            "links": {},
         },
         "channel-map": [
             {
@@ -76,7 +74,6 @@ class GetGitHubBadgeTest(TestCase):
                                 "contact",
                                 "website",
                                 "publisher",
-                                "prices",
                                 "media",
                                 "download",
                                 "version",
@@ -85,6 +82,7 @@ class GetGitHubBadgeTest(TestCase):
                                 "categories",
                                 "trending",
                                 "unlisted",
+                                "links",
                             ]
                         )
                     }

@@ -3,7 +3,13 @@ import functools
 
 # Third party packages
 import flask
+
+from canonicalwebteam.store_api.publishergw import PublisherGW
+
 from webapp import authentication
+from webapp.helpers import api_publisher_session
+
+publisher_gateway = PublisherGW(api_publisher_session)
 
 
 def login_required(func):
@@ -14,12 +20,24 @@ def login_required(func):
 
     @functools.wraps(func)
     def is_user_logged_in(*args, **kwargs):
-        last_login_method = flask.request.cookies.get("last_login_method")
-        login_path = "login-beta" if last_login_method == "candid" else "login"
-
         if not authentication.is_authenticated(flask.session):
-            return flask.redirect(f"/{login_path}?next={flask.request.path}")
+            authentication.empty_session(flask.session)
+            return flask.redirect(f"/login?next={flask.request.path}")
 
         return func(*args, **kwargs)
 
     return is_user_logged_in
+
+
+def exchange_required(func):
+    @functools.wraps(func)
+    def is_exchanged(*args, **kwargs):
+        if "exchanged_developer_token" not in flask.session:
+            result = publisher_gateway.exchange_dashboard_macaroons(
+                flask.session
+            )
+            flask.session["developer_token"] = result
+            flask.session["exchanged_developer_token"] = True
+        return func(*args, **kwargs)
+
+    return is_exchanged

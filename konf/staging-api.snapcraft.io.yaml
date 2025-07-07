@@ -1,6 +1,6 @@
 domain: staging-api.snapcraft.io
 
-image: prod-comms.docker-registry.canonical.com/staging-api.snapcraft.io
+image: prod-comms.ps5.docker-registry.canonical.com/staging-api.snapcraft.io
 
 env:
   - name: SNAPSTORE_DASHBOARD_API_URL
@@ -61,6 +61,11 @@ env:
   - name: DISCOURSE_API_USERNAME
     secretKeyRef:
       key: discourse-api-username
+      name: snapcraft-io
+
+  - name: DNS_VERIFICATION_SALT
+    secureKeyRef:
+      key: dns-verification-salt
       name: snapcraft-io
 
 memoryLimit: 256Mi

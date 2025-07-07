@@ -30,6 +30,7 @@
         Raven.config('{{ SENTRY_DSN }}', {
           whitelistUrls: ['staging.snapcraft.io/static/js', 'snapcraft.io/static/js/'],
           ignoreUrls: ['staging.snapcraft.io/static/js/modules', 'snapcraft.io/static/js/modules'],
+          ignoreErrors: ['AbortError'],
           release: '{{ COMMIT_ID }}',
           environment: '{{ ENVIRONMENT }}'
         }).install();
@@ -41,7 +42,7 @@
     <script src="https://assets.ubuntu.com/v1/703e23c9-lazysizes+noscript+native-loading.5.1.2.min.js" defer></script>
 
     <meta name="description" content="{% block meta_description %}Snaps are containerised software packages that are simple to create and install. They auto-update and are safe to run. And because they bundle their dependencies, they work on all major Linux systems without modification.{% endblock %}">
-    <meta name="copydoc" content="{% block meta_copydoc %}https://drive.google.com/drive/folders/1q9ia7iDuWQlCaJ7nfKVeQ5G-FPyJbP-H{% endblock %}">
+    <meta name="copydoc" content="{% block meta_copydoc %}{% endblock %}">
     <meta name="google-site-verification" content="Y1JayrP2iS6jS6Rd7uGX3Kzgm0oD8rV5R6TkzteLbQg" />
 
     {% block meta %}
@@ -64,12 +65,13 @@
     {% block extra_meta %}{% endblock %}
     <link rel="canonical" href="https://snapcraft.io{{ request.path }}" />
 
-    <link rel="icon" type="image/png" href="https://assets.ubuntu.com/v1/fdc99abe-ico_16px.png" sizes="16x16" />
-    <link rel="icon" type="image/png" href="https://assets.ubuntu.com/v1/0f3c662c-ico_32px.png" sizes="32x32" />
+    <link rel="icon" type="image/png" href="https://assets.ubuntu.com/v1/d4ca039f-favicon_16px.png" sizes="16x16" />
+    <link rel="icon" type="image/png" href="https://assets.ubuntu.com/v1/841d0bcf-favicon_32px.png" sizes="32x32" />
+    <link rel="icon" type="image/png" href="{{ static_url('snapcraft-favicon.png') }}" sizes="144x144" />
     <link rel="author" href="/humans.txt" />
   </head>
 
-  <body class="has-sticky-footer">
+  <body class="l-site">
     <!-- Google Tag Manager (noscript) -->
     <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KCGXHQS"
       height="0" width="0" style="display: none; visibility: hidden;"></iframe></noscript>
@@ -77,17 +79,23 @@
 
     {% block header %}
     <!-- JS that is needed right away -->
-    <script src="{{ static_url('js/dist/global-nav.js') }}"></script>
     <script src="{{ static_url('js/dist/cookie-policy.js') }}"></script>
 
-    {% include "_header.html" %}
+    {% from "_header_macros.html" import header %}
+      {% if show_header != False %}
+        {% from "_header_macros.html" import header %}
+        {{ header() }}
+      {% endif %}
     {% endblock %}
 
     {% block content %}{% endblock %}
 
-    {% block footer %}{% endblock %}
+    {% block footer %}
+    {% endblock %}
 
     {% block scripts %}{% endblock %}
+
+    <script src="{{ static_url('js/dist/global-nav.js') }}"></script>
 
     <script type="application/ld+json">
       {

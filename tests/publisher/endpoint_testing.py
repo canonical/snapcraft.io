@@ -19,8 +19,6 @@ class BaseTestCases:
     """
 
     class BaseAppTesting(TestCase):
-        render_templates = False
-
         def setUp(self, snap_name, api_url, endpoint_url):
             self.snap_name = snap_name
             self.api_url = api_url
@@ -37,7 +35,7 @@ class BaseTestCases:
             return app
 
         def _get_location(self):
-            return "http://localhost{}".format(self.endpoint_url)
+            return "{}".format(self.endpoint_url)
 
         def _log_in(self, client):
             """Emulates test client login in the store.
@@ -59,6 +57,7 @@ class BaseTestCases:
                     "nickname": "Toto",
                     "fullname": "El Toto",
                     "email": "testing@testing.com",
+                    "stores": [],
                 }
                 s["macaroon_root"] = root.serialize()
                 s["macaroon_discharge"] = discharge.serialize()
@@ -81,7 +80,6 @@ class BaseTestCases:
 
     class EndpointLoggedOut(BaseAppTesting):
         def setUp(self, snap_name, endpoint_url, method_endpoint="GET"):
-
             self.method_endpoint = method_endpoint
             super().setUp(snap_name, None, endpoint_url)
 
@@ -93,7 +91,7 @@ class BaseTestCases:
 
             self.assertEqual(302, response.status_code)
             self.assertEqual(
-                "http://localhost/login?next={}".format(self.endpoint_url),
+                "/login?next={}".format(self.endpoint_url),
                 response.location,
             )
 
@@ -108,7 +106,6 @@ class BaseTestCases:
             data=None,
             json=None,
         ):
-
             super().setUp(
                 snap_name=snap_name, api_url=api_url, endpoint_url=endpoint_url
             )
@@ -361,9 +358,7 @@ class BaseTestCases:
             self.check_call_by_api_url(responses.calls)
 
             self.assertEqual(302, response.status_code)
-            self.assertEqual(
-                "http://localhost/account/agreement", response.location
-            )
+            self.assertEqual("/account/agreement", response.location)
 
         @responses.activate
         def test_account_no_username_logged_in(self):
@@ -399,6 +394,4 @@ class BaseTestCases:
             self.check_call_by_api_url(responses.calls)
 
             self.assertEqual(302, response.status_code)
-            self.assertEqual(
-                "http://localhost/account/username", response.location
-            )
+            self.assertEqual("/account/username", response.location)

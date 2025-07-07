@@ -74,7 +74,7 @@ describe("createChannelTree", () => {
   describe("risk only", () => {
     beforeEach(() => {
       channelList = ["stable", "beta", "candidate", "edge"].map((channel) =>
-        parseChannel(channel)
+        parseChannel(channel),
       );
     });
 
@@ -124,7 +124,7 @@ describe("createChannelTree", () => {
   describe("track/risk", () => {
     beforeEach(() => {
       channelList = ["stable", "latest/edge", "test/candidate"].map((channel) =>
-        parseChannel(channel)
+        parseChannel(channel),
       );
     });
     it("should return 'latest' and others", () => {
@@ -169,12 +169,9 @@ describe("createChannelTree", () => {
 
   describe("risk/branch", () => {
     beforeEach(() => {
-      channelList = [
-        "stable",
-        "beta/test",
-        "edge/1.0.1",
-        "edge/hotfix",
-      ].map((channel) => parseChannel(channel));
+      channelList = ["stable", "beta/test", "edge/1.0.1", "edge/hotfix"].map(
+        (channel) => parseChannel(channel),
+      );
     });
 
     it("should return latest tracks with different branches on the tracks", () => {
@@ -295,13 +292,13 @@ describe("sortAlphaNum", () => {
 
   it("puts latest first if isTrack and no defaultTrack", () => {
     expect(
-      sortAlphaNum(["0.0.1", "5", "test", "11", "latest"], "latest")
+      sortAlphaNum(["0.0.1", "5", "test", "11", "latest"], "latest"),
     ).toEqual(["latest", "test", "11", "5", "0.0.1"]);
   });
 
   it("puts defaultTrack first if isTrack and defaultTrack set", () => {
     expect(
-      sortAlphaNum(["0.0.1", "5", "test", "11", "latest"], "test")
+      sortAlphaNum(["0.0.1", "5", "test", "11", "latest"], "test"),
     ).toEqual(["test", "latest", "11", "5", "0.0.1"]);
   });
 });
@@ -310,7 +307,7 @@ describe("sortChannels", () => {
   describe("tracks", () => {
     it("should return in the track order, with latest first", () => {
       expect(
-        sortChannels(["zzz/edge", "stable", "1/beta", "5.9.0/candidate"]).tree
+        sortChannels(["zzz/edge", "stable", "1/beta", "5.9.0/candidate"]).tree,
       ).toEqual([
         {
           name: "latest",
@@ -371,7 +368,7 @@ describe("sortChannels", () => {
   describe("track/risk", () => {
     it("should return with 'latest' track first, with risks in order of stability", () => {
       expect(
-        sortChannels(["zzz/edge", "stable", "1/beta", "1/candidate"]).tree
+        sortChannels(["zzz/edge", "stable", "1/beta", "1/candidate"]).tree,
       ).toEqual([
         {
           name: "latest",
@@ -434,7 +431,7 @@ describe("sortChannels", () => {
             "1/beta/1.0.1",
             "1/beta/hotfix",
             "1/candidate",
-          ]).tree
+          ]).tree,
         ).toEqual([
           {
             name: "latest",
@@ -496,7 +493,7 @@ describe("sortChannels", () => {
             "1/beta/1.0.1",
             "1/beta/hotfix",
             "1/candidate",
-          ]).list
+          ]).list,
         ).toEqual([
           "stable",
           "zzz/edge",
@@ -514,7 +511,7 @@ describe("sortChannels", () => {
         expect(
           sortChannels(["latest/stable", "test/stable"], {
             defaultTrack: "test",
-          }).list
+          }).list,
         ).toEqual(["test/stable", "latest/stable"]);
       });
     });
@@ -524,7 +521,7 @@ describe("sortChannels", () => {
         expect(
           sortChannels(["test/stable", "stable"], {
             maintainFormat: true,
-          }).list
+          }).list,
         ).toEqual(["stable", "test/stable"]);
       });
     });

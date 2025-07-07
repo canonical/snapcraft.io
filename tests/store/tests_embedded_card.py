@@ -5,8 +5,6 @@ from webapp.app import create_app
 
 
 class GetEmbeddedCardTest(TestCase):
-    render_templates = False
-
     snap_payload = {
         "snap-id": "id",
         "name": "snapName",
@@ -17,7 +15,6 @@ class GetEmbeddedCardTest(TestCase):
             "description": "this is a description",
             "media": [],
             "license": "license",
-            "prices": 0,
             "publisher": {
                 "display-name": "Toto",
                 "username": "toto",
@@ -26,6 +23,7 @@ class GetEmbeddedCardTest(TestCase):
             "categories": [{"name": "test"}],
             "trending": False,
             "unlisted": False,
+            "links": {},
         },
         "channel-map": [
             {
@@ -63,7 +61,6 @@ class GetEmbeddedCardTest(TestCase):
                                 "contact",
                                 "website",
                                 "publisher",
-                                "prices",
                                 "media",
                                 "download",
                                 "version",
@@ -72,6 +69,7 @@ class GetEmbeddedCardTest(TestCase):
                                 "categories",
                                 "trending",
                                 "unlisted",
+                                "links",
                             ]
                         )
                     }

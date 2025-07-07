@@ -1,4 +1,5 @@
 import os
+
 from urllib.parse import urlparse
 
 from pymacaroons import Macaroon
@@ -9,6 +10,7 @@ LOGIN_URL = os.getenv("LOGIN_URL", "https://login.ubuntu.com")
 PERMISSIONS = [
     "edit_account",
     "package_access",
+    "package_manage",
     "package_metrics",
     "package_register",
     "package_release",
@@ -27,7 +29,11 @@ def get_authorization_header(root, discharge):
         Macaroon.deserialize(discharge)
     )
 
-    return "Macaroon root={}, discharge={}".format(root, bound.serialize())
+    return "macaroon root={}, discharge={}".format(root, bound.serialize())
+
+
+def get_publishergw_authorization_header(developer_token):
+    return {"Authorization ": f"Macaroon {developer_token}"}
 
 
 def is_authenticated(session):
@@ -50,7 +56,6 @@ def empty_session(session):
     session.pop("macaroon_root", None)
     session.pop("macaroon_discharge", None)
     session.pop("publisher", None)
-    session.pop("user_shared_snaps", None)
     session.pop("github_auth_secret", None)
 
 

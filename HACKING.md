@@ -6,8 +6,8 @@
 To use staging APIs locally you can add the following lines to an `.env.local` file:
 
 ```bash
-SNAPSTORE_API_URL=https://api.staging.snapcraft.io/
-SNAPSTORE_DASHBOARD_API_URL=https://dashboard.staging.snapcraft.io/
+DEVICE_GATEWAY_API_URL=https://api.staging.snapcraft.io/
+DASHBOARD_API_URL=https://dashboard.staging.snapcraft.io/
 LOGIN_URL=https://login.staging.ubuntu.com
 CANDID_API_URL=https://api.staging.jujucharms.com/identity/
 ```
@@ -44,8 +44,8 @@ Download [this Python script](https://github.com/canonical-web-and-design/build.
 Run:
 
 ```bash
-$ sudo apt install python-launchpadlib
-$ ./create-launchpad-credentials
+$ pip install launchpadlib
+$ python3 ./scripts/create-launchpad-credentials.py
 ```
 
 It will print the details needed. If you need complete instructions for obtaining these details, they can be found [here](https://help.launchpad.net/API/SigningRequests).
@@ -101,3 +101,9 @@ In case you need to update the license list:
 - Make sure the function `get_licenses()` in the [./webapp/helpers.py](./webapp/helpers.py) is still working
 
 We are supporting some custom licenses (like the Proprietary license). On update of the list, make sure that they have not been included since. This will avoid having duplicate licenses.
+
+
+## Fetching CVE Data
+When the app is run locally, a GitHub personal access token is required to fetch the CVE data. Make sure you have access to the [canonicalwebteam.snap-cves](https://github.com/canonical/canonicalwebteam.snap-cves) repository. After creating a GitHub classic personal access token, follow the steps described in [GitHub's documentation](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens#personal-access-tokens-classic).
+Then, add this token to the .env.local file with the key GITHUB_SNAPCRAFT_BOT_USER_TOKEN.
+

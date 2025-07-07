@@ -6,6 +6,9 @@ The web frontend for the snap store.
 
 import talisker.requests
 import webapp.api
+
+from talisker import logging
+
 from canonicalwebteam.flask_base.app import FlaskBase
 from webapp.blog.views import init_blog
 from webapp.docs.views import init_docs
@@ -21,18 +24,23 @@ from webapp.publisher.views import account
 from webapp.snapcraft.views import snapcraft_blueprint
 from webapp.store.views import store_blueprint
 from webapp.tutorials.views import init_tutorials
+from webapp.packages.store_packages import store_packages
+
+
+TALISKER_WSGI_LOGGER = logging.getLogger("talisker.wsgi")
 
 
 def create_app(testing=False):
     app = FlaskBase(
         __name__,
         "snapcraft.io",
-        favicon_url="https://assets.ubuntu.com/v1/fdc99abe-ico_16px.png",
+        favicon_url="https://assets.ubuntu.com/v1/d4ca039f-favicon_16px.png",
         template_404="404.html",
         template_folder="../templates",
         static_folder="../static",
     )
     app.config.from_object("webapp.config")
+    app.name = "snapcraft"
     app.testing = testing
 
     if not testing:
@@ -41,24 +49,16 @@ def create_app(testing=False):
         talisker.requests.configure(webapp.helpers.api_session)
         talisker.requests.configure(webapp.helpers.api_publisher_session)
 
-    app.config.from_object("webapp.configs." + app.config["WEBAPP"])
+    if testing:
+
+        @app.context_processor
+        def inject_csrf_token():
+            return dict(csrf_token=lambda: "mocked_csrf_token")
+
     set_handlers(app)
 
-    if app.config["WEBAPP"] == "snapcraft":
-        init_snapcraft(app)
-    else:
-        init_brandstore(app)
-
-    return app
-
-
-def init_brandstore(app):
-    store = app.config.get("WEBAPP_CONFIG").get("STORE_QUERY")
-    app.register_blueprint(store_blueprint(store))
-
-
-def init_snapcraft(app):
     app.register_blueprint(snapcraft_blueprint())
+    app.register_blueprint(store_packages)
     app.register_blueprint(first_snap, url_prefix="/first-snap")
     app.register_blueprint(login)
     app.register_blueprint(oauth)
@@ -70,6 +70,8 @@ def init_snapcraft(app):
     init_docs(app, "/docs")
     init_blog(app, "/blog")
     init_tutorials(app, "/tutorials")
+
+    return app
 
 
 def init_extensions(app):

@@ -168,7 +168,6 @@ function sortAlphaNum(list, hoistValue) {
  * track/stable/branches
  * ...
  *
- * @param {[string]} channels An array of "risk" / "track/risk" / "track/risk/branch"
  * @param {{defaultTrack: string}} options
  * @returns {{tree: Array, list: Array}}
  */
@@ -218,7 +217,7 @@ function sortChannels(channels, options) {
                 (item) =>
                   item.track === track.name &&
                   item.risk === risk.name &&
-                  item.branch === branch.name
+                  item.branch === branch.name,
               )[0].format;
               const str = [];
               if (format.track) {

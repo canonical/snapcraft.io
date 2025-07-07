@@ -1,151 +1,278 @@
+@include vf-p-icon-log-out;
+
+@mixin app-icon-sidebar-collapse() {
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 16 16' width='16px' height='16px' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M 0 7.743 L 6.742 14.485 L 7.899 13.329 L 2.311 7.743 L 7.899 2.157 L 6.742 1 L 0 7.743 Z M 7.899 7.743 L 14.642 14.485 L 15.797 13.329 L 10.21 7.743 L 15.797 2.157 L 14.642 1 L 7.899 7.743 Z' fill='%23FFF' style=''/%3E%3C/svg%3E");
+}
+
+@mixin app-p-icon {
+  .p-icon--sidebar-toggle {
+    @extend %icon;
+    @include app-icon-sidebar-collapse;
+  }
+}
+
 @mixin snapcraft-l-application {
-  // main navigation height is based on padding and line height of a nav link
-  $main-nav-height: map-get($line-heights, default-text) + $spv-inner--large * 2;
-  $global-nav-height: 2rem;
-  // application layout is typically 100vh, but we need to also accommodate the main nav
-  $layout-height: calc(100vh - #{$main-nav-height} - #{$global-nav-height});
-
   .l-application {
-    height: $layout-height;
+    .p-panel__logo {
+      margin-top: 0;
 
-    .p-side-navigation__toggle--dense {
-      background: $color-mid-dark;
-      border: 0;
-      line-height: 1rem;
-      padding: 0.5rem;
-      width: auto;
-
-      &:hover {
-        background: #333;
+      .p-panel__logo-image {
+        height: 36px;
+        max-width: inherit;
       }
 
-      &:active {
-        background: #000;
+      .logo-text {
+        color: #fff;
+        left: 47px;
+        position: absolute;
+        top: 0;
       }
     }
 
-    .p-tabs__link:active,
-    .p-tabs__link[aria-pressed="true"],
-    .p-tabs__link[aria-selected="true"],
-    .p-tabs__link[aria-expanded="true"] {
-      background-color: $color-x-light;
+    .l-navigation-bar {
+      z-index: 200;
+
+      .p-panel__controls {
+        padding-top: 0.25rem;
+      }
     }
 
-    .u-fixed-width,
-    .row {
-      max-width: 100%;
-    }
-  }
+    .l-navigation {
+      background-color: #262626;
 
-  .l-navigation-bar {
-    .p-panel {
-      background-color: $color-light;
-      border-bottom: $border;
-    }
-
-    .p-panel__controls {
-      margin-left: 0;
-    }
-  }
-
-  .l-navigation {
-    height: $layout-height;
-    position: absolute;
-    top: auto;
-    z-index: 100;
-
-    @media (min-width: $application-layout--breakpoint-side-nav-expanded) {
-      position: static;
+      .p-panel__content {
+        overflow: visible;
+      }
     }
 
     .l-navigation__drawer {
-      height: $layout-height;
+      .p-panel__controls {
+        margin-right: -1rem;
+        padding-top: 0.5rem;
+      }
     }
 
-    .p-panel {
-      background: $color-light;
+    .p-side-navigation__label {
+      width: 100%;
+    }
 
-      // side nav tablet view with fixed footer
-      &.is-flex-column--medium {
-        @media (min-width: $application-layout--breakpoint-side-nav-collapsed) and (max-width: $application-layout--breakpoint-side-nav-expanded - 1px) {
-          .l-navigation & {
-            @content;
+    .sidenav-bottom {
+      bottom: 1.5rem;
+      position: absolute;
+      width: 15rem;
+    }
+
+    .aside-overlay {
+      background-color: rgba(0, 0, 0, 0.25);
+      height: 100%;
+      left: 0;
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 200;
+    }
+
+    .l-aside {
+      z-index: 200;
+    }
+
+    .l-aside__overlay {
+      background-color: rgba(0, 0, 0, 0.25);
+      height: 100%;
+      position: absolute;
+      right: 0;
+      top: 0;
+      width: 100%;
+      z-index: 110;
+    }
+
+    .l-status {
+      padding: 1rem 0;
+    }
+
+    .p-side-navigation__item--title .p-side-navigation__link {
+      color: #a8a8a8 !important;
+    }
+
+    .store-selector {
+      margin-right: 0.5rem;
+      position: relative;
+
+      .p-search-box {
+        background-color: #262626;
+        position: sticky;
+        top: 0;
+      }
+    }
+
+    .store-selector__button {
+      background-color: rgba(255, 255, 255, 0.04);
+      background-image: url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%2716%27 height=%2716%27%3E%3Cpath fill=%27%23666%27 d=%27M8.187 11.748l6.187-6.187-1.06-1.061-5.127 5.127L3.061 4.5 2 5.561z%27/%3E%3C/svg%3E");
+      background-position: right 0.75rem center;
+      background-repeat: no-repeat;
+      background-size: 1rem;
+      border: 0;
+      border-bottom: 1.5px solid rgba(255, 255, 255, 0.5);
+      color: $color-x-light;
+      cursor: pointer;
+      max-width: 100%;
+      min-height: 1.5rem;
+      overflow: hidden;
+      padding: calc(0.4rem - 1px) 2rem calc(0.4rem - 1px) 0.5rem;
+      text-align: left;
+      text-indent: 0.01px;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      width: 100%;
+    }
+
+    .store-selector__panel {
+      background-color: #2d2d2d;
+      left: 0;
+      padding: 0.5rem 0.5rem 0;
+      position: absolute;
+      top: 2.3rem;
+      width: 100%;
+      z-index: 1;
+    }
+
+    .store-selector__list {
+      background-color: #2d2d2d;
+      margin: 0;
+      padding-left: 0;
+    }
+
+    .store-selector__item {
+      border-bottom: 1px solid rgba(255, 255, 255, 0.25);
+      padding: calc(0.4rem - 1px) 0;
+
+      &:last-child {
+        border-bottom: 0;
+      }
+
+      a {
+        color: $color-x-light;
+        display: block;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+
+        &:hover {
+          text-decoration: none;
+        }
+      }
+    }
+  }
+
+  // Add collapsible nav in application layout
+  @include app-p-icon;
+
+  .sidenav-toggle-wrapper {
+    background: $colors--dark-theme--background-default;
+    bottom: 0;
+    padding: $spv--small $sph--x-large $spv--large $sph--large;
+    position: absolute;
+    text-align: right;
+    width: 100%;
+
+    .sidenav-toggle {
+      background-color: #444 !important;
+    }
+  }
+
+  .l-navigation.is-collapsed .sidenav-toggle-wrapper {
+    text-align: left;
+
+    .sidenav-toggle {
+      rotate: 180deg;
+    }
+  }
+
+  @media (width >= 1036px) {
+    .l-navigation.is-collapsed {
+      transform: translateX(0) !important;
+      width: 4rem !important;
+
+      .is-fading-when-collapsed {
+        opacity: 0 !important;
+        transition-duration: 0.1s !important;
+        transition-property: opacity !important;
+        transition-timing-function: cubic-bezier(
+          0.215,
+          0.61,
+          0.355,
+          1
+        ) !important;
+      }
+
+      .p-side-navigation__list {
+        opacity: 0 !important;
+        transition-duration: 0.1s !important;
+        transition-property: opacity !important;
+        transition-timing-function: cubic-bezier(
+          0.215,
+          0.61,
+          0.355,
+          1
+        ) !important;
+      }
+
+      .p-side-navigation--icons .p-side-navigation__list {
+        opacity: 1 !important;
+      }
+    }
+  }
+
+  // Overrides to add separators and hide icons in side nav when collapsed
+  .nav-list-separator {
+    padding-left: 4rem;
+  }
+
+  .is-collapsed {
+    .hide-collapsed {
+      .p-side-navigation__icon {
+        display: none !important;
+      }
+
+      [aria-current="page"] {
+        &.p-side-navigation__link {
+          background-color: inherit !important;
+
+          &:hover {
+            background-color: inherit !important;
+            cursor: default !important;
           }
 
-          display: flex;
-          flex-direction: column;
-
-          .p-panel__content {
-            flex: 1 1 0;
-            overflow-y: scroll;
+          &::before {
+            display: none !important;
           }
         }
       }
     }
-
-    .p-panel__header {
-      background-color: $color-light;
-      padding-left: 1.5rem;
-      padding-right: 1.5rem;
-    }
-
-    .p-panel__footer {
-      padding: 1rem;
-    }
-
-    .p-panel__logo-icon {
-      width: 1.5rem;
-    }
-
-    .p-side-navigation__link {
-      &.is-active,
-      &[aria-current="page"],
-      &[aria-current="true"] {
-        @include vf-highlight-bar(#82bfa1, left);
-      }
-    }
-
-    .p-side-navigation--icons {
-      .p-side-navigation__icon {
-        left: 1.25rem;
-        top: 0.25rem;
-      }
-
-      .p-side-navigation__link {
-        padding-left: 3.25rem;
-      }
-    }
   }
 
-  .l-aside {
-    height: $layout-height;
-    position: relative;
+  @media (min-width: $breakpoint-small) and (max-width: $breakpoint-large) {
+    .l-navigation:not(.is-pinned, :hover) {
+      .hide-collapsed {
+        .p-side-navigation__icon {
+          display: none !important;
+        }
 
-    @media (min-width: $breakpoint-small) {
-      width: 22.5rem;
-    }
+        [aria-current="page"] {
+          &.p-side-navigation__link {
+            background-color: inherit !important;
 
-    .is-flex-column {
-      display: flex;
-      flex-direction: column;
+            &:hover {
+              background-color: inherit !important;
+              cursor: default !important;
+            }
 
-      .p-panel__content {
-        flex: 1 1 0;
-        overflow-y: scroll;
+            &::before {
+              display: none !important;
+            }
+          }
+        }
       }
     }
-
-    .p-panel__footer {
-      background-color: $color-x-light;
-      padding: 1rem;
-    }
-  }
-
-  .l-status {
-    background-color: $color-x-light;
-    padding-bottom: $spv-inner--scaleable;
-    padding-top: $spv-inner--scaleable;
-    position: relative;
-    top: -100%;
   }
 }

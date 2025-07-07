@@ -1,0 +1,18 @@
+<div class="p-modal u-hide" id="contact-form-modal">
+  <section class="p-modal__dialog" role="dialog" aria-modal="true" aria-labeledby="modal-title">
+    <header class="p-modal__header">
+      <h2 class="p-modal__title">Contact us</h2>
+      <button class="p-modal__close" aria-label="Close active modal" aria-controls="modal" data-js="close-modal-control">Close</button>
+    </header>
+    <div id="modal-body"></div>
+  </section>
+</div>
+
+<script type="text/template" id="contactFormTemplate">
+  {% with formid="{{formid}}",
+   product="appstore",
+   returnURL="https://snapcraft.io/about/thank-you" %}
+    {% include "shared/contact-form.html" %}
+  {% endwith %}
+</script>
+

@@ -5,7 +5,7 @@ from tests.publisher.endpoint_testing import BaseTestCases
 class ListingPageNotAuth(BaseTestCases.EndpointLoggedOut):
     def setUp(self):
         snap_name = "test-snap"
-        endpoint_url = "/{}/listing".format(snap_name)
+        endpoint_url = "/api/{}/listing".format(snap_name)
 
         super().setUp(snap_name=snap_name, endpoint_url=endpoint_url)
 
@@ -16,7 +16,7 @@ class GetListingPage(BaseTestCases.EndpointLoggedInErrorHandling):
 
         api_url = "https://dashboard.snapcraft.io/dev/api/snaps/info/{}"
         api_url = api_url.format(snap_name)
-        endpoint_url = "/{}/listing".format(snap_name)
+        endpoint_url = "/api/{}/listing".format(snap_name)
 
         super().setUp(
             snap_name=snap_name,
@@ -61,6 +61,7 @@ class GetListingPage(BaseTestCases.EndpointLoggedInErrorHandling):
             "categories": {"items": []},
             "status": "published",
             "update_metadata_on_release": True,
+            "links": {"website": ["https://example.com"]},
         }
 
         responses.add(responses.GET, self.api_url, json=payload, status=200)
@@ -78,25 +79,6 @@ class GetListingPage(BaseTestCases.EndpointLoggedInErrorHandling):
         self.check_call_by_api_url(responses.calls)
 
         assert response.status_code == 200
-        self.assert_template_used("publisher/listing.html")
-
-        self.assert_context("snap_id", "id")
-        self.assert_context("snap_name", snap_name)
-        self.assert_context("snap_title", "Snap title")
-        self.assert_context("summary", "This is a summary")
-        self.assert_context("description", "This is a description")
-        self.assert_context("icon_url", None)
-        self.assert_context("publisher_name", "The publisher")
-        self.assert_context("username", "toto")
-        self.assert_context("screenshot_urls", [])
-        self.assert_context("contact", "contact adress")
-        self.assert_context("website", "website_url")
-        self.assert_context("is_on_stable", False)
-        self.assert_context("public_metrics_enabled", True)
-        self.assert_context("public_metrics_blacklist", False)
-        self.assert_context("license", "License")
-        self.assert_context("video_urls", [])
-        self.assert_context("from", "test")
 
     @responses.activate
     def test_icon(self):
@@ -119,6 +101,7 @@ class GetListingPage(BaseTestCases.EndpointLoggedInErrorHandling):
             "categories": {"items": []},
             "status": "published",
             "update_metadata_on_release": True,
+            "links": {"website": ["https://example.com"]},
         }
 
         responses.add(responses.GET, self.api_url, json=payload, status=200)
@@ -134,9 +117,6 @@ class GetListingPage(BaseTestCases.EndpointLoggedInErrorHandling):
         self.check_call_by_api_url(responses.calls)
 
         assert response.status_code == 200
-        self.assert_template_used("publisher/listing.html")
-
-        self.assert_context("icon_url", "this is a url")
 
     @responses.activate
     def test_screenshots(self):
@@ -159,6 +139,7 @@ class GetListingPage(BaseTestCases.EndpointLoggedInErrorHandling):
             "categories": {"items": []},
             "status": "published",
             "update_metadata_on_release": True,
+            "links": {"website": ["https://example.com"]},
         }
 
         responses.add(responses.GET, self.api_url, json=payload, status=200)
@@ -174,9 +155,6 @@ class GetListingPage(BaseTestCases.EndpointLoggedInErrorHandling):
         self.check_call_by_api_url(responses.calls)
 
         assert response.status_code == 200
-        self.assert_template_used("publisher/listing.html")
-
-        self.assert_context("screenshot_urls", ["this is a url"])
 
     @responses.activate
     def test_banner_images(self):
@@ -205,6 +183,7 @@ class GetListingPage(BaseTestCases.EndpointLoggedInErrorHandling):
             "categories": {"items": []},
             "status": "published",
             "update_metadata_on_release": True,
+            "links": {"website": ["https://example.com"]},
         }
 
         responses.add(responses.GET, self.api_url, json=payload, status=200)
@@ -220,9 +199,6 @@ class GetListingPage(BaseTestCases.EndpointLoggedInErrorHandling):
         self.check_call_by_api_url(responses.calls)
 
         assert response.status_code == 200
-        self.assert_template_used("publisher/listing.html")
-
-        self.assert_context("banner_urls", ["/banner_1234.png"])
 
     @responses.activate
     def test_videos(self):
@@ -245,6 +221,7 @@ class GetListingPage(BaseTestCases.EndpointLoggedInErrorHandling):
             "categories": {"items": []},
             "status": "published",
             "update_metadata_on_release": True,
+            "links": {"website": ["https://example.com"]},
         }
 
         responses.add(responses.GET, self.api_url, json=payload, status=200)
@@ -260,9 +237,6 @@ class GetListingPage(BaseTestCases.EndpointLoggedInErrorHandling):
         self.check_call_by_api_url(responses.calls)
 
         assert response.status_code == 200
-        self.assert_template_used("publisher/listing.html")
-
-        self.assert_context("video_urls", ["https://youtube.com/watch?v=1234"])
 
     @responses.activate
     def test_failed_categories_api(self):
@@ -285,6 +259,7 @@ class GetListingPage(BaseTestCases.EndpointLoggedInErrorHandling):
             "categories": {"items": []},
             "status": "published",
             "update_metadata_on_release": True,
+            "links": {"website": ["https://example.com"]},
         }
 
         responses.add(responses.GET, self.api_url, json=payload, status=200)
@@ -300,6 +275,3 @@ class GetListingPage(BaseTestCases.EndpointLoggedInErrorHandling):
         self.check_call_by_api_url(responses.calls)
 
         assert response.status_code == 200
-        self.assert_template_used("publisher/listing.html")
-
-        self.assert_context("categories", [])

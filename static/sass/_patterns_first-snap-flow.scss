@@ -1,10 +1,8 @@
+@use "sass:map";
+
 @mixin snapcraft-p-first-snap-flow {
   .p-flow-details {
     width: 100%;
-  }
-
-  .p-flow-details__continue {
-    clear: both;
   }
 
   .p-code-yaml {
@@ -16,18 +14,11 @@
     }
   }
 
-  // workaround for bringing back default p styles in accordion
-  // before this vanilla bug is fixed:
-  // https://github.com/canonical-web-and-design/vanilla-framework/issues/2301
-  .p-accordion p {
-    margin-bottom: map-get($sp-after, p) - map-get($nudges, nudge--p);
-  }
-
   .p-accordion__panel {
-    $icon-size: map-get($icon-sizes, accordion);
+    $icon-size: map.get($icon-sizes, accordion);
 
     overflow: visible;
-    padding-left: $sph-inner + $icon-size + $sph-inner; // same as accordion button
+    padding-left: $sph--large + $icon-size + $sph--large; // same as accordion button
   }
 
   .p-form-validation__message {
@@ -36,9 +27,5 @@
     .is-error & {
       display: block;
     }
-  }
-
-  .p-text-optional {
-    color: $color-mid-dark;
   }
 }

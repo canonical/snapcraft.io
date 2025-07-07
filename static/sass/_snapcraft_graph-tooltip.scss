@@ -3,7 +3,7 @@
     &__title {
       border-bottom: 1px solid $color-mid-dark;
       display: block;
-      font-family: "Ubuntu", sans-serif;
+      font-family: Ubuntu, sans-serif;
       font-size: 12px;
       margin-bottom: 0.5rem;
       padding-bottom: 0.25rem;
@@ -13,11 +13,11 @@
     &__series {
       align-items: center;
       display: flex;
-      font-family: "Ubuntu", sans-serif;
+      font-family: Ubuntu, sans-serif;
       font-size: 12px;
-      justify-content: center;
+      justify-content: space-between;
       margin-top: 0.25rem;
-      width: 215px;
+      width: 265px;
 
       &:last-child {
         margin-bottom: 0.25rem;
@@ -27,17 +27,24 @@
         font-weight: bold;
       }
 
+      &-start {
+        align-items: center;
+        display: flex;
+        flex-direction: row;
+        flex-shrink: 1;
+        overflow: hidden;
+      }
+
       &-name {
-        display: inline-block;
         overflow: hidden;
         text-align: left;
         text-overflow: ellipsis;
-        width: calc(70% - 0.5rem);
       }
 
       &-color {
         border-radius: 0.75rem;
         display: inline-block;
+        flex-grow: 0;
         height: 0.75rem;
         width: 0.75rem;
         margin: {
@@ -50,7 +57,6 @@
         display: inline-block;
         margin-top: 0;
         text-align: right;
-        width: calc(30% - 0.5rem);
       }
     }
   }

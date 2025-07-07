@@ -1,3 +1,5 @@
+@use "sass:map";
+
 // colour definitions
 $ubuntu-orange: #e95420;
 $color-brand: #00302f;
@@ -5,14 +7,22 @@ $color-accent: $color-brand;
 $color-navigation-active-bar: $ubuntu-orange;
 $color-sidenav-item-border-highlight: #82bfa1;
 
-// navigation variables
-$theme-default-nav: dark;
-$breakpoint-navigation-threshold: 800px;
+// XXX: remove when updating to the latest 4.0 version which includes this var
+$color-paper: #f3f3f3;
 
+.is-paper {
+  background-color: $color-paper;
+}
+
+// navigation variables
 $font-display-option: swap;
 
+// responsive
+$breakpoint-medium: 619px;
+
 // vanilla patterns
-@import "vanilla-framework/scss/vanilla";
+@import "vanilla-framework";
+@include vanilla;
 
 // import cookie policy
 @import "@canonical/cookie-policy/build/css/cookie-policy";
@@ -20,346 +30,154 @@ $font-display-option: swap;
 // make social icons match footer p-strip--light color
 $color-social-icon-foreground: $color-light;
 
-@include vf-base;
-@include vf-p-accordion;
-@include vf-p-card; // required by vf-p-tooltips
-@include vf-p-divider;
-@include vf-p-links;
-@include vf-p-lists;
-@include vf-p-grid;
-@include vf-p-grid-modifications;
-@include vf-p-buttons;
-@include vf-p-strip;
-@include vf-p-media-object;
-@include vf-p-modal;
-@include vf-p-table-mobile-card;
-@include vf-p-muted-heading;
-@include vf-p-navigation;
-@include vf-p-notification;
-@include vf-p-tooltips;
-@include vf-p-forms;
-@include vf-p-form-help-text;
-@include vf-p-headings;
-@include vf-p-matrix;
-@include vf-p-icons;
-@include vf-p-heading-icon;
-@include vf-p-form-validation;
-@include vf-p-contextual-menu;
-@include vf-p-breadcrumbs;
-@include vf-p-pagination;
-@include vf-p-code-snippet;
-@include vf-p-tabs;
-@include vf-p-table-icons;
-@include vf-p-subnav;
-@include vf-p-side-navigation;
-@include vf-p-search-box;
-
-// vanilla utilities
-@include vf-u-floats;
-@include vf-u-off-screen;
-@include vf-u-margin-collapse;
-@include vf-u-padding-collapse;
-@include vf-u-vertically-center;
-@include vf-u-align;
-@include vf-u-clearfix;
-@include vf-u-animations;
-@include vf-u-image-position;
-@include vf-u-equal-height;
-@include vf-u-hide;
-@include vf-u-show;
-@include vf-u-layout;
-@include vf-u-text-muted;
-@include vf-u-truncate;
-@include vf-u-embedded-media;
-
-// vanilla layouts
-@include vf-l-application;
-
-@import "patterns_icons";
 @import "snapcraft_custom-cols";
-
 @include snapcraft-custom-cols;
-
-// No drop-in replacement from vanilla, but perhaps we could use
-// p-button has-icon?
-@import "patterns_button_spinner";
-
-@include p-button-spinner;
 
 // Needs some TLC with the new code styling
 @import "patterns_annotated_code";
-
 @include p-annotated-code;
-
 @import "map";
-
 @include snap-details-map;
 
 // Again the new grid doesn't work to implement what happens here
 @import "search-form";
-
 @include search-form;
-
-// The footer pattern has been removed from vanilla
-// so there is little possibility this will be added
-@import "patterns_sticky_footer";
-
-@include p-sticky-footer;
-
-// some bugfixes for Vanilla navigation issues
-@import "snapcraft_p-navigation";
-
-@include snapcraft-p-navigation;
-
 @import "snapcraft_banner";
-
 @include snapcraft-banner;
-
 @import "snapcraft_graph-tooltip";
-
 @include snapcraft-graph-tooltip;
-
 @import "snapcraft_metrics";
-
 @include snapcraft-metrics;
 
 // When we move the listing, formerly market page
 // to react, we should be able to remove this
 @import "snapcraft_market";
-
 @include snapcraft-market;
-
 @import "patterns_testimonial";
-
 @include vf-p-testimonial;
-
-@import "button-overrides";
-
-@include button-overrides;
-
-@import "patterns_logo-links";
-
-@include p-logo-link;
-
 @import "snapcraft_market_screenshots";
-
 @include snapcraft-market-screenshots;
 
 // This needs to be killed with fire
 @import "patterns_maas_modal";
-
 @include maas-p-modal;
-
 @import "snapcraft_details_heading";
-
 @include snapcraft-details-heading;
-
-@import "snapcraft_patterns_icons";
-
-@include snapcraft-p-icon-top;
-
 @import "snapcraft_show-more";
-
 @include snapcraft-show-more;
-
 @import "snapcraft_snap-details";
-
 @include snapcraft-snap-details;
-
-@import "snapcraft_p-form-validation";
-
-@include snapcraft-p-form-validation;
-
 @import "snapcraft_p-notifications";
-
 @include snapcraft-p-notification;
-
 @import "snapcraft_distro-chart";
-
 @include snapcraft-distro-chart;
-
 @import "snapcraft_p-verified";
-
 @include snapcraft-p-verified;
-
 @import "utilities_crop";
-
 @include u-insights-crop;
-
 @import "patterns_blog-post";
-
 @include snapcraft-p-blog-post;
-
 @import "patterns_nested-inputs";
-
 @include snapcraft-p-nested-inputs;
-
 @import "patterns_carousel";
-
 @include snapcraft-p-carousel;
-
 @import "patterns_media-object--snap";
-
 @include snapcraft-p-media-object--snap;
-
 @import "snapcraft_release";
-
 @include snapcraft-release;
-
 @import "snapcraft_p-build";
-
 @include snapcraft-p-build;
-
 @import "patterns_blog-list";
-
 @include snapcraft-p-blog-list;
-
 @import "patterns_form-multiselect";
-
 @include snapcraft-p-multiselect;
-
 @import "patterns_first-snap-flow";
-
 @include snapcraft-p-first-snap-flow;
-
-@import "snapcraft_p-breadcrumbs";
-
-@include snapcraft-p-breadcrumbs;
-
-@import "snapcraft-publicise";
-
-@include snapcraft-publicise;
-
 @import "snapcraft-publisher";
-
 @include snapcraft-publisher;
-
 @import "patterns_modal";
-
 @include vf-p-modal-snapcraft;
-
-@import "patterns_strip_slanted";
-
-@include snapcraft-p-strip;
-
-@import "snapcraft_store";
-
-@include snapcraft-store;
-
+@import "snapcraft_packages";
+@include snapcraft-packages;
 @import "snapcraft_dispute-list";
-
 @include snapcraft-p-dispute-list;
-
 @import "snapcraft_embedded_card_modal";
-
 @include snapcraft-embedded-card-modal;
-
 @import "snapcraft_p-file-input";
-
 @include snapcraft-p-file-input;
-
 @import "patterns_pagination";
-
 @include snapcraft-p-pagination;
-
 @import "snapcraft_p-featured-snap";
-
 @include snapcraft-p-featured-snap;
-
 @import "patterns_distro_banner";
-
 @include p-distro-banner;
-
 @import "snapcraft_p-docs";
-
 @include snapcraft-pattern-docs;
-
 @import "patterns_table";
-
 @include snapcraft-p-table;
-
-@import "utilities_no-limit";
-
-@include u-no-limit;
-
-@import "utilities_flex";
-
-@include u-flex;
-
 @import "utilities_disabled";
-
 @include u-disabled;
-
 @import "utilities_text-wrap";
-
 @include u-text-wrap;
-
 @import "snapcraft_tour";
-
 @include snapcraft-tour;
-
 @import "pattern-hero-tab";
-
 @include snapcraft-hero-tab;
-
 @import "snapcraft_p-tutorials";
-
 @include snapcraft-pattern-tutorials;
+@import "snapcraft_p-snap-list";
+@include snapcraft-p-snap-list;
 
 // Convert first row of a card to a header
 @import "snapcraft_p-table-mobile-card";
-
 @include snapcraft-p-table-mobile-card;
-
 @import "snapcraft_p-progressive-bar";
-
 @include snapcraft-p-progressive-bar;
-
 @import "snapcraft_p-release-details-row";
-
 @include snapcraft-p-release-details-row;
-
-@import "snapcraft_l-application";
-
-@include snapcraft-l-application;
-
 @import "snapcraft-p-videos";
-
 @include snapcraft-p-videos;
-
-@import "pattern_p-button-group";
-
-@include p-snapcraft-button-group;
-
 @import "snapcraft_p-action-form";
-
 @include snapcraft-action-form;
-
 @import "snapcraft_custom-checkboxes";
-
 @include snapcraft-custom-checkboxes;
-
 @import "snapcraft_p-sticky-admin-footer";
-
 @include snapcraft-sticky-admin-footer;
-
 @import "snapcraft_p-side-panel";
-
 @include snapcraft-p-side-panel;
-
 @import "patterns_p-password-toggle-input";
-
 @include p-password-toggle-input;
-
 @import "snapcraft_p-autocomplete";
-
 @include snapcraft-autocomplete;
-@include snapcraft-p-icons;
 @include vf-p-form-password-toggle;
 @include vf-p-icon-status-waiting;
+@include vf-p-icon-submit-bug;
+@include vf-p-icon-code;
+@include vf-p-icon-exposed;
+@include vf-p-icon-topic;
+@include vf-p-icon-revisions;
+@import "snapcraft_snap-image-upload";
+@include snap-image-upload;
+@import "snapcraft_p-featured-snaps";
+@include snapcraft-p-featured-snaps;
+@import "snapcraft_p-app-pagination";
+@include snapcraft-app-pagination;
+@import "patterns_p-filter-panel";
+@import "snapcraft_l-application";
+@include snapcraft-l-application;
+@include p-filter-panel;
+@include vf-p-icon-pin;
+@include vf-p-icon-user-group;
+@include vf-p-icon-settings;
+@include vf-p-icon-begin-downloading;
+@include vf-p-icon-pods;
+@include vf-p-icon-security;
+@include vf-p-icon-models;
+@include vf-p-icon-edit;
+@include vf-p-icon-units;
 
 dl {
-  margin-bottom: $spv-outer--scaleable;
+  margin-bottom: $spv--x-large;
 }
 
 .u-animate--reveal {
@@ -368,41 +186,16 @@ dl {
   transition: opacity 0.5s ease-in;
 }
 
-// Vanilla bug: https://github.com/canonical-web-and-design/vanilla-framework/issues/3321
-
-.u-show--small {
-  @media screen and (max-width: $breakpoint-medium) {
-    // we duplicate display to support IE
-    // sass-lint:disable no-duplicate-properties
-    display: inherit !important;
-    display: initial !important;
-    // sass-lint:enable no-duplicate-properties
-  }
-}
-
 .u-line-clamp--3 {
   -webkit-box-orient: vertical;
-  display: -webkit-box;
+  display: flex;
   -webkit-line-clamp: 3;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-// This should be removed once vanilla is upgraded to v2.22.2
-.p-code-snippet__block--icon.is-wrapped,
-.p-code-snippet__block--numbered.is-wrapped,
-.p-code-snippet__block.is-wrapped {
-  white-space: pre-wrap;
-}
-
-// Vanilla bug: https://github.com/canonical-web-and-design/vanilla-framework/issues/3526
-code {
-  white-space: pre;
-  word-break: normal;
-}
-
 .p-modal__dialog {
-  @media only screen and (min-width: $breakpoint-medium) {
+  @media only screen and (min-width: $breakpoint-small) {
     min-width: 400px;
   }
 }
@@ -421,31 +214,24 @@ code {
   overflow: visible !important;
 }
 
-// Vanilla bug: https://github.com/canonical-web-and-design/vanilla-framework/issues/3975
-.p-form-password-toggle + [readonly] {
-  color: $color-dark;
+.table-cell-checkbox__label {
+  @extend .u-off-screen;
 }
 
-.table-cell--checkbox,
 .table-cell-head--checkbox {
   padding-left: 2.5rem;
 
   .p-checkbox {
     margin-bottom: 0;
-    margin-left: -2rem;
+    margin-left: -1.5rem;
+    margin-right: 0.25rem;
     padding-top: 0;
     position: relative;
-    top: 4px;
+    top: 0;
 
     .p-checkbox__input {
       margin-top: 0;
     }
-  }
-}
-
-.table-cell-head--checkbox {
-  .p-checkbox {
-    top: -2px;
   }
 }
 
@@ -461,9 +247,9 @@ code {
   }
 }
 
-.members-accordion {
+.app-accordion {
   .p-accordion__panel {
-    padding-left: 0;
+    padding-left: 2.5rem;
   }
 }
 
@@ -475,28 +261,242 @@ code {
     margin-bottom: 0 !important;
   }
 
-  @media (min-width: $breakpoint-medium) {
+  @media (min-width: $breakpoint-small) {
     display: inline-block;
     margin-left: 0.75rem !important;
   }
 
-  @media (min-width: 1353px) {
+  @media (width >= 1353px) {
     margin-bottom: 0 !important;
   }
 }
 
-.snap-sub-table {
-  @media (min-width: $breakpoint-medium) {
-    border-top: 1px solid $colors--light-theme--border-low-contrast;
-  }
-}
-
 .snap-published-in-cell {
-  @media (max-width: $breakpoint-medium - 1px) {
+  @media (max-width: $breakpoint-large - 1) {
     display: none !important;
 
     + td::after {
       display: none;
     }
   }
+}
+
+.u-space-between {
+  display: flex;
+  justify-content: space-between;
+}
+
+.u-hide-table-col--large {
+  @media (width >= 1036px) {
+    display: none !important;
+  }
+}
+
+.u-no-max-width {
+  max-width: 100% !important;
+}
+
+.p-list-indented {
+  margin-left: 1.25rem;
+}
+
+.external-link-protocol--positive {
+  color: $color-positive;
+}
+
+.external-link-protocol--negative {
+  color: $color-negative;
+}
+
+.u-screenreader-only {
+  height: 1px;
+  left: -10000px;
+  overflow: hidden;
+  position: absolute;
+  top: auto;
+  width: 1px;
+}
+
+// Needed to override as the accent color is different on this site
+.p-navigation__tagged-logo .p-navigation__logo-tag {
+  background-color: $ubuntu-orange;
+}
+
+.u-full-width {
+  width: 100%;
+}
+
+.article-row {
+  &:not(:first-child) {
+    border-top: 1px solid $color-mid-light;
+  }
+
+  &:not(:last-child) {
+    margin-bottom: 2rem;
+  }
+}
+
+.p-tabs__list.is-light {
+  list-style: none;
+
+  .p-tabs__link {
+    background-color: $color-paper;
+  }
+}
+
+.p-strip--homepage {
+  @extend .p-strip;
+
+  background-color: $color-paper;
+}
+
+.p-rule--vertical {
+  &::before {
+    background-color: $colors--light-theme--border-default;
+    display: block;
+    height: 100%;
+    left: map.get($grid-gutter-widths, default) * -0.5;
+    position: absolute;
+    width: 1px;
+  }
+}
+
+.p-inline-list--vertical-divider {
+  @extend .p-inline-list--middot;
+
+  .p-inline-list__item:not(:last-child) {
+    &::after {
+      border-left: 1px solid $color-mid-light;
+      content: "";
+      right: -0.15rem;
+    }
+  }
+}
+
+.main {
+  background: $color-paper;
+}
+
+.p-suru25light {
+  background-color: $color-paper;
+  background-image: url("https://assets.ubuntu.com/v1/7f34ade9-website_suru_25.jpg");
+  background-position: 0 0;
+  background-repeat: no-repeat;
+  background-size: 100%;
+  max-width: 80rem;
+  padding-top: 19%;
+}
+
+.snap-search-bar {
+  background-color: $color-x-light;
+  background-image: none;
+  box-shadow: 0 3px 3px rgba(51, 51, 51, 0.2);
+}
+
+.p-navigation__row.is-full-width {
+  max-width: 100%;
+}
+
+// To prevent layout shift
+.brand-store-tabs {
+  height: 48px;
+
+  @media only screen and (min-width: $breakpoint-x-large) {
+    height: 54px;
+  }
+}
+
+.u-flex-column {
+  display: flex;
+  flex-direction: column;
+}
+
+.u-flex-grow {
+  flex-grow: 1;
+}
+
+// Fix issue where pagination causes overflow in application layout
+.u-off-screen--top {
+  top: -100%;
+}
+
+// Breaks modals
+.p-accordion__panel[aria-hidden="false"] {
+  transform: none;
+}
+
+.p-search-box .p-search-box__input:placeholder-shown ~ .p-search-box__reset {
+  display: none !important;
+}
+
+.p-search-box .p-button.p-search-box__button {
+  margin-right: 0;
+}
+
+.accordion-bold-titles {
+  .p-accordion__heading button {
+    font-weight: bold;
+    text-transform: uppercase;
+  }
+
+  .p-accordion__panel {
+    padding-left: 0;
+    position: relative;
+  }
+
+  .p-accordion__list {
+    margin-bottom: 0;
+  }
+}
+
+.brand-store-table-header {
+  padding-top: 21px;
+}
+
+.accordion-actions {
+  position: relative;
+}
+
+.accordion-actions__row {
+  margin-top: 1rem;
+
+  @media (min-width: $breakpoint-small) {
+    margin-top: 0;
+    position: absolute;
+    right: 0;
+    top: 0.35rem;
+    z-index: 10;
+  }
+}
+
+.is-flex-column {
+  display: flex;
+  flex-direction: column;
+
+  .p-panel__content {
+    flex-grow: 1;
+  }
+}
+
+.publisher-app > .p-panel > .p-panel__content {
+  overflow: visible;
+}
+
+.releases-track-aside {
+  height: 100%;
+  position: fixed !important;
+  right: 0;
+  top: 0;
+}
+
+@media (max-width: $breakpoint-small) {
+  .releases-track-aside {
+    .is-flex-column {
+      min-height: calc(100% - 56px);
+    }
+  }
+}
+
+html {
+  scroll-behavior: smooth;
 }

@@ -1,46 +1,55 @@
-<div class="col-{{ columns }} u-hide" data-flow-details="ros">
+<div class="u-hide" data-flow-details="ros">
+  <hr class="p-rule u-hide--large">
   <div class="row">
-    <div class="col-{{ (columns/2) | int }}">
-      <h3 class="p-heading--4">Why are snaps good for ROS projects?</h3>
-      <ul>
-        <li>Bundle all the runtime requirements, including the exact version of ROS and system libraries you need.</li>
-        <li>Expand the distributions supported beyond just Ubuntu.</li>
-        <li>Directly and reliably control the delivery of application updates using existing infrastructure.</li>
-        <li>Extremely simple creation of daemons.</li>
-      </ul>
-      <div class="p-flow-details__continue">
-        <p>In just a few steps, you’ll have an example ROS app in the Snap Store.</p>
-        <a class="p-button--positive" href="/first-snap/ros/">Continue &rsaquo;</a>
-      </div>
+    <div class="col-3">
+      <h3 class="p-heading--5">Why are snaps good for ROS projects?</h3>
     </div>
-
-    <div class="col-{{ (columns/2) | int }}">
-      <h3 class="p-heading--4">Here's an example snapcraft.yaml that uses ROS:</h3>
-      <div class ="p-show-more is-collapsed" data-js="js-show-more">
-        <pre class="p-code-yaml"><b>name</b>: ros-talker-listener
+    <div class="col-6">
+      <ul class="p-list--divided">
+        <li class="p-list__item has-bullet">Bundle all the runtime requirements, including the exact version of ROS and system libraries you need.</li>
+        <li class="p-list__item has-bullet">Expand the distributions supported beyond just Ubuntu.</li>
+        <li class="p-list__item has-bullet">Directly and reliably control the delivery of application updates using existing infrastructure.</li>
+        <li class="p-list__item has-bullet">Extremely simple creation of daemons.</li>
+      </ul>
+      <p>In just a few steps, you’ll have an example ROS app in the Snap Store.</p>
+    </div>
+  </div>
+  <hr class="p-rule">
+  <div class="row">
+    <div class="col-3">
+      <h3 class="p-heading--5">Here's an example snapcraft.yaml that uses ROS:</h3>
+    </div>
+    <div class ="p-show-more is-collapsed col-6" data-js="js-show-more">
+      <pre class="p-code-yaml"><b>name</b>: ros-talker-listener
 <b>version</b>: '0.1'
 <b>summary</b>: ROS Talker/Listener Example
 <b>description</b>: |
   This example launches a ROS talker and listener.
 
-<b>base</b>: core18
 <b>confinement</b>: devmode
+<b>base</b>: core20
 
 <b>parts</b>:
   <b>ros-tutorials</b>:
     <b>plugin</b>: catkin
     <b>source</b>: https://github.com/ros/ros_tutorials.git
-    <b>source-branch</b>: melodic-devel
-    <b>source-space</b>: roscpp_tutorials/
-    <b>build-packages</b>: [lsb-release]
+    <b>source-branch</b>: noetic-devel
+    <b>catkin-packages</b>: [roscpp_tutorials]
+    <b>stage-packages</b>:
+      - ros-noetic-roslaunch
 
 <b>apps</b>:
-  <b>run</b>:
-    <b>command</b>: roslaunch roscpp_tutorials talker_listener.launch</pre>
+  <b>ros-talker-listener</b>:
+    <b>command</b>: opt/ros/noetic/bin/roslaunch roscpp_tutorials talker_listener.launch
+    <b>extensions</b>: [ros1-noetic]</pre>
 
       {% include "home/_fsf_yaml_show_more.html" %}
 
-      </div>
     </div>
+  </div>
+
+  <div class="u-align--right">
+    <hr>
+    <a class="p-button--positive" href="/docs/ros-applications">Continue &rsaquo;</a>
   </div>
 </div>

@@ -62,7 +62,6 @@ class TemplateUtilsTest(unittest.TestCase):
         self.assertTrue(result, "10,000")
 
     def test_install_snippet(self):
-
         result = template_utils.install_snippet(
             "spotify", "latest", "stable", ""
         )
@@ -101,17 +100,182 @@ class TemplateUtilsTest(unittest.TestCase):
         result = template_utils.format_date(
             "2019-09-02T09:27:58.930567+00:00", "%d %B %Y"
         )
-        self.assertEquals(result, "02 September 2019")
+        self.assertEqual(result, "02 September 2019")
 
     def test_format_member_role(self):
         result = template_utils.format_member_role("admin")
-        self.assertEquals(result, "admin")
+        self.assertEqual(result, "admin")
 
         result = template_utils.format_member_role("review")
-        self.assertEquals(result, "reviewer")
+        self.assertEqual(result, "reviewer")
 
         result = template_utils.format_member_role("view")
-        self.assertEquals(result, "viewer")
+        self.assertEqual(result, "viewer")
 
         result = template_utils.format_member_role("access")
-        self.assertEquals(result, "publisher")
+        self.assertEqual(result, "publisher")
+
+    def test_format_link(self):
+        result = template_utils.format_link("mailto:hello@example.com")
+        self.assertEqual(result, "hello@example.com")
+
+        result = template_utils.format_link("https://example.com")
+        self.assertEqual(result, "example.com")
+
+        result = template_utils.format_link("http://example.com")
+        self.assertEqual(result, "example.com")
+
+        result = template_utils.format_link("https://example.com/")
+        self.assertEqual(result, "example.com")
+
+        result = template_utils.format_link("http://example.com/")
+        self.assertEqual(result, "example.com")
+
+        result = template_utils.format_link("https://example.com/path")
+        self.assertEqual(result, "example.com")
+
+        result = template_utils.format_link("http://example.com/path")
+        self.assertEqual(result, "example.com")
+
+        result = template_utils.format_link("https://example.com/path/")
+        self.assertEqual(result, "example.com")
+
+        result = template_utils.format_link("http://example.com/path/")
+        self.assertEqual(result, "example.com")
+
+        result = template_utils.format_link("https://example.com/path/path")
+        self.assertEqual(result, "example.com")
+
+        result = template_utils.format_link("http://example.com/path/path")
+        self.assertEqual(result, "example.com")
+
+        result = template_utils.format_link("https://example.com/path/path/")
+        self.assertEqual(result, "example.com")
+
+        result = template_utils.format_link("http://example.com/path/path/")
+        self.assertEqual(result, "example.com")
+
+        result = template_utils.format_link("https://example.com?foo=bar")
+        self.assertEqual(result, "example.com")
+
+        result = template_utils.format_link("http://example.com?foo=bar")
+        self.assertEqual(result, "example.com")
+
+        result = template_utils.format_link("https://example.com/?foo=bar")
+        self.assertEqual(result, "example.com")
+
+        result = template_utils.format_link("http://example.com/?foo=bar")
+        self.assertEqual(result, "example.com")
+
+        result = template_utils.format_link(
+            "https://example.com?foo=bar&bar=foo"
+        )
+        self.assertEqual(result, "example.com")
+
+        result = template_utils.format_link(
+            "http://example.com?foo=bar&bar=foo"
+        )
+        self.assertEqual(result, "example.com")
+
+        result = template_utils.format_link(
+            "https://example.com/?foo=bar&bar=foo"
+        )
+        self.assertEqual(result, "example.com")
+
+        result = template_utils.format_link(
+            "http://example.com/?foo=bar&bar=foo"
+        )
+        self.assertEqual(result, "example.com")
+
+        result = template_utils.format_link("https://example.com/path?foo=bar")
+        self.assertEqual(result, "example.com")
+
+        result = template_utils.format_link("http://example.com/path?foo=bar")
+        self.assertEqual(result, "example.com")
+
+        result = template_utils.format_link(
+            "https://example.com/path/?foo=bar"
+        )
+        self.assertEqual(result, "example.com")
+
+        result = template_utils.format_link("http://example.com/path/?foo=bar")
+        self.assertEqual(result, "example.com")
+
+        result = template_utils.format_link(
+            "https://example.com/path/path?foo=bar"
+        )
+        self.assertEqual(result, "example.com")
+
+        result = template_utils.format_link(
+            "http://example.com/path/path?foo=bar"
+        )
+        self.assertEqual(result, "example.com")
+
+        result = template_utils.format_link(
+            "https://example.com/path/path/?foo=bar"
+        )
+        self.assertEqual(result, "example.com")
+
+        result = template_utils.format_link(
+            "http://example.com/path/path/?foo=bar"
+        )
+        self.assertEqual(result, "example.com")
+
+        result = template_utils.format_link("https://example.com/path?foo=bar")
+        self.assertEqual(result, "example.com")
+
+        result = template_utils.format_link("http://example.com/path?foo=bar")
+        self.assertEqual(result, "example.com")
+
+        result = template_utils.format_link(
+            "https://example.com/path/?foo=bar"
+        )
+        self.assertEqual(result, "example.com")
+
+        result = template_utils.format_link(
+            "http://example.com/path/?foo=bar&bar=foo"
+        )
+        self.assertEqual(result, "example.com")
+
+        result = template_utils.format_link(
+            "https://example.com/path/path?foo=bar&bar=foo"
+        )
+        self.assertEqual(result, "example.com")
+
+        result = template_utils.format_link(
+            "http://example.com/path/path?foo=bar&bar=foo"
+        )
+        self.assertEqual(result, "example.com")
+
+        result = template_utils.format_link(
+            "https://example.com/path/path/?foo=bar&bar=foo"
+        )
+        self.assertEqual(result, "example.com")
+
+        result = template_utils.format_link(
+            "http://example.com/path/path/?foo=bar&bar=foo"
+        )
+        self.assertEqual(result, "example.com")
+
+        for domain in [
+            "github.com",
+            "gitlab.com",
+            "bitbucket.org",
+            "launchpad.net",
+            "sourceforge.net",
+        ]:
+            result = template_utils.format_link(f"https://{domain}/test/test")
+            self.assertEqual(result, f"{domain}/test/test")
+
+            result = template_utils.format_link(
+                f"http://{domain}/test/test?foo=bar"
+            )
+            self.assertEqual(result, f"{domain}/test/test")
+
+            result = template_utils.format_link(f"http://{domain}/test/test")
+            self.assertEqual(result, f"{domain}/test/test")
+
+            result = template_utils.format_link(
+                f"http://{domain}/test/test?foo=bar"
+            )
+            self.assertEqual(result, f"{domain}/test/test")

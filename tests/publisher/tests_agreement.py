@@ -2,12 +2,6 @@ import responses
 from tests.publisher.endpoint_testing import BaseTestCases
 
 
-class GetAgreementPageNotAuth(BaseTestCases.EndpointLoggedOut):
-    def setUp(self):
-        endpoint_url = "/account/agreement"
-        super().setUp(snap_name=None, endpoint_url=endpoint_url)
-
-
 class GetAgreementPage(BaseTestCases.BaseAppTesting):
     def setUp(self):
         endpoint_url = "/account/agreement"
@@ -21,14 +15,6 @@ class GetAgreementPage(BaseTestCases.BaseAppTesting):
         assert response.status_code == 200
         self.assert_template_used(
             "publisher/developer_programme_agreement.html"
-        )
-
-
-class PostAgreementPageNotAuth(BaseTestCases.EndpointLoggedOut):
-    def setUp(self):
-        endpoint_url = "/account/agreement"
-        super().setUp(
-            snap_name=None, endpoint_url=endpoint_url, method_endpoint="POST"
         )
 
 
@@ -63,13 +49,11 @@ class PostAgreementPage(BaseTestCases.EndpointLoggedIn):
         self.assertEqual(b'{"latest_tos_accepted": true}', called.request.body)
 
         self.assertEqual(302, response.status_code)
-        self.assertEqual("http://localhost/account/", response.location)
+        self.assertEqual("/account/", response.location)
 
     @responses.activate
     def test_post_agreement_off(self):
         response = self.client.post(self.endpoint_url, data={"i_agree": "off"})
 
         self.assertEqual(302, response.status_code)
-        self.assertEqual(
-            "http://localhost/account/agreement", response.location
-        )
+        self.assertEqual("/account/agreement", response.location)

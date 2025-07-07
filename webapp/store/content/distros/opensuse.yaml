@@ -43,11 +43,5 @@ install:
       You then need to either reboot, logout/login or <code>source /etc/profile</code> to have /snap/bin added to PATH.
       Additionally, enable and start both the <em>snapd</em> and the <em>snapd.apparmor</em> services with the following commands:
     command: |
-      sudo systemctl enable snapd
-      sudo systemctl start snapd
-  -
-    action: |
-      Tumbleweed users also need to run the following:
-    command: |
-      sudo systemctl enable snapd.apparmor
-      sudo systemctl start snapd.apparmor
+      sudo systemctl enable --now snapd
+      sudo systemctl enable --now snapd.apparmor

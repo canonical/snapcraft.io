@@ -22,8 +22,14 @@
         <ul class="p-inline-list--middot u-no-margin--bottom">
           <li class="p-inline-list__item">
             by {{ display_name(publisher, username) }}
-            {% if developer_validation and developer_validation == VERIFIED_PUBLISHER %}
-              {% include "partials/_verified_developer.html" %}
+            {% if developer_validation %}
+              {% if developer_validation == VERIFIED_PUBLISHER %}
+                {% include "partials/_verified_developer.html" %}
+              {% endif %}
+
+              {% if developer_validation == STAR_DEVELOPER %}
+                {% include "partials/_star_developer.html" %}
+              {% endif %}
             {% endif %}
           </li>
         </ul>
@@ -50,8 +56,9 @@
         <h4 class="p-embedded-description__summary">{{ summary }}</h4>
       {% endif %}
       {% if button %}
-      <div class="p-embedded-description__badge">
-        <img alt="Get it from the Snap Store" src="https://snapcraft.io/static/images/badges/en/snap-store-{{ button }}.svg" />
+      <div>
+        <img alt="Get it from the Snap Store"
+        src="https://snapcraft.io/en/{% if button == 'white' %}light{% else %}dark{% endif %}/install.svg" />
       </div>
       {% endif %}
     </div>

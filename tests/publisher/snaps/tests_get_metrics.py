@@ -1,5 +1,8 @@
 import random
 from datetime import datetime
+from flask_testing import TestCase
+from webapp.app import create_app
+from unittest.mock import patch
 
 import responses
 from tests.publisher.endpoint_testing import BaseTestCases
@@ -13,14 +16,15 @@ class MetricsPageNotAuth(BaseTestCases.EndpointLoggedOut):
         super().setUp(snap_name=snap_name, endpoint_url=endpoint_url)
 
 
-class GetMetricsGetInfoPage(BaseTestCases.EndpointLoggedInErrorHandling):
+class GetActiveDeviceAnnotationGetInfo(
+    BaseTestCases.EndpointLoggedInErrorHandling
+):
     def setUp(self):
         snap_name = "test-snap"
 
         api_url = "https://dashboard.snapcraft.io/dev/api/snaps/info/{}"
         api_url = api_url.format(snap_name)
-        endpoint_url = "/{}/metrics".format(snap_name)
-
+        endpoint_url = "/{}/metrics/active-device-annotation".format(snap_name)
         super().setUp(
             snap_name=snap_name,
             endpoint_url=endpoint_url,
@@ -30,500 +34,346 @@ class GetMetricsGetInfoPage(BaseTestCases.EndpointLoggedInErrorHandling):
         )
 
 
-class GetMetricsPostMetrics(BaseTestCases.EndpointLoggedInErrorHandling):
-    def setUp(self):
-        snap_name = "test-snap"
+class GetActiveDeviceMetrics(TestCase):
+    render_templates = False
 
-        self.snap_id = "complexId"
-        info_url = "https://dashboard.snapcraft.io/dev/api/snaps/info/{}"
-        self.info_url = info_url.format(snap_name)
+    snap_name = "test-snap"
+    endpoint_url = "/test-snap/metrics/active-devices"
 
-        payload = {
-            "snap_id": "id",
-            "title": "Test Snap",
-            "private": False,
-            "categories": {
-                "items": [{"name": "test", "since": "2018-01-01T00:00:00"}]
-            },
-            "publisher": {"display-name": "test"},
-        }
-
-        responses.add(responses.GET, self.info_url, json=payload, status=200)
-
-        api_url = "https://dashboard.snapcraft.io/dev/api/snaps/metrics"
-        endpoint_url = "/{}/metrics".format(snap_name)
-
-        super().setUp(
-            snap_name=snap_name,
-            endpoint_url=endpoint_url,
-            api_url=api_url,
-            method_endpoint="GET",
-            method_api="POST",
-        )
+    def create_app(self):
+        app = create_app(testing=True)
+        app.secret_key = "secret_key"
+        app.config["WTF_CSRF_METHODS"] = []
+        return app
 
     @responses.activate
-    def test_no_data(self):
-        payload = {
+    @patch("webapp.publisher.snaps.views.authentication.is_authenticated")
+    @patch("canonicalwebteam.store_api.dashboard.Dashboard.get_snap_info")
+    @patch(
+        "canonicalwebteam.store_api.dashboard.Dashboard.get_publisher_metrics"
+    )
+    def test_get_active_devices_weekly_installed_by_version(
+        self,
+        mock_get_publisher_metrics,
+        mock_get_item_details,
+        mock_is_authenticated,
+    ):
+        mock_is_authenticated.return_value = True
+
+        mock_get_item_details.return_value = {"snap_id": "id"}
+        random_values = random.sample(range(1, 30), 29)
+        dates = [
+            datetime(2018, 3, day).strftime("%Y-%m-%d") for day in range(1, 30)
+        ]
+
+        mock_get_publisher_metrics.return_value = {
             "metrics": [
                 {
-                    "status": "NO DATA",
-                    "series": [],
-                    "buckets": [],
+                    "buckets": dates,
                     "metric_name": "weekly_installed_base_by_version",
-                },
-                {
-                    "status": "NO DATA",
-                    "series": [],
-                    "buckets": [],
-                    "metric_name": "weekly_installed_base_by_country",
-                },
+                    "series": [{"name": "1.0", "values": random_values}],
+                    "snap_id": "test-id",
+                    "status": "OK",
+                }
             ]
         }
-
-        responses.add(responses.POST, self.api_url, json=payload, status=200)
 
         response = self.client.get(self.endpoint_url)
-
-        self.assertEqual(3, len(responses.calls))
-        called = responses.calls[0]
-        self.assertEqual(self.info_url, called.request.url)
-        self.assertEqual(
-            self.authorization, called.request.headers.get("Authorization")
-        )
-        called = responses.calls[1]
-        self.assertEqual(self.api_url, called.request.url)
-        self.assertEqual(
-            self.authorization, called.request.headers.get("Authorization")
-        )
-
         self.assertEqual(response.status_code, 200)
-        self.assert_template_used("publisher/metrics.html")
-        self.assert_context("snap_name", self.snap_name)
-        self.assert_context("snap_title", "Test Snap")
-        self.assert_context("metric_period", "30d")
-        self.assert_context("active_device_metric", "version")
-        self.assert_context("nodata", True)
+        response_json = response.json
+
+        self.assertIn("active_devices", response_json)
+        self.assertIn("latest_active_devices", response_json)
+        self.assertEqual(
+            response_json["latest_active_devices"], random_values[28]
+        )
+
+        active_devices = response_json["active_devices"]
+        self.assertEqual(
+            active_devices["name"], "weekly_installed_base_by_version"
+        )
+        self.assertEqual(active_devices["series"][0]["name"], "1.0")
+        self.assertEqual(active_devices["series"][0]["values"], random_values)
 
     @responses.activate
-    def test_data_version_1_year(self):
+    @patch("webapp.publisher.snaps.views.authentication.is_authenticated")
+    @patch("canonicalwebteam.store_api.dashboard.Dashboard.get_snap_info")
+    @patch(
+        "canonicalwebteam.store_api.dashboard.Dashboard.get_publisher_metrics"
+    )
+    def test_get_active_devices_weekly_installed_by_channel(
+        self,
+        mock_get_publisher_metrics,
+        mock_get_item_details,
+        mock_is_authenticated,
+    ):
+        mock_is_authenticated.return_value = True
+        mock_get_item_details.return_value = {"snap_id": "id"}
         random_values = random.sample(range(1, 30), 29)
         dates = [
             datetime(2018, 3, day).strftime("%Y-%m-%d") for day in range(1, 30)
         ]
-        countries = [
-            {"values": [2], "name": "FR"},
-            {"values": [3], "name": "GB"},
-        ]
-        payload = {
+        mock_get_publisher_metrics.return_value = {
             "metrics": [
                 {
-                    "status": "OK",
-                    "series": [{"values": random_values, "name": "0.1"}],
                     "buckets": dates,
-                    "metric_name": "weekly_installed_base_by_version",
-                },
-                {
+                    "metric_name": "weekly_installed_base_by_channel",
+                    "series": [{"name": "1.0", "values": random_values}],
+                    "snap_id": "test-id",
                     "status": "OK",
-                    "series": countries,
-                    "buckets": ["2018-03-18"],
-                    "metric_name": "weekly_installed_base_by_country",
-                },
+                }
             ]
         }
-        responses.add(responses.POST, self.api_url, json=payload, status=200)
 
-        response = self.client.get(self.endpoint_url + "?period=1y")
-
-        self.assertEqual(3, len(responses.calls))
-        called = responses.calls[0]
-        self.assertEqual(self.info_url, called.request.url)
-        self.assertEqual(
-            self.authorization, called.request.headers.get("Authorization")
+        response = self.client.get(
+            self.endpoint_url + "?active-devices=channel"
         )
-        called = responses.calls[1]
-        self.assertEqual(self.api_url, called.request.url)
-        self.assertEqual(
-            self.authorization, called.request.headers.get("Authorization")
-        )
-
         self.assertEqual(response.status_code, 200)
-        self.assert_template_used("publisher/metrics.html")
-        self.assert_context("snap_name", self.snap_name)
-        self.assert_context("snap_title", "Test Snap")
-        self.assert_context("metric_period", "1y")
-        self.assert_context("active_device_metric", "version")
-        self.assert_context("nodata", False)
+        response_json = response.json
+        self.assertIn("active_devices", response_json)
+        self.assertIn("latest_active_devices", response_json)
+        self.assertEqual(
+            response_json["latest_active_devices"], random_values[28]
+        )
+
+        active_devices = response_json["active_devices"]
+        self.assertEqual(
+            active_devices["name"], "weekly_installed_base_by_channel"
+        )
+        self.assertEqual(active_devices["series"][0]["name"], "latest/1.0")
+        self.assertEqual(active_devices["series"][0]["values"], random_values)
 
     @responses.activate
-    def test_data_version_1_month(self):
+    @patch("webapp.publisher.snaps.views.authentication.is_authenticated")
+    @patch("canonicalwebteam.store_api.dashboard.Dashboard.get_snap_info")
+    @patch(
+        "canonicalwebteam.store_api.dashboard.Dashboard.get_publisher_metrics"
+    )
+    def test_get_active_devices_weekly_installed_by_os(
+        self,
+        mock_get_publisher_metrics,
+        mock_get_item_details,
+        mock_is_authenticated,
+    ):
+        mock_is_authenticated.return_value = True
+        mock_get_item_details.return_value = {"snap_id": "id"}
         random_values = random.sample(range(1, 30), 29)
         dates = [
             datetime(2018, 3, day).strftime("%Y-%m-%d") for day in range(1, 30)
         ]
-        countries = [
-            {"values": [2], "name": "FR"},
-            {"values": [3], "name": "GB"},
-        ]
-        payload = {
+        mock_get_publisher_metrics.return_value = {
             "metrics": [
                 {
-                    "status": "OK",
-                    "series": [{"values": random_values, "name": "0.1"}],
                     "buckets": dates,
-                    "metric_name": "weekly_installed_base_by_version",
-                },
-                {
-                    "status": "OK",
-                    "series": countries,
-                    "buckets": ["2018-03-18"],
-                    "metric_name": "weekly_installed_base_by_country",
-                },
-            ]
-        }
-        responses.add(responses.POST, self.api_url, json=payload, status=200)
-
-        response = self.client.get(self.endpoint_url + "?period=30d")
-
-        self.assertEqual(3, len(responses.calls))
-        called = responses.calls[0]
-        self.assertEqual(self.info_url, called.request.url)
-        self.assertEqual(
-            self.authorization, called.request.headers.get("Authorization")
-        )
-        called = responses.calls[1]
-        self.assertEqual(self.api_url, called.request.url)
-        self.assertEqual(
-            self.authorization, called.request.headers.get("Authorization")
-        )
-
-        self.assertEqual(response.status_code, 200)
-        self.assert_template_used("publisher/metrics.html")
-        self.assert_context("snap_name", self.snap_name)
-        self.assert_context("snap_title", "Test Snap")
-        self.assert_context("metric_period", "30d")
-        self.assert_context("active_device_metric", "version")
-        self.assert_context("nodata", False)
-
-    @responses.activate
-    def test_data_version_weekly(self):
-        random_values = random.sample(range(1, 30), 6)
-        dates = [
-            datetime(2018, 3, day).strftime("%Y-%m-%d") for day in range(1, 7)
-        ]
-        countries = [
-            {"values": [2], "name": "FR"},
-            {"values": [3], "name": "GB"},
-        ]
-        payload = {
-            "metrics": [
-                {
-                    "status": "OK",
-                    "series": [{"values": random_values, "name": "0.1"}],
-                    "buckets": dates,
-                    "metric_name": "weekly_installed_base_by_version",
-                },
-                {
-                    "status": "OK",
-                    "series": countries,
-                    "buckets": ["2018-03-18"],
-                    "metric_name": "weekly_installed_base_by_country",
-                },
-            ]
-        }
-        responses.add(responses.POST, self.api_url, json=payload, status=200)
-
-        response = self.client.get(self.endpoint_url + "?period=7d")
-
-        self.assertEqual(3, len(responses.calls))
-        called = responses.calls[0]
-        self.assertEqual(self.info_url, called.request.url)
-        self.assertEqual(
-            self.authorization, called.request.headers.get("Authorization")
-        )
-        called = responses.calls[1]
-        self.assertEqual(self.api_url, called.request.url)
-        self.assertEqual(
-            self.authorization, called.request.headers.get("Authorization")
-        )
-
-        self.assertEqual(response.status_code, 200)
-        self.assert_template_used("publisher/metrics.html")
-        self.assert_context("snap_name", self.snap_name)
-        self.assert_context("snap_title", "Test Snap")
-        self.assert_context("metric_period", "7d")
-        self.assert_context("active_device_metric", "version")
-        self.assert_context("nodata", False)
-
-    @responses.activate
-    def test_data_version_3_month(self):
-        random_values = random.sample(range(1, 100), 59)
-        dates = []
-        for month in range(4, 7):
-            dates = dates + [
-                datetime(2018, month, day).strftime("%Y-%m-%d")
-                for day in range(1, 30)
-            ]
-
-        countries = [
-            {"values": [2], "name": "FR"},
-            {"values": [3], "name": "GB"},
-        ]
-        payload = {
-            "metrics": [
-                {
-                    "status": "OK",
-                    "series": [{"values": random_values, "name": "0.1"}],
-                    "buckets": dates,
-                    "metric_name": "weekly_installed_base_by_version",
-                },
-                {
-                    "status": "OK",
-                    "series": countries,
-                    "buckets": ["2018-03-18"],
-                    "metric_name": "weekly_installed_base_by_country",
-                },
-            ]
-        }
-        responses.add(responses.POST, self.api_url, json=payload, status=200)
-
-        response = self.client.get(self.endpoint_url + "?period=3m")
-
-        self.assertEqual(3, len(responses.calls))
-        called = responses.calls[0]
-        self.assertEqual(self.info_url, called.request.url)
-        self.assertEqual(
-            self.authorization, called.request.headers.get("Authorization")
-        )
-        called = responses.calls[1]
-        self.assertEqual(self.api_url, called.request.url)
-        self.assertEqual(
-            self.authorization, called.request.headers.get("Authorization")
-        )
-
-        self.assertEqual(response.status_code, 200)
-        self.assert_template_used("publisher/metrics.html")
-        self.assert_context("snap_name", self.snap_name)
-        self.assert_context("snap_title", "Test Snap")
-        self.assert_context("metric_period", "3m")
-        self.assert_context("active_device_metric", "version")
-        self.assert_context("nodata", False)
-
-    @responses.activate
-    def test_data_os_7_days(self):
-        random_values = random.sample(range(1, 100), 59)
-        dates = [
-            datetime(2018, 3, day).strftime("%Y-%m-%d") for day in range(1, 7)
-        ]
-        countries = [
-            {"values": [2], "name": "FR"},
-            {"values": [3], "name": "GB"},
-        ]
-        payload = {
-            "metrics": [
-                {
-                    "status": "OK",
+                    "metric_name": "weekly_installed_base_by_operating_system",
                     "series": [
                         {"values": random_values, "name": "ubuntu/0.1"}
                     ],
-                    "buckets": dates,
-                    "metric_name": "weekly_installed_base_by_operating_system",
-                },
-                {
+                    "snap_id": "test-id",
                     "status": "OK",
-                    "series": countries,
-                    "buckets": ["2018-03-18"],
-                    "metric_name": "weekly_installed_base_by_country",
-                },
+                }
             ]
         }
-        responses.add(responses.POST, self.api_url, json=payload, status=200)
 
-        response = self.client.get(
-            self.endpoint_url + "?period=7d&active-devices=os"
-        )
-
-        self.assertEqual(3, len(responses.calls))
-        called = responses.calls[0]
-        self.assertEqual(self.info_url, called.request.url)
-        self.assertEqual(
-            self.authorization, called.request.headers.get("Authorization")
-        )
-        called = responses.calls[1]
-        self.assertEqual(self.api_url, called.request.url)
-        self.assertEqual(
-            self.authorization, called.request.headers.get("Authorization")
-        )
-
+        response = self.client.get(self.endpoint_url + "?active-devices=os")
         self.assertEqual(response.status_code, 200)
-        self.assert_template_used("publisher/metrics.html")
-        self.assert_context("snap_name", self.snap_name)
-        self.assert_context("snap_title", "Test Snap")
-        self.assert_context("metric_period", "7d")
-        self.assert_context("active_device_metric", "os")
-        self.assert_context("nodata", False)
+        response_json = response.json
+        self.assertIn("active_devices", response_json)
+        self.assertIn("latest_active_devices", response_json)
+
+        active_devices = response_json["active_devices"]
+        self.assertEqual(
+            active_devices["name"], "weekly_installed_base_by_operating_system"
+        )
+        self.assertEqual(active_devices["series"][0]["name"], "Ubuntu 0.1")
+        self.assertEqual(active_devices["series"][0]["values"], random_values)
 
     @responses.activate
-    def test_data_os_1_year(self):
-        random_values = random.sample(range(1, 100), 59)
+    @patch("webapp.publisher.snaps.views.authentication.is_authenticated")
+    @patch("canonicalwebteam.store_api.dashboard.Dashboard.get_snap_info")
+    @patch(
+        "canonicalwebteam.store_api.dashboard.Dashboard.get_publisher_metrics"
+    )
+    def test_get_active_devices_in_3_months_period(
+        self,
+        mock_get_publisher_metrics,
+        mock_get_item_details,
+        mock_is_authenticated,
+    ):
+        mock_is_authenticated.return_value = True
+        mock_get_item_details.return_value = {"snap_id": "id"}
+        random_values = random.sample(range(1, 30), 29)
         dates = [
             datetime(2018, 3, day).strftime("%Y-%m-%d") for day in range(1, 30)
         ]
-        countries = [
-            {"values": [2], "name": "FR"},
-            {"values": [3], "name": "GB"},
-        ]
-        payload = {
+        mock_get_publisher_metrics.return_value = {
             "metrics": [
                 {
-                    "status": "OK",
-                    "series": [
-                        {"values": random_values, "name": "ubuntu/0.1"}
-                    ],
                     "buckets": dates,
-                    "metric_name": "weekly_installed_base_by_operating_system",
-                },
-                {
+                    "metric_name": "weekly_installed_base_by_architecture",
+                    "series": [{"values": random_values, "name": "0.1"}],
+                    "snap_id": "test-id",
                     "status": "OK",
-                    "series": countries,
-                    "buckets": ["2018-03-18"],
-                    "metric_name": "weekly_installed_base_by_country",
-                },
+                }
             ]
         }
-        responses.add(responses.POST, self.api_url, json=payload, status=200)
 
         response = self.client.get(
-            self.endpoint_url + "?period=1y&active-devices=os"
+            self.endpoint_url + "?active-devices=architecture&period=3m"
         )
-
-        self.assertEqual(3, len(responses.calls))
-        called = responses.calls[0]
-        self.assertEqual(self.info_url, called.request.url)
-        self.assertEqual(
-            self.authorization, called.request.headers.get("Authorization")
-        )
-        called = responses.calls[1]
-        self.assertEqual(self.api_url, called.request.url)
-        self.assertEqual(
-            self.authorization, called.request.headers.get("Authorization")
-        )
-
         self.assertEqual(response.status_code, 200)
-        self.assert_template_used("publisher/metrics.html")
-        self.assert_context("snap_name", self.snap_name)
-        self.assert_context("snap_title", "Test Snap")
-        self.assert_context("metric_period", "1y")
-        self.assert_context("active_device_metric", "os")
-        self.assert_context("nodata", False)
+        response_json = response.json
+
+        self.assertIn("active_devices", response_json)
+        self.assertIn("latest_active_devices", response_json)
+
+        active_devices = response_json["active_devices"]
+        self.assertEqual(
+            active_devices["name"], "weekly_installed_base_by_architecture"
+        )
+        self.assertEqual(active_devices["series"][0]["name"], "0.1")
+        self.assertEqual(active_devices["series"][0]["values"], random_values)
+
+
+class GetMetricAnnotation(TestCase):
+    render_templates = False
+
+    snap_name = "test-snap"
+    snap_payload = {
+        "snap_name": snap_name,
+        "snap_id": "snap_id",
+        "categories": {
+            "locked": False,
+            "items": [
+                {
+                    "featured": False,
+                    "name": "development",
+                    "since": "2019-02-08T17:02:33.318798",
+                },
+                {
+                    "featured": True,
+                    "name": "featured",
+                    "since": "2024-07-01T19:45:19.386538",
+                },
+                {
+                    "featured": True,
+                    "name": "server-and-cloud",
+                    "since": "2019-01-24T10:26:40.642290",
+                },
+            ],
+        },
+    }
+    endpoint_url = "/test-snap/metrics/active-device-annotation"
+
+    def create_app(self):
+        app = create_app(testing=True)
+        app.secret_key = "secret_key"
+        app.config["WTF_CSRF_METHODS"] = []
+        return app
 
     @responses.activate
-    def test_data_os_1_month(self):
-        random_values = random.sample(range(1, 100), 59)
-        dates = [
-            datetime(2018, 3, day).strftime("%Y-%m-%d") for day in range(1, 30)
-        ]
-        countries = [
-            {"values": [2], "name": "FR"},
-            {"values": [3], "name": "GB"},
-        ]
-        payload = {
-            "metrics": [
-                {
-                    "status": "OK",
-                    "series": [
-                        {"values": random_values, "name": "ubuntu/0.1"}
-                    ],
-                    "buckets": dates,
-                    "metric_name": "weekly_installed_base_by_operating_system",
-                },
-                {
-                    "status": "OK",
-                    "series": countries,
-                    "buckets": ["2018-03-18"],
-                    "metric_name": "weekly_installed_base_by_country",
-                },
-            ]
-        }
-        responses.add(responses.POST, self.api_url, json=payload, status=200)
+    @patch("webapp.publisher.snaps.views.authentication.is_authenticated")
+    @patch("canonicalwebteam.store_api.dashboard.Dashboard.get_snap_info")
+    def test_get_active_devices_weekly_installed_by_version(
+        self, mock_get_snap_info, mock_is_authenticated
+    ):
+        mock_is_authenticated.return_value = True
 
-        response = self.client.get(
-            self.endpoint_url + "?period=30d&active-devices=os"
-        )
+        mock_get_snap_info.return_value = self.snap_payload
 
-        self.assertEqual(3, len(responses.calls))
-        called = responses.calls[0]
-        self.assertEqual(self.info_url, called.request.url)
-        self.assertEqual(
-            self.authorization, called.request.headers.get("Authorization")
-        )
-        called = responses.calls[1]
-        self.assertEqual(self.api_url, called.request.url)
-        self.assertEqual(
-            self.authorization, called.request.headers.get("Authorization")
-        )
-
+        response = self.client.get(self.endpoint_url)
         self.assertEqual(response.status_code, 200)
-        self.assert_template_used("publisher/metrics.html")
-        self.assert_context("snap_name", self.snap_name)
-        self.assert_context("snap_title", "Test Snap")
-        self.assert_context("metric_period", "30d")
-        self.assert_context("active_device_metric", "os")
-        self.assert_context("nodata", False)
+        response_json = response.json
+
+        self.assertEqual(
+            response_json["buckets"],
+            ["2019-02-08", "2024-07-01", "2019-01-24"],
+        )
+        self.assertEqual(response_json["name"], "annotations")
+        self.assertEqual(
+            response_json["series"],
+            [
+                {
+                    "date": "2019-01-24",
+                    "display_date": "January 2019",
+                    "display_name": "Server and cloud",
+                    "name": "server-and-cloud",
+                    "values": [0, 0, 1],
+                },
+                {
+                    "date": "2019-02-08",
+                    "display_date": "February 2019",
+                    "display_name": "Development",
+                    "name": "development",
+                    "values": [1, 0, 0],
+                },
+                {
+                    "date": "2024-07-01",
+                    "display_date": "July 2024",
+                    "display_name": "Featured",
+                    "name": "featured",
+                    "values": [0, 1, 0],
+                },
+            ],
+        )
+
+
+class GetCountryMetric(TestCase):
+    render_templates = False
+
+    snap_name = "test-snap"
+    endpoint_url = "/test-snap/metrics/country-metric"
+
+    def create_app(self):
+        app = create_app(testing=True)
+        app.secret_key = "secret_key"
+        app.config["WTF_CSRF_METHODS"] = []
+        return app
 
     @responses.activate
-    def test_data_os_3_month(self):
-        random_values = random.sample(range(1, 100), 59)
-        dates = []
-        for month in range(4, 7):
-            dates = dates + [
-                datetime(2018, month, day).strftime("%Y-%m-%d")
-                for day in range(1, 30)
-            ]
+    @patch("webapp.publisher.snaps.views.authentication.is_authenticated")
+    @patch("canonicalwebteam.store_api.dashboard.Dashboard.get_snap_info")
+    @patch(
+        "canonicalwebteam.store_api.dashboard.Dashboard.get_publisher_metrics"
+    )
+    def test_get_active_devices_weekly_installed_by_version(
+        self,
+        mock_get_publisher_metrics,
+        mock_get_item_details,
+        mock_is_authenticated,
+    ):
+        mock_is_authenticated.return_value = True
 
         countries = [
             {"values": [2], "name": "FR"},
             {"values": [3], "name": "GB"},
         ]
-        payload = {
+        mock_get_item_details.return_value = {"snap_id": "id"}
+        mock_get_publisher_metrics.return_value = {
             "metrics": [
                 {
-                    "status": "OK",
-                    "series": [
-                        {"values": random_values, "name": "ubuntu/0.1"}
-                    ],
-                    "buckets": dates,
-                    "metric_name": "weekly_installed_base_by_operating_system",
-                },
-                {
-                    "status": "OK",
-                    "series": countries,
-                    "buckets": ["2018-03-18"],
+                    "buckets": ["2024-09-17"],
                     "metric_name": "weekly_installed_base_by_country",
-                },
+                    "series": countries,
+                    "snap_id": "id",
+                    "status": "OK",
+                }
             ]
         }
-        responses.add(responses.POST, self.api_url, json=payload, status=200)
 
-        response = self.client.get(
-            self.endpoint_url + "?period=3m&active-devices=os"
-        )
-
-        self.assertEqual(3, len(responses.calls))
-        called = responses.calls[0]
-        self.assertEqual(self.info_url, called.request.url)
-        self.assertEqual(
-            self.authorization, called.request.headers.get("Authorization")
-        )
-        called = responses.calls[1]
-        self.assertEqual(self.api_url, called.request.url)
-        self.assertEqual(
-            self.authorization, called.request.headers.get("Authorization")
-        )
-
+        response = self.client.get(self.endpoint_url)
         self.assertEqual(response.status_code, 200)
-        self.assert_template_used("publisher/metrics.html")
-        self.assert_context("snap_name", self.snap_name)
-        self.assert_context("snap_title", "Test Snap")
-        self.assert_context("metric_period", "3m")
-        self.assert_context("active_device_metric", "os")
-        self.assert_context("nodata", False)
+        response_json = response.json
+        active_devices = response_json["active_devices"]
+
+        for info in active_devices:
+            country_info = active_devices[info]
+            if country_info["code"] == "FR":
+                self.assertEqual(country_info["number_of_users"], 2)
+                self.assertEqual(country_info["color_rgb"], [66, 146, 198])
+            elif country_info["code"] == "GB":
+                self.assertEqual(country_info["number_of_users"], 3)
+                self.assertEqual(country_info["color_rgb"], [8, 48, 107])
+            else:
+                self.assertEqual(country_info["number_of_users"], 0)
+                self.assertEqual(country_info["color_rgb"], [218, 218, 218])

@@ -1,6 +1,8 @@
 # ![snapcraft.io](https://assets.ubuntu.com/v1/944b8760-snapcraft-logo-bird.svg?fmt=png&w=50 "Snapcraft") snapcraft.io codebase
 
-![Github Actions Status](https://github.com/canonical-web-and-design/snapcraft.io/workflows/master%20checks/badge.svg) [![Code coverage](https://codecov.io/gh/canonical-web-and-design/snapcraft.io/branch/master/graph/badge.svg)](https://codecov.io/gh/canonical-web-and-design/snapcraft.io)
+[Python Coverage](https://canonical.github.io/snapcraft.io/coverage/python) | [JavaScript Coverage](https://canonical.github.io/snapcraft.io/coverage/js)
+
+![Github Actions Status](https://github.com/canonical-web-and-design/snapcraft.io/workflows/main%20checks/badge.svg) [![Code coverage](https://codecov.io/gh/canonical-web-and-design/snapcraft.io/branch/master/graph/badge.svg)](https://codecov.io/gh/canonical-web-and-design/snapcraft.io)
 
 Snaps are applications packaged with all their dependencies to run on all popular Linux distributions from a single build. They update automatically and roll back gracefully. This repo is the application for the [snapcraft.io](https://snapcraft.io) website.
 
@@ -24,7 +26,7 @@ If you have found a bug elsewhere in the snap world:
 
 ## Local development
 
-The simplest way to run the site locally is using the [`dotrun`](https://snapcraft.io/dotrun) snap:
+The simplest way to run the site locally is using [`dotrun`](https://github.com/canonical/dotrun):
 
 ```bash
 dotrun
@@ -46,7 +48,7 @@ You can find the deployment config in the deploy folder.
 
 ## License
 
-The content of this project is licensed under the [Creative Commons Attribution-ShareAlike 4.0 International license](https://creativecommons.org/licenses/by-sa/4.0/), and the underlying code used to format and display that content is licensed under the [LGPLv3](https://opensource.org/licenses/lgpl-3.0.html) by [Canonical Ltd](https://canonical.com/).
+The content of this project is licensed under the [Creative Commons Attribution-ShareAlike 4.0 International license](https://creativecommons.org/licenses/by-sa/4.0/), and the underlying code used to format and display that content is licensed under the [LGPLv3](https://opensource.org/licenses/lgpl-3.0) by [Canonical Ltd](https://canonical.com/).
 
 
 With ♥ from Canonical

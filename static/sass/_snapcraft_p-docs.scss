@@ -1,7 +1,8 @@
 @mixin snapcraft-pattern-docs {
   $banner-background: #106363;
 
-  #search-docs.snapcraft-banner-background { //sass-lint:disable-line no-ids
+  #search-docs.snapcraft-banner-background {
+    // sass-lint:disable-line no-ids
     background: $banner-background;
   }
 

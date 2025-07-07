@@ -1,4 +1,4 @@
-{% extends webapp_config['LAYOUT'] %}
+{% extends "_layout.html" %}
 
 {% block meta_copydoc %}{% endblock %}
 
@@ -11,6 +11,12 @@
     {{ icon_url }}
   {% endblock %}
 {% endif %}
+
+{% block extra_meta %}
+  {% if unlisted %}
+    <meta name="robots" content="noindex" />
+  {% endif %}
+{% endblock %}
 
 {% block meta_schema %}
   <script type="application/ld+json">
@@ -193,7 +199,7 @@
   <section class="p-strip is-shallow">
     <div class="u-fixed-width u-clearfix">
       <h3 class="u-float-left">Other popular snaps…</h3>
-      <a href="/search?category=featured" class="p-button--neutral u-float-right u-hide--small p-featured-snap__see-more">See more...</a>
+      <a href="/search?categories=featured" class="p-button u-float-right u-hide--small p-featured-snap__see-more">See more...</a>
     </div>
     <div class="row">
         {% set show_summary = True %}
@@ -205,7 +211,7 @@
         {% endfor %}
     </div>
     <div class="row u-hide--medium u-hide--large">
-      <a href="/search?category=featured" class="p-button--neutral u-float-right">See more in Featured</a>
+      <a href="/search?categories=featured" class="p-button u-float-right">See more in Featured</a>
     </div>
   </section>
   <section class="p-strip is-shallow">
@@ -260,16 +266,11 @@
 {% block scripts_includes %}
   <script src="{{ static_url('js/dist/distro-install.js') }}" defer></script>
 {% endblock %}
+
 {% block scripts %}
   <script>
     window.addEventListener("DOMContentLoaded", function() {
       Raven.context(function () {
-        try {
-          snapcraft.public.distroInstall.initLinkScroll(document.querySelector(".js-install"), { offset: 20 });
-        } catch(e) {
-          Raven.captureException(e);
-        }
-
         try {
           snapcraft.public.distroInstall.triggerEventWhenVisible("#snippet-snap-install-stable")
         } catch(e) {

@@ -9,7 +9,7 @@ responses.mock.assert_all_requests_are_fired = True
 
 class PostAccountDetailsPageNotAuth(BaseTestCases.EndpointLoggedOut):
     def setUp(self):
-        endpoint_url = "/account/details"
+        endpoint_url = "/account/publisher"
 
         super().setUp(
             snap_name=None, endpoint_url=endpoint_url, method_endpoint="POST"
@@ -19,7 +19,7 @@ class PostAccountDetailsPageNotAuth(BaseTestCases.EndpointLoggedOut):
 class PostAccountDetailsPage(BaseTestCases.BaseAppTesting):
     def setUp(self):
         api_url = "https://test.com/"
-        endpoint_url = "/account/details"
+        endpoint_url = "/account/publisher"
 
         super().setUp(
             snap_name=None, api_url=api_url, endpoint_url=endpoint_url
@@ -41,12 +41,7 @@ class PostAccountDetailsPage(BaseTestCases.BaseAppTesting):
             "test@test.com", "True"
         )
 
-        with self.client.session_transaction() as session:
-            category, flash = session["_flashes"][0]
-            self.assertEqual("positive", category)
-            self.assertEqual("Changes applied successfully.", flash)
-
-        self.assertEqual(302, response.status_code)
+        self.assertEqual(200, response.status_code)
 
     @patch("webapp.publisher.views.marketo")
     def test_post_account_exception(self, marketo):
@@ -57,9 +52,4 @@ class PostAccountDetailsPage(BaseTestCases.BaseAppTesting):
         )
         response = self.client.post(self.endpoint_url)
 
-        with self.client.session_transaction() as session:
-            category, flash = session["_flashes"][0]
-            self.assertEqual("negative", category)
-            self.assertEqual("There was an error, please try again.", flash)
-
-        self.assertEqual(302, response.status_code)
+        self.assertEqual(200, response.status_code)

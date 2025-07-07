@@ -271,23 +271,21 @@ def filter_changes_data(changes):
         "title",
         "summary",
         "description",
-        "contact",
-        "website",
         "keywords",
         "license",
-        "price",
         "private",
         "unlisted",
         "blacklist_countries",
         "whitelist_countries",
         "public_metrics_enabled",
         "public_metrics_blacklist",
-        "whitelist_countries",
-        "blacklist_countries",
+        "public_metrics_distros",
+        "public_metrics_territories",
         "license",
         "video_urls",
         "categories",
         "update_metadata_on_release",
+        "links",
     ]
 
     return {key: changes[key] for key in whitelist if key in changes}
@@ -367,14 +365,14 @@ def filter_available_stores(stores):
 
 def convert_date(date_to_convert):
     """Convert date to human readable format: Month Year
-
     Format of date to convert: 2019-01-12T16:48:41.821037+00:00
-    Output: January 2019
 
+    Output: January 2019
     :param date_to_convert: Date to convert
     :returns: Readable date
     """
-    date_parsed = parser.parse(date_to_convert).replace(tzinfo=None)
+    local_timezone = datetime.datetime.utcnow().tzinfo
+    date_parsed = parser.parse(date_to_convert).replace(tzinfo=local_timezone)
     return date_parsed.strftime("%B %Y")
 
 
@@ -398,3 +396,15 @@ def categorise_media(media):
             screenshot_urls.append(m["url"])
 
     return icon_urls, screenshot_urls, banner_urls
+
+
+def get_store_name(store_id, stores):
+    available_stores = filter_available_stores(stores)
+    store = next(
+        (st for st in available_stores if st["id"] == store_id),
+        None,
+    )
+    if store:
+        return store["name"]
+    else:
+        return "Global"

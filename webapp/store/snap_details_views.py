@@ -1,57 +1,67 @@
 import flask
+from flask import make_response, Response
+
 import humanize
+import dns.resolver
+import re
+import os
 
 import webapp.helpers as helpers
 import webapp.metrics.helper as metrics_helper
 import webapp.metrics.metrics as metrics
 import webapp.store.logic as logic
 from webapp import authentication
-from webapp.api.exceptions import ApiError
 from webapp.markdown import parse_markdown_description
 
 from canonicalwebteam.flask_base.decorators import (
     exclude_xframe_options_header,
 )
-from canonicalwebteam.store_api.exceptions import (
-    StoreApiCircuitBreaker,
-    StoreApiError,
-    StoreApiResponseDecodeError,
-    StoreApiResponseError,
-    StoreApiResponseErrorList,
-    StoreApiTimeoutError,
-)
+from canonicalwebteam.exceptions import StoreApiError
+from canonicalwebteam.store_api.devicegw import DeviceGW
 from pybadges import badge
 
+device_gateway = DeviceGW("snap", helpers.api_session)
 
-def snap_details_views(store, api, handle_errors):
+FIELDS = [
+    "title",
+    "summary",
+    "description",
+    "license",
+    "contact",
+    "website",
+    "publisher",
+    "media",
+    "download",
+    "version",
+    "created-at",
+    "confinement",
+    "categories",
+    "trending",
+    "unlisted",
+    "links",
+]
 
+
+def snap_details_views(store):
     snap_regex = "[a-z0-9-]*[a-z][a-z0-9-]*"
     snap_regex_upercase = "[A-Za-z0-9-]*[A-Za-z][A-Za-z0-9-]*"
 
+    def _get_snap_link_fields(snap_name):
+        details = device_gateway.get_item_details(
+            snap_name, api_version=2, fields=FIELDS
+        )
+        context = {
+            "links": details["snap"].get("links", {}),
+        }
+        return context
+
     def _get_context_snap_details(snap_name):
-        try:
-            details = api.get_item_details(snap_name, api_version=2)
-        except StoreApiTimeoutError as api_timeout_error:
-            flask.abort(504, str(api_timeout_error))
-        except StoreApiResponseDecodeError as api_response_decode_error:
-            flask.abort(502, str(api_response_decode_error))
-        except StoreApiResponseErrorList as api_response_error_list:
-            if api_response_error_list.status_code == 404:
-                flask.abort(404, "No snap named {}".format(snap_name))
-            else:
-                if api_response_error_list.errors:
-                    error_messages = ", ".join(
-                        api_response_error_list.errors.key()
-                    )
-                else:
-                    error_messages = "An error occurred."
-                flask.abort(502, error_messages)
-        except StoreApiResponseError as api_response_error:
-            flask.abort(502, str(api_response_error))
-        except StoreApiCircuitBreaker:
-            flask.abort(503)
-        except (StoreApiError, ApiError) as api_error:
-            flask.abort(502, str(api_error))
+        details = device_gateway.get_item_details(
+            snap_name, fields=FIELDS, api_version=2
+        )
+        # 404 for any snap under quarantine
+        if details["snap"]["publisher"]["username"] == "snap-quarantine":
+            flask.abort(404, "No snap named {}".format(snap_name))
 
         # When removing all the channel maps of an existing snap the API,
         # responds that the snaps still exists with data.
@@ -61,7 +71,7 @@ def snap_details_views(store, api, handle_errors):
             flask.abort(404, "No snap named {}".format(snap_name))
 
         formatted_description = parse_markdown_description(
-            details["snap"]["description"]
+            details.get("snap", {}).get("description", "")
         )
 
         channel_maps_list = logic.convert_channel_maps(
@@ -87,12 +97,17 @@ def snap_details_views(store, api, handle_errors):
         )
 
         last_updated = latest_channel["channel"]["released-at"]
+        updates = logic.get_latest_versions(
+            details.get("channel-map"), default_track, lowest_risk_available
+        )
         binary_filesize = latest_channel["download"]["size"]
 
         # filter out banner and banner-icon images from screenshots
-        screenshots = logic.filter_screenshots(details["snap"]["media"])
+        screenshots = logic.filter_screenshots(
+            details.get("snap", {}).get("media", [])
+        )
 
-        icons = logic.get_icon(details["snap"]["media"])
+        icon_url = helpers.get_icon(details.get("snap", {}).get("media", []))
 
         publisher_info = helpers.get_yaml(
             "{}{}.yaml".format(
@@ -122,21 +137,20 @@ def snap_details_views(store, api, handle_errors):
                 publisher_snaps["snaps"], 4
             )
 
-        video = logic.get_video(details["snap"]["media"])
+        video = logic.get_video(details.get("snap", {}).get("media", []))
 
         is_users_snap = False
         if authentication.is_authenticated(flask.session):
             if (
                 flask.session.get("publisher").get("nickname")
                 == details["snap"]["publisher"]["username"]
-            ) or (
-                "user_shared_snaps" in flask.session
-                and snap_name in flask.session.get("user_shared_snaps")
             ):
                 is_users_snap = True
 
         # build list of categories of a snap
-        categories = logic.get_snap_categories(details["snap"]["categories"])
+        categories = logic.get_snap_categories(
+            details.get("snap", {}).get("categories", [])
+        )
 
         developer = logic.get_snap_developer(details["name"])
 
@@ -146,7 +160,7 @@ def snap_details_views(store, api, handle_errors):
             "snap_title": details["snap"]["title"],
             "package_name": details["name"],
             "categories": categories,
-            "icon_url": icons[0] if icons else None,
+            "icon_url": icon_url,
             "version": extracted_info["version"],
             "license": details["snap"]["license"],
             "publisher": details["snap"]["publisher"]["display-name"],
@@ -156,7 +170,6 @@ def snap_details_views(store, api, handle_errors):
             "publisher_snaps": publisher_snaps,
             "publisher_featured_snaps": publisher_featured_snaps,
             "has_publisher_page": publisher_info is not None,
-            "prices": details["snap"]["prices"],
             "contact": details["snap"].get("contact"),
             "website": details["snap"].get("website"),
             "summary": details["snap"]["summary"],
@@ -167,13 +180,13 @@ def snap_details_views(store, api, handle_errors):
             "default_track": default_track,
             "lowest_risk_available": lowest_risk_available,
             "confinement": extracted_info["confinement"],
-            "trending": details["snap"]["trending"],
+            "trending": details.get("snap", {}).get("trending", False),
             # Transformed API data
             "filesize": humanize.naturalsize(binary_filesize),
             "last_updated": logic.convert_date(last_updated),
             "last_updated_raw": last_updated,
             "is_users_snap": is_users_snap,
-            "unlisted": details["snap"]["unlisted"],
+            "unlisted": details.get("snap", {}).get("unlisted", False),
             "developer": developer,
             # TODO: This is horrible and hacky
             "appliances": {
@@ -183,9 +196,47 @@ def snap_details_views(store, api, handle_errors):
                 "plexmediaserver": "plex",
                 "openhab": "openhab",
             },
+            "links": details["snap"].get("links"),
+            "updates": updates,
         }
 
         return context
+
+    @store.route('/api/<regex("' + snap_regex + '"):snap_name>/verify')
+    def dns_verified_status(snap_name):
+        res = {"primary_domain": False, "token": None}
+        context = _get_snap_link_fields(snap_name)
+
+        primary_domain = None
+
+        if "website" in context["links"]:
+            primary_domain = context["links"]["website"][0]
+
+        if primary_domain:
+            token = helpers.get_dns_verification_token(
+                snap_name, primary_domain
+            )
+
+            domain = re.compile(r"https?://")
+            domain = domain.sub("", primary_domain).strip().strip("/")
+
+            res["token"] = token
+
+            try:
+                dns_txt_records = [
+                    dns_record.to_text()
+                    for dns_record in dns.resolver.resolve(domain, "TXT").rrset
+                ]
+
+                if f'"SNAPCRAFT_IO_VERIFICATION={token}"' in dns_txt_records:
+                    res["primary_domain"] = True
+
+            except Exception:
+                res["primary_domain"] = False
+
+        response = make_response(res, 200)
+        response.cache_control.max_age = "3600"
+        return response
 
     @store.route('/<regex("' + snap_regex + '"):snap_name>')
     def snap_details(snap_name):
@@ -202,63 +253,51 @@ def snap_details_views(store, api, handle_errors):
 
         context = _get_context_snap_details(snap_name)
 
-        webapp_config = flask.current_app.config.get("WEBAPP_CONFIG")
+        country_metric_name = "weekly_installed_base_by_country_percent"
+        os_metric_name = "weekly_installed_base_by_operating_system_normalized"
 
-        if "STORE_QUERY" not in webapp_config:
-            country_metric_name = "weekly_installed_base_by_country_percent"
-            os_metric_name = (
-                "weekly_installed_base_by_operating_system_normalized"
+        end = metrics_helper.get_last_metrics_processed_date()
+
+        metrics_query_json = [
+            metrics_helper.get_filter(
+                metric_name=country_metric_name,
+                snap_id=context["snap-id"],
+                start=end,
+                end=end,
+            ),
+            metrics_helper.get_filter(
+                metric_name=os_metric_name,
+                snap_id=context["snap-id"],
+                start=end,
+                end=end,
+            ),
+        ]
+
+        metrics_response = device_gateway.get_public_metrics(
+            metrics_query_json
+        )
+
+        os_metrics = None
+        country_devices = None
+        if metrics_response:
+            oses = metrics_helper.find_metric(metrics_response, os_metric_name)
+            os_metrics = metrics.OsMetric(
+                name=oses["metric_name"],
+                series=oses["series"],
+                buckets=oses["buckets"],
+                status=oses["status"],
             )
 
-            end = metrics_helper.get_last_metrics_processed_date()
-
-            metrics_query_json = [
-                metrics_helper.get_filter(
-                    metric_name=country_metric_name,
-                    snap_id=context["snap-id"],
-                    start=end,
-                    end=end,
-                ),
-                metrics_helper.get_filter(
-                    metric_name=os_metric_name,
-                    snap_id=context["snap-id"],
-                    start=end,
-                    end=end,
-                ),
-            ]
-
-            try:
-                metrics_response = api.get_public_metrics(metrics_query_json)
-            except (StoreApiError, ApiError) as api_error:
-                status_code, error_info = handle_errors(api_error)
-                metrics_response = None
-
-            os_metrics = None
-            country_devices = None
-            if metrics_response:
-                oses = metrics_helper.find_metric(
-                    metrics_response, os_metric_name
-                )
-                os_metrics = metrics.OsMetric(
-                    name=oses["metric_name"],
-                    series=oses["series"],
-                    buckets=oses["buckets"],
-                    status=oses["status"],
-                )
-
-                territories = metrics_helper.find_metric(
-                    metrics_response, country_metric_name
-                )
-                country_devices = metrics.CountryDevices(
-                    name=territories["metric_name"],
-                    series=territories["series"],
-                    buckets=territories["buckets"],
-                    status=territories["status"],
-                    private=False,
-                )
-        else:
-            os_metrics = None
-            country_devices = None
+            territories = metrics_helper.find_metric(
+                metrics_response, country_metric_name
+            )
+            country_devices = metrics.CountryDevices(
+                name=territories["metric_name"],
+                series=territories["series"],
+                buckets=territories["buckets"],
+                status=territories["status"],
+                private=False,
+            )
 
         context.update(
             {
@@ -363,6 +402,36 @@ def snap_details_views(store, api, handle_errors):
 
         return svg, 200, {"Content-Type": "image/svg+xml"}
 
+    @store.route("/<lang>/<theme>/install.svg")
+    def snap_install_badge(lang, theme):
+        base_path = "static/images/badges/"
+        allowed_langs = helpers.list_folders(base_path)
+
+        if lang not in allowed_langs:
+            return Response("Invalid language", status=400)
+
+        file_name = (
+            "snap-store-white.svg"
+            if theme == "light"
+            else "snap-store-black.svg"
+        )
+
+        svg_path = os.path.normpath(os.path.join(base_path, lang, file_name))
+
+        # Ensure the path is within the base path
+        if not svg_path.startswith(base_path) or not os.path.exists(svg_path):
+            return Response(
+                '<svg height="20" width="1" '
+                'xmlns="http://www.w3.org/2000/svg" '
+                'xmlns:xlink="http://www.w3.org/1999/xlink"></svg>',
+                mimetype="image/svg+xml",
+                status=404,
+            )
+        else:
+            with open(svg_path, "r") as svg_file:
+                svg_content = svg_file.read()
+            return Response(svg_content, mimetype="image/svg+xml")
+
     @store.route('/<regex("' + snap_regex + '"):snap_name>/trending.svg')
     def snap_details_badge_trending(snap_name):
         is_preview = flask.request.args.get("preview", default=0, type=int)
@@ -378,14 +447,7 @@ def snap_details_views(store, api, handle_errors):
         # on Publicise page
         show_as_preview = False
         if is_preview and authentication.is_authenticated(flask.session):
-            if (
-                flask.session.get("publisher").get("nickname")
-                == context["username"]
-            ) or (
-                "user_shared_snaps" in flask.session
-                and snap_name in flask.session.get("user_shared_snaps")
-            ):
-                show_as_preview = True
+            show_as_preview = True
 
         if context["trending"] or show_as_preview:
             svg = get_badge_svg(
@@ -427,9 +489,10 @@ def snap_details_views(store, api, handle_errors):
         )
 
         try:
-            featured_snaps_results = api.get_featured_items(
+            featured_snaps_results = device_gateway.get_featured_items(
                 size=13, page=1
             ).get("results", [])
+
         except StoreApiError:
             featured_snaps_results = []
 
@@ -439,7 +502,34 @@ def snap_details_views(store, api, handle_errors):
             if snap["package_name"] != snap_name
         ][:12]
 
+        for snap in featured_snaps:
+            snap["icon_url"] = helpers.get_icon(snap["media"])
+
         context.update({"featured_snaps": featured_snaps})
         return flask.render_template(
             "store/snap-distro-install.html", **context
         )
+
+    @store.route("/report", methods=["POST"])
+    def report_snap():
+        form_url = "/".join(
+            [
+                "https://docs.google.com",
+                "forms",
+                "d",
+                "e",
+                "1FAIpQLSc5w1Ow6hRGs-VvBXmDtPOZaadYHEpsqCl2RbKEenluBvaw3Q",
+                "formResponse",
+            ]
+        )
+
+        fields = flask.request.form
+
+        # If the honeypot is activated or a URL is included in the message,
+        # say "OK" to avoid spam
+        if (
+            "entry.13371337" in fields and fields["entry.13371337"] == "on"
+        ) or "http" in fields["entry.1974584359"]:
+            return "", 200
+
+        return flask.jsonify({"url": form_url}), 200

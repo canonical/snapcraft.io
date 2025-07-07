@@ -5,8 +5,6 @@ from webapp.app import create_app
 
 
 class GetDistroPageTest(TestCase):
-    render_templates = False
-
     snap_payload = {
         "snap-id": "id",
         "name": "snapName",
@@ -17,7 +15,6 @@ class GetDistroPageTest(TestCase):
             "description": "this is a description",
             "media": [],
             "license": "license",
-            "prices": 0,
             "publisher": {
                 "display-name": "Toto",
                 "username": "toto",
@@ -26,6 +23,7 @@ class GetDistroPageTest(TestCase):
             "categories": [{"name": "test"}],
             "trending": False,
             "unlisted": False,
+            "links": {},
         },
         "channel-map": [
             {
@@ -63,7 +61,6 @@ class GetDistroPageTest(TestCase):
                                 "contact",
                                 "website",
                                 "publisher",
-                                "prices",
                                 "media",
                                 "download",
                                 "version",
@@ -72,6 +69,7 @@ class GetDistroPageTest(TestCase):
                                 "categories",
                                 "trending",
                                 "unlisted",
+                                "links",
                             ]
                         )
                     }
@@ -90,8 +88,8 @@ class GetDistroPageTest(TestCase):
                         "page": "1",
                         "scope": "wide",
                         "confinement": "strict,classic",
-                        "fields": "package_name,title,summary,icon_url,"
-                        "architecture,media,publisher,"
+                        "fields": "package_name,title,summary,"
+                        "architecture,media,developer_name,developer_id,"
                         "developer_validation,origin,apps,sections",
                         "arch": "wide",
                         "section": "featured",

@@ -1,0 +1,67 @@
+{% extends "_layout.html" %}
+
+{% block meta_copydoc %}{% endblock %}
+
+{% block meta_title %}{{ format_display_name(publisher["display-name"]) }} ({{ publisher["username"] }}) published snaps in the Snap Store{% endblock %}
+{% block meta_description %}
+  {% if meta_description %}
+    {{ meta_description }}
+  {% else %}
+    Install snaps by {{ format_display_name(publisher["display-name"]) }} ({{ publisher["username"] }}) for Linux in the Snap Store
+  {% endif %}
+{% endblock %}
+
+
+{% block content %}
+  <div class="p-strip--dark is-shallow" style="background: #262626;">
+    <div class="u-fixed-width">
+      <div class="p-snap-heading">
+        <div class="p-snap-heading__title">
+          <h1 class="p-heading--2 p-snap-heading__name">{{ format_display_name(publisher["display-name"]) }}</h1>
+          <p class="p-snap-heading__publisher">
+            ({{ publisher["username"] }})
+            {% if publisher["validation"] %}
+              {% if publisher["validation"] == VERIFIED_PUBLISHER %}
+                {% include "partials/_verified_developer.html" %}
+              {% endif %}
+
+              {% if publisher["validation"] == STAR_DEVELOPER %}
+                {% include "partials/_star_developer.html" %}
+              {% endif %}
+            {% endif %}
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="p-strip is-shallow">
+    <div class="row">
+      {% if snaps_count == 1 %}
+	<h4>{{ format_display_name(publisher["display-name"]) }} has published 1 snap</h4>
+      {% else %}
+	<h4>{{ format_display_name(publisher["display-name"]) }} has published {{snaps_count}} snaps</h4>
+      {% endif %}
+      {% set hide_publisher = True %}
+      {% set show_summary = True %}
+      {% for snap in snaps %}
+	<div class="col-4">
+          {% include "store/_media-object-snap-partial.html" %}
+	</div>
+      {% endfor %}
+    </div>
+  </div>
+
+  {% if api_error %}
+    <div class="row">
+      <div class="col-12">
+        <div class="p-notification--negative">
+          <div class="p-notification__content">
+            <h5 class="p-notification__title">Error</h5>
+            <p class="p-notification__message">API request failed</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+{% endblock %}

@@ -1,11 +1,11 @@
 import unittest
 
 import datetime
+from freezegun import freeze_time
 import webapp.store.logic as logic
 
 
 class StoreLogicTest(unittest.TestCase):
-
     # convert_channel_maps
     # ===
     def test_empty_channel_map(self):
@@ -326,6 +326,13 @@ class StoreLogicTest(unittest.TestCase):
 
         self.assertEqual(result, "Today")
 
+    @freeze_time("2021-05-12 10:38:34", tz_offset=-6)
+    def test_convert_date_timezone_yesterday(self):
+        date_test = "2021-05-11T10:48:41.821037-06:00"
+        result = logic.convert_date(date_test)
+
+        self.assertEqual(result, "Yesterday")
+
     def test_get_snap_banner(self):
         snap_with_banner = {
             "media": [
@@ -350,3 +357,118 @@ class StoreLogicTest(unittest.TestCase):
         result = logic.get_snap_banner_url(snap_with_banner)
 
         self.assertEqual(result.get("banner_url"), None)
+
+    def test_get_latest_versions(self):
+        latest_stable = {
+            "channel": {
+                "architecture": "amd64",
+                "risk": "stable",
+                "track": "latest",
+                "released-at": "2023-02-02",
+            }
+        }
+
+        latest_edge = {
+            "channel": {
+                "architecture": "amd64",
+                "risk": "edge",
+                "track": "latest",
+                "released-at": "2023-03-01",
+            }
+        }
+
+        latest_stable_arm = {
+            "channel": {
+                "architecture": "arm64",
+                "released-at": "2023-01-04",
+                "risk": "candidate",
+                "track": "latest",
+            }
+        }
+
+        channel_map_single_channel = [latest_stable]
+
+        channel_map_stable_first = [latest_stable, latest_edge]
+
+        channel_map_stable_second = [latest_edge, latest_stable]
+
+        channel_map_multiple_stable_architectures = [
+            latest_edge,
+            latest_stable,
+            latest_stable_arm,
+        ]
+
+        single_result = logic.get_latest_versions(
+            channel_map_single_channel, "latest", "stable"
+        )
+        self.assertEqual(
+            single_result[0]["released-at-display"], "2 February 2023"
+        )
+        self.assertEqual(single_result[1], None)
+
+        stable_first_result = logic.get_latest_versions(
+            channel_map_stable_first, "latest", "stable"
+        )
+        self.assertEqual(
+            stable_first_result[0]["released-at-display"], "2 February 2023"
+        )
+        self.assertEqual(
+            stable_first_result[1]["released-at-display"], "1 March 2023"
+        )
+
+        stable_second_result = logic.get_latest_versions(
+            channel_map_stable_second, "latest", "stable"
+        )
+        self.assertEqual(
+            stable_second_result[0]["released-at-display"], "2 February 2023"
+        )
+        self.assertEqual(
+            stable_second_result[1]["released-at-display"], "1 March 2023"
+        )
+
+        edge_highest_risk_result = logic.get_latest_versions(
+            channel_map_stable_first, "latest", "edge"
+        )
+        self.assertEqual(
+            edge_highest_risk_result[0]["released-at-display"], "1 March 2023"
+        )
+        self.assertEqual(
+            edge_highest_risk_result[1]["released-at-display"],
+            "2 February 2023",
+        )
+
+        multiple_stable_channels_results = logic.get_latest_versions(
+            channel_map_multiple_stable_architectures, "latest", "stable"
+        )
+
+        self.assertEqual(
+            multiple_stable_channels_results[0]["released-at-display"],
+            "2 February 2023",
+        )
+        self.assertEqual(
+            multiple_stable_channels_results[1]["released-at-display"],
+            "1 March 2023",
+        )
+
+    def test_get_last_updated_versions(self):
+        latest_stable = {
+            "channel": {
+                "risk": "stable",
+                "track": "latest",
+                "released-at": "2023-02-02",
+            }
+        }
+
+        latest_edge = {
+            "channel": {
+                "risk": "edge",
+                "track": "latest",
+                "released-at": "2023-03-01",
+            }
+        }
+
+        result = logic.get_last_updated_versions([latest_stable, latest_edge])
+
+        self.assertEqual(
+            result, [latest_edge["channel"], latest_stable["channel"]]
+        )

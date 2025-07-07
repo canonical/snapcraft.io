@@ -1,5 +1,7 @@
+@use "sass:map";
+
 @mixin snapcraft-p-build {
-  $icon-size: map-get($icon-sizes, default);
+  $icon-size: map.get($icon-sizes, default);
 
   .p-icon--github-white {
     @extend %icon;
@@ -9,7 +11,7 @@
 
   .p-build__github-button {
     font-size: 1.25rem;
-    margin-top: $spv-outer--regular-scaleable;
+    margin-top: $spv--strip-regular;
 
     img {
       display: inline-block;
@@ -25,18 +27,50 @@
     vertical-align: middle;
   }
 
-  // This should be removed once the restart icon is implemented in vanilla and use the vanilla one
-  .p-icon--restart {
-    @extend %icon;
-
-    background-image: url("#{$assets-path}34f54cf0-restart.svg");
-  }
-
   .p-form-validation {
     .p-icon-container {
       position: absolute;
       right: 0.55rem;
       top: 0.4rem;
+    }
+  }
+
+  .build-notification {
+    background-color: #e5e5e5;
+    padding: 1.5rem;
+
+    .build-notification-text {
+      color: #06c;
+      font-size: 16px;
+    }
+  }
+
+  .build-container {
+    background-image: url("https://assets.ubuntu.com/v1/7242e628-build.snapcraft.hero.svg");
+    background-position: 56% 80%;
+    background-repeat: no-repeat;
+    bottom: 20px;
+    display: flex;
+    flex-direction: row;
+
+    .build-divider {
+      background-color: rgba(0, 0, 0, 0.15);
+      margin: 0;
+      padding: 0;
+      width: 1px;
+    }
+
+    .col-4 {
+      height: 565.5px;
+    }
+
+    @media (min-width: $breakpoint-small) and (max-width: $breakpoint-large) {
+      background-size: 90%;
+
+      .col-4 {
+        height: auto;
+        padding-bottom: 50%;
+      }
     }
   }
 }

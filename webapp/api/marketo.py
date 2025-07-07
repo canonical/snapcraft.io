@@ -105,9 +105,9 @@ class Marketo:
             "input": [
                 {
                     "email": lead_email,
-                    "snapcraftnewsletter": True
-                    if newsletter_status
-                    else False,
+                    "snapcraftnewsletter": (
+                        True if newsletter_status else False
+                    ),
                 }
             ],
         }

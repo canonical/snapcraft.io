@@ -1,16 +1,22 @@
 # Packages
 import bleach
 import flask
-from canonicalwebteam.store_api.stores.snapstore import SnapPublisher
-from canonicalwebteam.store_api.exceptions import (
+from canonicalwebteam.store_api.dashboard import Dashboard
+from canonicalwebteam.store_api.publishergw import PublisherGW
+from canonicalwebteam.exceptions import (
     StoreApiError,
     StoreApiResponseErrorList,
+    StoreApiResponseError,
+    StoreApiResourceNotFound,
 )
+from flask.json import jsonify
 
 # Local
+from webapp import authentication
 from webapp.helpers import api_publisher_session, launchpad
 from webapp.api.exceptions import ApiError
-from webapp.decorators import login_required
+from webapp.decorators import exchange_required, login_required
+from webapp.publisher.cve import cve_views
 from webapp.publisher.snaps import (
     build_views,
     listing_views,
@@ -19,11 +25,12 @@ from webapp.publisher.snaps import (
     publicise_views,
     release_views,
     settings_views,
+    collaboration_views,
 )
 from webapp.publisher.snaps.builds import map_snap_build_status
-from webapp.publisher.views import _handle_error, _handle_error_list
 
-publisher_api = SnapPublisher(api_publisher_session)
+dashboard = Dashboard(api_publisher_session)
+publisher_gateway = PublisherGW("snap", api_publisher_session)
 
 
 publisher_snaps = flask.Blueprint(
@@ -54,8 +61,13 @@ publisher_snaps.add_url_rule(
     methods=["GET"],
 )
 publisher_snaps.add_url_rule(
-    "/<snap_name>/listing",
-    view_func=listing_views.post_listing_snap,
+    "/api/<snap_name>/listing",
+    view_func=listing_views.get_listing_data,
+    methods=["GET"],
+)
+publisher_snaps.add_url_rule(
+    "/api/<snap_name>/listing",
+    view_func=listing_views.post_listing_data,
     methods=["POST"],
 )
 publisher_snaps.add_url_rule(
@@ -63,56 +75,78 @@ publisher_snaps.add_url_rule(
     view_func=listing_views.post_preview,
     methods=["POST"],
 )
+publisher_snaps.add_url_rule(
+    "/<snap_name>/collaboration",
+    view_func=collaboration_views.get_collaboration_snap,
+    methods=["GET"],
+)
 
 # Build views
 publisher_snaps.add_url_rule(
     "/<snap_name>/builds",
+    view_func=build_views.get_snap_builds_page,
+    methods=["GET"],
+),
+
+publisher_snaps.add_url_rule(
+    "/<snap_name>/builds/<build_id>",
+    view_func=build_views.get_snap_build_page,
+    methods=["GET"],
+),
+
+publisher_snaps.add_url_rule(
+    "/api/<snap_name>/repo",
+    view_func=build_views.get_snap_repo,
+    methods=["GET"],
+)
+publisher_snaps.add_url_rule(
+    "/api/<snap_name>/builds",
     view_func=build_views.get_snap_builds,
     methods=["GET"],
 )
 publisher_snaps.add_url_rule(
-    "/<snap_name>/builds.json",
-    view_func=build_views.get_snap_builds_json,
-    methods=["GET"],
-)
-publisher_snaps.add_url_rule(
-    "/<snap_name>/builds",
+    "/api/<snap_name>/builds",
     view_func=build_views.post_snap_builds,
     methods=["POST"],
 )
 publisher_snaps.add_url_rule(
-    "/<snap_name>/builds/<build_id>",
+    "/api/<snap_name>/builds/<build_id>",
     view_func=build_views.get_snap_build,
     methods=["GET"],
 )
 publisher_snaps.add_url_rule(
-    "/<snap_name>/builds/validate-repo",
+    "/api/<snap_name>/builds/validate-repo",
     view_func=build_views.get_validate_repo,
     methods=["GET"],
 )
 publisher_snaps.add_url_rule(
-    "/<snap_name>/builds/trigger-build",
+    "/api/<snap_name>/builds/trigger-build",
     view_func=build_views.post_build,
     methods=["POST"],
 )
 publisher_snaps.add_url_rule(
-    "/<snap_name>/webhook/notify",
+    "/api/<snap_name>/builds/check-build-request/<build_id>",
+    view_func=build_views.check_build_request,
+    methods=["GET"],
+)
+publisher_snaps.add_url_rule(
+    "/api/<snap_name>/webhook/notify",
     view_func=build_views.post_github_webhook,
     methods=["POST"],
 )
 # This route is to support previous webhooks from build.snapcraft.io
 publisher_snaps.add_url_rule(
-    "/<github_owner>/<github_repo>/webhook/notify",
+    "/api/<github_owner>/<github_repo>/webhook/notify",
     view_func=build_views.post_github_webhook,
     methods=["POST"],
 )
 publisher_snaps.add_url_rule(
-    "/<snap_name>/builds/update-webhook",
+    "/api/<snap_name>/builds/update-webhook",
     view_func=build_views.get_update_gh_webhooks,
     methods=["GET"],
 )
 publisher_snaps.add_url_rule(
-    "/<snap_name>/builds/disconnect/",
+    "/api/<snap_name>/builds/disconnect/",
     view_func=build_views.post_disconnect_repo,
     methods=["POST"],
 )
@@ -128,7 +162,12 @@ publisher_snaps.add_url_rule(
 )
 publisher_snaps.add_url_rule(
     "/<snap_name>/releases",
-    view_func=release_views.get_release_history,
+    view_func=release_views.get_releases,
+    methods=["GET"],
+)
+publisher_snaps.add_url_rule(
+    "/api/<snap_name>/releases",
+    view_func=release_views.get_release_history_data,
     methods=["GET"],
 )
 publisher_snaps.add_url_rule(
@@ -189,6 +228,26 @@ publisher_snaps.add_url_rule(
     view_func=metrics_views.publisher_snap_metrics,
 )
 
+publisher_snaps.add_url_rule(
+    "/<snap_name>/metrics/active-devices",
+    view_func=metrics_views.get_active_devices,
+)
+
+publisher_snaps.add_url_rule(
+    "/<snap_name>/metrics/active-latest-devices",
+    view_func=metrics_views.get_latest_active_devices,
+)
+
+publisher_snaps.add_url_rule(
+    "/<snap_name>/metrics/active-device-annotation",
+    view_func=metrics_views.get_metric_annotaion,
+)
+
+publisher_snaps.add_url_rule(
+    "/<snap_name>/metrics/country-metric",
+    view_func=metrics_views.get_country_metric,
+)
+
 # Publice views
 publisher_snaps.add_url_rule(
     "/<snap_name>/publicise",
@@ -196,11 +255,15 @@ publisher_snaps.add_url_rule(
 )
 publisher_snaps.add_url_rule(
     "/<snap_name>/publicise/badges",
-    view_func=publicise_views.get_publicise_badges,
+    view_func=publicise_views.get_publicise,
 )
 publisher_snaps.add_url_rule(
     "/<snap_name>/publicise/cards",
-    view_func=publicise_views.get_publicise_cards,
+    view_func=publicise_views.get_publicise,
+)
+publisher_snaps.add_url_rule(
+    "/api/<snap_name>/publicise",
+    view_func=publicise_views.get_publicise_data,
 )
 
 # Settings views
@@ -209,9 +272,24 @@ publisher_snaps.add_url_rule(
     view_func=settings_views.get_settings,
 )
 publisher_snaps.add_url_rule(
-    "/<snap_name>/settings",
-    view_func=settings_views.post_settings,
+    "/api/<snap_name>/settings",
+    view_func=settings_views.post_settings_data,
     methods=["POST"],
+)
+publisher_snaps.add_url_rule(
+    "/api/<snap_name>/settings",
+    view_func=settings_views.get_settings_data,
+)
+
+# CVE API
+publisher_snaps.add_url_rule(
+    "/api/<snap_name>/<revision>/cves",
+    view_func=cve_views.get_cves,
+)
+
+publisher_snaps.add_url_rule(
+    "/api/<snap_name>/cves",
+    view_func=cve_views.get_revisions_with_cves,
 )
 
 
@@ -224,12 +302,7 @@ def redirect_get_account_snaps():
 @publisher_snaps.route("/snaps")
 @login_required
 def get_account_snaps():
-    try:
-        account_info = publisher_api.get_account(flask.session)
-    except StoreApiResponseErrorList as api_response_error_list:
-        return _handle_error_list(api_response_error_list.errors)
-    except (StoreApiError, ApiError) as api_error:
-        return _handle_error(api_error)
+    account_info = dashboard.get_account(flask.session)
 
     user_snaps, registered_snaps = logic.get_snaps_account_info(account_info)
 
@@ -241,14 +314,32 @@ def get_account_snaps():
         "registered_snaps": registered_snaps,
     }
 
-    return flask.render_template("publisher/account-snaps.html", **context)
+    return flask.render_template("store/publisher.html", **context)
+
+
+@publisher_snaps.route("/snaps.json")
+@login_required
+def get_user_snaps():
+    account_info = dashboard.get_account(flask.session)
+
+    user_snaps, registered_snaps = logic.get_snaps_account_info(account_info)
+
+    flask_user = flask.session["publisher"]
+
+    return flask.jsonify(
+        {
+            "snaps": user_snaps,
+            "current_user": flask_user["nickname"],
+            "registered_snaps": registered_snaps,
+        }
+    )
 
 
 @publisher_snaps.route("/snap-builds.json")
 @login_required
 def get_snap_build_status():
     try:
-        account_info = publisher_api.get_account(flask.session)
+        account_info = dashboard.get_account(flask.session)
     except (StoreApiError, ApiError) as api_error:
         return flask.jsonify(api_error), 400
 
@@ -272,46 +363,7 @@ def redirect_get_register_name():
 @publisher_snaps.route("/register-snap")
 @login_required
 def get_register_name():
-    try:
-        user = publisher_api.get_account(flask.session)
-    except (StoreApiError, ApiError) as api_error:
-        return _handle_error(api_error)
-
-    available_stores = logic.filter_available_stores(user["stores"])
-
-    snap_name = flask.request.args.get("snap_name", default="", type=str)
-    store = flask.request.args.get("store", default="", type=str)
-
-    conflict_str = flask.request.args.get(
-        "conflict", default="False", type=str
-    )
-    conflict = conflict_str == "True"
-
-    already_owned_str = flask.request.args.get(
-        "already_owned", default="False", type=str
-    )
-    already_owned = already_owned_str == "True"
-
-    reserved_str = flask.request.args.get(
-        "reserved", default="False", type=str
-    )
-    reserved = reserved_str == "True"
-
-    is_private_str = flask.request.args.get(
-        "is_private", default="False", type=str
-    )
-    is_private = is_private_str == "True"
-
-    context = {
-        "snap_name": snap_name,
-        "is_private": is_private,
-        "conflict": conflict,
-        "already_owned": already_owned,
-        "reserved": reserved,
-        "store": store,
-        "available_stores": available_stores,
-    }
-    return flask.render_template("publisher/register-snap.html", **context)
+    return flask.render_template("store/publisher.html")
 
 
 @publisher_snaps.route("/account/register-snap", methods=["POST"])
@@ -319,95 +371,147 @@ def redirect_post_register_name():
     return flask.redirect(flask.url_for(".post_register_name"), 307)
 
 
-@publisher_snaps.route("/register-snap", methods=["POST"])
+@publisher_snaps.route("/api/register-snap", methods=["POST"])
 @login_required
 def post_register_name():
-    snap_name = flask.request.form.get("snap-name")
+    snap_name = flask.request.form.get("snap_name")
+    res = {}
 
     if not snap_name:
-        return flask.redirect(flask.url_for(".get_register_name"))
+        res["success"] = False
+        res["message"] = "You must define a snap name"
+
+        return jsonify(res)
 
     is_private = flask.request.form.get("is_private") == "private"
     store = flask.request.form.get("store")
-    registrant_comment = flask.request.form.get("registrant_comment")
 
     try:
-        publisher_api.post_register_name(
+        dashboard.post_register_name(
             session=flask.session,
             snap_name=snap_name,
+            registrant_comment=None,
             is_private=is_private,
             store=store,
-            registrant_comment=registrant_comment,
         )
     except StoreApiResponseErrorList as api_response_error_list:
-        try:
-            user = publisher_api.get_account(flask.session)
-        except (StoreApiError, ApiError) as api_error:
-            return _handle_error(api_error)
-
-        available_stores = logic.filter_available_stores(user["stores"])
+        res = {
+            "success": False,
+            "data": {
+                "is_private": is_private,
+                "snap_name": snap_name,
+                "store": store,
+            },
+        }
 
         if api_response_error_list.status_code == 409:
             for error in api_response_error_list.errors:
-                if error["code"] == "already_claimed":
-                    return flask.redirect(
-                        flask.url_for("account.get_account_details")
-                    )
-                elif error["code"] == "already_registered":
-                    return flask.redirect(
-                        flask.url_for(
-                            ".get_register_name",
-                            snap_name=snap_name,
-                            is_private=is_private,
-                            store=store,
-                            conflict=True,
-                        )
-                    )
-                elif error["code"] == "already_owned":
-                    return flask.redirect(
-                        flask.url_for(
-                            ".get_register_name",
-                            snap_name=snap_name,
-                            is_private=is_private,
-                            store=store,
-                            already_owned=True,
-                        )
-                    )
-                elif error["code"] == "reserved_name":
-                    return flask.redirect(
-                        flask.url_for(
-                            ".get_register_name",
-                            snap_name=snap_name,
-                            is_private=is_private,
-                            store=store,
-                            reserved=True,
-                        )
-                    )
+                res["data"]["error_code"] = error["code"]
 
-        context = {
+                return jsonify(res)
+
+        if api_response_error_list.status_code == 400:
+            res["data"]["error_code"] = "no-permission"
+            res[
+                "message"
+            ] = """You don't have permission
+                to register a snap in this store.
+                Please see store administrator."""
+
+            return jsonify(res)
+
+        res["message"] = "Unable to register snap name"
+        res["data"] = {
             "snap_name": snap_name,
             "is_private": is_private,
-            "available_stores": available_stores,
-            "errors": api_response_error_list.errors,
+            "store": store,
         }
 
-        return flask.render_template("publisher/register-snap.html", **context)
-    except (StoreApiError, ApiError) as api_error:
-        return _handle_error(api_error)
+        return jsonify(res)
 
-    flask.flash(
-        "".join(
-            [
-                snap_name,
-                " registered.",
-                ' <a href="https://docs.snapcraft.io/build-snaps/upload"',
-                ' class="p-link--external"',
-                ' target="blank">How to upload a Snap</a>',
-            ]
+    return jsonify({"success": True})
+
+
+@publisher_snaps.route("/api/packages/<snap_name>", methods=["GET"])
+@login_required
+@exchange_required
+def get_package_metadata(snap_name):
+    try:
+        package_metadata = publisher_gateway.get_package_metadata(
+            flask.session, snap_name
         )
+        return jsonify({"data": package_metadata, "success": True})
+    except StoreApiResourceNotFound:
+        return (jsonify({"error": "Package not found", "success": False}), 404)
+    except StoreApiResponseErrorList as error:
+        return (
+            jsonify(
+                {
+                    "error": "Error occurred while fetching snap metadata.",
+                    "errors": error.errors,
+                    "success": False,
+                }
+            ),
+            error.status_code,
+        )
+    except StoreApiResponseError as error:
+        return (
+            jsonify(
+                {
+                    "error": "Error occurred while fetching snap metadata.",
+                    "success": False,
+                }
+            ),
+            error.status_code,
+        )
+    except StoreApiError:
+        return (
+            jsonify(
+                {
+                    "error": "Error occurred while fetching snap metadata.",
+                    "success": False,
+                }
+            ),
+            500,
+        )
+    except Exception:
+        return (jsonify({"error": "Unexpected error", "success": False}), 500)
+
+
+@publisher_snaps.route("/packages/<package_name>", methods=["DELETE"])
+@login_required
+@exchange_required
+def delete_package(package_name):
+    response = publisher_gateway.unregister_package_name(
+        flask.session, package_name
     )
 
-    return flask.redirect(flask.url_for("account.get_account"))
+    if response.status_code == 200:
+        return ("", 200)
+    return (
+        jsonify({"error": response.json()["error-list"][0]["message"]}),
+        response.status_code,
+    )
+
+
+@publisher_snaps.route("/snap_info/user_snap/<snap_name>", methods=["GET"])
+@login_required
+def get_is_user_snap(snap_name):
+    is_users_snap = False
+    try:
+        snap_info = dashboard.get_snap_info(flask.session, snap_name)
+    except (StoreApiError, ApiError) as api_error:
+        return flask.jsonify({"error": str(api_error)}), 400
+
+    if authentication.is_authenticated(flask.session):
+        publisher_info = flask.session.get("publisher", {})
+        if (
+            publisher_info.get("nickname")
+            == snap_info["publisher"]["username"]
+        ):
+            is_users_snap = True
+
+    return {"is_users_snap": is_users_snap}
 
 
 @publisher_snaps.route("/register-snap/json", methods=["POST"])
@@ -422,7 +526,7 @@ def post_register_name_json():
         )
 
     try:
-        response = publisher_api.post_register_name(
+        response = dashboard.post_register_name(
             session=flask.session, snap_name=snap_name
         )
     except StoreApiResponseErrorList as api_response_error_list:
@@ -436,8 +540,6 @@ def post_register_name_json():
             flask.jsonify({"errors": api_response_error_list.errors}),
             api_response_error_list.status_code,
         )
-    except (StoreApiError, ApiError) as api_error:
-        return _handle_error(api_error)
 
     response["code"] = "created"
 
@@ -448,63 +550,66 @@ def post_register_name_json():
 @login_required
 def get_register_name_dispute():
     snap_name = flask.request.args.get("snap-name")
+
     if not snap_name:
         return flask.redirect(
             flask.url_for(".get_register_name", snap_name=snap_name)
         )
     return flask.render_template(
-        "publisher/register-name-dispute.html", snap_name=snap_name
+        "store/publisher.html",
     )
 
 
-@publisher_snaps.route("/register-name-dispute", methods=["POST"])
+@publisher_snaps.route("/api/register-name-dispute", methods=["POST"])
 @login_required
 def post_register_name_dispute():
     try:
-        snap_name = flask.request.form.get("snap-name", "")
-        claim_comment = flask.request.form.get("claim-comment", "")
-        publisher_api.post_register_name_dispute(
-            flask.session, bleach.clean(snap_name), bleach.clean(claim_comment)
+        claim = flask.json.loads(flask.request.data)
+        snap_name = claim["snap-name"]
+        claim_comment = claim["claim-comment"]
+        dashboard.post_register_name_dispute(
+            flask.session,
+            bleach.clean(snap_name),
+            bleach.clean(claim_comment),
         )
     except StoreApiResponseErrorList as api_response_error_list:
         if api_response_error_list.status_code in [400, 409]:
-            return flask.render_template(
-                "publisher/register-name-dispute.html",
-                snap_name=snap_name,
-                errors=api_response_error_list.errors,
+            return jsonify(
+                {
+                    "success": False,
+                    "data": api_response_error_list.errors,
+                    "message": api_response_error_list.errors[0]["message"],
+                }
             )
-        else:
-            return _handle_error_list(api_response_error_list.errors)
-    except (StoreApiError, ApiError) as api_error:
-        return _handle_error(api_error)
-
-    return flask.render_template(
-        "publisher/register-name-dispute-success.html", snap_name=snap_name
-    )
+    return jsonify({"success": True})
 
 
 @publisher_snaps.route("/request-reserved-name")
 @login_required
 def get_request_reserved_name():
+    stores = dashboard.get_stores(flask.session)
+
     snap_name = flask.request.args.get("snap_name")
+    store_id = flask.request.args.get("store")
+    store_name = logic.get_store_name(store_id, stores)
+
     if not snap_name:
         return flask.redirect(
-            flask.url_for(".get_register_name", snap_name=snap_name)
+            flask.url_for(
+                ".get_register_name", snap_name=snap_name, store=store_id
+            )
         )
     return flask.render_template(
-        "publisher/request-reserved-name.html", snap_name=snap_name
+        "store/publisher.html",
+        snap_name=snap_name,
+        store=store_name,
     )
 
 
 @publisher_snaps.route("/snaps/api/snap-count")
 @login_required
 def snap_count():
-    try:
-        account_info = publisher_api.get_account(flask.session)
-    except StoreApiResponseErrorList as api_response_error_list:
-        return _handle_error_list(api_response_error_list.errors)
-    except (StoreApiError, ApiError) as api_error:
-        return _handle_error(api_error)
+    account_info = dashboard.get_account(flask.session)
 
     user_snaps, registered_snaps = logic.get_snaps_account_info(account_info)
 

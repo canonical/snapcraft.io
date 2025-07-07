@@ -1,5 +1,7 @@
+@use 'sass:color';
+
 @mixin snapcraft-tour {
-  $color-overlay: transparentize($color-dark, 0.35);
+  $color-overlay: color.adjust($color-dark, $alpha: -0.35);
   $triangle-height: $sp-unit;
   $triangle-spacing: 2 * $triangle-height;
 
@@ -11,7 +13,7 @@
   .p-tour-bar {
     bottom: 0;
     left: 0;
-    padding: $spv-inner--medium;
+    padding: $spv--medium $spv--x-large;
     pointer-events: none;
     position: fixed;
     right: 0;
@@ -19,7 +21,7 @@
   }
 
   .p-tour-bar__button {
-    @extend %p-button--neutral;
+    @extend .p-button;
 
     float: right;
     margin: 0;
@@ -57,7 +59,7 @@
         top: $triangle-height solid transparent;
       }
 
-      content: '';
+      content: "";
       height: 0;
       pointer-events: none;
       position: absolute;
@@ -105,18 +107,19 @@
   %triangle--on-left {
     &::before,
     &::after {
-      left: $sph-inner;
+      left: $sph--large;
     }
   }
 
   %triangle--on-right {
     &::before,
     &::after {
-      right: $sph-inner;
+      right: $sph--large;
     }
   }
 
-  %triangle--on-center-x { // horizontally centered
+  %triangle--on-center-x {
+    // horizontally centered
     &::before,
     &::after {
       left: 50%;
@@ -164,18 +167,19 @@
   %triangle--on-top {
     &::before,
     &::after {
-      top: $spv-inner--large;
+      top: $spv--large;
     }
   }
 
   %triangle--on-bottom {
     &::before,
     &::after {
-      bottom: $spv-inner--large;
+      bottom: $spv--large;
     }
   }
 
-  %triangle--on-center-y { // vertically center
+  %triangle--on-center-y {
+    // vertically center
     &::before,
     &::after {
       top: 50%;
@@ -258,31 +262,5 @@
       @extend %triangle--pointing-left;
       @extend %triangle--on-bottom;
     }
-  }
-
-  .p-tour-controls {
-    display: flex;
-    justify-content: space-between;
-    margin-top: $spv-inner--large;
-
-    // based on pagination pattern from Vanilla this turns contextual menu
-    // chevron icon into < > arrows
-    // let's hope Vanilla doesn't change this icon to something else ;)
-    .p-icon--contextual-menu.is-next {
-      transform: rotate(-90deg);
-    }
-
-    .p-icon--contextual-menu.is-prev {
-      transform: rotate(90deg);
-    }
-  }
-
-  .p-tour-controls__buttons {
-    display: flex;
-    margin-left: auto; // align right in flex parent
-  }
-
-  .p-tour-controls__step {
-    margin-right: $sph-inner;
   }
 }

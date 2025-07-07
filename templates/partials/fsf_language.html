@@ -4,216 +4,134 @@
   {% set layout_no_of_columns=12 %}
 {% endif%}
 
-<div class="row js-fsf-language-select" id="language">
-  <div class="col-small-2 col-medium-3 col-2 col-lang-select--{% if layout_no_of_columns==12 %}3{% elif layout_no_of_columns==8 %}4{% endif%}">
-    <a class="p-card p-logo-link p-flow-link u-align--center" href="/first-snap/python" data-flow-link="python">
-      <header class="p-card__header">
-        {{
-          image(
-            url="https://assets.ubuntu.com/v1/5398ed20-logo-python.svg",
-            alt="Python",
-            width="97",
-            height="97",
-            hi_def=True
-          ) | safe
-        }}
-      </header>
-      <span>Python</span>
-    </a>
+<div class="row">
+  <div class="col-start-large-4 col-9">
+    <div class="p-strip is-deep">
+      <h2>Learn how to snap an app in 30 minutes</h2>
+    </div>
   </div>
-  <div class="col-small-2 col-medium-3 col-2 col-lang-select--{% if layout_no_of_columns==12 %}3{% elif layout_no_of_columns==8 %}4{% endif %}">
-    <a class="p-logo-link p-card p-flow-link u-align--center" href="/first-snap/pre-built" data-flow-link="pre-built">
-      <header class="p-card__header">
-        {{
-          image(
-            url="https://assets.ubuntu.com/v1/701da9c0-icon-prepackaged-apps.svg",
-            alt="Pre-built",
-            width="97",
-            height="97",
-            hi_def=True
-          ) | safe
-        }}
-      </header>
-      <span>Pre-built apps</span>
-    </a>
+</div>
+<div class="row p-section" id="language">
+  <hr class="p-rule">
+  <div class="col-2">
+    <div class="u-hide--large">
+      <div class="p-muted-heading">
+        <label for="choose-language">Choose your language:</label>
+      </div>
+      <select id="choose-language" data-js="flow-options">
+        <option value="python">Python</option>
+        <option value="pre-built">Pre-built apps</option>
+        <option value="c">C/C++</option>
+        <option value="go">Go</option>
+        <option value="java">Java</option>
+        <option value="node">Node.js</option>
+        <option value="electron">Electron</option>
+        <option value="flutter">Flutter</option>
+        <option value="ruby">Ruby</option>
+        <option value="rust">Rust</option>
+        <option value="moos">MOOS</option>
+        <option value="ros">ROS</option>
+        <option value="ros2">ROS 2</option>
+      </select>
+    </div>
+    <h3 class="p-muted-heading u-hide--small u-hide--medium u-sv2">Choose <br>your language:</h3>
+    <div class="p-side-navigation u-hide--small u-hide--medium">
+      <ul class="p-side-navigation__list" data-js="flow-links-container">
+        <li class="p-side-navigation__item">
+          <a class="p-side-navigation__link" href="/first-snap/python" data-js="flow-link" data-flow="python" aria-current="page">
+            <img src="https://assets.ubuntu.com/v1/b0f5ac3f-logo-python.svg" alt="" width="24" height="24">
+            &nbsp;
+            Python
+          </a>
+        </li>
+        <li class="p-side-navigation__item">
+          <a class="p-side-navigation__link" href="/first-snap/pre-built" data-js="flow-link" data-flow="pre-built">
+            <img src="https://assets.ubuntu.com/v1/571b641b-logo-prepackaged-apps.svg" alt="" width="24" height="24">
+            &nbsp;
+            Pre-built apps
+          </a>
+        </li>
+        <li class="p-side-navigation__item">
+          <a class="p-side-navigation__link" href="/first-snap/c" data-js="flow-link" data-flow="c">
+            <img src="https://assets.ubuntu.com/v1/ef1f8882-logo-cpp.svg" alt="" width="24" height="24">
+            &nbsp;
+            C/C++
+          </a>
+        </li>
+        <li class="p-side-navigation__item">
+          <a class="p-side-navigation__link" href="/first-snap/golang" data-js="flow-link" data-flow="go">
+            <img src="https://assets.ubuntu.com/v1/551b3590-logo-go.svg" alt="" width="24" height="24">
+            &nbsp;
+            Go
+          </a>
+        </li>
+        <li class="p-side-navigation__item">
+          <a class="p-side-navigation__link" href="/first-snap/java" data-js="flow-link" data-flow="java">
+            <img src="https://assets.ubuntu.com/v1/d1ed3b5d-logo-java.svg" alt="" width="24" height="24">
+            &nbsp;
+            Java
+          </a>
+        </li>
+        <li class="p-side-navigation__item">
+          <a class="p-side-navigation__link" href="/first-snap/node" data-js="flow-link" data-flow="node">
+            <img src="https://assets.ubuntu.com/v1/792b186f-logo-node.svg" alt="" width="24" height="24">
+            &nbsp;
+            Node.js
+          </a>
+        </li>
+        <li class="p-side-navigation__item">
+          <a class="p-side-navigation__link" href="/docs/build-snaps/electron" data-js="flow-link" data-flow="electron">
+            <img src="https://assets.ubuntu.com/v1/7dcb7e61-logo-electron.svg" alt="" width="24" height="24">
+            &nbsp;
+            Electron
+          </a>
+        </li>
+        <li class="p-side-navigation__item">
+          <a class="p-side-navigation__link" href="/first-snap/flutter" data-js="flow-link" data-flow="flutter">
+            <img src="https://assets.ubuntu.com/v1/12d888b1-logo-flutter.svg" alt="" width="24" height="24">
+            &nbsp;
+            Flutter
+          </a>
+        </li>
+        <li class="p-side-navigation__item">
+          <a class="p-side-navigation__link" href="/first-snap/ruby" data-js="flow-link" data-flow="ruby">
+            <img src="https://assets.ubuntu.com/v1/bbfae801-logo-ruby.svg" alt="" width="24" height="24">
+            &nbsp;
+            Ruby
+          </a>
+        </li>
+        <li class="p-side-navigation__item">
+          <a class="p-side-navigation__link" href="/first-snap/rust" data-js="flow-link" data-flow="rust">
+            <img src="https://assets.ubuntu.com/v1/6f250572-logo-rust.svg" alt="" width="24" height="24">
+            &nbsp;
+            Rust
+          </a>
+        </li>
+        <li class="p-side-navigation__item">
+          <a class="p-side-navigation__link" href="/first-snap/moos" data-js="flow-link" data-flow="moos">
+            <img src="https://assets.ubuntu.com/v1/6808d58c-logo-moos.svg" alt="" width="24" height="24">
+            &nbsp;
+            MOOS
+          </a>
+        </li>
+        <li class="p-side-navigation__item">
+          <a class="p-side-navigation__link" href="/first-snap/ros" data-js="flow-link" data-flow="ros">
+            <img src="https://assets.ubuntu.com/v1/ecb3bce5-logo-ros.svg" alt="" width="24" height="24">
+            &nbsp;
+            ROS
+          </a>
+        </li>
+        <li class="p-side-navigation__item">
+          <a class="p-side-navigation__link" href="/first-snap/ros2" data-js="flow-link" data-flow="ros2">
+            <img src="https://assets.ubuntu.com/v1/6fd7ea3b-logo-ros-2.svg" alt="" width="24" height="24">
+            &nbsp;
+            ROS 2
+          </a>
+        </li>
+      </ul>
+    </div>
   </div>
-  <div class="col-small-2 col-medium-3 col-2 col-lang-select--{% if layout_no_of_columns==12 %}3{% elif layout_no_of_columns==8 %}4{% endif %}">
-    <a class="p-logo-link p-card p-flow-link u-align--center" href="/first-snap/c" data-flow-link="c">
-      <header class="p-card__header">
-        {{
-          image(
-            url="https://assets.ubuntu.com/v1/dcc8c108-logo-cpp.svg",
-            alt="C/C++",
-            width="97",
-            height="97",
-            hi_def=True
-          ) | safe
-        }}
-      </header>
-      <span>C/C++</span>
-    </a>
-  </div>
-  <div class="col-small-2 col-medium-3 col-2 col-lang-select--{% if layout_no_of_columns==12 %}3{% elif layout_no_of_columns==8 %}4{% endif %}">
-    <a class="p-logo-link p-card p-flow-link u-align--center" href="/first-snap/golang" data-flow-link="go">
-      <header class="p-card__header">
-        {{
-          image(
-            url="https://assets.ubuntu.com/v1/158bd625-logo-go.svg",
-            alt="Go",
-            width="97",
-            height="97",
-            hi_def=True
-          ) | safe
-        }}
-      </header>
-      <span>Go</span>
-    </a>
-  </div>
-  <div class="col-small-2 col-medium-3 col-2 col-lang-select--{% if layout_no_of_columns==12 %}3{% elif layout_no_of_columns==8 %}4{% endif %}">
-    <a class="p-logo-link p-card p-flow-link u-align--center" href="/first-snap/java" data-flow-link="java">
-      <header class="p-card__header">
-        {{
-          image(
-            url="https://assets.ubuntu.com/v1/f6840095-logo-java.svg",
-            alt="Java",
-            width="97",
-            height="97",
-            hi_def=True
-          ) | safe
-        }}
-      </header>
-      <span>Java</span>
-    </a>
-  </div>
-  <div class="col-small-2 col-medium-3 col-2 col-lang-select--{% if layout_no_of_columns==12 %}3{% elif layout_no_of_columns==8 %}4{% endif %}">
-    <a class="p-logo-link p-card p-flow-link u-align--center" href="/first-snap/node" data-flow-link="node">
-      <header class="p-card__header">
-        {{
-          image(
-            url="https://assets.ubuntu.com/v1/7a4dcddb-logo-node.svg",
-            alt="Node.js",
-            width="97",
-            height="97",
-            hi_def=True
-          ) | safe
-        }}
-      </header>
-      <span>Node.js</span>
-    </a>
-  </div>
-  <div class="col-small-2 col-medium-3 col-2 col-lang-select--{% if layout_no_of_columns==12 %}3{% elif layout_no_of_columns==8 %}4{% endif %}">
-    <a class="p-logo-link p-card p-flow-link u-align--center" href="/docs/build-snaps/electron" data-flow-link="electron">
-      <header class="p-card__header">
-        {{
-          image(
-            url="https://assets.ubuntu.com/v1/4ab5c788-logo-electron.svg",
-            alt="Electron",
-            width="97",
-            height="97",
-            hi_def=True
-          ) | safe
-        }}
-      </header>
-      <span>Electron</span>
-    </a>
-  </div>
-  <div class="col-small-2 col-medium-3 col-2 col-lang-select--{% if layout_no_of_columns==12 %}3{% elif layout_no_of_columns==8 %}4{% endif %}">
-    <a class="p-logo-link p-card p-flow-link u-align--center" href="/first-snap/flutter" data-flow-link="flutter">
-      <header class="p-card__header">
-        {{
-          image(
-            url="https://assets.ubuntu.com/v1/d654c17e-Flutter_logo.svg",
-            alt="Flutter",
-            width="97",
-            height="97",
-            hi_def=True
-          ) | safe
-        }}
-      </header>
-      <span>Flutter</span>
-    </a>
-  </div>
-  <div class="col-small-2 col-medium-3 col-2 col-lang-select--{% if layout_no_of_columns==12 %}3{% elif layout_no_of_columns==8 %}4{% endif %}">
-    <a class="p-logo-link p-card p-flow-link u-align--center" href="/first-snap/ruby" data-flow-link="ruby">
-      <header class="p-card__header">
-        {{
-          image(
-            url="https://assets.ubuntu.com/v1/eacdd4e1-logo-ruby.svg",
-            alt="Ruby",
-            width="97",
-            height="97",
-            hi_def=True
-          ) | safe
-        }}
-      </header>
-      <span>Ruby</span>
-    </a>
-  </div>
-  <div class="col-small-2 col-medium-3 col-2 col-lang-select--{% if layout_no_of_columns==12 %}3{% elif layout_no_of_columns==8 %}4{% endif %}">
-    <a class="p-logo-link p-card p-flow-link u-align--center" href="/first-snap/rust" data-flow-link="rust">
-      <header class="p-card__header">
-        {{
-          image(
-            url="https://assets.ubuntu.com/v1/6677836e-logo-rust.svg",
-            alt="Rust",
-            width="97",
-            height="97",
-            hi_def=True
-          ) | safe
-        }}
-      </header>
-      <span>Rust</span>
-    </a>
-  </div>
-  <div class="col-small-2 col-medium-3 col-2 col-lang-select--{% if layout_no_of_columns==12 %}3{% elif layout_no_of_columns==8 %}4{% endif %}">
-    <a class="p-logo-link p-card p-flow-link u-align--center" href="/first-snap/moos" data-flow-link="moos">
-      <header class="p-card__header">
-        {{
-          image(
-            url="https://assets.ubuntu.com/v1/4c371ff8-logo-moos.svg",
-            alt="MOOS",
-            width="97",
-            height="97",
-            hi_def=True
-          ) | safe
-        }}
-      </header>
-      <span>MOOS</span>
-    </a>
-  </div>
-  <div class="col-small-2 col-medium-3 col-2 col-lang-select--{% if layout_no_of_columns==12 %}3{% elif layout_no_of_columns==8 %}4{% endif %}">
-    <a class="p-logo-link p-card p-flow-link u-align--center" href="/first-snap/ros" data-flow-link="ros">
-      <header class="p-card__header">
-        {{
-          image(
-            url="https://assets.ubuntu.com/v1/f2b40fc0-logo-ros.svg",
-            alt="ROS",
-            width="97",
-            height="97",
-            hi_def=True
-          ) | safe
-        }}
-      </header>
-      <span>ROS</span>
-    </a>
-  </div>
-  <div class="col-small-2 col-medium-3 col-2 col-lang-select--{% if layout_no_of_columns==12 %}3{% elif layout_no_of_columns==8 %}4{% endif %}">
-    <a class="p-logo-link p-card p-flow-link u-align--center" href="/first-snap/ros2" data-flow-link="ros2">
-      <header class="p-card__header">
-        {{
-          image(
-            url="https://assets.ubuntu.com/v1/7dad0dcc-logo-ros2.svg",
-            alt="ROS 2",
-            width="97",
-            height="97",
-            hi_def=True
-          ) | safe
-        }}
-      </header>
-      <span>ROS 2</span>
-    </a>
-  </div>
-  {% with columns=layout_no_of_columns %}
+  <div class="col-9 col-start-large-4 js-fsf-language-select p-rule--vertical">
     {% include "home/_fsf_c.html" %}
     {% include "home/_fsf_electron.html" %}
     {% include "home/_fsf_flutter.html" %}
@@ -227,5 +145,5 @@
     {% include "home/_fsf_ros2.html" %}
     {% include "home/_fsf_ruby.html" %}
     {% include "home/_fsf_rust.html" %}
-  {% endwith %}
+  </div>
 </div>

@@ -1,15 +1,144 @@
-@import 'snapcraft_patterns_icons';
+@include vf-p-icon-task-outstanding;
+
+@mixin snapcraft-icon-branch($color, $width, $height) {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='$width' height='$height'%3E%3Cpath fill='#{vf-url-friendly-color($color)}' fill-rule='nonzero' d='M3 6h1.268a2 2 0 1 1 0 2H3v2a1 1 0 0 1-2 0V3.732a2 2 0 1 1 2 0V6zM2 3a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm4 5a1 1 0 1 0 0-2 1 1 0 0 0 0 2z'/%3E%3C/svg%3E");
+}
 
 @mixin snapcraft-release {
-  $color-highlighted: #fae6be;
+  $color-highlighted: #e9ffec;
+  $color-highlighted-border: 1px dashed #0e8420;
+
+  .p-releases-row {
+    border-bottom: $border;
+    padding: $spv--small 0;
+
+    .is-pinned & {
+      border-bottom: none;
+    }
+  }
+
+  // CUSTOM TRACK DROPDOWN
+
+  .track-dropdown {
+    background-color: $color-mid-light;
+    border-bottom: 1px solid $color-mid-dark;
+    display: inline-block;
+    height: 42px;
+    margin-right: 1rem;
+    min-width: 150px;
+    width: auto;
+  }
+
+  .dropdown-toggle {
+    align-items: center;
+    cursor: pointer;
+    display: flex;
+    height: inherit;
+    justify-content: space-between;
+    padding: $sp-small;
+  }
+
+  .dropdown-menu {
+    background-color: $color-x-light;
+    box-shadow: 0 3px 3px rgba(51, 51, 51, 0.2);
+    display: flex;
+    flex-direction: column;
+    margin: $sp-small 0 $sp-small 0;
+    max-height: 250px;
+    min-width: 150px;
+    order: 1;
+    overflow-y: auto;
+    position: absolute;
+    width: auto;
+    z-index: 1000;
+  }
+
+  .dropdown-menu.padding-bottom {
+    padding: $sp-small;
+  }
+
+  .dropdown-menu.no-padding-bottom {
+    padding: $sp-small $sp-small 0 $sp-small;
+  }
+
+  .dropdown-item {
+    align-items: center;
+    cursor: pointer;
+    display: flex;
+    flex: 1;
+    height: inherit;
+    justify-content: space-between;
+    padding: $sp-small;
+    width: 100%;
+
+    &:hover {
+      background-color: $color-mid-light;
+      border-radius: 4px;
+    }
+  }
+
+  .options-container {
+    flex-grow: 1;
+  }
+
+  .new-track-button {
+    border: none;
+    height: 100%;
+    margin: 0;
+    width: 100%;
+
+    &:hover {
+      background-color: $color-mid-light;
+      border-radius: 4px;
+    }
+  }
+
+  .track-button {
+    background-color: $color-x-light;
+    border-top: $border;
+    bottom: 0;
+    height: 100%;
+    margin-top: $spv--x-small;
+    padding: $sp-small 0 $sp-small 0;
+    position: sticky;
+    width: 100%;
+  }
+
+  .track-button-wrapper {
+    background-color: $color-x-light;
+    bottom: 0;
+    margin-top: auto;
+    padding: none;
+    position: sticky;
+  }
+
+  .p-status-label {
+    margin: 0 $sp-small;
+  }
+
+  // REQUEST / ADD TRACK ASIDE COMPONENT
+
+  .aside-panel-footer {
+    background-color: $color-x-light;
+    border-top: $border;
+    bottom: 0;
+    margin: $spv--small;
+    padding: $spv--medium 0 $spv--medium 0;
+    position: sticky;
+    z-index: 1000;
+  }
 
   // RELEASES CONFIRM
 
   .p-releases-confirm {
-    border-bottom: 1px solid $color-mid-light;
-    margin-bottom: 1rem;
-    padding: 0.5em 0;
-    position: relative;
+    background-color: $color-x-light;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+
+    &.is-pinned {
+      box-shadow: 0 3px 3px rgba(51, 51, 51, 0.2);
+    }
   }
 
   .p-releases-confirm__buttons {
@@ -17,41 +146,22 @@
     margin-left: auto;
   }
 
-  .p-releases-confirm__details-toggle {
-    cursor: pointer;
-    display: flex;
-    flex-grow: 1;
-    justify-content: flex-end;
-    margin-right: 1rem;
-
-    .p-icon--contextual-menu {
-      transform: rotate(0deg);
-    }
-
-    &.is-open {
-      .p-icon--contextual-menu {
-        transform: rotate(180deg);
-      }
-    }
-  }
-
-  .p-releases-confirm__actions {
-    display: flex;
-    justify-content: space-between;
-  }
-
   .p-releases-confirm__details {
-    border-bottom: 1px solid $color-mid-light;
-    margin: 0.5rem 0 1rem;
-    padding-bottom: 0.5rem;
-    position: relative;
-    top: -1rem;
+    border-bottom: $border;
+    margin-bottom: 1rem;
+    padding-bottom: $spv--small;
+    padding-top: $spv--small;
+
+    .is-pinned & {
+      border-bottom: none;
+      border-top: $border;
+    }
   }
 
   // RELEASES TABLE
 
   .p-releases-table {
-    margin-bottom: $spv-outer--medium;
+    margin-bottom: $spv--large;
   }
 
   // Same again for branches
@@ -63,22 +173,47 @@
 
     // 2 arch
     &:first-child:nth-last-child(3).p-releases-channel {
-      width: calc(33.333333% - 1rem);
+      width: calc(33.3333% - 1rem);
     }
+  }
+
+  .p-promote-button {
+    display: none;
   }
 
   .p-releases-channel {
     align-items: flex-start;
-    background: $color-light;
+    border-right: 1px solid $colors--light-theme--border-default;
     display: flex;
     flex-shrink: 0;
-    font-size: 1rem;
-    padding: $spv-inner--small $sph-inner--small;
+    flex-wrap: wrap;
+    padding: $spv--small $sph--small $spv--small 25px;
     position: relative;
-    width: 280px;
+    width: 240px;
+
+    @media (max-width: $breakpoint-medium) {
+      display: none;
+    }
 
     .p-promote-button {
-      font-size: 0.9rem;
+      display: none;
+    }
+
+    .p-releases-channel__name {
+      padding-right: $sph--small;
+    }
+
+    &:hover {
+      .p-promote-button {
+        display: inline-block;
+        position: absolute;
+        right: 0.5rem;
+        top: 0.5rem;
+      }
+
+      .p-releases-channel__name {
+        max-width: 95px;
+      }
     }
 
     .has-active & {
@@ -93,11 +228,21 @@
 
     &.is-placeholder {
       background: none;
+      border-right: 0;
     }
 
     .is-over &,
     &.is-highlighted {
       background-color: $color-highlighted;
+      border: $color-highlighted-border;
+    }
+  }
+
+  .p-releases-table__row--container {
+    @media (max-width: $breakpoint-medium) {
+      border: 1px solid $colors--light-theme--border-default;
+      border-radius: $border-radius;
+      margin-bottom: 1.5rem;
     }
   }
 
@@ -106,9 +251,12 @@
   // the number of architectures
   // See https://www.growingwiththeweb.com/2014/06/detecting-number-of-siblings-with-css.html
   // For more information
+  .p-releases-table__row--container:not(:first-child) {
+    @extend %table-row-border;
+  }
+
   .p-releases-table__row {
     display: flex;
-    margin-bottom: 2px;
 
     &.p-releases-table__row--heading > div,
     & > div:not(.is-placeholder) {
@@ -117,6 +265,11 @@
       &:first-child:nth-last-child(2) ~ div {
         max-width: 50%;
         width: 50%;
+
+        @media (max-width: $breakpoint-medium) {
+          max-width: 100%;
+          width: 100%;
+        }
       }
 
       // 2 arch
@@ -132,6 +285,19 @@
 
   .p-releases-table__row--channel {
     height: 4rem;
+
+    @media (max-width: $breakpoint-medium) {
+      display: block;
+      height: auto;
+    }
+
+    &.is-hovered {
+      background-color: $color-light;
+    }
+  }
+
+  .p-releases-table__row--channel:not(:first-child) {
+    @extend %table-row-border;
   }
 
   .p-releases-table__row--branch {
@@ -150,11 +316,15 @@
   }
 
   .p-releases-table__row--heading {
-    height: 2rem;
+    @extend %table-header-label;
+
+    border-top: 0;
+    margin-bottom: 0;
+    vertical-align: top;
   }
 
   .p-releases-table > h4 {
-    margin-top: $spv-outer--shallow-scaleable;
+    margin-top: $spv--x-large;
   }
 
   .p-releases-table__menus {
@@ -179,7 +349,7 @@
     bottom: 0.2rem;
     cursor: pointer;
     opacity: 0.6;
-    padding: 0.2rem $sph-inner--small;
+    padding: 0.2rem $sph--small;
     right: 0.2rem;
 
     &:hover,
@@ -194,75 +364,38 @@
     right: 0.8rem;
   }
 
-  // channel cell
-
-  .p-releases-channel__name {
-    flex-grow: 1;
-    max-width: calc(100% - 55px); // leave space handle and settings menu
-    padding-right: $sph-inner--small;
-  }
-
-  // release cell
-
   .p-release-data__icon {
     border-radius: 3px;
     cursor: pointer;
-    opacity: 0;
-    padding: 0 $sph-inner--small;
+    left: -30px;
+    padding: 0 $sph--small;
     position: absolute;
-    right: 0.5rem;
-    top: 0.5rem;
-  }
+    transform: rotate(-90deg);
 
-  .is-pending {
-    .p-release-data__icon {
-      margin-right: 1.25rem;
+    @media (max-width: $breakpoint-medium) {
+      left: auto;
+      right: -8px;
+      top: -10px;
     }
   }
 
-  .p-release-data__title,
+  .p-release-data__title {
+    @media (max-width: $breakpoint-medium) {
+      display: inline-block;
+      margin-right: 0.5rem;
+    }
+  }
+
+  .p-release-data__title .has-button,
   .p-release-data__meta {
     display: block;
     overflow: hidden;
     text-overflow: ellipsis;
-  }
-
-  .p-release__progressive-percentage,
-  .p-release__progressive-pending-percentage {
-    @include vf-animation (#{transform}, fast, in);
-
-    border-radius: 0 4px 4px 0;
-    bottom: 0;
-    height: 3px;
-    left: 0;
-    position: absolute;
-    transform: scaleX(1);
-    transform-origin: left;
-  }
-
-  .p-release__progressive-percentage {
-    background: $color-link;
-  }
-
-  .p-release__progressive-pending-percentage {
-    background: scale-color($color-link, $lightness: -20%);
-  }
-
-  .is-highlighted {
-    .p-release__progressive-percentage,
-    .p-release__progressive-pending-percentage {
-      height: 5px;
-    }
-  }
-
-  .p-release__progressive-pending-percentage + .p-release__progressive-percentage {
-    border-radius: 0;
-    border-right: 1px solid $color-x-light;
+    white-space: nowrap;
   }
 
   .p-contextual-menu__dropdown {
     overflow: visible; // allow tooltips inside menu
-    z-index: 2; // workaround for https://github.com/canonical-web-and-design/vanilla-framework/issues/2577
 
     .p-tooltip {
       display: block;
@@ -271,7 +404,8 @@
 
   .is-grabbing,
   .is-dragging {
-    opacity: 0.9; // little workaround for chrome
+    background-color: #ebfaff !important;
+    cursor: move;
 
     .p-tooltip__message,
     .p-contextual-menu__dropdown {
@@ -287,19 +421,68 @@
     }
   }
 
-  .p-releases-table__cell {
-    @include vf-animation (#{background-color, border-color}, 0, in);
+  .p-release-data__info {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 
-    background: $color-light;
+    &.is-pending {
+      font-weight: 400;
+      padding-right: $sph--large;
+    }
+
+    .p-tooltip__message {
+      pointer-events: none;
+    }
+  }
+
+  .p-drag-handle {
+    left: 0;
+    margin-left: auto;
+    opacity: 0;
+    position: absolute;
+    visibility: hidden;
+
+    .p-releases-channel__inner & {
+      margin-left: 0;
+      margin-right: 0.5rem;
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .p-release-data & {
+      left: auto;
+      position: absolute;
+      right: 0.5rem;
+      top: 0.5rem;
+    }
+
+    .is-draggable & {
+      visibility: visible;
+    }
+  }
+
+  .p-releases-table__cell {
+    @include vf-animation(#{background-color, border-color}, 0, in);
+
     border-bottom: 3px solid transparent;
     flex-basis: 100px;
     flex-grow: 1;
-    font-size: 1rem;
-    margin-left: 2px;
     max-width: 25.2%; // fill the whole space for 3 archs
     min-width: 100px;
+    padding-left: 28px;
     position: relative;
     transition-duration: 0s; // vf-animation doesn't allow to do that
+
+    @media (max-width: $breakpoint-medium) {
+      border-bottom: 1px solid $colors--light-theme--border-default;
+      max-width: 100%;
+      padding: $spv--small 1rem $spv--small;
+
+      &:last-child {
+        border-bottom: 0;
+      }
+    }
 
     .has-active & {
       opacity: 0.5;
@@ -317,18 +500,32 @@
     &:focus,
     &:hover,
     &.is-active {
+      background-color: $color-light;
       opacity: 1;
     }
 
+    &:focus,
+    &:hover {
+      .p-drag-handle {
+        opacity: 1;
+        visibility: visible;
+      }
+
+      .p-promote-button {
+        display: inline-block;
+        position: absolute;
+        right: 1.75rem;
+        top: 0.5rem;
+      }
+    }
+
     &.is-active {
-      @include vf-animation (#{background-color, border-color}, fast, in);
+      @include vf-animation(#{background-color, border-color}, fast, in);
 
       background-color: $color-x-light;
-      border-color: $color-mid-dark;
 
-      .p-release__progressive-percentage,
-      .p-release__progressive-pending-percentage {
-        transform: scaleX(0);
+      &:not(.p-releases-table__arch) {
+        border-bottom: 3px solid $color-dark !important;
       }
 
       .p-release-data__title {
@@ -338,19 +535,34 @@
       .p-tooltip__message {
         display: none;
       }
+
+      .p-release-data__icon {
+        transform: rotate(0deg);
+      }
     }
 
     &.is-over,
     .is-over &,
     &.is-highlighted {
       background: $color-highlighted;
+      border: $color-highlighted-border;
+
+      &.is-unassigned {
+        background-color: $color-light;
+        border-color: $color-mid-x-light;
+      }
+
+      .p-promote-button,
+      .p-drag-handle {
+        display: none;
+      }
     }
   }
 
   .p-releases-table__arch {
     background: none;
     border: 0;
-    padding: ($spv-inner--small - 0.1rem) $sph-inner--small; // same as p-release-data
+    padding: ($spv--small - 0.1rem) $sph--small ($spv--small - 0.1rem) 28px;
   }
 
   // cell contents (release info)
@@ -362,35 +574,16 @@
   }
 
   .p-release-data {
+    align-items: start;
     display: flex;
     height: 4rem;
     max-width: 100%;
-    padding: $spv-inner--small $sph-inner--small; // p-releases-table__arch
-    padding-left: ($sph-inner--small - 0.1rem);
-  }
+    padding: $spv--small $sph--small $spv--small 0;
 
-  .p-release-data__info {
-    overflow: hidden;
-    white-space: nowrap;
-
-    &.is-pending {
-      font-weight: 400;
-      padding-right: $sph-outer;
-    }
-  }
-
-  .p-releases-table__cell.is-active .p-release-data__icon {
-    opacity: 1;
-  }
-
-  .p-release-data:hover {
-    .p-release-data__icon {
-      opacity: 0.6;
-
-      &:hover {
-        background-color: $color-x-light;
-        opacity: 1;
-      }
+    @media (max-width: $breakpoint-medium) {
+      height: auto;
+      padding-right: 0;
+      padding-top: 0;
     }
   }
 
@@ -398,19 +591,57 @@
     display: inline-block;
     overflow: hidden;
     padding-bottom: 0.6em;
-    padding-top: 0.6em;
     text-overflow: ellipsis;
     white-space: nowrap;
+  }
+
+  .p-releases-channel__inner {
+    display: flex;
+    flex: 1;
+  }
+
+  .p-release-data__meta-container {
+    display: block;
+    width: 100%;
   }
 
   .p-release-data__meta {
     color: $color-mid-dark;
     font-size: 0.8rem;
+
+    @media (max-width: $breakpoint-medium) {
+      display: inline !important;
+    }
   }
 
   // REVISIONS LIST
 
   .p-revisions-list {
+    margin-bottom: 0;
+
+    @media (max-width: $breakpoint-medium) {
+      border: 1px solid $colors--light-theme--border-default;
+      position: relative;
+      z-index: 1;
+
+      tbody {
+        display: block;
+
+        tr {
+          border-width: 0 0 1px;
+          padding: 0 0 1rem;
+          position: relative;
+          z-index: 1;
+        }
+
+        td {
+          &::after {
+            display: none;
+          }
+        }
+      }
+    }
+
     td,
     th {
       overflow: visible;
@@ -421,13 +652,7 @@
     }
 
     .p-revisions-list__row {
-      background-color: $color-light;
-      border: 0;
-      border-bottom: 2px solid $color-x-light;
-
       &.is-active {
-        background-color: $color-x-light;
-
         .p-revisions-list__revision {
           font-weight: bold;
         }
@@ -437,33 +662,32 @@
         }
       }
 
-      &.is-pending {
-        background: $color-highlighted;
-      }
-
       &.is-clickable {
-        @include vf-animation (#{background-color}, fast, in);
-
         cursor: pointer;
 
         &:hover {
-          background-color: $color-x-light;
+          background-color: $color-light;
         }
       }
 
-      .p-revisions-list__revision-progressive {
-        cursor: default;
-        display: flex;
-        flex-direction: row;
+      @media (max-width: $breakpoint-medium) {
+        margin-bottom: 0;
+        margin-left: 1rem;
+        margin-right: 1rem;
+        padding-top: 1rem;
 
-        .p-progressive__pause,
-        .p-progressive__cancel {
-          cursor: pointer;
+        &:last-child {
+          border-bottom: 0;
         }
+      }
+    }
 
-        .progressive-bar__interactive-wrapper {
-          flex-grow: 1;
-          margin: 0 1rem;
+    td {
+      @media (max-width: $breakpoint-medium) {
+        display: flex;
+
+        &::before {
+          width: 40% !important;
         }
       }
     }
@@ -471,6 +695,10 @@
     td:first-of-type,
     th:first-of-type {
       padding-left: 0.2rem;
+
+      @media (max-width: $breakpoint-medium) {
+        padding-left: 0;
+      }
     }
 
     td:last-of-type,
@@ -481,19 +709,15 @@
 
   // DND
   .is-draggable {
-    cursor: grab !important;
+    cursor: grab;
   }
 
   .is-dragging {
-    opacity: 0.5 !important; // fighting specificity
-  }
+    background-color: #ebfaff !important;
+    cursor: move;
 
-  .p-drag-handle {
-    margin-right: $sph-inner--small;
-    visibility: hidden;
-
-    .is-draggable & {
-      visibility: visible;
+    .is-draggable {
+      cursor: move;
     }
   }
 
@@ -502,26 +726,6 @@
   .p-help {
     border-bottom: 1px dashed $color-mid-dark;
     cursor: help;
-  }
-
-  .p-icon-button {
-    padding: 0.1rem 0.35rem;
-
-    &:not(:last-of-type):not(:only-of-type) {
-      margin-right: 0.25rem;
-    }
-
-    // workaround for misaligned Vanilla icon
-    // https://github.com/vanilla-framework/vanilla-framework/issues/2085
-    & .p-icon--delete {
-      left: -1px;
-      top: -3px;
-    }
-
-    // don't grow these buttons to 100% width on mobile
-    @media (max-width: $breakpoint-small) {
-      width: auto;
-    }
   }
 
   .p-text-icon {
@@ -546,12 +750,6 @@
 
   .p-contextual-menu__dropdown.is-wide {
     min-width: 16rem;
-  }
-
-  .p-contextual-menu__link {
-    color: $color-link;
-    padding-bottom: $sp-x-small;
-    padding-top: $sp-x-small;
   }
 
   .p-contextual-menu__link.is-indented {
@@ -590,6 +788,32 @@
     margin-top: $sp-x-small;
   }
 
+  .p-history-panel {
+    border: 1px solid $color-mid-x-light;
+    padding: 1.5rem;
+
+    @media (max-width: $breakpoint-medium) {
+      background-color: $color-x-light;
+      border: 0;
+      height: auto;
+      left: 0;
+      position: absolute;
+      top: -132px;
+      width: 100%;
+      z-index: 1;
+
+      &::before {
+        background-color: $color-x-light;
+        content: "";
+        height: 100vh;
+        left: 0;
+        position: fixed;
+        top: 0;
+        width: 100%;
+      }
+    }
+  }
+
   .p-icon--lp {
     @extend %icon;
 
@@ -608,29 +832,70 @@
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' height='12' width='12'%3E%3Cpath fill-rule='nonzero' fill='%23666' d='M4 3a1 1 0 1 1 0-2 1 1 0 0 1 0 2zm0 4a1 1 0 1 1 0-2 1 1 0 0 1 0 2zm0 4a1 1 0 1 1 0-2 1 1 0 0 1 0 2zm4-8a1 1 0 1 1 0-2 1 1 0 0 1 0 2zm0 4a1 1 0 1 1 0-2 1 1 0 0 1 0 2zm0 4a1 1 0 1 1 0-2 1 1 0 0 1 0 2z'/%3E%3C/svg%3E");
   }
 
-  .p-icon--history {
-    @extend %icon;
-
-    @include snapcraft-icon-history($color-dark);
-  }
-
   .p-icon--branch {
     @extend %icon;
-
     @include snapcraft-icon-branch($color-dark, "8px", "11px");
 
     top: 2px;
   }
 
-  .p-icon--pause {
-    @extend %icon;
-
-    background-image: url("data:image/svg+xml,%3Csvg width='12' height='16' viewBox='0 0 12 16' fill='none' xmlns='http://www.w3.org/2000/svg'%3E %3Crect width='4' height='16' fill='%23666'/%3E %3Crect x='8' width='4' height='16' fill='%23666'/%3E %3C/svg%3E ");
+  .current-change {
+    background-color: $color-highlighted !important;
+    border: $color-highlighted-border !important;
   }
 
-  .p-icon--resume {
-    @extend %icon;
+  .progressive-chart-key--current::after,
+  .progressive-chart-key--target::after {
+    border-radius: 10px;
+    content: "";
+    display: inline-block;
+    height: 10px;
+    margin-left: 5px;
+    width: 10px;
+  }
 
-    background-image: url("data:image/svg+xml,%3Csvg width='16' height='16' viewBox='0 0 16 16' fill='none' xmlns='http://www.w3.org/2000/svg'%3E %3Cg%3E %3Cpath d='M14 8L2 14.9282L2 1.0718L14 8Z' fill='%23666'/%3E %3C/g%3E%3C/svg%3E");
+  .progressive-chart-key--current::after {
+    background-color: #652466;
+  }
+
+  .previous-progressive-progress-chart .progressive-chart-key--current::after {
+    background-color: #43717e;
+  }
+
+  .progressive-chart-key--target::after {
+    background-color: #5a5a5a;
+  }
+
+  .progressive-progress-bar {
+    background-color: #decddf;
+    border-radius: 10px;
+    height: 10px;
+    margin: 0.5rem 0;
+    max-width: 320px;
+    position: relative;
+    width: 100%;
+
+    .previous-progressive-progress-chart & {
+      background-color: #d7e1e3;
+    }
+  }
+
+  .progressive-progress-bar__inner {
+    background-color: #652466;
+    border-bottom-left-radius: 10px;
+    border-top-left-radius: 10px;
+    height: 10px;
+
+    .previous-progressive-progress-chart & {
+      background-color: #43717e;
+    }
+  }
+
+  .progressive-progress-bar__marker {
+    background-color: #5a5a5a;
+    height: 1.5rem;
+    position: absolute;
+    top: calc(0rem - 0.75rem + 5px);
+    width: 2px;
   }
 }

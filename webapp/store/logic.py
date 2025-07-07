@@ -9,7 +9,6 @@ from webapp import helpers
 
 
 def get_n_random_snaps(snaps, choice_number):
-
     if len(snaps) > choice_number:
         return random.sample(snaps, choice_number)
 
@@ -193,8 +192,10 @@ def convert_date(date_to_convert):
     :param date_to_convert: Date to convert
     :returns: Readable date
     """
-    date_parsed = parser.parse(date_to_convert).replace(tzinfo=None)
-    delta = datetime.datetime.now() - datetime.timedelta(days=1)
+    local_timezone = datetime.datetime.utcnow().tzinfo
+    date_parsed = parser.parse(date_to_convert).replace(tzinfo=local_timezone)
+    delta = datetime.datetime.utcnow() - datetime.timedelta(days=1)
+
     if delta < date_parsed:
         return humanize.naturalday(date_parsed).title()
     else:
@@ -274,6 +275,52 @@ def get_snap_categories(snap_categories):
             )
 
     return categories
+
+
+def get_latest_versions(channel_maps, default_track, lowest_risk):
+    """Get the latest versions of both default/stable and the latest of
+    all other channels, unless it's default/stable
+
+    :param channel_map: Channel map list
+
+    :returns: A tuple of default/stable, track/risk channel map objects
+    """
+    ordered_versions = get_last_updated_versions(channel_maps)
+
+    default_stable = None
+    other = None
+
+    for channel in ordered_versions:
+        if (
+            channel["track"] == default_track
+            and channel["risk"] == lowest_risk
+        ):
+            if not default_stable:
+                default_stable = channel
+        elif not other:
+            other = channel
+
+    if default_stable:
+        default_stable["released-at-display"] = convert_date(
+            default_stable["released-at"]
+        )
+    if other:
+        other["released-at-display"] = convert_date(other["released-at"])
+    return default_stable, other
+
+
+def get_last_updated_versions(channel_maps):
+    """Get all channels in order of updates
+
+    :param channel_map: Channel map list
+
+    :returns: A list of channels ordered by last updated time
+    """
+    releases = []
+    for channel_map in channel_maps:
+        releases.append(channel_map["channel"])
+
+    return list(reversed(sorted(releases, key=lambda c: c["released-at"])))
 
 
 def get_last_updated_version(channel_maps):
@@ -409,10 +456,6 @@ def filter_screenshots(media):
     ][:5]
 
 
-def get_icon(media):
-    return [m["url"] for m in media if m["type"] == "icon"]
-
-
 def get_video(media):
     video = None
     for m in media:
@@ -429,12 +472,15 @@ def promote_snap_with_icon(snaps):
 
     :returns: A list of snaps
     """
-    snap_with_icon = next(snap for snap in snaps if snap["icon_url"] != "")
+    try:
+        snap_with_icon = next(snap for snap in snaps if snap["icon_url"] != "")
 
-    if snap_with_icon:
-        snap_with_icon_index = snaps.index(snap_with_icon)
+        if snap_with_icon:
+            snap_with_icon_index = snaps.index(snap_with_icon)
 
-        snaps.insert(0, snaps.pop(snap_with_icon_index))
+            snaps.insert(0, snaps.pop(snap_with_icon_index))
+    except StopIteration:
+        pass
 
     return snaps
 

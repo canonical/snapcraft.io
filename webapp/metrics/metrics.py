@@ -7,50 +7,54 @@ def _calculate_colors(countries, max_users):
     maximum number of users
 
     :param countries: List of countries
-    :param max_users: Maximum of number users
+    :param max_users: Maximum number of users
 
     :returns: The list of countries with a calculated color for each
     """
     for country_code in countries:
-        countries[country_code]["color_rgb"] = [
-            _calculate_color(
-                countries[country_code]["percentage_of_users"],
-                max_users,
-                8,
-                229,
-            ),
-            _calculate_color(
-                countries[country_code]["percentage_of_users"],
-                max_users,
-                64,
-                245,
-            ),
-            _calculate_color(
-                countries[country_code]["percentage_of_users"],
-                max_users,
-                129,
-                223,
-            ),
-        ]
+        countries[country_code]["color_rgb"] = _calculate_color(
+            countries[country_code]["percentage_of_users"], max_users
+        )
 
     return countries
 
 
-def _calculate_color(thisCountry, maxCountry, maxColor, minColor):
+def _calculate_color(thisCountry, max_users):
     """Calculate displayed color for a given country
 
     :param thisCountry: The country
-    :param maxCountry: The number of users of the country with
+    :param max_users: The number of users of the country with
     the most users
-    :param maxColor: The maximum color to reach
-    :param minColor: The minimum color to reach
 
-    :returns: The calculated color for the country
+    :returns: The calculated rgb for the country
     """
-    countryFactor = float(thisCountry) / maxCountry
-    colorRange = maxColor - minColor
+    colors = [
+        [222, 235, 247],
+        [210, 227, 243],
+        [198, 219, 239],
+        [178, 210, 232],
+        [158, 202, 225],
+        [133, 188, 220],
+        [107, 174, 214],
+        [66, 146, 198],
+        [50, 130, 190],
+        [33, 113, 181],
+        [8, 81, 156],
+        [8, 65, 132],
+        [8, 48, 107],
+    ]
 
-    return int(colorRange * countryFactor + minColor)
+    buckets = max_users / len(colors)
+
+    if thisCountry == 0.0:
+        return [218, 218, 218]
+
+    color_index = int(thisCountry / buckets) - 1
+
+    if color_index == -1:
+        color_index = 0
+
+    return colors[color_index]
 
 
 def _capitalize_os_name(os_name):
@@ -130,7 +134,8 @@ class ActiveDevices(Metric):
         super().__init__(name, series_sorted, buckets, status)
 
     def get_number_latest_active_devices(self):
-        """Get the number of latest active devices from the list of active devices.
+        """Get the number of latest active devices from the list of
+        active devices.
 
         :returns The number of lastest active devices
         """
@@ -251,12 +256,12 @@ class CountryDevices(Metric):
             country_info = self.users_by_country.get(country.alpha_2)
             number_of_users = 0
             percentage_of_users = 0
-            color_rgb = [247, 247, 247]
+            color_rgb = [218, 218, 218]
             if country_info is not None:
                 if self.private:
                     number_of_users = country_info["number_of_users"] or 0
                 percentage_of_users = country_info["percentage_of_users"] or 0
-                color_rgb = country_info["color_rgb"] or [247, 247, 247]
+                color_rgb = country_info["color_rgb"] or color_rgb
 
             # Use common_name if available to be less political
             # offending (#310)
@@ -303,7 +308,6 @@ class OsMetric(Metric):
 
         for distro in self.series:
             if distro["values"][0]:
-
                 name = _capitalize_os_name(distro["name"])
                 oses.append({"name": name, "value": distro["values"][-1]})
 

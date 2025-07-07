@@ -17,4 +17,4 @@ class LogoutRedirects(BaseTestCases.BaseAppTesting):
 
         self.assertEqual(302, response.status_code)
 
-        self.assertEqual("http://localhost/", response.location)
+        self.assertEqual("/", response.location)

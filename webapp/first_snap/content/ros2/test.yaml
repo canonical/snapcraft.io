@@ -1,4 +1,4 @@
-name: test-ros2-talker-listener-{name}
+name: ros2-talker-listener-{name}
 linux:
   - action: "Install the snap:"
     command: sudo snap install --devmode --dangerous *.snap
@@ -6,7 +6,7 @@ linux:
     command: snap list
   - action: "Run the snap:"
     command: ${name}
-  - action: "Stop it when you tire of seeing the nodes communicate:"
+  - action: "Stop it when you are tired of seeing the nodes communicate:"
     command: ctrl-c
 macos:
   - action: "Create a Linux virtual machine for testing snaps:"
@@ -21,7 +21,7 @@ macos:
     command: snap list
   - action: "Run the snap inside the virtual machine:"
     command: ${name}
-  - action: "Stop it when you tire of seeing the nodes communicate:"
+  - action: "Stop it when you are tired of seeing the nodes communicate:"
     command: ctrl-c
   - action: "Exit the virtual machine:"
     command: exit

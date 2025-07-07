@@ -47,7 +47,7 @@ class PostUsernamePage(BaseTestCases.EndpointLoggedIn):
 
     @responses.activate
     def test_post_username(self):
-        responses.add(responses.PATCH, self.api_url, json={}, status=204)
+        responses.add(responses.PATCH, self.api_url, json={}, status=200)
 
         response = self.client.post(self.endpoint_url, data=self.data)
 
@@ -61,22 +61,18 @@ class PostUsernamePage(BaseTestCases.EndpointLoggedIn):
         self.assertEqual(b'{"short_namespace": "toto"}', called.request.body)
 
         self.assertEqual(302, response.status_code)
-        self.assertEqual("http://localhost/account/", response.location)
+        self.assertEqual("/account/", response.location)
 
     @responses.activate
     def test_post_username_empty(self):
         response = self.client.post(self.endpoint_url, data={"username": ""})
 
         self.assertEqual(302, response.status_code)
-        self.assertEqual(
-            "http://localhost/account/username", response.location
-        )
+        self.assertEqual("/account/username", response.location)
 
     @responses.activate
     def test_post_no_data(self):
         response = self.client.post(self.endpoint_url, data={})
 
         self.assertEqual(302, response.status_code)
-        self.assertEqual(
-            "http://localhost/account/username", response.location
-        )
+        self.assertEqual("/account/username", response.location)

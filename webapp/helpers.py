@@ -1,15 +1,20 @@
 import json
 import os
+import hashlib
 
 import flask
 from canonicalwebteam.launchpad import Launchpad
 from ruamel.yaml import YAML
 from webapp.api.requests import PublisherSession, Session
+from canonicalwebteam.store_api.dashboard import Dashboard
+import webapp.api.marketo as marketo_api
 
 _yaml = YAML(typ="rt")
 _yaml_safe = YAML(typ="safe")
 api_session = Session()
 api_publisher_session = PublisherSession()
+marketo = marketo_api.Marketo()
+dashboard = Dashboard(api_session)
 
 launchpad = Launchpad(
     username=os.getenv("LP_API_USERNAME"),
@@ -91,3 +96,67 @@ def get_yaml(filename, typ="safe", replaces={}):
 def dump_yaml(data, stream, typ="safe"):
     yaml = get_yaml_loader(typ)
     yaml.dump(data, stream)
+
+
+def get_icon(media):
+    icons = [m["url"] for m in media if m["type"] == "icon"]
+    if len(icons) > 0:
+        return icons[0]
+    return ""
+
+
+def get_publisher_data():
+    # We don't use the data from this endpoint.
+    # It is mostly used to make sure the user has signed
+    # the terms and conditions.
+    dashboard.get_account(flask.session)
+
+    flask_user = flask.session["publisher"]
+
+    subscriptions = None
+
+    # don't rely on marketo to show the page,
+    # if anything fails, just continue and don't show
+    # this section
+    try:
+        subscribed_to_newsletter = False
+        marketo_user = marketo.get_user(flask_user["email"])
+        if marketo_user:
+            marketo_subscribed = marketo.get_newsletter_subscription(
+                marketo_user["id"]
+            )
+            if marketo_subscribed.get("snapcraftnewsletter"):
+                subscribed_to_newsletter = True
+
+        subscriptions = {"newsletter": subscribed_to_newsletter}
+    except Exception:
+        if "sentry" in flask.current_app.extensions:
+            flask.current_app.extensions["sentry"].captureException()
+
+    flask_user["subscriptions"] = subscriptions
+    context = {"publisher": flask_user}
+
+    return context
+
+
+def get_dns_verification_token(snap_name, domain):
+    salt = os.getenv("DNS_VERIFICATION_SALT")
+    token_string = f"{domain}:{snap_name}:{salt}"
+    token = hashlib.sha256(token_string.encode("utf-8")).hexdigest()
+    return token
+
+
+def get_csp_as_str(csp={}):
+    csp_str = ""
+    for key, values in csp.items():
+        csp_value = " ".join(values)
+        csp_str += f"{key} {csp_value}; "
+    return csp_str.strip()
+
+
+def list_folders(directory):
+    return [
+        item
+        for item in os.listdir(directory)
+        if os.path.isdir(os.path.join(directory, item))
+    ]

@@ -13,19 +13,19 @@ describe("accordion", () => {
     <div class="p-accordion" role="tablist" aria-multiselect="true">
       <ul class="p-accordion__list">
         <li class="p-accordion__group">
-          <button type="button" class="p-accordion__tab" id="tab1" role="tab" aria-controls="#tab1-section" aria-expanded="true">Owner</button>
+          <button type="button" class="p-accordion__tab" id="tab1" role="tab" aria-controls="tab1-section" aria-expanded="true">Owner</button>
           <section class="p-accordion__panel" id="tab1-section" role="tabpanel" aria-hidden="false" aria-labelledby="tab1-section">
             <p>Open panel</p>
           </section>
         </li>
         <li class="p-accordion__group">
-          <button type="button" class="p-accordion__tab" id="tab2" role="tab" aria-controls="#tab2-section" aria-expanded="false">Status</button>
+          <button type="button" class="p-accordion__tab" id="tab2" role="tab" aria-controls="tab2-section" aria-expanded="false">Status</button>
           <section class="p-accordion__panel" id="tab2-section" role="tabpanel" aria-hidden="true" aria-labelledby="tab2-section">
             <p>Closed panel</p>
           </section>
         </li>
         <li class="p-accordion__group">
-          <button type="button" class="p-accordion__tab" id="tab3" role="tab" aria-controls="#tab3-section" aria-expanded="false">Tags</button>
+          <button type="button" class="p-accordion__tab" id="tab3" role="tab" aria-controls="tab3-section" aria-expanded="false">Tags</button>
           <section class="p-accordion__panel" id="tab3-section" role="tabpanel" aria-hidden="true" aria-labelledby="tab3-section">
             <p>Closed panel</p>
           </section>
