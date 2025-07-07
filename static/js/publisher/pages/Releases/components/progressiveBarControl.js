@@ -7,8 +7,6 @@ import { updateProgressiveReleasePercentage } from "../actions/pendingReleases";
 import progressiveTypes from "./releasesConfirmDetails/types";
 
 import { InteractiveProgressiveBar } from "./progressiveBar";
-import { min } from "date-fns";
-
 class ProgressiveBarControl extends React.Component {
   constructor(props) {
     super(props);
