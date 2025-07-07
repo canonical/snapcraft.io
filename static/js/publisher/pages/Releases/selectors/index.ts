@@ -619,7 +619,7 @@ export function getProgressiveState(
         previousRevision = revisions[previousRevision.revision];
       }
     } else if (isPending) {
-      previousRevision = allReleases[0];
+      previousRevision = revisions[allReleases[0]?.revision];
     }
 
     let pendingMatch: any;
