@@ -19,6 +19,9 @@ export function releaseRevision(revision, channel, progressive) {
     const { revisions, pendingReleases } = state;
 
     const previousReleases = getReleases(state, revision.architectures, channel)
+      // Find all revision releases for this channel and architecture
+      // that do not share the same revision number as the previous release.
+      // for example [1, 1, 2, 2, 3, 2, 2, 2, 1] will return [1, 2, 3, 2, 1]
       .reduce((acc, release) => {
         if (!acc.length || acc[acc.length - 1].revision !== release.revision) {
           acc.push(release);
