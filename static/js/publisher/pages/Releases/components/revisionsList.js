@@ -385,7 +385,7 @@ class RevisionsList extends Component {
             {showPendingRelease &&
               this.renderRow(
                 pendingRelease.revision,
-                pendingRelease.previousRevisions[0],
+                pendingRelease.previousReleases[0],
                 !isReleaseHistory,
                 showChannels,
                 true,

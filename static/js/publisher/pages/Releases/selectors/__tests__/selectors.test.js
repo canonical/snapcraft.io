@@ -1106,7 +1106,7 @@ describe("hasRelease", () => {
                 percentage: 100,
                 paused: false,
               },
-              previousRevisions: [{ revision: 2 }],
+              previousReleases: [{ revision: 2 }],
             },
           },
         },
@@ -1142,7 +1142,7 @@ describe("hasRelease", () => {
                 percentage: 40,
                 paused: false,
               },
-              previousRevisions: [
+              previousReleases: [
                 {
                   revision: 2,
                 },

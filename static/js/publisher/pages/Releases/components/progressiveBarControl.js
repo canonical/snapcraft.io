@@ -7,7 +7,6 @@ import { updateProgressiveReleasePercentage } from "../actions/pendingReleases";
 import progressiveTypes from "./releasesConfirmDetails/types";
 
 import { InteractiveProgressiveBar } from "./progressiveBar";
-
 class ProgressiveBarControl extends React.Component {
   constructor(props) {
     super(props);
@@ -26,7 +25,7 @@ class ProgressiveBarControl extends React.Component {
   }
 
   render() {
-    const { release, type, globalPercentage } = this.props;
+    const { release, type, globalPercentage, minPercentage } = this.props;
 
     if (!release.progressive) {
       return false;
@@ -54,13 +53,15 @@ class ProgressiveBarControl extends React.Component {
     return (
       <div className="progressive-release-control">
         <div className="progressive-release-control__inner">
-          <div>Release all to</div>
+          <div>
+            <b>Release all to</b>
+          </div>
           <div className="p-release-details-row__progress">
             <InteractiveProgressiveBar
               percentage={startingPercentage}
               onChange={this.onChangeHandler}
               targetPercentage={targetPercentage}
-              minPercentage={1}
+              minPercentage={minPercentage}
               singleDirection={type === progressiveTypes.UPDATE ? 1 : 0}
             />
             <span>
@@ -83,7 +84,14 @@ class ProgressiveBarControl extends React.Component {
         <div className="p-release-details-row__notes">
           <small>
             {100 - targetPercentage}% of devices will stay on the current
-            version
+            version.
+            {minPercentage > 1 && (
+              <>
+                <br />
+                {minPercentage}% is the lowest percentage all revisions can be
+                released to.
+              </>
+            )}
           </small>
         </div>
       </div>
@@ -97,6 +105,7 @@ ProgressiveBarControl.propTypes = {
   globalPercentage: PropTypes.number,
   updateGlobalPercentage: PropTypes.func,
   updateProgressiveReleasePercentage: PropTypes.func,
+  minPercentage: PropTypes.number,
 };
 
 const mapDispatchToProps = (dispatch) => {

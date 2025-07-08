@@ -36,7 +36,7 @@ describe("pendingReleases actions", () => {
     architectures: ["test64"],
   };
   const channel = "test/edge";
-  const previousRevisions = [];
+  const previousReleases = [];
   const initialState = reducers(undefined, {});
   const stateWithRevisions = {
     ...initialState,
@@ -107,12 +107,12 @@ describe("pendingReleases actions", () => {
       const store = mockStore(stateWithRevisions);
       expect(
         store.dispatch(releaseRevision(revision, channel)).payload
-          .previousRevisions,
+          .previousReleases,
       ).toEqual([]);
     });
 
     describe("if previous revisions", () => {
-      const stateWithPreviousRevisions = {
+      const stateWithPreviousReleases = {
         ...initialState,
         releases: [
           {
@@ -133,7 +133,7 @@ describe("pendingReleases actions", () => {
       };
 
       it("should return previous revisions, if available", () => {
-        const store = mockStore(stateWithPreviousRevisions);
+        const store = mockStore(stateWithPreviousReleases);
 
         const revisionWithRelease = {
           ...revision,
@@ -149,9 +149,9 @@ describe("pendingReleases actions", () => {
           ),
         );
 
-        expect(dispatch.payload.previousRevisions).toEqual([
+        expect(dispatch.payload.previousReleases).toEqual([
           {
-            ...stateWithPreviousRevisions.revisions["2"],
+            ...stateWithPreviousReleases.revisions["2"],
           },
         ]);
       });
@@ -237,7 +237,7 @@ describe("pendingReleases actions", () => {
           payload: {
             revision,
             channel: targetChannel,
-            previousRevisions,
+            previousReleases,
             progressive: actions.find(
               (action) =>
                 action.payload.revision.revision === revision.revision &&
@@ -255,7 +255,7 @@ describe("pendingReleases actions", () => {
             ).payload.progressive,
             revision: revision2,
             channel: targetChannel,
-            previousRevisions: [],
+            previousReleases: [],
           },
         });
       });
