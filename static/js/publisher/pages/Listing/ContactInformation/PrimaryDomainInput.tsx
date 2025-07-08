@@ -9,6 +9,8 @@ import {
 import { nanoid } from "nanoid";
 import { Row, Col, Modal } from "@canonical/react-components";
 
+import VerifiedButton from "./VerifiedButton";
+
 import { useVerified } from "../../../hooks";
 
 import type { ListingData } from "../../../types";
@@ -147,31 +149,17 @@ function PrimaryDomainInput({
                       {!domainChanged() &&
                         pathChanged() &&
                         !domainInNoPathList() && (
-                          <button
-                            type="button"
-                            className="p-button--base has-icon"
-                            onClick={() => {
-                              setShowVerifyModal(true);
-                            }}
-                            disabled={fieldState.isDirty}
-                          >
-                            <span>Verified ownership</span>
-                            <i className="p-icon--chevron-right"></i>
-                          </button>
+                          <VerifiedButton
+                            isDirty={fieldState.isDirty}
+                            setShowVerifyModal={setShowVerifyModal}
+                          />
                         )}
 
                       {!domainChanged() && !pathChanged() && (
-                        <button
-                          type="button"
-                          className="p-button--base has-icon"
-                          onClick={() => {
-                            setShowVerifyModal(true);
-                          }}
-                          disabled={fieldState.isDirty}
-                        >
-                          <span>Verified ownership</span>
-                          <i className="p-icon--chevron-right"></i>
-                        </button>
+                        <VerifiedButton
+                          isDirty={fieldState.isDirty}
+                          setShowVerifyModal={setShowVerifyModal}
+                        />
                       )}
 
                       {domainChanged() && !domainInNoPathList() && (
@@ -184,17 +172,10 @@ function PrimaryDomainInput({
                   )}
 
                   {!fieldState.isDirty && (
-                    <button
-                      type="button"
-                      className="p-button--base has-icon"
-                      onClick={() => {
-                        setShowVerifyModal(true);
-                      }}
-                      disabled={fieldState.isDirty}
-                    >
-                      <span>Verified ownership</span>
-                      <i className="p-icon--chevron-right"></i>
-                    </button>
+                    <VerifiedButton
+                      isDirty={fieldState.isDirty}
+                      setShowVerifyModal={setShowVerifyModal}
+                    />
                   )}
                 </>
               )}

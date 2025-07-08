@@ -75,7 +75,7 @@ describe("PrimaryDomainInput", () => {
     renderComponent(mockListingData, {
       primary_website: "https://example.com",
     });
-    expect(screen.getByText("Verified ownership")).toBeInTheDocument();
+    expect(screen.getByText("Ownership verified")).toBeInTheDocument();
   });
 
   it("shows message if verified domain is changed", async () => {
@@ -131,7 +131,7 @@ describe("PrimaryDomainInput", () => {
     const input = screen.getByRole("textbox", { name: "Primary website:" });
     await user.clear(input);
     await user.type(input, "/path");
-    expect(screen.getByText("Verified ownership")).toBeInTheDocument();
+    expect(screen.getByText("Ownership verified")).toBeInTheDocument();
   });
 
   it("shows message if verified domain is in no path list", async () => {
@@ -158,7 +158,7 @@ describe("PrimaryDomainInput", () => {
     expect(screen.getByText(/Unable to verify/)).toBeInTheDocument();
   });
 
-  it("'Verified ownership' button opens modal with token", async () => {
+  it("'Ownership verified' button opens modal with token", async () => {
     mockUseQueryReturnValue.data.primary_domain = true;
 
     // @ts-expect-error mocks
@@ -177,7 +177,7 @@ describe("PrimaryDomainInput", () => {
       primary_website: "https://example.com",
     });
     await user.click(
-      screen.getByRole("button", { name: "Verified ownership" }),
+      screen.getByRole("button", { name: "Ownership verified" }),
     );
     expect(
       screen.getByRole("heading", { level: 2, name: "Verify ownership" }),
@@ -199,7 +199,7 @@ describe("PrimaryDomainInput", () => {
     renderComponent(mockListingData, {
       primary_website: "https://example.com",
     });
-    expect(screen.queryByText("Verified ownership")).not.toBeInTheDocument();
+    expect(screen.queryByText("Ownership verified")).not.toBeInTheDocument();
     expect(
       screen.getByRole("button", { name: "Verify ownership" }),
     ).toBeInTheDocument();
