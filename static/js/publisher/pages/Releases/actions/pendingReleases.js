@@ -65,7 +65,7 @@ export function releaseRevision(revision, channel, progressive) {
         revision: revisionToRelease,
         channel,
         progressive,
-        previousReleases: previousReleases,
+        previousReleases,
       },
     });
   };
