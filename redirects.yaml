@@ -136,6 +136,8 @@ docs/snapcraft-quickstart/?: https://documentation.ubuntu.com/snapcraft/stable/t
 docs/snapcraft-checklist/?: https://documentation.ubuntu.com/snapcraft/stable/tutorials/craft-a-snap/
 docs/adding-parts/?: https://documentation.ubuntu.com/snapcraft/stable/tutorials/craft-a-snap/
 docs/defining-a-command/?: https://documentation.ubuntu.com/snapcraft/stable/tutorials/craft-a-snap/
+docs/snapcraft-tutorials/?: https://documentation.ubuntu.com/snapcraft/stable/tutorials/
+docs/snapcraft-reference/?: https://documentation.ubuntu.com/snapcraft/stable/reference/
 
 # Old URL redirects
 docs/build-snaps: /docs/snap-format
