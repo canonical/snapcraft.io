@@ -85,14 +85,12 @@ class ProgressiveBarControl extends React.Component {
           <small>
             {100 - targetPercentage}% of devices will stay on the current
             version.
-            {minPercentage > 1 ? (
+            {minPercentage > 1 && (
               <>
                 <br />
                 {minPercentage}% is the lowest percentage all revisions can be
                 released to.
               </>
-            ) : (
-              ""
             )}
           </small>
         </div>
