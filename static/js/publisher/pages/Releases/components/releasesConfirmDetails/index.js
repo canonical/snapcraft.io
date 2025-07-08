@@ -32,20 +32,22 @@ const ReleasesConfirmDetails = ({ updates, isProgressiveReleaseEnabled }) => {
   const showNewReleases = Object.keys(newReleases).length > 0;
   const showPendingCloses = pendingCloses.length > 0;
 
+  // Find the highest release target percentage among previous progressive releases:
+  // this will be the lowest percentage for the new release
   const lowestPercentage = Object.values(updates.newReleasesToProgress).reduce(
-    (min, release) => {
+    (max, release) => {
       const previousRelease = release.previousReleases?.[0];
       if (previousRelease?.revision !== release.revision.revision) {
-        return min;
+        return max;
       }
       const percentage =
         previousRelease?.releases?.[0]?.progressive?.percentage || 1;
 
-      if (percentage > min) {
+      if (percentage > max) {
         return percentage;
       }
 
-      return min;
+      return max;
     },
     1,
   );
