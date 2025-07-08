@@ -1,5 +1,5 @@
 import { useState, useEffect, Dispatch, SetStateAction } from "react";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilState } from "recoil";
 import { useAtomValue as useJotaiValue } from "jotai";
 import { useParams, Link, useNavigate, useLocation } from "react-router-dom";
 import { useMutation, useQueryClient } from "react-query";
@@ -32,7 +32,7 @@ function CreatePolicyForm({
   const { isLoading, isError, error, data } = useSigningKeys(id);
   const [signingKeys, setSigningKeys] = useRecoilState(signingKeysListState);
   const [newSigningKey, setNewSigningKey] = useRecoilState(newSigningKeyState);
-  const brandStore = useRecoilValue(brandStoreState(id));
+  const brandStore = useJotaiValue(brandStoreState(id));
   const [isSaving, setIsSaving] = useState(false);
   const queryClient = useQueryClient();
 

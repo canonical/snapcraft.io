@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useRecoilValue } from "recoil";
+import { useAtomValue as useJotaiValue } from "jotai";
 import { useParams, NavLink } from "react-router-dom";
 
 import { brandStoresState } from "../../state/brandStoreState";
@@ -12,7 +12,7 @@ type Props = {
 
 function StoreSelector({ nativeNavLink }: Props): React.JSX.Element {
   const { id } = useParams();
-  const brandStoresList = useRecoilValue(brandStoresState);
+  const brandStoresList = useJotaiValue(brandStoresState);
   const [showStoreSelector, setShowStoreSelector] = useState<boolean>(false);
   const [searchValue, setSearchValue] = useState("");
   const [filteredBrandStores, setFilteredBrandstores] =

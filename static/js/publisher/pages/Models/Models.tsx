@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useSetRecoilState, useRecoilValue } from "recoil";
+import { useSetRecoilState } from "recoil";
 import { useAtomValue as useJotaiValue } from "jotai";
 import {
   Link,
@@ -46,7 +46,7 @@ function Models(): React.JSX.Element {
   const setPolicies = useSetRecoilState<Array<Policy>>(policiesListState);
   const setNewModel = useSetRecoilState(newModelState);
   const setFilter = useSetRecoilState<string>(modelsListFilterState);
-  const brandStore = useRecoilValue(brandStoreState(id));
+  const brandStore = useJotaiValue(brandStoreState(id));
   const [searchParams] = useSearchParams();
   const [showNotification, setShowNotification] = useState<boolean>(false);
   const [showErrorNotification, setShowErrorNotification] =

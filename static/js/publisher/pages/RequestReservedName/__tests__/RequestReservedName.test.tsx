@@ -6,13 +6,11 @@ import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import "@testing-library/jest-dom";
 
-import { RecoilObserver, storesResponse } from "../../../test-utils";
+import { JotaiTestProvider, storesResponse } from "../../../test-utils";
 
 import { brandStoresState } from "../../../state/brandStoreState";
 
 import RequestReservedName from "../RequestReservedName";
-
-import type { MutableSnapshot } from "recoil";
 
 const testSnapName = "test-snap-name";
 const testStoreName = "Test store";
@@ -22,13 +20,10 @@ window.CSRF_TOKEN = "test-csrf-token";
 function renderComponent() {
   render(
     <BrowserRouter>
-      <RecoilRoot
-        initializeState={(snapshot: MutableSnapshot) => {
-          return snapshot.set(brandStoresState, storesResponse);
-        }}
-      >
-        <RecoilObserver node={brandStoresState} event={jest.fn()} />
-        <RequestReservedName />
+      <RecoilRoot>
+        <JotaiTestProvider initialValues={[[brandStoresState, storesResponse]]}>
+          <RequestReservedName />
+        </JotaiTestProvider>
       </RecoilRoot>
     </BrowserRouter>,
   );

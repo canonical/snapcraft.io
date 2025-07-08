@@ -1,4 +1,4 @@
-import { RecoilRoot, MutableSnapshot } from "recoil";
+import { RecoilRoot } from "recoil";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { BrowserRouter } from "react-router-dom";
 import { setupServer } from "msw/node";
@@ -7,7 +7,7 @@ import userEvent from "@testing-library/user-event";
 import "@testing-library/jest-dom";
 
 import {
-  RecoilObserver,
+  JotaiTestProvider,
   brandStoreRequests,
   storesResponse,
 } from "../../../test-utils";
@@ -29,15 +29,14 @@ const queryClient = new QueryClient();
 
 function renderComponent() {
   return render(
-    <RecoilRoot
-      initializeState={(snapshot: MutableSnapshot) => {
-        return snapshot.set(brandStoresState, storesResponse);
-      }}
-    >
+    <RecoilRoot>
       <QueryClientProvider client={queryClient}>
         <BrowserRouter>
-          <RecoilObserver node={brandStoresState} event={jest.fn()} />
-          <Snaps />
+          <JotaiTestProvider
+            initialValues={[[brandStoresState, storesResponse]]}
+          >
+            <Snaps />
+          </JotaiTestProvider>
         </BrowserRouter>
       </QueryClientProvider>
     </RecoilRoot>,

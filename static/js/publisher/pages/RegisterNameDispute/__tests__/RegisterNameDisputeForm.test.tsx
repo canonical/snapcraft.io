@@ -4,13 +4,11 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import "@testing-library/jest-dom";
 
-import { RecoilObserver, storesResponse } from "../../../test-utils";
+import { JotaiTestProvider, storesResponse } from "../../../test-utils";
 
 import { brandStoresState } from "../../../state/brandStoreState";
 
 import RegisterNameDisputeForm from "../RegisterNameDisputeForm";
-
-import type { MutableSnapshot } from "recoil";
 
 const testSnapName = "test-snap-name";
 const testStoreName = "Test store";
@@ -18,17 +16,14 @@ const testStoreName = "Test store";
 function renderComponent() {
   render(
     <BrowserRouter>
-      <RecoilRoot
-        initializeState={(snapshot: MutableSnapshot) => {
-          return snapshot.set(brandStoresState, storesResponse);
-        }}
-      >
-        <RecoilObserver node={brandStoresState} event={jest.fn()} />
-        <RegisterNameDisputeForm
-          snapName={testSnapName}
-          store={testStoreName}
-          setClaimSubmitted={jest.fn()}
-        />
+      <RecoilRoot>
+        <JotaiTestProvider initialValues={[[brandStoresState, storesResponse]]}>
+          <RegisterNameDisputeForm
+            snapName={testSnapName}
+            store={testStoreName}
+            setClaimSubmitted={jest.fn()}
+          />
+        </JotaiTestProvider>
       </RecoilRoot>
     </BrowserRouter>,
   );
