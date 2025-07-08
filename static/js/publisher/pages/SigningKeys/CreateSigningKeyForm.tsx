@@ -33,7 +33,7 @@ function CreateSigningKeyForm({
   const brandId = useJotaiValue(brandIdState);
   const [newSigningKey, setNewSigningKey] = useRecoilState(newSigningKeyState);
   const signingKeysList = useRecoilValue(filteredSigningKeysListState);
-  const brandStore = useRecoilValue(brandStoreState(id));
+  const brandStore = useJotaiValue(brandStoreState(id));
   const setSigningKeysList =
     useSetRecoilState<Array<SigningKey>>(signingKeysListState);
   const [isSaving, setIsSaving] = useState(false);

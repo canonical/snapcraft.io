@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useSetRecoilState, useRecoilValue } from "recoil";
+import { useSetRecoilState } from "recoil";
 import { useAtomValue as useJotaiValue } from "jotai";
 import {
   Link,
@@ -51,7 +51,7 @@ function SigningKeys(): React.JSX.Element {
   const setPolicies = useSetRecoilState<Array<Policy>>(policiesListState);
   const setFilter = useSetRecoilState<string>(signingKeysListFilterState);
   const setNewSigningKey = useSetRecoilState(newSigningKeyState);
-  const brandStore = useRecoilValue(brandStoreState(id));
+  const brandStore = useJotaiValue(brandStoreState(id));
   const [searchParams] = useSearchParams();
   const [showNotification, setShowNotification] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>("");

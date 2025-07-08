@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import { useRecoilState, useRecoilValue } from "recoil";
-import { useAtom as useJotaiState } from "jotai";
+import { useRecoilState } from "recoil";
+import { useAtom as useJotaiState, useAtomValue as useJotaiValue } from "jotai";
 import { useParams, NavLink } from "react-router-dom";
 import { Icon } from "@canonical/react-components";
 
@@ -18,7 +18,7 @@ function Navigation({
 }: {
   sectionName: string | null;
 }): React.JSX.Element {
-  const brandStoresList = useRecoilValue(brandStoresState);
+  const brandStoresList = useJotaiValue(brandStoresState);
   const { id } = useParams();
   const { data: brand } = useBrand(id);
   const { data: publisherData } = usePublisher();

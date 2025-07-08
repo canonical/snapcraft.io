@@ -32,7 +32,7 @@ function Model() {
   const [showSuccessNotification, setShowSuccessNotificaton] = useState(false);
   const [showErrorNotification, setShowErrorNotificaton] = useState(false);
   const setModelsList = useSetRecoilState<ModelType[]>(modelsListState);
-  const brandStore = useRecoilValue(brandStoreState(id));
+  const brandStore = useJotaiValue(brandStoreState(id));
 
   const mutation = useMutation({
     mutationFn: (apiKey: string) => {

@@ -6,7 +6,8 @@ import {
   useLocation,
   useNavigate,
 } from "react-router-dom";
-import { useSetRecoilState, useRecoilValue } from "recoil";
+import { useSetRecoilState } from "recoil";
+import { useAtomValue as useJotaiValue } from "jotai";
 import { Row, Col, Notification, Icon } from "@canonical/react-components";
 
 import ModelNav from "./ModelNav";
@@ -42,7 +43,7 @@ function Policies(): React.JSX.Element {
   const setPoliciesList = useSetRecoilState<Array<Policy>>(policiesListState);
   const setFilter = useSetRecoilState<string>(policiesListFilterState);
   const setNewSigningKey = useSetRecoilState(newSigningKeyState);
-  const brandStore = useRecoilValue(brandStoreState(id));
+  const brandStore = useJotaiValue(brandStoreState(id));
   const [searchParams] = useSearchParams();
   const [showNotification, setShowNotification] = useState<boolean>(false);
   const [showErrorNotification, setShowErrorNotification] =

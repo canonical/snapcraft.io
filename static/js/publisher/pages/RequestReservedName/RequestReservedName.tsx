@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
-import { useRecoilValue } from "recoil";
+import { useAtomValue as useJotaiValue } from "jotai";
 import {
   Form,
   Button,
@@ -20,7 +20,7 @@ function RequestReservedName(): React.JSX.Element {
   const [showSuccessNotification, setShowSuccessNotification] =
     useState<boolean>(false);
   const [errorNotification, setErrorNotification] = useState<string>();
-  const stores = useRecoilValue(brandStoresState);
+  const stores = useJotaiValue(brandStoresState);
   const [searchParams] = useSearchParams();
   const snapName = searchParams.get("snap_name");
   const store = searchParams.get("store");

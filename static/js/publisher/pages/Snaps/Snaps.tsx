@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
-import { useRecoilValue } from "recoil";
+import { useAtomValue as useJotaiValue } from "jotai";
 import {
   Spinner,
   Row,
@@ -31,7 +31,7 @@ import type { Store, Snap, SnapsList, Member } from "../../types/shared";
 
 function Snaps() {
   const { id } = useParams();
-  const brandStoresList = useRecoilValue(brandStoresState);
+  const brandStoresList = useJotaiValue(brandStoresState);
   const {
     data: snaps,
     isLoading: snapsLoading,
