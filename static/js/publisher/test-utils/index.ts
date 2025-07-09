@@ -14,6 +14,7 @@ import {
   membersResponse,
   storesResponse,
 } from "./brand-store-responses";
+import publisherResponse from "./publisher-response";
 import JotaiTestProvider from "./JotaiTestProvider";
 
 export {
@@ -31,5 +32,6 @@ export {
   mockReleasedChannels,
   mockReleasesData,
   mockRevisionsMap,
+  publisherResponse,
   JotaiTestProvider,
 };

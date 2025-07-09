@@ -1,9 +1,7 @@
-import { atom } from "recoil";
+import { atom as jotaiAtom } from "jotai";
+
 import type { Publisher } from "../types/shared";
 
-const publisherState = atom({
-  key: "publisher",
-  default: null as Publisher,
-});
+const publisherState = jotaiAtom(null as Publisher);
 
 export { publisherState };

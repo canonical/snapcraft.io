@@ -1,11 +1,9 @@
 import { Provider as JotaiProvider } from "jotai";
 import { useHydrateAtoms } from "jotai/utils";
 
-import type { PrimitiveAtom } from "jotai";
-
-import type { Store } from "../types/shared";
-
-type InitialValues = Array<readonly [PrimitiveAtom<Store[]>, Store[]]>;
+// Using any to make it work with all atom types - this will be type-safe at usage
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type InitialValues = Array<readonly [any, any]>;
 
 const HydrateAtoms = ({
   initialValues,
