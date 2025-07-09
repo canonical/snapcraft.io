@@ -1,9 +1,9 @@
 import { Dispatch, SetStateAction, useState } from "react";
 import { useParams } from "react-router-dom";
-import { useSetRecoilState } from "recoil";
+import { useSetAtom as useSetJotaiState } from "jotai";
 import { Button } from "@canonical/react-components";
 
-import { buildRepoConnectedState } from "../../state/atoms";
+import { buildRepoConnectedState } from "../../state/buildsState";
 
 import type { GithubData } from "../../types";
 
@@ -17,7 +17,7 @@ function DisconnectRepoActions({
   githubData,
 }: Props): React.JSX.Element {
   const { snapId } = useParams();
-  const setRepoConnected = useSetRecoilState(buildRepoConnectedState);
+  const setRepoConnected = useSetJotaiState(buildRepoConnectedState);
   const [disconnecting, setDisconnecting] = useState<boolean>(false);
 
   const handleRepoDisconnect = async () => {

@@ -1,10 +1,10 @@
 import { Dispatch, SetStateAction } from "react";
-import { useRecoilValue } from "recoil";
+import { useAtomValue as useJotaiValue } from "jotai";
 import { Strip } from "@canonical/react-components";
 
 import RepoSelector from "./RepoSelector";
 
-import { githubDataState } from "../../state/atoms";
+import { githubDataState } from "../../state/buildsState";
 
 import type { GithubData } from "../../types/";
 
@@ -13,7 +13,7 @@ function RepoNotConnected({
 }: {
   setAutoTriggerBuild: Dispatch<SetStateAction<boolean>>;
 }): React.JSX.Element {
-  const githubData = useRecoilValue<GithubData | null>(githubDataState);
+  const githubData = useJotaiValue<GithubData | null>(githubDataState);
 
   return (
     <>

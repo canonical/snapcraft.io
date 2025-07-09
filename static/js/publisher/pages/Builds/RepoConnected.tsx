@@ -1,6 +1,6 @@
 import { useState, useEffect, Dispatch, SetStateAction } from "react";
 import { useQuery } from "react-query";
-import { useRecoilValue } from "recoil";
+import { useAtomValue as useJotaiValue } from "jotai";
 import { useParams, Link } from "react-router-dom";
 import { formatDistanceToNow, formatDuration } from "date-fns";
 import {
@@ -14,7 +14,7 @@ import {
 
 import DisconnectRepoActions from "./DisconnectRepoActions";
 
-import { githubDataState } from "../../state/atoms";
+import { githubDataState } from "../../state/buildsState";
 
 function RepoConnected({
   autoTriggerBuild,
@@ -24,7 +24,7 @@ function RepoConnected({
   setAutoTriggerBuild: Dispatch<SetStateAction<boolean>>;
 }): React.JSX.Element {
   const { snapId } = useParams();
-  const githubData = useRecoilValue(githubDataState);
+  const githubData = useJotaiValue(githubDataState);
   const [disconnectModalOpen, setDisconnectModalOpen] =
     useState<boolean>(false);
   const [triggeringBuild, setTriggeringBuild] = useState<boolean>(false);
