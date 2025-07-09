@@ -8,9 +8,16 @@ import {
 
 import StoreSelector from "../StoreSelector";
 
-import { usePublisher, useValidationSets, useBrandStores } from "../../hooks";
+import {
+  usePublisher,
+  useValidationSets,
+  useBrandStores,
+  useAccountKeys,
+} from "../../hooks";
 
 import { brandStoresState } from "../../state/brandStoreState";
+import { accountKeysState } from "../../state/accountKeysState";
+import { useRecoilState } from "recoil";
 
 function PrimaryNav({
   collapseNavigation,
@@ -23,14 +30,22 @@ function PrimaryNav({
   const { data: publisherData } = usePublisher();
   const { data: validationSetsData } = useValidationSets();
   const { data: brandStoresList } = useBrandStores();
+  const { data: accountKeysData } = useAccountKeys();
 
   const setRecoilBrandStores = useSetJotaiState(brandStoresState);
+  const setAccountKeys = useSetJotaiState(accountKeysState);
 
   useEffect(() => {
     if (brandStoresList) {
       setRecoilBrandStores(brandStoresList);
     }
   }, [brandStoresList]);
+
+  useEffect(() => {
+    if (accountKeysData) {
+      setAccountKeys(accountKeysData);
+    }
+  }, [accountKeysData]);
 
   return (
     <>
@@ -72,6 +87,20 @@ function PrimaryNav({
                     },
                   ]
                 : [],
+          },
+          {
+            items: accountKeysData
+              ? [
+                  {
+                    label: "My keys",
+                    href: "/admin/account-keys",
+                    icon: "private-key",
+                    "aria-current": location.pathname.includes(
+                      "/admin/account-keys"
+                    ),
+                  },
+                ]
+              : [],
           },
         ]}
       />
@@ -122,16 +151,7 @@ function PrimaryNav({
                   </span>
                 </a>
               </li>
-              {/* TODO: why is this different from Navigation.tsx? */}
-              <li className="p-side-navigation__item">
-                <a href="/admin/account-keys" className="p-side-navigation__link">
-                  <i className="p-icon--private-key is-light p-side-navigation__icon"></i>
-                  <span className="p-side-navigation__label">
-                    My keys
-                  </span>
-                </a>
-              </li>
-              
+
               <li className="p-side-navigation__item">
                 <a href="/logout" className="p-side-navigation__link">
                   <i className="p-icon--log-out is-light p-side-navigation__icon"></i>
