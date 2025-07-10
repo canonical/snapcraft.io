@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
-import { useSetRecoilState } from "recoil";
-import { useAtomValue as useJotaiValue } from "jotai";
+import {
+  useAtomValue as useJotaiValue,
+  useSetAtom as useSetJotaiState,
+} from "jotai";
 import {
   Link,
   useParams,
@@ -32,7 +34,7 @@ import {
   getPolicies,
 } from "../../utils";
 
-import type { SigningKey, Policy, Model } from "../../types/shared";
+import type { SigningKey, Model } from "../../types/shared";
 
 function SigningKeys(): React.JSX.Element {
   const { id } = useParams();
@@ -46,11 +48,10 @@ function SigningKeys(): React.JSX.Element {
     data,
     refetch,
   }: UseQueryResult<SigningKey[], Error> = useSigningKeys(id);
-  const setSigningKeysList =
-    useSetRecoilState<Array<SigningKey>>(signingKeysListState);
-  const setPolicies = useSetRecoilState<Array<Policy>>(policiesListState);
-  const setFilter = useSetRecoilState<string>(signingKeysListFilterState);
-  const setNewSigningKey = useSetRecoilState(newSigningKeyState);
+  const setSigningKeysList = useSetJotaiState(signingKeysListState);
+  const setPolicies = useSetJotaiState(policiesListState);
+  const setFilter = useSetJotaiState(signingKeysListFilterState);
+  const setNewSigningKey = useSetJotaiState(newSigningKeyState);
   const brandStore = useJotaiValue(brandStoreState(id));
   const [searchParams] = useSearchParams();
   const [showNotification, setShowNotification] = useState<boolean>(false);

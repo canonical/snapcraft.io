@@ -1,6 +1,5 @@
 import { useState, useEffect, Dispatch, SetStateAction } from "react";
-import { useRecoilState } from "recoil";
-import { useAtomValue as useJotaiValue } from "jotai";
+import { useAtomValue as useJotaiValue, useAtom as useJotaiState } from "jotai";
 import { useParams, Link, useNavigate, useLocation } from "react-router-dom";
 import { useMutation, useQueryClient } from "react-query";
 import { Button, Icon } from "@canonical/react-components";
@@ -30,8 +29,8 @@ function CreatePolicyForm({
   const navigate = useNavigate();
   const location = useLocation();
   const { isLoading, isError, error, data } = useSigningKeys(id);
-  const [signingKeys, setSigningKeys] = useRecoilState(signingKeysListState);
-  const [newSigningKey, setNewSigningKey] = useRecoilState(newSigningKeyState);
+  const [signingKeys, setSigningKeys] = useJotaiState(signingKeysListState);
+  const [newSigningKey, setNewSigningKey] = useJotaiState(newSigningKeyState);
   const brandStore = useJotaiValue(brandStoreState(id));
   const [isSaving, setIsSaving] = useState(false);
   const queryClient = useQueryClient();

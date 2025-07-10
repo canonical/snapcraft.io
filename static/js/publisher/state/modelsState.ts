@@ -1,4 +1,5 @@
-import { atom, selector, selectorFamily } from "recoil";
+import { atom as jotaiAtom } from "jotai";
+import { atomFamily as jotaiAtomFamily } from "jotai/utils";
 
 import { policiesListState } from "./policiesState";
 
@@ -23,54 +24,39 @@ function getFilteredModels(models: Array<Model>, filterQuery?: string | null) {
   });
 }
 
-const modelsListState = atom({
-  key: "modelsList",
-  default: [] as Array<Model>,
+const modelsListState = jotaiAtom([] as Model[]);
+
+const modelsListFilterState = jotaiAtom("" as string);
+
+const newModelState = jotaiAtom({ name: "", apiKey: "" } as {
+  name: string;
+  apiKey: string;
 });
 
-const modelsListFilterState = atom({
-  key: "modelsListFilter",
-  default: "" as string,
+const filteredModelsListState = jotaiAtom<Array<Model>>((get) => {
+  const filter = get(modelsListFilterState);
+  const models = get(modelsListState);
+  const policies = get(policiesListState);
+  const modelsWithPolicies = models.map((model) => {
+    const policy = policies.find(
+      (policy) => policy["model-name"] === model.name,
+    );
+
+    return {
+      ...model,
+      "policy-revision": policy ? policy.revision : undefined,
+    };
+  });
+
+  return getFilteredModels(modelsWithPolicies, filter);
 });
 
-const newModelState = atom({
-  key: "newModel",
-  default: {
-    name: "",
-    apiKey: "",
-  },
-});
-
-const filteredModelsListState = selector<Array<Model>>({
-  key: "filteredModelsList",
-  get: ({ get }) => {
-    const filter = get(modelsListFilterState);
+const currentModelState = jotaiAtomFamily((modelId) =>
+  jotaiAtom((get) => {
     const models = get(modelsListState);
-    const policies = get(policiesListState);
-    const modelsWithPolicies = models.map((model) => {
-      const policy = policies.find(
-        (policy) => policy["model-name"] === model.name,
-      );
-
-      return {
-        ...model,
-        "policy-revision": policy ? policy.revision : undefined,
-      };
-    });
-
-    return getFilteredModels(modelsWithPolicies, filter);
-  },
-});
-
-const currentModelState = selectorFamily({
-  key: "currentModel",
-  get:
-    (modelId) =>
-    ({ get }) => {
-      const models = get(modelsListState);
-      return models.find((model) => model.name === modelId);
-    },
-});
+    return models.find((model) => model.name === modelId);
+  }),
+);
 
 export {
   modelsListState,

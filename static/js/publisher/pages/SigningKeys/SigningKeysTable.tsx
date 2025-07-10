@@ -1,7 +1,9 @@
 import { SetStateAction, useState, Dispatch, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { useRecoilValue, useSetRecoilState } from "recoil";
-import { useAtomValue as useJotaiValue } from "jotai";
+import {
+  useAtomValue as useJotaiValue,
+  useSetAtom as useSetJotaiState,
+} from "jotai";
 import { format } from "date-fns";
 import { MainTable, Button, Tooltip } from "@canonical/react-components";
 
@@ -30,12 +32,12 @@ function SigningKeysTable({
 }: Props): React.JSX.Element {
   useParams();
   const brandId = useJotaiValue(brandIdState);
-  const signingKeysList = useRecoilValue<Array<SigningKey>>(
+  const signingKeysList = useJotaiValue<Array<SigningKey>>(
     filteredSigningKeysListState,
   );
   const [itemsToShow, setItemsToShow] =
     useState<Array<SigningKey>>(signingKeysList);
-  const setSigningKeysList = useSetRecoilState(signingKeysListState);
+  const setSigningKeysList = useSetJotaiState(signingKeysListState);
   const [isDeleting, setIsDeleting] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedSigningKey, setSelectedSigningKey] = useState<SigningKey>();

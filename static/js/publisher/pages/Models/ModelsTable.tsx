@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { useRecoilValue } from "recoil";
+import { useAtomValue as useJotaiValue } from "jotai";
 import { format } from "date-fns";
 import { MainTable } from "@canonical/react-components";
 
@@ -14,7 +14,7 @@ import type { Model as ModelType } from "../../types/shared";
 
 function ModelsTable(): React.JSX.Element {
   const { id } = useParams();
-  const modelsList = useRecoilValue<Array<ModelType>>(filteredModelsListState);
+  const modelsList = useJotaiValue<Array<ModelType>>(filteredModelsListState);
   const [itemsToShow, setItemsToShow] = useState<Array<ModelType>>(modelsList);
 
   return (
