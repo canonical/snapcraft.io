@@ -1,4 +1,3 @@
-import { RecoilRoot } from "recoil";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { BrowserRouter } from "react-router-dom";
 import { setupServer } from "msw/node";
@@ -26,17 +25,13 @@ function renderComponent() {
   const queryClient = new QueryClient();
 
   render(
-    <RecoilRoot>
-      <QueryClientProvider client={queryClient}>
-        <BrowserRouter>
-          <JotaiTestProvider
-            initialValues={[[brandStoresState, storesResponse]]}
-          >
-            <Members />
-          </JotaiTestProvider>
-        </BrowserRouter>
-      </QueryClientProvider>
-    </RecoilRoot>,
+    <QueryClientProvider client={queryClient}>
+      <BrowserRouter>
+        <JotaiTestProvider initialValues={[[brandStoresState, storesResponse]]}>
+          <Members />
+        </JotaiTestProvider>
+      </BrowserRouter>
+    </QueryClientProvider>,
   );
 }
 

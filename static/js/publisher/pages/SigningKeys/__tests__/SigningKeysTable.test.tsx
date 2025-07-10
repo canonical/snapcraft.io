@@ -1,5 +1,4 @@
 import { BrowserRouter } from "react-router-dom";
-import { RecoilRoot } from "recoil";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import "@testing-library/jest-dom";
@@ -8,14 +7,12 @@ import SigningKeysTable from "../SigningKeysTable";
 
 const renderComponent = () => {
   return render(
-    <RecoilRoot>
-      <BrowserRouter>
-        <SigningKeysTable
-          setShowDisableSuccessNotification={jest.fn()}
-          enableTableActions={false}
-        />
-      </BrowserRouter>
-    </RecoilRoot>,
+    <BrowserRouter>
+      <SigningKeysTable
+        setShowDisableSuccessNotification={jest.fn()}
+        enableTableActions={false}
+      />
+    </BrowserRouter>,
   );
 };
 

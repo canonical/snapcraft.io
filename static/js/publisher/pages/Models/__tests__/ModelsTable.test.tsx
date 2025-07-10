@@ -1,5 +1,4 @@
 import { BrowserRouter } from "react-router-dom";
-import { RecoilRoot } from "recoil";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import "@testing-library/jest-dom";
@@ -8,11 +7,9 @@ import ModelsTable from "../ModelsTable";
 
 const renderComponent = () => {
   return render(
-    <RecoilRoot>
-      <BrowserRouter>
-        <ModelsTable />
-      </BrowserRouter>
-    </RecoilRoot>,
+    <BrowserRouter>
+      <ModelsTable />
+    </BrowserRouter>,
   );
 };
 

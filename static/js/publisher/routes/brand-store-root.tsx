@@ -24,11 +24,11 @@ import StoreNotFound from "../pages/StoreNotFound";
 function BrandStoreRoot() {
   const { data: brandStoresList, isLoading } = useBrandStores();
 
-  const setRecoilBrandStores = useSetJotaiState(brandStoresState);
+  const setBrandStores = useSetJotaiState(brandStoresState);
 
   useEffect(() => {
     if (brandStoresList) {
-      setRecoilBrandStores(brandStoresList);
+      setBrandStores(brandStoresList);
     }
   }, [brandStoresList]);
 

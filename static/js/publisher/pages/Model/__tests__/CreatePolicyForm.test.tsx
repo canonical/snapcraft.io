@@ -1,5 +1,4 @@
 import { BrowserRouter } from "react-router-dom";
-import { RecoilRoot } from "recoil";
 import { QueryClient, QueryClientProvider, useQuery } from "react-query";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
@@ -24,17 +23,15 @@ jest.mock("react-query", () => ({
 
 const renderComponent = () => {
   return render(
-    <RecoilRoot>
-      <BrowserRouter>
-        <QueryClientProvider client={queryClient}>
-          <CreatePolicyForm
-            setShowErrorNotification={jest.fn()}
-            setShowNotification={jest.fn()}
-            refetchPolicies={jest.fn()}
-          />
-        </QueryClientProvider>
-      </BrowserRouter>
-    </RecoilRoot>,
+    <BrowserRouter>
+      <QueryClientProvider client={queryClient}>
+        <CreatePolicyForm
+          setShowErrorNotification={jest.fn()}
+          setShowNotification={jest.fn()}
+          refetchPolicies={jest.fn()}
+        />
+      </QueryClientProvider>
+    </BrowserRouter>,
   );
 };
 

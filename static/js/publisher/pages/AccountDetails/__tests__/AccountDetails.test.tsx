@@ -1,7 +1,6 @@
 import { screen, render, waitFor } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import { BrowserRouter } from "react-router-dom";
-import { RecoilRoot } from "recoil";
 import { QueryClient, QueryClientProvider } from "react-query";
 
 import AccountDetails from "../AccountDetails";
@@ -13,17 +12,15 @@ const queryClient = new QueryClient();
 
 const renderComponent = () => {
   render(
-    <RecoilRoot>
-      <QueryClientProvider client={queryClient}>
-        <BrowserRouter>
-          <JotaiTestProvider
-            initialValues={[[publisherState, publisherResponse]]}
-          >
-            <AccountDetails />
-          </JotaiTestProvider>
-        </BrowserRouter>
-      </QueryClientProvider>
-    </RecoilRoot>,
+    <QueryClientProvider client={queryClient}>
+      <BrowserRouter>
+        <JotaiTestProvider
+          initialValues={[[publisherState, publisherResponse]]}
+        >
+          <AccountDetails />
+        </JotaiTestProvider>
+      </BrowserRouter>
+    </QueryClientProvider>,
   );
 };
 

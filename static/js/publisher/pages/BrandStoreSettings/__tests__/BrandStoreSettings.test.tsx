@@ -1,6 +1,5 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { RecoilRoot } from "recoil";
 import { QueryClientProvider, QueryClient, useQuery } from "react-query";
 import { BrowserRouter } from "react-router-dom";
 import "@testing-library/jest-dom";
@@ -23,13 +22,11 @@ jest.mock("react-query", () => ({
 
 const renderComponent = () => {
   render(
-    <RecoilRoot>
-      <BrowserRouter>
-        <QueryClientProvider client={queryClient}>
-          <BrandStoreSettings />
-        </QueryClientProvider>
-      </BrowserRouter>
-    </RecoilRoot>,
+    <BrowserRouter>
+      <QueryClientProvider client={queryClient}>
+        <BrandStoreSettings />
+      </QueryClientProvider>
+    </BrowserRouter>,
   );
 };
 

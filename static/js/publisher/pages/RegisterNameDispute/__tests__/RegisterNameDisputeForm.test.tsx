@@ -1,5 +1,4 @@
 import { BrowserRouter } from "react-router-dom";
-import { RecoilRoot } from "recoil";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import "@testing-library/jest-dom";
@@ -16,15 +15,13 @@ const testStoreName = "Test store";
 function renderComponent() {
   render(
     <BrowserRouter>
-      <RecoilRoot>
-        <JotaiTestProvider initialValues={[[brandStoresState, storesResponse]]}>
-          <RegisterNameDisputeForm
-            snapName={testSnapName}
-            store={testStoreName}
-            setClaimSubmitted={jest.fn()}
-          />
-        </JotaiTestProvider>
-      </RecoilRoot>
+      <JotaiTestProvider initialValues={[[brandStoresState, storesResponse]]}>
+        <RegisterNameDisputeForm
+          snapName={testSnapName}
+          store={testStoreName}
+          setClaimSubmitted={jest.fn()}
+        />
+      </JotaiTestProvider>
     </BrowserRouter>,
   );
 }

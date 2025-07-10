@@ -1,5 +1,4 @@
 import { BrowserRouter } from "react-router-dom";
-import { RecoilRoot } from "recoil";
 import { QueryClientProvider, QueryClient } from "react-query";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
@@ -18,16 +17,14 @@ const queryClient = new QueryClient({
 
 const renderComponent = () => {
   return render(
-    <RecoilRoot>
-      <BrowserRouter>
-        <QueryClientProvider client={queryClient}>
-          <PoliciesTable
-            setShowDeletePolicyNotification={jest.fn()}
-            setShowDeletePolicyErrorNotification={jest.fn()}
-          />
-        </QueryClientProvider>
-      </BrowserRouter>
-    </RecoilRoot>,
+    <BrowserRouter>
+      <QueryClientProvider client={queryClient}>
+        <PoliciesTable
+          setShowDeletePolicyNotification={jest.fn()}
+          setShowDeletePolicyErrorNotification={jest.fn()}
+        />
+      </QueryClientProvider>
+    </BrowserRouter>,
   );
 };
 

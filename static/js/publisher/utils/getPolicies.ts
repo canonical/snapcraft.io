@@ -1,11 +1,11 @@
 import { Dispatch, SetStateAction } from "react";
-import { SetterOrUpdater } from "recoil";
-import type { Model as ModelType, Policy } from "../types/shared";
+
+import type { Model, Policy } from "../types/shared";
 
 type Options = {
-  models: ModelType[];
+  models: Model[];
   id: string | undefined;
-  setPolicies: SetterOrUpdater<Policy[]>;
+  setPolicies: Dispatch<SetStateAction<Policy[]>>;
   signal?: AbortSignal;
   setEnableTableActions?: Dispatch<SetStateAction<boolean>>;
 };
