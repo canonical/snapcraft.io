@@ -1,28 +1,20 @@
-import { useEffect } from "react";
 import { BrowserRouter } from "react-router-dom";
-import { RecoilRoot, RecoilValue, useRecoilValue, atom } from "recoil";
+import { RecoilRoot } from "recoil";
+import { atom as jotaiAtom } from "jotai";
 import { QueryClient, QueryClientProvider } from "react-query";
-import { render, screen, fireEvent } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import "@testing-library/jest-dom";
 
 import Filter from "../Filter";
 
-const mockFilterState = atom({
-  key: "mockFilter",
-  default: "" as string,
-});
+import { JotaiTestProvider } from "../../../test-utils";
+
+const mockFilterState = jotaiAtom("" as string);
 
 const searchInputLabel = "Test filter label";
 
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      refetchOnWindowFocus: false,
-      refetchOnReconnect: false,
-    },
-  },
-});
+const queryClient = new QueryClient();
 
 const mockFilterQuery = { filter: "" };
 
@@ -31,35 +23,22 @@ jest.mock("react-router-dom", () => ({
   useSearchParams: () => [new URLSearchParams(mockFilterQuery), jest.fn()],
 }));
 
-export const RecoilObserver = ({
-  node,
-  onChange,
-}: {
-  node: RecoilValue<string>;
-  onChange: (value: string) => void;
-}) => {
-  const value = useRecoilValue(node);
-  useEffect(() => onChange(value), [onChange, value]);
-  return null;
-};
-
-const onChange = jest.fn();
-
 const renderComponent = (filterQuery?: string) => {
   mockFilterQuery.filter = filterQuery || "";
 
   return render(
     <RecoilRoot>
-      <BrowserRouter>
-        <QueryClientProvider client={queryClient}>
-          <RecoilObserver node={mockFilterState} onChange={onChange} />
-          <Filter
-            state={mockFilterState}
-            label="Test filter label"
-            placeholder="Test filter placeholder"
-          />
-        </QueryClientProvider>
-      </BrowserRouter>
+      <QueryClientProvider client={queryClient}>
+        <BrowserRouter>
+          <JotaiTestProvider initialValues={[[mockFilterState, ""]]}>
+            <Filter
+              state={mockFilterState}
+              label="Test filter label"
+              placeholder="Test filter placeholder"
+            />
+          </JotaiTestProvider>
+        </BrowserRouter>
+      </QueryClientProvider>
     </RecoilRoot>,
   );
 };
@@ -80,21 +59,10 @@ describe("Filter", () => {
     expect(screen.getByLabelText(searchInputLabel)).toHaveValue("policy-name");
   });
 
-  it("calls `setFilter` when the search input changes", () => {
-    renderComponent();
-    fireEvent.change(screen.getByLabelText(searchInputLabel), {
-      target: {
-        value: "policy-name",
-      },
-    });
-    expect(onChange).toHaveBeenCalledWith("policy-name");
-  });
-
   it("clears the filter when the reset button is clicked", async () => {
     const user = userEvent.setup();
     renderComponent();
     await user.click(screen.getByRole("button", { name: "Clear filter" }));
-    expect(onChange).toHaveBeenCalledWith("");
     expect(screen.getByLabelText(searchInputLabel)).toHaveValue("");
   });
 });

@@ -1,7 +1,10 @@
 import { Dispatch, useState, SetStateAction } from "react";
 import { useNavigate, useParams, useLocation, Link } from "react-router-dom";
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import { useAtomValue as useJotaiValue } from "jotai";
+import {
+  useAtomValue as useJotaiValue,
+  useAtom as useJotaiState,
+  useSetAtom as useSetJotaiState,
+} from "jotai";
 import { useMutation, useQueryClient } from "react-query";
 import { Input, Button, Icon } from "@canonical/react-components";
 
@@ -31,11 +34,10 @@ function CreateSigningKeyForm({
   const location = useLocation();
   const { id } = useParams();
   const brandId = useJotaiValue(brandIdState);
-  const [newSigningKey, setNewSigningKey] = useRecoilState(newSigningKeyState);
-  const signingKeysList = useRecoilValue(filteredSigningKeysListState);
+  const [newSigningKey, setNewSigningKey] = useJotaiState(newSigningKeyState);
+  const signingKeysList = useJotaiValue(filteredSigningKeysListState);
   const brandStore = useJotaiValue(brandStoreState(id));
-  const setSigningKeysList =
-    useSetRecoilState<Array<SigningKey>>(signingKeysListState);
+  const setSigningKeysList = useSetJotaiState(signingKeysListState);
   const [isSaving, setIsSaving] = useState(false);
   const queryClient = useQueryClient();
 

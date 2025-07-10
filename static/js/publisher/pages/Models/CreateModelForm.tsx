@@ -1,7 +1,10 @@
 import { Dispatch, SetStateAction, useState } from "react";
 import { useNavigate, useParams, useLocation, Link } from "react-router-dom";
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import { useAtomValue as useJotaiValue, useAtom as useJotaiState } from "jotai";
+import {
+  useAtomValue as useJotaiValue,
+  useAtom as useJotaiState,
+  useSetAtom as useSetJotaiState,
+} from "jotai";
 import { useMutation, useQueryClient } from "react-query";
 import { Input, Button, Icon } from "@canonical/react-components";
 import randomstring from "randomstring";
@@ -34,12 +37,12 @@ function CreateModelForm({
   const location = useLocation();
   const { id } = useParams();
   const brandId = useJotaiValue(brandIdState);
-  const [newModel, setNewModel] = useRecoilState(newModelState);
+  const [newModel, setNewModel] = useJotaiState(newModelState);
   const stores = useJotaiState(brandStoresState);
   const currentStore = stores[0].find((store: Store) => store.id === id);
-  const modelsList = useRecoilValue(filteredModelsListState);
+  const modelsList = useJotaiValue(filteredModelsListState);
   const brandStore = useJotaiValue(brandStoreState(id));
-  const setModelsList = useSetRecoilState<Array<Model>>(modelsListState);
+  const setModelsList = useSetJotaiState(modelsListState);
   const [isSaving, setIsSaving] = useState(false);
 
   const queryClient = useQueryClient();

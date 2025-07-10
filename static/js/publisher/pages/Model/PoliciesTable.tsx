@@ -1,6 +1,5 @@
 import { SetStateAction, useState, Dispatch } from "react";
-import { useRecoilState } from "recoil";
-import { useAtomValue as useJotaiValue } from "jotai";
+import { useAtomValue as useJotaiValue, useAtom as useJotaiState } from "jotai";
 import { useParams } from "react-router-dom";
 import { format } from "date-fns";
 import { MainTable, Button, Modal, Icon } from "@canonical/react-components";
@@ -25,7 +24,7 @@ function ModelsTable({
 }: Props): React.JSX.Element {
   const { id, model_id } = useParams();
   const brandId = useJotaiValue(brandIdState);
-  const [policiesList, setPoliciesList] = useRecoilState(
+  const [policiesList, setPoliciesList] = useJotaiState(
     filteredPoliciesListState,
   );
   const [itemsToShow, setItemsToShow] = useState<Array<Policy>>(policiesList);

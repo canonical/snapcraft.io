@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
-import { useSetRecoilState } from "recoil";
-import { useAtomValue as useJotaiValue } from "jotai";
+import {
+  useAtomValue as useJotaiValue,
+  useSetAtom as useSetJotaiState,
+} from "jotai";
 import {
   Link,
   useParams,
@@ -27,7 +29,7 @@ import Navigation from "../../components/Navigation";
 import { useModels } from "../../hooks";
 import { isClosedPanel, setPageTitle, getPolicies } from "../../utils";
 
-import type { Model as ModelType, Policy } from "../../types/shared";
+import type { Model as ModelType } from "../../types/shared";
 
 function Models(): React.JSX.Element {
   const { id } = useParams();
@@ -42,10 +44,10 @@ function Models(): React.JSX.Element {
 
   const location = useLocation();
   const navigate = useNavigate();
-  const setModelsList = useSetRecoilState<Array<ModelType>>(modelsListState);
-  const setPolicies = useSetRecoilState<Array<Policy>>(policiesListState);
-  const setNewModel = useSetRecoilState(newModelState);
-  const setFilter = useSetRecoilState<string>(modelsListFilterState);
+  const setModelsList = useSetJotaiState(modelsListState);
+  const setPolicies = useSetJotaiState(policiesListState);
+  const setNewModel = useSetJotaiState(newModelState);
+  const setFilter = useSetJotaiState(modelsListFilterState);
   const brandStore = useJotaiValue(brandStoreState(id));
   const [searchParams] = useSearchParams();
   const [showNotification, setShowNotification] = useState<boolean>(false);
