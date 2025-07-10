@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">98.58% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>138/138</span>
+                <span class='fraction'>139/141</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">93.51% </span>
+                <span class="strong">91.74% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>101/108</span>
+                <span class='fraction'>100/109</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>59/59</span>
+                <span class='fraction'>60/60</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">98.54% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>134/134</span>
+                <span class='fraction'>135/137</span>
             </div>
         
             
@@ -878,7 +878,14 @@
 <a name='L813'></a><a href='#L813'>813</a>
 <a name='L814'></a><a href='#L814'>814</a>
 <a name='L815'></a><a href='#L815'>815</a>
-<a name='L816'></a><a href='#L816'>816</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L816'></a><a href='#L816'>816</a>
+<a name='L817'></a><a href='#L817'>817</a>
+<a name='L818'></a><a href='#L818'>818</a>
+<a name='L819'></a><a href='#L819'>819</a>
+<a name='L820'></a><a href='#L820'>820</a>
+<a name='L821'></a><a href='#L821'>821</a>
+<a name='L822'></a><a href='#L822'>822</a>
+<a name='L823'></a><a href='#L823'>823</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1487,12 +1494,19 @@
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -2302,12 +2316,19 @@ export function getProgressiveState(
   <span class="missing-if-branch" title="else path not taken" >E</span>if (release &amp;&amp; release.revision) {
     // If the release is pending we don't want to look up the previous state, as it will be
     // for an outdated release
-    <span class="missing-if-branch" title="else path not taken" >E</span>if (!isPending &amp;&amp; release &amp;&amp; release.progressive) {
-      previousRevision = allReleases[1];
+    // If the release is progressive, we do.
+    if (!isPending &amp;&amp; release?.isProgressive) {
+      // Find the previous revision in the list of all releases
+      // that is not the current release.
+      previousRevision = allReleases.find(
+        (r: any) =&gt; r.revision !== release.revision,
+      );
 &nbsp;
       <span class="missing-if-branch" title="else path not taken" >E</span>if (previousRevision &amp;&amp; previousRevision.revision) {
         previousRevision = revisions[previousRevision.revision];
       }
+    } else <span class="cstat-no" title="statement not covered" ><span class="missing-if-branch" title="else path not taken" >E</span>if (isPending) {</span>
+<span class="cstat-no" title="statement not covered" >      previousRevision = revisions[allReleases[0]?.revision];</span>
     }
 &nbsp;
     let pendingMatch: any;
@@ -2409,9 +2430,9 @@ export function getSeparatePendingReleases(
       } else if (
         isProgressiveEnabled &amp;&amp;
         pendingRelease.progressive &amp;&amp;
-        pendingRelease.previousRevisions &amp;&amp;
-        pendingRelease.previousRevisions.length &gt; 0 &amp;&amp;
-        pendingRelease.previousRevisions[0]
+        pendingRelease.previousReleases &amp;&amp;
+        pendingRelease.previousReleases.length &gt; 0 &amp;&amp;
+        pendingRelease.previousReleases[0]
       ) {
         // What are the differences between the previous progressive state
         // and the new state.
@@ -2515,7 +2536,7 @@ export function getReleases(
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-07-09T22:04:25.026Z
+                at 2025-07-10T22:03:57.838Z
             </div>
         <script src="../../../../prettify.js"></script>
         <script>

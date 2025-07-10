@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">80% </span>
+                <span class="strong">50% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>8/10</span>
+                <span class='fraction'>5/10</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">75% </span>
+                <span class="strong">50% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>3/4</span>
+                <span class='fraction'>2/4</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">66.66% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>3/3</span>
+                <span class='fraction'>2/3</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">80% </span>
+                <span class="strong">50% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>8/10</span>
+                <span class='fraction'>5/10</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line high'></div>
+    <div class='status-line medium'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -134,12 +134,10 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">20x</span>
-<span class="cline-any cline-yes">20x</span>
+<span class="cline-any cline-yes">19x</span>
+<span class="cline-any cline-yes">19x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">20x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">19x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -152,9 +150,11 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -180,20 +180,20 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { useSearchParams } from "react-router-dom";
-import { useSetRecoilState } from "recoil";
+import { useSetAtom as useSetJotaiState } from "jotai";
 import { Button, Icon } from "@canonical/react-components";
 &nbsp;
-import type { RecoilState } from "recoil";
+import type { PrimitiveAtom } from "jotai";
 &nbsp;
 type Props = {
-  state: RecoilState&lt;string&gt;;
+  state: PrimitiveAtom&lt;string&gt;;
   label: string;
   placeholder: string;
 };
 &nbsp;
 function Filter({ state, label, placeholder }: Props): React.JSX.Element {
   const [searchParams, setSearchParams] = useSearchParams();
-  const setFilter = useSetRecoilState(state);
+  const setFilter = useSetJotaiState(state);
 &nbsp;
   return (
     &lt;div className="p-search-box"&gt;
@@ -209,11 +209,11 @@ function Filter({ state, label, placeholder }: Props): React.JSX.Element {
         placeholder={placeholder}
         autoComplete="off"
         value={searchParams.get("filter") || ""}
-        onChange={(e) =&gt; {
-          if (e.target.value) {
-            setSearchParams({ filter: e.target.value });
-            setFilter(e.target.value);
-          } else <span class="missing-if-branch" title="else path not taken" >E</span>{
+        onChange={<span class="fstat-no" title="function not covered" >(e</span>) =&gt; {
+<span class="cstat-no" title="statement not covered" >          if (e.target.value) {</span>
+<span class="cstat-no" title="statement not covered" >            setSearchParams({ filter: e.target.value });</span>
+<span class="cstat-no" title="statement not covered" >            setFilter(e.target.value);</span>
+          } else {
 <span class="cstat-no" title="statement not covered" >            setSearchParams();</span>
 <span class="cstat-no" title="statement not covered" >            setFilter("");</span>
           }
@@ -244,7 +244,7 @@ export default Filter;
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-07-09T22:04:25.026Z
+                at 2025-07-10T22:03:57.838Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>
