@@ -68,13 +68,19 @@ EmptyInfo.propTypes = {
 };
 
 const ProgressiveTooltip = ({ revision, previousRevision }) => {
+  const { progressive } = revision?.releases?.[0];
+
+  if (!progressive) {
+    return;
+  }
+
   const previousRevisionData = (
     <>
       <strong>{previousRevision?.revision || "Unknown"}</strong>
       <br />
       <strong>
-        {Math.round(100 - revision?.progressive?.["current-percentage"]) || 0}% →{" "}
-        {Math.round(100 - revision?.progressive?.percentage)}%
+        {Math.round(100 - progressive["current-percentage"]) || 0}% →{" "}
+        {Math.round(100 - progressive.percentage)}%
       </strong>
       <br />
       <strong>{previousRevision?.version || "Unknown"}</strong>
@@ -94,8 +100,8 @@ const ProgressiveTooltip = ({ revision, previousRevision }) => {
       <strong>{revision.revision} (progressive)</strong>
       <br />
       <strong>
-        {Math.round(revision?.progressive?.["current-percentage"]) || 0}% →{" "}
-        {Math.round(revision?.progressive?.percentage)}%
+        {Math.round(progressive["current-percentage"]) || 0}% →{" "}
+        {Math.round(progressive.percentage)}%
       </strong>
       <br />
       <strong>{revision.version}</strong>
@@ -148,7 +154,7 @@ export const RevisionInfo = ({
   isPending,
   previousRevision,
   risk,
-  track,
+  channel,
 }) => {
   let buildIcon = null;
 
@@ -165,11 +171,15 @@ export const RevisionInfo = ({
     </Fragment>
   );
 
+  const currentRelease = revision.releases?.filter(
+    (r) => r.channel === channel,
+  );
+
   // This mimics what the snapcraft cli does as some fields may be
   // present even if a release is not progressive
   const isProgressive =
-    revision.prog_channels &&
-    revision.prog_channels.includes(`${track}/${risk}`) &&
+    currentRelease?.length > 0 &&
+    currentRelease[0].isProgressive &&
     risk !== "AVAILABLE"
       ? true
       : false;
@@ -256,7 +266,7 @@ RevisionInfo.propTypes = {
   isPending: PropTypes.bool,
   previousRevision: PropTypes.object,
   risk: PropTypes.string,
-  track: PropTypes.string,
+  channel: PropTypes.string,
 };
 
 // generic draggable view of releases table cell

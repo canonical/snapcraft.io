@@ -846,6 +846,7 @@ describe("getProgressiveState", () => {
         track: "latest",
         risk: "stable",
         revision: "1",
+        isProgressive: false,
         progressive: null,
       },
       {
@@ -854,6 +855,7 @@ describe("getProgressiveState", () => {
         track: "latest",
         risk: "stable",
         revision: "3",
+        isProgressive: true,
         progressive: {
           key: "test",
           percentage: 60,
@@ -866,6 +868,7 @@ describe("getProgressiveState", () => {
         track: "latest",
         risk: "stable",
         revision: "2",
+        isProgressive: true,
         progressive: {
           key: "test",
           percentage: 50,
@@ -876,6 +879,7 @@ describe("getProgressiveState", () => {
     revisions: {
       3: "revision3",
       2: "revision2",
+      1: "revision1",
     },
   };
 
@@ -896,6 +900,7 @@ describe("getProgressiveState", () => {
         "latest/stable": {
           revision: { revision: "3", architectures: ["arch2"] },
           channel: "latest/stable",
+          isProgressive: true,
           progressive: {
             key: "progressive-test",
             percentage: 40,
@@ -1101,7 +1106,7 @@ describe("hasRelease", () => {
                 percentage: 100,
                 paused: false,
               },
-              previousRevisions: [{ revision: 2 }],
+              previousReleases: [{ revision: 2 }],
             },
           },
         },
@@ -1137,7 +1142,7 @@ describe("hasRelease", () => {
                 percentage: 40,
                 paused: false,
               },
-              previousRevisions: [
+              previousReleases: [
                 {
                   revision: 2,
                 },
