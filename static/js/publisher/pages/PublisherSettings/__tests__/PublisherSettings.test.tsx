@@ -1,5 +1,4 @@
 import { BrowserRouter } from "react-router-dom";
-import { RecoilRoot } from "recoil";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { render, screen } from "@testing-library/react";
 import "@testing-library/jest-dom";
@@ -18,11 +17,9 @@ jest.mock("react-router-dom", () => ({
 function renderComponent() {
   render(
     <BrowserRouter>
-      <RecoilRoot>
-        <QueryClientProvider client={queryClient}>
-          <PublisherSettings />
-        </QueryClientProvider>
-      </RecoilRoot>
+      <QueryClientProvider client={queryClient}>
+        <PublisherSettings />
+      </QueryClientProvider>
     </BrowserRouter>,
   );
 }

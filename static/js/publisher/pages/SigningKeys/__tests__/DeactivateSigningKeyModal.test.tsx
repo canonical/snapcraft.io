@@ -1,5 +1,4 @@
 import { BrowserRouter } from "react-router-dom";
-import { RecoilRoot } from "recoil";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { render, screen } from "@testing-library/react";
 
@@ -18,22 +17,20 @@ const queryClient = new QueryClient({
 
 const renderComponent = () => {
   return render(
-    <RecoilRoot>
-      <BrowserRouter>
-        <QueryClientProvider client={queryClient}>
-          <DeactivateSigningKeyModal
-            setModalOpen={jest.fn()}
-            handleDisable={jest.fn()}
-            isDeleting={false}
-            signingKey={{
-              name: "test-signing-key",
-              "created-at": "2025-01-30",
-              "modified-at": null,
-            }}
-          />
-        </QueryClientProvider>
-      </BrowserRouter>
-    </RecoilRoot>,
+    <BrowserRouter>
+      <QueryClientProvider client={queryClient}>
+        <DeactivateSigningKeyModal
+          setModalOpen={jest.fn()}
+          handleDisable={jest.fn()}
+          isDeleting={false}
+          signingKey={{
+            name: "test-signing-key",
+            "created-at": "2025-01-30",
+            "modified-at": null,
+          }}
+        />
+      </QueryClientProvider>
+    </BrowserRouter>,
   );
 };
 

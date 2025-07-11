@@ -1,5 +1,4 @@
 import { BrowserRouter } from "react-router-dom";
-import { RecoilRoot } from "recoil";
 import { http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
 import { render, screen, waitFor } from "@testing-library/react";
@@ -20,11 +19,9 @@ window.CSRF_TOKEN = "test-csrf-token";
 function renderComponent() {
   render(
     <BrowserRouter>
-      <RecoilRoot>
-        <JotaiTestProvider initialValues={[[brandStoresState, storesResponse]]}>
-          <RequestReservedName />
-        </JotaiTestProvider>
-      </RecoilRoot>
+      <JotaiTestProvider initialValues={[[brandStoresState, storesResponse]]}>
+        <RequestReservedName />
+      </JotaiTestProvider>
     </BrowserRouter>,
   );
 }

@@ -1,5 +1,4 @@
 import { BrowserRouter } from "react-router-dom";
-import { RecoilRoot } from "recoil";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
@@ -19,17 +18,15 @@ const queryClient = new QueryClient({
 
 const renderComponent = () => {
   return render(
-    <RecoilRoot>
-      <BrowserRouter>
-        <QueryClientProvider client={queryClient}>
-          <CreateSigningKeyForm
-            setShowNotification={jest.fn()}
-            setErrorMessage={jest.fn()}
-            refetch={jest.fn()}
-          />
-        </QueryClientProvider>
-      </BrowserRouter>
-    </RecoilRoot>,
+    <BrowserRouter>
+      <QueryClientProvider client={queryClient}>
+        <CreateSigningKeyForm
+          setShowNotification={jest.fn()}
+          setErrorMessage={jest.fn()}
+          refetch={jest.fn()}
+        />
+      </QueryClientProvider>
+    </BrowserRouter>,
   );
 };
 

@@ -1,4 +1,3 @@
-import { RecoilRoot } from "recoil";
 import { BrowserRouter } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { http, HttpResponse } from "msw";
@@ -13,13 +12,11 @@ const queryClient = new QueryClient();
 
 function renderComponent() {
   return render(
-    <RecoilRoot>
-      <QueryClientProvider client={queryClient}>
-        <BrowserRouter>
-          <RegisterSnap />
-        </BrowserRouter>
-      </QueryClientProvider>
-    </RecoilRoot>,
+    <QueryClientProvider client={queryClient}>
+      <BrowserRouter>
+        <RegisterSnap />
+      </BrowserRouter>
+    </QueryClientProvider>,
   );
 }
 

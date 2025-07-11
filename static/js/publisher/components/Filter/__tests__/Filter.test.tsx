@@ -1,5 +1,4 @@
 import { BrowserRouter } from "react-router-dom";
-import { RecoilRoot } from "recoil";
 import { atom as jotaiAtom } from "jotai";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { render, screen } from "@testing-library/react";
@@ -27,19 +26,17 @@ const renderComponent = (filterQuery?: string) => {
   mockFilterQuery.filter = filterQuery || "";
 
   return render(
-    <RecoilRoot>
-      <QueryClientProvider client={queryClient}>
-        <BrowserRouter>
-          <JotaiTestProvider initialValues={[[mockFilterState, ""]]}>
-            <Filter
-              state={mockFilterState}
-              label="Test filter label"
-              placeholder="Test filter placeholder"
-            />
-          </JotaiTestProvider>
-        </BrowserRouter>
-      </QueryClientProvider>
-    </RecoilRoot>,
+    <QueryClientProvider client={queryClient}>
+      <BrowserRouter>
+        <JotaiTestProvider initialValues={[[mockFilterState, ""]]}>
+          <Filter
+            state={mockFilterState}
+            label="Test filter label"
+            placeholder="Test filter placeholder"
+          />
+        </JotaiTestProvider>
+      </BrowserRouter>
+    </QueryClientProvider>,
   );
 };
 
