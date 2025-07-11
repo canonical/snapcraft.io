@@ -1,6 +1,6 @@
 import { Dispatch, SetStateAction, useState } from "react";
 import { useParams } from "react-router-dom";
-import { useSetAtom as useSetJotaiState } from "jotai";
+import { useSetAtom } from "jotai";
 import { Button } from "@canonical/react-components";
 
 import { buildRepoConnectedState } from "../../state/buildsState";
@@ -17,7 +17,7 @@ function DisconnectRepoActions({
   githubData,
 }: Props): React.JSX.Element {
   const { snapId } = useParams();
-  const setRepoConnected = useSetJotaiState(buildRepoConnectedState);
+  const setRepoConnected = useSetAtom(buildRepoConnectedState);
   const [disconnecting, setDisconnecting] = useState<boolean>(false);
 
   const handleRepoDisconnect = async () => {

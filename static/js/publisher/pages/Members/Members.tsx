@@ -1,6 +1,6 @@
 import { ChangeEvent, useEffect, useState } from "react";
 import { useParams, Navigate } from "react-router-dom";
-import { useAtomValue as useJotaiValue } from "jotai";
+import { useAtomValue } from "jotai";
 import {
   Spinner,
   Accordion,
@@ -42,7 +42,7 @@ type Member = {
 };
 
 function Members(): React.JSX.Element {
-  const brandStoresList = useJotaiValue(brandStoresState);
+  const brandStoresList = useAtomValue(brandStoresState);
   const { id } = useParams();
   const {
     data: members,

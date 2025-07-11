@@ -1,5 +1,5 @@
 import { SetStateAction, useState, Dispatch } from "react";
-import { useAtomValue as useJotaiValue, useAtom as useJotaiState } from "jotai";
+import { useAtomValue, useAtom } from "jotai";
 import { useParams } from "react-router-dom";
 import { format } from "date-fns";
 import { MainTable, Button, Modal, Icon } from "@canonical/react-components";
@@ -23,10 +23,8 @@ function ModelsTable({
   setShowDeletePolicyErrorNotification,
 }: Props): React.JSX.Element {
   const { id, model_id } = useParams();
-  const brandId = useJotaiValue(brandIdState);
-  const [policiesList, setPoliciesList] = useJotaiState(
-    filteredPoliciesListState,
-  );
+  const brandId = useAtomValue(brandIdState);
+  const [policiesList, setPoliciesList] = useAtom(filteredPoliciesListState);
   const [itemsToShow, setItemsToShow] = useState<Array<Policy>>(policiesList);
   const [showModal, setShowModal] = useState<boolean>(false);
   const [selectedPolicy, setSelectedPolicy] = useState<number | undefined>();

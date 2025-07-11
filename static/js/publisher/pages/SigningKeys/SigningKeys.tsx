@@ -1,8 +1,5 @@
 import { useState, useEffect } from "react";
-import {
-  useAtomValue as useJotaiValue,
-  useSetAtom as useSetJotaiState,
-} from "jotai";
+import { useAtomValue, useSetAtom } from "jotai";
 import {
   Link,
   useParams,
@@ -38,7 +35,7 @@ import type { SigningKey, Model } from "../../types/shared";
 
 function SigningKeys(): React.JSX.Element {
   const { id } = useParams();
-  const brandId = useJotaiValue(brandIdState);
+  const brandId = useAtomValue(brandIdState);
   const location = useLocation();
   const navigate = useNavigate();
   const {
@@ -48,11 +45,11 @@ function SigningKeys(): React.JSX.Element {
     data,
     refetch,
   }: UseQueryResult<SigningKey[], Error> = useSigningKeys(id);
-  const setSigningKeysList = useSetJotaiState(signingKeysListState);
-  const setPolicies = useSetJotaiState(policiesListState);
-  const setFilter = useSetJotaiState(signingKeysListFilterState);
-  const setNewSigningKey = useSetJotaiState(newSigningKeyState);
-  const brandStore = useJotaiValue(brandStoreState(id));
+  const setSigningKeysList = useSetAtom(signingKeysListState);
+  const setPolicies = useSetAtom(policiesListState);
+  const setFilter = useSetAtom(signingKeysListFilterState);
+  const setNewSigningKey = useSetAtom(newSigningKeyState);
+  const brandStore = useAtomValue(brandStoreState(id));
   const [searchParams] = useSearchParams();
   const [showNotification, setShowNotification] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>("");

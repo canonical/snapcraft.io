@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useSetAtom as useSetJotaiState } from "jotai";
+import { useSetAtom } from "jotai";
 import {
   BrowserRouter as Router,
   Routes,
@@ -24,7 +24,7 @@ import StoreNotFound from "../pages/StoreNotFound";
 function BrandStoreRoot() {
   const { data: brandStoresList, isLoading } = useBrandStores();
 
-  const setBrandStores = useSetJotaiState(brandStoresState);
+  const setBrandStores = useSetAtom(brandStoresState);
 
   useEffect(() => {
     if (brandStoresList) {

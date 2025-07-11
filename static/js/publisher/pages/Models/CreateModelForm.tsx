@@ -1,10 +1,6 @@
 import { Dispatch, SetStateAction, useState } from "react";
 import { useNavigate, useParams, useLocation, Link } from "react-router-dom";
-import {
-  useAtomValue as useJotaiValue,
-  useAtom as useJotaiState,
-  useSetAtom as useSetJotaiState,
-} from "jotai";
+import { useAtomValue, useAtom, useSetAtom } from "jotai";
 import { useMutation, useQueryClient } from "react-query";
 import { Input, Button, Icon } from "@canonical/react-components";
 import randomstring from "randomstring";
@@ -36,13 +32,13 @@ function CreateModelForm({
   const navigate = useNavigate();
   const location = useLocation();
   const { id } = useParams();
-  const brandId = useJotaiValue(brandIdState);
-  const [newModel, setNewModel] = useJotaiState(newModelState);
-  const stores = useJotaiState(brandStoresState);
+  const brandId = useAtomValue(brandIdState);
+  const [newModel, setNewModel] = useAtom(newModelState);
+  const stores = useAtom(brandStoresState);
   const currentStore = stores[0].find((store: Store) => store.id === id);
-  const modelsList = useJotaiValue(filteredModelsListState);
-  const brandStore = useJotaiValue(brandStoreState(id));
-  const setModelsList = useSetJotaiState(modelsListState);
+  const modelsList = useAtomValue(filteredModelsListState);
+  const brandStore = useAtomValue(brandStoreState(id));
+  const setModelsList = useSetAtom(modelsListState);
   const [isSaving, setIsSaving] = useState(false);
 
   const queryClient = useQueryClient();
