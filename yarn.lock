@@ -1085,10 +1085,10 @@
     react-table "7.8.0"
     react-useportal "1.0.19"
 
-"@canonical/react-components@2.7.7":
-  version "2.7.7"
-  resolved "https://registry.yarnpkg.com/@canonical/react-components/-/react-components-2.7.7.tgz#06d231fb52a20d507584749644a3616c4ac800f1"
-  integrity sha512-mnq0llAXrR0oVRV90Yan+PrIUcjp/cVcRzRrt/s8jdg2jDv5IhBsckwW4LjRBwGzzJBbkFhqPAMhEDgFjnS+ag==
+"@canonical/react-components@2.7.9":
+  version "2.7.9"
+  resolved "https://registry.yarnpkg.com/@canonical/react-components/-/react-components-2.7.9.tgz#681154bc9cc27ee63e5124d43d59678a5b6e8e5e"
+  integrity sha512-nnVV8+rptpUloW+f0D4LTKbZQ0wl/5dtIdVurW/hS0DK8y++/U2oHOP22lINEi8nXuQQumkA9PptTgwrS5CV9g==
   dependencies:
     "@types/jest" "29.5.14"
     "@types/node" "20.17.19"
@@ -1101,10 +1101,10 @@
     prop-types "15.8.1"
     react-table "7.8.0"
 
-"@canonical/store-components@0.54.1":
-  version "0.54.1"
-  resolved "https://registry.yarnpkg.com/@canonical/store-components/-/store-components-0.54.1.tgz#542d14bd3596d1da27096c2d1443008528401730"
-  integrity sha512-GsZIFPyPqagwuylpaZT8L3jLFCLdthf9VFeeqWZQIjIRhgrkpW0bDrF/24f3lNVr23nrjiK8Jrf3+056DI+NDg==
+"@canonical/store-components@0.54.2":
+  version "0.54.2"
+  resolved "https://registry.yarnpkg.com/@canonical/store-components/-/store-components-0.54.2.tgz#d281835da2519530dda2b0b4faeaa6d10dac86ce"
+  integrity sha512-FzKAHNk1d0knvICPpOcis0fGnDU3ozJ4Fnx+X6iXX5K82ZKXB5bCYlcOPwKFmuSpbvjGkpM08WS2xBqHLgn1bw==
   dependencies:
     "@canonical/react-components" "1.9.0"
     "@types/jest" "27.5.2"
@@ -8322,10 +8322,10 @@ v8-to-istanbul@^9.0.1:
     "@types/istanbul-lib-coverage" "^2.0.1"
     convert-source-map "^2.0.0"
 
-vanilla-framework@4.24.1:
-  version "4.24.1"
-  resolved "https://registry.yarnpkg.com/vanilla-framework/-/vanilla-framework-4.24.1.tgz#cd1f24ef3d048d410fda252aeafc015c44adc8cf"
-  integrity sha512-mX2kugxhMtoo1IbvRDyA0WY8IJ/z7Q3MO4k8LMz0Plc/ZnPTuOcUYretx/e/TmgLrCko0rmTLjrSiEkWJWySxA==
+vanilla-framework@4.26.0:
+  version "4.26.0"
+  resolved "https://registry.yarnpkg.com/vanilla-framework/-/vanilla-framework-4.26.0.tgz#510e9fccae358cb8abbfedf483f17fc2e9340b8f"
+  integrity sha512-lFxAvQCwcx8DsHdAvS1Bd1iKCYWMwcjEjdVxQA2bm1Bk0M9ax1LjCZ7/zAcj6y1JkM06ThB2mqUkleghJTr/Tg==
 
 vanilla-framework@4.9.0:
   version "4.9.0"
