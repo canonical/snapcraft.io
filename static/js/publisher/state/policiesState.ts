@@ -1,4 +1,4 @@
-import { atom as jotaiAtom } from "jotai";
+import { atom } from "jotai";
 
 import { signingKeysListState } from "./signingKeysState";
 
@@ -27,11 +27,11 @@ function getFilteredPolicies(
   });
 }
 
-const policiesListState = jotaiAtom([] as Policy[]);
+const policiesListState = atom([] as Policy[]);
 
-const policiesListFilterState = jotaiAtom("" as string);
+const policiesListFilterState = atom("" as string);
 
-const filteredPoliciesListState = jotaiAtom(
+const filteredPoliciesListState = atom(
   (get) => {
     const filter = get(policiesListFilterState);
     const policies = get(policiesListState);

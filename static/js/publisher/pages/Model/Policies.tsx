@@ -6,10 +6,7 @@ import {
   useLocation,
   useNavigate,
 } from "react-router-dom";
-import {
-  useAtomValue as useJotaiValue,
-  useSetAtom as useSetJotaiState,
-} from "jotai";
+import { useAtomValue, useSetAtom } from "jotai";
 import { Row, Col, Notification, Icon } from "@canonical/react-components";
 
 import ModelNav from "./ModelNav";
@@ -40,10 +37,10 @@ function Policies(): React.JSX.Element {
   const { isLoading, isError, error, refetch, data }: UsePoliciesResponse =
     usePolicies(id, model_id);
   const signingKeys = useSigningKeys(id);
-  const setPoliciesList = useSetJotaiState(policiesListState);
-  const setFilter = useSetJotaiState(policiesListFilterState);
-  const setNewSigningKey = useSetJotaiState(newSigningKeyState);
-  const brandStore = useJotaiValue(brandStoreState(id));
+  const setPoliciesList = useSetAtom(policiesListState);
+  const setFilter = useSetAtom(policiesListFilterState);
+  const setNewSigningKey = useSetAtom(newSigningKeyState);
+  const brandStore = useAtomValue(brandStoreState(id));
   const [searchParams] = useSearchParams();
   const [showNotification, setShowNotification] = useState<boolean>(false);
   const [showErrorNotification, setShowErrorNotification] =
@@ -54,7 +51,7 @@ function Policies(): React.JSX.Element {
     showDeletePolicyErrorNotification,
     setShowDeletePolicyErrorNotification,
   ] = useState<boolean>(false);
-  const setSigningKeysList = useSetJotaiState(signingKeysListState);
+  const setSigningKeysList = useSetAtom(signingKeysListState);
 
   useEffect(() => {
     if (!signingKeys.isLoading && !signingKeys.isError) {

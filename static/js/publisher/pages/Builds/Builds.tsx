@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { useQuery } from "react-query";
-import { useAtom as useJotaiState } from "jotai";
+import { useAtom } from "jotai";
 import { Strip } from "@canonical/react-components";
 
 import SectionNav from "../../components/SectionNav";
@@ -19,11 +19,9 @@ import { setPageTitle } from "../../utils";
 
 function Builds(): React.JSX.Element {
   const { snapId } = useParams();
-  const [githubData, setGithubData] = useJotaiState(githubDataState);
-  const [loggedIn, setLoggedIn] = useJotaiState(buildLoggedInState);
-  const [repoConnected, setRepoConnected] = useJotaiState(
-    buildRepoConnectedState,
-  );
+  const [githubData, setGithubData] = useAtom(githubDataState);
+  const [loggedIn, setLoggedIn] = useAtom(buildLoggedInState);
+  const [repoConnected, setRepoConnected] = useAtom(buildRepoConnectedState);
   const [autoTriggerBuild, setAutoTriggerBuild] = useState<boolean>(false);
   const { isLoading } = useQuery({
     queryKey: ["githubData"],

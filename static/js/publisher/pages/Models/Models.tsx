@@ -1,8 +1,5 @@
 import { useState, useEffect } from "react";
-import {
-  useAtomValue as useJotaiValue,
-  useSetAtom as useSetJotaiState,
-} from "jotai";
+import { useAtomValue, useSetAtom } from "jotai";
 import {
   Link,
   useParams,
@@ -33,7 +30,7 @@ import type { Model as ModelType } from "../../types/shared";
 
 function Models(): React.JSX.Element {
   const { id } = useParams();
-  const brandId = useJotaiValue(brandIdState);
+  const brandId = useAtomValue(brandIdState);
 
   const {
     data: models,
@@ -44,11 +41,11 @@ function Models(): React.JSX.Element {
 
   const location = useLocation();
   const navigate = useNavigate();
-  const setModelsList = useSetJotaiState(modelsListState);
-  const setPolicies = useSetJotaiState(policiesListState);
-  const setNewModel = useSetJotaiState(newModelState);
-  const setFilter = useSetJotaiState(modelsListFilterState);
-  const brandStore = useJotaiValue(brandStoreState(id));
+  const setModelsList = useSetAtom(modelsListState);
+  const setPolicies = useSetAtom(policiesListState);
+  const setNewModel = useSetAtom(newModelState);
+  const setFilter = useSetAtom(modelsListFilterState);
+  const brandStore = useAtomValue(brandStoreState(id));
   const [searchParams] = useSearchParams();
   const [showNotification, setShowNotification] = useState<boolean>(false);
   const [showErrorNotification, setShowErrorNotification] =

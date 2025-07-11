@@ -1,9 +1,6 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import {
-  useAtomValue as useJotaiValue,
-  useSetAtom as useSetJotaiState,
-} from "jotai";
+import { useAtomValue, useSetAtom } from "jotai";
 import { useMutation } from "react-query";
 import { format } from "date-fns";
 import randomstring from "randomstring";
@@ -28,13 +25,13 @@ import type { Model as ModelType } from "../../types/shared";
 
 function Model() {
   const { id, model_id } = useParams();
-  const brandId = useJotaiValue(brandIdState);
-  const currentModel = useJotaiValue(currentModelState(model_id));
+  const brandId = useAtomValue(brandIdState);
+  const currentModel = useAtomValue(currentModelState(model_id));
   const [newApiKey, setNewApiKey] = useState("");
   const [showSuccessNotification, setShowSuccessNotificaton] = useState(false);
   const [showErrorNotification, setShowErrorNotificaton] = useState(false);
-  const setModelsList = useSetJotaiState(modelsListState);
-  const brandStore = useJotaiValue(brandStoreState(id));
+  const setModelsList = useSetAtom(modelsListState);
+  const brandStore = useAtomValue(brandStoreState(id));
 
   const mutation = useMutation({
     mutationFn: (apiKey: string) => {

@@ -1,9 +1,9 @@
-import { atom as jotaiAtom } from "jotai";
+import { atom } from "jotai";
 
 import type { GithubData } from "../types";
 
-export const buildLoggedInState = jotaiAtom(false);
+export const buildLoggedInState = atom(false);
 
-export const buildRepoConnectedState = jotaiAtom(false);
+export const buildRepoConnectedState = atom(false);
 
-export const githubDataState = jotaiAtom<GithubData | null>(null);
+export const githubDataState = atom<GithubData | null>(null);

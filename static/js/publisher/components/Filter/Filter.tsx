@@ -1,5 +1,5 @@
 import { useSearchParams } from "react-router-dom";
-import { useSetAtom as useSetJotaiState } from "jotai";
+import { useSetAtom } from "jotai";
 import { Button, Icon } from "@canonical/react-components";
 
 import type { PrimitiveAtom } from "jotai";
@@ -12,7 +12,7 @@ type Props = {
 
 function Filter({ state, label, placeholder }: Props): React.JSX.Element {
   const [searchParams, setSearchParams] = useSearchParams();
-  const setFilter = useSetJotaiState(state);
+  const setFilter = useSetAtom(state);
 
   return (
     <div className="p-search-box">

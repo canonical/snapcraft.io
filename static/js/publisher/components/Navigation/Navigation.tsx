@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useAtom as useJotaiState, useAtomValue as useJotaiValue } from "jotai";
+import { useAtom, useAtomValue } from "jotai";
 import { useParams, NavLink } from "react-router-dom";
 import { Icon } from "@canonical/react-components";
 
@@ -17,15 +17,15 @@ function Navigation({
 }: {
   sectionName: string | null;
 }): React.JSX.Element {
-  const brandStoresList = useJotaiValue(brandStoresState);
+  const brandStoresList = useAtomValue(brandStoresState);
   const { id } = useParams();
   const { data: brand } = useBrand(id);
   const { data: publisherData } = usePublisher();
   const { data: validationSetsData } = useValidationSets();
   const [pinSideNavigation, setPinSideNavigation] = useState<boolean>(false);
   const [collapseNavigation, setCollapseNavigation] = useState<boolean>(false);
-  const [publisher, setPublisher] = useJotaiState(publisherState);
-  const [brandId, setBrandId] = useJotaiState(brandIdState);
+  const [publisher, setPublisher] = useAtom(publisherState);
+  const [brandId, setBrandId] = useAtom(brandIdState);
 
   const currentStore = brandStoresList.find((store) => store.id === id);
 

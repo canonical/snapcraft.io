@@ -1,5 +1,5 @@
 import { useState, useEffect, Dispatch, SetStateAction } from "react";
-import { useAtomValue as useJotaiValue, useAtom as useJotaiState } from "jotai";
+import { useAtomValue, useAtom } from "jotai";
 import { useParams, Link, useNavigate, useLocation } from "react-router-dom";
 import { useMutation, useQueryClient } from "react-query";
 import { Button, Icon } from "@canonical/react-components";
@@ -25,13 +25,13 @@ function CreatePolicyForm({
   refetchPolicies,
 }: Props): React.JSX.Element {
   const { id, model_id } = useParams();
-  const brandId = useJotaiValue(brandIdState);
+  const brandId = useAtomValue(brandIdState);
   const navigate = useNavigate();
   const location = useLocation();
   const { isLoading, isError, error, data } = useSigningKeys(id);
-  const [signingKeys, setSigningKeys] = useJotaiState(signingKeysListState);
-  const [newSigningKey, setNewSigningKey] = useJotaiState(newSigningKeyState);
-  const brandStore = useJotaiValue(brandStoreState(id));
+  const [signingKeys, setSigningKeys] = useAtom(signingKeysListState);
+  const [newSigningKey, setNewSigningKey] = useAtom(newSigningKeyState);
+  const brandStore = useAtomValue(brandStoreState(id));
   const [isSaving, setIsSaving] = useState(false);
   const queryClient = useQueryClient();
 
