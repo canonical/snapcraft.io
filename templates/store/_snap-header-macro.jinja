@@ -1,0 +1,14 @@
+{%- macro package_header(caller=None) -%}
+  {%- set buttons_content = caller('buttons') -%}
+  {%- set has_buttons_content = buttons_content|trim|length > 0 -%}
+
+  <div class="p-snap-heading">
+    {% include 'store/snap-details/_snap_heading_data.html' %}
+
+    {%- if has_buttons_content -%}
+    <div class="p-snap-install-buttons">
+      {{ buttons_content }}
+    </div>
+    {%- endif -%}
+  </div>
+{%- endmacro -%}
