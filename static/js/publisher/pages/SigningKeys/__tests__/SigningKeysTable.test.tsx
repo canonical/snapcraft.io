@@ -42,7 +42,7 @@ describe("SigningKeysTable", () => {
     ).toBeInTheDocument();
 
     expect(
-      screen.getByRole("columnheader", { name: "fingerprint" }),
+      screen.getByRole("columnheader", { name: "Fingerprint" }),
     ).toBeInTheDocument();
   });
 

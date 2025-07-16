@@ -500,3 +500,8 @@ dl {
 html {
   scroll-behavior: smooth;
 }
+
+// Prevents over-scrolling if contains an absolutely positioned element
+.l-main {
+  position: relative;
+}

@@ -2,10 +2,16 @@ import { SetStateAction, useState, Dispatch, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useAtomValue, useSetAtom } from "jotai";
 import { format } from "date-fns";
-import { MainTable, Button, Tooltip } from "@canonical/react-components";
+import {
+  MainTable,
+  Button,
+  Tooltip,
+  TablePagination,
+} from "@canonical/react-components";
 
-import AppPagination from "../../components/AppPagination";
 import DeactivateSigningKeyModal from "./DeactivateSigningKeyModal";
+
+import { useSortTableData } from "../../hooks";
 
 import { sortByDateDescending } from "../../utils";
 
@@ -16,7 +22,6 @@ import {
 import { brandIdState } from "../../state/brandStoreState";
 
 import type { SigningKey } from "../../types/shared";
-import type { ItemType } from "../../components/AppPagination/AppPagination";
 
 type Props = {
   setShowDisableSuccessNotification: Dispatch<SetStateAction<boolean>>;
@@ -32,8 +37,6 @@ function SigningKeysTable({
   const signingKeysList = useAtomValue<Array<SigningKey>>(
     filteredSigningKeysListState,
   );
-  const [itemsToShow, setItemsToShow] =
-    useState<Array<SigningKey>>(signingKeysList);
   const setSigningKeysList = useSetAtom(signingKeysListState);
   const [isDeleting, setIsDeleting] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
@@ -96,6 +99,118 @@ function SigningKeysTable({
     };
   }, []);
 
+  const headers = [
+    {
+      content: `Name (${signingKeysList.length})`,
+      sortKey: "name",
+      style: {
+        width: "320px",
+      },
+    },
+    {
+      content: "Policies",
+      sortKey: "policy",
+      className: "u-align--right",
+      style: {
+        width: "80px",
+      },
+    },
+    {
+      content: "Models",
+      sortKey: "models",
+      className: "u-align--right",
+      style: {
+        width: "80px",
+      },
+    },
+    {
+      content: "Created date",
+      sortKey: "created-at",
+      className: "u-align--right",
+      style: {
+        width: "120px",
+      },
+    },
+    {
+      content: "Fingerprint",
+      sortKey: "fingerprint",
+    },
+    {
+      content: "",
+      className: "u-align--right",
+      style: {
+        width: "150px",
+      },
+    },
+  ];
+
+  const rows = signingKeysList.map((signingKey: SigningKey) => {
+    return {
+      columns: [
+        {
+          content: signingKey["name"],
+          className: "u-truncate",
+        },
+        {
+          content: signingKey.policies ? signingKey.policies.length : 0,
+          className: "u-align--right",
+        },
+        {
+          content: (
+            <Tooltip
+              position="btm-right"
+              message={
+                <ul className="p-list u-no-margin--bottom">
+                  {signingKey.models &&
+                    signingKey.models.map((model) => (
+                      <li key={model}>{model}</li>
+                    ))}
+                </ul>
+              }
+            >
+              {signingKey.models ? signingKey.models.length : "0"}
+            </Tooltip>
+          ),
+          className: "u-align--right",
+        },
+        {
+          content:
+            signingKey["created-at"] && signingKey["created-at"] !== null
+              ? format(new Date(signingKey["created-at"]), "dd/MM/yyyy")
+              : "-",
+          className: "u-align--right",
+        },
+        {
+          content: signingKey["fingerprint"],
+          className: "u-align--right",
+        },
+        {
+          content: (
+            <Button
+              dense
+              onClick={() => {
+                handleDisableClick(signingKey);
+              }}
+              disabled={isDeleting || !enableTableActions}
+            >
+              Deactivate
+            </Button>
+          ),
+          className: "u-align--right",
+        },
+      ],
+      sortData: {
+        name: signingKey.name,
+        policies: signingKey?.policies?.length,
+        models: signingKey?.models?.length,
+        "created-at": signingKey["created-at"],
+        fingerprint: signingKey.fingerprint,
+      },
+    };
+  });
+
+  const { rows: sortedRows, updateSort } = useSortTableData({ rows });
+
   return (
     <>
       {selectedSigningKey && modalOpen && (
@@ -107,134 +222,19 @@ function SigningKeysTable({
         />
       )}
 
-      <div className="u-flex-grow">
+      <TablePagination
+        data={sortedRows}
+        pageLimits={[25, 50, 100, 200]}
+        position="below"
+      >
         <MainTable
           data-testid="signing-keys-table"
           sortable
+          onUpdateSort={updateSort}
           emptyStateMsg="No signing keys match this filter"
-          headers={[
-            {
-              content: `Name (${signingKeysList.length})`,
-              sortKey: "name",
-              style: {
-                width: "320px",
-              },
-            },
-            {
-              content: "Policies",
-              sortKey: "policy",
-              className: "u-align--right",
-              style: {
-                width: "80px",
-              },
-            },
-            {
-              content: "Models",
-              sortKey: "models",
-              className: "u-align--right",
-              style: {
-                width: "80px",
-              },
-            },
-            {
-              content: "Created date",
-              sortKey: "created-at",
-              className: "u-align--right",
-              style: {
-                width: "120px",
-              },
-            },
-            {
-              content: "fingerprint",
-              sortKey: "fingerprint",
-              className: "u-align--right",
-            },
-            {
-              content: "",
-              className: "u-align--right",
-              style: {
-                width: "150px",
-              },
-            },
-          ]}
-          rows={itemsToShow.map((signingKey: SigningKey) => {
-            return {
-              columns: [
-                {
-                  content: signingKey["name"],
-                  className: "u-truncate",
-                },
-                {
-                  content: signingKey.policies ? signingKey.policies.length : 0,
-                  className: "u-align--right",
-                },
-                {
-                  content: (
-                    <Tooltip
-                      position="btm-right"
-                      message={
-                        <ul className="p-list u-no-margin--bottom">
-                          {signingKey.models &&
-                            signingKey.models.map((model) => (
-                              <li key={model}>{model}</li>
-                            ))}
-                        </ul>
-                      }
-                    >
-                      {signingKey.models ? signingKey.models.length : "0"}
-                    </Tooltip>
-                  ),
-                  className: "u-align--right",
-                },
-                {
-                  content:
-                    signingKey["created-at"] &&
-                    signingKey["created-at"] !== null
-                      ? format(new Date(signingKey["created-at"]), "dd/MM/yyyy")
-                      : "-",
-                  className: "u-align--right",
-                },
-                {
-                  content: signingKey["fingerprint"],
-                  className: "u-align--right",
-                },
-                {
-                  content: (
-                    <Button
-                      dense
-                      onClick={() => {
-                        handleDisableClick(signingKey);
-                      }}
-                      disabled={isDeleting || !enableTableActions}
-                    >
-                      Deactivate
-                    </Button>
-                  ),
-                  className: "u-align--right",
-                },
-              ],
-              sortData: {
-                name: signingKey.name,
-                policies: signingKey?.policies?.length,
-                models: signingKey?.models?.length,
-                "created-at": signingKey["created-at"],
-                fingerprint: signingKey.fingerprint,
-              },
-            };
-          })}
+          headers={headers}
         />
-      </div>
-      <AppPagination
-        keyword="signing key"
-        items={signingKeysList}
-        setItemsToShow={(items: ItemType[]) => {
-          if (items.length > 0 && "name" in items[0]) {
-            setItemsToShow(items as SigningKey[]);
-          } else {
-            console.error("Invalid item types.");
-          }
-        }}
-      />
+      </TablePagination>
     </>
   );
 }
