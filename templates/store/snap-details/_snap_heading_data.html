@@ -1,3 +1,6 @@
+{%- from 'store/_snap-header-developer-information.html' import developer_info -%}
+{%- from 'store/_snap-header-information.html' import publisher_info -%}
+
 {%- macro package_header_data(
     package_name,
     package_title,
@@ -38,15 +41,16 @@
     <h1 class="p-heading--2 p-snap-heading__name" data-live="title">{{ package_title }}</h1>
     <div class="u-hide--medium u-hide--large">
       {% if developer %}
-        {% include 'store/_snap-header-developer-information.html' %}
+        {{ developer_info(name=developer[0], url=developer[1]) }}
       {% endif %}
-      {% include 'store/_snap-header-information.html' %}
+      {{ publisher_info(publisher, username, developer_validation, display_name, VERIFIED_PUBLISHER, STAR_DEVELOPER) }}
+
     </div>
     <ul class="p-inline-list--vertical-divider">
       {% if developer %}
-        <li class="p-inline-list__item u-hide--small">{% include 'store/_snap-header-developer-information.html' %}</li>
+        <li class="p-inline-list__item u-hide--small">{{ developer_info(name=developer[0], url=developer[1]) }}</li>
       {% endif %}
-      <li class="p-inline-list__item u-hide--small">{% include 'store/_snap-header-information.html' %}</li>
+      <li class="p-inline-list__item u-hide--small">{{ publisher_info(publisher, username, developer_validation, display_name, VERIFIED_PUBLISHER, STAR_DEVELOPER) }}</li>
       {% for category in categories %}
         <li class="p-inline-list__item">
           <a href="/search?categories={{ category.slug }}">{{ category.name }}</a>

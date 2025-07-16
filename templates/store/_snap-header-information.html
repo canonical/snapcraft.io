@@ -1,3 +1,4 @@
+{%- macro publisher_info(publisher, username, developer_validation, display_name, VERIFIED_PUBLISHER, STAR_DEVELOPER) -%}
 <span class="p-tooltip--top-center">
   <a href="/publisher/{{ username }}" title="View all snaps from {{ display_name(publisher, username) }}">
     {{ display_name(publisher, username) }}
@@ -5,12 +6,13 @@
   <span class="p-tooltip__message">Publisher</span>
 </span>
 
-{% if developer_validation %}
-  {% if developer_validation == VERIFIED_PUBLISHER %}
-    {% include "partials/_verified_developer.html" %}
-  {% endif %}
+{%- if developer_validation -%}
+  {%- if developer_validation == VERIFIED_PUBLISHER -%}
+    {%- include "partials/_verified_developer.html" -%}
+  {%- endif -%}
 
-  {% if developer_validation == STAR_DEVELOPER %}
-    {% include "partials/_star_developer.html" %}
-  {% endif %}
-{% endif %}
+  {%- if developer_validation == STAR_DEVELOPER -%}
+    {%- include "partials/_star_developer.html" -%}
+  {%- endif -%}
+{%- endif -%}
+{%- endmacro -%}
