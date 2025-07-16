@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">80% </span>
+                <span class="strong">85.71% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>4/5</span>
+                <span class='fraction'>6/7</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">80% </span>
+                <span class="strong">85.71% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>4/5</span>
+                <span class='fraction'>6/7</span>
             </div>
         
             
@@ -177,8 +177,7 @@
 <a name='L112'></a><a href='#L112'>112</a>
 <a name='L113'></a><a href='#L113'>113</a>
 <a name='L114'></a><a href='#L114'>114</a>
-<a name='L115'></a><a href='#L115'>115</a>
-<a name='L116'></a><a href='#L116'>116</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L115'></a><a href='#L115'>115</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -192,15 +191,10 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">28x</span>
+<span class="cline-any cline-yes">28x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">19x</span>
-<span class="cline-any cline-yes">19x</span>
-<span class="cline-any cline-yes">19x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">19x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">28x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -234,10 +228,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">28x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -280,6 +271,9 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">28x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">28x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -293,117 +287,120 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { useState } from "react";
-import { Link, useParams } from "react-router-dom";
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { Link, useParams } from "react-router-dom";
 import { useAtomValue } from "jotai";
 import { format } from "date-fns";
-import { MainTable } from "@canonical/react-components";
+import { MainTable, TablePagination } from "@canonical/react-components";
 &nbsp;
-import AppPagination from "../../components/AppPagination";
-&nbsp;
-import { maskString } from "../../utils";
+import { maskString, sortByDateDescending } from "../../utils";
 &nbsp;
 import { filteredModelsListState } from "../../state/modelsState";
+&nbsp;
+import { useSortTableData } from "../../hooks";
 &nbsp;
 import type { Model as ModelType } from "../../types/shared";
 &nbsp;
 function ModelsTable(): React.JSX.Element {
   const { id } = useParams();
   const modelsList = useAtomValue&lt;Array&lt;ModelType&gt;&gt;(filteredModelsListState);
-  const [itemsToShow, setItemsToShow] = useState&lt;Array&lt;ModelType&gt;&gt;(modelsList);
+&nbsp;
+  const headers = [
+    {
+      content: `Name (${modelsList.length})`,
+      sortKey: "name",
+    },
+    {
+      content: "API key",
+      className: "u-align--right",
+    },
+    {
+      content: "Policy revision",
+      className: "u-align--right",
+      style: {
+        width: "150px",
+      },
+    },
+    {
+      content: "Last updated",
+      className: "u-align--right",
+      sortKey: "modified-at",
+      style: {
+        width: "120px",
+      },
+    },
+    {
+      content: "Created date",
+      className: "u-align--right",
+      sortKey: "created-at",
+      style: {
+        width: "120px",
+      },
+    },
+  ];
+&nbsp;
+  const rows = modelsList.sort(sortByDateDescending).map(<span class="fstat-no" title="function not covered" >(m</span>odel: ModelType) =&gt; {
+<span class="cstat-no" title="statement not covered" >    return {</span>
+      columns: [
+        {
+          content: (
+            &lt;Link to={`/admin/${id}/models/${model.name}`}&gt;{model.name}&lt;/Link&gt;
+          ),
+          className: "u-truncate",
+        },
+        {
+          content: maskString(model["api-key"]) || "-",
+          className: "u-align--right",
+        },
+        {
+          content:
+            model["policy-revision"] !== undefined
+              ? model["policy-revision"]
+              : "-",
+          className: "u-align--right",
+        },
+        {
+          content:
+            model["modified-at"] &amp;&amp; model["modified-at"] !== null
+              ? format(new Date(model["modified-at"]), "dd/MM/yyyy")
+              : "-",
+          className: "u-align--right",
+        },
+        {
+          content:
+            model["created-at"] !== null
+              ? format(new Date(model["created-at"]), "dd/MM/yyyy")
+              : "-",
+          className: "u-align--right",
+        },
+      ],
+      sortData: {
+        name: model.name,
+        "modified-at": model["modified-at"],
+        "created-at": model["created-at"],
+      },
+    };
+  });
+&nbsp;
+  const { rows: sortedRows, updateSort } = useSortTableData({ rows });
 &nbsp;
   return (
-    &lt;&gt;
-      &lt;div className="u-flex-grow"&gt;
-        &lt;MainTable
-          data-testid="models-table"
-          sortable
-          emptyStateMsg="No models match this filter"
-          headers={[
-            {
-              content: `Name (${modelsList.length})`,
-              sortKey: "name",
-            },
-            {
-              content: "API key",
-              className: "u-align--right",
-            },
-            {
-              content: "Policy revision",
-              className: "u-align--right",
-              style: {
-                width: "150px",
-              },
-            },
-            {
-              content: "Last updated",
-              className: "u-align--right",
-              sortKey: "modified-at",
-              style: {
-                width: "120px",
-              },
-            },
-            {
-              content: "Created date",
-              className: "u-align--right",
-              sortKey: "created-at",
-              style: {
-                width: "120px",
-              },
-            },
-          ]}
-          rows={itemsToShow.map(<span class="fstat-no" title="function not covered" >(m</span>odel: ModelType) =&gt; {
-<span class="cstat-no" title="statement not covered" >            return {</span>
-              columns: [
-                {
-                  content: (
-                    &lt;Link to={`/admin/${id}/models/${model.name}`}&gt;
-                      {model.name}
-                    &lt;/Link&gt;
-                  ),
-                  className: "u-truncate",
-                },
-                {
-                  content: maskString(model["api-key"]) || "-",
-                  className: "u-align--right",
-                },
-                {
-                  content:
-                    model["policy-revision"] !== undefined
-                      ? model["policy-revision"]
-                      : "-",
-                  className: "u-align--right",
-                },
-                {
-                  content:
-                    model["modified-at"] &amp;&amp; model["modified-at"] !== null
-                      ? format(new Date(model["modified-at"]), "dd/MM/yyyy")
-                      : "-",
-                  className: "u-align--right",
-                },
-                {
-                  content:
-                    model["created-at"] !== null
-                      ? format(new Date(model["created-at"]), "dd/MM/yyyy")
-                      : "-",
-                  className: "u-align--right",
-                },
-              ],
-              sortData: {
-                name: model.name,
-                "modified-at": model["modified-at"],
-                "created-at": model["created-at"],
-              },
-            };
-          })}
-        /&gt;
-      &lt;/div&gt;
-      &lt;AppPagination
-        keyword="model"
-        items={modelsList}
-        setItemsToShow={setItemsToShow}
+    &lt;TablePagination
+      data={sortedRows}
+      pageLimits={[25, 50, 100, 200]}
+      position="below"
+    &gt;
+      &lt;MainTable
+        data-testid="models-table"
+        sortable
+        onUpdateSort={updateSort}
+        emptyStateMsg="No models match this filter"
+        headers={headers}
       /&gt;
-    &lt;/&gt;
+    &lt;/TablePagination&gt;
   );
 }
 &nbsp;
@@ -415,7 +412,7 @@ export default ModelsTable;
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-07-15T22:04:26.226Z
+                at 2025-07-16T22:04:23.991Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>
