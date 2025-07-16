@@ -193,17 +193,19 @@ const ReleasesTableDroppableRow = (props: {
           {versionCountString}
         </small>
       </div>
-      <div className="p-releases-table__row--container" ref={drop}>
-        <ReleasesTableChannelRow
-          risk={risk}
-          branch={branch}
-          // @ts-ignore
-          revisions={revisions}
-          isOverParent={isOver}
-          draggedItem={item}
-          canDrop={canDrop}
-        />
-      </div>
+      {drop(
+        <div className="p-releases-table__row--container">
+          <ReleasesTableChannelRow
+            risk={risk}
+            branch={branch}
+            // @ts-ignore
+            revisions={revisions}
+            isOverParent={isOver}
+            draggedItem={item}
+            canDrop={canDrop}
+          />
+        </div>,
+      )}
     </>
   );
 };

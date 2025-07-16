@@ -6,6 +6,9 @@ import "@testing-library/jest-dom";
 
 import Store from "../Store";
 
+// Necessary to prevent FormData type error in some tests
+global.FormData = jest.fn();
+
 global.fetch = jest.fn(() => {
   return Promise.resolve({
     json: () => {

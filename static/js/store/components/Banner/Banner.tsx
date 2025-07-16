@@ -4,8 +4,8 @@ import { SearchInput } from "../SearchInput";
 import type { RefObject } from "react";
 
 type Props = {
-  searchRef: RefObject<HTMLInputElement>;
-  searchSummaryRef?: RefObject<HTMLDivElement>;
+  searchRef: RefObject<HTMLInputElement | null>;
+  searchSummaryRef?: RefObject<HTMLDivElement | null>;
 };
 
 function Banner({ searchRef, searchSummaryRef }: Props): React.JSX.Element {
