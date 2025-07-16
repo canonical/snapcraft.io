@@ -1,9 +1,49 @@
-{%- macro package_header(caller=None) -%}
+{#
+TODO:
+
+Context variables needed:
+
+Snap data:
+package_name	Used in _verified_developer and _star_developer - just for tooltip id?
+snap_title	Title of the snap
+icon_url	URL of the icon
+categories	List of categories with slug/name
+
+Publisher data:
+username	Publisher's username
+publisher	Publisher object (used in display_name)
+developer	Tuple/List – name and URL
+developer_validation	Status string
+
+Other:
+image	template function
+display_name	template function
+VERIFIED_PUBLISHER	const (value of developer_validation)
+STAR_DEVELOPER	const (value of developer_validation)
+#}
+
+{% from "store/snap-details/_snap_heading_data.html" import package_header_data %}
+
+{%- macro package_header(
+    caller=None) -%}
   {%- set buttons_content = caller('buttons') -%}
   {%- set has_buttons_content = buttons_content|trim|length > 0 -%}
 
   <div class="p-snap-heading">
-    {% include 'store/snap-details/_snap_heading_data.html' %}
+    {{ package_header_data(
+        package_name=package_name,
+        package_title=snap_title,
+        icon_url=icon_url,
+        developer=developer,
+        categories=categories,
+        image=image,
+        display_name=display_name,
+        username=username,
+        publisher=publisher,
+        developer_validation=developer_validation,
+        STAR_DEVELOPER=STAR_DEVELOPER,
+        VERIFIED_PUBLISHER=VERIFIED_PUBLISHER
+    )}}
 
     {%- if has_buttons_content -%}
     <div class="p-snap-install-buttons">

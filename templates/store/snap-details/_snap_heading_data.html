@@ -1,41 +1,57 @@
-{% if icon_url %}
-  {% if icon_url.startswith("blob") %}
-    <img class="p-snap-heading__icon" src="{{ icon_url | safe }}" width="60" height="60" data-live="icon" />
+{%- macro package_header_data(
+    package_name,
+    package_title,
+    icon_url,
+    developer,
+    categories,
+    image,
+    display_name,
+    username,
+    publisher,
+    developer_validation,
+    STAR_DEVELOPER,
+    VERIFIED_PUBLISHER) -%}
+  {% if icon_url %}
+    {% if icon_url.startswith("blob") %}
+      <img class="p-snap-heading__icon"
+           src="{{ icon_url | safe }}"
+           width="60"
+           height="60"
+           data-live="icon" />
+    {% else %}
+      {{ image(url=icon_url,
+            alt=package_title,
+            width=60,
+            height=60,
+            hi_def=True,
+            loading="eager",
+            attrs={"class": "p-snap-heading__icon", "data-live": "icon"}) | safe
+      }}
+    {% endif %}
   {% else %}
-    {{
-      image(
-        url=icon_url,
-        alt=snap_title,
-        width=60,
-        height=60,
-        hi_def=True,
-        loading="eager",
-        attrs={"class": "p-snap-heading__icon", "data-live": "icon"}
-      ) | safe
-    }}
+    <img class="p-snap-heading__icon"
+         src="https://assets.ubuntu.com/v1/be6eb412-snapcraft-missing-icon.svg"
+         alt=""
+         data-live="icon" />
   {% endif %}
-{% else %}
-  <img class="p-snap-heading__icon" src="https://assets.ubuntu.com/v1/be6eb412-snapcraft-missing-icon.svg" alt="" data-live="icon" />
-{% endif %}
-<div class="p-snap-heading__title">
-  <h1 class="p-heading--2 p-snap-heading__name" data-live="title">{{ snap_title }}</h1>
-  <div class="u-hide--medium u-hide--large">
-    {% if developer %}
-    {% include 'store/_snap-header-developer-information.html' %}
-    {% endif %}
-    {% include 'store/_snap-header-information.html' %}
-  </div>
-  <ul class="p-inline-list--vertical-divider">
-    {% if developer %}
-      <li class="p-inline-list__item u-hide--small">
+  <div class="p-snap-heading__title">
+    <h1 class="p-heading--2 p-snap-heading__name" data-live="title">{{ package_title }}</h1>
+    <div class="u-hide--medium u-hide--large">
+      {% if developer %}
         {% include 'store/_snap-header-developer-information.html' %}
-      </li>
-    {% endif %}
-    <li class="p-inline-list__item u-hide--small">
+      {% endif %}
       {% include 'store/_snap-header-information.html' %}
-    </li>
-    {% for category in categories %}<li class="p-inline-list__item">
-      <a href="/search?categories={{category.slug}}">{{ category.name }}</a>
-    </li>{% endfor %}
-  </ul>
-</div>
+    </div>
+    <ul class="p-inline-list--vertical-divider">
+      {% if developer %}
+        <li class="p-inline-list__item u-hide--small">{% include 'store/_snap-header-developer-information.html' %}</li>
+      {% endif %}
+      <li class="p-inline-list__item u-hide--small">{% include 'store/_snap-header-information.html' %}</li>
+      {% for category in categories %}
+        <li class="p-inline-list__item">
+          <a href="/search?categories={{ category.slug }}">{{ category.name }}</a>
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
+{%- endmacro -%}
