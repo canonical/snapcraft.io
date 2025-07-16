@@ -50,10 +50,19 @@ function initReleasesData(revisionsMap, releases, channelMap) {
               if (currentChannel) {
                 release.progressive["current-percentage"] =
                   currentChannel.progressive["current-percentage"];
-                  if (currentChannel.progressive.percentage !== release.progressive.percentage) {
-                    release.progressive.percentage =
-                      currentChannel.progressive.percentage || 100;
-                  }
+                // if the current channel has a different percentage
+                // than the release, we need to update the release
+                // to match the current channel's percentage
+                // If the current channel is null, this means that
+                // an automatic release was completed
+                // and we need to set the percentage to 100
+                if (
+                  currentChannel.progressive.percentage !==
+                  release.progressive.percentage
+                ) {
+                  release.progressive.percentage =
+                    currentChannel.progressive.percentage || 100;
+                }
               }
             }
           }
