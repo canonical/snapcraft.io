@@ -50,6 +50,10 @@ function initReleasesData(revisionsMap, releases, channelMap) {
               if (currentChannel) {
                 release.progressive["current-percentage"] =
                   currentChannel.progressive["current-percentage"];
+                  if (currentChannel.progressive.percentage !== release.progressive.percentage) {
+                    release.progressive.percentage =
+                      currentChannel.progressive.percentage || 100;
+                  }
               }
             }
           }
