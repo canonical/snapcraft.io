@@ -13,6 +13,7 @@ from webapp.helpers import api_publisher_session, api_session
 from webapp.api.exceptions import ApiResponseError
 from webapp.extensions import csrf
 from webapp.login.macaroon import MacaroonRequest, MacaroonResponse
+from webapp.observability.utils import trace_function
 from webapp.publisher.snaps import logic
 
 login = flask.Blueprint(
@@ -42,6 +43,7 @@ publisher_gateway = PublisherGW(api_publisher_session)
 device_gateway = DeviceGW("snap", api_session)
 
 
+@trace_function
 @login.route("/login", methods=["GET", "POST"])
 @csrf.exempt
 @open_id.loginhandler
@@ -138,6 +140,7 @@ def login_beta():
     return flask.redirect(flask.url_for(".login_handler"))
 
 
+@trace_function
 @login.route("/logout")
 def logout():
     authentication.empty_session(flask.session)
