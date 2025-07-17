@@ -215,7 +215,6 @@ describe("releases actions", () => {
       const store = mockStore({
         options: {
           snapName: "test",
-          csrfToken: "test",
           defaultTrack: "latest",
         },
         pendingReleases: {
@@ -249,7 +248,6 @@ describe("releases actions", () => {
       const store = mockStore({
         options: {
           snapName: "test",
-          csrfToken: "test",
           defaultTrack: "latest",
         },
         pendingReleases: {
@@ -304,11 +302,6 @@ describe("releases actions", () => {
     });
 
     it("should remove progressive release if percentage is 100", () => {
-      const revision = {
-        architectures: ["amd64"],
-        revision: 3,
-      };
-
       const release = {
         architecture: "amd64",
         branch: null,
@@ -316,10 +309,15 @@ describe("releases actions", () => {
         risk: "edge",
         track: "latest",
       };
+
+      const revision = {
+        architectures: ["amd64"],
+        revision: 3,
+      };
+
       const store = mockStore({
         options: {
           snapName: "test",
-          csrfToken: "test",
           defaultTrack: "latest",
         },
         pendingReleases: {
@@ -366,8 +364,21 @@ describe("releases actions", () => {
         // fetchReleasesHistory API Response
         .mockResolvedValueOnce({
           json: () => ({
-            releases: [release],
-            revisions: [revision],
+            data: {
+              release_history: {
+                releases: [release],
+                revisions: [revision],
+              },
+              channel_map: [
+                {
+                  channel: "edge",
+                  info: "specific",
+                  revision: 3,
+                  version: "test",
+                  architecture: "amd64",
+                },
+              ],
+            },
           }),
         });
 
@@ -405,6 +416,23 @@ describe("releases actions", () => {
             type: "UPDATE_ARCHITECTURES",
           },
           {
+            payload: {
+              channelMap: {
+                edge: {
+                  amd64: {
+                    architectures: ["amd64"],
+                    channels: ["latest/edge"],
+                    expiration: undefined,
+                    progressive: undefined,
+                    releases: [release],
+                    revision: 3,
+                  },
+                },
+              },
+            },
+            type: "INIT_CHANNEL_MAP",
+          },
+          {
             type: "CANCEL_PENDING_RELEASES",
           },
           {
@@ -418,7 +446,6 @@ describe("releases actions", () => {
       const store = mockStore({
         options: {
           snapName: "test",
-          csrfToken: "test",
           defaultTrack: "latest",
         },
         pendingReleases: {},
@@ -445,7 +472,6 @@ describe("releases actions", () => {
         architectures: ["amd64"],
         revision: 3,
       };
-
       const release = {
         architecture: "amd64",
         branch: null,
@@ -461,7 +487,6 @@ describe("releases actions", () => {
       const store = mockStore({
         options: {
           snapName: "test",
-          csrfToken: "test",
           defaultTrack: "latest",
         },
         pendingReleases: {
@@ -483,7 +508,6 @@ describe("releases actions", () => {
         },
         architectures: [],
       });
-
       global.fetch = jest
         .fn()
         // fetchReleases API Response
@@ -499,6 +523,7 @@ describe("releases actions", () => {
                       info: "specific",
                       revision: 3,
                       version: "test",
+                      architecture: "amd64",
                     },
                   ],
                 },
@@ -516,8 +541,21 @@ describe("releases actions", () => {
         // fetchReleasesHistory API Response
         .mockResolvedValueOnce({
           json: () => ({
-            releases: [release],
-            revisions: [revision],
+            data: {
+              release_history: {
+                releases: [release],
+                revisions: [revision],
+              },
+              channel_map: [
+                {
+                  channel: "edge",
+                  info: "specific",
+                  revision: 3,
+                  version: "test",
+                  architecture: "amd64",
+                },
+              ],
+            },
           }),
         });
 
@@ -559,6 +597,23 @@ describe("releases actions", () => {
               architectures: ["amd64"],
             },
             type: "UPDATE_ARCHITECTURES",
+          },
+          {
+            payload: {
+              channelMap: {
+                edge: {
+                  amd64: {
+                    architectures: ["amd64"],
+                    channels: ["latest/edge"],
+                    expiration: undefined,
+                    progressive: undefined,
+                    releases: [release],
+                    revision: 3,
+                  },
+                },
+              },
+            },
+            type: "INIT_CHANNEL_MAP",
           },
           {
             type: "CANCEL_PENDING_RELEASES",

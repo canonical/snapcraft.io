@@ -6,7 +6,7 @@ import {
   useLocation,
   useNavigate,
 } from "react-router-dom";
-import { useSetRecoilState, useRecoilValue } from "recoil";
+import { useAtomValue, useSetAtom } from "jotai";
 import { Row, Col, Notification, Icon } from "@canonical/react-components";
 
 import ModelNav from "./ModelNav";
@@ -30,8 +30,6 @@ import { brandStoreState } from "../../state/brandStoreState";
 
 import { isClosedPanel, setPageTitle } from "../../utils";
 
-import type { Policy, SigningKey } from "../../types/shared";
-
 function Policies(): React.JSX.Element {
   const { id, model_id } = useParams();
   const location = useLocation();
@@ -39,10 +37,10 @@ function Policies(): React.JSX.Element {
   const { isLoading, isError, error, refetch, data }: UsePoliciesResponse =
     usePolicies(id, model_id);
   const signingKeys = useSigningKeys(id);
-  const setPoliciesList = useSetRecoilState<Array<Policy>>(policiesListState);
-  const setFilter = useSetRecoilState<string>(policiesListFilterState);
-  const setNewSigningKey = useSetRecoilState(newSigningKeyState);
-  const brandStore = useRecoilValue(brandStoreState(id));
+  const setPoliciesList = useSetAtom(policiesListState);
+  const setFilter = useSetAtom(policiesListFilterState);
+  const setNewSigningKey = useSetAtom(newSigningKeyState);
+  const brandStore = useAtomValue(brandStoreState(id));
   const [searchParams] = useSearchParams();
   const [showNotification, setShowNotification] = useState<boolean>(false);
   const [showErrorNotification, setShowErrorNotification] =
@@ -53,8 +51,7 @@ function Policies(): React.JSX.Element {
     showDeletePolicyErrorNotification,
     setShowDeletePolicyErrorNotification,
   ] = useState<boolean>(false);
-  const setSigningKeysList =
-    useSetRecoilState<Array<SigningKey>>(signingKeysListState);
+  const setSigningKeysList = useSetAtom(signingKeysListState);
 
   useEffect(() => {
     if (!signingKeys.isLoading && !signingKeys.isError) {

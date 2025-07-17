@@ -9,6 +9,8 @@ import {
 import { nanoid } from "nanoid";
 import { Row, Col, Modal } from "@canonical/react-components";
 
+import VerifiedButton from "./VerifiedButton";
+
 import { useVerified } from "../../../hooks";
 
 import type { ListingData } from "../../../types";
@@ -33,7 +35,7 @@ function PrimaryDomainInput({
   const { isLoading, status, data: verifiedData } = useVerified(snapId);
   const domain = getValues("primary_website");
   const defaultDomain = data.primary_website;
-  const verificationToken = `SNAPCRAFT_IO_VERIFICATION=${window.SNAP_LISTING_DATA.DNS_VERIFICATION_TOKEN}`;
+  const verificationToken = `SNAPCRAFT_IO_VERIFICATION=${verifiedData && verifiedData.token}`;
 
   const noPathDomains = [
     "github.com",
@@ -147,31 +149,17 @@ function PrimaryDomainInput({
                       {!domainChanged() &&
                         pathChanged() &&
                         !domainInNoPathList() && (
-                          <button
-                            type="button"
-                            className="p-button--base has-icon"
-                            onClick={() => {
-                              setShowVerifyModal(true);
-                            }}
-                            disabled={fieldState.isDirty}
-                          >
-                            <span>Verified ownership</span>
-                            <i className="p-icon--chevron-right"></i>
-                          </button>
+                          <VerifiedButton
+                            isDirty={fieldState.isDirty}
+                            setShowVerifyModal={setShowVerifyModal}
+                          />
                         )}
 
                       {!domainChanged() && !pathChanged() && (
-                        <button
-                          type="button"
-                          className="p-button--base has-icon"
-                          onClick={() => {
-                            setShowVerifyModal(true);
-                          }}
-                          disabled={fieldState.isDirty}
-                        >
-                          <span>Verified ownership</span>
-                          <i className="p-icon--chevron-right"></i>
-                        </button>
+                        <VerifiedButton
+                          isDirty={fieldState.isDirty}
+                          setShowVerifyModal={setShowVerifyModal}
+                        />
                       )}
 
                       {domainChanged() && !domainInNoPathList() && (
@@ -184,17 +172,10 @@ function PrimaryDomainInput({
                   )}
 
                   {!fieldState.isDirty && (
-                    <button
-                      type="button"
-                      className="p-button--base has-icon"
-                      onClick={() => {
-                        setShowVerifyModal(true);
-                      }}
-                      disabled={fieldState.isDirty}
-                    >
-                      <span>Verified ownership</span>
-                      <i className="p-icon--chevron-right"></i>
-                    </button>
+                    <VerifiedButton
+                      isDirty={fieldState.isDirty}
+                      setShowVerifyModal={setShowVerifyModal}
+                    />
                   )}
                 </>
               )}

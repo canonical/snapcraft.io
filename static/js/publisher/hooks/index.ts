@@ -13,6 +13,7 @@ import usePolicies from "./usePolicies";
 import usePublisher from "./usePublisher";
 import useFetchAccountSnaps from "./useFetchAccountSnaps";
 import useFetchPublishedSnapMetrics from "./useFetchPublishedSnapMetrics";
+import useSortTableData from "./useSortTableData";
 
 export {
   useValidationSets,
@@ -30,4 +31,5 @@ export {
   usePublisher,
   useFetchAccountSnaps,
   useFetchPublishedSnapMetrics,
+  useSortTableData,
 };

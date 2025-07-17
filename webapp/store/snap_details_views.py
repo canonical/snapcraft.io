@@ -204,7 +204,7 @@ def snap_details_views(store):
 
     @store.route('/api/<regex("' + snap_regex + '"):snap_name>/verify')
     def dns_verified_status(snap_name):
-        res = {"primary_domain": False}
+        res = {"primary_domain": False, "token": None}
         context = _get_snap_link_fields(snap_name)
 
         primary_domain = None
@@ -219,6 +219,8 @@ def snap_details_views(store):
 
             domain = re.compile(r"https?://")
             domain = domain.sub("", primary_domain).strip().strip("/")
+
+            res["token"] = token
 
             try:
                 dns_txt_records = [

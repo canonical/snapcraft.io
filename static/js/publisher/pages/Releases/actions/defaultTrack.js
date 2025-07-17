@@ -6,7 +6,7 @@ import { showNotification } from "./globalNotification";
 export const SET_DEFAULT_TRACK_SUCCESS = "SET_DEFAULT_TRACK_SUCCESS";
 export const SET_DEFAULT_TRACK_FAILURE = "SET_DEFAULT_TRACK_FAILURE";
 
-const fetchDefaultTrack = (snapName, csrfToken, track) => {
+const fetchDefaultTrack = (snapName, track) => {
   return fetch(`/${snapName}/releases/default-track`, {
     method: "POST",
     mode: "cors",
@@ -14,7 +14,7 @@ const fetchDefaultTrack = (snapName, csrfToken, track) => {
     credentials: "same-origin",
     headers: {
       "Content-Type": "application/json; charset=utf-8",
-      "X-CSRFToken": csrfToken,
+      "X-CSRFToken": window.CSRF_TOKEN,
     },
     redirect: "follow",
     referrer: "no-referrer",
@@ -30,9 +30,9 @@ const fetchDefaultTrack = (snapName, csrfToken, track) => {
 export function clearDefaultTrack() {
   return (dispatch, getState) => {
     const { options } = getState();
-    const { snapName, csrfToken } = options;
+    const { snapName } = options;
 
-    return fetchDefaultTrack(snapName, csrfToken, null).then(() => {
+    return fetchDefaultTrack(snapName, null).then(() => {
       dispatch({
         type: SET_DEFAULT_TRACK_SUCCESS,
         payload: null,
@@ -55,9 +55,9 @@ export function clearDefaultTrack() {
 export function setDefaultTrack() {
   return (dispatch, getState) => {
     const { options, currentTrack } = getState();
-    const { snapName, csrfToken } = options;
+    const { snapName } = options;
 
-    return fetchDefaultTrack(snapName, csrfToken, currentTrack)
+    return fetchDefaultTrack(snapName, currentTrack)
       .then(() => {
         dispatch({
           type: SET_DEFAULT_TRACK_SUCCESS,

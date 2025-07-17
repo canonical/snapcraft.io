@@ -19,9 +19,6 @@ jest.mock("react-router-dom", () => {
 });
 
 function renderComponent(updateMetadataOnRelease = false) {
-  window.SNAP_LISTING_DATA = {
-    DNS_VERIFICATION_TOKEN: "test-dns-verification-token",
-  };
   const data = {
     ...mockListingData,
     update_metadata_on_release: updateMetadataOnRelease,
@@ -51,6 +48,7 @@ beforeEach(() => {
     http.get("/api/test_id/verify", () => {
       return HttpResponse.json({
         primary_domain: true,
+        token: "test-dns-verification-token",
       });
     }),
   );

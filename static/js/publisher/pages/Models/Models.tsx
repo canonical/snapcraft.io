@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useSetRecoilState, useRecoilValue } from "recoil";
+import { useAtomValue, useSetAtom } from "jotai";
 import {
   Link,
   useParams,
@@ -26,11 +26,11 @@ import Navigation from "../../components/Navigation";
 import { useModels } from "../../hooks";
 import { isClosedPanel, setPageTitle, getPolicies } from "../../utils";
 
-import type { Model as ModelType, Policy } from "../../types/shared";
+import type { Model as ModelType } from "../../types/shared";
 
 function Models(): React.JSX.Element {
   const { id } = useParams();
-  const brandId = useRecoilValue(brandIdState);
+  const brandId = useAtomValue(brandIdState);
 
   const {
     data: models,
@@ -41,11 +41,11 @@ function Models(): React.JSX.Element {
 
   const location = useLocation();
   const navigate = useNavigate();
-  const setModelsList = useSetRecoilState<Array<ModelType>>(modelsListState);
-  const setPolicies = useSetRecoilState<Array<Policy>>(policiesListState);
-  const setNewModel = useSetRecoilState(newModelState);
-  const setFilter = useSetRecoilState<string>(modelsListFilterState);
-  const brandStore = useRecoilValue(brandStoreState(id));
+  const setModelsList = useSetAtom(modelsListState);
+  const setPolicies = useSetAtom(policiesListState);
+  const setNewModel = useSetAtom(newModelState);
+  const setFilter = useSetAtom(modelsListFilterState);
+  const brandStore = useAtomValue(brandStoreState(id));
   const [searchParams] = useSearchParams();
   const [showNotification, setShowNotification] = useState<boolean>(false);
   const [showErrorNotification, setShowErrorNotification] =

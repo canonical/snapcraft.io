@@ -37,7 +37,7 @@ function releaseRevision(
   revision: { architectures: any[]; revision: number },
   channel: string,
   progressive: null,
-  previousRevisions: undefined,
+  previousReleases: undefined,
 ) {
   state = { ...state };
 
@@ -72,8 +72,8 @@ function releaseRevision(
     };
   }
 
-  if (previousRevisions) {
-    state[revision.revision][channel].previousRevisions = previousRevisions;
+  if (previousReleases) {
+    state[revision.revision][channel].previousReleases = previousReleases;
   }
 
   if (progressive && !state[revision.revision][channel].progressive) {
@@ -108,12 +108,12 @@ function setProgressiveRelease(
 
   Object.values(nextState).forEach((pendingRelease: any) => {
     Object.values(pendingRelease).forEach((channel: any) => {
-      const hasPreviousRevisions =
-        channel.previousRevisions &&
-        Object.keys(channel.previousRevisions).length > 0;
+      const hasPreviousReleases =
+        channel.previousReleases &&
+        Object.keys(channel.previousReleases).length > 0;
 
       if (
-        hasPreviousRevisions &&
+        hasPreviousReleases &&
         !channel.progressive &&
         progressive.percentage < 100
       ) {
@@ -205,7 +205,7 @@ function cancelProgressiveRelease(
 //       revision: { revision: <revisionId>, version, ... },
 //       channel: <channel>,
 //       progressive: { key, percentage, paused },
-//       previousRevisions: {
+//       previousReleases: {
 //         <arch>: { revision: <revisionId>, version, ... }
 //       },
 //       replaces: <revision>
@@ -225,7 +225,7 @@ export default function pendingReleases(
         action.payload.revision,
         action.payload.channel,
         action.payload.progressive,
-        action.payload.previousRevisions,
+        action.payload.previousReleases,
       );
     case UNDO_RELEASE:
       return removePendingRelease(

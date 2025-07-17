@@ -5,7 +5,7 @@ const CancelProgressiveRow = ({ release }) => {
   const revisionInfo = release.revision;
 
   return revisionInfo.architectures.map((arch) => {
-    const previousRevision = release.previousRevisions[0];
+    const previousRelease = release.previousReleases[0];
     return (
       <div
         className="p-release-details-row is-closing"
@@ -14,7 +14,7 @@ const CancelProgressiveRow = ({ release }) => {
         <span>Cancel</span>
         <span>
           <b>{revisionInfo.revision}</b> in <b>{release.channel}</b> on{" "}
-          <b>{arch}</b>. Revert to <b>{previousRevision.revision}</b>.
+          <b>{arch}</b>. Revert to <b>{previousRelease.revision}</b>.
         </span>
       </div>
     );

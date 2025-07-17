@@ -56,6 +56,11 @@ export type Store = {
   roles?: Array<"admin" | "review" | "view" | "access">;
   snaps: SnapsList;
   userHasAccess?: boolean;
+  includedStore?: {
+    id: string;
+    name: string;
+    userHasAccess: boolean;
+  };
 };
 
 export type Model = {

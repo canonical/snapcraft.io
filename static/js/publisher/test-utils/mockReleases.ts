@@ -29,4 +29,19 @@ export const mockReleases = [
     track: "latest",
     when: "2025-04-30T18:21:01Z",
   },
+  {
+    architecture: "arm64",
+    branch: "ubuntu-core-desktop",
+    channel: "latest/edge",
+    "expiration-date": null,
+    progressive: {
+      "current-percentage": null,
+      paused: null,
+      percentage: 10,
+    },
+    revision: 54,
+    risk: "stable",
+    track: "latest",
+    when: "2025-04-30T18:21:01Z",
+  },
 ];

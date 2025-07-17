@@ -1,5 +1,4 @@
 import { BrowserRouter } from "react-router-dom";
-import { RecoilRoot } from "recoil";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
@@ -37,11 +36,9 @@ const updateMetadataOnReleaseNotification =
 function renderComponent() {
   render(
     <BrowserRouter>
-      <RecoilRoot>
-        <QueryClientProvider client={queryClient}>
-          <PublisherSettingsForm settings={mockSettings} />
-        </QueryClientProvider>
-      </RecoilRoot>
+      <QueryClientProvider client={queryClient}>
+        <PublisherSettingsForm settings={mockSettings} />
+      </QueryClientProvider>
     </BrowserRouter>,
   );
 }

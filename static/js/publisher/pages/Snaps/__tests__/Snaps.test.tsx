@@ -1,4 +1,3 @@
-import { RecoilRoot, MutableSnapshot } from "recoil";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { BrowserRouter } from "react-router-dom";
 import { setupServer } from "msw/node";
@@ -7,7 +6,7 @@ import userEvent from "@testing-library/user-event";
 import "@testing-library/jest-dom";
 
 import {
-  RecoilObserver,
+  JotaiTestProvider,
   brandStoreRequests,
   storesResponse,
 } from "../../../test-utils";
@@ -29,18 +28,13 @@ const queryClient = new QueryClient();
 
 function renderComponent() {
   return render(
-    <RecoilRoot
-      initializeState={(snapshot: MutableSnapshot) => {
-        return snapshot.set(brandStoresState, storesResponse);
-      }}
-    >
-      <QueryClientProvider client={queryClient}>
-        <BrowserRouter>
-          <RecoilObserver node={brandStoresState} event={jest.fn()} />
+    <QueryClientProvider client={queryClient}>
+      <BrowserRouter>
+        <JotaiTestProvider initialValues={[[brandStoresState, storesResponse]]}>
           <Snaps />
-        </BrowserRouter>
-      </QueryClientProvider>
-    </RecoilRoot>,
+        </JotaiTestProvider>
+      </BrowserRouter>
+    </QueryClientProvider>,
   );
 }
 
@@ -91,7 +85,7 @@ describe("Snaps", () => {
 
     await waitFor(() => {
       expect(
-        screen.getByRole("gridcell", { name: "test-snap-name-included" }),
+        screen.getByLabelText("test-snap-name-included"),
       ).toBeInTheDocument();
     });
   });

@@ -5,10 +5,6 @@
 </div>
 <script>
   window.CSRF_TOKEN = "{{ csrf_token() }}";
-  
-  window.SNAP_LISTING_DATA = {
-    DNS_VERIFICATION_TOKEN: "{{ dns_verification_token }}",
-  };
 </script>
 <script src="{{ static_url('js/dist/publisher.js') }}"></script>
 {% endblock %}

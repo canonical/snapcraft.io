@@ -156,13 +156,13 @@ describe("pendingReleases", () => {
       });
     });
 
-    describe("when previousRevisions are passed", () => {
-      let releaseRevisionPreviousRevisionsAction = {
+    describe("when previousReleases are passed", () => {
+      let releaseRevisionPreviousReleasesAction = {
         type: RELEASE_REVISION,
         payload: {
           revision: { revision: 1, architectures: ["abc42", "test64"] },
           channel: "test/edge",
-          previousRevisions: {
+          previousReleases: {
             abc42: { revision: 0, architectures: ["abc42"] },
           },
         },
@@ -172,7 +172,7 @@ describe("pendingReleases", () => {
         const state = {
           1: {
             "test/edge": {
-              revision: releaseRevisionPreviousRevisionsAction.payload.revision,
+              revision: releaseRevisionPreviousReleasesAction.payload.revision,
               channel: "test/edge",
             },
           },
@@ -180,15 +180,15 @@ describe("pendingReleases", () => {
 
         const result = pendingReleases(
           state,
-          releaseRevisionPreviousRevisionsAction,
+          releaseRevisionPreviousReleasesAction,
         );
 
         expect(result).toEqual({
           1: {
             "test/edge": {
-              revision: releaseRevisionPreviousRevisionsAction.payload.revision,
+              revision: releaseRevisionPreviousReleasesAction.payload.revision,
               channel: "test/edge",
-              previousRevisions: {
+              previousReleases: {
                 abc42: { revision: 0, architectures: ["abc42"] },
               },
             },
@@ -626,7 +626,7 @@ describe("pendingReleases", () => {
           "test/edge": {
             revision: { revision: 1, architectures: ["abc42", "test64"] },
             channel: "test/edge",
-            previousRevisions: {
+            previousReleases: {
               abc42: { revision: 0, architectures: ["abc42"] },
             },
           },
@@ -737,7 +737,7 @@ describe("pendingReleases", () => {
               percentage: 20,
               paused: true,
             },
-            previousRevisions: {
+            previousReleases: {
               abc42: { revision: 0, architectures: ["abc42"] },
             },
           },

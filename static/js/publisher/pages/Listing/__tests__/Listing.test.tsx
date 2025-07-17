@@ -32,10 +32,6 @@ const queryClient = new QueryClient({
 });
 
 function renderComponent() {
-  window.SNAP_LISTING_DATA = {
-    DNS_VERIFICATION_TOKEN: "test-dns-verification-token",
-  };
-
   return render(
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
@@ -55,6 +51,14 @@ beforeEach(() => {
   server.use(
     http.get("/api/test_id/listing", () => {
       return HttpResponse.json(testListingData);
+    }),
+  );
+  server.use(
+    http.get("/api/test_id/verify", () => {
+      return HttpResponse.json({
+        primary_domain: true,
+        token: "test-dns-verification-token",
+      });
     }),
   );
 });

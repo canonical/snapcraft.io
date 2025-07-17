@@ -25,7 +25,6 @@ export const mockReleasedChannels = {
         percentage: null,
       },
       channels: ["latest/candidate", "latest/beta", "latest/stable"],
-      prog_channels: [],
     },
     arm64: {
       architectures: ["arm64"],
@@ -52,7 +51,6 @@ export const mockReleasedChannels = {
         percentage: null,
       },
       channels: ["latest/beta", "latest/stable", "latest/candidate"],
-      prog_channels: [],
     },
     armhf: {
       architectures: ["armhf"],
@@ -83,7 +81,6 @@ export const mockReleasedChannels = {
         percentage: null,
       },
       channels: ["latest/edge", "latest/candidate", "latest/stable"],
-      prog_channels: [],
     },
   },
   "latest/edge": {
@@ -112,7 +109,6 @@ export const mockReleasedChannels = {
         percentage: null,
       },
       channels: ["latest/edge"],
-      prog_channels: [],
     },
     arm64: {
       architectures: ["arm64"],
@@ -143,7 +139,6 @@ export const mockReleasedChannels = {
         percentage: 50,
       },
       channels: ["latest/edge", "latest/stable"],
-      prog_channels: ["latest/stable"],
     },
   },
   "latest/stable": {
@@ -172,7 +167,6 @@ export const mockReleasedChannels = {
         percentage: null,
       },
       channels: ["latest/candidate", "latest/beta", "latest/stable"],
-      prog_channels: [],
     },
     arm64: {
       architectures: ["arm64"],
@@ -203,7 +197,6 @@ export const mockReleasedChannels = {
         percentage: 50,
       },
       channels: ["latest/edge", "latest/stable"],
-      prog_channels: ["latest/stable"],
     },
     armhf: {
       architectures: ["armhf"],
@@ -234,7 +227,6 @@ export const mockReleasedChannels = {
         percentage: null,
       },
       channels: ["latest/edge", "latest/candidate", "latest/stable"],
-      prog_channels: [],
     },
     ppc64el: {
       architectures: ["ppc64el"],
@@ -265,7 +257,6 @@ export const mockReleasedChannels = {
         percentage: null,
       },
       channels: ["latest/edge", "latest/stable"],
-      prog_channels: [],
     },
     s390x: {
       architectures: ["s390x"],
@@ -296,7 +287,6 @@ export const mockReleasedChannels = {
         percentage: null,
       },
       channels: ["latest/edge", "latest/stable"],
-      prog_channels: [],
     },
   },
 };
