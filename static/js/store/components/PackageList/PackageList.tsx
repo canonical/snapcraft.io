@@ -23,8 +23,8 @@ function PackageList({
 }: {
   data?: Packages;
   isFetching: boolean;
-  searchRef: RefObject<HTMLInputElement>;
-  searchSummaryRef: RefObject<HTMLDivElement>;
+  searchRef: RefObject<HTMLInputElement | null>;
+  searchSummaryRef: RefObject<HTMLDivElement | null>;
 }): React.JSX.Element {
   const [searchParams, setSearchParams] = useSearchParams();
 

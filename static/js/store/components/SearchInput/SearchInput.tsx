@@ -4,8 +4,8 @@ import { useSearchParams } from "react-router-dom";
 import type { RefObject } from "react";
 
 type Props = {
-  searchRef: RefObject<HTMLInputElement>;
-  searchSummaryRef?: RefObject<HTMLDivElement>;
+  searchRef: RefObject<HTMLInputElement | null>;
+  searchSummaryRef?: RefObject<HTMLDivElement | null>;
 };
 
 export const SearchInput = ({
