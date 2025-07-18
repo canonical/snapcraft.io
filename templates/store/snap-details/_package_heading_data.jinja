@@ -1,0 +1,64 @@
+{%- from 'store/_developer_info.jinja' import developer_info -%}
+{%- from 'store/_publisher_info.jinja' import publisher_info -%}
+
+{%- macro package_header_data(
+    package_title,
+    icon_url,
+    developer,
+    categories,
+    image,
+    display_name,
+    username,
+    publisher,
+    developer_validation,
+    STAR_DEVELOPER,
+    VERIFIED_PUBLISHER) -%}
+  {% if icon_url %}
+    {% if icon_url.startswith("blob") %}
+      <img class="p-snap-heading__icon"
+           src="{{ icon_url | safe }}"
+           width="60"
+           height="60"
+           data-live="icon" />
+    {% else %}
+      {{ image(url=icon_url,
+            alt=package_title,
+            width=60,
+            height=60,
+            hi_def=True,
+            loading="eager",
+            attrs={"class": "p-snap-heading__icon", "data-live": "icon"}) | safe
+      }}
+    {% endif %}
+  {% else %}
+    <img class="p-snap-heading__icon"
+         src="https://assets.ubuntu.com/v1/be6eb412-snapcraft-missing-icon.svg"
+         alt=""
+         data-live="icon" />
+  {% endif %}
+  <div class="p-snap-heading__title">
+    <h1 class="p-heading--2 p-snap-heading__name" data-live="title">{{ package_title }}</h1>
+
+    {# TODO:
+      Extract the section below as own slot, to avoid dependency on a lot of publisher data?
+    #}
+    <div class="u-hide--medium u-hide--large">
+      {% if developer %}
+        {{ developer_info(name=developer[0], url=developer[1]) }}
+      {% endif %}
+      {{ publisher_info(publisher, username, developer_validation, display_name, VERIFIED_PUBLISHER, STAR_DEVELOPER) }}
+
+    </div>
+    <ul class="p-inline-list--vertical-divider">
+      {% if developer %}
+        <li class="p-inline-list__item u-hide--small">{{ developer_info(name=developer[0], url=developer[1]) }}</li>
+      {% endif %}
+      <li class="p-inline-list__item u-hide--small">{{ publisher_info(publisher, username, developer_validation, display_name, VERIFIED_PUBLISHER, STAR_DEVELOPER) }}</li>
+      {% for category in categories %}
+        <li class="p-inline-list__item">
+          <a href="/search?categories={{ category.slug }}">{{ category.name }}</a>
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
+{%- endmacro -%}
