@@ -2,7 +2,6 @@
 {%- from 'store/_snap-header-information.html' import publisher_info -%}
 
 {%- macro package_header_data(
-    package_name,
     package_title,
     icon_url,
     developer,
@@ -39,6 +38,10 @@
   {% endif %}
   <div class="p-snap-heading__title">
     <h1 class="p-heading--2 p-snap-heading__name" data-live="title">{{ package_title }}</h1>
+
+    {# TODO:
+      Extract the section below as own slot, to avoid dependency on a lot of publisher data?
+    #}
     <div class="u-hide--medium u-hide--large">
       {% if developer %}
         {{ developer_info(name=developer[0], url=developer[1]) }}
