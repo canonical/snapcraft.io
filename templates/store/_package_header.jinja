@@ -19,7 +19,7 @@ Other:
   STAR_DEVELOPER: const (value of developer_validation)
 #}
 
-{% from "store/snap-details/_snap_heading_data.html" import package_header_data %}
+{% from "store/snap-details/_package_heading_data.jinja" import package_header_data %}
 
 {%- macro package_header(
     caller=None) -%}
