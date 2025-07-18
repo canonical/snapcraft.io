@@ -30,12 +30,6 @@ docs/ros2-shared-memory-in-snaps/?: https://canonical-robotics.readthedocs-hoste
 docs/ros-distributions-with-no-extensions/?: https://canonical-robotics.readthedocs-hosted.com/en/latest/how-to-guides/packaging/ros-distributions-with-no-extensions/
 docs/ros-troubleshooting/?: https://canonical-robotics.readthedocs-hosted.com/en/latest/references/snapcraft/faq/
 docs/snapcraft-build-example/?: https://documentation.ubuntu.com/snapcraft/latest/how-to/publishing/publish-a-snap/
-docs/using-the-snap-store/?: https://documentation.ubuntu.com/snapcraft/stable
-docs/upload-deltas/?: https://documentation.ubuntu.com/snapcraft/stable
-docs/build-private-repository/?: https://documentation.ubuntu.com/snapcraft/stable
-docs/build-private-repository-workflow/?: https://documentation.ubuntu.com/snapcraft/stable
-docs/services-and-daemons/?: https://documentation.ubuntu.com/snapcraft/stable
-docs/gnome-3-34-extension/?: https://documentation.ubuntu.com/snapcraft/stable
 docs/ant-plugin/?: https://documentation.ubuntu.com/snapcraft/stable/common/craft-parts/reference/plugins/ant_plugin/
 docs/autotools-plugin/?: https://documentation.ubuntu.com/snapcraft/stable/common/craft-parts/reference/plugins/autotools_plugin/
 docs/cmake-plugin/?: https://documentation.ubuntu.com/snapcraft/stable/common/craft-parts/reference/plugins/cmake_plugin/
@@ -49,7 +43,6 @@ docs/rust-plugin/?: https://documentation.ubuntu.com/snapcraft/stable/common/cra
 docs/scons-plugin/?: https://documentation.ubuntu.com/snapcraft/stable/common/craft-parts/reference/plugins/scons_plugin/
 docs/explanation-architectures/?: https://documentation.ubuntu.com/snapcraft/stable/explanation/architectures/
 docs/classic-confinement/?: https://documentation.ubuntu.com/snapcraft/stable/explanation/classic-confinement/
-docs/snapcraft-interfaces/?: https://documentation.ubuntu.com/snapcraft/stable/explanation/interfaces/
 docs/parts-lifecycle/?: https://documentation.ubuntu.com/snapcraft/stable/explanation/parts-lifecycle/
 docs/remote-build/?: https://documentation.ubuntu.com/snapcraft/stable/explanation/remote-build/
 docs/migrating-bases/?: https://documentation.ubuntu.com/snapcraft/stable/how-to/change-bases/
@@ -138,6 +131,15 @@ docs/adding-parts/?: https://documentation.ubuntu.com/snapcraft/stable/tutorials
 docs/defining-a-command/?: https://documentation.ubuntu.com/snapcraft/stable/tutorials/craft-a-snap/
 docs/snapcraft-tutorials/?: https://documentation.ubuntu.com/snapcraft/stable/tutorials/
 docs/snapcraft-reference/?: https://documentation.ubuntu.com/snapcraft/stable/reference/
+
+# Legacy forum redirects for pages that don't exist in RTD.
+# These are temporary and will be replaced when Snapcraft 7 is migrated.
+docs/using-the-snap-store/?: https://forum.snapcraft.io/t/using-the-snap-store/12379
+docs/upload-deltas/?: https://forum.snapcraft.io/t/upload-deltas/43890
+docs/build-private-repository/?: https://forum.snapcraft.io/t/build-a-snap-from-a-private-repository/38961
+docs/build-private-repository-workflow/?: https://forum.snapcraft.io/t/build-a-snap-from-a-private-repository-in-a-github-workflow/38962
+docs/gnome-3-34-extension/?: https://forum.snapcraft.io/t/the-gnome-3-34-extension/18485
+docs/snapcraft-interfaces/?: https://forum.snapcraft.io/t/supported-interfaces/7744
 
 # Old URL redirects
 docs/build-snaps: /docs/snap-format
