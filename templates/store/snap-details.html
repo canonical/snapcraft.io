@@ -90,7 +90,7 @@
     {% endif %}
     <div class="row">
       {%- call(slot) package_header() -%}
-        {%- if slot =='buttons' -%}
+        {%- if slot == 'buttons' -%}
           <button
             class="p-button p-snap-install-buttons__versions{% if is_preview %} p-tooltip p-tooltip--btm-right{% endif %}"
             {% if is_preview %}
