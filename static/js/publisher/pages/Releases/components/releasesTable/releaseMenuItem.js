@@ -7,7 +7,7 @@ import { getPendingChannelMap } from "../../selectors";
 import { canBeReleased, isInDevmode } from "../../helpers";
 
 function ReleaseMenuItem(props) {
-  const risk = `latest/${props.risk}`;
+  const risk = `${props.currentTrack}/${props.risk}`;
   const devModeRisk = props.risk === "stable" || props.risk === "candidate";
   const hasDevmodeRevisions =
     Object.values(props.item.revisions).some(isInDevmode) && devModeRisk;
