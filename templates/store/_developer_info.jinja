@@ -1,0 +1,12 @@
+{%- macro developer_info(name, url) -%}
+  {%- if url -%}
+  <a href="{{ url }}">
+  {%- endif -%}
+    <span class="p-tooltip p-tooltip--top-center">
+      {{ name }}
+      <span class="p-tooltip__message">Developer</span>
+    </span>
+  {%- if url -%}
+  </a>
+  {%- endif -%}
+{%- endmacro -%}
