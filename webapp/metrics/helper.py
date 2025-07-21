@@ -2,6 +2,8 @@ import datetime
 from dateutil import relativedelta
 import math
 
+from webapp.observability.utils import trace_function
+
 
 def get_filter(metric_name, snap_id, start, end):
     return {
@@ -12,6 +14,7 @@ def get_filter(metric_name, snap_id, start, end):
     }
 
 
+@trace_function
 def get_last_metrics_processed_date():
     # We want to give time to the store to proccess all the metrics,
     # since the metrics are processed during the night
@@ -31,6 +34,7 @@ def get_last_metrics_processed_date():
     return last_metrics_processed.date() - days_to_skip
 
 
+@trace_function
 def get_dates_for_metric(metric_period=30, metric_bucket="d"):
     end = get_last_metrics_processed_date()
 
@@ -72,6 +76,7 @@ def build_metric_query_installed_base(
     }
 
 
+@trace_function
 def build_active_device_metric_query(snap_id, installed_base, end, start):
     return {
         "filters": [
@@ -110,6 +115,7 @@ def build_metric_query_country(snap_id):
     }
 
 
+@trace_function
 def find_metric(full_response, name):
     """Find a named metric in a metric response
 
