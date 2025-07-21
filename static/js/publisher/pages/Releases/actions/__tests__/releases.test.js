@@ -396,6 +396,9 @@ describe("releases actions", () => {
             type: "RELEASE_REVISION_SUCCESS",
           },
           {
+            type: "CANCEL_PENDING_RELEASES",
+          },
+          {
             payload: {
               revisions: {
                 3: revision,
@@ -431,9 +434,6 @@ describe("releases actions", () => {
               },
             },
             type: "INIT_CHANNEL_MAP",
-          },
-          {
-            type: "CANCEL_PENDING_RELEASES",
           },
           {
             type: "CLOSE_HISTORY",
@@ -579,6 +579,9 @@ describe("releases actions", () => {
             type: "CLOSE_CHANNEL_SUCCESS",
           },
           {
+            type: "CANCEL_PENDING_RELEASES",
+          },
+          {
             payload: {
               revisions: {
                 3: revision,
@@ -614,9 +617,6 @@ describe("releases actions", () => {
               },
             },
             type: "INIT_CHANNEL_MAP",
-          },
-          {
-            type: "CANCEL_PENDING_RELEASES",
           },
           {
             type: "CLOSE_HISTORY",

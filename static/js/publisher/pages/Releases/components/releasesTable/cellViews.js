@@ -37,7 +37,7 @@ UnassignedInfo.propTypes = {
 };
 
 // content of empty cell in channel row (nothing released or tracking channel)
-export const EmptyInfo = ({ trackingChannel }) => {
+export const EmptyInfo = ({ trackingChannel, failed }) => {
   const trackingChannelSplit = trackingChannel
     ? trackingChannel.split("/")
     : null;
@@ -49,7 +49,7 @@ export const EmptyInfo = ({ trackingChannel }) => {
           <small>
             Tracking {trackingChannelSplit[0]}/{trackingChannelSplit[1]}
           </small>
-        ) : (
+        ) : failed ? "x": (
           "-"
         )}
       </span>
@@ -57,6 +57,7 @@ export const EmptyInfo = ({ trackingChannel }) => {
       <span className="p-tooltip__message u-hide--small">
         {trackingChannel
           ? `Tracking ${trackingChannel}`
+          : failed? "An error occured"
           : "Nothing currently released"}
       </span>
     </Fragment>

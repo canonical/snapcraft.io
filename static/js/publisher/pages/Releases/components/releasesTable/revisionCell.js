@@ -23,6 +23,7 @@ const ReleasesTableRevisionCell = (props) => {
       cellType="revision"
       arch={arch}
     >
+      revisionCell.js
       {revision ? <RevisionInfo revision={revision} /> : <EmptyInfo />}
     </ReleasesTableCellView>
   );
