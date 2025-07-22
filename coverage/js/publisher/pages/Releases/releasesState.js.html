@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">70.14% </span>
+                <span class="strong">64.38% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>47/67</span>
+                <span class='fraction'>47/73</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">55.55% </span>
+                <span class="strong">53.19% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>25/45</span>
+                <span class='fraction'>25/47</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">70.76% </span>
+                <span class="strong">63.88% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>46/65</span>
+                <span class='fraction'>46/72</span>
             </div>
         
             
@@ -252,7 +252,23 @@
 <a name='L187'></a><a href='#L187'>187</a>
 <a name='L188'></a><a href='#L188'>188</a>
 <a name='L189'></a><a href='#L189'>189</a>
-<a name='L190'></a><a href='#L190'>190</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L190'></a><a href='#L190'>190</a>
+<a name='L191'></a><a href='#L191'>191</a>
+<a name='L192'></a><a href='#L192'>192</a>
+<a name='L193'></a><a href='#L193'>193</a>
+<a name='L194'></a><a href='#L194'>194</a>
+<a name='L195'></a><a href='#L195'>195</a>
+<a name='L196'></a><a href='#L196'>196</a>
+<a name='L197'></a><a href='#L197'>197</a>
+<a name='L198'></a><a href='#L198'>198</a>
+<a name='L199'></a><a href='#L199'>199</a>
+<a name='L200'></a><a href='#L200'>200</a>
+<a name='L201'></a><a href='#L201'>201</a>
+<a name='L202'></a><a href='#L202'>202</a>
+<a name='L203'></a><a href='#L203'>203</a>
+<a name='L204'></a><a href='#L204'>204</a>
+<a name='L205'></a><a href='#L205'>205</a>
+<a name='L206'></a><a href='#L206'>206</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">3x</span>
@@ -340,6 +356,9 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -377,8 +396,21 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -523,18 +555,21 @@ function initReleasesData(revisionsMap, releases, channelMap) {
 }
 &nbsp;
 // Get specific revision based on snapName and a channelMap object
-function <span class="fstat-no" title="function not covered" >fetchMissingRevision(</span>snapName, info) {
+async function <span class="fstat-no" title="function not covered" >fetchMissingRevision(</span>snapName, info) {
 <span class="cstat-no" title="statement not covered" >  return fetch(`/${snapName}/releases/revision/${info.revision}`)</span>
     .then(<span class="fstat-no" title="function not covered" >(r</span>es) =&gt; <span class="cstat-no" title="statement not covered" >res.json())</span>
     .then(<span class="fstat-no" title="function not covered" >(r</span>evision) =&gt; (<span class="cstat-no" title="statement not covered" >{</span>
       info,
       revision: revision.revision,
+    })).catch(<span class="fstat-no" title="function not covered" >er</span>r =&gt; <span class="cstat-no" title="statement not covered" >Promise.reject({</span>
+      info,
+      error: err.message
     }));
 }
 &nbsp;
 // transforming channel map list data into format used by this component
 // https://dashboard.snapcraft.io/docs/v2/en/snaps.html#snap-channel-map
-function getReleaseDataFromChannelMap(channelMap, revisionsMap, snapName) {
+async function getReleaseDataFromChannelMap(channelMap, revisionsMap, snapName) {
   return new Promise((resolve) =&gt; {
     const releasedChannels = {};
     const missingRevisions = [];
@@ -560,25 +595,38 @@ function getReleaseDataFromChannelMap(channelMap, revisionsMap, snapName) {
         }
       }
     });
-&nbsp;
+   
     <span class="missing-if-branch" title="if path not taken" >I</span>if (missingRevisions.length &gt; 0) {
-<span class="cstat-no" title="statement not covered" >      Promise.all(missingRevisions)</span>
-        .then(<span class="fstat-no" title="function not covered" >(r</span>evs) =&gt; {
-<span class="cstat-no" title="statement not covered" >          revs.forEach(<span class="fstat-no" title="function not covered" >(r</span>ev) =&gt; {</span>
-            const { info, revision } = <span class="cstat-no" title="statement not covered" >rev;</span>
-<span class="cstat-no" title="statement not covered" >            releasedChannels[info.channel][info.architecture] = revision;</span>
+<span class="cstat-no" title="statement not covered" >      Promise.allSettled(missingRevisions)</span>
+        .then(<span class="fstat-no" title="function not covered" >(r</span>esults) =&gt; {
+          const successfulRevisions = <span class="cstat-no" title="statement not covered" >[];</span>
+          const failedRevisions = <span class="cstat-no" title="statement not covered" >[]</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >          results.forEach(<span class="fstat-no" title="function not covered" >(r</span>esult) =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >            if (result.status === "fulfilled") {</span>
+              const { info, revision } = <span class="cstat-no" title="statement not covered" >result.value;</span>
+<span class="cstat-no" title="statement not covered" >              releasedChannels[info.channel][info.architecture] = revision;</span>
 <span class="cstat-no" title="statement not covered" >            releasedChannels[info.channel][info.architecture].expiration =</span>
               revision["expiration-date"];
+<span class="cstat-no" title="statement not covered" >              successfulRevisions.push(revision);</span>
+            } else {
+              const { info } = <span class="cstat-no" title="statement not covered" >result.reason;</span>
+<span class="cstat-no" title="statement not covered" >              failedRevisions.push({</span>
+                channel: info.channel,
+                architecture: info.architecture,
+              });
+            }
+            
           });
 &nbsp;
-<span class="cstat-no" title="statement not covered" >          resolve([releasedChannels, revs.map(<span class="fstat-no" title="function not covered" >(r</span>) =&gt; <span class="cstat-no" title="statement not covered" >r.revision)</span>]);</span>
+<span class="cstat-no" title="statement not covered" >          resolve([releasedChannels, successfulRevisions, failedRevisions]);</span>
         })
         .catch(<span class="fstat-no" title="function not covered" >()</span> =&gt; {
           // if a call doesn't work for whatever reason
-<span class="cstat-no" title="statement not covered" >          resolve([releasedChannels, []]);</span>
+<span class="cstat-no" title="statement not covered" >          resolve([releasedChannels, [], []]);</span>
         });
     } else {
-      resolve([releasedChannels, []]);
+      resolve([releasedChannels, [], []]);
     }
   });
 }
@@ -637,7 +685,7 @@ export {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-07-21T22:04:22.027Z
+                at 2025-07-22T22:04:18.954Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>
