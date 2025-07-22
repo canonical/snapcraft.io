@@ -24,6 +24,7 @@ import {
   EmptyInfo,
   CloseChannelInfo,
   UnassignedInfo,
+  FailedInfo,
 } from "./cellViews";
 
 // releases table cell with data from channel map release
@@ -140,11 +141,12 @@ const ReleasesTableReleaseCell = (props) => {
     );
   } else if (isUnassigned) {
     cellInfoNode = <UnassignedInfo availableCount={getAvailableCount(arch)} />;
+  } else if (failed) {
+    cellInfoNode = <FailedInfo />
   } else {
     cellInfoNode = (
       <EmptyInfo
         trackingChannel={getTrackingChannel(channelMap, track, risk, arch)}
-        failed={failed}
       />
     );
   }
