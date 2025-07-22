@@ -54,7 +54,7 @@ const canReleaseToChannel = (
   targetChannel: string,
 ) => {
   if (currentRevisionsByArch) {
-    return Object.keys(currentRevisionsByArch).every((arch) => {
+    return Object.keys(currentRevisionsByArch).some((arch) => {
       if (!targetRevisionsByArch?.[arch]) {
         return true; // no target revision for this arch, can release
       }
