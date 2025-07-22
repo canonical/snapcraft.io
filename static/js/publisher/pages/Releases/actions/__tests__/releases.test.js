@@ -436,6 +436,12 @@ describe("releases actions", () => {
             type: "INIT_CHANNEL_MAP",
           },
           {
+            payload: {
+              failedRevisions: []
+            },
+            type: "UPDATE_FAILED_REVISIONS",
+          },
+          {
             type: "CLOSE_HISTORY",
           },
         ]);
@@ -617,6 +623,12 @@ describe("releases actions", () => {
               },
             },
             type: "INIT_CHANNEL_MAP",
+          },
+          {
+            payload: {
+              failedRevisions: []
+            },
+            type: "UPDATE_FAILED_REVISIONS",
           },
           {
             type: "CLOSE_HISTORY",
