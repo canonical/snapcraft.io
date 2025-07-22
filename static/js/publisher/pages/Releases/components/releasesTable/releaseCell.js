@@ -174,7 +174,6 @@ const ReleasesTableReleaseCell = (props) => {
           )}
         />
       )}
-      {/* releaseCell.js */}
       {cellInfoNode}
     </ReleasesTableCellView>
   );
