@@ -39,12 +39,11 @@ UnassignedInfo.propTypes = {
 export const FailedInfo = () => {
   return (
     <Fragment>
-      <span className="p-release-data__info--empty">
-        x
-      </span>
-
-      <span className="p-tooltip__message u-hide--small">
-        An error occurred
+      <span className="p-release-data__info--error">
+        <i class="p-icon--error"></i>
+        <span className="p-release-data__info--error-text">
+          An error occurred
+        </span>
       </span>
     </Fragment>
   );
@@ -68,7 +67,7 @@ export const EmptyInfo = ({ trackingChannel }) => {
 
       <span className="p-tooltip__message u-hide--small">
         {trackingChannel
-          ? `Tracking ${trackingChannel}`  
+          ? `Tracking ${trackingChannel}`
           : "Nothing currently released"}
       </span>
     </Fragment>
@@ -191,8 +190,8 @@ export const RevisionInfo = ({
   // present even if a release is not progressive
   const isProgressive =
     currentRelease?.length > 0 &&
-    currentRelease[0].isProgressive &&
-    risk !== "AVAILABLE"
+      currentRelease[0].isProgressive &&
+      risk !== "AVAILABLE"
       ? true
       : false;
 
@@ -214,10 +213,9 @@ export const RevisionInfo = ({
             ? "Progressive release"
             : `
             ${revision.version}
-            ${
-              revision?.attributes?.["build-request-id"]
-                ? ` | ${revision.attributes["build-request-id"]}`
-                : ""
+            ${revision?.attributes?.["build-request-id"]
+              ? ` | ${revision.attributes["build-request-id"]}`
+              : ""
             }`}
         </span>{" "}
       </span>
