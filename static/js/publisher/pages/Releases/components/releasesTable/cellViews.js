@@ -44,7 +44,7 @@ export const FailedInfo = () => {
       </span>
 
       <span className="p-tooltip__message u-hide--small">
-        "An error occured"
+        An error occurred
       </span>
     </Fragment>
   );
