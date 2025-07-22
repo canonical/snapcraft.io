@@ -595,6 +595,15 @@
     white-space: nowrap;
   }
 
+  .p-release-data__info--error {
+    font-size: 0.8rem;
+    white-space: normal;
+  }
+
+  .p-release-data__info--error-text {
+    padding-left: 0.25rem;
+  }
+
   .p-releases-channel__inner {
     display: flex;
     flex: 1;

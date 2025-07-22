@@ -14,6 +14,7 @@ import pendingCloses from "./pendingCloses";
 import pendingReleases from "./pendingReleases";
 import releases from "./releases";
 import revisions from "./revisions";
+import failedRevisions from "./failedRevisions";
 
 const releasesReducers = combineReducers({
   architectures,
@@ -22,6 +23,7 @@ const releasesReducers = combineReducers({
   channelMap,
   currentTrack,
   defaultTrack,
+  failedRevisions,
   history,
   modal,
   notification,
