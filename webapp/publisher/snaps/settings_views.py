@@ -71,7 +71,7 @@ def get_settings_data(snap_name):
         "update_metadata_on_release": snap_details[
             "update_metadata_on_release"
         ],
-        "visibility_locked": snap_details["visibility_locked"] | False,
+        "visibility_locked": bool(snap_details["visibility_locked"]),
     }
 
     return flask.jsonify({"success": True, "data": context})
