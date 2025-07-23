@@ -16,6 +16,8 @@ import checkSigningKeyExists from "./checkSigningKeyExists";
 import sortByDateDescending from "./sortByDateDescending";
 import getPolicies from "./getPolicies";
 import filterAvailableStores from "./filterAvailableStores";
+import formatBuildStatus from "./formatBuildStatus";
+import formatDurationString from "./formatDurationString";
 
 export {
   getSettingsData,
@@ -36,4 +38,6 @@ export {
   sortByDateDescending,
   getPolicies,
   filterAvailableStores,
+  formatBuildStatus,
+  formatDurationString,
 };
