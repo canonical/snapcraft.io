@@ -34,6 +34,6 @@ function formatBuildStatus(status: string): React.JSX.Element {
     default:
       return <>{status} </>;
   }
-};
+}
 
 export default formatBuildStatus;

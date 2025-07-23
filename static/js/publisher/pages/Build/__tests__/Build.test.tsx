@@ -108,7 +108,7 @@ describe("Build", () => {
     renderComponent();
 
     expect(
-      screen.getByRole("gridcell", { name: "0:14:47.375900" }),
+      screen.getByRole("gridcell", { name: "14 minutes 47 seconds" }),
     ).toBeInTheDocument();
   });
 
@@ -124,7 +124,7 @@ describe("Build", () => {
     renderComponent();
 
     expect(
-      screen.getByRole("gridcell", { name: "released" }),
+      screen.getByRole("gridcell", { name: "Released" }),
     ).toBeInTheDocument();
   });
 
