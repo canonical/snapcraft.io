@@ -2,7 +2,7 @@ import { useState, useEffect, Dispatch, SetStateAction } from "react";
 import { useQuery } from "react-query";
 import { useAtomValue } from "jotai";
 import { useParams, Link } from "react-router-dom";
-import { formatDistanceToNow, formatDuration } from "date-fns";
+import { formatDistanceToNow } from "date-fns";
 import {
   Strip,
   Button,
@@ -15,6 +15,7 @@ import {
 import DisconnectRepoActions from "./DisconnectRepoActions";
 
 import { githubDataState } from "../../state/buildsState";
+import { formatBuildStatus, formatDurationString } from "../../utils";
 
 function RepoConnected({
   autoTriggerBuild,
@@ -39,58 +40,6 @@ function RepoConnected({
       setTriggeringBuild(false);
     },
   });
-
-  const formatDurationString = (duration?: string): string => {
-    if (!duration) {
-      return "-";
-    }
-
-    const durationParts = duration.split(":");
-
-    return formatDuration({
-      hours: parseInt(durationParts[0]),
-      minutes: parseInt(durationParts[1]),
-      seconds: Math.floor(parseInt(durationParts[2])),
-    });
-  };
-
-  const formatStatus = (status: string): React.JSX.Element => {
-    switch (status) {
-      case "never_built":
-        return <>Never built</>;
-      case "building_soon":
-        return <>Building soon</>;
-      case "wont_release":
-        return <>Won't release</>;
-      case "released":
-        return <>Released</>;
-      case "release_failed":
-        return <>Release failed</>;
-      case "releasing_soon":
-        return <>Releasing soon</>;
-      case "in_progress":
-        return (
-          <>
-            <i className="p-icon--spinner u-animation--spin" />
-            In progress
-          </>
-        );
-      case "failed_to_build":
-        return <>Failed to build</>;
-      case "cancelled":
-        return <>Cancelled</>;
-      case "unknown":
-        return <>Unknown</>;
-      case "ERROR":
-        return <>Error</>;
-      case "SUCCESS":
-        return <>Success</>;
-      case "IDLE":
-        return <>Idle</>;
-      default:
-        return <>{status}</>;
-    }
-  };
 
   async function trigger() {
     const response = await fetch(`/api/${snapId}/builds/trigger-build`, {
@@ -222,7 +171,7 @@ function RepoConnected({
                     { content: build.arch_tag },
                     { content: formatDurationString(build.duration) },
                     {
-                      content: formatStatus(build.status),
+                      content: formatBuildStatus(build.status),
                       className: "p-table__cell--icon-placeholder",
                     },
                     {

@@ -5,7 +5,11 @@ import { formatDistanceToNow } from "date-fns";
 
 import SectionNav from "../../components/SectionNav";
 
-import { setPageTitle } from "../../utils";
+import {
+  formatBuildStatus,
+  formatDurationString,
+  setPageTitle,
+} from "../../utils";
 
 function Build(): React.JSX.Element {
   const { buildId, snapId } = useParams();
@@ -29,11 +33,12 @@ function Build(): React.JSX.Element {
     refetchOnWindowFocus: false,
   });
 
+  const build = data?.snap_build;
   const isDataLoading =
     isLoading ||
     isFetching ||
     !data ||
-    (data.snap_build && data.snap_build.id.toString() !== buildId);
+    (build && build.id.toString() !== buildId);
 
   setPageTitle(`Build ${buildId} for ${snapId}`);
 
@@ -66,13 +71,15 @@ function Build(): React.JSX.Element {
               {
                 columns: [
                   { content: buildId },
-                  { content: data.snap_build.arch_tag },
-                  { content: data.snap_build.duration },
-                  { content: data.snap_build.status },
+                  { content: build.arch_tag },
+                  { content: formatDurationString(build.duration) },
+                  { content: formatBuildStatus(build.status) },
                   {
-                    content: formatDistanceToNow(data.snap_build.datebuilt, {
-                      addSuffix: true,
-                    }),
+                    content: build.datebuilt
+                      ? formatDistanceToNow(build.datebuilt, {
+                          addSuffix: true,
+                        })
+                      : "-",
                     className: "u-align--right",
                   },
                 ],
@@ -89,7 +96,7 @@ function Build(): React.JSX.Element {
               </a>
               <a
                 target="_blank"
-                href={data.snap_build.logs}
+                href={build.logs}
                 className="p-button"
                 rel="noreferrer"
               >
