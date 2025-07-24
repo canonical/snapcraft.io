@@ -133,6 +133,7 @@
     "ts-jest": "29.2.5"
   },
   "resolutions": {
-    "lodash": "4.17.21"
+    "lodash": "4.17.21",
+    "minimatch": "3.0.5"
   }
 }
