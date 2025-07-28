@@ -35,7 +35,7 @@ from opentelemetry import trace
 from opentelemetry.sdk.trace import TracerProvider
 from opentelemetry.sdk.trace.export import BatchSpanProcessor
 from opentelemetry.exporter.otlp.proto.http.trace_exporter import (
-    OTLPSpanExporter
+    OTLPSpanExporter,
 )
 from opentelemetry.sdk.resources import Resource
 
@@ -85,8 +85,9 @@ def create_app(testing=False):
 
         # Add tracing auto instrumentation
         FlaskInstrumentor().instrument_app(
-            app, excluded_urls=",".join(UNTRACED_ROUTES),
-            request_hook=request_hook
+            app,
+            excluded_urls=",".join(UNTRACED_ROUTES),
+            request_hook=request_hook,
         )
         RequestsInstrumentor().instrument()
 
