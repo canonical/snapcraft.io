@@ -8,4 +8,9 @@ if [ "${FLASK_DEBUG}" = true ] || [ "${FLASK_DEBUG}" = 1 ]; then
     RUN_COMMAND="${RUN_COMMAND} --reload --log-level debug --timeout 9999"
 fi
 
+# if OTEL_SERVICE_NAME is defined, inject OTEL sdk
+if [ -n "${OTEL_SERVICE_NAME}" ]; then
+    RUN_COMMAND="${RUN_COMMAND} --config observability/observability.gunicorn.conf.py"
+fi
+
 ${RUN_COMMAND}
