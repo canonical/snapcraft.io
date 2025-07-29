@@ -18,7 +18,7 @@ class GetDnsVerificationTokenTest(unittest.TestCase):
         )
 
 
-class DirectoryExists(TestCase):
+class DirectoryExistsTest(TestCase):
     def create_app(self):
         app = create_app(testing=True)
         return app
