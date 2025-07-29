@@ -1,4 +1,3 @@
-import os
 import re
 from io import StringIO
 
@@ -10,7 +9,7 @@ FSF_FLOW = "first-snap"
 
 
 first_snap = flask.Blueprint(
-    "fist_snap_flow",
+    "first_snap_flow",
     __name__,
     template_folder="/templates",
     static_folder="/static",
@@ -40,10 +39,6 @@ def transform_snapcraft_yaml(snapcraft_yaml):
     return snapcraft_yaml
 
 
-def directory_exists(file):
-    return os.path.isdir(os.path.join(flask.current_app.root_path, file))
-
-
 @first_snap.route("/")
 def get_pick_language():
     return flask.render_template("first-snap/language.html")
@@ -52,7 +47,7 @@ def get_pick_language():
 @first_snap.route("/<language>")
 def get_language(language):
     filename = f"first_snap/content/{language}"
-    if not directory_exists(filename):
+    if not helpers.directory_exists(filename):
         return flask.abort(404)
 
     context = {"language": language, "fsf_flow": FSF_FLOW}
