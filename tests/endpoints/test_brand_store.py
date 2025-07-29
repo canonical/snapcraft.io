@@ -1,7 +1,7 @@
 from unittest.mock import patch
 from canonicalwebteam.exceptions import StoreApiResponseErrorList
 
-from tests.admin.tests_models import TestModelServiceEndpoints
+from tests.endpoints.endpoint_testing import TestModelServiceEndpoints
 
 
 class TestGetBrandStoreEndpoint(TestModelServiceEndpoints):
