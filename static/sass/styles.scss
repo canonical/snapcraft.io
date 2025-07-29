@@ -505,3 +505,33 @@ html {
 .l-main {
   position: relative;
 }
+
+.p-navigation--sliding:target {
+  &::after {
+    display: none;
+  }
+
+  .p-navigation__nav {
+    display: flex;
+  }
+
+  .p-navigation__items {
+    display: block;
+
+    @media (min-width: $breakpoint-navigation-threshold) {
+      display: flex;
+    }
+  }
+
+  .p-navigation__toggle--open {
+    display: none;
+  }
+
+  .p-navigation__toggle--close {
+    display: block;
+
+    @media (min-width: $breakpoint-navigation-threshold) {
+      display: none;
+    }
+  }
+}
