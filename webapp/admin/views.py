@@ -45,20 +45,6 @@ def get_admin(path):
     return flask.render_template("admin/admin.html", **context)
 
 
-@admin.route("/api/stores")
-@login_required
-@exchange_required
-def get_stores():
-    """
-    In this view we get all the stores the user is an admin or we show a 403
-    """
-    stores = dashboard.get_stores(flask.session)
-
-    res = {"success": True, "data": stores}
-
-    return jsonify(res)
-
-
 @admin.route("/api/store/<store_id>")
 @login_required
 @exchange_required

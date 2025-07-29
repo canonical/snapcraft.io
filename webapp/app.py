@@ -25,6 +25,7 @@ from webapp.snapcraft.views import snapcraft_blueprint
 from webapp.store.views import store_blueprint
 from webapp.tutorials.views import init_tutorials
 from webapp.packages.store_packages import store_packages
+from webapp.endpoints.views import endpoints
 
 
 TALISKER_WSGI_LOGGER = logging.getLogger("talisker.wsgi")
@@ -67,6 +68,7 @@ def create_app(testing=False):
     app.register_blueprint(publisher_snaps)
     app.register_blueprint(publisher_github)
     app.register_blueprint(admin)
+    app.register_blueprint(endpoints)
     init_docs(app, "/docs")
     init_blog(app, "/blog")
     init_tutorials(app, "/tutorials")
