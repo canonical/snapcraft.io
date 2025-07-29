@@ -1,4 +1,5 @@
 from unittest import TestCase
+from unittest.mock import patch
 
 from webapp.app import create_app
 from webapp.authentication import get_publishergw_authorization_header
@@ -26,3 +27,12 @@ class TestEndpoints(TestCase):
         self.app = create_app(testing=True)
         self.client = self.app.test_client()
         self._log_in(self.client)
+
+
+class TestModelServiceEndpoints(TestEndpoints):
+    def setUp(self):
+        self.api_key = "qwertyuioplkjhgfdsazxcvbnmkiopuytrewqasdfghjklmnbv"
+        self.mock_get_store = patch(
+            "webapp.endpoints.views.dashboard.get_store"
+        ).start()
+        super().setUp()
