@@ -160,3 +160,13 @@ def list_folders(directory):
         for item in os.listdir(directory)
         if os.path.isdir(os.path.join(directory, item))
     ]
+
+
+def directory_exists(file):
+    base_path = os.path.abspath(flask.current_app.root_path)
+    target_path = os.path.abspath(os.path.join(base_path, file))
+
+    if not target_path.startswith(base_path):
+        return False
+
+    return os.path.isdir(target_path)
