@@ -44,10 +44,10 @@ class FirstSnap(TestCase):
         assert response.status_code == 404
 
     def test_get_package(self):
-        response = self.client.get("/first-snap/python/linux-auto/package")
+        response = self.client.get("/first-snap/python/linux/package")
         assert response.status_code == 200
         self.assert_context("language", "python")
-        self.assert_context("os", "linux-auto")
+        self.assert_context("os", "linux")
         self.assert_context("has_user_chosen_name", False)
         self.assert_template_used("first-snap/package.html")
 
@@ -56,7 +56,7 @@ class FirstSnap(TestCase):
             "localhost", "fsf_snap_name_python", "test-snap-name-python"
         )
         response = self.client.get(
-            "/first-snap/python/linux-auto/package",
+            "/first-snap/python/linux/package",
         )
         assert response.status_code == 200
         self.assert_context("language", "python")
@@ -80,24 +80,20 @@ class FirstSnap(TestCase):
         self.assert404(response)
 
     def test_get_build_and_test(self):
-        response = self.client.get(
-            "/first-snap/python/linux-auto/build-and-test"
-        )
+        response = self.client.get("/first-snap/python/linux/build-and-test")
         assert response.status_code == 200
         self.assert_context("language", "python")
-        self.assert_context("os", "linux-auto")
+        self.assert_context("os", "linux")
         self.assert_template_used("first-snap/build-and-test.html")
 
     def test_get_build_and_test_snap_name(self):
         self.client.set_cookie(
             "snapcraft.io", "fsf_snap_name_python", "test-snap-name-python"
         )
-        response = self.client.get(
-            "/first-snap/python/linux-auto/build-and-test"
-        )
+        response = self.client.get("/first-snap/python/linux/build-and-test")
         assert response.status_code == 200
         self.assert_context("language", "python")
-        self.assert_context("os", "linux-auto")
+        self.assert_context("os", "linux")
         self.assert_context("snap_name", "test-offlineimap-{name}")
         self.assert_template_used("first-snap/build-and-test.html")
 
