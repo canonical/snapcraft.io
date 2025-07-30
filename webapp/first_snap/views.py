@@ -3,10 +3,10 @@ from io import StringIO
 
 import flask
 from webapp import helpers
+from webapp.first_snap import logic
 
 YAML_KEY_REGEXP = re.compile(r"([^\s:]*)(:.*)")
 FSF_FLOW = "first-snap"
-
 
 first_snap = flask.Blueprint(
     "first_snap_flow",
@@ -87,6 +87,11 @@ def get_language_snapcraft_yaml(language):
 
 @first_snap.route("/<language>/<operating_system>/package")
 def get_package(language, operating_system):
+    if not logic.is_valid_language_and_os(
+        language=language, os=operating_system
+    ):
+        return flask.abort(404)
+
     filename = f"first_snap/content/{language}/package.yaml"
     snapcraft_yaml_filename = f"first_snap/content/{language}/snapcraft.yaml"
     annotations_filename = "first_snap/content/snapcraft_yaml_annotations.yaml"
@@ -132,6 +137,11 @@ def get_package(language, operating_system):
 
 @first_snap.route("/<language>/<operating_system>/build-and-test")
 def get_build(language, operating_system):
+    if not logic.is_valid_language_and_os(
+        language=language, os=operating_system
+    ):
+        return flask.abort(404)
+
     build_filename = f"first_snap/content/{language}/build.yaml"
     test_filename = f"first_snap/content/{language}/test.yaml"
     snap_name_cookie = f"fsf_snap_name_{language}"
@@ -187,10 +197,12 @@ def get_upload(language, operating_system):
     filename = f"first_snap/content/{language}/package.yaml"
     snap_name_cookie = f"fsf_snap_name_{language}"
 
-    data = helpers.get_yaml(filename, typ="rt")
-
-    if not data:
+    if not logic.is_valid_language_and_os(
+        language=language, os=operating_system
+    ):
         return flask.abort(404)
+
+    data = helpers.get_yaml(filename, typ="rt")
 
     snap_name = data["name"]
     has_user_chosen_name = False
