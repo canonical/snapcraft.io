@@ -41,6 +41,26 @@ def get_stores():
     return jsonify(res)
 
 
+@endpoints.route("/api/store/<store_id>")
+@login_required
+@exchange_required
+def get_settings(store_id):
+    store = dashboard.get_store(flask.session, store_id)
+    store["links"] = []
+
+    if any(role["role"] == "admin" for role in store["roles"]):
+        store["links"].append(
+            {"name": "Members", "path": f'/admin/{store["id"]}/members'}
+        )
+        store["links"].append(
+            {"name": "Settings", "path": f'/admin/${store["id"]}/settings'}
+        )
+
+    res = {"success": True, "data": store}
+
+    return jsonify(res)
+
+
 @endpoints.route("/api/store/<store_id>/brand")
 @login_required
 @exchange_required

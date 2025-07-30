@@ -45,26 +45,6 @@ def get_admin(path):
     return flask.render_template("admin/admin.html", **context)
 
 
-@admin.route("/api/store/<store_id>")
-@login_required
-@exchange_required
-def get_settings(store_id):
-    store = dashboard.get_store(flask.session, store_id)
-    store["links"] = []
-
-    if any(role["role"] == "admin" for role in store["roles"]):
-        store["links"].append(
-            {"name": "Members", "path": f'/admin/{store["id"]}/members'}
-        )
-        store["links"].append(
-            {"name": "Settings", "path": f'/admin/${store["id"]}/settings'}
-        )
-
-    res = {"success": True, "data": store}
-
-    return jsonify(res)
-
-
 @admin.route("/api/store/<store_id>/settings", methods=["PUT"])
 @login_required
 @exchange_required
