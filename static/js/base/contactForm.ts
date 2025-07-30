@@ -21,26 +21,35 @@ if (modal) {
 function handleClick(event: Event): void {
   event.preventDefault();
 
-  const target = event.target as HTMLElement;
+  const target = event.currentTarget as HTMLElement;
   const args = target.dataset;
 
-  const formEl = document.getElementById(
+  const formTemplateEl = document.getElementById(
     "contactFormTemplate",
-  ) as HTMLFormElement;
+  ) as HTMLScriptElement;
 
-  let formTemplate = formEl.innerText;
+  if (!formTemplateEl) return;
 
-  Object.keys(args).forEach((arg: string) => {
-    formTemplate = formTemplate.split(`{{${arg}}}`).join(`${args[arg]}`);
+  let formTemplate = formTemplateEl.textContent || "";
+
+  Object.keys(args).forEach((key) => {
+    const value = args[key] ?? "";
+    formTemplate = formTemplate.split(`{{${key}}}`).join(escapeHTML(value));
   });
 
-  if (modalBody) {
-    modalBody.innerHTML = formTemplate;
-  }
+  const tempContainer = document.createElement("template");
+  tempContainer.innerHTML = formTemplate.trim();
 
-  if (modal) {
-    modal.classList.remove("u-hide");
-  }
+  modalBody?.replaceChildren(tempContainer.content);
+
+  modal?.classList.remove("u-hide");
+}
+
+// Escapes HTML to prevent XSS by encoding special characters.
+function escapeHTML(value: string): string {
+  const div = document.createElement("div");
+  div.textContent = value;
+  return div.innerHTML;
 }
 
 function attachClickHandler(element: Element): void {
