@@ -10,6 +10,7 @@ from canonicalwebteam.exceptions import (
     StoreApiResourceNotFound,
 )
 from flask.json import jsonify
+from talisker import logging
 
 # Local
 from webapp import authentication
@@ -341,7 +342,11 @@ def get_snap_build_status():
     try:
         account_info = dashboard.get_account(flask.session)
     except (StoreApiError, ApiError) as api_error:
-        return flask.jsonify(api_error), 400
+        logging.getLogger("talisker.wsgi").error(
+            "Error with session: %s", api_error
+        )
+
+        return flask.jsonify({"error": "An unexpected error occurred"}), 400
 
     response = []
     user_snaps, _ = logic.get_snaps_account_info(account_info)
@@ -501,7 +506,11 @@ def get_is_user_snap(snap_name):
     try:
         snap_info = dashboard.get_snap_info(flask.session, snap_name)
     except (StoreApiError, ApiError) as api_error:
-        return flask.jsonify({"error": str(api_error)}), 400
+        logging.getLogger("talisker.wsgi").error(
+            "Error with session: %s", api_error
+        )
+
+        return flask.jsonify({"error": "An unexpected error occurred"}), 400
 
     if authentication.is_authenticated(flask.session):
         publisher_info = flask.session.get("publisher", {})
