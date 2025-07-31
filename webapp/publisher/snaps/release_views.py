@@ -88,10 +88,14 @@ def post_release(snap_name):
         if api_response_error_list.status_code == 404:
             return flask.abort(404, "No snap named {}".format(snap_name))
         else:
-            response = {
-                "errors": api_response_error_list,
-            }
-            return flask.jsonify(response), 400
+            return (
+                flask.jsonify(
+                    {
+                        "errors": api_response_error_list.errors,
+                    }
+                ),
+                400,
+            )
 
     return flask.jsonify(response)
 
