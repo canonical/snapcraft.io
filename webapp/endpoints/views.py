@@ -10,7 +10,7 @@ from flask.json import jsonify
 
 # Local
 from webapp.decorators import login_required, exchange_required
-from webapp.helpers import api_publisher_session, api_session
+from webapp.helpers import api_publisher_session, api_session, get_brand_id
 
 
 dashboard = Dashboard(api_session)
@@ -20,11 +20,6 @@ endpoints = flask.Blueprint(
     "endpoints",
     __name__,
 )
-
-
-def get_brand_id(session, store_id):
-    store = dashboard.get_store(session, store_id)
-    return store["brand-id"]
 
 
 @endpoints.route("/api/stores")
