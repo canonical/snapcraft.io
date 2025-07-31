@@ -77,8 +77,8 @@ jobs:
 
   lint-scss:
     runs-on: ubuntu-latest
-      permissions:
-        contents: read
+    permissions:
+      contents: read
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -100,8 +100,8 @@ jobs:
 
   lint-js:
     runs-on: ubuntu-latest
-      permissions:
-        contents: read
+    permissions:
+      contents: read
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -129,9 +129,9 @@ jobs:
 
   test-python:
     runs-on: ubuntu-latest
-      permissions:
-        pull-requests: write
-        contents: read
+    permissions:
+      pull-requests: write
+      contents: read
 
     steps:
       - uses: actions/checkout@v4
