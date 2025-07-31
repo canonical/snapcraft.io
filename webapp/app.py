@@ -28,6 +28,7 @@ from webapp.packages.store_packages import store_packages
 from webapp.endpoints.views import endpoints
 from webapp.endpoints.signing_keys import signing_keys
 from webapp.endpoints.models import models
+from webapp.endpoints.snaps import snaps
 
 
 TALISKER_WSGI_LOGGER = logging.getLogger("talisker.wsgi")
@@ -73,6 +74,7 @@ def create_app(testing=False):
     app.register_blueprint(endpoints)
     app.register_blueprint(signing_keys)
     app.register_blueprint(models)
+    app.register_blueprint(snaps)
     init_docs(app, "/docs")
     init_blog(app, "/blog")
     init_tutorials(app, "/tutorials")
