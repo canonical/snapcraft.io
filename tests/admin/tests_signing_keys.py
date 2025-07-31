@@ -58,6 +58,10 @@ class TestCreateSigningKeys(TestModelServiceEndpoints):
 
 class TestDeleteSigningKeys(TestModelServiceEndpoints):
     @patch(
+        "canonicalwebteam.store_api.dashboard.Dashboard.get_store",
+        Mock(return_value={"brand-id": "BrandName"}),
+    )
+    @patch(
         "canonicalwebteam.store_api.publishergw."
         "PublisherGW.delete_store_signing_key"
     )
@@ -75,6 +79,10 @@ class TestDeleteSigningKeys(TestModelServiceEndpoints):
         self.assertEqual(response.status_code, 200)
         self.assertTrue(data["success"])
 
+    @patch(
+        "canonicalwebteam.store_api.dashboard.Dashboard.get_store",
+        Mock(return_value={"brand-id": "BrandName"}),
+    )
     @patch(
         "canonicalwebteam.store_api.publishergw."
         "PublisherGW.delete_store_signing_key"
@@ -113,6 +121,10 @@ class TestDeleteSigningKeys(TestModelServiceEndpoints):
             [{"name": "Model1", "policies": [{"revision": "1"}]}],
         )
 
+    @patch(
+        "canonicalwebteam.store_api.dashboard.Dashboard.get_store",
+        Mock(return_value={"brand-id": "BrandName"}),
+    )
     @patch(
         "canonicalwebteam.store_api.publishergw."
         "PublisherGW.delete_store_signing_key"
