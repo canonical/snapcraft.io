@@ -8,6 +8,8 @@ env:
 jobs:
   run-image:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
       - uses: actions/checkout@v4
       - name: Build image
@@ -19,7 +21,8 @@ jobs:
 
   run-dotrun:
     runs-on: ubuntu-latest
-
+    permissions:
+      contents: read
     steps:
       - uses: actions/checkout@v4
 
@@ -42,7 +45,8 @@ jobs:
 
   lint-python:
     runs-on: ubuntu-latest
-
+    permissions:
+      contents: read
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -73,6 +77,8 @@ jobs:
 
   lint-scss:
     runs-on: ubuntu-latest
+      permissions:
+        contents: read
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -94,6 +100,8 @@ jobs:
 
   lint-js:
     runs-on: ubuntu-latest
+      permissions:
+        contents: read
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -121,6 +129,9 @@ jobs:
 
   test-python:
     runs-on: ubuntu-latest
+      permissions:
+        pull-requests: write
+        contents: read
 
     steps:
       - uses: actions/checkout@v4
@@ -162,7 +173,8 @@ jobs:
 
   test-js:
     runs-on: ubuntu-latest
-
+    permissions:
+      contents: read
     steps:
       - uses: actions/checkout@v4
 
@@ -200,6 +212,9 @@ jobs:
 
   check-inclusive-naming:
     runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+      contents: read
 
     steps:
       - name: Checkout
