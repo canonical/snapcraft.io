@@ -1,5 +1,5 @@
 from unittest.mock import patch, Mock
-from tests.admin.tests_models import TestModelServiceEndpoints
+from tests.endpoints.endpoint_testing import TestModelServiceEndpoints
 from canonicalwebteam.exceptions import StoreApiResponseErrorList
 
 
