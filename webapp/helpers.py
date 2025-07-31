@@ -179,3 +179,8 @@ def directory_exists(file):
         os.path.join(flask.current_app.root_path, file)
     )
     return os.path.isdir(target_path)
+
+
+def get_brand_id(session, store_id):
+    store = dashboard.get_store(session, store_id)
+    return store["brand-id"]
