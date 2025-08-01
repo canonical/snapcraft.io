@@ -29,8 +29,42 @@ from webapp.endpoints.views import endpoints
 from webapp.endpoints.signing_keys import signing_keys
 from webapp.endpoints.models import models
 
+# --- OpenTelemetry imports ---
+from opentelemetry.instrumentation.flask import FlaskInstrumentor
+from opentelemetry.instrumentation.requests import RequestsInstrumentor
+from opentelemetry.trace import Span
+from webapp.observability.utils import trace_function
+from opentelemetry import trace
+from opentelemetry.sdk.trace import TracerProvider
+from opentelemetry.sdk.trace.export import BatchSpanProcessor
+from opentelemetry.exporter.otlp.proto.http.trace_exporter import (
+    OTLPSpanExporter,
+)
+from opentelemetry.sdk.resources import Resource
 
 TALISKER_WSGI_LOGGER = logging.getLogger("talisker.wsgi")
+
+
+# OpenTelemetry
+UNTRACED_ROUTES = [
+    "/_status",
+    ".*[.jpg|.jpeg|.png|.gif|.ico|.css|.js|.json]$",
+]
+
+
+# Setup tracing manually
+# could be removed if we can run dotrun with opentelemetry
+resource = Resource.create()
+trace.set_tracer_provider(TracerProvider(resource=resource))
+tracer_provider = trace.get_tracer_provider()
+otlp_exporter = OTLPSpanExporter()  # reads env variables
+tracer_provider.add_span_processor(BatchSpanProcessor(otlp_exporter))
+
+
+@trace_function
+def request_hook(span: Span, environ):
+    if span and span.is_recording():
+        span.update_name(f"{environ['REQUEST_METHOD']} {environ['PATH_INFO']}")
 
 
 def create_app(testing=False):
@@ -51,6 +85,14 @@ def create_app(testing=False):
         talisker.requests.configure(webapp.api.sso.api_session)
         talisker.requests.configure(webapp.helpers.api_session)
         talisker.requests.configure(webapp.helpers.api_publisher_session)
+
+        # Add tracing auto instrumentation
+        FlaskInstrumentor().instrument_app(
+            app,
+            excluded_urls=",".join(UNTRACED_ROUTES),
+            request_hook=request_hook,
+        )
+        RequestsInstrumentor().instrument()
 
     if testing:
 

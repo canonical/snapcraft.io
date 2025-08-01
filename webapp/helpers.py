@@ -8,6 +8,7 @@ from ruamel.yaml import YAML
 from webapp.api.requests import PublisherSession, Session
 from canonicalwebteam.store_api.dashboard import Dashboard
 import webapp.api.marketo as marketo_api
+from webapp.observability.utils import trace_function
 
 _yaml = YAML(typ="rt")
 _yaml_safe = YAML(typ="safe")
@@ -107,6 +108,7 @@ def dump_yaml(data, stream, typ="safe"):
     yaml.dump(data, stream)
 
 
+@trace_function
 def get_icon(media):
     icons = [m["url"] for m in media if m["type"] == "icon"]
     if len(icons) > 0:
@@ -114,6 +116,7 @@ def get_icon(media):
     return ""
 
 
+@trace_function
 def get_publisher_data():
     # We don't use the data from this endpoint.
     # It is mostly used to make sure the user has signed
@@ -148,6 +151,7 @@ def get_publisher_data():
     return context
 
 
+@trace_function
 def get_dns_verification_token(snap_name, domain):
     salt = os.getenv("DNS_VERIFICATION_SALT")
     token_string = f"{domain}:{snap_name}:{salt}"

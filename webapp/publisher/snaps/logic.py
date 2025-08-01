@@ -4,6 +4,8 @@ from json import dumps
 
 from dateutil import parser
 
+from webapp.observability.utils import trace_function
+
 
 def get_snaps_account_info(account_info):
     """Get snaps from the account information of a user
@@ -91,6 +93,7 @@ def get_snap_names_by_ownership(account_info):
     return owned_snaps_names, shared_snaps_names
 
 
+@trace_function
 def verify_base_metrics(active_devices):
     """Verify that the base metric exists in the list of available
     metrics
@@ -105,6 +108,7 @@ def verify_base_metrics(active_devices):
     return active_devices
 
 
+@trace_function
 def extract_metrics_period(metric_period):
     """Extract the different values from the period requested. The format of
     the metric_period should be: [0-9]+[dm]
@@ -141,6 +145,7 @@ def extract_metrics_period(metric_period):
     }
 
 
+@trace_function
 def get_installed_based_metric(installed_base_metric):
     if installed_base_metric == "version":
         return "weekly_installed_base_by_version"
