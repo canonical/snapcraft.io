@@ -59,7 +59,7 @@ env[23]/
 
 # dotrun snap files
 .dotrun.json
-.venv/
+.venv*/
 
 # Project specific ignores
 static/js/modules

@@ -1046,10 +1046,9 @@
   resolved "https://registry.yarnpkg.com/@canonical/cookie-policy/-/cookie-policy-3.6.5.tgz#50d82df6da2970b6b5d78d066dd94fcc1317e591"
   integrity sha512-CQJKSkuLXhSumkIIw4YPSjR7k9561hZ3EEdMPQTkAVTxXURhm3WzJm/uyrvcAuU/a//jzWa8ScltCaHFBdACew==
 
-"@canonical/global-nav@3.6.4":
+"@canonical/global-nav@canonical/global-nav#WD-19720":
   version "3.6.4"
-  resolved "https://registry.yarnpkg.com/@canonical/global-nav/-/global-nav-3.6.4.tgz#347401d20a01c51a9d0024f7867ddebd3b407dcf"
-  integrity sha512-CEmFtHOdxAG8kFCOBcTR08u/SbwIVZQ1O0evNa/X+KyS7F9YrI6TXBHO3oLNO8Rv1WZUSMeh1BPhv7ChKfojgQ==
+  resolved "https://codeload.github.com/canonical/global-nav/tar.gz/55a9022ecb579f828a7b6edd4025c2c13563bdfb"
   dependencies:
     vanilla-framework "4.9.0"
 
