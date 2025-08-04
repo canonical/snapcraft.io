@@ -47,3 +47,56 @@ class TestGetSigningKeys(TestModelServiceEndpoints):
         self.assertEqual(response.status_code, 500)
         self.assertFalse(data["success"])
         self.assertEqual(data["message"], "An error occurred")
+
+
+class TestCreateSigningKeys(TestModelServiceEndpoints):
+    @patch(
+        "canonicalwebteam.store_api.publishergw."
+        "PublisherGW.create_store_signing_key"
+    )
+    def test_create_signing_key(self, mock_create_store_signing_key):
+        mock_create_store_signing_key.return_value = None
+
+        payload = {"name": "test_signing_key"}
+        response = self.client.post(
+            "/api/store/1/signing-keys",
+            data=payload,
+        )
+        self.assertEqual(response.status_code, 200)
+        data = response.json
+        self.assertTrue(data["success"])
+
+    def test_name_too_long_create_signing_key(self):
+        payload = {"name": "random name" * 12}
+        response = self.client.post("/api/store/1/signing-keys", data=payload)
+        data = response.json
+
+        self.assertEqual(response.status_code, 500)
+        self.assertFalse(data["success"])
+        self.assertEqual(
+            data["message"],
+            "Invalid signing key. Limit 128 characters",
+        )
+
+    @patch(
+        "canonicalwebteam.store_api.publishergw."
+        "PublisherGW.create_store_signing_key"
+    )
+    def test_exception_in_create_signing_key(
+        self,
+        mock_create_store_signing_key,
+    ):
+        mock_create_store_signing_key.side_effect = StoreApiResponseErrorList(
+            "An error occurred", 500, [{"message": "An error occurred"}]
+        )
+
+        payload = {"name": "test_signing_key"}
+        response = self.client.post(
+            "/api/store/1/signing-keys",
+            data=payload,
+        )
+        data = response.json
+
+        self.assertEqual(response.status_code, 500)
+        self.assertFalse(data["success"])
+        self.assertEqual(data["message"], "An error occurred")

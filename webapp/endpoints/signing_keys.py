@@ -45,3 +45,28 @@ def get_signing_keys(store_id: str):
         )
         res["data"] = []
         return make_response(res, 500)
+
+
+@signing_keys.route("/api/store/<store_id>/signing-keys", methods=["POST"])
+@login_required
+@exchange_required
+def create_signing_key(store_id: str):
+    name = flask.request.form.get("name")
+    res = {}
+
+    try:
+        if name and len(name) <= 128:
+            publisher_gateway.create_store_signing_key(
+                flask.session, store_id, name
+            )
+            res["success"] = True
+            return make_response(res, 200)
+        else:
+            res["message"] = "Invalid signing key. Limit 128 characters"
+            res["success"] = False
+            make_response(res, 500)
+    except StoreApiResponseErrorList as error_list:
+        res["success"] = False
+        res["message"] = error_list.errors[0]["message"]
+
+    return make_response(res, 500)
