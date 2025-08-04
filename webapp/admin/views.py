@@ -111,19 +111,6 @@ def post_manage_store_snaps(store_id):
     return jsonify({"success": True})
 
 
-@admin.route("/api/store/<store_id>/members")
-@login_required
-@exchange_required
-def get_manage_members(store_id):
-    members = dashboard.get_store_members(flask.session, store_id)
-
-    for item in members:
-        if item["email"] == flask.session["publisher"]["email"]:
-            item["current_user"] = True
-
-    return jsonify(members)
-
-
 @admin.route("/api/store/<store_id>/members", methods=["POST"])
 @login_required
 @exchange_required
