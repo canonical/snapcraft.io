@@ -119,7 +119,7 @@ class TestDeletePolicies(TestModelServiceEndpoints):
         response = self.client.delete("/api/store/1/models/Model1/policies/1")
         data = response.json
 
-        self.assertEqual(response.status_code, 500)
+        self.assertEqual(response.status_code, 404)
         self.assertFalse(data["success"])
         self.assertEqual(data["message"], "Policy not found")
 
