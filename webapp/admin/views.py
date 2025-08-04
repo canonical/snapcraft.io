@@ -64,20 +64,6 @@ def post_settings(store_id):
     return jsonify({"success": True})
 
 
-@admin.route("/api/<store_id>/snaps/search")
-@login_required
-@exchange_required
-def get_snaps_search(store_id):
-    snaps = dashboard.get_store_snaps(
-        flask.session,
-        store_id,
-        flask.request.args.get("q"),
-        flask.request.args.get("allowed_for_inclusion"),
-    )
-
-    return jsonify(snaps)
-
-
 @admin.route("/api/store/<store_id>/snaps")
 @login_required
 @exchange_required
