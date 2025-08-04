@@ -33,6 +33,7 @@ from webapp.endpoints.snaps import snaps
 from webapp.endpoints.snap_search import snap_search
 from webapp.endpoints.validation_sets import validation_sets
 from webapp.endpoints.invites import invites
+from webapp.endpoints.settings import settings
 
 
 TALISKER_WSGI_LOGGER = logging.getLogger("talisker.wsgi")
@@ -83,6 +84,7 @@ def create_app(testing=False):
     app.register_blueprint(snap_search)
     app.register_blueprint(validation_sets)
     app.register_blueprint(invites)
+    app.register_blueprint(settings)
     init_docs(app, "/docs")
     init_blog(app, "/blog")
     init_tutorials(app, "/tutorials")
