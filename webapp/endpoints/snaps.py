@@ -1,14 +1,18 @@
 import flask
 from flask import make_response
+from flask.json import jsonify
 
 import dns.resolver
 import re
 
 import webapp.helpers as helpers
+from webapp.decorators import login_required, exchange_required
 
 from canonicalwebteam.store_api.devicegw import DeviceGW
+from canonicalwebteam.store_api.dashboard import Dashboard
 
 device_gateway = DeviceGW("snap", helpers.api_session)
+dashboard = Dashboard(helpers.api_session)
 
 FIELDS = [
     "title",
@@ -80,3 +84,36 @@ def dns_verified_status(snap_name):
     response = make_response(res, 200)
     response.cache_control.max_age = "3600"
     return response
+
+
+@snaps.route("/api/store/<store_id>/snaps")
+@login_required
+@exchange_required
+def get_store_snaps(store_id):
+    snaps = dashboard.get_store_snaps(flask.session, store_id)
+    store = dashboard.get_store(flask.session, store_id)
+    if "store-whitelist" in store:
+        included_stores = []
+        for item in store["store-whitelist"]:
+            try:
+                store_item = dashboard.get_store(flask.session, item)
+                if store_item:
+                    included_stores.append(
+                        {
+                            "id": store_item["id"],
+                            "name": store_item["name"],
+                            "userHasAccess": True,
+                        }
+                    )
+            except Exception:
+                included_stores.append(
+                    {
+                        "id": item,
+                        "name": "Private store",
+                        "userHasAccess": False,
+                    }
+                )
+
+        if included_stores:
+            snaps.append({"included-stores": included_stores})
+    return jsonify(snaps)

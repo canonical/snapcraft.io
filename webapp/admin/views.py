@@ -64,39 +64,6 @@ def post_settings(store_id):
     return jsonify({"success": True})
 
 
-@admin.route("/api/store/<store_id>/snaps")
-@login_required
-@exchange_required
-def get_store_snaps(store_id):
-    snaps = dashboard.get_store_snaps(flask.session, store_id)
-    store = dashboard.get_store(flask.session, store_id)
-    if "store-whitelist" in store:
-        included_stores = []
-        for item in store["store-whitelist"]:
-            try:
-                store_item = dashboard.get_store(flask.session, item)
-                if store_item:
-                    included_stores.append(
-                        {
-                            "id": store_item["id"],
-                            "name": store_item["name"],
-                            "userHasAccess": True,
-                        }
-                    )
-            except Exception:
-                included_stores.append(
-                    {
-                        "id": item,
-                        "name": "Private store",
-                        "userHasAccess": False,
-                    }
-                )
-
-        if included_stores:
-            snaps.append({"included-stores": included_stores})
-    return jsonify(snaps)
-
-
 @admin.route("/api/store/<store_id>/snaps", methods=["POST"])
 @login_required
 @exchange_required
