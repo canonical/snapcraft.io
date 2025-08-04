@@ -161,15 +161,6 @@ def post_manage_members(store_id):
     return jsonify(res)
 
 
-@admin.route("/api/store/<store_id>/invites")
-@login_required
-@exchange_required
-def get_invites(store_id):
-    invites = dashboard.get_store_invites(flask.session, store_id)
-
-    return jsonify(invites)
-
-
 @admin.route("/api/store/<store_id>/invite", methods=["POST"])
 @login_required
 @exchange_required
