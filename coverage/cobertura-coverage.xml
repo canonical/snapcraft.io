@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 <!DOCTYPE coverage SYSTEM "http://cobertura.sourceforge.net/xml/coverage-04.dtd">
-<coverage lines-valid="4285" lines-covered="2718" line-rate="0.6343" branches-valid="2758" branches-covered="1667" branch-rate="0.6043999999999999" timestamp="1754345055768" complexity="0" version="0.1">
+<coverage lines-valid="4285" lines-covered="2718" line-rate="0.6343" branches-valid="2758" branches-covered="1667" branch-rate="0.6043999999999999" timestamp="1754431469884" complexity="0" version="0.1">
   <sources>
     <source>/home/runner/work/snapcraft.io/snapcraft.io</source>
   </sources>
@@ -4793,9 +4793,9 @@
         </class>
         <class name="MembersTable.tsx" filename="static/js/publisher/pages/Members/MembersTable.tsx" line-rate="0.1891" branch-rate="0.14279999999999998">
           <methods>
-            <method name="MembersTable" hits="14" signature="()V">
+            <method name="MembersTable" hits="13" signature="()V">
               <lines>
-                <line number="13" hits="14"/>
+                <line number="13" hits="13"/>
               </lines>
             </method>
             <method name="(anonymous_1)" hits="0" signature="()V">
@@ -4848,9 +4848,9 @@
                 <line number="82" hits="11"/>
               </lines>
             </method>
-            <method name="(anonymous_11)" hits="14" signature="()V">
+            <method name="(anonymous_11)" hits="12" signature="()V">
               <lines>
-                <line number="146" hits="14"/>
+                <line number="146" hits="12"/>
               </lines>
             </method>
             <method name="(anonymous_12)" hits="0" signature="()V">
@@ -4875,14 +4875,14 @@
             </method>
           </methods>
           <lines>
-            <line number="18" hits="14" branch="false"/>
-            <line number="20" hits="14" branch="false"/>
+            <line number="18" hits="13" branch="false"/>
+            <line number="20" hits="13" branch="false"/>
             <line number="21" hits="0" branch="true" condition-coverage="0% (0/2)"/>
             <line number="22" hits="0" branch="false"/>
             <line number="25" hits="0" branch="false"/>
             <line number="27" hits="0" branch="false"/>
             <line number="30" hits="0" branch="false"/>
-            <line number="33" hits="14" branch="false"/>
+            <line number="33" hits="13" branch="false"/>
             <line number="34" hits="0" branch="false"/>
             <line number="35" hits="0" branch="false"/>
             <line number="37" hits="0" branch="true" condition-coverage="0% (0/2)"/>
@@ -4904,10 +4904,10 @@
             <line number="73" hits="0" branch="false"/>
             <line number="76" hits="0" branch="false"/>
             <line number="79" hits="0" branch="false"/>
-            <line number="82" hits="14" branch="false"/>
+            <line number="82" hits="13" branch="false"/>
             <line number="83" hits="11" branch="false"/>
-            <line number="86" hits="14" branch="false"/>
-            <line number="147" hits="14" branch="false"/>
+            <line number="86" hits="13" branch="false"/>
+            <line number="147" hits="12" branch="false"/>
             <line number="168" hits="0" branch="false"/>
             <line number="181" hits="0" branch="false"/>
             <line number="194" hits="0" branch="false"/>
