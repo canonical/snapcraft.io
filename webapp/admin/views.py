@@ -58,43 +58,6 @@ def post_manage_store_snaps(store_id):
     return jsonify({"success": True})
 
 
-@admin.route("/api/store/<store_id>/members", methods=["POST"])
-@login_required
-@exchange_required
-def post_manage_members(store_id):
-    members = json.loads(flask.request.form.get("members"))
-
-    res = {}
-
-    try:
-        dashboard.update_store_members(flask.session, store_id, members)
-        res["msg"] = "Changes saved"
-    except StoreApiResponseErrorList as api_response_error_list:
-        codes = [error.get("code") for error in api_response_error_list.errors]
-
-        msgs = [
-            f"{error.get('message', 'An error occurred')}"
-            for error in api_response_error_list.errors
-        ]
-
-        for code in codes:
-            account_id = ""
-
-            if code == "store-users-no-match":
-                if account_id:
-                    res["msg"] = code
-                else:
-                    res["msg"] = "invite"
-
-            elif code == "store-users-multiple-matches":
-                res["msg"] = code
-            else:
-                for msg in msgs:
-                    flask.flash(msg, "negative")
-
-    return jsonify(res)
-
-
 @admin.route("/api/store/<store_id>/invite", methods=["POST"])
 @login_required
 @exchange_required
