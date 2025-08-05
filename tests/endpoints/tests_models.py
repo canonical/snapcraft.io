@@ -12,6 +12,50 @@ from tests.endpoints.endpoint_testing import TestModelServiceEndpoints
 candid = CandidClient(api_publisher_session)
 
 
+class TestCreateModel(TestModelServiceEndpoints):
+    @patch(
+        "canonicalwebteam.store_api.publishergw.PublisherGW.create_store_model"
+    )
+    def test_create_model(self, mock_create_store_model):
+        mock_create_store_model.return_value = None
+
+        payload = {"name": "Test Model", "api_key": self.api_key}
+        response = self.client.post("/api/store/1/models", data=payload)
+        data = response.json
+
+        self.assertEqual(response.status_code, 201)
+        self.assertTrue(data["success"])
+
+    def test_create_model_with_invalid_api_key(self):
+        payload = {"name": "Test Model", "api_key": "invalid_api_key"}
+        response = self.client.post("/api/store/1/models", data=payload)
+        data = response.json
+
+        self.assertEqual(response.status_code, 500)
+        self.assertFalse(data["success"])
+        self.assertIn("Invalid API key", data["message"])
+
+    def test_name_too_long(self):
+        payload = {"name": "some_random_long_name" * 7}
+        response = self.client.post("/api/store/1/models", data=payload)
+        data = response.json
+
+        self.assertEqual(response.status_code, 500)
+        self.assertFalse(data["success"])
+        self.assertEqual(
+            data["message"], "Name is too long. Limit 128 characters"
+        )
+
+    def test_missing_name(self):
+        payload = {"api_key": self.api_key}
+        response = self.client.post("/api/store/1/models", data=payload)
+        data = response.json
+
+        self.assertEqual(response.status_code, 500)
+        self.assertFalse(data["success"])
+        self.assertEqual(data["message"], "An error occurred")
+
+
 class TestGetModels(TestModelServiceEndpoints):
     @patch(
         "canonicalwebteam.store_api.publishergw.PublisherGW.get_store_models"

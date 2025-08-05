@@ -167,6 +167,60 @@ def delete_policy(store_id: str, model_name: str, revision: str):
         return make_response(res, 500)
 
 
+@models.route("/api/store/<store_id>/models", methods=["POST"])
+@login_required
+@exchange_required
+def create_models(store_id: str):
+    """
+    Create a model for a given store.
+
+    Args:
+        store_id (str): The ID of the store.
+
+    Returns:
+        dict: A dictionary containing the response message and success
+        status.
+    """
+
+    # TO DO: Addn validation that name does not exist already
+
+    res = {}
+
+    try:
+        name = flask.request.form.get("name")
+        api_key = flask.request.form.get("api_key", "")
+
+        if len(name) > 128:
+            res["message"] = "Name is too long. Limit 128 characters"
+            res["success"] = False
+            return make_response(res, 500)
+
+        if api_key and len(api_key) != 50 and not api_key.isalpha():
+            res["message"] = "Invalid API key"
+            res["success"] = False
+            return make_response(res, 500)
+
+        publisher_gateway.create_store_model(
+            flask.session, store_id, name, api_key
+        )
+        res["success"] = True
+
+        return make_response(res, 201)
+    except StoreApiResponseErrorList as error_list:
+        res["success"] = False
+        messages = [
+            f"{error.get('message', 'An error occurred')}"
+            for error in error_list.errors
+        ]
+        res["message"] = (" ").join(messages)
+
+    except Exception:
+        res["success"] = False
+        res["message"] = "An error occurred"
+
+    return make_response(res, 500)
+
+
 @models.route("/api/store/<store_id>/models/<model_name>", methods=["PATCH"])
 @login_required
 @exchange_required
