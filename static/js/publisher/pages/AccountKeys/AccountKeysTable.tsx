@@ -4,7 +4,7 @@ import {
   MainTableRow,
 } from "@canonical/react-components/dist/components/MainTable/MainTable";
 import { useMemo } from "react";
-import { AccountKeysData } from "../../types/shared";
+import type { AccountKeysData } from "../../types/accountKeysTypes";
 
 function AccountKeysTable(props: {
   keys?: AccountKeysData;
@@ -33,6 +33,7 @@ function AccountKeysTable(props: {
           since: new Date(k.since),
         },
         key: k["public-key-sha3-384"],
+        // TODO: how do we show the constraints list? tooltip? modal? something else?
       })),
     [keys]
   );
