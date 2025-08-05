@@ -5,7 +5,6 @@ import flask
 from flask import make_response
 from canonicalwebteam.exceptions import (
     StoreApiResponseErrorList,
-    StoreApiResourceNotFound,
 )
 from canonicalwebteam.store_api.dashboard import Dashboard
 from canonicalwebteam.store_api.publishergw import PublisherGW
@@ -200,48 +199,6 @@ def create_models(store_id: str):
         res["success"] = False
         res["message"] = "An error occurred"
 
-    return make_response(res, 500)
-
-
-@admin.route("/api/store/<store_id>/models/<model_name>", methods=["PATCH"])
-@login_required
-@exchange_required
-def update_model(store_id: str, model_name: str):
-    """
-    Update a model for a given store.
-
-    Args:
-        store_id (str): The ID of the store.
-        model_name (str): The name of the model.
-
-    Returns:
-        dict: A dictionary containing the response message and success
-            status.
-    """
-    res = {}
-
-    try:
-        api_key = flask.request.form.get("api_key", "")
-
-        if len(api_key) != 50 and not api_key.isalpha():
-            res["message"] = "Invalid API key"
-            res["success"] = False
-            return make_response(res, 500)
-
-        publisher_gateway.update_store_model(
-            flask.session, store_id, model_name, api_key
-        )
-        res["success"] = True
-
-    except StoreApiResponseErrorList as error_list:
-        res["success"] = False
-        res["message"] = error_list.errors[0]["message"]
-
-    except StoreApiResourceNotFound:
-        res["success"] = False
-        res["message"] = "Model not found"
-    if res["success"]:
-        return make_response(res, 200)
     return make_response(res, 500)
 
 
