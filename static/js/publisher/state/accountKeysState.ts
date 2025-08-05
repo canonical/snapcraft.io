@@ -1,9 +1,6 @@
-import { atom } from "recoil";
 import type { AccountKeysData } from "../types/shared";
+import { atom } from "jotai";
 
-const accountKeysState = atom({
-  key: "accountKeys",
-  default: null as unknown as AccountKeysData,
-});
+const accountKeysState = atom(null as unknown as AccountKeysData);
 
 export { accountKeysState };

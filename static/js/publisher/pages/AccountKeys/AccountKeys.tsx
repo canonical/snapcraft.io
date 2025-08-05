@@ -1,11 +1,11 @@
 import { Col, Icon, Row } from "@canonical/react-components";
 import Navigation from "../../components/Navigation";
 import AccountKeysTable from "./AccountKeysTable";
-import { useRecoilValue } from "recoil";
+import { useAtomValue } from "jotai";
 import { accountKeysState } from "../../state/accountKeysState";
 
 function AccountKeys(): React.JSX.Element {
-  const accountKeys = useRecoilValue(accountKeysState);
+  const accountKeys = useAtomValue(accountKeysState);
 
   return (
     <>

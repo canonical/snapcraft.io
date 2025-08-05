@@ -4,19 +4,16 @@ import { render, screen } from "@testing-library/react";
 import "@testing-library/jest-dom";
 
 import AccountKeys from "../AccountKeys";
-import { RecoilRoot } from "recoil";
 
 const queryClient = new QueryClient();
 
 const renderComponent = () => {
   return render(
-    <RecoilRoot>
-      <BrowserRouter>
-        <QueryClientProvider client={queryClient}>
-          <AccountKeys />
-        </QueryClientProvider>
-      </BrowserRouter>
-    </RecoilRoot>
+    <BrowserRouter>
+      <QueryClientProvider client={queryClient}>
+        <AccountKeys />
+      </QueryClientProvider>
+    </BrowserRouter>
   );
 };
 
