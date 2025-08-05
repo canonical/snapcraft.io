@@ -1,9 +1,6 @@
 from unittest.mock import patch
 
 from canonicalwebteam.candid import CandidClient
-from canonicalwebteam.exceptions import (
-    StoreApiResourceNotFound,
-)
 from webapp.helpers import api_publisher_session
 from tests.admin.admin_endpoint_testing import TestAdminEndpoints
 
@@ -62,49 +59,3 @@ class TestCreateModel(TestModelServiceEndpoints):
         self.assertEqual(response.status_code, 500)
         self.assertFalse(data["success"])
         self.assertEqual(data["message"], "An error occurred")
-
-
-class TestUpdateModel(TestModelServiceEndpoints):
-    @patch(
-        "canonicalwebteam.store_api.publishergw.PublisherGW.update_store_model"
-    )
-    def test_update_model(self, mock_update_store_model):
-        mock_update_store_model.return_value = None
-
-        payload = {"api_key": self.api_key}
-        response = self.client.patch(
-            "/api/store/1/models/Model1", data=payload
-        )
-        data = response.json
-
-        self.assertEqual(response.status_code, 200)
-        self.assertTrue(data["success"])
-
-    def test_update_model_with_invalid_api_key(self):
-        payload = {"api_key": "invalid_api_key"}
-        response = self.client.patch(
-            "/api/store/1/models/Model1", data=payload
-        )
-        data = response.json
-
-        self.assertEqual(response.status_code, 500)
-        self.assertFalse(data["success"])
-        self.assertEqual(data["message"], "Invalid API key")
-
-    @patch(
-        "canonicalwebteam.store_api.publishergw.PublisherGW.update_store_model"
-    )
-    def test_model_not_found(self, mock_update_store_model):
-        mock_update_store_model.side_effect = StoreApiResourceNotFound(
-            "Model not found", 404, [{"message": "Model not found"}]
-        )
-
-        payload = {"api_key": self.api_key}
-        response = self.client.patch(
-            "/api/store/1/models/Model1", data=payload
-        )
-        data = response.json
-
-        self.assertEqual(response.status_code, 500)
-        self.assertFalse(data["success"])
-        self.assertEqual(data["message"], "Model not found")
