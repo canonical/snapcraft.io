@@ -44,20 +44,6 @@ def get_admin(path):
     return flask.render_template("admin/admin.html", **context)
 
 
-@admin.route("/api/store/<store_id>/snaps", methods=["POST"])
-@login_required
-@exchange_required
-def post_manage_store_snaps(store_id):
-    snaps = json.loads(flask.request.form.get("snaps"))
-
-    res = {}
-
-    dashboard.update_store_snaps(flask.session, store_id, snaps)
-    res["msg"] = "Changes saved"
-
-    return jsonify({"success": True})
-
-
 @admin.route("/api/store/<store_id>/invite", methods=["POST"])
 @login_required
 @exchange_required
