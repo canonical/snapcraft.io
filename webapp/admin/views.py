@@ -291,30 +291,6 @@ def create_policy(store_id: str, model_name: str):
     return make_response(res, 500)
 
 
-@admin.route(
-    "/api/store/<store_id>/models/<model_name>/policies/<revision>",
-    methods=["DELETE"],
-)
-@login_required
-@exchange_required
-def delete_policy(store_id: str, model_name: str, revision: str):
-    res = {}
-    try:
-        response = publisher_gateway.delete_store_model_policy(
-            flask.session, store_id, model_name, revision
-        )
-        if response.status_code == 204:
-            res = {"success": True}
-            return make_response(res, 200)
-        elif response.status_code == 404:
-            res = {"success": False, "message": "Policy not found"}
-            return make_response(res, 404)
-    except StoreApiResponseErrorList as error_list:
-        res["success"] = False
-        res["message"] = error_list.errors[0]["message"]
-        return make_response(res, 500)
-
-
 # ---------------------- END MODELS SERVICES ----------------------
 # -------------------- FEATURED SNAPS AUTOMATION ------------------
 @admin.route("/admin/featured", methods=["POST"])
