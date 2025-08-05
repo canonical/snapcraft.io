@@ -14,8 +14,9 @@ function AccountKeysTable(props: {
   const headers: MainTableHeader[] = useMemo(
     () => [
       { content: "Name", sortKey: "name" },
-      { content: "SHA3-384 Fingerprint" },
-      { content: "Added", sortKey: "since" },
+      { content: "Created date", sortKey: "since" },
+      { content: "Valid until", sortKey: "until" },
+      { content: "Fingerprint" },
     ],
     []
   );
@@ -25,15 +26,17 @@ function AccountKeysTable(props: {
       keys.map((k) => ({
         columns: [
           { content: k.name },
+          { content: new Date(k.since).toLocaleDateString() },
+          { content: k.until ? new Date(k.until).toLocaleDateString() : "-" },
           { content: k["public-key-sha3-384"] },
-          { content: new Date(k.since).toLocaleString() },
+          // TODO: how do we show the constraints list? tooltip? modal? something else?
         ],
         sortData: {
           name: k.name,
           since: new Date(k.since),
+          until: k.until ? new Date(k.until) : new Date(8640000000000000),
         },
         key: k["public-key-sha3-384"],
-        // TODO: how do we show the constraints list? tooltip? modal? something else?
       })),
     [keys]
   );
