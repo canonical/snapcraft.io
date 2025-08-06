@@ -18,32 +18,6 @@ def redirect_get_release_history(snap_name):
 
 
 @login_required
-def get_release_history_data(snap_name):
-    release_history = dashboard.snap_release_history(flask.session, snap_name)
-
-    channel_map = dashboard.snap_channel_map(flask.session, snap_name)
-
-    snap = channel_map.get("snap", {})
-
-    context = {
-        "snap_name": snap_name,
-        "snap_title": snap.get("title"),
-        "publisher_name": snap.get("publisher", {}).get("display-name", {}),
-        "release_history": release_history,
-        "private": snap.get("private"),
-        "default_track": (
-            snap.get("default-track")
-            if snap.get("default-track") is not None
-            else "latest"
-        ),
-        "channel_map": channel_map.get("channel-map"),
-        "tracks": snap.get("tracks"),
-    }
-
-    return flask.jsonify({"success": True, "data": context})
-
-
-@login_required
 def get_releases(snap_name):
     # If this fails, the page will 404
     dashboard.get_snap_info(flask.session, snap_name)
