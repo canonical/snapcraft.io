@@ -3,6 +3,11 @@ color-1: "#3C6EB4"
 color-2: "#294172"
 logo: https://assets.ubuntu.com/v1/c93d842f-fedora.png
 logo-mono: https://assets.ubuntu.com/v1/c93d842f-fedora.png
+supported-archs:
+  - amd64
+  - arm64
+  - ppc64el
+  - s390x
 install:
   -
     action: |

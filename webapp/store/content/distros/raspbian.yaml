@@ -3,6 +3,9 @@ color-1: "#c05672"
 color-2: "#a22846"
 logo: https://assets.ubuntu.com/v1/193cb6ac-logo-raspberry-pi.svg
 logo-mono: https://assets.ubuntu.com/v1/a31b1451-rpi-b-w.svg
+supported-archs:
+  - armhf
+  - arm64
 install:
   - action: |
       On a <a href="https://www.raspberrypi.org/" >Raspberry Pi</a> running the latest version of <a href="https://www.raspberrypi.org/downloads/raspbian/" >Raspbian</a> snap can be installed directly from the command line:

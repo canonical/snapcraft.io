@@ -3,6 +3,11 @@ color-1: "#265AA3"
 color-2: "#0E223D"
 logo: https://assets.ubuntu.com/v1/acf876d9-Distro_Logo_CentOS.svg
 logo-mono: https://assets.ubuntu.com/v1/7d49bfed-Distro_Logo_CentOS_White.svg
+supported-archs:
+  - amd64
+  - arm64
+  - ppc64el
+  - s390x
 install:
   -
     action: |
