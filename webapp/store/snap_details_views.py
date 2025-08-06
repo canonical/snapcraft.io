@@ -44,7 +44,7 @@ def snap_details_views(store):
     snap_regex = "[a-z0-9-]*[a-z][a-z0-9-]*"
     snap_regex_upercase = "[A-Za-z0-9-]*[A-Za-z][A-Za-z0-9-]*"
 
-    def _get_context_snap_details(snap_name):
+    def _get_context_snap_details(snap_name, supported_architectures=None):
         details = device_gateway.get_item_details(
             snap_name, fields=FIELDS, api_version=2
         )
@@ -87,7 +87,10 @@ def snap_details_views(store):
 
         last_updated = latest_channel["channel"]["released-at"]
         updates = logic.get_latest_versions(
-            details.get("channel-map"), default_track, lowest_risk_available
+            details.get("channel-map"),
+            default_track,
+            lowest_risk_available,
+            supported_architectures,
         )
         binary_filesize = latest_channel["download"]["size"]
 
@@ -420,14 +423,11 @@ def snap_details_views(store):
         if not distro_data:
             flask.abort(404)
 
-        context = _get_context_snap_details(snap_name)
+        supported_archs = distro_data["supported-archs"]
+        context = _get_context_snap_details(snap_name, supported_archs)
 
-        if distro == "raspbian":
-            if (
-                "armhf" not in context["channel_map"]
-                and "arm64" not in context["channel_map"]
-            ):
-                return flask.render_template("404.html"), 404
+        if all(arch not in context["channel_map"] for arch in supported_archs):
+            return flask.render_template("404.html"), 404
 
         context.update(
             {

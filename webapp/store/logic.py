@@ -277,7 +277,9 @@ def get_snap_categories(snap_categories):
     return categories
 
 
-def get_latest_versions(channel_maps, default_track, lowest_risk):
+def get_latest_versions(
+    channel_maps, default_track, lowest_risk, supported_architectures=None
+):
     """Get the latest versions of both default/stable and the latest of
     all other channels, unless it's default/stable
 
@@ -289,16 +291,19 @@ def get_latest_versions(channel_maps, default_track, lowest_risk):
 
     default_stable = None
     other = None
-
     for channel in ordered_versions:
         if (
-            channel["track"] == default_track
-            and channel["risk"] == lowest_risk
+            not supported_architectures
+            or channel["architecture"] in supported_architectures
         ):
-            if not default_stable:
-                default_stable = channel
-        elif not other:
-            other = channel
+            if (
+                channel["track"] == default_track
+                and channel["risk"] == lowest_risk
+            ):
+                if not default_stable:
+                    default_stable = channel
+            elif not other:
+                other = channel
 
     if default_stable:
         default_stable["released-at-display"] = convert_date(

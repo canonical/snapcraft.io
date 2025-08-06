@@ -3,6 +3,8 @@ color-1: "#48B9C7"
 color-2: "#102a4c"
 logo: https://assets.ubuntu.com/v1/c7ca0dfa-Distro_Logo_Pop.svg
 logo-mono: https://assets.ubuntu.com/v1/91e233bc-PopOS-short-white.svg
+supported-archs:
+  - amd64
 install:
   -
     action: |
