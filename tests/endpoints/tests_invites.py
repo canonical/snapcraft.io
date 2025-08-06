@@ -52,3 +52,24 @@ class TestInvites(TestEndpoints):
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(data["msg"], "Changes saved")
+
+    @patch(
+        "canonicalwebteam.store_api.dashboard.Dashboard.invite_store_members"
+    )
+    def test_post_invite_members_success(self, mock_invite_store_members):
+        """Test successful invitation of store members"""
+        mock_members_data = [
+            {"email": "user1@example.com", "roles": ["admin"]},
+            {"email": "user2@example.com", "roles": ["view"]},
+        ]
+
+        mock_invite_store_members.return_value = None
+
+        response = self.client.post(
+            "/api/store/test-store-id/invite",
+            data={"members": json.dumps(mock_members_data)},
+        )
+        data = response.get_json()
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(data["msg"], "Changes saved")
