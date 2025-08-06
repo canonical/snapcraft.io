@@ -64,3 +64,54 @@ class TestGetStoreSnaps(TestEndpoints):
         self.assertEqual(included_stores[1]["id"], "included-store-2")
         self.assertEqual(included_stores[1]["name"], "Included Store 2")
         self.assertTrue(included_stores[1]["userHasAccess"])
+
+
+class TestPostManageStoreSnaps(TestEndpoints):
+    @patch("canonicalwebteam.store_api.dashboard.Dashboard.update_store_snaps")
+    def test_post_manage_store_snaps_success(self, mock_update_store_snaps):
+        """Test successfully updating store snaps"""
+        mock_update_store_snaps.return_value = None
+
+        test_snaps = [
+            {"snap-id": "snap1", "name": "test-snap-1"},
+            {"snap-id": "snap2", "name": "test-snap-2"},
+        ]
+
+        response = self.client.post(
+            "/api/store/test-store-id/snaps",
+            data={"snaps": str(test_snaps).replace("'", '"')},
+        )
+        data = response.get_json()
+
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(data["success"])
+        mock_update_store_snaps.assert_called_once()
+
+    @patch("canonicalwebteam.store_api.dashboard.Dashboard.update_store_snaps")
+    def test_post_manage_store_snaps_with_json_string(
+        self, mock_update_store_snaps
+    ):
+        """Test updating store snaps with proper JSON string"""
+        mock_update_store_snaps.return_value = None
+
+        import json
+
+        test_snaps = [
+            {"snap-id": "snap1", "name": "test-snap-1", "enabled": True},
+            {"snap-id": "snap2", "name": "test-snap-2", "enabled": False},
+        ]
+
+        response = self.client.post(
+            "/api/store/test-store-id/snaps",
+            data={"snaps": json.dumps(test_snaps)},
+        )
+        data = response.get_json()
+
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(data["success"])
+
+        # Verify the dashboard method was called with the correct arguments
+        mock_update_store_snaps.assert_called_once()
+        call_args = mock_update_store_snaps.call_args
+        self.assertEqual(call_args[0][1], "test-store-id")  # store_id
+        self.assertEqual(call_args[0][2], test_snaps)  # snaps data
