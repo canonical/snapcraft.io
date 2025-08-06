@@ -423,11 +423,11 @@ def snap_details_views(store):
         if not distro_data:
             flask.abort(404)
 
-        supported_archs = distro_data["supported-archs"]
-        context = _get_context_snap_details(snap_name, supported_archs)
-
         if all(arch not in context["channel_map"] for arch in supported_archs):
             return flask.render_template("404.html"), 404
+
+        supported_archs = distro_data["supported-archs"]
+        context = _get_context_snap_details(snap_name, supported_archs)
 
         context.update(
             {
@@ -438,7 +438,6 @@ def snap_details_views(store):
                 "distro_color_1": distro_data["color-1"],
                 "distro_color_2": distro_data["color-2"],
                 "distro_install_steps": distro_data["install"],
-                "distro_supported_archs": supported_archs,
             }
         )
 
