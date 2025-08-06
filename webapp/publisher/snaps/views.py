@@ -28,6 +28,7 @@ from webapp.publisher.snaps import (
     settings_views,
     collaboration_views,
 )
+from webapp.endpoints import releases
 from webapp.publisher.snaps.builds import map_snap_build_status
 
 dashboard = Dashboard(api_publisher_session)
@@ -168,7 +169,7 @@ publisher_snaps.add_url_rule(
 )
 publisher_snaps.add_url_rule(
     "/api/<snap_name>/releases",
-    view_func=release_views.get_release_history_data,
+    view_func=releases.get_release_history_data,
     methods=["GET"],
 )
 publisher_snaps.add_url_rule(
