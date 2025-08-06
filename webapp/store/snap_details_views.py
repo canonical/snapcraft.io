@@ -423,11 +423,11 @@ def snap_details_views(store):
         if not distro_data:
             flask.abort(404)
 
-        if all(arch not in context["channel_map"] for arch in supported_archs):
-            return flask.render_template("404.html"), 404
-
         supported_archs = distro_data["supported-archs"]
         context = _get_context_snap_details(snap_name, supported_archs)
+
+        if all(arch not in context["channel_map"] for arch in supported_archs):
+            return flask.render_template("404.html"), 404
 
         context.update(
             {
