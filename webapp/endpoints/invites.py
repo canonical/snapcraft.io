@@ -52,3 +52,28 @@ def update_invite_status(store_id):
             flask.flash(msg, "negative")
 
     return jsonify(res)
+
+
+@invites.route("/api/store/<store_id>/invite", methods=["POST"])
+@login_required
+@exchange_required
+def post_invite_members(store_id):
+    members = json.loads(flask.request.form.get("members"))
+
+    res = {}
+
+    try:
+        dashboard.invite_store_members(flask.session, store_id, members)
+        res["msg"] = "Changes saved"
+    except StoreApiResponseErrorList as api_response_error_list:
+        msgs = [
+            f"{error.get('message', 'An error occurred')}"
+            for error in api_response_error_list.errors
+        ]
+
+        msgs = list(dict.fromkeys(msgs))
+
+        for msg in msgs:
+            flask.flash(msg, "negative")
+
+    return jsonify(res)
