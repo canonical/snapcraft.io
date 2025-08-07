@@ -28,6 +28,7 @@ from webapp.publisher.snaps import (
     settings_views,
     collaboration_views,
 )
+from webapp.endpoints.publisher.builds import get_snap_build_page
 from webapp.endpoints.publisher.settings import get_settings_data
 from webapp.endpoints import releases, builds
 from webapp.publisher.snaps.builds import map_snap_build_status
@@ -93,7 +94,7 @@ publisher_snaps.add_url_rule(
 
 publisher_snaps.add_url_rule(
     "/<snap_name>/builds/<build_id>",
-    view_func=build_views.get_snap_build_page,
+    view_func=get_snap_build_page,
     methods=["GET"],
 ),
 
