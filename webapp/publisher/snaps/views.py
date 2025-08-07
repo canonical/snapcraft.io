@@ -28,7 +28,10 @@ from webapp.publisher.snaps import (
     settings_views,
     collaboration_views,
 )
-from webapp.endpoints.publisher.settings import get_settings_data
+from webapp.endpoints.publisher.settings import (
+    get_settings_data,
+    post_settings_data,
+)
 from webapp.endpoints import releases, builds
 from webapp.publisher.snaps.builds import map_snap_build_status
 
@@ -276,7 +279,7 @@ publisher_snaps.add_url_rule(
 )
 publisher_snaps.add_url_rule(
     "/api/<snap_name>/settings",
-    view_func=settings_views.post_settings_data,
+    view_func=post_settings_data,
     methods=["POST"],
 )
 publisher_snaps.add_url_rule(
