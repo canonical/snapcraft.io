@@ -28,15 +28,14 @@ export default defineConfig({
   },
   build: {
     manifest: true,
-    emptyOutDir: false,
-    sourcemap: true,
-    minify: false,
-    // outDir: "static/js/dist",
+    emptyOutDir: true,
+    sourcemap: "hidden",
+    outDir: "static/js/dist/vite",
     rollupOptions: {
       input: entryPoints,
       output: {
-        entryFileNames: `assets/[name].js`,
-        chunkFileNames: `assets/[name].js`,
+        entryFileNames: `[name].js`,
+        chunkFileNames: `chunks/[name].js`,
         assetFileNames: `assets/[name][extname]`,
       },
     },
