@@ -69,3 +69,5 @@ coverage/
 .webcache/
 .webcache_blog/
 .coverage
+
+dist/
