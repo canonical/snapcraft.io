@@ -73,15 +73,6 @@ def get_snap_builds_page(snap_name):
 
 
 @login_required
-def get_snap_build_page(snap_name, build_id):
-    # If this fails, the page will 404
-    dashboard.get_snap_info(flask.session, snap_name)
-    return flask.render_template(
-        "store/publisher.html", snap_name=snap_name, build_id=build_id
-    )
-
-
-@login_required
 def get_snap_builds(snap_name):
     res = {"message": "", "success": True}
     data = {"snap_builds": [], "total_builds": 0}
