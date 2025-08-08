@@ -1,7 +1,8 @@
 import unittest
-
+from unittest.mock import patch
 
 from webapp.publisher.snaps.builds import map_build_and_upload_states
+from webapp.publisher.snaps.build_views import get_builds
 
 
 class TestBuildStateMapper(unittest.TestCase):
@@ -115,3 +116,89 @@ class TestBuildStateMapper(unittest.TestCase):
         for build_state, upload_state, expected in combinations:
             result = map_build_and_upload_states(build_state, upload_state)
             self.assertEqual(result, expected)
+
+
+class TestGetBuilds(unittest.TestCase):
+    @patch("webapp.publisher.snaps.build_views.launchpad")
+    def test_get_builds_includes_github_repository(self, mock_launchpad):
+        """Test that get_builds includes GitHub repository information"""
+        # Mock Launchpad snap data with GitHub repository URL
+        lp_snap = {
+            "store_name": "test-snap",
+            "git_repository_url": "https://github.com/owner/repo",
+        }
+
+        # Mock build data from Launchpad
+        mock_builds = [
+            {
+                "self_link": (
+                    "https://api.launchpad.net/devel/~owner/"
+                    "+snap/test-snap/+build/123"
+                ),
+                "arch_tag": "amd64",
+                "datebuilt": "2023-01-01T12:00:00Z",
+                "duration": "00:05:30",
+                "build_log_url": (
+                    "https://launchpad.net/~owner/+snap/test-snap/"
+                    "+build/123/+files/buildlog.txt"
+                ),
+                "revision_id": "abcdef1234567890abcdef1234567890abcdef12",
+                "buildstate": "Successfully built",
+                "store_upload_status": "Uploaded",
+                "title": "Test build",
+            }
+        ]
+
+        mock_launchpad.get_snap_builds.return_value = mock_builds
+
+        # Call get_builds
+        result = get_builds(lp_snap, slice(0, 10))
+
+        # Verify the result includes GitHub repository information
+        self.assertEqual(result["total_builds"], 1)
+        self.assertEqual(len(result["snap_builds"]), 1)
+
+        build = result["snap_builds"][0]
+        self.assertEqual(build["id"], "123")
+        self.assertEqual(build["arch_tag"], "amd64")
+        self.assertEqual(
+            build["revision_id"], "abcdef1234567890abcdef1234567890abcdef12"
+        )
+        self.assertEqual(build["github_repository"], "owner/repo")
+        self.assertEqual(build["status"], "released")
+
+    @patch("webapp.publisher.snaps.build_views.launchpad")
+    def test_get_builds_without_github_repository(self, mock_launchpad):
+        """Test that get_builds handles snaps without GitHub repository"""
+        # Mock Launchpad snap data without GitHub repository URL
+        lp_snap = {"store_name": "test-snap"}
+
+        # Mock build data from Launchpad
+        mock_builds = [
+            {
+                "self_link": (
+                    "https://api.launchpad.net/devel/~owner/"
+                    "+snap/test-snap/+build/123"
+                ),
+                "arch_tag": "amd64",
+                "datebuilt": "2023-01-01T12:00:00Z",
+                "duration": "00:05:30",
+                "build_log_url": (
+                    "https://launchpad.net/~owner/+snap/test-snap/"
+                    "+build/123/+files/buildlog.txt"
+                ),
+                "revision_id": "abcdef1234567890abcdef1234567890abcdef12",
+                "buildstate": "Successfully built",
+                "store_upload_status": "Uploaded",
+                "title": "Test build",
+            }
+        ]
+
+        mock_launchpad.get_snap_builds.return_value = mock_builds
+
+        # Call get_builds
+        result = get_builds(lp_snap, slice(0, 10))
+
+        # Verify the result has None for GitHub repository
+        build = result["snap_builds"][0]
+        self.assertIsNone(build["github_repository"])

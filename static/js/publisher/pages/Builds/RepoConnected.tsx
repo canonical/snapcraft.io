@@ -16,6 +16,7 @@ import DisconnectRepoActions from "./DisconnectRepoActions";
 
 import { githubDataState } from "../../state/buildsState";
 import { formatBuildStatus, formatDurationString } from "../../utils";
+import { GitCommitLink } from "../../utils/formatGitCommit";
 
 function RepoConnected({
   autoTriggerBuild,
@@ -139,6 +140,7 @@ function RepoConnected({
             headers={[
               { content: "ID", sortKey: "id" },
               { content: "Architecture", sortKey: "arch" },
+              { content: "Git commit", sortKey: "revision_id" },
               { content: "Build duration", sortKey: "duration" },
               {
                 content: "Result",
@@ -158,6 +160,8 @@ function RepoConnected({
                 duration: string;
                 status: string;
                 datebuilt: string;
+                revision_id?: string;
+                github_repository?: string;
               }) => {
                 return {
                   columns: [
@@ -169,6 +173,14 @@ function RepoConnected({
                       ),
                     },
                     { content: build.arch_tag },
+                    {
+                      content: (
+                        <GitCommitLink
+                          commitId={build.revision_id}
+                          githubRepository={build.github_repository}
+                        />
+                      ),
+                    },
                     { content: formatDurationString(build.duration) },
                     {
                       content: formatBuildStatus(build.status),

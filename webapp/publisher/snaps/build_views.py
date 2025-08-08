@@ -32,6 +32,12 @@ def get_builds(lp_snap, selection):
     snap_builds = []
     builders_status = None
 
+    # Extract GitHub repository info for commit links
+    github_repository = None
+    if lp_snap.get("git_repository_url"):
+        # Remove "https://github.com/" prefix to get owner/repo
+        github_repository = lp_snap["git_repository_url"][19:]
+
     for build in builds:
         status = map_build_and_upload_states(
             build["buildstate"], build["store_upload_status"]
@@ -47,6 +53,7 @@ def get_builds(lp_snap, selection):
             "status": status,
             "title": build["title"],
             "queue_time": None,
+            "github_repository": github_repository,
         }
 
         if build["buildstate"] == "Needs building":
@@ -117,6 +124,13 @@ def get_snap_build(snap_name, build_id):
     lp_build = launchpad.get_snap_build(details["snap_name"], build_id)
 
     if lp_build:
+        # Get snap info to extract GitHub repository
+        lp_snap = launchpad.get_snap_by_store_name(details["snap_name"])
+        github_repository = None
+        if lp_snap and lp_snap.get("git_repository_url"):
+            # Remove "https://github.com/" prefix to get owner/repo
+            github_repository = lp_snap["git_repository_url"][19:]
+
         status = map_build_and_upload_states(
             lp_build["buildstate"], lp_build["store_upload_status"]
         )
@@ -129,6 +143,7 @@ def get_snap_build(snap_name, build_id):
             "revision_id": lp_build["revision_id"],
             "status": status,
             "title": lp_build["title"],
+            "github_repository": github_repository,
         }
 
         if context["snap_build"]["logs"]:
