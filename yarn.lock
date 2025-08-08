@@ -8760,11 +8760,6 @@ verbalize@^0.1.2:
   dependencies:
     chalk "~0.4.0"
 
-vite-plugin-babel@^1.3.2:
-  version "1.3.2"
-  resolved "https://registry.yarnpkg.com/vite-plugin-babel/-/vite-plugin-babel-1.3.2.tgz#2288e9c02363ce7ba62c65214b06d267bcf6781b"
-  integrity sha512-mEld4OVyuNs5+ISN+U5XyTnNcDwln/s2oER2m0PQ32YYPqPR25E3mfnhAA/RkZJxPuwFkprKWV405aZArE6kzA==
-
 vite-plugin-css-injected-by-js@^3.5.2:
   version "3.5.2"
   resolved "https://registry.yarnpkg.com/vite-plugin-css-injected-by-js/-/vite-plugin-css-injected-by-js-3.5.2.tgz#1f75d16ad5c05b6b49bf18018099a189ec2e46ad"
