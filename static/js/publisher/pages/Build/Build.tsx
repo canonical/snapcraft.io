@@ -10,6 +10,7 @@ import {
   formatDurationString,
   setPageTitle,
 } from "../../utils";
+import { GitCommitLink } from "../../utils/formatGitCommit";
 
 function Build(): React.JSX.Element {
   const { buildId, snapId } = useParams();
@@ -63,6 +64,7 @@ function Build(): React.JSX.Element {
             headers={[
               { content: "id" },
               { content: "Architecture" },
+              { content: "Git commit" },
               { content: "Build duration" },
               { content: "Result" },
               { content: "Build finished", className: "u-align-text--right" },
@@ -72,6 +74,14 @@ function Build(): React.JSX.Element {
                 columns: [
                   { content: buildId },
                   { content: build.arch_tag },
+                  {
+                    content: (
+                      <GitCommitLink
+                        commitId={build.revision_id}
+                        githubRepository={build.github_repository}
+                      />
+                    ),
+                  },
                   { content: formatDurationString(build.duration) },
                   { content: formatBuildStatus(build.status) },
                   {
