@@ -18,6 +18,13 @@ export default defineConfig({
       origin: "http://localhost:8004", // needed for backend integration with Flask
     },
   },
+  optimizeDeps: {
+    esbuildOptions: {
+      loader: {
+        ".js": "jsx",
+      },
+    },
+  },
   css: {
     preprocessorOptions: {
       scss: {
@@ -28,6 +35,7 @@ export default defineConfig({
   },
   build: {
     manifest: true,
+    modulePreload: false,
     emptyOutDir: true,
     sourcemap: "hidden",
     outDir: "static/js/dist/vite",
