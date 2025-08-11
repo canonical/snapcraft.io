@@ -33,6 +33,7 @@ from webapp.endpoints.publisher.settings import (
     get_settings_data,
     post_settings_data,
 )
+from webapp.endpoints.publisher.publicise import get_publicise_data
 from webapp.endpoints import releases, builds
 from webapp.publisher.snaps.builds import map_snap_build_status
 
@@ -270,7 +271,7 @@ publisher_snaps.add_url_rule(
 )
 publisher_snaps.add_url_rule(
     "/api/<snap_name>/publicise",
-    view_func=publicise_views.get_publicise_data,
+    view_func=get_publicise_data,
 )
 
 # Settings views
