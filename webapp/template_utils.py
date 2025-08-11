@@ -3,11 +3,13 @@ import hashlib
 import os
 
 from dateutil import parser
-
+from markupsafe import Markup
 from emoji import replace_emoji
-
+from webapp.vite_integration import ViteIntegration
 
 # generator functions for templates
+
+
 def generate_slug(path):
     """
     Generate a slug for each page
@@ -87,6 +89,19 @@ def static_url(filename):
             file_hash.update(chunk)
 
     return url + "?v=" + file_hash.hexdigest()[:7]
+
+
+def vite_import(entrypoint):
+    entry_url = ViteIntegration.get_asset_url(entrypoint)
+    entry_script = f'<script type="module" src="{entry_url}"></script>'
+
+    chunks_urls = ViteIntegration.get_imported_chunks(entrypoint)
+    chunks_scripts = [
+        f'<link rel="modulepreload" href="{c}" />' for c in chunks_urls]
+
+    print(entry_script)
+    print(chunks_scripts)
+    return Markup(entry_script + "".join(chunks_scripts))
 
 
 def install_snippet(

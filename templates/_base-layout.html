@@ -22,6 +22,9 @@
     <!-- End Google Tag Manager -->
 
     <link rel="stylesheet" href="{{ static_url('css/styles.css') }}" />
+    {% if config.ENVIRONMENT == "devel" %}
+    <script type="module" src="http://localhost:5173/@vite/client"></script>
+    {% endif %}
 
     {% block scripts_modules %}{% endblock %}
     <script src="{{ static_url('js/modules/raven.min.js') }}" defer></script>
