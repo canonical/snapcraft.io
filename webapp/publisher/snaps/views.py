@@ -27,7 +27,10 @@ from webapp.publisher.snaps import (
     settings_views,
     collaboration_views,
 )
-from webapp.endpoints.publisher.builds import get_snap_build_page
+from webapp.endpoints.publisher.builds import (
+    get_snap_build_page,
+    get_validate_repo,
+)
 from webapp.endpoints.publisher.settings import (
     get_settings_data,
     post_settings_data,
@@ -125,7 +128,7 @@ publisher_snaps.add_url_rule(
 )
 publisher_snaps.add_url_rule(
     "/api/<snap_name>/builds/validate-repo",
-    view_func=build_views.get_validate_repo,
+    view_func=get_validate_repo,
     methods=["GET"],
 )
 publisher_snaps.add_url_rule(
