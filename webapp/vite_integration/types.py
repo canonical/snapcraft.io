@@ -1,10 +1,11 @@
-from typing import TypedDict, List, Set, Dict, Optional
+from typing import TypedDict, List, Dict, Optional
 
 
 class ManifestChunk(TypedDict):
     """
     Python equivalent of the Vite's 'ManifestChunk' type.
     """
+
     src: Optional[str]
     file: str
     css: Optional[List[str]]

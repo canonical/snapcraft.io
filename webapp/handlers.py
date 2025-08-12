@@ -131,7 +131,7 @@ CSP_SCRIPT_SRC = [
 ]
 
 # Vite integration
-if (ENVIRONMENT == "devel"):
+if ENVIRONMENT == "devel":
     CSP["script-src-elem"].append("localhost:5173")
     CSP["connect-src"].append("localhost:5173")
     CSP["connect-src"].append("ws://localhost:5173")

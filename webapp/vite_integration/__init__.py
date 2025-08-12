@@ -1,11 +1,15 @@
 import os
 import json
-from typing import TypedDict, List, Set, Dict, Optional
+from typing import List, Set
 from abc import abstractmethod
 from urllib.parse import urljoin
 
 from webapp.vite_integration.types import Manifest, ManifestChunk
-from webapp.vite_integration.exceptions import AssetPathException, ManifestContentException, ManifestPathException
+from webapp.vite_integration.exceptions import (
+    AssetPathException,
+    ManifestContentException,
+    ManifestPathException,
+)
 
 IS_PROD = os.getenv("ENVIRONMENT", "devel") != "devel"
 
@@ -50,7 +54,8 @@ class _ProdViteIntegration(_AbstractViteIntegration):
 
         print("Initializing Vite manifest")
         manifest_path = os.path.join(
-            _ProdViteIntegration.OUT_DIR, _ProdViteIntegration.BUILD_MANIFEST)
+            _ProdViteIntegration.OUT_DIR, _ProdViteIntegration.BUILD_MANIFEST
+        )
         if not os.path.isfile(manifest_path):
             raise ManifestPathException("Bad path to Vite manifest")
 
@@ -63,12 +68,14 @@ class _ProdViteIntegration(_AbstractViteIntegration):
         entry = _ProdViteIntegration.manifest[asset_name]
         if not entry:
             raise ManifestContentException(
-                f"Asset \"{asset_name}\" not declared in Vite build manifest")
+                f'Asset "{asset_name}" not declared in Vite build manifest'
+            )
 
         entry_path = os.path.join(_ProdViteIntegration.OUT_DIR, entry["file"])
         if not os.path.isfile(entry_path):
             raise AssetPathException(
-                f"Path to asset file \"{entry_path}\" doesn't exist")
+                f'Path to asset file "{entry_path}" doesn\'t exist'
+            )
 
         return f"/{entry_path}"
 
@@ -91,18 +98,22 @@ class _ProdViteIntegration(_AbstractViteIntegration):
         entry = _ProdViteIntegration.manifest.get(asset_name)
         if not entry:
             raise ManifestContentException(
-                f"Asset \"{asset_name}\" not declared in Vite build manifest")
+                f'Asset "{asset_name}" not declared in Vite build manifest'
+            )
 
         chunks = _get_imported_chunks(entry)
-        files = [os.path.join(_ProdViteIntegration.OUT_DIR, f["file"])
-                 for f in chunks]
+        files = [
+            os.path.join(_ProdViteIntegration.OUT_DIR, f["file"])
+            for f in chunks
+        ]
 
         for f in files:
             if not os.path.isfile(f):
                 # TODO: think about whether failing like this would make sense
                 # in a prod environment. Probably no, and we'll remove it
                 raise AssetPathException(
-                    f"Path to asset file \"{f}\" doesn't exist")
+                    f'Path to asset file "{f}" doesn\'t exist'
+                )
 
         # only build filesystem paths for all chunks
         urls = [f"/{f}" for f in files]

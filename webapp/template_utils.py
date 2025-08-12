@@ -97,7 +97,8 @@ def vite_import(entrypoint):
 
     chunks_urls = ViteIntegration.get_imported_chunks(entrypoint)
     chunks_scripts = [
-        f'<link rel="modulepreload" href="{c}" />' for c in chunks_urls]
+        f'<link rel="modulepreload" href="{c}" />' for c in chunks_urls
+    ]
 
     return Markup(entry_script + "".join(chunks_scripts))
 
