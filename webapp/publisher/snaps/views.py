@@ -15,6 +15,7 @@ from webapp import authentication
 from webapp.helpers import api_publisher_session, launchpad
 from webapp.api.exceptions import ApiError
 from webapp.decorators import exchange_required, login_required
+from webapp.endpoints.publisher import listing as listing_endpoint
 from webapp.publisher.cve import cve_views
 from webapp.publisher.snaps import (
     build_views,
@@ -69,7 +70,7 @@ publisher_snaps.add_url_rule(
 )
 publisher_snaps.add_url_rule(
     "/api/<snap_name>/listing",
-    view_func=listing_views.get_listing_data,
+    view_func=listing_endpoint.get_listing_data,
     methods=["GET"],
 )
 publisher_snaps.add_url_rule(
