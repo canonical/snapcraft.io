@@ -75,7 +75,7 @@ publisher_snaps.add_url_rule(
 )
 publisher_snaps.add_url_rule(
     "/api/<snap_name>/listing",
-    view_func=listing_views.post_listing_data,
+    view_func=listing_endpoint.post_listing_data,
     methods=["POST"],
 )
 publisher_snaps.add_url_rule(
