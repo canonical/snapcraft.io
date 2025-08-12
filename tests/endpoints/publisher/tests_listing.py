@@ -191,3 +191,117 @@ class TestGetListingData(TestEndpoints):
         self.assertIsNone(context["icon_url"])
         self.assertEqual(context["screenshot_urls"], [])
         self.assertIsNone(context["video_urls"])
+
+
+class TestPostListingData(TestEndpoints):
+    @patch("webapp.endpoints.publisher.listing.dashboard")
+    @patch("webapp.endpoints.publisher.listing.logic.filter_changes_data")
+    def test_post_listing_data_success_no_changes(
+        self,
+        mock_filter_changes_data,
+        mock_dashboard,
+    ):
+        """Test POST with no changes returns success"""
+        # Make the request with no changes
+        response = self.client.post("/api/test-snap/listing")
+        data = response.json
+
+        # Assert response
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(data["success"])
+
+        # Verify no API calls were made since there were no changes
+        mock_dashboard.snap_screenshots.assert_not_called()
+        mock_dashboard.snap_metadata.assert_not_called()
+
+    @patch("webapp.endpoints.publisher.listing.dashboard")
+    @patch("webapp.endpoints.publisher.listing.logic.filter_changes_data")
+    @patch(
+        "webapp.endpoints.publisher.listing.logic.remove_invalid_characters"
+    )
+    def test_post_listing_data_success_with_metadata_changes(
+        self,
+        mock_remove_invalid_characters,
+        mock_filter_changes_data,
+        mock_dashboard,
+    ):
+        """Test POST with metadata changes (title, description, etc.)"""
+        # Mock the filter_changes_data to return some changes
+        mock_filter_changes_data.return_value = {
+            "title": "Updated Title",
+            "description": "Updated description with some content",
+            "summary": "Updated summary",
+        }
+
+        # Mock character removal
+        mock_remove_invalid_characters.return_value = (
+            "Updated description with some content"
+        )
+
+        # Prepare form data
+        form_data = {
+            "changes": (
+                '{"title": "Updated Title", '
+                '"description": "Updated description"}'
+            ),
+            "snap_id": "test-snap-id-123",
+        }
+
+        # Make the request
+        response = self.client.post("/api/test-snap/listing", data=form_data)
+        data = response.json
+
+        # Assert response
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(data["success"])
+
+        # Verify snap_metadata was called with the filtered data
+        mock_dashboard.snap_metadata.assert_called_once()
+        call_args = mock_dashboard.snap_metadata.call_args
+        self.assertEqual(call_args[0][1], "test-snap-id-123")  # snap_id
+
+        # Verify description was processed for invalid characters
+        mock_remove_invalid_characters.assert_called_once_with(
+            "Updated description with some content"
+        )
+
+    @patch("webapp.endpoints.publisher.listing.dashboard")
+    @patch("webapp.endpoints.publisher.listing.logic.build_changed_images")
+    def test_post_listing_data_success_with_image_changes(
+        self,
+        mock_build_changed_images,
+        mock_dashboard,
+    ):
+        """Test POST with image changes (icon, screenshots, banner)"""
+        # Mock existing screenshots
+        mock_dashboard.snap_screenshots.side_effect = [
+            # First call for current screenshots
+            [{"type": "screenshot", "url": "existing.png"}],
+            None,  # Second call for updating screenshots
+        ]
+
+        # Mock build_changed_images
+        mock_build_changed_images.return_value = (
+            [{"type": "icon", "url": "new-icon.png"}],  # images_json
+            [],  # images_files
+        )
+
+        # Prepare form data with image changes
+        form_data = {
+            "changes": '{"images": {"icon": "new-icon.png"}}',
+            "snap_id": "test-snap-id-456",
+        }
+
+        # Make the request
+        response = self.client.post("/api/test-snap/listing", data=form_data)
+        data = response.json
+
+        # Assert response
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(data["success"])
+
+        # Verify screenshots were fetched and updated
+        self.assertEqual(mock_dashboard.snap_screenshots.call_count, 2)
+
+        # Verify build_changed_images was called
+        mock_build_changed_images.assert_called_once()
