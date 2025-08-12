@@ -99,8 +99,6 @@ def vite_import(entrypoint):
     chunks_scripts = [
         f'<link rel="modulepreload" href="{c}" />' for c in chunks_urls]
 
-    print(entry_script)
-    print(chunks_scripts)
     return Markup(entry_script + "".join(chunks_scripts))
 
 

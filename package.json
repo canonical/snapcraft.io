@@ -115,6 +115,7 @@
     "@percy/cli": "1.30.6",
     "@types/d3": "7.4.3",
     "@types/markdown-it": "14.1.2",
+    "@types/node": "^24.2.1",
     "@types/uuid": "10.0.0",
     "@typescript-eslint/eslint-plugin": "^8.19.1",
     "@typescript-eslint/parser": "^8.19.1",
