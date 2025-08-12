@@ -6,8 +6,6 @@ from canonicalwebteam.store_api.publishergw import PublisherGW
 from canonicalwebteam.exceptions import (
     StoreApiError,
     StoreApiResponseErrorList,
-    StoreApiResponseError,
-    StoreApiResourceNotFound,
 )
 from flask.json import jsonify
 from talisker import logging
@@ -28,7 +26,13 @@ from webapp.publisher.snaps import (
     settings_views,
     collaboration_views,
 )
-from webapp.endpoints.publisher.settings import get_settings_data
+from webapp.endpoints.publisher.builds import get_snap_build_page
+from webapp.endpoints.publisher.settings import (
+    get_settings_data,
+    post_settings_data,
+)
+from webapp.endpoints.publisher.publicise import get_publicise_data
+from webapp.endpoints.publisher.packages import get_package_metadata
 from webapp.endpoints import releases, builds
 from webapp.publisher.snaps.builds import map_snap_build_status
 
@@ -93,7 +97,7 @@ publisher_snaps.add_url_rule(
 
 publisher_snaps.add_url_rule(
     "/<snap_name>/builds/<build_id>",
-    view_func=build_views.get_snap_build_page,
+    view_func=get_snap_build_page,
     methods=["GET"],
 ),
 
@@ -266,7 +270,7 @@ publisher_snaps.add_url_rule(
 )
 publisher_snaps.add_url_rule(
     "/api/<snap_name>/publicise",
-    view_func=publicise_views.get_publicise_data,
+    view_func=get_publicise_data,
 )
 
 # Settings views
@@ -276,7 +280,7 @@ publisher_snaps.add_url_rule(
 )
 publisher_snaps.add_url_rule(
     "/api/<snap_name>/settings",
-    view_func=settings_views.post_settings_data,
+    view_func=post_settings_data,
     methods=["POST"],
 )
 publisher_snaps.add_url_rule(
@@ -439,50 +443,11 @@ def post_register_name():
     return jsonify({"success": True})
 
 
-@publisher_snaps.route("/api/packages/<snap_name>", methods=["GET"])
-@login_required
-@exchange_required
-def get_package_metadata(snap_name):
-    try:
-        package_metadata = publisher_gateway.get_package_metadata(
-            flask.session, snap_name
-        )
-        return jsonify({"data": package_metadata, "success": True})
-    except StoreApiResourceNotFound:
-        return (jsonify({"error": "Package not found", "success": False}), 404)
-    except StoreApiResponseErrorList as error:
-        return (
-            jsonify(
-                {
-                    "error": "Error occurred while fetching snap metadata.",
-                    "errors": error.errors,
-                    "success": False,
-                }
-            ),
-            error.status_code,
-        )
-    except StoreApiResponseError as error:
-        return (
-            jsonify(
-                {
-                    "error": "Error occurred while fetching snap metadata.",
-                    "success": False,
-                }
-            ),
-            error.status_code,
-        )
-    except StoreApiError:
-        return (
-            jsonify(
-                {
-                    "error": "Error occurred while fetching snap metadata.",
-                    "success": False,
-                }
-            ),
-            500,
-        )
-    except Exception:
-        return (jsonify({"error": "Unexpected error", "success": False}), 500)
+publisher_snaps.add_url_rule(
+    "/api/packages/<snap_name>",
+    view_func=get_package_metadata,
+    methods=["GET"],
+)
 
 
 @publisher_snaps.route("/packages/<package_name>", methods=["DELETE"])

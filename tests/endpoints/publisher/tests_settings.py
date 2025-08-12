@@ -180,3 +180,31 @@ class TestGetSettingsData(TestEndpoints):
 
         response_data = data["data"]
         self.assertTrue(response_data["visibility_locked"])
+
+
+class TestPostSettingsData(TestEndpoints):
+    @patch("webapp.publisher.snaps.logic.filter_changes_data")
+    @patch("canonicalwebteam.store_api.dashboard.Dashboard.snap_metadata")
+    def test_post_settings_data_success(
+        self, mock_snap_metadata, mock_filter_changes
+    ):
+        # Mock the filtered data
+        mock_filter_changes.return_value = {"title": "Updated Title"}
+
+        # Mock successful API response
+        mock_response = {"success": True}
+        mock_snap_metadata.return_value = mock_response
+
+        # Make the request with form data
+        response = self.client.post(
+            "/api/test-snap/settings",
+            data={
+                "snap_id": "test-snap-id-123",
+                "changes": '{"title": "Updated Title"}',
+            },
+        )
+
+        # Assert response
+        self.assertEqual(response.status_code, 200)
+        data = response.json
+        self.assertEqual(data, mock_response)
