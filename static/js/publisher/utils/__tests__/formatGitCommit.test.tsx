@@ -130,21 +130,30 @@ describe("GitCommitLink", () => {
     render(<GitCommitLink commitId={null} />);
     const span = screen.getByText("-");
     expect(span.tagName).toBe("SPAN");
-    expect(span).toHaveAttribute("aria-label", "No commit data available for this build");
+    expect(span).toHaveAttribute(
+      "aria-label",
+      "No commit data available for this build",
+    );
   });
 
   test("renders dash when commit ID is undefined", () => {
     render(<GitCommitLink commitId={undefined} />);
     const span = screen.getByText("-");
     expect(span.tagName).toBe("SPAN");
-    expect(span).toHaveAttribute("aria-label", "No commit data available for this build");
+    expect(span).toHaveAttribute(
+      "aria-label",
+      "No commit data available for this build",
+    );
   });
 
   test("renders dash when commit ID is too short", () => {
     render(<GitCommitLink commitId="abc123" />);
     const span = screen.getByText("-");
     expect(span.tagName).toBe("SPAN");
-    expect(span).toHaveAttribute("aria-label", "No commit data available for this build");
+    expect(span).toHaveAttribute(
+      "aria-label",
+      "No commit data available for this build",
+    );
   });
 
   test("renders span when repository format is invalid", () => {
