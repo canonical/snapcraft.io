@@ -17,7 +17,7 @@
     "build-js-vite": "vite build",
     "watch-js-vite": "vite",
     "serve": "./entrypoint 0.0.0.0:${PORT}",
-    "start": "concurrently --raw 'yarn run watch-scss' 'yarn run watch-js' 'yarn run watch-js-vite' 'yarn run serve'",
+    "start": "yarn run build && concurrently --raw 'yarn run watch-scss' 'yarn run watch-js' 'yarn run watch-js-vite' 'yarn run serve'",
     "watch": "watch -p 'static/sass/**/*.scss' -p 'static/js/**/*.js' -c 'yarn run build'",
     "watch-scss": "watch -p 'static/sass/**/*.scss' -c 'yarn run build-css'",
     "watch-js": "webpack --watch --mode development",
