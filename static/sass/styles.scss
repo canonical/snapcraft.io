@@ -509,19 +509,21 @@ html {
 @media (width < $breakpoint-navigation-threshold) {
   #navigation.p-navigation--sliding {
     @property --right {
-      syntax: '<percentage>';
       inherits: false;
       initial-value: 0%;
+      syntax: '<percentage>';
     }
 
     .p-navigation__nav {
       display: block;
-      position: absolute;
-      min-width: 100%;
       margin-top: 3.5rem;
+      min-width: 100%;
+      position: absolute;
       transform: translateX(var(--right));
+
       // same function as for the global-nav dropdown
       transition: transform 0.333s cubic-bezier(.215,.61,.355,1);
+
       // starts on the right outside of the screen
       --right: 110%;
     }
@@ -548,9 +550,9 @@ html {
     }
 
     @property --up {
-      syntax: '<percentage>';
       inherits: false;
       initial-value: 0%;
+      syntax: '<percentage>';
     }
 
     .p-navigation__items {
@@ -576,10 +578,11 @@ html {
 
       > .p-navigation__dropdown {
         display: block;
+        position: static;
         transform: translateY(calc(-1 * var(--up)));
+
         // same function as for the global-nav dropdown
         transition: transform 0.333s cubic-bezier(.215,.61,.355,1);
-        position: static;
 
         &[aria-hidden="true"] {
           // extra 10% to not let the shadow show underneath the navbar
