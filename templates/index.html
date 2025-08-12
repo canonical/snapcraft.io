@@ -163,6 +163,10 @@
 {% block scripts_includes %}
 <script src="{{ static_url('js/dist/homepage.js') }}" defer></script>
 <script src="{{ static_url('js/dist/featured-snaps.js') }}" defer></script>
+{#
+  {{ vite_import('static/js/public/homepage.ts') }}
+  {{ vite_import('static/js/public/featured-snaps.ts') }}
+#}
 {% if nps %}
 <script src="//app-sjg.marketo.com/js/forms2/js/forms2.min.js" defer></script>
 {% endif %}
