@@ -58,30 +58,27 @@ export function GitCommitLink({
   commitId,
   githubRepository,
   showLink = true,
-}: GitCommitLinkProps): React.JSX.Element | null {
+}: GitCommitLinkProps): React.JSX.Element {
   const formattedCommitId = formatCommitId(commitId);
-
-  if (!formattedCommitId) {
-    return null;
-  }
-
-  if (!showLink || !githubRepository) {
-    return <span className="p-text--code">{formattedCommitId}</span>;
-  }
-
   const commitUrl = createGitHubCommitUrl(githubRepository, commitId);
 
-  if (!commitUrl) {
-    return <span className="p-text--code">{formattedCommitId}</span>;
-  }
-
-  return (
+  return !formattedCommitId ? (
+    <span
+      className="p-text--code"
+      aria-label="No commit data available for this build"
+    >
+      -
+    </span>
+  ) : !showLink || !githubRepository || !commitUrl ? (
+    <span className="p-text--code">{formattedCommitId}</span>
+  ) : (
     <a
       href={commitUrl}
       target="_blank"
       rel="noopener noreferrer"
       className="p-text--code"
       title={`View commit ${formattedCommitId} on GitHub`}
+      aria-label={`View commit ${formattedCommitId} on GitHub`}
     >
       {formattedCommitId}
     </a>

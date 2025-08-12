@@ -2,7 +2,10 @@ import unittest
 from unittest.mock import patch
 
 from webapp.publisher.snaps.builds import map_build_and_upload_states
-from webapp.publisher.snaps.build_views import get_builds
+from webapp.publisher.snaps.build_views import (
+    extract_github_repository,
+    get_builds,
+)
 
 
 class TestBuildStateMapper(unittest.TestCase):
@@ -202,3 +205,39 @@ class TestGetBuilds(unittest.TestCase):
         # Verify the result has None for GitHub repository
         build = result["snap_builds"][0]
         self.assertIsNone(build["github_repository"])
+
+
+class TestExtractGithubRepository(unittest.TestCase):
+    """Test the extract_github_repository helper function."""
+
+    def test_extract_valid_github_url(self):
+        """Test extracting owner/repo from valid GitHub URLs."""
+        test_cases = [
+            ("https://github.com/owner/repo", "owner/repo"),
+            ("https://github.com/owner/repo.git", "owner/repo"),
+            ("https://github.com/owner/repo/", "owner/repo"),
+            ("https://github.com/owner/repo.git/", "owner/repo"),
+            ("http://github.com/owner/repo", "owner/repo"),
+        ]
+
+        for url, expected in test_cases:
+            with self.subTest(url=url):
+                result = extract_github_repository(url)
+                self.assertEqual(result, expected)
+
+    def test_extract_invalid_urls(self):
+        """Test that invalid URLs return None."""
+        test_cases = [
+            None,
+            "",
+            "https://gitlab.com/owner/repo",
+            "https://bitbucket.org/owner/repo",
+            "not-a-url",
+            "https://github.com/",
+            "https://github.com/owner",
+        ]
+
+        for url in test_cases:
+            with self.subTest(url=url):
+                result = extract_github_repository(url)
+                self.assertIsNone(result)

@@ -1,5 +1,6 @@
 # Standard library
 import os
+import re
 from hashlib import md5
 
 # Packages
@@ -18,6 +19,30 @@ from werkzeug.exceptions import Unauthorized
 
 GITHUB_SNAPCRAFT_USER_TOKEN = os.getenv("GITHUB_SNAPCRAFT_USER_TOKEN")
 GITHUB_WEBHOOK_HOST_URL = os.getenv("GITHUB_WEBHOOK_HOST_URL")
+
+
+def extract_github_repository(git_repository_url):
+    """
+    Extract owner/repo from a GitHub repository URL.
+
+    Args:
+        git_repository_url (str): The full GitHub repository URL
+
+    Returns:
+        str or None: The owner/repo part of the URL, or None if not a
+        valid GitHub URL
+    """
+    if not git_repository_url:
+        return None
+
+    match = re.search(
+        r"github\.com/(?P<repo>.+/.+?)(?:\.git)?/?$", git_repository_url
+    )
+    if match:
+        return match.groupdict()["repo"]
+    return None
+
+
 BUILDS_PER_PAGE = 15
 dashboard = Dashboard(api_publisher_session)
 
@@ -33,10 +58,9 @@ def get_builds(lp_snap, selection):
     builders_status = None
 
     # Extract GitHub repository info for commit links
-    github_repository = None
-    if lp_snap.get("git_repository_url"):
-        # Remove "https://github.com/" prefix to get owner/repo
-        github_repository = lp_snap["git_repository_url"][19:]
+    github_repository = extract_github_repository(
+        lp_snap.get("git_repository_url")
+    )
 
     for build in builds:
         status = map_build_and_upload_states(
@@ -127,9 +151,10 @@ def get_snap_build(snap_name, build_id):
         # Get snap info to extract GitHub repository
         lp_snap = launchpad.get_snap_by_store_name(details["snap_name"])
         github_repository = None
-        if lp_snap and lp_snap.get("git_repository_url"):
-            # Remove "https://github.com/" prefix to get owner/repo
-            github_repository = lp_snap["git_repository_url"][19:]
+        if lp_snap:
+            github_repository = extract_github_repository(
+                lp_snap.get("git_repository_url")
+            )
 
         status = map_build_and_upload_states(
             lp_build["buildstate"], lp_build["store_upload_status"]

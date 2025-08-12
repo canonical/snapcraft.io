@@ -126,19 +126,25 @@ describe("GitCommitLink", () => {
     expect(span).toHaveClass("p-text--code");
   });
 
-  test("renders nothing when commit ID is null", () => {
-    const { container } = render(<GitCommitLink commitId={null} />);
-    expect(container.firstChild).toBeNull();
+  test("renders dash when commit ID is null", () => {
+    render(<GitCommitLink commitId={null} />);
+    const span = screen.getByText("-");
+    expect(span.tagName).toBe("SPAN");
+    expect(span).toHaveAttribute("aria-label", "No commit data available for this build");
   });
 
-  test("renders nothing when commit ID is undefined", () => {
-    const { container } = render(<GitCommitLink commitId={undefined} />);
-    expect(container.firstChild).toBeNull();
+  test("renders dash when commit ID is undefined", () => {
+    render(<GitCommitLink commitId={undefined} />);
+    const span = screen.getByText("-");
+    expect(span.tagName).toBe("SPAN");
+    expect(span).toHaveAttribute("aria-label", "No commit data available for this build");
   });
 
-  test("renders nothing when commit ID is too short", () => {
-    const { container } = render(<GitCommitLink commitId="abc123" />);
-    expect(container.firstChild).toBeNull();
+  test("renders dash when commit ID is too short", () => {
+    render(<GitCommitLink commitId="abc123" />);
+    const span = screen.getByText("-");
+    expect(span.tagName).toBe("SPAN");
+    expect(span).toHaveAttribute("aria-label", "No commit data available for this build");
   });
 
   test("renders span when repository format is invalid", () => {
@@ -154,7 +160,7 @@ describe("GitCommitLink", () => {
     expect(span).toHaveClass("p-text--code");
   });
 
-  test("includes correct title attribute for link", () => {
+  test("includes correct title and aria-label attributes for link", () => {
     render(
       <GitCommitLink
         commitId="abcdef1234567890"
@@ -164,5 +170,6 @@ describe("GitCommitLink", () => {
 
     const link = screen.getByRole("link");
     expect(link).toHaveAttribute("title", "View commit abcdef1 on GitHub");
+    expect(link).toHaveAttribute("aria-label", "View commit abcdef1 on GitHub");
   });
 });
