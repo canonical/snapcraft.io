@@ -30,6 +30,7 @@ from webapp.endpoints.publisher.builds import (
     get_snap_build_page,
     get_validate_repo,
     post_build,
+    post_disconnect_repo,
 )
 from webapp.endpoints.publisher.settings import (
     get_settings_data,
@@ -162,7 +163,7 @@ publisher_snaps.add_url_rule(
 )
 publisher_snaps.add_url_rule(
     "/api/<snap_name>/builds/disconnect/",
-    view_func=build_views.post_disconnect_repo,
+    view_func=post_disconnect_repo,
     methods=["POST"],
 )
 

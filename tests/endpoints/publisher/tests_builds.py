@@ -169,3 +169,22 @@ class TestPostBuild(TestEndpoints):
         # Should redirect to login or return unauthorized
         # The exact behavior depends on the login_required decorator
         self.assertIn(response.status_code, [302, 401, 403])
+
+
+class TestPostDisconnectRepo(TestEndpoints):
+    def setUp(self):
+        super().setUp()
+        self.snap_name = "test-snap"
+        self.endpoint_url = f"/api/{self.snap_name}/builds/disconnect/"
+
+    def test_post_disconnect_repo_requires_login(self):
+        """Test that the endpoint requires login"""
+        # Create a new client without logging in
+        app = self.app
+        client = app.test_client()
+
+        response = client.post(self.endpoint_url)
+
+        # Should redirect to login or return unauthorized
+        # The exact behavior depends on the login_required decorator
+        self.assertIn(response.status_code, [302, 401, 403])
