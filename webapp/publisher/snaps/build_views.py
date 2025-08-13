@@ -220,22 +220,6 @@ def validate_repo(github_token, snap_name, gh_owner, gh_repo):
 
 
 @login_required
-def get_validate_repo(snap_name):
-    details = dashboard.get_snap_info(flask.session, snap_name)
-
-    owner, repo = flask.request.args.get("repo").split("/")
-
-    return flask.jsonify(
-        validate_repo(
-            flask.session.get("github_auth_secret"),
-            details["snap_name"],
-            owner,
-            repo,
-        )
-    )
-
-
-@login_required
 def post_snap_builds(snap_name):
     details = dashboard.get_snap_info(flask.session, snap_name)
 
