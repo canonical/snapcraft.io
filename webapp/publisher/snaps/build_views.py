@@ -360,40 +360,6 @@ def check_build_request(snap_name, build_id):
     )
 
 
-@login_required
-def post_disconnect_repo(snap_name):
-    details = dashboard.get_snap_info(flask.session, snap_name)
-
-    lp_snap = launchpad.get_snap_by_store_name(snap_name)
-    launchpad.delete_snap(details["snap_name"])
-
-    # Try to remove the GitHub webhook if possible
-    if flask.session.get("github_auth_secret"):
-        github = GitHub(flask.session.get("github_auth_secret"))
-
-        try:
-            gh_owner, gh_repo = lp_snap["git_repository_url"][19:].split("/")
-
-            old_hook = github.get_hook_by_url(
-                gh_owner,
-                gh_repo,
-                f"{GITHUB_WEBHOOK_HOST_URL}api/{snap_name}/webhook/notify",
-            )
-
-            if old_hook:
-                github.remove_hook(
-                    gh_owner,
-                    gh_repo,
-                    old_hook["id"],
-                )
-        except HTTPError:
-            pass
-
-    return flask.redirect(
-        flask.url_for(".get_snap_builds", snap_name=snap_name)
-    )
-
-
 @csrf.exempt
 def post_github_webhook(snap_name=None, github_owner=None, github_repo=None):
     payload = flask.request.json
