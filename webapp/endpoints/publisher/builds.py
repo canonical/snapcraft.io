@@ -2,8 +2,10 @@
 import flask
 from canonicalwebteam.store_api.dashboard import Dashboard
 
+from requests.exceptions import HTTPError
+
 # Local
-from webapp.helpers import api_publisher_session
+from webapp.helpers import api_publisher_session, launchpad
 from webapp.api.github import GitHub, InvalidYAML
 from webapp.decorators import login_required
 
@@ -82,3 +84,42 @@ def get_validate_repo(snap_name):
             repo,
         )
     )
+
+
+@login_required
+def post_build(snap_name):
+    # Don't allow builds from no contributors
+    account_snaps = dashboard.get_account_snaps(flask.session)
+
+    if snap_name not in account_snaps:
+        return flask.jsonify(
+            {
+                "success": False,
+                "error": {
+                    "type": "FORBIDDEN",
+                    "message": "You are not allowed to request "
+                    "builds for this snap",
+                },
+            }
+        )
+
+    try:
+        if launchpad.is_snap_building(snap_name):
+            launchpad.cancel_snap_builds(snap_name)
+
+        build_id = launchpad.build_snap(snap_name)
+
+    except HTTPError as e:
+        return flask.jsonify(
+            {
+                "success": False,
+                "error": {
+                    "message": "An error happened building "
+                    "this snap, please try again."
+                },
+                "details": e.response.text,
+                "status_code": e.response.status_code,
+            }
+        )
+
+    return flask.jsonify({"success": True, "build_id": build_id})

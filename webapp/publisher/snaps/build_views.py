@@ -315,45 +315,6 @@ def post_snap_builds(snap_name):
 
 
 @login_required
-def post_build(snap_name):
-    # Don't allow builds from no contributors
-    account_snaps = dashboard.get_account_snaps(flask.session)
-
-    if snap_name not in account_snaps:
-        return flask.jsonify(
-            {
-                "success": False,
-                "error": {
-                    "type": "FORBIDDEN",
-                    "message": "You are not allowed to request "
-                    "builds for this snap",
-                },
-            }
-        )
-
-    try:
-        if launchpad.is_snap_building(snap_name):
-            launchpad.cancel_snap_builds(snap_name)
-
-        build_id = launchpad.build_snap(snap_name)
-
-    except HTTPError as e:
-        return flask.jsonify(
-            {
-                "success": False,
-                "error": {
-                    "message": "An error happened building "
-                    "this snap, please try again."
-                },
-                "details": e.response.text,
-                "status_code": e.response.status_code,
-            }
-        )
-
-    return flask.jsonify({"success": True, "build_id": build_id})
-
-
-@login_required
 def check_build_request(snap_name, build_id):
     # Don't allow builds from no contributors
     account_snaps = dashboard.get_account_snaps(flask.session)

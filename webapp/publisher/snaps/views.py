@@ -30,6 +30,7 @@ from webapp.publisher.snaps import (
 from webapp.endpoints.publisher.builds import (
     get_snap_build_page,
     get_validate_repo,
+    post_build,
 )
 from webapp.endpoints.publisher.settings import (
     get_settings_data,
@@ -133,7 +134,7 @@ publisher_snaps.add_url_rule(
 )
 publisher_snaps.add_url_rule(
     "/api/<snap_name>/builds/trigger-build",
-    view_func=build_views.post_build,
+    view_func=post_build,
     methods=["POST"],
 )
 publisher_snaps.add_url_rule(
