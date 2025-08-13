@@ -68,7 +68,7 @@ jobs:
           rm -rf coverage
           mkdir coverage
       - name: Download coverage report artifact
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: snapcraftio-coverage
           path: coverage
@@ -112,7 +112,7 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Download coverage report artifact
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: snapcraftio-coverage
           path: coverage
