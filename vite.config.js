@@ -2,40 +2,51 @@ import react from "@vitejs/plugin-react-swc";
 import { execSync } from "node:child_process";
 import { defineConfig, transformWithEsbuild } from "vite";
 import cssInjectedByJsPlugin from "vite-plugin-css-injected-by-js";
-import { execSync } from "node:child_process";
 
-let entryPoints = []; // In dev mode we don't need to define entry points...
-if (process.env.NODE_ENV != "development") {
-  // ... but when building static bundles we need to!
+const flaskBuildInputConfig = () => ({
+  name: "flask-build-input-config",
+  config(config, env) {
+    // In dev mode we don't need to define entry points
+    if (env.mode === "development") return config;
 
-  try {
-    // So we get a list of all "vite_import(...)" calls in "./templates/"
-    const viteImports =
-      execSync(
-        // TODO: we should do it without grep to make it portable
-        `grep -rn templates/ -e 'vite_import\\((.*)\\)'`
-      ).toString() || "";
+    let input = [];
 
-    // grep returns the origin file name and line on top of the match for
-    // "vite_import(...)", so we must extract the JS/TS entry point path
-    entryPoints = Array.from(
-      viteImports.matchAll(/\(["'](?<file>.+)["']\)/g)
-    ).map((m) => m.groups.file);
+    try {
+      // So we get a list of all "vite_import(...)" calls in "./templates/"
+      const viteImports =
+        execSync(
+          // TODO: we should do it without grep to make it portable
+          `grep -rn templates/ -e 'vite_import\\((.*)\\)'`
+        ).toString() || "";
 
-    console.info(
-      "Building bundles for the following entry points:",
-      entryPoints
-    );
-  } catch (e) {
-    console.error(e.toString());
+      const imports = new Set();
 
-    throw new Error(
-      "Vite: Couldn't find any entry points for production build"
-    );
-  }
-  }
-// TODO: could this ^^^ be turned into a Vite plugin? The "config" hook allows
-// us to mutate the config before resolving it and starting the build process
+      // grep returns the origin file name and line on top of the match for
+      // "vite_import(...)", so we must extract the JS/TS entry point path
+      for (const match of viteImports.matchAll(/\(["'](?<file>.+)["']\)/g)) {
+        imports.add(match.groups.file);
+      }
+
+      input = Array.from(imports).sort();
+
+      console.info("Building bundles for the following entry points:", input);
+    } catch (e) {
+      throw new Error(
+        "Vite: Couldn't find any entry points for production build\n" +
+          e.toString()
+      );
+    }
+
+    // this will be deep-merged with the current config
+    return defineConfig({
+      build: {
+        rollupOptions: {
+          input: input,
+        },
+      },
+    });
+  },
+});
 
 const jsxInJsPlugin = () => ({
   name: "jsx-in-js",
@@ -51,10 +62,11 @@ const jsxInJsPlugin = () => ({
 
 export default defineConfig({
   plugins: [
+    flaskBuildInputConfig(),
     react(),
     cssInjectedByJsPlugin(),
     jsxInJsPlugin(),
-],
+  ],
   server: {
     cors: {
       origin: "http://localhost:8004", // needed for backend integration with Flask
@@ -75,7 +87,7 @@ export default defineConfig({
     sourcemap: "hidden",
     outDir: "static/js/dist/vite",
     rollupOptions: {
-      input: entryPoints,
+      // input: entryPoints, // flaskEntrypointConfig will populate this
       output: {
         entryFileNames: `[name].js`,
         chunkFileNames: `chunks/[name].js`,
