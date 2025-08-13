@@ -1,4 +1,5 @@
 # Packages
+import bleach
 import flask
 from canonicalwebteam.store_api.dashboard import Dashboard
 from canonicalwebteam.exceptions import StoreApiResponseErrorList
@@ -68,4 +69,27 @@ def post_register_name():
 
         return jsonify(res)
 
+    return jsonify({"success": True})
+
+
+@login_required
+def post_register_name_dispute():
+    try:
+        claim = flask.json.loads(flask.request.data)
+        snap_name = claim["snap-name"]
+        claim_comment = claim["claim-comment"]
+        dashboard.post_register_name_dispute(
+            flask.session,
+            bleach.clean(snap_name),
+            bleach.clean(claim_comment),
+        )
+    except StoreApiResponseErrorList as api_response_error_list:
+        if api_response_error_list.status_code in [400, 409]:
+            return jsonify(
+                {
+                    "success": False,
+                    "data": api_response_error_list.errors,
+                    "message": api_response_error_list.errors[0]["message"],
+                }
+            )
     return jsonify({"success": True})

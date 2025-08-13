@@ -1,5 +1,4 @@
 # Packages
-import bleach
 import flask
 from canonicalwebteam.store_api.dashboard import Dashboard
 from canonicalwebteam.store_api.publishergw import PublisherGW
@@ -38,7 +37,10 @@ from webapp.endpoints.publisher.settings import (
 )
 from webapp.endpoints.publisher.publicise import get_publicise_data
 from webapp.endpoints.publisher.packages import get_package_metadata
-from webapp.endpoints.publisher.register import post_register_name
+from webapp.endpoints.publisher.register import (
+    post_register_name,
+    post_register_name_dispute,
+)
 from webapp.endpoints import releases, builds
 from webapp.publisher.snaps.builds import map_snap_build_status
 
@@ -400,6 +402,12 @@ publisher_snaps.add_url_rule(
     methods=["POST"],
 )
 
+publisher_snaps.add_url_rule(
+    "/api/register-name-dispute",
+    view_func=post_register_name_dispute,
+    methods=["POST"],
+)
+
 
 @publisher_snaps.route("/packages/<package_name>", methods=["DELETE"])
 @login_required
@@ -485,30 +493,6 @@ def get_register_name_dispute():
     return flask.render_template(
         "store/publisher.html",
     )
-
-
-@publisher_snaps.route("/api/register-name-dispute", methods=["POST"])
-@login_required
-def post_register_name_dispute():
-    try:
-        claim = flask.json.loads(flask.request.data)
-        snap_name = claim["snap-name"]
-        claim_comment = claim["claim-comment"]
-        dashboard.post_register_name_dispute(
-            flask.session,
-            bleach.clean(snap_name),
-            bleach.clean(claim_comment),
-        )
-    except StoreApiResponseErrorList as api_response_error_list:
-        if api_response_error_list.status_code in [400, 409]:
-            return jsonify(
-                {
-                    "success": False,
-                    "data": api_response_error_list.errors,
-                    "message": api_response_error_list.errors[0]["message"],
-                }
-            )
-    return jsonify({"success": True})
 
 
 @publisher_snaps.route("/request-reserved-name")
