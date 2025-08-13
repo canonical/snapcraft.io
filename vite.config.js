@@ -1,5 +1,6 @@
 import react from "@vitejs/plugin-react-swc";
-import { defineConfig } from "vite";
+import { execSync } from "node:child_process";
+import { defineConfig, transformWithEsbuild } from "vite";
 import cssInjectedByJsPlugin from "vite-plugin-css-injected-by-js";
 import { execSync } from "node:child_process";
 
@@ -32,27 +33,31 @@ if (process.env.NODE_ENV != "development") {
       "Vite: Couldn't find any entry points for production build"
     );
   }
-}
+  }
 // TODO: could this ^^^ be turned into a Vite plugin? The "config" hook allows
 // us to mutate the config before resolving it and starting the build process
 
-export default defineConfig({
-  plugins: [react(), cssInjectedByJsPlugin()],
-  esbuild: {
-    include: /\.[jt]sx?$/,
-    exclude: [],
-    loader: "tsx",
+const jsxInJsPlugin = () => ({
+  name: "jsx-in-js",
+  async transform(code, id) {
+    if (!id.match(/\.js$/)) return null;
+
+    return transformWithEsbuild(code, id, {
+      loader: "jsx",
+      jsx: "automatic",
+    });
   },
+});
+
+export default defineConfig({
+  plugins: [
+    react(),
+    cssInjectedByJsPlugin(),
+    jsxInJsPlugin(),
+],
   server: {
     cors: {
       origin: "http://localhost:8004", // needed for backend integration with Flask
-    },
-  },
-  optimizeDeps: {
-    esbuildOptions: {
-      loader: {
-        ".js": "jsx",
-      },
     },
   },
   css: {
