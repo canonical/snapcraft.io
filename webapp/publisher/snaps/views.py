@@ -15,7 +15,6 @@ from webapp.helpers import api_publisher_session, launchpad
 from webapp.api.exceptions import ApiError
 from webapp.decorators import exchange_required, login_required
 from webapp.endpoints.publisher import listing as listing_endpoint
-from webapp.publisher.cve import cve_views
 from webapp.endpoints import cves
 from webapp.publisher.snaps import (
     build_views,
@@ -301,7 +300,7 @@ publisher_snaps.add_url_rule(
 # CVE API
 publisher_snaps.add_url_rule(
     "/api/<snap_name>/<revision>/cves",
-    view_func=cve_views.get_cves,
+    view_func=cves.get_cves,
 )
 
 publisher_snaps.add_url_rule(
