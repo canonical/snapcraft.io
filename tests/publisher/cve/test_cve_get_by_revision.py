@@ -65,7 +65,6 @@ class CveHGetByRevisionTest(unittest.TestCase):
                                             "version": "2.27-3ubuntu1.4",
                                         },
                                     ],
-                                    "channels_with_fix": [],
                                     "usns": ["3009-1"],
                                 },
                                 "CVE-2023-31486": {
