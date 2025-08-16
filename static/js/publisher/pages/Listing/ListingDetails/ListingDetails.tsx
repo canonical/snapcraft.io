@@ -107,9 +107,9 @@ function ListingDetails({
                 id="title-error"
                 role="alert"
               >
-                {typeof formState.errors.title?.message === 'string'
+                {typeof formState.errors.title?.message === "string"
                   ? formState.errors.title.message
-                  : 'This field is required'}
+                  : "This field is required"}
               </p>
             )}
           </div>
@@ -159,9 +159,9 @@ function ListingDetails({
                 id="primary-category-error"
                 role="alert"
               >
-                {typeof formState.errors.primary_category?.message === 'string'
+                {typeof formState.errors.primary_category?.message === "string"
                   ? formState.errors.primary_category.message
-                  : 'This field is required'}
+                  : "This field is required"}
               </p>
             )}
           </div>
@@ -215,9 +215,10 @@ function ListingDetails({
                   id="secondary-category-error"
                   role="alert"
                 >
-                  {typeof formState.errors.secondary_category?.message === 'string'
+                  {typeof formState.errors.secondary_category?.message ===
+                  "string"
                     ? formState.errors.secondary_category.message
-                    : 'This field is required'}
+                    : "This field is required"}
                 </p>
               )}
             </div>
@@ -343,9 +344,9 @@ function ListingDetails({
                 id="summary-error"
                 role="alert"
               >
-                {typeof formState.errors.summary?.message === 'string'
+                {typeof formState.errors.summary?.message === "string"
                   ? formState.errors.summary.message
-                  : 'This field is required'}
+                  : "This field is required"}
               </p>
             )}
           </div>
@@ -383,9 +384,9 @@ function ListingDetails({
                 id="description-error"
                 role="alert"
               >
-                {typeof formState.errors.description?.message === 'string'
+                {typeof formState.errors.description?.message === "string"
                   ? formState.errors.description.message
-                  : 'This field is required'}
+                  : "This field is required"}
               </p>
             )}
           </div>
