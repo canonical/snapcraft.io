@@ -10,7 +10,7 @@ import { mockListingData } from "../../../../test-utils";
 import { getDefaultListingData } from "../../../../utils";
 
 function TestImageUpload() {
-  const { register, getValues, setValue, control } = useForm<FieldValues>({
+  const { register, getValues, setValue, control, formState } = useForm<FieldValues>({
     defaultValues: getDefaultListingData(mockListingData),
   });
 
@@ -22,6 +22,7 @@ function TestImageUpload() {
         getValues={getValues}
         setValue={setValue}
         control={control}
+        formState={formState}
       />
     </form>
   );

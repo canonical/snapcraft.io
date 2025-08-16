@@ -1,10 +1,11 @@
 import { useState } from "react";
-import {
+import type {
   UseFormRegister,
   UseFormGetValues,
   UseFormSetValue,
   FieldValues,
   Control,
+  FormState,
 } from "react-hook-form";
 import { Row, Col, Button, Icon } from "@canonical/react-components";
 
@@ -19,6 +20,7 @@ type Props = {
   getValues: UseFormGetValues<FieldValues>;
   setValue: UseFormSetValue<FieldValues>;
   control: Control<FieldValues>;
+  formState: FormState<FieldValues>;
 };
 
 function ListingDetails({
@@ -27,6 +29,7 @@ function ListingDetails({
   getValues,
   setValue,
   control,
+  formState,
 }: Props): React.JSX.Element {
   const [showSupportedMarkdownSyntax, setShowSupportedMarkdownSyntax] =
     useState<boolean>(false);
@@ -75,10 +78,15 @@ function ListingDetails({
         type="icon"
       />
 
-      <Row className="p-form__group" data-tour="listing-title">
+      <Row
+        className={`p-form__group ${
+          formState.errors.title ? "p-form-validation is-error" : ""
+        }`}
+        data-tour="listing-title"
+      >
         <Col size={2}>
           <label htmlFor="title" className="p-form__label">
-            Title:
+            Title: <span aria-label="required">*</span>
           </label>
         </Col>
         <Col size={8}>
@@ -86,26 +94,55 @@ function ListingDetails({
             <input
               type="text"
               id="title"
+              className="p-form-validation__input"
               defaultValue={data.title}
-              {...register("title", { required: true })}
+              aria-describedby={
+                formState.errors.title ? "title-error" : undefined
+              }
+              {...register("title", { required: "This field is required" })}
             />
+            {formState.errors.title && (
+              <p
+                className="p-form-validation__message"
+                id="title-error"
+                role="alert"
+              >
+                {typeof formState.errors.title?.message === 'string'
+                  ? formState.errors.title.message
+                  : 'This field is required'}
+              </p>
+            )}
           </div>
         </Col>
       </Row>
 
-      <Row className="p-form__group" data-tour="listing-category">
+      <Row
+        className={`p-form__group ${
+          formState.errors.primary_category ? "p-form-validation is-error" : ""
+        }`}
+        data-tour="listing-category"
+      >
         <Col size={2}>
           <label htmlFor="primary_category" className="p-form__label">
-            Category:
+            Category: <span aria-label="required">*</span>
           </label>
         </Col>
         <Col size={5}>
           <div className="p-form__control">
             <select
               id="primary_category"
+              className="p-form-validation__input"
               defaultValue={data.primary_category}
-              {...register("primary_category", { required: true })}
+              aria-describedby={
+                formState.errors.primary_category
+                  ? "primary-category-error"
+                  : undefined
+              }
+              {...register("primary_category", {
+                required: "This field is required",
+              })}
             >
+              <option value="">Select a category</option>
               {data.categories.map((category) => (
                 <option
                   value={category.slug}
@@ -116,23 +153,50 @@ function ListingDetails({
                 </option>
               ))}
             </select>
+            {formState.errors.primary_category && (
+              <p
+                className="p-form-validation__message"
+                id="primary-category-error"
+                role="alert"
+              >
+                {typeof formState.errors.primary_category?.message === 'string'
+                  ? formState.errors.primary_category.message
+                  : 'This field is required'}
+              </p>
+            )}
           </div>
         </Col>
       </Row>
 
       {showSecondaryCategory() && (
-        <Row className="p-form__group">
+        <Row
+          className={`p-form__group ${
+            formState.errors.secondary_category
+              ? "p-form-validation is-error"
+              : ""
+          }`}
+        >
           <Col size={2}>
             <label htmlFor="secondary_category" className="p-form__label">
-              Secondary category:
+              Secondary category: <span aria-label="required">*</span>
             </label>
           </Col>
           <Col size={5}>
             <div className="p-form__control">
               <select
                 id="secondary_category"
+                className="p-form-validation__input"
                 defaultValue={data.secondary_category || ""}
-                {...register("secondary_category", { required: true })}
+                aria-describedby={
+                  formState.errors.secondary_category
+                    ? "secondary-category-error"
+                    : undefined
+                }
+                {...register("secondary_category", {
+                  required: showSecondaryCategory()
+                    ? "This field is required"
+                    : false,
+                })}
               >
                 <option value="">Select a category</option>
                 {data.categories.map((category) => (
@@ -145,6 +209,17 @@ function ListingDetails({
                   </option>
                 ))}
               </select>
+              {formState.errors.secondary_category && (
+                <p
+                  className="p-form-validation__message"
+                  id="secondary-category-error"
+                  role="alert"
+                >
+                  {typeof formState.errors.secondary_category?.message === 'string'
+                    ? formState.errors.secondary_category.message
+                    : 'This field is required'}
+                </p>
+              )}
             </div>
           </Col>
           <Col size={2}>
@@ -239,34 +314,80 @@ function ListingDetails({
         type="banner"
       />
 
-      <Row className="p-form__group" data-tour="listing-summary">
+      <Row
+        className={`p-form__group ${
+          formState.errors.summary ? "p-form-validation is-error" : ""
+        }`}
+        data-tour="listing-summary"
+      >
         <Col size={2}>
-          <label htmlFor="summary">Summary:</label>
+          <label htmlFor="summary">
+            Summary: <span aria-label="required">*</span>
+          </label>
         </Col>
         <Col size={8}>
           <div className="p-form__control">
             <input
               type="text"
               id="summary"
+              className="p-form-validation__input"
               defaultValue={data.summary}
-              {...register("summary", { required: true })}
+              aria-describedby={
+                formState.errors.summary ? "summary-error" : undefined
+              }
+              {...register("summary", { required: "This field is required" })}
             />
+            {formState.errors.summary && (
+              <p
+                className="p-form-validation__message"
+                id="summary-error"
+                role="alert"
+              >
+                {typeof formState.errors.summary?.message === 'string'
+                  ? formState.errors.summary.message
+                  : 'This field is required'}
+              </p>
+            )}
           </div>
         </Col>
       </Row>
 
-      <Row className="p-form__group" data-tour="listing-description">
+      <Row
+        className={`p-form__group ${
+          formState.errors.description ? "p-form-validation is-error" : ""
+        }`}
+        data-tour="listing-description"
+      >
         <Col size={2}>
-          <label htmlFor="description">Description:</label>
+          <label htmlFor="description">
+            Description: <span aria-label="required">*</span>
+          </label>
         </Col>
         <Col size={8}>
           <div className="p-form__control">
             <textarea
               id="description"
+              className="p-form-validation__input"
               defaultValue={data.description}
               rows={10}
-              {...register("description", { required: true })}
+              aria-describedby={
+                formState.errors.description ? "description-error" : undefined
+              }
+              {...register("description", {
+                required: "This field is required",
+              })}
             />
+            {formState.errors.description && (
+              <p
+                className="p-form-validation__message"
+                id="description-error"
+                role="alert"
+              >
+                {typeof formState.errors.description?.message === 'string'
+                  ? formState.errors.description.message
+                  : 'This field is required'}
+              </p>
+            )}
           </div>
           <Button
             appearance="link"
