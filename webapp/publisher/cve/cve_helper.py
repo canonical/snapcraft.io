@@ -58,6 +58,11 @@ class CveHelper:
                             }
                         )
 
+            channels_with_fix = None
+
+            if "channels_with_fix" in cve:
+                channels_with_fix = cve["channels_with_fix"]
+
             cves.append(
                 {
                     "id": cve_id,
@@ -67,7 +72,7 @@ class CveHelper:
                     "description": cve_detail["description"],
                     "ubuntu_priority": cve_detail["ubuntu_priority"],
                     "affected_binaries": cve["affected_binaries"],
-                    "channels_with_fix": cve["channels_with_fix"],
+                    "channels_with_fix": channels_with_fix,
                     "usns": cve_usns,
                 }
             )
