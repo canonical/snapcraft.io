@@ -42,14 +42,14 @@ def validate_repo(github_token, snap_name, gh_owner, gh_repo):
                 "and runnable."
             ),
         }
-    # The property name inside the yaml file doesn't match the snap
     else:
         try:
             gh_snap_name = github.get_snapcraft_yaml_data(
                 gh_owner, gh_repo
             ).get("name")
 
-            if gh_snap_name != snap_name:
+            # The property name inside the yaml file doesn't match the snap
+            if gh_snap_name is not None and gh_snap_name != snap_name:
                 result["success"] = False
                 result["error"] = {
                     "type": "SNAP_NAME_DOES_NOT_MATCH",
