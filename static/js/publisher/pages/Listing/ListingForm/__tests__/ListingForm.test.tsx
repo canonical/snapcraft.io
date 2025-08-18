@@ -84,7 +84,7 @@ describe("ListingForm", () => {
 
     // perform some random change
     await user.type(
-      screen.getByRole("textbox", { name: "Title:" }),
+      screen.getByRole("textbox", { name: "Title: required" }),
       "new-title",
     );
     await user.click(screen.getByRole("button", { name: "Save" }));
@@ -116,7 +116,7 @@ describe("ListingForm", () => {
 
     // perform some random change
     await user.type(
-      screen.getByRole("textbox", { name: "Title:" }),
+      screen.getByRole("textbox", { name: "Title: required" }),
       "new-title",
     );
     await userEvent.click(screen.getByRole("button", { name: "Save" }));
@@ -150,5 +150,93 @@ describe("ListingForm", () => {
   test("PreviewForm is rendered", () => {
     renderComponent();
     expect(document.getElementById("preview-form")).toBeVisible();
+  });
+
+  test("Validation error displayed for empty title field", async () => {
+    const user = userEvent.setup();
+    await act(async () => {
+      renderComponent();
+    });
+
+    // Clear the title field
+    const titleInput = screen.getByDisplayValue("test-snap");
+    await user.clear(titleInput);
+
+    // Try to submit the form
+    await user.click(screen.getByRole("button", { name: "Save" }));
+
+    // Check that validation error is displayed
+    await waitFor(() => {
+      expect(screen.getByText("This field is required")).toBeVisible();
+      expect(screen.getByRole("alert")).toBeVisible();
+    });
+  });
+
+  test("Validation error displayed for empty summary field", async () => {
+    const user = userEvent.setup();
+    await act(async () => {
+      renderComponent();
+    });
+
+    // Clear the summary field
+    const summaryInput = screen.getByDisplayValue("lorem ispum");
+    await user.clear(summaryInput);
+
+    // Try to submit the form
+    await user.click(screen.getByRole("button", { name: "Save" }));
+
+    // Check that validation error is displayed
+    await waitFor(() => {
+      expect(screen.getByText("This field is required")).toBeVisible();
+    });
+  });
+
+  test("Validation error displayed for empty description field", async () => {
+    const user = userEvent.setup();
+    await act(async () => {
+      renderComponent();
+    });
+
+    // Clear the description field
+    const descriptionInput = screen.getByDisplayValue(
+      "lorem ipsum dolor sit amet",
+    );
+    await user.clear(descriptionInput);
+
+    // Try to submit the form
+    await user.click(screen.getByRole("button", { name: "Save" }));
+
+    // Check that validation error is displayed
+    await waitFor(() => {
+      expect(screen.getByText("This field is required")).toBeVisible();
+    });
+  });
+
+  test("Validation error displayed for empty category field", async () => {
+    const user = userEvent.setup();
+    await act(async () => {
+      renderComponent();
+    });
+
+    // Select empty option in primary category field
+    const categorySelect = screen.getByRole("combobox", {
+      name: "Category: required",
+    });
+    await user.selectOptions(categorySelect, "");
+
+    // Try to submit the form
+    await user.click(screen.getByRole("button", { name: "Save" }));
+
+    // Check that validation error is displayed
+    await waitFor(() => {
+      expect(screen.getByText("This field is required")).toBeVisible();
+    });
+  });
+
+  test("Required field indicators are displayed", () => {
+    renderComponent();
+
+    // Check that required asterisks are present (there should be multiple)
+    expect(screen.getAllByLabelText("required")).toHaveLength(5);
   });
 });

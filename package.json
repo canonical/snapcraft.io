@@ -5,7 +5,7 @@
     "lint-scss": "stylelint static/**/*.scss",
     "lint-python": "flake8 webapp tests && black --diff --check --line-length 79 webapp tests",
     "test": "yarn run test-python && yarn run test-js-all && yarn run lint-scss",
-    "test-e2e": "cypress run",
+    "test-e2e": "cypress run --quiet",
     "test-js": "jest",
     "test-js-all": "yarn run lint-js && yarn run test-js",
     "test-python": "yarn run lint-python && FLASK_DEBUG=0 python3 -m unittest discover tests",
