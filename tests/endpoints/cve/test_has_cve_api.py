@@ -1,15 +1,9 @@
-from unittest import TestCase
-from webapp.app import create_app
 from unittest.mock import patch
+from tests.endpoints.endpoint_testing import TestEndpoints
 
 
-class TestEndpoints(TestCase):
-    def setUp(self):
-        self.app = create_app(testing=True)
-        self.client = self.app.test_client()
-        self._log_in(is_canonical=False)
-
-    def _log_in(self, is_canonical=False):
+class TestCveEndpoints(TestEndpoints):
+    def _log_in_with_canonical_status(self, is_canonical=False):
         test_macaroon = "test_macaroon"
         with self.client.session_transaction() as s:
             s["publisher"] = {
@@ -26,10 +20,14 @@ class TestEndpoints(TestCase):
             s["exchanged_developer_token"] = True
 
     def _set_user_is_canonical(self, value):
-        self._log_in(is_canonical=value)
+        self._log_in_with_canonical_status(is_canonical=value)
+
+    def setUp(self):
+        super().setUp()
+        self._log_in_with_canonical_status(is_canonical=False)
 
 
-class TestModelServiceEndpoints(TestEndpoints):
+class TestModelServiceEndpoints(TestCveEndpoints):
     @patch(
         "webapp.publisher.cve.cve_helper.CveHelper.get_revisions_with_cves",
         return_value=[123, 321],
