@@ -153,3 +153,117 @@ class PostRegisterNamePage(BaseTestCases.EndpointLoggedIn):
 
         assert response.status_code == 200
         assert response.get_json()["success"] is True
+
+
+class PostRegisterNameDisputeNotAuth(BaseTestCases.EndpointLoggedOut):
+    def setUp(self):
+        endpoint_url = "/api/register-name-dispute"
+        super().setUp(
+            snap_name=None, endpoint_url=endpoint_url, method_endpoint="POST"
+        )
+
+
+class PostRegisterNameDispute(BaseTestCases.EndpointLoggedIn):
+    def setUp(self):
+        endpoint_url = "/api/register-name-dispute"
+        api_url = (
+            "https://dashboard.snapcraft.io/dev/api/register-name-dispute/"
+        )
+
+        json_data = {
+            "snap-name": "test-snap",
+            "claim-comment": "I own this trademark",
+        }
+
+        super().setUp(
+            snap_name=None,
+            api_url=api_url,
+            endpoint_url=endpoint_url,
+            method_api="POST",
+            method_endpoint="POST",
+            json=json_data,
+        )
+
+    @responses.activate
+    def test_post_register_name_dispute_success(self):
+        responses.add(responses.POST, self.api_url, json={}, status=200)
+
+        response = self.client.post(
+            self.endpoint_url,
+            json=self.json,
+            content_type="application/json",
+        )
+
+        # Check that the API was called (JSON was parsed correctly)
+        self.assertEqual(1, len(responses.calls))
+        called = responses.calls[0]
+        self.assertEqual(self.api_url, called.request.url)
+        self.assertEqual(
+            self.authorization, called.request.headers.get("Authorization")
+        )
+
+        assert response.status_code == 200
+        assert response.get_json()["success"] is True
+
+    @responses.activate
+    def test_post_register_name_dispute_400_error(self):
+        payload = {
+            "error_list": [
+                {
+                    "code": "invalid-request",
+                    "message": "Invalid request parameters",
+                }
+            ]
+        }
+        responses.add(responses.POST, self.api_url, json=payload, status=400)
+
+        response = self.client.post(
+            self.endpoint_url,
+            json=self.json,
+            content_type="application/json",
+        )
+
+        self.assertEqual(1, len(responses.calls))
+        called = responses.calls[0]
+        self.assertEqual(self.api_url, called.request.url)
+        self.assertEqual(
+            self.authorization, called.request.headers.get("Authorization")
+        )
+
+        assert response.status_code == 200
+        response_data = response.get_json()
+        assert response_data["success"] is False
+        assert response_data["data"] == payload["error_list"]
+        assert response_data["message"] == "Invalid request parameters"
+
+    @responses.activate
+    def test_post_register_name_dispute_409_error(self):
+        payload = {
+            "error_list": [
+                {
+                    "code": "dispute-already-exists",
+                    "message": "A dispute for this name already exists",
+                }
+            ]
+        }
+        responses.add(responses.POST, self.api_url, json=payload, status=409)
+
+        response = self.client.post(
+            self.endpoint_url,
+            json=self.json,
+            content_type="application/json",
+        )
+
+        self.assertEqual(1, len(responses.calls))
+        called = responses.calls[0]
+        self.assertEqual(self.api_url, called.request.url)
+        self.assertEqual(
+            self.authorization, called.request.headers.get("Authorization")
+        )
+
+        assert response.status_code == 200
+        response_data = response.get_json()
+        assert response_data["success"] is False
+        assert response_data["data"] == payload["error_list"]
+        expected_message = "A dispute for this name already exists"
+        assert response_data["message"] == expected_message

@@ -161,6 +161,7 @@ function ListingForm({ data, refetch }: Props): React.JSX.Element {
             getValues={getValues}
             setValue={setValue}
             control={control}
+            formState={formState}
           />
 
           <Strip shallow>
