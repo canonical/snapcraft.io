@@ -82,6 +82,13 @@ module.exports = [
     ],
   },
   {
+    test: require.resolve(__dirname + "/static/js/public/about/index.ts"),
+    use: [
+      "expose-loader?exposes=snapcraft.about",
+      "babel-loader",
+    ],
+  },
+  {
     test: /\.tsx?/,
     use: ["ts-loader"],
   },
