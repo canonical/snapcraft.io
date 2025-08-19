@@ -94,7 +94,7 @@ function LicenseSearch({
       }}
       itemToString={() => ""}
     >
-      {({ getInputProps, getItemProps, getMenuProps, highlightedIndex }) => (
+      {({ getInputProps, getItemProps, getMenuProps }) => (
         <div>
           <input
             type="hidden"
@@ -184,17 +184,12 @@ function LicenseSearch({
               className="p-list p-card--highlighted u-no-padding u-no-margin--bottom p-autocomplete__suggestions"
               {...getMenuProps()}
             >
-              {suggestions.map((item: License, index) => (
+              {suggestions.map((item: License) => (
                 <li
                   key={item.key}
                   className="p-list__item p-autocomplete__suggestion"
                   {...getItemProps({
-                    index,
                     item,
-                    style: {
-                      backgroundColor:
-                        highlightedIndex === index ? "#f7f7f7" : "#fff",
-                    },
                   })}
                 >
                   {item.name}

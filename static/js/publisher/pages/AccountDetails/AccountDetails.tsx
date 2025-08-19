@@ -7,6 +7,7 @@ import {
   CheckboxInput,
   Button,
   Notification,
+  ThemeSwitcher,
 } from "@canonical/react-components";
 
 import Navigation from "../../components/Navigation";
@@ -152,6 +153,22 @@ function AccountDetails(): React.JSX.Element {
                   <Col size={6}>
                     <p className="u-text-muted">
                       Your email address will not be shared publicly.
+                    </p>
+                  </Col>
+                </Row>
+                <div className="u-fixed-width">
+                  <hr />
+                </div>
+                <Row>
+                  <Col size={3}>
+                    <p>Theme</p>
+                  </Col>
+                  <Col size={3}>
+                    <ThemeSwitcher />
+                  </Col>
+                  <Col size={6}>
+                    <p className="u-text-muted">
+                      Your preference of dark or light mode
                     </p>
                   </Col>
                 </Row>

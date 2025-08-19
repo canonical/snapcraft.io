@@ -201,7 +201,7 @@ dl {
 }
 
 .u-text-muted {
-  color: $color-mid-dark;
+  color: $colors--theme--text-muted;
 }
 
 .p-navigation {
@@ -511,7 +511,7 @@ html {
     @property --right {
       inherits: false;
       initial-value: 0%;
-      syntax: '<percentage>';
+      syntax: "<percentage>";
     }
 
     .p-navigation__nav {
@@ -522,7 +522,7 @@ html {
       transform: translateX(var(--right));
 
       // same function as for the global-nav dropdown
-      transition: transform 0.333s cubic-bezier(.215,.61,.355,1);
+      transition: transform 0.333s cubic-bezier(0.215, 0.61, 0.355, 1);
 
       // starts on the right outside of the screen
       --right: 110%;
@@ -556,7 +556,7 @@ html {
     @property --up {
       inherits: false;
       initial-value: 0%;
-      syntax: '<percentage>';
+      syntax: "<percentage>";
     }
 
     .p-navigation__items {
@@ -586,7 +586,7 @@ html {
         transform: translateY(calc(-1 * var(--up)));
 
         // same function as for the global-nav dropdown
-        transition: transform 0.333s cubic-bezier(.215,.61,.355,1);
+        transition: transform 0.333s cubic-bezier(0.215, 0.61, 0.355, 1);
 
         &[aria-hidden="true"] {
           // extra 10% to not let the shadow show underneath the navbar
@@ -597,7 +597,16 @@ html {
           --up: 0%;
         }
       }
-
     }
+  }
+}
+
+.read-only-dark {
+  color: $colors--theme--text-muted;
+}
+
+.__floater__arrow {
+  polygon {
+    fill: $colors--theme--background-default;
   }
 }

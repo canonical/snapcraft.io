@@ -20,8 +20,8 @@
   // CUSTOM TRACK DROPDOWN
 
   .track-dropdown {
-    background-color: $color-mid-light;
-    border-bottom: 1px solid $color-mid-dark;
+    background-color: $colors--theme--background-inputs;
+    border-bottom: 1px solid $colors--theme--border-high-contrast;
     display: inline-block;
     height: 42px;
     margin-right: 1rem;
@@ -39,7 +39,7 @@
   }
 
   .dropdown-menu {
-    background-color: $color-x-light;
+    background-color: $colors--theme--background-default;
     box-shadow: 0 3px 3px rgba(51, 51, 51, 0.2);
     display: flex;
     flex-direction: column;
@@ -72,7 +72,7 @@
     width: 100%;
 
     &:hover {
-      background-color: $color-mid-light;
+      background-color: $colors--theme--background-inputs;
       border-radius: 4px;
     }
   }
@@ -88,13 +88,13 @@
     width: 100%;
 
     &:hover {
-      background-color: $color-mid-light;
+      background-color: $colors--theme--background-inputs;
       border-radius: 4px;
     }
   }
 
   .track-button {
-    background-color: $color-x-light;
+    background-color: $colors--theme--background-default;
     border-top: $border;
     bottom: 0;
     height: 100%;
@@ -105,7 +105,7 @@
   }
 
   .track-button-wrapper {
-    background-color: $color-x-light;
+    background-color: $colors--theme--background-default;
     bottom: 0;
     margin-top: auto;
     padding: none;
@@ -119,8 +119,8 @@
   // REQUEST / ADD TRACK ASIDE COMPONENT
 
   .aside-panel-footer {
-    background-color: $color-x-light;
-    border-top: $border;
+    background-color: $colors--theme--background-default;
+    border-top: 1px solid $colors--theme--border-default;
     bottom: 0;
     margin: $spv--small;
     padding: $spv--medium 0 $spv--medium 0;
@@ -131,7 +131,7 @@
   // RELEASES CONFIRM
 
   .p-releases-confirm {
-    background-color: $color-x-light;
+    background-color: $colors--theme--background-default;
     position: sticky;
     top: 0;
     z-index: 10;
@@ -292,7 +292,7 @@
     }
 
     &.is-hovered {
-      background-color: $color-light;
+      background-color: $colors--theme--background-inputs;
     }
   }
 
@@ -500,7 +500,7 @@
     &:focus,
     &:hover,
     &.is-active {
-      background-color: $color-light;
+      background-color: $colors--theme--background-inputs;
       opacity: 1;
     }
 
@@ -522,7 +522,7 @@
     &.is-active {
       @include vf-animation(#{background-color, border-color}, fast, in);
 
-      background-color: $color-x-light;
+      background-color: $colors--theme--background-inputs;
 
       &:not(.p-releases-table__arch) {
         border-bottom: 3px solid $color-dark !important;
@@ -547,9 +547,14 @@
       background: $color-highlighted;
       border: $color-highlighted-border;
 
+      .is-dark & {
+        background: $colors--theme--border-high-contrast;
+        border-color: $colors--theme--border-high-contrast;
+      }
+
       &.is-unassigned {
-        background-color: $color-light;
-        border-color: $color-mid-x-light;
+        background-color: $colors--theme--background-inputs;
+        border-color: $colors--theme--border-default;
       }
 
       .p-promote-button,
@@ -615,7 +620,7 @@
   }
 
   .p-release-data__meta {
-    color: $color-mid-dark;
+    color: $colors--theme--text-muted;
     font-size: 0.8rem;
 
     @media (max-width: $breakpoint-medium) {
@@ -766,8 +771,8 @@
   }
 
   .p-contextual-menu__link.is-disabled {
-    background: $color-x-light;
-    color: $color-mid-dark;
+    background: $colors--theme--background-inputs;
+    color: $colors--theme--text-muted;
     cursor: not-allowed;
     opacity: 0.5;
   }

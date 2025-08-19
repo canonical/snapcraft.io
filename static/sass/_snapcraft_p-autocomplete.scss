@@ -10,8 +10,13 @@
     }
 
     .p-autocomplete__suggestion {
+      cursor: pointer;
       padding-bottom: 0.5rem;
       padding-top: 0.5rem;
+
+      &:hover {
+        background-color: $colors--theme--background-inputs;
+      }
     }
   }
 
@@ -20,7 +25,7 @@
   }
 
   .p-autocomplete__result {
-    background-color: $color-light;
+    background-color: $colors--theme--background-inputs;
     display: flex;
     justify-content: space-between;
     margin-bottom: $spv--large;

@@ -13,6 +13,7 @@ import {
   Notification,
   Switch,
   Icon,
+  loadTheme,
 } from "@canonical/react-components";
 
 import { validateImageDimensions } from "../../../utils";
@@ -82,12 +83,13 @@ function ImageUpload({
   hasDarkThemePreview,
   type,
 }: Props) {
+  const theme = loadTheme();
   const { snapId } = useParams();
   const [showImageRestrictions, setShowImageRestrictions] = useState(false);
   const [imageVaidationError, setImageValidationError] = useState("");
   const [imageIsValid, setImageIsValid] = useState(true);
   const [isDragging, setIsDragging] = useState(false);
-  const [darkThemeEnabled, setDarkThemeEnabled] = useState(false);
+  const [darkThemeEnabled, setDarkThemeEnabled] = useState(theme === "dark");
   const [previewImageUrl, setPreviewImageUrl] = useState(
     getValues(imageUrlFieldKey),
   );
@@ -224,7 +226,6 @@ function ImageUpload({
                   style={{
                     width: `${previewWidth}px`,
                     height: `${previewHeight}px`,
-                    backgroundColor: isDark ? "#666" : "#d9d9d9",
                   }}
                 >
                   <Icon name="plus" light={isDark}>
@@ -257,7 +258,7 @@ function ImageUpload({
             {showDeleteButton() && (
               <button
                 type="button"
-                className="p-button--base snap-remove-icon"
+                className={`p-button--base snap-remove-icon ${!darkThemeEnabled && "is-light"}`}
                 onClick={() => {
                   setImageIsValid(true);
                   setValue(imageUrlFieldKey, "", {
@@ -277,6 +278,7 @@ function ImageUpload({
             <div>
               <Switch
                 label="Dark theme"
+                checked={darkThemeEnabled}
                 onChange={(
                   e: SyntheticEvent<HTMLInputElement> & {
                     target: HTMLInputElement;
