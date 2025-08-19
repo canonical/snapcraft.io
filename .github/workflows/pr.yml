@@ -43,6 +43,37 @@ jobs:
           dotrun &
           curl --head --fail --retry-delay 3 --retry 30 --retry-connrefused http://localhost:8004
 
+  run-cypress:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      # START copy of the run-dotrun job
+      - uses: actions/checkout@v5
+
+      - name: Install Dotrun
+        run: |
+          sudo pip3 install dotrun requests==2.31.0 # requests version is pinned to avoid breaking changes, can be removed once issue is resolved: https://github.com/docker/docker-py/issues/3256
+
+      - name: Install dependencies
+        run: |
+          sudo chmod -R 777 .
+          dotrun install
+
+      - name: Build assets
+        run: dotrun build
+
+      - name: Run dotrun
+        run: |
+          dotrun &
+          curl --head --fail --retry-delay 3 --retry 30 --retry-connrefused http://localhost:8004
+      # END copy of the run-dotrun job
+
+      - name: Run Cypress as a Docker container
+        run: |
+          docker run --network="host" -v .:/app cypress/base:22.18.0 \
+            bash "-c" "cd /app && npx cypress install && yarn run test-e2e"
+
   lint-python:
     runs-on: ubuntu-latest
     permissions:
