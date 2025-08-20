@@ -528,6 +528,10 @@ html {
       --right: 110%;
     }
 
+    &.has-menu-open {
+      overflow-x: hidden;
+    }
+
     &.has-menu-open .p-navigation__nav {
       --right: 0%;
     }
