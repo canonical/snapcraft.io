@@ -71,7 +71,6 @@
     "d3-time-format": "4.1.0",
     "date-fns": "4.1.0",
     "downshift": "9.0.8",
-    "expose-loader": "5.0.0",
     "fast-average-color": "9.4.0",
     "jotai": "2.12.5",
     "markdown-it": "14.1.0",

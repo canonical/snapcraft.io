@@ -27,66 +27,47 @@ module.exports = [
       },
     ],
   },
-  // TODO:
-  // we should get rid of using globals making expose-loader unnecessary
-  // https://github.com/canonical-web-and-design/snapcraft.io/issues/1245
-
   // loaders are evaluated from bottom to top (right to left)
   // so first transpile via babel, then expose as global
   {
     test: require.resolve(__dirname + "/static/js/base/base.ts"),
-    use: ["expose-loader?exposes=snapcraft.base", "babel-loader"],
+    use: ["babel-loader"],
   },
   {
     test: require.resolve(__dirname + "/static/js/public/featured-snaps.ts"),
-    use: [
-      "expose-loader?exposes=snapcraft.public.featuredSnaps",
-      "babel-loader",
-    ],
+    use: ["babel-loader"],
   },
   {
     test: require.resolve(__dirname + "/static/js/public/modal.ts"),
-    use: ["expose-loader?exposes=snapcraft.public.modal", "babel-loader"],
+    use: ["babel-loader"],
   },
   {
     test: require.resolve(__dirname + "/static/js/public/homepage.ts"),
-    use: ["expose-loader?exposes=snapcraft.public.homepage", "babel-loader"],
+    use: ["babel-loader"],
   },
   {
     test: require.resolve(__dirname + "/static/js/public/blog.ts"),
-    use: ["expose-loader?exposes=snapcraft.public.blog", "babel-loader"],
+    use: ["babel-loader"],
   },
   {
     test: require.resolve(__dirname + "/static/js/public/store-details.ts"),
-    use: [
-      "expose-loader?exposes=snapcraft.public.storeDetails",
-      "babel-loader",
-    ],
+    use: ["babel-loader"],
   },
   {
     test: require.resolve(__dirname + "/static/js/public/fsf.ts"),
-    use: ["expose-loader?exposes=snapcraft.public.fsf", "babel-loader"],
+    use: ["babel-loader"],
   },
   {
     test: require.resolve(__dirname + "/static/js/public/distro-install.ts"),
-    use: [
-      "expose-loader?exposes=snapcraft.public.distroInstall",
-      "babel-loader",
-    ],
+    use: ["babel-loader"],
   },
   {
     test: require.resolve(__dirname + "/static/js/public/publisher-details.ts"),
-    use: [
-      "expose-loader?exposes=snapcraft.public.publisherDetails",
-      "babel-loader",
-    ],
+    use: ["babel-loader"],
   },
   {
     test: require.resolve(__dirname + "/static/js/public/about/index.ts"),
-    use: [
-      "expose-loader?exposes=snapcraft.about",
-      "babel-loader",
-    ],
+    use: ["babel-loader"],
   },
   {
     test: /\.tsx?/,
