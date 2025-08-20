@@ -31,10 +31,12 @@ ADD static/js static/js
 ADD webpack.config.js .
 ADD webpack.config.entry.js .
 ADD webpack.config.rules.js .
+ADD vite.config.js .
 ADD tsconfig.json .
 ADD babel.config.json .
 RUN yarn install
 RUN yarn run build-js
+RUN yarn run build-js-vite
 
 # Build the production image
 # ===
