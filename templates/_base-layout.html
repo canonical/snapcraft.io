@@ -79,7 +79,7 @@
 
     {% block header %}
     <!-- JS that is needed right away -->
-    <script src="{{ static_url('js/dist/cookie-policy.js') }}"></script>
+    <script type="module" src="{{ static_url('js/dist/vite/cookie-policy.js') }}"></script>
 
     {% from "_header_macros.html" import header %}
       {% if show_header != False %}
