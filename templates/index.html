@@ -162,7 +162,7 @@
 
 {% block scripts_includes %}
 <script type="module" src="{{ static_url('js/dist/vite/homepage.js') }}" defer></script>
-<script src="{{ static_url('js/dist/featured-snaps.js') }}" defer></script>
+<script type="module" src="{{ static_url('js/dist/vite/featured-snaps.js') }}" defer></script>
 {% if nps %}
 <script src="//app-sjg.marketo.com/js/forms2/js/forms2.min.js" defer></script>
 {% endif %}
