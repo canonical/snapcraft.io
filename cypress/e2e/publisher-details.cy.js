@@ -26,7 +26,7 @@ describe("Test publisher-details.js bundle on a publisher page (specifically /pu
 
   it("sets 'window.snapcraft.public.publisherDetails'", () => {
     cy.window().then((window) => {
-      expect(typeof window?.snapcraft?.public?.blog).to.equal("object");
+      expect(typeof window?.snapcraft?.public?.publisherDetails).to.equal("object");
     });
   });
 
