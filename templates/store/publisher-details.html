@@ -178,8 +178,9 @@
 {% endblock %}
 
 {% block scripts_includes %}
+  <script type="module" src="{{ static_url('js/dist/vite/publisher-details.js') }}"></script>
   {% if blog_slug %}
-    <script src="{{ static_url('js/dist/publisher-details.js') }}" defer></script>
+    <!-- TODO: move the script back in this if clause -->
   {% endif %}
 {% endblock %}
 
