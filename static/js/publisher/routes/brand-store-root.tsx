@@ -6,6 +6,7 @@ import {
   Route,
   Navigate,
 } from "react-router-dom";
+import { loadTheme, applyTheme } from "@canonical/react-components";
 
 import { brandStoresState } from "../state/brandStoreState";
 
@@ -31,6 +32,11 @@ function BrandStoreRoot() {
       setBrandStores(brandStoresList);
     }
   }, [brandStoresList]);
+
+  useEffect(() => {
+    const theme = loadTheme();
+    applyTheme(theme);
+  }, []);
 
   return (
     <Router>

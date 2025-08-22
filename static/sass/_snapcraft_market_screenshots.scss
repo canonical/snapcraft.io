@@ -9,7 +9,6 @@
 
   .p-listing-images {
     align-items: center;
-    background-color: $color-x-light;
     display: flex;
     flex-wrap: wrap;
     justify-content: flex-start;
@@ -21,8 +20,7 @@
 
   .p-listing-images__image {
     align-items: center;
-    background: $color-light;
-    border: 1px solid $color-light;
+    background: $colors--theme--background-inputs;
     border-radius: $border-radius;
     color: $color-link;
     cursor: grab;
