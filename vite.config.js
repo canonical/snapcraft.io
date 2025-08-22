@@ -1,5 +1,5 @@
 import react from "@vitejs/plugin-react-swc";
-import { defineConfig, transformWithEsbuild } from "vite";
+import { defineConfig, loadEnv, transformWithEsbuild } from "vite";
 import cssInjectedByJsPlugin from "vite-plugin-css-injected-by-js";
 import entryPoints from "./vite.config.entry";
 
@@ -23,9 +23,12 @@ const jsxInJsPlugin = () => ({
   },
 });
 
+const env = loadEnv("all", process.cwd());
+
 export default defineConfig({
   plugins: [react(), cssInjectedByJsPlugin(), jsxInJsPlugin()],
   server: {
+    port: env?.VITE_PORT || 5173,
     cors: {
       origin: "http://localhost:8004", // needed for backend integration with Flask
     },

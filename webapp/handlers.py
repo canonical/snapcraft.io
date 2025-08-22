@@ -21,7 +21,8 @@ from webapp.config import (
     ENVIRONMENT,
     WEBAPP_CONFIG,
     DNS_VERIFICATION_SALT,
-    IS_DEVELOPMENT
+    IS_DEVELOPMENT,
+    VITE_PORT
 )
 
 from canonicalwebteam.exceptions import (
@@ -133,10 +134,10 @@ CSP_SCRIPT_SRC = [
 
 # Vite integration
 if IS_DEVELOPMENT:
-    CSP["script-src-elem"].append("localhost:5173")
-    CSP["connect-src"].append("localhost:5173")
-    CSP["connect-src"].append("ws://localhost:5173")
-    CSP_SCRIPT_SRC.append("localhost:5173")
+    CSP["script-src-elem"].append(f"localhost:{VITE_PORT}")
+    CSP["connect-src"].append(f"localhost:{VITE_PORT}")
+    CSP["connect-src"].append(f"ws://localhost:{VITE_PORT}")
+    CSP_SCRIPT_SRC.append(f"localhost:{VITE_PORT}")
 
 
 def refresh_redirect(path):
