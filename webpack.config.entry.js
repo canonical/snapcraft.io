@@ -4,7 +4,6 @@ module.exports = {
   base: "./static/js/base/base.ts",
   about: "./static/js/public/about/index.ts",
   "featured-snaps": "./static/js/public/featured-snaps.ts",
-  modal: "./static/js/public/modal.ts",
   homepage: "./static/js/public/homepage.ts",
   blog: "./static/js/public/blog.ts",
   "store-details": "./static/js/public/store-details.ts",
