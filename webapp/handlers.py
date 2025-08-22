@@ -21,6 +21,7 @@ from webapp.config import (
     ENVIRONMENT,
     WEBAPP_CONFIG,
     DNS_VERIFICATION_SALT,
+    IS_DEVELOPMENT
 )
 
 from canonicalwebteam.exceptions import (
@@ -131,7 +132,7 @@ CSP_SCRIPT_SRC = [
 ]
 
 # Vite integration
-if ENVIRONMENT == "devel":
+if IS_DEVELOPMENT:
     CSP["script-src-elem"].append("localhost:5173")
     CSP["connect-src"].append("localhost:5173")
     CSP["connect-src"].append("ws://localhost:5173")
@@ -189,6 +190,7 @@ def snapcraft_utility_processor():
         "contains": template_utils.contains,
         "join": template_utils.join,
         "static_url": template_utils.static_url,
+        "IS_DEVELOPMENT": IS_DEVELOPMENT,
         "vite_import": template_utils.vite_import,
         "vite_dev_tools": template_utils.vite_dev_tools,
         "format_number": template_utils.format_number,
