@@ -179,7 +179,7 @@
 
 {% block scripts_includes %}
   {% if blog_slug %}
-    <script src="{{ static_url('js/dist/publisher-details.js') }}" defer></script>
+    <script type="module" src="{{ static_url('js/dist/vite/publisher-details.js') }}"></script>
   {% endif %}
 {% endblock %}
 
