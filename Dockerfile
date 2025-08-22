@@ -28,15 +28,12 @@ RUN yarn run build-css
 # ===
 FROM yarn-dependencies AS build-js
 ADD static/js static/js
-ADD webpack.config.js .
-ADD webpack.config.entry.js .
-ADD webpack.config.rules.js .
 ADD vite.config.js .
+ADD vite.config.entry.js .
 ADD tsconfig.json .
 ADD babel.config.json .
 RUN yarn install
 RUN yarn run build-js
-RUN yarn run build-js-vite
 
 # Build the production image
 # ===
@@ -54,7 +51,7 @@ WORKDIR /srv
 
 # Import code, build assets and mirror list
 ADD . .
-RUN rm -rf package.json yarn.lock .babelrc webpack.config.js requirements.txt
+RUN rm -rf package.json yarn.lock .babelrc requirements.txt
 COPY --from=build-css /srv/static/css static/css
 COPY --from=build-js /srv/static/js static/js
 
