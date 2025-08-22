@@ -130,6 +130,13 @@ CSP_SCRIPT_SRC = [
     "'unsafe-hashes'",
 ]
 
+# Vite integration
+if ENVIRONMENT == "devel":
+    CSP["script-src-elem"].append("localhost:5173")
+    CSP["connect-src"].append("localhost:5173")
+    CSP["connect-src"].append("ws://localhost:5173")
+    CSP_SCRIPT_SRC.append("localhost:5173")
+
 
 def refresh_redirect(path):
     try:
@@ -182,6 +189,8 @@ def snapcraft_utility_processor():
         "contains": template_utils.contains,
         "join": template_utils.join,
         "static_url": template_utils.static_url,
+        "vite_import": template_utils.vite_import,
+        "vite_dev_tools": template_utils.vite_dev_tools,
         "format_number": template_utils.format_number,
         "format_display_name": template_utils.format_display_name,
         "display_name": template_utils.display_name,
