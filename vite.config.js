@@ -1,7 +1,7 @@
 import react from "@vitejs/plugin-react-swc";
 import { defineConfig, transformWithEsbuild } from "vite";
 import cssInjectedByJsPlugin from "vite-plugin-css-injected-by-js";
-import entryPoints from "./webpack.config.entry";
+import entryPoints from "./vite.config.entry";
 
 /**
  * Vite is opinionated and doesn't support JSX in .js files (and that's cool).
