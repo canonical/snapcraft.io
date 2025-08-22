@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">39.62% </span>
+                <span class="strong">40.74% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>21/53</span>
+                <span class='fraction'>22/54</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">64.28% </span>
+                <span class="strong">66.07% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>36/56</span>
+                <span class='fraction'>37/56</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">39.62% </span>
+                <span class="strong">40.74% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>21/53</span>
+                <span class='fraction'>22/54</span>
             </div>
         
             
@@ -436,7 +436,9 @@
 <a name='L371'></a><a href='#L371'>371</a>
 <a name='L372'></a><a href='#L372'>372</a>
 <a name='L373'></a><a href='#L373'>373</a>
-<a name='L374'></a><a href='#L374'>374</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L374'></a><a href='#L374'>374</a>
+<a name='L375'></a><a href='#L375'>375</a>
+<a name='L376'></a><a href='#L376'>376</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -487,18 +489,19 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -520,6 +523,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">294x</span>
 <span class="cline-any cline-yes">294x</span>
 <span class="cline-any cline-yes">294x</span>
 <span class="cline-any cline-yes">294x</span>
@@ -683,7 +687,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -703,6 +706,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -824,6 +828,7 @@ import {
   Notification,
   Switch,
   Icon,
+  loadTheme,
 } from "@canonical/react-components";
 &nbsp;
 import { validateImageDimensions } from "../../../utils";
@@ -893,12 +898,13 @@ function ImageUpload({
   hasDarkThemePreview,
   type,
 }: Props) {
+  const theme = loadTheme();
   const { snapId } = useParams();
   const [showImageRestrictions, setShowImageRestrictions] = useState(false);
   const [imageVaidationError, setImageValidationError] = useState("");
   const [imageIsValid, setImageIsValid] = useState(true);
   const [isDragging, setIsDragging] = useState(false);
-  const [darkThemeEnabled, setDarkThemeEnabled] = useState(false);
+  const [darkThemeEnabled, setDarkThemeEnabled] = useState(theme === "dark");
   const [previewImageUrl, setPreviewImageUrl] = useState(
     getValues(imageUrlFieldKey),
   );
@@ -1035,7 +1041,6 @@ function ImageUpload({
                   style={{
                     width: `${previewWidth}px`,
                     height: `${previewHeight}px`,
-                    backgroundColor: isDark ? <span class="branch-0 cbranch-no" title="branch not covered" >"#666" </span>: "#d9d9d9",
                   }}
                 &gt;
                   &lt;Icon name="plus" light={isDark}&gt;
@@ -1068,7 +1073,7 @@ function ImageUpload({
             {showDeleteButton() &amp;&amp; (
               &lt;button
                 type="button"
-                className="p-button--base snap-remove-icon"
+                className={`p-button--base snap-remove-icon ${!darkThemeEnabled &amp;&amp; "is-light"}`}
                 onClick={() =&gt; {
                   setImageIsValid(true);
                   setValue(imageUrlFieldKey, "", {
@@ -1088,6 +1093,7 @@ function ImageUpload({
             &lt;div&gt;
               &lt;Switch
                 label="Dark theme"
+                checked={darkThemeEnabled}
                 onChange={<span class="fstat-no" title="function not covered" >(</span>
                   e: SyntheticEvent&lt;HTMLInputElement&gt; &amp; {
                     target: HTMLInputElement;
@@ -1189,7 +1195,7 @@ export default ImageUpload;
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-08-21T22:04:27.689Z
+                at 2025-08-22T22:04:22.079Z
             </div>
         <script src="../../../../prettify.js"></script>
         <script>
