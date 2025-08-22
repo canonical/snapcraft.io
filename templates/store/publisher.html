@@ -6,5 +6,5 @@
 <script>
   window.CSRF_TOKEN = "{{ csrf_token() }}";
 </script>
-<script type="module" src="{{ static_url('js/dist/vite/publisher.js') }}"></script>
+{{ vite_import('static/js/publisher/publisher.tsx') }}
 {% endblock %}
