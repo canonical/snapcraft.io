@@ -16,12 +16,12 @@
     }
 
     &__notes {
-      color: $color-dark;
+      color: $colors--theme--text-default;
     }
   }
 
   .p-release-details-group + .p-release-details-row {
-    border-top: 1px dashed $color-mid-light;
+    border-top: 1px dashed $colors--theme--border-default;
     margin-top: 0.5rem;
     padding-top: 0.5rem;
   }
