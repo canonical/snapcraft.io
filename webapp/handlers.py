@@ -21,6 +21,8 @@ from webapp.config import (
     ENVIRONMENT,
     WEBAPP_CONFIG,
     DNS_VERIFICATION_SALT,
+    IS_DEVELOPMENT,
+    VITE_PORT,
 )
 
 from canonicalwebteam.exceptions import (
@@ -130,6 +132,13 @@ CSP_SCRIPT_SRC = [
     "'unsafe-hashes'",
 ]
 
+# Vite integration
+if IS_DEVELOPMENT:
+    CSP["script-src-elem"].append(f"localhost:{VITE_PORT}")
+    CSP["connect-src"].append(f"localhost:{VITE_PORT}")
+    CSP["connect-src"].append(f"ws://localhost:{VITE_PORT}")
+    CSP_SCRIPT_SRC.append(f"localhost:{VITE_PORT}")
+
 
 def refresh_redirect(path):
     try:
@@ -182,6 +191,9 @@ def snapcraft_utility_processor():
         "contains": template_utils.contains,
         "join": template_utils.join,
         "static_url": template_utils.static_url,
+        "IS_DEVELOPMENT": IS_DEVELOPMENT,
+        "vite_import": template_utils.vite_import,
+        "vite_dev_tools": template_utils.vite_dev_tools,
         "format_number": template_utils.format_number,
         "format_display_name": template_utils.format_display_name,
         "display_name": template_utils.display_name,
