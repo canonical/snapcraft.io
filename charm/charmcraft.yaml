@@ -4,11 +4,11 @@ type: charm
 
 bases:
   - build-on:
-    - name: ubuntu
-      channel: "22.04"
+      - name: ubuntu
+        channel: "22.04"
     run-on:
-    - name: ubuntu
-      channel: "22.04"
+      - name: ubuntu
+        channel: "22.04"
 
 summary: The charm for the snapcraft.io website
 
@@ -16,6 +16,77 @@ description: The charm for the snapcraft.io website, built with the PaaS app cha
 
 extensions:
   - flask-framework
+
+config:
+  options:
+    sentry-dsn:
+      description: ""
+      type: string
+
+    environment:
+      description: ""
+      default: "production"
+      type: string
+
+    marketo-client-id:
+      description: ""
+      type: string
+
+    marketo-client-secret:
+      description: ""
+      type: string
+
+    github-client-id:
+      description: ""
+      type: string
+
+    github-client-secret:
+      description: ""
+      type: string
+
+    github-snapcraft-user-token:
+      description: ""
+      type: string
+
+    github-snapcraft-bot-user-token:
+      description: ""
+      type: string
+
+    github-webhook-secret:
+      description: ""
+      type: string
+
+    github-webhook-host-url:
+      description: ""
+      type: string
+
+    lp-api-username:
+      description: ""
+      type: string
+
+    lp-api-token:
+      description: ""
+      type: string
+
+    lp-api-token-secret:
+      description: ""
+      type: string
+
+    youtube-api-key:
+      description: ""
+      type: string
+
+    discourse-api-key:
+      description: ""
+      type: string
+
+    discourse-api-username:
+      description: ""
+      type: string
+
+    dns-verification-salt:
+      description: ""
+      type: string
 
 # requires:
 #   tracing:
