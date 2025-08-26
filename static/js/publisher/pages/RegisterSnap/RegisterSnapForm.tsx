@@ -33,6 +33,8 @@ function RegisterSnapForm({
 }: Props): React.JSX.Element {
   const [snapName, setSnapName] = useState<string>();
   const [privacy, setPrivacy] = useState<string>("private");
+  const [showSnapNameConstraints, setShowSnapNameConstraints] =
+    useState<boolean>(false);
 
   const navigate = useNavigate();
 
@@ -71,6 +73,23 @@ function RegisterSnapForm({
     }, 1000);
   };
 
+  // Must satisfy the following requriements:
+  // - Contain no more than 40 characters
+  // - Consist of only lowercase letters, numbers, and hyphens
+  // - Contain at least one letter
+  // - Not start or end with a hyphen
+  //
+  // See: https://documentation.ubuntu.com/snapcraft/stable/how-to/publishing/register-a-snap/#name-your-snap
+  const isValid = (): boolean => {
+    const snapNamePattern = /^(?<!-)\d*[a-z][a-z0-9-]*(?<!-)$/;
+
+    if (snapName && snapName.length < 40 && snapName.match(snapNamePattern)) {
+      return true;
+    }
+
+    return false;
+  };
+
   return (
     <Form onSubmit={handleSubmit}>
       <Row>
@@ -99,7 +118,43 @@ function RegisterSnapForm({
             }}
             required
           />
-          <label htmlFor="public">Snap privacy</label>
+
+          <Button
+            type="button"
+            appearance="link"
+            onClick={() => {
+              setShowSnapNameConstraints(!showSnapNameConstraints);
+            }}
+          >
+            <small>
+              {showSnapNameConstraints ? <>Hide</> : <>Show</>} snap name
+              constraints
+            </small>
+          </Button>
+
+          {showSnapNameConstraints && (
+            <ul>
+              <li>
+                <small>Contain no more than 40 characters</small>
+              </li>
+              <li>
+                <small>
+                  Consist of only lowercase letters, numbers, and hyphens
+                </small>
+              </li>
+              <li>
+                <small>Contain at least one letter</small>
+              </li>
+              <li>
+                <small>Not start or end with a hyphen</small>
+              </li>
+            </ul>
+          )}
+
+          <p>
+            <label htmlFor="public">Snap privacy</label>
+          </p>
+
           <p className="p-form-help-text">
             This can be changed at any time after the initial upload
           </p>
@@ -133,7 +188,7 @@ function RegisterSnapForm({
         <Button
           type="submit"
           appearance="positive"
-          disabled={!snapName || isSending}
+          disabled={isSending || !isValid()}
         >
           {isSending ? (
             <>

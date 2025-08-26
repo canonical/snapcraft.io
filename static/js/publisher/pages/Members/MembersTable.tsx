@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
-import { MainTable, CheckboxInput } from "@canonical/react-components";
+import { MainTable } from "@canonical/react-components";
 import ROLES from "./memberRoles";
+
+import MemberRoleCheckbox from "./MemberRoleCheckbox";
 
 import type { Member } from "../../types/shared";
 
@@ -158,57 +160,38 @@ function MembersTable({
             },
             {
               content: (
-                <>
-                  <CheckboxInput
-                    defaultChecked={member.roles.includes("admin")}
-                    disabled={
-                      member.current_user && member.roles.includes("admin")
-                    }
-                    onChange={() => {
-                      handleRoleChange(member, "admin");
-                    }}
-                    label={<span className="u-hide--large">Admin</span>}
-                  />
-                </>
+                <MemberRoleCheckbox
+                  member={member}
+                  handleRoleChange={handleRoleChange}
+                  memberRole="admin"
+                />
               ),
             },
             {
               content: (
-                <>
-                  <CheckboxInput
-                    defaultChecked={member.roles.includes("review")}
-                    onChange={() => {
-                      handleRoleChange(member, "review");
-                    }}
-                    label={<span className="u-hide--large">Reviewer</span>}
-                  />
-                </>
+                <MemberRoleCheckbox
+                  member={member}
+                  handleRoleChange={handleRoleChange}
+                  memberRole="review"
+                />
               ),
             },
             {
               content: (
-                <>
-                  <CheckboxInput
-                    defaultChecked={member.roles.includes("view")}
-                    onChange={() => {
-                      handleRoleChange(member, "view");
-                    }}
-                    label={<span className="u-hide--large">Viewer</span>}
-                  />
-                </>
+                <MemberRoleCheckbox
+                  member={member}
+                  handleRoleChange={handleRoleChange}
+                  memberRole="view"
+                />
               ),
             },
             {
               content: (
-                <>
-                  <CheckboxInput
-                    defaultChecked={member.roles.includes("access")}
-                    onChange={() => {
-                      handleRoleChange(member, "access");
-                    }}
-                    label={<span className="u-hide--large">Publisher</span>}
-                  />
-                </>
+                <MemberRoleCheckbox
+                  member={member}
+                  handleRoleChange={handleRoleChange}
+                  memberRole="access"
+                />
               ),
             },
           ],

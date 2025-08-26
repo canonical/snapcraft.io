@@ -42,7 +42,6 @@ function SnapsSearch({
           getLabelProps,
           getMenuProps,
           isOpen,
-          highlightedIndex,
         }) => {
           const { id, ...inputProps } = getInputProps({
             onKeyUp: debounce(
@@ -125,16 +124,13 @@ function SnapsSearch({
                   className="p-list p-card--highlighted u-no-padding u-no-margin--bottom p-autocomplete__suggestions"
                   {...getMenuProps()}
                 >
-                  {suggestions.map((item: Snap, index: number) => (
+                  {suggestions.map((item: Snap) => (
                     <li
-                      className="p-list__item"
+                      className="p-list__item p-autocomplete__suggestion"
                       key={item.id}
                       {...getItemProps({
-                        index,
                         item,
                         style: {
-                          backgroundColor:
-                            highlightedIndex === index ? "#f7f7f7" : "#fff",
                           paddingLeft: "1rem",
                           paddingRight: "1rem",
                         },

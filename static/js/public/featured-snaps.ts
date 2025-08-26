@@ -1,3 +1,5 @@
+import declareGlobal from "../libs/declare";
+
 type PackageData = {
   apps: Array<string>;
   architecture: Array<string>;
@@ -168,4 +170,4 @@ async function init(featuredCategories: Array<string>): Promise<void> {
   await buildCards(featuredCategories[0].toLowerCase());
 }
 
-export { init };
+declareGlobal("snapcraft.public.featuredSnaps", { init });

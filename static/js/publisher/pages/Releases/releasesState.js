@@ -80,18 +80,21 @@ function initReleasesData(revisionsMap, releases, channelMap) {
 }
 
 // Get specific revision based on snapName and a channelMap object
-function fetchMissingRevision(snapName, info) {
+async function fetchMissingRevision(snapName, info) {
   return fetch(`/${snapName}/releases/revision/${info.revision}`)
     .then((res) => res.json())
     .then((revision) => ({
       info,
       revision: revision.revision,
+    })).catch(err => Promise.reject({
+      info,
+      error: err.message
     }));
 }
 
 // transforming channel map list data into format used by this component
 // https://dashboard.snapcraft.io/docs/v2/en/snaps.html#snap-channel-map
-function getReleaseDataFromChannelMap(channelMap, revisionsMap, snapName) {
+async function getReleaseDataFromChannelMap(channelMap, revisionsMap, snapName) {
   return new Promise((resolve) => {
     const releasedChannels = {};
     const missingRevisions = [];
@@ -117,25 +120,38 @@ function getReleaseDataFromChannelMap(channelMap, revisionsMap, snapName) {
         }
       }
     });
-
+   
     if (missingRevisions.length > 0) {
-      Promise.all(missingRevisions)
-        .then((revs) => {
-          revs.forEach((rev) => {
-            const { info, revision } = rev;
-            releasedChannels[info.channel][info.architecture] = revision;
+      Promise.allSettled(missingRevisions)
+        .then((results) => {
+          const successfulRevisions = [];
+          const failedRevisions = []
+
+          results.forEach((result) => {
+            if (result.status === "fulfilled") {
+              const { info, revision } = result.value;
+              releasedChannels[info.channel][info.architecture] = revision;
             releasedChannels[info.channel][info.architecture].expiration =
               revision["expiration-date"];
+              successfulRevisions.push(revision);
+            } else {
+              const { info } = result.reason;
+              failedRevisions.push({
+                channel: info.channel,
+                architecture: info.architecture,
+              });
+            }
+            
           });
 
-          resolve([releasedChannels, revs.map((r) => r.revision)]);
+          resolve([releasedChannels, successfulRevisions, failedRevisions]);
         })
         .catch(() => {
           // if a call doesn't work for whatever reason
-          resolve([releasedChannels, []]);
+          resolve([releasedChannels, [], []]);
         });
     } else {
-      resolve([releasedChannels, []]);
+      resolve([releasedChannels, [], []]);
     }
   });
 }

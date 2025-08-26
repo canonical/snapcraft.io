@@ -1,4 +1,5 @@
 import { initFSFLanguageSelect } from "../fsf-language-select";
 import initExpandableArea from "../expandable-area";
+import declareGlobal from "../../libs/declare";
 
-export { initFSFLanguageSelect, initExpandableArea };
+declareGlobal("snapcraft.about", { initFSFLanguageSelect, initExpandableArea });

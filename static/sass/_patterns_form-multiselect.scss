@@ -16,7 +16,7 @@
 
     align-content: flex-start;
     align-items: flex-start;
-    background-color: #f5f5f5;
+    background-color: $colors--theme--background-inputs;
     border-bottom: 1.5px solid $colors--light-theme--border-high-contrast;
     display: flex;
     flex-wrap: wrap;
@@ -72,7 +72,6 @@
     .p-multiselect__options {
       @extend %vf-has-box-shadow;
 
-      background: $color-x-light;
       left: 0;
       list-style-type: none;
       margin-left: 0;
@@ -97,14 +96,14 @@
     }
 
     .p-multiselect__option {
-      background: $color-x-light;
+      background: $colors--theme--background-default;
       cursor: pointer;
       padding: 0.5rem;
       position: relative;
 
       &.is-highlighted,
       &:hover {
-        background: $color-light;
+        background: $colors--theme--background-inputs;
       }
     }
   }

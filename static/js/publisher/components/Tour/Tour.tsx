@@ -10,7 +10,7 @@ type Props = {
   steps: {
     target: string;
     title: string;
-    content: React.JSX.Element;
+    content: React.ReactNode;
     disableBeacon?: boolean;
   }[];
 };

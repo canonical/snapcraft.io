@@ -3,6 +3,9 @@ color-1: "#35BF5C"
 color-2: "#278C44"
 logo: https://assets.ubuntu.com/v1/4635a0bd-Distro_Logo_Manjaro.svg
 logo-mono: https://assets.ubuntu.com/v1/e1b2fbdb-Distro_Logo_Manjaro_White.svg
+supported-archs:
+  - amd64
+  - arm64
 install:
   -
     action: |

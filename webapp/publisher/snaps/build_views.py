@@ -1,5 +1,6 @@
 # Standard library
 import os
+import re
 from hashlib import md5
 
 # Packages
@@ -18,6 +19,30 @@ from werkzeug.exceptions import Unauthorized
 
 GITHUB_SNAPCRAFT_USER_TOKEN = os.getenv("GITHUB_SNAPCRAFT_USER_TOKEN")
 GITHUB_WEBHOOK_HOST_URL = os.getenv("GITHUB_WEBHOOK_HOST_URL")
+
+
+def extract_github_repository(git_repository_url):
+    """
+    Extract owner/repo from a GitHub repository URL.
+
+    Args:
+        git_repository_url (str): The full GitHub repository URL
+
+    Returns:
+        str or None: The owner/repo part of the URL, or None if not a
+        valid GitHub URL
+    """
+    if not git_repository_url:
+        return None
+
+    match = re.search(
+        r"github\.com/(?P<repo>.+/.+?)(?:\.git)?/?$", git_repository_url
+    )
+    if match:
+        return match.groupdict()["repo"]
+    return None
+
+
 BUILDS_PER_PAGE = 15
 dashboard = Dashboard(api_publisher_session)
 
@@ -31,6 +56,11 @@ def get_builds(lp_snap, selection):
 
     snap_builds = []
     builders_status = None
+
+    # Extract GitHub repository info for commit links
+    github_repository = extract_github_repository(
+        lp_snap.get("git_repository_url")
+    )
 
     for build in builds:
         status = map_build_and_upload_states(
@@ -47,6 +77,7 @@ def get_builds(lp_snap, selection):
             "status": status,
             "title": build["title"],
             "queue_time": None,
+            "github_repository": github_repository,
         }
 
         if build["buildstate"] == "Needs building":
@@ -66,72 +97,10 @@ def get_builds(lp_snap, selection):
 
 
 @login_required
-def get_snap_repo(snap_name):
-    res = {"message": "", "success": True}
-    data = {"github_orgs": [], "github_repository": None, "github_user": None}
-
-    details = dashboard.get_snap_info(flask.session, snap_name)
-
-    # API call to make users without needed permissions refresh the session
-    # Users needs package_upload_request permission to use this feature
-    dashboard.get_package_upload_macaroon(
-        session=flask.session, snap_name=snap_name, channels=["edge"]
-    )
-
-    # Get built snap in launchpad with this store name
-    lp_snap = launchpad.get_snap_by_store_name(details["snap_name"])
-
-    if lp_snap:
-        # In this case we can use the GitHub user account or
-        # the Snapcraft GitHub user to check the snapcraft.yaml
-        github = GitHub(
-            flask.session.get(
-                "github_auth_secret", GITHUB_SNAPCRAFT_USER_TOKEN
-            )
-        )
-
-        # Git repository without GitHub hostname
-        data["github_repository"] = lp_snap["git_repository_url"][19:]
-        github_owner, github_repo = data["github_repository"].split("/")
-
-        if not github.check_if_repo_exists(github_owner, github_repo):
-            data["success"] = False
-            data["message"] = "This app has been revoked"
-
-        if github.get_user():
-            data["github_user"] = github.get_user()
-            data["github_orgs"] = github.get_orgs()
-
-    else:
-        data["github_repository"] = None
-        github = GitHub(flask.session.get("github_auth_secret"))
-
-        if github.get_user():
-            data["github_user"] = github.get_user()
-            data["github_orgs"] = github.get_orgs()
-        else:
-            data["success"] = False
-            data["message"] = "Unauthorized"
-
-    res["data"] = data
-
-    return flask.jsonify(res)
-
-
-@login_required
 def get_snap_builds_page(snap_name):
     # If this fails, the page will 404
     dashboard.get_snap_info(flask.session, snap_name)
     return flask.render_template("store/publisher.html", snap_name=snap_name)
-
-
-@login_required
-def get_snap_build_page(snap_name, build_id):
-    # If this fails, the page will 404
-    dashboard.get_snap_info(flask.session, snap_name)
-    return flask.render_template(
-        "store/publisher.html", snap_name=snap_name, build_id=build_id
-    )
 
 
 @login_required
@@ -170,6 +139,14 @@ def get_snap_build(snap_name, build_id):
     lp_build = launchpad.get_snap_build(details["snap_name"], build_id)
 
     if lp_build:
+        # Get snap info to extract GitHub repository
+        lp_snap = launchpad.get_snap_by_store_name(details["snap_name"])
+        github_repository = None
+        if lp_snap:
+            github_repository = extract_github_repository(
+                lp_snap.get("git_repository_url")
+            )
+
         status = map_build_and_upload_states(
             lp_build["buildstate"], lp_build["store_upload_status"]
         )
@@ -182,6 +159,7 @@ def get_snap_build(snap_name, build_id):
             "revision_id": lp_build["revision_id"],
             "status": status,
             "title": lp_build["title"],
+            "github_repository": github_repository,
         }
 
         if context["snap_build"]["logs"]:
@@ -239,22 +217,6 @@ def validate_repo(github_token, snap_name, gh_owner, gh_repo):
             }
 
     return result
-
-
-@login_required
-def get_validate_repo(snap_name):
-    details = dashboard.get_snap_info(flask.session, snap_name)
-
-    owner, repo = flask.request.args.get("repo").split("/")
-
-    return flask.jsonify(
-        validate_repo(
-            flask.session.get("github_auth_secret"),
-            details["snap_name"],
-            owner,
-            repo,
-        )
-    )
 
 
 @login_required
@@ -353,45 +315,6 @@ def post_snap_builds(snap_name):
 
 
 @login_required
-def post_build(snap_name):
-    # Don't allow builds from no contributors
-    account_snaps = dashboard.get_account_snaps(flask.session)
-
-    if snap_name not in account_snaps:
-        return flask.jsonify(
-            {
-                "success": False,
-                "error": {
-                    "type": "FORBIDDEN",
-                    "message": "You are not allowed to request "
-                    "builds for this snap",
-                },
-            }
-        )
-
-    try:
-        if launchpad.is_snap_building(snap_name):
-            launchpad.cancel_snap_builds(snap_name)
-
-        build_id = launchpad.build_snap(snap_name)
-
-    except HTTPError as e:
-        return flask.jsonify(
-            {
-                "success": False,
-                "error": {
-                    "message": "An error happened building "
-                    "this snap, please try again."
-                },
-                "details": e.response.text,
-                "status_code": e.response.status_code,
-            }
-        )
-
-    return flask.jsonify({"success": True, "build_id": build_id})
-
-
-@login_required
 def check_build_request(snap_name, build_id):
     # Don't allow builds from no contributors
     account_snaps = dashboard.get_account_snaps(flask.session)
@@ -434,40 +357,6 @@ def check_build_request(snap_name, build_id):
             "status": response["status"],
             "error": {"message": error_message},
         }
-    )
-
-
-@login_required
-def post_disconnect_repo(snap_name):
-    details = dashboard.get_snap_info(flask.session, snap_name)
-
-    lp_snap = launchpad.get_snap_by_store_name(snap_name)
-    launchpad.delete_snap(details["snap_name"])
-
-    # Try to remove the GitHub webhook if possible
-    if flask.session.get("github_auth_secret"):
-        github = GitHub(flask.session.get("github_auth_secret"))
-
-        try:
-            gh_owner, gh_repo = lp_snap["git_repository_url"][19:].split("/")
-
-            old_hook = github.get_hook_by_url(
-                gh_owner,
-                gh_repo,
-                f"{GITHUB_WEBHOOK_HOST_URL}api/{snap_name}/webhook/notify",
-            )
-
-            if old_hook:
-                github.remove_hook(
-                    gh_owner,
-                    gh_repo,
-                    old_hook["id"],
-                )
-        except HTTPError:
-            pass
-
-    return flask.redirect(
-        flask.url_for(".get_snap_builds", snap_name=snap_name)
     )
 
 

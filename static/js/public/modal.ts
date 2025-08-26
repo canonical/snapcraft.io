@@ -1,3 +1,5 @@
+import declareGlobal from "../libs/declare";
+
 function toggleModal(modal: HTMLElement) {
   if (modal && modal.classList.contains("p-modal")) {
     if (modal.style.display === "none") {
@@ -26,4 +28,4 @@ function init(): void {
   });
 }
 
-export { init };
+declareGlobal("snapcraft.public.modal", { init });

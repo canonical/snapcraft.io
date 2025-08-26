@@ -25,6 +25,7 @@ import {
   getRevisionsMap,
   initReleasesData,
 } from "../releasesState";
+import { updateFailedRevisions } from "./failedRevisions";
 
 export const UPDATE_RELEASES = "UPDATE_RELEASES";
 
@@ -52,14 +53,15 @@ function updateReleasesData(apiData: FetchReleaseResponse) {
         | { releases: any }
         | { revisions: any }
         | { architectures: any[] }
-        | { channelMap: any };
+        | { channelMap: any }
+        | { failedRevisions: any };
     }) => void,
   ) => {
     const revisionsList = releasesData.revisions;
     const releases = releasesData.releases;
 
     getReleaseDataFromChannelMap(channelMap, revisionsList, snapName).then(
-      ([transformedChannelMap, revisionsListAdditions]) => {
+      ([transformedChannelMap, revisionsListAdditions, failedRevisions]) => {
         revisionsList.push(...revisionsListAdditions);
         const revisionsMap = getRevisionsMap(revisionsList);
         initReleasesData(revisionsMap, releases, channelMap);
@@ -67,6 +69,7 @@ function updateReleasesData(apiData: FetchReleaseResponse) {
         dispatch(updateReleases(releases));
         dispatch(updateArchitectures(revisionsList));
         dispatch(initChannelMap(transformedChannelMap));
+        dispatch(updateFailedRevisions(failedRevisions));
       },
     );
   };

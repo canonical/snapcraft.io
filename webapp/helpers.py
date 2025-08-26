@@ -53,6 +53,12 @@ def get_licenses():
     return licenses
 
 
+def is_valid_path(path):
+    base_path = os.path.abspath(flask.current_app.root_path)
+    target_path = os.path.abspath(os.path.join(base_path, path))
+    return target_path.startswith(base_path)
+
+
 def get_file(filename, replaces={}):
     """
     Reads a file, replaces occurences of all the keys in `replaces` with
@@ -62,6 +68,9 @@ def get_file(filename, replaces={}):
     filename -- name if the file to load.
     replaces -- key/values to replace in the file content (default {})
     """
+    if not is_valid_path(filename):
+        return None
+
     filepath = os.path.join(flask.current_app.root_path, filename)
 
     try:
@@ -160,3 +169,18 @@ def list_folders(directory):
         for item in os.listdir(directory)
         if os.path.isdir(os.path.join(directory, item))
     ]
+
+
+def directory_exists(file):
+    if not is_valid_path(file):
+        return False
+
+    target_path = os.path.abspath(
+        os.path.join(flask.current_app.root_path, file)
+    )
+    return os.path.isdir(target_path)
+
+
+def get_brand_id(session, store_id):
+    store = dashboard.get_store(session, store_id)
+    return store["brand-id"]

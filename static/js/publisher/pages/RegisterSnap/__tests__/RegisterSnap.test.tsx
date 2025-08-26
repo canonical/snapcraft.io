@@ -121,7 +121,7 @@ describe("RegisterSnap", () => {
     renderComponent();
 
     await waitFor(() => {
-      user.type(screen.getByLabelText("Snap name"), "Test");
+      user.type(screen.getByLabelText("Snap name"), "test");
       expect(
         screen.getByRole("button", { name: "Register" }),
       ).not.toHaveAttribute("aria-disabled");

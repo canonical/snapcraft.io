@@ -1,22 +1,21 @@
 # Packages
-import bleach
 import flask
 from canonicalwebteam.store_api.dashboard import Dashboard
 from canonicalwebteam.store_api.publishergw import PublisherGW
 from canonicalwebteam.exceptions import (
     StoreApiError,
     StoreApiResponseErrorList,
-    StoreApiResponseError,
-    StoreApiResourceNotFound,
 )
 from flask.json import jsonify
+from talisker import logging
 
 # Local
 from webapp import authentication
 from webapp.helpers import api_publisher_session, launchpad
 from webapp.api.exceptions import ApiError
 from webapp.decorators import exchange_required, login_required
-from webapp.publisher.cve import cve_views
+from webapp.endpoints.publisher import listing as listing_endpoint
+from webapp.endpoints import cves
 from webapp.publisher.snaps import (
     build_views,
     listing_views,
@@ -27,6 +26,23 @@ from webapp.publisher.snaps import (
     settings_views,
     collaboration_views,
 )
+from webapp.endpoints.publisher.builds import (
+    get_snap_build_page,
+    get_validate_repo,
+    post_build,
+    post_disconnect_repo,
+)
+from webapp.endpoints.publisher.settings import (
+    get_settings_data,
+    post_settings_data,
+)
+from webapp.endpoints.publisher.publicise import get_publicise_data
+from webapp.endpoints.publisher.packages import get_package_metadata
+from webapp.endpoints.publisher.register import (
+    post_register_name,
+    post_register_name_dispute,
+)
+from webapp.endpoints import releases, builds
 from webapp.publisher.snaps.builds import map_snap_build_status
 
 dashboard = Dashboard(api_publisher_session)
@@ -62,12 +78,12 @@ publisher_snaps.add_url_rule(
 )
 publisher_snaps.add_url_rule(
     "/api/<snap_name>/listing",
-    view_func=listing_views.get_listing_data,
+    view_func=listing_endpoint.get_listing_data,
     methods=["GET"],
 )
 publisher_snaps.add_url_rule(
     "/api/<snap_name>/listing",
-    view_func=listing_views.post_listing_data,
+    view_func=listing_endpoint.post_listing_data,
     methods=["POST"],
 )
 publisher_snaps.add_url_rule(
@@ -90,13 +106,13 @@ publisher_snaps.add_url_rule(
 
 publisher_snaps.add_url_rule(
     "/<snap_name>/builds/<build_id>",
-    view_func=build_views.get_snap_build_page,
+    view_func=get_snap_build_page,
     methods=["GET"],
 ),
 
 publisher_snaps.add_url_rule(
     "/api/<snap_name>/repo",
-    view_func=build_views.get_snap_repo,
+    view_func=builds.get_snap_repo,
     methods=["GET"],
 )
 publisher_snaps.add_url_rule(
@@ -116,12 +132,12 @@ publisher_snaps.add_url_rule(
 )
 publisher_snaps.add_url_rule(
     "/api/<snap_name>/builds/validate-repo",
-    view_func=build_views.get_validate_repo,
+    view_func=get_validate_repo,
     methods=["GET"],
 )
 publisher_snaps.add_url_rule(
     "/api/<snap_name>/builds/trigger-build",
-    view_func=build_views.post_build,
+    view_func=post_build,
     methods=["POST"],
 )
 publisher_snaps.add_url_rule(
@@ -147,7 +163,7 @@ publisher_snaps.add_url_rule(
 )
 publisher_snaps.add_url_rule(
     "/api/<snap_name>/builds/disconnect/",
-    view_func=build_views.post_disconnect_repo,
+    view_func=post_disconnect_repo,
     methods=["POST"],
 )
 
@@ -167,7 +183,7 @@ publisher_snaps.add_url_rule(
 )
 publisher_snaps.add_url_rule(
     "/api/<snap_name>/releases",
-    view_func=release_views.get_release_history_data,
+    view_func=releases.get_release_history_data,
     methods=["GET"],
 )
 publisher_snaps.add_url_rule(
@@ -263,7 +279,7 @@ publisher_snaps.add_url_rule(
 )
 publisher_snaps.add_url_rule(
     "/api/<snap_name>/publicise",
-    view_func=publicise_views.get_publicise_data,
+    view_func=get_publicise_data,
 )
 
 # Settings views
@@ -273,23 +289,23 @@ publisher_snaps.add_url_rule(
 )
 publisher_snaps.add_url_rule(
     "/api/<snap_name>/settings",
-    view_func=settings_views.post_settings_data,
+    view_func=post_settings_data,
     methods=["POST"],
 )
 publisher_snaps.add_url_rule(
     "/api/<snap_name>/settings",
-    view_func=settings_views.get_settings_data,
+    view_func=get_settings_data,
 )
 
 # CVE API
 publisher_snaps.add_url_rule(
     "/api/<snap_name>/<revision>/cves",
-    view_func=cve_views.get_cves,
+    view_func=cves.get_cves,
 )
 
 publisher_snaps.add_url_rule(
     "/api/<snap_name>/cves",
-    view_func=cve_views.get_revisions_with_cves,
+    view_func=cves.get_revisions_with_cves,
 )
 
 
@@ -341,7 +357,11 @@ def get_snap_build_status():
     try:
         account_info = dashboard.get_account(flask.session)
     except (StoreApiError, ApiError) as api_error:
-        return flask.jsonify(api_error), 400
+        logging.getLogger("talisker.wsgi").error(
+            "Error with session: %s", api_error
+        )
+
+        return flask.jsonify({"error": "An unexpected error occurred"}), 400
 
     response = []
     user_snaps, _ = logic.get_snaps_account_info(account_info)
@@ -371,111 +391,23 @@ def redirect_post_register_name():
     return flask.redirect(flask.url_for(".post_register_name"), 307)
 
 
-@publisher_snaps.route("/api/register-snap", methods=["POST"])
-@login_required
-def post_register_name():
-    snap_name = flask.request.form.get("snap_name")
-    res = {}
+publisher_snaps.add_url_rule(
+    "/api/packages/<snap_name>",
+    view_func=get_package_metadata,
+    methods=["GET"],
+)
 
-    if not snap_name:
-        res["success"] = False
-        res["message"] = "You must define a snap name"
+publisher_snaps.add_url_rule(
+    "/api/register-snap",
+    view_func=post_register_name,
+    methods=["POST"],
+)
 
-        return jsonify(res)
-
-    is_private = flask.request.form.get("is_private") == "private"
-    store = flask.request.form.get("store")
-
-    try:
-        dashboard.post_register_name(
-            session=flask.session,
-            snap_name=snap_name,
-            registrant_comment=None,
-            is_private=is_private,
-            store=store,
-        )
-    except StoreApiResponseErrorList as api_response_error_list:
-        res = {
-            "success": False,
-            "data": {
-                "is_private": is_private,
-                "snap_name": snap_name,
-                "store": store,
-            },
-        }
-
-        if api_response_error_list.status_code == 409:
-            for error in api_response_error_list.errors:
-                res["data"]["error_code"] = error["code"]
-
-                return jsonify(res)
-
-        if api_response_error_list.status_code == 400:
-            res["data"]["error_code"] = "no-permission"
-            res[
-                "message"
-            ] = """You don't have permission
-                to register a snap in this store.
-                Please see store administrator."""
-
-            return jsonify(res)
-
-        res["message"] = "Unable to register snap name"
-        res["data"] = {
-            "snap_name": snap_name,
-            "is_private": is_private,
-            "store": store,
-        }
-
-        return jsonify(res)
-
-    return jsonify({"success": True})
-
-
-@publisher_snaps.route("/api/packages/<snap_name>", methods=["GET"])
-@login_required
-@exchange_required
-def get_package_metadata(snap_name):
-    try:
-        package_metadata = publisher_gateway.get_package_metadata(
-            flask.session, snap_name
-        )
-        return jsonify({"data": package_metadata, "success": True})
-    except StoreApiResourceNotFound:
-        return (jsonify({"error": "Package not found", "success": False}), 404)
-    except StoreApiResponseErrorList as error:
-        return (
-            jsonify(
-                {
-                    "error": "Error occurred while fetching snap metadata.",
-                    "errors": error.errors,
-                    "success": False,
-                }
-            ),
-            error.status_code,
-        )
-    except StoreApiResponseError as error:
-        return (
-            jsonify(
-                {
-                    "error": "Error occurred while fetching snap metadata.",
-                    "success": False,
-                }
-            ),
-            error.status_code,
-        )
-    except StoreApiError:
-        return (
-            jsonify(
-                {
-                    "error": "Error occurred while fetching snap metadata.",
-                    "success": False,
-                }
-            ),
-            500,
-        )
-    except Exception:
-        return (jsonify({"error": "Unexpected error", "success": False}), 500)
+publisher_snaps.add_url_rule(
+    "/api/register-name-dispute",
+    view_func=post_register_name_dispute,
+    methods=["POST"],
+)
 
 
 @publisher_snaps.route("/packages/<package_name>", methods=["DELETE"])
@@ -501,7 +433,11 @@ def get_is_user_snap(snap_name):
     try:
         snap_info = dashboard.get_snap_info(flask.session, snap_name)
     except (StoreApiError, ApiError) as api_error:
-        return flask.jsonify({"error": str(api_error)}), 400
+        logging.getLogger("talisker.wsgi").error(
+            "Error with session: %s", api_error
+        )
+
+        return flask.jsonify({"error": "An unexpected error occurred"}), 400
 
     if authentication.is_authenticated(flask.session):
         publisher_info = flask.session.get("publisher", {})
@@ -558,30 +494,6 @@ def get_register_name_dispute():
     return flask.render_template(
         "store/publisher.html",
     )
-
-
-@publisher_snaps.route("/api/register-name-dispute", methods=["POST"])
-@login_required
-def post_register_name_dispute():
-    try:
-        claim = flask.json.loads(flask.request.data)
-        snap_name = claim["snap-name"]
-        claim_comment = claim["claim-comment"]
-        dashboard.post_register_name_dispute(
-            flask.session,
-            bleach.clean(snap_name),
-            bleach.clean(claim_comment),
-        )
-    except StoreApiResponseErrorList as api_response_error_list:
-        if api_response_error_list.status_code in [400, 409]:
-            return jsonify(
-                {
-                    "success": False,
-                    "data": api_response_error_list.errors,
-                    "message": api_response_error_list.errors[0]["message"],
-                }
-            )
-    return jsonify({"success": True})
 
 
 @publisher_snaps.route("/request-reserved-name")

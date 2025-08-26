@@ -163,7 +163,6 @@ function CreateModelForm({
               value={newModel.apiKey}
               placeholder="yx6dnxsWQ3XUB5gza8idCuMvwmxtk1xBpa9by8TuMit5dgGnv"
               className="read-only-dark"
-              style={{ color: "#000" }}
               readOnly
             />
             <Button
