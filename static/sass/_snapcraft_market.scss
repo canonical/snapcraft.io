@@ -96,7 +96,7 @@
 
   // Stick the Revert, Apply buttons to the top
   .snapcraft-p-sticky {
-    background: $color-x-light;
+    background: $colors--theme--background-default;
     position: sticky;
     top: 0;
     z-index: 9;

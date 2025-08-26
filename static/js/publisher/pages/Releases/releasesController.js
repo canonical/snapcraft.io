@@ -17,6 +17,7 @@ import {
   initReleasesData,
   getReleaseDataFromChannelMap,
 } from "./releasesState";
+import { updateFailedRevisions } from "./actions/failedRevisions";
 
 const ReleasesController = ({
   snapName,
@@ -25,6 +26,7 @@ const ReleasesController = ({
   updateArchitectures,
   updateReleases,
   updateRevisions,
+  updateFailedRevisions,
   initChannelMap,
   notification,
   showModal,
@@ -34,7 +36,7 @@ const ReleasesController = ({
 
   useEffect(() => {
     getReleaseDataFromChannelMap(channelMap, revisionsList, snapName).then(
-      ([transformedChannelMap, revisionsListAdditions]) => {
+      ([transformedChannelMap, revisionsListAdditions, failedRevisions]) => {
         revisionsList.push(...revisionsListAdditions);
         const revisionsMap = getRevisionsMap(revisionsList);
 
@@ -43,6 +45,7 @@ const ReleasesController = ({
         updateReleases(releasesData.releases);
         updateArchitectures(revisionsList);
         initChannelMap(transformedChannelMap);
+        updateFailedRevisions(failedRevisions);
         setReady(true);
       },
     );
@@ -106,6 +109,7 @@ ReleasesController.propTypes = {
   updateArchitectures: PropTypes.func,
   updateReleases: PropTypes.func,
   updateRevisions: PropTypes.func,
+  updateFailedRevisions: PropTypes.func,
 };
 
 const mapStateToProps = (state) => {
@@ -121,6 +125,7 @@ const mapDispatchToProps = (dispatch) => {
     updateArchitectures: (revisions) =>
       dispatch(updateArchitectures(revisions)),
     updateRevisions: (revisions) => dispatch(updateRevisions(revisions)),
+    updateFailedRevisions: (failedRevisions) => dispatch(updateFailedRevisions(failedRevisions)),
     updateReleases: (releases) => dispatch(updateReleases(releases)),
   };
 };

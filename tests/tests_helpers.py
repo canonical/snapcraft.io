@@ -3,6 +3,8 @@ import os
 import hashlib
 
 from webapp import helpers
+from webapp.app import create_app
+from flask_testing import TestCase
 
 
 class GetDnsVerificationTokenTest(unittest.TestCase):
@@ -14,3 +16,17 @@ class GetDnsVerificationTokenTest(unittest.TestCase):
             helpers.get_dns_verification_token("spotify", "spotify.com"),
             test_hash,
         )
+
+
+class DirectoryExistsTest(TestCase):
+    def create_app(self):
+        app = create_app(testing=True)
+        return app
+
+    def test_directory_exists(self):
+        filename = "first_snap/content/c"
+        self.assertTrue(helpers.directory_exists(filename))
+
+    def test_directory_not_exists(self):
+        filename = "first_snap/content/test"
+        self.assertFalse(helpers.directory_exists(filename))

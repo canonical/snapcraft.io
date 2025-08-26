@@ -18,12 +18,10 @@
     "isolatedModules": true,
     "noEmit": false,
     "sourceMap": true,
-    "ignoreDeprecations": "5.0"
-  },
-  "include": ["./static/js"],
-  "paths": [
-    {
+    "ignoreDeprecations": "5.0",
+    "paths": {
       "*": ["types/*.d.ts"]
     }
-  ]
+  },
+  "include": ["./static/js"]
 }

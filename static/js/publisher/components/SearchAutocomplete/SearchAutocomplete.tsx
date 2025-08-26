@@ -76,14 +76,7 @@ function SearchAutocomplete({
       }}
       itemToString={() => ""}
     >
-      {({
-        getInputProps,
-        getItemProps,
-        getMenuProps,
-        isOpen,
-        inputValue,
-        highlightedIndex,
-      }) => (
+      {({ getInputProps, getItemProps, getMenuProps, isOpen, inputValue }) => (
         <div className="p-multiselect">
           {selections.map((suggestion: DataItem) => (
             <span key={suggestion.key} className="p-multiselect__item">
@@ -135,17 +128,12 @@ function SearchAutocomplete({
                     item.key.toLowerCase().includes(inputValue) ||
                     item.name.toLowerCase().includes(inputValue),
                 )
-                .map((item, index) => (
+                .map((item) => (
                   <li
                     key={item.key}
                     className="p-multiselect__option"
                     {...getItemProps({
-                      index,
                       item,
-                      style: {
-                        backgroundColor:
-                          highlightedIndex === index ? "#f7f7f7" : "#fff",
-                      },
                     })}
                   >
                     {item.name}

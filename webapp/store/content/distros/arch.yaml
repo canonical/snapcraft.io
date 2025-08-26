@@ -3,6 +3,9 @@ color-1: "#1793D1"
 color-2: "#116F9E"
 logo: https://assets.ubuntu.com/v1/feca0fc0-Distro_Logo_ArchLinux.svg
 logo-mono: https://assets.ubuntu.com/v1/d1dabe71-Distro_Logo_ArchLinux_White.svg
+supported-archs:
+  - amd64
+  - arm64
 install:
   - action: |
       On Arch Linux, snap can be installed from the <a href="https://aur.archlinux.org/packages/snapd/" >Arch User Repository (AUR).</a>

@@ -36,6 +36,19 @@ UnassignedInfo.propTypes = {
   availableCount: PropTypes.number,
 };
 
+export const FailedInfo = () => {
+  return (
+    <Fragment>
+      <span className="p-release-data__info--error">
+        <i class="p-icon--error"></i>
+        <span className="p-release-data__info--error-text">
+          An error occurred
+        </span>
+      </span>
+    </Fragment>
+  );
+}
+
 // content of empty cell in channel row (nothing released or tracking channel)
 export const EmptyInfo = ({ trackingChannel }) => {
   const trackingChannelSplit = trackingChannel
@@ -49,9 +62,7 @@ export const EmptyInfo = ({ trackingChannel }) => {
           <small>
             Tracking {trackingChannelSplit[0]}/{trackingChannelSplit[1]}
           </small>
-        ) : (
-          "-"
-        )}
+        ) : "-"}
       </span>
 
       <span className="p-tooltip__message u-hide--small">
@@ -179,8 +190,8 @@ export const RevisionInfo = ({
   // present even if a release is not progressive
   const isProgressive =
     currentRelease?.length > 0 &&
-    currentRelease[0].isProgressive &&
-    risk !== "AVAILABLE"
+      currentRelease[0].isProgressive &&
+      risk !== "AVAILABLE"
       ? true
       : false;
 
@@ -202,10 +213,9 @@ export const RevisionInfo = ({
             ? "Progressive release"
             : `
             ${revision.version}
-            ${
-              revision?.attributes?.["build-request-id"]
-                ? ` | ${revision.attributes["build-request-id"]}`
-                : ""
+            ${revision?.attributes?.["build-request-id"]
+              ? ` | ${revision.attributes["build-request-id"]}`
+              : ""
             }`}
         </span>{" "}
       </span>

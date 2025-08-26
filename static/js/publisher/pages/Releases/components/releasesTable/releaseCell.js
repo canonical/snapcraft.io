@@ -24,6 +24,7 @@ import {
   EmptyInfo,
   CloseChannelInfo,
   UnassignedInfo,
+  FailedInfo,
 } from "./cellViews";
 
 // releases table cell with data from channel map release
@@ -44,8 +45,9 @@ const ReleasesTableReleaseCell = (props) => {
     toggleHistoryPanel,
     getProgressiveState,
     current,
+    failedRevisions
   } = props;
-
+  const failed = !!failedRevisions.find(rev => rev.architecture === arch && rev.channel === `${track}/${risk}`)
   const branchName = branch ? branch.branch : null;
 
   const channel = getChannelName(track, risk, branchName);
@@ -139,6 +141,8 @@ const ReleasesTableReleaseCell = (props) => {
     );
   } else if (isUnassigned) {
     cellInfoNode = <UnassignedInfo availableCount={getAvailableCount(arch)} />;
+  } else if (failed) {
+    cellInfoNode = <FailedInfo />
   } else {
     cellInfoNode = (
       <EmptyInfo
@@ -170,7 +174,6 @@ const ReleasesTableReleaseCell = (props) => {
           )}
         />
       )}
-
       {cellInfoNode}
     </ReleasesTableCellView>
   );
@@ -182,6 +185,7 @@ ReleasesTableReleaseCell.propTypes = {
   filters: PropTypes.object,
   pendingCloses: PropTypes.array,
   pendingChannelMap: PropTypes.object,
+  failedRevisions: PropTypes.object,
   // compute state
   getAvailableCount: PropTypes.func,
   hasPendingRelease: PropTypes.func,
@@ -205,6 +209,7 @@ const mapStateToProps = (state) => {
     channelMap: state.channelMap,
     filters: state.history.filters,
     pendingCloses: state.pendingCloses,
+    failedRevisions: state.failedRevisions,
     pendingChannelMap: getPendingChannelMap(state),
     getAvailableCount: (arch) =>
       getFilteredAvailableRevisionsForArch(state, arch).length,

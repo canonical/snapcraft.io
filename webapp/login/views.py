@@ -128,8 +128,6 @@ def after_login(resp):
             302,
         ),
     )
-    # this is a temporary cookies to be taken out later
-    response.set_cookie("login_migrated", "true")
     return response
 
 

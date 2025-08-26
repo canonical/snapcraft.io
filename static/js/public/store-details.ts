@@ -6,8 +6,9 @@ import initReportSnap from "./snap-details/reportSnap";
 import initEmbeddedCardModal from "./snap-details/embeddedCard";
 import { snapDetailsPosts } from "./snap-details/blog-posts";
 import initExpandableArea from "./expandable-area";
+import declareGlobal from "../libs/declare";
 
-export {
+declareGlobal("snapcraft.public.storeDetails", {
   map,
   screenshots,
   channelMap,
@@ -16,4 +17,4 @@ export {
   initExpandableArea,
   initReportSnap,
   videos,
-};
+});

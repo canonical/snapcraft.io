@@ -1,3 +1,4 @@
+import declareGlobal from "../libs/declare";
 import { newsletter } from "./newsletter";
 
-export { newsletter };
+declareGlobal("snapcraft.public.blog", { newsletter });
