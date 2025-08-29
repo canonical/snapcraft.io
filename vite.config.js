@@ -75,7 +75,12 @@ const jsxInJsPlugin = () => ({
 const env = loadEnv("all", process.cwd());
 
 export default defineConfig({
-  plugins: [react(), cssInjectedByJsPlugin(), jsxInJsPlugin()],
+  plugins: [
+    flaskViteImportPlugin(),
+    react(),
+    cssInjectedByJsPlugin(),
+    jsxInJsPlugin(),
+  ],
   server: {
     port: env?.VITE_PORT || 5173,
     cors: {
@@ -90,6 +95,9 @@ export default defineConfig({
       },
     },
   },
+  define: {
+    global: "globalThis", // in dev mode "randomstring" uses `global` rather than `globalThis`
+  },
   build: {
     manifest: true,
     modulePreload: false,
@@ -97,7 +105,6 @@ export default defineConfig({
     sourcemap: "hidden",
     outDir: env?.VITE_OUTPUT_DIR || "static/js/dist/vite",
     rollupOptions: {
-      input: entryPoints,
       output: {
         entryFileNames: `[name].js`,
         chunkFileNames: `chunks/[name].js`,
