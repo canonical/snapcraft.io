@@ -10,6 +10,7 @@ import webapp.api
 from talisker import logging
 
 from canonicalwebteam.flask_base.app import FlaskBase
+import webapp.config
 from webapp.blog.views import init_blog
 from webapp.docs.views import init_docs
 from webapp.extensions import csrf
