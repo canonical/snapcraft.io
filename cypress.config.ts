@@ -6,5 +6,12 @@ export default defineConfig({
       // implement node event listeners here
     },
     supportFile: false,
+    blockHosts: [
+      "www.googletagmanager.com",
+      "analytics.google.com",
+      "*.analytics.google.com",
+      "www.google-analytics.com",
+      "assets.ubuntu.com"
+    ],
   },
 });
