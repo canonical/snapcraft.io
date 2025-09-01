@@ -9,8 +9,11 @@ import webapp.api
 
 from talisker import logging
 
-from canonicalwebteam.flask_base.app import FlaskBase
+# We import the config module before anything else to make sure env vars are
+# loaded properly and the FLASK_* prefix is stripped before they are parsed
 import webapp.config
+
+from canonicalwebteam.flask_base.app import FlaskBase
 from webapp.blog.views import init_blog
 from webapp.docs.views import init_docs
 from webapp.extensions import csrf
