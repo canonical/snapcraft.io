@@ -1,12 +1,8 @@
-import os
-
+from webapp.config import IS_DEVELOPMENT
 from webapp.vite_integration.impl import (
     DevViteIntegration,
     ProdViteIntegration,
 )
 
 
-IS_PROD = os.getenv("ENVIRONMENT", "devel") != "devel"
-
-
-ViteIntegration = (ProdViteIntegration if IS_PROD else DevViteIntegration)()
+ViteIntegration = (DevViteIntegration if IS_DEVELOPMENT else ProdViteIntegration)()
