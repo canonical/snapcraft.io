@@ -1070,10 +1070,10 @@
     react-table "7.8.0"
     react-useportal "1.0.19"
 
-"@canonical/react-components@2.12.0":
-  version "2.12.0"
-  resolved "https://registry.yarnpkg.com/@canonical/react-components/-/react-components-2.12.0.tgz#8a54d32bcde40c3528bc246923e82e06f6178b5e"
-  integrity sha512-YtUTW1wL48M1vaPYhRgJ1vkRMFudvVK7vW21N9GMR60qXPWuArZ9yOHX1Wlx8I7bnDyFBLG0Zdw7glOO3FQCog==
+"@canonical/react-components@2.16.1":
+  version "2.16.1"
+  resolved "https://registry.yarnpkg.com/@canonical/react-components/-/react-components-2.16.1.tgz#4c814dd6b64549a4ccda94eb0df5d0ba0d35b41b"
+  integrity sha512-8qoTl/4cci8JzDX+XJXP0/dHJQXhY0skQDYX5jynFXS9lUnjdgAlVehiulghFRZWGXUKrinRqwVYIXR88xEZww==
   dependencies:
     "@types/jest" "29.5.14"
     "@types/node" "20.17.19"
@@ -8893,6 +8893,11 @@ vanilla-framework@4.26.1:
   version "4.26.1"
   resolved "https://registry.yarnpkg.com/vanilla-framework/-/vanilla-framework-4.26.1.tgz#d076f26a7215cf8b0babae81753ef535e6486257"
   integrity sha512-7m3qX4rm+I+go5mNjzO8gkp2qxr5m4n1jAxTh+bJ8hx/Wrsx3hiWDmJHylZ2GqjeqdtOiidvWgU2ToZJK6ELUg==
+
+vanilla-framework@4.32.1:
+  version "4.32.1"
+  resolved "https://registry.yarnpkg.com/vanilla-framework/-/vanilla-framework-4.32.1.tgz#6c861e09511bc40605432824d9d8fa8a9ec2e1d6"
+  integrity sha512-BNXHJ5glRB+o4dorWdqyUv8dIoFddYy16yUvsP0MQ55W1VG9K8lrGJYiw9bXElBTh9+WubbJicIF2Vnl3hzIzg==
 
 verbalize@^0.1.2:
   version "0.1.2"
