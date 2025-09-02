@@ -25,5 +25,6 @@
 
 {% block content %}
 <main id="root"></main>
-<script type="module" src="{{ versioned_static('js/dist/vite/store.js') }}" defer></script>
+
+{{ vite_import('static/js/store/index.tsx') }}
 {% endblock %}

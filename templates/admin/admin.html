@@ -10,5 +10,5 @@
   window.SENTRY_DSN = "{{ SENTRY_DSN }}";
   window.API_URL = "{{ api_url }}";
 </script>
-<script type="module" src="{{ static_url('js/dist/vite/brand-store.js') }}"></script>
+{{ vite_import('static/js/publisher/brand-store.tsx') }}
 {% endblock %}
