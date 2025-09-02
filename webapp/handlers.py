@@ -22,7 +22,7 @@ from webapp.config import (
     WEBAPP_CONFIG,
     DNS_VERIFICATION_SALT,
     IS_DEVELOPMENT,
-    VITE_PORT
+    VITE_PORT,
 )
 
 from canonicalwebteam.exceptions import (

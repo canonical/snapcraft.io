@@ -46,7 +46,7 @@ export default defineConfig({
     modulePreload: false,
     emptyOutDir: true,
     sourcemap: "hidden",
-    outDir: "static/js/dist/vite",
+    outDir: env?.VITE_OUTPUT_DIR || "static/js/dist/vite",
     rollupOptions: {
       input: entryPoints,
       output: {

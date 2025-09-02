@@ -3,6 +3,7 @@ import json
 from typing import List, Set
 from functools import cache
 
+from webapp.config import VITE_OUTPUT_DIR
 from webapp.vite_integration.impl.base import _AbstractViteIntegration
 from webapp.vite_integration.types import Manifest, ManifestChunk
 from webapp.vite_integration.exceptions import (
@@ -13,7 +14,7 @@ from webapp.vite_integration.exceptions import (
 
 
 class ProdViteIntegration(_AbstractViteIntegration):
-    OUT_DIR = "static/js/dist/vite"  # TODO: update if outDir changes
+    OUT_DIR = VITE_OUTPUT_DIR
     BUILD_MANIFEST = ".vite/manifest.json"
     manifest = None  # we cache the manifest contents in a static attribute
 

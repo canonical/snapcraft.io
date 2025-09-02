@@ -5,4 +5,6 @@ from webapp.vite_integration.impl import (
 )
 
 
-ViteIntegration = (DevViteIntegration if IS_DEVELOPMENT else ProdViteIntegration)()
+ViteIntegration = (
+    DevViteIntegration if IS_DEVELOPMENT else ProdViteIntegration
+)()
