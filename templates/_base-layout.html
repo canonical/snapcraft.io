@@ -23,6 +23,8 @@
 
     <link rel="stylesheet" href="{{ static_url('css/styles.css') }}" />
 
+    {{ vite_dev_tools() }}
+
     {% block scripts_modules %}{% endblock %}
     <script src="{{ static_url('js/modules/raven.min.js') }}" defer></script>
     <script>
