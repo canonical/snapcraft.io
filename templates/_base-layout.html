@@ -28,7 +28,6 @@
     {% endif %}
 
     {% block scripts_modules %}{% endblock %}
-    {{ vite_import('node_modules/raven-js/dist/raven.min.js') }}
     <script src="{{ static_url('js/modules/raven.min.js') }}" defer></script>
     <script>
       window.addEventListener("DOMContentLoaded", function() {
