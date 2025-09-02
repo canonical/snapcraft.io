@@ -31,6 +31,7 @@ ADD static/js static/js
 ADD vite.config.js .
 ADD tsconfig.json .
 ADD babel.config.json .
+ADD templates .
 RUN yarn install
 RUN yarn run build-js
 
