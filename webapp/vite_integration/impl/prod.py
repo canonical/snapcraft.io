@@ -23,7 +23,7 @@ class ProdViteIntegration(_AbstractViteIntegration):
             # manifest has already been parsed
             return
 
-        print("Initializing Vite manifest")
+        # print("Initializing Vite manifest")
         manifest_path = path.join(
             ProdViteIntegration.OUT_DIR, ProdViteIntegration.BUILD_MANIFEST
         )
@@ -40,7 +40,7 @@ class ProdViteIntegration(_AbstractViteIntegration):
 
     @cache
     def get_asset_url(self, asset_name: str) -> str:
-        entry = ProdViteIntegration.manifest[asset_name]
+        entry = ProdViteIntegration.manifest.get(asset_name)
         if not entry:
             raise ManifestContentException(
                 f'Asset "{asset_name}" not declared in Vite build manifest'
