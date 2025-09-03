@@ -1,4 +1,12 @@
-import { ChangeEvent, Dispatch, SetStateAction, useState } from "react";
+import {
+  ChangeEvent,
+  Dispatch,
+  SetStateAction,
+  useState,
+  useEffect,
+  useCallback,
+  useRef,
+} from "react";
 import { useParams } from "react-router-dom";
 import { useSetAtom } from "jotai";
 import {
@@ -35,44 +43,92 @@ function RepoSelector({ githubData, setAutoTriggerBuild }: Props) {
   const [reposLoading, setReposLoading] = useState<boolean>(false);
   const [validRepo, setValidRepo] = useState<boolean | null>(null);
   const [validationError, setValidationError] = useState<boolean>(false);
+  const [repoInputValue, setRepoInputValue] = useState<string>("");
+  const [repoFetchError, setRepoFetchError] = useState<string>("");
+  const [repoConnectError, setRepoConnectError] = useState<string>("");
 
-  const getRepoNameWithOwner = (repo: Repo) =>
-    selectedOrg ? `${selectedOrg}/${repo.name}` : repo.nameWithOwner;
+  // Track autofill attempts to avoid unnecessary re-runs
+  const autofillAttemptedRef = useRef<string | null>(null);
 
-  const validateRepo = async (repo: Repo | undefined) => {
-    if (!repo) {
-      return;
+  const getRepoNameWithOwner = useCallback(
+    (repo: Repo) =>
+      selectedOrg ? `${selectedOrg}/${repo.name}` : repo.nameWithOwner,
+    [selectedOrg],
+  );
+
+  // Custom validation function that handles all validation logic
+  const validateRepoInternal = useCallback(
+    async (repo: Repo) => {
+      setValidating(true);
+
+      // Calculate repo name inline to avoid dependency on getRepoNameWithOwner
+      const repoName = selectedOrg
+        ? `${selectedOrg}/${repo.name}`
+        : repo.nameWithOwner;
+
+      try {
+        const response = await fetch(
+          `/api/${snapId}/builds/validate-repo?repo=${repoName}`,
+        );
+
+        if (!response.ok) {
+          setValidationError(true);
+          throw new Error("Not a valid repo");
+        }
+
+        const responseData = await response.json();
+
+        if (responseData.success) {
+          setValidRepo(true);
+          setValidationMessage("");
+          setValidationError(false);
+        } else {
+          setValidationMessage(responseData.error.message);
+          setValidationError(true);
+          setValidRepo(null);
+        }
+      } catch {
+        setValidationError(true);
+      } finally {
+        setValidating(false);
+      }
+    },
+    [snapId, selectedOrg],
+  );
+
+  // Public validation function for manual use
+  const validateRepo = useCallback(
+    async (repo: Repo | undefined) => {
+      if (!repo) {
+        return;
+      }
+      await validateRepoInternal(repo);
+    },
+    [validateRepoInternal],
+  );
+
+  // Autofill effect with proper dependencies
+  useEffect(() => {
+    const currentOrgKey = `${selectedOrg || "user"}-${snapId}`;
+
+    if (
+      repos.length > 0 &&
+      snapId &&
+      !repoInputValue &&
+      autofillAttemptedRef.current !== currentOrgKey
+    ) {
+      const matchingRepo = repos.find((repo: Repo) => repo.name === snapId);
+      if (matchingRepo) {
+        setRepoInputValue(matchingRepo.name);
+        setSelectedRepo(matchingRepo);
+        validateRepoInternal(matchingRepo);
+      }
+      // Mark autofill as attempted for this org/snap combination
+      autofillAttemptedRef.current = currentOrgKey;
     }
+  }, [repos, snapId, repoInputValue, selectedOrg, validateRepoInternal]);
 
-    setValidating(true);
-
-    const repoName = getRepoNameWithOwner(repo);
-
-    const response = await fetch(
-      `/api/${snapId}/builds/validate-repo?repo=${repoName}`,
-    );
-
-    if (!response.ok) {
-      setValidationError(true);
-      throw new Error("Not a valid repo");
-    }
-
-    const responseData = await response.json();
-
-    if (responseData.success) {
-      setValidRepo(true);
-      setValidationMessage("");
-      setValidationError(false);
-    } else {
-      setValidationMessage(responseData.error.message);
-      setValidationError(true);
-      setValidRepo(null);
-    }
-
-    setValidating(false);
-  };
-
-  const getRepos = async (org?: string) => {
+  const getRepos = useCallback(async (org?: string) => {
     setReposLoading(true);
 
     let apiUrl = "/publisher/github/get-repos";
@@ -81,20 +137,24 @@ function RepoSelector({ githubData, setAutoTriggerBuild }: Props) {
       apiUrl += `?org=${org}`;
     }
 
-    const response = await fetch(apiUrl);
+    try {
+      const response = await fetch(apiUrl);
 
-    if (!response.ok) {
-      throw Error("Unable to fetch repos");
+      if (!response.ok) {
+        throw Error("Unable to fetch repos");
+      }
+
+      const responseData = await response.json();
+      setRepos(responseData);
+    } catch (_error) {
+      setRepoFetchError("Failed to fetch repositories. Please try again.");
+      setRepos([]);
+    } finally {
+      setReposLoading(false);
     }
+  }, []);
 
-    const responseData = await response.json();
-
-    setReposLoading(false);
-
-    setRepos(responseData);
-  };
-
-  const getOrgs = (): { label: string; value: string }[] => {
+  const getOrgs = useCallback((): { label: string; value: string }[] => {
     if (githubData) {
       return githubData.github_orgs.map((org) => {
         return {
@@ -105,9 +165,9 @@ function RepoSelector({ githubData, setAutoTriggerBuild }: Props) {
     }
 
     return [];
-  };
+  }, [githubData]);
 
-  const getValidationStatusClassName = (): string => {
+  const getValidationStatusClassName = useCallback((): string => {
     if (validRepo) {
       return "is-success";
     }
@@ -117,48 +177,70 @@ function RepoSelector({ githubData, setAutoTriggerBuild }: Props) {
     }
 
     return "";
-  };
+  }, [validRepo, validationError]);
 
-  const handleOrganizationChange = (e: ChangeEvent) => {
-    const target = e.target as HTMLInputElement;
+  const handleOrganizationChange = useCallback(
+    (e: ChangeEvent) => {
+      const target = e.target as HTMLInputElement;
 
-    if (target.value) {
-      setReposLoading(true);
+      setRepoInputValue("");
+      setSelectedRepo(undefined);
+      setValidRepo(null);
+      setValidationError(false);
+      setRepoFetchError("");
+      setRepoConnectError("");
+      // Reset autofill tracking when organization changes
+      autofillAttemptedRef.current = null;
 
-      const org = target.value;
+      if (target.value) {
+        setReposLoading(true);
 
-      if (org === githubData.github_user.login) {
-        getRepos();
+        const org = target.value;
+
+        if (org === githubData.github_user.login) {
+          getRepos();
+        } else {
+          getRepos(org);
+        }
+
+        setSelectedOrg(org);
       } else {
-        getRepos(org);
+        setSelectedOrg(null);
+      }
+    },
+    [githubData, getRepos],
+  );
+
+  const handleRepoChange = useCallback(
+    (e: ChangeEvent) => {
+      const target = e.target as HTMLInputElement;
+      const searchTerm = target.value;
+
+      setRepoInputValue(searchTerm);
+      setRepoFetchError("");
+      setRepoConnectError("");
+
+      if (!searchTerm) {
+        setValidationError(false);
+        setValidRepo(null);
+        setSelectedRepo(undefined);
+        return;
       }
 
-      setSelectedOrg(org);
-    } else {
-      setSelectedOrg(null);
-    }
-  };
+      const selectedRepo = repos.find((repo: Repo) => repo.name === searchTerm);
 
-  const handleRepoChange = (e: ChangeEvent) => {
-    const target = e.target as HTMLInputElement;
-    const searchTerm = target.value;
+      setSelectedRepo(selectedRepo);
 
-    if (!searchTerm) {
-      setValidationError(false);
-      setValidRepo(false);
-    }
+      if (selectedRepo) {
+        validateRepo(selectedRepo);
+      }
+    },
+    [repos, validateRepo],
+  );
 
-    const selectedRepo = repos.find((repo: Repo) => repo.name === searchTerm);
-
-    setSelectedRepo(selectedRepo);
-
-    if (selectedRepo) {
-      validateRepo(selectedRepo);
-    }
-  };
-
-  const connectRepo = async () => {
+  const connectRepo = useCallback(async () => {
     setBuilding(true);
+    setRepoConnectError("");
     const formData = new FormData();
     formData.set("csrf_token", window.CSRF_TOKEN);
     if (selectedRepo) {
@@ -166,17 +248,30 @@ function RepoSelector({ githubData, setAutoTriggerBuild }: Props) {
       formData.set("github_repository", repoName);
     }
 
-    const response = await fetch(`/api/${snapId}/builds`, {
-      method: "POST",
-      body: formData,
-    });
+    try {
+      const response = await fetch(`/api/${snapId}/builds`, {
+        method: "POST",
+        body: formData,
+      });
 
-    if (response) {
-      setAutoTriggerBuild(true);
+      if (response.ok) {
+        setAutoTriggerBuild(true);
+        setRepoConnected(true);
+      } else {
+        setRepoConnectError("Failed to connect repository. Please try again.");
+      }
+    } catch (_error) {
+      setRepoConnectError("Failed to connect repository. Please try again.");
+    } finally {
+      setBuilding(false);
     }
-
-    setRepoConnected(true);
-  };
+  }, [
+    selectedRepo,
+    snapId,
+    getRepoNameWithOwner,
+    setAutoTriggerBuild,
+    setRepoConnected,
+  ]);
 
   return (
     <Strip shallow>
@@ -213,6 +308,7 @@ function RepoSelector({ githubData, setAutoTriggerBuild }: Props) {
             placeholder="Search your repos"
             disabled={selectedOrg === null || validating}
             className="p-form-validation__input"
+            value={repoInputValue}
             onChange={handleRepoChange}
           />
           {reposLoading ||
@@ -226,6 +322,11 @@ function RepoSelector({ githubData, setAutoTriggerBuild }: Props) {
               <option value={repo.name} key={repo.name} />
             ))}
           </datalist>
+          {repoFetchError && (
+            <p className="p-form-validation__message" role="alert">
+              {repoFetchError}
+            </p>
+          )}
         </Col>
         <Col size={2}>
           {validRepo === true && (
@@ -253,7 +354,7 @@ function RepoSelector({ githubData, setAutoTriggerBuild }: Props) {
                 role="tooltip"
                 id="recheck-tooltip"
               >
-                Re-check
+                Check again
               </span>
             </Button>
           )}
@@ -274,6 +375,15 @@ function RepoSelector({ githubData, setAutoTriggerBuild }: Props) {
             .
           </p>
         </div>
+      )}
+      {repoConnectError && (
+        <Row>
+          <Col size={12}>
+            <p className="p-form-validation__message" role="alert">
+              {repoConnectError}
+            </p>
+          </Col>
+        </Row>
       )}
     </Strip>
   );
