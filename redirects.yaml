@@ -206,3 +206,7 @@ docs/snaps/intro: /docs/quickstart-tour
 docs/snaps/metadata: /docs/snap-format
 docs/snaps/structure: /docs/system-snap-directory
 account/details: /admin/account
+
+# Redirects webhook requests using old URL format (i.e. not starting with api/)
+(?P<snap_name>[^/]*)/webhook/notify: /api/{snap_name}/webhook/notify
+(?!api/.*)(?P<github_owner>[^/]*)/(?P<github_repo>[^/]*)/webhook/notify: /api/{github_owner}/{github_repo}/webhook/notify  
