@@ -6,6 +6,9 @@ env:
   - name: SNAPSTORE_DASHBOARD_API_URL
     value: https://dashboard.staging.snapcraft.io/
 
+  - name: DASHBOARD_API_URL
+    value: https://dashboard.staging.snapcraft.io/
+
   - name: LOGIN_URL
     value: https://login.staging.ubuntu.com
 
