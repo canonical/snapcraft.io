@@ -19,9 +19,7 @@ MOCK_MANIFEST = {
         "file": "chunks/chunk.js",
         "name": "chunk",
         "imports": ["_dependency.js"],
-        "css": [
-            "assets/styles.css"
-        ]
+        "css": ["assets/styles.css"],
     },
     "test/path/for/asset.ts": {
         "file": "asset.js",
