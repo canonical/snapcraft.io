@@ -23,6 +23,10 @@
 
     <link rel="stylesheet" href="{{ static_url('css/styles.css') }}" />
 
+    {% if IS_DEVELOPMENT %}
+      {{ vite_dev_tools() }}
+    {% endif %}
+
     {% block scripts_modules %}{% endblock %}
     <script src="{{ static_url('js/modules/raven.min.js') }}" defer></script>
     <script>
@@ -37,7 +41,7 @@
       });
     </script>
 
-    <script type="module" src="{{ static_url('js/dist/vite/base.js') }}" defer></script>
+    {{ vite_import('static/js/base/base.ts') }}
     {% block scripts_includes %}{% endblock %}
     <script src="https://assets.ubuntu.com/v1/703e23c9-lazysizes+noscript+native-loading.5.1.2.min.js" defer></script>
 
@@ -79,11 +83,11 @@
 
     {% block header %}
     <!-- JS that is needed right away -->
-    <script type="module" src="{{ static_url('js/dist/vite/cookie-policy.js') }}"></script>
+    {{ vite_import('static/js/base/cookie-policy.ts') }}
 
     {% from "_header_macros.html" import header %}
       {% if show_header != False %}
-        <script type="module" src="{{ static_url('js/dist/vite/global-nav.js') }}"></script>
+        {{ vite_import('static/js/base/global-nav.ts') }}
         {% from "_header_macros.html" import header %}
         {{ header() }}
       {% endif %}
