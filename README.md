@@ -34,6 +34,11 @@ dotrun
 
 Once the server has started, you can visit `http://127.0.0.1:8004` in your browser. You stop the server using `<ctrl>+c`.
 
+> If you're running dotrun on macOS or Windows, you will have to use a different command to launch dotrun with an additional argument in order to get JavaScript code working:
+```bash
+dotrun -p 5004:5004
+```
+
 For more detailed local development instructions, see [HACKING.md](HACKING.md).
 
 ## Brand stores

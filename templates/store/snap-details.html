@@ -306,7 +306,7 @@
 {% endblock %}
 
 {% block scripts_includes %}
-  <script type="module" src="{{ static_url('js/dist/vite/store-details.js') }}" defer></script>
+  {{ vite_import('static/js/public/store-details.ts') }}
 {% endblock %}
 
 {% block scripts %}

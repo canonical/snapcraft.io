@@ -29,9 +29,9 @@ RUN yarn run build-css
 FROM yarn-dependencies AS build-js
 ADD static/js static/js
 ADD vite.config.js .
-ADD vite.config.entry.js .
 ADD tsconfig.json .
 ADD babel.config.json .
+ADD templates .
 RUN yarn install
 RUN yarn run build-js
 

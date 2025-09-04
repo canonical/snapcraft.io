@@ -65,7 +65,7 @@ jobs:
 
       - name: Run dotrun
         run: |
-          dotrun &
+          dotrun --env ENVIRONMENT="prod" serve &
           curl --head --fail --retry-delay 3 --retry 30 --retry-connrefused http://localhost:8004
       # END copy of the run-dotrun job
 
