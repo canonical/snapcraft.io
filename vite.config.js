@@ -110,9 +110,9 @@ export default defineConfig({
     outDir: env?.VITE_OUTPUT_DIR || "static/js/dist/vite",
     rollupOptions: {
       output: {
-        entryFileNames: `[name].js`,
-        chunkFileNames: `chunks/[name].js`,
-        assetFileNames: `assets/[name][extname]`,
+        entryFileNames: `[name]--[hash].js`,
+        chunkFileNames: `chunks/[name]--[hash].js`,
+        assetFileNames: `assets/[name]--[hash][extname]`,
       },
     },
   },
