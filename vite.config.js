@@ -83,6 +83,7 @@ export default defineConfig({
   ],
   server: {
     port: env?.VITE_PORT || 5173,
+    host: true,
     cors: {
       origin: [
         "http://localhost:8004",
