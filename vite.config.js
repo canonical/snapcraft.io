@@ -84,7 +84,11 @@ export default defineConfig({
   server: {
     port: env?.VITE_PORT || 5173,
     cors: {
-      origin: "http://localhost:8004", // needed for backend integration with Flask
+      origin: [
+        "http://localhost:8004",
+        "http://127.0.0.1:8004",
+        "http://0.0.0.0:8004",
+      ], // needed for backend integration with Flask
     },
   },
   css: {
