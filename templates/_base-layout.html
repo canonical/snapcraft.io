@@ -21,7 +21,7 @@
     })(window,document,'script','dataLayer','GTM-KCGXHQS');</script>
     <!-- End Google Tag Manager -->
 
-    <link rel="stylesheet" href="{{ static_url('css/styles.css') }}" />
+    {{ vite_import('static/sass/styles.scss') }}
 
     {% if IS_DEVELOPMENT %}
       {{ vite_dev_tools() }}
