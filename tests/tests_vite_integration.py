@@ -12,12 +12,14 @@ import webapp.vite_integration.exceptions as vite_exceptions
 
 MOCK_OUTPUT_PATH = "/tmp/python_vite_test"
 MOCK_ASSET_PATH = "test/path/for/asset.ts"
+MOCK_SCSS_PATH = "test/path/for/styles.scss"
 MOCK_MANIFEST = {
     "_dependency.js": {"file": "chunks/dependency.js", "name": "dependency"},
     "_chunk.js": {
         "file": "chunks/chunk.js",
         "name": "chunk",
         "imports": ["_dependency.js"],
+        "css": ["assets/styles.css"],
     },
     "test/path/for/asset.ts": {
         "file": "asset.js",
@@ -27,6 +29,12 @@ MOCK_MANIFEST = {
         "imports": [
             "_chunk.js",
         ],
+    },
+    "test/path/for/styles.scss": {
+        "file": "assets/styles.css",
+        "src": "test/path/for/styles.scss",
+        "isEntry": True,
+        "names": ["styles.css"],
     },
 }
 
@@ -53,6 +61,9 @@ class TestsDevViteIntegration(TestCase):
 
     def tests_get_imported_chunks(self):
         assert len(self.vite.get_imported_chunks(MOCK_ASSET_PATH)) == 0
+
+    def tests_get_imported_css(self):
+        assert len(self.vite.get_imported_css(MOCK_ASSET_PATH)) == 0
 
 
 class TestsProdViteIntegration(TestCase):
@@ -125,6 +136,12 @@ class TestsProdViteIntegration(TestCase):
         assert MOCK_ASSET_PATH not in url  # source asset is a .ts file
         assert url.endswith(".js")  # dist asset is a .js file
 
+    def tests_get_asset_url__is_not_scss(self):
+        vite = ProdViteIntegration()
+        url = vite.get_asset_url(MOCK_SCSS_PATH)
+        assert MOCK_SCSS_PATH not in url  # source asset is a .scss file
+        assert url.endswith(".css")  # dist asset is a .css file
+
     def tests_get_imported_chunks__bad_asset(self):
         vite = ProdViteIntegration()
         with self.assertRaises(vite_exceptions.ManifestContentException):
@@ -148,6 +165,13 @@ class TestsProdViteIntegration(TestCase):
 
     def tests_get_imported_chunks(self):
         vite = ProdViteIntegration()
-        assert len(vite.get_imported_chunks(MOCK_ASSET_PATH)) == (
-            len(MOCK_MANIFEST.values()) - 1
+        js_entries = filter(
+            lambda x: x["file"].endswith(".js"), MOCK_MANIFEST.values()
         )
+        assert len(vite.get_imported_chunks(MOCK_ASSET_PATH)) == (
+            len(list(js_entries)) - 1
+        )
+
+    def tests_get_imported_css(self):
+        vite = ProdViteIntegration()
+        assert len(vite.get_imported_css(MOCK_ASSET_PATH)) == 1

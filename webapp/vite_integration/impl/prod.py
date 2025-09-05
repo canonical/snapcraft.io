@@ -48,28 +48,29 @@ class ProdViteIntegration(_AbstractViteIntegration):
 
         entry_path = path.join(ProdViteIntegration.OUT_DIR, entry["file"])
         if not path.isfile(entry_path):
-            # TODO: this should never happen, if the file is there in the
-            # manifest then it MUST exist
             raise AssetPathException(
-                f'Path to asset file "{entry_path}" doesn\'t exist'
+                f'Path to asset file "{entry_path}" doesn\'t exist; check your'
+                "VITE_OUTPUT_DIR env variable"
             )
 
         return f"/{entry_path}"
 
     @cache
-    def get_imported_chunks(self, asset_name: str) -> List[str]:
+    def _recursive_get_chunks(self, asset_name: str) -> List[ManifestChunk]:
         seen: Set[str] = set()
 
         # recursively visit the manifest to build the import tree for the
         # given `asset_name`
-        def _get_imported_chunks(chunk: ManifestChunk) -> List[ManifestChunk]:
+        def __recursive_get_chunks(
+            chunk: ManifestChunk,
+        ) -> List[ManifestChunk]:
             chunks: List[ManifestChunk] = []
             for file in chunk.get("imports", []):
                 importee = ProdViteIntegration.manifest[file]
                 if file in seen:
                     continue
                 seen.add(file)
-                chunks.extend(_get_imported_chunks(importee))
+                chunks.extend(__recursive_get_chunks(importee))
                 chunks.append(importee)
             return chunks
 
@@ -79,20 +80,45 @@ class ProdViteIntegration(_AbstractViteIntegration):
                 f'Asset "{asset_name}" not declared in Vite build manifest'
             )
 
-        chunks = _get_imported_chunks(entry)
+        return [entry] + __recursive_get_chunks(entry)
+
+    @cache
+    def get_imported_chunks(self, asset_name: str) -> List[str]:
+        chunks = self._recursive_get_chunks(asset_name)
         files = [
-            path.join(ProdViteIntegration.OUT_DIR, f["file"]) for f in chunks
+            path.join(ProdViteIntegration.OUT_DIR, f["file"])
+            for f in chunks[1:]  # first chunk is asset_name
         ]
 
         for f in files:
             if not path.isfile(f):
-                # TODO: this should never happen, if the file is there in the
-                # manifest then it MUST exist
                 raise AssetPathException(
-                    f'Path to asset file "{f}" doesn\'t exist'
+                    f'Path to asset file "{f}" doesn\'t exist; check your'
+                    "VITE_OUTPUT_DIR env variable"
                 )
 
         # only build filesystem paths for all chunks
         urls = [f"/{f}" for f in files]
+
+        return urls
+
+    @cache
+    def get_imported_css(self, asset_name: str) -> List[str]:
+        chunks = self._recursive_get_chunks(asset_name)
+        css = [
+            path.join(ProdViteIntegration.OUT_DIR, c)
+            for f in chunks
+            for c in f.get("css", [])
+        ]
+
+        for f in css:
+            if not path.isfile(f):
+                raise AssetPathException(
+                    f'Path to asset file "{f}" doesn\'t exist; check your'
+                    "VITE_OUTPUT_DIR env variable"
+                )
+
+        # only build filesystem paths for all chunks
+        urls = [f"/{f}" for f in css]
 
         return urls

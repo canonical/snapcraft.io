@@ -11,7 +11,7 @@
     <link rel="preconnect" href="https://assets.ubuntu.com">
     <link rel="preconnect" href="https://munchkin.marketo.net">
 
-    <link rel="stylesheet" href="{{ static_url('css/styles-embedded.css') }}" />
+    {{ vite_import('static/sass/styles-embedded.scss') }}
 
     {% block scripts_modules %}{% endblock %}
     {% block scripts_includes %}{% endblock %}
