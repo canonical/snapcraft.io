@@ -213,11 +213,15 @@ def snap_details_views(store):
 
         context = _get_context_snap_details(snap_name)
         extra_details = device_gateway.get_snap_details(
-            snap_name, fields=FIELDS_EXTRA_DETAILS)
+            snap_name, fields=FIELDS_EXTRA_DETAILS
+        )
 
         if extra_details["aliases"]:
             context["aliases"] = [
-                [f"{extra_details['package_name']}.{alias_obj['target']}", alias_obj['name']]
+                [
+                    f"{extra_details['package_name']}.{alias_obj['target']}",
+                    alias_obj["name"],
+                ]
                 for alias_obj in extra_details["aliases"]
             ]
 
