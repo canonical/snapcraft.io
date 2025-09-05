@@ -105,13 +105,12 @@ class ProdViteIntegration(_AbstractViteIntegration):
     @cache
     def get_imported_css(self, asset_name: str) -> List[str]:
         chunks = self._recursive_get_chunks(asset_name)
-        css = [
-            path.join(ProdViteIntegration.OUT_DIR, c)
-            for f in chunks
-            for c in f.get("css", [])
-        ]
+        files = []
+        for chunk in chunks:
+            for file in chunk.get("css", []):
+                files.append(path.join(ProdViteIntegration.OUT_DIR, file))
 
-        for f in css:
+        for f in files:
             if not path.isfile(f):
                 raise AssetPathException(
                     f'Path to asset file "{f}" doesn\'t exist; check your'
@@ -119,6 +118,6 @@ class ProdViteIntegration(_AbstractViteIntegration):
                 )
 
         # only build filesystem paths for all chunks
-        urls = [f"/{f}" for f in css]
+        urls = [f"/{f}" for f in files]
 
         return urls
