@@ -29,6 +29,7 @@ interface ChannelData {
   "released-at": string;
   risk: string;
   version: string;
+  size: number;
   channel?: string;
 }
 
@@ -518,6 +519,19 @@ class ChannelMap {
   }
 
   /**
+   * Format file size in human readable format
+   * @param {number} bytes - Size in bytes
+   * @returns {string} - Formatted size string
+   */
+  formatSize(bytes: number): string {
+    if (bytes === 0) return "0 B";
+    const k = 1000;
+    const sizes = ["B", "kB", "MB", "GB", "TB"];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + " " + sizes[i];
+  }
+
+  /**
    * Prepare the channel map tables
    *
    * @param {Object} archData
@@ -574,6 +588,7 @@ class ChannelMap {
           trackName,
           trackInfo["risk"],
           trackInfo["version"],
+          this.formatSize(trackInfo["size"]),
           trackInfo["released-at"],
           trackInfo["confinement"],
         ]);
