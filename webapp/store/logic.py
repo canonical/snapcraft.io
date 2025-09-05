@@ -193,14 +193,74 @@ def convert_date(date_to_convert):
     :param date_to_convert: Date to convert
     :returns: Readable date
     """
-    local_timezone = datetime.datetime.utcnow().tzinfo
-    date_parsed = parser.parse(date_to_convert).replace(tzinfo=local_timezone)
-    delta = datetime.datetime.utcnow() - datetime.timedelta(days=1)
+    date_parsed = parser.parse(date_to_convert)
+    # Ensure we have a timezone-aware datetime
+    if date_parsed.tzinfo is None:
+        date_parsed = date_parsed.replace(tzinfo=datetime.timezone.utc)
+
+    now = datetime.datetime.now(datetime.timezone.utc)
+    delta = now - datetime.timedelta(days=1)
 
     if delta < date_parsed:
         return humanize.naturalday(date_parsed).title()
     else:
         return date_parsed.strftime("%-d %B %Y")
+
+
+def convert_date_month_year(date_to_convert):
+    """Convert date to month and year format: Month Year
+
+    Format of date to convert: 2019-01-12T16:48:41.821037+00:00
+    Output: January 2019
+
+    :param date_to_convert: Date to convert
+    :returns: Month and year only
+    """
+    date_parsed = parser.parse(date_to_convert)
+    if date_parsed.tzinfo is None:
+        date_parsed = date_parsed.replace(tzinfo=datetime.timezone.utc)
+
+    return date_parsed.strftime("%B %Y")
+
+
+def is_snap_old(last_updated_date, old_threshold_years=2.0):
+    """Check if a snap is considered 'old' based on its last update date
+
+    A snap is considered old if it hasn't been updated in the specified
+    number of years (default: 2 years).
+
+    :param last_updated_date: The last updated date string in ISO format
+    :param old_threshold_years: Number of years to consider a snap old
+                                (default: 2)
+    :returns: Dictionary with 'is_old' boolean and 'years_since_update'
+              integer
+    """
+    if not last_updated_date:
+        return {"is_old": False, "years_since_update": 0}
+
+    try:
+        date_parsed = parser.parse(last_updated_date)
+        if date_parsed.tzinfo is None:
+            date_parsed = date_parsed.replace(tzinfo=datetime.timezone.utc)
+
+        now = datetime.datetime.now(datetime.timezone.utc)
+
+        days_diff = (now - date_parsed).days
+        years_diff = days_diff / 365.25  # Account for leap years
+        years_since_update = int(years_diff)
+
+        is_old = days_diff >= (old_threshold_years * 365.25)
+
+        return {
+            "is_old": is_old,
+            "years_since_update": years_since_update,
+            "last_updated_formatted": convert_date_month_year(
+                last_updated_date
+            ),
+        }
+    except (ValueError, TypeError):
+        # If we can't parse the date, assume it's not old
+        return {"is_old": False, "years_since_update": 0}
 
 
 categories_list = [

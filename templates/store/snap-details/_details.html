@@ -19,6 +19,17 @@
   <hr class="p-rule--muted">
 {% endif %}
 
+{% if old_snap_info and old_snap_info.is_old %}
+  <div class="p-notification--caution is-borderless">
+    <div class="p-notification__content">
+      <p class="p-notification__message">
+        This snap in this channel hasn't been updated since {{ old_snap_info.last_updated_formatted }}. Contact the developer to ask for an update.
+      </p>
+    </div>
+  </div>
+  <hr>
+{% endif %}
+
 {% if links %}
   {% if links["website"] %}
     <h3 class="p-muted-heading">Websites</h3>
