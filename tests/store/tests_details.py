@@ -4,6 +4,9 @@ from flask_testing import TestCase
 from webapp.app import create_app
 
 
+EMPTY_EXTRA_DETAILS_PAYLOAD = {"aliases": None, "package_name": "vault"}
+
+
 class GetDetailsPageTest(TestCase):
     def setUp(self):
         self.snap_name = "toto"
@@ -40,6 +43,15 @@ class GetDetailsPageTest(TestCase):
             ]
         )
         self.endpoint_url = "/" + self.snap_name
+        self.api_url_details = "".join(
+            [
+                "https://api.snapcraft.io/api/v1/",
+                "snaps/details/",
+                self.snap_name,
+                "?",
+                urlencode({"fields": ",".join(["aliases"])}),
+            ]
+        )
 
     def create_app(self):
         app = create_app(testing=True)
@@ -125,6 +137,14 @@ class GetDetailsPageTest(TestCase):
                 method="GET", url=self.api_url, json=payload, status=200
             )
         )
+        responses.add(
+            responses.Response(
+                method="GET",
+                url=self.api_url_details,
+                json=EMPTY_EXTRA_DETAILS_PAYLOAD,
+                status=200,
+            )
+        )
 
         response = self.client.get(self.endpoint_url)
 
@@ -172,6 +192,14 @@ class GetDetailsPageTest(TestCase):
         responses.add(
             responses.Response(
                 method="GET", url=self.api_url, json=payload, status=200
+            )
+        )
+        responses.add(
+            responses.Response(
+                method="GET",
+                url=self.api_url_details,
+                json=EMPTY_EXTRA_DETAILS_PAYLOAD,
+                status=200,
             )
         )
 
@@ -239,6 +267,14 @@ class GetDetailsPageTest(TestCase):
                 method="GET", url=self.api_url, json=payload, status=200
             )
         )
+        responses.add(
+            responses.Response(
+                method="GET",
+                url=self.api_url_details,
+                json=EMPTY_EXTRA_DETAILS_PAYLOAD,
+                status=200,
+            )
+        )
 
         metrics_url = "https://api.snapcraft.io/api/v1/snaps/metrics"
         responses.add(
@@ -296,6 +332,14 @@ class GetDetailsPageTest(TestCase):
                 method="GET", url=self.api_url, json=payload, status=200
             )
         )
+        responses.add(
+            responses.Response(
+                method="GET",
+                url=self.api_url_details,
+                json=EMPTY_EXTRA_DETAILS_PAYLOAD,
+                status=200,
+            )
+        )
 
         metrics_url = "https://api.snapcraft.io/api/v1/snaps/metrics"
         responses.add(
@@ -311,3 +355,91 @@ class GetDetailsPageTest(TestCase):
 
         assert response.status_code == 200
         self.assert_context("is_users_snap", False)
+
+    @responses.activate
+    def test_extra_details(self):
+        payload = {
+            "snap-id": "toto_id",
+            "name": "toto",
+            "default-track": None,
+            "snap": {
+                "title": "Snap Title",
+                "summary": "This is a summary",
+                "description": "this is a description",
+                "media": [],
+                "license": "license",
+                "publisher": {
+                    "display-name": "Toto",
+                    "username": "toto",
+                    "validation": True,
+                },
+                "categories": [{"name": "test"}],
+                "trending": False,
+                "unlisted": False,
+                "links": {},
+            },
+            "channel-map": [
+                {
+                    "channel": {
+                        "architecture": "amd64",
+                        "name": "stable",
+                        "risk": "stable",
+                        "track": "latest",
+                        "released-at": "2018-09-18T14:45:28.064633+00:00",
+                    },
+                    "created-at": "2018-09-18T14:45:28.064633+00:00",
+                    "version": "1.0",
+                    "confinement": "conf",
+                    "download": {"size": 100000},
+                }
+            ],
+        }
+        payload_extra_details = {
+            "aliases": [
+                {"name": "nu", "target": "nu"},
+                {
+                    "name": "nu_plugin_stress_internals",
+                    "target": "nu-plugin-stress-internals",
+                },
+                {"name": "nu_plugin_gstat", "target": "nu-plugin-gstat"},
+                {"name": "nu_plugin_formats", "target": "nu-plugin-formats"},
+                {"name": "nu_plugin_polars", "target": "nu-plugin-polars"},
+            ],
+            "package_name": "toto",
+        }
+
+        responses.add(
+            responses.Response(
+                method="GET", url=self.api_url, json=payload, status=200
+            )
+        )
+        responses.add(
+            responses.Response(
+                method="GET",
+                url=self.api_url_details,
+                json=payload_extra_details,
+                status=200,
+            )
+        )
+        metrics_url = "https://api.snapcraft.io/api/v1/snaps/metrics"
+        responses.add(
+            responses.Response(
+                method="POST", url=metrics_url, json={}, status=200
+            )
+        )
+
+        response = self.client.get(self.endpoint_url)
+        assert response.status_code == 200
+        self.assert_context(
+            "aliases",
+            [
+                ["toto.nu", "nu"],
+                [
+                    "toto.nu-plugin-stress-internals",
+                    "nu_plugin_stress_internals",
+                ],
+                ["toto.nu-plugin-gstat", "nu_plugin_gstat"],
+                ["toto.nu-plugin-formats", "nu_plugin_formats"],
+                ["toto.nu-plugin-polars", "nu_plugin_polars"],
+            ],
+        )
