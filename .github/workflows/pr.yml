@@ -43,6 +43,20 @@ jobs:
           dotrun &
           curl --head --fail --retry-delay 3 --retry 30 --retry-connrefused http://localhost:8004
 
+  pack-rock:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Setup LXD
+        uses: canonical/setup-lxd@main
+
+      - name: Setup rockcraft
+        run: sudo snap install rockcraft --classic
+
+      - name: Pack rock
+        run: rockcraft pack
+
   run-cypress:
     runs-on: ubuntu-latest
     permissions:
