@@ -1,6 +1,6 @@
 import react from "@vitejs/plugin-react-swc";
 import { defineConfig, loadEnv, transformWithEsbuild } from "vite";
-import cssInjectedByJsPlugin from "vite-plugin-css-injected-by-js";
+import autoprefixer from "autoprefixer";
 import { execSync } from "node:child_process";
 
 /**
@@ -75,12 +75,7 @@ const jsxInJsPlugin = () => ({
 const env = loadEnv("all", process.cwd());
 
 export default defineConfig({
-  plugins: [
-    flaskViteImportPlugin(),
-    react(),
-    cssInjectedByJsPlugin(),
-    jsxInJsPlugin(),
-  ],
+  plugins: [flaskViteImportPlugin(), react(), jsxInJsPlugin()],
   server: {
     port: env?.VITE_PORT || 5173,
     host: true,
@@ -99,6 +94,10 @@ export default defineConfig({
         silenceDeprecations: ["import", "global-builtin"],
       },
     },
+    postcss: {
+      plugins: [autoprefixer()],
+      map: false,
+    },
   },
   define: {
     global: "globalThis", // in dev mode "randomstring" uses `global` rather than `globalThis`
@@ -111,9 +110,9 @@ export default defineConfig({
     outDir: env?.VITE_OUTPUT_DIR || "static/js/dist/vite",
     rollupOptions: {
       output: {
-        entryFileNames: `[name].js`,
-        chunkFileNames: `chunks/[name].js`,
-        assetFileNames: `assets/[name][extname]`,
+        entryFileNames: `[name]--[hash].js`,
+        chunkFileNames: `chunks/[name]--[hash].js`,
+        assetFileNames: `assets/[name]--[hash][extname]`,
       },
     },
   },

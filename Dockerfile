@@ -17,23 +17,16 @@ ADD package.json .
 ADD yarn.lock .
 RUN --mount=type=cache,target=/usr/local/share/.cache/yarn yarn install --production
 
-
-# Build stage: Run "yarn run build-css"
+# Build stage: Run "yarn run build"
 # ===
-FROM yarn-dependencies AS build-css
-ADD static/sass static/sass
-RUN yarn run build-css
-
-# Build stage: Run "yarn run build-js"
-# ===
-FROM yarn-dependencies AS build-js
+FROM yarn-dependencies AS build
 ADD static/js static/js
+ADD static/sass static/sass
 ADD vite.config.js .
 ADD tsconfig.json .
-ADD babel.config.json .
 ADD templates .
 RUN yarn install
-RUN yarn run build-js
+RUN yarn run build
 
 # Build the production image
 # ===
@@ -52,8 +45,7 @@ WORKDIR /srv
 # Import code, build assets and mirror list
 ADD . .
 RUN rm -rf package.json yarn.lock .babelrc requirements.txt
-COPY --from=build-css /srv/static/css static/css
-COPY --from=build-js /srv/static/js static/js
+COPY --from=build /srv/static/js static/js
 
 # Set revision ID
 ARG BUILD_ID

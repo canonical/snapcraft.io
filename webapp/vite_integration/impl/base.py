@@ -18,3 +18,7 @@ class _AbstractViteIntegration:
     @abstractmethod
     def get_imported_chunks(self, asset_name: str) -> List[str]:
         pass
+
+    @abstractmethod
+    def get_imported_css(self, asset_name: str) -> List[str]:
+        pass
