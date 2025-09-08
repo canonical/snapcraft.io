@@ -37,3 +37,7 @@ class DevViteIntegration(_AbstractViteIntegration):
     def get_imported_chunks(self, asset_name: str) -> List[str]:
         # no need for this, Vite dev server imports automatically
         return []
+
+    def get_imported_css(self, asset_name: str) -> List[str]:
+        # no need for this, Vite dev server imports automatically
+        return []
