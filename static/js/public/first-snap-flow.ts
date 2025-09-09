@@ -107,12 +107,6 @@ function install(language: unknown, fsfFlow: string): void {
   }
 
   document.addEventListener("change", onChange);
-
-  // @ts-ignore
-  if (typeof ClipboardJS !== "undefined") {
-    // @ts-ignore
-    new ClipboardJS(".js-clipboard-copy");
-  }
 }
 
 function getSnapCount(cb: {
