@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-/* globals ClipboardJS, ga */
+/* globals ga */
 
 import "whatwg-fetch";
 

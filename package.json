@@ -121,6 +121,9 @@
   },
   "resolutions": {
     "lodash": "4.17.21",
-    "minimatch": "3.1.2 || 5.1.6 || 9.0.5"
+    "eslint/**/minimatch": "3.1.2",
+    "eslint-*/minimatch": "3.1.2",
+    "@typescript-eslint/**/minimatch": "9.0.5",
+    "ts-jest/ejs/jake/filelist/minimatch": "5.1.6"
   }
 }
