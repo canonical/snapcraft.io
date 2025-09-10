@@ -216,7 +216,7 @@ def snap_details_views(store):
             snap_name, fields=FIELDS_EXTRA_DETAILS
         )
 
-        if extra_details["aliases"]:
+        if extra_details and extra_details["aliases"]:
             context["aliases"] = [
                 [
                     f"{extra_details['package_name']}.{alias_obj['target']}",
