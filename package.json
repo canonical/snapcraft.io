@@ -11,7 +11,7 @@
     "test-python": "yarn run lint-python && FLASK_DEBUG=0 python3 -m unittest discover tests",
     "test-python-job": "SECRET_KEY=insecure_secret_key coverage run  --source=. -m unittest discover tests",
     "build": "yarn run copy-3rd-party-js && vite build",
-    "copy-3rd-party-js": "mkdir -p static/js/modules && cp node_modules/d3/dist/d3.min.js static/js/modules && cp node_modules/clipboard/dist/clipboard.min.js static/js/modules && cp node_modules/raven-js/dist/raven.min.js static/js/modules",
+    "copy-3rd-party-js": "mkdir -p static/js/modules && cp node_modules/raven-js/dist/raven.min.js static/js/modules",
     "serve": "./entrypoint 0.0.0.0:${PORT}",
     "start": "concurrently --raw 'yarn run copy-3rd-party-js' 'yarn run watch' 'yarn run serve'",
     "watch": "vite",
@@ -35,7 +35,6 @@
     "@dnd-kit/utilities": "3.2.2",
     "@sentry/react": "7.120.2",
     "@sentry/tracing": "7.114.0",
-    "@tarekraafat/autocomplete.js": "10.2.9",
     "@testing-library/dom": "10.4.0",
     "@testing-library/jest-dom": "6.6.3",
     "@testing-library/react": "16.2.0",
@@ -48,7 +47,6 @@
     "@types/topojson-client": "3.1.5",
     "@vitejs/plugin-react-swc": "4.0.0",
     "autoprefixer": "10.4.20",
-    "clipboard": "2.0.11",
     "d3": "7.9.0",
     "d3-array": "3.2.4",
     "d3-axis": "3.0.0",
@@ -62,11 +60,8 @@
     "d3-time-format": "4.1.0",
     "date-fns": "4.1.0",
     "downshift": "9.0.8",
-    "fast-average-color": "9.4.0",
     "jotai": "2.12.5",
-    "markdown-it": "14.1.0",
     "nanoid": "5.0.9",
-    "polylabel": "2.0.1",
     "postcss": "8.4.49",
     "postcss-cli": "11.0.0",
     "prettier": "3.4.2",
@@ -93,8 +88,6 @@
     "uuid": "11.0.4",
     "vanilla-framework": "4.33.0",
     "vite": "7.1.2",
-    "vite-plugin-css-injected-by-js": "3.5.2",
-    "watch-cli": "0.2.3",
     "whatwg-fetch": "3.6.20"
   },
   "devDependencies": {
@@ -128,6 +121,9 @@
   },
   "resolutions": {
     "lodash": "4.17.21",
-    "minimatch": "3.0.5"
+    "eslint/**/minimatch": "3.1.2",
+    "eslint-*/minimatch": "3.1.2",
+    "@typescript-eslint/**/minimatch": "9.0.5",
+    "ts-jest/ejs/jake/filelist/minimatch": "5.1.6"
   }
 }
