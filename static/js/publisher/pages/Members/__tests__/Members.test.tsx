@@ -31,7 +31,7 @@ function renderComponent() {
           <Members />
         </JotaiTestProvider>
       </BrowserRouter>
-    </QueryClientProvider>
+    </QueryClientProvider>,
   );
 }
 
@@ -59,7 +59,7 @@ describe("Members", () => {
 
     await waitFor(() => {
       expect(
-        screen.getByRole("heading", { level: 1, name: "Test store / Members" })
+        screen.getByRole("heading", { level: 1, name: "Test store / Members" }),
       ).toBeInTheDocument();
     });
   });

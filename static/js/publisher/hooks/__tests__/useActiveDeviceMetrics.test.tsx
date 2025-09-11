@@ -19,7 +19,7 @@ describe("useActiveDeviceMetrics", () => {
         period: "30d",
         snapId: "test-id",
         type: "version",
-      })
+      }),
     );
     expect(ReactQuery.useQuery).toHaveBeenCalled();
     spy.mockRestore();
@@ -59,7 +59,7 @@ describe("useActiveDeviceMetrics", () => {
             total_page_num: 1,
           }),
         ok: true,
-      })
+      }),
     ) as Mock;
 
     const { result } = renderHook(
@@ -71,7 +71,7 @@ describe("useActiveDeviceMetrics", () => {
         }),
       {
         wrapper: createWrapper(),
-      }
+      },
     );
 
     await waitFor(() => expect(result.current.status).toBe("success"));
@@ -117,7 +117,7 @@ describe("useActiveDeviceMetrics", () => {
             total_page_num: 1,
           }),
         ok: true,
-      })
+      }),
     ) as Mock;
 
     const { result } = renderHook(
@@ -129,7 +129,7 @@ describe("useActiveDeviceMetrics", () => {
         }),
       {
         wrapper: createWrapper(),
-      }
+      },
     );
 
     await waitFor(() => expect(result.current.status).toBe("success"));
@@ -144,7 +144,7 @@ describe("useActiveDeviceMetrics", () => {
         json: () => Promise.resolve(undefined),
         ok: false,
         status: 404,
-      })
+      }),
     ) as Mock;
 
     const { result } = renderHook(
@@ -156,7 +156,7 @@ describe("useActiveDeviceMetrics", () => {
         }),
       {
         wrapper: createWrapper(),
-      }
+      },
     );
     await waitFor(() => expect(result.current.status).toBe("success"));
 

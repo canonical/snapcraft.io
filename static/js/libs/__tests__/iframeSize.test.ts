@@ -26,7 +26,7 @@ describe("iframeSize", () => {
         width: 500,
         height: 500,
         toJSON: () => ({}),
-      })
+      }),
     ) as Mock;
 
     iframeSize(".frame-wrapper");

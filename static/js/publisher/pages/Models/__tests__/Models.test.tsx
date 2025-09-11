@@ -29,7 +29,7 @@ function renderComponent() {
       <QueryClientProvider client={queryClient}>
         <Models />
       </QueryClientProvider>
-    </BrowserRouter>
+    </BrowserRouter>,
   );
 }
 
@@ -37,7 +37,7 @@ describe("Models", () => {
   it("displays a link to create a new model", () => {
     renderComponent();
     expect(
-      screen.getByRole("link", { name: "Create new model" })
+      screen.getByRole("link", { name: "Create new model" }),
     ).toBeInTheDocument();
   });
 
@@ -47,13 +47,13 @@ describe("Models", () => {
     await user.click(screen.getByRole("link", { name: "Create new model" }));
     expect(screen.getByRole("textbox", { name: "Name" })).toBeInTheDocument();
     expect(
-      screen.getByRole("textbox", { name: "API key" })
+      screen.getByRole("textbox", { name: "API key" }),
     ).toBeInTheDocument();
     expect(
-      screen.getByRole("button", { name: "Generate key" })
+      screen.getByRole("button", { name: "Generate key" }),
     ).toBeInTheDocument();
     expect(
-      screen.getByRole("button", { name: "Add model" })
+      screen.getByRole("button", { name: "Add model" }),
     ).toBeInTheDocument();
   });
 

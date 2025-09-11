@@ -36,7 +36,7 @@ function renderComponent() {
       <BrowserRouter>
         <Metrics />
       </BrowserRouter>
-    </QueryClientProvider>
+    </QueryClientProvider>,
   );
 }
 
@@ -97,7 +97,7 @@ describe("Metrics", () => {
       screen.getByRole("heading", {
         level: 1,
         name: "My snaps / test-snap-id / Metrics",
-      })
+      }),
     ).toBeInTheDocument();
   });
 
@@ -105,7 +105,7 @@ describe("Metrics", () => {
     renderComponent();
     expect(screen.getByRole("link", { name: "Metrics" })).toHaveAttribute(
       "aria-selected",
-      "true"
+      "true",
     );
   });
 
@@ -116,12 +116,12 @@ describe("Metrics", () => {
         screen.getByRole("heading", {
           level: 2,
           name: "Measure your snap's performance",
-        })
+        }),
       ).toBeInTheDocument();
       expect(
         screen.getByText(
-          "You'll be able to see active devices and territories when people start using your snap."
-        )
+          "You'll be able to see active devices and territories when people start using your snap.",
+        ),
       ).toBeInTheDocument();
     });
   });
@@ -138,12 +138,12 @@ describe("Metrics", () => {
     server.use(
       http.get("/test-snap-id/metrics/active-devices", () => {
         return HttpResponse.json(mockActiveDeviceMetrics);
-      })
+      }),
     );
     server.use(
       http.get("/test-snap-id/metrics/country-metric", () => {
         return HttpResponse.json(mockTerritoryMetrics);
-      })
+      }),
     );
     renderComponent();
     await waitFor(() => {
@@ -156,12 +156,12 @@ describe("Metrics", () => {
     server.use(
       http.get("/test-snap-id/metrics/active-devices", () => {
         return HttpResponse.json(mockActiveDeviceMetrics);
-      })
+      }),
     );
     server.use(
       http.get("/test-snap-id/metrics/country-metric", () => {
         return HttpResponse.json(mockTerritoryMetrics);
-      })
+      }),
     );
     renderComponent();
     await waitFor(() => {
@@ -173,12 +173,12 @@ describe("Metrics", () => {
     server.use(
       http.get("/test-snap-id/metrics/active-devices", () => {
         return HttpResponse.json(mockActiveDeviceMetrics);
-      })
+      }),
     );
     server.use(
       http.get("/test-snap-id/metrics/country-metric", () => {
         return HttpResponse.json(mockTerritoryMetrics);
-      })
+      }),
     );
     renderComponent();
     await waitFor(() => {

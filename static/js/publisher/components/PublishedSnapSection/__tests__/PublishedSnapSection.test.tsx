@@ -50,7 +50,7 @@ const renderComponent = (snaps: ISnap[]) => {
       <QueryClientProvider client={queryClient}>
         <PublishedSnapSection currentUser="test-user" snaps={snaps} />
       </QueryClientProvider>
-    </BrowserRouter>
+    </BrowserRouter>,
   );
 };
 

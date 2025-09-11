@@ -20,7 +20,7 @@ function renderComponent() {
       <QueryClientProvider client={queryClient}>
         <PublisherSettings />
       </QueryClientProvider>
-    </BrowserRouter>
+    </BrowserRouter>,
   );
 }
 
@@ -30,7 +30,7 @@ describe("PublisherSettings", () => {
     expect(
       screen.getByRole("link", {
         name: "test-snap-id",
-      })
+      }),
     ).toBeInTheDocument();
   });
 
@@ -38,7 +38,7 @@ describe("PublisherSettings", () => {
     renderComponent();
     expect(screen.getByRole("link", { name: "Settings" })).toHaveAttribute(
       "aria-selected",
-      "true"
+      "true",
     );
   });
 

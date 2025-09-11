@@ -39,7 +39,7 @@ function renderComponent() {
       <QueryClientProvider client={queryClient}>
         <PublisherSettingsForm settings={mockSettings} />
       </QueryClientProvider>
-    </BrowserRouter>
+    </BrowserRouter>,
   );
 }
 
@@ -48,11 +48,11 @@ describe("PublisherSettingsForm", () => {
     renderComponent();
     expect(screen.getByRole("button", { name: "Revert" })).toHaveAttribute(
       "aria-disabled",
-      "true"
+      "true",
     );
     expect(screen.getByRole("button", { name: "Save" })).toHaveAttribute(
       "aria-disabled",
-      "true"
+      "true",
     );
   });
 
@@ -76,7 +76,7 @@ describe("PublisherSettingsForm", () => {
     expect(
       screen.getByRole("link", {
         name: "Manage collaborators in dashboard.snapcraft.io",
-      })
+      }),
     ).toBeInTheDocument();
   });
 
@@ -95,17 +95,17 @@ describe("PublisherSettingsForm", () => {
     renderComponent();
     await user.click(screen.getByLabelText("Update metadata on release:"));
     expect(screen.getByRole("button", { name: "Revert" })).not.toHaveAttribute(
-      "aria-disabled"
+      "aria-disabled",
     );
     expect(screen.getByRole("button", { name: "Save" })).not.toHaveAttribute(
-      "aria-disabled"
+      "aria-disabled",
     );
   });
 
   test("'Update metadata on release' shows warning if selected", () => {
     renderComponent();
     expect(
-      screen.getByText(updateMetadataOnReleaseNotification)
+      screen.getByText(updateMetadataOnReleaseNotification),
     ).toBeInTheDocument();
   });
 
@@ -114,7 +114,7 @@ describe("PublisherSettingsForm", () => {
     renderComponent();
     await user.click(screen.getByLabelText("Update metadata on release:"));
     expect(
-      screen.queryByText(updateMetadataOnReleaseNotification)
+      screen.queryByText(updateMetadataOnReleaseNotification),
     ).not.toBeInTheDocument();
   });
 });

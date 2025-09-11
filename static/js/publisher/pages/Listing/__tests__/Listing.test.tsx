@@ -35,7 +35,7 @@ function renderComponent() {
       <BrowserRouter>
         <Listing />
       </BrowserRouter>
-    </QueryClientProvider>
+    </QueryClientProvider>,
   );
 }
 
@@ -49,7 +49,7 @@ beforeEach(() => {
   server.use(
     http.get("/api/test_id/listing", () => {
       return HttpResponse.json(testListingData);
-    })
+    }),
   );
   server.use(
     http.get("/api/test_id/verify", () => {
@@ -57,7 +57,7 @@ beforeEach(() => {
         primary_domain: true,
         token: "test-dns-verification-token",
       });
-    })
+    }),
   );
 });
 
@@ -80,11 +80,11 @@ describe("Listing", () => {
   test("heading is displayed", async () => {
     renderComponent();
     expect(
-      await screen.findByRole("link", { name: "My snaps" })
+      await screen.findByRole("link", { name: "My snaps" }),
     ).toHaveProperty("href", expect.stringMatching(/\/snaps$/));
     expect(await screen.findByRole("link", { name: "test_id" })).toHaveProperty(
       "href",
-      expect.stringMatching(/\/test_id$/)
+      expect.stringMatching(/\/test_id$/),
     );
     expect(await screen.findByText("Listing")).toBeInTheDocument();
   });
@@ -103,7 +103,7 @@ describe("Listing", () => {
         http.get("/api/test_id/listing", async () => {
           await delay(5000);
           return HttpResponse.json(testListingData);
-        })
+        }),
       );
 
       const loadingText = /Loading/;
@@ -117,7 +117,7 @@ describe("Listing", () => {
       server.use(
         http.get("/api/test_id/listing", () => {
           return HttpResponse.json({}, { status: 500 });
-        })
+        }),
       );
 
       renderComponent();

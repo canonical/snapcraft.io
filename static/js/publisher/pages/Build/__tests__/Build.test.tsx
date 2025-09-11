@@ -43,7 +43,7 @@ function renderComponent() {
       <BrowserRouter>
         <Build />
       </BrowserRouter>
-    </QueryClientProvider>
+    </QueryClientProvider>,
   );
 }
 
@@ -60,7 +60,7 @@ describe("Build", () => {
     renderComponent();
 
     expect(
-      screen.getByText(/Loading test-snap-id build data/)
+      screen.getByText(/Loading test-snap-id build data/),
     ).toBeInTheDocument();
   });
 
@@ -76,7 +76,7 @@ describe("Build", () => {
     renderComponent();
 
     expect(
-      screen.getByRole("gridcell", { name: "test-build-id" })
+      screen.getByRole("gridcell", { name: "test-build-id" }),
     ).toBeInTheDocument();
   });
 
@@ -106,7 +106,7 @@ describe("Build", () => {
     renderComponent();
 
     expect(
-      screen.getByRole("gridcell", { name: "14 minutes 47 seconds" })
+      screen.getByRole("gridcell", { name: "14 minutes 47 seconds" }),
     ).toBeInTheDocument();
   });
 
@@ -122,7 +122,7 @@ describe("Build", () => {
     renderComponent();
 
     expect(
-      screen.getByRole("gridcell", { name: "Released" })
+      screen.getByRole("gridcell", { name: "Released" }),
     ).toBeInTheDocument();
   });
 

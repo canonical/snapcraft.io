@@ -22,7 +22,7 @@ function renderComponent() {
           setClaimSubmitted={vi.fn()}
         />
       </JotaiTestProvider>
-    </BrowserRouter>
+    </BrowserRouter>,
   );
 }
 
@@ -56,7 +56,7 @@ describe("RegisterNameDisputeForm", () => {
   test("CTA button is disabled by default", () => {
     renderComponent();
     expect(
-      screen.getByRole("button", { name: "Submit name claim" })
+      screen.getByRole("button", { name: "Submit name claim" }),
     ).toHaveAttribute("aria-disabled", "true");
   });
 
@@ -68,7 +68,7 @@ describe("RegisterNameDisputeForm", () => {
     await user.type(screen.getByLabelText("Comment"), "This is a test comment");
 
     expect(
-      screen.getByRole("button", { name: "Submit name claim" })
+      screen.getByRole("button", { name: "Submit name claim" }),
     ).not.toHaveAttribute("aria-disabled");
   });
 });

@@ -33,7 +33,7 @@ const renderComponent = () => {
       <QueryClientProvider client={queryClient}>
         <Model />
       </QueryClientProvider>
-    </BrowserRouter>
+    </BrowserRouter>,
   );
 };
 
@@ -70,7 +70,7 @@ describe("Model", () => {
     renderComponent();
     expect(screen.getByRole("button", { name: "Save" })).toHaveAttribute(
       "aria-disabled",
-      "true"
+      "true",
     );
   });
 
@@ -88,7 +88,7 @@ describe("Model", () => {
     const apiKeyField: HTMLInputElement = screen.getByLabelText("API key");
     const apiKeyFieldValue = apiKeyField.value;
     expect(apiKeyFieldValue).not.toEqual(
-      "K2NjWGA4iKhLmGDDQUJhJyhzS35CBLJClyNu8dAS0TWrTF3aSD"
+      "K2NjWGA4iKhLmGDDQUJhJyhzS35CBLJClyNu8dAS0TWrTF3aSD",
     );
   });
 
@@ -96,7 +96,7 @@ describe("Model", () => {
     renderComponent();
     expect(screen.getByRole("button", { name: "Revert" })).toHaveAttribute(
       "aria-disabled",
-      "true"
+      "true",
     );
   });
 
@@ -112,11 +112,11 @@ describe("Model", () => {
     const user = userEvent.setup();
     await user.click(screen.getByRole("button", { name: "Generate key" }));
     expect(screen.getByLabelText("API key")).not.toHaveValue(
-      "K2NjWGA4iKhLmGDDQUJhJyhzS35CBLJClyNu8dAS0TWrTF3aSD"
+      "K2NjWGA4iKhLmGDDQUJhJyhzS35CBLJClyNu8dAS0TWrTF3aSD",
     );
     await user.click(screen.getByRole("button", { name: "Revert" }));
     expect(screen.getByLabelText("API key")).toHaveValue(
-      "K2NjWGA4iKhLmGDDQUJhJyhzS35CBLJClyNu8dAS0TWrTF3aSD"
+      "K2NjWGA4iKhLmGDDQUJhJyhzS35CBLJClyNu8dAS0TWrTF3aSD",
     );
   });
 });

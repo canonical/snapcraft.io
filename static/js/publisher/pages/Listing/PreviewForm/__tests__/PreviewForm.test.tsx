@@ -30,7 +30,7 @@ function renderComponent() {
       <BrowserRouter>
         <Listing />
       </BrowserRouter>
-    </QueryClientProvider>
+    </QueryClientProvider>,
   );
 }
 
@@ -53,7 +53,7 @@ beforeEach(() => {
         primary_domain: true,
         token: "test-dns-verification-token",
       });
-    })
+    }),
   );
 });
 
@@ -105,7 +105,7 @@ describe("PreviewForm", () => {
     const user = userEvent.setup();
     renderComponent();
     const stateInput = (await screen.findByTestId(
-      "state-input"
+      "state-input",
     )) as HTMLInputElement;
 
     const title = screen.getByLabelText(/Title/);

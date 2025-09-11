@@ -10,7 +10,7 @@ function renderComponent() {
   render(
     <BrowserRouter>
       <EmptyResultSection searchTerm={testSearchQuery} isFetching={false} />
-    </BrowserRouter>
+    </BrowserRouter>,
   );
 }
 
@@ -25,7 +25,7 @@ describe("EmptyResultSection", () => {
     expect(
       screen.getByRole("heading", {
         name: `Search results for "${testSearchQuery}"`,
-      })
+      }),
     ).toBeInTheDocument();
   });
 
@@ -39,7 +39,7 @@ describe("EmptyResultSection", () => {
     expect(
       screen.getByRole("link", {
         name: "Explore featured snaps",
-      })
+      }),
     ).toBeInTheDocument();
   });
 
@@ -48,7 +48,7 @@ describe("EmptyResultSection", () => {
     expect(
       screen.getByRole("link", {
         name: "Contact us",
-      })
+      }),
     ).toBeInTheDocument();
   });
 });

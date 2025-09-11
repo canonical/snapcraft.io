@@ -26,7 +26,7 @@ const renderComponent = () => {
       <QueryClientProvider client={queryClient}>
         <BrandStoreSettings />
       </QueryClientProvider>
-    </BrowserRouter>
+    </BrowserRouter>,
   );
 };
 
@@ -57,7 +57,7 @@ describe("BrandStoreSettings", () => {
     renderComponent();
 
     expect(
-      screen.getByLabelText("Include this store in public lists")
+      screen.getByLabelText("Include this store in public lists"),
     ).toBeChecked();
   });
 
@@ -73,7 +73,7 @@ describe("BrandStoreSettings", () => {
     renderComponent();
 
     expect(
-      screen.getByLabelText("Include this store in public lists")
+      screen.getByLabelText("Include this store in public lists"),
     ).not.toBeChecked();
   });
 
@@ -88,7 +88,7 @@ describe("BrandStoreSettings", () => {
 
     expect(screen.getByLabelText("Store ID")).toHaveAttribute(
       "type",
-      "password"
+      "password",
     );
   });
 

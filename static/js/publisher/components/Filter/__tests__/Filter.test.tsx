@@ -36,7 +36,7 @@ const renderComponent = (filterQuery?: string) => {
           />
         </JotaiTestProvider>
       </BrowserRouter>
-    </QueryClientProvider>
+    </QueryClientProvider>,
   );
 };
 

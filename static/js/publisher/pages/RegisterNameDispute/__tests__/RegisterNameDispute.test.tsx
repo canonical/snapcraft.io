@@ -35,7 +35,7 @@ function renderComponent() {
       <QueryClientProvider client={queryClient}>
         <RegisterNameDispute />
       </QueryClientProvider>
-    </BrowserRouter>
+    </BrowserRouter>,
   );
 }
 
@@ -59,14 +59,14 @@ describe("RegisterNameDispute", () => {
   test("'Register a new name' link is on page", () => {
     renderComponent();
     expect(
-      screen.getByRole("link", { name: "Register a new name" })
+      screen.getByRole("link", { name: "Register a new name" }),
     ).toHaveAttribute("href", "/register-snap");
   });
 
   test("'Submit name claim' button is disabled", () => {
     renderComponent();
     expect(
-      screen.getByRole("button", { name: "Submit name claim" })
+      screen.getByRole("button", { name: "Submit name claim" }),
     ).toHaveAttribute("aria-disabled", "true");
   });
 
@@ -75,7 +75,7 @@ describe("RegisterNameDispute", () => {
     renderComponent();
     await user.type(screen.getByLabelText("Comment"), "Test comment");
     expect(
-      screen.getByRole("button", { name: "Submit name claim" })
+      screen.getByRole("button", { name: "Submit name claim" }),
     ).not.toHaveAttribute("aria-disabled");
   });
 });

@@ -12,7 +12,7 @@ function renderComponent(isDisabled?: boolean) {
   render(
     <BrowserRouter>
       <PackageFilter data={testPackageData} disabled={isDisabled || false} />
-    </BrowserRouter>
+    </BrowserRouter>,
   );
 }
 

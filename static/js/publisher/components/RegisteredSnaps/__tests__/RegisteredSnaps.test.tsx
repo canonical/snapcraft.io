@@ -55,7 +55,7 @@ const renderComponent = (snaps: ISnap[]) => {
           refetchSnaps={vi.fn()}
         />
       </QueryClientProvider>
-    </BrowserRouter>
+    </BrowserRouter>,
   );
 };
 

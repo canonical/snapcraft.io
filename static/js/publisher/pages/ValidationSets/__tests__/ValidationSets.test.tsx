@@ -13,7 +13,7 @@ const renderComponent = () => {
       <BrowserRouter>
         <ValidationSets />
       </BrowserRouter>
-    </QueryClientProvider>
+    </QueryClientProvider>,
   );
 };
 
@@ -71,7 +71,7 @@ describe("ValidationSets", () => {
     useSearchParams.mockReturnValue([new URLSearchParams()]);
     renderComponent();
     expect(
-      screen.getByText(/There are no validation sets to display/)
+      screen.getByText(/There are no validation sets to display/),
     ).toBeInTheDocument();
   });
 
@@ -82,7 +82,7 @@ describe("ValidationSets", () => {
     useSearchParams.mockReturnValue([new URLSearchParams()]);
     renderComponent();
     expect(
-      screen.getByText(/Unable to load validation sets/)
+      screen.getByText(/Unable to load validation sets/),
     ).toBeInTheDocument();
   });
 
@@ -104,7 +104,7 @@ describe("ValidationSets", () => {
     renderComponent();
     expect(screen.getByText(mockValidationSets[1].name)).toBeInTheDocument();
     expect(
-      screen.queryByText(mockValidationSets[0].name)
+      screen.queryByText(mockValidationSets[0].name),
     ).not.toBeInTheDocument();
   });
 });

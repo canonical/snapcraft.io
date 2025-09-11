@@ -19,7 +19,7 @@ const renderComponent = (isEmpty: boolean) => {
       <BrowserRouter>
         <ActiveDeviceMetrics isEmpty={isEmpty} onDataLoad={vi.fn()} />
       </BrowserRouter>
-    </QueryClientProvider>
+    </QueryClientProvider>,
   );
 };
 
@@ -111,7 +111,7 @@ describe("ActiveDeviceMetrics", () => {
 
     await waitFor(() => {
       expect(
-        screen.getByText("An error occurred. Please try again.")
+        screen.getByText("An error occurred. Please try again."),
       ).toBeInTheDocument();
     });
   });

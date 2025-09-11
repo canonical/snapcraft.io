@@ -32,7 +32,7 @@ function renderComponent() {
           <Snaps />
         </JotaiTestProvider>
       </BrowserRouter>
-    </QueryClientProvider>
+    </QueryClientProvider>,
   );
 }
 
@@ -63,7 +63,7 @@ describe("Snaps", () => {
         screen.getByRole("heading", {
           level: 1,
           name: "Test store / Store snaps",
-        })
+        }),
       ).toBeInTheDocument();
     });
   });
@@ -73,7 +73,7 @@ describe("Snaps", () => {
 
     await waitFor(() => {
       expect(
-        screen.getByRole("gridcell", { name: "test-snap-name" })
+        screen.getByRole("gridcell", { name: "test-snap-name" }),
       ).toBeInTheDocument();
     });
   });
@@ -83,7 +83,7 @@ describe("Snaps", () => {
 
     await waitFor(() => {
       expect(
-        screen.getByLabelText("test-snap-name-included")
+        screen.getByLabelText("test-snap-name-included"),
       ).toBeInTheDocument();
     });
   });
@@ -99,10 +99,10 @@ describe("Snaps", () => {
 
     await waitFor(() => {
       expect(
-        screen.getByRole("gridcell", { name: "test-snap-name-2" })
+        screen.getByRole("gridcell", { name: "test-snap-name-2" }),
       ).toBeInTheDocument();
       expect(
-        screen.queryByRole("gridcell", { name: "test-snap-name" })
+        screen.queryByRole("gridcell", { name: "test-snap-name" }),
       ).not.toBeInTheDocument();
     });
   });

@@ -22,7 +22,7 @@ function renderComponent() {
       <BrowserRouter>
         <Builds />
       </BrowserRouter>
-    </QueryClientProvider>
+    </QueryClientProvider>,
   );
 }
 
@@ -45,14 +45,14 @@ describe("Build", () => {
     server.use(
       http.get("/api/test-snap-id/repo", () => {
         return HttpResponse.json({ data: null });
-      })
+      }),
     );
 
     renderComponent();
 
     await waitFor(() => {
       expect(
-        screen.getByText(/Login to your GitHub account to start building/)
+        screen.getByText(/Login to your GitHub account to start building/),
       ).toBeInTheDocument();
     });
   });
@@ -78,14 +78,14 @@ describe("Build", () => {
             },
           },
         });
-      })
+      }),
     );
 
     renderComponent();
 
     await waitFor(() => {
       expect(
-        screen.getByText(/Your GitHub account is connected/)
+        screen.getByText(/Your GitHub account is connected/),
       ).toBeInTheDocument();
     });
   });
