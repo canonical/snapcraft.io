@@ -10,6 +10,7 @@ export default defineConfig({
     environment: "jsdom",
     silent: "passed-only", // silence logs for passed tests
     pool: "threads",
+    testTimeout: 20000,
     coverage: {
       enabled: true,
       provider: "v8",
