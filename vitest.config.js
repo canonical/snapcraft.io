@@ -5,10 +5,10 @@ export default defineConfig({
   css: false,
   plugins: [jsxInJsPlugin()],
   test: {
-    dir: "static/js",
-    globals: true,
-    environment: "happy-dom",
-    silent: "passed-only",
+    dir: "static/js", // base directory for tests
+    globals: true, // inject global `vi` object in tests so we don't have to import it
+    environment: "jsdom",
+    silent: "passed-only", // silence logs for passed tests
     pool: "threads",
     coverage: {
       enabled: true,

@@ -107,7 +107,6 @@
     "eslint-plugin-jsx-a11y": "^6.9.0",
     "eslint-plugin-prettier": "5.2.1",
     "eslint-plugin-react": "7.37.3",
-    "happy-dom": "^18.0.1",
     "msw": "2.7.0",
     "stylelint": "16.12.0",
     "stylelint-config-standard-scss": "14.0.0",
@@ -119,6 +118,6 @@
     "eslint/**/minimatch": "3.1.2",
     "eslint-*/minimatch": "3.1.2",
     "@typescript-eslint/**/minimatch": "9.0.5",
-    "ts-jest/ejs/jake/filelist/minimatch": "5.1.6"
+    "@vitest/coverage-v8/**/minimatch": "9.0.5"
   }
 }
