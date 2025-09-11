@@ -36,8 +36,8 @@ function Builds(): React.JSX.Element {
 
       const githubData = responseData.data;
 
-      setLoggedIn(githubData.github_user !== null);
-      setRepoConnected(githubData.github_repository !== null);
+      setLoggedIn(githubData && githubData.github_user !== null);
+      setRepoConnected(githubData && githubData.github_repository !== null);
       setGithubData(responseData.data);
 
       return responseData.data;

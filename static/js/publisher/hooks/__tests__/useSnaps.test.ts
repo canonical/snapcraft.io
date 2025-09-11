@@ -5,7 +5,7 @@ import { useSnaps } from "../index";
 
 describe("useSnaps", () => {
   test("Calls useQuery", () => {
-    jest.spyOn(ReactQuery, "useQuery").mockImplementation(jest.fn());
+    vi.spyOn(ReactQuery, "useQuery").mockImplementation(vi.fn());
     renderHook(() => useSnaps("brandId"));
     expect(ReactQuery.useQuery).toHaveBeenCalled();
   });

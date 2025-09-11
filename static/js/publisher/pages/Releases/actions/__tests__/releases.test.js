@@ -232,7 +232,7 @@ describe("releases actions", () => {
         },
       });
 
-      global.fetch = jest
+      global.fetch = vi
         .fn()
         .mockResolvedValue({ json: () => ({ sucess: true }) });
 
@@ -273,7 +273,7 @@ describe("releases actions", () => {
         },
       });
 
-      global.fetch = jest
+      global.fetch = vi
         .fn()
         .mockResolvedValue({ json: () => ({ sucess: true }) });
 
@@ -339,7 +339,7 @@ describe("releases actions", () => {
         architectures: [],
       });
 
-      global.fetch = jest
+      global.fetch = vi
         .fn()
         // fetchReleases API Response
         .mockResolvedValueOnce({
@@ -457,7 +457,7 @@ describe("releases actions", () => {
         pendingReleases: {},
       });
 
-      global.fetch = jest
+      global.fetch = vi
         .fn()
         // fetchReleases API Response
         .mockResolvedValueOnce({
@@ -514,7 +514,7 @@ describe("releases actions", () => {
         },
         architectures: [],
       });
-      global.fetch = jest
+      global.fetch = vi
         .fn()
         // fetchReleases API Response
         .mockResolvedValueOnce({

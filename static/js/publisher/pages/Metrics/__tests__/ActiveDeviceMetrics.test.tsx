@@ -11,26 +11,26 @@ import ActiveDeviceMetrics from "../ActiveDeviceMetrics";
 const queryClient = new QueryClient();
 
 const renderComponent = (isEmpty: boolean) => {
-  const mock = jest.spyOn(MetricsRenderMethods, "renderActiveDevicesMetrics");
-  mock.mockImplementation(jest.fn());
+  const mock = vi.spyOn(MetricsRenderMethods, "renderActiveDevicesMetrics");
+  mock.mockImplementation(vi.fn());
 
   return render(
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
-        <ActiveDeviceMetrics isEmpty={isEmpty} onDataLoad={jest.fn()} />
+        <ActiveDeviceMetrics isEmpty={isEmpty} onDataLoad={vi.fn()} />
       </BrowserRouter>
     </QueryClientProvider>,
   );
 };
 
-jest.mock("react-query", () => ({
-  ...jest.requireActual("react-query"),
-  useQuery: jest.fn(),
+vi.mock("react-query", async () => ({
+  ...(await vi.importActual("react-query")),
+  useQuery: vi.fn(),
 }));
 
-jest.mock("react-router-dom", () => ({
-  ...jest.requireActual("react-router-dom"),
-  useSearchParams: jest.fn(),
+vi.mock("react-router-dom", async () => ({
+  ...(await vi.importActual("react-router-dom")),
+  useSearchParams: vi.fn(),
 }));
 
 describe("ActiveDeviceMetrics", () => {

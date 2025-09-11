@@ -5,7 +5,7 @@ import { useBrandStores } from "../index";
 
 describe("useBrandStores", () => {
   test("Calls useQuery", () => {
-    jest.spyOn(ReactQuery, "useQuery").mockImplementation(jest.fn());
+    vi.spyOn(ReactQuery, "useQuery").mockImplementation(vi.fn());
     renderHook(() => useBrandStores());
     expect(ReactQuery.useQuery).toHaveBeenCalled();
   });

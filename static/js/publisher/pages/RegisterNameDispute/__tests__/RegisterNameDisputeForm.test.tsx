@@ -19,16 +19,16 @@ function renderComponent() {
         <RegisterNameDisputeForm
           snapName={testSnapName}
           store={testStoreName}
-          setClaimSubmitted={jest.fn()}
+          setClaimSubmitted={vi.fn()}
         />
       </JotaiTestProvider>
     </BrowserRouter>,
   );
 }
 
-jest.mock("react-router-dom", () => {
+vi.mock("react-router-dom", async () => {
   return {
-    ...jest.requireActual("react-router-dom"),
+    ...(await vi.importActual("react-router-dom")),
     useSearchParams: () => [
       new URLSearchParams({
         snap_name: testSnapName,

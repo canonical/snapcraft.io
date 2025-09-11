@@ -20,8 +20,8 @@ const renderComponent = () => {
     <BrowserRouter>
       <QueryClientProvider client={queryClient}>
         <PoliciesTable
-          setShowDeletePolicyNotification={jest.fn()}
-          setShowDeletePolicyErrorNotification={jest.fn()}
+          setShowDeletePolicyNotification={vi.fn()}
+          setShowDeletePolicyErrorNotification={vi.fn()}
         />
       </QueryClientProvider>
     </BrowserRouter>,

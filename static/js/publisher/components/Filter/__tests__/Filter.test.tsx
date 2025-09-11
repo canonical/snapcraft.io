@@ -17,9 +17,9 @@ const queryClient = new QueryClient();
 
 const mockFilterQuery = { filter: "" };
 
-jest.mock("react-router-dom", () => ({
-  ...jest.requireActual("react-router-dom"),
-  useSearchParams: () => [new URLSearchParams(mockFilterQuery), jest.fn()],
+vi.mock("react-router-dom", async () => ({
+  ...(await vi.importActual("react-router-dom")),
+  useSearchParams: () => [new URLSearchParams(mockFilterQuery), vi.fn()],
 }));
 
 const renderComponent = (filterQuery?: string) => {

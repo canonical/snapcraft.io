@@ -50,13 +50,13 @@ const renderComponent = (snaps: ISnap[]) => {
       <QueryClientProvider client={queryClient}>
         <PublishedSnapSection currentUser="test-user" snaps={snaps} />
       </QueryClientProvider>
-    </BrowserRouter>,
+    </BrowserRouter>
   );
 };
 
-jest.mock("react-query", () => ({
-  ...jest.requireActual("react-query"),
-  useQuery: jest.fn(),
+vi.mock("react-query", async () => ({
+  ...(await vi.importActual("react-query")),
+  useQuery: vi.fn(),
 }));
 
 const generateSnaps = () => {

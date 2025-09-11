@@ -5,7 +5,7 @@ import { usePublisher } from "../index";
 
 describe("usePublisher", () => {
   test("Calls useQuery", () => {
-    jest.spyOn(ReactQuery, "useQuery").mockImplementation(jest.fn());
+    vi.spyOn(ReactQuery, "useQuery").mockImplementation(vi.fn());
     renderHook(() => usePublisher());
     expect(ReactQuery.useQuery).toHaveBeenCalled();
   });

@@ -24,9 +24,9 @@ const mockPubliciseData = {
   trending: false,
 };
 
-jest.mock("react-query", () => ({
-  ...jest.requireActual("react-query"),
-  useQuery: jest.fn(),
+vi.mock("react-query", async () => ({
+  ...(await vi.importActual("react-query")),
+  useQuery: vi.fn(),
 }));
 
 beforeEach(() => {

@@ -14,7 +14,7 @@ const mockMember: Member = {
   current_user: false,
 };
 
-const mockHandleRoleChange = jest.fn();
+const mockHandleRoleChange = vi.fn();
 
 function renderComponent(
   member = mockMember,
@@ -32,7 +32,7 @@ function renderComponent(
 
 describe("MemberRoleCheckbox", () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   test("renders checkbox with correct label", () => {

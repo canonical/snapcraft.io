@@ -52,11 +52,10 @@ const renderComponent = (snaps: ISnap[]) => {
         <RegisteredSnaps
           currentUser="test-user"
           snaps={snaps}
-          refetchSnaps={jest.fn()}
+          refetchSnaps={vi.fn()}
         />
-        ,
       </QueryClientProvider>
-    </BrowserRouter>,
+    </BrowserRouter>
   );
 };
 

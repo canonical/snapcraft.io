@@ -8,16 +8,16 @@ import BrandStoreSettings from "../BrandStoreSettings";
 
 const queryClient = new QueryClient();
 
-jest.mock("react-router-dom", () => ({
-  ...jest.requireActual("react-router-dom"),
+vi.mock("react-router-dom", async () => ({
+  ...(await vi.importActual("react-router-dom")),
   useParams: () => ({
     id: "store-id",
   }),
 }));
 
-jest.mock("react-query", () => ({
-  ...jest.requireActual("react-query"),
-  useQuery: jest.fn(),
+vi.mock("react-query", async () => ({
+  ...(await vi.importActual("react-query")),
+  useQuery: vi.fn(),
 }));
 
 const renderComponent = () => {

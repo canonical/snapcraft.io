@@ -11,9 +11,9 @@ import { mockListingData } from "../../../../test-utils";
 
 import type { ListingData } from "../../../../types";
 
-jest.mock("react-query", () => ({
-  ...jest.requireActual("react-query"),
-  useQuery: jest.fn(),
+vi.mock("react-query", async () => ({
+  ...(await vi.importActual("react-query")),
+  useQuery: vi.fn(),
 }));
 
 const mockUseQueryReturnValue = {
@@ -22,18 +22,18 @@ const mockUseQueryReturnValue = {
   status: "success",
 };
 
-jest.mock("react-hook-form", () => ({
-  ...jest.requireActual("react-hook-form"),
-  useForm: jest.fn(),
+vi.mock("react-hook-form", async () => ({
+  ...(await vi.importActual("react-hook-form")),
+  useForm: vi.fn(),
 }));
 
 const mockUseFormReturnValue = {
-  register: jest.fn(),
-  getFieldState: jest.fn().mockReturnValue({
+  register: vi.fn(),
+  getFieldState: vi.fn().mockReturnValue({
     invalid: false,
     isDirty: false,
   }),
-  getValues: jest.fn().mockReturnValue("https://example.com"),
+  getValues: vi.fn().mockReturnValue("https://example.com"),
 };
 
 const renderComponent = (
@@ -83,12 +83,12 @@ describe("PrimaryDomainInput", () => {
     // @ts-expect-error mocks
     useQuery.mockImplementation(() => mockUseQueryReturnValue);
 
-    mockUseFormReturnValue.getFieldState = jest.fn().mockReturnValue({
+    mockUseFormReturnValue.getFieldState = vi.fn().mockReturnValue({
       invalid: false,
       isDirty: true,
     });
 
-    mockUseFormReturnValue.getValues = jest
+    mockUseFormReturnValue.getValues = vi
       .fn()
       .mockReturnValue("https://example.comabc");
     // @ts-expect-error mocks
@@ -112,12 +112,12 @@ describe("PrimaryDomainInput", () => {
     // @ts-expect-error mocks
     useQuery.mockImplementation(() => mockUseQueryReturnValue);
 
-    mockUseFormReturnValue.getFieldState = jest.fn().mockReturnValue({
+    mockUseFormReturnValue.getFieldState = vi.fn().mockReturnValue({
       invalid: false,
       isDirty: true,
     });
 
-    mockUseFormReturnValue.getValues = jest
+    mockUseFormReturnValue.getValues = vi
       .fn()
       .mockReturnValue("https://example.com");
 
@@ -140,7 +140,7 @@ describe("PrimaryDomainInput", () => {
     // @ts-expect-error mocks
     useQuery.mockImplementation(() => mockUseQueryReturnValue);
 
-    mockUseFormReturnValue.getValues = jest
+    mockUseFormReturnValue.getValues = vi
       .fn()
       .mockReturnValue("https://launchpad.net/path");
 
@@ -164,7 +164,7 @@ describe("PrimaryDomainInput", () => {
     // @ts-expect-error mocks
     useQuery.mockImplementation(() => mockUseQueryReturnValue);
 
-    mockUseFormReturnValue.getFieldState = jest.fn().mockReturnValue({
+    mockUseFormReturnValue.getFieldState = vi.fn().mockReturnValue({
       invalid: false,
       isDirty: false,
     });
@@ -211,7 +211,7 @@ describe("PrimaryDomainInput", () => {
     // @ts-expect-error mocks
     useQuery.mockImplementation(() => mockUseQueryReturnValue);
 
-    mockUseFormReturnValue.getFieldState = jest.fn().mockReturnValue({
+    mockUseFormReturnValue.getFieldState = vi.fn().mockReturnValue({
       invalid: false,
       isDirty: false,
     });
@@ -238,7 +238,7 @@ describe("PrimaryDomainInput", () => {
     // @ts-expect-error mocks
     useQuery.mockImplementation(() => mockUseQueryReturnValue);
 
-    mockUseFormReturnValue.getFieldState = jest.fn().mockReturnValue({
+    mockUseFormReturnValue.getFieldState = vi.fn().mockReturnValue({
       invalid: false,
       isDirty: true,
     });

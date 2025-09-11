@@ -3,18 +3,19 @@ import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import "@testing-library/jest-dom";
 import { UnregisterSnapModal } from "../UnregisterSnapModal";
+import type { Mock } from "vitest";
 
 // Mock the global fetch function
-global.fetch = jest.fn(() =>
+global.fetch = vi.fn(() =>
   Promise.resolve({
     ok: true,
     json: () => Promise.resolve({}),
   }),
-) as jest.Mock;
+) as Mock;
 
-const mockSetUnregisterModalOpen = jest.fn();
-const mockSetUnregisterError = jest.fn();
-const mockSetUnregisterErrorMessage = jest.fn();
+const mockSetUnregisterModalOpen = vi.fn();
+const mockSetUnregisterError = vi.fn();
+const mockSetUnregisterErrorMessage = vi.fn();
 
 const defaultProps = {
   snapName: "test-snap",
@@ -25,7 +26,7 @@ const defaultProps = {
 
 describe("UnregisterSnapModal", () => {
   beforeEach(() => {
-    (global.fetch as jest.Mock).mockClear();
+    (global.fetch as Mock).mockClear();
     mockSetUnregisterModalOpen.mockClear();
     mockSetUnregisterError.mockClear();
     mockSetUnregisterErrorMessage.mockClear();
@@ -76,7 +77,7 @@ describe("UnregisterSnapModal", () => {
 
   test("handles errors correctly", async () => {
     const user = userEvent.setup();
-    (global.fetch as jest.Mock).mockImplementationOnce(() =>
+    (global.fetch as Mock).mockImplementationOnce(() =>
       Promise.resolve({
         ok: false,
         json: () => Promise.resolve({ error: "Some error occurred" }),
@@ -95,8 +96,8 @@ describe("UnregisterSnapModal", () => {
 
   test("logs error to console if fetch throws", async () => {
     const user = userEvent.setup();
-    console.error = jest.fn();
-    (global.fetch as jest.Mock).mockImplementationOnce(() =>
+    console.error = vi.fn();
+    (global.fetch as Mock).mockImplementationOnce(() =>
       Promise.reject("Fetch error"),
     );
     render(<UnregisterSnapModal {...defaultProps} />);

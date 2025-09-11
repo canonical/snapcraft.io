@@ -7,7 +7,7 @@ import { triggerGAEvent } from "../gaEventTracking";
 
 describe("triggerGAEvent", () => {
   beforeEach(() => {
-    global.dataLayer = { push: jest.fn() };
+    global.dataLayer = { push: vi.fn() };
   });
 
   afterEach(() => {

@@ -72,14 +72,14 @@ const mockValidationSet = [
   },
 ];
 
-jest.mock("react-query", () => ({
-  ...jest.requireActual("react-query"),
-  useQuery: jest.fn(),
+vi.mock("react-query", async () => ({
+  ...(await vi.importActual("react-query")),
+  useQuery: vi.fn(),
 }));
 
-jest.mock("react-router-dom", () => ({
-  ...jest.requireActual("react-router-dom"),
-  useSearchParams: jest.fn(),
+vi.mock("react-router-dom", async () => ({
+  ...(await vi.importActual("react-router-dom")),
+  useSearchParams: vi.fn(),
 }));
 
 describe("ValidationSet", () => {

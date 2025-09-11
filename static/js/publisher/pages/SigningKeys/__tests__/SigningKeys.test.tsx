@@ -9,9 +9,9 @@ import SigningKeys from "../SigningKeys";
 
 const mockFilterQuery = "signing key-1";
 
-jest.mock("react-router-dom", () => {
+vi.mock("react-router-dom", async () => {
   return {
-    ...jest.requireActual("react-router-dom"),
+    ...(await vi.importActual("react-router-dom")),
     useSearchParams: () => [new URLSearchParams({ filter: mockFilterQuery })],
   };
 });

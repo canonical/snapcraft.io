@@ -16,9 +16,9 @@ const queryClient = new QueryClient({
   },
 });
 
-jest.mock("react-query", () => ({
-  ...jest.requireActual("react-query"),
-  useQuery: jest.fn(),
+vi.mock("react-query", async () => ({
+  ...(await vi.importActual("react-query")),
+  useQuery: vi.fn(),
 }));
 
 const renderComponent = () => {
@@ -26,9 +26,9 @@ const renderComponent = () => {
     <BrowserRouter>
       <QueryClientProvider client={queryClient}>
         <CreatePolicyForm
-          setShowErrorNotification={jest.fn()}
-          setShowNotification={jest.fn()}
-          refetchPolicies={jest.fn()}
+          setShowErrorNotification={vi.fn()}
+          setShowNotification={vi.fn()}
+          refetchPolicies={vi.fn()}
         />
       </QueryClientProvider>
     </BrowserRouter>,

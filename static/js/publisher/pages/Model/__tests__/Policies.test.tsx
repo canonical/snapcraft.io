@@ -9,16 +9,16 @@ import Policies from "../Policies";
 
 const mockFilterQuery = "1.7";
 
-jest.mock("react-router-dom", () => {
+vi.mock("react-router-dom", async () => {
   return {
-    ...jest.requireActual("react-router-dom"),
+    ...(await vi.importActual("react-router-dom")),
     useSearchParams: () => [new URLSearchParams({ filter: mockFilterQuery })],
   };
 });
 
-jest.mock("react-redux", () => ({
-  ...jest.requireActual("react-redux"),
-  useSelector: jest.fn().mockReturnValue([
+vi.mock("react-redux", async () => ({
+  ...(await vi.importActual("react-redux")),
+  useSelector: vi.fn().mockReturnValue([
     { id: "test-id", name: "Test store", roles: ["admin"] },
     {
       id: "non-admin-store",

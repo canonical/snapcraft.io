@@ -14,9 +14,9 @@ const testListingData = {
   data: mockListingData,
 };
 
-jest.mock("react-router-dom", () => {
+vi.mock("react-router-dom", async () => {
   return {
-    ...jest.requireActual("react-router-dom"),
+    ...(await vi.importActual("react-router-dom")),
     useParams: () => ({
       snapId: "test_id",
     }),

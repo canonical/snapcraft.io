@@ -15,14 +15,14 @@ import Metrics from "../Metrics";
 
 Object.defineProperty(global.SVGElement.prototype, "getBBox", {
   writable: true,
-  value: jest.fn().mockReturnValue({
+  value: vi.fn().mockReturnValue({
     x: 0,
     y: 0,
   }),
 });
 
-jest.mock("react-router-dom", () => ({
-  ...jest.requireActual("react-router-dom"),
+vi.mock("react-router-dom", async () => ({
+  ...(await vi.importActual("react-router-dom")),
   useParams: () => ({
     snapId: "test-snap-id",
   }),

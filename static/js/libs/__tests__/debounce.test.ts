@@ -1,7 +1,8 @@
 import debounce from "../debounce";
+import type { Mock } from "vitest";
 
-jest.useFakeTimers();
-const fn: jest.Mock = jest.fn();
+vi.useFakeTimers();
+const fn: Mock = vi.fn();
 
 describe("debounce", () => {
   test("function is only called once", () => {
@@ -11,7 +12,7 @@ describe("debounce", () => {
       debouncedFn();
     }
 
-    jest.runAllTimers();
+    vi.runAllTimers();
 
     expect(fn).toHaveBeenCalledTimes(1);
   });
@@ -23,7 +24,7 @@ describe("debounce", () => {
       debouncedFn();
     }
 
-    jest.runAllTimers();
+    vi.runAllTimers();
 
     expect(fn).toHaveBeenCalledTimes(2);
   });

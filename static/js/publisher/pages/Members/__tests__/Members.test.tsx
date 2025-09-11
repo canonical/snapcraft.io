@@ -14,8 +14,8 @@ import { brandStoresState } from "../../../state/brandStoreState";
 
 import Members from "../Members";
 
-jest.mock("react-router-dom", () => ({
-  ...jest.requireActual("react-router-dom"),
+vi.mock("react-router-dom", async () => ({
+  ...(await vi.importActual("react-router-dom")),
   useParams: () => ({
     id: "test-store-id",
   }),

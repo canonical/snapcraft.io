@@ -10,7 +10,7 @@ import LicenseSearch from "../LicenseSearch";
 import { FieldValues, useForm } from "react-hook-form";
 import { getDefaultListingData } from "../../../../utils";
 
-jest.mock("../LicenseSearch");
+vi.mock("../LicenseSearch");
 
 function TestLicenseInputs() {
   const { register, setValue, watch } = useForm<FieldValues>({
@@ -51,7 +51,7 @@ beforeEach(() => {
 });
 
 afterEach(() => {
-  jest.clearAllMocks();
+  vi.clearAllMocks();
   server.resetHandlers();
 });
 

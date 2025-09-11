@@ -8,14 +8,14 @@ button.classList.add("test-button");
 
 describe("Events", () => {
   test("adds an event listener", () => {
-    const testEvent = jest.fn();
+    const testEvent = vi.fn();
     events.addEvent("click", button, testEvent);
     button.click();
     expect(testEvent).toHaveBeenCalled();
   });
 
   test("adds events by type", () => {
-    const testEvent = jest.fn();
+    const testEvent = vi.fn();
     events.addEvents({
       click: {
         "[class=test-button]": (event: { preventDefault: () => void }) => {

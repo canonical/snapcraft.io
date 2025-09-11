@@ -16,10 +16,10 @@ const renderComponent = (options: Options) => {
   return render(
     <SaveStateNotifications
       hasSaved={options.hasSaved || false}
-      setHasSaved={options.setHasSaved || jest.fn()}
+      setHasSaved={options.setHasSaved || vi.fn()}
       savedError={options.savedError || false}
       // @ts-expect-error Mock for testing
-      setSavedError={options.setSavedError || jest.fn()}
+      setSavedError={options.setSavedError || vi.fn()}
     />,
   );
 };
@@ -41,7 +41,7 @@ describe("SaveStateNotifications", () => {
 
   test("success notifcation can be closed", async () => {
     const user = userEvent.setup();
-    const setHasSaved = jest.fn();
+    const setHasSaved = vi.fn();
     renderComponent({ hasSaved: true, setHasSaved });
     await user.click(
       screen.getByRole("button", { name: "Close notification" }),
@@ -81,7 +81,7 @@ describe("SaveStateNotifications", () => {
 
   test("error notifcation can be closed", async () => {
     const user = userEvent.setup();
-    const setHasSaved = jest.fn();
+    const setHasSaved = vi.fn();
     renderComponent({ savedError: true, setHasSaved });
     await user.click(
       screen.getByRole("button", { name: "Close notification" }),
@@ -91,7 +91,7 @@ describe("SaveStateNotifications", () => {
 
   test("error notifcation can be cleared", async () => {
     const user = userEvent.setup();
-    const setSavedError = jest.fn();
+    const setSavedError = vi.fn();
     renderComponent({ savedError: true, setSavedError });
     await user.click(
       screen.getByRole("button", { name: "Close notification" }),

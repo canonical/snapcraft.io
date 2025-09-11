@@ -4,7 +4,7 @@ import useLatestsActiveDeviceMetric from "../useMetricsAnnotation";
 
 describe("useLatestsActiveDeviceMetric", () => {
   test("Calls useQuery", () => {
-    jest.spyOn(ReactQuery, "useQuery").mockImplementation(jest.fn());
+    vi.spyOn(ReactQuery, "useQuery").mockImplementation(vi.fn());
     renderHook(() => useLatestsActiveDeviceMetric("test-id"));
     expect(ReactQuery.useQuery).toHaveBeenCalled();
   });

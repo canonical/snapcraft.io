@@ -21,9 +21,9 @@ const renderComponent = () => {
     <BrowserRouter>
       <QueryClientProvider client={queryClient}>
         <CreateSigningKeyForm
-          setShowNotification={jest.fn()}
-          setErrorMessage={jest.fn()}
-          refetch={jest.fn()}
+          setShowNotification={vi.fn()}
+          setErrorMessage={vi.fn()}
+          refetch={vi.fn()}
         />
       </QueryClientProvider>
     </BrowserRouter>,

@@ -48,7 +48,7 @@ beforeEach(() => {
 });
 
 afterEach(() => {
-  jest.clearAllMocks();
+  vi.clearAllMocks();
   server.resetHandlers();
 });
 

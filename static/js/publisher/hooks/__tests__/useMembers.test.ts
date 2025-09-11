@@ -5,7 +5,7 @@ import { useMembers } from "../index";
 
 describe("useMembers", () => {
   test("Calls useQuery", () => {
-    jest.spyOn(ReactQuery, "useQuery").mockImplementation(jest.fn());
+    vi.spyOn(ReactQuery, "useQuery").mockImplementation(vi.fn());
     renderHook(() => useMembers("storeId"));
     expect(ReactQuery.useQuery).toHaveBeenCalled();
   });

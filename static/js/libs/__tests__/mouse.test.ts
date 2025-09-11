@@ -3,7 +3,7 @@ import mouse from "../mouse";
 
 describe("mouse", () => {
   test("calls the updatePosition method on mousemove", () => {
-    const spy = jest.spyOn(mouse, "updatePosition");
+    const spy = vi.spyOn(mouse, "updatePosition");
 
     window.dispatchEvent(new Event("mousemove"));
 
