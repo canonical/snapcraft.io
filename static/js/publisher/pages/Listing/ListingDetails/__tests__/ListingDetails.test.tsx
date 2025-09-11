@@ -62,28 +62,21 @@ describe("ListingDetails", () => {
   test("secondary category renders correct data", () => {
     renderComponent();
 
-    waitFor(() => {
-      expect(screen.getByLabelText("Secondary category:")).toHaveValue(
-        mockListingData.secondary_category,
-      );
-    });
+    expect(screen.getByLabelText("Secondary category: *")).toHaveValue(
+      mockListingData.secondary_category,
+    );
   });
 
-  test("secondary category can be removed", () => {
+  test("secondary category can be removed", async () => {
     renderComponent();
 
-    waitFor(async () => {
-      const user = userEvent.setup();
+    const user = userEvent.setup();
+    await user.click(
+      screen.getByRole("button", { name: "Remove secondary category" }),
+    );
 
-      renderComponent();
-
-      await user.click(
-        screen.getByRole("button", { name: "Remove secondary category" }),
-      );
-
-      expect(
-        screen.queryByLabelText("Secondary category:"),
-      ).not.toBeInTheDocument();
-    });
+    expect(
+      screen.queryByLabelText("Secondary category: *"),
+    ).not.toBeInTheDocument();
   });
 });

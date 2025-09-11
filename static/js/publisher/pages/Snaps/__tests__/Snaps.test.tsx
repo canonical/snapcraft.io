@@ -93,9 +93,7 @@ describe("Snaps", () => {
 
     const user = userEvent.setup();
 
-    await waitFor(() => {
-      user.type(screen.getByLabelText("Search snaps"), "e-2");
-    });
+    await user.type(screen.getByLabelText("Search snaps"), "e-2");
 
     await waitFor(() => {
       expect(

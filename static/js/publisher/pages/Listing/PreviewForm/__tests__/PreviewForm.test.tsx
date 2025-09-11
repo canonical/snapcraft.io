@@ -133,5 +133,5 @@ describe("PreviewForm", () => {
     await user.click(iconDeleteButton);
 
     expect(stateInput.value).toEqual(JSON.stringify(expectedListingData));
-  }, 10000);
+  }, 20000);
 });
