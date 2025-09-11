@@ -14,8 +14,9 @@ export default defineConfig({
       enabled: true,
       provider: "v8",
       all: false, // don't include untested files, in Vitest 4.0 option is removed but will be default behavior
+      experimentalAstAwareRemapping: true, // this will be the default in Vitest 4.0
       reporter: ["cobertura", "html"],
-      reportsDirectory: "coverage/vitest",
+      reportsDirectory: "coverage/js",
       include: ["static/js/**"],
       exclude: [
         "static/js/**.d.ts",
