@@ -60,7 +60,7 @@ const flaskViteImportPlugin = () => ({
  * This has a small performance penalty compared to renaming the files, but
  * for the moment it's fine and we can easily get rid of it later
  */
-const jsxInJsPlugin = () => ({
+export const jsxInJsPlugin = () => ({
   name: "jsx-in-js",
   async transform(code, id) {
     if (!id.match(/\.js$/)) return null;
