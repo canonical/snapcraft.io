@@ -14,8 +14,8 @@ import { brandStoresState } from "../../../state/brandStoreState";
 
 import Members from "../Members";
 
-vi.mock("react-router-dom", async () => ({
-  ...(await vi.importActual("react-router-dom")),
+vi.mock("react-router-dom", async (importOriginal) => ({
+  ...(await importOriginal()),
   useParams: () => ({
     id: "test-store-id",
   }),
@@ -31,7 +31,7 @@ function renderComponent() {
           <Members />
         </JotaiTestProvider>
       </BrowserRouter>
-    </QueryClientProvider>,
+    </QueryClientProvider>
   );
 }
 
@@ -59,7 +59,7 @@ describe("Members", () => {
 
     await waitFor(() => {
       expect(
-        screen.getByRole("heading", { level: 1, name: "Test store / Members" }),
+        screen.getByRole("heading", { level: 1, name: "Test store / Members" })
       ).toBeInTheDocument();
     });
   });

@@ -3,13 +3,13 @@ import mouse from "../mouse";
 
 describe("mouse", () => {
   test("calls the updatePosition method on mousemove", () => {
-    const spy = vi.spyOn(mouse, "updatePosition");
-
-    window.dispatchEvent(new Event("mousemove"));
+    window.dispatchEvent(
+      new MouseEvent("mousemove", { clientX: 1, clientY: 1 })
+    );
 
     // Take out of the event loop so runs after event is triggered
     setTimeout(() => {
-      expect(spy).toHaveBeenCalled();
+      expect(mouse.position).toMatchObject({ x: 1, y: 1 });
     }, 0);
   });
 });

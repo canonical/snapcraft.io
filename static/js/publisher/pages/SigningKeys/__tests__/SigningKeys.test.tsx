@@ -9,12 +9,10 @@ import SigningKeys from "../SigningKeys";
 
 const mockFilterQuery = "signing key-1";
 
-vi.mock("react-router-dom", async () => {
-  return {
-    ...(await vi.importActual("react-router-dom")),
-    useSearchParams: () => [new URLSearchParams({ filter: mockFilterQuery })],
-  };
-});
+vi.mock("react-router-dom", async (importOriginal) => ({
+  ...(await importOriginal()),
+  useSearchParams: () => [new URLSearchParams({ filter: mockFilterQuery })],
+}));
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -31,7 +29,7 @@ function renderComponent() {
       <QueryClientProvider client={queryClient}>
         <SigningKeys />
       </QueryClientProvider>
-    </BrowserRouter>,
+    </BrowserRouter>
   );
 }
 
@@ -39,7 +37,7 @@ describe("SigningKeys", () => {
   it("displays a link to create a new signing key", () => {
     renderComponent();
     expect(
-      screen.getByRole("link", { name: "Create new signing key" }),
+      screen.getByRole("link", { name: "Create new signing key" })
     ).toBeInTheDocument();
   });
 
@@ -47,13 +45,13 @@ describe("SigningKeys", () => {
     const user = userEvent.setup();
     renderComponent();
     await user.click(
-      screen.getByRole("link", { name: "Create new signing key" }),
+      screen.getByRole("link", { name: "Create new signing key" })
     );
     expect(
-      screen.getByRole("textbox", { name: "Signing key name" }),
+      screen.getByRole("textbox", { name: "Signing key name" })
     ).toBeInTheDocument();
     expect(
-      screen.getByRole("button", { name: "Add signing key" }),
+      screen.getByRole("button", { name: "Add signing key" })
     ).toBeInTheDocument();
   });
 

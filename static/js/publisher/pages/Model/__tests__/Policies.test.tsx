@@ -9,15 +9,13 @@ import Policies from "../Policies";
 
 const mockFilterQuery = "1.7";
 
-vi.mock("react-router-dom", async () => {
-  return {
-    ...(await vi.importActual("react-router-dom")),
-    useSearchParams: () => [new URLSearchParams({ filter: mockFilterQuery })],
-  };
-});
+vi.mock("react-router-dom", async (importOriginal) => ({
+  ...(await importOriginal()),
+  useSearchParams: () => [new URLSearchParams({ filter: mockFilterQuery })],
+}));
 
-vi.mock("react-redux", async () => ({
-  ...(await vi.importActual("react-redux")),
+vi.mock("react-redux", async (importOriginal) => ({
+  ...(await importOriginal()),
   useSelector: vi.fn().mockReturnValue([
     { id: "test-id", name: "Test store", roles: ["admin"] },
     {
@@ -43,7 +41,7 @@ function renderComponent() {
       <QueryClientProvider client={queryClient}>
         <Policies />
       </QueryClientProvider>
-    </BrowserRouter>,
+    </BrowserRouter>
   );
 }
 
@@ -51,7 +49,7 @@ describe("Policies", () => {
   it("displays a link to create a new policy", () => {
     renderComponent();
     expect(
-      screen.getByRole("link", { name: "Create policy" }),
+      screen.getByRole("link", { name: "Create policy" })
     ).toBeInTheDocument();
   });
 
@@ -60,10 +58,10 @@ describe("Policies", () => {
     renderComponent();
     await user.click(screen.getByRole("link", { name: "Create policy" }));
     expect(
-      screen.getByRole("combobox", { name: "Signing key" }),
+      screen.getByRole("combobox", { name: "Signing key" })
     ).toBeInTheDocument();
     expect(
-      screen.getByRole("button", { name: "Add policy" }),
+      screen.getByRole("button", { name: "Add policy" })
     ).toBeInTheDocument();
   });
 
@@ -75,7 +73,7 @@ describe("Policies", () => {
   it("populates filter with the filter query parameter", () => {
     renderComponent();
     expect(screen.getByLabelText("Search policies")).toHaveValue(
-      mockFilterQuery,
+      mockFilterQuery
     );
   });
 });

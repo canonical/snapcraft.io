@@ -24,8 +24,8 @@ const mockPubliciseData = {
   trending: false,
 };
 
-vi.mock("react-query", async () => ({
-  ...(await vi.importActual("react-query")),
+vi.mock("react-query", async (importOriginal) => ({
+  ...(await importOriginal()),
   useQuery: vi.fn(),
 }));
 

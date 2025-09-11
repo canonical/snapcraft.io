@@ -13,7 +13,7 @@ const renderComponent = () => {
       <BrowserRouter>
         <ValidationSet />
       </BrowserRouter>
-    </QueryClientProvider>,
+    </QueryClientProvider>
   );
 };
 
@@ -72,13 +72,13 @@ const mockValidationSet = [
   },
 ];
 
-vi.mock("react-query", async () => ({
-  ...(await vi.importActual("react-query")),
+vi.mock("react-query", async (importOriginal) => ({
+  ...(await importOriginal()),
   useQuery: vi.fn(),
 }));
 
-vi.mock("react-router-dom", async () => ({
-  ...(await vi.importActual("react-router-dom")),
+vi.mock("react-router-dom", async (importOriginal) => ({
+  ...(await importOriginal()),
   useSearchParams: vi.fn(),
 }));
 
@@ -90,7 +90,7 @@ describe("ValidationSet", () => {
     useSearchParams.mockReturnValue([new URLSearchParams()]);
     renderComponent();
     expect(
-      screen.getByText(/Fetching validation set snaps/),
+      screen.getByText(/Fetching validation set snaps/)
     ).toBeInTheDocument();
   });
 
@@ -101,7 +101,7 @@ describe("ValidationSet", () => {
     useSearchParams.mockReturnValue([new URLSearchParams()]);
     renderComponent();
     expect(
-      screen.getByText(/There are no snaps in this validation set to display/),
+      screen.getByText(/There are no snaps in this validation set to display/)
     ).toBeInTheDocument();
   });
 
@@ -112,7 +112,7 @@ describe("ValidationSet", () => {
     useSearchParams.mockReturnValue([new URLSearchParams()]);
     renderComponent();
     expect(
-      screen.getByText(/Unable to load validation set snaps/),
+      screen.getByText(/Unable to load validation set snaps/)
     ).toBeInTheDocument();
   });
 
@@ -123,7 +123,7 @@ describe("ValidationSet", () => {
     useSearchParams.mockReturnValue([new URLSearchParams()]);
     renderComponent();
     expect(
-      screen.getByText(mockValidationSet[0].snaps[0].name),
+      screen.getByText(mockValidationSet[0].snaps[0].name)
     ).toBeInTheDocument();
   });
 

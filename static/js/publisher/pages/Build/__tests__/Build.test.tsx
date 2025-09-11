@@ -5,15 +5,13 @@ import "@testing-library/jest-dom";
 
 import Build from "../Build";
 
-vi.mock("react-router-dom", async () => {
-  return {
-    ...(await vi.importActual("react-router-dom")),
-    useParams: () => ({
-      buildId: "test-build-id",
-      snapId: "test-snap-id",
-    }),
-  };
-});
+vi.mock("react-router-dom", async (importOriginal) => ({
+  ...(await importOriginal()),
+  useParams: () => ({
+    buildId: "test-build-id",
+    snapId: "test-snap-id",
+  }),
+}));
 
 const queryClient = new QueryClient();
 
@@ -34,8 +32,8 @@ const mockBuildData = {
   snap_title: "Test snap title",
 };
 
-vi.mock("react-query", async () => ({
-  ...(await vi.importActual("react-query")),
+vi.mock("react-query", async (importOriginal) => ({
+  ...(await importOriginal()),
   useQuery: vi.fn(),
 }));
 
@@ -45,7 +43,7 @@ function renderComponent() {
       <BrowserRouter>
         <Build />
       </BrowserRouter>
-    </QueryClientProvider>,
+    </QueryClientProvider>
   );
 }
 
@@ -62,7 +60,7 @@ describe("Build", () => {
     renderComponent();
 
     expect(
-      screen.getByText(/Loading test-snap-id build data/),
+      screen.getByText(/Loading test-snap-id build data/)
     ).toBeInTheDocument();
   });
 
@@ -78,7 +76,7 @@ describe("Build", () => {
     renderComponent();
 
     expect(
-      screen.getByRole("gridcell", { name: "test-build-id" }),
+      screen.getByRole("gridcell", { name: "test-build-id" })
     ).toBeInTheDocument();
   });
 
@@ -108,7 +106,7 @@ describe("Build", () => {
     renderComponent();
 
     expect(
-      screen.getByRole("gridcell", { name: "14 minutes 47 seconds" }),
+      screen.getByRole("gridcell", { name: "14 minutes 47 seconds" })
     ).toBeInTheDocument();
   });
 
@@ -124,7 +122,7 @@ describe("Build", () => {
     renderComponent();
 
     expect(
-      screen.getByRole("gridcell", { name: "Released" }),
+      screen.getByRole("gridcell", { name: "Released" })
     ).toBeInTheDocument();
   });
 

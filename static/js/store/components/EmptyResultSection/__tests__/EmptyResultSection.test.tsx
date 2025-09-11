@@ -10,16 +10,14 @@ function renderComponent() {
   render(
     <BrowserRouter>
       <EmptyResultSection searchTerm={testSearchQuery} isFetching={false} />
-    </BrowserRouter>,
+    </BrowserRouter>
   );
 }
 
-vi.mock("react-router-dom", async () => {
-  return {
-    ...(await vi.importActual("react-router-dom")),
-    useSearchParams: () => [new URLSearchParams({ q: testSearchQuery })],
-  };
-});
+vi.mock("react-router-dom", async (importOriginal) => ({
+  ...(await importOriginal()),
+  useSearchParams: () => [new URLSearchParams({ q: testSearchQuery })],
+}));
 
 describe("EmptyResultSection", () => {
   test("displays search query on the page", () => {
@@ -27,7 +25,7 @@ describe("EmptyResultSection", () => {
     expect(
       screen.getByRole("heading", {
         name: `Search results for "${testSearchQuery}"`,
-      }),
+      })
     ).toBeInTheDocument();
   });
 
@@ -41,7 +39,7 @@ describe("EmptyResultSection", () => {
     expect(
       screen.getByRole("link", {
         name: "Explore featured snaps",
-      }),
+      })
     ).toBeInTheDocument();
   });
 
@@ -50,7 +48,7 @@ describe("EmptyResultSection", () => {
     expect(
       screen.getByRole("link", {
         name: "Contact us",
-      }),
+      })
     ).toBeInTheDocument();
   });
 });

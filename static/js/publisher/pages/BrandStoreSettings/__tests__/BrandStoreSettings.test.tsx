@@ -8,15 +8,15 @@ import BrandStoreSettings from "../BrandStoreSettings";
 
 const queryClient = new QueryClient();
 
-vi.mock("react-router-dom", async () => ({
-  ...(await vi.importActual("react-router-dom")),
+vi.mock("react-router-dom", async (importOriginal) => ({
+  ...(await importOriginal()),
   useParams: () => ({
     id: "store-id",
   }),
 }));
 
-vi.mock("react-query", async () => ({
-  ...(await vi.importActual("react-query")),
+vi.mock("react-query", async (importOriginal) => ({
+  ...(await importOriginal()),
   useQuery: vi.fn(),
 }));
 
@@ -26,7 +26,7 @@ const renderComponent = () => {
       <QueryClientProvider client={queryClient}>
         <BrandStoreSettings />
       </QueryClientProvider>
-    </BrowserRouter>,
+    </BrowserRouter>
   );
 };
 
@@ -57,7 +57,7 @@ describe("BrandStoreSettings", () => {
     renderComponent();
 
     expect(
-      screen.getByLabelText("Include this store in public lists"),
+      screen.getByLabelText("Include this store in public lists")
     ).toBeChecked();
   });
 
@@ -73,7 +73,7 @@ describe("BrandStoreSettings", () => {
     renderComponent();
 
     expect(
-      screen.getByLabelText("Include this store in public lists"),
+      screen.getByLabelText("Include this store in public lists")
     ).not.toBeChecked();
   });
 
@@ -88,7 +88,7 @@ describe("BrandStoreSettings", () => {
 
     expect(screen.getByLabelText("Store ID")).toHaveAttribute(
       "type",
-      "password",
+      "password"
     );
   });
 

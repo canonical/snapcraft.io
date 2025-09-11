@@ -11,8 +11,8 @@ import { mockListingData } from "../../../../test-utils";
 
 import type { ListingData } from "../../../../types";
 
-vi.mock("react-query", async () => ({
-  ...(await vi.importActual("react-query")),
+vi.mock("react-query", async (importOriginal) => ({
+  ...(await importOriginal()),
   useQuery: vi.fn(),
 }));
 
@@ -22,8 +22,8 @@ const mockUseQueryReturnValue = {
   status: "success",
 };
 
-vi.mock("react-hook-form", async () => ({
-  ...(await vi.importActual("react-hook-form")),
+vi.mock("react-hook-form", async (importOriginal) => ({
+  ...(await importOriginal()),
   useForm: vi.fn(),
 }));
 

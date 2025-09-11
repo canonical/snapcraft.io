@@ -1,7 +1,7 @@
 import { FieldValues, useForm } from "react-hook-form";
 import { http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
-import { render, screen, waitFor } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import "@testing-library/jest-dom";
 

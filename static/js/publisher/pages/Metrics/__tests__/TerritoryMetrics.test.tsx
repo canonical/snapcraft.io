@@ -19,17 +19,17 @@ const renderComponent = (isEmpty: boolean) => {
       <BrowserRouter>
         <TerritoryMetrics isEmpty={isEmpty} onDataLoad={vi.fn()} />
       </BrowserRouter>
-    </QueryClientProvider>,
+    </QueryClientProvider>
   );
 };
 
-vi.mock("react-query", async () => ({
-  ...(await vi.importActual("react-query")),
+vi.mock("react-query", async (importOriginal) => ({
+  ...(await importOriginal()),
   useQuery: vi.fn(),
 }));
 
-vi.mock("react-router-dom", async () => ({
-  ...(await vi.importActual("react-router-dom")),
+vi.mock("react-router-dom", async (importOriginal) => ({
+  ...(await importOriginal()),
   useSearchParams: vi.fn(),
 }));
 
@@ -65,7 +65,7 @@ describe("ActiveDeviceMetrics", () => {
 
     await waitFor(() => {
       expect(
-        screen.getByText("An error occurred. Please try again."),
+        screen.getByText("An error occurred. Please try again.")
       ).toBeInTheDocument();
     });
   });

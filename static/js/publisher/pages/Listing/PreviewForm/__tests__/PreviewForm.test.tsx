@@ -9,14 +9,12 @@ import "@testing-library/jest-dom";
 import Listing from "../../Listing";
 import { mockListingData } from "../../../../test-utils";
 
-vi.mock("react-router-dom", async () => {
-  return {
-    ...(await vi.importActual("react-router-dom")),
-    useParams: () => ({
-      snapId: "test_id",
-    }),
-  };
-});
+vi.mock("react-router-dom", async (importOriginal) => ({
+  ...(await importOriginal()),
+  useParams: () => ({
+    snapId: "test_id",
+  }),
+}));
 
 const testListingData = {
   message: "",
@@ -32,7 +30,7 @@ function renderComponent() {
       <BrowserRouter>
         <Listing />
       </BrowserRouter>
-    </QueryClientProvider>,
+    </QueryClientProvider>
   );
 }
 
@@ -55,7 +53,7 @@ beforeEach(() => {
         primary_domain: true,
         token: "test-dns-verification-token",
       });
-    }),
+    })
   );
 });
 
@@ -107,7 +105,7 @@ describe("PreviewForm", () => {
     const user = userEvent.setup();
     renderComponent();
     const stateInput = (await screen.findByTestId(
-      "state-input",
+      "state-input"
     )) as HTMLInputElement;
 
     const title = screen.getByLabelText(/Title/);

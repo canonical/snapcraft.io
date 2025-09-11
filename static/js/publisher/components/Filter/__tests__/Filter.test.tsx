@@ -17,8 +17,8 @@ const queryClient = new QueryClient();
 
 const mockFilterQuery = { filter: "" };
 
-vi.mock("react-router-dom", async () => ({
-  ...(await vi.importActual("react-router-dom")),
+vi.mock("react-router-dom", async (importOriginal) => ({
+  ...(await importOriginal()),
   useSearchParams: () => [new URLSearchParams(mockFilterQuery), vi.fn()],
 }));
 
@@ -36,7 +36,7 @@ const renderComponent = (filterQuery?: string) => {
           />
         </JotaiTestProvider>
       </BrowserRouter>
-    </QueryClientProvider>,
+    </QueryClientProvider>
   );
 };
 

@@ -9,14 +9,12 @@ import "@testing-library/jest-dom";
 import ListingForm from "../ListingForm";
 import { mockListingData } from "../../../../test-utils";
 
-vi.mock("react-router-dom", async () => {
-  return {
-    ...(await vi.importActual("react-router-dom")),
-    useParams: () => ({
-      snapId: "test_id",
-    }),
-  };
-});
+vi.mock("react-router-dom", async (importOriginal) => ({
+  ...(await importOriginal()),
+  useParams: () => ({
+    snapId: "test_id",
+  }),
+}));
 
 function renderComponent(updateMetadataOnRelease = false) {
   const data = {
@@ -30,7 +28,7 @@ function renderComponent(updateMetadataOnRelease = false) {
       <BrowserRouter>
         <ListingForm data={data} refetch={vi.fn()} />
       </BrowserRouter>
-    </QueryClientProvider>,
+    </QueryClientProvider>
   );
 }
 
@@ -50,7 +48,7 @@ beforeEach(() => {
         primary_domain: true,
         token: "test-dns-verification-token",
       });
-    }),
+    })
   );
 });
 
@@ -71,7 +69,7 @@ describe("ListingForm", () => {
   test("Notification displayed when update_metadata_on_release", () => {
     renderComponent(true);
     expect(
-      screen.getByText(/Information here was automatically/),
+      screen.getByText(/Information here was automatically/)
     ).toBeVisible();
     expect(screen.getByRole("link", { name: "Learn more" })).toBeVisible();
   });
@@ -85,7 +83,7 @@ describe("ListingForm", () => {
     // perform some random change
     await user.type(
       screen.getByRole("textbox", { name: "Title: required" }),
-      "new-title",
+      "new-title"
     );
     await user.click(screen.getByRole("button", { name: "Save" }));
 
@@ -106,7 +104,7 @@ describe("ListingForm", () => {
             },
           ],
         });
-      }),
+      })
     );
 
     const user = userEvent.setup();
@@ -117,7 +115,7 @@ describe("ListingForm", () => {
     // perform some random change
     await user.type(
       screen.getByRole("textbox", { name: "Title: required" }),
-      "new-title",
+      "new-title"
     );
     await userEvent.click(screen.getByRole("button", { name: "Save" }));
 
@@ -129,21 +127,21 @@ describe("ListingForm", () => {
   test("ListingDetails is rendered", () => {
     renderComponent();
     expect(
-      screen.getByRole("heading", { name: "Listing details" }),
+      screen.getByRole("heading", { name: "Listing details" })
     ).toBeVisible();
   });
 
   test("ContactInformation is rendered", () => {
     renderComponent();
     expect(
-      screen.getByRole("heading", { name: "Contact information" }),
+      screen.getByRole("heading", { name: "Contact information" })
     ).toBeVisible();
   });
 
   test("AdditionalInformation is rendered", () => {
     renderComponent();
     expect(
-      screen.getByRole("heading", { name: "Additional information" }),
+      screen.getByRole("heading", { name: "Additional information" })
     ).toBeVisible();
   });
 
@@ -199,7 +197,7 @@ describe("ListingForm", () => {
 
     // Clear the description field
     const descriptionInput = screen.getByDisplayValue(
-      "lorem ipsum dolor sit amet",
+      "lorem ipsum dolor sit amet"
     );
     await user.clear(descriptionInput);
 

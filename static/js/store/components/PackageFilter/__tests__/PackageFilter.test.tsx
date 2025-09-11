@@ -12,18 +12,16 @@ function renderComponent(isDisabled?: boolean) {
   render(
     <BrowserRouter>
       <PackageFilter data={testPackageData} disabled={isDisabled || false} />
-    </BrowserRouter>,
+    </BrowserRouter>
   );
 }
 
-vi.mock("react-router-dom", async () => {
-  return {
-    ...(await vi.importActual("react-router-dom")),
-    useSearchParams: () => [
-      new URLSearchParams({ categories: testCategoriesQueryString }),
-    ],
-  };
-});
+vi.mock("react-router-dom", async (importOriginal) => ({
+  ...(await importOriginal()),
+  useSearchParams: () => [
+    new URLSearchParams({ categories: testCategoriesQueryString }),
+  ],
+}));
 
 describe("PackageFilter", () => {
   test("disabled if fetching data", () => {

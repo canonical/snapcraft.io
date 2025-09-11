@@ -22,21 +22,19 @@ function renderComponent() {
       <JotaiTestProvider initialValues={[[brandStoresState, storesResponse]]}>
         <RequestReservedName />
       </JotaiTestProvider>
-    </BrowserRouter>,
+    </BrowserRouter>
   );
 }
 
-vi.mock("react-router-dom", async () => {
-  return {
-    ...(await vi.importActual("react-router-dom")),
-    useSearchParams: () => [
-      new URLSearchParams({
-        snap_name: testSnapName,
-        store: testStoreName,
-      }),
-    ],
-  };
-});
+vi.mock("react-router-dom", async (importOriginal) => ({
+  ...(await importOriginal()),
+  useSearchParams: () => [
+    new URLSearchParams({
+      snap_name: testSnapName,
+      store: testStoreName,
+    }),
+  ],
+}));
 
 const server = setupServer();
 
@@ -72,7 +70,7 @@ describe("RequestReservedName", () => {
   test("CTA button is disabled by default", () => {
     renderComponent();
     expect(
-      screen.getByRole("button", { name: "Yes, I am sure" }),
+      screen.getByRole("button", { name: "Yes, I am sure" })
     ).toHaveAttribute("aria-disabled", "true");
   });
 
@@ -84,7 +82,7 @@ describe("RequestReservedName", () => {
     await user.type(screen.getByLabelText("Comment"), "This is a test comment");
 
     expect(
-      screen.getByRole("button", { name: "Yes, I am sure" }),
+      screen.getByRole("button", { name: "Yes, I am sure" })
     ).not.toHaveAttribute("aria-disabled");
   });
 
@@ -96,7 +94,7 @@ describe("RequestReservedName", () => {
         return HttpResponse.json({
           success: true,
         });
-      }),
+      })
     );
 
     renderComponent();
@@ -106,7 +104,7 @@ describe("RequestReservedName", () => {
 
     await waitFor(() => {
       expect(
-        screen.getByText("Your claim has been submitted and will be reviewed"),
+        screen.getByText("Your claim has been submitted and will be reviewed")
       ).toBeInTheDocument();
     });
   });
@@ -120,7 +118,7 @@ describe("RequestReservedName", () => {
           success: false,
           message: "Test error message",
         });
-      }),
+      })
     );
 
     renderComponent();
