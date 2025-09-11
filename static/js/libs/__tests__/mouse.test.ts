@@ -4,7 +4,7 @@ import mouse from "../mouse";
 describe("mouse", () => {
   test("calls the updatePosition method on mousemove", () => {
     window.dispatchEvent(
-      new MouseEvent("mousemove", { clientX: 1, clientY: 1 })
+      new MouseEvent("mousemove", { clientX: 1, clientY: 1 }),
     );
 
     // Take out of the event loop so runs after event is triggered
