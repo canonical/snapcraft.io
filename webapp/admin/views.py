@@ -7,7 +7,7 @@ from canonicalwebteam.store_api.publishergw import PublisherGW
 from canonicalwebteam.store_api.devicegw import DeviceGW
 
 # Local
-from webapp.decorators import login_required, exchange_required
+from webapp.decorators import login_required, exchange_required, admin_required
 from webapp.helpers import api_publisher_session, api_session
 
 
@@ -43,6 +43,7 @@ def get_admin(path):
 @admin.route("/admin/featured", methods=["POST"])
 @login_required
 @exchange_required
+@admin_required
 def post_featured_snaps():
     """
     In this view, we do three things:
@@ -50,6 +51,7 @@ def post_featured_snaps():
     2. Delete the currently featured snaps
     3. Update featured snaps to be newly featured
 
+    
     Args:
         None
 
@@ -83,9 +85,18 @@ def post_featured_snaps():
         snap["snap_id"] for snap in currently_featured_snaps
     ]
 
+    print(1)
     delete_response = publisher_gateway.delete_featured_snaps(
         flask.session, {"packages": currently_featured_snap_ids}
     )
+    print(2)
+
+    if delete_response.status_code != 201:
+        try:
+            error_body = delete_response.json() 
+        except ValueError:
+            error_body = delete_response.text 
+    print(error_body)
     if delete_response.status_code != 201:
         response = {
             "success": False,
@@ -96,6 +107,7 @@ def post_featured_snaps():
         dashboard.get_snap_id(flask.session, snap_name)
         for snap_name in new_featured_snaps
     ]
+    print(3)
 
     update_response = publisher_gateway.update_featured_snaps(
         flask.session, snap_ids
@@ -106,4 +118,5 @@ def post_featured_snaps():
             "message": "An error occured while updating featured snaps",
         }
         return make_response(response, 500)
+    print(4)
     return make_response({"success": True}, 200)
