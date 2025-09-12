@@ -1,5 +1,6 @@
 import flask
 from flask import Response
+import requests
 
 import humanize
 import os
@@ -212,9 +213,18 @@ def snap_details_views(store):
         status_code = 200
 
         context = _get_context_snap_details(snap_name)
-        extra_details = device_gateway.get_snap_details(
-            snap_name, fields=FIELDS_EXTRA_DETAILS
-        )
+        print(f"DEBUGGING: {snap_name}")
+        try:
+            extra_details = device_gateway.get_snap_details(
+                snap_name, fields=FIELDS_EXTRA_DETAILS
+            )
+        except Exception as e:
+            print(e)
+            response = requests.get(
+                f"https://api.snapcraft.io/api/v1/snaps/details/{snap_name}?fields=aliases",
+                headers={"X-Ubuntu-Series": "16"})
+            print(response.status_code)
+            print(response.text)
 
         if extra_details and extra_details["aliases"]:
             context["aliases"] = [
