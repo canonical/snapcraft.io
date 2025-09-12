@@ -8,8 +8,8 @@ import PublisherSettingsForm from "../PublisherSettingsForm";
 
 const queryClient = new QueryClient();
 
-jest.mock("react-router-dom", () => ({
-  ...jest.requireActual("react-router-dom"),
+vi.mock("react-router-dom", async (importOriginal) => ({
+  ...(await importOriginal()),
   useParams: () => ({
     snapId: "test-snap-id",
   }),

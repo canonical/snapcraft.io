@@ -4,7 +4,7 @@ import useMetricsAnnotation from "../useMetricsAnnotation";
 
 describe("useMetricsAnnotation", () => {
   test("Calls useQuery", () => {
-    jest.spyOn(ReactQuery, "useQuery").mockImplementation(jest.fn());
+    vi.spyOn(ReactQuery, "useQuery").mockImplementation(vi.fn());
     renderHook(() => useMetricsAnnotation("test-id"));
     expect(ReactQuery.useQuery).toHaveBeenCalled();
   });

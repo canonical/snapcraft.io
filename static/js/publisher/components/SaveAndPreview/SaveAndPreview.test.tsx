@@ -4,7 +4,7 @@ import "@testing-library/jest-dom";
 
 import SaveAndPreview from "./SaveAndPreview";
 
-const reset = jest.fn();
+const reset = vi.fn();
 
 const renderComponent = (
   isDirty: boolean,

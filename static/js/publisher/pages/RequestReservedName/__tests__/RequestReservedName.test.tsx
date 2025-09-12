@@ -26,17 +26,15 @@ function renderComponent() {
   );
 }
 
-jest.mock("react-router-dom", () => {
-  return {
-    ...jest.requireActual("react-router-dom"),
-    useSearchParams: () => [
-      new URLSearchParams({
-        snap_name: testSnapName,
-        store: testStoreName,
-      }),
-    ],
-  };
-});
+vi.mock("react-router-dom", async (importOriginal) => ({
+  ...(await importOriginal()),
+  useSearchParams: () => [
+    new URLSearchParams({
+      snap_name: testSnapName,
+      store: testStoreName,
+    }),
+  ],
+}));
 
 const server = setupServer();
 

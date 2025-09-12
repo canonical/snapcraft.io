@@ -19,24 +19,22 @@ function renderComponent() {
         <RegisterNameDisputeForm
           snapName={testSnapName}
           store={testStoreName}
-          setClaimSubmitted={jest.fn()}
+          setClaimSubmitted={vi.fn()}
         />
       </JotaiTestProvider>
     </BrowserRouter>,
   );
 }
 
-jest.mock("react-router-dom", () => {
-  return {
-    ...jest.requireActual("react-router-dom"),
-    useSearchParams: () => [
-      new URLSearchParams({
-        snap_name: testSnapName,
-        store: testStoreName,
-      }),
-    ],
-  };
-});
+vi.mock("react-router-dom", async (importOriginal) => ({
+  ...(await importOriginal()),
+  useSearchParams: () => [
+    new URLSearchParams({
+      snap_name: testSnapName,
+      store: testStoreName,
+    }),
+  ],
+}));
 
 describe("RegisterNameDisputeForm", () => {
   test("shows snap name in heading", () => {

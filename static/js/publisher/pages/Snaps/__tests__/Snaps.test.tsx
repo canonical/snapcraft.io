@@ -15,14 +15,12 @@ import Snaps from "../Snaps";
 
 import { brandStoresState } from "../../../state/brandStoreState";
 
-jest.mock("react-router-dom", () => {
-  return {
-    ...jest.requireActual("react-router-dom"),
-    useParams: () => ({
-      id: "test-store-id",
-    }),
-  };
-});
+vi.mock("react-router-dom", async (importOriginal) => ({
+  ...(await importOriginal()),
+  useParams: () => ({
+    id: "test-store-id",
+  }),
+}));
 
 const queryClient = new QueryClient();
 
@@ -95,9 +93,7 @@ describe("Snaps", () => {
 
     const user = userEvent.setup();
 
-    await waitFor(() => {
-      user.type(screen.getByLabelText("Search snaps"), "e-2");
-    });
+    await user.type(screen.getByLabelText("Search snaps"), "e-2");
 
     await waitFor(() => {
       expect(

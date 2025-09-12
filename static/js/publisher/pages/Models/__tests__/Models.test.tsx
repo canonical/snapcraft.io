@@ -9,12 +9,10 @@ import Models from "../Models";
 
 const mockFilterQuery = "model-1";
 
-jest.mock("react-router-dom", () => {
-  return {
-    ...jest.requireActual("react-router-dom"),
-    useSearchParams: () => [new URLSearchParams({ filter: mockFilterQuery })],
-  };
-});
+vi.mock("react-router-dom", async (importOriginal) => ({
+  ...(await importOriginal()),
+  useSearchParams: () => [new URLSearchParams({ filter: mockFilterQuery })],
+}));
 
 const queryClient = new QueryClient({
   defaultOptions: {

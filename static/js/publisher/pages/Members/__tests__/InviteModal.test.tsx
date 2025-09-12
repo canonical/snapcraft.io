@@ -3,7 +3,7 @@ import userEvent from "@testing-library/user-event";
 import "@testing-library/jest-dom";
 import InviteModal from "../InviteModal";
 
-const updateInvite = jest.fn();
+const updateInvite = vi.fn();
 
 const renderComponent = (props: {
   inviteActionData: { action: "resend" | "revoke" | "open"; email: string };
@@ -13,7 +13,7 @@ const renderComponent = (props: {
     <InviteModal
       inviteActionData={props.inviteActionData}
       inviteModalOpen={true}
-      setInviteModalOpen={jest.fn()}
+      setInviteModalOpen={vi.fn()}
       updateInvite={updateInvite}
       inviteModalIsSaving={props.inviteModalIsSaving}
     />,

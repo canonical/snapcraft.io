@@ -6,18 +6,16 @@ import "@testing-library/jest-dom";
 
 import RegisterNameDispute from "../RegisterNameDispute";
 
-jest.mock("react-router-dom", () => {
-  return {
-    ...jest.requireActual("react-router-dom"),
-    useSearchParams: () => [
-      new URLSearchParams({ "snap-name": "test-snap-id", store: "ubuntu" }),
-    ],
-  };
-});
+vi.mock("react-router-dom", async (importOriginal) => ({
+  ...(await importOriginal()),
+  useSearchParams: () => [
+    new URLSearchParams({ "snap-name": "test-snap-id", store: "ubuntu" }),
+  ],
+}));
 
-jest.mock("react-query", () => ({
-  ...jest.requireActual("react-query"),
-  useQuery: jest.fn().mockReturnValue({
+vi.mock("react-query", async (importOriginal) => ({
+  ...(await importOriginal()),
+  useQuery: vi.fn().mockReturnValue({
     data: [
       {
         id: "ubuntu",

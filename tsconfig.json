@@ -19,6 +19,7 @@
     "noEmit": false,
     "sourceMap": true,
     "ignoreDeprecations": "5.0",
+    "types": ["vitest/globals"],
     "paths": {
       "*": ["types/*.d.ts"]
     }

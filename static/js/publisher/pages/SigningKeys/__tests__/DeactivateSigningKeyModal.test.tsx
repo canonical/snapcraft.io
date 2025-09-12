@@ -20,8 +20,8 @@ const renderComponent = () => {
     <BrowserRouter>
       <QueryClientProvider client={queryClient}>
         <DeactivateSigningKeyModal
-          setModalOpen={jest.fn()}
-          handleDisable={jest.fn()}
+          setModalOpen={vi.fn()}
+          handleDisable={vi.fn()}
           isDeleting={false}
           signingKey={{
             name: "test-signing-key",

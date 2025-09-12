@@ -14,14 +14,12 @@ const testListingData = {
   data: mockListingData,
 };
 
-jest.mock("react-router-dom", () => {
-  return {
-    ...jest.requireActual("react-router-dom"),
-    useParams: () => ({
-      snapId: "test_id",
-    }),
-  };
-});
+vi.mock("react-router-dom", async (importOriginal) => ({
+  ...(await importOriginal()),
+  useParams: () => ({
+    snapId: "test_id",
+  }),
+}));
 
 const queryClient = new QueryClient({
   defaultOptions: {

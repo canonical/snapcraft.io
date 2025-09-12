@@ -14,12 +14,10 @@ function renderComponent() {
   );
 }
 
-jest.mock("react-router-dom", () => {
-  return {
-    ...jest.requireActual("react-router-dom"),
-    useSearchParams: () => [new URLSearchParams({ q: testSearchQuery })],
-  };
-});
+vi.mock("react-router-dom", async (importOriginal) => ({
+  ...(await importOriginal()),
+  useSearchParams: () => [new URLSearchParams({ q: testSearchQuery })],
+}));
 
 describe("EmptyResultSection", () => {
   test("displays search query on the page", () => {

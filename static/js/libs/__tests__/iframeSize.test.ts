@@ -1,5 +1,6 @@
 import "@testing-library/jest-dom";
 import iframeSize from "../iframeSize";
+import type { Mock } from "vitest";
 
 describe("iframeSize", () => {
   test("sizes iframe to container width and maintain ratio", () => {
@@ -14,7 +15,7 @@ describe("iframeSize", () => {
 
     document.body.appendChild(frameWrapper);
 
-    frameWrapper.getBoundingClientRect = jest.fn(
+    frameWrapper.getBoundingClientRect = vi.fn(
       (): DOMRect => ({
         x: 0,
         y: 0,
@@ -26,7 +27,7 @@ describe("iframeSize", () => {
         height: 500,
         toJSON: () => ({}),
       }),
-    ) as jest.Mock;
+    ) as Mock;
 
     iframeSize(".frame-wrapper");
 

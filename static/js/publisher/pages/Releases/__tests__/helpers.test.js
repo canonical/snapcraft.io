@@ -8,7 +8,7 @@ import {
   getPackageMetadata,
 } from "../helpers";
 
-global.fetch = jest.fn();
+global.fetch = vi.fn();
 
 describe("getChannelName", () => {
   it("should return track/risk pair as a name", () => {

@@ -3,11 +3,12 @@ import * as ReactQuery from "react-query";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { renderHook, waitFor } from "@testing-library/react";
 import useActiveDeviceMetrics from "../useActiveDeviceMetrics";
+import type { Mock } from "vitest";
 
 describe("useActiveDeviceMetrics", () => {
   test("Calls useQuery", () => {
     // @ts-expect-error Mock for tests
-    const spy = jest.spyOn(ReactQuery, "useQuery").mockReturnValue({
+    const spy = vi.spyOn(ReactQuery, "useQuery").mockReturnValue({
       data: [],
       status: "success",
       isFetcing: false,
@@ -34,7 +35,7 @@ describe("useActiveDeviceMetrics", () => {
   };
 
   test("if the page size is set to less than 3 months, do not paginate ", async () => {
-    global.fetch = jest.fn(() =>
+    global.fetch = vi.fn(() =>
       Promise.resolve({
         json: () =>
           Promise.resolve({
@@ -59,7 +60,7 @@ describe("useActiveDeviceMetrics", () => {
           }),
         ok: true,
       }),
-    ) as jest.Mock;
+    ) as Mock;
 
     const { result } = renderHook(
       () =>
@@ -88,11 +89,11 @@ describe("useActiveDeviceMetrics", () => {
         series: [{ name: "1.0", values: [5, 5, 0, 4, 4] }],
       },
     });
-    (global.fetch as jest.Mock).mockRestore();
+    (global.fetch as Mock).mockRestore();
   });
 
   test("if the page size is greater than 3 months, request data over multiple requests", async () => {
-    global.fetch = jest.fn(() =>
+    global.fetch = vi.fn(() =>
       Promise.resolve({
         json: () =>
           Promise.resolve({
@@ -117,7 +118,7 @@ describe("useActiveDeviceMetrics", () => {
           }),
         ok: true,
       }),
-    ) as jest.Mock;
+    ) as Mock;
 
     const { result } = renderHook(
       () =>
@@ -134,17 +135,17 @@ describe("useActiveDeviceMetrics", () => {
     await waitFor(() => expect(result.current.status).toBe("success"));
 
     expect(global.fetch).toHaveBeenCalledTimes(8);
-    (global.fetch as jest.Mock).mockRestore();
+    (global.fetch as Mock).mockRestore();
   });
 
   test("if the request 404, empty data should be returned", async () => {
-    global.fetch = jest.fn(() =>
+    global.fetch = vi.fn(() =>
       Promise.resolve({
         json: () => Promise.resolve(undefined),
         ok: false,
         status: 404,
       }),
-    ) as jest.Mock;
+    ) as Mock;
 
     const { result } = renderHook(
       () =>
@@ -166,6 +167,6 @@ describe("useActiveDeviceMetrics", () => {
         series: [],
       },
     });
-    (global.fetch as jest.Mock).mockRestore();
+    (global.fetch as Mock).mockRestore();
   });
 });

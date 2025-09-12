@@ -17,9 +17,9 @@ const renderComponent = () => {
   );
 };
 
-jest.mock("react-query", () => ({
-  ...jest.requireActual("react-query"),
-  useQuery: jest.fn(),
+vi.mock("react-query", async (importOriginal) => ({
+  ...(await importOriginal()),
+  useQuery: vi.fn(),
 }));
 
 describe("AccountSnaps", () => {

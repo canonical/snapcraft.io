@@ -9,7 +9,7 @@ const renderComponent = () => {
   return render(
     <BrowserRouter>
       <SigningKeysTable
-        setShowDisableSuccessNotification={jest.fn()}
+        setShowDisableSuccessNotification={vi.fn()}
         enableTableActions={false}
       />
     </BrowserRouter>,

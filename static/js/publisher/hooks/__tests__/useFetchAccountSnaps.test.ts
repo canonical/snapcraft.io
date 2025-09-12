@@ -5,7 +5,7 @@ import useFetchAccountSnaps from "../useFetchAccountSnaps";
 
 describe("useFetchAccountSnaps", () => {
   test("Calls useQuery", () => {
-    jest.spyOn(ReactQuery, "useQuery").mockImplementation(jest.fn());
+    vi.spyOn(ReactQuery, "useQuery").mockImplementation(vi.fn());
     renderHook(() => useFetchAccountSnaps());
     expect(ReactQuery.useQuery).toHaveBeenCalled();
   });

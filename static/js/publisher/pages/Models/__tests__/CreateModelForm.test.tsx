@@ -21,8 +21,8 @@ const renderComponent = () => {
     <BrowserRouter>
       <QueryClientProvider client={queryClient}>
         <CreateModelForm
-          setShowErrorNotification={jest.fn()}
-          setShowNotification={jest.fn()}
+          setShowErrorNotification={vi.fn()}
+          setShowNotification={vi.fn()}
         />
       </QueryClientProvider>
     </BrowserRouter>,

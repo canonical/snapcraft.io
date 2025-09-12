@@ -3,13 +3,14 @@ import { BrowserRouter, MemoryRouter } from "react-router-dom";
 import { render, waitFor, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import "@testing-library/jest-dom";
+import type { Mock } from "vitest";
 
 import Store from "../Store";
 
 // Necessary to prevent FormData type error in some tests
-global.FormData = jest.fn();
+global.FormData = vi.fn();
 
-global.fetch = jest.fn(() => {
+global.fetch = vi.fn(() => {
   return Promise.resolve({
     json: () => {
       return Promise.resolve({
@@ -111,10 +112,10 @@ global.fetch = jest.fn(() => {
       });
     },
   });
-}) as jest.Mock;
+}) as Mock;
 
 // Required because of the Banner component which uses this
-window.HTMLElement.prototype.scrollIntoView = jest.fn();
+window.HTMLElement.prototype.scrollIntoView = vi.fn();
 
 const queryClient = new QueryClient();
 

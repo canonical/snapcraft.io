@@ -4,8 +4,8 @@ import "@testing-library/jest-dom";
 
 import UpdateMetadataModal from "../UpdateMetadataModal";
 
-const setShowMetadataWarningModal = jest.fn();
-const submitForm = jest.fn();
+const setShowMetadataWarningModal = vi.fn();
+const submitForm = vi.fn();
 const formData = {};
 
 const renderComponent = () => {

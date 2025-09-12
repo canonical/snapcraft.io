@@ -59,7 +59,7 @@ describe("initChooseName", () => {
 
   it("should set cookie on submit", () => {
     delete window.location;
-    window.location = { reload: jest.fn() };
+    window.location = { reload: vi.fn() };
 
     nameInput.click();
     nameInput.value = "valid-name";

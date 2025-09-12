@@ -6,9 +6,9 @@ import "@testing-library/jest-dom";
 
 import Model from "../Model";
 
-jest.mock("react-redux", () => ({
-  ...jest.requireActual("react-redux"),
-  useSelector: jest.fn().mockReturnValue([
+vi.mock("react-redux", async (importOriginal) => ({
+  ...(await importOriginal()),
+  useSelector: vi.fn().mockReturnValue([
     { id: "test-id", name: "Test store", roles: ["admin"] },
     {
       id: "non-admin-store",
@@ -37,16 +37,16 @@ const renderComponent = () => {
   );
 };
 
-jest.mock("react-router-dom", () => ({
-  ...jest.requireActual("react-router-dom"),
+vi.mock("react-router-dom", async (importOriginal) => ({
+  ...(await importOriginal()),
   useParams: () => ({
     model_id: "model-1",
   }),
 }));
 
-jest.mock("react-query", () => ({
-  ...jest.requireActual("react-query"),
-  useQuery: jest.fn().mockReturnValue({
+vi.mock("react-query", async (importOriginal) => ({
+  ...(await importOriginal()),
+  useQuery: vi.fn().mockReturnValue({
     data: [
       {
         "api-key": "K2NjWGA4iKhLmGDDQUJhJyhzS35CBLJClyNu8dAS0TWrTF3aSD",

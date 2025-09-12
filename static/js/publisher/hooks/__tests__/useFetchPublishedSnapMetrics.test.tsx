@@ -5,7 +5,7 @@ import useFetchPublishedSnapMetrics from "../useFetchPublishedSnapMetrics";
 
 describe("useFetchPublishedSnapMetrics", () => {
   test("Calls useQuery", () => {
-    jest.spyOn(ReactQuery, "useQuery").mockImplementation(jest.fn());
+    vi.spyOn(ReactQuery, "useQuery").mockImplementation(vi.fn());
     renderHook(() => useFetchPublishedSnapMetrics([]));
     expect(ReactQuery.useQuery).toHaveBeenCalled();
   });

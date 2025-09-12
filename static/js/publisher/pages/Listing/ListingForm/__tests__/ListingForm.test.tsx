@@ -9,14 +9,12 @@ import "@testing-library/jest-dom";
 import ListingForm from "../ListingForm";
 import { mockListingData } from "../../../../test-utils";
 
-jest.mock("react-router-dom", () => {
-  return {
-    ...jest.requireActual("react-router-dom"),
-    useParams: () => ({
-      snapId: "test_id",
-    }),
-  };
-});
+vi.mock("react-router-dom", async (importOriginal) => ({
+  ...(await importOriginal()),
+  useParams: () => ({
+    snapId: "test_id",
+  }),
+}));
 
 function renderComponent(updateMetadataOnRelease = false) {
   const data = {
@@ -28,7 +26,7 @@ function renderComponent(updateMetadataOnRelease = false) {
   return render(
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
-        <ListingForm data={data} refetch={jest.fn()} />
+        <ListingForm data={data} refetch={vi.fn()} />
       </BrowserRouter>
     </QueryClientProvider>,
   );

@@ -29,7 +29,7 @@ function renderComponent(members?: Member[]) {
     <MembersTable
       filteredMembers={members || mockMembers}
       changedMembers={members || mockMembers}
-      setChangedMembers={jest.fn()}
+      setChangedMembers={vi.fn()}
     />,
   );
 }

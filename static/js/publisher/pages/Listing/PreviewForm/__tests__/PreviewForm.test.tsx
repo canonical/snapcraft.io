@@ -9,14 +9,12 @@ import "@testing-library/jest-dom";
 import Listing from "../../Listing";
 import { mockListingData } from "../../../../test-utils";
 
-jest.mock("react-router-dom", () => {
-  return {
-    ...jest.requireActual("react-router-dom"),
-    useParams: () => ({
-      snapId: "test_id",
-    }),
-  };
-});
+vi.mock("react-router-dom", async (importOriginal) => ({
+  ...(await importOriginal()),
+  useParams: () => ({
+    snapId: "test_id",
+  }),
+}));
 
 const testListingData = {
   message: "",
@@ -135,5 +133,5 @@ describe("PreviewForm", () => {
     await user.click(iconDeleteButton);
 
     expect(stateInput.value).toEqual(JSON.stringify(expectedListingData));
-  }, 10000);
+  }, 20000);
 });

@@ -47,7 +47,7 @@ describe("pendingReleases actions", () => {
   };
 
   beforeEach(() => {
-    global.dataLayer = { push: jest.fn() };
+    global.dataLayer = { push: vi.fn() };
   });
 
   afterEach(() => {

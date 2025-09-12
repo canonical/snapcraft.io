@@ -16,14 +16,12 @@ function renderComponent(isDisabled?: boolean) {
   );
 }
 
-jest.mock("react-router-dom", () => {
-  return {
-    ...jest.requireActual("react-router-dom"),
-    useSearchParams: () => [
-      new URLSearchParams({ categories: testCategoriesQueryString }),
-    ],
-  };
-});
+vi.mock("react-router-dom", async (importOriginal) => ({
+  ...(await importOriginal()),
+  useSearchParams: () => [
+    new URLSearchParams({ categories: testCategoriesQueryString }),
+  ],
+}));
 
 describe("PackageFilter", () => {
   test("disabled if fetching data", () => {

@@ -7,14 +7,12 @@ import "@testing-library/jest-dom";
 
 import Builds from "../Builds";
 
-jest.mock("react-router-dom", () => {
-  return {
-    ...jest.requireActual("react-router-dom"),
-    useParams: () => ({
-      snapId: "test-snap-id",
-    }),
-  };
-});
+vi.mock("react-router-dom", async (importOriginal) => ({
+  ...(await importOriginal()),
+  useParams: () => ({
+    snapId: "test-snap-id",
+  }),
+}));
 
 const queryClient = new QueryClient();
 

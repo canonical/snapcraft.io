@@ -5,15 +5,13 @@ import "@testing-library/jest-dom";
 
 import Build from "../Build";
 
-jest.mock("react-router-dom", () => {
-  return {
-    ...jest.requireActual("react-router-dom"),
-    useParams: () => ({
-      buildId: "test-build-id",
-      snapId: "test-snap-id",
-    }),
-  };
-});
+vi.mock("react-router-dom", async (importOriginal) => ({
+  ...(await importOriginal()),
+  useParams: () => ({
+    buildId: "test-build-id",
+    snapId: "test-snap-id",
+  }),
+}));
 
 const queryClient = new QueryClient();
 
@@ -34,9 +32,9 @@ const mockBuildData = {
   snap_title: "Test snap title",
 };
 
-jest.mock("react-query", () => ({
-  ...jest.requireActual("react-query"),
-  useQuery: jest.fn(),
+vi.mock("react-query", async (importOriginal) => ({
+  ...(await importOriginal()),
+  useQuery: vi.fn(),
 }));
 
 function renderComponent() {

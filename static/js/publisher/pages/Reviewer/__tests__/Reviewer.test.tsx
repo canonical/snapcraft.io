@@ -4,8 +4,8 @@ import "@testing-library/jest-dom";
 
 import Reviewer from "../Reviewer";
 
-jest.mock("react-router-dom", () => ({
-  ...jest.requireActual("react-router-dom"),
+vi.mock("react-router-dom", async (importOriginal) => ({
+  ...(await importOriginal()),
   useParams: () => ({
     id: "storeid",
   }),

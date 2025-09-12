@@ -42,14 +42,14 @@ const handlers = [
       success: true,
     });
   }),
-  http.get("/api/store/test-brand-id/models", () => {
+  http.get("/api/store/test-brand-id-fail/models", () => {
     return HttpResponse.json({
       data: [],
       message: "Unable to fetch models",
       success: false,
     });
   }),
-  http.get("/api/store/test-brand-id/models", () => {
+  http.get("/api/store/test-brand-id-error/models", () => {
     return HttpResponse.error();
   }),
 ];
@@ -83,7 +83,7 @@ describe("useModels", () => {
   });
 
   test("returns no data if request fails", async () => {
-    const { result } = renderHook(() => useModels("test-brand-id"), {
+    const { result } = renderHook(() => useModels("test-brand-id-fail"), {
       wrapper: createWrapper(),
     });
 
@@ -95,7 +95,7 @@ describe("useModels", () => {
   });
 
   test("returns no data if error", async () => {
-    const { result } = renderHook(() => useModels("test-brand-id"), {
+    const { result } = renderHook(() => useModels("test-brand-id-error"), {
       wrapper: createWrapper(),
     });
 

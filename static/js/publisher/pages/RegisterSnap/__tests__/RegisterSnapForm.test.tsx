@@ -8,11 +8,11 @@ import RegisterSnapForm from "../RegisterSnapForm";
 function renderComponent() {
   const props = {
     isSending: false,
-    setIsSending: jest.fn(),
-    setRegistrationResponse: jest.fn(),
+    setIsSending: vi.fn(),
+    setRegistrationResponse: vi.fn(),
     availableStores: [],
     selectedStore: "global",
-    setSelectedStore: jest.fn(),
+    setSelectedStore: vi.fn(),
   };
 
   return render(

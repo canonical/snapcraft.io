@@ -4,7 +4,7 @@ import useCountryMetrics from "../useCountryMetrics";
 
 describe("useCountryMetrics", () => {
   test("Calls useQuery", () => {
-    jest.spyOn(ReactQuery, "useQuery").mockImplementation(jest.fn());
+    vi.spyOn(ReactQuery, "useQuery").mockImplementation(vi.fn());
     renderHook(() => useCountryMetrics("test-id"));
     expect(ReactQuery.useQuery).toHaveBeenCalled();
   });

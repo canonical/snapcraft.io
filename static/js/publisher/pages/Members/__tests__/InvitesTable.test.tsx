@@ -19,10 +19,10 @@ function renderComponent() {
   render(
     <InvitesTable
       invites={mockInvites}
-      refetchInvites={jest.fn()}
-      setShowErrorNotification={jest.fn()}
-      setShowSuccessNotification={jest.fn()}
-      setNotificationText={jest.fn()}
+      refetchInvites={vi.fn()}
+      setShowErrorNotification={vi.fn()}
+      setShowSuccessNotification={vi.fn()}
+      setNotificationText={vi.fn()}
     />,
   );
 }

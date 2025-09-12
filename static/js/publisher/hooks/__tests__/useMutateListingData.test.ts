@@ -7,17 +7,17 @@ import { mockListingData } from "../../test-utils";
 
 describe("useMutateListingData", () => {
   test("Calls useMutatation", () => {
-    jest.spyOn(ReactQuery, "useMutation").mockImplementation(jest.fn());
+    vi.spyOn(ReactQuery, "useMutation").mockImplementation(vi.fn());
     renderHook(() =>
       useMutateListingData({
         data: mockListingData,
         dirtyFields: {},
-        getDefaultData: jest.fn(),
-        refetch: jest.fn(),
-        reset: jest.fn(),
-        setStatusNotification: jest.fn(),
-        setUpdateMetadataOnRelease: jest.fn(),
-        shouldShowUpdateMetadataWarning: jest.fn(),
+        getDefaultData: vi.fn(),
+        refetch: vi.fn(),
+        reset: vi.fn(),
+        setStatusNotification: vi.fn(),
+        setUpdateMetadataOnRelease: vi.fn(),
+        shouldShowUpdateMetadataWarning: vi.fn(),
         snapName: "test-snap",
       }),
     );
