@@ -12,7 +12,7 @@ import { createNav } from "@canonical/global-nav";
 const DROPDOWN_ANIMATION_DURATION = 333;
 const toggles = [
   ...document.querySelectorAll(
-    ".p-navigation__nav .p-navigation__link[aria-controls]:not(.js-back-button)"
+    ".p-navigation__nav .p-navigation__link[aria-controls]:not(.js-back-button)",
   ),
 ].filter((element) => element.id !== "all-canonical-link");
 
@@ -28,8 +28,10 @@ const toggleAnimationPlaying = (element: Element) => {
 const setAnimationPlaying = () => {
   // get all open toggles to add the animation playing to them
   toggles
-    .filter((toggle: Element): toggle is Element =>
-      toggle.parentElement != null && toggle.parentElement.classList.contains("is-active")
+    .filter(
+      (toggle: Element): toggle is Element =>
+        toggle.parentElement != null &&
+        toggle.parentElement.classList.contains("is-active"),
     )
     .forEach((toggle: Element) => {
       toggleAnimationPlaying(toggle.parentElement!);
