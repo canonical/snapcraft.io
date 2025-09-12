@@ -30,6 +30,7 @@ docs/ros2-shared-memory-in-snaps/?: https://canonical-robotics.readthedocs-hoste
 docs/ros-distributions-with-no-extensions/?: https://canonical-robotics.readthedocs-hosted.com/en/latest/how-to-guides/packaging/ros-distributions-with-no-extensions/
 docs/ros-troubleshooting/?: https://canonical-robotics.readthedocs-hosted.com/en/latest/references/snapcraft/faq/
 docs/snapcraft-build-example/?: https://documentation.ubuntu.com/snapcraft/latest/how-to/publishing/publish-a-snap/
+docs/snapcraft-plugins/?: https://documentation.ubuntu.com/snapcraft/stable/reference/plugins/
 docs/ant-plugin/?: https://documentation.ubuntu.com/snapcraft/stable/common/craft-parts/reference/plugins/ant_plugin/
 docs/autotools-plugin/?: https://documentation.ubuntu.com/snapcraft/stable/common/craft-parts/reference/plugins/autotools_plugin/
 docs/cmake-plugin/?: https://documentation.ubuntu.com/snapcraft/stable/common/craft-parts/reference/plugins/cmake_plugin/
@@ -41,6 +42,7 @@ docs/nil-plugin/?: https://documentation.ubuntu.com/snapcraft/stable/common/craf
 docs/npm-plugin/?: https://documentation.ubuntu.com/snapcraft/stable/common/craft-parts/reference/plugins/npm_plugin/
 docs/rust-plugin/?: https://documentation.ubuntu.com/snapcraft/stable/common/craft-parts/reference/plugins/rust_plugin/
 docs/scons-plugin/?: https://documentation.ubuntu.com/snapcraft/stable/common/craft-parts/reference/plugins/scons_plugin/
+docs/dotnet-plugin/?: https://documentation.ubuntu.com/snapcraft/stable/common/craft-parts/reference/plugins/dotnet_plugin/
 docs/explanation-architectures/?: https://documentation.ubuntu.com/snapcraft/stable/explanation/architectures/
 docs/classic-confinement/?: https://documentation.ubuntu.com/snapcraft/stable/explanation/classic-confinement/
 docs/parts-lifecycle/?: https://documentation.ubuntu.com/snapcraft/stable/explanation/parts-lifecycle/
