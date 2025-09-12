@@ -39,6 +39,10 @@ FIELDS = [
     "links",
 ]
 
+FIELDS_EXTRA_DETAILS = [
+    "aliases",
+]
+
 
 def snap_details_views(store):
     snap_regex = "[a-z0-9-]*[a-z][a-z0-9-]*"
@@ -208,6 +212,18 @@ def snap_details_views(store):
         status_code = 200
 
         context = _get_context_snap_details(snap_name)
+        extra_details = device_gateway.get_snap_details(
+            snap_name, fields=FIELDS_EXTRA_DETAILS
+        )
+
+        if extra_details and extra_details["aliases"]:
+            context["aliases"] = [
+                [
+                    f"{extra_details['package_name']}.{alias_obj['target']}",
+                    alias_obj["name"],
+                ]
+                for alias_obj in extra_details["aliases"]
+            ]
 
         country_metric_name = "weekly_installed_base_by_country_percent"
         os_metric_name = "weekly_installed_base_by_operating_system_normalized"
