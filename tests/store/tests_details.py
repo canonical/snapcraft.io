@@ -60,6 +60,16 @@ class GetDetailsPageTest(TestCase):
 
         return app
 
+    def assert_not_in_context(self, name):
+        try:
+            self.get_context_variable(name)
+        except Exception:
+            # flask-testing throws exception if context doesn't have "name"
+            # that's what we expect so we just return and let the test pass
+            return
+        # If we reach this point it means the variable IS in context
+        self.fail(f"Context variable exists: {name}")
+
     @responses.activate
     def test_api_404(self):
         payload = {"error-list": [{"code": "resource-not-found"}]}
@@ -76,6 +86,86 @@ class GetDetailsPageTest(TestCase):
         assert called.request.url == self.api_url
 
         assert response.status_code == 404
+
+    @responses.activate
+    def test_extra_details_404(self):
+        payload = {
+            "snap-id": "id",
+            "name": "toto",
+            "default-track": None,
+            "snap": {
+                "title": "Snap Title",
+                "summary": "This is a summary",
+                "description": "this is a description",
+                "media": [],
+                "license": "license",
+                "publisher": {
+                    "display-name": "Toto",
+                    "username": "toto",
+                    "validation": True,
+                },
+                "categories": [{"name": "test"}],
+                "trending": False,
+                "unlisted": False,
+                "links": {},
+            },
+            "channel-map": [
+                {
+                    "channel": {
+                        "architecture": "amd64",
+                        "name": "stable",
+                        "risk": "stable",
+                        "track": "latest",
+                        "released-at": "2018-09-18T14:45:28.064633+00:00",
+                    },
+                    "created-at": "2018-09-18T14:45:28.064633+00:00",
+                    "version": "1.0",
+                    "confinement": "conf",
+                    "download": {"size": 100000},
+                }
+            ],
+        }
+        extra_details_payload = {
+            "error_list": [
+                {
+                    "code": "resource-not-found",
+                    "message": "No snap named 'toto' found in series '16'.",
+                }
+            ],
+            "errors": ["No snap named 'toto' found in series '16'."],
+            "result": "error",
+        }
+
+        responses.add(
+            responses.Response(
+                method="GET", url=self.api_url, json=payload, status=200
+            )
+        )
+        responses.add(
+            responses.Response(
+                method="GET",
+                url=self.api_url_details,
+                json=extra_details_payload,
+                status=404,
+            )
+        )
+        metrics_url = "https://api.snapcraft.io/api/v1/snaps/metrics"
+        responses.add(
+            responses.Response(
+                method="POST", url=metrics_url, json={}, status=200
+            )
+        )
+
+        response = self.client.get(self.endpoint_url)
+
+        assert len(responses.calls) == 3
+        assert responses.calls[0].request.url == self.api_url
+        assert responses.calls[1].request.url == self.api_url_details
+        assert responses.calls[2].request.url == metrics_url
+
+        self.assert200(response)
+        self.assert_not_in_context("aliases")
+        self.assert_context("snap-id", "id")
 
     @responses.activate
     def test_api_500(self):
