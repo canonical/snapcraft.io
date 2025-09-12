@@ -1,14 +1,12 @@
 import { createNav } from "@canonical/global-nav";
 
-window.addEventListener("DOMContentLoaded", function () {
-  createNav({ isSliding: true, closeMenuAnimationDuration: 200 });
-});
-
-
 /**
  * Add custom listeners to control animation of dropdowns and be able to remove the
  * display of some hidden elements from global-nav that block clicks for underneath
  * elements (see WD-26684).
+ *
+ * We must set these listeners before the global-nav sets its own listeners for them
+ * to work properly.
  */
 
 const DROPDOWN_ANIMATION_DURATION = 333;
@@ -20,25 +18,21 @@ const toggles = [
 
 const toggleAnimationPlaying = (element: Element) => {
   const endAnimation = () => {
-    element.classList.toggle('js-animation-playing', false);
+    element.classList.toggle("js-animation-playing", false);
   };
 
-  element.classList.toggle('js-animation-playing', true);
+  element.classList.toggle("js-animation-playing", true);
   setTimeout(endAnimation, DROPDOWN_ANIMATION_DURATION);
 };
 
 const setAnimationPlaying = () => {
   // get all open toggles to add the animation playing to them
   toggles
-    .filter((toggle: Element) => {
-      const toggleParent = toggle.parentElement;
-      if (toggleParent) {
-        return toggleParent.classList.contains("is-active");
-      }
-      return false;
-    })
+    .filter((toggle: Element): toggle is Element =>
+      toggle.parentElement != null && toggle.parentElement.classList.contains("is-active")
+    )
     .forEach((toggle: Element) => {
-      toggleAnimationPlaying(toggle);
+      toggleAnimationPlaying(toggle.parentElement!);
     });
 };
 
@@ -55,8 +49,13 @@ const handleToggle = (e: Event, toggle: Element) => {
 
 toggles.forEach((toggle: Element) => {
   const handler = (e: Event) => handleToggle(e, toggle);
-  toggle.addEventListener("keydown", handler);
+  toggle.addEventListener("click", handler);
 });
 
 // when clicking outside navigation, set js-animation-playing on all open dropdowns
 document.addEventListener("click", setAnimationPlaying);
+
+// Once our listeners are added then we run global-nav, which will add others
+window.addEventListener("DOMContentLoaded", function () {
+  createNav({ isSliding: true, closeMenuAnimationDuration: 200 });
+});
