@@ -470,12 +470,12 @@ function CreatePolicyForm({
   const [isSaving, setIsSaving] = useState(false);
   const queryClient = useQueryClient();
 &nbsp;
-  const handleError = <span class="fstat-no" title="function not covered" >()</span> =&gt; {
+  const handleError = <span class="fstat-no" title="function not covered" >() =&gt; {</span>
 <span class="cstat-no" title="statement not covered" >    setShowErrorNotification(true);</span>
 <span class="cstat-no" title="statement not covered" >    navigate(`/admin/${id}/models/${model_id}/policies`);</span>
 <span class="cstat-no" title="statement not covered" >    setNewSigningKey({ name: "" });</span>
 <span class="cstat-no" title="statement not covered" >    setIsSaving(false);</span>
-<span class="cstat-no" title="statement not covered" >    setTimeout(<span class="fstat-no" title="function not covered" >()</span> =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >    setTimeout(<span class="fstat-no" title="function not covered" >() =&gt; {</span></span>
 <span class="cstat-no" title="statement not covered" >      setShowErrorNotification(false);</span>
     }, 5000);
   };
@@ -496,10 +496,10 @@ function CreatePolicyForm({
         body: formData,
       });
     },
-    onMutate: <span class="fstat-no" title="function not covered" >as</span>ync (newPolicy) =&gt; {
+    onMutate: <span class="fstat-no" title="function not covered" >async (n</span>ewPolicy) =&gt; {
 <span class="cstat-no" title="statement not covered" >      await queryClient.cancelQueries({ queryKey: ["policies"] });</span>
       const previousPolicies = <span class="cstat-no" title="statement not covered" >queryClient.getQueryData(["policies"]);</span>
-<span class="cstat-no" title="statement not covered" >      queryClient.setQueryData(["policies"], <span class="fstat-no" title="function not covered" >()</span> =&gt; <span class="cstat-no" title="statement not covered" >[newPolicy])</span>;</span>
+<span class="cstat-no" title="statement not covered" >      queryClient.setQueryData(["policies"], <span class="fstat-no" title="function not covered" >() =&gt; <span class="cstat-no" title="statement not covered" >[</span>newPolicy])</span>;</span>
 <span class="cstat-no" title="statement not covered" >      return { previousPolicies };</span>
     },
     onError: <span class="fstat-no" title="function not covered" >({</span> context }) =&gt; {
@@ -507,21 +507,21 @@ function CreatePolicyForm({
 <span class="cstat-no" title="statement not covered" >      handleError();</span>
 <span class="cstat-no" title="statement not covered" >      throw new Error("Unable to create a new policy");</span>
     },
-    onSettled: <span class="fstat-no" title="function not covered" >as</span>ync () =&gt; {
+    onSettled: <span class="fstat-no" title="function not covered" >async () =&gt; {</span>
 <span class="cstat-no" title="statement not covered" >      queryClient.invalidateQueries({ queryKey: ["policies"] });</span>
 <span class="cstat-no" title="statement not covered" >      setShowNotification(true);</span>
 <span class="cstat-no" title="statement not covered" >      setIsSaving(false);</span>
 <span class="cstat-no" title="statement not covered" >      refetchPolicies();</span>
 <span class="cstat-no" title="statement not covered" >      navigate(`/admin/${id}/models/${model_id}/policies`);</span>
-<span class="cstat-no" title="statement not covered" >      setTimeout(<span class="fstat-no" title="function not covered" >()</span> =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >      setTimeout(<span class="fstat-no" title="function not covered" >() =&gt; {</span></span>
 <span class="cstat-no" title="statement not covered" >        setShowNotification(false);</span>
       }, 5000);
     },
   });
 &nbsp;
   if (location.pathname.includes("/create")) {
-    brandStore
-      ? <span class="branch-0 cbranch-no" title="branch not covered" >setPageTitle(`Create policy in ${brandStore.name}`)</span>
+<span class="branch-0 cbranch-no" title="branch not covered" >    brandStore</span>
+      ? setPageTitle(`Create policy in ${brandStore.name}`)
       : setPageTitle("Create policy");
   }
 &nbsp;
@@ -546,7 +546,7 @@ function CreatePolicyForm({
         &lt;div className="p-panel__content"&gt;
           &lt;div className="u-fixed-width" style={{ marginBottom: "30px" }}&gt;
             {isLoading &amp;&amp; &lt;p&gt;Fetching signing keys...&lt;/p&gt;}
-            {isError &amp;&amp; <span class="branch-1 cbranch-no" title="branch not covered" >error instanceof Error </span>&amp;&amp; <span class="branch-2 cbranch-no" title="branch not covered" >&lt;p&gt;Error: {error.message}&lt;/p&gt;}</span>
+            {isError &amp;&amp; <span class="branch-1 cbranch-no" title="branch not covered" >error instanceof Error &amp;&amp; <span class="branch-2 cbranch-no" title="branch not covered" >&lt;</span>p&gt;Error: {error.message}&lt;/p&gt;}</span>
             {isSaving &amp;&amp; (
 <span class="branch-1 cbranch-no" title="branch not covered" >              &lt;p&gt;</span>
                 &lt;Icon name="spinner" className="u-animation--spin" /&gt;
@@ -594,7 +594,7 @@ function CreatePolicyForm({
               &lt;Link
                 className="p-button u-no-margin--bottom"
                 to={`/admin/${id}/models/${model_id}/policies`}
-                onClick={<span class="fstat-no" title="function not covered" >()</span> =&gt; {
+                onClick={<span class="fstat-no" title="function not covered" >() =&gt; {</span>
 <span class="cstat-no" title="statement not covered" >                  setNewSigningKey({ name: "" });</span>
 <span class="cstat-no" title="statement not covered" >                  setShowErrorNotification(false);</span>
                 }}
@@ -625,7 +625,7 @@ export default CreatePolicyForm;
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-09-11T22:04:25.119Z
+                at 2025-09-12T22:04:42.372Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>

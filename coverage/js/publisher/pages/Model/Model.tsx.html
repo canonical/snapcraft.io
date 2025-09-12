@@ -422,11 +422,11 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">17x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">17x</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -697,12 +697,12 @@ function Model() {
 &nbsp;
 <span class="cstat-no" title="statement not covered" >      if (response.ok) {</span>
 <span class="cstat-no" title="statement not covered" >        setShowSuccessNotificaton(true);</span>
-<span class="cstat-no" title="statement not covered" >        setTimeout(<span class="fstat-no" title="function not covered" >()</span> =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >        setTimeout(<span class="fstat-no" title="function not covered" >() =&gt; {</span></span>
 <span class="cstat-no" title="statement not covered" >          setShowSuccessNotificaton(false);</span>
         }, 5000);
       }
     },
-    onError: <span class="fstat-no" title="function not covered" >()</span> =&gt; {
+    onError: <span class="fstat-no" title="function not covered" >() =&gt; {</span>
 <span class="cstat-no" title="statement not covered" >      handleError();</span>
 <span class="cstat-no" title="statement not covered" >      throw new Error("Unable to create a new model");</span>
     },
@@ -718,15 +718,15 @@ function Model() {
     error: unknown;
   } = useModels(brandId);
 &nbsp;
-  const handleError = <span class="fstat-no" title="function not covered" >()</span> =&gt; {
+  const handleError = <span class="fstat-no" title="function not covered" >() =&gt; {</span>
 <span class="cstat-no" title="statement not covered" >    setShowErrorNotificaton(true);</span>
-<span class="cstat-no" title="statement not covered" >    setTimeout(<span class="fstat-no" title="function not covered" >()</span> =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >    setTimeout(<span class="fstat-no" title="function not covered" >() =&gt; {</span></span>
 <span class="cstat-no" title="statement not covered" >      setShowErrorNotificaton(false);</span>
     }, 5000);
   };
 &nbsp;
-  currentModel &amp;&amp; brandStore
-    ? <span class="branch-0 cbranch-no" title="branch not covered" >setPageTitle(`${currentModel.name} in ${brandStore.name}`)</span>
+  currentModel &amp;&amp; <span class="branch-0 cbranch-no" title="branch not covered" >brandStore</span>
+    ? setPageTitle(`${currentModel.name} in ${brandStore.name}`)
     : setPageTitle("Model");
 &nbsp;
   useEffect(() =&gt; {
@@ -757,7 +757,7 @@ function Model() {
 <span class="branch-1 cbranch-no" title="branch not covered" >              &lt;div className="u-fixed-width"&gt;</span>
                 &lt;Notification
                   severity="positive"
-                  onDismiss={<span class="fstat-no" title="function not covered" >()</span> =&gt; {
+                  onDismiss={<span class="fstat-no" title="function not covered" >() =&gt; {</span>
 <span class="cstat-no" title="statement not covered" >                    setShowSuccessNotificaton(false);</span>
                   }}
                 &gt;
@@ -769,7 +769,7 @@ function Model() {
 <span class="branch-1 cbranch-no" title="branch not covered" >              &lt;div className="u-fixed-width"&gt;</span>
                 &lt;Notification
                   severity="negative"
-                  onDismiss={<span class="fstat-no" title="function not covered" >()</span> =&gt; {
+                  onDismiss={<span class="fstat-no" title="function not covered" >() =&gt; {</span>
 <span class="cstat-no" title="statement not covered" >                    setShowErrorNotificaton(false);</span>
                   }}
                 &gt;
@@ -892,7 +892,7 @@ function Model() {
                     &lt;/Row&gt;
                   &lt;/&gt;
                 )}
-                {currentModel["modified-at"] &amp;&amp; <span class="branch-1 cbranch-no" title="branch not covered" >currentModel["modified-by"] </span>&amp;&amp; (
+                {currentModel["modified-at"] &amp;&amp; <span class="branch-1 cbranch-no" title="branch not covered" >currentModel["modified-by"] &amp;&amp; (</span>
 <span class="branch-2 cbranch-no" title="branch not covered" >                  &lt;&gt;</span>
                     &lt;div className="u-fixed-width"&gt;
                       &lt;hr /&gt;
@@ -940,7 +940,7 @@ export default Model;
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-09-11T22:04:25.119Z
+                at 2025-09-12T22:04:42.372Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>

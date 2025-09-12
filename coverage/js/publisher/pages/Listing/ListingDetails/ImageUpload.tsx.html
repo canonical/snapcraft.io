@@ -523,28 +523,28 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">292x</span>
-<span class="cline-any cline-yes">292x</span>
-<span class="cline-any cline-yes">292x</span>
-<span class="cline-any cline-yes">292x</span>
-<span class="cline-any cline-yes">292x</span>
-<span class="cline-any cline-yes">292x</span>
-<span class="cline-any cline-yes">292x</span>
-<span class="cline-any cline-yes">292x</span>
+<span class="cline-any cline-yes">302x</span>
+<span class="cline-any cline-yes">302x</span>
+<span class="cline-any cline-yes">302x</span>
+<span class="cline-any cline-yes">302x</span>
+<span class="cline-any cline-yes">302x</span>
+<span class="cline-any cline-yes">302x</span>
+<span class="cline-any cline-yes">302x</span>
+<span class="cline-any cline-yes">302x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">292x</span>
-<span class="cline-any cline-yes">292x</span>
+<span class="cline-any cline-yes">302x</span>
+<span class="cline-any cline-yes">302x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">292x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">302x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">292x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">302x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -590,17 +590,17 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">292x</span>
-<span class="cline-any cline-yes">292x</span>
+<span class="cline-any cline-yes">302x</span>
+<span class="cline-any cline-yes">302x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">292x</span>
-<span class="cline-any cline-yes">291x</span>
+<span class="cline-any cline-yes">302x</span>
+<span class="cline-any cline-yes">301x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">292x</span>
+<span class="cline-any cline-yes">302x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -873,7 +873,7 @@ function <span class="fstat-no" title="function not covered" >validateAspectRati
 <span class="cstat-no" title="statement not covered" >  return expectedHeight === height;</span>
 }
 &nbsp;
-function <span class="fstat-no" title="function not covered" >formatFileSize(</span>fileSize: number): string {
+function <span class="fstat-no" title="function not covered" >formatFileSize(f</span>ileSize: number): string {
 <span class="cstat-no" title="statement not covered" >  if (fileSize &lt; 1000000) {</span>
 <span class="cstat-no" title="statement not covered" >    return `${fileSize / 1000}kB`;</span>
   }
@@ -913,8 +913,8 @@ function ImageUpload({
   const isDark = hasDarkThemePreview &amp;&amp; darkThemeEnabled;
 &nbsp;
   const darkThemeStyles = {
-    backgroundColor: hasDarkThemePreview &amp;&amp; isDark ? <span class="branch-0 cbranch-no" title="branch not covered" >"#2f2f2f" </span>: "#f7f7f7",
-    color: isDark ? <span class="branch-0 cbranch-no" title="branch not covered" >"#fff" </span>: "#111",
+    backgroundColor: hasDarkThemePreview &amp;&amp; isDark ? <span class="branch-0 cbranch-no" title="branch not covered" >"#2f2f2f" : "</span>#f7f7f7",
+    color: isDark ? <span class="branch-0 cbranch-no" title="branch not covered" >"#fff" : "</span>#111",
     padding: hasDarkThemePreview ? "1rem 1rem 0" : "0",
     display: "flex",
   };
@@ -934,7 +934,7 @@ function ImageUpload({
     const renderedImageUrl = <span class="cstat-no" title="statement not covered" >URL.createObjectURL(image);</span>
 &nbsp;
 <span class="cstat-no" title="statement not covered" >    renderedImage.src = renderedImageUrl;</span>
-<span class="cstat-no" title="statement not covered" >    renderedImage.onload = <span class="fstat-no" title="function not covered" >()</span> =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >    renderedImage.onload = <span class="fstat-no" title="function not covered" >() =&gt; {</span></span>
 <span class="cstat-no" title="statement not covered" >      if (</span>
         !validateAspectRatio(renderedImage.width, renderedImage.height, {
           width: validationSchema?.aspectRatio?.width,
@@ -945,7 +945,7 @@ function ImageUpload({
 <span class="cstat-no" title="statement not covered" >        setImageValidationError(</span>
           `${image.name} (${renderedImage.width} x ${renderedImage.height} pixels) does not have the correct aspect ratio: it needs to be ${validationSchema?.aspectRatio?.width}:${validationSchema?.aspectRatio?.height} (e.g. ${validationSchema?.minWidth} x ${validationSchema?.minHeight}pixels)`,
         );
-      } else <span class="cstat-no" title="statement not covered" >if (</span>
+<span class="cstat-no" title="statement not covered" >      } else if (</span>
         !validateImageDimensions(renderedImage.width, renderedImage.height, {
           minWidth: validationSchema?.minWidth,
           maxWidth: validationSchema?.maxWidth,
@@ -992,7 +992,7 @@ function ImageUpload({
           &lt;div className="snap-image-upload-container"&gt;
             &lt;div
               className={`snap-image-upload-drop-area ${
-                isDragging ? <span class="branch-0 cbranch-no" title="branch not covered" >"is-dragging" </span>: ""
+                isDragging ? <span class="branch-0 cbranch-no" title="branch not covered" >"is-dragging" : "</span>"
               }`}
               style={{
                 width: `${previewWidth}px`,
@@ -1000,13 +1000,13 @@ function ImageUpload({
                 marginRight:
                   hasDarkThemePreview &amp;&amp; !previewImageUrl ? "1rem" : "0",
               }}
-              onDragOver={<span class="fstat-no" title="function not covered" >()</span> =&gt; {
+              onDragOver={<span class="fstat-no" title="function not covered" >() =&gt; {</span>
 <span class="cstat-no" title="statement not covered" >                setIsDragging(true);</span>
               }}
-              onDragLeave={<span class="fstat-no" title="function not covered" >()</span> =&gt; {
+              onDragLeave={<span class="fstat-no" title="function not covered" >() =&gt; {</span>
 <span class="cstat-no" title="statement not covered" >                setIsDragging(false);</span>
               }}
-              onDrop={<span class="fstat-no" title="function not covered" >()</span> =&gt; {
+              onDrop={<span class="fstat-no" title="function not covered" >() =&gt; {</span>
 <span class="cstat-no" title="statement not covered" >                setIsDragging(false);</span>
               }}
             &gt;
@@ -1108,7 +1108,7 @@ function ImageUpload({
               /&gt;
               &lt;small&gt;
                 This is how your application&amp;rsquo;s icon will look in{" "}
-                {darkThemeEnabled ? <span class="branch-0 cbranch-no" title="branch not covered" >"dark" </span>: "light"} theme
+                {darkThemeEnabled ? <span class="branch-0 cbranch-no" title="branch not covered" >"dark" : "</span>light"} theme
               &lt;/small&gt;
             &lt;/div&gt;
           )}
@@ -1119,7 +1119,7 @@ function ImageUpload({
         &lt;button
           type="button"
           className="p-button--link"
-          onClick={<span class="fstat-no" title="function not covered" >()</span> =&gt; {
+          onClick={<span class="fstat-no" title="function not covered" >() =&gt; {</span>
 <span class="cstat-no" title="statement not covered" >            setShowImageRestrictions(!showImageRestrictions);</span>
           }}
         &gt;
@@ -1195,7 +1195,7 @@ export default ImageUpload;
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-09-11T22:04:25.119Z
+                at 2025-09-12T22:04:42.372Z
             </div>
         <script src="../../../../prettify.js"></script>
         <script>

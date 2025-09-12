@@ -322,19 +322,19 @@
 <span class="cline-any cline-yes">9x</span>
 <span class="cline-any cline-yes">9x</span>
 <span class="cline-any cline-yes">9x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">9x</span>
-<span class="cline-any cline-yes">9x</span>
-<span class="cline-any cline-yes">9x</span>
-<span class="cline-any cline-yes">9x</span>
-<span class="cline-any cline-yes">9x</span>
-<span class="cline-any cline-yes">9x</span>
-<span class="cline-any cline-yes">9x</span>
 <span class="cline-any cline-yes">9x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">9x</span>
+<span class="cline-any cline-yes">9x</span>
+<span class="cline-any cline-yes">9x</span>
+<span class="cline-any cline-yes">9x</span>
+<span class="cline-any cline-yes">9x</span>
+<span class="cline-any cline-yes">9x</span>
+<span class="cline-any cline-yes">9x</span>
+<span class="cline-any cline-yes">9x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">9x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -565,7 +565,7 @@ function Policies(): React.JSX.Element {
   const setSigningKeysList = useSetAtom(signingKeysListState);
 &nbsp;
   useEffect(() =&gt; {
-    <span class="missing-if-branch" title="if path not taken" >I</span>if (!signingKeys.isLoading &amp;&amp; <span class="branch-1 cbranch-no" title="branch not covered" >!signingKeys.isError)</span> {
+    <span class="missing-if-branch" title="if path not taken" >I</span>if (!signingKeys.isLoading &amp;&amp; <span class="branch-1 cbranch-no" title="branch not covered" >!signingKeys.isError) {</span>
 <span class="cstat-no" title="statement not covered" >      if (signingKeys.data) {</span>
 <span class="cstat-no" title="statement not covered" >        setSigningKeysList(signingKeys.data);</span>
       } else {
@@ -575,7 +575,7 @@ function Policies(): React.JSX.Element {
   }, [signingKeys]);
 &nbsp;
   useEffect(() =&gt; {
-    <span class="missing-if-branch" title="if path not taken" >I</span>if (!isLoading &amp;&amp; <span class="branch-1 cbranch-no" title="branch not covered" >!isError)</span> {
+    <span class="missing-if-branch" title="if path not taken" >I</span>if (!isLoading &amp;&amp; <span class="branch-1 cbranch-no" title="branch not covered" >!isError) {</span>
 <span class="cstat-no" title="statement not covered" >      if (data) {</span>
 <span class="cstat-no" title="statement not covered" >        setPoliciesList(data);</span>
       }
@@ -585,8 +585,8 @@ function Policies(): React.JSX.Element {
     }
   }, [isLoading, error, data]);
 &nbsp;
-  brandStore
-    ? <span class="branch-0 cbranch-no" title="branch not covered" >setPageTitle(`Policies in ${brandStore.name}`)</span>
+<span class="branch-0 cbranch-no" title="branch not covered" >  brandStore</span>
+    ? setPageTitle(`Policies in ${brandStore.name}`)
     : setPageTitle("Policies");
 &nbsp;
   return (
@@ -606,7 +606,7 @@ function Policies(): React.JSX.Element {
 <span class="branch-1 cbranch-no" title="branch not covered" >              &lt;div className="u-fixed-width"&gt;</span>
                 &lt;Notification
                   severity="positive"
-                  onDismiss={<span class="fstat-no" title="function not covered" >()</span> =&gt; {
+                  onDismiss={<span class="fstat-no" title="function not covered" >() =&gt; {</span>
 <span class="cstat-no" title="statement not covered" >                    setShowNotification(false);</span>
                   }}
                 &gt;
@@ -618,7 +618,7 @@ function Policies(): React.JSX.Element {
 <span class="branch-1 cbranch-no" title="branch not covered" >              &lt;div className="u-fixed-width"&gt;</span>
                 &lt;Notification
                   severity="positive"
-                  onDismiss={<span class="fstat-no" title="function not covered" >()</span> =&gt; {
+                  onDismiss={<span class="fstat-no" title="function not covered" >() =&gt; {</span>
 <span class="cstat-no" title="statement not covered" >                    setShowDeletePolicyNotification(false);</span>
                   }}
                 &gt;
@@ -630,7 +630,7 @@ function Policies(): React.JSX.Element {
 <span class="branch-1 cbranch-no" title="branch not covered" >              &lt;div className="u-fixed-width"&gt;</span>
                 &lt;Notification
                   severity="negative"
-                  onDismiss={<span class="fstat-no" title="function not covered" >()</span> =&gt; {
+                  onDismiss={<span class="fstat-no" title="function not covered" >() =&gt; {</span>
 <span class="cstat-no" title="statement not covered" >                    setShowErrorNotification(false);</span>
                   }}
                 &gt;
@@ -642,7 +642,7 @@ function Policies(): React.JSX.Element {
 <span class="branch-1 cbranch-no" title="branch not covered" >              &lt;div className="u-fixed-width"&gt;</span>
                 &lt;Notification
                   severity="negative"
-                  onDismiss={<span class="fstat-no" title="function not covered" >()</span> =&gt; {
+                  onDismiss={<span class="fstat-no" title="function not covered" >() =&gt; {</span>
 <span class="cstat-no" title="statement not covered" >                    setShowDeletePolicyErrorNotification(false);</span>
                   }}
                 &gt;
@@ -669,7 +669,7 @@ function Policies(): React.JSX.Element {
             &lt;/Row&gt;
             &lt;div className="u-fixed-width u-flex-column u-flex-grow"&gt;
               &lt;&gt;
-                {isError &amp;&amp; <span class="branch-1 cbranch-no" title="branch not covered" >error </span>&amp;&amp; (
+                {isError &amp;&amp; <span class="branch-1 cbranch-no" title="branch not covered" >error &amp;&amp; (</span>
 <span class="branch-2 cbranch-no" title="branch not covered" >                  &lt;Notification severity="negative"&gt;</span>
                     Error: {(error as ApiError).message}
                   &lt;/Notification&gt;
@@ -700,7 +700,7 @@ function Policies(): React.JSX.Element {
         className={`l-aside__overlay ${
           isClosedPanel(location.pathname, "create") ? "u-hide" : ""
         }`}
-        onClick={<span class="fstat-no" title="function not covered" >()</span> =&gt; {
+        onClick={<span class="fstat-no" title="function not covered" >() =&gt; {</span>
 <span class="cstat-no" title="statement not covered" >          navigate(`/admin/${id}/models/${model_id}/policies`);</span>
 <span class="cstat-no" title="statement not covered" >          setNewSigningKey({ name: "" });</span>
 <span class="cstat-no" title="statement not covered" >          setShowErrorNotification(false);</span>
@@ -739,7 +739,7 @@ export default Policies;
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-09-11T22:04:25.119Z
+                at 2025-09-12T22:04:42.372Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>

@@ -466,7 +466,7 @@ function CreateSigningKeyForm({
   const [isSaving, setIsSaving] = useState(false);
   const queryClient = useQueryClient();
 &nbsp;
-  const handleError = <span class="fstat-no" title="function not covered" >()</span> =&gt; {
+  const handleError = <span class="fstat-no" title="function not covered" >() =&gt; {</span>
 <span class="cstat-no" title="statement not covered" >    setSigningKeysList(<span class="fstat-no" title="function not covered" >(o</span>ldSigningKeysList: Array&lt;SigningKey&gt;) =&gt; {</span>
 <span class="cstat-no" title="statement not covered" >      return oldSigningKeysList.filter(</span>
 <span class="fstat-no" title="function not covered" >        (s</span>igningKey) =&gt; <span class="cstat-no" title="statement not covered" >signingKey.name !== newSigningKey.name,</span>
@@ -475,7 +475,7 @@ function CreateSigningKeyForm({
 <span class="cstat-no" title="statement not covered" >    navigate(`/admin/${id}/signing-keys`);</span>
 <span class="cstat-no" title="statement not covered" >    setNewSigningKey({ name: "" });</span>
 <span class="cstat-no" title="statement not covered" >    setIsSaving(false);</span>
-<span class="cstat-no" title="statement not covered" >    setTimeout(<span class="fstat-no" title="function not covered" >()</span> =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >    setTimeout(<span class="fstat-no" title="function not covered" >() =&gt; {</span></span>
 <span class="cstat-no" title="statement not covered" >      setErrorMessage("");</span>
     }, 5000);
   };
@@ -507,10 +507,10 @@ function CreateSigningKeyForm({
         body: formData,
       });
     },
-    onMutate: <span class="fstat-no" title="function not covered" >as</span>ync (newSigningKey) =&gt; {
+    onMutate: <span class="fstat-no" title="function not covered" >async (n</span>ewSigningKey) =&gt; {
 <span class="cstat-no" title="statement not covered" >      await queryClient.cancelQueries({ queryKey: ["signingKeys"] });</span>
       const previousSigningKeys = <span class="cstat-no" title="statement not covered" >queryClient.getQueryData(["signingKeys"]);</span>
-<span class="cstat-no" title="statement not covered" >      queryClient.setQueryData(["signingKeys"], <span class="fstat-no" title="function not covered" >()</span> =&gt; <span class="cstat-no" title="statement not covered" >[newSigningKey])</span>;</span>
+<span class="cstat-no" title="statement not covered" >      queryClient.setQueryData(["signingKeys"], <span class="fstat-no" title="function not covered" >() =&gt; <span class="cstat-no" title="statement not covered" >[</span>newSigningKey])</span>;</span>
 <span class="cstat-no" title="statement not covered" >      return { previousSigningKeys };</span>
     },
     onError: <span class="fstat-no" title="function not covered" >({</span> context }) =&gt; {
@@ -518,21 +518,21 @@ function CreateSigningKeyForm({
 <span class="cstat-no" title="statement not covered" >      handleError();</span>
 <span class="cstat-no" title="statement not covered" >      throw new Error("Unable to create signing key");</span>
     },
-    onSettled: <span class="fstat-no" title="function not covered" >()</span> =&gt; {
+    onSettled: <span class="fstat-no" title="function not covered" >() =&gt; {</span>
 <span class="cstat-no" title="statement not covered" >      queryClient.invalidateQueries({ queryKey: ["signingKeys"] });</span>
 <span class="cstat-no" title="statement not covered" >      refetch();</span>
 <span class="cstat-no" title="statement not covered" >      setShowNotification(true);</span>
 <span class="cstat-no" title="statement not covered" >      setIsSaving(false);</span>
 <span class="cstat-no" title="statement not covered" >      navigate(`/admin/${id}/signing-keys`);</span>
-<span class="cstat-no" title="statement not covered" >      setTimeout(<span class="fstat-no" title="function not covered" >()</span> =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >      setTimeout(<span class="fstat-no" title="function not covered" >() =&gt; {</span></span>
 <span class="cstat-no" title="statement not covered" >        setShowNotification(false);</span>
       }, 5000);
     },
   });
 &nbsp;
   if (location.pathname.includes("/create")) {
-    brandStore
-      ? <span class="branch-0 cbranch-no" title="branch not covered" >setPageTitle(`Create signing key in ${brandStore.name}`)</span>
+<span class="branch-0 cbranch-no" title="branch not covered" >    brandStore</span>
+      ? setPageTitle(`Create signing key in ${brandStore.name}`)
       : setPageTitle("Create signing key");
   }
 &nbsp;
@@ -582,7 +582,7 @@ function CreateSigningKeyForm({
               &lt;Link
                 className="p-button u-no-margin--bottom"
                 to={`/admin/${id}/signing-keys`}
-                onClick={<span class="fstat-no" title="function not covered" >()</span> =&gt; {
+                onClick={<span class="fstat-no" title="function not covered" >() =&gt; {</span>
 <span class="cstat-no" title="statement not covered" >                  setNewSigningKey({ name: "" });</span>
 <span class="cstat-no" title="statement not covered" >                  setErrorMessage("");</span>
                 }}
@@ -616,7 +616,7 @@ export default CreateSigningKeyForm;
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-09-11T22:04:25.119Z
+                at 2025-09-12T22:04:42.372Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>

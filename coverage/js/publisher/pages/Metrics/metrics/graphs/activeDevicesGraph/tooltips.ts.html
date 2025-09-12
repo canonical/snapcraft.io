@@ -288,12 +288,12 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">5x</span>
-<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -391,7 +391,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -469,18 +469,18 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">5x</span>
-<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -493,9 +493,9 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -507,7 +507,7 @@ import { format } from "d3-format";
 &nbsp;
 export function tooltips(this: any) {
   const tooltipTimeFormat = utcFormat("%Y-%m-%d");
-  const commaValue = <span class="fstat-no" title="function not covered" >(n</span>umber: number) =&gt; <span class="cstat-no" title="statement not covered" >format(",")(number);</span>
+  const commaValue = <span class="fstat-no" title="function not covered" >(<span class="cstat-no" title="statement not covered" >n</span>umber: number) =&gt; format(",")(number);</span>
 &nbsp;
   this.showTooltips = false;
 &nbsp;
@@ -614,8 +614,8 @@ export function tooltips(this: any) {
 <span class="cstat-no" title="statement not covered" >      return;</span>
     }
 &nbsp;
-    const bisectDate = <span class="cstat-no" title="statement not covered" >bisector(<span class="fstat-no" title="function not covered" >(d</span>: any) =&gt; <span class="cstat-no" title="statement not covered" >d.date)</span>.left;</span>
-    const mousePosition = <span class="cstat-no" title="statement not covered" >pointer(event, event.currentTarget);</span>
+    const <span class="cstat-no" title="statement not covered" >bisectDate = bisector(<span class="fstat-no" title="function not covered" >(d</span>: any) =&gt; <span class="cstat-no" title="statement not covered" >d.date)</span>.left;</span>
+    const <span class="cstat-no" title="statement not covered" >mousePosition = pointer(event, event.currentTarget);</span>
 &nbsp;
     const x0 = <span class="cstat-no" title="statement not covered" >this.xScale.invert(mousePosition[0]);</span>
     const _date = <span class="cstat-no" title="statement not covered" >new Date(x0);</span>
@@ -687,7 +687,7 @@ export function tooltips(this: any) {
     }
   };
 &nbsp;
-  const cancelTooltip = <span class="fstat-no" title="function not covered" >()</span> =&gt; {
+  const cancelTooltip = <span class="fstat-no" title="function not covered" >() =&gt; {</span>
 <span class="cstat-no" title="statement not covered" >    this.tooltip.style("display", "none");</span>
   };
 &nbsp;
@@ -724,7 +724,7 @@ export function tooltips(this: any) {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-09-11T22:04:25.119Z
+                at 2025-09-12T22:04:42.372Z
             </div>
         <script src="../../../../../../prettify.js"></script>
         <script>

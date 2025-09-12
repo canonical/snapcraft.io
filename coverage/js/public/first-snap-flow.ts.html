@@ -938,7 +938,7 @@ import "whatwg-fetch";
 &nbsp;
 import { toggleAccordion } from "./accordion";
 &nbsp;
-function <span class="fstat-no" title="function not covered" >install(</span>language: unknown, fsfFlow: string): void {
+function <span class="fstat-no" title="function not covered" >install(l</span>anguage: unknown, fsfFlow: string): void {
   const osPickers = <span class="cstat-no" title="statement not covered" >Array.from(</span>
     document.querySelectorAll(".js-os-select"),
   ) as Array&lt;HTMLElement&gt;;
@@ -946,9 +946,9 @@ function <span class="fstat-no" title="function not covered" >install(</span>lan
     document.querySelectorAll(".js-os-wrapper"),
   ) as Array&lt;HTMLElement&gt;;
 &nbsp;
-  function <span class="fstat-no" title="function not covered" >select(</span>selectedOs: string) {
+  function <span class="fstat-no" title="function not covered" >select(s</span>electedOs: string) {
 <span class="cstat-no" title="statement not covered" >    if (osWrappers) {</span>
-<span class="cstat-no" title="statement not covered" >      osWrappers.forEach(<span class="fstat-no" title="function not covered" >fu</span>nction (wrapper) {</span>
+<span class="cstat-no" title="statement not covered" >      osWrappers.forEach(<span class="fstat-no" title="function not covered" >function (w</span>rapper) {</span>
 <span class="cstat-no" title="statement not covered" >        wrapper.classList.add("u-hide");</span>
       });
     }
@@ -975,19 +975,19 @@ function <span class="fstat-no" title="function not covered" >install(</span>lan
     const isLinux = <span class="cstat-no" title="statement not covered" >!!userAgent.match(/(Linux)|(X11)/);</span>
     const userOS = <span class="cstat-no" title="statement not covered" >isMac ? "macos" : isLinux ? "linux" : null;</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >    osPickers.forEach(<span class="fstat-no" title="function not covered" >fu</span>nction (os) {</span>
+<span class="cstat-no" title="statement not covered" >    osPickers.forEach(<span class="fstat-no" title="function not covered" >function (o</span>s) {</span>
 <span class="cstat-no" title="statement not covered" >      if (os.dataset.os === userOS) {</span>
 <span class="cstat-no" title="statement not covered" >        os.classList.add("is-selected");</span>
       }
 &nbsp;
-<span class="cstat-no" title="statement not covered" >      os.addEventListener("click", <span class="fstat-no" title="function not covered" >fu</span>nction (e: Event) {</span>
+<span class="cstat-no" title="statement not covered" >      os.addEventListener("click", <span class="fstat-no" title="function not covered" >function (e</span>: Event) {</span>
         const target = <span class="cstat-no" title="statement not covered" >e.target as HTMLElement;</span>
         const osSelect = <span class="cstat-no" title="statement not covered" >target.closest(".js-os-select") as HTMLElement;</span>
 <span class="cstat-no" title="statement not covered" >        if (!osSelect) {</span>
 <span class="cstat-no" title="statement not covered" >          return;</span>
         }
 &nbsp;
-<span class="cstat-no" title="statement not covered" >        osPickers.forEach(<span class="fstat-no" title="function not covered" >fu</span>nction (picker) {</span>
+<span class="cstat-no" title="statement not covered" >        osPickers.forEach(<span class="fstat-no" title="function not covered" >function (p</span>icker) {</span>
 <span class="cstat-no" title="statement not covered" >          picker.classList.remove("is-selected");</span>
         });
 <span class="cstat-no" title="statement not covered" >        osSelect.classList.add("is-selected");</span>
@@ -1002,7 +1002,7 @@ function <span class="fstat-no" title="function not covered" >install(</span>lan
     }
   }
 &nbsp;
-  function <span class="fstat-no" title="function not covered" >onChange(</span>e: Event) {
+  function <span class="fstat-no" title="function not covered" >onChange(e</span>: Event) {
     const target = <span class="cstat-no" title="statement not covered" >e.target as HTMLInputElement;</span>
     const type = <span class="cstat-no" title="statement not covered" >target.value;</span>
     const os = <span class="cstat-no" title="statement not covered" >type.split("-")[0];</span>
@@ -1016,10 +1016,10 @@ function <span class="fstat-no" title="function not covered" >install(</span>lan
     }
 &nbsp;
 <span class="cstat-no" title="statement not covered" >    if (osWrappers) {</span>
-<span class="cstat-no" title="statement not covered" >      osWrappers.forEach(<span class="fstat-no" title="function not covered" >fu</span>nction (wrapper) {</span>
+<span class="cstat-no" title="statement not covered" >      osWrappers.forEach(<span class="fstat-no" title="function not covered" >function (w</span>rapper) {</span>
         const rows = <span class="cstat-no" title="statement not covered" >Array.from(wrapper.querySelectorAll(".js-os-type"));</span>
 <span class="cstat-no" title="statement not covered" >        if (rows) {</span>
-<span class="cstat-no" title="statement not covered" >          rows.forEach(<span class="fstat-no" title="function not covered" >fu</span>nction (row) {</span>
+<span class="cstat-no" title="statement not covered" >          rows.forEach(<span class="fstat-no" title="function not covered" >function (r</span>ow) {</span>
 <span class="cstat-no" title="statement not covered" >            row.classList.add("u-hide");</span>
           });
         }
@@ -1042,7 +1042,7 @@ function <span class="fstat-no" title="function not covered" >install(</span>lan
 <span class="cstat-no" title="statement not covered" >  document.addEventListener("change", onChange);</span>
 }
 &nbsp;
-function <span class="fstat-no" title="function not covered" >getSnapCount(</span>cb: {
+function <span class="fstat-no" title="function not covered" >getSnapCount(c</span>b: {
   (data: { count: number; snaps: string[] }): void;
 }): void {
 <span class="cstat-no" title="statement not covered" >  fetch("/snaps/api/snap-count")</span>
@@ -1053,7 +1053,7 @@ function <span class="fstat-no" title="function not covered" >getSnapCount(</spa
     .catch();
 }
 &nbsp;
-function <span class="fstat-no" title="function not covered" >getArrayDiff(</span>arr1: string[], arr2: string[]): string[] {
+function <span class="fstat-no" title="function not covered" >getArrayDiff(a</span>rr1: string[], arr2: string[]): string[] {
   let newArr: string[];
   let oldArr: string[];
 <span class="cstat-no" title="statement not covered" >  if (arr1.length === arr2.length) {</span>
@@ -1079,7 +1079,7 @@ function <span class="fstat-no" title="function not covered" >getArrayDiff(</spa
 <span class="cstat-no" title="statement not covered" >  return newValues;</span>
 }
 &nbsp;
-function <span class="fstat-no" title="function not covered" >push(</span>): void {
+function <span class="fstat-no" title="function not covered" >push(): void {</span>
   let initialCount: number | null = <span class="cstat-no" title="statement not covered" >null;</span>
   let initialSnaps: string[] = <span class="cstat-no" title="statement not covered" >[];</span>
   let timer: string | number | NodeJS.Timeout | undefined;
@@ -1095,7 +1095,7 @@ function <span class="fstat-no" title="function not covered" >push(</span>): voi
 <span class="cstat-no" title="statement not covered" >      if (initialCount === null) {</span>
 <span class="cstat-no" title="statement not covered" >        initialCount = data.count;</span>
 <span class="cstat-no" title="statement not covered" >        initialSnaps = data.snaps;</span>
-      } else <span class="cstat-no" title="statement not covered" >if (data.count !== initialCount) {</span>
+<span class="cstat-no" title="statement not covered" >      } else if (data.count !== initialCount) {</span>
         const newSnaps = <span class="cstat-no" title="statement not covered" >getArrayDiff(initialSnaps, data.snaps);</span>
 &nbsp;
         // @ts-ignore
@@ -1242,7 +1242,7 @@ function <span class="fstat-no" title="function not covered" >initRegisterName(<
     "[name=snap-name]",
   ) as HTMLInputElement;
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  snapNameInput.addEventListener("keyup", <span class="fstat-no" title="function not covered" >()</span> =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >  snapNameInput.addEventListener("keyup", <span class="fstat-no" title="function not covered" >() =&gt; {</span></span>
 <span class="cstat-no" title="statement not covered" >    if (notificationEl.classList.contains("u-hide")) {</span>
 <span class="cstat-no" title="statement not covered" >      notificationEl.classList.remove("u-hide");</span>
     }
@@ -1263,12 +1263,12 @@ function <span class="fstat-no" title="function not covered" >initRegisterName(<
     }
   });
 &nbsp;
-  function <span class="fstat-no" title="function not covered" >showSuccess(</span>message: string | undefined) {
+  function <span class="fstat-no" title="function not covered" >showSuccess(m</span>essage: string | undefined) {
 <span class="cstat-no" title="statement not covered" >    successEl.classList.remove("u-hide");</span>
 <span class="cstat-no" title="statement not covered" >    successNotification(notificationEl, message);</span>
   }
 &nbsp;
-  function <span class="fstat-no" title="function not covered" >showError(</span>message: string) {
+  function <span class="fstat-no" title="function not covered" >showError(m</span>essage: string) {
 <span class="cstat-no" title="statement not covered" >    errorNotification(notificationEl, message);</span>
   }
 &nbsp;
@@ -1290,7 +1290,7 @@ function <span class="fstat-no" title="function not covered" >initRegisterName(<
       ".p-accordion__tab",
     ) as HTMLElement;
 &nbsp;
-    const enableButton = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >()</span> =&gt; {</span>
+    const enableButton = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >() =&gt; {</span></span>
 <span class="cstat-no" title="statement not covered" >      if (submitButton.disabled) {</span>
 <span class="cstat-no" title="statement not covered" >        submitButton.classList.remove("has-spinner");</span>
 <span class="cstat-no" title="statement not covered" >        submitButton.disabled = false;</span>
@@ -1298,7 +1298,7 @@ function <span class="fstat-no" title="function not covered" >initRegisterName(<
     };
 &nbsp;
     // Enable "Go to listing" button for an unpublished app
-    const enableGoToListingButton = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >()</span> =&gt; {</span>
+    const enableGoToListingButton = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >() =&gt; {</span></span>
       const formField = <span class="cstat-no" title="statement not covered" >formEl.querySelector(</span>
         "[name=snap-name]",
       ) as HTMLInputElement;
@@ -1313,7 +1313,7 @@ function <span class="fstat-no" title="function not covered" >initRegisterName(<
     };
 &nbsp;
     // Show spinner if data fetch takes long
-    const timer = <span class="cstat-no" title="statement not covered" >setTimeout(<span class="fstat-no" title="function not covered" >()</span> =&gt; {</span>
+    const timer = <span class="cstat-no" title="statement not covered" >setTimeout(<span class="fstat-no" title="function not covered" >() =&gt; {</span></span>
 <span class="cstat-no" title="statement not covered" >      if (currentToggle.getAttribute("aria-expanded") === "true") {</span>
 <span class="cstat-no" title="statement not covered" >        submitButton.classList.add("has-spinner");</span>
 <span class="cstat-no" title="statement not covered" >        submitButton.disabled = true;</span>
@@ -1332,9 +1332,9 @@ function <span class="fstat-no" title="function not covered" >initRegisterName(<
 <span class="cstat-no" title="statement not covered" >          showError(json.errors[0].message);</span>
 <span class="cstat-no" title="statement not covered" >          enableButton();</span>
 <span class="cstat-no" title="statement not covered" >          return;</span>
-        } else <span class="cstat-no" title="statement not covered" >if (json.code == "created") {</span>
+<span class="cstat-no" title="statement not covered" >        } else if (json.code == "created") {</span>
 <span class="cstat-no" title="statement not covered" >          message = `Name "${json.snap_name}" registered successfully.`;</span>
-        } else <span class="cstat-no" title="statement not covered" >if (json.code == "already_owned") {</span>
+<span class="cstat-no" title="statement not covered" >        } else if (json.code == "already_owned") {</span>
 <span class="cstat-no" title="statement not covered" >          message = `You already own "${json.snap_name}"".`;</span>
         }
         // Jump to the next accordion panel
@@ -1345,7 +1345,7 @@ function <span class="fstat-no" title="function not covered" >initRegisterName(<
 <span class="cstat-no" title="statement not covered" >        showSuccess(message);</span>
 <span class="cstat-no" title="statement not covered" >        enableGoToListingButton();</span>
       })
-      .catch(<span class="fstat-no" title="function not covered" >()</span> =&gt; {
+      .catch(<span class="fstat-no" title="function not covered" >() =&gt; {</span>
 <span class="cstat-no" title="statement not covered" >        clearTimeout(timer);</span>
 <span class="cstat-no" title="statement not covered" >        if (submitButton.disabled) {</span>
 <span class="cstat-no" title="statement not covered" >          submitButton.classList.remove("has-spinner");</span>
@@ -1372,7 +1372,7 @@ export default {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-09-11T22:04:25.119Z
+                at 2025-09-12T22:04:42.372Z
             </div>
         <script src="../prettify.js"></script>
         <script>

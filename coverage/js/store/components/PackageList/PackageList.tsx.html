@@ -250,35 +250,35 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">32x</span>
+<span class="cline-any cline-yes">34x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">32x</span>
+<span class="cline-any cline-yes">34x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">32x</span>
+<span class="cline-any cline-yes">34x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">32x</span>
+<span class="cline-any cline-yes">34x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">32x</span>
-<span class="cline-any cline-yes">32x</span>
+<span class="cline-any cline-yes">34x</span>
+<span class="cline-any cline-yes">34x</span>
+<span class="cline-any cline-yes">34x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">32x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">32x</span>
+<span class="cline-any cline-yes">34x</span>
 <span class="cline-any cline-yes">12x</span>
 <span class="cline-any cline-yes">39x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">12x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">32x</span>
-<span class="cline-any cline-yes">32x</span>
-<span class="cline-any cline-yes">13x</span>
+<span class="cline-any cline-yes">34x</span>
+<span class="cline-any cline-yes">34x</span>
+<span class="cline-any cline-yes">14x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">19x</span>
-<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-yes">20x</span>
+<span class="cline-any cline-yes">8x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">12x</span>
@@ -296,7 +296,7 @@
 <span class="cline-any cline-yes">8x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">32x</span>
+<span class="cline-any cline-yes">34x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -307,11 +307,11 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">32x</span>
+<span class="cline-any cline-yes">34x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">32x</span>
+<span class="cline-any cline-yes">34x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -352,7 +352,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">15x</span>
+<span class="cline-any cline-yes">17x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -455,7 +455,7 @@ function PackageList({
     return getCategoryDisplayName(selectedCategories[0]);
   };
 &nbsp;
-  const onClear = <span class="fstat-no" title="function not covered" >()</span>: void =&gt; {
+  const onClear = <span class="fstat-no" title="function not covered" >(): void =&gt; {</span>
 <span class="cstat-no" title="statement not covered" >    searchParams.delete("q");</span>
 <span class="cstat-no" title="statement not covered" >    searchParams.delete("page");</span>
 <span class="cstat-no" title="statement not covered" >    setSearchParams(searchParams);</span>
@@ -484,7 +484,7 @@ function PackageList({
                 &lt;Col size={6}&gt;
                   {searchParams.get("q") ? (
                     &lt;p&gt;
-                      Showing {currentPage === "1" ? "1" : <span class="branch-1 cbranch-no" title="branch not covered" >firstResultNumber}</span> to{" "}
+                      Showing {currentPage === "1" ? "1" : <span class="branch-1 cbranch-no" title="branch not covered" >firstResultNumber} </span>to{" "}
                       {lastResultNumber} of {overHundredText} results for{" "}
                       &lt;strong&gt;"{searchParams.get("q")}"&lt;/strong&gt;.{" "}
                       &lt;Button appearance="link" onClick={onClear}&gt;
@@ -493,7 +493,7 @@ function PackageList({
                     &lt;/p&gt;
                   ) : (
                     &lt;p&gt;
-                      Showing {currentPage === "1" ? "1" : <span class="branch-1 cbranch-no" title="branch not covered" >firstResultNumber}</span> to{" "}
+                      Showing {currentPage === "1" ? "1" : <span class="branch-1 cbranch-no" title="branch not covered" >firstResultNumber} </span>to{" "}
                       {lastResultNumber} of {overHundredText} items
                     &lt;/p&gt;
                   )}
@@ -547,7 +547,7 @@ export default PackageList;
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-09-11T22:04:25.119Z
+                at 2025-09-12T22:04:42.372Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>

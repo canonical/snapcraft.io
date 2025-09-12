@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">61.53% </span>
+                <span class="strong">84.61% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>8/13</span>
+                <span class='fraction'>11/13</span>
+            </div>
+        
+            
+            <div class='fl pad1y space-right2'>
+                <span class="strong">75% </span>
+                <span class="quiet">Branches</span>
+                <span class='fraction'>42/56</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">71.42% </span>
-                <span class="quiet">Branches</span>
-                <span class='fraction'>40/56</span>
-            </div>
-        
-            
-            <div class='fl pad1y space-right2'>
-                <span class="strong">57.14% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>4/7</span>
+                <span class='fraction'>5/7</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">61.53% </span>
+                <span class="strong">84.61% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>8/13</span>
+                <span class='fraction'>11/13</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line medium'></div>
+    <div class='status-line high'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -542,22 +542,22 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">151x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">146x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">146x</span>
+<span class="cline-any cline-yes">151x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">146x</span>
-<span class="cline-any cline-yes">438x</span>
-<span class="cline-any cline-yes">438x</span>
+<span class="cline-any cline-yes">151x</span>
+<span class="cline-any cline-yes">452x</span>
+<span class="cline-any cline-yes">450x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">146x</span>
+<span class="cline-any cline-yes">151x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -655,7 +655,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">584x</span>
+<span class="cline-any cline-yes">604x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -711,7 +711,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">584x</span>
+<span class="cline-any cline-yes">600x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -739,10 +739,10 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -996,11 +996,11 @@ function ListingDetails({
   );
 &nbsp;
   const showSecondaryCategory = (): boolean =&gt; {
-    <span class="missing-if-branch" title="else path not taken" >E</span>if (getValues("secondary_category") !== "") {
+    if (getValues("secondary_category") !== "") {
       return true;
     }
 &nbsp;
-<span class="cstat-no" title="statement not covered" >    return hasSecondaryCategory;</span>
+    return hasSecondaryCategory;
   };
 &nbsp;
   return (
@@ -1184,11 +1184,11 @@ function ListingDetails({
             &lt;Button
               type="button"
               appearance="base"
-              onClick={<span class="fstat-no" title="function not covered" >()</span> =&gt; {
-<span class="cstat-no" title="statement not covered" >                setValue("secondary_category", "", {</span>
+              onClick={() =&gt; {
+                setValue("secondary_category", "", {
                   shouldDirty: data.secondary_category !== "",
                 });
-<span class="cstat-no" title="statement not covered" >                setHasSecondCategory(false);</span>
+                setHasSecondCategory(false);
               }}
             &gt;
               &lt;Icon name="delete" /&gt;
@@ -1199,13 +1199,13 @@ function ListingDetails({
       )}
 &nbsp;
       {!showSecondaryCategory() &amp;&amp; (
-<span class="branch-1 cbranch-no" title="branch not covered" >        &lt;Row className="p-form__group"&gt;</span>
+        &lt;Row className="p-form__group"&gt;
           &lt;Col size={5} emptyLarge={3}&gt;
             &lt;Button
               type="button"
               appearance="link"
               className="u-no-margin--bottom"
-              onClick={<span class="fstat-no" title="function not covered" >()</span> =&gt; {
+              onClick={<span class="fstat-no" title="function not covered" >() =&gt; {</span>
 <span class="cstat-no" title="statement not covered" >                setHasSecondCategory(true);</span>
               }}
             &gt;
@@ -1350,12 +1350,12 @@ function ListingDetails({
           &lt;Button
             appearance="link"
             type="button"
-            onClick={<span class="fstat-no" title="function not covered" >()</span> =&gt; {
+            onClick={<span class="fstat-no" title="function not covered" >() =&gt; {</span>
 <span class="cstat-no" title="statement not covered" >              setShowSupportedMarkdownSyntax(!showSupportedMarkdownSyntax);</span>
             }}
           &gt;
             &lt;small&gt;
-              {showSupportedMarkdownSyntax ? <span class="branch-0 cbranch-no" title="branch not covered" >"Hide" </span>: "Show"} supported markdown
+              {showSupportedMarkdownSyntax ? <span class="branch-0 cbranch-no" title="branch not covered" >"Hide" : "</span>Show"} supported markdown
               syntax
             &lt;/small&gt;
           &lt;/Button&gt;
@@ -1408,7 +1408,7 @@ export default ListingDetails;
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-09-11T22:04:25.119Z
+                at 2025-09-12T22:04:42.372Z
             </div>
         <script src="../../../../prettify.js"></script>
         <script>

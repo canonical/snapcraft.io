@@ -560,7 +560,7 @@ function PoliciesTable({
   const [isLoading, setIsLoading] = useState&lt;boolean&gt;(false);
   const { refetch } = usePolicies(id, model_id) as UsePoliciesResponse;
 &nbsp;
-  const deletePolicy = <span class="fstat-no" title="function not covered" >as</span>ync (policyRevision: number | undefined) =&gt; {
+  const deletePolicy = <span class="fstat-no" title="function not covered" >async (p</span>olicyRevision: number | undefined) =&gt; {
 <span class="cstat-no" title="statement not covered" >    if (policyRevision === undefined) {</span>
 <span class="cstat-no" title="statement not covered" >      return;</span>
     }
@@ -586,7 +586,7 @@ function PoliciesTable({
 &nbsp;
 <span class="cstat-no" title="statement not covered" >    if (!response.ok) {</span>
 <span class="cstat-no" title="statement not covered" >      setShowDeletePolicyErrorNotification(true);</span>
-<span class="cstat-no" title="statement not covered" >      setTimeout(<span class="fstat-no" title="function not covered" >()</span> =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >      setTimeout(<span class="fstat-no" title="function not covered" >() =&gt; {</span></span>
 <span class="cstat-no" title="statement not covered" >        setShowDeletePolicyErrorNotification(false);</span>
       }, 5000);
 &nbsp;
@@ -595,14 +595,14 @@ function PoliciesTable({
 &nbsp;
 <span class="cstat-no" title="statement not covered" >    if (!data.success) {</span>
 <span class="cstat-no" title="statement not covered" >      setShowDeletePolicyErrorNotification(true);</span>
-<span class="cstat-no" title="statement not covered" >      setTimeout(<span class="fstat-no" title="function not covered" >()</span> =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >      setTimeout(<span class="fstat-no" title="function not covered" >() =&gt; {</span></span>
 <span class="cstat-no" title="statement not covered" >        setShowDeletePolicyErrorNotification(false);</span>
       }, 5000);
 &nbsp;
 <span class="cstat-no" title="statement not covered" >      throw new Error(data.message);</span>
     }
 &nbsp;
-<span class="cstat-no" title="statement not covered" >    setTimeout(<span class="fstat-no" title="function not covered" >()</span> =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >    setTimeout(<span class="fstat-no" title="function not covered" >() =&gt; {</span></span>
 <span class="cstat-no" title="statement not covered" >      setIsLoading(false);</span>
 <span class="cstat-no" title="statement not covered" >      setShowModal(false);</span>
     }, 500);
@@ -611,7 +611,7 @@ function PoliciesTable({
 <span class="cstat-no" title="statement not covered" >    setSelectedPolicy(undefined);</span>
 <span class="cstat-no" title="statement not covered" >    refetch();</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >    setTimeout(<span class="fstat-no" title="function not covered" >()</span> =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >    setTimeout(<span class="fstat-no" title="function not covered" >() =&gt; {</span></span>
 <span class="cstat-no" title="statement not covered" >      setShowDeletePolicyNotification(false);</span>
     }, 5000);
   };
@@ -666,7 +666,7 @@ function PoliciesTable({
           content: (
             &lt;Button
               className="u-no-margin--bottom"
-              onClick={<span class="fstat-no" title="function not covered" >()</span> =&gt; {
+              onClick={<span class="fstat-no" title="function not covered" >() =&gt; {</span>
 <span class="cstat-no" title="statement not covered" >                setSelectedPolicy(policy.revision);</span>
 <span class="cstat-no" title="statement not covered" >                setShowModal(true);</span>
               }}
@@ -705,7 +705,7 @@ function PoliciesTable({
       &lt;/TablePagination&gt;
       {showModal &amp;&amp; (
 <span class="branch-1 cbranch-no" title="branch not covered" >        &lt;Modal</span>
-          close={<span class="fstat-no" title="function not covered" >()</span> =&gt; {
+          close={<span class="fstat-no" title="function not covered" >() =&gt; {</span>
 <span class="cstat-no" title="statement not covered" >            setShowModal(false);</span>
           }}
           title="Delete policy"
@@ -713,7 +713,7 @@ function PoliciesTable({
             &lt;&gt;
               &lt;Button
                 className="u-no-margin--bottom"
-                onClick={<span class="fstat-no" title="function not covered" >()</span> =&gt; {
+                onClick={<span class="fstat-no" title="function not covered" >() =&gt; {</span>
 <span class="cstat-no" title="statement not covered" >                  setSelectedPolicy(undefined);</span>
 <span class="cstat-no" title="statement not covered" >                  setShowModal(false);</span>
                 }}
@@ -723,7 +723,7 @@ function PoliciesTable({
               &lt;Button
                 className="u-no-margin--bottom u-no-margin--right"
                 appearance="positive"
-                onClick={<span class="fstat-no" title="function not covered" >()</span> =&gt; {
+                onClick={<span class="fstat-no" title="function not covered" >() =&gt; {</span>
 <span class="cstat-no" title="statement not covered" >                  deletePolicy(selectedPolicy);</span>
                 }}
               &gt;
@@ -757,7 +757,7 @@ export default PoliciesTable;
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-09-11T22:04:25.119Z
+                at 2025-09-12T22:04:42.372Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>

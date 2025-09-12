@@ -379,19 +379,19 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">101x</span>
-<span class="cline-any cline-yes">101x</span>
-<span class="cline-any cline-yes">101x</span>
-<span class="cline-any cline-yes">101x</span>
-<span class="cline-any cline-yes">101x</span>
-<span class="cline-any cline-yes">101x</span>
-<span class="cline-any cline-yes">101x</span>
-<span class="cline-any cline-yes">101x</span>
-<span class="cline-any cline-yes">101x</span>
+<span class="cline-any cline-yes">102x</span>
+<span class="cline-any cline-yes">102x</span>
+<span class="cline-any cline-yes">102x</span>
+<span class="cline-any cline-yes">102x</span>
+<span class="cline-any cline-yes">102x</span>
+<span class="cline-any cline-yes">102x</span>
+<span class="cline-any cline-yes">102x</span>
+<span class="cline-any cline-yes">102x</span>
+<span class="cline-any cline-yes">102x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">101x</span>
+<span class="cline-any cline-yes">102x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">101x</span>
+<span class="cline-any cline-yes">102x</span>
 <span class="cline-any cline-yes">36x</span>
 <span class="cline-any cline-yes">14x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -399,13 +399,13 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">101x</span>
+<span class="cline-any cline-yes">102x</span>
 <span class="cline-any cline-yes">41x</span>
 <span class="cline-any cline-yes">22x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">101x</span>
+<span class="cline-any cline-yes">102x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -711,7 +711,7 @@ function Navigation({
             &lt;div className="p-panel__controls"&gt;
               &lt;button
                 className="p-panel__toggle u-no-margin--bottom"
-                onClick={<span class="fstat-no" title="function not covered" >()</span> =&gt; {
+                onClick={<span class="fstat-no" title="function not covered" >() =&gt; {</span>
 <span class="cstat-no" title="statement not covered" >                  setCollapseNavigation(!collapseNavigation);</span>
                 }}
               &gt;
@@ -722,7 +722,7 @@ function Navigation({
         &lt;/div&gt;
       &lt;/header&gt;
       &lt;nav
-        className={`l-navigation ${collapseNavigation ? <span class="branch-0 cbranch-no" title="branch not covered" >"is-collapsed" </span>: ""} ${pinSideNavigation ? <span class="branch-0 cbranch-no" title="branch not covered" >"is-pinned" </span>: ""}`}
+        className={`l-navigation ${collapseNavigation ? <span class="branch-0 cbranch-no" title="branch not covered" >"is-collapsed" : "</span>"} ${pinSideNavigation ? <span class="branch-0 cbranch-no" title="branch not covered" >"is-pinned" : "</span>"}`}
       &gt;
         &lt;div className="l-navigation__drawer"&gt;
           &lt;div className="p-panel is-dark"&gt;
@@ -732,7 +732,7 @@ function Navigation({
                 {pinSideNavigation &amp;&amp; (
 <span class="branch-1 cbranch-no" title="branch not covered" >                  &lt;button</span>
                     className="p-button--base is-dark has-icon u-no-margin u-hide--small u-hide--large"
-                    onClick={<span class="fstat-no" title="function not covered" >()</span> =&gt; {
+                    onClick={<span class="fstat-no" title="function not covered" >() =&gt; {</span>
 <span class="cstat-no" title="statement not covered" >                      setPinSideNavigation(false);</span>
                     }}
                   &gt;
@@ -743,7 +743,7 @@ function Navigation({
                 {!pinSideNavigation &amp;&amp; (
                   &lt;button
                     className="p-button--base is-dark has-icon u-no-margin u-hide--small u-hide--large"
-                    onClick={<span class="fstat-no" title="function not covered" >()</span> =&gt; {
+                    onClick={<span class="fstat-no" title="function not covered" >() =&gt; {</span>
 <span class="cstat-no" title="statement not covered" >                      setPinSideNavigation(true);</span>
                     }}
                   &gt;
@@ -938,8 +938,8 @@ function Navigation({
             &lt;div className="sidenav-toggle-wrapper u-hide--small u-hide--medium"&gt;
               &lt;button
                 className="p-button--base has-icon is-dense sidenav-toggle is-dark u-no-margin l-navigation-collapse-toggle u-hide--small"
-                aria-label={`${collapseNavigation ? <span class="branch-0 cbranch-no" title="branch not covered" >"Collapse" </span>: "Expand"} main navigation`}
-                onClick={<span class="fstat-no" title="function not covered" >()</span> =&gt; {
+                aria-label={`${collapseNavigation ? <span class="branch-0 cbranch-no" title="branch not covered" >"Collapse" : "</span>Expand"} main navigation`}
+                onClick={<span class="fstat-no" title="function not covered" >() =&gt; {</span>
 <span class="cstat-no" title="statement not covered" >                  setCollapseNavigation(!collapseNavigation);</span>
                 }}
               &gt;
@@ -961,7 +961,7 @@ export default Navigation;
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-09-11T22:04:25.119Z
+                at 2025-09-12T22:04:42.372Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>
