@@ -966,10 +966,10 @@
     react-table "7.8.0"
     react-useportal "1.0.19"
 
-"@canonical/react-components@2.16.1":
-  version "2.16.1"
-  resolved "https://registry.yarnpkg.com/@canonical/react-components/-/react-components-2.16.1.tgz#4c814dd6b64549a4ccda94eb0df5d0ba0d35b41b"
-  integrity sha512-8qoTl/4cci8JzDX+XJXP0/dHJQXhY0skQDYX5jynFXS9lUnjdgAlVehiulghFRZWGXUKrinRqwVYIXR88xEZww==
+"@canonical/react-components@3.0.1":
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/@canonical/react-components/-/react-components-3.0.1.tgz#8918dae0bc4c7096d2a5b31883eadfa8b741acb3"
+  integrity sha512-MQ7sPK8afAlUwbLQm46h5OH0NdFlD8SCGvD4u3Ei7Rkol4g9al5w8uJDpnpK6rC/mC2sc09QxZeLiBRZZt71+Q==
   dependencies:
     "@types/jest" "29.5.14"
     "@types/node" "20.17.19"
@@ -6229,13 +6229,6 @@ minimatch@3.1.2, minimatch@^3.1.1, minimatch@^3.1.2:
   integrity sha512-J7p63hRiAjw1NDEww1W7i37+ByIrOWO5XQQAzZ3VOcL0PNybwpfmV/N05zFAzwQ9USyEcX6t3UO+K5aqBQOIHw==
   dependencies:
     brace-expansion "^1.1.7"
-
-minimatch@5.1.6:
-  version "5.1.6"
-  resolved "https://registry.yarnpkg.com/minimatch/-/minimatch-5.1.6.tgz#1cfcb8cf5522ea69952cd2af95ae09477f122a96"
-  integrity sha512-lKwV/1brpG6mBUFHtb7NUmtABCb2WZZmm2wNiOA5hAb8VdCS4B3dtMWyvcoViccwAW/COERjXLt0zP1zXUN26g==
-  dependencies:
-    brace-expansion "^2.0.1"
 
 minimatch@9.0.5, minimatch@^9.0.4:
   version "9.0.5"
