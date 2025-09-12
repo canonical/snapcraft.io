@@ -69,7 +69,7 @@
       .p-navigation__dropdown--container {
         // a bit extra % to be able to show the shadow of the box if present
         clip-path: rect(0 105% 105% 0);
-        display: block;
+        display: none;
         min-width: 100%;
         position: absolute;
 
@@ -90,6 +90,11 @@
             --up: 0%;
           }
         }
+      }
+
+      .js-animation-playing .p-navigation__dropdown--container,
+      .is-active .p-navigation__dropdown--container {
+        display: block;
       }
     }
   }
