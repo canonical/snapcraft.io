@@ -102,7 +102,7 @@ def post_featured_snaps():
             "success": False,
             "message": "An error occurred while deleting featured snaps",
         }
-        return make_response(response, 500)
+        return make_response(error_body, 500)
     snap_ids = [
         dashboard.get_snap_id(flask.session, snap_name)
         for snap_name in new_featured_snaps
@@ -113,10 +113,15 @@ def post_featured_snaps():
         flask.session, snap_ids
     )
     if update_response.status_code != 201:
+        try:
+            error_body = update_response.json() 
+        except ValueError:
+            error_body = update_response.text 
+    if update_response.status_code != 201:
         response = {
             "success": False,
             "message": "An error occured while updating featured snaps",
         }
-        return make_response(response, 500)
+        return make_response(error_body, 500)
     print(4)
     return make_response({"success": True}, 200)
