@@ -212,9 +212,15 @@ def snap_details_views(store):
         status_code = 200
 
         context = _get_context_snap_details(snap_name)
-        extra_details = device_gateway.get_snap_details(
-            snap_name, fields=FIELDS_EXTRA_DETAILS
-        )
+        print(snap_name)
+
+        try:
+            extra_details = device_gateway.get_snap_details(
+                snap_name, fields=FIELDS_EXTRA_DETAILS
+            )
+        except Exception as e:
+            print(e)
+
 
         if extra_details and extra_details["aliases"]:
             context["aliases"] = [
