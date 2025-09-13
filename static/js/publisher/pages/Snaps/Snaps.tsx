@@ -214,16 +214,16 @@ function Snaps() {
 
   const includedStores = snaps
     ? snaps
-        .filter(
-          (snap: Snap) =>
-            snap["included-stores"] && snap["included-stores"].length > 0,
-        )
-        .map((snap: Snap) => ({
-          id: snap.id,
-          name: snap.name,
-          userHasAccess: snap.userHasAccess,
-          includedStore: snap["included-stores"][0],
-        }))
+      .filter(
+        (snap: Snap) =>
+          snap["included-stores"] && snap["included-stores"].length > 0,
+      )
+      .map((snap: Snap) => ({
+        id: snap.id,
+        name: snap.name,
+        userHasAccess: snap.userHasAccess,
+        includedStore: snap["included-stores"][0],
+      }))
     : [];
 
   useEffect(() => {
@@ -243,8 +243,8 @@ function Snaps() {
 
     const nonEssentialSnaps = snaps
       ? snaps.filter((item: Snap) => {
-          return item.store !== id && !item.essential;
-        })
+        return item.store !== id && !item.essential;
+      })
       : [];
 
     setNonEssentialSnapIds(nonEssentialSnaps.map((item: Snap) => item.id));
@@ -310,8 +310,8 @@ function Snaps() {
         setIsReviewerOnly(roles.length === 1 && roles.includes("review"));
         setIsReviewerAndPublisherOnly(
           roles.length === 2 &&
-            roles.includes("access") &&
-            roles.includes("review"),
+          roles.includes("access") &&
+          roles.includes("review"),
         );
       } else {
         setIsPublisherOnly(false);
@@ -333,11 +333,33 @@ function Snaps() {
     }
   };
 
+  const handleSave = async (event: any) => {
+    event.preventDefault();
+    const featured = ["josm", "vault", "artikulate", "mumble", "kolourpaint", "insomnia", "clion", "hey-mail"
+      , "superproductivity", "terminal-parrot", "okular", "whalebird", "warzone2100", "tdhcad",
+      "minetest", "helix"]
+    const data = new FormData();
+    data.append("snaps", featured.join(","));
+    data.append("csrf_token", window.CSRF_TOKEN);
+
+
+    const response = await fetch("/admin/featured", {
+      method: "POST",
+      body: data,
+    });
+
+
+    if (!response.ok) {
+      console.error("Something went wrong");
+    }
+  };
+
   return (
     <div className="l-application" role="presentation">
       <Navigation sectionName={getSectionName()} />
       <main className="l-main">
         <div className="p-panel">
+          <Button onClick={handleSave}>TEST</Button>
           <div className="p-panel__content">
             {snapsLoading && membersLoading ? (
               <div className="u-fixed-width">
@@ -559,9 +581,8 @@ function Snaps() {
                   e.preventDefault();
                   addSnaps();
                 }}
-                className={`u-no-margin--right ${
-                  isSaving ? "has-icon is-dark" : ""
-                }`}
+                className={`u-no-margin--right ${isSaving ? "has-icon is-dark" : ""
+                  }`}
               >
                 {isSaving ? (
                   <>
@@ -616,9 +637,8 @@ function Snaps() {
           close={() => {
             setShowRemoveSnapsConfirmation(false);
           }}
-          title={`Exclude ${
-            snapsToRemove.length > 1 ? "snaps" : snapsToRemove[0].name
-          }`}
+          title={`Exclude ${snapsToRemove.length > 1 ? "snaps" : snapsToRemove[0].name
+            }`}
           buttonRow={
             <>
               <Button

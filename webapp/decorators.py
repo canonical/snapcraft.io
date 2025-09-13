@@ -41,3 +41,15 @@ def exchange_required(func):
         return func(*args, **kwargs)
 
     return is_exchanged
+
+
+
+def admin_required(func):
+    @functools.wraps(func)
+    def is_admin(*args, **kwargs):
+        print(flask.session["publisher"])
+        if not flask.session["publisher"]["is_admin"]:
+            flask.abort(403)
+        return func(*args, **kwargs)
+
+    return is_admin

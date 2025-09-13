@@ -30,6 +30,7 @@ def get_environment():
 
 
 LP_CANONICAL_TEAM = "canonical"
+LP_ADMIN_TEAM = "featured-packages-editors"
 
 open_id = OpenID(
     store_factory=lambda: None,
@@ -62,7 +63,7 @@ def login_handler():
     )
     flask.session["macaroon_root"] = root
 
-    lp_teams = TeamsRequest(query_membership=[LP_CANONICAL_TEAM])
+    lp_teams = TeamsRequest(query_membership=[LP_CANONICAL_TEAM, LP_ADMIN_TEAM])
 
     return open_id.try_login(
         LOGIN_URL,
@@ -100,6 +101,7 @@ def after_login(resp):
             "image": resp.image,
             "email": account["email"],
             "is_canonical": is_canonical,
+            "is_admin": LP_ADMIN_TEAM in resp.extensions["lp"].is_member,
         }
 
         if logic.get_stores(
