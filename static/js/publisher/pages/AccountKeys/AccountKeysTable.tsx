@@ -1,4 +1,9 @@
-import { MainTable, TablePagination } from "@canonical/react-components";
+import {
+  Button,
+  Icon,
+  MainTable,
+  TablePagination,
+} from "@canonical/react-components";
 import {
   MainTableHeader,
   MainTableRow,
@@ -6,9 +11,7 @@ import {
 import { useMemo } from "react";
 import type { AccountKeysData } from "../../types/accountKeysTypes";
 
-function AccountKeysTable(props: {
-  keys?: AccountKeysData;
-}): React.JSX.Element {
+function AccountKeysTable(props: { keys: AccountKeysData }): React.JSX.Element {
   const keys = props.keys ?? [];
 
   const headers: MainTableHeader[] = useMemo(
@@ -17,6 +20,7 @@ function AccountKeysTable(props: {
       { content: "Created date", sortKey: "since" },
       { content: "Valid until", sortKey: "until" },
       { content: "Fingerprint" },
+      { content: "Constraints" },
     ],
     []
   );
@@ -29,6 +33,14 @@ function AccountKeysTable(props: {
           { content: new Date(k.since).toLocaleDateString() },
           { content: k.until ? new Date(k.until).toLocaleDateString() : "-" },
           { content: k["public-key-sha3-384"] },
+          {
+            content: k.constraints && (
+              <Button>
+                Constraints <Icon name="chevron-right" />
+              </Button>
+            ),
+          },
+
           // TODO: how do we show the constraints list? tooltip? modal? something else?
         ],
         sortData: {

@@ -178,6 +178,8 @@ $color-social-icon-foreground: $color-light;
 @include vf-p-icon-models;
 @include vf-p-icon-edit;
 @include vf-p-icon-units;
+@import "snapcraft_p-account-key-card";
+@include snapcraft-p-account-key-card;
 
 dl {
   margin-bottom: $spv--x-large;
