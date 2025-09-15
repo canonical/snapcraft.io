@@ -212,3 +212,18 @@ account/details: /admin/account
 # Redirects webhook requests using old URL format (i.e. not starting with api/)
 (?P<snap_name>[^/]*)/webhook/notify: /api/{snap_name}/webhook/notify
 (?!api/.*)(?P<github_owner>[^/]*)/(?P<github_repo>[^/]*)/webhook/notify: /api/{github_owner}/{github_repo}/webhook/notify  
+
+# First snap flow pages
+first-snap/python: https://documentation.ubuntu.com/snapcraft/stable/how-to/integrations/craft-a-python-app/
+first-snap/pre-built: https://documentation.ubuntu.com/snapcraft/stable/how-to/integrations/craft-a-pre-built-app/
+first-snap/c: https://documentation.ubuntu.com/snapcraft/stable/how-to/integrations/craft-a-c-or-cpp-app/
+first-snap/golang: https://documentation.ubuntu.com/snapcraft/stable/how-to/integrations/craft-a-go-app/
+first-snap/java: https://documentation.ubuntu.com/snapcraft/stable/how-to/integrations/craft-a-java-app/
+first-snap/node: https://documentation.ubuntu.com/snapcraft/stable/how-to/integrations/craft-a-node-app/
+first-snap/electron: https://documentation.ubuntu.com/snapcraft/stable/how-to/integrations/craft-an-electron-app/
+first-snap/flutter: https://documentation.ubuntu.com/snapcraft/stable/how-to/integrations/craft-a-flutter-app/
+first-snap/ruby: https://documentation.ubuntu.com/snapcraft/stable/how-to/integrations/index.html
+first-snap/rust: https://documentation.ubuntu.com/snapcraft/stable/how-to/integrations/craft-a-rust-app/
+first-snap/moos: https://documentation.ubuntu.com/snapcraft/stable/how-to/integrations/craft-a-moos-app/
+first-snap/ros: https://documentation.ubuntu.com/snapcraft/stable/how-to/integrations/craft-an-ros-1-app/
+first-snap/ros2: https://documentation.ubuntu.com/snapcraft/stable/how-to/integrations/craft-an-ros-2-app/

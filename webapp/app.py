@@ -17,7 +17,6 @@ from canonicalwebteam.flask_base.app import FlaskBase
 from webapp.blog.views import init_blog
 from webapp.docs.views import init_docs
 from webapp.extensions import csrf
-from webapp.first_snap.views import first_snap
 from webapp.handlers import set_handlers
 from webapp.login.views import login
 from webapp.login.oauth_views import oauth
@@ -72,7 +71,6 @@ def create_app(testing=False):
 
     app.register_blueprint(snapcraft_blueprint())
     app.register_blueprint(store_packages)
-    app.register_blueprint(first_snap, url_prefix="/first-snap")
     app.register_blueprint(login)
     app.register_blueprint(oauth)
     app.register_blueprint(store_blueprint())
