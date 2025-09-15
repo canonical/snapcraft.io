@@ -29,7 +29,11 @@ function PrimaryNav({
   const { data: publisherData } = usePublisher();
   const { data: validationSetsData } = useValidationSets();
   const { data: brandStoresList } = useBrandStores();
-  const { data: accountKeysData } = useAccountKeys();
+  const {
+    data: accountKeysData,
+    isLoading: accountKeysLoading,
+    isError: accountKeysError,
+  } = useAccountKeys();
 
   const setBrandStores = useSetAtom(brandStoresState);
   const setAccountKeys = useSetAtom(accountKeysState);
@@ -41,10 +45,12 @@ function PrimaryNav({
   }, [brandStoresList]);
 
   useEffect(() => {
-    if (accountKeysData) {
-      setAccountKeys(accountKeysData);
-    }
-  }, [accountKeysData]);
+    setAccountKeys({
+      isLoading: accountKeysLoading,
+      data: accountKeysData,
+      isError: accountKeysError,
+    });
+  }, [accountKeysData, accountKeysLoading, accountKeysError]);
 
   return (
     <>

@@ -8,7 +8,12 @@ import StoreSelector from "../StoreSelector";
 
 import { publisherState } from "../../state/publisherState";
 import { brandIdState } from "../../state/brandStoreState";
-import { useBrand, usePublisher, useValidationSets, useAccountKeys } from "../../hooks";
+import {
+  useBrand,
+  usePublisher,
+  useValidationSets,
+  useAccountKeys,
+} from "../../hooks";
 
 import { brandStoresState } from "../../state/brandStoreState";
 import { accountKeysState } from "../../state/accountKeysState";
@@ -22,7 +27,11 @@ function Navigation({
   const { id } = useParams();
   const { data: brand } = useBrand(id);
   const { data: publisherData } = usePublisher();
-  const { data: accountKeysData } = useAccountKeys();
+  const {
+    data: accountKeysData,
+    isLoading: accountKeysLoading,
+    isError: accountKeysError,
+  } = useAccountKeys();
   const { data: validationSetsData } = useValidationSets();
   const [pinSideNavigation, setPinSideNavigation] = useState<boolean>(false);
   const [collapseNavigation, setCollapseNavigation] = useState<boolean>(false);
@@ -47,10 +56,12 @@ function Navigation({
   }, [publisherData]);
 
   useEffect(() => {
-    if (accountKeysData) {
-      setAccountKeys(accountKeysData);
-    }
-  }, [accountKeysData]);
+    setAccountKeys({
+      isLoading: accountKeysLoading,
+      data: accountKeysData,
+      isError: accountKeysError,
+    });
+  }, [accountKeysData, accountKeysLoading, accountKeysError]);
 
   return (
     <>

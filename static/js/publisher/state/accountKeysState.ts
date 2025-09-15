@@ -1,6 +1,12 @@
 import type { AccountKeysData } from "../types/accountKeysTypes";
 import { atom } from "jotai";
 
-const accountKeysState = atom(null as unknown as AccountKeysData);
+interface AccountKeysState {
+  data?: AccountKeysData;
+  isLoading: boolean;
+  isError?: boolean;
+}
+
+const accountKeysState = atom({ isLoading: true } as AccountKeysState);
 
 export { accountKeysState };
