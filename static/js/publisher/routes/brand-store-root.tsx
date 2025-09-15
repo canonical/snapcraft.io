@@ -21,6 +21,7 @@ import Model from "../pages/Model";
 import Policies from "../pages/Model/Policies";
 import SigningKeys from "../pages/SigningKeys";
 import StoreNotFound from "../pages/StoreNotFound";
+import AccountKeys from "../pages/AccountKeys";
 
 function BrandStoreRoot() {
   const { data: brandStoresList, isLoading } = useBrandStores();
@@ -61,6 +62,7 @@ function BrandStoreRoot() {
           }
         />
         <Route path="/admin/account" element={<AccountDetails />} />
+        <Route path="/admin/account-keys" element={<AccountKeys />} />
         <Route path="/admin/:id/snaps" element={<Snaps />} />
         <Route path="/admin/:id/members" element={<Members />} />
         <Route path="/admin/:id/settings" element={<BrandStoreSettings />} />
