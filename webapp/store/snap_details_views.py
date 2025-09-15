@@ -225,6 +225,7 @@ def snap_details_views(store):
                 headers={"X-Ubuntu-Series": "16"})
             print(response.status_code)
             print(response.text)
+            print("END_DEBUGGING")
 
         if extra_details and extra_details["aliases"]:
             context["aliases"] = [
