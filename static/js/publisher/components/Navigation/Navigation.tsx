@@ -12,7 +12,6 @@ import { useBrand, usePublisher, useValidationSets, useAccountKeys } from "../..
 
 import { brandStoresState } from "../../state/brandStoreState";
 import { accountKeysState } from "../../state/accountKeysState";
-import { useRecoilState } from "recoil";
 
 function Navigation({
   sectionName,
@@ -29,7 +28,7 @@ function Navigation({
   const [collapseNavigation, setCollapseNavigation] = useState<boolean>(false);
   const [publisher, setPublisher] = useAtom(publisherState);
   const [brandId, setBrandId] = useAtom(brandIdState);
-  const [, setAccountKeys] = useRecoilState(accountKeysState);
+  const [, setAccountKeys] = useAtom(accountKeysState);
 
   const currentStore = brandStoresList.find((store) => store.id === id);
 
@@ -141,6 +140,22 @@ function Navigation({
                           My validation sets
                         </span>
                       </a>
+                    </li>
+                  </ul>
+                )}
+                {accountKeysData && (
+                  <ul className="p-side-navigation__list">
+                    <li className="p-side-navigation__item">
+                      <NavLink
+                        to="/admin/account-keys"
+                        className="p-side-navigation__link"
+                        aria-selected={sectionName === "account-keys"}
+                      >
+                        <i className="p-icon--private-key is-light p-side-navigation__icon"></i>
+                        <span className="p-side-navigation__label">
+                          My keys
+                        </span>
+                      </NavLink>
                     </li>
                   </ul>
                 )}
@@ -270,18 +285,6 @@ function Navigation({
                           <i className="p-icon--user is-light p-side-navigation__icon"></i>
                           <span className="p-side-navigation__label">
                             {publisherData.publisher.fullname}
-                          </span>
-                        </NavLink>
-                      </li>
-                      <li className="p-side-navigation__item">
-                        <NavLink
-                          to="/admin/account-keys"
-                          className="p-side-navigation__link"
-                          aria-selected={sectionName === "account-keys"}
-                        >
-                          <i className="p-icon--private-key is-light p-side-navigation__icon"></i>
-                          <span className="p-side-navigation__label">
-                            My keys
                           </span>
                         </NavLink>
                       </li>
