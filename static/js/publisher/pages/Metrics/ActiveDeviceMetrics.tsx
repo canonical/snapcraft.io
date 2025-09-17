@@ -61,7 +61,7 @@ function ActiveDeviceMetrics({
       return searchParams;
     });
   };
-  const daysWithoutDataExist = data && data.daysWithoutData.size > 0;
+  const daysWithoutDataExist = data && data.daysWithoutData.length > 0;
 
   return (
     <section className={`p-strip is-shallow ${isEmpty ? "is-empty" : ""}`}>
