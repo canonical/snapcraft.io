@@ -127,7 +127,7 @@
       try {
         snapcraft.public.blog.newsletter();
       } catch(e) {
-        Sentry.catchException(e);
+        Sentry.captureException(e);
       }
     });
   </script>
