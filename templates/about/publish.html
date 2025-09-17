@@ -198,10 +198,17 @@
 {% block scripts %}
 <script>
   window.addEventListener("DOMContentLoaded", function () {
-    Raven.context(function () {
+    try {
       snapcraft.about.initFSFLanguageSelect(document.querySelector('.js-fsf-language-select'));
+    } catch(e) {
+      Sentry.captureException(e);
+    }
+
+    try {
       snapcraft.about.initExpandableArea();
-    });
+    } catch(e) {
+      Sentry.captureException(e);
+    }
   });
 </script>
 {% endblock %}

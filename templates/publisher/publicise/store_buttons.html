@@ -136,9 +136,11 @@
 {% block scripts %}
   <script>
     window.addEventListener("DOMContentLoaded", function() {
-      Raven.context(function () {
+      try {
         snapcraft.publisher.publicise.initSnapButtonsPicker();
-      });
+      } catch(e) {
+        Sentry.captureException(e);
+      }
     });
   </script>
 {% endblock %}

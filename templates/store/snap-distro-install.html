@@ -269,34 +269,32 @@
 {% block scripts %}
   <script>
     window.addEventListener("DOMContentLoaded", function() {
-      Raven.context(function () {
-        try {
-          snapcraft.public.distroInstall.triggerEventWhenVisible("#snippet-snap-install-stable")
-        } catch(e) {
-          Raven.captureException(e);
-        }
+      try {
+        snapcraft.public.distroInstall.triggerEventWhenVisible("#snippet-snap-install-stable")
+      } catch(e) {
+        Sentry.captureException(e);
+      }
 
-        try {
-          snapcraft.public.distroInstall.initExpandableArea(
-            ".js-snap-description-text",
-            ".js-snap-description-details"
-          );
-        } catch(e) {
-          Raven.captureException(e);
-        }
+      try {
+        snapcraft.public.distroInstall.initExpandableArea(
+          ".js-snap-description-text",
+          ".js-snap-description-details"
+        );
+      } catch(e) {
+        Sentry.captureException(e);
+      }
 
-        try {
-          snapcraft.public.distroInstall.screenshots('#js-snap-screenshots');
-        } catch(e) {
-          Raven.captureException(e);
-        }
+      try {
+        snapcraft.public.distroInstall.screenshots('#js-snap-screenshots');
+      } catch(e) {
+        Sentry.captureException(e);
+      }
 
-        try {
-          snapcraft.public.distroInstall.videos('.js-video-slide');
-        } catch(e) {
-          Raven.captureException(e);
-        }
-      });
+      try {
+        snapcraft.public.distroInstall.videos('.js-video-slide');
+      } catch(e) {
+        Sentry.captureException(e);
+      }
     });
   </script>
 {% endblock %}
