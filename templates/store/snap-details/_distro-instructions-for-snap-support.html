@@ -1,11 +1,17 @@
-<div class="p-strip is-shallow">
-  <div class="u-fixed-width"><hr></div>
-  <div class="u-fixed-width">
-    <h3 class="p-heading--2">Install {{snap_title}} on your Linux distribution</h3>
-    <p>Choose your Linux distribution to get detailed installation instructions. If yours is not shown, get more details on the <a href="/docs/installing-snapd" target="_blank">installing snapd documentation</a>.</p>
-    </div>
-</div>
 <div class="p-strip is-shallow u-no-padding--top">
+  <div class="u-fixed-width"><hr></div>
+  <div class="p-section--shallow ">
+  <div class="row--50-50">
+    <div class="col">
+      <h3 class="p-heading--2">Install {{snap_title}}<br/> on your Linux distribution</h3>
+    </div>
+    <div class="col">
+      <p>Choose your Linux distribution to get detailed installation instructions. If yours is not shown, get more details on the <a href="/docs/installing-snapd" target="_blank">installing snapd documentation</a>.</p>
+    </div>
+  </div>
+  </div>
+  <div class="row--25-75">
+    <div class="col">
   <div class="row" id="distros">
     <div class="col-3 col-medium-3">
       <a class="p-media-object" href="/install/{{package_name}}/arch">
@@ -244,4 +250,7 @@
     </div>
     {% endif %}
   </div>
+    </div>
+  </div>
+
 </div>
