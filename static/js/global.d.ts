@@ -28,6 +28,8 @@ declare interface Window {
   CSRF_TOKEN: string;
   API_URL: string;
   Sentry: Record<string, unknown>;
+  COMMIT_ID: string;
+  ENVIRONMENT: string;
 }
 
 declare module "@canonical/cookie-policy";

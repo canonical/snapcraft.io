@@ -86,6 +86,12 @@
 
     {% block scripts %}{% endblock %}
 
+    <script>
+      window.COMMIT_ID = "{{ COMMIT_ID }}";
+      window.ENVIRONMENT = "{{ ENVIRONMENT }}";
+      window.SENTRY_DSN = "{{ SENTRY_DSN }}";
+    </script>
+
     <script type="application/ld+json">
       {
         "@context": "http://schema.org/",

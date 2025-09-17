@@ -9,7 +9,7 @@ Sentry.init({
     "snapcraft.io/static/js/modules",
   ],
   dsn: window.SENTRY_DSN,
-  environment: "{{ ENVIRONMENT }}",
+  environment: window.ENVIRONMENT,
   ignoreErrors: ["AbortError"],
-  release: "{{ COMMIT_ID }}",
+  release: window.COMMIT_ID,
 });
