@@ -116,13 +116,19 @@
 {% block scripts %}
   <script>
     window.addEventListener("DOMContentLoaded", function() {
-      Raven.context(function () {
+      try {
         {% if is_in_series %}
         snapcraft.blog.seriesPosts('[data-js="blog-series"]', '#blog-series-item-template');
         {% endif %}
+      } catch(e) {
+        Sentry.captureException(e);
+      }
 
+      try {
         snapcraft.public.blog.newsletter();
-      });
+      } catch(e) {
+        Sentry.catchException(e);
+      }
     });
   </script>
 {% endblock %}

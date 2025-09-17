@@ -163,7 +163,7 @@
 {% block scripts %}
 <script>
   window.addEventListener("DOMContentLoaded", function() {
-    Raven.context(function() {
+    try {
        // Based on Vanilla side navigation example
 // Should be moved out from the template as part of a given project JS bundle
 
@@ -326,7 +326,9 @@
     });
   });
 })();
-    });
+    } catch(e) {
+      Sentry.captureException(e);
+    }
   });
 </script>
 {% endblock %}
