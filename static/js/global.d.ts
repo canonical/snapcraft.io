@@ -27,6 +27,9 @@ declare interface Window {
   SENTRY_DSN: string;
   CSRF_TOKEN: string;
   API_URL: string;
+  Sentry: Record<string, unknown>;
+  COMMIT_ID: string;
+  ENVIRONMENT: string;
 }
 
 declare module "@canonical/cookie-policy";

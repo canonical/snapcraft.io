@@ -2,6 +2,7 @@ import { Provider as JotaiProvider } from "jotai";
 import { createRoot } from "react-dom/client";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+import * as Sentry from "@sentry/react";
 
 import BrandStoreLayout from "./layouts/BrandStoreLayout";
 import PublisherLayout from "./layouts/PublisherLayout";
@@ -26,6 +27,12 @@ import SigningKeys from "./pages/SigningKeys";
 import Snaps from "./pages/Snaps";
 import ValidationSet from "./pages/ValidationSet";
 import ValidationSets from "./pages/ValidationSets";
+
+Sentry.init({
+  dsn: window.SENTRY_DSN,
+  integrations: [Sentry.browserTracingIntegration()],
+  tracesSampleRate: 1.0,
+});
 
 const rootEl = document.getElementById("root")! as HTMLElement;
 const root = createRoot(rootEl);

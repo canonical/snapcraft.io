@@ -150,7 +150,7 @@
 {% block scripts %}
   <script>
     window.addEventListener("DOMContentLoaded", function() {
-      Raven.context(function () {
+      try {
         {% if categories %}
           var filter = document.getElementById('filter');
           var filterForm = document.querySelector('[data-js="filterForm"]');
@@ -158,9 +158,15 @@
             filterForm.submit();
           });
         {% endif %}
+      } catch(e) {
+        Sentry.captureException(e);
+      }
 
+      try {
         snapcraft.public.blog.newsletter();
-      });
+      } catch(e) {
+        Sentry.captureException(e);
+      }
     });
   </script>
 {% endblock %}
