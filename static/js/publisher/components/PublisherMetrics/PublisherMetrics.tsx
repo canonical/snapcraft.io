@@ -15,7 +15,8 @@ function PublisherMetrics({ snaps }: { snaps: ISnap[] }): React.JSX.Element {
       });
     }
   }, [metricsData]);
-
+  
+  const daysWithoutDataExist = metricsData && metricsData.daysWithoutData.length > 0
   return (
     <Strip
       className="u-no-padding--top"
@@ -28,6 +29,10 @@ function PublisherMetrics({ snaps }: { snaps: ISnap[] }): React.JSX.Element {
           size={12}
           className="snap-installs-container snapcraft-metrics__graph snapcraft-metrics__active-devices"
         >
+          {daysWithoutDataExist  && <Notification severity="caution">
+              Metrics for the most recent days may be incomplete or missing. They will be updated and accurate within a few hours.
+            </Notification>
+          }
           <svg width="100%" height="240"></svg>
           {metricsData && metricsData.buckets.length === 0 && (
             <div className="p-snap-list__metrics-empty-message">

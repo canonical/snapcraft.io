@@ -77,13 +77,15 @@ function useActiveDeviceMetrics({
     const buckets = [];
     const series = new Map();
 
+    const daysWithoutData = new Set();
+
     let seriesThatAreAddedBefore = 0;
 
     for (const result of results.reverse()) {
       const data = await handleResponse(result);
 
       const activeDeviceBuckets = data.active_devices.buckets;
-
+      daysWithoutData.add(data.days_without_data);
       buckets.push(...activeDeviceBuckets);
       // fill the array with 0's if the batch doesnt have that previous series
       for (const seriesKey of series.keys()) {
@@ -122,6 +124,7 @@ function useActiveDeviceMetrics({
         buckets,
         series: resultArray,
       },
+      daysWithoutData
     };
   };
 

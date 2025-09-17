@@ -9,6 +9,7 @@ type Series = {
 type SnapMetrics = {
   series: Array<Series>;
   buckets: Array<string>;
+  daysWithoutData: Array<string>;
 };
 
 function useFetchPublishedSnapMetrics(snaps: ISnap[]) {
@@ -40,6 +41,7 @@ function useFetchPublishedSnapMetrics(snaps: ISnap[]) {
       const metrics: SnapMetrics = {
         series: [],
         buckets: data.buckets,
+        daysWithoutData: data.days_without_data
       };
 
       data.snaps.forEach((snap: { series: Array<Series>; name: string }) => {

@@ -151,6 +151,16 @@ def build_snap_installs_metrics_query(snaps, get_filter=get_filter):
 
     return metrics_query
 
+def get_days_without_data(metrics_response):
+    days_without_data = set()
+    for metric in metrics_response["metrics"]:
+        if metric["status"] == "OK":
+            for series in metric["series"]:
+                values = series["values"]
+                none_indexes = [i for i, val in enumerate(values) if val is None]
+                days_without_data.update(metric["buckets"][i] for i in none_indexes)
+    return list(days_without_data)
+       
 
 def transform_metrics(metrics, metrics_response, snaps):
     """Transforms an API response from the publisher metrics
@@ -172,9 +182,9 @@ def transform_metrics(metrics, metrics_response, snaps):
                 {"id": snap_id, "name": snap_name, "series": metric["series"]}
             )
             metrics["buckets"] = metric["buckets"]
-
+    metrics["days_without_data"] = get_days_without_data(metrics_response)
     return metrics
-
+    
 
 def lttb_select_indices(values, target_size):
     """
