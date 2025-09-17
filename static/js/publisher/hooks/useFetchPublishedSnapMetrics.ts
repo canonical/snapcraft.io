@@ -41,7 +41,7 @@ function useFetchPublishedSnapMetrics(snaps: ISnap[]) {
       const metrics: SnapMetrics = {
         series: [],
         buckets: data.buckets,
-        daysWithoutData: data.days_without_data
+        daysWithoutData: data.days_without_data,
       };
 
       data.snaps.forEach((snap: { series: Array<Series>; name: string }) => {

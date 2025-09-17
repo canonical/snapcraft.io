@@ -124,7 +124,7 @@ function useActiveDeviceMetrics({
         buckets,
         series: resultArray,
       },
-      daysWithoutData
+      daysWithoutData,
     };
   };
 
