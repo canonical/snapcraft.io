@@ -312,72 +312,70 @@
 {% block scripts %}
   <script>
     window.addEventListener("DOMContentLoaded", function() {
-      Raven.context(function () {
-        try {
-          snapcraft.public.storeDetails.initExpandableArea();
-        } catch (e) {
-          Raven.captureException(e);
-        }
+      try {
+        snapcraft.public.storeDetails.initExpandableArea();
+      } catch (e) {
+        Sentry.captureException(e);
+      }
 
+      try {
+        snapcraft.public.storeDetails.screenshots('#js-snap-screenshots');
+      } catch(e) {
+        Sentry.captureException(e);
+      }
+
+      try {
+        snapcraft.public.storeDetails.videos('.js-video-slide');
+      } catch(e) {
+        Sentry.captureException(e);
+      }
+
+      {% if not is_preview %}
+      try {
+        snapcraft.public.storeDetails.initReportSnap(
+          '.js-modal-open', '#report-snap-modal',
+          document.getElementById('report-snap-form').action
+        );
+      } catch(e) {
+        Sentry.captureException(e);
+      }
+
+      try {
+        snapcraft.public.storeDetails.initEmbeddedCardModal('{{ package_name }}');
+      } catch(e) {
+        Sentry.captureException(e);
+      }
+      {% endif %}
+
+      {% if countries %}
         try {
-          snapcraft.public.storeDetails.screenshots('#js-snap-screenshots');
+          snapcraft.public.storeDetails.map('#js-snap-map', {{ countries | tojson }});
         } catch(e) {
-          Raven.captureException(e);
+          Sentry.captureException(e);
+          document.querySelector('.js-snap-map-holder').style.display = 'none';
         }
+      {% endif %}
 
+      {% if channel_map %}
         try {
-          snapcraft.public.storeDetails.videos('.js-video-slide');
+            snapcraft.public.storeDetails.channelMap('#js-channel-map', {{ package_name|tojson }}, {{ channel_map | tojson }}, "{{ default_track }}");
         } catch(e) {
-          Raven.captureException(e);
+          Sentry.captureException(e);
+          document.querySelector('.js-open-channel-map').style.display = 'none';
         }
+      {% endif %}
 
-        {% if not is_preview %}
-        try {
-          snapcraft.public.storeDetails.initReportSnap(
-            '.js-modal-open', '#report-snap-modal',
-            document.getElementById('report-snap-form').action
-          );
-        } catch(e) {
-          Raven.captureException(e);
+      {% if is_preview %}
+        const editButton = document.querySelector('.js-edit');
+        if (editButton) {
+          editButton.addEventListener("click", (e) => {
+            if (window.opener) {
+              e.preventDefault();
+              window.close();
+            }
+          });
         }
-
-        try {
-          snapcraft.public.storeDetails.initEmbeddedCardModal('{{ package_name }}');
-        } catch(e) {
-          Raven.captureException(e);
-        }
-        {% endif %}
-
-        {% if countries %}
-          try {
-            snapcraft.public.storeDetails.map('#js-snap-map', {{ countries | tojson }});
-          } catch(e) {
-            Raven.captureException(e);
-            document.querySelector('.js-snap-map-holder').style.display = 'none';
-          }
-        {% endif %}
-
-        {% if channel_map %}
-          try {
-              snapcraft.public.storeDetails.channelMap('#js-channel-map', {{ package_name|tojson }}, {{ channel_map | tojson }}, "{{ default_track }}");
-          } catch(e) {
-            Raven.captureException(e);
-            document.querySelector('.js-open-channel-map').style.display = 'none';
-          }
-        {% endif %}
-
-        {% if is_preview %}
-          const editButton = document.querySelector('.js-edit');
-          if (editButton) {
-            editButton.addEventListener("click", (e) => {
-              if (window.opener) {
-                e.preventDefault();
-                window.close();
-              }
-            });
-          }
-        {% endif %}
-      });
+      {% endif %}
     });
   </script>
 {% endblock %}
