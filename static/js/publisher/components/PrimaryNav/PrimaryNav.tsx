@@ -1,16 +1,67 @@
-import { useEffect } from "react";
-import { useLocation } from "react-router-dom";
-import { useSetAtom } from "jotai";
 import {
   SideNavigation,
+  SideNavigationLink,
   SideNavigationText,
 } from "@canonical/react-components";
+import { useAtom } from "jotai";
+import { useEffect } from "react";
+import { NavLink, useLocation, useParams } from "react-router-dom";
 
 import StoreSelector from "../StoreSelector";
 
-import { usePublisher, useValidationSets, useBrandStores } from "../../hooks";
+import {
+  useBrand,
+  useBrandStores,
+  usePublisher,
+  useValidationSets,
+} from "../../hooks";
 
-import { brandStoresState } from "../../state/brandStoreState";
+import { brandIdState, brandStoresState } from "../../state/brandStoreState";
+import { publisherState } from "../../state/publisherState";
+
+// load all data that's needed for side navigation
+function useNavigationData() {
+  const { id: storeId } = useParams();
+  const { data: publisherData } = usePublisher();
+  const { data: validationSetsData } = useValidationSets();
+  const { data: brandStoresData } = useBrandStores();
+  const { data: brandData } = useBrand(storeId);
+
+  const [brandStores, setBrandStores] = useAtom(brandStoresState);
+  const [publisher, setPublisher] = useAtom(publisherState);
+  const [brandId, setBrandId] = useAtom(brandIdState);
+
+  const currentStore = brandStores?.find((store) => store.id === storeId);
+
+  useEffect(() => {
+    if (brandData) {
+      setBrandId(brandData?.["account-id"]);
+    } else {
+      setBrandId("");
+    }
+  }, [brandData]);
+
+  useEffect(() => {
+    if (brandStoresData) {
+      setBrandStores(brandStoresData);
+    }
+  }, [brandStoresData]);
+
+  useEffect(() => {
+    if (publisherData) {
+      setPublisher(publisherData.publisher);
+    }
+  }, [publisherData]);
+
+  return {
+    storeId,
+    brandId,
+    currentStore,
+    brandStores,
+    publisher,
+    validationSets: validationSetsData,
+  };
+}
 
 function PrimaryNav({
   collapseNavigation,
@@ -20,22 +71,12 @@ function PrimaryNav({
   setCollapseNavigation: (value: boolean) => void;
 }): React.JSX.Element {
   const location = useLocation();
-  const { data: publisherData } = usePublisher();
-  const { data: validationSetsData } = useValidationSets();
-  const { data: brandStoresList } = useBrandStores();
-
-  const setBrandStores = useSetAtom(brandStoresState);
-
-  useEffect(() => {
-    if (brandStoresList) {
-      setBrandStores(brandStoresList);
-    }
-  }, [brandStoresList]);
+  const { storeId, brandId, currentStore, publisher, validationSets } =
+    useNavigationData();
 
   return (
     <>
       <SideNavigation
-        className="hide-collapsed"
         dark={true}
         items={[
           {
@@ -43,71 +84,112 @@ function PrimaryNav({
               <div className="nav-list-separator" key="separator">
                 <hr />
               </div>,
-              <SideNavigationText key="unique-key">
-                <div
+              <SideNavigationText key="my-snaps">
+                <span
                   className="p-side-navigation__item--title p-muted-heading"
                   style={{ color: "#a8a8a8" }}
                 >
                   My snaps
-                </div>
+                </span>
               </SideNavigationText>,
               {
                 label: "Overview",
-                href: "/snaps",
+                component: NavLink,
+                to: "/snaps",
                 icon: "pods",
                 "aria-current": location.pathname === "/snaps",
               },
             ],
           },
-          {
-            items:
-              validationSetsData && validationSetsData.length > 0
-                ? [
-                    {
-                      label: "My validation sets",
-                      href: "/validation-sets",
-                      icon: "topic",
-                      "aria-current":
-                        location.pathname.includes("/validation-sets"),
-                    },
-                  ]
-                : [],
-          },
+          validationSets && validationSets.length > 0
+            ? {
+                items: [
+                  {
+                    label: "My validation sets",
+                    component: NavLink,
+                    to: "/validation-sets",
+                    icon: "topic",
+                    "aria-current":
+                      location.pathname.includes("/validation-sets"),
+                  },
+                ],
+              }
+            : null,
+          publisher?.has_stores
+            ? {
+                items: [
+                  <SideNavigationText key="my-stores-key">
+                    <i className="p-icon--units is-light p-side-navigation__icon"></i>
+                    <span
+                      className="p-side-navigation__item--title p-muted-heading"
+                      style={{ color: "#a8a8a8" }}
+                    >
+                      My stores
+                    </span>
+                  </SideNavigationText>,
+                  <StoreSelector />,
+                ],
+              }
+            : null,
+          currentStore
+            ? {
+                items: [
+                  {
+                    label: "Store snaps",
+                    component: NavLink,
+                    to: `/admin/${storeId}/snaps`,
+                    icon: "pods",
+                    "aria-current":
+                      location.pathname === `/admin/${storeId}/snaps`,
+                  },
+                  brandId
+                    ? {
+                        label: "Models",
+                        component: NavLink,
+                        to: `/admin/${storeId}/models`,
+                        icon: "models",
+                        "aria-current":
+                          location.pathname === `/admin/${storeId}/models`,
+                      }
+                    : null,
+                  brandId
+                    ? {
+                        label: "Signing keys",
+                        component: NavLink,
+                        to: `/admin/${storeId}/signing-keys`,
+                        icon: "security",
+                        "aria-current":
+                          location.pathname ===
+                          `/admin/${storeId}/signing-keys`,
+                      }
+                    : null,
+                  currentStore?.roles?.includes("admin")
+                    ? {
+                        label: "Members",
+                        component: NavLink,
+                        to: `/admin/${storeId}/members`,
+                        icon: "user-group",
+                        "aria-current":
+                          location.pathname === `/admin/${storeId}/members`,
+                      }
+                    : null,
+                  currentStore?.roles?.includes("admin")
+                    ? {
+                        label: "Settings",
+                        component: NavLink,
+                        to: `/admin/${storeId}/settings`,
+                        icon: "settings",
+                        "aria-current":
+                          location.pathname === `/admin/${storeId}/settings`,
+                      }
+                    : null,
+                ],
+              }
+            : null,
         ]}
       />
 
-      {publisherData &&
-        publisherData.publisher &&
-        publisherData.publisher.has_stores && (
-          <>
-            <div className="nav-list-separator">
-              <hr />
-            </div>
-            <div className="p-side-navigation--icons hide-collapsed is-dark">
-              <ul className="p-side-navigation__list u-no-margin--bottom">
-                <li className="p-side-navigation__item--title p-muted-heading">
-                  <span className="p-side-navigation__link">
-                    <i className="p-icon--units is-light p-side-navigation__icon"></i>
-                    <span className="p-side-navigation__label">My stores</span>
-                  </span>
-                </li>
-              </ul>
-            </div>
-            <div className="p-side-navigation is-dark">
-              <ul className="p-side-navigation__list">
-                <li className="p-side-navigation__item">
-                  <span className="p-side-navigation__link">
-                    <span className="p-side-navigation__label">
-                      <StoreSelector nativeNavLink={true} />
-                    </span>
-                  </span>
-                </li>
-              </ul>
-            </div>
-          </>
-        )}
-
-      {publisherData && publisherData.publisher && (
+      {publisher && (
         <div className="p-side-navigation--icons is-dark">
           <div className="sidenav-bottom">
             <div className="nav-list-separator">
@@ -115,13 +197,14 @@ function PrimaryNav({
             </div>
             <ul className="p-side-navigation__list">
               <li className="p-side-navigation__item">
-                <a href="/admin/account" className="p-side-navigation__link">
-                  <i className="p-icon--user is-light p-side-navigation__icon"></i>
-                  <span className="p-side-navigation__label">
-                    {publisherData.publisher.fullname}
-                  </span>
-                </a>
+                <SideNavigationLink
+                  component={NavLink}
+                  to="/admin/account"
+                  icon="user"
+                  label={publisher.fullname}
+                />
               </li>
+
               <li className="p-side-navigation__item">
                 <a href="/logout" className="p-side-navigation__link">
                   <i className="p-icon--log-out is-light p-side-navigation__icon"></i>
