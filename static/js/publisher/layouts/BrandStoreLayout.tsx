@@ -1,12 +1,13 @@
+import { applyTheme, Icon, loadTheme } from "@canonical/react-components";
 import { useSetAtom } from "jotai";
+import { useEffect } from "react";
 import { Outlet, useLocation, useNavigate, useParams } from "react-router-dom";
 
-import { applyTheme, Icon, loadTheme } from "@canonical/react-components";
-import { useEffect } from "react";
+import Navigation from "../components/Navigation";
 import { useBrandStores } from "../hooks";
+import useSideNavigationData from "../hooks/useSideNavigationData";
 import StoreNotFound from "../pages/StoreNotFound";
 import { brandStoresState } from "../state/brandStoreState";
-import Navigation from "../components/Navigation";
 import { Store } from "../types/shared";
 
 // TODO: get rid of this file and create a common layout for all the pages in the app
@@ -31,6 +32,7 @@ function BrandStoreLoader() {
 }
 
 function BrandStoreLayout() {
+  useSideNavigationData();
   const location = useLocation();
   const navigate = useNavigate();
   const { data: brandStoresList, isLoading } = useBrandStores();

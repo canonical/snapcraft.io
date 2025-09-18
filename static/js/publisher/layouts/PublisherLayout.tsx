@@ -11,8 +11,11 @@ import { useEffect } from "react";
 import { Outlet } from "react-router-dom";
 
 import Navigation from "../components/Navigation";
+import useSideNavigationData from "../hooks/useSideNavigationData";
 
 function PublisherLayout(): React.JSX.Element {
+  useSideNavigationData();
+
   useEffect(() => {
     const theme = loadTheme();
     applyTheme(theme);

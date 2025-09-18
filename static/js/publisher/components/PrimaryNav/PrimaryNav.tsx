@@ -2,70 +2,25 @@ import {
   SideNavigation,
   SideNavigationText,
 } from "@canonical/react-components";
-import { useAtom } from "jotai";
-import { useEffect } from "react";
+import { useAtomValue } from "jotai";
 import { NavLink, useLocation, useParams } from "react-router-dom";
 
-import StoreSelector from "../StoreSelector";
-
 import {
-  useBrand,
-  useBrandStores,
-  usePublisher,
-  useValidationSets,
-} from "../../hooks";
-
-import { brandIdState, brandStoresState } from "../../state/brandStoreState";
+  brandIdState,
+  brandStoreState
+} from "../../state/brandStoreState";
 import { publisherState } from "../../state/publisherState";
-
-// load all data that's needed for side navigation
-function useNavigationData() {
-  const { id: storeId } = useParams();
-  const { data: publisherData } = usePublisher();
-  const { data: validationSetsData } = useValidationSets();
-  const { data: brandStoresData } = useBrandStores();
-  const { data: brandData } = useBrand(storeId);
-
-  const [brandStores, setBrandStores] = useAtom(brandStoresState);
-  const [publisher, setPublisher] = useAtom(publisherState);
-  const [brandId, setBrandId] = useAtom(brandIdState);
-
-  const currentStore = brandStores?.find((store) => store.id === storeId);
-
-  useEffect(() => {
-    if (brandData) {
-      setBrandId(brandData?.["account-id"]);
-    } else {
-      setBrandId("");
-    }
-  }, [brandData]);
-
-  useEffect(() => {
-    if (brandStoresData) {
-      setBrandStores(brandStoresData);
-    }
-  }, [brandStoresData]);
-
-  useEffect(() => {
-    if (publisherData) {
-      setPublisher(publisherData.publisher);
-    }
-  }, [publisherData]);
-
-  return {
-    storeId,
-    brandId,
-    currentStore,
-    brandStores,
-    publisher,
-    validationSets: validationSetsData,
-  };
-}
+import { validationSetsState } from "../../state/validationSetsState";
+import StoreSelector from "../StoreSelector";
 
 function PrimaryNav(): React.JSX.Element {
   const location = useLocation();
-  const { storeId, brandId, currentStore, publisher, validationSets } =
-    useNavigationData();
+  const { id: storeId } = useParams();
+
+  const currentStore = useAtomValue(brandStoreState(storeId));
+  const publisher = useAtomValue(publisherState);
+  const brandId = useAtomValue(brandIdState);
+  const validationSets = useAtomValue(validationSetsState);
 
   return (
     <>
