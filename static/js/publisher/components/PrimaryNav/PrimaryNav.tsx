@@ -5,10 +5,7 @@ import {
 import { useAtomValue } from "jotai";
 import { NavLink, useLocation, useParams } from "react-router-dom";
 
-import {
-  brandIdState,
-  brandStoreState
-} from "../../state/brandStoreState";
+import { brandIdState, brandStoreState } from "../../state/brandStoreState";
 import { publisherState } from "../../state/publisherState";
 import { validationSetsState } from "../../state/validationSetsState";
 import StoreSelector from "../StoreSelector";

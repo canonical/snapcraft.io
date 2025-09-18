@@ -7,7 +7,7 @@ import StoreNotFound from "../StoreNotFound";
 vi.mock("react-router-dom", () => ({
   useLocation: () => "",
   useParams: () => ({}),
-  NavLink: () => <a></a>,
+  NavLink: () => <a href="/">Mock</a>,
 }));
 
 describe("StoreNotFound", () => {
