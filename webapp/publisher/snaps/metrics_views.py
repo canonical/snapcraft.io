@@ -133,7 +133,7 @@ def get_active_devices(snap_name):
     metrics_response = dashboard.get_publisher_metrics(
         flask.session, json=new_metrics_query
     )
-
+    days_without_data = metrics_helper.get_days_without_data(metrics_response)
     active_metrics = metrics_helper.find_metric(
         metrics_response["metrics"], installed_base
     )
@@ -180,6 +180,7 @@ def get_active_devices(snap_name):
             "active_devices": dict(active_devices),
             "latest_active_devices": latest_active,
             "total_page_num": total_page_num,
+            "days_without_data": days_without_data,
         }
     )
 
