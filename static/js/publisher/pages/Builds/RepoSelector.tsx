@@ -28,7 +28,10 @@ type Props = {
   setAutoTriggerBuild: Dispatch<SetStateAction<boolean>>;
 };
 
-const formatRepoName = (org: string, repo: string) => `${org}/${repo}`;
+// Utility function for formatting repository names with owner
+const getRepoNameWithOwner = (org: string, repo: string): string => {
+  return `${org}/${repo}`;
+};
 
 function RepoSelector({ githubData, setAutoTriggerBuild }: Props) {
   const rawLogsUrl =
@@ -55,7 +58,7 @@ function RepoSelector({ githubData, setAutoTriggerBuild }: Props) {
     setValidating(true);
 
     const repoName = selectedOrg
-      ? formatRepoName(selectedOrg, repo.name)
+      ? getRepoNameWithOwner(selectedOrg, repo.name)
       : repo.nameWithOwner;
 
     try {
@@ -225,7 +228,7 @@ function RepoSelector({ githubData, setAutoTriggerBuild }: Props) {
     formData.set("csrf_token", window.CSRF_TOKEN);
     if (selectedRepo) {
       const repoName = selectedOrg
-        ? formatRepoName(selectedOrg, selectedRepo.name)
+        ? getRepoNameWithOwner(selectedOrg, selectedRepo.name)
         : selectedRepo.nameWithOwner;
       formData.set("github_repository", repoName);
     }
