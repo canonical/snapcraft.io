@@ -12,7 +12,9 @@ function useLocalStorage<T = unknown>(
 
   // when state changes update local storage
   useEffect(() => {
-    window.localStorage.setItem(key, JSON.stringify(storedValue));
+    setTimeout(() => {
+      window.localStorage.setItem(key, JSON.stringify(storedValue));
+    }); // delay the write to let React do its job first
   }, [key, storedValue]);
 
   // same API as useState so we have to accept a function as argument

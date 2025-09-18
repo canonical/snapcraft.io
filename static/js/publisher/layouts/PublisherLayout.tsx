@@ -1,4 +1,6 @@
 import {
+  AppMain,
+  Application,
   ApplicationLayout,
   Col,
   Panel,
@@ -12,15 +14,16 @@ import { Outlet } from "react-router-dom";
 import Logo from "../components/Logo";
 import PrimaryNav from "../components/PrimaryNav";
 import useLocalStorage from "../hooks/useLocalStorage";
+import Navigation from "../components/Navigation";
 
 function PublisherLayout(): React.JSX.Element {
   const [collapseNavigation, setCollapseNavigation] = useLocalStorage<boolean>(
     "collapse-nav",
-    false,
+    false
   );
   const [pinSideNavigation, setPinSideNavigation] = useLocalStorage<boolean>(
     "pin-nav",
-    false,
+    false
   );
 
   useEffect(() => {
@@ -29,27 +32,18 @@ function PublisherLayout(): React.JSX.Element {
   }, []);
 
   return (
-    <ApplicationLayout
-      menuCollapsed={collapseNavigation}
-      onCollapseMenu={setCollapseNavigation}
-      menuPinned={pinSideNavigation}
-      onPinMenu={setPinSideNavigation}
-      logo={<Logo />}
-      sideNavigation={
-        <PrimaryNav
-          collapseNavigation={collapseNavigation}
-          setCollapseNavigation={setCollapseNavigation}
-        />
-      }
-    >
-      <Panel>
-        <Row>
-          <Col size={12}>
-            <Outlet />
-          </Col>
-        </Row>
-      </Panel>
-    </ApplicationLayout>
+    <Application>
+      <Navigation />
+      <AppMain>
+        <Panel>
+          <Row>
+            <Col size={12}>
+              <Outlet />
+            </Col>
+          </Row>
+        </Panel>
+      </AppMain>
+    </Application>
   );
 }
 

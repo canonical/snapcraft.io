@@ -10,6 +10,7 @@ type Props = {
   nativeNavLink?: boolean;
 };
 
+// TODO: refactor this and use Downshift to have proper a11y
 function StoreSelector({ nativeNavLink }: Props): React.JSX.Element {
   const { id } = useParams();
   const selectorRef = useRef<HTMLDivElement>(null);

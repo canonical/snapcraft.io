@@ -1,29 +1,31 @@
-import { useState } from "react";
-
-import Logo from "./Logo";
-import PrimaryNav from "../PrimaryNav";
 import {
   AppNavigation,
   AppNavigationBar,
+  Button,
+  Icon,
   Panel,
+  Tooltip,
 } from "@canonical/react-components";
+
 import useLocalStorage from "../../hooks/useLocalStorage";
+import PrimaryNav from "../PrimaryNav";
+import Logo from "./Logo";
 
 function Navigation({}: { sectionName?: string | null }): React.JSX.Element {
   const [collapseNavigation, setCollapseNavigation] = useLocalStorage<boolean>(
     "collapse-nav",
-    false,
+    false
   );
   const [pinSideNavigation, setPinSideNavigation] = useLocalStorage<boolean>(
     "pin-nav",
-    false,
+    false
   );
 
   return (
     <>
       <AppNavigationBar>
         <Panel
-          dark
+          // dark
           logo={<Logo />}
           toggle={{
             label: "Menu",
@@ -37,41 +39,55 @@ function Navigation({}: { sectionName?: string | null }): React.JSX.Element {
       <AppNavigation collapsed={collapseNavigation} pinned={pinSideNavigation}>
         <Panel
           dark
-          header={
-            <div className="p-panel__header is-sticky">
-              <Logo />
-              <div className="p-panel__controls">
-                {pinSideNavigation && (
-                  <button
-                    className="p-button--base is-dark has-icon u-no-margin u-hide--small u-hide--large"
-                    onClick={() => {
-                      setPinSideNavigation(false);
-                    }}
-                  >
-                    <i className="is-light p-icon--close"></i>
-                  </button>
-                )}
+          logo={<Logo />}
+          controls={
+            <>
+              <Button
+                hasIcon
+                appearance="base"
+                className="u-no-margin u-hide--small u-hide--large"
+                onClick={() => {
+                  setPinSideNavigation(!pinSideNavigation);
+                }}
+              >
+                <Icon light name={pinSideNavigation ? "close" : "pin"} />
+              </Button>
 
-                {!pinSideNavigation && (
-                  <button
-                    className="p-button--base is-dark has-icon u-no-margin u-hide--small u-hide--large"
+              {!collapseNavigation && (
+                <Tooltip message="Collapse main navigation" position="right">
+                  <Button
+                    hasIcon
+                    appearance="base"
+                    className="u-hide--small u-hide--medium u-no-margin l-navigation-collapse-toggle"
+                    aria-label="Collapse main navigation"
                     onClick={() => {
-                      setPinSideNavigation(true);
+                      setCollapseNavigation(true);
                     }}
                   >
-                    <i className="is-light p-icon--pin"></i>
-                  </button>
-                )}
-              </div>
-            </div>
+                    <Icon name="toggle-side-nav" />
+                  </Button>
+                </Tooltip>
+              )}
+            </>
           }
         >
-          <PrimaryNav
-            collapseNavigation={collapseNavigation}
-            setCollapseNavigation={() => {
-              setCollapseNavigation(!collapseNavigation);
-            }}
-          />
+          {collapseNavigation && (
+            <Tooltip message="Expand main navigation" position="right">
+              <Button
+                hasIcon
+                appearance="base"
+                className="sidenav-toggle u-hide--small u-hide--medium u-no-margin l-navigation-collapse-toggle"
+                aria-label="Expand main navigation"
+                onClick={() => {
+                  setCollapseNavigation(false);
+                }}
+              >
+                <Icon name="toggle-side-nav" />
+              </Button>
+            </Tooltip>
+          )}
+
+          <PrimaryNav />
         </Panel>
       </AppNavigation>
     </>

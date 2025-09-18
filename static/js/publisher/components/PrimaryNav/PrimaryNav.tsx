@@ -1,6 +1,5 @@
 import {
   SideNavigation,
-  SideNavigationLink,
   SideNavigationText,
 } from "@canonical/react-components";
 import { useAtom } from "jotai";
@@ -63,13 +62,7 @@ function useNavigationData() {
   };
 }
 
-function PrimaryNav({
-  collapseNavigation,
-  setCollapseNavigation,
-}: {
-  collapseNavigation: boolean;
-  setCollapseNavigation: (value: boolean) => void;
-}): React.JSX.Element {
+function PrimaryNav(): React.JSX.Element {
   const location = useLocation();
   const { storeId, brandId, currentStore, publisher, validationSets } =
     useNavigationData();
@@ -77,7 +70,8 @@ function PrimaryNav({
   return (
     <>
       <SideNavigation
-        dark={true}
+        dark
+        className="hide-collapsed"
         items={[
           {
             items: [
@@ -87,7 +81,6 @@ function PrimaryNav({
               <SideNavigationText key="my-snaps">
                 <span
                   className="p-side-navigation__item--title p-muted-heading"
-                  style={{ color: "#a8a8a8" }}
                 >
                   My snaps
                 </span>
@@ -118,11 +111,9 @@ function PrimaryNav({
           publisher?.has_stores
             ? {
                 items: [
-                  <SideNavigationText key="my-stores-key">
-                    <i className="p-icon--units is-light p-side-navigation__icon"></i>
+                  <SideNavigationText dark icon="units" key="my-stores-key">
                     <span
                       className="p-side-navigation__item--title p-muted-heading"
-                      style={{ color: "#a8a8a8" }}
                     >
                       My stores
                     </span>
@@ -189,44 +180,34 @@ function PrimaryNav({
         ]}
       />
 
-      {publisher && (
-        <div className="p-side-navigation--icons is-dark">
-          <div className="sidenav-bottom">
-            <div className="nav-list-separator">
-              <hr />
-            </div>
-            <ul className="p-side-navigation__list">
-              <li className="p-side-navigation__item">
-                <SideNavigationLink
-                  component={NavLink}
-                  to="/admin/account"
-                  icon="user"
-                  label={publisher.fullname}
-                />
-              </li>
-
-              <li className="p-side-navigation__item">
-                <a href="/logout" className="p-side-navigation__link">
-                  <i className="p-icon--log-out is-light p-side-navigation__icon"></i>
-                  <span className="p-side-navigation__label">Logout</span>
-                </a>
-              </li>
-            </ul>
-          </div>
-        </div>
-      )}
-
-      <div className="sidenav-toggle-wrapper u-hide--small u-hide--medium">
-        <button
-          className="p-button--base has-icon is-dense sidenav-toggle is-dark u-no-margin l-navigation-collapse-toggle "
-          aria-label={`${collapseNavigation ? "Collapse" : "Expand"} main navigation`}
-          onClick={() => {
-            setCollapseNavigation(!collapseNavigation);
-          }}
-        >
-          <i className="p-icon--sidebar-toggle is-light"></i>
-        </button>
-      </div>
+      <SideNavigation
+        dark
+        className="pin-bottom"
+        items={[
+          publisher
+            ? {
+                items: [
+                  <div className="nav-list-separator">
+                    <hr />
+                  </div>,
+                  {
+                    label: publisher.fullname,
+                    component: NavLink,
+                    to: "/admin/account",
+                    icon: "user",
+                    "aria-current": location.pathname === "/admin/account",
+                  },
+                  {
+                    label: "Logout",
+                    href: "/logout",
+                    to: "/logout", // useless but otherwise TS complains
+                    icon: "log-out",
+                  },
+                ],
+              }
+            : null,
+        ]}
+      />
     </>
   );
 }
