@@ -80,7 +80,7 @@ function Policies(): React.JSX.Element {
 
   return (
     <div className="l-application" role="presentation">
-      <Navigation sectionName="policies" />
+      <Navigation  />
       <main className="l-main">
         <div className="p-panel u-flex-column">
           <div className="p-panel__content u-flex-column u-flex-grow">

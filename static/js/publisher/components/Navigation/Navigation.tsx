@@ -11,14 +11,14 @@ import useLocalStorage from "../../hooks/useLocalStorage";
 import PrimaryNav from "../PrimaryNav";
 import Logo from "./Logo";
 
-function Navigation({}: { sectionName?: string | null }): React.JSX.Element {
+function Navigation(): React.JSX.Element {
   const [collapseNavigation, setCollapseNavigation] = useLocalStorage<boolean>(
     "collapse-nav",
-    false
+    false,
   );
   const [pinSideNavigation, setPinSideNavigation] = useLocalStorage<boolean>(
     "pin-nav",
-    false
+    false,
   );
 
   return (

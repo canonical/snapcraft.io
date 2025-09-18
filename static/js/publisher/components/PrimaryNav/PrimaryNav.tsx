@@ -75,13 +75,11 @@ function PrimaryNav(): React.JSX.Element {
         items={[
           {
             items: [
-              <div className="nav-list-separator" key="separator">
+              <div className="nav-list-separator" key="separator-1-key">
                 <hr />
               </div>,
               <SideNavigationText key="my-snaps">
-                <span
-                  className="p-side-navigation__item--title p-muted-heading"
-                >
+                <span className="p-side-navigation__item--title p-muted-heading">
                   My snaps
                 </span>
               </SideNavigationText>,
@@ -112,13 +110,11 @@ function PrimaryNav(): React.JSX.Element {
             ? {
                 items: [
                   <SideNavigationText dark icon="units" key="my-stores-key">
-                    <span
-                      className="p-side-navigation__item--title p-muted-heading"
-                    >
+                    <span className="p-side-navigation__item--title p-muted-heading">
                       My stores
                     </span>
                   </SideNavigationText>,
-                  <StoreSelector />,
+                  <StoreSelector key="store-selector-key" />,
                 ],
               }
             : null,
@@ -187,7 +183,7 @@ function PrimaryNav(): React.JSX.Element {
           publisher
             ? {
                 items: [
-                  <div className="nav-list-separator">
+                  <div className="nav-list-separator" key="separator-2-key">
                     <hr />
                   </div>,
                   {

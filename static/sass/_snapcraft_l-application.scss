@@ -129,10 +129,10 @@
       }
 
       a {
-        padding: calc(0.4rem - 1px) 0.5rem;
         color: var(--vf-color-text-default);
         display: block;
         overflow: hidden;
+        padding: calc(0.4rem - 1px) 0.5rem;
         text-overflow: ellipsis;
         white-space: nowrap;
 
@@ -147,9 +147,9 @@
   .l-navigation {
     &.is-collapsed {
       .sidenav-toggle {
+        margin-left: $spv--large !important;
         rotate: 180deg;
         width: fit-content;
-        margin-left: $spv--large !important;
       }
     }
 
@@ -174,15 +174,16 @@
       flex-direction: column;
 
       > .p-panel__content {
-        padding-top: 0;
-        flex-grow: 1;
         display: flex;
         flex-direction: column;
+        flex-grow: 1;
+        padding-top: 0;
       }
     }
 
     .p-side-navigation--icons.pin-bottom {
       margin-top: auto;
+
       .p-side-navigation__list {
         margin-bottom: 0;
       }

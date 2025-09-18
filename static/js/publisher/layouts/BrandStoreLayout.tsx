@@ -7,6 +7,7 @@ import { useBrandStores } from "../hooks";
 import StoreNotFound from "../pages/StoreNotFound";
 import { brandStoresState } from "../state/brandStoreState";
 import Navigation from "../components/Navigation";
+import { Store } from "../types/shared";
 
 // TODO: get rid of this file and create a common layout for all the pages in the app
 
@@ -39,7 +40,7 @@ function BrandStoreLayout() {
   const hasStoreId = storeId !== undefined;
   const userHasStores = brandStoresList?.length > 0;
   const userHasCurrentStore = !!brandStoresList?.find(
-    (store: any) => store.id === storeId,
+    (store: Store) => store.id === storeId,
   );
 
   useEffect(() => {
@@ -57,7 +58,7 @@ function BrandStoreLayout() {
 
   // if location is /admin, redirect user to their first store
   if (isAdminPage && userHasStores) {
-    const [store0, store1, ..._] = brandStoresList;
+    const [store0, store1 /*, ..._*/] = brandStoresList;
     const redirectStoreId =
       store0.id === "ubuntu" && store1 ? store1.id : store0.id;
     // don't redirect to the global store by default
