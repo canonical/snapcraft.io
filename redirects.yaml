@@ -227,3 +227,4 @@ first-snap/rust: https://documentation.ubuntu.com/snapcraft/stable/how-to/integr
 first-snap/moos: https://documentation.ubuntu.com/snapcraft/stable/how-to/integrations/craft-a-moos-app/
 first-snap/ros: https://documentation.ubuntu.com/snapcraft/stable/how-to/integrations/craft-an-ros-1-app/
 first-snap/ros2: https://documentation.ubuntu.com/snapcraft/stable/how-to/integrations/craft-an-ros-2-app/
+first-snap: https://documentation.ubuntu.com/snapcraft/stable/how-to/integrations/
