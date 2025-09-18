@@ -85,7 +85,7 @@ function useActiveDeviceMetrics({
       const data = await handleResponse(result);
 
       const activeDeviceBuckets = data.active_devices.buckets;
-      data.days_without_data && daysWithoutData.push(...data.days_without_data);
+
       buckets.push(...activeDeviceBuckets);
       // fill the array with 0's if the batch doesnt have that previous series
       for (const seriesKey of series.keys()) {
@@ -112,6 +112,10 @@ function useActiveDeviceMetrics({
       }
 
       seriesThatAreAddedBefore += activeDeviceBuckets.length;
+
+      if (data.days_without_data) {
+        daysWithoutData.push(...data.days_without_data);
+      }
     }
 
     const resultArray = Array.from(series.entries()).map(([key, value]) => ({
