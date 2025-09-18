@@ -27,6 +27,7 @@ from webapp.publisher.views import account
 from webapp.snapcraft.views import snapcraft_blueprint
 from webapp.store.views import store_blueprint
 from webapp.tutorials.views import init_tutorials
+from webapp.admin_dashboard.views import admin_dashboard
 from webapp.packages.store_packages import store_packages
 from webapp.endpoints.views import endpoints
 from webapp.endpoints.signing_keys import signing_keys
@@ -78,6 +79,7 @@ def create_app(testing=False):
     app.register_blueprint(publisher_snaps)
     app.register_blueprint(publisher_github)
     app.register_blueprint(admin)
+    app.register_blueprint(admin_dashboard, url_prefix="/admin-dashboard")
     app.register_blueprint(endpoints)
     app.register_blueprint(signing_keys)
     app.register_blueprint(models)

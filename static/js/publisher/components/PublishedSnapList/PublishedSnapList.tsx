@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { MainTable, Pagination, Strip } from "@canonical/react-components";
+import { Button, MainTable, Pagination, Strip } from "@canonical/react-components";
 import SnapNameEntry from "./SnapNameEntry";
 import NewSnapNotification from "../NewSnapNotification";
 import EmptySnapList from "../EmptySnapList";
@@ -77,7 +77,26 @@ function PublishedSnapList({
   };
 
   const isEmpty = snaps && snaps.length === 0;
+  const handleSave = async (event: any) => {
+    event.preventDefault();
+    const featured = ["josm", "vault", "artikulate", "mumble", "kolourpaint", "insomnia", "clion", "hey-mail"
+      , "superproductivity", "terminal-parrot", "okular", "whalebird", "warzone2100", "tdhcad",
+      "minetest", "helix"]
+    const data = new FormData();
+    data.append("snaps", featured.join(","));
+    data.append("csrf_token", window.CSRF_TOKEN);
 
+
+    const response = await fetch("/admin/featured", {
+      method: "POST",
+      body: data,
+    });
+
+
+    if (!response.ok) {
+      console.error("Something went wrong");
+    }
+  };
   return (
     <Strip element="section" shallow>
       {isEmpty && <EmptySnapList />}
@@ -87,7 +106,8 @@ function PublishedSnapList({
           <h2 className="p-heading--4">My published snaps</h2>
         </div>
       )}
-
+      here
+      <Button onClick={handleSave}>TEST</Button>
       {shouldShowNewSnapNotification && <NewSnapNotification snap={snaps[0]} />}
 
       {snaps.length > 0 && (
