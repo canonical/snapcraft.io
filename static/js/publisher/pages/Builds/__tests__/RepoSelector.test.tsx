@@ -36,6 +36,11 @@ const mockOrgRepos = [
   { name: "ubuntu-repo" },
 ];
 
+const mockOrgReposNoMatch = [
+  { name: "canonical-repo" },
+  { name: "ubuntu-repo" },
+];
+
 vi.mock("react-router-dom", async () => {
   const actual = await vi.importActual("react-router-dom");
   return {
@@ -195,13 +200,13 @@ describe("RepoSelector", () => {
     expect(repoInput.value).toBe("");
   });
 
-  test("clears input when organization changes", async () => {
+  test("clears input when organization changes to one without matching repo", async () => {
     server.use(
       http.get("/publisher/github/get-repos", ({ request }) => {
         const url = new URL(request.url);
         const org = url.searchParams.get("org");
         if (org === "canonical") {
-          return HttpResponse.json(mockOrgRepos);
+          return HttpResponse.json(mockOrgReposNoMatch);
         }
         return HttpResponse.json(mockRepos);
       }),
@@ -214,27 +219,27 @@ describe("RepoSelector", () => {
 
     const user = userEvent.setup();
     const orgSelect = screen.getByLabelText("Select an organization");
+    const repoInput = screen.getByLabelText(
+      "Select a repository",
+    ) as HTMLInputElement;
+
+    // Initially input should be empty
+    expect(repoInput.value).toBe("");
 
     // Select user organization first
     await user.selectOptions(orgSelect, "johndoe");
 
     // Wait for autofill
     await waitFor(() => {
-      const repoInput = screen.getByLabelText(
-        "Select a repository",
-      ) as HTMLInputElement;
       expect(repoInput.value).toBe("test-snap-id");
     });
 
-    // Change to different organization
+    // Change to different organization that has no matching repo
     await user.selectOptions(orgSelect, "canonical");
 
-    // Input should be cleared and then autofilled again
+    // Wait for repos to load and verify input is empty
     await waitFor(() => {
-      const repoInput = screen.getByLabelText(
-        "Select a repository",
-      ) as HTMLInputElement;
-      expect(repoInput.value).toBe("test-snap-id");
+      expect(repoInput.value).toBe("");
     });
   });
 
