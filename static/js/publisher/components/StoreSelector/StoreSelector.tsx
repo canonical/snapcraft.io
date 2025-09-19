@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useAtomValue } from "jotai";
 import { useParams, NavLink } from "react-router-dom";
 
@@ -10,13 +10,30 @@ type Props = {
   nativeNavLink?: boolean;
 };
 
+// TODO: refactor this and use Downshift to have proper a11y
 function StoreSelector({ nativeNavLink }: Props): React.JSX.Element {
   const { id } = useParams();
+  const selectorRef = useRef<HTMLDivElement>(null);
   const brandStoresList = useAtomValue(brandStoresState);
   const [showStoreSelector, setShowStoreSelector] = useState<boolean>(false);
   const [searchValue, setSearchValue] = useState("");
   const [filteredBrandStores, setFilteredBrandstores] =
     useState<Store[]>(brandStoresList);
+
+  // close the store list when clicking outside of this component
+  useEffect(() => {
+    const clickOutsideListener = (e: MouseEvent) => {
+      if (!selectorRef.current?.contains(e.target as HTMLElement)) {
+        setShowStoreSelector(false);
+      }
+    };
+
+    window.addEventListener("click", clickOutsideListener);
+
+    return () => {
+      window.removeEventListener("click", clickOutsideListener);
+    };
+  }, []);
 
   const getStoreName = (id: string | undefined) => {
     if (!id) {
@@ -29,7 +46,7 @@ function StoreSelector({ nativeNavLink }: Props): React.JSX.Element {
       return targetStore.name;
     }
 
-    return;
+    return "Select a store";
   };
 
   useEffect(() => {
@@ -37,7 +54,7 @@ function StoreSelector({ nativeNavLink }: Props): React.JSX.Element {
   }, [brandStoresList]);
 
   return (
-    <div className="store-selector">
+    <div className="store-selector" ref={selectorRef}>
       <button
         className="store-selector__button u-no-margin--bottom"
         onClick={() => {

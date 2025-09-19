@@ -4,6 +4,8 @@ function useBrand(id: string | undefined) {
   return useQuery({
     queryKey: ["brand", id],
     queryFn: async () => {
+      if (!id) return null;
+
       const response = await fetch(`/api/store/${id}/brand`);
 
       if (!response.ok) {

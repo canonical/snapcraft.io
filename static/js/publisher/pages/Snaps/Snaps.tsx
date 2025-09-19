@@ -325,17 +325,9 @@ function Snaps() {
     }
   }, [currentStore, id]);
 
-  const getSectionName = () => {
-    if (!isReloading && !isOnlyViewer() && snaps && members) {
-      return "snaps";
-    } else {
-      return null;
-    }
-  };
-
   return (
     <div className="l-application" role="presentation">
-      <Navigation sectionName={getSectionName()} />
+      <Navigation />
       <main className="l-main">
         <div className="p-panel">
           <div className="p-panel__content">
