@@ -21,29 +21,19 @@ function useSideNavigationData() {
   const [validationSets, setValidationSets] = useAtom(validationSetsState);
 
   useEffect(() => {
-    if (brandData) {
-      setBrandId(brandData?.["account-id"]);
-    } else {
-      setBrandId("");
-    }
+    setBrandId(brandData?.["account-id"] || brandIdState.init);
   }, [brandData]);
 
   useEffect(() => {
-    if (brandStoresData) {
-      setBrandStores(brandStoresData);
-    }
+    setBrandStores(brandStoresData || brandStoresState.init);
   }, [brandStoresData]);
 
   useEffect(() => {
-    if (publisherData) {
-      setPublisher(publisherData.publisher);
-    }
+    setPublisher(publisherData?.publisher || publisherState.init);
   }, [publisherData]);
 
   useEffect(() => {
-    if (validationSetsData) {
-      setValidationSets(validationSetsData);
-    }
+    setValidationSets(validationSetsData || validationSetsState.init);
   }, [validationSetsData]);
 
   return {
