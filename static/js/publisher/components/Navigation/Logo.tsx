@@ -6,9 +6,7 @@ function Logo(): React.JSX.Element {
         alt="Snapcraft logo"
         className="p-panel__logo-image"
       />
-      <div className="logo-text p-heading--4 is-fading-when-collapsed">
-        Snapcraft
-      </div>
+      <div className="logo-text p-heading--4 hide-collapsed">Snapcraft</div>
     </a>
   );
 }

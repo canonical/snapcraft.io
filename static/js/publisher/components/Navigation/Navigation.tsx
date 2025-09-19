@@ -7,19 +7,21 @@ import {
   Tooltip,
 } from "@canonical/react-components";
 
+import { useState } from "react";
 import useLocalStorage from "../../hooks/useLocalStorage";
 import PrimaryNav from "../PrimaryNav";
 import Logo from "./Logo";
 
 function Navigation(): React.JSX.Element {
-  const [collapseNavigation, setCollapseNavigation] = useLocalStorage<boolean>(
-    "collapse-nav",
-    false,
-  );
-  const [pinSideNavigation, setPinSideNavigation] = useLocalStorage<boolean>(
-    "pin-nav",
-    false,
-  );
+  // persist navigation state between refreshes for desktop and tablet
+  const [collapseDesktopNavigation, setCollapseDesktopNavigation] =
+    useLocalStorage<boolean>("collapse-desktop-nav", false);
+  const [pinTabletNavigation, setPinTabletNavigation] =
+    useLocalStorage<boolean>("pin-nav", false);
+
+  // don't persist mobile navigation state between refreshes
+  const [collapseMobileNavigation, setCollapseMobileNavigation] =
+    useState<boolean>(true);
 
   return (
     <>
@@ -30,13 +32,17 @@ function Navigation(): React.JSX.Element {
           toggle={{
             label: "Menu",
             onClick: () => {
-              setCollapseNavigation(!collapseNavigation);
+              setCollapseMobileNavigation(!collapseMobileNavigation);
             },
           }}
         ></Panel>
       </AppNavigationBar>
 
-      <AppNavigation collapsed={collapseNavigation} pinned={pinSideNavigation}>
+      <AppNavigation
+        className={collapseDesktopNavigation ? "is-collapsed--desktop" : ""}
+        collapsed={collapseMobileNavigation}
+        pinned={pinTabletNavigation}
+      >
         <Panel
           dark
           stickyHeader
@@ -50,13 +56,13 @@ function Navigation(): React.JSX.Element {
                 appearance="base"
                 className="u-no-margin u-hide--small u-hide--large"
                 onClick={() => {
-                  setPinSideNavigation(!pinSideNavigation);
+                  setPinTabletNavigation(!pinTabletNavigation);
                 }}
               >
-                <Icon light name={pinSideNavigation ? "close" : "pin"} />
+                <Icon light name={pinTabletNavigation ? "close" : "pin"} />
               </Button>
 
-              {!collapseNavigation && (
+              {!collapseDesktopNavigation && (
                 <Tooltip message="Collapse main navigation" position="right">
                   <Button
                     hasIcon
@@ -64,7 +70,7 @@ function Navigation(): React.JSX.Element {
                     className="u-hide--small u-hide--medium u-no-margin l-navigation__collapse-toggle"
                     aria-label="Collapse main navigation"
                     onClick={() => {
-                      setCollapseNavigation(true);
+                      setCollapseDesktopNavigation(true);
                     }}
                   >
                     <Icon name="toggle-side-nav" />
@@ -74,7 +80,7 @@ function Navigation(): React.JSX.Element {
             </>
           }
         >
-          {collapseNavigation && (
+          {collapseDesktopNavigation && (
             <Tooltip message="Expand main navigation" position="right">
               <Button
                 hasIcon
@@ -82,7 +88,7 @@ function Navigation(): React.JSX.Element {
                 className="u-hide--small u-hide--medium u-no-margin l-navigation__collapse-toggle"
                 aria-label="Expand main navigation"
                 onClick={() => {
-                  setCollapseNavigation(false);
+                  setCollapseDesktopNavigation(false);
                 }}
               >
                 <Icon name="toggle-side-nav" />

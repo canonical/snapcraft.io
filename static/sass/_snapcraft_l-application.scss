@@ -144,45 +144,32 @@
     }
   }
 
+  // Overrides for side nav to implement the more recent design spec
   .l-navigation {
-    &.is-collapsed {
-      .l-navigation__collapse-toggle {
-        width: $application-layout--side-nav-width-collapsed;
-      }
-
-      .p-icon--toggle-side-nav {
-        transform: rotate(180deg);
-      }
-
-      .is-fading-when-collapsed {
-        opacity: 0 !important;
-        transition-duration: 0.1s !important;
-        transition-property: opacity !important;
-        transition-timing-function: cubic-bezier(
-          0.215,
-          0.61,
-          0.355,
-          1
-        ) !important;
-      }
-    }
-
-    // tablet layout
+    // tablet layout: hide menu items when side nav not pinned or in use
     @media (min-width: $breakpoint-small) and (max-width: $breakpoint-large) {
-      &:not(.is-pinned, :hover, :focus-within) {
+      &:not(.is-pinned):not(:hover):not(:focus-within) {
         .hide-collapsed {
           display: none;
         }
       }
     }
 
-    // desktop layout
+    // desktop layout: enable collapsed layout, hide menu items when collapsed, style collapse toggle
     @media (min-width: $breakpoint-large) {
-      &.is-collapsed {
-        // Override sidenav width for collapsed side navigation, only needed because
-        // Vanilla sets `width: $application-layout--side-nav-width-expanded;`
+      &.is-collapsed--desktop {
+        // Override sidenav width for collapsed side navigation on desktop;
+        // this is because Vanilla sets `width: $application-layout--side-nav-width-expanded;`
         // for this element when the nav has the "is-collapsed" class
         width: $application-layout--side-nav-width-collapsed !important;
+
+        .l-navigation__collapse-toggle {
+          width: $application-layout--side-nav-width-collapsed;
+        }
+
+        .p-icon--toggle-side-nav {
+          transform: rotate(180deg);
+        }
 
         .hide-collapsed {
           display: none;
