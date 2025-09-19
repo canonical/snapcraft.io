@@ -130,7 +130,7 @@ function PrimaryNav(): React.JSX.Element {
 
       <SideNavigation
         dark
-        className="pin-bottom"
+        className="u-align--bottom"
         items={[
           publisher
             ? {

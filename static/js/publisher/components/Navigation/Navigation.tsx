@@ -39,6 +39,9 @@ function Navigation(): React.JSX.Element {
       <AppNavigation collapsed={collapseNavigation} pinned={pinSideNavigation}>
         <Panel
           dark
+          stickyHeader
+          className="u-flex-column"
+          contentClassName="u-flex-grow u-flex-column u-no-padding"
           logo={<Logo />}
           controls={
             <>
@@ -58,7 +61,7 @@ function Navigation(): React.JSX.Element {
                   <Button
                     hasIcon
                     appearance="base"
-                    className="u-hide--small u-hide--medium u-no-margin l-navigation-collapse-toggle"
+                    className="u-hide--small u-hide--medium u-no-margin l-navigation__collapse-toggle"
                     aria-label="Collapse main navigation"
                     onClick={() => {
                       setCollapseNavigation(true);
@@ -76,7 +79,7 @@ function Navigation(): React.JSX.Element {
               <Button
                 hasIcon
                 appearance="base"
-                className="sidenav-toggle u-hide--small u-hide--medium u-no-margin l-navigation-collapse-toggle"
+                className="u-hide--small u-hide--medium u-no-margin l-navigation__collapse-toggle"
                 aria-label="Expand main navigation"
                 onClick={() => {
                   setCollapseNavigation(false);
