@@ -58,15 +58,16 @@ function BrandStoreLayout() {
     }
   }, [brandStoresList]);
 
-  // if location is /admin, redirect user to their first store
-  if (isAdminPage && userHasStores) {
-    const [store0, store1 /*, ..._*/] = brandStoresList;
-    const redirectStoreId =
-      store0.id === "ubuntu" && store1 ? store1.id : store0.id;
-    // don't redirect to the global store by default
-
-    navigate(`${redirectStoreId}/snaps${window.location.search}`);
-  }
+  useEffect(() => {
+    // if location is /admin, redirect user to their first store
+    if (isAdminPage && userHasStores && brandStoresList) {
+      const [store0, store1 /*, ..._*/] = brandStoresList;
+      const redirectStoreId =
+        store0.id === "ubuntu" && store1 ? store1.id : store0.id;
+      // don't redirect to the global store by default
+      navigate(`${redirectStoreId}/snaps${window.location.search}`);
+    }
+  }, [isAdminPage, userHasStores, brandStoresList, navigate, location.search]);
 
   return !isLoading ? (
     !hasStoreId || (userHasStores && userHasCurrentStore) ? (
