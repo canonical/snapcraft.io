@@ -25,7 +25,7 @@ function Navigation(): React.JSX.Element {
     <>
       <AppNavigationBar>
         <Panel
-          // dark
+          dark
           logo={<Logo />}
           toggle={{
             label: "Menu",
