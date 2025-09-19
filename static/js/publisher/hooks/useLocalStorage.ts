@@ -7,14 +7,18 @@ function useLocalStorage<T = unknown>(
   // use a function to initialize the state to ensure init only runs on first render
   const [storedValue, setStoredValue] = useState<T>(() => {
     const item = window.localStorage.getItem(key);
-    return item ? JSON.parse(item) : initialValue;
+    return item
+      ? JSON.parse(item)
+      : initialValue instanceof Function
+        ? initialValue()
+        : initialValue;
   });
 
   // when state changes update local storage
   useEffect(() => {
     setTimeout(() => {
       window.localStorage.setItem(key, JSON.stringify(storedValue));
-    }); // delay the write to let React do its job first
+    }, 0); // delay the write to let React do its job first
   }, [key, storedValue]);
 
   // same API as useState so we have to accept a function as argument
