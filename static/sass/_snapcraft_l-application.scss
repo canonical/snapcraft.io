@@ -147,9 +147,8 @@
   .l-navigation {
     &.is-collapsed {
       .sidenav-toggle {
-        margin-left: $spv--large !important;
+        margin-left: 0.8rem !important;
         rotate: 180deg;
-        width: fit-content;
       }
     }
 
@@ -188,10 +187,6 @@
         margin-bottom: 0;
       }
     }
-  }
-
-  .l-navigation.is-collapsed .sidenav-toggle-wrapper {
-    text-align: left;
   }
 
   @media (width >= 1036px) {
