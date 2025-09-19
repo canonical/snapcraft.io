@@ -9,7 +9,7 @@ function StoreNotFound(): React.JSX.Element {
       <Navigation />
 
       <main className="l-main">
-        <div className="p-panel--not_found">
+        <div className="p-panel--not-found">
           <div className="p-panel__content">
             <div className="u-fixed-width">
               <h1>Store not found</h1>
