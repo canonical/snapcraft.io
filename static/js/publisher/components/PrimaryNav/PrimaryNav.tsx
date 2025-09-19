@@ -147,8 +147,9 @@ function PrimaryNav(): React.JSX.Element {
                   },
                   {
                     label: "Logout",
-                    href: "/logout",
-                    to: "/logout", // useless but otherwise TS complains
+                    component: NavLink,
+                    to: "/logout",
+                    reloadDocument: true,
                     icon: "log-out",
                   },
                 ],
