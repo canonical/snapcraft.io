@@ -345,7 +345,9 @@
 <a name='L280'></a><a href='#L280'>280</a>
 <a name='L281'></a><a href='#L281'>281</a>
 <a name='L282'></a><a href='#L282'>282</a>
-<a name='L283'></a><a href='#L283'>283</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L283'></a><a href='#L283'>283</a>
+<a name='L284'></a><a href='#L284'>284</a>
+<a name='L285'></a><a href='#L285'>285</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -580,18 +582,20 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -857,35 +861,37 @@ function RepoSelector({ githubData, setAutoTriggerBuild }: Props) {
           &lt;/datalist&gt;
         &lt;/Col&gt;
         &lt;Col size={2}&gt;
-          {validRepo === true &amp;&amp; (
-<span class="branch-1 cbranch-no" title="branch not covered" >            &lt;Button</span>
-              appearance="positive"
-              disabled={building}
-              onClick={<span class="fstat-no" title="function not covered" >() =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >                connectRepo();</span>
-              }}
-            &gt;
-              Start building
-            &lt;/Button&gt;
-          )}
-          {validationError &amp;&amp; (
-<span class="branch-1 cbranch-no" title="branch not covered" >            &lt;Button</span>
-              className="p-tooltip--btm-center"
-              aria-describedby="recheck-tooltip"
-              onClick={<span class="fstat-no" title="function not covered" >() =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >                validateRepo(selectedRepo);</span>
-              }}
-            &gt;
-              &lt;i className="p-icon--restart"&gt;&lt;/i&gt;
-              &lt;span
-                className="p-tooltip__message"
-                role="tooltip"
-                id="recheck-tooltip"
+          &lt;div style={{ display: "flex", alignItems: "end", height: "100%" }}&gt;
+            {validRepo === true &amp;&amp; (
+<span class="branch-1 cbranch-no" title="branch not covered" >              &lt;Button</span>
+                appearance="positive"
+                disabled={building}
+                onClick={<span class="fstat-no" title="function not covered" >() =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >                  connectRepo();</span>
+                }}
               &gt;
-                Re-check
-              &lt;/span&gt;
-            &lt;/Button&gt;
-          )}
+                Start building
+              &lt;/Button&gt;
+            )}
+            {validationError &amp;&amp; (
+<span class="branch-1 cbranch-no" title="branch not covered" >              &lt;Button</span>
+                className="p-tooltip--btm-center"
+                aria-describedby="recheck-tooltip"
+                onClick={<span class="fstat-no" title="function not covered" >() =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >                  validateRepo(selectedRepo);</span>
+                }}
+              &gt;
+                &lt;i className="p-icon--restart"&gt;&lt;/i&gt;
+                &lt;span
+                  className="p-tooltip__message"
+                  role="tooltip"
+                  id="recheck-tooltip"
+                &gt;
+                  Re-check
+                &lt;/span&gt;
+              &lt;/Button&gt;
+            )}
+          &lt;/div&gt;
         &lt;/Col&gt;
       &lt;/Row&gt;
       {validationError &amp;&amp; (
@@ -916,7 +922,7 @@ export default RepoSelector;
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-09-22T22:04:54.910Z
+                at 2025-09-23T22:04:50.743Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>
