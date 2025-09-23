@@ -228,35 +228,37 @@ function RepoSelector({ githubData, setAutoTriggerBuild }: Props) {
           </datalist>
         </Col>
         <Col size={2}>
-          {validRepo === true && (
-            <Button
-              appearance="positive"
-              disabled={building}
-              onClick={() => {
-                connectRepo();
-              }}
-            >
-              Start building
-            </Button>
-          )}
-          {validationError && (
-            <Button
-              className="p-tooltip--btm-center"
-              aria-describedby="recheck-tooltip"
-              onClick={() => {
-                validateRepo(selectedRepo);
-              }}
-            >
-              <i className="p-icon--restart"></i>
-              <span
-                className="p-tooltip__message"
-                role="tooltip"
-                id="recheck-tooltip"
+          <div style={{ display: "flex", alignItems: "end", height: "100%" }}>
+            {validRepo === true && (
+              <Button
+                appearance="positive"
+                disabled={building}
+                onClick={() => {
+                  connectRepo();
+                }}
               >
-                Re-check
-              </span>
-            </Button>
-          )}
+                Start building
+              </Button>
+            )}
+            {validationError && (
+              <Button
+                className="p-tooltip--btm-center"
+                aria-describedby="recheck-tooltip"
+                onClick={() => {
+                  validateRepo(selectedRepo);
+                }}
+              >
+                <i className="p-icon--restart"></i>
+                <span
+                  className="p-tooltip__message"
+                  role="tooltip"
+                  id="recheck-tooltip"
+                >
+                  Re-check
+                </span>
+              </Button>
+            )}
+          </div>
         </Col>
       </Row>
       {validationError && (
