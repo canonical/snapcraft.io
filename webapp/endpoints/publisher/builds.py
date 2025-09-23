@@ -28,11 +28,13 @@ def get_snap_build_page(snap_name, build_id):
 
 def validate_repo(github_token, snap_name, gh_owner, gh_repo):
     github = GitHub(github_token)
-    result = {"success": True}
+    result = {"success": True, "data": None, "error": None}
     yaml_location = github.get_snapcraft_yaml_location(gh_owner, gh_repo)
+    default_branch = github.get_default_branch(gh_owner, gh_repo)
 
     # The snapcraft.yaml is not present
     if not yaml_location:
+        result["data"] = {"default_branch": default_branch}
         result["success"] = False
         result["error"] = {
             "type": "MISSING_YAML_FILE",
