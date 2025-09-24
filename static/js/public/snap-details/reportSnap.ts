@@ -1,4 +1,3 @@
-import "whatwg-fetch";
 import { buttonEnabled, buttonLoading } from "../../libs/formHelpers";
 
 const showEl = (el: HTMLElement) => el.classList.remove("u-hide");
