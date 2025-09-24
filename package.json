@@ -84,7 +84,7 @@
     "topojson-client": "3.1.0",
     "typescript": "5.3.3",
     "uuid": "11.0.4",
-    "vanilla-framework": "4.33.0",
+    "vanilla-framework": "4.34.1",
     "vite": "7.1.2",
     "whatwg-fetch": "3.6.20"
   },
