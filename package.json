@@ -85,8 +85,7 @@
     "typescript": "5.3.3",
     "uuid": "11.0.4",
     "vanilla-framework": "4.34.1",
-    "vite": "7.1.5",
-    "whatwg-fetch": "3.6.20"
+    "vite": "7.1.5"
   },
   "devDependencies": {
     "@babel/eslint-parser": "7.25.9",
