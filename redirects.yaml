@@ -131,6 +131,7 @@ docs/snapcraft-quickstart/?: https://documentation.ubuntu.com/snapcraft/stable/t
 docs/snapcraft-checklist/?: https://documentation.ubuntu.com/snapcraft/stable/tutorials/craft-a-snap/
 docs/adding-parts/?: https://documentation.ubuntu.com/snapcraft/stable/tutorials/craft-a-snap/
 docs/defining-a-command/?: https://documentation.ubuntu.com/snapcraft/stable/tutorials/craft-a-snap/
+docs/snapcraft-docker-images/?: https://documentation.ubuntu.com/snapcraft/stable/how-to/crafting/specify-a-base/#containers
 docs/snapcraft-tutorials/?: https://documentation.ubuntu.com/snapcraft/stable/tutorials/
 docs/snapcraft-reference/?: https://documentation.ubuntu.com/snapcraft/stable/reference/
 
@@ -227,3 +228,4 @@ first-snap/rust: https://documentation.ubuntu.com/snapcraft/stable/how-to/integr
 first-snap/moos: https://documentation.ubuntu.com/snapcraft/stable/how-to/integrations/craft-a-moos-app/
 first-snap/ros: https://documentation.ubuntu.com/snapcraft/stable/how-to/integrations/craft-an-ros-1-app/
 first-snap/ros2: https://documentation.ubuntu.com/snapcraft/stable/how-to/integrations/craft-an-ros-2-app/
+first-snap: https://documentation.ubuntu.com/snapcraft/stable/how-to/integrations/

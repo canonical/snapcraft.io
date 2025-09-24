@@ -1,5 +1,11 @@
 import { useParams, useSearchParams } from "react-router-dom";
-import { Row, Col, Spinner, CodeSnippet } from "@canonical/react-components";
+import {
+  Row,
+  Col,
+  Spinner,
+  CodeSnippet,
+  Notification,
+} from "@canonical/react-components";
 
 import { useEffect } from "react";
 import { renderActiveDevicesMetrics } from "./metrics/metrics";
@@ -55,10 +61,17 @@ function ActiveDeviceMetrics({
       return searchParams;
     });
   };
+  const daysWithoutDataExist = data && data.daysWithoutData.length > 0;
 
   return (
     <section className={`p-strip is-shallow ${isEmpty ? "is-empty" : ""}`}>
       <Row>
+        {daysWithoutDataExist && (
+          <Notification severity="caution">
+            Metrics for the most recent days may be incomplete or missing. They
+            will be updated and accurate within a few hours.
+          </Notification>
+        )}
         <Col size={12} key="activeServices">
           <h4 className="u-float-left">Weekly active devices</h4>
           <div className="p-heading--4 u-float-right u-no-margin--top">
