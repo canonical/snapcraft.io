@@ -34,7 +34,7 @@ function generateYamlTemplateUrl(
   const url = `https://github.com/${org}/${repo}/new/${branch}`;
   const searchParams = new URLSearchParams();
   const templateContent = `# After registering a name on snapcraft.io, commit an uncommented line:
-# name: ${snapId} 
+# name: ${snapId}
 version: '0.1' # just for humans, typically '1.2+git' or '1.3.2'
 summary: Single-line elevator pitch for your amazing snap # 79 char long summary
 description: |
@@ -52,7 +52,7 @@ parts:
   searchParams.set("filename", "snap/snapcraft.yaml");
   searchParams.set("value", templateContent);
 
-  return `${encodeURI(url)}?${searchParams.toString()}`;
+  return `${url}?${searchParams.toString()}`;
 }
 
 function RepoSelector({ githubData, setAutoTriggerBuild }: Props) {
