@@ -18,10 +18,9 @@ const MAX_DATE = new Date(8640000000000000);
 
 function AccountKeyStatus(props: { accountKey: AccountKeyData }) {
   const {
-    accountKey: { since: _since, until: _until },
+    accountKey: { until: _until },
   } = props;
 
-  const since = new Date(_since);
   const hasUntil = !!_until; // valid keys don't have an "until" value by default
   const until = hasUntil ? new Date(_until) : MAX_DATE;
   const isExpired = until < new Date();
@@ -68,20 +67,23 @@ function AccountKeyConstraints(props: { accountKey: AccountKeyData }) {
   const remaining = (constraints?.length ?? 0) - 2;
 
   return constraints ? (
-    <div className="u-whitespace-nowrap">
-      <Button
-        className="u-no-margin"
-        appearance="base"
-        hasIcon
-        aria-label={expanded ? "Hide constraints" : "Show constraints"}
-        isDense
-        onClick={() => setExpanded(!expanded)}
-      >
-        <Icon name={expanded ? "chevron-down" : "chevron-right"} />
-      </Button>
-      {c0 && <Chip isReadOnly value={c0.headers.type} />}
-      {c1 && <Chip isReadOnly value={c1.headers.type} />}
-      {remaining > 0 && <Chip isReadOnly value={`+${remaining}`} />}
+    <>
+      <div style={{ display: "flex", alignItems: "baseline" }}>
+        <Button
+          // className="u-no-margin"
+          style={{ marginRight: "0.5rem" }}
+          appearance="base"
+          hasIcon
+          aria-label={expanded ? "Hide constraints" : "Show constraints"}
+          isDense
+          onClick={() => setExpanded(!expanded)}
+        >
+          <Icon name={expanded ? "chevron-down" : "chevron-right"} />
+        </Button>
+        {c0 && <Chip isReadOnly value={c0.headers.type} />}
+        {c1 && <Chip isReadOnly value={c1.headers.type} />}
+        {remaining > 0 && <Chip isReadOnly value={`+${remaining}`} />}
+      </div>
       {constraints?.length && expanded && (
         <table>
           <thead>
@@ -114,7 +116,7 @@ function AccountKeyConstraints(props: { accountKey: AccountKeyData }) {
           </tbody>
         </table>
       )}
-    </div>
+    </>
   ) : (
     <span className="u-text-muted">No constraints</span>
   );
@@ -145,13 +147,7 @@ function AccountKeysTable(props: {
               { content: k.name },
               { content: new Date(k.since).toLocaleDateString() },
               { content: <AccountKeyStatus accountKey={k} /> },
-              {
-                content: k.constraints ? (
-                  <AccountKeyConstraints accountKey={k} />
-                ) : (
-                  "No constraints"
-                ),
-              },
+              { content: <AccountKeyConstraints accountKey={k} /> },
               {
                 content: k["public-key-sha3-384"],
                 className: "u-truncate",

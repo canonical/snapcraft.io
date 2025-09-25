@@ -1,20 +1,15 @@
 import {
   Col,
-  Icon,
-  Row,
-  Notification,
-  EmptyState,
-  Button,
+  Row
 } from "@canonical/react-components";
-import Navigation from "../../components/Navigation";
-import AccountKeysTable from "./AccountKeysTable";
 import { useAtomValue } from "jotai";
-import { accountKeysState } from "../../state/accountKeysState";
-import AccountKeyCard from "./AccountKeyCard";
-import AccountKeysLoading from "./AccountKeyLoading";
-import AccountKeysError from "./AccountKeyError";
-import AccountKeysSearch from "./AccountKeySearch";
 import { useMemo, useState } from "react";
+import Navigation from "../../components/Navigation";
+import { accountKeysState } from "../../state/accountKeysState";
+import AccountKeysError from "./AccountKeyError";
+import AccountKeysLoading from "./AccountKeyLoading";
+import AccountKeysSearch from "./AccountKeySearch";
+import AccountKeysTable from "./AccountKeysTable";
 
 function AccountKeys(): React.JSX.Element {
   const { data, isLoading, isError } = useAtomValue(accountKeysState);
@@ -55,14 +50,6 @@ function AccountKeys(): React.JSX.Element {
                   <Row>
                     <AccountKeysTable keys={filteredData} />
                   </Row>
-
-                  {/* <Row>
-                    {data?.map((accountKey, i) => (
-                      <Col key={i} size={6}>
-                        <AccountKeyCard accountKey={accountKey} />
-                      </Col>
-                    ))}
-                  </Row> */}
                 </div>
               )}
 
