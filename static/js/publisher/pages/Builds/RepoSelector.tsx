@@ -25,15 +25,16 @@ function generateYamlTemplateUrl(
   org: string | null,
   repo: string | undefined,
   branch: string | null,
+  snapId: string,
 ) {
   if (!org || !repo) {
     return;
   }
 
   const url = `https://github.com/${org}/${repo}/new/${branch}`;
-  const searchParams = new URLSearchParams(window.location.search);
+  const searchParams = new URLSearchParams();
   const templateContent = `# After registering a name on snapcraft.io, commit an uncommented line:
-# name: notion-snap
+# name: ${snapId} 
 version: '0.1' # just for humans, typically '1.2+git' or '1.3.2'
 summary: Single-line elevator pitch for your amazing snap # 79 char long summary
 description: |
@@ -316,6 +317,7 @@ function RepoSelector({ githubData, setAutoTriggerBuild }: Props) {
                 selectedOrg,
                 selectedRepo?.name,
                 defaultBranch,
+                snapId,
               )}
             >
               get started with a template
