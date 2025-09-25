@@ -32,10 +32,12 @@ export type AccountKeyConstraint = {
   headers: SerialModelPreseedHeader | SimpleHeader | SystemUserHeader;
 };
 
-export type AccountKeysData = {
+export type AccountKeyData = {
   name: string;
   "public-key-sha3-384": string;
   since: string;
   until?: string; // not all keys have an expiry date
   constraints?: AccountKeyConstraint[]; // not all keys are limited
-}[];
+};
+
+export type AccountKeysData = AccountKeyData[];
