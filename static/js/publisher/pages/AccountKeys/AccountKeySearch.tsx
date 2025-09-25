@@ -1,6 +1,9 @@
 import { Button, Icon } from "@canonical/react-components";
 
-function AccountKeysSearch(): React.JSX.Element {
+function AccountKeysSearch(props: {
+  value?: string;
+  onChange: (v: string) => void;
+}): React.JSX.Element {
   return (
     <div className="p-search-box">
       <label className="u-off-screen" htmlFor="search">
@@ -14,19 +17,16 @@ function AccountKeysSearch(): React.JSX.Element {
         className="p-search-box__input"
         placeholder="Search account keys"
         autoComplete="off"
-        value={""}
+        value={props.value}
         onChange={(e) => {
-          if (e.target.value) {
-            // TODO
-          } else {
-          }
+          props.onChange(e.target.value);
         }}
       />
       <Button
         type="reset"
         className="p-search-box__reset"
         onClick={() => {
-          // TODO
+          props.onChange("");
         }}
       >
         <Icon name="close">Clear filter</Icon>

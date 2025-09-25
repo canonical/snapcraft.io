@@ -1,8 +1,8 @@
-import type { AccountKeysData } from "../types/accountKeysTypes";
+import type { AccountKeyData } from "../types/accountKeysTypes";
 import { atom } from "jotai";
 
 interface AccountKeysState {
-  data?: AccountKeysData;
+  data?: AccountKeyData[];
   isLoading: boolean;
   isError?: boolean;
 }

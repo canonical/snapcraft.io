@@ -14,10 +14,18 @@ import AccountKeyCard from "./AccountKeyCard";
 import AccountKeysLoading from "./AccountKeyLoading";
 import AccountKeysError from "./AccountKeyError";
 import AccountKeysSearch from "./AccountKeySearch";
+import { useMemo, useState } from "react";
 
 function AccountKeys(): React.JSX.Element {
   const { data, isLoading, isError } = useAtomValue(accountKeysState);
   const hasKeys = !isLoading && !isError && !!data?.length;
+  const [searchName, setSearchName] = useState<string>("");
+
+  const filteredData = useMemo(() => {
+    if (!searchName) return data ?? [];
+
+    return (data ?? []).filter((k) => k.name.includes(searchName));
+  }, [data, searchName]);
 
   return (
     <>
@@ -37,21 +45,24 @@ function AccountKeys(): React.JSX.Element {
                 <div className="u-fixed-width">
                   <Row>
                     <Col size={6}>
-                      <AccountKeysSearch />
+                      <AccountKeysSearch
+                        value={searchName}
+                        onChange={setSearchName}
+                      />
                     </Col>
                   </Row>
 
-                  {/* <Row>
-                    <AccountKeysTable keys={data} />
-                  </Row> */}
-
                   <Row>
+                    <AccountKeysTable keys={filteredData} />
+                  </Row>
+
+                  {/* <Row>
                     {data?.map((accountKey, i) => (
                       <Col key={i} size={6}>
                         <AccountKeyCard accountKey={accountKey} />
                       </Col>
                     ))}
-                  </Row>
+                  </Row> */}
                 </div>
               )}
 

@@ -11,7 +11,6 @@ export type SimpleHeader = {
     | "snap-declaration"
     | "snap-revision"
     | "store"
-    | "system-user"
     | "validation"
     | "validation-set";
 };
@@ -39,5 +38,3 @@ export type AccountKeyData = {
   until?: string; // not all keys have an expiry date
   constraints?: AccountKeyConstraint[]; // not all keys are limited
 };
-
-export type AccountKeysData = AccountKeyData[];
