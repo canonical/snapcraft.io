@@ -1,11 +1,23 @@
-import { Col, Icon, Row } from "@canonical/react-components";
+import {
+  Col,
+  Icon,
+  Row,
+  Notification,
+  EmptyState,
+  Button,
+} from "@canonical/react-components";
 import Navigation from "../../components/Navigation";
 import AccountKeysTable from "./AccountKeysTable";
 import { useAtomValue } from "jotai";
 import { accountKeysState } from "../../state/accountKeysState";
+import AccountKeyCard from "./AccountKeyCard";
+import AccountKeysLoading from "./AccountKeyLoading";
+import AccountKeysError from "./AccountKeyError";
+import AccountKeysSearch from "./AccountKeySearch";
 
 function AccountKeys(): React.JSX.Element {
-  const accountKeys = useAtomValue(accountKeysState);
+  const { data, isLoading, isError } = useAtomValue(accountKeysState);
+  const hasKeys = !isLoading && !isError && !!data?.length;
 
   return (
     <>
@@ -15,35 +27,41 @@ function AccountKeys(): React.JSX.Element {
         <main className="l-main">
           <div className="p-panel">
             <div className="p-panel__content">
-              {!accountKeys && (
+              <Row>
+                <Col size={12}>
+                  <h2 className="p-heading--4">Account keys</h2>
+                </Col>
+              </Row>
+
+              {hasKeys && (
                 <div className="u-fixed-width">
-                  <Icon name="spinner" className="u-animation--spin" />
-                  &nbsp;Loading...
+                  <Row>
+                    <Col size={6}>
+                      <AccountKeysSearch />
+                    </Col>
+                  </Row>
+
+                  {/* <Row>
+                    <AccountKeysTable keys={data} />
+                  </Row> */}
+
+                  <Row>
+                    {data?.map((accountKey, i) => (
+                      <Col key={i} size={6}>
+                        <AccountKeyCard accountKey={accountKey} />
+                      </Col>
+                    ))}
+                  </Row>
                 </div>
               )}
 
-              {/* TODO: how to detect error? */}
-              {/* {false && (
-                <div className="u-fixed-width">
-                  <Notification severity="negative" title="Error:">
-                    Something went wrong. Please try again later.
-                  </Notification>
-                </div>
-              )} */}
+              {isLoading && <AccountKeysLoading />}
 
-              {!!accountKeys && (
-                <div className="u-fixed-width">
-                  <Row>
-                    <Col size={12}>
-                      <h2 className="p-heading--4">Account keys</h2>
-                    </Col>
-                  </Row>
+              {isError && <AccountKeysError />}
 
-                  <Row>
-                    <Col size={12}>
-                      <AccountKeysTable keys={accountKeys} />
-                    </Col>
-                  </Row>
+              {!isLoading && !isError && !hasKeys && (
+                <div className="u-fixed-width">
+                  There are no keys associated to your account
                 </div>
               )}
             </div>
