@@ -176,10 +176,3 @@ export type TerritoriesMetricsData = {
     percentage_of_users: number;
   };
 };
-
-export type AccountKeysData = {
-  name: string;
-  "public-key-sha3-384": string;
-  since: string;
-  until?: string;
-}[];
