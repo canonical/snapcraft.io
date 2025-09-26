@@ -1,5 +1,3 @@
-import "whatwg-fetch";
-
 interface Post {
   slug: string;
   [key: string]: string | undefined;

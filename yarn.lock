@@ -966,10 +966,10 @@
     react-table "7.8.0"
     react-useportal "1.0.19"
 
-"@canonical/react-components@2.16.1":
-  version "2.16.1"
-  resolved "https://registry.yarnpkg.com/@canonical/react-components/-/react-components-2.16.1.tgz#4c814dd6b64549a4ccda94eb0df5d0ba0d35b41b"
-  integrity sha512-8qoTl/4cci8JzDX+XJXP0/dHJQXhY0skQDYX5jynFXS9lUnjdgAlVehiulghFRZWGXUKrinRqwVYIXR88xEZww==
+"@canonical/react-components@3.1.0":
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/@canonical/react-components/-/react-components-3.1.0.tgz#dfcb95d701050adf8b635ddfc47bfd6b5454ac74"
+  integrity sha512-eORYAW5NX37C+0u+u2+2DheHagKZWN38EzNyTHGcdHlUJYrPafTHX958sdpYeR1BL7Sn/t5371RZF2RHxM6S6w==
   dependencies:
     "@types/jest" "29.5.14"
     "@types/node" "20.17.19"
@@ -4814,7 +4814,7 @@ fd-slicer@~1.1.0:
   dependencies:
     pend "~1.2.0"
 
-fdir@^6.4.4, fdir@^6.4.6:
+fdir@^6.4.4:
   version "6.4.6"
   resolved "https://registry.yarnpkg.com/fdir/-/fdir-6.4.6.tgz#2b268c0232697063111bbf3f64810a2a741ba281"
   integrity sha512-hiFoqpyZcfNm1yc4u8oWCf9A2c4D3QjCrks3zmoVKVxpQRzmPNar1hUJcBG2RQHvEVGDN+Jm81ZheVLAQMK6+w==
@@ -7829,6 +7829,14 @@ tinyglobby@^0.2.14:
     fdir "^6.4.4"
     picomatch "^4.0.2"
 
+tinyglobby@^0.2.15:
+  version "0.2.15"
+  resolved "https://registry.yarnpkg.com/tinyglobby/-/tinyglobby-0.2.15.tgz#e228dd1e638cea993d2fdb4fcd2d4602a79951c2"
+  integrity sha512-j2Zq4NyQYG5XMST4cbs02Ak8iJUdxRM0XI5QyxXuZOzKOINmWurp3smXu3y5wDcJrptwpSjgXHzIQxR0omXljQ==
+  dependencies:
+    fdir "^6.5.0"
+    picomatch "^4.0.3"
+
 tinypool@^1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/tinypool/-/tinypool-1.1.1.tgz#059f2d042bd37567fbc017d3d426bdd2a2612591"
@@ -8158,10 +8166,10 @@ vanilla-framework@4.26.1:
   resolved "https://registry.yarnpkg.com/vanilla-framework/-/vanilla-framework-4.26.1.tgz#d076f26a7215cf8b0babae81753ef535e6486257"
   integrity sha512-7m3qX4rm+I+go5mNjzO8gkp2qxr5m4n1jAxTh+bJ8hx/Wrsx3hiWDmJHylZ2GqjeqdtOiidvWgU2ToZJK6ELUg==
 
-vanilla-framework@4.33.0:
-  version "4.33.0"
-  resolved "https://registry.yarnpkg.com/vanilla-framework/-/vanilla-framework-4.33.0.tgz#9c8212ce2443fbded4d74e3d7969132ca8688ed2"
-  integrity sha512-J1ACu3eVLXQzCWZz6D82MiKAyFdLcLA0XfVW0WZU+lil1RAaEDbxFdFcrDJtzVEClBWrlfANS9COtXV3VHxKow==
+vanilla-framework@4.34.1:
+  version "4.34.1"
+  resolved "https://registry.yarnpkg.com/vanilla-framework/-/vanilla-framework-4.34.1.tgz#99da5661c10fa1539b263b87df9b455cc09761f6"
+  integrity sha512-ycuVdn0yYsDuRbMD7mTbGPQ2r8y0FtL601Sa0id5ozHS24wzBd7Yp1w1TLYprvP5q7dCO5r6fne/k/bw08e0tg==
 
 verror@1.10.0:
   version "1.10.0"
@@ -8183,17 +8191,17 @@ vite-node@3.2.4:
     pathe "^2.0.3"
     vite "^5.0.0 || ^6.0.0 || ^7.0.0-0"
 
-vite@7.1.2:
-  version "7.1.2"
-  resolved "https://registry.yarnpkg.com/vite/-/vite-7.1.2.tgz#62ffd8a915977ff387fbe7a731af1a650ec5006e"
-  integrity sha512-J0SQBPlQiEXAF7tajiH+rUooJPo0l8KQgyg4/aMunNtrOa7bwuZJsJbDWzeljqQpgftxuq5yNJxQ91O9ts29UQ==
+vite@7.1.5:
+  version "7.1.5"
+  resolved "https://registry.yarnpkg.com/vite/-/vite-7.1.5.tgz#4dbcb48c6313116689be540466fc80faa377be38"
+  integrity sha512-4cKBO9wR75r0BeIWWWId9XK9Lj6La5X846Zw9dFfzMRw38IlTk2iCcUt6hsyiDRcPidc55ZParFYDXi0nXOeLQ==
   dependencies:
     esbuild "^0.25.0"
-    fdir "^6.4.6"
+    fdir "^6.5.0"
     picomatch "^4.0.3"
     postcss "^8.5.6"
     rollup "^4.43.0"
-    tinyglobby "^0.2.14"
+    tinyglobby "^0.2.15"
   optionalDependencies:
     fsevents "~2.3.3"
 
@@ -8258,11 +8266,6 @@ whatwg-encoding@^2.0.0:
   integrity sha512-p41ogyeMUrw3jWclHWTQg1k05DSVXPLcVxRTYsXUk+ZooOCZLcoYgPZ/HL/D/N+uQPOtcp1me1WhBEaX02mhWg==
   dependencies:
     iconv-lite "0.6.3"
-
-whatwg-fetch@3.6.20:
-  version "3.6.20"
-  resolved "https://registry.yarnpkg.com/whatwg-fetch/-/whatwg-fetch-3.6.20.tgz#580ce6d791facec91d37c72890995a0b48d31c70"
-  integrity sha512-EqhiFU6daOA8kpjOWTL0olhVOF3i7OrFzSYiGsEMB8GcXS+RrzauAERX65xMeNWVqxA6HXH2m69Z9LaKKdisfg==
 
 whatwg-mimetype@^3.0.0:
   version "3.0.0"

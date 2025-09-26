@@ -1,5 +1,3 @@
-import "whatwg-fetch";
-
 import { CLOSE_MODAL } from "./modal";
 import { showNotification } from "./globalNotification";
 

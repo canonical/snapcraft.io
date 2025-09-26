@@ -1,5 +1,3 @@
-import "whatwg-fetch";
-
 import { DEFAULT_ERROR_MESSAGE as ERROR_MESSAGE } from "../constants";
 
 export function fetchReleases(onComplete, releases, snapName) {

@@ -1,8 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* globals ga */
 
-import "whatwg-fetch";
-
 import { toggleAccordion } from "./accordion";
 
 function install(language: unknown, fsfFlow: string): void {
