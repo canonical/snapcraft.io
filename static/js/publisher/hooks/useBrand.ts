@@ -4,7 +4,8 @@ function useBrand(id: string | undefined) {
   return useQuery({
     queryKey: ["brand", id],
     queryFn: async () => {
-      if (!id) return null;
+      // this can get called on routes that aren't a brand store -> id === undefined
+      if (!id) return null; // return null to clear the state variable
 
       const response = await fetch(`/api/store/${id}/brand`);
 
