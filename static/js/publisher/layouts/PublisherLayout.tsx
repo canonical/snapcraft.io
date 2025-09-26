@@ -12,9 +12,17 @@ import { Outlet } from "react-router-dom";
 
 import Navigation from "../components/Navigation";
 import useSideNavigationData from "../hooks/useSideNavigationData";
+import { usePortalExit } from "../pages/Portals/Portals";
+import useMergeRefs from "../hooks/useMergeRefs";
 
 function PublisherLayout(): React.JSX.Element {
   useSideNavigationData();
+  // merge two ref callbacks into one
+  const mergedPortalsRef = useMergeRefs<HTMLDivElement>(
+    usePortalExit("aside"),
+    usePortalExit("modal"),
+  );
+  const notificationPortalRef = usePortalExit("notification");
 
   useEffect(() => {
     const theme = loadTheme();
@@ -22,7 +30,7 @@ function PublisherLayout(): React.JSX.Element {
   }, []);
 
   return (
-    <Application>
+    <Application ref={mergedPortalsRef}>
       <Navigation />
       <AppMain>
         <Panel>
@@ -33,6 +41,8 @@ function PublisherLayout(): React.JSX.Element {
           </Row>
         </Panel>
       </AppMain>
+
+      <div className="p-notification-center" ref={notificationPortalRef}></div>
     </Application>
   );
 }
