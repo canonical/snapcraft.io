@@ -90,6 +90,8 @@ root.render(
             />
 
             <Route path="admin/account" element={<AccountDetails />} />
+            <Route path="admin/:id" element={<Snaps />} />
+            <Route path="admin/:id/snaps" element={<Snaps />} />
           </Route>
           {/* END publisher routes */}
 

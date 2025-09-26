@@ -1,33 +1,31 @@
-import { useState, useEffect } from "react";
-import { useParams, Link } from "react-router-dom";
-import { useAtomValue } from "jotai";
 import {
-  Spinner,
-  Row,
-  Col,
-  Button,
-  Notification,
-  Modal,
   Accordion,
+  Button,
+  Col,
+  Modal,
+  Notification,
+  Row,
+  Spinner,
 } from "@canonical/react-components";
+import { useAtomValue } from "jotai";
+import { useEffect, useState } from "react";
+import { Link, useParams } from "react-router-dom";
 
-import { useSnaps, useMembers } from "../../hooks";
+import { useMembers, useSnaps } from "../../hooks";
 
 import { brandStoresState } from "../../state/brandStoreState";
 
+import type { Member, Snap, SnapsList, Store } from "../../types/shared";
+import { setPageTitle } from "../../utils";
+import { PortalEntry } from "../Portals/Portals";
 import Publisher from "../Publisher";
 import Reviewer from "../Reviewer";
 import ReviewerAndPublisher from "../ReviewerAndPublisher";
+import StoreNotFound from "../StoreNotFound";
+import IncludedSnapsTable from "./IncludedSnapsTable";
+import PublishedSnapsTable from "./PublishedSnapsTable";
 import SnapsFilter from "./SnapsFilter";
 import SnapsSearch from "./SnapsSearch";
-import StoreNotFound from "../StoreNotFound";
-import Navigation from "../../components/Navigation";
-import PublishedSnapsTable from "./PublishedSnapsTable";
-import IncludedSnapsTable from "./IncludedSnapsTable";
-
-import { setPageTitle } from "../../utils";
-
-import type { Store, Snap, SnapsList, Member } from "../../types/shared";
 
 function Snaps() {
   const { id } = useParams();
@@ -216,7 +214,7 @@ function Snaps() {
     ? snaps
         .filter(
           (snap: Snap) =>
-            snap["included-stores"] && snap["included-stores"].length > 0,
+            snap["included-stores"] && snap["included-stores"].length > 0
         )
         .map((snap: Snap) => ({
           id: snap.id,
@@ -237,7 +235,7 @@ function Snaps() {
 
   useEffect(() => {
     setSnapsInStore(
-      snaps ? snaps.filter((snap: Snap) => snap.store === id) : [],
+      snaps ? snaps.filter((snap: Snap) => snap.store === id) : []
     );
     setOtherStoreIds(getOtherStoreIds());
 
@@ -285,7 +283,7 @@ function Snaps() {
             return false;
           }),
         };
-      }),
+      })
     );
   }, [otherStoreIds]);
 
@@ -311,7 +309,7 @@ function Snaps() {
         setIsReviewerAndPublisherOnly(
           roles.length === 2 &&
             roles.includes("access") &&
-            roles.includes("review"),
+            roles.includes("review")
         );
       } else {
         setIsPublisherOnly(false);
@@ -326,252 +324,242 @@ function Snaps() {
   }, [currentStore, id]);
 
   return (
-    <div className="l-application" role="presentation">
-      <Navigation />
-      <main className="l-main">
-        <div className="p-panel">
-          <div className="p-panel__content">
-            {snapsLoading && membersLoading ? (
+    <>
+      {snapsLoading && membersLoading ? (
+        <div className="u-fixed-width">
+          <Spinner text="Loading&hellip;" />
+        </div>
+      ) : currentStore && isReviewerAndPublisherOnly ? (
+        <ReviewerAndPublisher />
+      ) : currentStore && isReviewerOnly ? (
+        <Reviewer />
+      ) : currentStore && isPublisherOnly ? (
+        <Publisher />
+      ) : !snapsLoading && !snaps ? (
+        <StoreNotFound />
+      ) : (
+        <>
+          {!isReloading && (
+            <>
               <div className="u-fixed-width">
-                <Spinner text="Loading&hellip;" />
+                <h1 className="p-heading--4">
+                  {getStoreName(id || "")} / Store snaps
+                </h1>
               </div>
-            ) : currentStore && isReviewerAndPublisherOnly ? (
-              <ReviewerAndPublisher />
-            ) : currentStore && isReviewerOnly ? (
-              <Reviewer />
-            ) : currentStore && isPublisherOnly ? (
-              <Publisher />
-            ) : !snapsLoading && !snaps ? (
-              <StoreNotFound />
-            ) : (
+              <Row>
+                <Col size={8}>
+                  <SnapsFilter
+                    setSnapsInStore={setSnapsInStore}
+                    snapsInStore={snapsInStore}
+                    setOtherStores={setOtherStores}
+                    otherStoreIds={otherStoreIds}
+                    getStoreName={getStoreName}
+                    snaps={snaps}
+                    id={id || ""}
+                  />
+                </Col>
+              </Row>
+            </>
+          )}
+          <div className="u-fixed-width">
+            {isReloading && <Spinner text="Loading&hellip;" />}
+
+            {!isReloading && currentStore && (
               <>
-                {!isReloading && (
-                  <>
-                    <div className="u-fixed-width">
-                      <h1 className="p-heading--4">
-                        {getStoreName(id || "")} / Store snaps
-                      </h1>
+                <Accordion
+                  className="accordion-bold-titles"
+                  sections={[
+                    {
+                      key: "published-snaps",
+                      title:
+                        currentStore && currentStore.name
+                          ? `Snaps published in ${currentStore.name}`
+                          : "Published snaps",
+                      content: (
+                        <PublishedSnapsTable snapsInStore={snapsInStore} />
+                      ),
+                    },
+                  ]}
+                  expanded="published-snaps"
+                />
+                <hr className="u-no-margin--bottom" />
+                <div className="accordion-actions">
+                  {!isOnlyViewer() && (
+                    <div className="accordion-actions__row u-align--right">
+                      <Button
+                        disabled={snapsToRemove.length < 1 || removeSnapSaving}
+                        onClick={() => {
+                          setShowRemoveSnapsConfirmation(true);
+                        }}
+                        className={
+                          removeSnapSaving ? "has-icon is-dense" : "is-dense"
+                        }
+                      >
+                        {removeSnapSaving ? (
+                          <>
+                            <i className="p-icon--spinner u-animation--spin"></i>
+                            <span>Saving...</span>
+                          </>
+                        ) : snapsToRemove.length > 1 ? (
+                          "Exclude snaps"
+                        ) : (
+                          "Exclude snap"
+                        )}
+                      </Button>
+                      <Button
+                        onClick={() => setSidePanelOpen(true)}
+                        appearance="positive"
+                        className="u-no-margin--right is-dense"
+                      >
+                        Include snap
+                      </Button>
                     </div>
-                    <Row>
-                      <Col size={8}>
-                        <SnapsFilter
-                          setSnapsInStore={setSnapsInStore}
-                          snapsInStore={snapsInStore}
-                          setOtherStores={setOtherStores}
-                          otherStoreIds={otherStoreIds}
-                          getStoreName={getStoreName}
-                          snaps={snaps}
-                          id={id || ""}
-                        />
-                      </Col>
-                    </Row>
+                  )}
+                  <Accordion
+                    className="accordion-bold-titles"
+                    sections={[
+                      {
+                        key: "included-snaps",
+                        title: "Included snaps",
+                        content: (
+                          <IncludedSnapsTable
+                            otherStores={otherStores}
+                            globalStore={globalStore || null}
+                            getStoreName={getStoreName}
+                            isOnlyViewer={isOnlyViewer}
+                            snapsToRemove={snapsToRemove}
+                            setSnapsToRemove={setSnapsToRemove}
+                            nonEssentialSnapIds={nonEssentialSnapIds}
+                          />
+                        ),
+                      },
+                    ]}
+                    expanded="included-snaps"
+                  />
+                </div>
+                {!!includedStores.length && !isReloading && (
+                  <>
+                    <hr className="u-no-margin--bottom" />
+                    <Accordion
+                      className="accordion-bold-titles"
+                      sections={[
+                        {
+                          key: "included-stores",
+                          title: `Fully included stores (${includedStores.length})`,
+                          content: (
+                            <div className="u-fixed-width">
+                              <h4>Fully included stores</h4>
+                              <p>
+                                In addition to the snaps listed above, all snaps
+                                from the following stores are also included in{" "}
+                                {getStoreName(id || "")}.
+                              </p>
+                              <ul>
+                                {includedStores.map((store: Store) => (
+                                  <li key={store?.includedStore?.id}>
+                                    {store.userHasAccess ? (
+                                      <Link
+                                        to={`/admin/${store?.includedStore?.id}/snaps`}
+                                      >
+                                        {store?.includedStore?.name}
+                                      </Link>
+                                    ) : (
+                                      <>
+                                        {store?.includedStore?.name} (
+                                        {store?.includedStore?.id})
+                                      </>
+                                    )}
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
+                          ),
+                        },
+                      ]}
+                    />
                   </>
                 )}
-                <div className="u-fixed-width">
-                  {isReloading && <Spinner text="Loading&hellip;" />}
-
-                  {!isReloading && currentStore && (
-                    <>
-                      <Accordion
-                        className="accordion-bold-titles"
-                        sections={[
-                          {
-                            key: "published-snaps",
-                            title:
-                              currentStore && currentStore.name
-                                ? `Snaps published in ${currentStore.name}`
-                                : "Published snaps",
-                            content: (
-                              <PublishedSnapsTable
-                                snapsInStore={snapsInStore}
-                              />
-                            ),
-                          },
-                        ]}
-                        expanded="published-snaps"
-                      />
-                      <hr className="u-no-margin--bottom" />
-                      <div className="accordion-actions">
-                        {!isOnlyViewer() && (
-                          <div className="accordion-actions__row u-align--right">
-                            <Button
-                              disabled={
-                                snapsToRemove.length < 1 || removeSnapSaving
-                              }
-                              onClick={() => {
-                                setShowRemoveSnapsConfirmation(true);
-                              }}
-                              className={
-                                removeSnapSaving
-                                  ? "has-icon is-dense"
-                                  : "is-dense"
-                              }
-                            >
-                              {removeSnapSaving ? (
-                                <>
-                                  <i className="p-icon--spinner u-animation--spin"></i>
-                                  <span>Saving...</span>
-                                </>
-                              ) : snapsToRemove.length > 1 ? (
-                                "Exclude snaps"
-                              ) : (
-                                "Exclude snap"
-                              )}
-                            </Button>
-                            <Button
-                              onClick={() => setSidePanelOpen(true)}
-                              appearance="positive"
-                              className="u-no-margin--right is-dense"
-                            >
-                              Include snap
-                            </Button>
-                          </div>
-                        )}
-                        <Accordion
-                          className="accordion-bold-titles"
-                          sections={[
-                            {
-                              key: "included-snaps",
-                              title: "Included snaps",
-                              content: (
-                                <IncludedSnapsTable
-                                  otherStores={otherStores}
-                                  globalStore={globalStore || null}
-                                  getStoreName={getStoreName}
-                                  isOnlyViewer={isOnlyViewer}
-                                  snapsToRemove={snapsToRemove}
-                                  setSnapsToRemove={setSnapsToRemove}
-                                  nonEssentialSnapIds={nonEssentialSnapIds}
-                                />
-                              ),
-                            },
-                          ]}
-                          expanded="included-snaps"
-                        />
-                      </div>
-                      {!!includedStores.length && !isReloading && (
-                        <>
-                          <hr className="u-no-margin--bottom" />
-                          <Accordion
-                            className="accordion-bold-titles"
-                            sections={[
-                              {
-                                key: "included-stores",
-                                title: `Fully included stores (${includedStores.length})`,
-                                content: (
-                                  <div className="u-fixed-width">
-                                    <h4>Fully included stores</h4>
-                                    <p>
-                                      In addition to the snaps listed above, all
-                                      snaps from the following stores are also
-                                      included in {getStoreName(id || "")}.
-                                    </p>
-                                    <ul>
-                                      {includedStores.map((store: Store) => (
-                                        <li key={store?.includedStore?.id}>
-                                          {store.userHasAccess ? (
-                                            <Link
-                                              to={`/admin/${store?.includedStore?.id}/snaps`}
-                                            >
-                                              {store?.includedStore?.name}
-                                            </Link>
-                                          ) : (
-                                            <>
-                                              {store?.includedStore?.name} (
-                                              {store?.includedStore?.id})
-                                            </>
-                                          )}
-                                        </li>
-                                      ))}
-                                    </ul>
-                                  </div>
-                                ),
-                              },
-                            ]}
-                          />
-                        </>
-                      )}
-                    </>
-                  )}
-                </div>
               </>
             )}
           </div>
-        </div>
-      </main>
-      <div
-        className={`l-aside__overlay ${sidePanelOpen ? "" : "u-hide"}`}
-        onClick={() => {
-          setSidePanelOpen(false);
-        }}
-        onKeyDown={(e) => {
-          if (e.key == "Enter" || e.key == " ") {
+        </>
+      )}
+
+      <PortalEntry name="aside">
+        <div
+          className={`l-aside__overlay ${sidePanelOpen ? "" : "u-hide"}`}
+          onClick={() => {
             setSidePanelOpen(false);
-          }
-        }}
-        role="button"
-        tabIndex={0}
-        aria-label="Close side panel"
-      ></div>
-      <aside
-        className={`l-aside ${sidePanelOpen ? "" : "is-collapsed"}`}
-        id="aside-panel"
-      >
-        <div className="p-panel is-flex-column">
-          <div className="p-panel__header">
-            <h4 className="p-panel__title">
-              Add a snap to {getStoreName(id || "")}
-            </h4>
-          </div>
-          <div className="p-panel__content u-no-padding--top">
-            <div className="u-fixed-width">
-              <SnapsSearch
-                selectedSnaps={selectedSnaps}
-                setSelectedSnaps={setSelectedSnaps}
-                storeId={id || ""}
-                nonEssentialSnapIds={nonEssentialSnapIds}
-              />
+          }}
+          onKeyDown={(e) => {
+            if (e.key == "Enter" || e.key == " ") {
+              setSidePanelOpen(false);
+            }
+          }}
+          role="button"
+          tabIndex={0}
+          aria-label="Close side panel"
+        ></div>
+        <aside
+          className={`l-aside ${sidePanelOpen ? "" : "is-collapsed"}`}
+          id="aside-panel"
+        >
+          <div className="p-panel is-flex-column">
+            <div className="p-panel__header">
+              <h4 className="p-panel__title">
+                Add a snap to {getStoreName(id || "")}
+              </h4>
+            </div>
+            <div className="p-panel__content u-no-padding--top">
+              <div className="u-fixed-width">
+                <SnapsSearch
+                  selectedSnaps={selectedSnaps}
+                  setSelectedSnaps={setSelectedSnaps}
+                  storeId={id || ""}
+                  nonEssentialSnapIds={nonEssentialSnapIds}
+                />
+              </div>
+            </div>
+            <div className="p-panel__footer u-align--right">
+              <div className="u-fixed-width">
+                <Button
+                  onClick={() => {
+                    setSidePanelOpen(false);
+                    setSelectedSnaps([]);
+                  }}
+                >
+                  Cancel
+                </Button>
+
+                <Button
+                  appearance="positive"
+                  disabled={selectedSnaps.length < 1 || isSaving}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    addSnaps();
+                  }}
+                  className={`u-no-margin--right ${
+                    isSaving ? "has-icon is-dark" : ""
+                  }`}
+                >
+                  {isSaving ? (
+                    <>
+                      <i className="p-icon--spinner is-light u-animation--spin"></i>
+                      <span>Saving...</span>
+                    </>
+                  ) : selectedSnaps.length <= 1 ? (
+                    "Add snap"
+                  ) : (
+                    "Add snaps"
+                  )}
+                </Button>
+              </div>
             </div>
           </div>
-          <div className="p-panel__footer u-align--right">
-            <div className="u-fixed-width">
-              <Button
-                onClick={() => {
-                  setSidePanelOpen(false);
-                  setSelectedSnaps([]);
-                }}
-              >
-                Cancel
-              </Button>
+        </aside>
+      </PortalEntry>
 
-              <Button
-                appearance="positive"
-                disabled={selectedSnaps.length < 1 || isSaving}
-                onClick={(e) => {
-                  e.preventDefault();
-                  addSnaps();
-                }}
-                className={`u-no-margin--right ${
-                  isSaving ? "has-icon is-dark" : ""
-                }`}
-              >
-                {isSaving ? (
-                  <>
-                    <i className="p-icon--spinner is-light u-animation--spin"></i>
-                    <span>Saving...</span>
-                  </>
-                ) : selectedSnaps.length <= 1 ? (
-                  "Add snap"
-                ) : (
-                  "Add snaps"
-                )}
-              </Button>
-            </div>
-          </div>
-        </div>
-      </aside>
-
-      <div className="p-notification-center">
+      <PortalEntry name="notification">
         {showAddSuccessNotification && (
           <Notification
             severity="positive"
@@ -601,55 +589,57 @@ function Snaps() {
             </a>
           </Notification>
         )}
-      </div>
+      </PortalEntry>
 
-      {showRemoveSnapsConfirmation && (
-        <Modal
-          close={() => {
-            setShowRemoveSnapsConfirmation(false);
-          }}
-          title={`Exclude ${
-            snapsToRemove.length > 1 ? "snaps" : snapsToRemove[0].name
-          }`}
-          buttonRow={
-            <>
-              <Button
-                className="u-no-margin--bottom"
-                onClick={() => {
-                  setShowRemoveSnapsConfirmation(false);
-                }}
-              >
-                Cancel
-              </Button>
-              <Button
-                className="u-no-margin--bottom u-no-margin--right"
-                appearance="positive"
-                onClick={() => {
-                  setShowRemoveSnapsConfirmation(false);
-                  removeSnaps();
-                }}
-              >
-                Exclude snap{snapsToRemove.length > 1 ? "s" : ""}
-              </Button>
-            </>
-          }
-        >
-          {snapsToRemove.length > 1 && (
-            <ul>
-              {snapsToRemove.map((snapToRemove: Snap) => (
-                <li key={snapToRemove.id}>
-                  <strong>{snapToRemove.name}</strong>
-                </li>
-              ))}
-            </ul>
-          )}
-          <p>
-            {snapsToRemove.length > 1 ? "These snaps" : "This snap"} can still
-            be included again in this store.
-          </p>
-        </Modal>
-      )}
-    </div>
+      <PortalEntry name="modal">
+        {showRemoveSnapsConfirmation && (
+          <Modal
+            close={() => {
+              setShowRemoveSnapsConfirmation(false);
+            }}
+            title={`Exclude ${
+              snapsToRemove.length > 1 ? "snaps" : snapsToRemove[0].name
+            }`}
+            buttonRow={
+              <>
+                <Button
+                  className="u-no-margin--bottom"
+                  onClick={() => {
+                    setShowRemoveSnapsConfirmation(false);
+                  }}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  className="u-no-margin--bottom u-no-margin--right"
+                  appearance="positive"
+                  onClick={() => {
+                    setShowRemoveSnapsConfirmation(false);
+                    removeSnaps();
+                  }}
+                >
+                  Exclude snap{snapsToRemove.length > 1 ? "s" : ""}
+                </Button>
+              </>
+            }
+          >
+            {snapsToRemove.length > 1 && (
+              <ul>
+                {snapsToRemove.map((snapToRemove: Snap) => (
+                  <li key={snapToRemove.id}>
+                    <strong>{snapToRemove.name}</strong>
+                  </li>
+                ))}
+              </ul>
+            )}
+            <p>
+              {snapsToRemove.length > 1 ? "These snaps" : "This snap"} can still
+              be included again in this store.
+            </p>
+          </Modal>
+        )}
+      </PortalEntry>
+    </>
   );
 }
 
