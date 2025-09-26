@@ -177,6 +177,8 @@ $color-social-icon-foreground: $color-light;
 @include vf-p-icon-models;
 @include vf-p-icon-edit;
 @include vf-p-icon-units;
+@include vf-p-icon-toggle-side-nav;
+@include vf-p-icon-log-out;
 @include vf-p-icon-restart;
 
 dl {
