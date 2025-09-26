@@ -13,28 +13,26 @@ function NewSnapNotification({ snap }: { snap: ISnap }): React.JSX.Element {
   return (
     <>
       <Notification severity="information" title={title}>
-        <p>
-          Want to improve the listing in stores?
-          <Link
-            href={`/${snapName}/listing`}
-            className="p-snap-list__notification-link"
-          >
-            Edit store listing
-          </Link>
-          {!latestRelease && (
-            <>
-              <br />
-              Is your snap ready to release?
-              <Link
-                href="/docs/releasing-your-app"
-                target="_blank"
-                className="p-snap-list__notification-link"
-              >
-                Release it
-              </Link>
-            </>
-          )}
-        </p>
+        Want to improve the listing in stores?
+        <Link
+          href={`/${snapName}/listing`}
+          className="p-snap-list__notification-link"
+        >
+          Edit store listing
+        </Link>
+        {!latestRelease && (
+          <>
+            <br />
+            Is your snap ready to release?
+            <Link
+              href="/docs/releasing-your-app"
+              target="_blank"
+              className="p-snap-list__notification-link"
+            >
+              Release it
+            </Link>
+          </>
+        )}
       </Notification>
     </>
   );
