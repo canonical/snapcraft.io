@@ -71,12 +71,10 @@
     <!-- JS that is needed right away -->
     {{ vite_import('static/js/base/cookie-policy.ts') }}
 
-    {% from "_header_macros.html" import header %}
-      {% if show_header != False %}
-        {{ vite_import('static/js/base/global-nav.ts') }}
-        {% from "_header_macros.html" import header %}
-        {{ header() }}
-      {% endif %}
+    {% if show_header != False %}
+      {% from "_header_macros.html" import header %}
+      {{ header(vite_import) }}
+    {% endif %}
     {% endblock %}
 
     {% block content %}{% endblock %}

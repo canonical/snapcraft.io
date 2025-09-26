@@ -1,7 +1,8 @@
 {% extends "_base-layout.html" %}
 
 {% block header %}
-{% from "_header_docs_macros.html" import header %}{{ header() }}
+{% from "_header_macros.html" import header %}
+  {{ header(vite_import, docs=True) }}
 {% endblock %}
 
 {% block content %}{% endblock %}
