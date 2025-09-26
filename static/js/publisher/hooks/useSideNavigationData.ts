@@ -13,7 +13,7 @@ import { validationSetsState } from "../state/validationSetsState";
  * - the list of brand stores the user has access to
  * - the brand ID of the currently selected store
  * - the list of validation sets
- * 
+ *
  * The data is loaded into the appropriate Jotai state variables
  */
 function useSideNavigationData() {
