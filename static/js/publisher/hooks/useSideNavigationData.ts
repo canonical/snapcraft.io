@@ -1,4 +1,4 @@
-import { useAtom } from "jotai";
+import { useSetAtom } from "jotai";
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 
@@ -7,7 +7,15 @@ import { brandIdState, brandStoresState } from "../state/brandStoreState";
 import { publisherState } from "../state/publisherState";
 import { validationSetsState } from "../state/validationSetsState";
 
-// load all data that's needed for side navigation
+/**
+ * Load all the data that is needed for side navigation, more specifically:
+ * - the user's publisher information
+ * - the list of brand stores the user has access to
+ * - the brand ID of the currently selected store
+ * - the list of validation sets
+ * 
+ * The data is loaded into the appropriate Jotai state variables
+ */
 function useSideNavigationData() {
   const { id: storeId } = useParams();
   const { data: publisherData } = usePublisher();
@@ -15,10 +23,10 @@ function useSideNavigationData() {
   const { data: brandStoresData } = useBrandStores();
   const { data: brandData } = useBrand(storeId);
 
-  const [brandStores, setBrandStores] = useAtom(brandStoresState);
-  const [publisher, setPublisher] = useAtom(publisherState);
-  const [brandId, setBrandId] = useAtom(brandIdState);
-  const [validationSets, setValidationSets] = useAtom(validationSetsState);
+  const setBrandStores = useSetAtom(brandStoresState);
+  const setPublisher = useSetAtom(publisherState);
+  const setBrandId = useSetAtom(brandIdState);
+  const setValidationSets = useSetAtom(validationSetsState);
 
   useEffect(() => {
     setBrandId(brandData?.["account-id"] || brandIdState.init);
@@ -35,14 +43,6 @@ function useSideNavigationData() {
   useEffect(() => {
     setValidationSets(validationSetsData || validationSetsState.init);
   }, [validationSetsData]);
-
-  return {
-    storeId,
-    brandId,
-    brandStores,
-    publisher,
-    validationSets,
-  };
 }
 
 export default useSideNavigationData;

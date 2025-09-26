@@ -5,10 +5,10 @@ import { Outlet, useLocation, useNavigate, useParams } from "react-router-dom";
 
 import Navigation from "../components/Navigation";
 import { useBrandStores } from "../hooks";
-import useSideNavigationData from "../hooks/useSideNavigationData";
 import StoreNotFound from "../pages/StoreNotFound";
 import { brandStoresState } from "../state/brandStoreState";
 import { Store } from "../types/shared";
+import useSideNavigationData from "../hooks/useSideNavigationData";
 
 // TODO: get rid of this file and create a common layout for all the pages in the app
 
@@ -33,6 +33,7 @@ function BrandStoreLoader() {
 
 function BrandStoreLayout() {
   useSideNavigationData();
+
   const location = useLocation();
   const navigate = useNavigate();
   const { data: brandStoresList, isLoading } = useBrandStores();
