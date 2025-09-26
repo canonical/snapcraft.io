@@ -1,3 +1,4 @@
-{% macro header(docs=False) %}
+{% macro header(vite_import, docs=False) %}
+  {{ vite_import('static/js/base/global-nav.ts') }}
   {% include "_header.html" %}
 {% endmacro %}
