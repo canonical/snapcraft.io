@@ -88,15 +88,14 @@ root.render(
               path="validation-sets/:validationSetId"
               element={<ValidationSet />}
             />
+
+            <Route path="admin/account" element={<AccountDetails />} />
           </Route>
           {/* END publisher routes */}
 
           {/* START brand store routes */}
           <Route path="admin" element={<BrandStoreLayout />}>
-            <Route path="account" element={<AccountDetails />} />
             <Route path=":id">
-              <Route index element={<Snaps />} />
-              <Route path="snaps" element={<Snaps />} />
               <Route path="members" element={<Members />} />
               <Route path="settings" element={<BrandStoreSettings />} />
               <Route path="models" element={<Models />} />
