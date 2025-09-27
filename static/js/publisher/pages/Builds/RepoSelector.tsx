@@ -29,8 +29,11 @@ type Props = {
 };
 
 // Utility function for formatting repository names with owner
-const getRepoNameWithOwner = (org: string, repo: string): string => {
-  return `${org}/${repo}`;
+const getRepoNameWithOwner = (
+  selectedOrg: string | null,
+  repo: Repo,
+): string => {
+  return selectedOrg ? `${selectedOrg}/${repo.name}` : repo.nameWithOwner;
 };
 
 function RepoSelector({ githubData, setAutoTriggerBuild }: Props) {
@@ -54,12 +57,14 @@ function RepoSelector({ githubData, setAutoTriggerBuild }: Props) {
   // Track autofill attempts to avoid unnecessary re-runs
   const autofillAttemptedRef = useRef<string | null>(null);
 
-  const validateRepoInternal = async (repo: Repo) => {
+  const validateRepoInternal = async (repo: Repo | undefined) => {
+    if (!repo) {
+      return;
+    }
+
     setValidating(true);
 
-    const repoName = selectedOrg
-      ? getRepoNameWithOwner(selectedOrg, repo.name)
-      : repo.nameWithOwner;
+    const repoName = getRepoNameWithOwner(selectedOrg, repo);
 
     try {
       const response = await fetch(
@@ -87,13 +92,6 @@ function RepoSelector({ githubData, setAutoTriggerBuild }: Props) {
     } finally {
       setValidating(false);
     }
-  };
-
-  const validateRepo = async (repo: Repo | undefined) => {
-    if (!repo) {
-      return;
-    }
-    await validateRepoInternal(repo);
   };
 
   // Autofill effect with proper dependencies
@@ -217,7 +215,7 @@ function RepoSelector({ githubData, setAutoTriggerBuild }: Props) {
     setSelectedRepo(selectedRepo);
 
     if (selectedRepo) {
-      validateRepo(selectedRepo);
+      validateRepoInternal(selectedRepo);
     }
   };
 
@@ -227,9 +225,7 @@ function RepoSelector({ githubData, setAutoTriggerBuild }: Props) {
     const formData = new FormData();
     formData.set("csrf_token", window.CSRF_TOKEN);
     if (selectedRepo) {
-      const repoName = selectedOrg
-        ? getRepoNameWithOwner(selectedOrg, selectedRepo.name)
-        : selectedRepo.nameWithOwner;
+      const repoName = getRepoNameWithOwner(selectedOrg, selectedRepo);
       formData.set("github_repository", repoName);
     }
 
@@ -324,7 +320,7 @@ function RepoSelector({ githubData, setAutoTriggerBuild }: Props) {
               className="p-tooltip--btm-center"
               aria-describedby="recheck-tooltip"
               onClick={() => {
-                validateRepo(selectedRepo);
+                validateRepoInternal(selectedRepo);
               }}
             >
               <i className="p-icon--restart"></i>
