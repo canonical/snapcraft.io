@@ -62,7 +62,7 @@ function BrandStoreSettings() {
 
   return (
     <div className="l-application">
-      <Navigation sectionName="settings" />
+      <Navigation />
       <main className="l-main">
         <div className="p-panel--settings">
           <div className="p-panel__content">

@@ -59,7 +59,7 @@ function AccountDetails(): React.JSX.Element {
 
   return (
     <div className="l-application" role="presentation">
-      <Navigation sectionName={"account"} />
+      <Navigation />
       <main className="l-main">
         <div className="p-panel">
           <div className="p-panel__content">

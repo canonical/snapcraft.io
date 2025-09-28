@@ -176,14 +176,6 @@ function Members(): React.JSX.Element {
     }
   }, [members, membersLoading, invitesLoading]);
 
-  const getSectionName = () => {
-    if (members && invites) {
-      return "members";
-    } else {
-      return null;
-    }
-  };
-
   const getStoreName = (storeId: string) => {
     const store = brandStoresList.find((item) => item.id === storeId);
 
@@ -196,7 +188,7 @@ function Members(): React.JSX.Element {
 
   return (
     <div className="l-application" role="presentation">
-      <Navigation sectionName={getSectionName()} />
+      <Navigation />
       <main className="l-main">
         <div className="p-panel">
           <div className="p-panel__content">
