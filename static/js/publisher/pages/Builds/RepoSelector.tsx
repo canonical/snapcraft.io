@@ -219,8 +219,6 @@ function RepoSelector({ githubData, setAutoTriggerBuild }: Props) {
     autofillAttemptedRef.current = null;
 
     if (target.value) {
-      setReposLoading(true);
-
       const org = target.value;
 
       if (org === githubData.github_user.login) {
