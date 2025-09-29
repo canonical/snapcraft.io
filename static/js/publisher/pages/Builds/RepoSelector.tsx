@@ -172,7 +172,12 @@ function RepoSelector({ githubData, setAutoTriggerBuild }: Props) {
       }
 
       const responseData = await response.json();
-      setRepos(responseData);
+      setRepos(
+        responseData.sort(
+          (a: Repo, b: Repo) =>
+            a.name.localeCompare(b.name) || b.name.localeCompare(a.name),
+        ),
+      );
     } catch (_error) {
       setRepoFetchError("Failed to fetch repositories. Please try again.");
       setRepos([]);
@@ -332,7 +337,9 @@ function RepoSelector({ githubData, setAutoTriggerBuild }: Props) {
             ))}
           <datalist id="repo-list">
             {repos.map((repo: Repo) => (
-              <option value={repo.name} key={repo.name} />
+              <option value={repo.name} key={repo.name}>
+                {repo.nameWithOwner}
+              </option>
             ))}
           </datalist>
           {repoFetchError && (
