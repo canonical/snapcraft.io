@@ -91,7 +91,7 @@ function RepoSelector({ githubData, setAutoTriggerBuild }: Props) {
   // Track autofill attempts to avoid unnecessary re-runs
   const autofillAttemptedRef = useRef<string | null>(null);
 
-  const validateRepoInternal = async (repo: Repo | undefined) => {
+  const validateRepo = async (repo: Repo | undefined) => {
     if (!repo) {
       return;
     }
@@ -148,7 +148,7 @@ function RepoSelector({ githubData, setAutoTriggerBuild }: Props) {
       if (matchingRepo) {
         setRepoInputValue(matchingRepo.name);
         setSelectedRepo(matchingRepo);
-        validateRepoInternal(matchingRepo);
+        validateRepo(matchingRepo);
       }
       // Mark autofill as attempted for this org/snap combination
       autofillAttemptedRef.current = currentOrgKey;
@@ -253,7 +253,7 @@ function RepoSelector({ githubData, setAutoTriggerBuild }: Props) {
     setSelectedRepo(selectedRepo);
 
     if (selectedRepo) {
-      validateRepoInternal(selectedRepo);
+      validateRepo(selectedRepo);
     }
   };
 
@@ -359,7 +359,7 @@ function RepoSelector({ githubData, setAutoTriggerBuild }: Props) {
                 className="p-tooltip--btm-center"
                 aria-describedby="recheck-tooltip"
                 onClick={() => {
-                  validateRepoInternal(selectedRepo);
+                  validateRepo(selectedRepo);
                 }}
               >
                 <i className="p-icon--restart"></i>
