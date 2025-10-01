@@ -214,9 +214,6 @@ def set_handlers(app):
         error_name = getattr(error, "name", type(error).__name__)
         return_code = getattr(error, "code", 500)
 
-        if not app.testing:
-            app.extensions["sentry"].captureException()
-
         return (
             flask.render_template("50X.html", error_name=error_name),
             return_code,
