@@ -4,6 +4,7 @@ from urllib.parse import unquote, urlparse, urlunparse
 import base64
 import hashlib
 import re
+import sentry_sdk
 
 import flask
 from flask import render_template, request
@@ -46,6 +47,8 @@ from webapp.api.exceptions import (
 )
 
 from datetime import datetime
+
+sentry_sdk.init(dsn=SENTRY_DSN)
 
 CSP = {
     "default-src": ["'self'"],
@@ -212,6 +215,9 @@ def set_handlers(app):
     def internal_error(error):
         error_name = getattr(error, "name", type(error).__name__)
         return_code = getattr(error, "code", 500)
+
+        if not app.testing:
+            sentry_sdk.capture_exception()
 
         return (
             flask.render_template("50X.html", error_name=error_name),
