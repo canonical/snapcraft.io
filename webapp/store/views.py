@@ -1,5 +1,4 @@
 from math import floor
-import talisker.requests
 import flask
 from dateutil import parser
 from webapp.decorators import exchange_required, login_required
@@ -19,7 +18,7 @@ from flask.json import jsonify
 import os
 from webapp.extensions import csrf
 
-session = talisker.requests.get_session(requests.Session)
+session = requests.Session
 
 YOUTUBE_API_KEY = os.getenv("YOUTUBE_API_KEY")
 dashboard = Dashboard(api_session)
