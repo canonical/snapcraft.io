@@ -7,7 +7,6 @@ import re
 
 import flask
 from flask import render_template, request
-import user_agents
 import webapp.template_utils as template_utils
 from canonicalwebteam import image_template
 from webapp import authentication
