@@ -4,8 +4,6 @@ A Flask application for snapcraft.io.
 The web frontend for the snap store.
 """
 
-from talisker import logging
-
 # We import the config module before anything else to make sure env vars are
 # loaded properly and the FLASK_* prefix is stripped before they are parsed
 import webapp.config
@@ -34,9 +32,6 @@ from webapp.endpoints.snap_search import snap_search
 from webapp.endpoints.validation_sets import validation_sets
 from webapp.endpoints.invites import invites
 from webapp.endpoints.settings import settings
-
-
-TALISKER_WSGI_LOGGER = logging.getLogger("talisker.wsgi")
 
 
 def create_app(testing=False):
