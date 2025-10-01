@@ -4,9 +4,6 @@ A Flask application for snapcraft.io.
 The web frontend for the snap store.
 """
 
-import talisker.requests
-import webapp.api
-
 from talisker import logging
 
 # We import the config module before anything else to make sure env vars are
@@ -57,9 +54,6 @@ def create_app(testing=False):
 
     if not testing:
         init_extensions(app)
-        talisker.requests.configure(webapp.api.sso.api_session)
-        talisker.requests.configure(webapp.helpers.api_session)
-        talisker.requests.configure(webapp.helpers.api_publisher_session)
 
     if testing:
 
