@@ -1,6 +1,5 @@
 import flask
 import prometheus_client
-from talisker import logging
 
 from webapp.snapcraft import logic
 
@@ -45,11 +44,7 @@ def snapcraft_blueprint():
             response.headers["Cache-Control"] = "no-store"
 
             return response
-        except Exception as e:
-            logging.getLogger("talisker.wsgi").error(
-                "Error with session: %s", e
-            )
-
+        except Exception:
             response = {"error": "Error fetching account information"}
             response = flask.make_response(response)
             response.headers["Cache-Control"] = "no-store"
