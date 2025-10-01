@@ -1,6 +1,7 @@
 import json
 import os
 import hashlib
+import sentry_sdk
 
 import flask
 from canonicalwebteam.launchpad import Launchpad
@@ -8,6 +9,7 @@ from ruamel.yaml import YAML
 from webapp.api.requests import PublisherSession, Session
 from canonicalwebteam.store_api.dashboard import Dashboard
 import webapp.api.marketo as marketo_api
+from webapp.config import SENTRY_DSN
 
 _yaml = YAML(typ="rt")
 _yaml_safe = YAML(typ="safe")
@@ -22,6 +24,8 @@ launchpad = Launchpad(
     secret=os.getenv("LP_API_TOKEN_SECRET"),
     session=api_publisher_session,
 )
+
+sentry_sdk.init(dsn=SENTRY_DSN)
 
 
 def get_yaml_loader(typ="safe"):
@@ -139,7 +143,7 @@ def get_publisher_data():
 
         subscriptions = {"newsletter": subscribed_to_newsletter}
     except Exception:
-        pass
+        sentry_sdk.capture_exception()
 
     flask_user["subscriptions"] = subscriptions
     context = {"publisher": flask_user}
