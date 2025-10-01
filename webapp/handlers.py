@@ -7,7 +7,6 @@ import re
 
 import flask
 from flask import render_template, request
-import prometheus_client
 import user_agents
 import webapp.template_utils as template_utils
 from canonicalwebteam import image_template
@@ -48,21 +47,6 @@ from webapp.api.exceptions import (
 )
 
 from datetime import datetime
-
-badge_counter = prometheus_client.Counter(
-    "badge_counter", "A counter of badges requests"
-)
-
-badge_logged_in_counter = prometheus_client.Counter(
-    "badge_logged_in_counter",
-    "A counter of badges requests of logged in users",
-)
-
-accept_encoding_counter = prometheus_client.Counter(
-    "accept_encoding_counter",
-    "A counter for Accept-Encoding headers, split by browser",
-    ["accept_encoding", "browser_family"],
-)
 
 CSP = {
     "default-src": ["'self'"],
@@ -336,31 +320,6 @@ def set_handlers(app):
             new_uri = urlunparse(parsed_url._replace(path=path[:-1]))
 
             return flask.redirect(new_uri)
-
-    @app.before_request
-    def prometheus_metrics():
-        # Accept-encoding counter
-        # ===
-        agent_string = flask.request.headers.get("User-Agent")
-
-        # Exclude probes, which happen behind the cache
-        if agent_string and not agent_string.startswith(
-            ("kube-probe", "Prometheus")
-        ):
-            agent = user_agents.parse(agent_string or "")
-
-            accept_encoding_counter.labels(
-                accept_encoding=flask.request.headers.get("Accept-Encoding"),
-                browser_family=agent.browser.family,
-            ).inc()
-
-        # Badge counters
-        # ===
-        if "/static/images/badges" in flask.request.url:
-            if flask.session:
-                badge_logged_in_counter.inc()
-            else:
-                badge_counter.inc()
 
     # Calculate the SHA256 hash of the script content and encode it in base64.
     def calculate_sha256_base64(script_content):
