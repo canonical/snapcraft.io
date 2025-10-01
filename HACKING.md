@@ -82,15 +82,6 @@ Install the [`dotrun`](https://snapcraft.io/dotrun) snap.
 dotrun test
 ```
 
-## Status checks and prometheus metrics
-
-[Talisker](https://talisker.readthedocs.io/en/latest/) provides a bunch of useful status checks and metrics about the running application. Some of this information is sensitive and so to access it you need to run the site with your IP address mentioned in the `TALISKER_NETWORKS` variable.
-
-Now visit http://127.0.0.1:8004/_status to see the endpoints provided by Talisker. Useful ones include:
-
-- http://127.0.0.1:8004/_status/check - A basic check that the site is running
-- http://127.0.0.1:8004/_status/metrics - The prometheus metrics for the application
-
 ## Update the list of licenses
 
 The licenses that we use are based on the [SPDX Specification](https://spdx.github.io/license-list-data/). In order to have all the products supporting the same set of licenses, the list needs to be synchronised between snapcraft.io, snapd and the snap store.
