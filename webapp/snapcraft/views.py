@@ -1,14 +1,6 @@
 import flask
-import prometheus_client
 
 from webapp.snapcraft import logic
-
-users_with_js = prometheus_client.Counter(
-    "users_with_js", "A counter of sessions with JS"
-)
-users_without_js = prometheus_client.Counter(
-    "users_without_js", "A counter of sessions without JS"
-)
 
 
 def snapcraft_blueprint():
