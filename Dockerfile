@@ -47,10 +47,6 @@ ADD . .
 RUN rm -rf package.json yarn.lock .babelrc requirements.txt
 COPY --from=build /srv/static/js static/js
 
-# Set revision ID
-ARG BUILD_ID
-ENV TALISKER_REVISION_ID "${BUILD_ID}"
-
 # Setup commands to run server
 ENTRYPOINT ["./entrypoint"]
 CMD ["0.0.0.0:80"]
