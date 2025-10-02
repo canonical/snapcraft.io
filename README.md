@@ -2,7 +2,7 @@
 
 [![Python Coverage](https://img.shields.io/badge/Python%20Coverage-View%20Report-blue)](https://canonical.github.io/snapcraft.io/coverage/python) [![JavaScript Coverage](https://img.shields.io/badge/JavaScript%20Coverage-View%20Report-blue)](https://canonical.github.io/snapcraft.io/coverage/js)
 
-[![Github Actions Status](https://github.com/canonical/snapcraft.io/actions/workflows/coverage.yml/badge.svg)](https://github.com/canonical/snapcraft.io/actions/workflows/coverage.yml) [![Code coverage](https://codecov.io/gh/canonical-web-and-design/snapcraft.io/branch/master/graph/badge.svg)](https://codecov.io/gh/canonical-web-and-design/snapcraft.io)
+[![Github Actions Status](https://github.com/canonical/snapcraft.io/actions/workflows/coverage.yml/badge.svg)](https://github.com/canonical/snapcraft.io/actions/workflows/coverage.yml) [![Code coverage](https://codecov.io/gh/canonical/snapcraft.io/branch/main/graph/badge.svg)](https://codecov.io/gh/canonical/snapcraft.io)
 
 Snaps are applications packaged with all their dependencies to run on all popular Linux distributions from a single build. They update automatically and roll back gracefully. This repo is the application for the [snapcraft.io](https://snapcraft.io) website.
 
