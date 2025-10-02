@@ -82,7 +82,7 @@ function Explore(): JSX.Element {
   if (recommendations) {
     recommendations.forEach((recommendation) => {
       if (recommendation.data) {
-        snaps[recommendation.data.name] = recommendation.data.snaps.slice(0, 6);
+        snaps[recommendation.data.name] = recommendation.data.snaps.slice(0, 8);
       }
     });
   }

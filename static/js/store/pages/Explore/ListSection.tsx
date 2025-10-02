@@ -23,7 +23,7 @@ function ListSection({ isLoading, snaps, title }: Props): JSX.Element {
         <Row>
           {snaps.map((item: RecommendationData, index: number) => (
             <Col
-              size={4}
+              size={3}
               key={item.details.snap_id}
               style={{ marginBottom: "1.5rem" }}
             >

@@ -9,6 +9,8 @@ const elementIds: string[] = Array.of(
   uuidv4(),
   uuidv4(),
   uuidv4(),
+  uuidv4(),
+  uuidv4(),
 );
 
 function CardsLoader(): JSX.Element {

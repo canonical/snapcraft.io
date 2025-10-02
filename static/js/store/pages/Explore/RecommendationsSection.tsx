@@ -32,7 +32,7 @@ function RecommendationsSection({
         <Row>
           {snaps.map((item: RecommendationData) => (
             <Col
-              size={4}
+              size={3}
               key={item.details.snap_id}
               style={{ marginBottom: "1.5rem" }}
             >
