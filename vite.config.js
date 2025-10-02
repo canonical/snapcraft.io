@@ -114,6 +114,13 @@ export default defineConfig({
         entryFileNames: `[name]--[hash].js`,
         chunkFileNames: `chunks/[name]--[hash].js`,
         assetFileNames: `assets/[name]--[hash][extname]`,
+        manualChunks: {
+          react: ["react", "react-dom/client"],
+          "canonical-react-components": [
+            "@canonical/react-components",
+            "@canonical/store-components",
+          ],
+        },
       },
     },
   },
