@@ -2,7 +2,7 @@
 
 ## Repository Overview
 
-snapcraft.io is the web frontend for the Snap Store. Flask backend (Python 3.10+), React 19/TypeScript frontend, Vite 7 build system. ~166 Python files, ~557 JS/TS files.
+snapcraft.io is the web frontend for the Snap Store. Flask backend (Python 3.10+), React 19/TypeScript frontend, Vite 7 build system.
 
 **Stack**: Flask, React 19, TypeScript, Vite 7, Vanilla Framework (SCSS), unittest, Vitest, Cypress
 
@@ -11,9 +11,9 @@ snapcraft.io is the web frontend for the Snap Store. Flask backend (Python 3.10+
 **ALWAYS run in this exact order:**
 
 ```bash
-pip3 install -r requirements.txt          # ~30-60s
-yarn install --immutable                   # ~60-120s (Cypress download may fail in restricted networks - OK to ignore)
-yarn run build                             # ~15s - REQUIRED before running app or Python tests
+pip3 install -r requirements.txt
+yarn install --immutable                   # Cypress download may fail in restricted networks - OK to ignore
+yarn run build                             # REQUIRED before running app or Python tests
 ```
 
 **CRITICAL**: `yarn run build` MUST run before Flask app or Python tests. Creates `static/js/dist/vite/` assets required by templates.
@@ -21,11 +21,11 @@ yarn run build                             # ~15s - REQUIRED before running app 
 ## Linting & Testing
 
 ```bash
-yarn run lint-python  # ~3s: flake8 + black
-yarn run lint-js      # ~10s: eslint  
-yarn run lint-scss    # ~2s: stylelint
-yarn run test-js      # ~90s: vitest (755 tests)
-SECRET_KEY=test_key FLASK_DEBUG=0 python3 -m unittest discover tests  # ~35s (469 tests)
+yarn run lint-python  # flake8 + black
+yarn run lint-js      # eslint  
+yarn run lint-scss    # stylelint
+yarn run test-js      # vitest
+SECRET_KEY=test_key FLASK_DEBUG=0 python3 -m unittest discover tests
 yarn run test         # Combined: lint-python + test-python + test-js + lint-scss
 ```
 
@@ -63,7 +63,7 @@ tests/                   # Python unittest tests
 
 ## CI/CD (.github/workflows/pr.yml)
 
-**Jobs**: run-image (~2min), run-dotrun (~3min), run-cypress (~5min, needs ENVIRONMENT=prod), lint-python/js/scss (~30s-1min, path-filtered), test-python/js (~2min each, path-filtered), check-inclusive-naming
+**Jobs**: run-image, run-dotrun, run-cypress (needs ENVIRONMENT=prod), lint-python/js/scss (path-filtered), test-python/js (path-filtered), check-inclusive-naming
 
 **Requirements**: All dotrun jobs need `sudo chmod -R 777 .` before install. Python tests need `dotrun build` first.
 
@@ -99,3 +99,15 @@ tests/                   # Python unittest tests
 **NEVER**: Commit node_modules/, static/js/dist/, coverage/ | Skip `yarn build` after frontend/template changes | Edit static/js/dist/ (generated) | Run Python tests without SECRET_KEY
 
 **TRUST THESE INSTRUCTIONS**: Only search if instructions are incomplete or incorrect. Commands here are validated and work.
+
+## Maintaining These Instructions
+
+**When making code changes**: If your changes affect build steps, project structure, dependencies, or common workflows documented here, update this file accordingly.
+
+**During code review**: Point out when changes to the repository should be reflected in these instructions, such as:
+- New or changed build/test commands
+- New linting tools or configuration changes
+- Changes to project structure or key directories
+- New environment variables or configuration requirements
+- Changes to CI/CD workflows
+- New common development patterns or workflows
