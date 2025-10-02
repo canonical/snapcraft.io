@@ -4,49 +4,49 @@ import { Strip, Row, Col } from "@canonical/react-components";
 
 import Banner from "../../components/Banner";
 import RecommendationsSection from "./RecommendationsSection";
-import EditorialSection from "./EditorialSection";
+// import EditorialSection from "./EditorialSection";
 import ListSection from "./ListSection";
 import Categories from "./Categories";
 
 import type { UseQueryResult } from "react-query";
-import type { RecommendationData, SlicesData } from "../../types";
+import type { RecommendationData } from "../../types";
 
 function Explore(): JSX.Element {
   const searchRef = useRef<HTMLInputElement | null>(null);
   const searchSummaryRef = useRef<HTMLDivElement | null>(null);
   const categories: string[] = ["popular", "recent", "trending"];
-  const sliceIds: string[] = ["our_picks", "must_have_snaps"];
+  // const sliceIds: string[] = ["our_picks", "must_have_snaps"];
 
-  const slices = useQueries(
-    sliceIds.map((sliceId) => ({
-      queryKey: ["slices", sliceId],
-      queryFn: async () => {
-        const response = await fetch(
-          `https://recommendations.snapcraft.io/api/slice/${sliceId}`,
-        );
+  // const slices = useQueries(
+  //   sliceIds.map((sliceId) => ({
+  //     queryKey: ["slices", sliceId],
+  //     queryFn: async () => {
+  //       const response = await fetch(
+  //         `https://recommendations.snapcraft.io/api/slice/${sliceId}`,
+  //       );
+  //
+  //       if (!response.ok) {
+  //         throw Error(`Unable to fetch ${sliceId} data`);
+  //       }
+  //
+  //       const responseData = await response.json();
+  //
+  //       return responseData;
+  //     },
+  //   })),
+  // );
 
-        if (!response.ok) {
-          throw Error(`Unable to fetch ${sliceId} data`);
-        }
+  // const slicesLoading: boolean = slices.some((s) => s.isLoading);
 
-        const responseData = await response.json();
+  // const slicesData: Record<string, SlicesData> = {};
 
-        return responseData;
-      },
-    })),
-  );
-
-  const slicesLoading: boolean = slices.some((s) => s.isLoading);
-
-  const slicesData: Record<string, SlicesData> = {};
-
-  if (slices) {
-    slices.forEach((slice) => {
-      if (slice.data) {
-        slicesData[slice.data.slice.id] = slice.data;
-      }
-    });
-  }
+  // if (slices) {
+  //   slices.forEach((slice) => {
+  //     if (slice.data) {
+  //       slicesData[slice.data.slice.id] = slice.data;
+  //     }
+  //   });
+  // }
 
   const recommendations: UseQueryResult<{
     name: string;
@@ -91,7 +91,7 @@ function Explore(): JSX.Element {
     <>
       <Banner searchRef={searchRef} searchSummaryRef={searchSummaryRef} />
 
-      {slices && (
+      {/* slices && (
         <>
           {slicesData.our_picks && (
             <Strip className="u-no-padding--bottom">
@@ -103,7 +103,7 @@ function Explore(): JSX.Element {
             </Strip>
           )}
         </>
-      )}
+      ) */}
 
       {recommendations && (
         <>
@@ -135,7 +135,7 @@ function Explore(): JSX.Element {
       </Strip>
 
       {/* Placeholder until content is decided */}
-      {slices && (
+      {/* slices && (
         <>
           {slicesData.must_have_snaps && (
             <Strip shallow className="u-no-padding--top u-no-padding--bottom">
@@ -147,7 +147,7 @@ function Explore(): JSX.Element {
             </Strip>
           )}
         </>
-      )}
+      ) */}
 
       {recommendations && snaps.trending && (
         <Strip shallow>
