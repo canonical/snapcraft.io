@@ -18,7 +18,7 @@ from flask.json import jsonify
 import os
 from webapp.extensions import csrf
 
-session = requests.Session
+session = requests.Session()
 
 YOUTUBE_API_KEY = os.getenv("YOUTUBE_API_KEY")
 dashboard = Dashboard(api_session)

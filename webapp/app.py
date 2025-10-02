@@ -8,6 +8,8 @@ The web frontend for the snap store.
 # loaded properly and the FLASK_* prefix is stripped before they are parsed
 import webapp.config  # noqa: F401
 
+import sentry_sdk
+
 from canonicalwebteam.flask_base.app import FlaskBase
 from webapp.blog.views import init_blog
 from webapp.docs.views import init_docs
@@ -32,9 +34,12 @@ from webapp.endpoints.snap_search import snap_search
 from webapp.endpoints.validation_sets import validation_sets
 from webapp.endpoints.invites import invites
 from webapp.endpoints.settings import settings
+from webapp.config import SENTRY_DSN
 
 
 def create_app(testing=False):
+    sentry_sdk.init(dsn=SENTRY_DSN)
+
     app = FlaskBase(
         __name__,
         "snapcraft.io",

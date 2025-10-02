@@ -48,7 +48,6 @@ from webapp.api.exceptions import (
 
 from datetime import datetime
 
-sentry_sdk.init(dsn=SENTRY_DSN)
 
 CSP = {
     "default-src": ["'self'"],
