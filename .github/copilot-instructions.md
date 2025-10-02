@@ -100,6 +100,47 @@ tests/                   # Python unittest tests
 
 **TRUST THESE INSTRUCTIONS**: Only search if instructions are incomplete or incorrect. Commands here are validated and work.
 
+## Code Review Guidelines
+
+When reviewing pull requests, be a constructive and helpful reviewer:
+
+**Verify Best Practices**:
+- Check that code follows patterns documented in this file (build sequence, testing requirements, etc.)
+- Ensure changes follow conventions in README.md, HACKING.md, and BRANDSTORES.md
+- Verify Python code follows PEP 8 (will be checked by flake8 and black)
+- Confirm JavaScript/TypeScript follows project's ESLint rules
+- Check that SCSS follows project's Stylelint configuration
+
+**Make Valid Suggestions**:
+- Only suggest changes you can verify are correct and relevant
+- Test your suggestions mentally against the build/test requirements documented here
+- Focus on improvements that align with the project's architecture and patterns
+- Don't suggest changes to areas you're uncertain about - ask questions instead
+
+**Highlight Areas Needing Attention**:
+- Point out code that lacks tests or has insufficient test coverage
+- Flag changes that might have security implications (authentication, data validation, etc.)
+- Note when changes affect critical paths (authentication, payment flows, data integrity)
+- Identify potential performance issues (N+1 queries, inefficient algorithms, large bundle sizes)
+- Call out when assets need rebuilding (`yarn build` after frontend/template changes)
+- Mention when changes require documentation updates
+
+**Use Conversational Style**:
+- Ask questions to understand the author's intent: "What's the reasoning behind this approach?"
+- Suggest alternatives as questions: "Have you considered using X instead? It might simplify Y."
+- Be specific about concerns: "This could cause issues when Z happens" rather than "This looks wrong"
+- Acknowledge good patterns: "Nice use of the existing helper function here"
+- Offer to help: "Would it help if I provided an example of how this pattern is used elsewhere?"
+
+**Additional Best Practices**:
+- Review the entire change for consistency before commenting
+- Check that new dependencies are necessary and well-maintained
+- Verify that error handling is appropriate and informative
+- Ensure logging doesn't expose sensitive information
+- Confirm that user-facing messages are clear and helpful
+- Check accessibility for UI changes (semantic HTML, ARIA labels, keyboard navigation)
+- Verify responsive design for frontend changes
+
 ## Maintaining These Instructions
 
 **When making code changes**: If your changes affect build steps, project structure, dependencies, or common workflows documented here, update this file accordingly.
