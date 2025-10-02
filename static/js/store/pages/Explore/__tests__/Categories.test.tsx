@@ -15,7 +15,6 @@ function renderComponent() {
       <QueryClientProvider client={queryClient}>
         <Categories />
       </QueryClientProvider>
-      ,
     </BrowserRouter>,
   );
 }

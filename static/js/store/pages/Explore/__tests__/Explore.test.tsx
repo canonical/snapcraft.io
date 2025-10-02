@@ -17,7 +17,6 @@ function renderComponent() {
       <QueryClientProvider client={queryClient}>
         <Explore />
       </QueryClientProvider>
-      ,
     </BrowserRouter>,
   );
 }
