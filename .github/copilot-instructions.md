@@ -6,6 +6,12 @@ snapcraft.io is the web frontend for the Snap Store. Flask backend (Python 3.10+
 
 **Stack**: Flask, React 19, TypeScript, Vite 7, Vanilla Framework (SCSS), unittest, Vitest, Cypress
 
+**UI Framework**: [Vanilla Framework](https://vanillaframework.io/) is used as the primary component library and design system. When working with styles and UI components:
+- Follow [Vanilla Framework documentation](https://vanillaframework.io/docs) for component usage and patterns
+- Adhere to coding conventions from the [Vanilla Framework repository](https://github.com/canonical/vanilla-framework/)
+- Use existing Vanilla components and utilities before creating custom solutions
+- Maintain consistency with Vanilla's design tokens and spacing system
+
 ## Build Commands (CRITICAL SEQUENCE)
 
 **ALWAYS run in this exact order:**
@@ -110,6 +116,7 @@ When reviewing pull requests, be a constructive and helpful reviewer:
 - Verify Python code follows PEP 8 (will be checked by flake8 and black)
 - Confirm JavaScript/TypeScript follows project's ESLint rules
 - Check that SCSS follows project's Stylelint configuration
+- Verify UI changes follow [Vanilla Framework documentation](https://vanillaframework.io/docs) and conventions from the [Vanilla Framework repo](https://github.com/canonical/vanilla-framework/)
 
 **Make Valid Suggestions**:
 - Only suggest changes you can verify are correct and relevant
@@ -140,6 +147,7 @@ When reviewing pull requests, be a constructive and helpful reviewer:
 - Confirm that user-facing messages are clear and helpful
 - Check accessibility for UI changes (semantic HTML, ARIA labels, keyboard navigation)
 - Verify responsive design for frontend changes
+- Ensure UI components use Vanilla Framework patterns instead of custom implementations where possible
 
 ## Maintaining These Instructions
 
