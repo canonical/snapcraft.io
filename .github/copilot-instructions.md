@@ -7,9 +7,12 @@ snapcraft.io is the web frontend for the Snap Store. Flask backend (Python 3.10+
 **Stack**: Flask, React 19, TypeScript, Vite 7, Vanilla Framework (SCSS), unittest, Vitest, Cypress
 
 **UI Framework**: [Vanilla Framework](https://vanillaframework.io/) is used as the primary component library and design system. When working with styles and UI components:
-- Follow [Vanilla Framework documentation](https://vanillaframework.io/docs) for component usage and patterns
-- Adhere to coding conventions from the [Vanilla Framework repository](https://github.com/canonical/vanilla-framework/)
-- Use existing Vanilla components and utilities before creating custom solutions
+- **Vanilla Framework** (base package): Implements styles and HTML patterns as Jinja macros
+  - Follow [Vanilla Framework documentation](https://vanillaframework.io/docs) for component usage and patterns
+  - Adhere to coding conventions from the [Vanilla Framework repository](https://github.com/canonical/vanilla-framework/)
+- **React Components**: [React Components](https://github.com/canonical/react-components/) implements Vanilla patterns as React components with associated JS logic to enable interactions
+- **Store Components**: [Store Components](https://github.com/canonical/store-components) extends React Components with store-specific patterns and functionality
+- Use existing Vanilla/React/Store components before creating custom solutions
 - Maintain consistency with Vanilla's design tokens and spacing system
 
 ## Build Commands (CRITICAL SEQUENCE)
