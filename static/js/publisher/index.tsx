@@ -89,6 +89,7 @@ root.render(
               element={<ValidationSet />}
             />
 
+            <Route path="admin/account" element={<AccountDetails />} />
             <Route path="admin/:id" element={<Snaps />} />
             <Route path="admin/:id/snaps" element={<Snaps />} />
           </Route>
@@ -96,7 +97,6 @@ root.render(
 
           {/* START brand store routes */}
           <Route path="admin" element={<BrandStoreLayout />}>
-            <Route path="account" element={<AccountDetails />} />
             <Route path=":id">
               <Route path="members" element={<Members />} />
               <Route path="settings" element={<BrandStoreSettings />} />
