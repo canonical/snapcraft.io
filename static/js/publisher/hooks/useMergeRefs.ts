@@ -10,8 +10,12 @@ export default function useMergeRefs<T>(
 
         if (typeof ref === "function") {
           ref(element);
-        } else if (ref) {
+        } else if (Object.hasOwn(ref, "current")) {
           (ref as React.RefObject<T | null>).current = element;
+        } else {
+          console.error(
+            `useMergeRefs: can't merge object "${JSON.stringify(ref) || ref?.toString()}" because it's not a ref`,
+          );
         }
       }
     },
