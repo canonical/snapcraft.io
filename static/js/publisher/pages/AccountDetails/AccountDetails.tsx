@@ -195,7 +195,7 @@ function AccountDetails(): React.JSX.Element {
                   </p>
                   <hr />
                   <p className="u-text-muted">
-                    Please note, you will still recieve required platform
+                    Please note, you will still receive required platform
                     related emails such as registration of snap names, the
                     review status of a snap or any security vulnerabilities.
                   </p>
