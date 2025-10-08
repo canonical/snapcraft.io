@@ -1,5 +1,5 @@
 import flask
-import talisker
+import requests
 
 from canonicalwebteam import image_template
 from canonicalwebteam.blog import (
@@ -13,7 +13,7 @@ from requests.exceptions import RequestException
 
 
 def init_blog(app, url_prefix):
-    session = talisker.requests.get_session()
+    session = requests.Session()
     blog_api = BlogAPI(
         session=session,
         thumbnail_width=354,

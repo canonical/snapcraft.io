@@ -7,7 +7,6 @@ from canonicalwebteam.exceptions import (
     StoreApiResponseErrorList,
 )
 from flask.json import jsonify
-from talisker import logging
 
 # Local
 from webapp import authentication
@@ -356,11 +355,7 @@ def get_user_snaps():
 def get_snap_build_status():
     try:
         account_info = dashboard.get_account(flask.session)
-    except (StoreApiError, ApiError) as api_error:
-        logging.getLogger("talisker.wsgi").error(
-            "Error with session: %s", api_error
-        )
-
+    except (StoreApiError, ApiError):
         return flask.jsonify({"error": "An unexpected error occurred"}), 400
 
     response = []
@@ -432,11 +427,7 @@ def get_is_user_snap(snap_name):
     is_users_snap = False
     try:
         snap_info = dashboard.get_snap_info(flask.session, snap_name)
-    except (StoreApiError, ApiError) as api_error:
-        logging.getLogger("talisker.wsgi").error(
-            "Error with session: %s", api_error
-        )
-
+    except (StoreApiError, ApiError):
         return flask.jsonify({"error": "An unexpected error occurred"}), 400
 
     if authentication.is_authenticated(flask.session):

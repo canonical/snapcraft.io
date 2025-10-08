@@ -1,7 +1,7 @@
 from os import getenv
 
 import flask
-import talisker
+import requests
 
 from canonicalwebteam.discourse import DiscourseAPI, TutorialParser, Tutorials
 
@@ -10,7 +10,7 @@ DISCOURSE_API_USERNAME = getenv("DISCOURSE_API_USERNAME")
 
 
 def init_tutorials(app, url_prefix):
-    session = talisker.requests.get_session()
+    session = requests.Session()
     tutorials_discourse = Tutorials(
         parser=TutorialParser(
             api=DiscourseAPI(
