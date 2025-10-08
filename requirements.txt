@@ -12,6 +12,7 @@ Flask-OpenID==1.3.0
 Flask-WTF==1.2.1
 bleach==6.1.0
 emoji==2.9.0
+feedgen==1.0.0
 humanize==4.9.0
 mistune==2.0.5
 pybadges==3.0.1
