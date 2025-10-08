@@ -13,7 +13,7 @@ The site is largely maintained by the [Web and Design team](https://ubuntu.com/b
 
 ## Bugs and issues
 
-If you have found a bug on the site or have an idea for a new feature, feel free to [create a new issue](https://github.com/canonical-web-and-design/snapcraft.io/issues/new), or suggest a fix by [creating a pull request](https://help.github.com/articles/creating-a-pull-request/). You can also find a link to create issues in the footer of every page of the site itself.
+If you have found a bug on the site or have an idea for a new feature, feel free to [create a new issue](https://github.com/canonical/snapcraft.io/issues/new), or suggest a fix by [creating a pull request](https://help.github.com/articles/creating-a-pull-request/). You can also find a link to create issues in the footer of every page of the site itself.
 
 ### Bugs in snaps and tools
 

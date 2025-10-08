@@ -39,7 +39,7 @@ GITHUB_WEBHOOK_HOST_URL=https://hash-id.ngrok.io/
 
 To connect to Launchpad, you need to set up a **username**, a **consumer key** and obtain an **API token** and an **API token secret**:
 
-Download [this Python script](https://github.com/canonical-web-and-design/build.snapcraft.io/blob/master/scripts/create-launchpad-credentials).
+Download [this Python script](https://github.com/canonical/snapcraft.io/blob/main/scripts/create-launchpad-credentials).
 
 Run:
 
