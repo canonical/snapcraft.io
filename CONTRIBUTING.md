@@ -49,7 +49,8 @@ We usually require two approvals from project maintainers before merging a pull 
 
 ## A note on AI tools
 
-We welcome the use of AI tools and LLMs to assist in your contributions. However, we ask that you be transparent about your use of these tools.
+We welcome the use of AI tools and LLMs to assist in your contributions. However, we ask that you be transparent and thorough when using these tools.
+Please test and review the AI-generated code *before* creating the pull request: LLM output isn't always entirely correct, so make sure the code actually does what it says it does without introducing unwanted side effects.
 
 While we encourage the use of AI to help you in your work, we want to ensure that the conversations between our engineers and contributors are genuine. Therefore, we require that any comments made during reviews are written by the contributors themselves, not by their LLM tooling. Any comments made by bots or AI tools should be clearly marked as such.
 
