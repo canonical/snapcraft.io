@@ -13,16 +13,13 @@ import {
 } from "@canonical/react-components";
 
 import ROLES from "./memberRoles";
-
 import MembersTable from "./MembersTable";
 import InvitesTable from "./InvitesTable";
 import StoreNotFound from "../StoreNotFound";
-import Navigation from "../../components/Navigation";
-
 import { brandStoresState } from "../../state/brandStoreState";
 import { useMembers, useInvites } from "../../hooks";
-
 import { setPageTitle } from "../../utils";
+import { PortalEntry } from "../Portals/Portals";
 
 type Members = {
   members: {
@@ -187,242 +184,232 @@ function Members(): React.JSX.Element {
   };
 
   return (
-    <div className="l-application" role="presentation">
-      <Navigation />
-      <main className="l-main">
-        <div className="p-panel">
-          <div className="p-panel__content">
-            {membersLoading && invitesLoading ? (
-              <div className="u-fixed-width">
-                <Spinner text="Loading&hellip;" />
-              </div>
-            ) : (!members && !membersLoading) ||
-              (!invites && !invitesLoading) ? (
-              <StoreNotFound />
-            ) : isOnlyViewer() ? (
-              <Navigate to={`/admin/${id}/snaps`} />
-            ) : (
-              <div>
-                <div className="u-fixed-width">
-                  <h1 className="p-heading--4">
-                    {getStoreName(id || "")} / Members
-                  </h1>
-                </div>
-                <Row>
-                  <Col size={6}>
-                    <SearchBox
-                      placeholder="Search and filter"
-                      autocomplete="off"
-                      onChange={(query) => {
-                        if (query) {
-                          setFilteredMembers(
-                            members.filter(
-                              (member: Member) =>
-                                member.displayname.includes(query) ||
-                                member.email.includes(query),
-                            ),
-                          );
-                        } else {
-                          setFilteredMembers(members);
-                        }
-                      }}
+    <>
+      {membersLoading && invitesLoading ? (
+        <div className="u-fixed-width">
+          <Spinner text="Loading&hellip;" />
+        </div>
+      ) : (!members && !membersLoading) || (!invites && !invitesLoading) ? (
+        <StoreNotFound />
+      ) : isOnlyViewer() ? (
+        <Navigate to={`/admin/${id}/snaps`} />
+      ) : (
+        <div>
+          <div className="u-fixed-width">
+            <h1 className="p-heading--4">{getStoreName(id || "")} / Members</h1>
+          </div>
+          <Row>
+            <Col size={6}>
+              <SearchBox
+                placeholder="Search and filter"
+                autocomplete="off"
+                onChange={(query) => {
+                  if (query) {
+                    setFilteredMembers(
+                      members.filter(
+                        (member: Member) =>
+                          member.displayname.includes(query) ||
+                          member.email.includes(query),
+                      ),
+                    );
+                  } else {
+                    setFilteredMembers(members);
+                  }
+                }}
+              />
+            </Col>
+            <Col size={6} className="u-align--right">
+              <Button
+                onClick={() => {
+                  setSidePanelOpen(true);
+                }}
+              >
+                Add new member
+              </Button>
+            </Col>
+          </Row>
+          <div className="u-fixed-width app-accordion">
+            <Accordion
+              expanded="members-table"
+              sections={[
+                {
+                  key: "members-table",
+                  title: `${filteredMembers.length} members`,
+                  content: (
+                    <MembersTable
+                      filteredMembers={filteredMembers}
+                      changedMembers={changedMembers}
+                      setChangedMembers={setChangedMembers}
                     />
-                  </Col>
-                  <Col size={6} className="u-align--right">
-                    <Button
-                      onClick={() => {
-                        setSidePanelOpen(true);
-                      }}
-                    >
-                      Add new member
-                    </Button>
-                  </Col>
-                </Row>
-                <div className="u-fixed-width app-accordion">
-                  <Accordion
-                    expanded="members-table"
-                    sections={[
-                      {
-                        key: "members-table",
-                        title: `${filteredMembers.length} members`,
-                        content: (
-                          <MembersTable
-                            filteredMembers={filteredMembers}
-                            changedMembers={changedMembers}
-                            setChangedMembers={setChangedMembers}
-                          />
-                        ),
-                      },
-                      {
-                        key: "invites-table",
-                        title: `${invites ? invites.length : 0} invites`,
-                        content: (
-                          <InvitesTable
-                            invites={invites}
-                            refetchInvites={refetchInvites}
-                            setNotificationText={setNotificationText}
-                            setShowSuccessNotification={
-                              setShowSuccessNotification
-                            }
-                            setShowErrorNotification={setShowErrorNotification}
-                          />
-                        ),
-                      },
-                    ]}
-                  />
-                </div>
-              </div>
-            )}
+                  ),
+                },
+                {
+                  key: "invites-table",
+                  title: `${invites ? invites.length : 0} invites`,
+                  content: (
+                    <InvitesTable
+                      invites={invites}
+                      refetchInvites={refetchInvites}
+                      setNotificationText={setNotificationText}
+                      setShowSuccessNotification={setShowSuccessNotification}
+                      setShowErrorNotification={setShowErrorNotification}
+                    />
+                  ),
+                },
+              ]}
+            />
           </div>
         </div>
-      </main>
-      <div
-        className={`l-aside__overlay ${sidePanelOpen ? "" : "u-hide"}`}
-        onClick={() => {
-          setSidePanelOpen(false);
-          setShowInviteForm(false);
-          setNewMemberEmail("");
-          setNewMemberRoles([]);
-        }}
-        onKeyDown={(e) => {
-          if (e.key === "Enter" || e.key === " ") {
+      )}
+
+      <PortalEntry name="aside">
+        <div
+          className={`l-aside__overlay ${sidePanelOpen ? "" : "u-hide"}`}
+          onClick={() => {
             setSidePanelOpen(false);
             setShowInviteForm(false);
             setNewMemberEmail("");
             setNewMemberRoles([]);
-          }
-        }}
-        role="button"
-        tabIndex={0}
-        aria-label="Close the side panel"
-      ></div>
-      <aside
-        className={`l-aside ${sidePanelOpen ? "" : "is-collapsed"}`}
-        id="aside-panel"
-      >
-        <div className="p-panel is-flex-column">
-          <div className="p-panel__header">
-            <h4 className="p-panel__title">
-              {showInviteForm
-                ? "Send invitation to join this store"
-                : "Add new member"}
-            </h4>
-          </div>
-          <div className="p-panel__content u-no-padding--top">
-            {showInviteForm && (
-              <div className="u-fixed-width">
-                <p>
-                  We couldn&rsquo;t find an existing user for the email{" "}
-                  <strong>{newMemberEmail}</strong>
-                </p>
-                <p>
-                  Would you like to send an email inviting them to join{" "}
-                  <strong>{storeName}</strong>?
-                </p>
-                <p>
-                  When they accept they will be granted the following
-                  permissions:
-                </p>
-                <ul>
-                  {newMemberRoles.map((role: string) => (
-                    <li key={role}>
-                      <div>{ROLES[role].name}</div>
-                      <small className="u-text-muted">
-                        {ROLES[role].description}
-                      </small>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
-            {!showInviteForm && (
-              <div className="u-fixed-width">
-                <Input
-                  id="new-member-email"
-                  type="email"
-                  label="Email"
-                  placeholder="yourname@example.com"
-                  help="The primary email for the Ubuntu One account"
-                  value={newMemberEmail}
-                  onChange={(e) => {
-                    setNewMemberEmail(e.target.value);
-                  }}
-                />
-                <h4>Roles</h4>
-                {Object.keys(ROLES).map((role) => (
-                  <Input
-                    key={ROLES[role].name}
-                    type="checkbox"
-                    id={role}
-                    label={ROLES[role].name}
-                    help={ROLES[role].description}
-                    onChange={handleRoleChange}
-                    checked={newMemberRoles.includes(role)}
-                  />
-                ))}
-              </div>
-            )}
-          </div>
-          <div className="p-panel__footer u-align--right">
-            <div className="u-fixed-width">
-              <Button
-                className="u-no-margin--bottom"
-                onClick={() => {
-                  setSidePanelOpen(false);
-                  setNewMemberEmail("");
-                  setNewMemberRoles([]);
-                  setShowInviteForm(false);
-                }}
-              >
-                Cancel
-              </Button>
-
-              {!showInviteForm && (
-                <Button
-                  appearance="positive"
-                  className={`u-no-margin--bottom u-no-margin--right ${
-                    isSaving ? "has-icon is-dark" : ""
-                  }`}
-                  disabled={memberButtonDisabled}
-                  onClick={() => {
-                    handleInvite("members");
-                  }}
-                >
-                  {isSaving ? (
-                    <>
-                      <i className="p-icon--spinner u-animation--spin is-light"></i>
-                      <span>Saving...</span>
-                    </>
-                  ) : (
-                    "Add member"
-                  )}
-                </Button>
-              )}
-
+          }}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              setSidePanelOpen(false);
+              setShowInviteForm(false);
+              setNewMemberEmail("");
+              setNewMemberRoles([]);
+            }
+          }}
+          role="button"
+          tabIndex={0}
+          aria-label="Close the side panel"
+        ></div>
+        <aside
+          className={`l-aside ${sidePanelOpen ? "" : "is-collapsed"}`}
+          id="aside-panel"
+        >
+          <div className="p-panel is-flex-column">
+            <div className="p-panel__header">
+              <h4 className="p-panel__title">
+                {showInviteForm
+                  ? "Send invitation to join this store"
+                  : "Add new member"}
+              </h4>
+            </div>
+            <div className="p-panel__content u-no-padding--top">
               {showInviteForm && (
-                <Button
-                  appearance="positive"
-                  className={`u-no-margin--bottom u-no-margin--right ${
-                    isSaving ? "has-icon is-dark" : ""
-                  }`}
-                  onClick={() => {
-                    handleInvite("invite");
-                  }}
-                >
-                  {isSaving ? (
-                    <>
-                      <i className="p-icon--spinner u-animation--spin is-light"></i>
-                      <span>Saving...</span>
-                    </>
-                  ) : (
-                    "Send invite"
-                  )}
-                </Button>
+                <div className="u-fixed-width">
+                  <p>
+                    We couldn&rsquo;t find an existing user for the email{" "}
+                    <strong>{newMemberEmail}</strong>
+                  </p>
+                  <p>
+                    Would you like to send an email inviting them to join{" "}
+                    <strong>{storeName}</strong>?
+                  </p>
+                  <p>
+                    When they accept they will be granted the following
+                    permissions:
+                  </p>
+                  <ul>
+                    {newMemberRoles.map((role: string) => (
+                      <li key={role}>
+                        <div>{ROLES[role].name}</div>
+                        <small className="u-text-muted">
+                          {ROLES[role].description}
+                        </small>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+              {!showInviteForm && (
+                <div className="u-fixed-width">
+                  <Input
+                    id="new-member-email"
+                    type="email"
+                    label="Email"
+                    placeholder="yourname@example.com"
+                    help="The primary email for the Ubuntu One account"
+                    value={newMemberEmail}
+                    onChange={(e) => {
+                      setNewMemberEmail(e.target.value);
+                    }}
+                  />
+                  <h4>Roles</h4>
+                  {Object.keys(ROLES).map((role) => (
+                    <Input
+                      key={ROLES[role].name}
+                      type="checkbox"
+                      id={role}
+                      label={ROLES[role].name}
+                      help={ROLES[role].description}
+                      onChange={handleRoleChange}
+                      checked={newMemberRoles.includes(role)}
+                    />
+                  ))}
+                </div>
               )}
             </div>
+            <div className="p-panel__footer u-align--right">
+              <div className="u-fixed-width">
+                <Button
+                  onClick={() => {
+                    setSidePanelOpen(false);
+                    setNewMemberEmail("");
+                    setNewMemberRoles([]);
+                    setShowInviteForm(false);
+                  }}
+                >
+                  Cancel
+                </Button>
+
+                {!showInviteForm && (
+                  <Button
+                    appearance="positive"
+                    className={`u-no-margin--right ${
+                      isSaving ? "has-icon is-dark" : ""
+                    }`}
+                    disabled={memberButtonDisabled}
+                    onClick={() => {
+                      handleInvite("members");
+                    }}
+                  >
+                    {isSaving ? (
+                      <>
+                        <i className="p-icon--spinner u-animation--spin is-light"></i>
+                        <span>Saving...</span>
+                      </>
+                    ) : (
+                      "Add member"
+                    )}
+                  </Button>
+                )}
+
+                {showInviteForm && (
+                  <Button
+                    appearance="positive"
+                    className={`u-no-margin--right ${
+                      isSaving ? "has-icon is-dark" : ""
+                    }`}
+                    onClick={() => {
+                      handleInvite("invite");
+                    }}
+                  >
+                    {isSaving ? (
+                      <>
+                        <i className="p-icon--spinner u-animation--spin is-light"></i>
+                        <span>Saving...</span>
+                      </>
+                    ) : (
+                      "Send invite"
+                    )}
+                  </Button>
+                )}
+              </div>
+            </div>
           </div>
-        </div>
-      </aside>
+        </aside>
+      </PortalEntry>
 
       {changedMembers.length ? (
         <aside className="l-status">
@@ -494,7 +481,7 @@ function Members(): React.JSX.Element {
         </aside>
       ) : null}
 
-      <div className="p-notification-center">
+      <PortalEntry name="notification">
         {showSuccessNotification && (
           <Notification
             severity="positive"
@@ -515,8 +502,8 @@ function Members(): React.JSX.Element {
             </a>
           </Notification>
         )}
-      </div>
-    </div>
+      </PortalEntry>
+    </>
   );
 }
 
