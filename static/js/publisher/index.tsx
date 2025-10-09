@@ -93,13 +93,13 @@ root.render(
             <Route path="admin/:id" element={<Snaps />} />
             <Route path="admin/:id/snaps" element={<Snaps />} />
             <Route path="admin/:id/members" element={<Members />} />
+            <Route path="admin/:id/settings" element={<BrandStoreSettings />} />
           </Route>
           {/* END publisher routes */}
 
           {/* START brand store routes */}
           <Route path="admin" element={<BrandStoreLayout />}>
             <Route path=":id">
-              <Route path="settings" element={<BrandStoreSettings />} />
               <Route path="models" element={<Models />} />
               <Route path="models/create" element={<Models />} />
               <Route path="models/:model_id" element={<Model />} />
