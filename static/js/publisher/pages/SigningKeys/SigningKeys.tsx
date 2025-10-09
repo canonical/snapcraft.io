@@ -18,20 +18,17 @@ import {
 } from "../../state/signingKeysState";
 import { policiesListState } from "../../state/policiesState";
 import { brandIdState, brandStoreState } from "../../state/brandStoreState";
-
 import Filter from "../../components/Filter";
 import SigningKeysTable from "./SigningKeysTable";
 import CreateSigningKeyForm from "./CreateSigningKeyForm";
-import Navigation from "../../components/Navigation";
-
 import {
   isClosedPanel,
   setPageTitle,
   sortByDateDescending,
   getPolicies,
 } from "../../utils";
-
 import type { SigningKey, Model } from "../../types/shared";
+import { PortalEntry } from "../Portals/Portals";
 
 function SigningKeys(): React.JSX.Element {
   const { id } = useParams();
@@ -95,124 +92,123 @@ function SigningKeys(): React.JSX.Element {
   }, [models]);
 
   return (
-    <div className="l-application" role="presentation">
-      <Navigation />
-      <main className="l-main">
-        <div className="p-panel u-flex-column">
-          <div className="p-panel__content u-flex-column u-flex-grow">
-            <div className="u-fixed-width">
-              <h1 className="p-heading--4">Signing keys</h1>
-            </div>
-            {showNotification && (
-              <div className="u-fixed-width">
-                <Notification
-                  severity="positive"
-                  onDismiss={() => {
-                    setShowNotification(false);
-                  }}
-                >
-                  New signing key created
-                </Notification>
-              </div>
-            )}
-            {errorMessage && (
-              <div className="u-fixed-width">
-                <Notification
-                  severity="negative"
-                  onDismiss={() => {
-                    setErrorMessage("");
-                  }}
-                >
-                  {errorMessage}
-                </Notification>
-              </div>
-            )}
-            {showDisableSuccessNotification && (
-              <div className="u-fixed-width">
-                <Notification
-                  severity="positive"
-                  onDismiss={() => {
-                    setShowDisableSuccessNotification(false);
-                  }}
-                >
-                  Signing key successfully deactivated
-                </Notification>
-              </div>
-            )}
-            <Row>
-              <Col size={6}>
-                <Filter
-                  state={signingKeysListFilterState}
-                  label="Signing keys"
-                  placeholder="Search keys"
-                />
-              </Col>
-              <Col size={6} className="u-align--right">
-                <Link
-                  className="p-button--positive"
-                  to={`/admin/${id}/signing-keys/create`}
-                >
-                  Create new signing key
-                </Link>
-              </Col>
-            </Row>
-            <div className="u-fixed-width u-flex-column u-flex-grow">
-              {isError && error && (
-                <Notification severity="negative">
-                  Error: {error.message}
-                </Notification>
-              )}
-              {isLoading ? (
-                <p>
-                  <Icon name="spinner" className="u-animation--spin" />
-                  &nbsp;Fetching signing keys...
-                </p>
-              ) : (
-                <div className="u-flex-column u-flex-grow">
-                  <SigningKeysTable
-                    setShowDisableSuccessNotification={
-                      setShowDisableSuccessNotification
-                    }
-                    enableTableActions={enableTableActions}
-                  />
-                </div>
-              )}
-            </div>
+    <>
+      <div className="u-fixed-width">
+        <h1 className="p-heading--4">Signing keys</h1>
+      </div>
+      <Row>
+        <Col size={6}>
+          <Filter
+            state={signingKeysListFilterState}
+            label="Signing keys"
+            placeholder="Search keys"
+          />
+        </Col>
+        <Col size={6} className="u-align--right">
+          <Link
+            className="p-button--positive"
+            to={`/admin/${id}/signing-keys/create`}
+          >
+            Create new signing key
+          </Link>
+        </Col>
+      </Row>
+      <div className="u-fixed-width u-flex-column u-flex-grow">
+        {isError && error && (
+          <Notification severity="negative">
+            Error: {error.message}
+          </Notification>
+        )}
+        {isLoading ? (
+          <p>
+            <Icon name="spinner" className="u-animation--spin" />
+            &nbsp;Fetching signing keys...
+          </p>
+        ) : (
+          <div className="u-flex-column u-flex-grow">
+            <SigningKeysTable
+              setShowDisableSuccessNotification={
+                setShowDisableSuccessNotification
+              }
+              enableTableActions={enableTableActions}
+            />
           </div>
-        </div>
-      </main>
-      <div
-        className={`l-aside__overlay ${
-          isClosedPanel(location.pathname, "create") ? "u-hide" : ""
-        }`}
-        onClick={() => {
-          navigate(`/admin/${id}/signing-keys`);
-          setNewSigningKey({ name: "" });
-          setErrorMessage("");
-        }}
-        onKeyDown={(e) => {
-          if (e.key === "Enter" || e.key === " ") {
+        )}
+      </div>
+
+      <PortalEntry name="notification">
+        {showNotification && (
+          <div className="u-fixed-width">
+            <Notification
+              severity="positive"
+              onDismiss={() => {
+                setShowNotification(false);
+              }}
+            >
+              New signing key created
+            </Notification>
+          </div>
+        )}
+        {errorMessage && (
+          <div className="u-fixed-width">
+            <Notification
+              severity="negative"
+              onDismiss={() => {
+                setErrorMessage("");
+              }}
+            >
+              {errorMessage}
+            </Notification>
+          </div>
+        )}
+        {showDisableSuccessNotification && (
+          <div className="u-fixed-width">
+            <Notification
+              severity="positive"
+              onDismiss={() => {
+                setShowDisableSuccessNotification(false);
+              }}
+            >
+              Signing key successfully deactivated
+            </Notification>
+          </div>
+        )}
+      </PortalEntry>
+
+      <PortalEntry name="aside">
+        <div
+          className={`l-aside__overlay ${
+            isClosedPanel(location.pathname, "create") ? "u-hide" : ""
+          }`}
+          onClick={() => {
             navigate(`/admin/${id}/signing-keys`);
             setNewSigningKey({ name: "" });
             setErrorMessage("");
-          }
-        }}
-        role="button"
-        tabIndex={0}
-        aria-label="Navigate to signing keys"
-      ></div>
-      <aside
-        className={`l-aside ${
-          isClosedPanel(location.pathname, "create") ? "is-collapsed" : ""
-        }`}
-      >
-        <CreateSigningKeyForm
-          setShowNotification={setShowNotification}
-          setErrorMessage={setErrorMessage}
-          refetch={refetch}
-        />
-      </aside>
-    </div>
+          }}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              navigate(`/admin/${id}/signing-keys`);
+              setNewSigningKey({ name: "" });
+              setErrorMessage("");
+            }
+          }}
+          role="button"
+          tabIndex={0}
+          aria-label="Navigate to signing keys"
+        ></div>
+        <aside
+          className={`l-aside ${
+            isClosedPanel(location.pathname, "create") ? "is-collapsed" : ""
+          }`}
+        >
+          <CreateSigningKeyForm
+            setShowNotification={setShowNotification}
+            setErrorMessage={setErrorMessage}
+            refetch={refetch}
+          />
+        </aside>
+      </PortalEntry>
+    </>
   );
 }
 

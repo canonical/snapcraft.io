@@ -94,6 +94,11 @@ root.render(
             <Route path="admin/:id/snaps" element={<Snaps />} />
             <Route path="admin/:id/members" element={<Members />} />
             <Route path="admin/:id/settings" element={<BrandStoreSettings />} />
+            <Route path="admin/:id/signing-keys" element={<SigningKeys />} />
+            <Route
+              path="admin/:id/signing-keys/create"
+              element={<SigningKeys />}
+            />
           </Route>
           {/* END publisher routes */}
 
@@ -108,8 +113,6 @@ root.render(
                 path="models/:model_id/policies/create"
                 element={<Policies />}
               />
-              <Route path="signing-keys" element={<SigningKeys />} />
-              <Route path="signing-keys/create" element={<SigningKeys />} />
             </Route>
           </Route>
           {/* END brand store routes */}
