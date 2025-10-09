@@ -94,8 +94,6 @@ tests/                   # Python unittest tests
 
 **Add Flask endpoint**: Add route in `webapp/*/views.py`, add tests in `tests/*/`, create template if needed, `yarn build` if using JS, test with SECRET_KEY set
 
-**Brand stores**: Create `webapp/configs/<name>.py` with WEBAPP_CONFIG dict, run `dotrun --env WEBAPP=<name>`
-
 ## Key Files
 
 `.env` (dev defaults), `Dockerfile` (multi-stage), `entrypoint` (WSGI), `package.json` (yarn scripts), `requirements.txt` (Python deps), `vite.config.js` (build config), `vitest.config.js` (JS tests), `tsconfig.json`, `eslint.config.mjs`, `.stylelintrc`, `README.md` (quick start), `HACKING.md` (detailed setup), `CONTRIBUTING.md` (contribution guidelines)

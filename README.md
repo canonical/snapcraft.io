@@ -41,12 +41,6 @@ dotrun -p 5004:5004
 
 For more detailed local development instructions, see [HACKING.md](HACKING.md).
 
-## Brand stores
-
-This codebase can be modified to setup branded stores that represent specific brand or devices, giving the brand full control over the store content, reviewing process and identity.
-
-- [For companies looking to develop a brand store with Canonical&nbsp;&rsaquo;](https://snapcraft.io/docs/store-brand-accounts)
-
 # Deploy
 You can find the deployment config in the deploy folder.
 
