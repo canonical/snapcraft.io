@@ -98,7 +98,7 @@ tests/                   # Python unittest tests
 
 ## Key Files
 
-`.env` (dev defaults), `Dockerfile` (multi-stage), `entrypoint` (WSGI), `package.json` (yarn scripts), `requirements.txt` (Python deps), `vite.config.js` (build config), `vitest.config.js` (JS tests), `tsconfig.json`, `eslint.config.mjs`, `.stylelintrc`, `README.md` (quick start), `HACKING.md` (detailed setup), `BRANDSTORES.md`, `CONTRIBUTING.md` (contribution guidelines)
+`.env` (dev defaults), `Dockerfile` (multi-stage), `entrypoint` (WSGI), `package.json` (yarn scripts), `requirements.txt` (Python deps), `vite.config.js` (build config), `vitest.config.js` (JS tests), `tsconfig.json`, `eslint.config.mjs`, `.stylelintrc`, `README.md` (quick start), `HACKING.md` (detailed setup), `CONTRIBUTING.md` (contribution guidelines)
 
 ## Critical Rules
 
@@ -114,7 +114,7 @@ When reviewing pull requests, be a constructive and helpful reviewer:
 
 **Verify Best Practices**:
 - Check that code follows patterns documented in this file (build sequence, testing requirements, etc.)
-- Ensure changes follow conventions in README.md, HACKING.md, BRANDSTORES.md, and CONTRIBUTING.md
+- Ensure changes follow conventions in README.md, HACKING.md, and CONTRIBUTING.md
 - Verify Python code follows PEP 8 (will be checked by flake8 and black)
 - Confirm JavaScript/TypeScript follows project's ESLint rules
 - Check that SCSS follows project's Stylelint configuration
