@@ -19,5 +19,5 @@ WEBAPP_CONFIG = {
 Then run the project with this command, make sure the WEBAPP has the same name as the brand config file:
 
 ```bash
-./run --env WEBAPP=storePlus
+dotrun --env WEBAPP=storePlus
 ```
