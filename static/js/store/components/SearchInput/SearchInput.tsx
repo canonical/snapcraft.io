@@ -50,7 +50,7 @@ export const SearchInput = ({
         id="search"
         className="p-search-box__input"
         name="q"
-        placeholder="Search Snapcraft"
+        placeholder="Search snap store"
         defaultValue={searchParams.get("q") || ""}
         ref={searchRef}
       />
