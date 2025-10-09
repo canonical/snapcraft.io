@@ -1,4 +1,4 @@
-import { Row, Col } from "@canonical/react-components";
+import { Row, Col, Strip } from "@canonical/react-components";
 
 import CardsLoader from "./CardsLoader";
 
@@ -20,58 +20,60 @@ function ListSection({ isLoading, snaps, title }: Props): JSX.Element {
       {isLoading && <CardsLoader />}
 
       {!isLoading && (
-        <Row>
-          {snaps.map((item: RecommendationData, index: number) => (
-            <Col
-              size={3}
-              key={item.details.snap_id}
-              style={{ marginBottom: "1.5rem" }}
-            >
-              <p
-                className="p-heading--4"
-                style={{ float: "left", marginRight: "1rem" }}
+        <Strip shallow className="u-no-padding--bottom">
+          <Row>
+            {snaps.map((item: RecommendationData, index: number) => (
+              <Col
+                size={3}
+                key={item.details.snap_id}
+                style={{ marginBottom: "1.5rem" }}
               >
-                {index + 1}
-              </p>
-              <div className="p-media-object">
-                <a href={`/${item.details.name}`}>
-                  <img
-                    className="p-media-object__image"
-                    src={item.details.icon}
-                    alt={item.details.title}
-                  />
-                </a>
-                <div
-                  className="p-media-object__details"
-                  style={{ minWidth: "0" }}
+                <p
+                  className="p-heading--4"
+                  style={{ float: "left", marginRight: "1rem" }}
                 >
-                  <h3
-                    className="p-media-object__title u-truncate"
-                    title={item.details.title}
+                  {index + 1}
+                </p>
+                <div className="p-media-object">
+                  <a href={`/${item.details.name}`}>
+                    <img
+                      className="p-media-object__image"
+                      src={item.details.icon}
+                      alt={item.details.title}
+                    />
+                  </a>
+                  <div
+                    className="p-media-object__details"
+                    style={{ minWidth: "0" }}
                   >
-                    <a href={`/${item.details.name}`}>{item.details.title}</a>
-                  </h3>
-                  <p className="u-text--muted">
-                    <em>{item.details.publisher}</em>
-                    {item.details.developer_validation === "verified" ? (
-                      <>
-                        {" "}
-                        <img
-                          src="https://assets.ubuntu.com/v1/ba8a4b7b-Verified.svg"
-                          width="14"
-                          height="14"
-                          alt="Verified account"
-                          title="Verified account"
-                          className="sc-package-publisher-icon"
-                        />
-                      </>
-                    ) : null}
-                  </p>
+                    <h3
+                      className="p-media-object__title u-truncate"
+                      title={item.details.title}
+                    >
+                      <a href={`/${item.details.name}`}>{item.details.title}</a>
+                    </h3>
+                    <p className="u-text--muted">
+                      <em>{item.details.publisher}</em>
+                      {item.details.developer_validation === "verified" ? (
+                        <>
+                          {" "}
+                          <img
+                            src="https://assets.ubuntu.com/v1/ba8a4b7b-Verified.svg"
+                            width="14"
+                            height="14"
+                            alt="Verified account"
+                            title="Verified account"
+                            className="sc-package-publisher-icon"
+                          />
+                        </>
+                      ) : null}
+                    </p>
+                  </div>
                 </div>
-              </div>
-            </Col>
-          ))}
-        </Row>
+              </Col>
+            ))}
+          </Row>
+        </Strip>
       )}
     </>
   );

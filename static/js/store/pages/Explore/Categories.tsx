@@ -1,4 +1,4 @@
-import { Row, Col } from "@canonical/react-components";
+import { Row, Col, Strip } from "@canonical/react-components";
 
 import { useCategories } from "../../hooks";
 
@@ -11,20 +11,22 @@ function Categories(): JSX.Element {
     <>
       <h2>Categories</h2>
       {!isLoading && data && (
-        <Row>
-          {data.map((category: Category) => (
-            <Col size={3} key={category.name}>
-              <p className="p-heading--4">
-                <a
-                  className="p-link--soft"
-                  href={`/store?categories=${category.name}&page=1`}
-                >
-                  {category.display_name}
-                </a>
-              </p>
-            </Col>
-          ))}
-        </Row>
+        <Strip shallow className="u-no-padding--bottom">
+          <Row>
+            {data.map((category: Category) => (
+              <Col size={3} key={category.name}>
+                <p className="p-heading--4">
+                  <a
+                    className="p-link--soft"
+                    href={`/store?categories=${category.name}&page=1`}
+                  >
+                    {category.display_name}
+                  </a>
+                </p>
+              </Col>
+            ))}
+          </Row>
+        </Strip>
       )}
     </>
   );
