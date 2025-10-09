@@ -1,6 +1,7 @@
 import json
 import os
 import hashlib
+import sentry_sdk
 
 import flask
 from canonicalwebteam.launchpad import Launchpad
@@ -139,8 +140,7 @@ def get_publisher_data():
 
         subscriptions = {"newsletter": subscribed_to_newsletter}
     except Exception:
-        if "sentry" in flask.current_app.extensions:
-            flask.current_app.extensions["sentry"].captureException()
+        sentry_sdk.capture_exception()
 
     flask_user["subscriptions"] = subscriptions
     context = {"publisher": flask_user}

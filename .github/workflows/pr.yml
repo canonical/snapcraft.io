@@ -252,7 +252,7 @@ jobs:
         uses: actions/checkout@v5
 
       - name: Check inclusive naming
-        uses: canonical-web-and-design/inclusive-naming@main
+        uses: canonical/inclusive-naming@main
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           reporter: github-pr-review

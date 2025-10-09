@@ -510,7 +510,7 @@ function Members(): React.JSX.Element {
             onDismiss={() => setShowErrorNotification(false)}
           >
             Something went wrong.{" "}
-            <a href="https://github.com/canonical-web-and-design/snapcraft.io/issues/new">
+            <a href="https://github.com/canonical/snapcraft.io/issues/new">
               Report a bug
             </a>
           </Notification>

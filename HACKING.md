@@ -39,7 +39,7 @@ GITHUB_WEBHOOK_HOST_URL=https://hash-id.ngrok.io/
 
 To connect to Launchpad, you need to set up a **username**, a **consumer key** and obtain an **API token** and an **API token secret**:
 
-Download [this Python script](https://github.com/canonical-web-and-design/build.snapcraft.io/blob/master/scripts/create-launchpad-credentials).
+Download [this Python script](https://github.com/canonical/snapcraft.io/blob/main/scripts/create-launchpad-credentials).
 
 Run:
 
@@ -81,15 +81,6 @@ Install the [`dotrun`](https://snapcraft.io/dotrun) snap.
 ``` bash
 dotrun test
 ```
-
-## Status checks and prometheus metrics
-
-[Talisker](https://talisker.readthedocs.io/en/latest/) provides a bunch of useful status checks and metrics about the running application. Some of this information is sensitive and so to access it you need to run the site with your IP address mentioned in the `TALISKER_NETWORKS` variable.
-
-Now visit http://127.0.0.1:8004/_status to see the endpoints provided by Talisker. Useful ones include:
-
-- http://127.0.0.1:8004/_status/check - A basic check that the site is running
-- http://127.0.0.1:8004/_status/metrics - The prometheus metrics for the application
 
 ## Update the list of licenses
 

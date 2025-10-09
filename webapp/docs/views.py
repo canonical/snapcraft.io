@@ -1,6 +1,6 @@
 from os import getenv
 
-import talisker
+import requests
 
 from canonicalwebteam.discourse import (
     DiscourseAPI,
@@ -14,7 +14,7 @@ DISCOURSE_API_USERNAME = getenv("DISCOURSE_API_USERNAME")
 
 
 def init_docs(app, url_prefix):
-    session = talisker.requests.get_session()
+    session = requests.Session()
     discourse_docs = Docs(
         parser=DocParser(
             api=DiscourseAPI(
