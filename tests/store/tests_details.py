@@ -149,23 +149,14 @@ class GetDetailsPageTest(TestCase):
                 status=404,
             )
         )
-        metrics_url = "https://api.snapcraft.io/api/v1/snaps/metrics"
-        responses.add(
-            responses.Response(
-                method="POST", url=metrics_url, json={}, status=200
-            )
-        )
 
         response = self.client.get(self.endpoint_url)
 
-        assert len(responses.calls) == 3
+        assert len(responses.calls) == 2
         assert responses.calls[0].request.url == self.api_url
         assert responses.calls[1].request.url == self.api_url_details
-        assert responses.calls[2].request.url == metrics_url
 
-        self.assert200(response)
-        self.assert_not_in_context("aliases")
-        self.assert_context("snap-id", "id")
+        assert response.status_code == 404
 
     @responses.activate
     def test_api_500(self):

@@ -29,10 +29,6 @@ class BaseSession:
 
     def request(self, method, url, timeout=12, **kwargs):
         try:
-            print("Sending request to Store API")
-            print(url)
-            print(self.headers)
-            print(self.cookies)
             return super().request(
                 method=method, url=url, timeout=timeout, **kwargs
             )
