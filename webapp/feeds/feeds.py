@@ -41,7 +41,9 @@ def create_snap_description(snap):
 
     if snap.get("icon") and is_safe_url(snap["icon"]):
         icon_url = escape(snap["icon"])
-        description_parts.append(f'<img src="{icon_url}" alt="Snap icon">')
+        description_parts.append(
+            f'<img src="{icon_url}" alt="Snap icon" width="128" height="128">'
+        )
 
     if snap.get("summary"):
         summary = escape(snap["summary"])
@@ -68,9 +70,7 @@ def create_snap_description(snap):
                 and is_safe_url(media["url"])
             ):
                 media_url = escape(media["url"])
-                description_parts.append(
-                    f'<img src="{media_url}" alt="Screenshot">'
-                )
+                description_parts.append(f'<img src="{media_url}" alt="">')
 
     return "".join(description_parts)
 
