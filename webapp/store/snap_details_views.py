@@ -17,50 +17,10 @@ from canonicalwebteam.flask_base.decorators import (
 )
 from canonicalwebteam.exceptions import StoreApiError
 from canonicalwebteam.store_api.devicegw import DeviceGW
-device_gateway = DeviceGW("snap", helpers.api_session)
 from pybadges import badge
-import sys
 
+device_gateway = DeviceGW("snap", helpers.api_session)
 
-# --- Patch device_gateway.session.get to log full request/response ---
-original_get = device_gateway.session.get
-
-def debug_get(url, *args, **kwargs):
-    if "nushell" in url:
-        print(f"\nDEBUG: GET request to URL: {url}")
-        print(f"DEBUG: kwargs: {kwargs}")
-    response = original_get(url, *args, **kwargs)
-    if "nushell" in url:
-        print(f"DEBUG: Response status: {response.status_code}")
-        print(f"DEBUG: Response headers: {response.headers}")
-        print(f"DEBUG: Response text (first 500 chars): {response.text[:500]}")
-    sys.stdout.flush()
-    return response
-
-device_gateway.session.get = debug_get
-
-# --- Patch get_snap_details to log input, output, and exceptions ---
-original_get_snap_details = device_gateway.get_snap_details
-
-def debug_get_snap_details(snap_name, fields=None):
-    if snap_name == "nushell":
-        print(f"\nDEBUG: Calling get_snap_details with snap_name={snap_name}, fields={fields}")
-        sys.stdout.flush()
-    try:
-        result = original_get_snap_details(snap_name, fields=fields)
-        print(f"DEBUG: get_snap_details result:\n{result}")
-        sys.stdout.flush()
-        return result
-    except Exception as e:
-        print(f"DEBUG: Exception in get_snap_details: {e}")
-        sys.stdout.flush()
-        import traceback
-        traceback.print_exc()
-        raise
-
-device_gateway.get_snap_details = debug_get_snap_details
-
-import traceback
 FIELDS = [
     "title",
     "summary",
@@ -253,20 +213,19 @@ def snap_details_views(store):
         status_code = 200
 
         context = _get_context_snap_details(snap_name)
-        print("----------------------------------------------------------------")
-        print(f"DEBUGGING: {snap_name}",flush=True)
+        print(f"DEBUGGING: {snap_name}")
         try:
             extra_details = device_gateway.get_snap_details(
                 snap_name, fields=FIELDS_EXTRA_DETAILS
             )
         except Exception as e:
-            print("IT FAILED",flush=True)
             print(e)
-            traceback.print_exc()
-            extra_details = None
-            print("END_DEBUGGING",flush=True)
-
-        print("EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE")
+            response = requests.get(
+                f"https://api.snapcraft.io/api/v1/snaps/details/{snap_name}?fields=aliases",
+                headers={"X-Ubuntu-Series": "16"})
+            print(response.status_code)
+            print(response.text)
+            print("END_DEBUGGING")
 
         if extra_details and extra_details["aliases"]:
             context["aliases"] = [
