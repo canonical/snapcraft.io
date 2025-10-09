@@ -21,12 +21,12 @@ import { brandIdState, brandStoreState } from "../../state/brandStoreState";
 import Filter from "../../components/Filter";
 import ModelsTable from "./ModelsTable";
 import CreateModelForm from "./CreateModelForm";
-import Navigation from "../../components/Navigation";
 
 import { useModels } from "../../hooks";
 import { isClosedPanel, setPageTitle, getPolicies } from "../../utils";
 
 import type { Model as ModelType } from "../../types/shared";
+import { PortalEntry } from "../Portals/Portals";
 
 function Models(): React.JSX.Element {
   const { id } = useParams();
@@ -71,108 +71,107 @@ function Models(): React.JSX.Element {
   }, [modelsIsLoading, modelsError, models]);
 
   return (
-    <div className="l-application" role="presentation">
-      <Navigation />
-      <main className="l-main">
-        <div className="p-panel u-flex-column">
-          <div className="p-panel__content u-flex-column u-flex-grow">
-            <div className="u-fixed-width">
-              <h1 className="p-heading--4">Models</h1>
+    <>
+      <div className="u-fixed-width">
+        <h1 className="p-heading--4">Models</h1>
+      </div>
+      <Row>
+        <Col size={6}>
+          <Filter
+            state={modelsListFilterState}
+            label="Search models"
+            placeholder="Search models"
+          />
+        </Col>
+        <Col size={6} className="u-align--right">
+          <Link
+            className="p-button--positive"
+            to={`/admin/${id}/models/create`}
+          >
+            Create new model
+          </Link>
+        </Col>
+      </Row>
+      <div className="u-fixed-width u-flex-column u-flex-grow">
+        <div>
+          {modelsIsError && modelsError instanceof Error && (
+            <Notification severity="negative">
+              Error: {modelsError.message}
+            </Notification>
+          )}
+          {modelsIsLoading ? (
+            <p>
+              <Icon name="spinner" className="u-animation--spin" />
+              &nbsp;Fetching models...
+            </p>
+          ) : (
+            <div className="u-flex-column u-flex-grow">
+              <ModelsTable />
             </div>
-            {showNotification && (
-              <div className="u-fixed-width">
-                <Notification
-                  severity="positive"
-                  onDismiss={() => {
-                    setShowNotification(false);
-                  }}
-                >
-                  New model created
-                </Notification>
-              </div>
-            )}
-            {showErrorNotification && (
-              <div className="u-fixed-width">
-                <Notification
-                  severity="negative"
-                  onDismiss={() => {
-                    setShowErrorNotification(false);
-                  }}
-                >
-                  Unable to create model
-                </Notification>
-              </div>
-            )}
-            <Row>
-              <Col size={6}>
-                <Filter
-                  state={modelsListFilterState}
-                  label="Search models"
-                  placeholder="Search models"
-                />
-              </Col>
-              <Col size={6} className="u-align--right">
-                <Link
-                  className="p-button--positive"
-                  to={`/admin/${id}/models/create`}
-                >
-                  Create new model
-                </Link>
-              </Col>
-            </Row>
-            <div className="u-fixed-width u-flex-column u-flex-grow">
-              <div>
-                {modelsIsError && modelsError instanceof Error && (
-                  <Notification severity="negative">
-                    Error: {modelsError.message}
-                  </Notification>
-                )}
-                {modelsIsLoading ? (
-                  <p>
-                    <Icon name="spinner" className="u-animation--spin" />
-                    &nbsp;Fetching models...
-                  </p>
-                ) : (
-                  <div className="u-flex-column u-flex-grow">
-                    <ModelsTable />
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
+          )}
         </div>
-      </main>
-      <div
-        className={`l-aside__overlay ${
-          isClosedPanel(location.pathname, "create") ? "u-hide" : ""
-        }`}
-        onClick={() => {
-          navigate(`/admin/${id}/models`);
-          setShowErrorNotification(false);
-          setNewModel({ name: "", apiKey: "" });
-        }}
-        onKeyDown={(e) => {
-          if (e.key === "Enter" || e.key === " ") {
+      </div>
+
+      <PortalEntry name="notification">
+        {showNotification && (
+          <div className="u-fixed-width">
+            <Notification
+              severity="positive"
+              onDismiss={() => {
+                setShowNotification(false);
+              }}
+            >
+              New model created
+            </Notification>
+          </div>
+        )}
+        {showErrorNotification && (
+          <div className="u-fixed-width">
+            <Notification
+              severity="negative"
+              onDismiss={() => {
+                setShowErrorNotification(false);
+              }}
+            >
+              Unable to create model
+            </Notification>
+          </div>
+        )}
+      </PortalEntry>
+
+      <PortalEntry name="aside">
+        <div
+          className={`l-aside__overlay ${
+            isClosedPanel(location.pathname, "create") ? "u-hide" : ""
+          }`}
+          onClick={() => {
             navigate(`/admin/${id}/models`);
             setShowErrorNotification(false);
             setNewModel({ name: "", apiKey: "" });
-          }
-        }}
-        role="button"
-        tabIndex={0}
-        aria-label="Navigate to models page"
-      ></div>
-      <aside
-        className={`l-aside ${
-          isClosedPanel(location.pathname, "create") ? "is-collapsed" : ""
-        }`}
-      >
-        <CreateModelForm
-          setShowNotification={setShowNotification}
-          setShowErrorNotification={setShowErrorNotification}
-        />
-      </aside>
-    </div>
+          }}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              navigate(`/admin/${id}/models`);
+              setShowErrorNotification(false);
+              setNewModel({ name: "", apiKey: "" });
+            }
+          }}
+          role="button"
+          tabIndex={0}
+          aria-label="Navigate to models page"
+        ></div>
+        <aside
+          className={`l-aside ${
+            isClosedPanel(location.pathname, "create") ? "is-collapsed" : ""
+          }`}
+        >
+          <CreateModelForm
+            setShowNotification={setShowNotification}
+            setShowErrorNotification={setShowErrorNotification}
+          />
+        </aside>
+      </PortalEntry>
+    </>
   );
 }
 

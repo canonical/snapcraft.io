@@ -99,14 +99,14 @@ root.render(
               path="admin/:id/signing-keys/create"
               element={<SigningKeys />}
             />
+            <Route path="admin/:id/models" element={<Models />} />
+            <Route path="admin/:id/models/create" element={<Models />} />
           </Route>
           {/* END publisher routes */}
 
           {/* START brand store routes */}
           <Route path="admin" element={<BrandStoreLayout />}>
             <Route path=":id">
-              <Route path="models" element={<Models />} />
-              <Route path="models/create" element={<Models />} />
               <Route path="models/:model_id" element={<Model />} />
               <Route path="models/:model_id/policies" element={<Policies />} />
               <Route
