@@ -5,6 +5,7 @@ import {
   useState,
   useEffect,
   useRef,
+  useMemo,
 } from "react";
 import { useParams } from "react-router-dom";
 import { useSetAtom } from "jotai";
@@ -21,7 +22,7 @@ import { buildRepoConnectedState } from "../../state/buildsState";
 
 import type { GithubData } from "../../types/";
 
-type Repo = { name: string; nameWithOwner: string };
+type Repo = { name: string; nameWithOwner: string; owner: string };
 
 type Props = {
   githubData: GithubData;
@@ -173,10 +174,7 @@ function RepoSelector({ githubData, setAutoTriggerBuild }: Props) {
 
       const responseData = await response.json();
       setRepos(
-        responseData.sort(
-          (a: Repo, b: Repo) =>
-            a.name.localeCompare(b.name) || b.name.localeCompare(a.name),
-        ),
+        responseData.sort((a: Repo, b: Repo) => a.name.localeCompare(b.name)),
       );
     } catch (_error) {
       setRepoFetchError("Failed to fetch repositories. Please try again.");
@@ -338,7 +336,7 @@ function RepoSelector({ githubData, setAutoTriggerBuild }: Props) {
           <datalist id="repo-list">
             {repos.map((repo: Repo) => (
               <option value={repo.name} key={repo.name}>
-                {repo.nameWithOwner}
+                {repo.owner !== selectedOrg ? `Owned by ${repo.owner}` : ""}
               </option>
             ))}
           </datalist>
