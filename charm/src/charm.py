@@ -12,7 +12,7 @@ import paas_charm.flask
 logger = logging.getLogger(__name__)
 
 
-class CharmCharm(paas_charm.flask.Charm):
+class SnapcraftCharm(paas_charm.flask.Charm):
     """Flask Charm service."""
 
     def __init__(self, *args: typing.Any) -> None:
@@ -25,4 +25,5 @@ class CharmCharm(paas_charm.flask.Charm):
 
 
 if __name__ == "__main__":
-    ops.main(CharmCharm)
+    ops.main(SnapcraftCharm)
+
