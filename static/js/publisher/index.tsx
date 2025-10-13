@@ -2,7 +2,7 @@ import * as Sentry from "@sentry/react";
 import { Provider as JotaiProvider } from "jotai";
 import { createRoot } from "react-dom/client";
 import { QueryClient, QueryClientProvider } from "react-query";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 
 import BrandStoreRoute from "./components/BrandStoreRoute/BrandStoreRoute";
 import PublisherLayout from "./layouts/PublisherLayout";
@@ -91,6 +91,7 @@ root.render(
             <Route path="admin/account" element={<AccountDetails />} />
 
             <Route path="admin/:id" element={<BrandStoreRoute />}>
+              <Route index element={<Navigate to="snaps" />} />
               <Route path="snaps" element={<Snaps />} />
               <Route path="members" element={<Members />} />
               <Route path="settings" element={<BrandStoreSettings />} />
