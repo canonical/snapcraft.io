@@ -190,6 +190,7 @@ function PoliciesTable({
             <>
               <Button
                 className="u-no-margin--bottom"
+                disabled={isLoading}
                 onClick={() => {
                   setSelectedPolicy(undefined);
                   setShowModal(false);
@@ -200,26 +201,28 @@ function PoliciesTable({
               <Button
                 className="u-no-margin--bottom u-no-margin--right"
                 appearance="positive"
+                disabled={isLoading}
                 onClick={() => {
                   deletePolicy(selectedPolicy);
                 }}
               >
-                Delete policy
+                {isLoading ? (
+                  <>
+                    <Icon name="spinner" className="u-animation--spin" />
+                    &nbsp;Deleting policy...
+                  </>
+                ) : (
+                  "Delete policy"
+                )}
               </Button>
             </>
           }
         >
-          {isLoading ? (
-            <p>
-              <Icon name="spinner" className="u-animation--spin" />
-              &nbsp;Deleting policy...
-            </p>
-          ) : (
-            <p>
-              Are you sure you want to delete this policy? This action cannot be
-              undone.
-            </p>
-          )}
+          <p>
+            Are you sure you want to delete this policy?
+            <br />
+            This action cannot be undone.
+          </p>
         </Modal>
       )}
     </>
