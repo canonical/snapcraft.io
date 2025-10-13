@@ -102,19 +102,19 @@ root.render(
             <Route path="admin/:id/models" element={<Models />} />
             <Route path="admin/:id/models/create" element={<Models />} />
             <Route path="admin/:id/models/:model_id" element={<Model />} />
+            <Route
+              path="admin/:id/models/:model_id/policies"
+              element={<Policies />}
+            />
+            <Route
+              path="admin/:id/models/:model_id/policies/create"
+              element={<Policies />}
+            />
           </Route>
           {/* END publisher routes */}
 
           {/* START brand store routes */}
-          <Route path="admin" element={<BrandStoreLayout />}>
-            <Route path=":id">
-              <Route path="models/:model_id/policies" element={<Policies />} />
-              <Route
-                path="models/:model_id/policies/create"
-                element={<Policies />}
-              />
-            </Route>
-          </Route>
+          <Route path="admin" element={<BrandStoreLayout />}></Route>
           {/* END brand store routes */}
           {/* TODO: merge the two layouts */}
         </Routes>
