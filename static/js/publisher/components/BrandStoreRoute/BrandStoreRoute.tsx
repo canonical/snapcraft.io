@@ -1,39 +1,14 @@
-import { applyTheme, Icon, loadTheme } from "@canonical/react-components";
+import { Spinner } from "@canonical/react-components";
 import { useSetAtom } from "jotai";
 import { useEffect } from "react";
 import { Outlet, useLocation, useNavigate, useParams } from "react-router-dom";
 
-import Navigation from "../components/Navigation";
-import { useBrandStores } from "../hooks";
-import StoreNotFound from "../pages/StoreNotFound";
-import { brandStoresState } from "../state/brandStoreState";
-import { Store } from "../types/shared";
-import useSideNavigationData from "../hooks/useSideNavigationData";
+import { useBrandStores } from "../../hooks";
+import StoreNotFound from "../../pages/StoreNotFound";
+import { brandStoresState } from "../../state/brandStoreState";
+import { Store } from "../../types/shared";
 
-// TODO: get rid of this file and create a common layout for all the pages in the app
-
-function BrandStoreLoader() {
-  return (
-    <div className="l-application">
-      <Navigation />
-
-      <main className="l-main">
-        <div className="p-panel--loading">
-          <div className="p-panel__content">
-            <div className="u-fixed-width">
-              <Icon name="spinner" className="u-animation--spin" />
-              &nbsp;Loading...
-            </div>
-          </div>
-        </div>
-      </main>
-    </div>
-  );
-}
-
-function BrandStoreLayout() {
-  useSideNavigationData();
-
+function BrandStoreRoute() {
   const location = useLocation();
   const navigate = useNavigate();
   const { data: brandStoresList, isLoading } = useBrandStores();
@@ -45,11 +20,6 @@ function BrandStoreLayout() {
   const userHasCurrentStore = !!brandStoresList?.find(
     (store: Store) => store.id === storeId,
   );
-
-  useEffect(() => {
-    const theme = loadTheme();
-    applyTheme(theme);
-  }, []);
 
   const setBrandStores = useSetAtom(brandStoresState);
 
@@ -77,8 +47,8 @@ function BrandStoreLayout() {
       <StoreNotFound />
     )
   ) : (
-    <BrandStoreLoader />
+    <Spinner text="Loading..." />
   );
 }
 
-export default BrandStoreLayout;
+export default BrandStoreRoute;

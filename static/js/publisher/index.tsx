@@ -1,10 +1,10 @@
+import * as Sentry from "@sentry/react";
 import { Provider as JotaiProvider } from "jotai";
 import { createRoot } from "react-dom/client";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import * as Sentry from "@sentry/react";
 
-import BrandStoreLayout from "./layouts/BrandStoreLayout";
+import BrandStoreRoute from "./components/BrandStoreRoute/BrandStoreRoute";
 import PublisherLayout from "./layouts/PublisherLayout";
 import AccountDetails from "./pages/AccountDetails";
 import AccountSnaps from "./pages/AccountSnaps";
@@ -52,7 +52,6 @@ root.render(
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
         <Routes>
-          {/* START publisher routes */}
           <Route element={<PublisherLayout />}>
             <Route path=":snapId">
               <Route path="publicise" element={<Publicise />} />
@@ -90,33 +89,24 @@ root.render(
             />
 
             <Route path="admin/account" element={<AccountDetails />} />
-            <Route path="admin/:id" element={<Snaps />} />
-            <Route path="admin/:id/snaps" element={<Snaps />} />
-            <Route path="admin/:id/members" element={<Members />} />
-            <Route path="admin/:id/settings" element={<BrandStoreSettings />} />
-            <Route path="admin/:id/signing-keys" element={<SigningKeys />} />
-            <Route
-              path="admin/:id/signing-keys/create"
-              element={<SigningKeys />}
-            />
-            <Route path="admin/:id/models" element={<Models />} />
-            <Route path="admin/:id/models/create" element={<Models />} />
-            <Route path="admin/:id/models/:model_id" element={<Model />} />
-            <Route
-              path="admin/:id/models/:model_id/policies"
-              element={<Policies />}
-            />
-            <Route
-              path="admin/:id/models/:model_id/policies/create"
-              element={<Policies />}
-            />
-          </Route>
-          {/* END publisher routes */}
 
-          {/* START brand store routes */}
-          <Route path="admin" element={<BrandStoreLayout />}></Route>
-          {/* END brand store routes */}
-          {/* TODO: merge the two layouts */}
+            <Route path="admin/:id" element={<BrandStoreRoute />}>
+              <Route path="snaps" element={<Snaps />} />
+              <Route path="members" element={<Members />} />
+              <Route path="settings" element={<BrandStoreSettings />} />
+              <Route path="signing-keys" element={<SigningKeys />} />
+              <Route path="signing-keys/create" element={<SigningKeys />} />
+              <Route path="models">
+                <Route index element={<Models />} />
+                <Route path="create" element={<Models />} />
+                <Route path=":model_id">
+                  <Route index element={<Model />} />
+                  <Route path="policies" element={<Policies />} />
+                  <Route path="policies/create" element={<Policies />} />
+                </Route>
+              </Route>
+            </Route>
+          </Route>
         </Routes>
       </BrowserRouter>
     </QueryClientProvider>
