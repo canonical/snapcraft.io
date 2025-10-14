@@ -52,8 +52,9 @@
     <ul class="p-inline-list--vertical-divider">
       {% if developer %}
         <li class="p-inline-list__item u-hide--small">{{ developer_info(name=developer[0], url=developer[1]) }}</li>
-      {% endif %}
+      {% else %}
       <li class="p-inline-list__item u-hide--small">{{ publisher_info(publisher, username, developer_validation, display_name, VERIFIED_PUBLISHER, STAR_DEVELOPER) }}</li>
+      {% endif %}
       {% for category in categories %}
         <li class="p-inline-list__item">
           <a href="/search?categories={{ category.slug }}">{{ category.name }}</a>
