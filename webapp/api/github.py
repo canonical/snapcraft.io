@@ -216,7 +216,11 @@ class GitHub:
             repositories.extend(next_page)
 
         repos = [
-            {**repo, "owner": repo.get("nameWithOwner", "").split("/")[0]} if "nameWithOwner" in repo and repo.get("nameWithOwner") else {**repo, "owner": None}
+            (
+                {**repo, "owner": repo.get("nameWithOwner", "").split("/")[0]}
+                if "nameWithOwner" in repo and repo.get("nameWithOwner")
+                else {**repo, "owner": None}
+            )
             for repo in repositories
         ]
 
