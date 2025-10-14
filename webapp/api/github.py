@@ -221,6 +221,7 @@ class GitHub:
         ]
 
         return repos
+
     def get_org_repositories(self, org_login, end_cursor=None):
         """
         Lists of public repositories from the authenticated user

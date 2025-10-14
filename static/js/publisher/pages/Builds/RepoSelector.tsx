@@ -5,7 +5,6 @@ import {
   useState,
   useEffect,
   useRef,
-  useMemo,
 } from "react";
 import { useParams } from "react-router-dom";
 import { useSetAtom } from "jotai";
