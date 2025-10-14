@@ -65,7 +65,7 @@ def dns_verified_status(snap_name):
     if primary_domain:
         token = helpers.get_dns_verification_token(snap_name, primary_domain)
 
-        domain = re.compile(r"https?://")
+        domain = re.compile(r"https?://(www\.)?")
         domain = domain.sub("", primary_domain).strip().strip("/")
 
         res["token"] = token
