@@ -215,14 +215,12 @@ class GitHub:
             next_page = self.get_user_repositories(page_info["endCursor"])
             repositories.extend(next_page)
 
-        def get_owner_name(repo):
-            repo["owner"] = repo["nameWithOwner"].split("/")[0]
-            return repo
-
-        repos = list(map(lambda r: get_owner_name(r), repositories))
+        repos = [
+            {**repo, "owner": repo["nameWithOwner"].split("/")[0]}
+            for repo in repositories
+        ]
 
         return repos
-
     def get_org_repositories(self, org_login, end_cursor=None):
         """
         Lists of public repositories from the authenticated user
