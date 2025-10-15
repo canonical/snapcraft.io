@@ -511,10 +511,48 @@ html {
   position: relative;
 }
 
+.slice-banner {
+  padding: 1.5rem;
+
+  @media screen and (min-width: $breakpoint-small) {
+    padding: 74px 78px;
+  }
+}
+
+.slice-icons {
+  display: flex;
+  justify-content: flex-start;
+
+  @media screen and (min-width: $breakpoint-large) {
+    justify-content: flex-end;
+  }
+}
+
+.slice-icon {
+  background-color: #fff;
+  border-radius: 5px;
+  display: inline-block;
+  margin-right: 18px;
+  padding: 0.5rem;
+
+  @media screen and (min-width: $breakpoint-small) {
+    padding: 1rem;
+  }
+
+  @media screen and (min-width: $breakpoint-large) {
+    padding: 24px;
+  }
+
+  &:last-child {
+    margin-right: 0;
+  }
+}
+
 .read-only-dark {
   color: $colors--theme--text-muted;
 }
 
+// Needed so the tooltip from Joyride in the tour works in dark mode
 .__floater__arrow {
   polygon {
     fill: $colors--theme--background-default;
