@@ -26,9 +26,6 @@ get-iplayer:
 ghost-desktop:
 - ghost
 - https://ghost.org/
-gimp:
-- GIMP
-- https://gimp.org/
 gitter-desktop:
 - Gitter
 - https://gitter.im/
