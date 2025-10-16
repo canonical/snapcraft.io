@@ -41,16 +41,6 @@ dotrun -p 5004:5004
 
 For more detailed local development instructions, see [HACKING.md](HACKING.md).
 
-## Brand stores
-
-This codebase can be modified to setup branded stores that represent specific brand or devices, giving the brand full control over the store content, reviewing process and identity.
-
-- [For companies looking to develop a brand store with Canonical&nbsp;&rsaquo;](https://snapcraft.io/docs/store-brand-accounts)
-- For developers to learn more about developing a brandstore, see [BRANDSTORES.md](BRANDSTORES.md).
-
-# Deploy
-You can find the deployment config in the deploy folder.
-
 ## License
 
 The content of this project is licensed under the [Creative Commons Attribution-ShareAlike 4.0 International license](https://creativecommons.org/licenses/by-sa/4.0/), and the underlying code used to format and display that content is licensed under the [LGPLv3](https://opensource.org/licenses/lgpl-3.0) by [Canonical Ltd](https://canonical.com/).
