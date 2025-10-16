@@ -120,7 +120,7 @@ def store_blueprint(store_query=None):
 
     @store.route("/explore")
     def explore_view():
-        return flask.render_template("store/store.html")
+        return flask.render_template("explore/index.html")
 
     @store.route("/youtube", methods=["POST"])
     def get_video_thumbnail_data():

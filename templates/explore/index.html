@@ -1,0 +1,25 @@
+{% extends "_layout.html" %}
+
+{% block meta_title %}Install Linux apps using the Snap Store | Snapcraft {% endblock %}
+
+{% block content %}
+<main id="root">
+  <section class="p-strip--dark">
+    <div class="row">
+      <div class="col-start-large-4 col-6">
+        <h1 class="p-heading--2">The app store for Linux</h1>
+        <form class="p-search-box" action="/store">
+          <label class="u-off-screen" for="search">Search snap store</label>
+          <input type="search" id="search" class="p-search-box__input" placeholder="Search snap store" name="q">
+          <button type="reset" class="p-button p-search-box__reset">
+            <i class="p-icon--close">Close</i>
+          </button>
+          <button type="submit" class="p-button p-search-box__button">
+            <i class="p-icon--search">Search</i> 
+          </button>
+        </form>
+      </div>
+    </div>
+  </section>
+</main>
+{% endblock %}
