@@ -17,6 +17,9 @@ from webapp.helpers import api_publisher_session, api_session
 from flask.json import jsonify
 import os
 from webapp.extensions import csrf
+from webapp.store.logic import (
+    get_categories,
+)
 
 session = requests.Session()
 
@@ -120,7 +123,19 @@ def store_blueprint(store_query=None):
 
     @store.route("/explore")
     def explore_view():
-        return flask.render_template("explore/index.html")
+        try:
+            categories_results = device_gateway.get_categories()
+        except StoreApiError:
+            categories_results = []
+
+        categories = sorted(
+            get_categories(categories_results),
+            key=lambda category: category["slug"],
+        )
+
+        return flask.render_template(
+            "explore/index.html", categories=categories
+        )
 
     @store.route("/youtube", methods=["POST"])
     def get_video_thumbnail_data():
