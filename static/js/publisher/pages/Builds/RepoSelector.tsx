@@ -21,7 +21,7 @@ import { buildRepoConnectedState } from "../../state/buildsState";
 
 import type { GithubData } from "../../types/";
 
-type Repo = { name: string; nameWithOwner: string };
+type Repo = { name: string; nameWithOwner: string; owner: string };
 
 type Props = {
   githubData: GithubData;
@@ -172,7 +172,9 @@ function RepoSelector({ githubData, setAutoTriggerBuild }: Props) {
       }
 
       const responseData = await response.json();
-      setRepos(responseData);
+      setRepos(
+        responseData.sort((a: Repo, b: Repo) => a.name.localeCompare(b.name)),
+      );
     } catch (_error) {
       setRepoFetchError("Failed to fetch repositories. Please try again.");
       setRepos([]);
@@ -332,7 +334,9 @@ function RepoSelector({ githubData, setAutoTriggerBuild }: Props) {
             ))}
           <datalist id="repo-list">
             {repos.map((repo: Repo) => (
-              <option value={repo.name} key={repo.name} />
+              <option value={repo.name} key={repo.name}>
+                {repo.owner !== selectedOrg ? `Owned by ${repo.owner}` : ""}
+              </option>
             ))}
           </datalist>
           {repoFetchError && (
