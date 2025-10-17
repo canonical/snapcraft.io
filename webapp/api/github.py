@@ -215,7 +215,16 @@ class GitHub:
             next_page = self.get_user_repositories(page_info["endCursor"])
             repositories.extend(next_page)
 
-        return repositories
+        repos = [
+            (
+                {**repo, "owner": repo.get("nameWithOwner", "").split("/")[0]}
+                if "nameWithOwner" in repo and repo.get("nameWithOwner")
+                else {**repo, "owner": None}
+            )
+            for repo in repositories
+        ]
+
+        return repos
 
     def get_org_repositories(self, org_login, end_cursor=None):
         """
