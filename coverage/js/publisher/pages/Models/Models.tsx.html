@@ -241,8 +241,7 @@
 <a name='L176'></a><a href='#L176'>176</a>
 <a name='L177'></a><a href='#L177'>177</a>
 <a name='L178'></a><a href='#L178'>178</a>
-<a name='L179'></a><a href='#L179'>179</a>
-<a name='L180'></a><a href='#L180'>180</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L179'></a><a href='#L179'>179</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -328,35 +327,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -392,6 +362,33 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -400,6 +397,7 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -444,12 +442,12 @@ import { brandIdState, brandStoreState } from "../../state/brandStoreState";
 import Filter from "../../components/Filter";
 import ModelsTable from "./ModelsTable";
 import CreateModelForm from "./CreateModelForm";
-import Navigation from "../../components/Navigation";
 &nbsp;
 import { useModels } from "../../hooks";
 import { isClosedPanel, setPageTitle, getPolicies } from "../../utils";
 &nbsp;
 import type { Model as ModelType } from "../../types/shared";
+import { PortalEntrance } from "../Portals/Portals";
 &nbsp;
 function Models(): React.JSX.Element {
   const { id } = useParams();
@@ -494,108 +492,107 @@ function Models(): React.JSX.Element {
   }, [modelsIsLoading, modelsError, models]);
 &nbsp;
   return (
-    &lt;div className="l-application" role="presentation"&gt;
-      &lt;Navigation /&gt;
-      &lt;main className="l-main"&gt;
-        &lt;div className="p-panel u-flex-column"&gt;
-          &lt;div className="p-panel__content u-flex-column u-flex-grow"&gt;
-            &lt;div className="u-fixed-width"&gt;
-              &lt;h1 className="p-heading--4"&gt;Models&lt;/h1&gt;
+    &lt;&gt;
+      &lt;div className="u-fixed-width"&gt;
+        &lt;h1 className="p-heading--4"&gt;Models&lt;/h1&gt;
+      &lt;/div&gt;
+      &lt;Row&gt;
+        &lt;Col size={6}&gt;
+          &lt;Filter
+            state={modelsListFilterState}
+            label="Search models"
+            placeholder="Search models"
+          /&gt;
+        &lt;/Col&gt;
+        &lt;Col size={6} className="u-align--right"&gt;
+          &lt;Link
+            className="p-button--positive"
+            to={`/admin/${id}/models/create`}
+          &gt;
+            Create new model
+          &lt;/Link&gt;
+        &lt;/Col&gt;
+      &lt;/Row&gt;
+      &lt;div className="u-fixed-width u-flex-column u-flex-grow"&gt;
+        &lt;div&gt;
+          {modelsIsError &amp;&amp; <span class="branch-1 cbranch-no" title="branch not covered" >modelsError instanceof Error &amp;&amp; (</span>
+<span class="branch-2 cbranch-no" title="branch not covered" >            &lt;Notification severity="negative"&gt;</span>
+              Error: {modelsError.message}
+            &lt;/Notification&gt;
+          )}
+          {modelsIsLoading ? (
+<span class="branch-0 cbranch-no" title="branch not covered" >            &lt;p&gt;</span>
+              &lt;Icon name="spinner" className="u-animation--spin" /&gt;
+              &amp;nbsp;Fetching models...
+            &lt;/p&gt;
+          ) : (
+            &lt;div className="u-flex-column u-flex-grow"&gt;
+              &lt;ModelsTable /&gt;
             &lt;/div&gt;
-            {showNotification &amp;&amp; (
-<span class="branch-1 cbranch-no" title="branch not covered" >              &lt;div className="u-fixed-width"&gt;</span>
-                &lt;Notification
-                  severity="positive"
-                  onDismiss={<span class="fstat-no" title="function not covered" >() =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >                    setShowNotification(false);</span>
-                  }}
-                &gt;
-                  New model created
-                &lt;/Notification&gt;
-              &lt;/div&gt;
-            )}
-            {showErrorNotification &amp;&amp; (
-<span class="branch-1 cbranch-no" title="branch not covered" >              &lt;div className="u-fixed-width"&gt;</span>
-                &lt;Notification
-                  severity="negative"
-                  onDismiss={<span class="fstat-no" title="function not covered" >() =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >                    setShowErrorNotification(false);</span>
-                  }}
-                &gt;
-                  Unable to create model
-                &lt;/Notification&gt;
-              &lt;/div&gt;
-            )}
-            &lt;Row&gt;
-              &lt;Col size={6}&gt;
-                &lt;Filter
-                  state={modelsListFilterState}
-                  label="Search models"
-                  placeholder="Search models"
-                /&gt;
-              &lt;/Col&gt;
-              &lt;Col size={6} className="u-align--right"&gt;
-                &lt;Link
-                  className="p-button--positive"
-                  to={`/admin/${id}/models/create`}
-                &gt;
-                  Create new model
-                &lt;/Link&gt;
-              &lt;/Col&gt;
-            &lt;/Row&gt;
-            &lt;div className="u-fixed-width u-flex-column u-flex-grow"&gt;
-              &lt;div&gt;
-                {modelsIsError &amp;&amp; <span class="branch-1 cbranch-no" title="branch not covered" >modelsError instanceof Error &amp;&amp; (</span>
-<span class="branch-2 cbranch-no" title="branch not covered" >                  &lt;Notification severity="negative"&gt;</span>
-                    Error: {modelsError.message}
-                  &lt;/Notification&gt;
-                )}
-                {modelsIsLoading ? (
-<span class="branch-0 cbranch-no" title="branch not covered" >                  &lt;p&gt;</span>
-                    &lt;Icon name="spinner" className="u-animation--spin" /&gt;
-                    &amp;nbsp;Fetching models...
-                  &lt;/p&gt;
-                ) : (
-                  &lt;div className="u-flex-column u-flex-grow"&gt;
-                    &lt;ModelsTable /&gt;
-                  &lt;/div&gt;
-                )}
-              &lt;/div&gt;
-            &lt;/div&gt;
-          &lt;/div&gt;
+          )}
         &lt;/div&gt;
-      &lt;/main&gt;
-      &lt;div
-        className={`l-aside__overlay ${
-          isClosedPanel(location.pathname, "create") ? "u-hide" : ""
-        }`}
-        onClick={<span class="fstat-no" title="function not covered" >() =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >          navigate(`/admin/${id}/models`);</span>
-<span class="cstat-no" title="statement not covered" >          setShowErrorNotification(false);</span>
-<span class="cstat-no" title="statement not covered" >          setNewModel({ name: "", apiKey: "" });</span>
-        }}
-        onKeyDown={<span class="fstat-no" title="function not covered" >(e</span>) =&gt; {
-<span class="cstat-no" title="statement not covered" >          if (e.key === "Enter" || e.key === " ") {</span>
+      &lt;/div&gt;
+&nbsp;
+      &lt;PortalEntrance name="notification"&gt;
+        {showNotification &amp;&amp; (
+<span class="branch-1 cbranch-no" title="branch not covered" >          &lt;div className="u-fixed-width"&gt;</span>
+            &lt;Notification
+              severity="positive"
+              onDismiss={<span class="fstat-no" title="function not covered" >() =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >                setShowNotification(false);</span>
+              }}
+            &gt;
+              New model created
+            &lt;/Notification&gt;
+          &lt;/div&gt;
+        )}
+        {showErrorNotification &amp;&amp; (
+<span class="branch-1 cbranch-no" title="branch not covered" >          &lt;div className="u-fixed-width"&gt;</span>
+            &lt;Notification
+              severity="negative"
+              onDismiss={<span class="fstat-no" title="function not covered" >() =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >                setShowErrorNotification(false);</span>
+              }}
+            &gt;
+              Unable to create model
+            &lt;/Notification&gt;
+          &lt;/div&gt;
+        )}
+      &lt;/PortalEntrance&gt;
+&nbsp;
+      &lt;PortalEntrance name="aside"&gt;
+        &lt;div
+          className={`l-aside__overlay ${
+            isClosedPanel(location.pathname, "create") ? "u-hide" : ""
+          }`}
+          onClick={<span class="fstat-no" title="function not covered" >() =&gt; {</span>
 <span class="cstat-no" title="statement not covered" >            navigate(`/admin/${id}/models`);</span>
 <span class="cstat-no" title="statement not covered" >            setShowErrorNotification(false);</span>
 <span class="cstat-no" title="statement not covered" >            setNewModel({ name: "", apiKey: "" });</span>
-          }
-        }}
-        role="button"
-        tabIndex={0}
-        aria-label="Navigate to models page"
-      &gt;&lt;/div&gt;
-      &lt;aside
-        className={`l-aside ${
-          isClosedPanel(location.pathname, "create") ? "is-collapsed" : ""
-        }`}
-      &gt;
-        &lt;CreateModelForm
-          setShowNotification={setShowNotification}
-          setShowErrorNotification={setShowErrorNotification}
-        /&gt;
-      &lt;/aside&gt;
-    &lt;/div&gt;
+          }}
+          onKeyDown={<span class="fstat-no" title="function not covered" >(e</span>) =&gt; {
+<span class="cstat-no" title="statement not covered" >            if (e.key === "Enter" || e.key === " ") {</span>
+<span class="cstat-no" title="statement not covered" >              navigate(`/admin/${id}/models`);</span>
+<span class="cstat-no" title="statement not covered" >              setShowErrorNotification(false);</span>
+<span class="cstat-no" title="statement not covered" >              setNewModel({ name: "", apiKey: "" });</span>
+            }
+          }}
+          role="button"
+          tabIndex={0}
+          aria-label="Navigate to models page"
+        &gt;&lt;/div&gt;
+        &lt;aside
+          className={`l-aside ${
+            isClosedPanel(location.pathname, "create") ? "is-collapsed" : ""
+          }`}
+        &gt;
+          &lt;CreateModelForm
+            setShowNotification={setShowNotification}
+            setShowErrorNotification={setShowErrorNotification}
+          /&gt;
+        &lt;/aside&gt;
+      &lt;/PortalEntrance&gt;
+    &lt;/&gt;
   );
 }
 &nbsp;
@@ -607,7 +604,7 @@ export default Models;
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-10-16T22:04:46.771Z
+                at 2025-10-17T22:05:06.933Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>

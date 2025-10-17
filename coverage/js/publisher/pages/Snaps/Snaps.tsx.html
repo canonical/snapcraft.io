@@ -709,19 +709,7 @@
 <a name='L644'></a><a href='#L644'>644</a>
 <a name='L645'></a><a href='#L645'>645</a>
 <a name='L646'></a><a href='#L646'>646</a>
-<a name='L647'></a><a href='#L647'>647</a>
-<a name='L648'></a><a href='#L648'>648</a>
-<a name='L649'></a><a href='#L649'>649</a>
-<a name='L650'></a><a href='#L650'>650</a>
-<a name='L651'></a><a href='#L651'>651</a>
-<a name='L652'></a><a href='#L652'>652</a>
-<a name='L653'></a><a href='#L653'>653</a>
-<a name='L654'></a><a href='#L654'>654</a>
-<a name='L655'></a><a href='#L655'>655</a>
-<a name='L656'></a><a href='#L656'>656</a>
-<a name='L657'></a><a href='#L657'>657</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L647'></a><a href='#L647'>647</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1112,17 +1100,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1190,7 +1168,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1296,14 +1273,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1323,6 +1292,16 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1359,6 +1338,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1398,13 +1378,11 @@ import ReviewerAndPublisher from "../ReviewerAndPublisher";
 import SnapsFilter from "./SnapsFilter";
 import SnapsSearch from "./SnapsSearch";
 import StoreNotFound from "../StoreNotFound";
-import Navigation from "../../components/Navigation";
 import PublishedSnapsTable from "./PublishedSnapsTable";
 import IncludedSnapsTable from "./IncludedSnapsTable";
-&nbsp;
 import { setPageTitle } from "../../utils";
-&nbsp;
 import type { Store, Snap, SnapsList, Member } from "../../types/shared";
+import { PortalEntrance } from "../Portals/Portals";
 &nbsp;
 function Snaps() {
   const { id } = useParams();
@@ -1703,252 +1681,242 @@ function Snaps() {
   }, [currentStore, id]);
 &nbsp;
   return (
-    &lt;div className="l-application" role="presentation"&gt;
-      &lt;Navigation /&gt;
-      &lt;main className="l-main"&gt;
-        &lt;div className="p-panel"&gt;
-          &lt;div className="p-panel__content"&gt;
-            {snapsLoading &amp;&amp; membersLoading ? (
+    &lt;&gt;
+      {snapsLoading &amp;&amp; membersLoading ? (
+        &lt;div className="u-fixed-width"&gt;
+          &lt;Spinner text="Loading&amp;hellip;" /&gt;
+        &lt;/div&gt;
+      ) : currentStore &amp;&amp; isReviewerAndPublisherOnly ? (
+<span class="branch-0 cbranch-no" title="branch not covered" >        &lt;ReviewerAndPublisher /&gt;</span>
+      ) : currentStore &amp;&amp; isReviewerOnly ? (
+<span class="branch-0 cbranch-no" title="branch not covered" >        &lt;Reviewer /&gt;</span>
+      ) : currentStore &amp;&amp; isPublisherOnly ? (
+<span class="branch-0 cbranch-no" title="branch not covered" >        &lt;Publisher /&gt;</span>
+      ) : !snapsLoading &amp;&amp; !snaps ? (
+<span class="branch-0 cbranch-no" title="branch not covered" >        &lt;StoreNotFound /&gt;</span>
+      ) : (
+        &lt;&gt;
+          {!isReloading &amp;&amp; (
+            &lt;&gt;
               &lt;div className="u-fixed-width"&gt;
-                &lt;Spinner text="Loading&amp;hellip;" /&gt;
+                &lt;h1 className="p-heading--4"&gt;
+                  {getStoreName(id || <span class="branch-1 cbranch-no" title="branch not covered" >"")</span>} / Store snaps
+                &lt;/h1&gt;
               &lt;/div&gt;
-            ) : currentStore &amp;&amp; isReviewerAndPublisherOnly ? (
-<span class="branch-0 cbranch-no" title="branch not covered" >              &lt;ReviewerAndPublisher /&gt;</span>
-            ) : currentStore &amp;&amp; isReviewerOnly ? (
-<span class="branch-0 cbranch-no" title="branch not covered" >              &lt;Reviewer /&gt;</span>
-            ) : currentStore &amp;&amp; isPublisherOnly ? (
-<span class="branch-0 cbranch-no" title="branch not covered" >              &lt;Publisher /&gt;</span>
-            ) : !snapsLoading &amp;&amp; !snaps ? (
-<span class="branch-0 cbranch-no" title="branch not covered" >              &lt;StoreNotFound /&gt;</span>
-            ) : (
+              &lt;Row&gt;
+                &lt;Col size={8}&gt;
+                  &lt;SnapsFilter
+                    setSnapsInStore={setSnapsInStore}
+                    snapsInStore={snapsInStore}
+                    setOtherStores={setOtherStores}
+                    otherStoreIds={otherStoreIds}
+                    getStoreName={getStoreName}
+                    snaps={snaps}
+                    id={id || <span class="branch-1 cbranch-no" title="branch not covered" >""}</span>
+                  /&gt;
+                &lt;/Col&gt;
+              &lt;/Row&gt;
+            &lt;/&gt;
+          )}
+          &lt;div className="u-fixed-width"&gt;
+            {isReloading &amp;&amp; &lt;Spinner text="Loading&amp;hellip;" /&gt;}
+&nbsp;
+            {!isReloading &amp;&amp; currentStore &amp;&amp; (
               &lt;&gt;
-                {!isReloading &amp;&amp; (
-                  &lt;&gt;
-                    &lt;div className="u-fixed-width"&gt;
-                      &lt;h1 className="p-heading--4"&gt;
-                        {getStoreName(id || <span class="branch-1 cbranch-no" title="branch not covered" >"")</span>} / Store snaps
-                      &lt;/h1&gt;
+                &lt;Accordion
+                  className="accordion-bold-titles"
+                  sections={[
+                    {
+                      key: "published-snaps",
+                      title:
+                        currentStore &amp;&amp; currentStore.name
+                          ? `Snaps published in ${currentStore.name}`
+                          : <span class="branch-1 cbranch-no" title="branch not covered" >"Published snaps",</span>
+                      content: (
+                        &lt;PublishedSnapsTable snapsInStore={snapsInStore} /&gt;
+                      ),
+                    },
+                  ]}
+                  expanded="published-snaps"
+                /&gt;
+                &lt;hr className="u-no-margin--bottom" /&gt;
+                &lt;div className="accordion-actions"&gt;
+                  {!isOnlyViewer() &amp;&amp; (
+                    &lt;div className="accordion-actions__row u-align--right"&gt;
+                      &lt;Button
+                        disabled={snapsToRemove.length &lt; 1 || <span class="branch-1 cbranch-no" title="branch not covered" >removeSnapSaving}</span>
+                        onClick={<span class="fstat-no" title="function not covered" >() =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >                          setShowRemoveSnapsConfirmation(true);</span>
+                        }}
+                        className={
+                          removeSnapSaving ? <span class="branch-0 cbranch-no" title="branch not covered" >"has-icon is-dense" : "</span>is-dense"
+                        }
+                      &gt;
+                        {removeSnapSaving ? (
+<span class="branch-0 cbranch-no" title="branch not covered" >                          &lt;&gt;</span>
+                            &lt;i className="p-icon--spinner u-animation--spin"&gt;&lt;/i&gt;
+                            &lt;span&gt;Saving...&lt;/span&gt;
+                          &lt;/&gt;
+                        ) : snapsToRemove.length &gt; 1 ? (
+<span class="branch-0 cbranch-no" title="branch not covered" >                          "Exclude snaps"</span>
+                        ) : (
+                          "Exclude snap"
+                        )}
+                      &lt;/Button&gt;
+                      &lt;Button
+                        onClick={<span class="fstat-no" title="function not covered" >() =&gt; <span class="cstat-no" title="statement not covered" >s</span>etSidePanelOpen(true)}</span>
+                        appearance="positive"
+                        className="u-no-margin--right is-dense"
+                      &gt;
+                        Include snap
+                      &lt;/Button&gt;
                     &lt;/div&gt;
-                    &lt;Row&gt;
-                      &lt;Col size={8}&gt;
-                        &lt;SnapsFilter
-                          setSnapsInStore={setSnapsInStore}
-                          snapsInStore={snapsInStore}
-                          setOtherStores={setOtherStores}
-                          otherStoreIds={otherStoreIds}
-                          getStoreName={getStoreName}
-                          snaps={snaps}
-                          id={id || <span class="branch-1 cbranch-no" title="branch not covered" >""}</span>
-                        /&gt;
-                      &lt;/Col&gt;
-                    &lt;/Row&gt;
+                  )}
+                  &lt;Accordion
+                    className="accordion-bold-titles"
+                    sections={[
+                      {
+                        key: "included-snaps",
+                        title: "Included snaps",
+                        content: (
+                          &lt;IncludedSnapsTable
+                            otherStores={otherStores}
+                            globalStore={globalStore || <span class="branch-1 cbranch-no" title="branch not covered" >null}</span>
+                            getStoreName={getStoreName}
+                            isOnlyViewer={isOnlyViewer}
+                            snapsToRemove={snapsToRemove}
+                            setSnapsToRemove={setSnapsToRemove}
+                            nonEssentialSnapIds={nonEssentialSnapIds}
+                          /&gt;
+                        ),
+                      },
+                    ]}
+                    expanded="included-snaps"
+                  /&gt;
+                &lt;/div&gt;
+                {!!includedStores.length &amp;&amp; <span class="branch-1 cbranch-no" title="branch not covered" >!isReloading &amp;&amp; (</span>
+<span class="branch-2 cbranch-no" title="branch not covered" >                  &lt;&gt;</span>
+                    &lt;hr className="u-no-margin--bottom" /&gt;
+                    &lt;Accordion
+                      className="accordion-bold-titles"
+                      sections={[
+                        {
+                          key: "included-stores",
+                          title: `Fully included stores (${includedStores.length})`,
+                          content: (
+                            &lt;div className="u-fixed-width"&gt;
+                              &lt;h4&gt;Fully included stores&lt;/h4&gt;
+                              &lt;p&gt;
+                                In addition to the snaps listed above, all snaps
+                                from the following stores are also included in{" "}
+                                {getStoreName(id || "")}.
+                              &lt;/p&gt;
+                              &lt;ul&gt;
+                                {includedStores.map(<span class="fstat-no" title="function not covered" >(s</span>tore: Store) =&gt; (
+<span class="cstat-no" title="statement not covered" >                                  &lt;li key={store?.includedStore?.id}&gt;</span>
+                                    {store.userHasAccess ? (
+                                      &lt;Link
+                                        to={`/admin/${store?.includedStore?.id}/snaps`}
+                                      &gt;
+                                        {store?.includedStore?.name}
+                                      &lt;/Link&gt;
+                                    ) : (
+                                      &lt;&gt;
+                                        {store?.includedStore?.name} (
+                                        {store?.includedStore?.id})
+                                      &lt;/&gt;
+                                    )}
+                                  &lt;/li&gt;
+                                ))}
+                              &lt;/ul&gt;
+                            &lt;/div&gt;
+                          ),
+                        },
+                      ]}
+                    /&gt;
                   &lt;/&gt;
                 )}
-                &lt;div className="u-fixed-width"&gt;
-                  {isReloading &amp;&amp; &lt;Spinner text="Loading&amp;hellip;" /&gt;}
-&nbsp;
-                  {!isReloading &amp;&amp; currentStore &amp;&amp; (
-                    &lt;&gt;
-                      &lt;Accordion
-                        className="accordion-bold-titles"
-                        sections={[
-                          {
-                            key: "published-snaps",
-                            title:
-                              currentStore &amp;&amp; currentStore.name
-                                ? `Snaps published in ${currentStore.name}`
-                                : <span class="branch-1 cbranch-no" title="branch not covered" >"Published snaps",</span>
-                            content: (
-                              &lt;PublishedSnapsTable
-                                snapsInStore={snapsInStore}
-                              /&gt;
-                            ),
-                          },
-                        ]}
-                        expanded="published-snaps"
-                      /&gt;
-                      &lt;hr className="u-no-margin--bottom" /&gt;
-                      &lt;div className="accordion-actions"&gt;
-                        {!isOnlyViewer() &amp;&amp; (
-                          &lt;div className="accordion-actions__row u-align--right"&gt;
-                            &lt;Button
-                              disabled={
-                                snapsToRemove.length &lt; 1 || <span class="branch-1 cbranch-no" title="branch not covered" >removeSnapSaving</span>
-                              }
-                              onClick={<span class="fstat-no" title="function not covered" >() =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >                                setShowRemoveSnapsConfirmation(true);</span>
-                              }}
-                              className={
-                                removeSnapSaving
-                                  ? <span class="branch-0 cbranch-no" title="branch not covered" >"has-icon is-dense"</span>
-                                  : "is-dense"
-                              }
-                            &gt;
-                              {removeSnapSaving ? (
-<span class="branch-0 cbranch-no" title="branch not covered" >                                &lt;&gt;</span>
-                                  &lt;i className="p-icon--spinner u-animation--spin"&gt;&lt;/i&gt;
-                                  &lt;span&gt;Saving...&lt;/span&gt;
-                                &lt;/&gt;
-                              ) : snapsToRemove.length &gt; 1 ? (
-<span class="branch-0 cbranch-no" title="branch not covered" >                                "Exclude snaps"</span>
-                              ) : (
-                                "Exclude snap"
-                              )}
-                            &lt;/Button&gt;
-                            &lt;Button
-                              onClick={<span class="fstat-no" title="function not covered" >() =&gt; <span class="cstat-no" title="statement not covered" >s</span>etSidePanelOpen(true)}</span>
-                              appearance="positive"
-                              className="u-no-margin--right is-dense"
-                            &gt;
-                              Include snap
-                            &lt;/Button&gt;
-                          &lt;/div&gt;
-                        )}
-                        &lt;Accordion
-                          className="accordion-bold-titles"
-                          sections={[
-                            {
-                              key: "included-snaps",
-                              title: "Included snaps",
-                              content: (
-                                &lt;IncludedSnapsTable
-                                  otherStores={otherStores}
-                                  globalStore={globalStore || <span class="branch-1 cbranch-no" title="branch not covered" >null}</span>
-                                  getStoreName={getStoreName}
-                                  isOnlyViewer={isOnlyViewer}
-                                  snapsToRemove={snapsToRemove}
-                                  setSnapsToRemove={setSnapsToRemove}
-                                  nonEssentialSnapIds={nonEssentialSnapIds}
-                                /&gt;
-                              ),
-                            },
-                          ]}
-                          expanded="included-snaps"
-                        /&gt;
-                      &lt;/div&gt;
-                      {!!includedStores.length &amp;&amp; <span class="branch-1 cbranch-no" title="branch not covered" >!isReloading &amp;&amp; (</span>
-<span class="branch-2 cbranch-no" title="branch not covered" >                        &lt;&gt;</span>
-                          &lt;hr className="u-no-margin--bottom" /&gt;
-                          &lt;Accordion
-                            className="accordion-bold-titles"
-                            sections={[
-                              {
-                                key: "included-stores",
-                                title: `Fully included stores (${includedStores.length})`,
-                                content: (
-                                  &lt;div className="u-fixed-width"&gt;
-                                    &lt;h4&gt;Fully included stores&lt;/h4&gt;
-                                    &lt;p&gt;
-                                      In addition to the snaps listed above, all
-                                      snaps from the following stores are also
-                                      included in {getStoreName(id || "")}.
-                                    &lt;/p&gt;
-                                    &lt;ul&gt;
-                                      {includedStores.map(<span class="fstat-no" title="function not covered" >(s</span>tore: Store) =&gt; (
-<span class="cstat-no" title="statement not covered" >                                        &lt;li key={store?.includedStore?.id}&gt;</span>
-                                          {store.userHasAccess ? (
-                                            &lt;Link
-                                              to={`/admin/${store?.includedStore?.id}/snaps`}
-                                            &gt;
-                                              {store?.includedStore?.name}
-                                            &lt;/Link&gt;
-                                          ) : (
-                                            &lt;&gt;
-                                              {store?.includedStore?.name} (
-                                              {store?.includedStore?.id})
-                                            &lt;/&gt;
-                                          )}
-                                        &lt;/li&gt;
-                                      ))}
-                                    &lt;/ul&gt;
-                                  &lt;/div&gt;
-                                ),
-                              },
-                            ]}
-                          /&gt;
-                        &lt;/&gt;
-                      )}
-                    &lt;/&gt;
-                  )}
-                &lt;/div&gt;
               &lt;/&gt;
             )}
           &lt;/div&gt;
-        &lt;/div&gt;
-      &lt;/main&gt;
-      &lt;div
-        className={`l-aside__overlay ${sidePanelOpen ? <span class="branch-0 cbranch-no" title="branch not covered" >"" : "</span>u-hide"}`}
-        onClick={<span class="fstat-no" title="function not covered" >() =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >          setSidePanelOpen(false);</span>
-        }}
-        onKeyDown={<span class="fstat-no" title="function not covered" >(e</span>) =&gt; {
-<span class="cstat-no" title="statement not covered" >          if (e.key == "Enter" || e.key == " ") {</span>
+        &lt;/&gt;
+      )}
+&nbsp;
+      &lt;PortalEntrance name="aside"&gt;
+        &lt;div
+          className={`l-aside__overlay ${sidePanelOpen ? <span class="branch-0 cbranch-no" title="branch not covered" >"" : "</span>u-hide"}`}
+          onClick={<span class="fstat-no" title="function not covered" >() =&gt; {</span>
 <span class="cstat-no" title="statement not covered" >            setSidePanelOpen(false);</span>
-          }
-        }}
-        role="button"
-        tabIndex={0}
-        aria-label="Close side panel"
-      &gt;&lt;/div&gt;
-      &lt;aside
-        className={`l-aside ${sidePanelOpen ? <span class="branch-0 cbranch-no" title="branch not covered" >"" : "</span>is-collapsed"}`}
-        id="aside-panel"
-      &gt;
-        &lt;div className="p-panel is-flex-column"&gt;
-          &lt;div className="p-panel__header"&gt;
-            &lt;h4 className="p-panel__title"&gt;
-              Add a snap to {getStoreName(id || <span class="branch-1 cbranch-no" title="branch not covered" >"")</span>}
-            &lt;/h4&gt;
-          &lt;/div&gt;
-          &lt;div className="p-panel__content u-no-padding--top"&gt;
-            &lt;div className="u-fixed-width"&gt;
-              &lt;SnapsSearch
-                selectedSnaps={selectedSnaps}
-                setSelectedSnaps={setSelectedSnaps}
-                storeId={id || <span class="branch-1 cbranch-no" title="branch not covered" >""}</span>
-                nonEssentialSnapIds={nonEssentialSnapIds}
-              /&gt;
+          }}
+          onKeyDown={<span class="fstat-no" title="function not covered" >(e</span>) =&gt; {
+<span class="cstat-no" title="statement not covered" >            if (e.key == "Enter" || e.key == " ") {</span>
+<span class="cstat-no" title="statement not covered" >              setSidePanelOpen(false);</span>
+            }
+          }}
+          role="button"
+          tabIndex={0}
+          aria-label="Close side panel"
+        &gt;&lt;/div&gt;
+        &lt;aside
+          className={`l-aside ${sidePanelOpen ? <span class="branch-0 cbranch-no" title="branch not covered" >"" : "</span>is-collapsed"}`}
+          id="aside-panel"
+        &gt;
+          &lt;div className="p-panel is-flex-column"&gt;
+            &lt;div className="p-panel__header"&gt;
+              &lt;h4 className="p-panel__title"&gt;
+                Add a snap to {getStoreName(id || <span class="branch-1 cbranch-no" title="branch not covered" >"")</span>}
+              &lt;/h4&gt;
+            &lt;/div&gt;
+            &lt;div className="p-panel__content u-no-padding--top"&gt;
+              &lt;div className="u-fixed-width"&gt;
+                &lt;SnapsSearch
+                  selectedSnaps={selectedSnaps}
+                  setSelectedSnaps={setSelectedSnaps}
+                  storeId={id || <span class="branch-1 cbranch-no" title="branch not covered" >""}</span>
+                  nonEssentialSnapIds={nonEssentialSnapIds}
+                /&gt;
+              &lt;/div&gt;
+            &lt;/div&gt;
+            &lt;div className="p-panel__footer u-align--right"&gt;
+              &lt;div className="u-fixed-width"&gt;
+                &lt;Button
+                  onClick={<span class="fstat-no" title="function not covered" >() =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >                    setSidePanelOpen(false);</span>
+<span class="cstat-no" title="statement not covered" >                    setSelectedSnaps([]);</span>
+                  }}
+                &gt;
+                  Cancel
+                &lt;/Button&gt;
+&nbsp;
+                &lt;Button
+                  appearance="positive"
+                  disabled={selectedSnaps.length &lt; 1 || <span class="branch-1 cbranch-no" title="branch not covered" >isSaving}</span>
+                  onClick={<span class="fstat-no" title="function not covered" >(e</span>) =&gt; {
+<span class="cstat-no" title="statement not covered" >                    e.preventDefault();</span>
+<span class="cstat-no" title="statement not covered" >                    addSnaps();</span>
+                  }}
+                  className={`u-no-margin--right ${
+                    isSaving ? <span class="branch-0 cbranch-no" title="branch not covered" >"has-icon is-dark" : "</span>"
+                  }`}
+                &gt;
+                  {isSaving ? (
+<span class="branch-0 cbranch-no" title="branch not covered" >                    &lt;&gt;</span>
+                      &lt;i className="p-icon--spinner is-light u-animation--spin"&gt;&lt;/i&gt;
+                      &lt;span&gt;Saving...&lt;/span&gt;
+                    &lt;/&gt;
+                  ) : selectedSnaps.length &lt;= 1 ? (
+                    "Add snap"
+                  ) : (
+<span class="branch-1 cbranch-no" title="branch not covered" >                    "Add snaps"</span>
+                  )}
+                &lt;/Button&gt;
+              &lt;/div&gt;
             &lt;/div&gt;
           &lt;/div&gt;
-          &lt;div className="p-panel__footer u-align--right"&gt;
-            &lt;div className="u-fixed-width"&gt;
-              &lt;Button
-                onClick={<span class="fstat-no" title="function not covered" >() =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >                  setSidePanelOpen(false);</span>
-<span class="cstat-no" title="statement not covered" >                  setSelectedSnaps([]);</span>
-                }}
-              &gt;
-                Cancel
-              &lt;/Button&gt;
+        &lt;/aside&gt;
+      &lt;/PortalEntrance&gt;
 &nbsp;
-              &lt;Button
-                appearance="positive"
-                disabled={selectedSnaps.length &lt; 1 || <span class="branch-1 cbranch-no" title="branch not covered" >isSaving}</span>
-                onClick={<span class="fstat-no" title="function not covered" >(e</span>) =&gt; {
-<span class="cstat-no" title="statement not covered" >                  e.preventDefault();</span>
-<span class="cstat-no" title="statement not covered" >                  addSnaps();</span>
-                }}
-                className={`u-no-margin--right ${
-                  isSaving ? <span class="branch-0 cbranch-no" title="branch not covered" >"has-icon is-dark" : "</span>"
-                }`}
-              &gt;
-                {isSaving ? (
-<span class="branch-0 cbranch-no" title="branch not covered" >                  &lt;&gt;</span>
-                    &lt;i className="p-icon--spinner is-light u-animation--spin"&gt;&lt;/i&gt;
-                    &lt;span&gt;Saving...&lt;/span&gt;
-                  &lt;/&gt;
-                ) : selectedSnaps.length &lt;= 1 ? (
-                  "Add snap"
-                ) : (
-<span class="branch-1 cbranch-no" title="branch not covered" >                  "Add snaps"</span>
-                )}
-              &lt;/Button&gt;
-            &lt;/div&gt;
-          &lt;/div&gt;
-        &lt;/div&gt;
-      &lt;/aside&gt;
-&nbsp;
-      &lt;div className="p-notification-center"&gt;
+      &lt;PortalEntrance name="notification"&gt;
         {showAddSuccessNotification &amp;&amp; (
 <span class="branch-1 cbranch-no" title="branch not covered" >          &lt;Notification</span>
             severity="positive"
@@ -1978,55 +1946,57 @@ function Snaps() {
             &lt;/a&gt;
           &lt;/Notification&gt;
         )}
-      &lt;/div&gt;
+      &lt;/PortalEntrance&gt;
 &nbsp;
-      {showRemoveSnapsConfirmation &amp;&amp; (
-<span class="branch-1 cbranch-no" title="branch not covered" >        &lt;Modal</span>
-          close={<span class="fstat-no" title="function not covered" >() =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >            setShowRemoveSnapsConfirmation(false);</span>
-          }}
-          title={`Exclude ${
-            snapsToRemove.length &gt; 1 ? "snaps" : snapsToRemove[0].name
-          }`}
-          buttonRow={
-            &lt;&gt;
-              &lt;Button
-                className="u-no-margin--bottom"
-                onClick={<span class="fstat-no" title="function not covered" >() =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >                  setShowRemoveSnapsConfirmation(false);</span>
-                }}
-              &gt;
-                Cancel
-              &lt;/Button&gt;
-              &lt;Button
-                className="u-no-margin--bottom u-no-margin--right"
-                appearance="positive"
-                onClick={<span class="fstat-no" title="function not covered" >() =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >                  setShowRemoveSnapsConfirmation(false);</span>
-<span class="cstat-no" title="statement not covered" >                  removeSnaps();</span>
-                }}
-              &gt;
-                Exclude snap{snapsToRemove.length &gt; 1 ? "s" : ""}
-              &lt;/Button&gt;
-            &lt;/&gt;
-          }
-        &gt;
-          {snapsToRemove.length &gt; 1 &amp;&amp; (
-            &lt;ul&gt;
-              {snapsToRemove.map(<span class="fstat-no" title="function not covered" >(s</span>napToRemove: Snap) =&gt; (
-<span class="cstat-no" title="statement not covered" >                &lt;li key={snapToRemove.id}&gt;</span>
-                  &lt;strong&gt;{snapToRemove.name}&lt;/strong&gt;
-                &lt;/li&gt;
-              ))}
-            &lt;/ul&gt;
-          )}
-          &lt;p&gt;
-            {snapsToRemove.length &gt; 1 ? "These snaps" : "This snap"} can still
-            be included again in this store.
-          &lt;/p&gt;
-        &lt;/Modal&gt;
-      )}
-    &lt;/div&gt;
+      &lt;PortalEntrance name="modal"&gt;
+        {showRemoveSnapsConfirmation &amp;&amp; (
+<span class="branch-1 cbranch-no" title="branch not covered" >          &lt;Modal</span>
+            close={<span class="fstat-no" title="function not covered" >() =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >              setShowRemoveSnapsConfirmation(false);</span>
+            }}
+            title={`Exclude ${
+              snapsToRemove.length &gt; 1 ? "snaps" : snapsToRemove[0].name
+            }`}
+            buttonRow={
+              &lt;&gt;
+                &lt;Button
+                  className="u-no-margin--bottom"
+                  onClick={<span class="fstat-no" title="function not covered" >() =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >                    setShowRemoveSnapsConfirmation(false);</span>
+                  }}
+                &gt;
+                  Cancel
+                &lt;/Button&gt;
+                &lt;Button
+                  className="u-no-margin--bottom u-no-margin--right"
+                  appearance="positive"
+                  onClick={<span class="fstat-no" title="function not covered" >() =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >                    setShowRemoveSnapsConfirmation(false);</span>
+<span class="cstat-no" title="statement not covered" >                    removeSnaps();</span>
+                  }}
+                &gt;
+                  Exclude snap{snapsToRemove.length &gt; 1 ? "s" : ""}
+                &lt;/Button&gt;
+              &lt;/&gt;
+            }
+          &gt;
+            {snapsToRemove.length &gt; 1 &amp;&amp; (
+              &lt;ul&gt;
+                {snapsToRemove.map(<span class="fstat-no" title="function not covered" >(s</span>napToRemove: Snap) =&gt; (
+<span class="cstat-no" title="statement not covered" >                  &lt;li key={snapToRemove.id}&gt;</span>
+                    &lt;strong&gt;{snapToRemove.name}&lt;/strong&gt;
+                  &lt;/li&gt;
+                ))}
+              &lt;/ul&gt;
+            )}
+            &lt;p&gt;
+              {snapsToRemove.length &gt; 1 ? "These snaps" : "This snap"} can still
+              be included again in this store.
+            &lt;/p&gt;
+          &lt;/Modal&gt;
+        )}
+      &lt;/PortalEntrance&gt;
+    &lt;/&gt;
   );
 }
 &nbsp;
@@ -2038,7 +2008,7 @@ export default Snaps;
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-10-16T22:04:46.771Z
+                at 2025-10-17T22:05:06.933Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>

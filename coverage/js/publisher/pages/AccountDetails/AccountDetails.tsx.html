@@ -331,25 +331,7 @@
 <a name='L266'></a><a href='#L266'>266</a>
 <a name='L267'></a><a href='#L267'>267</a>
 <a name='L268'></a><a href='#L268'>268</a>
-<a name='L269'></a><a href='#L269'>269</a>
-<a name='L270'></a><a href='#L270'>270</a>
-<a name='L271'></a><a href='#L271'>271</a>
-<a name='L272'></a><a href='#L272'>272</a>
-<a name='L273'></a><a href='#L273'>273</a>
-<a name='L274'></a><a href='#L274'>274</a>
-<a name='L275'></a><a href='#L275'>275</a>
-<a name='L276'></a><a href='#L276'>276</a>
-<a name='L277'></a><a href='#L277'>277</a>
-<a name='L278'></a><a href='#L278'>278</a>
-<a name='L279'></a><a href='#L279'>279</a>
-<a name='L280'></a><a href='#L280'>280</a>
-<a name='L281'></a><a href='#L281'>281</a>
-<a name='L282'></a><a href='#L282'>282</a>
-<a name='L283'></a><a href='#L283'>283</a>
-<a name='L284'></a><a href='#L284'>284</a>
-<a name='L285'></a><a href='#L285'>285</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L269'></a><a href='#L269'>269</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -414,10 +396,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -431,9 +409,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -568,7 +543,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -578,9 +552,6 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -607,9 +578,6 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -642,8 +610,6 @@ import {
   Notification,
   ThemeSwitcher,
 } from "@canonical/react-components";
-&nbsp;
-import Navigation from "../../components/Navigation";
 &nbsp;
 import { publisherState } from "../../state/publisherState";
 &nbsp;
@@ -691,226 +657,212 @@ function AccountDetails(): React.JSX.Element {
   };
 &nbsp;
   return (
-    &lt;div className="l-application" role="presentation"&gt;
-      &lt;Navigation /&gt;
-      &lt;main className="l-main"&gt;
-        &lt;div className="p-panel"&gt;
-          &lt;div className="p-panel__content"&gt;
-            &lt;div className="u-fixed-width"&gt;
-              {showSuccessMessage &amp;&amp; (
-<span class="branch-1 cbranch-no" title="branch not covered" >                &lt;Notification</span>
-                  severity="positive"
-                  title="Success"
-                  onDismiss={<span class="fstat-no" title="function not covered" >() =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >                    setShowSuccessMessage(false);</span>
-                  }}
-                &gt;
-                  Changes applied successfully
-                &lt;/Notification&gt;
-              )}
+    &lt;&gt;
+      &lt;div className="u-fixed-width"&gt;
+        {showSuccessMessage &amp;&amp; (
+<span class="branch-1 cbranch-no" title="branch not covered" >          &lt;Notification</span>
+            severity="positive"
+            title="Success"
+            onDismiss={<span class="fstat-no" title="function not covered" >() =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >              setShowSuccessMessage(false);</span>
+            }}
+          &gt;
+            Changes applied successfully
+          &lt;/Notification&gt;
+        )}
 &nbsp;
-              {showErrorMessage &amp;&amp; (
-<span class="branch-1 cbranch-no" title="branch not covered" >                &lt;Notification</span>
-                  severity="negative"
-                  title="Error"
-                  onDismiss={<span class="fstat-no" title="function not covered" >() =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >                    setShowErrorMessage(false);</span>
-                  }}
-                &gt;
-                  There was an error, please try again
-                &lt;/Notification&gt;
-              )}
-            &lt;/div&gt;
+        {showErrorMessage &amp;&amp; (
+<span class="branch-1 cbranch-no" title="branch not covered" >          &lt;Notification</span>
+            severity="negative"
+            title="Error"
+            onDismiss={<span class="fstat-no" title="function not covered" >() =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >              setShowErrorMessage(false);</span>
+            }}
+          &gt;
+            There was an error, please try again
+          &lt;/Notification&gt;
+        )}
+      &lt;/div&gt;
 &nbsp;
-            {!publisher ? (
-<span class="branch-0 cbranch-no" title="branch not covered" >              &lt;div className="u-fixed-width"&gt;</span>
-                &lt;Icon name="spinner" className="u-animation--spin" /&gt;
-                &amp;nbsp;Loading...
-              &lt;/div&gt;
-            ) : (
-              &lt;&gt;
-                &lt;Row&gt;
-                  &lt;Col size={6}&gt;
-                    &lt;h2 className="p-heading--4"&gt;Account details&lt;/h2&gt;
-                  &lt;/Col&gt;
-                  &lt;Col size={6} className="u-align--right"&gt;
-                    &lt;a
-                      className="p-button has-icon"
-                      href="https://login.ubuntu.com"
-                    &gt;
-                      &lt;Icon name="edit" /&gt;
-                      &lt;span&gt;Edit details&lt;/span&gt;
-                    &lt;/a&gt;
-                  &lt;/Col&gt;
-                &lt;/Row&gt;
-                &lt;Row&gt;
-                  &lt;Col size={3}&gt;
-                    &lt;p&gt;Full name&lt;/p&gt;
-                  &lt;/Col&gt;
-                  &lt;Col size={3}&gt;
-                    &lt;p&gt;{publisher &amp;&amp; publisher?.fullname}&lt;/p&gt;
-                  &lt;/Col&gt;
-                  &lt;Col size={6}&gt;
-                    &lt;p className="u-text-muted"&gt;
-                      Who your users will see as the publisher of your snap.
-                    &lt;/p&gt;
-                  &lt;/Col&gt;
-                &lt;/Row&gt;
-                &lt;div className="u-fixed-width"&gt;
-                  &lt;hr /&gt;
-                &lt;/div&gt;
-                &lt;Row&gt;
-                  &lt;Col size={3}&gt;
-                    &lt;p&gt;Username&lt;/p&gt;
-                  &lt;/Col&gt;
-                  &lt;Col size={3}&gt;
-                    &lt;p&gt;{publisher &amp;&amp; publisher?.nickname}&lt;/p&gt;
-                  &lt;/Col&gt;
-                  &lt;Col size={6}&gt;
-                    &lt;p className="u-text-muted"&gt;
-                      This is a shorthand version of your name, used when space
-                      on screen is limited.
-                    &lt;/p&gt;
-                  &lt;/Col&gt;
-                &lt;/Row&gt;
-                &lt;div className="u-fixed-width"&gt;
-                  &lt;hr /&gt;
-                &lt;/div&gt;
-                &lt;Row&gt;
-                  &lt;Col size={3}&gt;
-                    &lt;p&gt;Email address&lt;/p&gt;
-                  &lt;/Col&gt;
-                  &lt;Col size={3}&gt;
-                    &lt;p&gt;{publisher &amp;&amp; publisher?.email}&lt;/p&gt;
-                  &lt;/Col&gt;
-                  &lt;Col size={6}&gt;
-                    &lt;p className="u-text-muted"&gt;
-                      Your email address will not be shared publicly.
-                    &lt;/p&gt;
-                  &lt;/Col&gt;
-                &lt;/Row&gt;
-                &lt;div className="u-fixed-width"&gt;
-                  &lt;hr /&gt;
-                &lt;/div&gt;
-                &lt;Row&gt;
-                  &lt;Col size={3}&gt;
-                    &lt;p&gt;Theme&lt;/p&gt;
-                  &lt;/Col&gt;
-                  &lt;Col size={3}&gt;
-                    &lt;ThemeSwitcher /&gt;
-                  &lt;/Col&gt;
-                  &lt;Col size={6}&gt;
-                    &lt;p className="u-text-muted"&gt;
-                      Your preference of dark or light mode
-                    &lt;/p&gt;
-                  &lt;/Col&gt;
-                &lt;/Row&gt;
-                {publisher?.subscriptions &amp;&amp; (
-                  &lt;&gt;
-                    &lt;div className="u-fixed-width"&gt;
-                      &lt;hr /&gt;
-                    &lt;/div&gt;
-                    &lt;Row&gt;
-                      &lt;Col size={3}&gt;
-                        &lt;p&gt;Email preferences&lt;/p&gt;
-                      &lt;/Col&gt;
-                      &lt;Col size={3}&gt;
-                        &lt;CheckboxInput
-                          label="Blog posts delivered"
-                          defaultChecked={isChecked()}
-                          onChange={<span class="fstat-no" title="function not covered" >(</span>
-                            e: SyntheticEvent&lt;HTMLInputElement&gt; &amp; {
-                              target: HTMLInputElement;
-                            },
-                          ) =&gt; {
-<span class="cstat-no" title="statement not covered" >                            setSubscribeToNewsletter(e.target.checked);</span>
-<span class="cstat-no" title="statement not covered" >                            setSubscriptionPreferencesChanged(</span>
-                              hasChanged(e.target.checked),
-                            );
-                          }}
-                        /&gt;
-                      &lt;/Col&gt;
-                      &lt;Col size={6}&gt;
-                        &lt;p className="u-text-muted"&gt;
-                          Get our latest and greatest blog posts delivered to
-                          your inbox.
-                        &lt;/p&gt;
-                        &lt;hr /&gt;
-                        &lt;p className="u-text-muted"&gt;
-                          Please note, you will still recieve required platform
-                          related emails such as registration of snap names, the
-                          review status of a snap or any security
-                          vulnerabilities.
-                        &lt;/p&gt;
-                      &lt;/Col&gt;
-                    &lt;/Row&gt;
-                    &lt;div className="u-fixed-width"&gt;
-                      &lt;hr /&gt;
-                    &lt;/div&gt;
-                    &lt;div className="u-fixed-width"&gt;
-                      &lt;Button
-                        appearance="positive"
-                        className="has-icon"
-                        disabled={!subscriptionPreferencesChanged || <span class="branch-1 cbranch-no" title="branch not covered" >isSaving}</span>
-                        onClick={<span class="fstat-no" title="function not covered" >async () =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >                          setShowSuccessMessage(false);</span>
-<span class="cstat-no" title="statement not covered" >                          setShowErrorMessage(false);</span>
-<span class="cstat-no" title="statement not covered" >                          setIsSaving(true);</span>
-&nbsp;
-                          const data = <span class="cstat-no" title="statement not covered" >new FormData();</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >                          data.set("csrf_token", window.CSRF_TOKEN);</span>
-<span class="cstat-no" title="statement not covered" >                          data.set("email", publisher?.email || "");</span>
-<span class="cstat-no" title="statement not covered" >                          data.set(</span>
-                            "newsletter",
-                            subscribeToNewsletter ? "on" : "",
-                          );
-&nbsp;
-                          const response: Response = <span class="cstat-no" title="statement not covered" >await fetch(</span>
-                            "/account/publisher",
-                            {
-                              method: "POST",
-                              body: data,
-                            },
-                          );
-&nbsp;
-<span class="cstat-no" title="statement not covered" >                          if (!response.ok) {</span>
-<span class="cstat-no" title="statement not covered" >                            setShowErrorMessage(true);</span>
-<span class="cstat-no" title="statement not covered" >                            setIsSaving(false);</span>
-<span class="cstat-no" title="statement not covered" >                            throw new Error(</span>
-                              "There has been a problem saving newsletter preferences",
-                            );
-                          }
-&nbsp;
-                          const responseData = <span class="cstat-no" title="statement not covered" >await response.json();</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >                          if (responseData.success) {</span>
-<span class="cstat-no" title="statement not covered" >                            setShowSuccessMessage(true);</span>
-<span class="cstat-no" title="statement not covered" >                            setIsSaving(false);</span>
-                          } else {
-<span class="cstat-no" title="statement not covered" >                            setShowErrorMessage(true);</span>
-<span class="cstat-no" title="statement not covered" >                            setIsSaving(false);</span>
-<span class="cstat-no" title="statement not covered" >                            throw new Error(responseData.message);</span>
-                          }
-                        }}
-                      &gt;
-                        {isSaving &amp;&amp; (
-<span class="branch-1 cbranch-no" title="branch not covered" >                          &lt;Icon</span>
-                            name="spinner"
-                            className="u-animation--spin is-light"
-                          /&gt;
-                        )}
-                        &lt;span&gt;Save email preferences&lt;/span&gt;
-                      &lt;/Button&gt;
-                    &lt;/div&gt;
-                  &lt;/&gt;
-                )}
-              &lt;/&gt;
-            )}
-          &lt;/div&gt;
+      {!publisher ? (
+<span class="branch-0 cbranch-no" title="branch not covered" >        &lt;div className="u-fixed-width"&gt;</span>
+          &lt;Icon name="spinner" className="u-animation--spin" /&gt;
+          &amp;nbsp;Loading...
         &lt;/div&gt;
-      &lt;/main&gt;
-    &lt;/div&gt;
+      ) : (
+        &lt;&gt;
+          &lt;Row&gt;
+            &lt;Col size={6}&gt;
+              &lt;h2 className="p-heading--4"&gt;Account details&lt;/h2&gt;
+            &lt;/Col&gt;
+            &lt;Col size={6} className="u-align--right"&gt;
+              &lt;a className="p-button has-icon" href="https://login.ubuntu.com"&gt;
+                &lt;Icon name="edit" /&gt;
+                &lt;span&gt;Edit details&lt;/span&gt;
+              &lt;/a&gt;
+            &lt;/Col&gt;
+          &lt;/Row&gt;
+          &lt;Row&gt;
+            &lt;Col size={3}&gt;
+              &lt;p&gt;Full name&lt;/p&gt;
+            &lt;/Col&gt;
+            &lt;Col size={3}&gt;
+              &lt;p&gt;{publisher &amp;&amp; publisher?.fullname}&lt;/p&gt;
+            &lt;/Col&gt;
+            &lt;Col size={6}&gt;
+              &lt;p className="u-text-muted"&gt;
+                Who your users will see as the publisher of your snap.
+              &lt;/p&gt;
+            &lt;/Col&gt;
+          &lt;/Row&gt;
+          &lt;div className="u-fixed-width"&gt;
+            &lt;hr /&gt;
+          &lt;/div&gt;
+          &lt;Row&gt;
+            &lt;Col size={3}&gt;
+              &lt;p&gt;Username&lt;/p&gt;
+            &lt;/Col&gt;
+            &lt;Col size={3}&gt;
+              &lt;p&gt;{publisher &amp;&amp; publisher?.nickname}&lt;/p&gt;
+            &lt;/Col&gt;
+            &lt;Col size={6}&gt;
+              &lt;p className="u-text-muted"&gt;
+                This is a shorthand version of your name, used when space on
+                screen is limited.
+              &lt;/p&gt;
+            &lt;/Col&gt;
+          &lt;/Row&gt;
+          &lt;div className="u-fixed-width"&gt;
+            &lt;hr /&gt;
+          &lt;/div&gt;
+          &lt;Row&gt;
+            &lt;Col size={3}&gt;
+              &lt;p&gt;Email address&lt;/p&gt;
+            &lt;/Col&gt;
+            &lt;Col size={3}&gt;
+              &lt;p&gt;{publisher &amp;&amp; publisher?.email}&lt;/p&gt;
+            &lt;/Col&gt;
+            &lt;Col size={6}&gt;
+              &lt;p className="u-text-muted"&gt;
+                Your email address will not be shared publicly.
+              &lt;/p&gt;
+            &lt;/Col&gt;
+          &lt;/Row&gt;
+          &lt;div className="u-fixed-width"&gt;
+            &lt;hr /&gt;
+          &lt;/div&gt;
+          &lt;Row&gt;
+            &lt;Col size={3}&gt;
+              &lt;p&gt;Theme&lt;/p&gt;
+            &lt;/Col&gt;
+            &lt;Col size={3}&gt;
+              &lt;ThemeSwitcher /&gt;
+            &lt;/Col&gt;
+            &lt;Col size={6}&gt;
+              &lt;p className="u-text-muted"&gt;
+                Your preference of dark or light mode
+              &lt;/p&gt;
+            &lt;/Col&gt;
+          &lt;/Row&gt;
+          {publisher?.subscriptions &amp;&amp; (
+            &lt;&gt;
+              &lt;div className="u-fixed-width"&gt;
+                &lt;hr /&gt;
+              &lt;/div&gt;
+              &lt;Row&gt;
+                &lt;Col size={3}&gt;
+                  &lt;p&gt;Email preferences&lt;/p&gt;
+                &lt;/Col&gt;
+                &lt;Col size={3}&gt;
+                  &lt;CheckboxInput
+                    label="Blog posts delivered"
+                    defaultChecked={isChecked()}
+                    onChange={<span class="fstat-no" title="function not covered" >(</span>
+                      e: SyntheticEvent&lt;HTMLInputElement&gt; &amp; {
+                        target: HTMLInputElement;
+                      },
+                    ) =&gt; {
+<span class="cstat-no" title="statement not covered" >                      setSubscribeToNewsletter(e.target.checked);</span>
+<span class="cstat-no" title="statement not covered" >                      setSubscriptionPreferencesChanged(</span>
+                        hasChanged(e.target.checked),
+                      );
+                    }}
+                  /&gt;
+                &lt;/Col&gt;
+                &lt;Col size={6}&gt;
+                  &lt;p className="u-text-muted"&gt;
+                    Get our latest and greatest blog posts delivered to your
+                    inbox.
+                  &lt;/p&gt;
+                  &lt;hr /&gt;
+                  &lt;p className="u-text-muted"&gt;
+                    Please note, you will still receive required platform
+                    related emails such as registration of snap names, the
+                    review status of a snap or any security vulnerabilities.
+                  &lt;/p&gt;
+                &lt;/Col&gt;
+              &lt;/Row&gt;
+              &lt;div className="u-fixed-width"&gt;
+                &lt;hr /&gt;
+              &lt;/div&gt;
+              &lt;div className="u-fixed-width"&gt;
+                &lt;Button
+                  appearance="positive"
+                  className="has-icon"
+                  disabled={!subscriptionPreferencesChanged || <span class="branch-1 cbranch-no" title="branch not covered" >isSaving}</span>
+                  onClick={<span class="fstat-no" title="function not covered" >async () =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >                    setShowSuccessMessage(false);</span>
+<span class="cstat-no" title="statement not covered" >                    setShowErrorMessage(false);</span>
+<span class="cstat-no" title="statement not covered" >                    setIsSaving(true);</span>
+&nbsp;
+                    const data = <span class="cstat-no" title="statement not covered" >new FormData();</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                    data.set("csrf_token", window.CSRF_TOKEN);</span>
+<span class="cstat-no" title="statement not covered" >                    data.set("email", publisher?.email || "");</span>
+<span class="cstat-no" title="statement not covered" >                    data.set("newsletter", subscribeToNewsletter ? "on" : "");</span>
+&nbsp;
+                    const response: Response = <span class="cstat-no" title="statement not covered" >await fetch(</span>
+                      "/account/publisher",
+                      {
+                        method: "POST",
+                        body: data,
+                      },
+                    );
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                    if (!response.ok) {</span>
+<span class="cstat-no" title="statement not covered" >                      setShowErrorMessage(true);</span>
+<span class="cstat-no" title="statement not covered" >                      setIsSaving(false);</span>
+<span class="cstat-no" title="statement not covered" >                      throw new Error(</span>
+                        "There has been a problem saving newsletter preferences",
+                      );
+                    }
+&nbsp;
+                    const responseData = <span class="cstat-no" title="statement not covered" >await response.json();</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                    if (responseData.success) {</span>
+<span class="cstat-no" title="statement not covered" >                      setShowSuccessMessage(true);</span>
+<span class="cstat-no" title="statement not covered" >                      setIsSaving(false);</span>
+                    } else {
+<span class="cstat-no" title="statement not covered" >                      setShowErrorMessage(true);</span>
+<span class="cstat-no" title="statement not covered" >                      setIsSaving(false);</span>
+<span class="cstat-no" title="statement not covered" >                      throw new Error(responseData.message);</span>
+                    }
+                  }}
+                &gt;
+                  {isSaving &amp;&amp; (
+<span class="branch-1 cbranch-no" title="branch not covered" >                    &lt;Icon</span>
+                      name="spinner"
+                      className="u-animation--spin is-light"
+                    /&gt;
+                  )}
+                  &lt;span&gt;Save email preferences&lt;/span&gt;
+                &lt;/Button&gt;
+              &lt;/div&gt;
+            &lt;/&gt;
+          )}
+        &lt;/&gt;
+      )}
+    &lt;/&gt;
   );
 }
 &nbsp;
@@ -922,7 +874,7 @@ export default AccountDetails;
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-10-16T22:04:46.771Z
+                at 2025-10-17T22:05:06.933Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>

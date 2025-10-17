@@ -257,18 +257,7 @@
 <a name='L192'></a><a href='#L192'>192</a>
 <a name='L193'></a><a href='#L193'>193</a>
 <a name='L194'></a><a href='#L194'>194</a>
-<a name='L195'></a><a href='#L195'>195</a>
-<a name='L196'></a><a href='#L196'>196</a>
-<a name='L197'></a><a href='#L197'>197</a>
-<a name='L198'></a><a href='#L198'>198</a>
-<a name='L199'></a><a href='#L199'>199</a>
-<a name='L200'></a><a href='#L200'>200</a>
-<a name='L201'></a><a href='#L201'>201</a>
-<a name='L202'></a><a href='#L202'>202</a>
-<a name='L203'></a><a href='#L203'>203</a>
-<a name='L204'></a><a href='#L204'>204</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L195'></a><a href='#L195'>195</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -345,10 +334,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -433,9 +418,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -481,8 +463,6 @@ import {
   PasswordToggle,
   Button,
 } from "@canonical/react-components";
-&nbsp;
-import Navigation from "../../components/Navigation";
 &nbsp;
 function BrandStoreSettings() {
   const { id } = useParams();
@@ -532,142 +512,135 @@ function BrandStoreSettings() {
   }, [data]);
 &nbsp;
   return (
-    &lt;div className="l-application"&gt;
-      &lt;Navigation /&gt;
-      &lt;main className="l-main"&gt;
-        &lt;div className="p-panel--settings"&gt;
-          &lt;div className="p-panel__content"&gt;
-            {isLoading &amp;&amp; (
-              &lt;div className="u-fixed-width"&gt;
-                &lt;Spinner text="Loading..." /&gt;
-              &lt;/div&gt;
-            )}
-&nbsp;
-            {!isLoading &amp;&amp; status === "success" &amp;&amp; data &amp;&amp; (
-              &lt;&gt;
-                &lt;div className="u-fixed-width"&gt;
-                  &lt;h1 className="p-heading--4"&gt;{data.name} / Settings&lt;/h1&gt;
-                &lt;/div&gt;
-                &lt;Row&gt;
-                  &lt;Col size={7}&gt;
-                    &lt;Form
-                      onSubmit={<span class="fstat-no" title="function not covered" >async (e</span>) =&gt; {
-<span class="cstat-no" title="statement not covered" >                        e.preventDefault();</span>
-&nbsp;
-<span class="cstat-no" title="statement not covered" >                        setIsSaving(true);</span>
-&nbsp;
-                        const formData = <span class="cstat-no" title="statement not covered" >new FormData();</span>
-<span class="cstat-no" title="statement not covered" >                        formData.set("csrf_token", window.CSRF_TOKEN);</span>
-<span class="cstat-no" title="statement not covered" >                        formData.set("store-id", id || "");</span>
-<span class="cstat-no" title="statement not covered" >                        formData.set("private", isPrivate.toString());</span>
-<span class="cstat-no" title="statement not covered" >                        formData.set(</span>
-                          "manual-review-policy",
-                          manualReviewPolicy || "",
-                        );
-&nbsp;
-                        const response = <span class="cstat-no" title="statement not covered" >await fetch(</span>
-                          `/api/store/${id}/settings`,
-                          { method: "PUT", body: formData },
-                        );
-&nbsp;
-<span class="cstat-no" title="statement not covered" >                        if (!response.ok) {</span>
-<span class="cstat-no" title="statement not covered" >                          throw new Error("Unable to save settings");</span>
-                        }
-&nbsp;
-<span class="cstat-no" title="statement not covered" >                        setTimeout(<span class="fstat-no" title="function not covered" >() =&gt; {</span></span>
-<span class="cstat-no" title="statement not covered" >                          setIsSaving(false);</span>
-                        }, 1500);
-&nbsp;
-<span class="cstat-no" title="statement not covered" >                        refetch();</span>
-                      }}
-                      autoComplete="off"
-                    &gt;
-                      &lt;Input
-                        id="is_public"
-                        label="Include this store in public lists"
-                        type="checkbox"
-                        help="This store will not be listed in the store dropdowns like the one in the snap name registration form."
-                        onChange={<span class="fstat-no" title="function not covered" >() =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >                          setIsPrivate(!isPrivate);</span>
-                        }}
-                        checked={!isPrivate}
-                      /&gt;
-&nbsp;
-                      &lt;PasswordToggle
-                        defaultValue={id}
-                        readOnly={true}
-                        label="Store ID"
-                        id="store-id"
-                      /&gt;
-&nbsp;
-                      &lt;h2 className="p-heading--4" id="store-id-label"&gt;
-                        Manual review policy
-                      &lt;/h2&gt;
-                      &lt;Input
-                        type="radio"
-                        label="Allow"
-                        help="Normal review behaviour will be applied, using the result from the automatic review tool checks."
-                        name="manual-review-policy"
-                        id="manual-review-policy-label-allow"
-                        value="allow"
-                        onChange={<span class="fstat-no" title="function not covered" >(e</span>) =&gt; {
-<span class="cstat-no" title="statement not covered" >                          setManualReviewPolicy(e.target.value);</span>
-                        }}
-                        checked={manualReviewPolicy === "allow"}
-                      /&gt;
-                      &lt;Input
-                        type="radio"
-                        label="Avoid"
-                        help="No snap will be left in the manual review queue, even if the automatic review tool found no issues."
-                        name="manual-review-policy"
-                        id="manual-review-policy-label-avoid"
-                        value="avoid"
-                        onChange={<span class="fstat-no" title="function not covered" >(e</span>) =&gt; {
-<span class="cstat-no" title="statement not covered" >                          setManualReviewPolicy(e.target.value);</span>
-                        }}
-                        checked={manualReviewPolicy === "avoid"}
-                      /&gt;
-                      &lt;Input
-                        type="radio"
-                        label="Require"
-                        help="Every snap will be moved to the review queue, even if the automatic review tool found no issues."
-                        name="manual-review-policy"
-                        id="manual-review-policy-label-require"
-                        value="require"
-                        onChange={<span class="fstat-no" title="function not covered" >(e</span>) =&gt; {
-<span class="cstat-no" title="statement not covered" >                          setManualReviewPolicy(e.target.value);</span>
-                        }}
-                        checked={manualReviewPolicy === "require"}
-                      /&gt;
-&nbsp;
-                      &lt;hr /&gt;
-&nbsp;
-                      &lt;div className="u-align--right"&gt;
-                        &lt;Button
-                          appearance="positive"
-                          type="submit"
-                          disabled={formDisabled() || isSaving}
-                          className={isSaving ? <span class="branch-0 cbranch-no" title="branch not covered" >"has-icon" : "</span>"}
-                        &gt;
-                          {isSaving ? (
-<span class="branch-0 cbranch-no" title="branch not covered" >                            &lt;&gt;</span>
-                              &lt;i className="p-icon--spinner is-light u-animation--spin"&gt;&lt;/i&gt;
-                              &lt;span&gt;Saving...&lt;/span&gt;
-                            &lt;/&gt;
-                          ) : (
-                            &lt;&gt;Save changes&lt;/&gt;
-                          )}
-                        &lt;/Button&gt;
-                      &lt;/div&gt;
-                    &lt;/Form&gt;
-                  &lt;/Col&gt;
-                &lt;/Row&gt;
-              &lt;/&gt;
-            )}
-          &lt;/div&gt;
+    &lt;&gt;
+      {isLoading &amp;&amp; (
+        &lt;div className="u-fixed-width"&gt;
+          &lt;Spinner text="Loading..." /&gt;
         &lt;/div&gt;
-      &lt;/main&gt;
-    &lt;/div&gt;
+      )}
+&nbsp;
+      {!isLoading &amp;&amp; status === "success" &amp;&amp; data &amp;&amp; (
+        &lt;&gt;
+          &lt;div className="u-fixed-width"&gt;
+            &lt;h1 className="p-heading--4"&gt;{data.name} / Settings&lt;/h1&gt;
+          &lt;/div&gt;
+          &lt;Row&gt;
+            &lt;Col size={7}&gt;
+              &lt;Form
+                onSubmit={<span class="fstat-no" title="function not covered" >async (e</span>) =&gt; {
+<span class="cstat-no" title="statement not covered" >                  e.preventDefault();</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                  setIsSaving(true);</span>
+&nbsp;
+                  const formData = <span class="cstat-no" title="statement not covered" >new FormData();</span>
+<span class="cstat-no" title="statement not covered" >                  formData.set("csrf_token", window.CSRF_TOKEN);</span>
+<span class="cstat-no" title="statement not covered" >                  formData.set("store-id", id || "");</span>
+<span class="cstat-no" title="statement not covered" >                  formData.set("private", isPrivate.toString());</span>
+<span class="cstat-no" title="statement not covered" >                  formData.set(</span>
+                    "manual-review-policy",
+                    manualReviewPolicy || "",
+                  );
+&nbsp;
+                  const response = <span class="cstat-no" title="statement not covered" >await fetch(`/api/store/${id}/settings`, {</span>
+                    method: "PUT",
+                    body: formData,
+                  });
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                  if (!response.ok) {</span>
+<span class="cstat-no" title="statement not covered" >                    throw new Error("Unable to save settings");</span>
+                  }
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                  setTimeout(<span class="fstat-no" title="function not covered" >() =&gt; {</span></span>
+<span class="cstat-no" title="statement not covered" >                    setIsSaving(false);</span>
+                  }, 1500);
+&nbsp;
+<span class="cstat-no" title="statement not covered" >                  refetch();</span>
+                }}
+                autoComplete="off"
+              &gt;
+                &lt;Input
+                  id="is_public"
+                  label="Include this store in public lists"
+                  type="checkbox"
+                  help="This store will not be listed in the store dropdowns like the one in the snap name registration form."
+                  onChange={<span class="fstat-no" title="function not covered" >() =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >                    setIsPrivate(!isPrivate);</span>
+                  }}
+                  checked={!isPrivate}
+                /&gt;
+&nbsp;
+                &lt;PasswordToggle
+                  defaultValue={id}
+                  readOnly={true}
+                  label="Store ID"
+                  id="store-id"
+                /&gt;
+&nbsp;
+                &lt;h2 className="p-heading--4" id="store-id-label"&gt;
+                  Manual review policy
+                &lt;/h2&gt;
+                &lt;Input
+                  type="radio"
+                  label="Allow"
+                  help="Normal review behaviour will be applied, using the result from the automatic review tool checks."
+                  name="manual-review-policy"
+                  id="manual-review-policy-label-allow"
+                  value="allow"
+                  onChange={<span class="fstat-no" title="function not covered" >(e</span>) =&gt; {
+<span class="cstat-no" title="statement not covered" >                    setManualReviewPolicy(e.target.value);</span>
+                  }}
+                  checked={manualReviewPolicy === "allow"}
+                /&gt;
+                &lt;Input
+                  type="radio"
+                  label="Avoid"
+                  help="No snap will be left in the manual review queue, even if the automatic review tool found no issues."
+                  name="manual-review-policy"
+                  id="manual-review-policy-label-avoid"
+                  value="avoid"
+                  onChange={<span class="fstat-no" title="function not covered" >(e</span>) =&gt; {
+<span class="cstat-no" title="statement not covered" >                    setManualReviewPolicy(e.target.value);</span>
+                  }}
+                  checked={manualReviewPolicy === "avoid"}
+                /&gt;
+                &lt;Input
+                  type="radio"
+                  label="Require"
+                  help="Every snap will be moved to the review queue, even if the automatic review tool found no issues."
+                  name="manual-review-policy"
+                  id="manual-review-policy-label-require"
+                  value="require"
+                  onChange={<span class="fstat-no" title="function not covered" >(e</span>) =&gt; {
+<span class="cstat-no" title="statement not covered" >                    setManualReviewPolicy(e.target.value);</span>
+                  }}
+                  checked={manualReviewPolicy === "require"}
+                /&gt;
+&nbsp;
+                &lt;hr /&gt;
+&nbsp;
+                &lt;div className="u-align--right"&gt;
+                  &lt;Button
+                    appearance="positive"
+                    type="submit"
+                    disabled={formDisabled() || isSaving}
+                    className={isSaving ? <span class="branch-0 cbranch-no" title="branch not covered" >"has-icon" : "</span>"}
+                  &gt;
+                    {isSaving ? (
+<span class="branch-0 cbranch-no" title="branch not covered" >                      &lt;&gt;</span>
+                        &lt;i className="p-icon--spinner is-light u-animation--spin"&gt;&lt;/i&gt;
+                        &lt;span&gt;Saving...&lt;/span&gt;
+                      &lt;/&gt;
+                    ) : (
+                      &lt;&gt;Save changes&lt;/&gt;
+                    )}
+                  &lt;/Button&gt;
+                &lt;/div&gt;
+              &lt;/Form&gt;
+            &lt;/Col&gt;
+          &lt;/Row&gt;
+        &lt;/&gt;
+      )}
+    &lt;/&gt;
   );
 }
 &nbsp;
@@ -679,7 +652,7 @@ export default BrandStoreSettings;
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-10-16T22:04:46.771Z
+                at 2025-10-17T22:05:06.933Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>

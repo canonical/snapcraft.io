@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">80.29% </span>
+                <span class="strong">80.43% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>110/137</span>
+                <span class='fraction'>111/138</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">75.38% </span>
+                <span class="strong">74.62% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>49/65</span>
+                <span class='fraction'>50/67</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">82.35% </span>
+                <span class="strong">83.33% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>14/17</span>
+                <span class='fraction'>15/18</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">80% </span>
+                <span class="strong">80.14% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>108/135</span>
+                <span class='fraction'>109/136</span>
             </div>
         
             
@@ -482,7 +482,11 @@
 <a name='L417'></a><a href='#L417'>417</a>
 <a name='L418'></a><a href='#L418'>418</a>
 <a name='L419'></a><a href='#L419'>419</a>
-<a name='L420'></a><a href='#L420'>420</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L420'></a><a href='#L420'>420</a>
+<a name='L421'></a><a href='#L421'>421</a>
+<a name='L422'></a><a href='#L422'>422</a>
+<a name='L423'></a><a href='#L423'>423</a>
+<a name='L424'></a><a href='#L424'>424</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -628,7 +632,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">14x</span>
+<span class="cline-any cline-yes">25x</span>
 <span class="cline-any cline-yes">10x</span>
 <span class="cline-any cline-yes">6x</span>
 <span class="cline-any cline-yes">6x</span>
@@ -657,6 +661,8 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">10x</span>
 <span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-yes">17x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -832,6 +838,8 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -924,7 +932,7 @@ import { buildRepoConnectedState } from "../../state/buildsState";
 &nbsp;
 import type { GithubData } from "../../types/";
 &nbsp;
-type Repo = { name: string; nameWithOwner: string };
+type Repo = { name: string; nameWithOwner: string; owner: string };
 &nbsp;
 type Props = {
   githubData: GithubData;
@@ -1075,7 +1083,9 @@ function RepoSelector({ githubData, setAutoTriggerBuild }: Props) {
       }
 &nbsp;
       const responseData = await response.json();
-      setRepos(responseData);
+      setRepos(
+        responseData.sort((a: Repo, b: Repo) =&gt; a.name.localeCompare(b.name)),
+      );
     } catch (_error) {
 <span class="cstat-no" title="statement not covered" >      setRepoFetchError("Failed to fetch repositories. Please try again.");</span>
 <span class="cstat-no" title="statement not covered" >      setRepos([]);</span>
@@ -1235,7 +1245,9 @@ function RepoSelector({ githubData, setAutoTriggerBuild }: Props) {
             ))}
           &lt;datalist id="repo-list"&gt;
             {repos.map((repo: Repo) =&gt; (
-              &lt;option value={repo.name} key={repo.name} /&gt;
+              &lt;option value={repo.name} key={repo.name}&gt;
+                {repo.owner !== selectedOrg ? `Owned by ${repo.owner}` : <span class="branch-1 cbranch-no" title="branch not covered" >""}</span>
+              &lt;/option&gt;
             ))}
           &lt;/datalist&gt;
           {repoFetchError &amp;&amp; (
@@ -1327,7 +1339,7 @@ export default RepoSelector;
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-10-16T22:04:46.771Z
+                at 2025-10-17T22:05:06.933Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>
