@@ -2,10 +2,17 @@ import { useSetAtom } from "jotai";
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 
-import { useBrand, useBrandStores, usePublisher, useValidationSets } from "./";
+import {
+  useAccountKeys,
+  useBrand,
+  useBrandStores,
+  usePublisher,
+  useValidationSets,
+} from "./";
 import { brandIdState, brandStoresState } from "../state/brandStoreState";
 import { publisherState } from "../state/publisherState";
 import { validationSetsState } from "../state/validationSetsState";
+import { accountKeysState } from "../state/accountKeysState";
 
 /**
  * Load all the data that is needed for side navigation, more specifically:
@@ -22,11 +29,13 @@ function useSideNavigationData() {
   const { data: validationSetsData } = useValidationSets();
   const { data: brandStoresData } = useBrandStores();
   const { data: brandData } = useBrand(storeId);
+  const { data: accountKeysData } = useAccountKeys();
 
   const setBrandStores = useSetAtom(brandStoresState);
   const setPublisher = useSetAtom(publisherState);
   const setBrandId = useSetAtom(brandIdState);
   const setValidationSets = useSetAtom(validationSetsState);
+  const setAccountKeys = useSetAtom(accountKeysState);
 
   useEffect(() => {
     setBrandId(brandData?.["account-id"] || brandIdState.init);
@@ -43,6 +52,10 @@ function useSideNavigationData() {
   useEffect(() => {
     setValidationSets(validationSetsData || validationSetsState.init);
   }, [validationSetsData]);
+
+  useEffect(() => {
+    setAccountKeys(accountKeysData || accountKeysState.init);
+  }, [accountKeysData]);
 }
 
 export default useSideNavigationData;

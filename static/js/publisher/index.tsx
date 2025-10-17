@@ -27,6 +27,7 @@ import SigningKeys from "./pages/SigningKeys";
 import Snaps from "./pages/Snaps";
 import ValidationSet from "./pages/ValidationSet";
 import ValidationSets from "./pages/ValidationSets";
+import AccountKeys from "./pages/AccountKeys";
 
 Sentry.init({
   dsn: window.SENTRY_DSN,
@@ -89,6 +90,7 @@ root.render(
             />
 
             <Route path="admin/account" element={<AccountDetails />} />
+            <Route path="admin/account-keys" element={<AccountKeys />} />
 
             <Route path="admin/:id" element={<BrandStoreRoute />}>
               <Route index element={<Navigate to="snaps" />} />

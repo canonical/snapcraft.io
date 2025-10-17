@@ -9,6 +9,7 @@ import { brandIdState, brandStoreState } from "../../state/brandStoreState";
 import { publisherState } from "../../state/publisherState";
 import { validationSetsState } from "../../state/validationSetsState";
 import StoreSelector from "../StoreSelector";
+import { accountKeysState } from "../../state/accountKeysState";
 
 function PrimaryNav(): React.JSX.Element {
   const location = useLocation();
@@ -18,6 +19,7 @@ function PrimaryNav(): React.JSX.Element {
   const publisher = useAtomValue(publisherState);
   const brandId = useAtomValue(brandIdState);
   const validationSets = useAtomValue(validationSetsState);
+  const accountKeys = useAtomValue(accountKeysState);
 
   return (
     <>
@@ -54,6 +56,21 @@ function PrimaryNav(): React.JSX.Element {
                     icon: "topic",
                     "aria-current":
                       location.pathname.includes("/validation-sets"),
+                  },
+                ],
+              }
+            : null,
+          accountKeys && accountKeys.length > 0
+            ? {
+                items: [
+                  {
+                    label: "My keys",
+                    component: NavLink,
+                    to: "/admin/account-keys",
+                    icon: "private-key",
+                    "aria-current": location.pathname.includes(
+                      "/admin/account-keys",
+                    ),
                   },
                 ],
               }
