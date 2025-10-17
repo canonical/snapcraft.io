@@ -19,7 +19,7 @@ import ModelBreadcrumb from "./ModelBreadcrumb";
 import { useModels } from "../../hooks";
 import { setPageTitle } from "../../utils";
 import type { Model as ModelType } from "../../types/shared";
-import { PortalEntry } from "../Portals/Portals";
+import { PortalEntrance } from "../Portals/Portals";
 
 function Model() {
   const { id, model_id } = useParams();
@@ -248,7 +248,7 @@ function Model() {
         </form>
       )}
 
-      <PortalEntry name="notification">
+      <PortalEntrance name="notification">
         {showSuccessNotification && (
           <div className="u-fixed-width">
             <Notification
@@ -273,7 +273,7 @@ function Model() {
             </Notification>
           </div>
         )}
-      </PortalEntry>
+      </PortalEntrance>
     </>
   );
 }

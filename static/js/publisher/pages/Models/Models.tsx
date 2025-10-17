@@ -26,7 +26,7 @@ import { useModels } from "../../hooks";
 import { isClosedPanel, setPageTitle, getPolicies } from "../../utils";
 
 import type { Model as ModelType } from "../../types/shared";
-import { PortalEntry } from "../Portals/Portals";
+import { PortalEntrance } from "../Portals/Portals";
 
 function Models(): React.JSX.Element {
   const { id } = useParams();
@@ -112,7 +112,7 @@ function Models(): React.JSX.Element {
         </div>
       </div>
 
-      <PortalEntry name="notification">
+      <PortalEntrance name="notification">
         {showNotification && (
           <div className="u-fixed-width">
             <Notification
@@ -137,9 +137,9 @@ function Models(): React.JSX.Element {
             </Notification>
           </div>
         )}
-      </PortalEntry>
+      </PortalEntrance>
 
-      <PortalEntry name="aside">
+      <PortalEntrance name="aside">
         <div
           className={`l-aside__overlay ${
             isClosedPanel(location.pathname, "create") ? "u-hide" : ""
@@ -170,7 +170,7 @@ function Models(): React.JSX.Element {
             setShowErrorNotification={setShowErrorNotification}
           />
         </aside>
-      </PortalEntry>
+      </PortalEntrance>
     </>
   );
 }

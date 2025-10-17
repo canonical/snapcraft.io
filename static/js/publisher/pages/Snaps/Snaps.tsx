@@ -25,7 +25,7 @@ import PublishedSnapsTable from "./PublishedSnapsTable";
 import IncludedSnapsTable from "./IncludedSnapsTable";
 import { setPageTitle } from "../../utils";
 import type { Store, Snap, SnapsList, Member } from "../../types/shared";
-import { PortalEntry } from "../Portals/Portals";
+import { PortalEntrance } from "../Portals/Portals";
 
 function Snaps() {
   const { id } = useParams();
@@ -485,7 +485,7 @@ function Snaps() {
         </>
       )}
 
-      <PortalEntry name="aside">
+      <PortalEntrance name="aside">
         <div
           className={`l-aside__overlay ${sidePanelOpen ? "" : "u-hide"}`}
           onClick={() => {
@@ -557,9 +557,9 @@ function Snaps() {
             </div>
           </div>
         </aside>
-      </PortalEntry>
+      </PortalEntrance>
 
-      <PortalEntry name="notification">
+      <PortalEntrance name="notification">
         {showAddSuccessNotification && (
           <Notification
             severity="positive"
@@ -589,9 +589,9 @@ function Snaps() {
             </a>
           </Notification>
         )}
-      </PortalEntry>
+      </PortalEntrance>
 
-      <PortalEntry name="modal">
+      <PortalEntrance name="modal">
         {showRemoveSnapsConfirmation && (
           <Modal
             close={() => {
@@ -638,7 +638,7 @@ function Snaps() {
             </p>
           </Modal>
         )}
-      </PortalEntry>
+      </PortalEntrance>
     </>
   );
 }

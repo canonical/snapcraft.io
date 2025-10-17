@@ -19,7 +19,7 @@ import StoreNotFound from "../StoreNotFound";
 import { brandStoresState } from "../../state/brandStoreState";
 import { useMembers, useInvites } from "../../hooks";
 import { setPageTitle } from "../../utils";
-import { PortalEntry } from "../Portals/Portals";
+import { PortalEntrance } from "../Portals/Portals";
 
 type Members = {
   members: {
@@ -262,7 +262,7 @@ function Members(): React.JSX.Element {
         </div>
       )}
 
-      <PortalEntry name="aside">
+      <PortalEntrance name="aside">
         <div
           className={`l-aside__overlay ${sidePanelOpen ? "" : "u-hide"}`}
           onClick={() => {
@@ -409,7 +409,7 @@ function Members(): React.JSX.Element {
             </div>
           </div>
         </aside>
-      </PortalEntry>
+      </PortalEntrance>
 
       {changedMembers.length ? (
         <aside className="l-status">
@@ -481,7 +481,7 @@ function Members(): React.JSX.Element {
         </aside>
       ) : null}
 
-      <PortalEntry name="notification">
+      <PortalEntrance name="notification">
         {showSuccessNotification && (
           <Notification
             severity="positive"
@@ -502,7 +502,7 @@ function Members(): React.JSX.Element {
             </a>
           </Notification>
         )}
-      </PortalEntry>
+      </PortalEntrance>
     </>
   );
 }

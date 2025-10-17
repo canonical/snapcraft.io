@@ -16,7 +16,9 @@ vi.mock("react-router-dom", async (importOriginal) => ({
 
 vi.mock("../../Portals/Portals", async (importOriginal) => ({
   ...(await importOriginal()),
-  PortalEntry: ({ children }: { children: React.ReactNode }) => <>{children}</>,
+  PortalEntrance: ({ children }: { children: React.ReactNode }) => (
+    <>{children}</>
+  ),
 }));
 
 const queryClient = new QueryClient({

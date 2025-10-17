@@ -26,7 +26,7 @@ import {
 } from "../../state/signingKeysState";
 import { brandStoreState } from "../../state/brandStoreState";
 import { isClosedPanel, setPageTitle } from "../../utils";
-import { PortalEntry } from "../Portals/Portals";
+import { PortalEntrance } from "../Portals/Portals";
 
 function Policies(): React.JSX.Element {
   const { id, model_id } = useParams();
@@ -129,7 +129,7 @@ function Policies(): React.JSX.Element {
         </>
       </div>
 
-      <PortalEntry name="notification">
+      <PortalEntrance name="notification">
         {showNotification && (
           <div className="u-fixed-width">
             <Notification
@@ -178,9 +178,9 @@ function Policies(): React.JSX.Element {
             </Notification>
           </div>
         )}
-      </PortalEntry>
+      </PortalEntrance>
 
-      <PortalEntry name="aside">
+      <PortalEntrance name="aside">
         <div
           className={`l-aside__overlay ${
             isClosedPanel(location.pathname, "create") ? "u-hide" : ""
@@ -212,7 +212,7 @@ function Policies(): React.JSX.Element {
             refetchPolicies={refetch}
           />
         </aside>
-      </PortalEntry>
+      </PortalEntrance>
     </>
   );
 }

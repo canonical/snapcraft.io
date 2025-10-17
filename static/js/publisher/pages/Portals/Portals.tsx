@@ -13,7 +13,7 @@ const portalElementState = atomFamily((portalName: PortalName) => {
 
 /**
  * Returns a ref to be assigned to an element that will serve as a portal render target;
- * the portal can be used by rendering inside a `<PortalEntry name={name} />`
+ * the portal can be used by rendering inside a `<PortalEntrance name={name} />`
  */
 function usePortalExit(name: PortalName) {
   const setPortals = useSetAtom(portalsState);
@@ -38,7 +38,7 @@ function usePortalExit(name: PortalName) {
   return handlePortalRef;
 }
 
-function PortalEntry({
+function PortalEntrance({
   name,
   children,
 }: {
@@ -52,4 +52,4 @@ function PortalEntry({
   );
 }
 
-export { PortalEntry, usePortalExit };
+export { PortalEntrance, usePortalExit };
