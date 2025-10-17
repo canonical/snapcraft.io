@@ -26,6 +26,13 @@ vi.mock("react-redux", async (importOriginal) => ({
   ]),
 }));
 
+vi.mock("../../Portals/Portals", async (importOriginal) => ({
+  ...(await importOriginal()),
+  PortalEntrance: ({ children }: { children: React.ReactNode }) => (
+    <>{children}</>
+  ),
+}));
+
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {

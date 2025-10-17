@@ -14,6 +14,13 @@ vi.mock("react-router-dom", async (importOriginal) => ({
   useSearchParams: () => [new URLSearchParams({ filter: mockFilterQuery })],
 }));
 
+vi.mock("../../Portals/Portals", async (importOriginal) => ({
+  ...(await importOriginal()),
+  PortalEntrance: ({ children }: { children: React.ReactNode }) => (
+    <>{children}</>
+  ),
+}));
+
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {

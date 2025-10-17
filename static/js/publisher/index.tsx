@@ -1,10 +1,10 @@
+import * as Sentry from "@sentry/react";
 import { Provider as JotaiProvider } from "jotai";
 import { createRoot } from "react-dom/client";
 import { QueryClient, QueryClientProvider } from "react-query";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
-import * as Sentry from "@sentry/react";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 
-import BrandStoreLayout from "./layouts/BrandStoreLayout";
+import BrandStoreRoute from "./components/BrandStoreRoute/BrandStoreRoute";
 import PublisherLayout from "./layouts/PublisherLayout";
 import AccountDetails from "./pages/AccountDetails";
 import AccountSnaps from "./pages/AccountSnaps";
@@ -52,7 +52,6 @@ root.render(
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
         <Routes>
-          {/* START publisher routes */}
           <Route element={<PublisherLayout />}>
             <Route path=":snapId">
               <Route path="publicise" element={<Publicise />} />
@@ -88,31 +87,27 @@ root.render(
               path="validation-sets/:validationSetId"
               element={<ValidationSet />}
             />
-          </Route>
-          {/* END publisher routes */}
 
-          {/* START brand store routes */}
-          <Route path="admin" element={<BrandStoreLayout />}>
-            <Route path="account" element={<AccountDetails />} />
-            <Route path=":id">
-              <Route index element={<Snaps />} />
+            <Route path="admin/account" element={<AccountDetails />} />
+
+            <Route path="admin/:id" element={<BrandStoreRoute />}>
+              <Route index element={<Navigate to="snaps" />} />
               <Route path="snaps" element={<Snaps />} />
               <Route path="members" element={<Members />} />
               <Route path="settings" element={<BrandStoreSettings />} />
-              <Route path="models" element={<Models />} />
-              <Route path="models/create" element={<Models />} />
-              <Route path="models/:model_id" element={<Model />} />
-              <Route path="models/:model_id/policies" element={<Policies />} />
-              <Route
-                path="models/:model_id/policies/create"
-                element={<Policies />}
-              />
               <Route path="signing-keys" element={<SigningKeys />} />
               <Route path="signing-keys/create" element={<SigningKeys />} />
+              <Route path="models">
+                <Route index element={<Models />} />
+                <Route path="create" element={<Models />} />
+                <Route path=":model_id">
+                  <Route index element={<Model />} />
+                  <Route path="policies" element={<Policies />} />
+                  <Route path="policies/create" element={<Policies />} />
+                </Route>
+              </Route>
             </Route>
           </Route>
-          {/* END brand store routes */}
-          {/* TODO: merge the two layouts */}
         </Routes>
       </BrowserRouter>
     </QueryClientProvider>
