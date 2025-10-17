@@ -559,3 +559,12 @@ html {
     fill: $colors--theme--background-default;
   }
 }
+
+.explore-highlight-block {
+  background-color: #f3f3f3;
+  background-image: url("https://assets.ubuntu.com/v1/e888a79f-suru.png");
+  background-position: right top;
+  background-repeat: no-repeat;
+  background-size: contain;
+  padding: 67px;
+}
