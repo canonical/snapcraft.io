@@ -123,15 +123,16 @@ function AccountKeyConstraints(props: { accountKey: AccountKeyData }) {
 
 function AccountKeysTable(props: {
   keys: AccountKeyData[];
+  hasConstraints?: boolean;
 }): React.JSX.Element {
-  const keys = props.keys ?? [];
+  const { keys, hasConstraints } = props;
 
   const headers: MainTableHeader[] = useMemo(
     () => [
       { content: "Name", sortKey: "name" },
       { content: "Registered", sortKey: "since" },
       { content: "Status", sortKey: "until" },
-      { content: "Constraints" },
+      hasConstraints ? { content: "Constraints" } : {},
       { content: "Fingerprint" },
     ],
     [],
@@ -146,7 +147,9 @@ function AccountKeysTable(props: {
               { content: k.name },
               { content: new Date(k.since).toLocaleDateString() },
               { content: <AccountKeyStatus accountKey={k} /> },
-              { content: <AccountKeyConstraints accountKey={k} /> },
+              hasConstraints
+                ? { content: <AccountKeyConstraints accountKey={k} /> }
+                : {},
               {
                 content: k["public-key-sha3-384"],
                 className: "u-truncate",

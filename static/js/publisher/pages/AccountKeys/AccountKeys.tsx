@@ -12,6 +12,10 @@ function AccountKeys(): React.JSX.Element {
   const hasKeys = !isLoading && !isError && !!data?.length;
   const [searchName, setSearchName] = useState<string>("");
 
+  const hasConstraints = useMemo(() => {
+    return (data ?? []).some((k) => !!k.constraints?.length);
+  }, [data]);
+
   const filteredData = useMemo(() => {
     if (!searchName) return data ?? [];
 
@@ -35,7 +39,10 @@ function AccountKeys(): React.JSX.Element {
           </Row>
 
           <Row style={{ overflow: "auto" }}>
-            <AccountKeysTable keys={filteredData} />
+            <AccountKeysTable
+              keys={filteredData}
+              hasConstraints={hasConstraints}
+            />
           </Row>
         </div>
       )}
