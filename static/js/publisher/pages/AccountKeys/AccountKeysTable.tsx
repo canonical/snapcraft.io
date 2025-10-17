@@ -129,7 +129,7 @@ function AccountKeysTable(props: {
   const headers: MainTableHeader[] = useMemo(
     () => [
       { content: "Name", sortKey: "name" },
-      { content: "Created", sortKey: "since" },
+      { content: "Registered", sortKey: "since" },
       { content: "Status", sortKey: "until" },
       { content: "Constraints" },
       { content: "Fingerprint" },
