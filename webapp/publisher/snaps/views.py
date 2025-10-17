@@ -332,6 +332,14 @@ def get_account_snaps():
     return flask.render_template("store/publisher.html", **context)
 
 
+@publisher_snaps.route("/account-keys.json")
+@login_required
+def get_user_keys():
+    account_keys = dashboard.get_account_keys(flask.session)
+
+    return flask.jsonify(account_keys)
+
+
 @publisher_snaps.route("/snaps.json")
 @login_required
 def get_user_snaps():
