@@ -1,6 +1,7 @@
 import { BrowserRouter } from "react-router-dom";
 import { QueryClient, QueryClientProvider, useQuery } from "react-query";
-import { render, screen } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import "@testing-library/jest-dom";
 
 import AccountKeys from "../AccountKeys";
@@ -70,6 +71,51 @@ describe("AccountKeys", () => {
     renderComponent();
     expect(screen.getByText(/test fingerprint 1/)).toBeInTheDocument();
     expect(screen.getByText(/test fingerprint 2/)).toBeInTheDocument();
+    expect(screen.queryByText(/Constraints/)).not.toBeInTheDocument(); // keys in response don't have constraints
+  });
+
+  test("shows keys table with constraints", async () => {
+    const user = userEvent.setup();
+    const nowISO = new Date().toISOString();
+    // @ts-expect-error Mocking useQuery to return an array of keys
+    useQuery.mockReturnValue({
+      status: "success",
+      data: [
+        {
+          name: "test-key constraints 1",
+          "public-key-sha3-384": "test fingerprint constraints 1",
+          since: nowISO,
+          constraints: [
+            {
+              headers: {
+                type: "model",
+                model: "test-.*",
+              },
+            },
+            {
+              headers: {
+                type: "system-user",
+                models: ["something", "something-else"],
+              },
+            },
+          ],
+        },
+      ],
+    });
+
+    renderComponent();
+
+    const expandBtn = screen.getByRole("button", {
+      name: /Show constraints/,
+    });
+
+    expect(
+      screen.getByText(/test fingerprint constraints 1/),
+    ).toBeInTheDocument();
+    expect(screen.getByText(/Constraints/)).toHaveRole("columnheader");
+    expect(expandBtn).toBeInTheDocument();
+    await waitFor(() => user.click(expandBtn));
+    expect(screen.getByText(/Assertion type/)).toHaveRole("columnheader");
   });
 
   test("shows message when there is an error fetching keys", () => {
