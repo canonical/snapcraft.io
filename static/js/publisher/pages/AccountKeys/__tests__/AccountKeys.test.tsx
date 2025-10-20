@@ -74,6 +74,49 @@ describe("AccountKeys", () => {
     expect(screen.queryByText(/Constraints/)).not.toBeInTheDocument(); // keys in response don't have constraints
   });
 
+  test("shows keys expiring soon warning", () => {
+    const nowISO = new Date().toISOString();
+    const tomorrowISO = new Date(
+      Date.now() + 1000 * 60 * 60 * 24,
+    ).toISOString();
+    // @ts-expect-error Mocking useQuery to return an array of keys
+    useQuery.mockReturnValue({
+      status: "success",
+      data: [
+        {
+          name: "test-key 1",
+          "public-key-sha3-384": "test fingerprint 1",
+          since: nowISO,
+          until: tomorrowISO,
+        },
+      ],
+    });
+
+    renderComponent();
+    expect(screen.getByText(/Expiring soon/)).toBeInTheDocument();
+  });
+
+  test("shows keys expired error", () => {
+    const yesterdayISO = new Date(
+      Date.now() - 1000 * 60 * 60 * 24,
+    ).toISOString();
+    // @ts-expect-error Mocking useQuery to return an array of keys
+    useQuery.mockReturnValue({
+      status: "success",
+      data: [
+        {
+          name: "test-key 1",
+          "public-key-sha3-384": "test fingerprint 1",
+          since: yesterdayISO,
+          until: yesterdayISO,
+        },
+      ],
+    });
+
+    renderComponent();
+    expect(screen.getByText(/Expired/)).toBeInTheDocument();
+  });
+
   test("shows keys table with constraints", async () => {
     const user = userEvent.setup();
     const nowISO = new Date().toISOString();
