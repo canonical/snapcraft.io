@@ -39,10 +39,7 @@ describe("AccountKeys", () => {
     // @ts-expect-error Mocking useQuery to return an empty array for no keys
     useQuery.mockReturnValue({
       status: "success",
-      data: {
-        success: true,
-        data: [],
-      },
+      data: [],
     });
 
     renderComponent();
