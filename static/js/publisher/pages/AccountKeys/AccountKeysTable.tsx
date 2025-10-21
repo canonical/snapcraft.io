@@ -62,7 +62,7 @@ function AccountKeyConstraints(props: { accountKey: AccountKeyData }) {
 
   const [expanded, setExpanded] = useState(false);
 
-  const [c0, c1 /* ..._*/] = constraints ?? []; // get first two constraints
+  const [c0, c1] = constraints ?? []; // get first two constraints
   const remaining = (constraints?.length ?? 0) - 2;
 
   return constraints ? (
