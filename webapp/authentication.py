@@ -20,6 +20,18 @@ PERMISSIONS = [
 ]
 
 
+SESSION_DATA_KEYS = [
+    "macaroons",
+    "macaroon_root",
+    "macaroon_discharge",
+    "publisher",
+    "github_auth_secret",
+    "developer_token",
+    "exchanged_developer_token",
+    "csrf_token",
+]  # keys for data stored in the session that should be cleared on logout
+
+
 def get_authorization_header(root, discharge):
     """
     Bind root and discharge macaroons and return the authorization header.
@@ -52,11 +64,8 @@ def empty_session(session):
     """
     Empty the session, used to logout.
     """
-    session.pop("macaroons", None)
-    session.pop("macaroon_root", None)
-    session.pop("macaroon_discharge", None)
-    session.pop("publisher", None)
-    session.pop("github_auth_secret", None)
+    for key in SESSION_DATA_KEYS:
+        session.pop(key, None)
 
 
 def get_caveat_id(root):
