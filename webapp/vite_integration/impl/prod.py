@@ -3,8 +3,7 @@ import json
 from typing import List, Set
 from functools import cache
 
-from webapp.config import VITE_OUTPUT_DIR
-from webapp.vite_integration.impl.base import _AbstractViteIntegration
+from webapp.vite_integration.impl.base import _AbstractViteIntegration, Config
 from webapp.vite_integration.types import Manifest, ManifestChunk
 from webapp.vite_integration.exceptions import (
     AssetPathException,
@@ -14,18 +13,19 @@ from webapp.vite_integration.exceptions import (
 
 
 class ProdViteIntegration(_AbstractViteIntegration):
-    OUT_DIR = VITE_OUTPUT_DIR
     BUILD_MANIFEST = ".vite/manifest.json"
     manifest = None  # we cache the manifest contents in a static attribute
 
-    def __init__(self):
+    def __init__(self, config: Config):
+        self.outdir = config["outdir"]
+
         if ProdViteIntegration.manifest:
             # manifest has already been parsed
             return
 
         # print("Initializing Vite manifest")
         manifest_path = path.join(
-            ProdViteIntegration.OUT_DIR, ProdViteIntegration.BUILD_MANIFEST
+            self.outdir, ProdViteIntegration.BUILD_MANIFEST
         )
         if not path.isfile(manifest_path):
             raise ManifestPathException("Bad path to Vite manifest")
@@ -46,7 +46,7 @@ class ProdViteIntegration(_AbstractViteIntegration):
                 f'Asset "{asset_name}" not declared in Vite build manifest'
             )
 
-        entry_path = path.join(ProdViteIntegration.OUT_DIR, entry["file"])
+        entry_path = path.join(self.outdir, entry["file"])
         if not path.isfile(entry_path):
             raise AssetPathException(
                 f'Path to asset file "{entry_path}" doesn\'t exist; check your'
@@ -86,7 +86,7 @@ class ProdViteIntegration(_AbstractViteIntegration):
     def get_imported_chunks(self, asset_name: str) -> List[str]:
         chunks = self._recursive_get_chunks(asset_name)
         files = [
-            path.join(ProdViteIntegration.OUT_DIR, f["file"])
+            path.join(self.outdir, f["file"])
             for f in chunks[1:]  # first chunk is asset_name
         ]
 
@@ -108,7 +108,7 @@ class ProdViteIntegration(_AbstractViteIntegration):
         files = []
         for chunk in chunks:
             for file in chunk.get("css", []):
-                files.append(path.join(ProdViteIntegration.OUT_DIR, file))
+                files.append(path.join(self.outdir, file))
 
         for f in files:
             if not path.isfile(f):

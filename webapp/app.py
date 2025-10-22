@@ -13,7 +13,7 @@ import sentry_sdk
 from canonicalwebteam.flask_base.app import FlaskBase
 from webapp.blog.views import init_blog
 from webapp.docs.views import init_docs
-from webapp.extensions import csrf
+from webapp.extensions import csrf, vite
 from webapp.handlers import set_handlers
 from webapp.login.views import login
 from webapp.login.oauth_views import oauth
@@ -92,3 +92,4 @@ def create_app(testing=False):
 
 def init_extensions(app):
     csrf.init_app(app)
+    vite.init_app(app, is_dev=webapp.config.IS_DEVELOPMENT)
