@@ -24,7 +24,7 @@ function Publicise({ view }: Props): React.JSX.Element {
   const { snapId } = useParams();
 
   const { data, isLoading, isFetched } = useQuery({
-    queryKey: ["publiciseData"],
+    queryKey: ["publiciseData", snapId],
     queryFn: async () => {
       const response = await fetch(`/api/${snapId}/publicise`);
 

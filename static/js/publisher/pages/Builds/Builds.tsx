@@ -24,7 +24,7 @@ function Builds(): React.JSX.Element {
   const [repoConnected, setRepoConnected] = useAtom(buildRepoConnectedState);
   const [autoTriggerBuild, setAutoTriggerBuild] = useState<boolean>(false);
   const { isLoading } = useQuery({
-    queryKey: ["githubData"],
+    queryKey: ["githubData", snapId],
     queryFn: async () => {
       const response = await fetch(`/api/${snapId}/repo`);
 

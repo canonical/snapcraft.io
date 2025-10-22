@@ -10,7 +10,7 @@ import { setPageTitle } from "../../utils";
 function Releases(): React.JSX.Element {
   const { snapId } = useParams();
   const { isLoading, isFetched, data } = useQuery({
-    queryKey: ["releases"],
+    queryKey: ["releases", snapId],
     queryFn: async () => {
       const response = await fetch(`/api/${snapId}/releases`);
 
