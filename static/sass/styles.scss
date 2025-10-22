@@ -158,6 +158,7 @@ $color-social-icon-foreground: $color-light;
 @include vf-p-icon-exposed;
 @include vf-p-icon-topic;
 @include vf-p-icon-revisions;
+@include vf-p-icon-private-key;
 @import "snapcraft_snap-image-upload";
 @include snap-image-upload;
 @import "snapcraft_p-featured-snaps";
