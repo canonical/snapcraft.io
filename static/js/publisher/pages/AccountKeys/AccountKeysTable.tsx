@@ -69,7 +69,6 @@ function AccountKeyConstraints(props: { accountKey: AccountKeyData }) {
     <>
       <div style={{ display: "flex", alignItems: "baseline" }}>
         <Button
-          // className="u-no-margin"
           style={{ marginRight: "0.5rem" }}
           appearance="base"
           hasIcon
@@ -175,7 +174,7 @@ function AccountKeysTable(props: {
         sortable
         defaultSort="since"
         defaultSortDirection="ascending"
-        emptyStateMsg="There are no keys associated to your account"
+        emptyStateMsg="There are no keys that match the criteria"
       />
     </TablePagination>
   );

@@ -1,9 +1,8 @@
-import { Col, Row } from "@canonical/react-components";
+import { Col, Row, Spinner } from "@canonical/react-components";
 import { useMemo, useState } from "react";
 
 import { useAccountKeys } from "../../hooks";
 import AccountKeysError from "./AccountKeyError";
-import AccountKeysLoading from "./AccountKeyLoading";
 import AccountKeysSearch from "./AccountKeySearch";
 import AccountKeysTable from "./AccountKeysTable";
 
@@ -47,7 +46,7 @@ function AccountKeys(): React.JSX.Element {
         </div>
       )}
 
-      {isLoading && <AccountKeysLoading />}
+      {isLoading && <Spinner text="Loading..." />}
 
       {isError && <AccountKeysError />}
 
