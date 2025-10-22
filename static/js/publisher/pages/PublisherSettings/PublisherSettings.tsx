@@ -10,7 +10,7 @@ import { setPageTitle } from "../../utils";
 function PublisherSettings() {
   const { snapId } = useParams();
   const { data, isLoading, isFetched } = useQuery({
-    queryKey: ["settingsData"],
+    queryKey: ["settingsData", snapId],
     queryFn: async () => {
       const response = await fetch(`/api/${snapId}/settings`);
 

@@ -31,7 +31,7 @@ function RepoConnected({
     useState<boolean>(false);
   const [triggeringBuild, setTriggeringBuild] = useState<boolean>(false);
   const { isLoading, isFetched, data, refetch } = useQuery({
-    queryKey: ["repo"],
+    queryKey: ["repo", snapId],
     queryFn: async () => {
       const response = await fetch(`/api/${snapId}/builds`);
       const data = await response.json();
