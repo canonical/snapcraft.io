@@ -2,10 +2,7 @@
 import hashlib
 import os
 from dateutil import parser
-from markupsafe import Markup
 from emoji import replace_emoji
-
-from webapp.vite_integration import ViteIntegration
 
 
 # generator functions for templates
@@ -88,38 +85,6 @@ def static_url(filename):
             file_hash.update(chunk)
 
     return url + "?v=" + file_hash.hexdigest()[:7]
-
-
-def vite_import(entrypoint: str):
-    """
-    Template function that takes a .js/.ts source file as an argument and
-    returns the <script> tags with the correct src URL based on Vite's
-    output (a localhost URL in dev mode, or a static url in prod mode)
-    """
-    entry_url = ViteIntegration.get_asset_url(entrypoint)
-    is_css = entry_url.endswith((".css"))
-
-    if is_css:
-        return Markup(f'<link rel="stylesheet" href="{entry_url}" />')
-
-    entry_script = f'<script type="module" src="{entry_url}"></script>'
-
-    chunks_urls = ViteIntegration.get_imported_chunks(entrypoint)
-    chunks_scripts = [
-        f'<link rel="modulepreload" href="{c}" />' for c in chunks_urls
-    ]
-    css_urls = ViteIntegration.get_imported_css(entrypoint)
-    css_scripts = [f'<link rel="stylesheet" href="{c}" />' for c in css_urls]
-
-    return Markup(entry_script + "".join(chunks_scripts + css_scripts))
-
-
-def vite_dev_tools():
-    """
-    Template function that returns <script> tags for Vite's dev server
-    integration (or an empty string in prod mode)
-    """
-    return Markup(ViteIntegration.get_dev_tools())
 
 
 def install_snippet(

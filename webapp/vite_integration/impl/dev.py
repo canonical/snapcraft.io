@@ -1,13 +1,12 @@
 from typing import List
 from urllib.parse import urljoin
 
-from webapp.config import VITE_PORT
-from webapp.vite_integration.impl.base import _AbstractViteIntegration
+from webapp.vite_integration.impl.base import _AbstractViteIntegration, Config
 
 
 class DevViteIntegration(_AbstractViteIntegration):
-    def __init__(self):
-        self.baseurl = f"http://localhost:{VITE_PORT}/"
+    def __init__(self, config: Config):
+        self.baseurl = f'http://localhost:{config["port"]}/'
 
     def get_dev_tools(self) -> str:
         # Vite dev server integration needs 2 things:

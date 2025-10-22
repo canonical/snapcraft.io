@@ -1,10 +1,12 @@
 from abc import abstractmethod
 from typing import List
 
+type Config = dict["port" | "outdir", str]
+
 
 class _AbstractViteIntegration:
     @abstractmethod
-    def __init__(self):
+    def __init__(self, config: Config):
         pass
 
     @abstractmethod
