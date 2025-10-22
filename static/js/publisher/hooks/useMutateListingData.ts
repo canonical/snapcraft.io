@@ -46,8 +46,40 @@ function useMutateListingData({
         formData.append("icon", values.icon[0]);
       }
 
+      // In regards to banners, the `banner` field is the file itself
+      // and the `banner_urls` is a string with the blob URL of the
+      // uploaded banner. If `banner` is a `dirtyField`, that means
+      // the banner itself has changed,
+      // whereas if `banner_urls` shows as a `dirtyField`,
+      // the banner would have been removed
+
+      // If the banner field has changed we need to remove
+      // the existing banner from the changes.images array,
+      // otherwise it overrides it and causes a
+      // "modified during validation" error
+      if (dirtyFields.banner && changes.images) {
+        changes.images = changes.images.filter(
+          (image) => image.type !== "banner",
+        );
+      }
+
+      // If there is a File for the banner, it must
+      // be appended to the formData in order
+      // to be uploaded
       if (values.banner && values.banner.length > 0) {
         formData.append("banner-image", values.banner[0]);
+      }
+
+      // If the banner_urls field has changed, we need to set
+      // the banner URL property in the changes.images array
+      // to the value of that field, otherwise the value doesn't
+      // change and therefore the banner doesn't change
+      if (changes.images && dirtyFields.banner_urls) {
+        const banner = changes.images.find((image) => image.type === "banner");
+
+        if (banner) {
+          banner.url = values.banner_urls;
+        }
       }
 
       if (values.screenshots) {
