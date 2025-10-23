@@ -7,7 +7,7 @@ from webapp.vite_integration.impl import (
     ProdViteIntegration,
 )
 
-EXTENSION_NAME = "canonicalwebteam.vite_flask"
+EXTENSION_NAME = "canonicalwebteam.flask_vite"
 
 
 class staticproperty(property):
@@ -30,7 +30,12 @@ class FlaskVite:
 
     @staticproperty
     def instance():
-        return flask.current_app.extensions[EXTENSION_NAME]
+        try:
+            return flask.current_app.extensions[EXTENSION_NAME]
+        except KeyError:
+            raise ExtensionNotInitialized(
+                f"{EXTENSION_NAME}: can't use extension before initializing it"
+            )
 
     def init_app(self, app: flask.Flask, is_dev: bool = False):
         ViteIntegration = DevViteIntegration if is_dev else ProdViteIntegration
@@ -101,9 +106,9 @@ def _script_import(entrypoint):
 
 def _unknown_import(entrypoint):
     flask.current_app.logger.error(
-        f'VITE: can\'t import file "{entrypoint}" with'
+        f'{EXTENSION_NAME}: can\'t import file "{entrypoint}" with'
         " unknown file extension"
     )
     return Markup(
-        f"<!-- VITE: unknown file extension for file {entrypoint} -->"
+        f"<!-- {EXTENSION_NAME}: unknown file extension for file {entrypoint} -->"
     )
