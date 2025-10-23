@@ -12,7 +12,7 @@ import webapp.vite_integration.exceptions as vite_exceptions
 
 
 MOCK_CONFIG = {
-    "port": "5173",
+    "port": 5173,
     "outdir": "/tmp/python_vite_test",
 }
 MOCK_ASSET_PATH = "test/path/for/asset.ts"
