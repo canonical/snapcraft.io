@@ -25,7 +25,7 @@ DNS_VERIFICATION_SALT = os.getenv("DNS_VERIFICATION_SALT")
 # Vite integration config values
 VITE_MODE = "development" if IS_DEVELOPMENT else "production"
 VITE_PORT = os.getenv("VITE_PORT", 5173)
-VITE_OUTPUT_DIR = os.getenv("VITE_OUTPUT_DIR", "static/js/dist/vite")
+VITE_OUTDIR = os.getenv("VITE_OUTDIR", "static/js/dist/vite")
 
 if ENVIRONMENT != "devel":
     SESSION_COOKIE_SAMESITE = "None"

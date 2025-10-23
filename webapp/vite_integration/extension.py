@@ -33,7 +33,7 @@ class FlaskVite:
         ViteIntegration = DevViteIntegration if is_dev else ProdViteIntegration
         config = {
             "port": app.config.get("VITE_PORT", "5173"),
-            "outdir": app.config.get("VITE_OUTPUT_DIR", "static/dist"),
+            "outdir": app.config.get("VITE_OUTDIR", "static/dist"),
         }
 
         if not app.extensions.get(EXTENSION_NAME):
