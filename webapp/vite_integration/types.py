@@ -1,6 +1,11 @@
 from typing import TypedDict, List, Dict, Optional
 
 
+class Config(TypedDict):
+    port: int
+    outdir: str
+
+
 class ManifestChunk(TypedDict):
     """
     Python equivalent of  Vite's 'ManifestChunk' type.

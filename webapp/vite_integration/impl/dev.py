@@ -1,7 +1,8 @@
 from typing import List
 from urllib.parse import urljoin
 
-from webapp.vite_integration.impl.base import _AbstractViteIntegration, Config
+from ..types import Config
+from .base import _AbstractViteIntegration
 
 
 class DevViteIntegration(_AbstractViteIntegration):

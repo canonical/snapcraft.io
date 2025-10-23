@@ -3,9 +3,10 @@ import json
 from typing import List, Set
 from functools import cache
 
-from webapp.vite_integration.impl.base import _AbstractViteIntegration, Config
-from webapp.vite_integration.types import Manifest, ManifestChunk
-from webapp.vite_integration.exceptions import (
+from ..utils import EXTENSION_NAME
+from ..types import Config, Manifest, ManifestChunk
+from .base import _AbstractViteIntegration
+from ..exceptions import (
     AssetPathException,
     ManifestContentException,
     ManifestPathException,
@@ -28,7 +29,9 @@ class ProdViteIntegration(_AbstractViteIntegration):
             self.outdir, ProdViteIntegration.BUILD_MANIFEST
         )
         if not path.isfile(manifest_path):
-            raise ManifestPathException("Bad path to Vite manifest")
+            raise ManifestPathException(
+                f"{EXTENSION_NAME}: Bad path to Vite manifest"
+            )
 
         manifest: Manifest = {}
         with open(manifest_path) as f:
@@ -43,14 +46,15 @@ class ProdViteIntegration(_AbstractViteIntegration):
         entry = ProdViteIntegration.manifest.get(asset_name)
         if not entry:
             raise ManifestContentException(
-                f'Asset "{asset_name}" not declared in Vite build manifest'
+                f'{EXTENSION_NAME}: Asset "{asset_name}" not declared in Vite'
+                " build manifest"
             )
 
         entry_path = path.join(self.outdir, entry["file"])
         if not path.isfile(entry_path):
             raise AssetPathException(
-                f'Path to asset file "{entry_path}" doesn\'t exist; check your'
-                "VITE_OUTPUT_DIR env variable"
+                f'{EXTENSION_NAME}: Path to asset file "{entry_path}" '
+                "doesn't exist; check your VITE_OUTPUT_DIR env variable"
             )
 
         return f"/{entry_path}"
@@ -77,7 +81,8 @@ class ProdViteIntegration(_AbstractViteIntegration):
         entry = ProdViteIntegration.manifest.get(asset_name)
         if not entry:
             raise ManifestContentException(
-                f'Asset "{asset_name}" not declared in Vite build manifest'
+                f'{EXTENSION_NAME}: Asset "{asset_name}" not declared in '
+                "Vite build manifest"
             )
 
         return [entry] + __recursive_get_chunks(entry)
@@ -86,15 +91,15 @@ class ProdViteIntegration(_AbstractViteIntegration):
     def get_imported_chunks(self, asset_name: str) -> List[str]:
         chunks = self._recursive_get_chunks(asset_name)
         files = [
-            path.join(self.outdir, f["file"])
-            for f in chunks[1:]  # first chunk is asset_name
+            path.join(self.outdir, chunk["file"])
+            for chunk in chunks[1:]  # first chunk is `asset_name``
         ]
 
         for f in files:
             if not path.isfile(f):
                 raise AssetPathException(
-                    f'Path to asset file "{f}" doesn\'t exist; check your'
-                    "VITE_OUTPUT_DIR env variable"
+                    f'{EXTENSION_NAME}: Path to asset file "{f}" doesn\'t '
+                    "exist; check your VITE_OUTPUT_DIR env variable"
                 )
 
         # only build filesystem paths for all chunks
@@ -113,8 +118,8 @@ class ProdViteIntegration(_AbstractViteIntegration):
         for f in files:
             if not path.isfile(f):
                 raise AssetPathException(
-                    f'Path to asset file "{f}" doesn\'t exist; check your'
-                    "VITE_OUTPUT_DIR env variable"
+                    f'{EXTENSION_NAME}: Path to asset file "{f}" doesn\'t '
+                    "exist; check your VITE_OUTPUT_DIR env variable"
                 )
 
         # only build filesystem paths for all chunks

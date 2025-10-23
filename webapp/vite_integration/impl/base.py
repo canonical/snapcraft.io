@@ -1,7 +1,7 @@
 from abc import abstractmethod
 from typing import List
 
-type Config = dict["port" | "outdir", str]
+from ..types import Config
 
 
 class _AbstractViteIntegration:
