@@ -88,6 +88,7 @@ def init_extensions(app: FlaskBase):
     if not app.testing:
         csrf.init_app(app)
     else:
+        # add a helper for injecting a mock CSRF token
         @app.context_processor
         def inject_csrf_token():
             return dict(csrf_token=lambda: "mocked_csrf_token")
