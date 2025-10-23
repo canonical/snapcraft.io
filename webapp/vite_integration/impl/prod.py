@@ -92,7 +92,7 @@ class ProdViteIntegration(_AbstractViteIntegration):
         chunks = self._recursive_get_chunks(asset_name)
         files = [
             path.join(self.outdir, chunk["file"])
-            for chunk in chunks[1:]  # first chunk is `asset_name``
+            for chunk in chunks[1:]  # first chunk is `asset_name`
         ]
 
         for f in files:
