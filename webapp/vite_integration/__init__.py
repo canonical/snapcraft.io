@@ -1,4 +1,4 @@
-from webapp.vite_integration.extension import FlaskVite
+from .extension import FlaskVite
 
 
 __all__ = [FlaskVite]
