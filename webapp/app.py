@@ -53,15 +53,7 @@ def create_app(testing=False):
     app.name = "snapcraft"
     app.testing = testing
 
-    if not testing:
-        init_extensions(app)
-
-    if testing:
-
-        @app.context_processor
-        def inject_csrf_token():
-            return dict(csrf_token=lambda: "mocked_csrf_token")
-
+    init_extensions(app)
     set_handlers(app)
 
     app.register_blueprint(snapcraft_blueprint())
@@ -90,6 +82,12 @@ def create_app(testing=False):
     return app
 
 
-def init_extensions(app):
-    csrf.init_app(app)
+def init_extensions(app: FlaskBase):
     vite.init_app(app)
+
+    if not app.testing:
+        csrf.init_app(app)
+    else:
+        @app.context_processor
+        def inject_csrf_token():
+            return dict(csrf_token=lambda: "mocked_csrf_token")
