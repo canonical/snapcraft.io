@@ -60,6 +60,13 @@ class GetActiveDeviceMetrics(TestCase):
     ):
         mock_is_authenticated.return_value = True
 
+        with self.client.session_transaction() as sess:
+            sess["publisher"] = {
+                "nickname": "test_username",
+                "fullname": "Test User",
+                "email": "test@example.com",
+            }
+
         mock_get_item_details.return_value = {"snap_id": "id"}
         random_values = random.sample(range(1, 30), 29)
         dates = [
@@ -125,6 +132,13 @@ class GetActiveDeviceMetrics(TestCase):
             ]
         }
 
+        with self.client.session_transaction() as sess:
+            sess["publisher"] = {
+                "nickname": "test_username",
+                "fullname": "Test User",
+                "email": "test@example.com",
+            }
+
         response = self.client.get(
             self.endpoint_url + "?active-devices=channel"
         )
@@ -175,6 +189,13 @@ class GetActiveDeviceMetrics(TestCase):
             ]
         }
 
+        with self.client.session_transaction() as sess:
+            sess["publisher"] = {
+                "nickname": "test_username",
+                "fullname": "Test User",
+                "email": "test@example.com",
+            }
+
         response = self.client.get(self.endpoint_url + "?active-devices=os")
         self.assertEqual(response.status_code, 200)
         response_json = response.json
@@ -217,6 +238,13 @@ class GetActiveDeviceMetrics(TestCase):
                 }
             ]
         }
+
+        with self.client.session_transaction() as sess:
+            sess["publisher"] = {
+                "nickname": "test_username",
+                "fullname": "Test User",
+                "email": "test@example.com",
+            }
 
         response = self.client.get(
             self.endpoint_url + "?active-devices=architecture&period=3m"
@@ -280,6 +308,13 @@ class GetMetricAnnotation(TestCase):
         mock_is_authenticated.return_value = True
 
         mock_get_snap_info.return_value = self.snap_payload
+
+        with self.client.session_transaction() as sess:
+            sess["publisher"] = {
+                "nickname": "test_username",
+                "fullname": "Test User",
+                "email": "test@example.com",
+            }
 
         response = self.client.get(self.endpoint_url)
         self.assertEqual(response.status_code, 200)
@@ -360,6 +395,13 @@ class GetCountryMetric(TestCase):
                 }
             ]
         }
+
+        with self.client.session_transaction() as sess:
+            sess["publisher"] = {
+                "nickname": "test_username",
+                "fullname": "Test User",
+                "email": "test@example.com",
+            }
 
         response = self.client.get(self.endpoint_url)
         self.assertEqual(response.status_code, 200)
