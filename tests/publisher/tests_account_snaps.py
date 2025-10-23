@@ -352,6 +352,7 @@ class AccountSnapsPage(BaseTestCases.EndpointLoggedInErrorHandling):
             sess["publisher"] = {
                 "nickname": "test_username",
                 "fullname": "Test User",
+                "email": "test@example.com",
             }
 
         response = self.client.get("/snap_info/user_snap/test_snap")

@@ -77,6 +77,7 @@ class PublisherPage(TestCase):
                 "image": None,
                 "nickname": "Toto",
                 "fullname": "El Toto",
+                "email": "test@example.com",
             }
             s["macaroon_root"] = root.serialize()
             s["macaroon_discharge"] = discharge.serialize()
