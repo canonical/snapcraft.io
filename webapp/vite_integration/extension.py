@@ -32,7 +32,7 @@ class FlaskVite:
         is_dev = "development" == app.config.get("VITE_MODE", "production")
         ViteIntegration = DevViteIntegration if is_dev else ProdViteIntegration
         config = {
-            "port": app.config.get("VITE_PORT", "5173"),
+            "port": app.config.get("VITE_PORT", 5173),
             "outdir": app.config.get("VITE_OUTDIR", "static/dist"),
         }
 
