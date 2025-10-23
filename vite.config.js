@@ -107,7 +107,7 @@ export default defineConfig({
     modulePreload: false,
     emptyOutDir: true,
     sourcemap: "hidden",
-    outDir: env?.VITE_OUTPUT_DIR || "static/js/dist/vite",
+    outDir: env?.VITE_OUTDIR || "static/js/dist/vite",
     rollupOptions: {
       output: {
         entryFileNames: `[name]--[hash].js`,

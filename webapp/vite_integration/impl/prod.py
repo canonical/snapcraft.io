@@ -54,7 +54,7 @@ class ProdViteIntegration(_AbstractViteIntegration):
         if not path.isfile(entry_path):
             raise AssetPathException(
                 f'{EXTENSION_NAME}: Path to asset file "{entry_path}" '
-                "doesn't exist; check your VITE_OUTPUT_DIR env variable"
+                "doesn't exist; check your VITE_OUTDIR env variable"
             )
 
         return f"/{entry_path}"
@@ -99,7 +99,7 @@ class ProdViteIntegration(_AbstractViteIntegration):
             if not path.isfile(f):
                 raise AssetPathException(
                     f'{EXTENSION_NAME}: Path to asset file "{f}" doesn\'t '
-                    "exist; check your VITE_OUTPUT_DIR env variable"
+                    "exist; check your VITE_OUTDIR env variable"
                 )
 
         # only build filesystem paths for all chunks
@@ -119,7 +119,7 @@ class ProdViteIntegration(_AbstractViteIntegration):
             if not path.isfile(f):
                 raise AssetPathException(
                     f'{EXTENSION_NAME}: Path to asset file "{f}" doesn\'t '
-                    "exist; check your VITE_OUTPUT_DIR env variable"
+                    "exist; check your VITE_OUTDIR env variable"
                 )
 
         # only build filesystem paths for all chunks
