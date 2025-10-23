@@ -92,4 +92,4 @@ def create_app(testing=False):
 
 def init_extensions(app):
     csrf.init_app(app)
-    vite.init_app(app, is_dev=webapp.config.IS_DEVELOPMENT)
+    vite.init_app(app)

@@ -21,6 +21,9 @@ COMMIT_ID = os.getenv("COMMIT_ID", "commit_id")
 SENTRY_DSN = os.getenv("SENTRY_DSN", "").strip()
 SENTRY_CONFIG = {"release": COMMIT_ID, "environment": ENVIRONMENT}
 DNS_VERIFICATION_SALT = os.getenv("DNS_VERIFICATION_SALT")
+
+# Vite integration config values
+VITE_MODE = "development" if IS_DEVELOPMENT else "production"
 VITE_PORT = os.getenv("VITE_PORT", 5173)
 VITE_OUTPUT_DIR = os.getenv("VITE_OUTPUT_DIR", "static/js/dist/vite")
 
