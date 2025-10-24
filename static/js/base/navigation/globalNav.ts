@@ -16,7 +16,6 @@ export function patchAllCanonicalMobile() {
       sectionLinksList.prepend(createBackButtonItem(sectionHref));
     }
   });
-  return allCanonicalMobile;
 }
 
 function createFromHTML(html: string) {
