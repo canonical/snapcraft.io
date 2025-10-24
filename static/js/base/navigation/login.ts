@@ -1,4 +1,5 @@
 // Login
+
 const navAccountContainer = document.querySelector(".js-nav-account") as
   | HTMLElement
   | undefined;

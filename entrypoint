@@ -6,6 +6,7 @@ RUN_COMMAND="gunicorn webapp.app:create_app() --bind $1 --worker-class gevent --
 
 if [ "${FLASK_DEBUG}" = true ] || [ "${FLASK_DEBUG}" = 1 ]; then
     RUN_COMMAND="${RUN_COMMAND} --reload --log-level debug --timeout 9999"
+    RUN_COMMAND="${RUN_COMMAND} --logger-class canonicalwebteam.flask_base.log_utils.GunicornDevLogger"
 fi
 
 ${RUN_COMMAND}
