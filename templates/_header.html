@@ -29,8 +29,8 @@
           <div class="p-navigation__row u-fixed-width">
         {% endif %}
             <nav class="p-navigation__nav">
-              <div class="p-navigation__items">
-                <ul class="p-navigation__items--section" role="menu">
+              <div class="p-navigation__nav--warpper">
+                <ul class="p-navigation__items" role="menu">
                   <li
                     class="p-navigation__item {% if request.path == '/store' %}is-selected{% endif %}"
                     role="menuitem"
@@ -97,7 +97,7 @@
                     <a class="p-navigation__link " href="https://forum.snapcraft.io/">Forum</a>
                   </li>
                 </ul>
-                <ul class="p-navigation__items--section js-nav-account global-nav" role="menu">
+                <ul class="p-navigation__items js-nav-account global-nav" role="menu">
                   {# Authenticated #}
                   <li class="p-navigation__item--dropdown-toggle js-nav-account--authenticated u-hide" role="menuitem" id="link-1">
                     <a class="p-navigation__link js-account--name" aria-controls="account-menu" aria-expanded="false"> My account </a>

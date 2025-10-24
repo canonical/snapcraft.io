@@ -19,6 +19,15 @@
 
         // starts on the right outside of the screen
         --right: 110%;
+
+        &--wrapper {
+          position: relative;
+        }
+      }
+
+      .p-navigation__items {
+        position: static;
+        padding-bottom: 0;
       }
 
       &.has-menu-open {
@@ -33,9 +42,20 @@
         --right: 110%;
       }
 
-      .p-navigation__items--section {
-        margin: 0;
-        padding: 0;
+      .p-navigation__dropdown {
+        // to match the styling from p-navigation__items coming from vanilla
+        margin-top: -1px;
+
+        &[aria-hidden=false] {
+          transform: translateX(-100vw);
+        }
+      }
+
+      // fix some stylings from vanilla-framework
+      #all-canonical-mobile {
+        .global-nav__header-link-anchor:after {
+          right: 1rem;
+        }
       }
     }
   }
@@ -50,16 +70,6 @@
         inherits: false;
         initial-value: 0%;
         syntax: "<percentage>";
-      }
-
-      .p-navigation__items {
-        justify-content: space-between;
-
-        &--section {
-          display: flex;
-          margin: 0;
-          padding: 0;
-        }
       }
 
       .p-navigation__item--dropdown-toggle {
