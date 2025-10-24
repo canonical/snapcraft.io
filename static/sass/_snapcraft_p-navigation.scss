@@ -26,8 +26,8 @@
       }
 
       .p-navigation__items {
-        position: static;
         padding-bottom: 0;
+        position: static;
       }
 
       &.has-menu-open {
@@ -46,14 +46,14 @@
         // to match the styling from p-navigation__items coming from vanilla
         margin-top: -1px;
 
-        &[aria-hidden=false] {
+        &[aria-hidden="false"] {
           transform: translateX(-100vw);
         }
       }
 
       // fix some stylings from vanilla-framework
       #all-canonical-mobile {
-        .global-nav__header-link-anchor:after {
+        .global-nav__header-link-anchor::after {
           right: 1rem;
         }
       }
