@@ -1,12 +1,12 @@
 import "./login";
 
-import { createNav as createAllCanonicalLink } from "@canonical/global-nav";
+import { createNav as createAllCanonicalNav } from "@canonical/global-nav";
 import { initNavigationListeners } from "./listeners";
-import { patchAllCanonicalMobile } from "./globalNav";
+import { patchAllCanonicalMobileMarkup } from "./globalNav";
 
 // initialize global-nav ("All Canonical" link) and the rest of the navigation
 window.addEventListener("DOMContentLoaded", function () {
-  createAllCanonicalLink();
-  patchAllCanonicalMobile();
+  createAllCanonicalNav();
+  patchAllCanonicalMobileMarkup();
   initNavigationListeners();
 });

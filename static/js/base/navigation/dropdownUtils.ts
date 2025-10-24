@@ -89,14 +89,16 @@ export const expandDropdown = (
   setFocusable(targetDropdown);
 };
 
-export const toggleAnimationPlaying = (
-  element?: Element,
+const toggleAnimationPlaying = (
+  element: Element,
   animationDuration?: number,
 ) => {
   const endAnimation = () => {
-    element?.classList.toggle("js-animation-playing", false);
+    element.classList.toggle("js-animation-playing", false);
   };
-  element?.classList.toggle("js-animation-playing", true);
+  element.classList.toggle("js-animation-playing", true);
+  // force browser to flush all pending style and layout calculations immediately
+  void (element as HTMLElement).offsetWidth;
   setTimeout(endAnimation, animationDuration);
 };
 
@@ -104,14 +106,7 @@ export const setupAnimationStart = (
   elements: Element[],
   animationDuration?: number,
 ) => {
-  // get all open toggles to add the animation playing to them
-  elements
-    .filter(
-      (toggle: Element): toggle is Element =>
-        toggle.parentElement != null &&
-        toggle.parentElement.classList.contains("is-active"),
-    )
-    .forEach((toggle: Element) => {
-      toggleAnimationPlaying(toggle.parentElement!, animationDuration);
-    });
+  elements.forEach((toggle: Element) => {
+    toggleAnimationPlaying(toggle.parentElement!, animationDuration);
+  });
 };
