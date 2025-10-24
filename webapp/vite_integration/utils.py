@@ -1,4 +1,4 @@
-EXTENSION_NAME = "canonicalwebteam.flask_vite"
+EXTENSION_NAME = "canonicalwebteam.flask-vite"
 
 
 class staticproperty(property):
