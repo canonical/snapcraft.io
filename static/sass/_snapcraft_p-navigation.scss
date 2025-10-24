@@ -72,6 +72,13 @@
         syntax: "<percentage>";
       }
 
+      .p-navigation__nav--wrapper{
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        width: 100%;
+      }
+
       .p-navigation__item--dropdown-toggle {
         position: relative;
       }

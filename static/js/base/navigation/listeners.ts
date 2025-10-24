@@ -3,7 +3,6 @@ import {
   collapseDropdown,
   setFocusable,
   setActiveDropdown,
-  toggleAnimationPlaying,
   setupAnimationStart,
 } from "./dropdownUtils";
 
@@ -31,6 +30,15 @@ export const initNavigationListeners = () => {
     ".p-navigation__dropdown",
   );
 
+  // global-nav related elements to fix certain problems for mobile view
+  const desktopGlobalNav = document.getElementById("all-canonical-desktop")!;
+  const overlayGlobalNav = document.getElementById("all-canonical-overlay")!;
+  const togglesGlobalNav = [
+    ...document.querySelectorAll(
+      "#all-canonical-mobile button.global-nav__header-link-anchor",
+    ),
+  ].map((element) => element as HTMLElement);
+
   /**
    * Collapses all dropdowns with an optional exception.
    *
@@ -47,6 +55,15 @@ export const initNavigationListeners = () => {
         collapseDropdown(toggle, target);
       }
     });
+    togglesGlobalNav.forEach((toggle) => {
+      const parent = toggle.parentElement;
+      const dropdownContents = parent?.querySelector(
+        ":scope > .p-navigation__dropdown",
+      );
+      if (dropdownContents) {
+        collapseDropdown(toggle, dropdownContents as HTMLElement);
+      }
+    });
   };
 
   const resetNavigation = () => {
@@ -55,6 +72,8 @@ export const initNavigationListeners = () => {
     const closeMenuHandler = () => {
       navigation.classList.remove("has-menu-open");
       navigation.classList.remove("menu-closing");
+      desktopGlobalNav.classList.remove("show-content");
+      overlayGlobalNav.classList.remove("show-overlay");
       collapseAllDropdowns();
     };
 
@@ -108,18 +127,6 @@ export const initNavigationListeners = () => {
       }
       // hide scroll bar
       document.body.style.overflow = "hidden";
-      console.log(navigation.scrollHeight, window.innerHeight);
-      [...navigation.querySelectorAll("*")].forEach((el) => {
-        const rect = el.getBoundingClientRect();
-        if (rect.bottom > window.innerHeight) {
-          console.log(
-            "Overflowing element:",
-            el,
-            rect.bottom - window.innerHeight,
-            "px beyond viewport",
-          );
-        }
-      });
     }
   };
 
@@ -154,19 +161,12 @@ export const initNavigationListeners = () => {
           collapseAllDropdowns(target);
         }
 
-        const toggleParent = toggle.parentElement;
-        if (toggleParent) {
-          requestAnimationFrame(() => {
-            toggleAnimationPlaying(toggleParent);
-          });
-        }
-
         if (target.getAttribute("aria-hidden") === "true") {
           unfocusAllLinks();
-          expandDropdown(toggle, target, ANIMATION_DURATION, true);
+          expandDropdown(toggle, target);
           navigation.classList.add("has-menu-open");
         } else {
-          collapseDropdown(toggle, target, ANIMATION_DURATION, true);
+          collapseDropdown(toggle, target);
           if (!isNested) {
             navigation.classList.remove("has-menu-open");
           }

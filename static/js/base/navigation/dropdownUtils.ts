@@ -9,6 +9,14 @@ export const setActiveDropdown = (
   if (dropdownToggleEl) {
     dropdownToggleEl.classList.toggle("is-active", isActive);
     dropdownToggleEl.classList.toggle("is-selected", isActive);
+    const globalNavButton = dropdownToggleEl.querySelector(
+      ":scope > .p-navigation__link",
+    );
+    // fix some states from global-nav elements in mobile
+    if (globalNavButton) {
+      globalNavButton.setAttribute("aria-expanded", isActive.toString());
+      globalNavButton.classList.toggle("is-selected", isActive);
+    }
   }
 
   // set active state of the parent dropdown panel (to fade it out of view)
@@ -67,49 +75,28 @@ export const setFocusable = (target: Element) => {
 export const collapseDropdown = (
   dropdownToggleButton: HTMLElement,
   targetDropdown: HTMLElement,
-  animationDuration?: number,
-  animated = false,
 ) => {
-  const closeHandler = () => {
-    targetDropdown.setAttribute("aria-hidden", "true");
-    setActiveDropdown(dropdownToggleButton, false);
-  };
-
-  if (animated) {
-    setTimeout(closeHandler, animationDuration);
-  } else {
-    closeHandler();
-  }
+  targetDropdown.setAttribute("aria-hidden", "true");
+  setActiveDropdown(dropdownToggleButton, false);
 };
 
 export const expandDropdown = (
   dropdownToggleButton: HTMLElement,
   targetDropdown: HTMLElement,
-  animationDuration?: number,
-  animated = false,
 ) => {
-  const expandHandler = () => {
-    setActiveDropdown(dropdownToggleButton);
-    targetDropdown.setAttribute("aria-hidden", "false");
-    setFocusable(targetDropdown);
-  };
-
-  if (animated) {
-    setTimeout(expandHandler, animationDuration);
-  } else {
-    expandHandler();
-  }
+  setActiveDropdown(dropdownToggleButton);
+  targetDropdown.setAttribute("aria-hidden", "false");
+  setFocusable(targetDropdown);
 };
 
 export const toggleAnimationPlaying = (
-  element: Element,
+  element?: Element,
   animationDuration?: number,
 ) => {
   const endAnimation = () => {
-    element.classList.toggle("js-animation-playing", false);
+    element?.classList.toggle("js-animation-playing", false);
   };
-
-  element.classList.toggle("js-animation-playing", true);
+  element?.classList.toggle("js-animation-playing", true);
   setTimeout(endAnimation, animationDuration);
 };
 
