@@ -13,7 +13,7 @@ import sentry_sdk
 from canonicalwebteam.flask_base.app import FlaskBase
 from webapp.blog.views import init_blog
 from webapp.docs.views import init_docs
-from webapp.extensions import csrf
+from webapp.extensions import csrf, vite
 from webapp.handlers import set_handlers
 from webapp.login.views import login
 from webapp.login.oauth_views import oauth
@@ -53,15 +53,7 @@ def create_app(testing=False):
     app.name = "snapcraft"
     app.testing = testing
 
-    if not testing:
-        init_extensions(app)
-
-    if testing:
-
-        @app.context_processor
-        def inject_csrf_token():
-            return dict(csrf_token=lambda: "mocked_csrf_token")
-
+    init_extensions(app)
     set_handlers(app)
 
     app.register_blueprint(snapcraft_blueprint())
@@ -90,5 +82,13 @@ def create_app(testing=False):
     return app
 
 
-def init_extensions(app):
-    csrf.init_app(app)
+def init_extensions(app: FlaskBase):
+    vite.init_app(app)
+
+    if not app.testing:
+        csrf.init_app(app)
+    else:
+        # add a helper for injecting a mock CSRF token
+        @app.context_processor
+        def inject_csrf_token():
+            return dict(csrf_token=lambda: "mocked_csrf_token")

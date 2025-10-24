@@ -1,5 +1,7 @@
-from webapp.vite_integration.impl.dev import DevViteIntegration
-from webapp.vite_integration.impl.prod import ProdViteIntegration
+from .dev import DevViteIntegration
+from .prod import ProdViteIntegration
 
-DevViteIntegration
-ProdViteIntegration
+__all__ = [
+    "DevViteIntegration",
+    "ProdViteIntegration",
+]

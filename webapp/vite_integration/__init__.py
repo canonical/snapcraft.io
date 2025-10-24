@@ -1,10 +1,4 @@
-from webapp.config import IS_DEVELOPMENT
-from webapp.vite_integration.impl import (
-    DevViteIntegration,
-    ProdViteIntegration,
-)
+from .extension import FlaskVite
 
 
-ViteIntegration = (
-    DevViteIntegration if IS_DEVELOPMENT else ProdViteIntegration
-)()
+__all__ = ["FlaskVite"]
