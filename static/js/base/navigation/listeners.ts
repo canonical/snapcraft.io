@@ -29,33 +29,29 @@ export const initNavigationListeners = () => {
   const dropdownLinksLists = document.querySelectorAll(
     ".p-navigation__dropdown",
   );
+  const allCanonicalLink = document.getElementById("all-canonical-link")!;
 
   // global-nav related elements to fix certain problems for mobile view
   const desktopGlobalNav = document.getElementById("all-canonical-desktop")!;
   const overlayGlobalNav = document.getElementById("all-canonical-overlay")!;
-  const togglesGlobalNav = [
+  const togglesMobileGlobalNav = [
     ...document.querySelectorAll(
       "#all-canonical-mobile button.global-nav__header-link-anchor",
     ),
   ].map((element) => element as HTMLElement);
 
-  /**
-   * Collapses all dropdowns with an optional exception.
-   *
-   * @param excludedToggle a toggle Element that is to be excluded from the reset.
-   */
   const collapseAllDropdowns = (excludedToggle?: HTMLElement) => {
     toggles.forEach((toggle) => {
       const ariaControls = toggle.getAttribute("aria-controls");
       if (ariaControls) {
         const target = document.getElementById(ariaControls);
-        if (!target || target === excludedToggle) {
-          return;
+        if (target && !(target === excludedToggle)) {
+          collapseDropdown(toggle, target);
         }
-        collapseDropdown(toggle, target);
       }
     });
-    togglesGlobalNav.forEach((toggle) => {
+    // handle the dropdowns from global-nav mobile too
+    togglesMobileGlobalNav.forEach((toggle) => {
       const parent = toggle.parentElement;
       const dropdownContents = parent?.querySelector(
         ":scope > .p-navigation__dropdown",
@@ -66,19 +62,21 @@ export const initNavigationListeners = () => {
     });
   };
 
-  const resetNavigation = () => {
+  const closeMenu = () => {
     navigation.classList.add("menu-closing");
 
     const closeMenuHandler = () => {
       navigation.classList.remove("has-menu-open");
       navigation.classList.remove("menu-closing");
-      desktopGlobalNav.classList.remove("show-content");
-      overlayGlobalNav.classList.remove("show-overlay");
-      collapseAllDropdowns();
     };
 
     // the time is aproximately the time of the sliding animation
     setTimeout(closeMenuHandler, ANIMATION_DURATION);
+  };
+
+  const resetNavigation = () => {
+    collapseAllDropdowns();
+    closeMenu();
   };
 
   const unfocusAllLinks = () => {
@@ -116,6 +114,9 @@ export const initNavigationListeners = () => {
     if (navigation.classList.contains("has-menu-open")) {
       resetNavigation();
       menuButton.innerHTML = "Menu";
+      // remove classes set for desktop global nav
+      desktopGlobalNav.classList.remove("show-content");
+      overlayGlobalNav.classList.remove("show-overlay");
       // reshow scroll bar
       document.body.style.overflow = "visible";
     } else {
@@ -137,10 +138,10 @@ export const initNavigationListeners = () => {
       const topNavigationElement = target.closest(
         ".p-navigation, .p-navigation--sliding, .p-navigation--reduced",
       );
-      if (!topNavigationElement) {
-        resetNavigation();
-        // set js-animation-playing on all open dropdowns
+      if (!topNavigationElement || target === allCanonicalLink) {
+        // set js-animation-playing on all dropdowns
         setupAnimationStart(toggles, ANIMATION_DURATION);
+        resetNavigation();
       }
     }
   };
@@ -148,6 +149,7 @@ export const initNavigationListeners = () => {
   const handleToggle = (e: Event, toggle: HTMLElement) => {
     e.preventDefault();
 
+    setupAnimationStart(toggles, ANIMATION_DURATION);
     const ariaControls = toggle.getAttribute("aria-controls");
     if (ariaControls) {
       const target = document.getElementById(ariaControls);
@@ -156,19 +158,20 @@ export const initNavigationListeners = () => {
         const isNested = !!(target.parentNode as HTMLElement).closest(
           ".p-navigation__dropdown",
         );
-
         if (!isNested) {
           collapseAllDropdowns(target);
         }
 
         if (target.getAttribute("aria-hidden") === "true") {
           unfocusAllLinks();
+          console.log(toggle.parentElement?.classList);
           expandDropdown(toggle, target);
           navigation.classList.add("has-menu-open");
         } else {
+          console.log(toggle.parentElement?.classList);
           collapseDropdown(toggle, target);
           if (!isNested) {
-            navigation.classList.remove("has-menu-open");
+            closeMenu();
           }
         }
       }
@@ -213,6 +216,7 @@ export const initNavigationListeners = () => {
     backButton.addEventListener("click", handler);
   });
 
-  // when clicking outside navigation, close all dropdowns
+  // when clicking outside navigation or in "All Canonical", close all dropdowns
   document.addEventListener("click", handleClickOutsideNavigation);
+  allCanonicalLink.addEventListener("click", handleClickOutsideNavigation);
 };

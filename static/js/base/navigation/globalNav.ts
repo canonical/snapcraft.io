@@ -1,4 +1,4 @@
-export function patchAllCanonicalMobile() {
+export function patchAllCanonicalMobileMarkup() {
   const allCanonicalMobile = document.getElementById("all-canonical-mobile");
   const topMobileSections = allCanonicalMobile?.querySelectorAll(
     ".global-nav__dropdown-toggle",
