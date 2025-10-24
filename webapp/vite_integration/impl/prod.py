@@ -15,7 +15,8 @@ from ..exceptions import (
 
 class ProdViteIntegration(_AbstractViteIntegration):
     BUILD_MANIFEST = ".vite/manifest.json"
-    manifest = None  # we cache the manifest contents in a static attribute
+    # we cache the manifest contents in a static attribute
+    manifest: Manifest = None
 
     def __init__(self, config: Config):
         self.outdir = config["outdir"]
@@ -24,7 +25,6 @@ class ProdViteIntegration(_AbstractViteIntegration):
             # manifest has already been parsed
             return
 
-        # print("Initializing Vite manifest")
         manifest_path = path.join(
             self.outdir, ProdViteIntegration.BUILD_MANIFEST
         )
@@ -43,21 +43,62 @@ class ProdViteIntegration(_AbstractViteIntegration):
 
     @cache
     def get_asset_url(self, asset_name: str) -> str:
-        entry = ProdViteIntegration.manifest.get(asset_name)
-        if not entry:
+        asset = self._get_asset(asset_name)
+
+        asset_path = path.join(self.outdir, asset["file"])
+        self._check_file_exists(asset_path)
+
+        return f"/{asset_path}"
+
+    @cache
+    def get_imported_chunks(self, asset_name: str) -> List[str]:
+        chunks = self._recursive_get_chunks(asset_name)
+        files = [
+            path.join(self.outdir, chunk["file"])
+            for chunk in chunks[1:]  # first chunk is `asset_name`
+        ]
+
+        self._check_all_files_exist(files)
+
+        # build URLs for all chunks
+        urls = [f"/{f}" for f in files]
+
+        return urls
+
+    @cache
+    def get_imported_css(self, asset_name: str) -> List[str]:
+        chunks = self._recursive_get_chunks(asset_name)
+        files = []
+        for chunk in chunks:
+            for file in chunk.get("css", []):
+                files.append(path.join(self.outdir, file))
+
+        self._check_all_files_exist(files)
+
+        # build URLs for all stylesheets
+        urls = [f"/{f}" for f in files]
+
+        return urls
+
+    def _get_asset(self, asset_name: str) -> ManifestChunk:
+        asset_chunk = ProdViteIntegration.manifest.get(asset_name)
+        if not asset_chunk:
             raise ManifestContentException(
-                f'{EXTENSION_NAME}: Asset "{asset_name}" not declared in Vite'
-                " build manifest"
+                f'{EXTENSION_NAME}: Asset "{asset_name}" not declared in '
+                "Vite build manifest"
             )
+        return asset_chunk
 
-        entry_path = path.join(self.outdir, entry["file"])
-        if not path.isfile(entry_path):
+    def _check_file_exists(self, file: str):
+        if not path.isfile(file):
             raise AssetPathException(
-                f'{EXTENSION_NAME}: Path to asset file "{entry_path}" '
-                "doesn't exist; check your VITE_OUTDIR env variable"
+                f'{EXTENSION_NAME}: Path to asset file "{file}" doesn\'t '
+                "exist; check your VITE_OUTDIR env variable"
             )
 
-        return f"/{entry_path}"
+    def _check_all_files_exist(self, files: List[str]):
+        for f in files:
+            self._check_file_exists(f)
 
     @cache
     def _recursive_get_chunks(self, asset_name: str) -> List[ManifestChunk]:
@@ -78,51 +119,6 @@ class ProdViteIntegration(_AbstractViteIntegration):
                 chunks.append(importee)
             return chunks
 
-        entry = ProdViteIntegration.manifest.get(asset_name)
-        if not entry:
-            raise ManifestContentException(
-                f'{EXTENSION_NAME}: Asset "{asset_name}" not declared in '
-                "Vite build manifest"
-            )
+        asset = self._get_asset(asset_name)
 
-        return [entry] + __recursive_get_chunks(entry)
-
-    @cache
-    def get_imported_chunks(self, asset_name: str) -> List[str]:
-        chunks = self._recursive_get_chunks(asset_name)
-        files = [
-            path.join(self.outdir, chunk["file"])
-            for chunk in chunks[1:]  # first chunk is `asset_name`
-        ]
-
-        for f in files:
-            if not path.isfile(f):
-                raise AssetPathException(
-                    f'{EXTENSION_NAME}: Path to asset file "{f}" doesn\'t '
-                    "exist; check your VITE_OUTDIR env variable"
-                )
-
-        # only build filesystem paths for all chunks
-        urls = [f"/{f}" for f in files]
-
-        return urls
-
-    @cache
-    def get_imported_css(self, asset_name: str) -> List[str]:
-        chunks = self._recursive_get_chunks(asset_name)
-        files = []
-        for chunk in chunks:
-            for file in chunk.get("css", []):
-                files.append(path.join(self.outdir, file))
-
-        for f in files:
-            if not path.isfile(f):
-                raise AssetPathException(
-                    f'{EXTENSION_NAME}: Path to asset file "{f}" doesn\'t '
-                    "exist; check your VITE_OUTDIR env variable"
-                )
-
-        # only build filesystem paths for all chunks
-        urls = [f"/{f}" for f in files]
-
-        return urls
+        return [asset] + __recursive_get_chunks(asset)
