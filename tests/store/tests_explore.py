@@ -1,16 +1,15 @@
 import unittest
 from unittest.mock import patch, Mock
+import requests
 
 
 class ExploreViewTest(unittest.TestCase):
     def setUp(self):
         self.recommendations_url = (
-            "https://recommendations.snapcraft.io/api/category/popular"
+            "https://recommendations.snapcraft.io/api/category"
         )
 
-    @patch("requests.get")
-    def test_recommendations_api_call(self, mock_requests_get):
-        mock_popular_snaps = [
+        self.mock_snaps = [
             {
                 "details": {
                     "contact": "https://example.com/contact",
@@ -27,15 +26,36 @@ class ExploreViewTest(unittest.TestCase):
                 "snap_id": "test-snap-id",
             }
         ]
+
+    @patch("requests.get")
+    def test_popular_snaps(self, mock_requests_get):
         mock_response = Mock()
-        mock_response.json.return_value = mock_popular_snaps
+        mock_response.json.return_value = self.mock_snaps
         mock_requests_get.return_value = mock_response
 
-        import requests
+        res = requests.get(f"{self.recommendations_url}/popular")
+        popular_snaps = res.json()
 
-        r = requests.get(
-            "https://recommendations.snapcraft.io/api/category/popular"
-        )
-        popular_snaps = r.json()
+        self.assertEqual(popular_snaps, self.mock_snaps)
 
-        self.assertEqual(popular_snaps, mock_popular_snaps)
+    @patch("requests.get")
+    def test_recent_snaps(self, mock_requests_get):
+        mock_response = Mock()
+        mock_response.json.return_value = self.mock_snaps
+        mock_requests_get.return_value = mock_response
+
+        res = requests.get(f"{self.recommendations_url}/recent")
+        recent_snaps = res.json()
+
+        self.assertEqual(recent_snaps, self.mock_snaps)
+
+    @patch("requests.get")
+    def test_trending_snaps(self, mock_requests_get):
+        mock_response = Mock()
+        mock_response.json.return_value = self.mock_snaps
+        mock_requests_get.return_value = mock_response
+
+        res = requests.get(f"{self.recommendations_url}/trending")
+        trending_snaps = res.json()
+
+        self.assertEqual(trending_snaps, self.mock_snaps)
