@@ -192,10 +192,10 @@ dl {
   transition: opacity 0.5s ease-in;
 }
 
-.u-line-clamp--3 {
+.u-line-clamp--2 {
   -webkit-box-orient: vertical;
-  display: flex;
-  -webkit-line-clamp: 3;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
   overflow: hidden;
   text-overflow: ellipsis;
 }
@@ -568,3 +568,4 @@ html {
   background-size: contain;
   padding: 67px;
 }
+

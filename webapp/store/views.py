@@ -125,11 +125,30 @@ def store_blueprint(store_query=None):
 
     @store.route("/explore")
     def explore_view():
-        r = api_requests.get(
-            "https://recommendations.snapcraft.io/api/category/popular"
+        recommendations_api_url = (
+            "https://recommendations.snapcraft.io/api/category"
         )
 
-        popular_snaps = r.json()
+        try:
+            popular_snaps = api_requests.get(
+                f"{recommendations_api_url}/popular"
+            ).json()
+        except StoreApiError:
+            popular_snaps = []
+
+        try:
+            recent_snaps = api_requests.get(
+                f"{recommendations_api_url}/recent"
+            ).json()
+        except StoreApiError:
+            recent_snaps = []
+
+        try:
+            trending_snaps = api_requests.get(
+                f"{recommendations_api_url}/trending"
+            ).json()
+        except StoreApiError:
+            trending_snaps = []
 
         try:
             categories_results = device_gateway.get_categories()
@@ -145,6 +164,8 @@ def store_blueprint(store_query=None):
             "explore/index.html",
             categories=categories,
             popular_snaps=popular_snaps,
+            recent_snaps=recent_snaps,
+            trending_snaps=trending_snaps,
         )
 
     @store.route("/youtube", methods=["POST"])

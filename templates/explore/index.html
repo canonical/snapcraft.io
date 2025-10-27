@@ -22,9 +22,21 @@
     </div>
   </section>
 
-  {% include "explore/_popular-snaps.html" %}
+  {% if recent_snaps %}
+    {% include "explore/_updated-snaps.html" %}
+  {% endif %}
 
-  {% include "explore/_categories.html" %}
+  {% if popular_snaps %}
+    {% include "explore/_popular-snaps.html" %}
+  {% endif %}
+
+  {% if categories %}
+    {% include "explore/_categories.html" %}
+  {% endif %}
+
+  {% if trending_snaps %}
+    {% include "explore/_trending-snaps.html" %}
+  {% endif %}
 
   <section class="p-strip u-no-padding--top">
     <div class="u-fixed-width">
