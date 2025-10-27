@@ -122,8 +122,8 @@ def _inject_vite_dev_tools(res: flask.Response):
 
     # build the dev tools scripts string
     port = flask.current_app.config.get("VITE_PORT", 5173)
-    baseurl = f'http://localhost:{port}/'
-    dev_tools = f'''
+    baseurl = f"http://localhost:{port}/"
+    dev_tools = f"""
     <!-- {EXTENSION_NAME}: start Vite dev tools -->
     <script
         type="module"
@@ -137,7 +137,7 @@ def _inject_vite_dev_tools(res: flask.Response):
         window.__vite_plugin_react_preamble_installed__ = true;
     </script>
     <!-- {EXTENSION_NAME}: end Vite dev tools -->
-    '''
+    """
 
     # inject the dev tools' scripts at the end of the <head> tag
     body = body.replace("</head>", f"{dev_tools}\n</head>")
