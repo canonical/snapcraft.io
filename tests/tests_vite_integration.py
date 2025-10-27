@@ -4,6 +4,9 @@ from shutil import rmtree
 from typing import cast
 from urllib.parse import urlparse
 from pathlib import Path
+from unittest.mock import patch
+
+from webapp.app import create_app
 from webapp.vite_integration.impl import (
     ProdViteIntegration,
     DevViteIntegration,
@@ -12,7 +15,8 @@ import webapp.vite_integration.exceptions as vite_exceptions
 
 
 MOCK_CONFIG = {
-    "port": 5173,
+    "mode": "development",
+    "port": 9999,
     "outdir": "/tmp/python_vite_test",
 }
 MOCK_ASSET_PATH = "test/path/for/asset.ts"
@@ -162,3 +166,28 @@ class TestsProdViteIntegration(TestCase):
     def tests_get_imported_css(self):
         vite = ProdViteIntegration(MOCK_CONFIG)
         assert len(vite.get_imported_css(MOCK_ASSET_PATH)) == 1
+
+
+class TestsFlaskViteExtension(TestCase):
+    @patch("webapp.config.VITE_MODE", "development")
+    @patch("webapp.config.VITE_PORT", MOCK_CONFIG["port"])
+    @patch("webapp.config.VITE_OUTDIR", MOCK_CONFIG["outdir"])
+    def setUp(self):
+        self.app = create_app(testing=True)
+        self.client = self.app.test_client()
+
+    def test_extension_init(self):
+        self.assertEqual(self.app.config.get("VITE_MODE"), "development")
+        self.assertEqual(self.app.config.get("VITE_PORT"), MOCK_CONFIG["port"])
+        self.assertEqual(
+            self.app.config.get("VITE_OUTDIR"), MOCK_CONFIG["outdir"]
+        )
+
+    def test_dev_tools(self):
+        port = self.app.config.get("VITE_PORT")
+        response = self.client.get("/")
+        self.assertEqual(response.status_code, 200)
+
+        body = response.get_data(as_text=True)
+        self.assertGreater(len(body), 0)
+        self.assertIn(f"http://localhost:{port}/@vite/client", body)
