@@ -1,4 +1,6 @@
 from math import floor
+
+import requests as api_requests
 import flask
 from dateutil import parser
 from webapp.decorators import exchange_required, login_required
@@ -123,6 +125,12 @@ def store_blueprint(store_query=None):
 
     @store.route("/explore")
     def explore_view():
+        r = api_requests.get(
+            "https://recommendations.snapcraft.io/api/category/popular"
+        )
+
+        popular_snaps = r.json()
+
         try:
             categories_results = device_gateway.get_categories()
         except StoreApiError:
@@ -134,7 +142,9 @@ def store_blueprint(store_query=None):
         )
 
         return flask.render_template(
-            "explore/index.html", categories=categories
+            "explore/index.html",
+            categories=categories,
+            popular_snaps=popular_snaps,
         )
 
     @store.route("/youtube", methods=["POST"])
