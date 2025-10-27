@@ -1,7 +1,8 @@
-from typing import TypedDict, List, Dict, Optional
+from typing import TypedDict, List, Dict, Optional, Union
 
 
 class Config(TypedDict):
+    mode: Union["development", "production"]
     port: int
     outdir: str
 

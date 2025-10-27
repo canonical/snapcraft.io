@@ -1,6 +1,7 @@
 import flask
 from markupsafe import Markup
 from os import path
+from typing import Union
 
 from .utils import EXTENSION_NAME, staticproperty
 from .exceptions import ExtensionNotInitialized
@@ -20,7 +21,7 @@ class FlaskVite:
             self.init_app(app)
 
     @staticproperty
-    def instance():
+    def instance() -> Union[DevViteIntegration, ProdViteIntegration]:
         try:
             return flask.current_app.extensions[EXTENSION_NAME]
         except KeyError:
@@ -29,12 +30,13 @@ class FlaskVite:
             )
 
     def init_app(self, app: flask.Flask):
-        is_dev = "development" == app.config.get("VITE_MODE", "production")
-        ViteIntegration = DevViteIntegration if is_dev else ProdViteIntegration
         config = {
+            "mode": app.config.get("VITE_MODE", "production"),
             "port": app.config.get("VITE_PORT", 5173),
             "outdir": app.config.get("VITE_OUTDIR", "static/dist"),
         }
+        is_dev = "development" == config["mode"]
+        ViteIntegration = DevViteIntegration if is_dev else ProdViteIntegration
 
         if not app.extensions.get(EXTENSION_NAME):
             app.extensions[EXTENSION_NAME] = ViteIntegration(config)
