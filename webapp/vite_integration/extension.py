@@ -56,9 +56,9 @@ def vite_import(entrypoint: str):
     _, ext = path.splitext(entrypoint)
 
     match ext:
-        case ".css" | ".scss" | ".sass":
+        case ".css" | ".scss" | ".sass" | ".less" | ".styl":
             return _stylesheet_import(entrypoint)
-        case ".js" | ".ts" | ".jsx" | ".tsx" | ".svelte":
+        case ".js" | ".ts" | ".jsx" | ".tsx" | ".svelte" | ".vue":
             return _script_import(entrypoint)
         case _:
             return _unknown_import(entrypoint)
