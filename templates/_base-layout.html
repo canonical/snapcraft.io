@@ -23,10 +23,6 @@
 
     {{ vite_import('static/sass/styles.scss') }}
 
-    {% if IS_DEVELOPMENT %}
-      {{ vite_dev_tools() }}
-    {% endif %}
-
     {{ vite_import('static/js/base/base.ts') }}
     {% block scripts_includes %}{% endblock %}
     <script src="https://assets.ubuntu.com/v1/703e23c9-lazysizes+noscript+native-loading.5.1.2.min.js" defer></script>

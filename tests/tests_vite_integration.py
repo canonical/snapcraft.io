@@ -47,11 +47,6 @@ class TestsDevViteIntegration(TestCase):
     def setUp(self):
         self.vite = DevViteIntegration(MOCK_CONFIG)
 
-    def tests_dev_tools(self):
-        dev_tools = self.vite.get_dev_tools()
-        assert "@vite/client" in dev_tools
-        assert "@react-refresh" in dev_tools
-
     def tests_get_asset_url(self):
         url = self.vite.get_asset_url(MOCK_ASSET_PATH)
         assert MOCK_ASSET_PATH in url
@@ -105,11 +100,6 @@ class TestsProdViteIntegration(TestCase):
 
         # reset build manifest path to previous value
         ProdViteIntegration.BUILD_MANIFEST = old_manifest_name
-
-    def tests_dev_tools(self):
-        vite = ProdViteIntegration(MOCK_CONFIG)
-        dev_tools = vite.get_dev_tools()
-        assert dev_tools == ""
 
     def tests_get_asset_url__bad_asset(self):
         vite = ProdViteIntegration(MOCK_CONFIG)

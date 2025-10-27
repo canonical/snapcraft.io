@@ -10,10 +10,6 @@ class _AbstractViteIntegration:
         pass
 
     @abstractmethod
-    def get_dev_tools(self) -> str:
-        pass
-
-    @abstractmethod
     def get_asset_url(self, asset_name: str) -> str:
         pass
 

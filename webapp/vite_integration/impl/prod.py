@@ -38,9 +38,6 @@ class ProdViteIntegration(_AbstractViteIntegration):
             manifest = json.load(f)
         ProdViteIntegration.manifest = manifest
 
-    def get_dev_tools(self) -> str:
-        return ""
-
     @cache
     def get_asset_url(self, asset_name: str) -> str:
         asset = self._get_asset(asset_name)

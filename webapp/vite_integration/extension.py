@@ -1,6 +1,7 @@
 import flask
 from markupsafe import Markup
 from os import path
+from urllib.parse import urljoin
 from typing import Union
 
 from .utils import EXTENSION_NAME, staticproperty
@@ -42,7 +43,10 @@ class FlaskVite:
             app.extensions[EXTENSION_NAME] = ViteIntegration(config)
 
         app.template_global("vite_import")(vite_import)
-        app.template_global("vite_dev_tools")(vite_dev_tools)
+
+        if is_dev:
+            # add an after request handler to inject dev tools scripts
+            app.after_request(_inject_vite_dev_tools)
 
 
 def vite_import(entrypoint: str):
@@ -64,14 +68,6 @@ def vite_import(entrypoint: str):
             return _script_import(entrypoint)
         case _:
             return _unknown_import(entrypoint)
-
-
-def vite_dev_tools():
-    """
-    Template function that returns <script> tags for Vite's dev server
-    integration (or an empty string in prod mode)
-    """
-    return Markup(flask.current_app.extensions[EXTENSION_NAME].get_dev_tools())
 
 
 def _stylesheet_import(entrypoint):
@@ -108,3 +104,42 @@ def _unknown_import(entrypoint):
         f"{EXTENSION_NAME}: unknown file extension for file {entrypoint} "
         "-->"
     )
+
+
+def _inject_vite_dev_tools(res: flask.Response):
+    """
+    Patch text/html responses by injecting the <script> tags for Vite's dev
+    server tools before closing the <head> tag
+    """
+    if "text/html" not in res.mimetype:
+        # response is not an HTML page, no need for Vite scripts
+        return res
+
+    body = res.get_data(as_text=True)
+    if not body:
+        # response doesn't have a body, no need for Vite scripts
+        return res
+
+    # build the dev tools scripts string
+    port = flask.current_app.config.get("VITE_PORT", 5173)
+    baseurl = f'http://localhost:{port}/'
+    dev_tools = f'''
+    <!-- {EXTENSION_NAME}: start Vite dev tools -->
+    <script
+        type="module"
+        src="{urljoin(baseurl, "@vite/client")}">
+    </script>
+    <script type="module">
+        import RefreshRuntime from "{urljoin(baseurl, "@react-refresh")}";
+        RefreshRuntime.injectIntoGlobalHook(window);
+        window.$RefreshReg$ = () => {{}};
+        window.$RefreshSig$ = () => (type) => type;
+        window.__vite_plugin_react_preamble_installed__ = true;
+    </script>
+    <!-- {EXTENSION_NAME}: end Vite dev tools -->
+    '''
+
+    # inject the dev tools' scripts at the end of the <head> tag
+    body = body.replace("</head>", f"{dev_tools}\n</head>")
+    res.set_data(body)
+    return res
