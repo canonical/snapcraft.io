@@ -164,11 +164,9 @@ export const initNavigationListeners = () => {
 
         if (target.getAttribute("aria-hidden") === "true") {
           unfocusAllLinks();
-          console.log(toggle.parentElement?.classList);
           expandDropdown(toggle, target);
           navigation.classList.add("has-menu-open");
         } else {
-          console.log(toggle.parentElement?.classList);
           collapseDropdown(toggle, target);
           if (!isNested) {
             closeMenu();

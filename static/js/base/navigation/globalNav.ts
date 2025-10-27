@@ -5,8 +5,8 @@ export function patchAllCanonicalMobileMarkup() {
   );
 
   topMobileSections?.forEach((section: Element) => {
-    const sectionButton = section.querySelector("button");
-    const sectionHref = sectionButton?.getAttribute("href");
+    const sectionLink = section.querySelector("a.p-navigation__link");
+    const sectionHref = sectionLink?.getAttribute("href");
 
     const sectionLinksList = section.querySelector("ul");
     sectionLinksList?.setAttribute("aria-hidden", "true");
@@ -28,8 +28,8 @@ function createBackButtonItem(href: string) {
   // remove the # from the href
   const ariaControls = href.slice(1);
   return createFromHTML(`<li class="p-navigation__item--dropdown-close">
-      <button href=${href} aria-controls=${ariaControls} class="p-navigation__link js-back-button">
+      <a href=${href} aria-controls=${ariaControls} class="p-navigation__link js-back-button">
         Back
-      </button>
+      </a>
     </li>`);
 }
