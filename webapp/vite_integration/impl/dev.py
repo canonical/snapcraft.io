@@ -3,7 +3,6 @@ from urllib.parse import urljoin
 
 from ..types import Config
 from .base import _AbstractViteIntegration
-from ..utils import EXTENSION_NAME
 
 
 class DevViteIntegration(_AbstractViteIntegration):
