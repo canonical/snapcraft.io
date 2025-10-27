@@ -4,7 +4,6 @@ import { QueryClient, QueryClientProvider } from "react-query";
 
 import Root from "./layouts/Root";
 import Store from "./pages/Store";
-import Explore from "./pages/Explore";
 
 const router = createBrowserRouter([
   {
@@ -14,10 +13,6 @@ const router = createBrowserRouter([
       {
         path: "/store",
         element: <Store />,
-      },
-      {
-        path: "/explore",
-        element: <Explore />,
       },
     ],
   },
