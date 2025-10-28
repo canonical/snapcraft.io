@@ -1,4 +1,6 @@
 from math import floor
+
+import requests as api_requests
 import flask
 from dateutil import parser
 from webapp.decorators import exchange_required, login_required
@@ -17,6 +19,9 @@ from webapp.helpers import api_publisher_session, api_session
 from flask.json import jsonify
 import os
 from webapp.extensions import csrf
+from webapp.store.logic import (
+    get_categories,
+)
 
 session = requests.Session()
 
@@ -120,7 +125,48 @@ def store_blueprint(store_query=None):
 
     @store.route("/explore")
     def explore_view():
-        return flask.render_template("store/store.html")
+        recommendations_api_url = (
+            "https://recommendations.snapcraft.io/api/category"
+        )
+
+        try:
+            popular_snaps = api_requests.get(
+                f"{recommendations_api_url}/popular"
+            ).json()
+        except api_requests.exceptions.RequestException:
+            popular_snaps = []
+
+        try:
+            recent_snaps = api_requests.get(
+                f"{recommendations_api_url}/recent"
+            ).json()
+        except api_requests.exceptions.RequestException:
+            recent_snaps = []
+
+        try:
+            trending_snaps = api_requests.get(
+                f"{recommendations_api_url}/trending"
+            ).json()
+        except api_requests.exceptions.RequestException:
+            trending_snaps = []
+
+        try:
+            categories_results = device_gateway.get_categories()
+        except StoreApiError:
+            categories_results = []
+
+        categories = sorted(
+            get_categories(categories_results),
+            key=lambda category: category["slug"],
+        )
+
+        return flask.render_template(
+            "explore/index.html",
+            categories=categories,
+            popular_snaps=popular_snaps,
+            recent_snaps=recent_snaps,
+            trending_snaps=trending_snaps,
+        )
 
     @store.route("/youtube", methods=["POST"])
     def get_video_thumbnail_data():

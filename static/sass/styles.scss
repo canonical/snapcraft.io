@@ -192,10 +192,10 @@ dl {
   transition: opacity 0.5s ease-in;
 }
 
-.u-line-clamp--3 {
+.u-line-clamp--2 {
   -webkit-box-orient: vertical;
-  display: flex;
-  -webkit-line-clamp: 3;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
   overflow: hidden;
   text-overflow: ellipsis;
 }
@@ -559,3 +559,13 @@ html {
     fill: $colors--theme--background-default;
   }
 }
+
+.explore-highlight-block {
+  background-color: #f3f3f3;
+  background-image: url("https://assets.ubuntu.com/v1/e888a79f-suru.png");
+  background-position: right top;
+  background-repeat: no-repeat;
+  background-size: contain;
+  padding: 67px;
+}
+

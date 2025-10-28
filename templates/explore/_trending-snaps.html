@@ -1,0 +1,39 @@
+<section class="p-strip is-shallow u-no-padding--bottom">
+  <div class="u-fixed-width">
+    <h2>Trending snaps</h2>
+  </div>
+</section>
+<section class="p-strip is-shallow">
+  <div class="row u-equal-height">
+    {% for snap in trending_snaps %}
+      {% if loop.index <= 8 %}
+        <div class="col-3 p-card">
+          <div class="p-card__content">
+            <div class="p-media-object u-no-margin--bottom">
+              <a href="{{ snap.details.name }}">
+                <img src="{{ snap.details.icon }}" class="p-media-object__image" alt="{{ snap.details.title }}" width="48" height="48">
+              </a>
+              <div class="p-media-object__details">
+                <h3 class="p-heading--5 u-no-margin--bottom">
+                  <a href="{{ snap.details.name }}" class="p-link--soft">{{ snap.details.title }}</a>
+                </h3>
+                <p class="u-text--muted u-no-padding--top">
+                  <em>{{ snap.details.publisher }}</em>
+                  
+                  {% if snap.details.developer_validation == VERIFIED_PUBLISHER %}
+                    {% include "partials/_verified_developer.html" %}
+                  {% endif %}
+
+                  {% if snap.details.developer_validation == STAR_DEVELOPER %}
+                    {% include "partials/_star_developer.html" %}
+                  {% endif %}
+                </p>
+                <p class="u-no-margin--bottom u-line-clamp--2">{{snap.details.summary}}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      {% endif %}
+    {% endfor %}
+  </div>
+</section>

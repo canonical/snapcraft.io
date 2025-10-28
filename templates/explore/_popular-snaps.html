@@ -1,0 +1,37 @@
+<section class="p-strip is-shallow u-no-padding--bottom">
+  <div class="u-fixed-width">
+    <h2>Most popular snaps</h2>
+  </div>
+</section>
+<section class="p-strip is-shallow u-no-padding--bottom">
+  <div class="row">
+    {% for snap in popular_snaps %}
+      {% if loop.index <= 8 %}
+        <div class="col-3">
+          <p class="p-heading--4" style="float: left; margin-right: 1rem">{{ loop.index }}</p>
+          <div class="p-media-object">
+            <a href="{{ snap.details.name }}">
+              <img src="{{ snap.details.icon }}" class="p-media-object__image" alt="{{ snap.details.title }}" width="48" height="48">
+            </a>
+            <div class="p-media-object__details" style="min-width: 0">
+              <h3 class="p-media-object__title u-truncate">
+                <a href="{{ snap.details.name }}">{{ snap.details.title }}</a>
+              </h3>
+              <p class="u-text--muted">
+                <em>{{ snap.details.publisher }}</em>
+                
+                {% if snap.details.developer_validation == VERIFIED_PUBLISHER %}
+                  {% include "partials/_verified_developer.html" %}
+                {% endif %}
+
+                {% if snap.details.developer_validation == STAR_DEVELOPER %}
+                  {% include "partials/_star_developer.html" %}
+                {% endif %}
+              </p>
+            </div>
+          </div>
+        </div>
+      {% endif %}
+    {% endfor %}
+  </div>
+</section>
