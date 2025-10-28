@@ -133,21 +133,21 @@ def store_blueprint(store_query=None):
             popular_snaps = api_requests.get(
                 f"{recommendations_api_url}/popular"
             ).json()
-        except StoreApiError:
+        except api_requests.exceptions.RequestException:
             popular_snaps = []
 
         try:
             recent_snaps = api_requests.get(
                 f"{recommendations_api_url}/recent"
             ).json()
-        except StoreApiError:
+        except api_requests.exceptions.RequestException:
             recent_snaps = []
 
         try:
             trending_snaps = api_requests.get(
                 f"{recommendations_api_url}/trending"
             ).json()
-        except StoreApiError:
+        except api_requests.exceptions.RequestException:
             trending_snaps = []
 
         try:
