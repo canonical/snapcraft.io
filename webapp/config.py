@@ -26,6 +26,7 @@ DNS_VERIFICATION_SALT = os.getenv("DNS_VERIFICATION_SALT")
 VITE_MODE = "development" if IS_DEVELOPMENT else "production"
 VITE_PORT = os.getenv("VITE_PORT", 5173)
 VITE_OUTDIR = os.getenv("VITE_OUTDIR", "static/js/dist/vite")
+VITE_REACT = True # inject React HMR scripts in dev mode
 
 if ENVIRONMENT != "devel":
     SESSION_COOKIE_SAMESITE = "None"
