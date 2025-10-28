@@ -1,14 +1,12 @@
 from abc import abstractmethod
 from typing import List
 
+from ..types import Config
+
 
 class _AbstractViteIntegration:
     @abstractmethod
-    def __init__(self):
-        pass
-
-    @abstractmethod
-    def get_dev_tools(self) -> str:
+    def __init__(self, config: Config):
         pass
 
     @abstractmethod

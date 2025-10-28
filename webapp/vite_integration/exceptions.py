@@ -8,3 +8,7 @@ class ManifestContentException(Exception):
 
 class AssetPathException(Exception):
     pass
+
+
+class ExtensionNotInitialized(Exception):
+    pass

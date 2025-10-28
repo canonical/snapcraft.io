@@ -4,13 +4,21 @@ from shutil import rmtree
 from typing import cast
 from urllib.parse import urlparse
 from pathlib import Path
+from unittest.mock import patch
+
+from webapp.app import create_app
 from webapp.vite_integration.impl import (
     ProdViteIntegration,
     DevViteIntegration,
 )
 import webapp.vite_integration.exceptions as vite_exceptions
 
-MOCK_OUTPUT_PATH = "/tmp/python_vite_test"
+
+MOCK_CONFIG = {
+    "mode": "development",
+    "port": 9999,
+    "outdir": "/tmp/python_vite_test",
+}
 MOCK_ASSET_PATH = "test/path/for/asset.ts"
 MOCK_SCSS_PATH = "test/path/for/styles.scss"
 MOCK_MANIFEST = {
@@ -41,12 +49,7 @@ MOCK_MANIFEST = {
 
 class TestsDevViteIntegration(TestCase):
     def setUp(self):
-        self.vite = DevViteIntegration()
-
-    def tests_dev_tools(self):
-        dev_tools = self.vite.get_dev_tools()
-        assert "@vite/client" in dev_tools
-        assert "@react-refresh" in dev_tools
+        self.vite = DevViteIntegration(MOCK_CONFIG)
 
     def tests_get_asset_url(self):
         url = self.vite.get_asset_url(MOCK_ASSET_PATH)
@@ -69,27 +72,24 @@ class TestsDevViteIntegration(TestCase):
 class TestsProdViteIntegration(TestCase):
     def setUp(self):
         # create a fake Vite output directory
-        manifest_path = Path(f"{MOCK_OUTPUT_PATH}/.vite/manifest.json")
+        manifest_path = Path(f'{MOCK_CONFIG["outdir"]}/.vite/manifest.json')
         manifest_path.parent.mkdir(exist_ok=True, parents=True)
         with manifest_path.open("w+") as file:
             file.write(json.dumps(MOCK_MANIFEST))
 
         for entry in MOCK_MANIFEST.values():
             file = cast(dict, entry).get("file", "")
-            file_path = Path(f"{MOCK_OUTPUT_PATH}/{file}")
+            file_path = Path(f'{MOCK_CONFIG["outdir"]}/{file}')
             file_path.parent.mkdir(exist_ok=True, parents=True)
             with file_path.open("w+") as file:
                 file.write("")
 
-        # inject the mocks in the static class scope before initalizing
-        ProdViteIntegration.OUT_DIR = MOCK_OUTPUT_PATH
-
     def tearDown(self):
-        rmtree(MOCK_OUTPUT_PATH)
+        rmtree(MOCK_CONFIG["outdir"])
 
     def tests_good_manifest_file(self):
         # attempt to init
-        ProdViteIntegration()
+        ProdViteIntegration(MOCK_CONFIG)
 
     def tests_bad_manifest_file(self):
         # try to init a ProdViteIntegration instance with a bad manifest file
@@ -100,50 +100,44 @@ class TestsProdViteIntegration(TestCase):
         ProdViteIntegration.BUILD_MANIFEST = "file/that/does/not/exist"
 
         with self.assertRaises(vite_exceptions.ManifestPathException):
-            self.vite = ProdViteIntegration()
+            self.vite = ProdViteIntegration(MOCK_CONFIG)
 
+        # reset build manifest path to previous value
         ProdViteIntegration.BUILD_MANIFEST = old_manifest_name
 
-    def tests_dev_tools(self):
-        vite = ProdViteIntegration()
-        dev_tools = vite.get_dev_tools()
-        assert dev_tools == ""
-
     def tests_get_asset_url__bad_asset(self):
-        vite = ProdViteIntegration()
+        vite = ProdViteIntegration(MOCK_CONFIG)
         with self.assertRaises(vite_exceptions.ManifestContentException):
             vite.get_asset_url("this_asset_does_not_exist.ts")
 
     def tests_get_asset_url__bad_path(self):
         # try to load an asset declared in the manifest but without a real
         # file backing it
+
         # load a proper manifest...
         ProdViteIntegration.manifest = MOCK_MANIFEST
         # but also load a broken OUT_DIR path
-        ProdViteIntegration.OUT_DIR = "/tmp/path/does/not/exist"
-
-        vite = ProdViteIntegration()
+        vite = ProdViteIntegration({"outdir": "/tmp/path/does/not/exist"})
         with self.assertRaises(vite_exceptions.AssetPathException):
             vite.get_asset_url(MOCK_ASSET_PATH)
 
         # cleanup
-        ProdViteIntegration.OUT_DIR = MOCK_OUTPUT_PATH
         ProdViteIntegration.manifest = None
 
     def tests_get_asset_url__is_not_ts(self):
-        vite = ProdViteIntegration()
+        vite = ProdViteIntegration(MOCK_CONFIG)
         url = vite.get_asset_url(MOCK_ASSET_PATH)
         assert MOCK_ASSET_PATH not in url  # source asset is a .ts file
         assert url.endswith(".js")  # dist asset is a .js file
 
     def tests_get_asset_url__is_not_scss(self):
-        vite = ProdViteIntegration()
+        vite = ProdViteIntegration(MOCK_CONFIG)
         url = vite.get_asset_url(MOCK_SCSS_PATH)
         assert MOCK_SCSS_PATH not in url  # source asset is a .scss file
         assert url.endswith(".css")  # dist asset is a .css file
 
     def tests_get_imported_chunks__bad_asset(self):
-        vite = ProdViteIntegration()
+        vite = ProdViteIntegration(MOCK_CONFIG)
         with self.assertRaises(vite_exceptions.ManifestContentException):
             vite.get_imported_chunks("this_asset_does_not_exist.ts")
 
@@ -153,18 +147,15 @@ class TestsProdViteIntegration(TestCase):
         # load a proper manifest...
         ProdViteIntegration.manifest = MOCK_MANIFEST
         # but also load a broken OUT_DIR path
-        ProdViteIntegration.OUT_DIR = "/tmp/path/does/not/exist"
-
-        vite = ProdViteIntegration()
+        vite = ProdViteIntegration({"outdir": "/tmp/path/does/not/exist"})
         with self.assertRaises(vite_exceptions.AssetPathException):
             vite.get_imported_chunks(MOCK_ASSET_PATH)
 
         # cleanup
-        ProdViteIntegration.OUT_DIR = MOCK_OUTPUT_PATH
         ProdViteIntegration.manifest = None
 
     def tests_get_imported_chunks(self):
-        vite = ProdViteIntegration()
+        vite = ProdViteIntegration(MOCK_CONFIG)
         js_entries = filter(
             lambda x: x["file"].endswith(".js"), MOCK_MANIFEST.values()
         )
@@ -173,5 +164,30 @@ class TestsProdViteIntegration(TestCase):
         )
 
     def tests_get_imported_css(self):
-        vite = ProdViteIntegration()
+        vite = ProdViteIntegration(MOCK_CONFIG)
         assert len(vite.get_imported_css(MOCK_ASSET_PATH)) == 1
+
+
+class TestsFlaskViteExtension(TestCase):
+    @patch("webapp.config.VITE_MODE", "development")
+    @patch("webapp.config.VITE_PORT", MOCK_CONFIG["port"])
+    @patch("webapp.config.VITE_OUTDIR", MOCK_CONFIG["outdir"])
+    def setUp(self):
+        self.app = create_app(testing=True)
+        self.client = self.app.test_client()
+
+    def test_extension_init(self):
+        self.assertEqual(self.app.config.get("VITE_MODE"), "development")
+        self.assertEqual(self.app.config.get("VITE_PORT"), MOCK_CONFIG["port"])
+        self.assertEqual(
+            self.app.config.get("VITE_OUTDIR"), MOCK_CONFIG["outdir"]
+        )
+
+    def test_dev_tools(self):
+        port = self.app.config.get("VITE_PORT")
+        response = self.client.get("/")
+        self.assertEqual(response.status_code, 200)
+
+        body = response.get_data(as_text=True)
+        self.assertGreater(len(body), 0)
+        self.assertIn(f"http://localhost:{port}/@vite/client", body)

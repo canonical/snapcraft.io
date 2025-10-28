@@ -1,4 +1,10 @@
-from typing import TypedDict, List, Dict, Optional
+from typing import TypedDict, List, Dict, Optional, Literal
+
+
+class Config(TypedDict):
+    mode: Literal["development", "production"]
+    port: int
+    outdir: str
 
 
 class ManifestChunk(TypedDict):
