@@ -76,7 +76,7 @@ The application will be reporting errors to your `sentry.io` project from now on
 
 ## Testing
 
-Install the [`dotrun`](https://snapcraft.io/dotrun) snap.
+Install [`dotrun`](https://github.com/canonical/dotrun), then run
 
 ``` bash
 dotrun test
@@ -98,3 +98,6 @@ We are supporting some custom licenses (like the Proprietary license). On update
 When the app is run locally, a GitHub personal access token is required to fetch the CVE data. Make sure you have access to the [canonicalwebteam.snap-cves](https://github.com/canonical/canonicalwebteam.snap-cves) repository. After creating a GitHub classic personal access token, follow the steps described in [GitHub's documentation](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens#personal-access-tokens-classic).
 Then, add this token to the .env.local file with the key GITHUB_SNAPCRAFT_BOT_USER_TOKEN.
 
+## Vite setup details
+This project relies on Vite for processing and bundling TypeScript and SCSS source files; referencing these files and the resulting bundles in templates is done through a `vite_import` template function provided by the [Canonical Webteam Flask-Vite integration](https://github.com/canonical/canonicalwebteam.flask-vite) package. The extension is configured via `VITE_*` variables that get loaded into the Flask `app.config` object where the extension reads them from.
+Files referenced via `vite_import` are automatically detected and added as entry points in the Vite config when running the build command.

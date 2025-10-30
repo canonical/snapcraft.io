@@ -55,8 +55,7 @@ webapp/                   # Flask app (blueprints in */views.py)
   ├── config.py          # Env vars: SECRET_KEY, LOGIN_URL, VITE_PORT, ENVIRONMENT
   ├── endpoints/         # API blueprints
   ├── publisher/         # Publisher dashboard
-  ├── store/             # Store frontend
-  └── vite_integration/  # Vite-Flask integration
+  └── store/             # Store frontend
 static/js/               # React/TypeScript (Jotai state, React Router v7)
   ├── publisher/         # Dashboard components
   ├── public/            # Public-facing JS

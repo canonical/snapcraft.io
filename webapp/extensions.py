@@ -1,5 +1,5 @@
 from flask_wtf.csrf import CSRFProtect
-from webapp.vite_integration import FlaskVite
+from canonicalwebteam.flask_vite import FlaskVite
 
 csrf = CSRFProtect()
 vite = FlaskVite()
