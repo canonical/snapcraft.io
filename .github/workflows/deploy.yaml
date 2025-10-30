@@ -8,12 +8,14 @@ on:
   workflow_dispatch:
     inputs:
       environment:
-        description: 'Environment (Production or Staging)'
+        description: 'Environment (Production, Staging or Staging API)'
         required: true
         type: choice
         options:
           - Production
           - Staging
+          - Staging API
+
 jobs:
   setup:
     runs-on: ubuntu-latest
@@ -54,3 +56,13 @@ jobs:
       VAULT_APPROLE_ROLE_ID: ${{ secrets.VAULT_APPROLE_ROLE_ID }}
       VAULT_APPROLE_SECRET_ID: ${{ secrets.VAULT_APPROLE_SECRET_ID }}
       CHARMHUB_TOKEN: ${{ secrets.CHARMHUB_TOKEN }}
+
+  deploy-staging-api-env-on-merge-into-main:
+    # this job can only run when invoked by CI because of a merge into main
+    if: ${{ github.event.inputs.environment == '' && github.ref == 'refs/heads/main' }}
+    # we will dispatch another copy of this workflow to deploy the Staging API env; we invoke the workflow
+    # with an input, so `github.event.inputs.environment` won't be "" and the `if` condition above will be
+    # false, thus there won't be a recursive loop
+    uses: canonical/snapcraft.io/.github/workflows/deploy.yaml@main
+    with:
+      environment: Staging API
