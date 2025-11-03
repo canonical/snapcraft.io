@@ -121,12 +121,11 @@ When creating or updating pull requests, follow these requirements:
 **QA Steps Format**:
 ```markdown
 ## How to QA
-1. Build the project: `yarn install && yarn build`
-2. Start the app: `dotrun` or `SECRET_KEY=test_key yarn run serve`
-3. Navigate to: [specific URL or path]
-4. [Specific action to take]
-5. Verify: [Expected outcome]
-6. [Additional steps as needed]
+1. Start the app: `dotrun`
+2. Navigate to: [specific URL or path]
+3. [Specific action to take]
+4. Verify: [Expected outcome]
+5. [Additional steps as needed]
 ```
 
 **Required Context**:
@@ -135,6 +134,7 @@ When creating or updating pull requests, follow these requirements:
 - Any prerequisites or dependencies
 - Screenshots for visual changes
 - Warnings about breaking changes or migrations
+- If testing requires specific app state or data shape, include instructions to achieve this (e.g., config changes, code modifications, database setup). Note that temporary changes should be removed after testing.
 
 ## Code Review Guidelines
 
