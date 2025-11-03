@@ -13,7 +13,7 @@ function NewSnapNotification({ snap }: { snap: ISnap }): React.JSX.Element {
   return (
     <>
       <Notification severity="information" title={title}>
-        <p>
+        <>
           Want to improve the listing in stores?
           <Link
             href={`/${snapName}/listing`}
@@ -34,7 +34,7 @@ function NewSnapNotification({ snap }: { snap: ISnap }): React.JSX.Element {
               </Link>
             </>
           )}
-        </p>
+        </>
       </Notification>
     </>
   );
