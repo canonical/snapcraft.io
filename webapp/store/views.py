@@ -151,6 +151,13 @@ def store_blueprint(store_query=None):
             trending_snaps = []
 
         try:
+            top_rated_snaps = api_requests.get(
+                f"{recommendations_api_url}/top_rated"
+            ).json()
+        except api_requests.exceptions.RequestException:
+            top_rated_snaps = []
+
+        try:
             categories_results = device_gateway.get_categories()
         except StoreApiError:
             categories_results = []
@@ -166,6 +173,7 @@ def store_blueprint(store_query=None):
             popular_snaps=popular_snaps,
             recent_snaps=recent_snaps,
             trending_snaps=trending_snaps,
+            top_rated_snaps=top_rated_snaps,
         )
 
     @store.route("/youtube", methods=["POST"])
