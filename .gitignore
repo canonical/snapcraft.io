@@ -70,4 +70,3 @@ coverage/
 .webcache_blog/
 .coverage
 cypress/screenshots/
-templates/_macros
