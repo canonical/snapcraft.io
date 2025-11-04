@@ -1,4 +1,7 @@
 {% extends "_layout.html" %}
+{% from "_macros/vf_hero.jinja" import vf_hero %}
+{% from "_macros/vf_logo-section.jinja" import vf_logo_section %}
+{% from "_macros/vf_divided-section.jinja" import vf_divided_section %}
 
 {% block meta_copydoc %}https://docs.google.com/document/d/1EvemWJDOpjL-8ieCSiStKViFx-fgwfTaENueOYlB5ps/edit{% endblock %}
 
@@ -8,20 +11,21 @@
     <p><strong>Ubuntu 18.04 is entering ESM.</strong> This can impact you as a snap developer. Read more about <a href="https://snapcraft.io/docs/migrating-bases">Migrating between bases.</a></p>
   </div>
 </section>
-<section id="main-content" class="p-section">
-  <div class="row">
-    <div class="col-9 col-medium-4">
-      <h1>Build snaps from GitHub repositories</h1>
-    </div>
-    <div class="col-3 col-medium-2 u-align--right u-vertically-center">
-      <a href="/snaps" class="p-button--positive">Get started now</a>
-    </div>
-  </div>
-</section>
-<section class="p-section">
-  <div class="u-fixed-width u-align--center">
+
+{% call(slot) vf_hero(
+  title_text='Build snaps from GitHub repositories',
+  layout='50/50'
+) -%}
+  {%- if slot == 'cta' -%}
+    <a href="/snaps" class="p-button--positive">Get started now</a>
+  {%- endif -%}
+  {%- if slot == 'image' -%}
     <img src="https://assets.ubuntu.com/v1/7242e628-build.snapcraft.hero.svg" alt="Build workflow" />
-  </div>
+  {%- endif -%}
+  {%- if slot == 'description' -%}
+  {%- endif -%}
+{%- endcall %}
+<section class="p-section">
   <div class="row">
     <div class="col-4">
       <hr class="p-rule--highlight u-hide--small" />
@@ -38,79 +42,81 @@
   </div>
 </section>
 
-<section class="p-section">
-  <hr class="p-rule is-fixed-width" />
-  <div class="u-fixed-width">
-    <h2 class="p-text--small-caps">Publish your software for</h2>
-  </div>
-  <div class="u-fixed-width">
-    <div class="p-logo-section">
-      <div class="p-logo-section__items">
-        <div class="p-logo-section__item">
-          <img class="p-logo-section__logo" src="https://assets.ubuntu.com/v1/46dc42a1-ubuntu-logo.png" alt="Ubuntu">
-        </div>
-        <div class="p-logo-section__item">
-          <img class="p-logo-section__logo" src="https://assets.ubuntu.com/v1/f7f680fb-debian.png" alt="Debian">
-        </div>
-        <div class="p-logo-section__item">
-          <img class="p-logo-section__logo" src="https://assets.ubuntu.com/v1/5a0c5aaa-popos.svg" alt="Pop!_OS">
-        </div>
-        <div class="p-logo-section__item">
-          <img class="p-logo-section__logo" src="https://assets.ubuntu.com/v1/eccf1818-raspberrypi.png" alt="Raspberry Pi">
-        </div>
-        <div class="p-logo-section__item">
-          <img class="p-logo-section__logo" src="https://assets.ubuntu.com/v1/44789cf1-arch.png" alt="Arch Linux">
-        </div>
-        <div class="p-logo-section__item">
-          <img class="p-logo-section__logo" src="https://assets.ubuntu.com/v1/f24733d2-fedora.png" alt="Fedora">
-        </div>
-        <div class="p-logo-section__item">
-          <img class="p-logo-section__logo" src="https://assets.ubuntu.com/v1/0dd4809d-openwrit.png" alt="OpenWrt">
-        </div>
-        <div class="p-logo-section__item">
-          <img class="p-logo-section__logo" src="https://assets.ubuntu.com/v1/f131a86c-yocto.png" alt="Yocto">
-        </div>
-        <div class="p-logo-section__item">
-          <img class="p-logo-section__logo" src="https://assets.ubuntu.com/v1/38659979-openembed.png" alt="OpenEmbedded">
-        </div>
-        <div class="p-logo-section__item">
-          <img class="p-logo-section__logo" src="https://assets.ubuntu.com/v1/c4c720c6-suse.png" alt="openSUSE">
-        </div>
-        <div class="p-logo-section__item">
-          <img class="p-logo-section__logo" src="https://assets.ubuntu.com/v1/02d49758-manjaro.png" alt="Manjaro">
-        </div>
-        <div class="p-logo-section__item">
-          <img class="p-logo-section__logo" src="https://assets.ubuntu.com/v1/4ea80b29-solus.png" alt="Solus">
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
+{% call(slot) vf_logo_section(
+  title={"text": "Publish your software for"},
+  blocks=[
+    {
+      "type": "logo-block",
+      "item": {
+        "logos": [
+          {"src": "https://assets.ubuntu.com/v1/46dc42a1-ubuntu-logo.png", "alt": "Ubuntu"},
+          {"src": "https://assets.ubuntu.com/v1/f7f680fb-debian.png", "alt": "Debian"},
+          {"src": "https://assets.ubuntu.com/v1/5a0c5aaa-popos.svg", "alt": "Pop!_OS"},
+          {"src": "https://assets.ubuntu.com/v1/eccf1818-raspberrypi.png", "alt": "Raspberry Pi"},
+          {"src": "https://assets.ubuntu.com/v1/44789cf1-arch.png", "alt": "Arch Linux"},
+          {"src": "https://assets.ubuntu.com/v1/f24733d2-fedora.png", "alt": "Fedora"},
+          {"src": "https://assets.ubuntu.com/v1/0dd4809d-openwrit.png", "alt": "OpenWrt"},
+          {"src": "https://assets.ubuntu.com/v1/f131a86c-yocto.png", "alt": "Yocto"},
+          {"src": "https://assets.ubuntu.com/v1/38659979-openembed.png", "alt": "OpenEmbedded"},
+          {"src": "https://assets.ubuntu.com/v1/c4c720c6-suse.png", "alt": "openSUSE"},
+          {"src": "https://assets.ubuntu.com/v1/02d49758-manjaro.png", "alt": "Manjaro"},
+          {"src": "https://assets.ubuntu.com/v1/4ea80b29-solus.png", "alt": "Solus"}
+        ]
+      }
+    }
+  ]
+) -%}
+  {%- if slot == 'description' -%}
+  {%- endif -%}
+{%- endcall %}
 
-<section class="p-section">
-  <hr class="p-rule is-fixed-width" />
-  <div class="row">
-    <div class="col-6 col-medium-3">
-      <h2 class="p-text--small-caps">Build makes it easier</h2>
-    </div>
-    <div class="col-6 col-medium-3">
-      <div class="p-section--shallow">
-        <h3>Automatic updates</h3>
-        <p>Whenever you commit a change in your code on GitHub, Snapcraft will trigger a new build automatically for all the distros you choose. When you are ready, these builds will be available for you to share with your users.</p>
-      </div>
-      <hr class="p-rule--muted" />
-      <div class="p-section--shallow">
-        <h3>Create snaps with tools you already use</h3>
-        <p>We created the possibility to start building your snaps from a Github repo so that you can focus on the things that matter, using the tools you know.</p>
-      </div>
-      <hr class="p-rule--muted" />
-      <div class="p-section--shallow">
-        <h3>Build for all distros</h3>
-        <p>Snaps work across Linux on any distribution or version. Bundle your dependencies and assets, simplifying installs to a single standard command.</p>
-      </div>
-    </div>
-  </div>
-</section>
+{% call(slot) vf_divided_section(
+  title={"text": "Build makes it easier"},
+  blocks=[
+    {
+      "type": "divided-block",
+      "items": [
+        {
+          "title_text": "Automatic updates",
+          "contents": [
+            {
+              "type": "description",
+              "item": {
+                "type": "text",
+                "content": "Whenever you commit a change in your code on GitHub, Snapcraft will trigger a new build automatically for all the distros you choose. When you are ready, these builds will be available for you to share with your users."
+              }
+            }
+          ]
+        },
+        {
+          "title_text": "Create snaps with tools you already use",
+          "contents": [
+            {
+              "type": "description",
+              "item": {
+                "type": "text",
+                "content": "We created the possibility to start building your snaps from a Github repo so that you can focus on the things that matter, using the tools you know."
+              }
+            }
+          ]
+        },
+        {
+          "title_text": "Build for all distros",
+          "contents": [
+            {
+              "type": "description",
+              "item": {
+                "type": "text",
+                "content": "Snaps work across Linux on any distribution or version. Bundle your dependencies and assets, simplifying installs to a single standard command."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+) -%}
+{%- endcall %}
 
 <section class="p-section">
   <hr class="p-rule is-fixed-width" />
