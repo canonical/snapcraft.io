@@ -5,7 +5,7 @@ export function patchAllCanonicalMobileMarkup() {
   );
 
   topMobileSections?.forEach((section: Element) => {
-    const sectionLink = section.querySelector("a.p-navigation__link");
+    const sectionLink = section.querySelector("button.p-navigation__link");
     const sectionHref = sectionLink?.getAttribute("href");
 
     const sectionLinksList = section.querySelector("ul");
