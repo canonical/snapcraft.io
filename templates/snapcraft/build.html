@@ -6,12 +6,6 @@
 {% block meta_copydoc %}https://docs.google.com/document/d/1EvemWJDOpjL-8ieCSiStKViFx-fgwfTaENueOYlB5ps/edit{% endblock %}
 
 {% block content %}
-<section class="p-section--shallow">
-  <div class="u-fixed-width">
-    <p><strong>Ubuntu 18.04 is entering ESM.</strong> This can impact you as a snap developer. Read more about <a href="https://snapcraft.io/docs/migrating-bases">Migrating between bases.</a></p>
-  </div>
-</section>
-
 {% call(slot) vf_hero(
   title_text='Build snaps from GitHub repositories',
   layout='50/50'
@@ -20,27 +14,59 @@
     <a href="/snaps" class="p-button--positive">Get started now</a>
   {%- endif -%}
   {%- if slot == 'image' -%}
-    <img src="https://assets.ubuntu.com/v1/7242e628-build.snapcraft.hero.svg" alt="Build workflow" />
+    <img src="https://assets.ubuntu.com/v1/7242e628-build.snapcraft.hero.svg" alt="" />
   {%- endif -%}
   {%- if slot == 'description' -%}
   {%- endif -%}
 {%- endcall %}
-<section class="p-section">
-  <div class="row">
-    <div class="col-4">
-      <hr class="p-rule--highlight u-hide--small" />
-      <p>Start by creating a repo and pushing your code to GitHub. Make sure that your repo includes a snapcraft.yaml file.</p>
-    </div>
-    <div class="col-4">
-      <hr class="p-rule--highlight u-hide--small" />
-      <p>Register a name on Snapcraft and attach it to your repo to start building. Your snap will be built automatically for all distros.</p>
-    </div>
-    <div class="col-4">
-      <hr class="p-rule--highlight u-hide--small" />
-      <p>Release your snap to your users. From here on, all the updates you do to your code will trigger automatic builds.</p>
-    </div>
-  </div>
-</section>
+
+{% call(slot) vf_divided_section(
+  title={"text": "How it works"},
+  blocks=[
+    {
+      "type": "divided-block",
+      "items": [
+        {
+          "title_text": "1. Create and push your code",
+          "contents": [
+            {
+              "type": "description",
+              "item": {
+                "type": "text",
+                "content": "Start by creating a repo and pushing your code to GitHub. Make sure that your repo includes a snapcraft.yaml file."
+              }
+            }
+          ]
+        },
+        {
+          "title_text": "2. Register and build",
+          "contents": [
+            {
+              "type": "description",
+              "item": {
+                "type": "text",
+                "content": "Register a name on Snapcraft and attach it to your repo to start building. Your snap will be built automatically for all distros."
+              }
+            }
+          ]
+        },
+        {
+          "title_text": "3. Release and update",
+          "contents": [
+            {
+              "type": "description",
+              "item": {
+                "type": "text",
+                "content": "Release your snap to your users. From here on, all the updates you do to your code will trigger automatic builds."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+) -%}
+{%- endcall %}
 
 {% call(slot) vf_logo_section(
   title={"text": "Publish your software for"},
@@ -123,9 +149,11 @@
   <div class="u-fixed-width">
     <h2>How Snapcraft fits your workflow</h2>
   </div>
-  <div class="u-fixed-width u-align--center">
-    <img class="u-hide--small u-hide--medium" src="https://assets.ubuntu.com/v1/21626379-Group%202899.svg" alt="1: You receive a pull request on GitHub. 2: Test with Travis or other CI system. 3: The code lands on your GitHub main branch. 4: Snapcraft builds a new snap version. 5: Auto-released to the snap store for testing. 6: You promote to beta, candidate, or stable." />
-    <img class="u-hide--large" src="https://assets.ubuntu.com/v1/80be83a9-Group%202898.svg" alt="1: You receive a pull request on GitHub. 2: Test with Travis or other CI system. 3: The code lands on your GitHub main branch. 4: Snapcraft builds a new snap version. 5: Auto-released to the snap store for testing. 6: You promote to beta, candidate, or stable." />
+  <div class="u-fixed-width">
+    <div class="p-image-container is-highlighted">
+      <img class="p-image-container__image u-hide--small u-hide--medium" src="https://assets.ubuntu.com/v1/21626379-Group%202899.svg" alt="1: You receive a pull request on GitHub. 2: Test with Travis or other CI system. 3: The code lands on your GitHub main branch. 4: Snapcraft builds a new snap version. 5: Auto-released to the snap store for testing. 6: You promote to beta, candidate, or stable." />
+      <img class="p-image-container__image u-hide--large" src="https://assets.ubuntu.com/v1/80be83a9-Group%202898.svg" alt="1: You receive a pull request on GitHub. 2: Test with Travis or other CI system. 3: The code lands on your GitHub main branch. 4: Snapcraft builds a new snap version. 5: Auto-released to the snap store for testing. 6: You promote to beta, candidate, or stable." />
+    </div>
   </div>
 </section>
 
