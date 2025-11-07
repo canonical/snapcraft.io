@@ -1,0 +1,37 @@
+<section class="p-strip is-shallow u-no-padding--bottom">
+  <div class="u-fixed-width">
+    <h2>{{gaming_slice.slice.name}}</h2>
+  </div>
+</section>
+<section class="p-strip is-shallow">
+  <div class="row">
+    {% for snap in gaming_slice.snaps %}
+      {% if loop.index <= 8 %}
+        <div class="col-3 p-card">
+          <div class="p-card__image p-image-container--16-9 is-cover is-highlighted">
+            <a href="/{{snap.name}}">
+              <img class="p-image-container__image" src={{snap.media[1].url}} alt="{{snap.title}} screenshot">
+            </a>
+          </div>
+          <div class="p-card__content">
+            <h3 class="p-heading--5 u-no-margin--bottom">
+              <a class="p-link--soft" href="/{{snap.name}}">{{snap.title}}</a>
+            </h3>
+            <p class="u-text--muted u-no-padding--top">
+              <em>{{snap.publisher}}</em>
+              
+              {% if snap.developer_validation == VERIFIED_PUBLISHER %}
+                {% include "partials/_verified_developer.html" %}
+              {% endif %}
+
+              {% if snap.developer_validation == STAR_DEVELOPER %}
+                {% include "partials/_star_developer.html" %}
+              {% endif %}
+            </p>
+            <p>{{snap.summary}}</p>
+          </div>
+        </div>
+      {% endif %}
+    {% endfor %}
+  </div>
+</section>

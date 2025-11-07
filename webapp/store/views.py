@@ -125,30 +125,37 @@ def store_blueprint(store_query=None):
 
     @store.route("/explore")
     def explore_view():
-        recommendations_api_url = (
-            "https://recommendations.snapcraft.io/api/category"
-        )
+        recommendations_api_url = "https://recommendations.snapcraft.io/api"
 
         try:
             popular_snaps = api_requests.get(
-                f"{recommendations_api_url}/popular"
+                f"{recommendations_api_url}/category/popular"
             ).json()
         except api_requests.exceptions.RequestException:
             popular_snaps = []
 
         try:
             recent_snaps = api_requests.get(
-                f"{recommendations_api_url}/recent"
+                f"{recommendations_api_url}/category/recent"
             ).json()
         except api_requests.exceptions.RequestException:
             recent_snaps = []
 
         try:
             trending_snaps = api_requests.get(
-                f"{recommendations_api_url}/trending"
+                f"{recommendations_api_url}/category/trending"
             ).json()
         except api_requests.exceptions.RequestException:
             trending_snaps = []
+
+        try:
+            gaming_slice = api_requests.get(
+                f"{recommendations_api_url}/slice/slice_1"
+            ).json()
+        except api_requests.exceptions.RequestException:
+            gaming_slice = None
+
+        print(gaming_slice)
 
         try:
             categories_results = device_gateway.get_categories()
@@ -166,6 +173,7 @@ def store_blueprint(store_query=None):
             popular_snaps=popular_snaps,
             recent_snaps=recent_snaps,
             trending_snaps=trending_snaps,
+            gaming_slice=gaming_slice,
         )
 
     @store.route("/youtube", methods=["POST"])
