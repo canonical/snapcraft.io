@@ -4,30 +4,45 @@ import { createRoot } from "react-dom/client";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 
-import BrandStoreRoute from "./components/BrandStoreRoute/BrandStoreRoute";
-import PublisherLayout from "./layouts/PublisherLayout";
-import AccountDetails from "./pages/AccountDetails";
-import AccountSnaps from "./pages/AccountSnaps";
-import BrandStoreSettings from "./pages/BrandStoreSettings";
-import Build from "./pages/Build";
-import Builds from "./pages/Builds";
-import Listing from "./pages/Listing";
-import Members from "./pages/Members";
-import Metrics from "./pages/Metrics";
-import Model from "./pages/Model";
-import Policies from "./pages/Model/Policies";
-import Models from "./pages/Models";
-import Publicise from "./pages/Publicise";
-import PublisherSettings from "./pages/PublisherSettings";
-import RegisterNameDispute from "./pages/RegisterNameDispute";
-import RegisterSnap from "./pages/RegisterSnap";
-import Releases from "./pages/Releases";
-import RequestReservedName from "./pages/RequestReservedName";
-import SigningKeys from "./pages/SigningKeys";
-import Snaps from "./pages/Snaps";
-import ValidationSet from "./pages/ValidationSet";
-import ValidationSets from "./pages/ValidationSets";
-import AccountKeys from "./pages/AccountKeys";
+import { importComponent } from "./utils/importComponent";
+
+const PublisherLayout = importComponent(
+  () => import("./layouts/PublisherLayout"),
+);
+const BrandStoreRoute = importComponent(
+  () => import("./components/BrandStoreRoute/BrandStoreRoute"),
+);
+
+const AccountDetails = importComponent(() => import("./pages/AccountDetails"));
+const AccountSnaps = importComponent(() => import("./pages/AccountSnaps"));
+const BrandStoreSettings = importComponent(
+  () => import("./pages/BrandStoreSettings"),
+);
+const Build = importComponent(() => import("./pages/Build"));
+const Builds = importComponent(() => import("./pages/Builds"));
+const Listing = importComponent(() => import("./pages/Listing"));
+const Members = importComponent(() => import("./pages/Members"));
+const Metrics = importComponent(() => import("./pages/Metrics"));
+const Model = importComponent(() => import("./pages/Model"));
+const Models = importComponent(() => import("./pages/Models"));
+const Policies = importComponent(() => import("./pages/Model/Policies"));
+const Publicise = importComponent(() => import("./pages/Publicise"));
+const PublisherSettings = importComponent(
+  () => import("./pages/PublisherSettings"),
+);
+const RegisterNameDispute = importComponent(
+  () => import("./pages/RegisterNameDispute"),
+);
+const RegisterSnap = importComponent(() => import("./pages/RegisterSnap"));
+const Releases = importComponent(() => import("./pages/Releases"));
+const RequestReservedName = importComponent(
+  () => import("./pages/RequestReservedName"),
+);
+const SigningKeys = importComponent(() => import("./pages/SigningKeys"));
+const Snaps = importComponent(() => import("./pages/Snaps"));
+const ValidationSet = importComponent(() => import("./pages/ValidationSet"));
+const ValidationSets = importComponent(() => import("./pages/ValidationSets"));
+const AccountKeys = importComponent(() => import("./pages/AccountKeys"));
 
 Sentry.init({
   dsn: window.SENTRY_DSN,

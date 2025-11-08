@@ -82,6 +82,7 @@ export default defineConfig({
   define: {
     global: "globalThis", // in dev mode "randomstring" uses `global` rather than `globalThis`
   },
+  base: "./", // use the script's URL path as base when preloading assets in dynamic imports
   build: {
     manifest: true,
     modulePreload: false,
