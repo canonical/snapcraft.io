@@ -1,0 +1,53 @@
+server:
+  http_listen_port: 9080
+  grpc_listen_port: 0
+
+positions:
+  filename: /tmp/positions.yaml
+
+clients:
+  - url: http://loki:3100/loki/api/v1/push
+
+scrape_configs:
+  # Generic Docker containers
+  - job_name: docker
+    docker_sd_configs:
+      - host: unix:///var/run/docker.sock
+        refresh_interval: 5s
+    relabel_configs:
+      # Drop Snapcraft container from generic job
+      - source_labels: ['__meta_docker_container_name']
+        regex: '/?dotrun-snapcraft-io-.*'
+        action: drop
+
+      # Set container name
+      - source_labels: ['__meta_docker_container_name']
+        target_label: 'container'
+        regex: '/?(.*)'
+        replacement: '${1}'
+
+      # Set service_name from Docker labels
+      - source_labels: ['__meta_docker_container_label_logging_service']
+        target_label: 'service_name'
+
+
+  # Snapcraft specific containers
+  - job_name: snapcraft-app-logs
+    docker_sd_configs:
+      - host: unix:///var/run/docker.sock
+        refresh_interval: 5s
+    relabel_configs:
+      # Only scrape containers that match dotrun-snapcraft-io-*
+      - source_labels: ['__meta_docker_container_name']
+        action: keep
+        regex: '/?dotrun-snapcraft-io-.*'
+
+      # Set container name
+      - source_labels: ['__meta_docker_container_name']
+        target_label: 'container'
+        regex: '/?(.*)'
+        replacement: '${1}'
+
+      # Override service_name
+      - target_label: 'service_name'
+        replacement: 'snapcraft-io'

@@ -1,0 +1,36 @@
+receivers:
+  otlp:
+    protocols:
+      http:
+        endpoint: 0.0.0.0:4318
+  faro:
+    endpoint: 0.0.0.0:8081
+    cors:
+      allowed_origins: ["*"]
+      allowed_headers: ["X-Faro-Session-Id", "Content-Type"]
+
+exporters:
+  otlp/tempo:
+    endpoint: tempo:4317
+    tls:
+      insecure: true
+
+  otlphttp/loki:
+    endpoint: http://loki:3100/otlp
+
+  prometheus:
+    endpoint: "0.0.0.0:8889"
+
+service:
+  pipelines:
+    traces:
+      receivers: [otlp, faro]
+      exporters: [otlp/tempo]
+
+    logs:
+      receivers: [faro]
+      exporters: [otlphttp/loki]
+
+    metrics:
+      receivers: [otlp]
+      exporters: [prometheus]
