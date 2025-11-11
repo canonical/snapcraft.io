@@ -1,11 +1,11 @@
 <section class="p-strip is-shallow u-no-padding--bottom">
   <div class="u-fixed-width">
-    <h2>Most popular snaps</h2>
+    <h2>{{ title }}</h2>
   </div>
 </section>
 <section class="p-strip is-shallow u-no-padding--bottom">
   <div class="row">
-    {% for snap in popular_snaps %}
+    {% for snap in snaps_list %}
       {% if loop.index <= 8 %}
         <div class="col-3">
           <p class="p-heading--4" style="float: left; margin-right: 1rem">{{ loop.index }}</p>

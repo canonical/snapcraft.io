@@ -27,11 +27,19 @@
   {% endif %}
 
   {% if popular_snaps %}
-    {% include "explore/_popular-snaps.html" %}
+    {% with snaps_list = popular_snaps, title = "Most popular snaps" %}
+      {% include "explore/_snaps-list.html" %}
+    {% endwith %}
   {% endif %}
 
   {% if categories %}
     {% include "explore/_categories.html" %}
+  {% endif %}
+
+  {% if top_rated_snaps %}
+    {% with snaps_list = top_rated_snaps, title = "Top rated snaps" %}
+      {% include "explore/_snaps-list.html" %}
+    {% endwith %}
   {% endif %}
 
   {% if trending_snaps %}
