@@ -1,9 +1,8 @@
 import { coverageConfigDefaults, defineConfig } from "vitest/config";
-import { jsxInJsPlugin } from "./vite.config";
 
 export default defineConfig({
   css: false,
-  plugins: [jsxInJsPlugin()],
+  plugins: [],
   test: {
     dir: "static/js", // base directory for tests
     globals: true, // inject global `vi` object in tests so we don't have to import it

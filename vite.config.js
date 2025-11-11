@@ -1,5 +1,5 @@
 import react from "@vitejs/plugin-react-swc";
-import { defineConfig, loadEnv, transformWithEsbuild } from "vite";
+import { defineConfig, loadEnv } from "vite";
 import autoprefixer from "autoprefixer";
 import { execSync } from "node:child_process";
 
@@ -52,30 +52,10 @@ const flaskViteImportPlugin = () => ({
   },
 });
 
-/**
- * Vite is opinionated and doesn't support JSX in .js files (and that's cool).
- * This plugin makes it clear that we don't care about its opinions: process
- * all .js files with esbuild as if they were .jsx.
- *
- * This has a small performance penalty compared to renaming the files, but
- * for the moment it's fine and we can easily get rid of it later
- */
-export const jsxInJsPlugin = () => ({
-  name: "jsx-in-js",
-  async transform(code, id) {
-    if (!id.match(/\.js$/)) return null;
-
-    return transformWithEsbuild(code, id, {
-      loader: "jsx",
-      jsx: "automatic",
-    });
-  },
-});
-
 const env = loadEnv("all", process.cwd());
 
 export default defineConfig({
-  plugins: [flaskViteImportPlugin(), react(), jsxInJsPlugin()],
+  plugins: [flaskViteImportPlugin(), react()],
   server: {
     port: env?.VITE_PORT || 5173,
     host: true,
