@@ -63,7 +63,7 @@ describe("ContactFields", () => {
     const fieldElement = screen.getByDisplayValue(
       "https://example.com/contact",
     );
-    const addFieldElement = screen.getByText(/Add field/);
+    const addFieldElement = screen.getByText(/Add link/);
 
     expect(fieldElement).toBeVisible();
     expect(addFieldElement).toBeVisible();
@@ -92,7 +92,7 @@ describe("ContactFields", () => {
     const user = userEvent.setup();
     renderComponent();
 
-    const addButton = screen.getByText(/Add field/);
+    const addButton = screen.getByText(/Add link/);
     await user.click(addButton);
     await waitFor(() => {
       const links = screen.queryAllByRole("textbox");
