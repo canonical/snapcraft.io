@@ -42,7 +42,7 @@ function ContactFields({
                 append({ url: "" });
               }}
             >
-              +&nbsp;Add field
+              +&nbsp;Add link
             </Button>
           </Col>
         </Row>
@@ -90,7 +90,7 @@ function ContactFields({
                 append({ url: "" });
               }}
             >
-              +&nbsp;Add field
+              +&nbsp;Add link
             </Button>
           </Col>
         </Row>
