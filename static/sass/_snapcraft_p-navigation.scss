@@ -20,9 +20,13 @@
         // starts on the right outside of the screen
         --right: 110%;
 
-        &--wrapper {
+        .p-navigation__items-wrapper {
           position: relative;
         }
+      }
+
+      .l-docs__main .p-navigation__nav {
+        margin-top: 0;
       }
 
       .p-navigation__items {
@@ -72,7 +76,7 @@
         syntax: "<percentage>";
       }
 
-      .p-navigation__nav--wrapper {
+      .p-navigation__items-wrapper {
         display: flex;
         flex-direction: row;
         justify-content: space-between;
