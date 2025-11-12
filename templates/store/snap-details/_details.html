@@ -19,65 +19,6 @@
   <hr>
 {% endif %}
 
-{%- if aliases -%}
-  {%- set show_more = "Show more" -%}
-  {%- set show_less = "Show less" -%}
-
-  {#- 
-   # The list starts displaying maximum 3 elements with the rest hidden.
-   # With the script provided and the link element rendered the user can toggle
-   # displaying and hiding all the aliases.
-  -#}
-  <h5 class="p-muted-heading">Command &rsaquo; Alias</h5>
-  <ul class="p-list js-expandable-list">
-    {%- set aliases_len = aliases|length -%}
-    {%- set default_visible_aliases = 3 -%}
-    {%- for alias in aliases -%}
-      {%- set invisible_class = "" -%}
-      {%- if loop.index > default_visible_aliases -%}
-        {%- set invisible_class = "js-hidable u-hide" -%}
-      {%- endif -%}
-      <li class="p-list__item {{ invisible_class }}">
-        {{ alias[0]|safe }} &rsaquo; {{ alias[1]|safe }}
-      </li>
-    {%- endfor -%}
-    {%- if aliases_len > default_visible_aliases -%}
-      <li class="p-list__item">
-        <a class="js-toggle-full-list" href="#" title="Display more/less aliases">
-          {{ show_more }}
-        </a>
-      </li>
-    {%- endif -%}
-  </ul>
-  <hr>
-
-  <script>
-    // Handle aliases "show more" button
-    const list = document.querySelector(".js-expandable-list");
-    const showMoreButton = document.querySelector(".js-toggle-full-list");
-    let hasAllElementsDisplayed = false;
-
-    const updateAliasesListUI = (displayAllElements, elements) => {
-      // change button
-      showMoreButton.innerHTML = displayAllElements ? "{{ show_less }}" : "{{ show_more }}";
-      // toggle hide classes
-      for (const element of elements) {
-        element.classList.toggle('u-hide', !displayAllElements);
-      }
-    }
-
-    if (list && showMoreButton) {
-      const listElements = list.querySelectorAll(".js-hidable");
-      showMoreButton.addEventListener("click", (e) => {
-        e.preventDefault();
-        // switch toggle
-        hasAllElementsDisplayed = !hasAllElementsDisplayed;
-        updateAliasesListUI(hasAllElementsDisplayed, listElements);
-      });
-    }
-  </script>
-{%- endif -%}
-
 {% if links %}
   {% if links["website"] %}
     <h5 class="p-muted-heading">Websites</h5>
@@ -134,6 +75,65 @@
     </ul>  
     <hr>
   {% endif %}
+
+  {%- if aliases -%}
+    {%- set show_more = "Show more" -%}
+    {%- set show_less = "Show less" -%}
+
+    {#- 
+    # The list starts displaying maximum 3 elements with the rest hidden.
+    # With the script provided and the link element rendered the user can toggle
+    # displaying and hiding all the aliases.
+    -#}
+    <h5 class="p-muted-heading">Command &rsaquo; Alias</h5>
+    <ul class="p-list js-expandable-list">
+      {%- set aliases_len = aliases|length -%}
+      {%- set default_visible_aliases = 3 -%}
+      {%- for alias in aliases -%}
+        {%- set invisible_class = "" -%}
+        {%- if loop.index > default_visible_aliases -%}
+          {%- set invisible_class = "js-hidable u-hide" -%}
+        {%- endif -%}
+        <li class="p-list__item {{ invisible_class }}">
+          {{ alias[0]|safe }} &rsaquo; {{ alias[1]|safe }}
+        </li>
+      {%- endfor -%}
+      {%- if aliases_len > default_visible_aliases -%}
+        <li class="p-list__item">
+          <a class="js-toggle-full-list" href="#" title="Display more/less aliases">
+            {{ show_more }}
+          </a>
+        </li>
+      {%- endif -%}
+    </ul>
+    <hr>
+
+    <script>
+      // Handle aliases "show more" button
+      const list = document.querySelector(".js-expandable-list");
+      const showMoreButton = document.querySelector(".js-toggle-full-list");
+      let hasAllElementsDisplayed = false;
+
+      const updateAliasesListUI = (displayAllElements, elements) => {
+        // change button
+        showMoreButton.innerHTML = displayAllElements ? "{{ show_less }}" : "{{ show_more }}";
+        // toggle hide classes
+        for (const element of elements) {
+          element.classList.toggle('u-hide', !displayAllElements);
+        }
+      }
+
+      if (list && showMoreButton) {
+        const listElements = list.querySelectorAll(".js-hidable");
+        showMoreButton.addEventListener("click", (e) => {
+          e.preventDefault();
+          // switch toggle
+          hasAllElementsDisplayed = !hasAllElementsDisplayed;
+          updateAliasesListUI(hasAllElementsDisplayed, listElements);
+        });
+      }
+    </script>
+  {%- endif -%}
 
   {% if links["issues"] %}
     <h5 class="p-muted-heading">Report a bug</h5>
