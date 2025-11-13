@@ -107,6 +107,7 @@ root.render(
             <Route path="admin/account" element={<AccountDetails />} />
             <Route path="admin/account-keys" element={<AccountKeys />} />
 
+            <Route path="admin" element={<BrandStoreRoute />} />
             <Route path="admin/:id" element={<BrandStoreRoute />}>
               <Route index element={<Navigate to="snaps" />} />
               <Route path="snaps" element={<Snaps />} />
