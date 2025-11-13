@@ -8,7 +8,9 @@ The web frontend for the snap store.
 # loaded properly and the FLASK_* prefix is stripped before they are parsed
 import webapp.config  # noqa: F401
 
+import os
 import sentry_sdk
+from jinja2 import ChoiceLoader, FileSystemLoader
 
 from canonicalwebteam.flask_base.app import FlaskBase
 from webapp.blog.views import init_blog
@@ -52,6 +54,19 @@ def create_app(testing=False):
     app.config.from_object("webapp.config")
     app.name = "snapcraft"
     app.testing = testing
+
+    # Configure Jinja2 to load Vanilla Framework templates
+    vanilla_templates_path = os.path.join(
+        os.path.dirname(__file__),
+        "..",
+        "node_modules",
+        "vanilla-framework",
+        "templates"
+    )
+    app.jinja_loader = ChoiceLoader([
+        FileSystemLoader(os.path.join(os.path.dirname(__file__), "..", "templates")),
+        FileSystemLoader(vanilla_templates_path),
+    ])
 
     init_extensions(app)
     set_handlers(app)

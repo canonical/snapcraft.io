@@ -46,6 +46,7 @@ WORKDIR /srv
 ADD . .
 RUN rm -rf package.json yarn.lock .babelrc requirements.txt
 COPY --from=build /srv/static/js static/js
+COPY --from=yarn-dependencies /srv/node_modules/vanilla-framework/templates node_modules/vanilla-framework/templates
 
 # Setup commands to run server
 ENTRYPOINT ["./entrypoint"]
