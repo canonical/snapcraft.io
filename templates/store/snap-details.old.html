@@ -1,5 +1,5 @@
 {% extends "_layout.html" %}
-{% from "store/_package_header.poc.jinja" import package_header_poc with context %}
+{% from "store/_package_header.jinja" import package_header with context %}
 
 {% block meta_copydoc %}{% endblock %}
 
@@ -88,7 +88,8 @@
         </div>
       </div>
     {% endif %}
-      {%- call(slot) package_header_poc() -%}
+    <div class="row">
+      {%- call(slot) package_header() -%}
         {%- if slot == 'buttons' -%}
           <button
             class="p-button p-snap-install-buttons__versions{% if is_preview %} p-tooltip p-tooltip--btm-right{% endif %}"
@@ -141,6 +142,7 @@
         {% endif %}
         {%- endif -%}
       {%- endcall -%}
+    </div>
   </div>
 
   {% include "store/snap-details/_channel_map.html" %}
@@ -153,8 +155,12 @@
 
   <div class="p-strip is-shallow u-no-padding--top">
     <div class="u-fixed-width"><hr></div>
-    <div class="grid-row">
-      <div class="col-2 u-text-wrap">
+    <div class="row">
+      <div class="col-8 u-text-wrap">
+        {% if summary or is_preview %}<h4 class="p-heading--2" data-live="summary">{{ summary }}</h4>{% endif %}
+        <div data-live="description">{{ description | safe }}</div>
+      </div>
+      <div class="col-4">
         {% include "store/snap-details/_details.html" %}
 
         {# EMBEDDABLE CARD SECTION - hidden in preview #}
@@ -165,10 +171,6 @@
 
           {% include "store/snap-details/_embedded_card_modal.html" %}
         {% endif %}
-      </div>
-      <div class="col-6">
-        {% if summary or is_preview %}<h4 class="p-heading--2" data-live="summary">{{ summary }}</h4>{% endif %}
-        <div data-live="description">{{ description | safe }}</div>
       </div>
     </div>
   </div>
@@ -188,17 +190,15 @@
         <div class="u-fixed-width">
           <h4 class="p-heading--2">Where people are using {{ snap_title }}</h4>
         </div>
-        <div class="row--25-75">
-          <div class="col">
         <div class="row {% if normalized_os %}u-equal-height{% endif %}">
           {% if countries %}
-            <div class="{% if normalized_os %}col-6{% else %}col-9{% endif %} js-snap-map-holder" data-live="installed_base_by_country_percent">
+            <div class="{% if normalized_os %}col-8{% else %}col-12{% endif %} js-snap-map-holder" data-live="installed_base_by_country_percent">
               <div id="js-snap-map" class="snapcraft-territories"></div>
             </div>
           {% endif %}
           {% if normalized_os %}
             {% if normalized_os|length > 21 %}
-            <div class="col-3 p-show-more is-collapsed is-deep" data-js="js-show-more">
+            <div class="col-4 p-show-more is-collapsed is-deep" data-js="js-show-more">
               <div class="js-sschart-holder" data-live="weekly_installed_base_by_operating_system_normalized">
                 <h4>Users by distribution (log)</h4>
                 <div class="snapcraft-distro-chart">
@@ -226,7 +226,7 @@
               </div>
             </div>
             {% else %}
-            <div class="col-3 js-snap-distro-chart-holder"
+            <div class="col-4 js-snap-distro-chart-holder"
               data-live="weekly_installed_base_by_operating_system_normalized">
               <h4 class="p-heading--5">Users by distribution (log)</h4>
               <div class="snapcraft-distro-chart">
@@ -246,8 +246,6 @@
             </div>
             {% endif %}
           {% endif %}
-        </div>
-        </div>
         </div>
       </div>
     </div>
@@ -308,76 +306,78 @@
 {% endblock %}
 
 {% block scripts_includes %}
-  {{ vite_import('static/js/public/store-details.ts') }}
+  <script type="module" src="{{ static_url('js/dist/vite/store-details.js') }}" defer></script>
 {% endblock %}
 
 {% block scripts %}
   <script>
     window.addEventListener("DOMContentLoaded", function() {
-      try {
-        snapcraft.public.storeDetails.initExpandableArea();
-      } catch (e) {
-        Sentry.captureException(e);
-      }
-
-      try {
-        snapcraft.public.storeDetails.screenshots('#js-snap-screenshots');
-      } catch(e) {
-        Sentry.captureException(e);
-      }
-
-      try {
-        snapcraft.public.storeDetails.videos('.js-video-slide');
-      } catch(e) {
-        Sentry.captureException(e);
-      }
-
-      {% if not is_preview %}
-      try {
-        snapcraft.public.storeDetails.initReportSnap(
-          '.js-modal-open', '#report-snap-modal',
-          document.getElementById('report-snap-form').action
-        );
-      } catch(e) {
-        Sentry.captureException(e);
-      }
-
-      try {
-        snapcraft.public.storeDetails.initEmbeddedCardModal('{{ package_name }}');
-      } catch(e) {
-        Sentry.captureException(e);
-      }
-      {% endif %}
-
-      {% if countries %}
+      Raven.context(function () {
         try {
-          snapcraft.public.storeDetails.map('#js-snap-map', {{ countries | tojson }});
-        } catch(e) {
-          Sentry.captureException(e);
-          document.querySelector('.js-snap-map-holder').style.display = 'none';
+          snapcraft.public.storeDetails.initExpandableArea();
+        } catch (e) {
+          Raven.captureException(e);
         }
-      {% endif %}
 
-      {% if channel_map %}
         try {
-            snapcraft.public.storeDetails.channelMap('#js-channel-map', {{ package_name|tojson }}, {{ channel_map | tojson }}, "{{ default_track }}");
+          snapcraft.public.storeDetails.screenshots('#js-snap-screenshots');
         } catch(e) {
-          Sentry.captureException(e);
-          document.querySelector('.js-open-channel-map').style.display = 'none';
+          Raven.captureException(e);
         }
-      {% endif %}
 
-      {% if is_preview %}
-        const editButton = document.querySelector('.js-edit');
-        if (editButton) {
-          editButton.addEventListener("click", (e) => {
-            if (window.opener) {
-              e.preventDefault();
-              window.close();
-            }
-          });
+        try {
+          snapcraft.public.storeDetails.videos('.js-video-slide');
+        } catch(e) {
+          Raven.captureException(e);
         }
-      {% endif %}
+
+        {% if not is_preview %}
+        try {
+          snapcraft.public.storeDetails.initReportSnap(
+            '.js-modal-open', '#report-snap-modal',
+            document.getElementById('report-snap-form').action
+          );
+        } catch(e) {
+          Raven.captureException(e);
+        }
+
+        try {
+          snapcraft.public.storeDetails.initEmbeddedCardModal('{{ package_name }}');
+        } catch(e) {
+          Raven.captureException(e);
+        }
+        {% endif %}
+
+        {% if countries %}
+          try {
+            snapcraft.public.storeDetails.map('#js-snap-map', {{ countries | tojson }});
+          } catch(e) {
+            Raven.captureException(e);
+            document.querySelector('.js-snap-map-holder').style.display = 'none';
+          }
+        {% endif %}
+
+        {% if channel_map %}
+          try {
+              snapcraft.public.storeDetails.channelMap('#js-channel-map', {{ package_name|tojson }}, {{ channel_map | tojson }}, "{{ default_track }}");
+          } catch(e) {
+            Raven.captureException(e);
+            document.querySelector('.js-open-channel-map').style.display = 'none';
+          }
+        {% endif %}
+
+        {% if is_preview %}
+          const editButton = document.querySelector('.js-edit');
+          if (editButton) {
+            editButton.addEventListener("click", (e) => {
+              if (window.opener) {
+                e.preventDefault();
+                window.close();
+              }
+            });
+          }
+        {% endif %}
+      });
     });
   </script>
 {% endblock %}
