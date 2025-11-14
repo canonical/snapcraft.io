@@ -6,6 +6,7 @@ from feedgen.feed import FeedGenerator
 from requests import Session
 from html import escape
 from urllib.parse import urlparse
+from canonicalwebteam.snap_recommendations import SnapRecommendations
 
 feeds = flask.Blueprint(
     "feeds",
@@ -13,6 +14,7 @@ feeds = flask.Blueprint(
 )
 
 session = Session()
+snap_recommendations = SnapRecommendations(session)
 
 
 def is_safe_url(url):
@@ -92,16 +94,11 @@ def recently_updated_feed():
     page = int(flask.request.args.get("page", "1"))
 
     try:
-        api_url = flask.current_app.config.get(
-            "RECOMMENDATION_API_URL",
-            "https://recommendations.snapcraft.io/api/recently-updated",
+        response = snap_recommendations.get_recently_updated(
+            page=page, size=size, timeout=10
         )
-        params = {"size": size, "page": page}
-        response = session.get(api_url, params=params, timeout=10)
-        response.raise_for_status()
 
-        data = response.json()
-        snaps = data.get("snaps", [])
+        snaps = response.get("snaps", [])
 
     except (requests.RequestException, ValueError) as e:
         flask.current_app.logger.error(f"Failed to fetch recommendations: {e}")
