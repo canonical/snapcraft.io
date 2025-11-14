@@ -12,6 +12,7 @@ from canonicalwebteam.exceptions import StoreApiError
 from canonicalwebteam.store_api.dashboard import Dashboard
 from canonicalwebteam.store_api.publishergw import PublisherGW
 from canonicalwebteam.store_api.devicegw import DeviceGW
+from canonicalwebteam.snap_recommendations import SnapRecommendations
 
 from webapp.api.exceptions import ApiError
 from webapp.store.snap_details_views import snap_details_views
@@ -29,6 +30,7 @@ YOUTUBE_API_KEY = os.getenv("YOUTUBE_API_KEY")
 dashboard = Dashboard(api_session)
 publisher_gateway = PublisherGW("snap", api_publisher_session)
 device_gateway = DeviceGW("snap", api_session)
+snap_recommendations = SnapRecommendations(session)
 
 
 def store_blueprint(store_query=None):
@@ -125,35 +127,23 @@ def store_blueprint(store_query=None):
 
     @store.route("/explore")
     def explore_view():
-        recommendations_api_url = (
-            "https://recommendations.snapcraft.io/api/category"
-        )
-
         try:
-            popular_snaps = api_requests.get(
-                f"{recommendations_api_url}/popular"
-            ).json()
+            popular_snaps = snap_recommendations.get_popular()
         except api_requests.exceptions.RequestException:
             popular_snaps = []
 
         try:
-            recent_snaps = api_requests.get(
-                f"{recommendations_api_url}/recent"
-            ).json()
+            recent_snaps = snap_recommendations.get_recent()
         except api_requests.exceptions.RequestException:
             recent_snaps = []
 
         try:
-            trending_snaps = api_requests.get(
-                f"{recommendations_api_url}/trending"
-            ).json()
+            trending_snaps = snap_recommendations.get_trending()
         except api_requests.exceptions.RequestException:
             trending_snaps = []
 
         try:
-            top_rated_snaps = api_requests.get(
-                f"{recommendations_api_url}/top_rated"
-            ).json()
+            top_rated_snaps = snap_recommendations.get_top_rated()
         except api_requests.exceptions.RequestException:
             top_rated_snaps = []
 
