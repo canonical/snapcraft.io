@@ -30,7 +30,7 @@ YOUTUBE_API_KEY = os.getenv("YOUTUBE_API_KEY")
 dashboard = Dashboard(api_session)
 publisher_gateway = PublisherGW("snap", api_publisher_session)
 device_gateway = DeviceGW("snap", api_session)
-snap_recommendations = SnapRecommendations()
+snap_recommendations = SnapRecommendations(session)
 
 
 def store_blueprint(store_query=None):
