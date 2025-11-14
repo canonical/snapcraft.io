@@ -1,0 +1,133 @@
+
+  Core Business Metrics
+
+  1. Conversion Rate (Percentage)
+
+  # Calculate what % of metrics views lead to actions
+  (rate(snapcraft_publisher_conversion_metrics_to_action[5m]) / rate(snapcraft_publisher_funnel_metrics_viewed[5m])) * 100
+  Why: Shows the effectiveness of your metrics dashboard in driving user actions. Target: >5-10%
+
+  2. Conversion Rate Over Time (Graph)
+
+  # 1-hour rolling window conversion rate
+  (increase(snapcraft_publisher_conversion_metrics_to_action[1h]) / increase(snapcraft_publisher_funnel_metrics_viewed[1h])) 
+  * 100
+  Why: Identify trends and patterns - is the dashboard becoming more/less effective?
+
+  Time-to-Action Analysis
+
+  3. Time-to-Action Percentiles (p50, p95, p99)
+
+  # Median time to action (p50)
+  histogram_quantile(0.5, rate(snapcraft_publisher_conversion_time_to_action_bucket[5m]))
+
+  # 95th percentile
+  histogram_quantile(0.95, rate(snapcraft_publisher_conversion_time_to_action_bucket[5m]))
+
+  # 99th percentile
+  histogram_quantile(0.99, rate(snapcraft_publisher_conversion_time_to_action_bucket[5m]))
+  Why: Average can be misleading. Percentiles show you if most users act quickly or if outliers skew the data.
+
+  4. Distribution of Time-to-Action
+
+  # Heatmap showing when users typically act
+  sum(rate(snapcraft_publisher_conversion_time_to_action_bucket[5m])) by (le)
+  Why: Visualize if users act immediately (<1 min), moderately fast (1-3 min), or slow (>3 min).
+
+  Activity Patterns
+
+  5. Actions Per Hour Rate
+
+  # Rate of actions per second (multiply by 3600 for per hour)
+  rate(snapcraft_publisher_action[5m]) * 3600
+  Why: Understand peak usage times and capacity planning.
+
+  6. Metrics Views Per Hour
+
+  rate(snapcraft_publisher_funnel_metrics_viewed[5m]) * 3600
+  Why: Track engagement with your metrics dashboard.
+
+  Funnel Analysis
+
+  7. Funnel Drop-off Rate
+
+  # Percentage of views that DON'T convert
+  (1 - (rate(snapcraft_publisher_conversion_metrics_to_action[5m]) / rate(snapcraft_publisher_funnel_metrics_viewed[5m]))) * 
+  100
+  Why: Inverse of conversion - identify friction points. High drop-off = users see metrics but don't act.
+
+  8. Attribution Window Utilization
+
+  # What % of total actions happen within attribution window
+  (rate(snapcraft_publisher_conversion_metrics_to_action[5m]) / rate(snapcraft_publisher_action[5m])) * 100
+  Why: Validate if your 5-minute attribution window is appropriate. If low (<20%), consider extending it.
+
+  Trending & Comparison
+
+  9. Conversion Rate: Current vs Previous Hour
+
+  # Current hour
+  (increase(snapcraft_publisher_conversion_metrics_to_action[1h]) / increase(snapcraft_publisher_funnel_metrics_viewed[1h])) 
+  * 100
+
+  # Previous hour (offset by 1h)
+  (increase(snapcraft_publisher_conversion_metrics_to_action[1h] offset 1h) /
+  increase(snapcraft_publisher_funnel_metrics_viewed[1h] offset 1h)) * 100
+  Why: Quick comparison to see if performance is improving or degrading.
+
+  10. Week-over-Week Growth
+
+  # Actions this week vs last week
+  (sum(increase(snapcraft_publisher_action[7d])) - sum(increase(snapcraft_publisher_action[7d] offset 7d))) /
+  sum(increase(snapcraft_publisher_action[7d] offset 7d)) * 100
+  Why: Track growth trends.
+
+  Dashboard Layout Recommendation
+
+  Row 1: Key Metrics (Stat panels)
+  - Conversion Rate (%)
+  - Median Time to Action (seconds)
+  - Actions/hour
+  - Metrics Views/hour
+
+  Row 2: Trends (Time series graphs)
+  - Conversion Rate Over Time (1h windows)
+  - Actions Per Hour
+
+  Row 3: Deep Dive (Graphs)
+  - Time-to-Action Percentiles (p50, p95, p99 on same graph)
+  - Funnel Visualization (Views → Actions)
+
+  Row 4: Advanced (Optional)
+  - Attribution Window Utilization
+  - Week-over-Week Comparison
+
+  Important Note
+
+  For histogram queries (like percentiles) to work, you need to ensure your metrics are being exported as histograms not just
+   timings. Check your StatsD exporter configuration - it should be configured to create histogram buckets for timing
+  metrics.
+
+----------------
+
+ Activity Trends is a time series graph that shows how your three key metrics change over time. It displays:
+
+  Three Lines on One Graph:
+
+  1. Actions/Hour (purple line) - How many actions publishers are taking per hour
+  2. Views/Hour (blue line) - How many times per hour publishers view metrics
+  3. Conversions/Hour (green line) - How many conversions (metrics → action) happen per hour
+
+  Why It's Useful:
+
+  This graph helps you:
+  - Spot patterns - Are there peak usage times during the day?
+  - See correlations - When views spike, do conversions spike too?
+  - Monitor health - Is engagement growing or declining over time?
+  - Identify anomalies - Sudden drops or spikes in activity
+
+  Example Insights:
+
+  - If Views/Hour is high but Conversions/Hour is low → Your metrics dashboard isn't effective
+  - If Actions/Hour >> Conversions/Hour → Most actions happen independently of metrics viewing
+  - If lines move together → Strong correlation between viewing metrics and taking action

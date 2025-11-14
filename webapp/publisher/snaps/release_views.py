@@ -6,6 +6,7 @@ from canonicalwebteam.exceptions import StoreApiResponseErrorList
 # Local
 from webapp.helpers import api_publisher_session
 from webapp.decorators import login_required
+from webapp.metrics_tracking import track_metrics_to_action_flow
 
 dashboard = Dashboard(api_publisher_session)
 
@@ -49,6 +50,7 @@ def get_release_history_json(snap_name):
 
 
 @login_required
+@track_metrics_to_action_flow('update_releases')
 def post_release(snap_name):
     data = flask.request.json
 
@@ -82,6 +84,7 @@ def redirect_post_close_channel(snap_name):
 
 
 @login_required
+@track_metrics_to_action_flow('close_channel')
 def post_close_channel(snap_name):
     data = flask.request.json
 
@@ -113,6 +116,7 @@ def post_close_channel(snap_name):
 
 
 @login_required
+@track_metrics_to_action_flow('set_default_track')
 def post_default_track(snap_name):
     data = flask.request.json
 

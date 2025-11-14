@@ -14,6 +14,7 @@ from canonicalwebteam.store_api.devicegw import DeviceGW
 from webapp.helpers import api_session
 from webapp.decorators import login_required
 from webapp.publisher.snaps import logic
+from webapp.metrics_tracking import mark_metrics_viewed
 
 
 dashboard = Dashboard(api_session)
@@ -62,6 +63,10 @@ def publisher_snap_metrics(snap_name):
     """
     # If this fails, the page will 404
     dashboard.get_snap_info(flask.session, snap_name)
+
+    # Track that publisher viewed their metrics
+    # This starts the conversion funnel: View Metrics -> Take Action
+    mark_metrics_viewed()
 
     context = {
         # Data direct from details API
@@ -187,6 +192,10 @@ def get_active_devices(snap_name):
 
 @login_required
 def get_latest_active_devices(snap_name):
+    # Track that publisher viewed their metrics
+    # This API endpoint is called when the React app loads the metrics page
+    mark_metrics_viewed()
+
     snap_details = dashboard.get_snap_info(flask.session, snap_name)
     snap_id = snap_details["snap_id"]
     # get latest active devices

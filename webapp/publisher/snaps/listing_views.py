@@ -16,6 +16,7 @@ from webapp.store.logic import (
     filter_screenshots,
     get_video,
 )
+from webapp.metrics_tracking import track_metrics_to_action_flow
 
 dashboard = Dashboard(api_session)
 
@@ -48,6 +49,7 @@ def get_listing_snap(snap_name):
 
 
 @login_required
+@track_metrics_to_action_flow('preview_listing')
 def post_preview(snap_name):
     snap_details = dashboard.get_snap_info(flask.session, snap_name)
 

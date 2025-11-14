@@ -36,6 +36,9 @@ from webapp.endpoints.invites import invites
 from webapp.endpoints.settings import settings
 from webapp.feeds.feeds import feeds
 from webapp.config import SENTRY_DSN
+from webapp.logging_config import configure_logging
+from webapp.tracing_config import configure_tracing
+import os
 
 
 def create_app(testing=False):
@@ -78,6 +81,13 @@ def create_app(testing=False):
     init_docs(app, "/docs")
     init_blog(app, "/blog")
     init_tutorials(app, "/tutorials")
+
+    # Configure structured logging for Loki
+    json_logs = os.getenv('JSON_LOGS', 'false').lower() == 'true'
+    configure_logging(app, json_logs=json_logs)
+
+    # Configure distributed tracing for Tempo
+    configure_tracing(app)
 
     return app
 

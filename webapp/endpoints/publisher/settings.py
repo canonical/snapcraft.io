@@ -13,6 +13,7 @@ from canonicalwebteam.exceptions import (
 from webapp.helpers import api_publisher_session, launchpad
 from webapp.decorators import login_required
 from webapp.publisher.snaps import logic
+from webapp.metrics_tracking import track_metrics_to_action_flow
 
 dashboard = Dashboard(api_publisher_session)
 
@@ -73,6 +74,7 @@ def get_settings_data(snap_name):
 
 
 @login_required
+@track_metrics_to_action_flow('update_settings')
 def post_settings_data(snap_name):
     changes = None
     changed_fields = flask.request.form.get("changes")

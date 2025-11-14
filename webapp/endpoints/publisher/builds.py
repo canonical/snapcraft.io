@@ -11,6 +11,7 @@ from requests.exceptions import HTTPError
 from webapp.helpers import api_publisher_session, launchpad
 from webapp.api.github import GitHub, InvalidYAML
 from webapp.decorators import login_required
+from webapp.metrics_tracking import track_metrics_to_action_flow
 
 GITHUB_WEBHOOK_HOST_URL = os.getenv("GITHUB_WEBHOOK_HOST_URL")
 
@@ -94,6 +95,7 @@ def get_validate_repo(snap_name):
 
 
 @login_required
+@track_metrics_to_action_flow('trigger_build')
 def post_build(snap_name):
     # Don't allow builds from no contributors
     account_snaps = dashboard.get_account_snaps(flask.session)

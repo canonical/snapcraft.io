@@ -18,6 +18,7 @@ from webapp.publisher.snaps import logic
 from webapp.store.logic import (
     get_categories,
 )
+from webapp.metrics_tracking import track_metrics_to_action_flow
 
 dashboard = Dashboard(api_session)
 device_gateway = DeviceGW("snap", api_session)
@@ -140,6 +141,7 @@ def get_listing_data(snap_name):
 
 
 @login_required
+@track_metrics_to_action_flow('edit_listing')
 def post_listing_data(snap_name):
     changes = None
     changed_fields = flask.request.form.get("changes")
