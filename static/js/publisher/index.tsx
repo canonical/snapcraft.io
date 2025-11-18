@@ -4,14 +4,9 @@ import { createRoot } from "react-dom/client";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 
-import { importComponent } from "./utils/importComponent";
-
-const PublisherLayout = importComponent(
-  () => import("./layouts/PublisherLayout"),
-);
-const BrandStoreRoute = importComponent(
-  () => import("./components/BrandStoreRoute/BrandStoreRoute"),
-);
+import PublisherLayout from "./layouts/PublisherLayout";
+import BrandStoreRoute from "./components/BrandStoreRoute/BrandStoreRoute";
+import importComponent from "./utils/importComponent";
 
 const AccountDetails = importComponent(() => import("./pages/AccountDetails"));
 const AccountSnaps = importComponent(() => import("./pages/AccountSnaps"));

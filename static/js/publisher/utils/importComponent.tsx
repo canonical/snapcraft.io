@@ -12,7 +12,7 @@ type LoaderFn<TComponent extends React.ComponentType> = () => Promise<{
  * @param {React.ReactNode} fallback element that will be displayed while waiting for `Component` to load, optional
  * @return a `Suspense` boundary that wraps `Component`
  */
-export function importComponent<TComponent extends React.ComponentType>(
+export default function importComponent<TComponent extends React.ComponentType>(
   loader: LoaderFn<TComponent>,
   fallback?: React.ReactNode,
 ) {
