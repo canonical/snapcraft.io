@@ -4,9 +4,9 @@ import { createRoot } from "react-dom/client";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 
+import { importComponent } from "./utils/importComponent";
 import BrandStoreRoute from "./components/BrandStoreRoute/BrandStoreRoute";
 import PublisherLayout from "./layouts/PublisherLayout";
-import AccountDetails from "./pages/AccountDetails";
 import AccountSnaps from "./pages/AccountSnaps";
 import BrandStoreSettings from "./pages/BrandStoreSettings";
 import Build from "./pages/Build";
@@ -28,6 +28,8 @@ import Snaps from "./pages/Snaps";
 import ValidationSet from "./pages/ValidationSet";
 import ValidationSets from "./pages/ValidationSets";
 import AccountKeys from "./pages/AccountKeys";
+
+const AccountDetails = importComponent(() => import("./pages/AccountDetails"));
 
 Sentry.init({
   dsn: window.SENTRY_DSN,
