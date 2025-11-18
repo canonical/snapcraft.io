@@ -9,19 +9,12 @@ import BrandStoreRoute from "./components/BrandStoreRoute/BrandStoreRoute";
 import PublisherLayout from "./layouts/PublisherLayout";
 import AccountSnaps from "./pages/AccountSnaps";
 import BrandStoreSettings from "./pages/BrandStoreSettings";
-import Build from "./pages/Build";
-import Builds from "./pages/Builds";
-import Listing from "./pages/Listing";
 import Members from "./pages/Members";
-import Metrics from "./pages/Metrics";
 import Model from "./pages/Model";
 import Policies from "./pages/Model/Policies";
 import Models from "./pages/Models";
-import Publicise from "./pages/Publicise";
-import PublisherSettings from "./pages/PublisherSettings";
 import RegisterNameDispute from "./pages/RegisterNameDispute";
 import RegisterSnap from "./pages/RegisterSnap";
-import Releases from "./pages/Releases";
 import RequestReservedName from "./pages/RequestReservedName";
 import SigningKeys from "./pages/SigningKeys";
 import Snaps from "./pages/Snaps";
@@ -30,6 +23,15 @@ import ValidationSets from "./pages/ValidationSets";
 import AccountKeys from "./pages/AccountKeys";
 
 const AccountDetails = importComponent(() => import("./pages/AccountDetails"));
+const Publicise = importComponent(() => import("./pages/Publicise"));
+const PublisherSettings = importComponent(
+  () => import("./pages/PublisherSettings"),
+);
+const Metrics = importComponent(() => import("./pages/Metrics"));
+const Listing = importComponent(() => import("./pages/Listing"));
+const Builds = importComponent(() => import("./pages/Builds"));
+const Build = importComponent(() => import("./pages/Build"));
+const Releases = importComponent(() => import("./pages/Releases"));
 
 Sentry.init({
   dsn: window.SENTRY_DSN,
