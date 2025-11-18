@@ -91,6 +91,7 @@ export default defineConfig({
       },
     ],
   },
+  base: "./", // use the script's URL path as base when loading assets in dynamic imports
   build: {
     manifest: true,
     modulePreload: false,
