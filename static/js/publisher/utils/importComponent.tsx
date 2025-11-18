@@ -14,7 +14,7 @@ type LoaderFn<TComponent extends React.ComponentType> = () => Promise<{
  */
 export function importComponent<TComponent extends React.ComponentType>(
   loader: LoaderFn<TComponent>,
-  fallback?: React.ReactNode
+  fallback?: React.ReactNode,
 ) {
   const Component = lazy(loader);
 
@@ -29,6 +29,6 @@ export function importComponent<TComponent extends React.ComponentType>(
         {/* @ts-expect-error: let's just ignore this error for the moment */}
         <Component {...props} ref={ref} />
       </Suspense>
-    )
+    ),
   );
 }
