@@ -1,6 +1,7 @@
 import flask
 from flask import Response
 
+import logging
 import humanize
 import os
 
@@ -19,6 +20,7 @@ from canonicalwebteam.store_api.devicegw import DeviceGW
 from pybadges import badge
 
 device_gateway = DeviceGW("snap", helpers.api_session)
+logger = logging.getLogger(__name__)
 
 FIELDS = [
     "title",
@@ -215,6 +217,14 @@ def snap_details_views(store):
         extra_details = device_gateway.get_snap_details(
             snap_name, fields=FIELDS_EXTRA_DETAILS
         )
+
+        try:
+            extra_details = device_gateway.get_snap_details(
+                snap_name, channel="", fields=FIELDS_EXTRA_DETAILS
+            )
+        except Exception:
+            logger.exception("Details endpoint returned an error")
+            extra_details = None
 
         if extra_details and extra_details["aliases"]:
             context["aliases"] = [
