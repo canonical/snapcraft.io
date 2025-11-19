@@ -7,6 +7,8 @@ import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { importComponent } from "./utils/importComponent";
 import BrandStoreRoute from "./components/BrandStoreRoute/BrandStoreRoute";
 import PublisherLayout from "./layouts/PublisherLayout";
+import SnapsManagementLayout from "./layouts/SnapsManagementLayout";
+
 import AccountSnaps from "./pages/AccountSnaps";
 import BrandStoreSettings from "./pages/BrandStoreSettings";
 import Members from "./pages/Members";
@@ -58,7 +60,11 @@ root.render(
       <BrowserRouter>
         <Routes>
           <Route element={<PublisherLayout />}>
-            <Route path=":snapId">
+            <Route path=":snapId" element={<SnapsManagementLayout />}>
+              {/*
+                if any of the children routes changes, make sure to update
+                static/js/publisher/layouts/SnapsManagementLayout/routes.ts
+              */}
               <Route path="publicise" element={<Publicise />} />
               <Route
                 path="publicise/badges"
