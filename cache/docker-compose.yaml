@@ -1,0 +1,23 @@
+services:
+  redis:
+    image: redis:7
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    command: ["redis-server", "--appendonly", "yes"]
+    healthcheck:
+      test: ["CMD", "redis-cli", "-h", "localhost", "-p", "6379", "ping"]
+      interval: 5s
+      timeout: 2s
+      retries: 5
+
+  redis-cli:
+    image: redis:7
+    entrypoint: ["redis-cli", "-h", "redis", "-p", "6379"]
+    depends_on:
+      redis:
+        condition: service_healthy
+
+volumes:
+  redis-data:
