@@ -23,18 +23,18 @@ from cache.cache_utility import redis_cache
 dashboard = Dashboard(api_session)
 device_gateway = DeviceGW("snap", api_session)
 
-def get_snap_info_key(snap_name):
-    user_id = flask.session.get(
-        "publisher", {}
-    ).get("identity_url", "").split("+id")[1]
 
-    return f"{user_id}:snap_info:{snap_name}"
+def get_snap_info_key(snap_name):
+    user_id = flask.session.get("publisher", {}).get("identity_url", "")
+    cache_key = f"snapcraft:dashboard:snap_info:{snap_name}:{user_id}"
+    return cache_key
+
 
 @login_required
 def get_listing_data(snap_name):
     snap_info_key = get_snap_info_key(snap_name)
     snap_details = redis_cache.get(snap_info_key, expected_type=dict)
-    
+
     if not snap_details:
         snap_details = dashboard.get_snap_info(flask.session, snap_name)
         redis_cache.set(snap_info_key, snap_details, ttl=3600)
