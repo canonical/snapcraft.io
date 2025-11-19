@@ -214,11 +214,10 @@ def snap_details_views(store):
         status_code = 200
 
         context = _get_context_snap_details(snap_name)
-        extra_details = device_gateway.get_snap_details(
-            snap_name, fields=FIELDS_EXTRA_DETAILS
-        )
-
         try:
+            # the empty string channel makes the store API not filter by
+            # the default channel 'latest/stable', which gives errors for
+            # snaps that don't use that channel
             extra_details = device_gateway.get_snap_details(
                 snap_name, channel="", fields=FIELDS_EXTRA_DETAILS
             )

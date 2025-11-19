@@ -5,6 +5,42 @@ from webapp.app import create_app
 
 
 EMPTY_EXTRA_DETAILS_PAYLOAD = {"aliases": None, "package_name": "vault"}
+SNAP_PAYLOAD = {
+    "snap-id": "id",
+    "name": "toto",
+    "default-track": None,
+    "snap": {
+        "title": "Snap Title",
+        "summary": "This is a summary",
+        "description": "this is a description",
+        "media": [],
+        "license": "license",
+        "publisher": {
+            "display-name": "Toto",
+            "username": "toto",
+            "validation": True,
+        },
+        "categories": [{"name": "test"}],
+        "trending": False,
+        "unlisted": False,
+        "links": {},
+    },
+    "channel-map": [
+        {
+            "channel": {
+                "architecture": "amd64",
+                "name": "stable",
+                "risk": "stable",
+                "track": "latest",
+                "released-at": "2018-09-18T14:45:28.064633+00:00",
+            },
+            "created-at": "2018-09-18T14:45:28.064633+00:00",
+            "version": "1.0",
+            "confinement": "conf",
+            "download": {"size": 100000},
+        }
+    ],
+}
 
 
 class GetDetailsPageTest(TestCase):
@@ -88,43 +124,8 @@ class GetDetailsPageTest(TestCase):
         assert response.status_code == 404
 
     @responses.activate
-    def test_extra_details_404(self):
-        payload = {
-            "snap-id": "id",
-            "name": "toto",
-            "default-track": None,
-            "snap": {
-                "title": "Snap Title",
-                "summary": "This is a summary",
-                "description": "this is a description",
-                "media": [],
-                "license": "license",
-                "publisher": {
-                    "display-name": "Toto",
-                    "username": "toto",
-                    "validation": True,
-                },
-                "categories": [{"name": "test"}],
-                "trending": False,
-                "unlisted": False,
-                "links": {},
-            },
-            "channel-map": [
-                {
-                    "channel": {
-                        "architecture": "amd64",
-                        "name": "stable",
-                        "risk": "stable",
-                        "track": "latest",
-                        "released-at": "2018-09-18T14:45:28.064633+00:00",
-                    },
-                    "created-at": "2018-09-18T14:45:28.064633+00:00",
-                    "version": "1.0",
-                    "confinement": "conf",
-                    "download": {"size": 100000},
-                }
-            ],
-        }
+    def test_extra_details_error(self):
+        payload = SNAP_PAYLOAD
         extra_details_payload = {
             "error_list": [
                 {
@@ -149,14 +150,16 @@ class GetDetailsPageTest(TestCase):
                 status=404,
             )
         )
+        metrics_url = "https://api.snapcraft.io/api/v1/snaps/metrics"
+        responses.add(
+            responses.Response(
+                method="POST", url=metrics_url, json={}, status=200
+            )
+        )
 
         response = self.client.get(self.endpoint_url)
 
-        assert len(responses.calls) == 2
-        assert responses.calls[0].request.url == self.api_url
-        assert responses.calls[1].request.url == self.api_url_details
-
-        assert response.status_code == 404
+        assert response.status_code == 200
 
     @responses.activate
     def test_api_500(self):
@@ -193,7 +196,7 @@ class GetDetailsPageTest(TestCase):
     def test_no_channel_map(self):
         payload = {
             "snap-id": "id",
-            "name": "snapName",
+            "name": "toto",
             "default-track": None,
             "snap": {
                 "title": "Snap Title",
@@ -233,42 +236,7 @@ class GetDetailsPageTest(TestCase):
 
     @responses.activate
     def test_user_connected(self):
-        payload = {
-            "snap-id": "id",
-            "name": "toto",
-            "default-track": None,
-            "snap": {
-                "title": "Snap Title",
-                "summary": "This is a summary",
-                "description": "this is a description",
-                "media": [],
-                "license": "license",
-                "publisher": {
-                    "display-name": "Toto",
-                    "username": "toto",
-                    "validation": True,
-                },
-                "categories": [{"name": "test"}],
-                "trending": False,
-                "unlisted": False,
-                "links": {},
-            },
-            "channel-map": [
-                {
-                    "channel": {
-                        "architecture": "amd64",
-                        "name": "stable",
-                        "risk": "stable",
-                        "track": "latest",
-                        "released-at": "2018-09-18T14:45:28.064633+00:00",
-                    },
-                    "created-at": "2018-09-18T14:45:28.064633+00:00",
-                    "version": "1.0",
-                    "confinement": "conf",
-                    "download": {"size": 100000},
-                }
-            ],
-        }
+        payload = SNAP_PAYLOAD
 
         responses.add(
             responses.Response(
@@ -306,42 +274,7 @@ class GetDetailsPageTest(TestCase):
 
     @responses.activate
     def test_user_not_connected(self):
-        payload = {
-            "snap-id": "id",
-            "name": "snapName",
-            "default-track": None,
-            "snap": {
-                "title": "Snap Title",
-                "summary": "This is a summary",
-                "description": "this is a description",
-                "media": [],
-                "license": "license",
-                "publisher": {
-                    "display-name": "Toto",
-                    "username": "toto",
-                    "validation": True,
-                },
-                "categories": [{"name": "test"}],
-                "trending": False,
-                "unlisted": False,
-                "links": {},
-            },
-            "channel-map": [
-                {
-                    "channel": {
-                        "architecture": "amd64",
-                        "name": "stable",
-                        "risk": "stable",
-                        "track": "latest",
-                        "released-at": "2018-09-18T14:45:28.064633+00:00",
-                    },
-                    "created-at": "2018-09-18T14:45:28.064633+00:00",
-                    "version": "1.0",
-                    "confinement": "conf",
-                    "download": {"size": 100000},
-                }
-            ],
-        }
+        payload = SNAP_PAYLOAD
 
         responses.add(
             responses.Response(
@@ -371,42 +304,7 @@ class GetDetailsPageTest(TestCase):
 
     @responses.activate
     def test_user_connected_on_not_own_snap(self):
-        payload = {
-            "snap-id": "id",
-            "name": "snapName",
-            "default-track": None,
-            "snap": {
-                "title": "Snap Title",
-                "summary": "This is a summary",
-                "description": "this is a description",
-                "media": [],
-                "license": "license",
-                "publisher": {
-                    "display-name": "Toto",
-                    "username": "toto",
-                    "validation": True,
-                },
-                "categories": [{"name": "test"}],
-                "trending": False,
-                "unlisted": False,
-                "links": {},
-            },
-            "channel-map": [
-                {
-                    "channel": {
-                        "architecture": "amd64",
-                        "name": "stable",
-                        "risk": "stable",
-                        "track": "latest",
-                        "released-at": "2018-09-18T14:45:28.064633+00:00",
-                    },
-                    "created-at": "2018-09-18T14:45:28.064633+00:00",
-                    "version": "1.0",
-                    "confinement": "conf",
-                    "download": {"size": 100000},
-                }
-            ],
-        }
+        payload = SNAP_PAYLOAD
 
         responses.add(
             responses.Response(
@@ -439,42 +337,7 @@ class GetDetailsPageTest(TestCase):
 
     @responses.activate
     def test_extra_details(self):
-        payload = {
-            "snap-id": "toto_id",
-            "name": "toto",
-            "default-track": None,
-            "snap": {
-                "title": "Snap Title",
-                "summary": "This is a summary",
-                "description": "this is a description",
-                "media": [],
-                "license": "license",
-                "publisher": {
-                    "display-name": "Toto",
-                    "username": "toto",
-                    "validation": True,
-                },
-                "categories": [{"name": "test"}],
-                "trending": False,
-                "unlisted": False,
-                "links": {},
-            },
-            "channel-map": [
-                {
-                    "channel": {
-                        "architecture": "amd64",
-                        "name": "stable",
-                        "risk": "stable",
-                        "track": "latest",
-                        "released-at": "2018-09-18T14:45:28.064633+00:00",
-                    },
-                    "created-at": "2018-09-18T14:45:28.064633+00:00",
-                    "version": "1.0",
-                    "confinement": "conf",
-                    "download": {"size": 100000},
-                }
-            ],
-        }
+        payload = SNAP_PAYLOAD
         payload_extra_details = {
             "aliases": [
                 {"name": "nu", "target": "nu"},
@@ -524,3 +387,9 @@ class GetDetailsPageTest(TestCase):
                 ["toto.nu-plugin-polars", "nu_plugin_polars"],
             ],
         )
+
+
+if __name__ == "__main__":
+    import unittest
+
+    unittest.main()
