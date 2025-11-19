@@ -25,8 +25,7 @@ device_gateway = DeviceGW("snap", api_session)
 
 
 def get_snap_info_key(snap_name):
-    user_id = flask.session.get("publisher", {}).get("identity_url", "")
-    cache_key = f"snapcraft:dashboard:snap_info:{snap_name}:{user_id}"
+    cache_key = f"snap_info:{snap_name}"
     return cache_key
 
 
