@@ -1,3 +1,6 @@
+// This same code can be found duplicated in charmhub.io
+// If you modify this file for some reason it is likely that you will also need to modify charmhub.io's one
+
 @mixin snapcraft-p-navigation {
   @media (width < $breakpoint-navigation-threshold) {
     #navigation.p-navigation--sliding {
