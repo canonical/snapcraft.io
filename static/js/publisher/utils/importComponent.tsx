@@ -1,5 +1,5 @@
 import { forwardRef, lazy, Suspense } from "react";
-import { Spinner } from "@canonical/react-components";
+import Loader from "../components/Loader";
 
 type LoaderFn<TComponent extends React.ComponentType> = () => Promise<{
   default: TComponent;
@@ -20,7 +20,7 @@ export function importComponent<TComponent extends React.ComponentType>(
 
   return forwardRef<unknown, React.ComponentPropsWithRef<TComponent>>(
     (props, ref) => (
-      <Suspense fallback={fallback ? fallback : <Spinner text="Loading..." />}>
+      <Suspense fallback={fallback ? fallback : <Loader />}>
         {/*
           Something is wrong with the types for Component and its props,
           but it does actually work at runtime and types are inferred properly
