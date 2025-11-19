@@ -197,18 +197,19 @@
             </div>
           {% endif %}
           {% if normalized_os %}
-            {% if normalized_os|length > 21 %}
+            {% set list_limit = 20 %}
+            {% if normalized_os|length > list_limit + 1 %}
             <div class="col-4">
               <div class="js-sschart-holder" data-live="weekly_installed_base_by_operating_system_normalized">
                 <h5 class="p-muted-heading">Users by distribution (log)</h5>
                 <div class="snapcraft-distro-chart">
                   <div class="snapcraft-distro-chart__names">
-                    {% for distro in normalized_os[:20] %}
+                    {% for distro in normalized_os[:list_limit] %}
                     <div class="snapcraft-distro-chart__name" title="{{ distro.name }}">{{ distro.name }}</div>
                     {% endfor %}
                   </div>
                   <div class="snapcraft-distro-chart__bars">
-                    {% for distro in normalized_os[:20] %}
+                    {% for distro in normalized_os[:list_limit] %}
                       <div
                         class="snapcraft-distro-chart__bar"
                         style="width: {{ distro.value * 100 }}%;"
@@ -218,12 +219,12 @@
                   <div class="p-show-more is-collapsed" data-js="js-show-more">
                     <div>{# single wrapper expected by show more JS/CSS #}
                       <div class="snapcraft-distro-chart__names">
-                        {% for distro in normalized_os[20:] %}
+                        {% for distro in normalized_os[list_limit:] %}
                         <div class="snapcraft-distro-chart__name" title="{{ distro.name }}">{{ distro.name }}</div>
                         {% endfor %}
                       </div>
                       <div class="snapcraft-distro-chart__bars">
-                        {% for distro in normalized_os[20:] %}
+                        {% for distro in normalized_os[list_limit:] %}
                           <div
                             class="snapcraft-distro-chart__bar"
                             style="width: {{ distro.value * 100 }}%;"
