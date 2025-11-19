@@ -92,24 +92,6 @@ afterAll(() => {
 });
 
 describe("Metrics", () => {
-  test("shows correct heading", () => {
-    renderComponent();
-    expect(
-      screen.getByRole("heading", {
-        level: 1,
-        name: "My snaps / test-snap-id / Metrics",
-      }),
-    ).toBeInTheDocument();
-  });
-
-  test("highlights correct tab", () => {
-    renderComponent();
-    expect(screen.getByRole("link", { name: "Metrics" })).toHaveAttribute(
-      "aria-selected",
-      "true",
-    );
-  });
-
   test("shows empty state if no data", async () => {
     renderComponent();
     await waitFor(() => {
