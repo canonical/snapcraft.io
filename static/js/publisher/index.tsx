@@ -65,6 +65,7 @@ root.render(
                 if any of the children routes changes, make sure to update
                 static/js/publisher/layouts/SnapsManagementLayout/routes.ts
               */}
+              {/* TODO: move to data routing with RouterProvider */}
               <Route path="publicise" element={<Publicise />} />
               <Route
                 path="publicise/badges"

@@ -35,6 +35,8 @@ function Breadcrumbs(): React.JSX.Element {
         ))}
       </h1>
 
+      {/* TODO: this is the proper accessible implementation of the breadcrumbs pattern,
+          we should change the layout to use this rather than the h1 above */}
       {/* <nav className="p-breadcrumbs" aria-label="Breadcrumb" aria-live="polite">
         <ol className="p-breadcrumbs__items">
           <li className="p-breadcrumbs__item">
