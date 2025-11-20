@@ -2,10 +2,10 @@ import { useParams, Link } from "react-router-dom";
 import { useQuery } from "react-query";
 import { Strip, Notification } from "@canonical/react-components";
 
-import SectionNav from "../../components/SectionNav";
 import ListingForm from "./ListingForm";
 
 import { setPageTitle } from "../../utils";
+import Loader from "../../components/Loader";
 
 function Listing(): React.JSX.Element {
   const { snapId } = useParams();
@@ -32,21 +32,7 @@ function Listing(): React.JSX.Element {
 
   return (
     <>
-      <h1 className="p-heading--4" aria-live="polite">
-        <a href="/snaps">My snaps</a> / <a href={`/${snapId}`}>{snapId}</a> /
-        Listing
-      </h1>
-
-      <SectionNav snapName={snapId} activeTab="listing" />
-
-      {isLoading && (
-        <Strip shallow>
-          <p>
-            <i className="p-icon--spinner u-animation--spin"></i>&nbsp;Loading{" "}
-            {snapId} listing data
-          </p>
-        </Strip>
-      )}
+      {isLoading && <Loader text={`Loading ${snapId} listing data`} />}
 
       {!isLoading && status === "error" && (
         <Strip shallow>

@@ -6,15 +6,14 @@ import {
   SideNavigation,
   Strip,
   Notification,
-  Icon,
 } from "@canonical/react-components";
 
-import SectionNav from "../../components/SectionNav";
 import PubliciseButtons from "./PubliciseButtons";
 import PubliciseBadges from "./PubliciseBadges";
 import PubliciseCards from "./PubliciseCards";
 
 import { setPageTitle } from "../../utils";
+import Loader from "../../components/Loader";
 
 type Props = {
   view?: undefined | "badges" | "cards";
@@ -54,21 +53,7 @@ function Publicise({ view }: Props): React.JSX.Element {
 
   return (
     <>
-      <h1 className="p-heading--4" aria-live="polite">
-        <a href="/snaps">My snaps</a> / <a href={`/${snapId}`}>{snapId}</a> /
-        Publicise
-      </h1>
-
-      <SectionNav snapName={snapId} activeTab="publicise" />
-
-      {isLoading && (
-        <Strip shallow>
-          <p>
-            <Icon name="spinner" className="u-animation--spin" />
-            &nbsp;Loading...
-          </p>
-        </Strip>
-      )}
+      {isLoading && <Loader />}
 
       {isFetched && data && (
         <Strip shallow>

@@ -2,9 +2,7 @@ import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { useQuery } from "react-query";
 import { useAtom } from "jotai";
-import { Strip } from "@canonical/react-components";
 
-import SectionNav from "../../components/SectionNav";
 import LoggedOut from "./LoggedOut";
 import RepoNotConnected from "./RepoNotConnected";
 import RepoConnected from "./RepoConnected";
@@ -16,6 +14,7 @@ import {
 } from "../../state/buildsState";
 
 import { setPageTitle } from "../../utils";
+import Loader from "../../components/Loader";
 
 function Builds(): React.JSX.Element {
   const { snapId } = useParams();
@@ -49,21 +48,7 @@ function Builds(): React.JSX.Element {
 
   return (
     <>
-      <h1 className="p-heading--4" aria-live="polite">
-        <a href="/snaps">My snaps</a> / <a href={`/${snapId}`}>{snapId}</a> /
-        Builds
-      </h1>
-
-      <SectionNav snapName={snapId} activeTab="builds" />
-
-      {isLoading && (
-        <Strip shallow>
-          <p>
-            <i className="p-icon--spinner u-animation--spin"></i>&nbsp;Loading{" "}
-            {snapId} builds data
-          </p>
-        </Strip>
-      )}
+      {isLoading && <Loader text={`Loading ${snapId} builds data`} />}
 
       {!isLoading && !loggedIn && <LoggedOut />}
       {!isLoading && loggedIn && !repoConnected && (
