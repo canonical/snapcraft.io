@@ -12,7 +12,7 @@
     }
 
     &__names {
-      width: 8rem;
+      width: 6rem;
     }
 
     &__bars {
@@ -26,7 +26,6 @@
       line-height: 1rem;
       margin-top: 1px;
       overflow: hidden;
-      text-align: right;
       text-overflow: ellipsis;
       white-space: nowrap;
     }

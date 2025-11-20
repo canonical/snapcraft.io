@@ -197,38 +197,54 @@
             </div>
           {% endif %}
           {% if normalized_os %}
-            {% if normalized_os|length > 21 %}
-            <div class="col-4 p-show-more is-collapsed is-deep" data-js="js-show-more">
+            {% set list_limit = 20 %}
+            {% if normalized_os|length > list_limit + 1 %}
+            <div class="col-4">
               <div class="js-sschart-holder" data-live="weekly_installed_base_by_operating_system_normalized">
-                <h4>Users by distribution (log)</h4>
+                <h5 class="p-muted-heading">Users by distribution (log)</h5>
                 <div class="snapcraft-distro-chart">
                   <div class="snapcraft-distro-chart__names">
-                    {% for distro in normalized_os %}
+                    {% for distro in normalized_os[:list_limit] %}
                     <div class="snapcraft-distro-chart__name" title="{{ distro.name }}">{{ distro.name }}</div>
                     {% endfor %}
                   </div>
                   <div class="snapcraft-distro-chart__bars">
-                    {% for distro in normalized_os %}
+                    {% for distro in normalized_os[:list_limit] %}
                       <div
                         class="snapcraft-distro-chart__bar"
                         style="width: {{ distro.value * 100 }}%;"
                       ></div>
                     {% endfor %}
                   </div>
-                </div>
-              </div>
-              <div class="p-show-more__fade">
-                <div class="p-show-more__link-container">
-                  <small>
-                    <a href="/{{ package_name }}" class="p-show-more__link">Show more</a>
-                  </small>
+                  <div class="p-show-more is-collapsed" data-js="js-show-more">
+                    <div>{# single wrapper expected by show more JS/CSS #}
+                      <div class="snapcraft-distro-chart__names">
+                        {% for distro in normalized_os[list_limit:] %}
+                        <div class="snapcraft-distro-chart__name" title="{{ distro.name }}">{{ distro.name }}</div>
+                        {% endfor %}
+                      </div>
+                      <div class="snapcraft-distro-chart__bars">
+                        {% for distro in normalized_os[list_limit:] %}
+                          <div
+                            class="snapcraft-distro-chart__bar"
+                            style="width: {{ distro.value * 100 }}%;"
+                          ></div>
+                        {% endfor %}
+                      </div>
+                    </div>
+                    <div class="p-show-more__fade">
+                      <div class="p-show-more__link-container">
+                        <button class="p-button--link p-show-more__link is-small u-no-padding" aria-expanded="false">Show more</button>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
             {% else %}
             <div class="col-4 js-snap-distro-chart-holder"
               data-live="weekly_installed_base_by_operating_system_normalized">
-              <h4 class="p-heading--5">Users by distribution (log)</h4>
+              <h5 class="p-muted-heading">Users by distribution (log)</h5>
               <div class="snapcraft-distro-chart">
                 <div class="snapcraft-distro-chart__names">
                   {% for distro in normalized_os %}
