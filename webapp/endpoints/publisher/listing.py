@@ -18,14 +18,25 @@ from webapp.publisher.snaps import logic
 from webapp.store.logic import (
     get_categories,
 )
+from cache.cache_utility import redis_cache
 
 dashboard = Dashboard(api_session)
 device_gateway = DeviceGW("snap", api_session)
 
 
+def get_snap_info_key(snap_name):
+    cache_key = f"snap_info:{snap_name}"
+    return cache_key
+
+
 @login_required
 def get_listing_data(snap_name):
-    snap_details = dashboard.get_snap_info(flask.session, snap_name)
+    snap_info_key = get_snap_info_key(snap_name)
+    snap_details = redis_cache.get(snap_info_key, expected_type=dict)
+
+    if not snap_details:
+        snap_details = dashboard.get_snap_info(flask.session, snap_name)
+        redis_cache.set(snap_info_key, snap_details, ttl=3600)
 
     details_metrics_enabled = snap_details["public_metrics_enabled"]
     details_blacklist = snap_details.get("public_metrics_blacklist", [])
@@ -184,6 +195,9 @@ def post_listing_data(snap_name):
                 dashboard.snap_screenshots(
                     flask.session, snap_id, images_json, images_files
                 )
+                # Invalidate cache after successful screenshot update
+                snap_info_key = get_snap_info_key(snap_name)
+                redis_cache.delete(snap_info_key)
             except StoreApiResponseErrorList as api_response_error_list:
                 if api_response_error_list.status_code != 404:
                     error_list = error_list + api_response_error_list.errors
@@ -198,6 +212,9 @@ def post_listing_data(snap_name):
 
             try:
                 dashboard.snap_metadata(flask.session, snap_id, body_json)
+                # Invalidate cache after successful metadata update
+                snap_info_key = get_snap_info_key(snap_name)
+                redis_cache.delete(snap_info_key)
             except StoreApiResponseErrorList as api_response_error_list:
                 if api_response_error_list.status_code != 404:
                     error_list = error_list + api_response_error_list.errors
