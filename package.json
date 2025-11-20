@@ -111,6 +111,7 @@
     "vitest": "^3.2.4"
   },
   "resolutions": {
+    "vitest/**/glob": "10.5.0",
     "lodash": "4.17.21",
     "eslint/**/minimatch": "3.1.2",
     "eslint-*/minimatch": "3.1.2",
