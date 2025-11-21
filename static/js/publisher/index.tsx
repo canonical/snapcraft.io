@@ -9,15 +9,11 @@ import BrandStoreRoute from "./components/BrandStoreRoute/BrandStoreRoute";
 import PublisherLayout from "./layouts/PublisherLayout";
 import SnapsManagementLayout from "./layouts/SnapsManagementLayout";
 
-import AccountSnaps from "./pages/AccountSnaps";
 import BrandStoreSettings from "./pages/BrandStoreSettings";
 import Members from "./pages/Members";
 import Model from "./pages/Model";
 import Policies from "./pages/Model/Policies";
 import Models from "./pages/Models";
-import RegisterNameDispute from "./pages/RegisterNameDispute";
-import RegisterSnap from "./pages/RegisterSnap";
-import RequestReservedName from "./pages/RequestReservedName";
 import SigningKeys from "./pages/SigningKeys";
 import Snaps from "./pages/Snaps";
 import ValidationSet from "./pages/ValidationSet";
@@ -34,6 +30,14 @@ const Listing = importComponent(() => import("./pages/Listing"));
 const Builds = importComponent(() => import("./pages/Builds"));
 const Build = importComponent(() => import("./pages/Build"));
 const Releases = importComponent(() => import("./pages/Releases"));
+const AccountSnaps = importComponent(() => import("./pages/AccountSnaps"));
+const RegisterNameDispute = importComponent(
+  () => import("./pages/RegisterNameDispute"),
+);
+const RegisterSnap = importComponent(() => import("./pages/RegisterSnap"));
+const RequestReservedName = importComponent(
+  () => import("./pages/RequestReservedName"),
+);
 
 Sentry.init({
   dsn: window.SENTRY_DSN,
