@@ -90,6 +90,7 @@ CSP = {
         "www.facebook.com",
         "px.ads.linkedin.com",
         "*.snapcraft.io",
+        "*.snapcraftcontent.com",
     ],
     "frame-src": [
         "'self'",
