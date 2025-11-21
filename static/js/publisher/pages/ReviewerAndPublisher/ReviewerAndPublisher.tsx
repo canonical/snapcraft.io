@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
 import type { RouteParams } from "../../types/shared";
 
@@ -10,7 +10,7 @@ function ReviewerAndPublisher(): React.JSX.Element {
       <h1>Reviewer and publisher</h1>
       <p>
         As a publisher you can{" "}
-        <a href="/snaps">register a snap name on the Snap store</a> and{" "}
+        <Link to="/snaps">register a snap name on the Snap store</Link> and{" "}
         <a href={`${window.API_URL}stores/snaps/`}>
           manage your snaps on the dashboard
         </a>
