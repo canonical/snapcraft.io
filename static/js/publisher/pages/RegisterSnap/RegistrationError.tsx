@@ -40,11 +40,11 @@ function RegistrationError({ snapName, errorCode, isPrivate, store }: Props) {
     return (
       <Notification severity="information">
         '<strong>{snapName}</strong>' is reserved. You can{" "}
-        <a
-          href={`/request-reserved-name?snap_name=${snapName}&store=${store}&is_isPrivate=${isPrivate}`}
+        <Link
+          to={`/request-reserved-name?snap_name=${snapName}&store=${store}&is_isPrivate=${isPrivate}`}
         >
           request a reserved name
-        </a>{" "}
+        </Link>{" "}
         or register a new name below.
       </Notification>
     );
