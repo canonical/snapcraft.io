@@ -114,7 +114,9 @@ def post_settings_data(snap_name):
         if error_list:
             try:
                 snap_info_key = get_snap_info_cache_key(snap_name)
-                snap_details = redis_cache.get(snap_info_key, expected_type=dict)
+                snap_details = redis_cache.get(
+                    snap_info_key, expected_type=dict
+                )
                 if not snap_details:
                     snap_details = dashboard.get_snap_info(
                         flask.session, snap_name
