@@ -16,24 +16,24 @@ publishers: [
 featured_snaps: [
     {
         "developer_validation": "verified",
-        "icon_url": "https://dashboard.snapcraft.io/site_media/appmedia/2017/11/PyCharmCore256.png",
+        "icon_url": "https://dashboard.snapcraft.io/site_media/appmedia/2024/06/Avatar-5.png",
         "origin": "jetbrains",
-        "package_name": "pycharm-community",
+        "package_name": "intellij-idea",
         "publisher": "JetBrains",
-        "summary": "Python IDE for Professional Developers",
-        "description": "PyCharm Community Edition is a free and open-source IDE which is perfect for pure Python coding. For professional Web and Scientific development see PyCharm Professional Edition.",
-        "title": "PyCharm CE",
-        "background": "#3d3532"
+        "summary": "The Leading IDE for Professional Development in Java and Kotlin",
+        "description": "IntelliJ IDEA is the JetBrains IDE for pro development in Java and Kotlin. Built for your comfort, it unlocks productivity, ensures quality code, supports cutting-edge tech, and protects your privacy.",
+        "title": "IntelliJ IDEA",
+        "background": "#000000"
     },
     {
         "developer_validation": "verified",
-        "icon_url": "https://dashboard.snapcraft.io/site_media/appmedia/2017/05/pycharm_logo_256.png",
+        "icon_url": "https://dashboard.snapcraft.io/site_media/appmedia/2025/11/PyCharm_icon.png",
         "origin": "jetbrains",
-        "package_name": "pycharm-professional",
+        "package_name": "pycharm",
         "publisher": "JetBrains",
-        "summary": "Python IDE for Professional Developers",
-        "description": "PyCharm Professional Edition is an IDE for professional Python development. It is designed by programmers, for programmers, to provide all the tools you need for productive Python, Web and Scientific development.PyCharm Professional Edition is available for a free 30-day evaluation. Monthly and yearly subscription options are available for companies and individual users. Find out more on https://www.jetbrains.com/pycharm/buy/.",
-        "title": "PyCharm Pro",
+        "summary": "PyCharm is the only Python IDE you need",
+        "description": "Built for web, data, and AI/ML professionals, PyCharm helps you develop smarter and faster with an AI-enhanced IDE experience. It offers out-of-the-box support for Python, databases, Jupyter, Git, Conda, PyTorch, TensorFlow, Hugging Face, Django, Flask, FastAPI, and more. With its context-aware AI tools, intelligent code completion, powerful debugger, and seamless integrations, PyCharm accelerates every stage of development – from prototyping and analysis to deployment – so you can focus on writing code.",
+        "title": "PyCharm",
         "background": "#134732"
     },
 ]
