@@ -42,18 +42,18 @@ def get_release_history_json(snap_name):
     page = flask.request.args.get("page", default=1, type=int)
 
     try:
-        release_history_page_key = get_release_history_json_key(
+        release_history_json_key = get_release_history_json_key(
             snap_name, page
         )
-        cached = redis_cache.get(release_history_page_key)
-        if cached is not None:
-            return flask.jsonify(cached)
+        release_history = redis_cache.get(release_history_json_key)
+        if release_history:
+            return flask.jsonify(release_history)
 
         release_history = dashboard.snap_release_history(
             flask.session, snap_name, page
         )
 
-        redis_cache.set(release_history_page_key, release_history, ttl=3600)
+        redis_cache.set(release_history_json_key, release_history, ttl=3600)
     except StoreApiResponseErrorList as api_response_error_list:
         if api_response_error_list.status_code == 404:
             return flask.abort(404, "No snap named {}".format(snap_name))
