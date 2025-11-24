@@ -40,6 +40,7 @@ FIELDS = [
     "trending",
     "unlisted",
     "links",
+    "revision",
 ]
 
 FIELDS_EXTRA_DETAILS = [
@@ -55,6 +56,7 @@ def snap_details_views(store):
         details = device_gateway.get_item_details(
             snap_name, fields=FIELDS, api_version=2
         )
+
         # 404 for any snap under quarantine
         if details["snap"]["publisher"]["username"] == "snap-quarantine":
             flask.abort(404, "No snap named {}".format(snap_name))
