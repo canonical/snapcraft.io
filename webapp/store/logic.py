@@ -174,6 +174,7 @@ def convert_channel_maps(channel_map):
             "risk": channel["channel"].get("risk"),
             "confinement": channel.get("confinement"),
             "size": channel["download"].get("size"),
+            "revision": channel["revision"],
         }
 
         channel_map_restruct[arch][track].append(info)
