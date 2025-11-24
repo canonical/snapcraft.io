@@ -46,6 +46,8 @@ class ChannelMap {
   events: SnapEvents;
   INSTALL_TEMPLATE: string = "";
   CHANNEL_ROW_TEMPLATE: string | undefined;
+  CHANNEL_MAP_VERSION_TABLE_HEAD_TEMPLATE: string = "";
+  CHANNEL_MAP_SECURITY_TABLE_HEAD_TEMPLATE: string = "";
   arch: string | undefined;
   openButton: HTMLElement | null | undefined;
   openScreenName: string | undefined;
@@ -140,6 +142,12 @@ class ChannelMap {
         "channel-map-row-template",
       );
     }
+    const channelMapVersionTableHead = document.getElementById(
+      "channel-map-version-table-head-template",
+    ) as HTMLElement;
+    const channelMapSecurityTableHead = document.getElementById(
+      "channel-map-security-table-head-template",
+    ) as HTMLElement;
 
     if (!installTemplateEl || !channelRowTemplateEl) {
       const buttonsVersions = document.querySelector(
@@ -151,6 +159,10 @@ class ChannelMap {
 
     this.INSTALL_TEMPLATE = installTemplateEl.innerHTML;
     this.CHANNEL_ROW_TEMPLATE = channelRowTemplateEl.innerHTML;
+    this.CHANNEL_MAP_VERSION_TABLE_HEAD_TEMPLATE =
+      channelMapVersionTableHead.innerHTML;
+    this.CHANNEL_MAP_SECURITY_TABLE_HEAD_TEMPLATE =
+      channelMapSecurityTableHead.innerHTML;
 
     // get architectures from data
     const architectures = Object.keys(this.channelMapData);
@@ -484,7 +496,11 @@ class ChannelMap {
     holder.innerHTML = newDiv.innerHTML;
   }
 
-  writeTable(el: HTMLElement, data: string[][]): void {
+  writeTable(
+    theadEl: HTMLElement,
+    tbodyEl: HTMLElement,
+    data: string[][],
+  ): void {
     let cache: string | undefined;
     const tbody = data.map((row, i) => {
       const isSameTrack = cache && row[0] === cache;
@@ -514,7 +530,13 @@ class ChannelMap {
       return _row;
     });
 
-    el.innerHTML = tbody.join("");
+    if (this.currentTab === "security") {
+      theadEl.innerHTML = this.CHANNEL_MAP_SECURITY_TABLE_HEAD_TEMPLATE;
+    } else {
+      theadEl.innerHTML = this.CHANNEL_MAP_VERSION_TABLE_HEAD_TEMPLATE;
+    }
+
+    tbodyEl.innerHTML = tbody.join("");
   }
 
   /**
@@ -524,6 +546,9 @@ class ChannelMap {
    * @param {Record<string, Array.<{channel: string, confinement: string, 'released-at': string, risk: string, size: number, version: string}>>} archData.track
    */
   prepareTable(archData: Record<string, ChannelData[]>) {
+    const theadEl = this.channelMapEl.querySelector(
+      '[data-js="channel-map-table-head"]',
+    ) as HTMLElement;
     const tbodyEl = this.channelMapEl.querySelector(
       '[data-js="channel-map-table"]',
     ) as HTMLElement;
@@ -580,7 +605,7 @@ class ChannelMap {
       });
     });
 
-    this.writeTable(tbodyEl, this.sortRows(rows));
+    this.writeTable(theadEl, tbodyEl, this.sortRows(rows));
   }
 
   hideTabs() {
