@@ -10,10 +10,6 @@ import PublisherLayout from "./layouts/PublisherLayout";
 import SnapsManagementLayout from "./layouts/SnapsManagementLayout";
 import ModelDetailsPageLayout from "./layouts/ModelDetailsPageLayout/ModelPageLayout";
 
-import BrandStoreSettings from "./pages/BrandStoreSettings";
-import Members from "./pages/Members";
-import SigningKeys from "./pages/SigningKeys";
-import Snaps from "./pages/Snaps";
 import ValidationSet from "./pages/ValidationSet";
 import ValidationSets from "./pages/ValidationSets";
 import AccountKeys from "./pages/AccountKeys";
@@ -39,6 +35,12 @@ const RequestReservedName = importComponent(
 const Models = importComponent(() => import("./pages/Models"));
 const Model = importComponent(() => import("./pages/Model"));
 const Policies = importComponent(() => import("./pages/Model/Policies"));
+const BrandStoreSettings = importComponent(
+  () => import("./pages/BrandStoreSettings"),
+);
+const Members = importComponent(() => import("./pages/Members"));
+const SigningKeys = importComponent(() => import("./pages/SigningKeys"));
+const Snaps = importComponent(() => import("./pages/Snaps"));
 
 Sentry.init({
   dsn: window.SENTRY_DSN,

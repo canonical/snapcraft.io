@@ -4,12 +4,12 @@ import { useQuery } from "react-query";
 import {
   Row,
   Col,
-  Spinner,
   Form,
   Input,
   PasswordToggle,
   Button,
 } from "@canonical/react-components";
+import Loader from "../../components/Loader";
 
 function BrandStoreSettings() {
   const { id } = useParams();
@@ -60,11 +60,7 @@ function BrandStoreSettings() {
 
   return (
     <>
-      {isLoading && (
-        <div className="u-fixed-width">
-          <Spinner text="Loading..." />
-        </div>
-      )}
+      {isLoading && <Loader />}
 
       {!isLoading && status === "success" && data && (
         <>
