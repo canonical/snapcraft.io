@@ -1,4 +1,3 @@
-import { Spinner } from "@canonical/react-components";
 import { useSetAtom } from "jotai";
 import { useEffect } from "react";
 import { Outlet, useLocation, useNavigate, useParams } from "react-router-dom";
@@ -7,6 +6,7 @@ import { useBrandStores } from "../../hooks";
 import StoreNotFound from "../../pages/StoreNotFound";
 import { brandStoresState } from "../../state/brandStoreState";
 import { Store } from "../../types/shared";
+import Loader from "../Loader";
 
 function BrandStoreRoute() {
   const location = useLocation();
@@ -47,7 +47,7 @@ function BrandStoreRoute() {
       <StoreNotFound />
     )
   ) : (
-    <Spinner text="Loading..." />
+    <Loader />
   );
 }
 

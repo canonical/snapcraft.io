@@ -8,12 +8,10 @@ import { importComponent } from "./utils/importComponent";
 import BrandStoreRoute from "./components/BrandStoreRoute/BrandStoreRoute";
 import PublisherLayout from "./layouts/PublisherLayout";
 import SnapsManagementLayout from "./layouts/SnapsManagementLayout";
+import ModelDetailsPageLayout from "./layouts/ModelDetailsPageLayout/ModelPageLayout";
 
 import BrandStoreSettings from "./pages/BrandStoreSettings";
 import Members from "./pages/Members";
-import Model from "./pages/Model";
-import Policies from "./pages/Model/Policies";
-import Models from "./pages/Models";
 import SigningKeys from "./pages/SigningKeys";
 import Snaps from "./pages/Snaps";
 import ValidationSet from "./pages/ValidationSet";
@@ -38,6 +36,9 @@ const RegisterSnap = importComponent(() => import("./pages/RegisterSnap"));
 const RequestReservedName = importComponent(
   () => import("./pages/RequestReservedName"),
 );
+const Models = importComponent(() => import("./pages/Models"));
+const Model = importComponent(() => import("./pages/Model"));
+const Policies = importComponent(() => import("./pages/Model/Policies"));
 
 Sentry.init({
   dsn: window.SENTRY_DSN,
@@ -117,7 +118,7 @@ root.render(
               <Route path="models">
                 <Route index element={<Models />} />
                 <Route path="create" element={<Models />} />
-                <Route path=":model_id">
+                <Route path=":model_id" element={<ModelDetailsPageLayout />}>
                   <Route index element={<Model />} />
                   <Route path="policies" element={<Policies />} />
                   <Route path="policies/create" element={<Policies />} />
