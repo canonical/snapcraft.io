@@ -1,9 +1,19 @@
 import responses
 from tests.publisher.endpoint_testing import BaseTestCases
+from cache.cache_utility import redis_cache
 
 
 class GetReleaseHistoryJsonNotAuth(BaseTestCases.EndpointLoggedOut):
     def setUp(self):
+        # Clear cache before each test
+        if redis_cache.redis_available:
+            try:
+                redis_cache.client.flushdb()
+            except Exception:
+                pass
+        else:
+            redis_cache.fallback.clear()
+
         snap_name = "test-snap"
         endpoint_url = "/{}/releases/json".format(snap_name)
 
@@ -12,6 +22,15 @@ class GetReleaseHistoryJsonNotAuth(BaseTestCases.EndpointLoggedOut):
 
 class GetReleasesHistoryJson(BaseTestCases.EndpointLoggedIn):
     def setUp(self):
+        # Clear cache before each test
+        if redis_cache.redis_available:
+            try:
+                redis_cache.client.flushdb()
+            except Exception:
+                pass
+        else:
+            redis_cache.fallback.clear()
+
         snap_name = "test-snap"
 
         api_url = (
