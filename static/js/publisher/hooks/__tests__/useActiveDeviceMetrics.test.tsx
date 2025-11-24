@@ -55,7 +55,6 @@ describe("useActiveDeviceMetrics", () => {
                 },
               ],
             },
-            days_without_data: [],
             latest_active_devices: 4,
             total_page_num: 1,
           }),
@@ -89,7 +88,6 @@ describe("useActiveDeviceMetrics", () => {
         ],
         series: [{ name: "1.0", values: [5, 5, 0, 4, 4] }],
       },
-      daysWithoutData: [],
     });
     (global.fetch as Mock).mockRestore();
   });
@@ -115,7 +113,6 @@ describe("useActiveDeviceMetrics", () => {
                 },
               ],
             },
-            days_without_data: [],
             latest_active_devices: 4,
             total_page_num: 1,
           }),
