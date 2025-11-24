@@ -10,10 +10,6 @@ import PublisherLayout from "./layouts/PublisherLayout";
 import SnapsManagementLayout from "./layouts/SnapsManagementLayout";
 import ModelDetailsPageLayout from "./layouts/ModelDetailsPageLayout/ModelPageLayout";
 
-import ValidationSet from "./pages/ValidationSet";
-import ValidationSets from "./pages/ValidationSets";
-import AccountKeys from "./pages/AccountKeys";
-
 const AccountDetails = importComponent(() => import("./pages/AccountDetails"));
 const Publicise = importComponent(() => import("./pages/Publicise"));
 const PublisherSettings = importComponent(
@@ -41,6 +37,9 @@ const BrandStoreSettings = importComponent(
 const Members = importComponent(() => import("./pages/Members"));
 const SigningKeys = importComponent(() => import("./pages/SigningKeys"));
 const Snaps = importComponent(() => import("./pages/Snaps"));
+const ValidationSet = importComponent(() => import("./pages/ValidationSet"));
+const ValidationSets = importComponent(() => import("./pages/ValidationSets"));
+const AccountKeys = importComponent(() => import("./pages/AccountKeys"));
 
 Sentry.init({
   dsn: window.SENTRY_DSN,
