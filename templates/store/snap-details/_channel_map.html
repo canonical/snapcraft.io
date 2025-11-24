@@ -103,13 +103,7 @@
         </div>
         <div class="u-fixed-width p-channel-map__version-table">
           <table>
-            <thead>
-              <tr>
-                <th>Channel</th>
-                <th>Version</th>
-                <th width="25%" class="u-hide--medium u-hide--small">Published</th>
-                <th width="12%"></th>
-              </tr>
+            <thead data-js="channel-map-table-head">
             </thead>
             <tbody data-js="channel-map-table">
             </tbody>
@@ -144,6 +138,22 @@
       Don't have snapd? <a href="/docs/installing-snapd">Get set up for snaps</a>.
     </p>
   </div>
+</script>
+<script type="text/template" id="channel-map-security-table-head-template" data-js="channel-map-version-table-head">
+  <tr>
+    <th>Channel</th>
+    <th>Version</th>
+    <th>Revision</th>
+    <th>Download SBOM</th>
+  </tr>
+</script>
+<script type="text/template" id="channel-map-version-table-head-template" data-js="channel-map-security-table-head">
+  <tr>
+    <th>Channel</th>
+    <th>Version</th>
+    <th width="25%" class="u-hide--medium u-hide--small">Published</th>
+    <th width="12%"></th>
+  </tr>
 </script>
 <script type="text/template" id="channel-map-row-template" data-js="channel-map-row">
   <tr class="${rowClass}" data-js="slide-install-instructions" data-channel="${row[0]}/${row[1]}" data-confinement="${row[4]}">
