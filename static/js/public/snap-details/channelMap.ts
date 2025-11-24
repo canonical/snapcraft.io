@@ -30,6 +30,7 @@ interface ChannelData {
   risk: string;
   version: string;
   channel?: string;
+  revision: string;
 }
 
 type ChannelMapData = Record<string, Record<string, ChannelData[]>>;
@@ -595,13 +596,23 @@ class ChannelMap {
     Object.keys(trackList).forEach((track) => {
       trackList[track].forEach((trackInfo) => {
         const trackName = track.split("/")[0];
-        rows.push([
-          trackName,
-          trackInfo["risk"],
-          trackInfo["version"],
-          trackInfo["released-at"],
-          trackInfo["confinement"],
-        ]);
+
+        if (this.currentTab === "security") {
+          rows.push([
+            trackName,
+            trackInfo["risk"],
+            trackInfo["version"],
+            trackInfo["revision"],
+          ]);
+        } else {
+          rows.push([
+            trackName,
+            trackInfo["risk"],
+            trackInfo["version"],
+            trackInfo["released-at"],
+            trackInfo["confinement"],
+          ]);
+        }
       });
     });
 
