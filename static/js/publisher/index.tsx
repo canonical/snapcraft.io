@@ -8,6 +8,7 @@ import { importComponent } from "./utils/importComponent";
 import BrandStoreRoute from "./components/BrandStoreRoute/BrandStoreRoute";
 import PublisherLayout from "./layouts/PublisherLayout";
 import SnapsManagementLayout from "./layouts/SnapsManagementLayout";
+import ModelDetailsPageLayout from "./layouts/ModelDetailsPageLayout/ModelPageLayout";
 
 import BrandStoreSettings from "./pages/BrandStoreSettings";
 import Members from "./pages/Members";
@@ -117,7 +118,7 @@ root.render(
               <Route path="models">
                 <Route index element={<Models />} />
                 <Route path="create" element={<Models />} />
-                <Route path=":model_id">
+                <Route path=":model_id" element={<ModelDetailsPageLayout />}>
                   <Route index element={<Model />} />
                   <Route path="policies" element={<Policies />} />
                   <Route path="policies/create" element={<Policies />} />
