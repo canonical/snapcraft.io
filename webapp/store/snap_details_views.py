@@ -1,3 +1,4 @@
+import requests
 import flask
 from flask import Response
 
@@ -241,6 +242,25 @@ def snap_details_views(store):
 
         end = metrics_helper.get_last_metrics_processed_date()
 
+        def snap_has_sboms(channel_map):
+            for arch in channel_map:
+                for channel in channel_map[arch]:
+                    for release in channel_map[arch][channel]:
+                        host = "https://api.staging.snapcraft.io/api/v1/sboms"
+                        file_type = "spdx2.3.json"
+                        id = context["snap-id"]
+                        rev = release["revision"]
+                        sbom_url = f"{host}/{id}_{rev}.{file_type}"
+
+                        res = requests.head(sbom_url)
+                        print("SEND", res.status_code)
+
+                        if res.status_code == 200:
+                            return True
+            return False
+
+        has_sboms = snap_has_sboms(context["channel_map"])
+
         metrics_query_json = [
             metrics_helper.get_filter(
                 metric_name=country_metric_name,
@@ -297,6 +317,8 @@ def snap_details_views(store):
                 "error_info": error_info,
             }
         )
+
+        context["has_sboms"] = has_sboms
 
         return (
             flask.render_template("store/snap-details.html", **context),
