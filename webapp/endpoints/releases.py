@@ -37,5 +37,5 @@ def get_release_history_data(snap_name):
         "tracks": snap.get("tracks"),
     }
 
-    redis_cache.set(release_history_key, context, ttl=3600)
+    redis_cache.set(release_history_key, context, ttl=600)
     return flask.jsonify({"success": True, "data": context})

@@ -63,6 +63,8 @@ def post_release(snap_name):
 
     try:
         response = dashboard.post_snap_release(flask.session, data)
+        release_history_key = get_release_history_key(snap_name)
+        redis_cache.delete(release_history_key)
     except StoreApiResponseErrorList as api_response_error_list:
         if api_response_error_list.status_code == 404:
             return flask.abort(404, "No snap named {}".format(snap_name))
@@ -76,8 +78,6 @@ def post_release(snap_name):
                 400,
             )
 
-    release_history_key = get_release_history_key(snap_name)
-    redis_cache.delete(release_history_key)
     return flask.jsonify(response)
 
 
@@ -105,6 +105,8 @@ def post_close_channel(snap_name):
 
     try:
         response = dashboard.post_close_channel(flask.session, snap_id, data)
+        release_history_key = get_release_history_key(snap_name)
+        redis_cache.delete(release_history_key)
     except StoreApiResponseErrorList as api_response_error_list:
         if api_response_error_list.status_code == 404:
             return flask.abort(404, "No snap named {}".format(snap_name))
@@ -114,8 +116,6 @@ def post_close_channel(snap_name):
                 "success": False,
             }
             return flask.jsonify(response), 400
-    release_history_key = get_release_history_key(snap_name)
-    redis_cache.delete(release_history_key)
 
     response["success"] = True
     return flask.jsonify(response)
@@ -138,6 +138,8 @@ def post_default_track(snap_name):
 
     try:
         dashboard.snap_metadata(flask.session, snap_id, data)
+        snap_info_key = get_snap_info_cache_key(snap_name)
+        redis_cache.delete(snap_info_key)
     except StoreApiResponseErrorList as api_response_error_list:
         if api_response_error_list.status_code == 404:
             return flask.abort(404, "No snap named {}".format(snap_name))
@@ -148,8 +150,6 @@ def post_default_track(snap_name):
             }
             return flask.jsonify(response), 400
 
-    snap_info_key = get_snap_info_cache_key(snap_name)
-    redis_cache.delete(snap_info_key)
     return flask.jsonify({"success": True})
 
 
