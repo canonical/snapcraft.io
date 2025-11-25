@@ -148,7 +148,7 @@ class CveHelper:
 
     @staticmethod
     def get_cve_with_revision(snap_name, revision):
-        cve_with_revision_cache_key = (f"cves:{snap_name}:{revision}")
+        cve_with_revision_cache_key = f"cves:{snap_name}:{revision}"
         cached_file_content = redis_cache.get(
             cve_with_revision_cache_key, expected_type=list
         )
