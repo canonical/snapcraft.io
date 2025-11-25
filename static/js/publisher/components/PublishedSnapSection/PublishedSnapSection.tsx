@@ -1,9 +1,10 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { Accordion } from "@canonical/react-components";
+
 import PublishedSnapList from "../PublishedSnapList";
 import PublisherMetrics from "../PublisherMetrics";
 import { ITEMS_PER_PAGE } from "../../constants";
-
 import type { ISnap } from "../../types";
 
 function PublishedSnapSection({
@@ -38,12 +39,12 @@ function PublishedSnapSection({
           />
           <div className="accordion-actions">
             <div className="accordion-actions__row u-align--right">
-              <a
-                href="/account/register-snap"
+              <Link
+                to="/register-snap"
                 className="p-button u-float-right p-snap-list__register u-no-margin--top is-dense"
               >
                 Register a snap name
-              </a>
+              </Link>
             </div>
           </div>
         </>

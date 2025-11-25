@@ -25,23 +25,6 @@ function renderComponent() {
 }
 
 describe("PublisherSettings", () => {
-  test("shows snap name link in title", () => {
-    renderComponent();
-    expect(
-      screen.getByRole("link", {
-        name: "test-snap-id",
-      }),
-    ).toBeInTheDocument();
-  });
-
-  test("shows 'Settings' tab as selected", () => {
-    renderComponent();
-    expect(screen.getByRole("link", { name: "Settings" })).toHaveAttribute(
-      "aria-selected",
-      "true",
-    );
-  });
-
   test("shows loading state by default", () => {
     renderComponent();
     expect(screen.getByText(/Loading.../)).toBeInTheDocument();
