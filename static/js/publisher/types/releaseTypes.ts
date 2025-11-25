@@ -4,13 +4,20 @@ type NonEmptyArray<T> = [T, ...T[]];
 
 type ISO8601Timestamp = string;
 
+// TODO: these come from "../pages/Releases/constants", what should we do with them?
+export type AvailableRevisionsSelect =
+  | "AVAILABLE_REVISIONS_SELECT_LAUNCHPAD"
+  | "AVAILABLE_REVISIONS_SELECT_UNRELEASED"
+  | "AVAILABLE_REVISIONS_SELECT_RECENT"
+  | "AVAILABLE_REVISIONS_SELECT_ALL";
+
 /**
  * Distinct type for strings for supported architectures
  *
  * List based on the Snapcraft docs:
  * https://documentation.ubuntu.com/snapcraft/stable/reference/architectures/#supported-architectures
  */
-type Architecture =
+export type CPUArchitecture =
   | "amd64"
   | "arm64"
   | "armhf"
@@ -27,7 +34,7 @@ export type Progressive = {
 };
 
 export type Release = {
-  architecture: Architecture;
+  architecture: CPUArchitecture;
   branch: string | null;
   channel?: string; // in the form "<track>/<risk>"
   "expiration-date": ISO8601Timestamp | null;
@@ -39,7 +46,7 @@ export type Release = {
 };
 
 export type Revision = {
-  architectures: NonEmptyArray<Architecture>;
+  architectures: NonEmptyArray<CPUArchitecture>;
   attributes: {
     "build-request-id"?: string;
     "build-request-timestamp"?: ISO8601Timestamp;
@@ -71,7 +78,7 @@ export type Revision = {
 export type Channel = {
   branch: string | null;
   fallback: string | null;
-  name: string;
+  name: string; // "<track>/<risk>"
   risk: string;
   track: string;
 };
@@ -128,7 +135,7 @@ export type ReleasesData = {
  * https://dashboard.snapcraft.io/docs/reference/v2/en/snaps.html#id3
  */
 export type ChannelMap = {
-  architecture: Architecture;
+  architecture: CPUArchitecture;
   channel: string;
   "expiration-date": ISO8601Timestamp | null;
   progressive: Progressive;
@@ -141,6 +148,7 @@ export type Options = {
   flags: {
     isProgressiveReleaseEnabled: boolean;
   };
+  tracks?: NonEmptyArray<Track>;
 };
 
 export type ReleasesAPIResponse = {
@@ -154,41 +162,74 @@ export type ReleasesAPIResponse = {
   tracks: NonEmptyArray<Track>;
 };
 
+export type ProgressiveChanges = {
+  [Key in keyof Progressive]: {
+    key: Key;
+    value: Progressive[Key];
+  };
+}[keyof Progressive][];
+
+export type ProgressiveMutated = Progressive & { key?: any }; // TODO: why/when is this a thing?
+
+export type PendingReleaseItem = {
+  revision: Revision & {
+    release?: Release & { progressive: ProgressiveMutated };
+  }; // when is this "release" member added?
+  channel: Channel["name"];
+  previousReleases: Revision[];
+  progressive: Progressive & {
+    changes?: ProgressiveChanges;
+  };
+  replaces: any; // ???
+};
+
+export type PendingReleases = {
+  [revision: string]: {
+    [channel: string]: PendingReleaseItem;
+  };
+};
+
 /**
  * Types for the Redux state used in the Releases page
  */
-export type State = CombinedState<{
-  // TODO: understand how the API data is processed and remove the anys
-  architectures: Architecture[];
-  availableRevisionsSelect: any;
-  branches: any[];
-  channelMap: any;
-  currentTrack: any;
-  defaultTrack: any;
-  history: any;
-  modal: any;
-  notification: any;
-  options: {
-    flags: {
-      isProgressiveReleaseEnabled?: boolean;
-    };
-    tracks: { name: string }[];
+export type ReleasesReduxState = CombinedState<{
+  architectures: CPUArchitecture[];
+  // TODO: these come from "../pages/Releases/constants", what should we do with them?
+  availableRevisionsSelect: AvailableRevisionsSelect;
+  branches: string[]; // TODO: wat do?
+  channelMap: Record<
+    Channel["name"] | "AVAILABLE",
+    Partial<Record<CPUArchitecture, Revision>>
+  >;
+  currentTrack: string;
+  defaultTrack: string;
+  history: {
+    filters: {
+      arch?: Release["architecture"];
+      track?: Release["track"];
+      risk?: Release["risk"];
+      branch?: Release["branch"];
+    } | null;
+    isOpen: boolean;
+    // TODO: more stuff???
   };
-  pendingCloses: any[];
-  pendingReleases: any;
+  modal: {
+    visible: boolean;
+    // TODO: more stuff???
+  };
+  notification: {
+    visible: boolean;
+    // TODO: more stuff???
+  };
+  options: Options;
+  pendingCloses: Channel["name"][]; // ???
+  pendingReleases: PendingReleases;
   revisions: {
-    [k: number]: {
-      revision: number;
-      version: string;
-      attributes: { "build-request-id": string };
+    [revision: string]: Revision & {
+      channels?: Channel["name"][];
     };
   };
-  releases: {
-    architecture: Architecture;
-    revision: number;
+  releases: (Release & {
     isProgressive?: boolean;
-    track: string;
-    risk: string;
-    branch: string;
-  }[];
+  })[];
 }>;

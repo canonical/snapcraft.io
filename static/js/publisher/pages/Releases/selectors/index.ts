@@ -12,48 +12,22 @@ import {
   jsonClone,
 } from "../helpers";
 import { sortAlphaNum, getChannelString } from "../../../../libs/channels";
-import { CombinedState } from "redux";
+import {
+  AvailableRevisionsSelect,
+  CPUArchitecture,
+  PendingReleaseItem,
+  ProgressiveChanges,
+  ProgressiveMutated,
+  ReleasesReduxState,
+} from "../../../types/releaseTypes";
 
 // returns true if isProgressiveReleaseEnabled feature flag is enabled
-export function isProgressiveReleaseEnabled(state: {
-  options: any;
-  "__@$CombinedState@14396"?: any;
-  architectures?: any;
-  availableRevisionsSelect?: any;
-  branches?: any;
-  channelMap?: any;
-  currentTrack?: any;
-  defaultTrack?: any;
-  history?: any;
-  modal?: any;
-  notification?: any;
-  pendingCloses?: any;
-  pendingReleases?: any;
-  revisions?: any;
-  releases?: any;
-}) {
+export function isProgressiveReleaseEnabled(state: ReleasesReduxState) {
   return !!state.options.flags.isProgressiveReleaseEnabled;
 }
 
 // returns release history filtered by history filters
-export function getFilteredReleaseHistory(
-  state: CombinedState<{
-    architectures: any[];
-    availableRevisionsSelect: any;
-    branches: any[];
-    channelMap: any;
-    currentTrack: any;
-    defaultTrack: any;
-    history: any;
-    modal: any;
-    notification: any;
-    options: { flags: {} };
-    pendingCloses: any[];
-    pendingReleases: any;
-    revisions: any;
-    releases: any[];
-  }>,
-) {
+export function getFilteredReleaseHistory(state: ReleasesReduxState) {
   const releases = state.releases;
   const revisions = state.revisions;
   const filters = state.history.filters;
@@ -91,7 +65,7 @@ export function getFilteredReleaseHistory(
       // map release history to revisions
       .map((release) => {
         return {
-          ...revisions[release.revision],
+          ...revisions[release.revision!],
           release,
         };
       })
@@ -99,27 +73,10 @@ export function getFilteredReleaseHistory(
 }
 
 // returns list of selected revisions, to know which ones to render selected
-export function getSelectedRevisions(
-  state: CombinedState<{
-    architectures: any[];
-    availableRevisionsSelect: any;
-    branches: any[];
-    channelMap: any;
-    currentTrack: any;
-    defaultTrack: any;
-    history: any;
-    modal: any;
-    notification: any;
-    options: { flags: {} };
-    pendingCloses: any[];
-    pendingReleases: any;
-    revisions: any;
-    releases: any[];
-  }>,
-) {
+export function getSelectedRevisions(state: ReleasesReduxState) {
   if (state.channelMap[AVAILABLE]) {
     return Object.values(state.channelMap[AVAILABLE]).map(
-      (revision: any) => revision.revision,
+      (revision) => revision.revision
     );
   }
 
@@ -128,23 +85,8 @@ export function getSelectedRevisions(
 
 // return selected revision for given architecture
 export function getSelectedRevision(
-  state: CombinedState<{
-    architectures: any[];
-    availableRevisionsSelect: any;
-    branches: any[];
-    channelMap: any;
-    currentTrack: any;
-    defaultTrack: any;
-    history: any;
-    modal: any;
-    notification: any;
-    options: { flags: {} };
-    pendingCloses: any[];
-    pendingReleases: any;
-    revisions: any;
-    releases: any[];
-  }>,
-  arch: string,
+  state: ReleasesReduxState,
+  arch: CPUArchitecture
 ) {
   if (state.channelMap[AVAILABLE]) {
     return state.channelMap[AVAILABLE][arch];
@@ -152,24 +94,7 @@ export function getSelectedRevision(
 }
 
 // returns list of selected architectures
-export function getSelectedArchitectures(
-  state: CombinedState<{
-    architectures: any[];
-    availableRevisionsSelect: any;
-    branches: any[];
-    channelMap: any;
-    currentTrack: any;
-    defaultTrack: any;
-    history: any;
-    modal: any;
-    notification: any;
-    options: { flags: {} };
-    pendingCloses: any[];
-    pendingReleases: any;
-    revisions: any;
-    releases: any[];
-  }>,
-) {
+export function getSelectedArchitectures(state: ReleasesReduxState) {
   if (state.channelMap[AVAILABLE]) {
     return Object.keys(state.channelMap[AVAILABLE]);
   }
@@ -178,36 +103,16 @@ export function getSelectedArchitectures(
 }
 
 // return true if there are any devmode revisions in the state
-export function hasDevmodeRevisions(
-  state: CombinedState<{
-    architectures: any[];
-    availableRevisionsSelect: any;
-    branches: any[];
-    channelMap: any;
-    currentTrack: any;
-    defaultTrack: any;
-    history: any;
-    modal: any;
-    notification: any;
-    options: { flags: {} };
-    pendingCloses: any[];
-    pendingReleases: any;
-    revisions: any;
-    releases: any[];
-  }>,
-) {
-  return Object.values(state.channelMap).some((archReleases: any) => {
+export function hasDevmodeRevisions(state: ReleasesReduxState) {
+  return Object.values(state.channelMap).some((archReleases) => {
     return Object.values(archReleases).some(isInDevmode);
   });
 }
 
 // get channel map data updated with any pending releases
-export function getPendingChannelMap(state: {
-  channelMap: any;
-  pendingReleases: any;
-}) {
+export function getPendingChannelMap(state: ReleasesReduxState) {
   const { channelMap, pendingReleases } = state;
-  const pendingChannelMap = jsonClone(channelMap);
+  const pendingChannelMap = structuredClone(channelMap);
 
   // for each release
   Object.keys(pendingReleases).forEach((releasedRevision) => {
@@ -218,8 +123,8 @@ export function getPendingChannelMap(state: {
         pendingChannelMap[channel] = {};
       }
 
-      revision.architectures.forEach((arch: string | number) => {
-        pendingChannelMap[channel][arch] = revision;
+      revision.architectures.forEach((arch: CPUArchitecture) => {
+        pendingChannelMap[channel]![arch] = revision;
       });
     });
   });
@@ -228,41 +133,29 @@ export function getPendingChannelMap(state: {
 }
 
 // get all revisions ordered from newest (based on revsion id)
-export function getAllRevisions(state: {
-  revisions: { [s: string]: unknown } | ArrayLike<unknown>;
-}) {
+export function getAllRevisions(state: ReleasesReduxState) {
   return Object.values(state.revisions).reverse();
 }
 
 // get all revisions not released to any channel yet
-export function getUnreleasedRevisions(state: {
-  revisions: ArrayLike<unknown> | { [s: string]: unknown };
-}) {
+export function getUnreleasedRevisions(state: ReleasesReduxState) {
   return getAllRevisions(state).filter(
-    (revision: any) => !revision.channels || revision.channels.length === 0,
+    (revision) => !revision.channels || revision.channels.length === 0
   );
 }
 
 // get unreleased revisions not older then 7 days
-export function getRecentRevisions(state: {
-  revisions: ArrayLike<unknown> | { [s: string]: unknown };
-}) {
+export function getRecentRevisions(state: ReleasesReduxState) {
   const interval = 1000 * 60 * 60 * 24 * 7; // 7 days
   return getUnreleasedRevisions(state).filter(
-    (r: any) => Date.now() - new Date(r.created_at).getTime() < interval,
+    (r) => Date.now() - new Date(r.created_at).getTime() < interval
   );
 }
 
 // return list of revisions based on given selection value
 export function getAvailableRevisionsBySelection(
-  state: {
-    revisions:
-      | ArrayLike<unknown>
-      | { [s: string]: unknown }
-      | { [s: string]: unknown }
-      | { [s: string]: unknown };
-  },
-  value: any,
+  state: ReleasesReduxState,
+  value: AvailableRevisionsSelect
 ) {
   switch (value) {
     case AVAILABLE_REVISIONS_SELECT_RECENT:
@@ -277,24 +170,7 @@ export function getAvailableRevisionsBySelection(
 }
 
 // return list of revisions based on current availableRevisionsSelect value
-export function getFilteredAvailableRevisions(
-  state: CombinedState<{
-    architectures: any[];
-    availableRevisionsSelect: any;
-    branches: any[];
-    channelMap: any;
-    currentTrack: any;
-    defaultTrack: any;
-    history: any;
-    modal: any;
-    notification: any;
-    options: { flags: {} };
-    pendingCloses: any[];
-    pendingReleases: any;
-    revisions: any;
-    releases: any[];
-  }>,
-) {
+export function getFilteredAvailableRevisions(state: ReleasesReduxState) {
   const { availableRevisionsSelect } = state;
   return getAvailableRevisionsBySelection(state, availableRevisionsSelect);
 }
@@ -302,116 +178,64 @@ export function getFilteredAvailableRevisions(
 // return list of revisions based on current availableRevisionsSelect value
 // filtered by arch (can't be memoized)
 export function getFilteredAvailableRevisionsForArch(
-  state: CombinedState<{
-    architectures: any[];
-    availableRevisionsSelect: any;
-    branches: any[];
-    channelMap: any;
-    currentTrack: any;
-    defaultTrack: any;
-    history: any;
-    modal: any;
-    notification: any;
-    options: { flags: {} };
-    pendingCloses: any[];
-    pendingReleases: any;
-    revisions: any;
-    releases: any[];
-  }>,
-  arch: string,
+  state: ReleasesReduxState,
+  arch: CPUArchitecture
 ) {
-  return getFilteredAvailableRevisions(state).filter((revision: any) =>
-    revision.architectures.includes(arch),
+  return getFilteredAvailableRevisions(state).filter((revision) =>
+    revision.architectures.includes(arch)
   );
 }
 
 // get list of architectures of uploaded revisions
-export function getArchitectures(state: {
-  architectures: any;
-  "__@$CombinedState@14396"?: any;
-  availableRevisionsSelect?: any;
-  branches?: any;
-  channelMap?: any;
-  currentTrack?: any;
-  defaultTrack?: any;
-  history?: any;
-  modal?: any;
-  notification?: any;
-  options?: any;
-  pendingCloses?: any;
-  pendingReleases?: any;
-  revisions?: any;
-  releases?: any;
-}) {
+export function getArchitectures(state: ReleasesReduxState) {
   return state.architectures && state.architectures.length > 0
     ? state.architectures.sort()
     : [];
 }
 
-export function getTracks(state: {
-  options: any;
-  "__@$CombinedState@14396"?: any;
-  architectures?: any;
-  availableRevisionsSelect?: any;
-  branches?: any;
-  channelMap?: any;
-  currentTrack?: any;
-  defaultTrack?: any;
-  history?: any;
-  modal?: any;
-  notification?: any;
-  pendingCloses?: any;
-  pendingReleases?: any;
-  revisions?: any;
-  releases?: any;
-}) {
-  let tracks = [];
-
-  tracks = state.options.tracks.map((track: { name: any }) => track.name);
+export function getTracks(state: ReleasesReduxState) {
+  let tracks = state.options.tracks?.map((track) => track.name) ?? [];
 
   // @ts-ignore
   return sortAlphaNum([...new Set(tracks)], "latest");
 }
 
-export function getBranches(state: { currentTrack: any; releases: any }) {
-  const branches: Array<any> = [];
+export function getBranches(state: ReleasesReduxState) {
+  const branches: Array<{
+    track: ReleasesReduxState["releases"][number]["track"];
+    risk: ReleasesReduxState["releases"][number]["risk"];
+    branch: ReleasesReduxState["releases"][number]["branch"];
+    when: ReleasesReduxState["releases"][number]["when"];
+    revision: ReleasesReduxState["releases"][number]["revision"];
+    expiration: string;
+  }> = []; // TODO: the type could just be Release[] if it wasn't for this stupid "expiration" field
   const { currentTrack, releases } = state;
 
   const now = Date.now();
 
   releases
-    .filter((t: any) => t.branch && t.track === currentTrack)
-    .sort((a: { when: string }, b: { when: string }) => {
-      return isAfter(parseISO(b.when), parseISO(a.when));
+    .filter((t) => t.branch && t.track === currentTrack)
+    .sort((a, b) => {
+      return +isAfter(parseISO(b.when), parseISO(a.when));
     })
-    .forEach(
-      (item: {
-        [x: string]: any;
-        track?: any;
-        risk?: any;
-        branch?: any;
-        when?: any;
-        revision?: any;
-      }) => {
-        const { track, risk, branch, when, revision } = item;
-        const exists =
-          branches.filter(
-            (b: any) =>
-              b.track === track && b.risk === risk && b.branch === branch,
-          ).length > 0;
+    .forEach((item) => {
+      const { track, risk, branch, when, revision } = item;
+      const exists =
+        branches.filter(
+          (b) => b.track === track && b.risk === risk && b.branch === branch
+        ).length > 0;
 
-        if (!exists) {
-          branches.push({
-            track,
-            risk,
-            branch,
-            revision,
-            when,
-            expiration: item["expiration-date"],
-          });
-        }
-      },
-    );
+      if (!exists) {
+        branches.push({
+          track,
+          risk,
+          branch,
+          revision,
+          when,
+          expiration: item["expiration-date"]!,
+        });
+      }
+    });
 
   return branches
     .filter((b) => {
@@ -421,7 +245,11 @@ export function getBranches(state: { currentTrack: any; releases: any }) {
 }
 
 // return true if there is a pending release in given channel for given arch
-export function hasPendingRelease(state: any, channel: string, arch: string) {
+export function hasPendingRelease(
+  state: ReleasesReduxState,
+  channel: string,
+  arch: CPUArchitecture
+) {
   const { channelMap } = state;
   const pendingChannelMap = getPendingChannelMap(state);
 
@@ -440,140 +268,31 @@ export function hasPendingRelease(state: any, channel: string, arch: string) {
 }
 
 export function getTrackRevisions(
-  {
-    channelMap,
-  }: {
-    channelMap: any;
-  },
-  track: string,
+  { channelMap }: ReleasesReduxState,
+  track: string
 ) {
   const trackKeys = Object.keys(channelMap).filter(
-    (trackName) => trackName.indexOf(track) == 0,
+    (trackName) => trackName.indexOf(track) == 0
   );
   return trackKeys.map((trackName) => channelMap[trackName]);
 }
 
 // return true if any revision has build-request-id attribute
-export function hasBuildRequestId(state: {
-  revisions:
-    | { [s: string]: unknown }
-    | ArrayLike<unknown>
-    | {
-        1: { revision: number; version: string };
-        2: { revision: number; version: string };
-        3: { revision: number; version: string };
-      }
-    | {
-        4: {
-          revision: number;
-          version: string;
-          attributes: { "build-request-id": string };
-        };
-        1: { revision: number; version: string };
-        2: { revision: number; version: string };
-        3: { revision: number; version: string };
-      };
-  "__@$CombinedState@14396"?: any;
-  architectures?: any;
-  availableRevisionsSelect?: any;
-  branches?: any;
-  channelMap?: any;
-  currentTrack?: any;
-  defaultTrack?: any;
-  history?: any;
-  modal?: any;
-  notification?: any;
-  options?: any;
-  pendingCloses?: any;
-  pendingReleases?: any;
-  releases?: any;
-}) {
-  return getAllRevisions(state).some((revision: any) => getBuildId(revision));
+export function hasBuildRequestId(state: ReleasesReduxState) {
+  return getAllRevisions(state).some((revision) => getBuildId(revision));
 }
 
 // return revisions built by launchpad
-export function getLaunchpadRevisions(state: {
-  revisions:
-    | ArrayLike<unknown>
-    | { [s: string]: unknown }
-    | { [s: string]: unknown }
-    | { [s: string]: unknown }
-    | { [s: string]: unknown }
-    | {
-        1: { revision: number; version: string };
-        2: { revision: number; version: string };
-        3: {
-          revision: number;
-          version: string;
-          attributes: { "build-request-id": string };
-        };
-        4: {
-          revision: number;
-          version: string;
-          attributes: { "build-request-id": string };
-        };
-      };
-  "__@$CombinedState@14396"?: any;
-  architectures?: any;
-  availableRevisionsSelect?: any;
-  branches?: any;
-  channelMap?: any;
-  currentTrack?: any;
-  defaultTrack?: any;
-  history?: any;
-  modal?: any;
-  notification?: any;
-  options?: any;
-  pendingCloses?: any;
-  pendingReleases?: any;
-  releases?: any;
-}) {
+export function getLaunchpadRevisions(state: ReleasesReduxState) {
   return getAllRevisions(state).filter(isRevisionBuiltOnLauchpad);
 }
 
 export function getRevisionsFromBuild(
-  state: {
-    revisions:
-      | ArrayLike<unknown>
-      | { [s: string]: unknown }
-      | {
-          1: { revision: number; version: string };
-          2: { revision: number; version: string };
-          3: {
-            revision: number;
-            version: string;
-            attributes: { "build-request-id": string };
-          };
-          4: {
-            revision: number;
-            version: string;
-            attributes: { "build-request-id": string };
-          };
-          5: {
-            revision: number;
-            version: string;
-            attributes: { "build-request-id": string };
-          };
-        };
-    "__@$CombinedState@14396"?: any;
-    architectures?: any;
-    availableRevisionsSelect?: any;
-    branches?: any;
-    channelMap?: any;
-    currentTrack?: any;
-    defaultTrack?: any;
-    history?: any;
-    modal?: any;
-    notification?: any;
-    options?: any;
-    pendingCloses?: any;
-    pendingReleases?: any;
-    releases?: any;
-  },
-  buildId: string,
+  state: ReleasesReduxState,
+  buildId: string
 ) {
   return getAllRevisions(state).filter(
-    (revision: any) => getBuildId(revision) === buildId,
+    (revision) => getBuildId(revision) === buildId
   );
 }
 
@@ -583,13 +302,13 @@ export function getRevisionsFromBuild(
 //    the progressive release status of a pending release of the same release
 // ]
 export function getProgressiveState(
-  state: any,
+  state: ReleasesReduxState,
   channel: string,
-  arch: string,
-  isPending: undefined,
+  arch: CPUArchitecture,
+  isPending: boolean
 ) {
   if (!isProgressiveReleaseEnabled(state)) {
-    return [null, null, null];
+    return [null, null, null]; // TODO: "return an array of 2 items", so why are we returning 3 nulls then?
   }
 
   const { releases, pendingReleases, revisions } = state;
@@ -598,8 +317,7 @@ export function getProgressiveState(
   let pendingProgressiveStatus = null;
 
   const allReleases = releases.filter(
-    (item: { architecture: string }) =>
-      channel === getChannelString(item) && arch === item.architecture,
+    (item) => channel === getChannelString(item) && arch === item.architecture
   );
 
   const release = allReleases[0];
@@ -612,17 +330,17 @@ export function getProgressiveState(
       // Find the previous revision in the list of all releases
       // that is not the current release.
       previousRevision = allReleases.find(
-        (r: any) => r.revision !== release.revision,
+        (r) => r.revision !== release.revision
       );
 
       if (previousRevision && previousRevision.revision) {
         previousRevision = revisions[previousRevision.revision];
       }
     } else if (isPending) {
-      previousRevision = revisions[allReleases[0]?.revision];
+      previousRevision = revisions[allReleases[0]?.revision!];
     }
 
-    let pendingMatch: any;
+    let pendingMatch: PendingReleaseItem | undefined;
 
     Object.keys(pendingReleases).forEach((revId) => {
       if (
@@ -649,30 +367,15 @@ export function getProgressiveState(
 
 // Is the latest release for a channel & architecture a valid revision?
 export function hasRelease(
-  state: CombinedState<{
-    architectures: any[];
-    availableRevisionsSelect: any;
-    branches: any[];
-    channelMap: any;
-    currentTrack: any;
-    defaultTrack: any;
-    history: any;
-    modal: any;
-    notification: any;
-    options: { flags: {} };
-    pendingCloses: any[];
-    pendingReleases: any;
-    revisions: any;
-    releases: any[];
-  }>,
+  state: ReleasesReduxState,
   channel: string,
-  architecture: string,
+  architecture: string
 ) {
   const { releases } = state;
   const filteredReleases = releases.filter(
     (release) =>
       release.architecture === architecture &&
-      getChannelString(release) === channel,
+      getChannelString(release) === channel
   );
 
   return filteredReleases &&
@@ -683,24 +386,7 @@ export function hasRelease(
 }
 
 // Separate pendingRelease actions
-export function getSeparatePendingReleases(
-  state: CombinedState<{
-    architectures: any[];
-    availableRevisionsSelect: any;
-    branches: any[];
-    channelMap: any;
-    currentTrack: any;
-    defaultTrack: any;
-    history: any;
-    modal: any;
-    notification: any;
-    options: { flags: {} };
-    pendingCloses: any[];
-    pendingReleases: any;
-    revisions: any;
-    releases: any[];
-  }>,
-) {
+export function getSeparatePendingReleases(state: ReleasesReduxState) {
   const { pendingReleases } = state;
   const isProgressiveEnabled = isProgressiveReleaseEnabled(state);
 
@@ -712,7 +398,7 @@ export function getSeparatePendingReleases(
   Object.keys(pendingReleases).forEach((revId) => {
     Object.keys(pendingReleases[revId]).forEach((channel) => {
       const pendingRelease = pendingReleases[revId][channel];
-      const releaseCopy = jsonClone(pendingRelease);
+      const releaseCopy = structuredClone(pendingRelease);
 
       if (isProgressiveEnabled && pendingRelease.replaces) {
         const oldRelease = pendingRelease.replaces;
@@ -729,10 +415,10 @@ export function getSeparatePendingReleases(
         // and the new state.
         const previousState = releaseCopy.revision.release
           ? releaseCopy.revision.release.progressive
-          : {};
+          : ({} as ProgressiveMutated);
         const newState = releaseCopy.progressive;
 
-        const changes = [];
+        const changes = [] as ProgressiveChanges;
         if (newState.paused !== previousState.paused) {
           changes.push({
             key: "paused",
@@ -770,27 +456,9 @@ export function getSeparatePendingReleases(
 
 // Get pending release for architecture
 export function getPendingRelease(
-  {
-    pendingReleases,
-  }: {
-    pendingReleases: any;
-    "__@$CombinedState@14396": any;
-    architectures: any;
-    availableRevisionsSelect: any;
-    branches: any;
-    channelMap: any;
-    currentTrack: any;
-    defaultTrack: any;
-    history: any;
-    modal: any;
-    notification: any;
-    options: any;
-    pendingCloses: any;
-    revisions: any;
-    releases: any;
-  },
+  { pendingReleases }: ReleasesReduxState,
   channel: string,
-  arch: string,
+  arch: CPUArchitecture
 ) {
   // for each release
   return Object.keys(pendingReleases).map((releasedRevision) => {
@@ -809,14 +477,12 @@ export function getPendingRelease(
 
 // Get releases
 export function getReleases(
-  {
-    releases,
-  }: { releases: never[] | { architecture: string; channel: string }[] },
-  archs: string | any[],
-  channel: string,
+  { releases }: ReleasesReduxState,
+  archs: string | CPUArchitecture[],
+  channel: string
 ) {
   return releases.filter(
-    (release: any) =>
-      archs.includes(release.architecture) && release.channel === channel,
+    (release) =>
+      archs.includes(release.architecture) && release.channel === channel
   );
 }
