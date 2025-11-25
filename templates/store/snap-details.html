@@ -268,41 +268,66 @@
   {% endif %}
 
   {% if has_publisher_page %}
-  <div class="p-strip is-shallow">
-      <div class="u-fixed-width u-clearfix">
-        <h3 class="p-heading--4 u-float-left">More snaps from {{ display_name(publisher, username) }}</h3>
-        <a class="p-button u-float-right" href="/publisher/{{ username }}" title="View all snaps from {{ display_name(publisher, username) }}">View all snaps</a>
-      </div>
-      {% if publisher_featured_snaps %}
-        {% if publisher_featured_snaps[1]%}
-          <div class="row u-equal-height">
-        {% else %}
-          <div class="row">
-        {% endif %}
-        {% set snap = publisher_featured_snaps[0] %}
-        {% include 'partials/_publisher-featured-snap.html' %}
-        {% if publisher_featured_snaps[1] %}
-          {% set snap = publisher_featured_snaps[1] %}
-          {% include 'partials/_publisher-featured-snap.html' %}
-        {% endif %}
-        </div>
-      </div>
-      {% endif %}
-      {% if publisher_snaps %}
-        <div class="p-strip is-shallow">
-          <div class="row">
+  <div class="p-section--deep">
+    {% if publisher_featured_snaps and publisher_featured_snaps|length > 1 %}
+    {# with 2 or more featured snaps use full width of the section #}
+    <div class="u-fixed-width">
+      <hr />
+      <h2>More from {{ display_name(publisher, username) }}</h2>
+    </div>
+    <div class="grid-row u-equal-height">
+        {% for snap in publisher_featured_snaps %}
+
+            {% include 'partials/_publisher-featured-snap.html' %}
+
+        {% endfor %}
+
+        {% if publisher_snaps %}
             {% for snap in publisher_snaps %}
               {% set hide_publisher = True %}
               {% set show_summary = True %}
-              <div class="col-3">
+              <div class="grid-col-2">
                 {% include "store/_media-object-snap-partial.html" %}
               </div>
             {% endfor %}
-          </div>
-        </div>
-      {% endif %}
+        {% endif %}
     </div>
+    <div class="u-fixed-width">
+      <a class="p-button u-float-right" href="/publisher/{{ username }}" title="View all snaps from {{ display_name(publisher, username) }}">View all snaps</a>
+    </div>
+    {% else %}
+    <div class="grid-row--50-50">
+      <hr />
+      <div class="grid-col">
+        <h2>More from {{ display_name(publisher, username) }}</h2>
+      </div>
+
+      <div class="grid-col">
+        <div class="grid-row">
+        {% if publisher_featured_snaps %}
+          {% set snap = publisher_featured_snaps[0] %}
+          <div class="grid-col-4">
+            {% include 'partials/_publisher-featured-snap.html' %}
+          </div>
+        {% endif %}
+
+        {% if publisher_snaps %}
+            {% for snap in publisher_snaps %}
+              {% set hide_publisher = True %}
+              {% set show_summary = True %}
+              <div class="grid-col-2">
+                {% include "store/_media-object-snap-partial.html" %}
+              </div>
+            {% endfor %}
+        {% endif %}
+        </div>
+        <a class="p-button u-float-right" href="/publisher/{{ username }}" title="View all snaps from {{ display_name(publisher, username) }}">View all snaps</a>
+      </div>
+    </div>
+    {% endif %}
+  </div>
   {% endif %}
+
   {% if is_preview %}
     </div>
   {% endif %}
