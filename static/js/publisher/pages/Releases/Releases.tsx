@@ -1,15 +1,15 @@
-import { useParams } from "react-router-dom";
 import { useQuery } from "react-query";
+import { useParams } from "react-router-dom";
 import { Link, Strip } from "@canonical/react-components";
 
 import SectionNav from "../../components/SectionNav";
 import Release from "./Release";
-
+import { ReleasesAPIResponse } from "../../types/releaseTypes";
 import { setPageTitle } from "../../utils";
 
 function Releases(): React.JSX.Element {
   const { snapId } = useParams();
-  const { isLoading, isFetched, data } = useQuery({
+  const { isLoading, isFetched, data } = useQuery<ReleasesAPIResponse>({
     queryKey: ["releases", snapId],
     queryFn: async () => {
       const response = await fetch(`/api/${snapId}/releases`);
