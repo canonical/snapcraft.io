@@ -4,8 +4,13 @@ from canonicalwebteam.store_api.dashboard import Dashboard
 from canonicalwebteam.exceptions import StoreApiResponseErrorList
 
 # Local
+from webapp.endpoints.utils import (
+    get_snap_info_cache_key,
+    get_release_history_key,
+)
 from webapp.helpers import api_publisher_session
 from webapp.decorators import login_required
+from cache.cache_utility import redis_cache
 
 dashboard = Dashboard(api_publisher_session)
 
@@ -71,6 +76,8 @@ def post_release(snap_name):
                 400,
             )
 
+    release_history_key = get_release_history_key(snap_name)
+    redis_cache.delete(release_history_key)
     return flask.jsonify(response)
 
 
@@ -107,6 +114,8 @@ def post_close_channel(snap_name):
                 "success": False,
             }
             return flask.jsonify(response), 400
+    release_history_key = get_release_history_key(snap_name)
+    redis_cache.delete(release_history_key)
 
     response["success"] = True
     return flask.jsonify(response)
@@ -139,6 +148,8 @@ def post_default_track(snap_name):
             }
             return flask.jsonify(response), 400
 
+    snap_info_key = get_snap_info_cache_key(snap_name)
+    redis_cache.delete(snap_info_key)
     return flask.jsonify({"success": True})
 
 
