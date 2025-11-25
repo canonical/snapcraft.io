@@ -133,7 +133,6 @@ def get_active_devices(snap_name):
     metrics_response = dashboard.get_publisher_metrics(
         flask.session, json=new_metrics_query
     )
-    days_without_data = metrics_helper.get_days_without_data(metrics_response)
     active_metrics = metrics_helper.find_metric(
         metrics_response["metrics"], installed_base
     )
@@ -142,6 +141,10 @@ def get_active_devices(snap_name):
     buckets = metrics_data["buckets"]
     series = metrics_data["series"]
     metric_name = metrics_data["metric_name"]
+
+    for item in series:
+        item["values"] = metrics_helper.fill_missing_values(item["values"])
+
     # Add constants to a variable
     if len(series) > downsample_data_limit:
         (
@@ -180,7 +183,6 @@ def get_active_devices(snap_name):
             "active_devices": dict(active_devices),
             "latest_active_devices": latest_active,
             "total_page_num": total_page_num,
-            "days_without_data": days_without_data,
         }
     )
 

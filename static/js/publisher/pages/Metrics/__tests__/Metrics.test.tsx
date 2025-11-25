@@ -60,7 +60,6 @@ const handlers = [
         name: "weekly_installed_base_by_version",
         series: [],
       },
-      days_without_data: [],
       latest_archive_devices: 0,
       total_page_num: 1,
     });

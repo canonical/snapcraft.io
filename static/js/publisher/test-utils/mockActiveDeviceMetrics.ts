@@ -44,6 +44,5 @@ export const mockActiveDeviceMetrics = {
       },
     ],
   },
-  daysWithoutData: [],
   latest_active_devices: 5,
 };

@@ -58,7 +58,6 @@ class AccountSnapsMetrics(BaseTestCases.BaseAppTesting):
 
         expected_response = {
             "buckets": ["2018-04-13", "2018-04-20"],
-            "days_without_data": [],
             "snaps": [
                 {
                     "id": "1",
@@ -114,50 +113,3 @@ class AccountSnapsMetrics(BaseTestCases.BaseAppTesting):
 
         self.assertEqual(500, response.status_code)
         self.assertEqual(expected_response, response.json)
-
-    @responses.activate
-    def test_metrics_with_empty_data(self):
-        metrics_payload = {
-            "metrics": [
-                {
-                    "snap_id": "1",
-                    "status": "OK",
-                    "series": [
-                        {"values": [0, 3, None], "name": "new"},
-                        {"values": [2, 3, None], "name": "lost"},
-                        {"values": [9, 6, None], "name": "continued"},
-                    ],
-                    "buckets": ["2018-04-13", "2018-04-20", "2018-04-21"],
-                },
-            ]
-        }
-
-        responses.add(
-            responses.POST, self.api_url, json=metrics_payload, status=200
-        )
-
-        payload = {"1": "test1"}
-        headers = {"content-type": "application/json"}
-        response = self.client.post(
-            self.endpoint_url, data=json.dumps(payload), headers=headers
-        )
-
-        expected_response = {
-            "buckets": ["2018-04-13", "2018-04-20", "2018-04-21"],
-            "days_without_data": ["2018-04-21"],
-            "snaps": [
-                {
-                    "id": "1",
-                    "name": None,
-                    "series": [
-                        {"name": "new", "values": [0, 3, None]},
-                        {"name": "lost", "values": [2, 3, None]},
-                        {"name": "continued", "values": [9, 6, None]},
-                    ],
-                }
-            ],
-        }
-
-        self.assertEqual(200, response.status_code)
-        self.assertEqual(expected_response, response.json)
-        self.assertEqual(1, len(responses.calls))
