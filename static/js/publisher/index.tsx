@@ -109,20 +109,22 @@ root.render(
             <Route path="admin/account" element={<AccountDetails />} />
             <Route path="admin/account-keys" element={<AccountKeys />} />
 
-            <Route path="admin/:id" element={<BrandStoreRoute />}>
-              <Route index element={<Navigate to="snaps" />} />
-              <Route path="snaps" element={<Snaps />} />
-              <Route path="members" element={<Members />} />
-              <Route path="settings" element={<BrandStoreSettings />} />
-              <Route path="signing-keys" element={<SigningKeys />} />
-              <Route path="signing-keys/create" element={<SigningKeys />} />
-              <Route path="models">
-                <Route index element={<Models />} />
-                <Route path="create" element={<Models />} />
-                <Route path=":model_id" element={<ModelDetailsPageLayout />}>
-                  <Route index element={<Model />} />
-                  <Route path="policies" element={<Policies />} />
-                  <Route path="policies/create" element={<Policies />} />
+            <Route path="admin" element={<BrandStoreRoute />}>
+              <Route path=":id">
+                <Route index element={<Navigate to="snaps" />} />
+                <Route path="snaps" element={<Snaps />} />
+                <Route path="members" element={<Members />} />
+                <Route path="settings" element={<BrandStoreSettings />} />
+                <Route path="signing-keys" element={<SigningKeys />} />
+                <Route path="signing-keys/create" element={<SigningKeys />} />
+                <Route path="models">
+                  <Route index element={<Models />} />
+                  <Route path="create" element={<Models />} />
+                  <Route path=":model_id" element={<ModelDetailsPageLayout />}>
+                    <Route index element={<Model />} />
+                    <Route path="policies" element={<Policies />} />
+                    <Route path="policies/create" element={<Policies />} />
+                  </Route>
                 </Route>
               </Route>
             </Route>
