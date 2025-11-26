@@ -13,6 +13,7 @@ import {
 } from "../helpers";
 import { sortAlphaNum, getChannelString } from "../../../../libs/channels";
 import {
+  ArchitectureRevisionsMap,
   AvailableRevisionsSelect,
   CPUArchitecture,
   PendingReleaseItem,
@@ -120,7 +121,7 @@ export function getPendingChannelMap(state: ReleasesReduxState) {
       const revision = pendingReleases[releasedRevision][channel].revision;
 
       if (!pendingChannelMap[channel]) {
-        pendingChannelMap[channel] = {};
+        pendingChannelMap[channel] = {} as ArchitectureRevisionsMap;
       }
 
       revision.architectures.forEach((arch: CPUArchitecture) => {

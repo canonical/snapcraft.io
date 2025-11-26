@@ -9,7 +9,7 @@ import { setPageTitle } from "../../utils";
 
 function Releases(): React.JSX.Element {
   const { snapId } = useParams();
-  const { isLoading, isFetched, data } = useQuery<ReleasesAPIResponse>({
+  const { isLoading, isFetched, data } = useQuery({
     queryKey: ["releases", snapId],
     queryFn: async () => {
       const response = await fetch(`/api/${snapId}/releases`);
@@ -18,7 +18,7 @@ function Releases(): React.JSX.Element {
         throw new Error("There was a problem fetching releases data");
       }
 
-      const responseData = await response.json();
+      const responseData = (await response.json()) as ReleasesAPIResponse;
 
       if (!responseData.success) {
         throw new Error("There was a problem fetching releases data");
@@ -59,6 +59,7 @@ function Releases(): React.JSX.Element {
             flags: {
               isProgressiveReleaseEnabled: true,
             },
+            snapName: data.snap_name,
           }}
         />
       )}

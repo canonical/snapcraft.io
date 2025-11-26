@@ -1,16 +1,18 @@
 import { AVAILABLE, REVISION_STATUS } from "./constants";
 import { getChannelString } from "../../../libs/channels";
 import { useEffect } from "react";
+import {
+  ArchitectureRevisionsMap,
+  CPUArchitecture,
+  Release,
+  Revision,
+} from "../../types/releaseTypes";
 
-export function isInDevmode(revision: any) {
+export function isInDevmode(revision: Revision) {
   return revision.confinement === "devmode" || revision.grade === "devel";
 }
 
-export function getChannelName(
-  track: string,
-  risk: string,
-  branch?: string | undefined,
-) {
+export function getChannelName(track: string, risk: string, branch?: string) {
   if (risk === AVAILABLE) {
     return AVAILABLE;
   }
@@ -22,19 +24,19 @@ export function getChannelName(
   });
 }
 
-export function getBuildId(revision: { attributes: { [x: string]: any } }) {
+export function getBuildId(revision: Revision) {
   return (
     revision && revision.attributes && revision.attributes["build-request-id"]
   );
 }
 
-export function isRevisionBuiltOnLauchpad(revision: any) {
+export function isRevisionBuiltOnLauchpad(revision: Revision) {
   const buildId = getBuildId(revision);
   return !!(buildId && buildId.indexOf("lp-") === 0);
 }
 
-export function getRevisionsArchitectures(revisions: any[]) {
-  let archs: any[] = [];
+export function getRevisionsArchitectures(revisions: Revision[]) {
+  let archs: CPUArchitecture[] = [];
 
   // get all architectures from all revisions
   revisions.forEach((revision) => {
@@ -48,23 +50,23 @@ export function getRevisionsArchitectures(revisions: any[]) {
 }
 
 export function getLatestRelease(
-  revision: { releases?: any[] },
-  channel: string,
+  revision: { releases?: Release[] },
+  channel: string
 ) {
   const releases = revision.releases;
   if (!releases) {
     return null;
   }
-  const filteredReleases = releases.filter((r: any) => r.channel === channel);
+  const filteredReleases = releases.filter((r) => r.channel === channel);
   if (filteredReleases.length === 0) {
     return null;
   }
   return filteredReleases[0];
 }
 
-export function isSameVersion(revisions: { version: string }[]) {
+export function isSameVersion(revisions?: ArchitectureRevisionsMap) {
   let hasSameVersion = false;
-  const versionsMap: any = {};
+  const versionsMap: { [version: string]: CPUArchitecture[] } = {};
 
   if (revisions) {
     // calculate map of architectures for each version
@@ -83,6 +85,7 @@ export function isSameVersion(revisions: { version: string }[]) {
   return hasSameVersion;
 }
 
+// TODO: replace all calls to this with structuredClone
 export function jsonClone(obj: {
   string: string;
   number?: number;
@@ -121,11 +124,11 @@ export function resizeAsidePanel(panelType: string) {
 
       if (panelType === "add") {
         asidePanel = document.querySelector(
-          "#add-track-aside-panel",
+          "#add-track-aside-panel"
         ) as HTMLElement;
       } else {
         asidePanel = document.querySelector(
-          "#request-track-aside-panel",
+          "#request-track-aside-panel"
         ) as HTMLElement;
       }
 

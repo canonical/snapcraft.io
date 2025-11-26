@@ -1,4 +1,7 @@
 import { CombinedState } from "redux";
+import { ThunkDispatch } from "redux-thunk";
+
+type Prettify<T> = { [K in keyof T]: T[K] } & {};
 
 type NonEmptyArray<T> = [T, ...T[]];
 
@@ -25,7 +28,8 @@ export type CPUArchitecture =
   | "powerpc"
   | "ppc64el"
   | "riscv64"
-  | "s390x";
+  | "s390x"
+  | (string & {}); // use string as a fallback. otherwise the type is too strict and stuff like Object.keys breaks
 
 export type Progressive = {
   "current-percentage": number | null;
@@ -33,7 +37,7 @@ export type Progressive = {
   percentage: number | null;
 };
 
-export type Release = {
+type _Release = {
   architecture: CPUArchitecture;
   branch: string | null;
   channel?: string; // in the form "<track>/<risk>"
@@ -115,20 +119,20 @@ export type Links = {
 };
 
 /**
- * Types for response to GET "/api/v2/snaps/(?P<name>[\\w-]+)/releases"
+ * Types for response to Store API GET "/api/v2/snaps/(?P<name>[\\w-]+)/releases"
  *
  * All referenced types are based on the JSON schema provided in the docs:
  * https://dashboard.snapcraft.io/docs/reference/v2/en/snaps.html#response-json-schema
  */
 export type ReleasesData = {
   _links: Links;
-  releases: Release[];
+  releases: _Release[];
   revisions: Revision[];
   snap: Snap;
 };
 
 /**
- * Types for response to GET "/api/v2/snaps/(?P<name>[\\w-]+)/channel-map"
+ * Types for response to Store API GET "/api/v2/snaps/(?P<name>[\\w-]+)/channel-map"
  * We only use the "channel-map" member of the response object, so we ignore "revisions" and "snap"
  *
  * All referenced types are based on the JSON schema provided in the docs:
@@ -143,50 +147,22 @@ export type ChannelMap = {
   when: ISO8601Timestamp;
 };
 
-export type Options = {
-  defaultTrack: string;
-  flags: {
-    isProgressiveReleaseEnabled: boolean;
-  };
-  tracks?: NonEmptyArray<Track>;
-};
-
+/**
+ * Types for response to our API GET "/api/<snap_name>/releases"
+ * As implemented in `webapp.endpoints.releases.get_release_history_data`
+ */
 export type ReleasesAPIResponse = {
-  channel_map: ChannelMap[];
-  default_track: string;
-  private: false;
-  publisher_name: string;
-  release_history: ReleasesData;
-  snap_name: "edisile-pyfiglet";
-  snap_title: "edisile-pyfiglet";
-  tracks: NonEmptyArray<Track>;
-};
-
-export type ProgressiveChanges = {
-  [Key in keyof Progressive]: {
-    key: Key;
-    value: Progressive[Key];
+  data: {
+    channel_map: ChannelMap[];
+    default_track: string;
+    private: boolean;
+    publisher_name: string;
+    release_history: ReleasesData;
+    snap_name: "edisile-pyfiglet";
+    snap_title: "edisile-pyfiglet";
+    tracks: NonEmptyArray<Track>;
   };
-}[keyof Progressive][];
-
-export type ProgressiveMutated = Progressive & { key?: any }; // TODO: why/when is this a thing?
-
-export type PendingReleaseItem = {
-  revision: Revision & {
-    release?: Release & { progressive: ProgressiveMutated };
-  }; // when is this "release" member added?
-  channel: Channel["name"];
-  previousReleases: Revision[];
-  progressive: Progressive & {
-    changes?: ProgressiveChanges;
-  };
-  replaces: any; // ???
-};
-
-export type PendingReleases = {
-  [revision: string]: {
-    [channel: string]: PendingReleaseItem;
-  };
+  success: boolean;
 };
 
 /**
@@ -197,10 +173,7 @@ export type ReleasesReduxState = CombinedState<{
   // TODO: these come from "../pages/Releases/constants", what should we do with them?
   availableRevisionsSelect: AvailableRevisionsSelect;
   branches: string[]; // TODO: wat do?
-  channelMap: Record<
-    Channel["name"] | "AVAILABLE",
-    Partial<Record<CPUArchitecture, Revision>>
-  >;
+  channelMap: ChannelArchitectureRevisionsMap;
   currentTrack: string;
   defaultTrack: string;
   history: {
@@ -223,13 +196,84 @@ export type ReleasesReduxState = CombinedState<{
   };
   options: Options;
   pendingCloses: Channel["name"][]; // ???
-  pendingReleases: PendingReleases;
-  revisions: {
-    [revision: string]: Revision & {
-      channels?: Channel["name"][];
+  pendingReleases: {
+    [revision: string]: {
+      [channel: string]: PendingReleaseItem;
     };
   };
-  releases: (Release & {
-    isProgressive?: boolean;
-  })[];
+  revisions: {
+    [revision: string]: Prettify<
+      Revision & {
+        channels?: Channel["name"][];
+      }
+    >;
+  };
+  failedRevisions: unknown[]; // TODO: what's this ???
+  releases: Release[];
 }>;
+
+// extend the type coming from backend adding the `isProgressive` member, only export this one to avoid confusion
+export type Release = Prettify<
+  _Release & {
+    isProgressive?: boolean;
+  }
+>;
+
+export type ArchitectureRevisionsMap = {
+  [arch in CPUArchitecture]: Revision & { releases: Release[] };
+};
+
+export type ChannelArchitectureRevisionsMap = {
+  [channel in Channel["name"] | "AVAILABLE"]: ArchitectureRevisionsMap;
+};
+
+export type Options = {
+  snapName: string;
+  defaultTrack: string;
+  flags: {
+    isProgressiveReleaseEnabled: boolean;
+  };
+  tracks?: NonEmptyArray<Track>;
+};
+
+export type ProgressiveChanges = {
+  [Key in keyof Progressive]: {
+    key: Key;
+    value: Progressive[Key];
+  };
+}[keyof Progressive][];
+
+export type ProgressiveMutated = Prettify<Progressive & { key?: number }>; // TODO: why/when is this a thing?
+
+export type PendingReleaseItem = {
+  revision: Prettify<
+    Revision & {
+      release?: Release & { progressive: ProgressiveMutated };
+      releases: Release[];
+    }
+  >; // when is this "release" member added?
+  channel: Channel["name"];
+  previousReleases: Revision[];
+  progressive: Prettify<
+    Progressive & {
+      changes?: ProgressiveChanges;
+    }
+  >;
+  replaces: {
+    revision: Revision;
+    channel: string;
+    progressive: Progressive;
+  };
+};
+
+/**
+ * Helper types for the Redux actions and Dispatch
+ */
+export type DispatchFn = ThunkDispatch<
+  ReleasesReduxState,
+  unknown,
+  {
+    type: string;
+    payload?: unknown; // actions are so messed up that there's no good way to type this
+  }
+>;
