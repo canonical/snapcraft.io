@@ -197,11 +197,11 @@
             </div>
           {% endif %}
           {% if normalized_os %}
-            {% set list_limit = 15 %}
-            {% if normalized_os|length > list_limit + 1 %}
             <div class="{% if countries %}grid-col-2{% else %}grid-col-4 grid-col-start-large-5{% endif %}">
               <div class="js-sschart-holder" data-live="weekly_installed_base_by_operating_system_normalized">
                 <h5 class="p-muted-heading">Users by distribution (log)</h5>
+                {% set list_limit = 15 %}
+                {% if normalized_os|length > list_limit + 1 %}
                 <div class="snapcraft-distro-chart">
                   <div class="snapcraft-distro-chart__names">
                     {% for distro in normalized_os[:list_limit] %}
@@ -239,28 +239,25 @@
                     </div>
                   </div>
                 </div>
+                {% else %}
+                <div class="snapcraft-distro-chart">
+                  <div class="snapcraft-distro-chart__names">
+                    {% for distro in normalized_os %}
+                    <div class="snapcraft-distro-chart__name" title="{{ distro.name }}">
+                      {{ distro.name }}</div>
+                    {% endfor %}
+                  </div>
+                  <div class="snapcraft-distro-chart__bars">
+                    {% for distro in normalized_os %}
+                    <div class="snapcraft-distro-chart__bar"
+                      style="width: {{ distro.value * 100 }}%;"></div>
+                    {% endfor %}
+                    </div>
+                  </div>
+                </div>
+                {% endif %}
               </div>
             </div>
-            {% else %}
-            <div class="col-4 js-snap-distro-chart-holder"
-              data-live="weekly_installed_base_by_operating_system_normalized">
-              <h5 class="p-muted-heading">Users by distribution (log)</h5>
-              <div class="snapcraft-distro-chart">
-                <div class="snapcraft-distro-chart__names">
-                  {% for distro in normalized_os %}
-                  <div class="snapcraft-distro-chart__name" title="{{ distro.name }}">
-                    {{ distro.name }}</div>
-                  {% endfor %}
-                </div>
-                <div class="snapcraft-distro-chart__bars">
-                  {% for distro in normalized_os %}
-                  <div class="snapcraft-distro-chart__bar"
-                    style="width: {{ distro.value * 100 }}%;"></div>
-                  {% endfor %}
-                </div>
-              </div>
-            </div>
-            {% endif %}
           {% endif %}
         </div>
       </div>
