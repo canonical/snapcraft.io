@@ -7,7 +7,7 @@ function usePolicies(
   modelId: string | undefined,
 ): UsePoliciesResponse {
   return useQuery<Policy[], ApiError>({
-    queryKey: ["policies", storeId],
+    queryKey: ["policies", storeId, modelId],
     queryFn: async () => {
       const response = await fetch(
         `/api/store/${storeId}/models/${modelId}/policies`,

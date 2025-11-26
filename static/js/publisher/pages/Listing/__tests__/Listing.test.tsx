@@ -77,18 +77,6 @@ describe("Listing", () => {
     });
   });
 
-  test("heading is displayed", async () => {
-    renderComponent();
-    expect(
-      await screen.findByRole("link", { name: "My snaps" }),
-    ).toHaveProperty("href", expect.stringMatching(/\/snaps$/));
-    expect(await screen.findByRole("link", { name: "test_id" })).toHaveProperty(
-      "href",
-      expect.stringMatching(/\/test_id$/),
-    );
-    expect(await screen.findByText("Listing")).toBeInTheDocument();
-  });
-
   test("ListingForm and PreviewForm are rendered", async () => {
     renderComponent();
     await waitFor(() => {

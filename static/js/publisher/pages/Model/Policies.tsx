@@ -9,8 +9,6 @@ import {
 import { useAtomValue, useSetAtom } from "jotai";
 import { Row, Col, Notification, Icon } from "@canonical/react-components";
 
-import ModelNav from "./ModelNav";
-import ModelBreadcrumb from "./ModelBreadcrumb";
 import Filter from "../../components/Filter";
 import PoliciesTable from "./PoliciesTable";
 import CreatePolicyForm from "./CreatePolicyForm";
@@ -78,13 +76,6 @@ function Policies(): React.JSX.Element {
 
   return (
     <>
-      <div className="u-fixed-width">
-        <ModelBreadcrumb />
-        <h1 className="u-off-screen">{model_id}</h1>
-      </div>
-      <div className="u-fixed-width">
-        <ModelNav sectionName="policies" />
-      </div>
       <Row>
         <Col size={6}>
           <Filter

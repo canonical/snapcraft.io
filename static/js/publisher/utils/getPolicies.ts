@@ -23,7 +23,15 @@ const getPolicies = async ({
         signal,
       });
     }),
-  );
+  ).catch((e: Error) => {
+    if (e instanceof DOMException && e.name == "AbortError") {
+      // swallow the error because it's actually deliberate
+    } else {
+      console.error(e);
+    }
+  });
+
+  if (!data) return;
 
   const allPolicies = await Promise.all(
     data.map(async (res) => {

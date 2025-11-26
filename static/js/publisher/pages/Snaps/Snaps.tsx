@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { useAtomValue } from "jotai";
 import {
-  Spinner,
   Row,
   Col,
   Button,
@@ -26,6 +25,7 @@ import IncludedSnapsTable from "./IncludedSnapsTable";
 import { setPageTitle } from "../../utils";
 import type { Store, Snap, SnapsList, Member } from "../../types/shared";
 import { PortalEntrance } from "../Portals/Portals";
+import Loader from "../../components/Loader";
 
 function Snaps() {
   const { id } = useParams();
@@ -326,9 +326,7 @@ function Snaps() {
   return (
     <>
       {snapsLoading && membersLoading ? (
-        <div className="u-fixed-width">
-          <Spinner text="Loading&hellip;" />
-        </div>
+        <Loader />
       ) : currentStore && isReviewerAndPublisherOnly ? (
         <ReviewerAndPublisher />
       ) : currentStore && isReviewerOnly ? (
@@ -362,7 +360,7 @@ function Snaps() {
             </>
           )}
           <div className="u-fixed-width">
-            {isReloading && <Spinner text="Loading&hellip;" />}
+            {isReloading && <Loader />}
 
             {!isReloading && currentStore && (
               <>

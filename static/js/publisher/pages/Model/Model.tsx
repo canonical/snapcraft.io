@@ -14,8 +14,6 @@ import {
 
 import { modelsListState, currentModelState } from "../../state/modelsState";
 import { brandIdState, brandStoreState } from "../../state/brandStoreState";
-import ModelNav from "./ModelNav";
-import ModelBreadcrumb from "./ModelBreadcrumb";
 import { useModels } from "../../hooks";
 import { setPageTitle } from "../../utils";
 import type { Model as ModelType } from "../../types/shared";
@@ -96,12 +94,6 @@ function Model() {
 
   return (
     <>
-      <div className="u-fixed-width">
-        <ModelBreadcrumb />
-      </div>
-      <div className="u-fixed-width">
-        <ModelNav sectionName="overview" />
-      </div>
       <div className="u-fixed-width u-align--right">
         <Button
           type="button"
