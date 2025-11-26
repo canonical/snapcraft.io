@@ -1,12 +1,11 @@
-from unittest import TestCase
 from unittest.mock import patch
 
+from tests.base_test_cases import BaseUnitTestCase
 from webapp.app import create_app
 from webapp.authentication import get_publishergw_authorization_header
-from cache.cache_utility import redis_cache
 
 
-class TestEndpoints(TestCase):
+class TestEndpoints(BaseUnitTestCase):
     def _log_in(self, client):
         test_macaroon = "test_macaroon"
         with client.session_transaction() as s:
@@ -25,15 +24,7 @@ class TestEndpoints(TestCase):
         return get_publishergw_authorization_header(test_macaroon)
 
     def setUp(self):
-        # Clear cache before each test
-        if redis_cache.redis_available:
-            try:
-                redis_cache.client.flushdb()
-            except Exception:
-                pass
-        else:
-            redis_cache.fallback.clear()
-
+        super().setUp()
         self.app = create_app(testing=True)
         self.client = self.app.test_client()
         self._log_in(self.client)

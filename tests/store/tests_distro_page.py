@@ -1,11 +1,10 @@
 import responses
 from urllib.parse import urlencode
-from flask_testing import TestCase
 from webapp.app import create_app
-from cache.cache_utility import redis_cache
+from tests.base_test_cases import BaseFlaskTestCase
 
 
-class GetDistroPageTest(TestCase):
+class GetDistroPageTest(BaseFlaskTestCase):
     snap_payload = {
         "snap-id": "id",
         "name": "snapName",
@@ -44,15 +43,7 @@ class GetDistroPageTest(TestCase):
     }
 
     def setUp(self):
-        # Clear cache before each test
-        if redis_cache.redis_available:
-            try:
-                redis_cache.client.flushdb()
-            except Exception:
-                pass
-        else:
-            redis_cache.fallback.clear()
-
+        super().setUp()
         self.snap_name = "toto"
         self.api_url = "".join(
             [
