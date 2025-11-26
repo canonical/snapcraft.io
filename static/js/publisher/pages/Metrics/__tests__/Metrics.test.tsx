@@ -60,7 +60,6 @@ const handlers = [
         name: "weekly_installed_base_by_version",
         series: [],
       },
-      days_without_data: [],
       latest_archive_devices: 0,
       total_page_num: 1,
     });
@@ -92,24 +91,6 @@ afterAll(() => {
 });
 
 describe("Metrics", () => {
-  test("shows correct heading", () => {
-    renderComponent();
-    expect(
-      screen.getByRole("heading", {
-        level: 1,
-        name: "My snaps / test-snap-id / Metrics",
-      }),
-    ).toBeInTheDocument();
-  });
-
-  test("highlights correct tab", () => {
-    renderComponent();
-    expect(screen.getByRole("link", { name: "Metrics" })).toHaveAttribute(
-      "aria-selected",
-      "true",
-    );
-  });
-
   test("shows empty state if no data", async () => {
     renderComponent();
     await waitFor(() => {

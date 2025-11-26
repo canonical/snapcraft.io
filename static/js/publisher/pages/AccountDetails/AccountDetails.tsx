@@ -11,6 +11,7 @@ import {
 } from "@canonical/react-components";
 
 import { publisherState } from "../../state/publisherState";
+import { setPageTitle } from "../../utils";
 
 function AccountDetails(): React.JSX.Element {
   const [subscriptionPreferencesChanged, setSubscriptionPreferencesChanged] =
@@ -20,6 +21,10 @@ function AccountDetails(): React.JSX.Element {
   const [showErrorMessage, setShowErrorMessage] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const publisher = useAtomValue(publisherState);
+
+  useEffect(() => {
+    setPageTitle(`Account details`);
+  }, []);
 
   useEffect(() => {
     setSubscribeToNewsletter(

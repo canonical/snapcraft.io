@@ -2,9 +2,14 @@ import { render, screen } from "@testing-library/react";
 import "@testing-library/jest-dom";
 
 import Publisher from "../Publisher";
+import { BrowserRouter } from "react-router-dom";
 
 const renderComponent = () => {
-  render(<Publisher />);
+  render(
+    <BrowserRouter>
+      <Publisher />
+    </BrowserRouter>,
+  );
 };
 
 describe("Publisher", () => {

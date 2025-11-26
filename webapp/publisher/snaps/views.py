@@ -15,6 +15,7 @@ from webapp.api.exceptions import ApiError
 from webapp.decorators import exchange_required, login_required
 from webapp.endpoints.publisher import listing as listing_endpoint
 from webapp.endpoints import cves
+from cache.cache_utility import redis_cache
 from webapp.publisher.snaps import (
     build_views,
     listing_views,
@@ -422,6 +423,9 @@ def delete_package(package_name):
     )
 
     if response.status_code == 200:
+        # Invalidate package metadata cache after successful deletion
+        package_metadata_key = f"package_metadata:{package_name}"
+        redis_cache.delete(package_metadata_key)
         return ("", 200)
     return (
         jsonify({"error": response.json()["error-list"][0]["message"]}),

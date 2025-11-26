@@ -1,9 +1,7 @@
-import { useParams, Link } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useQuery } from "react-query";
 import { Strip, Row, Col, MainTable } from "@canonical/react-components";
 import { formatDistanceToNow } from "date-fns";
-
-import SectionNav from "../../components/SectionNav";
 
 import {
   formatBuildStatus,
@@ -11,6 +9,7 @@ import {
   setPageTitle,
 } from "../../utils";
 import { GitCommitLink } from "../../utils/formatGitCommit";
+import Loader from "../../components/Loader";
 
 function Build(): React.JSX.Element {
   const { buildId, snapId } = useParams();
@@ -45,19 +44,8 @@ function Build(): React.JSX.Element {
 
   return (
     <>
-      <h1 className="p-heading--4" aria-live="polite">
-        <a href="/snaps">My snaps</a> / <a href={`/${snapId}`}>{snapId}</a> /{" "}
-        <Link to={`/${snapId}/builds`}>Builds</Link> / Build #{buildId}
-      </h1>
-      <SectionNav activeTab="builds" snapName={snapId} />
-      {isDataLoading && (
-        <Strip shallow>
-          <p>
-            <i className="p-icon--spinner u-animation--spin"></i>&nbsp;Loading{" "}
-            {snapId} build data
-          </p>
-        </Strip>
-      )}
+      {isDataLoading && <Loader text={`Loading ${snapId} build data`} />}
+
       {!isDataLoading && isFetched && data && (
         <Strip shallow>
           <MainTable
