@@ -179,10 +179,6 @@
     {% include "store/snap-details/_distro-instructions-for-snap-support.html" %}
   {% endif %}
 
-  {% if not IS_BRAND_STORE and package_name == "hiri" %}
-    {% include "partials/_hiri-case-study.html" %}
-  {% endif %}
-
   {% if countries or normalized_os %}
     <div data-live="public_metrics_live">
       <div class="{% if has_publisher_page %}p-section{% else %}p-section--deep{% endif %}">
