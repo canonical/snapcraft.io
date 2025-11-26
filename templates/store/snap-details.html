@@ -185,21 +185,21 @@
 
   {% if countries or normalized_os %}
     <div data-live="public_metrics_live">
-      <div class="p-strip is-shallow">
-        <div class="u-fixed-width"><hr></div>
+      <div class="{% if has_publisher_page %}p-section{% else %}p-section--deep{% endif %}">
         <div class="u-fixed-width">
-          <h4 class="p-heading--2">Where people are using {{ snap_title }}</h4>
+          <hr>
+          <h2>Where people are using {{ snap_title }}</h2>
         </div>
-        <div class="row {% if normalized_os %}u-equal-height{% endif %}">
+        <div class="grid-row {% if normalized_os %}u-equal-height{% endif %}">
           {% if countries %}
-            <div class="{% if normalized_os %}col-8{% else %}col-12{% endif %} js-snap-map-holder" data-live="installed_base_by_country_percent">
+            <div class="{% if normalized_os %}grid-col-4{% else %}grid-col-6{% endif %} grid-col-start-large-3 js-snap-map-holder" data-live="installed_base_by_country_percent">
               <div id="js-snap-map" class="snapcraft-territories"></div>
             </div>
           {% endif %}
           {% if normalized_os %}
-            {% set list_limit = 20 %}
+            {% set list_limit = 15 %}
             {% if normalized_os|length > list_limit + 1 %}
-            <div class="col-4">
+            <div class="{% if countries %}grid-col-2{% else %}grid-col-4 grid-col-start-large-5{% endif %}">
               <div class="js-sschart-holder" data-live="weekly_installed_base_by_operating_system_normalized">
                 <h5 class="p-muted-heading">Users by distribution (log)</h5>
                 <div class="snapcraft-distro-chart">
