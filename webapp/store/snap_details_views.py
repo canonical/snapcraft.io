@@ -52,11 +52,6 @@ def snap_details_views(store):
     snap_regex_upercase = "[A-Za-z0-9-]*[A-Za-z][A-Za-z0-9-]*"
 
     def _get_context_snap_details(snap_name, supported_architectures=None):
-        snap_details_context = redis_cache.get(
-            f"snap_details_context:{snap_name}", expected_type=dict
-        )
-        if snap_details_context:
-            return snap_details_context
         details = device_gateway.get_item_details(
             snap_name, fields=FIELDS, api_version=2
         )
@@ -203,7 +198,6 @@ def snap_details_views(store):
             "links": details["snap"].get("links"),
             "updates": updates,
         }
-        redis_cache.set(f"snap_details_context:{snap_name}", context, ttl=600)
         return context
 
     @store.route('/<regex("' + snap_regex + '"):snap_name>')
@@ -494,7 +488,9 @@ def snap_details_views(store):
 
         for snap in featured_snaps:
             snap["icon_url"] = helpers.get_icon(snap["media"])
-        redis_cache.set(cached_featured_snaps, featured_snaps, ttl=3600)
+        redis_cache.set(
+            "featured_snaps_install_pages", featured_snaps, ttl=3600
+        )
         context.update({"featured_snaps": featured_snaps})
         return flask.render_template(
             "store/snap-distro-install.html", **context
