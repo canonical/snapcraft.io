@@ -62,7 +62,9 @@ describe("ActiveDeviceMetrics", () => {
       }
       return {
         status: "success",
-        data: {},
+        data: {
+          daysWithoutData: [],
+        },
       };
     });
 
@@ -73,6 +75,11 @@ describe("ActiveDeviceMetrics", () => {
       expect(screen.getByText("5")).toBeInTheDocument();
       expect(screen.getByText("Past 30 days")).toBeInTheDocument();
       expect(screen.getByText("By version")).toBeInTheDocument();
+      expect(
+        screen.queryByText(
+          "Metrics for the most recent days may be incomplete or missing. They will be updated and accurate within a few hours.",
+        ),
+      ).toBeNull();
     });
   });
 
@@ -97,13 +104,16 @@ describe("ActiveDeviceMetrics", () => {
               buckets: [],
               name: "annotations",
               series: [],
+              daysWithoutData: [],
             },
           };
         }
       }
       return {
         status: "success",
-        data: {},
+        data: {
+          daysWithoutData: [],
+        },
       };
     });
 
@@ -137,13 +147,16 @@ describe("ActiveDeviceMetrics", () => {
               buckets: [],
               name: "annotations",
               series: [],
+              daysWithoutData: [],
             },
           };
         }
       }
       return {
         status: "success",
-        data: {},
+        data: {
+          daysWithoutData: [],
+        },
       };
     });
 
@@ -189,6 +202,53 @@ describe("ActiveDeviceMetrics", () => {
 
     await waitFor(() => {
       expect(screen.getByText("No data found.")).toBeInTheDocument();
+    });
+  });
+
+  test("renders the warning", async () => {
+    // @ts-expect-error mocks
+    useQuery.mockImplementation((params) => {
+      if (params) {
+        if (params.queryKey[0] === "activeDeviceMetrics") {
+          const mock = {
+            ...mockActiveDeviceMetrics,
+            daysWithoutData: ["2024-08-27"],
+          };
+          return {
+            status: "success",
+            data: mock,
+          };
+        } else if (params.queryKey[0] === "latestActiveDevicesMetric") {
+          return {
+            status: "success",
+            data: 5,
+          };
+        } else {
+          return {
+            status: "success",
+            data: {
+              buckets: [],
+              name: "annotations",
+              series: [],
+              daysWithoutData: [],
+            },
+          };
+        }
+      }
+      return {
+        status: "success",
+        data: {},
+      };
+    });
+
+    renderComponent(false);
+
+    await waitFor(() => {
+      expect(
+        screen.getByText(
+          "Metrics for the most recent days may be incomplete or missing. They will be updated and accurate within a few hours.",
+        ),
+      ).toBeInTheDocument();
     });
   });
 });
