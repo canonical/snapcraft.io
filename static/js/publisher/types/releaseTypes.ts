@@ -29,7 +29,9 @@ export type CPUArchitecture =
   | "ppc64el"
   | "riscv64"
   | "s390x"
-  | (string & {}); // use string as a fallback. otherwise the type is too strict and stuff like Object.keys breaks
+  | (string & {}); // use string as a fallback, otherwise the type is too strict and stuff like Object.keys breaks
+
+export type Series = "16" | (string & {}); // series is and will always be 16, but again, we must use string as a fallback
 
 export type Progressive = {
   "current-percentage": number | null;
@@ -181,6 +183,55 @@ export type ReleasesAPIResponse = Prettify<{
   };
   success: boolean;
 }>;
+
+/**
+ * Types for response to Store API GET "/dev/api/snap-release"
+ * All types are based on the examples and explanation in the docs:
+ * https://dashboard.snapcraft.io/docs/reference/v1/snap.html#release-a-snap-build-to-a-channel
+ */
+export type FetchReleasePayload = {
+  id: number;
+  revision: PendingReleaseItem["revision"];
+  channels: PendingReleaseItem["channel"][];
+  progressive: PendingReleaseItem["progressive"] | null;
+};
+
+export type ReleaseChannel = {
+  channel: Channel["risk"];
+  info: string;
+  version?: string;
+  revision?: number;
+};
+
+type ReleaseErrorResponse = {
+  success: false;
+  errors: string[];
+};
+
+type ArchitectureReleaseChannelMap = {
+  [arch in CPUArchitecture]: ReleaseChannel[];
+};
+
+export type FetchReleaseResponse =
+  | {
+      success: true;
+      channel_map: ReleaseChannel[];
+      channel_map_tree: {
+        [track in Channel["track"]]: {
+          [series in Series]: ArchitectureReleaseChannelMap;
+        };
+      };
+      opened_channels: string[];
+    }
+  | ReleaseErrorResponse;
+
+export type CloseChannelsResponse =
+  | {
+      success: true;
+      channel_maps: ArchitectureReleaseChannelMap;
+      closed_channels: string[];
+    }
+  | ReleaseErrorResponse;
 
 /**
  * Types for the Redux state used in the Releases page
