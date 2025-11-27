@@ -420,6 +420,9 @@ def store_blueprint(store_query=None):
             links=snaps,
         )
 
+        # Cache the generated sitemap for 12 hours
+        redis_cache.set("sitemap:xml", xml_sitemap, ttl=43200)
+
         response = flask.make_response(xml_sitemap)
         response.headers["Content-Type"] = "application/xml"
         response.headers["Cache-Control"] = "public, max-age=43200"
