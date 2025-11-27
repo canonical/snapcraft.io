@@ -41,6 +41,11 @@ export function releaseRevisionSuccess(revision, channel) {
   };
 }
 
+/**
+ * 
+ * @param {string} channel Channel to close
+ * @returns {{type: string, "payload": {channel: string}}}
+ */
 export function closeChannelSuccess(channel) {
   return {
     type: CLOSE_CHANNEL_SUCCESS,
