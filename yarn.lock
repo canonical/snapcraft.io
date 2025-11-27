@@ -954,23 +954,6 @@
   dependencies:
     vanilla-framework "4.35.0"
 
-"@canonical/react-components@1.9.0":
-  version "1.9.0"
-  resolved "https://registry.yarnpkg.com/@canonical/react-components/-/react-components-1.9.0.tgz#9337b35e632d7419eddf51823a5243156893185e"
-  integrity sha512-CB2xHvGs/KFsCAbh79pSsJfg+j5Pxmye1qXCeAoirTWj1WIwRiDVV32R07Xys/bAafzINy6kStqJHkq8XUld/g==
-  dependencies:
-    "@types/jest" "29.5.12"
-    "@types/node" "20.16.3"
-    "@types/react" "18.3.5"
-    "@types/react-dom" "18.3.0"
-    "@types/react-table" "7.7.20"
-    classnames "2.5.1"
-    jest-environment-jsdom "29.7.0"
-    lodash.isequal "4.5.0"
-    prop-types "15.8.1"
-    react-table "7.8.0"
-    react-useportal "1.0.19"
-
 "@canonical/react-components@3.6.0":
   version "3.6.0"
   resolved "https://registry.yarnpkg.com/@canonical/react-components/-/react-components-3.6.0.tgz#59a1c48ad6c0d4425e1a7a0f96b7d3e5d592b1bd"
@@ -987,12 +970,12 @@
     prop-types "15.8.1"
     react-table "7.8.0"
 
-"@canonical/store-components@0.54.2":
-  version "0.54.2"
-  resolved "https://registry.yarnpkg.com/@canonical/store-components/-/store-components-0.54.2.tgz#d281835da2519530dda2b0b4faeaa6d10dac86ce"
-  integrity sha512-FzKAHNk1d0knvICPpOcis0fGnDU3ozJ4Fnx+X6iXX5K82ZKXB5bCYlcOPwKFmuSpbvjGkpM08WS2xBqHLgn1bw==
+"@canonical/store-components@0.55.0":
+  version "0.55.0"
+  resolved "https://registry.yarnpkg.com/@canonical/store-components/-/store-components-0.55.0.tgz#4ca8d7813f1c61a687ae9e8242557a9d0fa82c63"
+  integrity sha512-h5BJcBJ/13zzd86QspTdpX8FOdCh/lzoW3EZLjTt/eyj7DRKaDMbjIjHtkK6K6D/CvBTkKfQgwwUIyhTjkXvPA==
   dependencies:
-    "@canonical/react-components" "1.9.0"
+    "@canonical/react-components" "3.6.0"
     "@types/jest" "27.5.2"
     "@types/node" "18.19.71"
     "@types/react" "17.0.83"
@@ -2487,14 +2470,6 @@
     jest-matcher-utils "^27.0.0"
     pretty-format "^27.0.0"
 
-"@types/jest@29.5.12":
-  version "29.5.12"
-  resolved "https://registry.yarnpkg.com/@types/jest/-/jest-29.5.12.tgz#7f7dc6eb4cf246d2474ed78744b05d06ce025544"
-  integrity sha512-eDC8bTvT/QhYdxJAulQikueigY5AsdBRH2yDKW3yveW7svY3+DzN84/2NUgkw10RTiJbWqZrTtoGVdYlvFJdLw==
-  dependencies:
-    expect "^29.0.0"
-    pretty-format "^29.0.0"
-
 "@types/jest@29.5.14":
   version "29.5.14"
   resolved "https://registry.yarnpkg.com/@types/jest/-/jest-29.5.14.tgz#2b910912fa1d6856cadcd0c1f95af7df1d6049e5"
@@ -2531,13 +2506,6 @@
   dependencies:
     undici-types "~5.26.4"
 
-"@types/node@20.16.3":
-  version "20.16.3"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-20.16.3.tgz#7b4f9a37091cf03a0c2561bf76a9a55f03f4f523"
-  integrity sha512-/wdGiWRkMOm53gAsSyFMXFZHbVg7C6CbkrzHNpaHoYfsUWPg7m6ZRKtvQjgvQ9i8WT540a3ydRlRQbxjY30XxQ==
-  dependencies:
-    undici-types "~6.19.2"
-
 "@types/node@20.17.19":
   version "20.17.19"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-20.17.19.tgz#0f2869555719bef266ca6e1827fcdca903c1a697"
@@ -2559,13 +2527,6 @@
   version "17.0.26"
   resolved "https://registry.yarnpkg.com/@types/react-dom/-/react-dom-17.0.26.tgz#fa7891ba70fd39ddbaa7e85b6ff9175bb546bc1b"
   integrity sha512-Z+2VcYXJwOqQ79HreLU/1fyQ88eXSSFh6I3JdrEHQIfYSI0kCQpTGvOrbE6jFGGYXKsHuwY9tBa/w5Uo6KzrEg==
-
-"@types/react-dom@18.3.0":
-  version "18.3.0"
-  resolved "https://registry.yarnpkg.com/@types/react-dom/-/react-dom-18.3.0.tgz#0cbc818755d87066ab6ca74fbedb2547d74a82b0"
-  integrity sha512-EhwApuTmMBmXuFOikhQLIBUn6uFg81SwLMOAUgodJF14SOBOCMdU04gDoYi0WOJJHD144TL32z4yDqCW3dnkQg==
-  dependencies:
-    "@types/react" "*"
 
 "@types/react-dom@19.0.4":
   version "19.0.4"
@@ -2608,14 +2569,6 @@
   dependencies:
     "@types/prop-types" "*"
     "@types/scheduler" "^0.16"
-    csstype "^3.0.2"
-
-"@types/react@18.3.5":
-  version "18.3.5"
-  resolved "https://registry.yarnpkg.com/@types/react/-/react-18.3.5.tgz#5f524c2ad2089c0ff372bbdabc77ca2c4dbadf8f"
-  integrity sha512-WeqMfGJLGuLCqHGYRGHxnKrXcTitc6L/nBUWfWPcTarG3t9PsquqUMuVeXZeca+mglY4Vo5GZjCi0A3Or2lnxA==
-  dependencies:
-    "@types/prop-types" "*"
     csstype "^3.0.2"
 
 "@types/react@19.0.10":
@@ -5090,10 +5043,10 @@ glob-parent@^6.0.2:
   dependencies:
     is-glob "^4.0.3"
 
-glob@^10.4.1:
-  version "10.4.5"
-  resolved "https://registry.yarnpkg.com/glob/-/glob-10.4.5.tgz#f4d9f0b90ffdbab09c9d77f5f29b4262517b0956"
-  integrity sha512-7Bv8RF0k6xjo7d4A/PxYLbUCfb6c+Vpd2/mB2yRDlew7Jb5hEXiCD9ibfO7wpk8i4sevK6DFny9h7EYbM3/sHg==
+glob@10.5.0, glob@^10.4.1:
+  version "10.5.0"
+  resolved "https://registry.yarnpkg.com/glob/-/glob-10.5.0.tgz#8ec0355919cd3338c28428a23d4f24ecc5fe738c"
+  integrity sha512-DfXN8DfhJ7NH3Oe7cFmu3NCu1wKbkReJ8TorzSAFbSKrlNaQSKfIzqYqVY8zlbs2NLBbWpRiU52GX2PbaBVNkg==
   dependencies:
     foreground-child "^3.1.0"
     jackspeak "^3.1.2"
@@ -5851,9 +5804,9 @@ js-tokens@^9.0.1:
   integrity sha512-mxa9E9ITFOt0ban3j6L5MpjwegGz6lBQmM1IJkWeBZGcMxto50+eWdjC/52xDbS2vy0k7vIMK0Fe2wfL9OQSpQ==
 
 js-yaml@^4.1.0:
-  version "4.1.0"
-  resolved "https://registry.yarnpkg.com/js-yaml/-/js-yaml-4.1.0.tgz#c1fb65f8f5017901cdd2c951864ba18458a10602"
-  integrity sha512-wpxZs9NoxZaJESJGIZTyDEaYpl0FKSA+FB9aJiyemKhMwkxQg63h4T1KJgUGHpTqPDNRcmmYLugrRjJlBtWvRA==
+  version "4.1.1"
+  resolved "https://registry.yarnpkg.com/js-yaml/-/js-yaml-4.1.1.tgz#854c292467705b699476e1a2decc0c8a3458806b"
+  integrity sha512-qQKT4zQxXl8lLwBtHMWwaTcGfFOZviOJet3Oy/xmGk2gZH677CJM9EvtfdSkgWcATZhj/55JZ0rmy3myCT5lsA==
   dependencies:
     argparse "^2.0.1"
 
@@ -6074,11 +6027,6 @@ lodash.debounce@^4.0.8:
   version "4.0.8"
   resolved "https://registry.yarnpkg.com/lodash.debounce/-/lodash.debounce-4.0.8.tgz#82d79bff30a67c4005ffd5e2515300ad9ca4d7af"
   integrity sha512-FT1yDzDYEoYWhnSGnpE/4Kj1fLZkDFyqRb7fNt6FdYOSxlUWAtp42Eh6Wb0rGIv/m9Bgo7x4GhQbm5Ys4SG5ow==
-
-lodash.isequal@4.5.0:
-  version "4.5.0"
-  resolved "https://registry.yarnpkg.com/lodash.isequal/-/lodash.isequal-4.5.0.tgz#415c4478f2bcc30120c22ce10ed3226f7d3e18e0"
-  integrity sha512-pDo3lu8Jhfjqls6GkMgpahsF9kCyayhgykjyLMNFTKWrpVdAQtYyB4muAMWozBB4ig/dtWAmsMxLEI8wuz+DYQ==
 
 lodash.isplainobject@^4.0.6:
   version "4.0.6"

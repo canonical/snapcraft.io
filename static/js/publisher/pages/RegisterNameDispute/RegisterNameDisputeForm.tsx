@@ -7,6 +7,7 @@ import {
   Col,
   Button,
 } from "@canonical/react-components";
+import { Link } from "react-router-dom";
 
 type Props = {
   snapName: string | null;
@@ -85,9 +86,9 @@ function RegisterNameDisputeForm({
         </Row>
         <hr />
         <div className="u-align--right">
-          <a className="p-button" href="/register-snap">
+          <Link className="p-button" to="/register-snap">
             Register a new name
-          </a>
+          </Link>
           <Button
             type="submit"
             appearance="positive"

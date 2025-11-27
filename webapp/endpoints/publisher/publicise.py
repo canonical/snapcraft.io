@@ -7,6 +7,8 @@ from canonicalwebteam.exceptions import StoreApiError
 # Local
 from webapp.helpers import api_session
 from webapp.decorators import login_required
+from cache.cache_utility import redis_cache
+from webapp.endpoints.utils import get_snap_info_cache_key
 
 dashboard = Dashboard(api_session)
 device_gateway = DeviceGW("snap", api_session)
@@ -14,7 +16,11 @@ device_gateway = DeviceGW("snap", api_session)
 
 @login_required
 def get_publicise_data(snap_name):
-    snap_details = dashboard.get_snap_info(flask.session, snap_name)
+    snap_info_key = get_snap_info_cache_key(snap_name)
+    snap_details = redis_cache.get(snap_info_key, expected_type=dict)
+    if not snap_details:
+        snap_details = dashboard.get_snap_info(flask.session, snap_name)
+        redis_cache.set(snap_info_key, snap_details, ttl=3600)
 
     try:
         snap_public_details = device_gateway.get_item_details(

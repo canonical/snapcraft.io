@@ -4,30 +4,42 @@ import { createRoot } from "react-dom/client";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 
+import { importComponent } from "./utils/importComponent";
 import BrandStoreRoute from "./components/BrandStoreRoute/BrandStoreRoute";
 import PublisherLayout from "./layouts/PublisherLayout";
-import AccountDetails from "./pages/AccountDetails";
-import AccountSnaps from "./pages/AccountSnaps";
-import BrandStoreSettings from "./pages/BrandStoreSettings";
-import Build from "./pages/Build";
-import Builds from "./pages/Builds";
-import Listing from "./pages/Listing";
-import Members from "./pages/Members";
-import Metrics from "./pages/Metrics";
-import Model from "./pages/Model";
-import Policies from "./pages/Model/Policies";
-import Models from "./pages/Models";
-import Publicise from "./pages/Publicise";
-import PublisherSettings from "./pages/PublisherSettings";
-import RegisterNameDispute from "./pages/RegisterNameDispute";
-import RegisterSnap from "./pages/RegisterSnap";
-import Releases from "./pages/Releases";
-import RequestReservedName from "./pages/RequestReservedName";
-import SigningKeys from "./pages/SigningKeys";
-import Snaps from "./pages/Snaps";
-import ValidationSet from "./pages/ValidationSet";
-import ValidationSets from "./pages/ValidationSets";
-import AccountKeys from "./pages/AccountKeys";
+import SnapsManagementLayout from "./layouts/SnapsManagementLayout";
+import ModelDetailsPageLayout from "./layouts/ModelDetailsPageLayout/ModelPageLayout";
+
+const AccountDetails = importComponent(() => import("./pages/AccountDetails"));
+const Publicise = importComponent(() => import("./pages/Publicise"));
+const PublisherSettings = importComponent(
+  () => import("./pages/PublisherSettings"),
+);
+const Metrics = importComponent(() => import("./pages/Metrics"));
+const Listing = importComponent(() => import("./pages/Listing"));
+const Builds = importComponent(() => import("./pages/Builds"));
+const Build = importComponent(() => import("./pages/Build"));
+const Releases = importComponent(() => import("./pages/Releases"));
+const AccountSnaps = importComponent(() => import("./pages/AccountSnaps"));
+const RegisterNameDispute = importComponent(
+  () => import("./pages/RegisterNameDispute"),
+);
+const RegisterSnap = importComponent(() => import("./pages/RegisterSnap"));
+const RequestReservedName = importComponent(
+  () => import("./pages/RequestReservedName"),
+);
+const Models = importComponent(() => import("./pages/Models"));
+const Model = importComponent(() => import("./pages/Model"));
+const Policies = importComponent(() => import("./pages/Model/Policies"));
+const BrandStoreSettings = importComponent(
+  () => import("./pages/BrandStoreSettings"),
+);
+const Members = importComponent(() => import("./pages/Members"));
+const SigningKeys = importComponent(() => import("./pages/SigningKeys"));
+const Snaps = importComponent(() => import("./pages/Snaps"));
+const ValidationSet = importComponent(() => import("./pages/ValidationSet"));
+const ValidationSets = importComponent(() => import("./pages/ValidationSets"));
+const AccountKeys = importComponent(() => import("./pages/AccountKeys"));
 
 Sentry.init({
   dsn: window.SENTRY_DSN,
@@ -54,7 +66,12 @@ root.render(
       <BrowserRouter>
         <Routes>
           <Route element={<PublisherLayout />}>
-            <Route path=":snapId">
+            <Route path=":snapId" element={<SnapsManagementLayout />}>
+              {/*
+                if any of the children routes changes, make sure to update
+                static/js/publisher/layouts/SnapsManagementLayout/routes.ts
+              */}
+              {/* TODO: move to data routing with RouterProvider */}
               <Route path="publicise" element={<Publicise />} />
               <Route
                 path="publicise/badges"
@@ -92,20 +109,22 @@ root.render(
             <Route path="admin/account" element={<AccountDetails />} />
             <Route path="admin/account-keys" element={<AccountKeys />} />
 
-            <Route path="admin/:id" element={<BrandStoreRoute />}>
-              <Route index element={<Navigate to="snaps" />} />
-              <Route path="snaps" element={<Snaps />} />
-              <Route path="members" element={<Members />} />
-              <Route path="settings" element={<BrandStoreSettings />} />
-              <Route path="signing-keys" element={<SigningKeys />} />
-              <Route path="signing-keys/create" element={<SigningKeys />} />
-              <Route path="models">
-                <Route index element={<Models />} />
-                <Route path="create" element={<Models />} />
-                <Route path=":model_id">
-                  <Route index element={<Model />} />
-                  <Route path="policies" element={<Policies />} />
-                  <Route path="policies/create" element={<Policies />} />
+            <Route path="admin" element={<BrandStoreRoute />}>
+              <Route path=":id">
+                <Route index element={<Navigate to="snaps" />} />
+                <Route path="snaps" element={<Snaps />} />
+                <Route path="members" element={<Members />} />
+                <Route path="settings" element={<BrandStoreSettings />} />
+                <Route path="signing-keys" element={<SigningKeys />} />
+                <Route path="signing-keys/create" element={<SigningKeys />} />
+                <Route path="models">
+                  <Route index element={<Models />} />
+                  <Route path="create" element={<Models />} />
+                  <Route path=":model_id" element={<ModelDetailsPageLayout />}>
+                    <Route index element={<Model />} />
+                    <Route path="policies" element={<Policies />} />
+                    <Route path="policies/create" element={<Policies />} />
+                  </Route>
                 </Route>
               </Route>
             </Route>

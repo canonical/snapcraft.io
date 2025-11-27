@@ -9,9 +9,10 @@
 
   .p-featured-snap {
     @extend %vf-card;
+    @include vf-theme-dark;
 
-    background-color: $color-dark;
-    color: $color-light;
+    background-color: $colors--theme--background-default;
+    color: $colors--theme--text-default;
     margin-bottom: $sp-large;
 
     // force color on visited links as well
@@ -19,7 +20,7 @@
     a:focus,
     a:hover,
     a:visited {
-      color: $color-light;
+      color: $colors--theme--text-default;
     }
 
     // update to lighter color in media object

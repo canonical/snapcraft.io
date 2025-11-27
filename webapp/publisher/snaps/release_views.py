@@ -4,8 +4,13 @@ from canonicalwebteam.store_api.dashboard import Dashboard
 from canonicalwebteam.exceptions import StoreApiResponseErrorList
 
 # Local
+from webapp.endpoints.utils import (
+    get_snap_info_cache_key,
+    get_release_history_key,
+)
 from webapp.helpers import api_publisher_session
 from webapp.decorators import login_required
+from cache.cache_utility import redis_cache
 
 dashboard = Dashboard(api_publisher_session)
 
@@ -58,6 +63,8 @@ def post_release(snap_name):
 
     try:
         response = dashboard.post_snap_release(flask.session, data)
+        release_history_key = get_release_history_key(snap_name)
+        redis_cache.delete(release_history_key)
     except StoreApiResponseErrorList as api_response_error_list:
         if api_response_error_list.status_code == 404:
             return flask.abort(404, "No snap named {}".format(snap_name))
@@ -98,6 +105,8 @@ def post_close_channel(snap_name):
 
     try:
         response = dashboard.post_close_channel(flask.session, snap_id, data)
+        release_history_key = get_release_history_key(snap_name)
+        redis_cache.delete(release_history_key)
     except StoreApiResponseErrorList as api_response_error_list:
         if api_response_error_list.status_code == 404:
             return flask.abort(404, "No snap named {}".format(snap_name))
@@ -129,6 +138,8 @@ def post_default_track(snap_name):
 
     try:
         dashboard.snap_metadata(flask.session, snap_id, data)
+        snap_info_key = get_snap_info_cache_key(snap_name)
+        redis_cache.delete(snap_info_key)
     except StoreApiResponseErrorList as api_response_error_list:
         if api_response_error_list.status_code == 404:
             return flask.abort(404, "No snap named {}".format(snap_name))

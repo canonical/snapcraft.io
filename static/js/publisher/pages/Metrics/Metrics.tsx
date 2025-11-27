@@ -1,7 +1,6 @@
 import { useParams } from "react-router-dom";
 import { Row, Col } from "@canonical/react-components";
 
-import SectionNav from "../../components/SectionNav";
 import ActiveDeviceMetrics from "./ActiveDeviceMetrics";
 import { TerritoryMetrics } from "./TerritoryMetrics";
 import { useState } from "react";
@@ -44,12 +43,6 @@ function Metrics(): React.JSX.Element {
 
   return (
     <>
-      <h1 className="p-heading--4" aria-live="polite">
-        <a href="/snaps">My snaps</a> / <a href={`/${snapId}`}>{snapId}</a> /
-        Metrics
-      </h1>
-
-      <SectionNav snapName={snapId} activeTab="metrics" />
       {isEmpty && <EmptyData />}
 
       <ActiveDeviceMetrics

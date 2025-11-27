@@ -20,7 +20,7 @@ const flaskViteImportPlugin = () => ({
       const viteImports =
         execSync(
           // TODO: do it in Node to make it truly portable`
-          `grep -rnoh --include '*.html' -e 'vite_import\\((.*)\\)'`
+          `grep -rnoh --include '*.html' -e 'vite_import\\((.*)\\)'`,
         ).toString() || ""; // big multi-line string wit the format
       // `vite_import(<filename>)`
 
@@ -37,7 +37,7 @@ const flaskViteImportPlugin = () => ({
     } catch (e) {
       throw new Error(
         "Vite: Couldn't find any entry points for production build\n" +
-          e.toString()
+          e.toString(),
       );
     }
 
@@ -82,6 +82,16 @@ export default defineConfig({
   define: {
     global: "globalThis", // in dev mode "randomstring" uses `global` rather than `globalThis`
   },
+  resolve: {
+    alias: [
+      // by default react-components exports a CJS module that can't be tree-shaken, we consume the ESM instead
+      {
+        find: /^@canonical\/react-components$/,
+        replacement: "@canonical/react-components/dist/esm",
+      },
+    ],
+  },
+  base: "./", // use the script's URL path as base when loading assets in dynamic imports
   build: {
     manifest: true,
     modulePreload: false,

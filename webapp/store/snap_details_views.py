@@ -1,6 +1,7 @@
 import flask
 from flask import Response
 
+import logging
 import humanize
 import os
 
@@ -19,6 +20,7 @@ from canonicalwebteam.store_api.devicegw import DeviceGW
 from pybadges import badge
 
 device_gateway = DeviceGW("snap", helpers.api_session)
+logger = logging.getLogger(__name__)
 
 FIELDS = [
     "title",
@@ -37,6 +39,10 @@ FIELDS = [
     "trending",
     "unlisted",
     "links",
+]
+
+FIELDS_EXTRA_DETAILS = [
+    "aliases",
 ]
 
 
@@ -208,6 +214,25 @@ def snap_details_views(store):
         status_code = 200
 
         context = _get_context_snap_details(snap_name)
+        try:
+            # the empty string channel makes the store API not filter by
+            # the default channel 'latest/stable', which gives errors for
+            # snaps that don't use that channel
+            extra_details = device_gateway.get_snap_details(
+                snap_name, channel="", fields=FIELDS_EXTRA_DETAILS
+            )
+        except Exception:
+            logger.exception("Details endpoint returned an error")
+            extra_details = None
+
+        if extra_details and extra_details["aliases"]:
+            context["aliases"] = [
+                [
+                    f"{extra_details['package_name']}.{alias_obj['target']}",
+                    alias_obj["name"],
+                ]
+                for alias_obj in extra_details["aliases"]
+            ]
 
         country_metric_name = "weekly_installed_base_by_country_percent"
         os_metric_name = "weekly_installed_base_by_operating_system_normalized"

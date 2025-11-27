@@ -4,6 +4,45 @@ from flask_testing import TestCase
 from webapp.app import create_app
 
 
+EMPTY_EXTRA_DETAILS_PAYLOAD = {"aliases": None, "package_name": "vault"}
+SNAP_PAYLOAD = {
+    "snap-id": "id",
+    "name": "toto",
+    "default-track": None,
+    "snap": {
+        "title": "Snap Title",
+        "summary": "This is a summary",
+        "description": "this is a description",
+        "media": [],
+        "license": "license",
+        "publisher": {
+            "display-name": "Toto",
+            "username": "toto",
+            "validation": True,
+        },
+        "categories": [{"name": "test"}],
+        "trending": False,
+        "unlisted": False,
+        "links": {},
+    },
+    "channel-map": [
+        {
+            "channel": {
+                "architecture": "amd64",
+                "name": "stable",
+                "risk": "stable",
+                "track": "latest",
+                "released-at": "2018-09-18T14:45:28.064633+00:00",
+            },
+            "created-at": "2018-09-18T14:45:28.064633+00:00",
+            "version": "1.0",
+            "confinement": "conf",
+            "download": {"size": 100000},
+        }
+    ],
+}
+
+
 class GetDetailsPageTest(TestCase):
     def setUp(self):
         self.snap_name = "toto"
@@ -40,6 +79,15 @@ class GetDetailsPageTest(TestCase):
             ]
         )
         self.endpoint_url = "/" + self.snap_name
+        self.api_url_details = "".join(
+            [
+                "https://api.snapcraft.io/api/v1/",
+                "snaps/details/",
+                self.snap_name,
+                "?",
+                urlencode({"fields": ",".join(["aliases"])}),
+            ]
+        )
 
     def create_app(self):
         app = create_app(testing=True)
@@ -47,6 +95,16 @@ class GetDetailsPageTest(TestCase):
         app.config["WTF_CSRF_METHODS"] = []
 
         return app
+
+    def assert_not_in_context(self, name):
+        try:
+            self.get_context_variable(name)
+        except Exception:
+            # flask-testing throws exception if context doesn't have "name"
+            # that's what we expect so we just return and let the test pass
+            return
+        # If we reach this point it means the variable IS in context
+        self.fail(f"Context variable exists: {name}")
 
     @responses.activate
     def test_api_404(self):
@@ -64,6 +122,44 @@ class GetDetailsPageTest(TestCase):
         assert called.request.url == self.api_url
 
         assert response.status_code == 404
+
+    @responses.activate
+    def test_extra_details_error(self):
+        payload = SNAP_PAYLOAD
+        extra_details_payload = {
+            "error_list": [
+                {
+                    "code": "resource-not-found",
+                    "message": "No snap named 'toto' found in series '16'.",
+                }
+            ],
+            "errors": ["No snap named 'toto' found in series '16'."],
+            "result": "error",
+        }
+
+        responses.add(
+            responses.Response(
+                method="GET", url=self.api_url, json=payload, status=200
+            )
+        )
+        responses.add(
+            responses.Response(
+                method="GET",
+                url=self.api_url_details,
+                json=extra_details_payload,
+                status=404,
+            )
+        )
+        metrics_url = "https://api.snapcraft.io/api/v1/snaps/metrics"
+        responses.add(
+            responses.Response(
+                method="POST", url=metrics_url, json={}, status=200
+            )
+        )
+
+        response = self.client.get(self.endpoint_url)
+
+        assert response.status_code == 200
 
     @responses.activate
     def test_api_500(self):
@@ -100,7 +196,7 @@ class GetDetailsPageTest(TestCase):
     def test_no_channel_map(self):
         payload = {
             "snap-id": "id",
-            "name": "snapName",
+            "name": "toto",
             "default-track": None,
             "snap": {
                 "title": "Snap Title",
@@ -125,6 +221,14 @@ class GetDetailsPageTest(TestCase):
                 method="GET", url=self.api_url, json=payload, status=200
             )
         )
+        responses.add(
+            responses.Response(
+                method="GET",
+                url=self.api_url_details,
+                json=EMPTY_EXTRA_DETAILS_PAYLOAD,
+                status=200,
+            )
+        )
 
         response = self.client.get(self.endpoint_url)
 
@@ -132,46 +236,19 @@ class GetDetailsPageTest(TestCase):
 
     @responses.activate
     def test_user_connected(self):
-        payload = {
-            "snap-id": "id",
-            "name": "toto",
-            "default-track": None,
-            "snap": {
-                "title": "Snap Title",
-                "summary": "This is a summary",
-                "description": "this is a description",
-                "media": [],
-                "license": "license",
-                "publisher": {
-                    "display-name": "Toto",
-                    "username": "toto",
-                    "validation": True,
-                },
-                "categories": [{"name": "test"}],
-                "trending": False,
-                "unlisted": False,
-                "links": {},
-            },
-            "channel-map": [
-                {
-                    "channel": {
-                        "architecture": "amd64",
-                        "name": "stable",
-                        "risk": "stable",
-                        "track": "latest",
-                        "released-at": "2018-09-18T14:45:28.064633+00:00",
-                    },
-                    "created-at": "2018-09-18T14:45:28.064633+00:00",
-                    "version": "1.0",
-                    "confinement": "conf",
-                    "download": {"size": 100000},
-                }
-            ],
-        }
+        payload = SNAP_PAYLOAD
 
         responses.add(
             responses.Response(
                 method="GET", url=self.api_url, json=payload, status=200
+            )
+        )
+        responses.add(
+            responses.Response(
+                method="GET",
+                url=self.api_url_details,
+                json=EMPTY_EXTRA_DETAILS_PAYLOAD,
+                status=200,
             )
         )
 
@@ -197,46 +274,19 @@ class GetDetailsPageTest(TestCase):
 
     @responses.activate
     def test_user_not_connected(self):
-        payload = {
-            "snap-id": "id",
-            "name": "snapName",
-            "default-track": None,
-            "snap": {
-                "title": "Snap Title",
-                "summary": "This is a summary",
-                "description": "this is a description",
-                "media": [],
-                "license": "license",
-                "publisher": {
-                    "display-name": "Toto",
-                    "username": "toto",
-                    "validation": True,
-                },
-                "categories": [{"name": "test"}],
-                "trending": False,
-                "unlisted": False,
-                "links": {},
-            },
-            "channel-map": [
-                {
-                    "channel": {
-                        "architecture": "amd64",
-                        "name": "stable",
-                        "risk": "stable",
-                        "track": "latest",
-                        "released-at": "2018-09-18T14:45:28.064633+00:00",
-                    },
-                    "created-at": "2018-09-18T14:45:28.064633+00:00",
-                    "version": "1.0",
-                    "confinement": "conf",
-                    "download": {"size": 100000},
-                }
-            ],
-        }
+        payload = SNAP_PAYLOAD
 
         responses.add(
             responses.Response(
                 method="GET", url=self.api_url, json=payload, status=200
+            )
+        )
+        responses.add(
+            responses.Response(
+                method="GET",
+                url=self.api_url_details,
+                json=EMPTY_EXTRA_DETAILS_PAYLOAD,
+                status=200,
             )
         )
 
@@ -254,46 +304,19 @@ class GetDetailsPageTest(TestCase):
 
     @responses.activate
     def test_user_connected_on_not_own_snap(self):
-        payload = {
-            "snap-id": "id",
-            "name": "snapName",
-            "default-track": None,
-            "snap": {
-                "title": "Snap Title",
-                "summary": "This is a summary",
-                "description": "this is a description",
-                "media": [],
-                "license": "license",
-                "publisher": {
-                    "display-name": "Toto",
-                    "username": "toto",
-                    "validation": True,
-                },
-                "categories": [{"name": "test"}],
-                "trending": False,
-                "unlisted": False,
-                "links": {},
-            },
-            "channel-map": [
-                {
-                    "channel": {
-                        "architecture": "amd64",
-                        "name": "stable",
-                        "risk": "stable",
-                        "track": "latest",
-                        "released-at": "2018-09-18T14:45:28.064633+00:00",
-                    },
-                    "created-at": "2018-09-18T14:45:28.064633+00:00",
-                    "version": "1.0",
-                    "confinement": "conf",
-                    "download": {"size": 100000},
-                }
-            ],
-        }
+        payload = SNAP_PAYLOAD
 
         responses.add(
             responses.Response(
                 method="GET", url=self.api_url, json=payload, status=200
+            )
+        )
+        responses.add(
+            responses.Response(
+                method="GET",
+                url=self.api_url_details,
+                json=EMPTY_EXTRA_DETAILS_PAYLOAD,
+                status=200,
             )
         )
 
@@ -311,3 +334,62 @@ class GetDetailsPageTest(TestCase):
 
         assert response.status_code == 200
         self.assert_context("is_users_snap", False)
+
+    @responses.activate
+    def test_extra_details(self):
+        payload = SNAP_PAYLOAD
+        payload_extra_details = {
+            "aliases": [
+                {"name": "nu", "target": "nu"},
+                {
+                    "name": "nu_plugin_stress_internals",
+                    "target": "nu-plugin-stress-internals",
+                },
+                {"name": "nu_plugin_gstat", "target": "nu-plugin-gstat"},
+                {"name": "nu_plugin_formats", "target": "nu-plugin-formats"},
+                {"name": "nu_plugin_polars", "target": "nu-plugin-polars"},
+            ],
+            "package_name": "toto",
+        }
+
+        responses.add(
+            responses.Response(
+                method="GET", url=self.api_url, json=payload, status=200
+            )
+        )
+        responses.add(
+            responses.Response(
+                method="GET",
+                url=self.api_url_details,
+                json=payload_extra_details,
+                status=200,
+            )
+        )
+        metrics_url = "https://api.snapcraft.io/api/v1/snaps/metrics"
+        responses.add(
+            responses.Response(
+                method="POST", url=metrics_url, json={}, status=200
+            )
+        )
+
+        response = self.client.get(self.endpoint_url)
+        assert response.status_code == 200
+        self.assert_context(
+            "aliases",
+            [
+                ["toto.nu", "nu"],
+                [
+                    "toto.nu-plugin-stress-internals",
+                    "nu_plugin_stress_internals",
+                ],
+                ["toto.nu-plugin-gstat", "nu_plugin_gstat"],
+                ["toto.nu-plugin-formats", "nu_plugin_formats"],
+                ["toto.nu-plugin-polars", "nu_plugin_polars"],
+            ],
+        )
+
+
+if __name__ == "__main__":
+    import unittest
+
+    unittest.main()
