@@ -37,7 +37,7 @@ export type Progressive = {
   percentage: number | null;
 };
 
-type _Release = {
+export type Release = {
   architecture: CPUArchitecture;
   branch: string | null;
   channel?: string; // in the form "<track>/<risk>"
@@ -47,35 +47,51 @@ type _Release = {
   risk: string;
   track: string;
   when: ISO8601Timestamp;
+
+  /**
+   * The following property doesn't come from the Store backend, but rather is added by our JS for convenience;
+   * its value is equivalent to `!!this.progressive.percentage`.
+   * (see static/js/publisher/pages/Releases/releasesState.js for more info)
+   * Rather than having two separate Release types and keeping track of both of them, casting from one to the other,
+   * etc., we just add this optional property here and pretend it actually is part of the Store backend response.
+   */
+  isProgressive?: boolean;
 };
+
+export type RevisionStatus =
+  | "Published"
+  | "Unpublished"
+  | "ManualReviewPending"
+  | "NeedsInformation"
+  | "AutomaticallyRejected"
+  | "Rejected";
+
+export type SnapConfinement = "strict" | "classic" | "devmode";
+
+export type RevisionGrade = "stable" | "devel";
 
 export type Revision = {
   architectures: NonEmptyArray<CPUArchitecture>;
   attributes: {
-    "build-request-id"?: string;
-    "build-request-timestamp"?: ISO8601Timestamp;
+    "build-request-id"?: string; // available if it's a Launchpad build
+    "build-request-timestamp"?: ISO8601Timestamp; // available if it's a Launchpad build
+
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    [key: string]: any; // store docs declare this as a generic "object" type
+    [key: string]: any; // store docs declare `attributes` as a generic "object" type
   };
   base: string; // "coreXX"
   build_url: string | null; // available if it's a Launchpad build
-  confinement: "strict" | "classic" | "devmode";
+  confinement: SnapConfinement;
   created_at: ISO8601Timestamp;
   epoch: {
     read: NonEmptyArray<number>;
     write: NonEmptyArray<number>;
   };
-  grade: "stable" | "devel";
+  grade: RevisionGrade;
   revision: number;
   "sha3-384": string;
   size: number;
-  status:
-    | "Published"
-    | "Unpublished"
-    | "ManualReviewPending"
-    | "NeedsInformation"
-    | "AutomaticallyRejected"
-    | "Rejected";
+  status: RevisionStatus;
   version: string;
 };
 
@@ -92,7 +108,8 @@ export type Track = {
   name: string;
   status: string;
   "version-pattern": string | null;
-  // docs might be wrong because they mark "pattern" as required but it doesn't exist
+  // Store API docs might be wrong because they mark `pattern` as required, but it doesn't exist
+  // We assume that "version-pattern" is required, but it can still be null
 };
 
 export type Snap = {
@@ -126,7 +143,7 @@ export type Links = {
  */
 export type ReleasesData = {
   _links: Links;
-  releases: _Release[];
+  releases: Release[];
   revisions: Revision[];
   snap: Snap;
 };
@@ -140,10 +157,10 @@ export type ReleasesData = {
  */
 export type ChannelMap = {
   architecture: CPUArchitecture;
-  channel: string;
+  channel: Channel["name"];
   "expiration-date": ISO8601Timestamp | null;
   progressive: Progressive;
-  revision: number | null;
+  revision: Revision["revision"] | null;
   when: ISO8601Timestamp;
 };
 
@@ -151,28 +168,27 @@ export type ChannelMap = {
  * Types for response to our API GET "/api/<snap_name>/releases"
  * As implemented in `webapp.endpoints.releases.get_release_history_data`
  */
-export type ReleasesAPIResponse = {
+export type ReleasesAPIResponse = Prettify<{
   data: {
     channel_map: ChannelMap[];
-    default_track: string;
-    private: boolean;
+    default_track: NonNullable<Snap["default-track"]>;
+    private: Snap["private"];
     publisher_name: string;
     release_history: ReleasesData;
-    snap_name: "edisile-pyfiglet";
-    snap_title: "edisile-pyfiglet";
-    tracks: NonEmptyArray<Track>;
+    snap_name: Snap["name"];
+    snap_title: Snap["title"];
+    tracks: Snap["tracks"];
   };
   success: boolean;
-};
+}>;
 
 /**
  * Types for the Redux state used in the Releases page
  */
 export type ReleasesReduxState = CombinedState<{
   architectures: CPUArchitecture[];
-  // TODO: these come from "../pages/Releases/constants", what should we do with them?
   availableRevisionsSelect: AvailableRevisionsSelect;
-  branches: string[]; // TODO: wat do?
+  branches: string[]; // TODO: are there any constraints on this?
   channelMap: ChannelArchitectureRevisionsMap;
   currentTrack: string;
   defaultTrack: string;
@@ -195,10 +211,10 @@ export type ReleasesReduxState = CombinedState<{
     // TODO: more stuff???
   };
   options: Options;
-  pendingCloses: Channel["name"][]; // ???
+  pendingCloses: Channel["name"][]; // TODO: are there any constraints on this?
   pendingReleases: {
     [revision: string]: {
-      [channel: string]: PendingReleaseItem;
+      [channel: Channel["name"]]: PendingReleaseItem;
     };
   };
   revisions: {
@@ -211,13 +227,6 @@ export type ReleasesReduxState = CombinedState<{
   failedRevisions: unknown[]; // TODO: what's this ???
   releases: Release[];
 }>;
-
-// extend the type coming from backend adding the `isProgressive` member, only export this one to avoid confusion
-export type Release = Prettify<
-  _Release & {
-    isProgressive?: boolean;
-  }
->;
 
 export type ArchitectureRevisionsMap = {
   [arch in CPUArchitecture]: Revision & { releases: Release[] };
@@ -261,7 +270,7 @@ export type PendingReleaseItem = {
   >;
   replaces: {
     revision: Revision;
-    channel: string;
+    channel: Channel["name"];
     progressive: Progressive;
   };
 };
