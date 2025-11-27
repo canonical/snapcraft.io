@@ -152,48 +152,18 @@ def build_snap_installs_metrics_query(snaps, get_filter=get_filter):
     return metrics_query
 
 
-def fill_missing_values(values):
-    """Fills out null values in a series according to these rules:
-    - If null is in the middle take average of previous and next non-null vals
-    - If null is at the end use the previous non-null value
-    - If null is at the start use the next non-null value
-    - If all values are null set to 0
-    """
-    if not values:
-        return values
-
-    filled = values.copy()
-    n = len(filled)
-
-    if all(v is None for v in filled):
-        return [0] * n
-
-    for i in range(n):
-        if filled[i] is None:
-            # Find previous non-null value
-            prev_value = None
-            prev_idx = i - 1
-            while prev_idx >= 0 and prev_value is None:
-                prev_value = filled[prev_idx]
-                prev_idx -= 1
-
-            # Find next non-null value
-            next_value = None
-            next_idx = i + 1
-            while next_idx < n and next_value is None:
-                next_value = filled[next_idx]
-                next_idx += 1
-
-            if prev_value is not None and next_value is not None:
-                filled[i] = (prev_value + next_value) / 2
-            elif prev_value is not None:
-                filled[i] = prev_value
-            elif next_value is not None:
-                filled[i] = next_value
-            else:
-                filled[i] = 0
-
-    return filled
+def get_days_without_data(metrics_response):
+    days_without_data = set()
+    for metric in metrics_response["metrics"]:
+        if metric["status"] == "OK":
+            for series in metric["series"]:
+                none_indexes = [
+                    i for i, val in enumerate(series["values"]) if val is None
+                ]
+                days_without_data.update(
+                    metric["buckets"][i] for i in none_indexes
+                )
+    return list(days_without_data)
 
 
 def transform_metrics(metrics, metrics_response, snaps):
@@ -212,24 +182,18 @@ def transform_metrics(metrics, metrics_response, snaps):
                 if snaps_id == snap_id:
                     snap_name = snaps_name
 
-            filled_series = []
-            for series in metric["series"]:
-                filled_values = fill_missing_values(series["values"])
-                filled_series.append(
-                    {"name": series["name"], "values": filled_values}
-                )
-
             metrics["snaps"].append(
-                {"id": snap_id, "name": snap_name, "series": filled_series}
+                {"id": snap_id, "name": snap_name, "series": metric["series"]}
             )
             metrics["buckets"] = metric["buckets"]
+    metrics["days_without_data"] = get_days_without_data(metrics_response)
     return metrics
 
 
 def lttb_select_indices(values, target_size):
     """
-    Selects indices using the LTTB algorithm for downsampling.
-    Assumes values have already been filled (no None values).
+    Selects indices using the LTTB algorithm for downsampling,
+    treating None as 0.
     """
     n = len(values)
     if n <= target_size:
@@ -246,11 +210,25 @@ def lttb_select_indices(values, target_size):
         max_area = 0
         max_area_idx = current_bucket_start
 
-        point1 = (current_bucket_start, values[current_bucket_start])
-        point2 = (next_bucket_start, values[next_bucket_start])
+        point1 = (
+            current_bucket_start,
+            (
+                values[current_bucket_start]
+                if values[current_bucket_start] is not None
+                else 0
+            ),
+        )
+        point2 = (
+            next_bucket_start,
+            (
+                values[next_bucket_start]
+                if values[next_bucket_start] is not None
+                else 0
+            ),
+        )
 
         for j in range(current_bucket_start + 1, next_bucket_start):
-            val_j = values[j]
+            val_j = values[j] if values[j] is not None else 0
 
             # Area of triangle formed by point1, point2, and the current point
             area = abs(
@@ -284,7 +262,7 @@ def normalize_series(series, bucket_count):
 
 
 def downsample_series(buckets, series, target_size):
-    """Downsample each series in the data, filling missing values first."""
+    """Downsample each series in the data, treating None as 0."""
     downsampled_buckets = []
     downsampled_series = []
 
@@ -301,14 +279,13 @@ def downsample_series(buckets, series, target_size):
         name = item["name"]
         values = item["values"]
 
-        # Fill missing values before downsampling
-        filled_values = fill_missing_values(values)
-
-        selected_indices = lttb_select_indices(filled_values, target_size)
+        selected_indices = lttb_select_indices(values, target_size)
 
         # Collect the buckets and values based on the selected indices
         downsampled_buckets = [buckets[i] for i in selected_indices]
-        downsampled_values = [filled_values[i] for i in selected_indices]
+        downsampled_values = [
+            values[i] if values[i] is not None else 0 for i in selected_indices
+        ]
 
         downsampled_series.append({"name": name, "values": downsampled_values})
 

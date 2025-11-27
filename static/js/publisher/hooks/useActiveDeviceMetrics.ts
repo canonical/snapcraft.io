@@ -77,6 +77,8 @@ function useActiveDeviceMetrics({
     const buckets = [];
     const series = new Map();
 
+    const daysWithoutData = [];
+
     let seriesThatAreAddedBefore = 0;
 
     for (const result of results.reverse()) {
@@ -110,6 +112,10 @@ function useActiveDeviceMetrics({
       }
 
       seriesThatAreAddedBefore += activeDeviceBuckets.length;
+
+      if (data.days_without_data) {
+        daysWithoutData.push(...data.days_without_data);
+      }
     }
 
     const resultArray = Array.from(series.entries()).map(([key, value]) => ({
@@ -122,6 +128,7 @@ function useActiveDeviceMetrics({
         buckets,
         series: resultArray,
       },
+      daysWithoutData,
     };
   };
 
