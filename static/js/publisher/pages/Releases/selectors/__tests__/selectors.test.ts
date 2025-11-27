@@ -31,9 +31,10 @@ import {
 } from "../index";
 
 import reducers from "../../reducers";
+import { ReleasesReduxState } from "../../../../types/releaseTypes";
 
 describe("getFilteredReleaseHistory", () => {
-  const initialState = reducers(undefined, {});
+  const initialState = reducers(undefined, {}) as unknown as ReleasesReduxState;
   const stateWithRevisions = {
     ...initialState,
     revisions: {
@@ -41,7 +42,7 @@ describe("getFilteredReleaseHistory", () => {
       2: { revision: 2, version: "2" },
       3: { revision: 3, version: "3" },
     },
-  };
+  } as unknown as ReleasesReduxState;
 
   it("should return empty list for initial state", () => {
     expect(getFilteredReleaseHistory(initialState)).toEqual([]);
@@ -55,7 +56,7 @@ describe("getFilteredReleaseHistory", () => {
         { risk: "test" },
         { risk: "test", revision: 2 },
       ],
-    };
+    } as unknown as ReleasesReduxState;
 
     const filteredHistory = getFilteredReleaseHistory(state);
     expect(filteredHistory.every((r) => r.revision)).toBe(true);
@@ -75,11 +76,11 @@ describe("getFilteredReleaseHistory", () => {
           arch: "test",
         },
       },
-    };
+    } as unknown as ReleasesReduxState;
 
     const filteredHistory = getFilteredReleaseHistory(state);
     const isEveryReleaseInTestArch = filteredHistory.every(
-      (r) => r.release.architecture === "test",
+      (r) => r.release.architecture === "test"
     );
     expect(isEveryReleaseInTestArch).toBe(true);
   });
@@ -98,11 +99,11 @@ describe("getFilteredReleaseHistory", () => {
           track: "test",
         },
       },
-    };
+    } as unknown as ReleasesReduxState;
 
     const filteredHistory = getFilteredReleaseHistory(state);
     const isEveryReleaseInTestTrack = filteredHistory.every(
-      (r) => r.release.track === "test",
+      (r) => r.release.track === "test"
     );
     expect(isEveryReleaseInTestTrack).toBe(true);
   });
@@ -121,11 +122,11 @@ describe("getFilteredReleaseHistory", () => {
           risk: "test",
         },
       },
-    };
+    } as unknown as ReleasesReduxState;
 
     const filteredHistory = getFilteredReleaseHistory(state);
     const isEveryReleaseInTestRisk = filteredHistory.every(
-      (r) => r.release.risk === "test",
+      (r) => r.release.risk === "test"
     );
     expect(isEveryReleaseInTestRisk).toBe(true);
   });
@@ -143,11 +144,11 @@ describe("getFilteredReleaseHistory", () => {
           branch: "test",
         },
       },
-    };
+    } as unknown as ReleasesReduxState;
 
     const filteredHistory = getFilteredReleaseHistory(state);
     const isEveryReleaseInTestBranch = filteredHistory.every(
-      (r) => r.release.branch === "test",
+      (r) => r.release.branch === "test"
     );
     expect(isEveryReleaseInTestBranch).toBe(true);
   });
@@ -161,10 +162,10 @@ describe("getFilteredReleaseHistory", () => {
         { revision: 1 },
         { revision: 3 },
       ],
-    };
+    } as unknown as ReleasesReduxState;
 
     const filteredRevisions = getFilteredReleaseHistory(state).map(
-      (r) => r.revision,
+      (r) => r.revision
     );
 
     const isUnique =
@@ -175,7 +176,7 @@ describe("getFilteredReleaseHistory", () => {
 });
 
 describe("getSelectedRevisions", () => {
-  const initialState = reducers(undefined, {});
+  const initialState = reducers(undefined, {}) as unknown as ReleasesReduxState;
 
   const stateWithSelectedRevisions = {
     ...initialState,
@@ -185,7 +186,7 @@ describe("getSelectedRevisions", () => {
         test64: { revision: 2, version: "2" },
       },
     },
-  };
+  } as unknown as ReleasesReduxState;
 
   it("should be empty for initial state", () => {
     expect(getSelectedRevisions(initialState)).toHaveLength(0);
@@ -197,7 +198,7 @@ describe("getSelectedRevisions", () => {
 });
 
 describe("getSelectedRevision", () => {
-  const initialState = reducers(undefined, {});
+  const initialState = reducers(undefined, {}) as unknown as ReleasesReduxState;
 
   const stateWithSelectedRevisions = {
     ...initialState,
@@ -207,7 +208,7 @@ describe("getSelectedRevision", () => {
         test64: { revision: 2, version: "2" },
       },
     },
-  };
+  } as unknown as ReleasesReduxState;
 
   it("should be empty for initial state", () => {
     expect(getSelectedRevision(initialState, "test64")).toBeUndefined();
@@ -215,13 +216,13 @@ describe("getSelectedRevision", () => {
 
   it("should return revision selected in given arch", () => {
     expect(getSelectedRevision(stateWithSelectedRevisions, "test64")).toEqual(
-      stateWithSelectedRevisions.channelMap[AVAILABLE]["test64"],
+      stateWithSelectedRevisions.channelMap[AVAILABLE]["test64"]
     );
   });
 });
 
 describe("getSelectedArchitectures", () => {
-  const initialState = reducers(undefined, {});
+  const initialState = reducers(undefined, {}) as unknown as ReleasesReduxState;
 
   const stateWithSelectedRevisions = {
     ...initialState,
@@ -231,7 +232,7 @@ describe("getSelectedArchitectures", () => {
         test64: { revision: 2, version: "2" },
       },
     },
-  };
+  } as unknown as ReleasesReduxState;
 
   it("should be empty for initial state", () => {
     expect(getSelectedArchitectures(initialState)).toHaveLength(0);
@@ -246,7 +247,7 @@ describe("getSelectedArchitectures", () => {
 });
 
 describe("hasDevmodeRevisions", () => {
-  const initialState = reducers(undefined, {});
+  const initialState = reducers(undefined, {}) as unknown as ReleasesReduxState;
   const stateWithReleasedRevisions = {
     ...initialState,
     channelMap: {
@@ -256,7 +257,7 @@ describe("hasDevmodeRevisions", () => {
         armf: { revision: 3, version: "3" },
       },
     },
-  };
+  } as unknown as ReleasesReduxState;
 
   const stateWithConfinementDevmode = {
     ...initialState,
@@ -267,7 +268,7 @@ describe("hasDevmodeRevisions", () => {
         armf: { revision: 3, version: "3" },
       },
     },
-  };
+  } as unknown as ReleasesReduxState;
 
   const stateWithGradeDevel = {
     ...initialState,
@@ -278,7 +279,7 @@ describe("hasDevmodeRevisions", () => {
         armf: { revision: 3, version: "3" },
       },
     },
-  };
+  } as unknown as ReleasesReduxState;
 
   it("should be false for initial empty state", () => {
     expect(hasDevmodeRevisions(initialState)).toBe(false);
@@ -306,11 +307,11 @@ describe("getPendingChannelMap", () => {
         },
       },
       pendingReleases: {},
-    };
+    } as unknown as ReleasesReduxState;
 
     it("should return channel map as it is", () => {
       expect(getPendingChannelMap(stateWithNoPendingReleases)).toEqual(
-        stateWithNoPendingReleases.channelMap,
+        stateWithNoPendingReleases.channelMap
       );
     });
   });
@@ -330,7 +331,7 @@ describe("getPendingChannelMap", () => {
           },
         },
       },
-    };
+    } as unknown as ReleasesReduxState;
 
     it("should return channel map with pending revisions added", () => {
       expect(getPendingChannelMap(stateWithPendingReleases)).toEqual({
@@ -360,7 +361,7 @@ describe("getPendingChannelMap", () => {
           },
         },
       },
-    };
+    } as unknown as ReleasesReduxState;
 
     it("should return channel map with pending revisions", () => {
       expect(getPendingChannelMap(stateWithPendingReleases)).toEqual({
@@ -377,7 +378,7 @@ describe("getPendingChannelMap", () => {
 });
 
 describe("getFilteredAvailableRevisions", () => {
-  const initialState = reducers(undefined, {});
+  const initialState = reducers(undefined, {}) as unknown as ReleasesReduxState;
 
   const dayAgo = new Date();
   dayAgo.setDate(dayAgo.getDate() - 1);
@@ -409,7 +410,7 @@ describe("getFilteredAvailableRevisions", () => {
         attributes: { "build-request-id": "lp-1234" },
       },
     },
-  };
+  } as unknown as ReleasesReduxState;
 
   describe("when there are no revisions", () => {
     it("should return empty list", () => {
@@ -422,7 +423,7 @@ describe("getFilteredAvailableRevisions", () => {
       const stateWithAllSelected = {
         ...stateWithRevisions,
         availableRevisionsSelect: AVAILABLE_REVISIONS_SELECT_ALL,
-      };
+      } as unknown as ReleasesReduxState;
 
       it("should return all revisions by default", () => {
         expect(getFilteredAvailableRevisions(stateWithAllSelected)).toEqual([
@@ -438,11 +439,11 @@ describe("getFilteredAvailableRevisions", () => {
       const stateWithUnreleasedSelected = {
         ...stateWithRevisions,
         availableRevisionsSelect: AVAILABLE_REVISIONS_SELECT_UNRELEASED,
-      };
+      } as unknown as ReleasesReduxState;
 
       it("should return only unreleased revisions", () => {
         expect(
-          getFilteredAvailableRevisions(stateWithUnreleasedSelected),
+          getFilteredAvailableRevisions(stateWithUnreleasedSelected)
         ).toEqual([
           stateWithUnreleasedSelected.revisions[2],
           stateWithUnreleasedSelected.revisions[1],
@@ -454,7 +455,7 @@ describe("getFilteredAvailableRevisions", () => {
       const stateWithRecentSelected = {
         ...stateWithRevisions,
         availableRevisionsSelect: AVAILABLE_REVISIONS_SELECT_RECENT,
-      };
+      } as unknown as ReleasesReduxState;
 
       it("should return unreleased revisions not older then a week", () => {
         expect(getFilteredAvailableRevisions(stateWithRecentSelected)).toEqual([
@@ -467,11 +468,11 @@ describe("getFilteredAvailableRevisions", () => {
       const stateWithLaunchpadSelected = {
         ...stateWithRevisions,
         availableRevisionsSelect: AVAILABLE_REVISIONS_SELECT_LAUNCHPAD,
-      };
+      } as unknown as ReleasesReduxState;
 
       it("should return unreleased revisions not older then a week", () => {
         expect(
-          getFilteredAvailableRevisions(stateWithLaunchpadSelected),
+          getFilteredAvailableRevisions(stateWithLaunchpadSelected)
         ).toEqual([stateWithLaunchpadSelected.revisions[4]]);
       });
     });
@@ -480,7 +481,7 @@ describe("getFilteredAvailableRevisions", () => {
 
 describe("getFilteredAvailableRevisionsByArch", () => {
   const arch = "test64";
-  const initialState = reducers(undefined, {});
+  const initialState = reducers(undefined, {}) as unknown as ReleasesReduxState;
   const stateWithRevisions = {
     ...initialState,
     revisions: {
@@ -493,12 +494,12 @@ describe("getFilteredAvailableRevisionsByArch", () => {
         channels: ["test/edge"],
       },
     },
-  };
+  } as unknown as ReleasesReduxState;
 
   describe("when there are no revisions", () => {
     it("should return empty list", () => {
       expect(getFilteredAvailableRevisionsForArch(initialState, arch)).toEqual(
-        [],
+        []
       );
     });
   });
@@ -507,11 +508,11 @@ describe("getFilteredAvailableRevisionsByArch", () => {
     const stateWithAllSelected = {
       ...stateWithRevisions,
       availableRevisionsSelect: AVAILABLE_REVISIONS_SELECT_ALL,
-    };
+    } as unknown as ReleasesReduxState;
 
     it("should return selected revisions by for given architecture", () => {
       expect(
-        getFilteredAvailableRevisionsForArch(stateWithAllSelected, arch),
+        getFilteredAvailableRevisionsForArch(stateWithAllSelected, arch)
       ).toEqual([
         stateWithAllSelected.revisions[3],
         stateWithAllSelected.revisions[1],
@@ -525,7 +526,7 @@ describe("getArchitectures", () => {
   const stateWithArchitectures = {
     ...initialState,
     architectures: ["test64", "amd42", "abc64"],
-  };
+  } as unknown as ReleasesReduxState;
 
   it("should return alphabetical list of all architectures", () => {
     expect(getArchitectures(stateWithArchitectures)).toEqual([
@@ -548,7 +549,7 @@ describe("getTracks", () => {
         { name: "12" },
       ],
     },
-  };
+  } as unknown as ReleasesReduxState;
 
   it("should return list of all tracks", () => {
     expect(getTracks(stateWithReleases)).toEqual(["latest", "test", "12"]);
@@ -564,11 +565,11 @@ describe("hasPendingRelease", () => {
         },
       },
       pendingReleases: {},
-    };
+    } as unknown as ReleasesReduxState;
 
     it("should return false", () => {
       expect(
-        hasPendingRelease(stateWithNoPendingReleases, "test/edge", "test64"),
+        hasPendingRelease(stateWithNoPendingReleases, "test/edge", "test64")
       ).toBe(false);
     });
   });
@@ -588,17 +589,17 @@ describe("hasPendingRelease", () => {
           },
         },
       },
-    };
+    } as unknown as ReleasesReduxState;
 
     it("should return false for channel/arch without pending release", () => {
       expect(
-        hasPendingRelease(stateWithPendingReleases, "test/edge", "test64"),
+        hasPendingRelease(stateWithPendingReleases, "test/edge", "test64")
       ).toBe(false);
     });
 
     it("should return true for channel/arch with pending release", () => {
       expect(
-        hasPendingRelease(stateWithPendingReleases, "latest/stable", "test64"),
+        hasPendingRelease(stateWithPendingReleases, "latest/stable", "test64")
       ).toBe(true);
     });
   });
@@ -618,11 +619,11 @@ describe("hasPendingRelease", () => {
           },
         },
       },
-    };
+    } as unknown as ReleasesReduxState;
 
     it("should return true for channel/arch with pending release", () => {
       expect(
-        hasPendingRelease(stateWithPendingReleases, "test/edge", "test64"),
+        hasPendingRelease(stateWithPendingReleases, "test/edge", "test64")
       ).toBe(true);
     });
   });
@@ -642,7 +643,9 @@ describe("getTrackRevisions", () => {
       },
     };
 
-    expect(getTrackRevisions({ channelMap }, "test")).toEqual([
+    expect(
+      getTrackRevisions({ channelMap } as unknown as ReleasesReduxState, "test")
+    ).toEqual([
       {
         test64: {
           revision: 1,
@@ -661,10 +664,10 @@ describe("getBranches", () => {
   it("should return branches on the currentTrack, ordered by oldest first", () => {
     const today = new Date();
     const expired = new Date(
-      new Date().setDate(today.getDate() - 1),
+      new Date().setDate(today.getDate() - 1)
     ).toISOString();
     const notExpired = new Date(
-      new Date().setDate(today.getDate() + 24),
+      new Date().setDate(today.getDate() + 24)
     ).toISOString();
 
     const state = {
@@ -703,7 +706,7 @@ describe("getBranches", () => {
           "expiration-date": expired,
         },
       ],
-    };
+    } as unknown as ReleasesReduxState;
 
     expect(getBranches(state)).toEqual([
       {
@@ -727,7 +730,7 @@ describe("getBranches", () => {
 });
 
 describe("hasBuildRequestId", () => {
-  const initialState = reducers(undefined, {});
+  const initialState = reducers(undefined, {}) as unknown as ReleasesReduxState;
   const stateWithoutBuildRequestId = {
     ...initialState,
     revisions: {
@@ -735,7 +738,7 @@ describe("hasBuildRequestId", () => {
       2: { revision: 2, version: "2" },
       3: { revision: 3, version: "3" },
     },
-  };
+  } as unknown as ReleasesReduxState;
   const stateWithBuildRequestId = {
     ...stateWithoutBuildRequestId,
     revisions: {
@@ -746,7 +749,7 @@ describe("hasBuildRequestId", () => {
         attributes: { "build-request-id": "test-1234" },
       },
     },
-  };
+  } as unknown as ReleasesReduxState;
   it("should return false if none of the revisions have build-request-id attribute", () => {
     expect(hasBuildRequestId(stateWithoutBuildRequestId)).toBe(false);
   });
@@ -757,7 +760,7 @@ describe("hasBuildRequestId", () => {
 });
 
 describe("getLaunchpadRevisions", () => {
-  const initialState = reducers(undefined, {});
+  const initialState = reducers(undefined, {}) as unknown as ReleasesReduxState;
   const stateWithLauchpadBuilds = {
     ...initialState,
     revisions: {
@@ -774,23 +777,27 @@ describe("getLaunchpadRevisions", () => {
         attributes: { "build-request-id": "lp-1234" },
       },
     },
-  };
+  } as unknown as ReleasesReduxState;
 
   it("should return only revisions with Lauchpad builds", () => {
     expect(getLaunchpadRevisions(stateWithLauchpadBuilds).length).toEqual(2);
     expect(getLaunchpadRevisions(stateWithLauchpadBuilds)).not.toContain(
-      stateWithLauchpadBuilds.revisions[1],
-      stateWithLauchpadBuilds.revisions[2],
+      stateWithLauchpadBuilds.revisions[1]
+    );
+    expect(getLaunchpadRevisions(stateWithLauchpadBuilds)).not.toContain(
+      stateWithLauchpadBuilds.revisions[2]
     );
     expect(getLaunchpadRevisions(stateWithLauchpadBuilds)).toContain(
-      stateWithLauchpadBuilds.revisions[3],
-      stateWithLauchpadBuilds.revisions[4],
+      stateWithLauchpadBuilds.revisions[3]
+    );
+    expect(getLaunchpadRevisions(stateWithLauchpadBuilds)).toContain(
+      stateWithLauchpadBuilds.revisions[4]
     );
   });
 });
 
 describe("getRevisionsFromBuild", () => {
-  const initialState = reducers(undefined, {});
+  const initialState = reducers(undefined, {}) as unknown as ReleasesReduxState;
   const stateWithLauchpadBuilds = {
     ...initialState,
     revisions: {
@@ -812,25 +819,21 @@ describe("getRevisionsFromBuild", () => {
         attributes: { "build-request-id": "lp-5432" },
       },
     },
-  };
+  } as unknown as ReleasesReduxState;
 
   it("should return only revisions with given build id", () => {
     const revisions = getRevisionsFromBuild(stateWithLauchpadBuilds, "lp-1234");
     expect(revisions.length).toEqual(2);
-    expect(revisions).not.toContain(
-      stateWithLauchpadBuilds.revisions[1],
-      stateWithLauchpadBuilds.revisions[2],
-      stateWithLauchpadBuilds.revisions[5],
-    );
-    expect(revisions).toContain(
-      stateWithLauchpadBuilds.revisions[3],
-      stateWithLauchpadBuilds.revisions[4],
-    );
+    expect(revisions).not.toContain(stateWithLauchpadBuilds.revisions[1]);
+    expect(revisions).not.toContain(stateWithLauchpadBuilds.revisions[2]);
+    expect(revisions).not.toContain(stateWithLauchpadBuilds.revisions[5]);
+    expect(revisions).toContain(stateWithLauchpadBuilds.revisions[3]);
+    expect(revisions).toContain(stateWithLauchpadBuilds.revisions[4]);
   });
 });
 
 describe("getProgressiveState", () => {
-  const initialState = reducers(undefined, {});
+  const initialState = reducers(undefined, {}) as unknown as ReleasesReduxState;
   const stateWithProgressiveEnabled = {
     ...initialState,
     options: {
@@ -881,7 +884,7 @@ describe("getProgressiveState", () => {
       2: "revision2",
       1: "revision1",
     },
-  };
+  } as unknown as ReleasesReduxState;
 
   const stateWithProgressiveDisabled = {
     ...stateWithProgressiveEnabled,
@@ -891,7 +894,7 @@ describe("getProgressiveState", () => {
         isProgressiveReleaseEnabled: false,
       },
     },
-  };
+  } as unknown as ReleasesReduxState;
 
   const stateWithProgressiveEnabledAndPendingRelease = {
     ...stateWithProgressiveEnabled,
@@ -909,7 +912,7 @@ describe("getProgressiveState", () => {
         },
       },
     },
-  };
+  } as unknown as ReleasesReduxState;
 
   it("should return the progressive release state of a channel and arch", () => {
     expect(
@@ -917,7 +920,8 @@ describe("getProgressiveState", () => {
         stateWithProgressiveEnabled,
         "latest/stable",
         "arch2",
-      ),
+        false
+      )
     ).toEqual(["revision2", null]);
   });
 
@@ -927,7 +931,8 @@ describe("getProgressiveState", () => {
         stateWithProgressiveEnabledAndPendingRelease,
         "latest/stable",
         "arch2",
-      ),
+        false
+      )
     ).toEqual([
       "revision2",
       { key: "progressive-test", paused: false, percentage: 40 },
@@ -940,13 +945,14 @@ describe("getProgressiveState", () => {
         stateWithProgressiveDisabled,
         "latest/stable",
         "arch2",
-      ),
+        false
+      )
     ).toEqual([null, null, null]);
   });
 });
 
 describe("isProgressiveReleaseEnabled", () => {
-  const initialState = reducers(undefined, {});
+  const initialState = reducers(undefined, {}) as unknown as ReleasesReduxState;
   const stateWithProgressiveEnabled = {
     ...initialState,
     options: {
@@ -955,7 +961,7 @@ describe("isProgressiveReleaseEnabled", () => {
         isProgressiveReleaseEnabled: true,
       },
     },
-  };
+  } as unknown as ReleasesReduxState;
 
   const stateWithProgressiveDisabled = {
     ...initialState,
@@ -965,7 +971,7 @@ describe("isProgressiveReleaseEnabled", () => {
         isProgressiveReleaseEnabled: false,
       },
     },
-  };
+  } as unknown as ReleasesReduxState;
 
   it("should be true with isProgressiveReleaseEnabled flag turned on", () => {
     expect(isProgressiveReleaseEnabled(stateWithProgressiveEnabled)).toBe(true);
@@ -973,25 +979,25 @@ describe("isProgressiveReleaseEnabled", () => {
 
   it("should be false with isProgressiveReleaseEnabled flag turned off", () => {
     expect(isProgressiveReleaseEnabled(stateWithProgressiveDisabled)).toBe(
-      false,
+      false
     );
   });
 });
 
 describe("hasRelease", () => {
-  const initialState = reducers(undefined, {});
+  const initialState = reducers(undefined, {}) as unknown as ReleasesReduxState;
   const stateWithARelease = {
     ...initialState,
     releases: [
       { architecture: "arm64", risk: "beta", track: "latest", revision: 1 },
     ],
-  };
+  } as unknown as ReleasesReduxState;
   const stateWithAClose = {
     ...initialState,
     releases: [
       { architecture: "arm64", risk: "beta", track: "latest", revision: null },
     ],
-  };
+  } as unknown as ReleasesReduxState;
   const stateWithMultipleArchAndChannels = {
     ...initialState,
     releases: [
@@ -1010,7 +1016,7 @@ describe("hasRelease", () => {
       },
       { architecture: "arm64", risk: "beta", track: "latest", revision: 3 },
     ],
-  };
+  } as unknown as ReleasesReduxState;
 
   it("should return false if there are no releases", () => {
     expect(hasRelease(initialState, "latest/beta", "arm64")).toBe(false);
@@ -1019,19 +1025,22 @@ describe("hasRelease", () => {
   it("should return false if the previous release was a close", () => {
     expect(hasRelease(stateWithAClose, "latest/beta", "arm64")).toBe(false);
     expect(
-      hasRelease(stateWithMultipleArchAndChannels, "latest/stable", "arm64"),
+      hasRelease(stateWithMultipleArchAndChannels, "latest/stable", "arm64")
     ).toBe(false);
   });
 
   it("should return true if there is a previous release", () => {
     expect(hasRelease(stateWithARelease, "latest/beta", "arm64")).toBe(true);
     expect(
-      hasRelease(stateWithMultipleArchAndChannels, "latest/beta", "arm64"),
+      hasRelease(stateWithMultipleArchAndChannels, "latest/beta", "arm64")
     ).toBe(true);
   });
 
   describe("getSeparatePendingReleases", () => {
-    const initialState = reducers(undefined, {});
+    const initialState = reducers(
+      undefined,
+      {}
+    ) as unknown as ReleasesReduxState;
 
     describe("with progressive releases disabled", () => {
       const stateWithPendingReleaseToProgress = {
@@ -1052,11 +1061,11 @@ describe("hasRelease", () => {
             revision: { revision: 2, architectures: ["amd64"] },
           },
         ],
-      };
+      } as unknown as ReleasesReduxState;
 
       it("should return new releases and ignore releases to progress", () => {
         expect(
-          getSeparatePendingReleases(stateWithPendingReleaseToProgress),
+          getSeparatePendingReleases(stateWithPendingReleaseToProgress)
         ).toEqual({
           newReleases: {
             "1-latest/stable":
@@ -1080,7 +1089,7 @@ describe("hasRelease", () => {
             isProgressiveReleaseEnabled: true,
           },
         },
-      };
+      } as unknown as ReleasesReduxState;
 
       const stateWithPendingRelease = {
         ...stateWithFlagEnabled,
@@ -1092,7 +1101,7 @@ describe("hasRelease", () => {
             },
           },
         },
-      };
+      } as unknown as ReleasesReduxState;
 
       const stateWithPendingReleaseToProgress = {
         ...stateWithFlagEnabled,
@@ -1118,7 +1127,7 @@ describe("hasRelease", () => {
             revision: { revision: 2, architectures: ["amd64"] },
           },
         ],
-      };
+      } as unknown as ReleasesReduxState;
 
       const stateWithPendingReleaseToUpdate = {
         ...stateWithFlagEnabled,
@@ -1150,7 +1159,7 @@ describe("hasRelease", () => {
             },
           },
         },
-      };
+      } as unknown as ReleasesReduxState;
 
       const stateWithPendingReleaseToCancel = {
         ...stateWithFlagEnabled,
@@ -1172,7 +1181,7 @@ describe("hasRelease", () => {
             },
           },
         },
-      };
+      } as unknown as ReleasesReduxState;
 
       it("should return nothing if there are no pending releases", () => {
         expect(getSeparatePendingReleases(initialState)).toEqual({
@@ -1197,7 +1206,7 @@ describe("hasRelease", () => {
 
       it("should return new release and releases to progress", () => {
         expect(
-          getSeparatePendingReleases(stateWithPendingReleaseToProgress),
+          getSeparatePendingReleases(stateWithPendingReleaseToProgress)
         ).toEqual({
           newReleases: {},
           newReleasesToProgress: {
@@ -1213,7 +1222,7 @@ describe("hasRelease", () => {
 
       it("should return a pending release to update", () => {
         expect(
-          getSeparatePendingReleases(stateWithPendingReleaseToUpdate),
+          getSeparatePendingReleases(stateWithPendingReleaseToUpdate)
         ).toEqual({
           newReleases: {},
           newReleasesToProgress: {},
@@ -1236,7 +1245,7 @@ describe("hasRelease", () => {
 
       it("should return a progressive release to cancel", () => {
         expect(
-          getSeparatePendingReleases(stateWithPendingReleaseToCancel),
+          getSeparatePendingReleases(stateWithPendingReleaseToCancel)
         ).toEqual({
           newReleases: {},
           newReleasesToProgress: {},
@@ -1257,7 +1266,7 @@ describe("hasRelease", () => {
 });
 
 describe("getPendingRelease", () => {
-  const initialState = reducers(undefined, {});
+  const initialState = reducers(undefined, {}) as unknown as ReleasesReduxState;
   const state = {
     ...initialState,
     pendingReleases: {
@@ -1278,7 +1287,7 @@ describe("getPendingRelease", () => {
         },
       },
     },
-  };
+  } as unknown as ReleasesReduxState;
 
   it("should return the correct release", () => {
     const result = getPendingRelease(state, "latest/stable", "amd64");
@@ -1300,9 +1309,9 @@ describe("getReleases", () => {
     const result = getReleases(
       {
         releases: [],
-      },
+      } as unknown as ReleasesReduxState,
       "amd64",
-      "latest/stable",
+      "latest/stable"
     );
 
     expect(result).toEqual([]);
@@ -1322,9 +1331,9 @@ describe("getReleases", () => {
     const result = getReleases(
       {
         releases,
-      },
+      } as unknown as ReleasesReduxState,
       ["amd64"],
-      "latest/stable",
+      "latest/stable"
     );
 
     expect(result).toEqual([releases[0]]);
