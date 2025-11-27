@@ -5,11 +5,7 @@ import {
   AVAILABLE_REVISIONS_SELECT_RECENT,
   AVAILABLE_REVISIONS_SELECT_LAUNCHPAD,
 } from "../constants";
-import {
-  isInDevmode,
-  getBuildId,
-  isRevisionBuiltOnLauchpad,
-} from "../helpers";
+import { isInDevmode, getBuildId, isRevisionBuiltOnLauchpad } from "../helpers";
 import { sortAlphaNum, getChannelString } from "../../../../libs/channels";
 import {
   ArchitectureRevisionsMap,
@@ -18,6 +14,7 @@ import {
   PendingReleaseItem,
   ProgressiveChanges,
   ProgressiveMutated,
+  Release,
   ReleasesReduxState,
 } from "../../../types/releaseTypes";
 
@@ -201,14 +198,11 @@ export function getTracks(state: ReleasesReduxState) {
 }
 
 export function getBranches(state: ReleasesReduxState) {
-  const branches: Array<{
-    track: ReleasesReduxState["releases"][number]["track"];
-    risk: ReleasesReduxState["releases"][number]["risk"];
-    branch: ReleasesReduxState["releases"][number]["branch"];
-    when: ReleasesReduxState["releases"][number]["when"];
-    revision: ReleasesReduxState["releases"][number]["revision"];
-    expiration: string;
-  }> = []; // TODO: the type could just be Release[] if it wasn't for this stupid "expiration" field
+  const branches: Array<
+    Pick<Release, "track" | "risk" | "branch" | "when" | "revision"> & {
+      expiration: string;
+    }
+  > = [];
   const { currentTrack, releases } = state;
 
   const now = Date.now();
