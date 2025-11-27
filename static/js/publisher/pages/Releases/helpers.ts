@@ -85,17 +85,6 @@ export function isSameVersion(revisions?: ArchitectureRevisionsMap) {
   return hasSameVersion;
 }
 
-// TODO: replace all calls to this with structuredClone
-export function jsonClone(obj: {
-  string: string;
-  number?: number;
-  boolean?: boolean;
-  array?: (string | number | boolean)[];
-  function?: () => string;
-}) {
-  return JSON.parse(JSON.stringify(obj));
-}
-
 export function canBeReleased(revision: { status: string }) {
   const allowed = [REVISION_STATUS.PUBLISHED, REVISION_STATUS.UNPUBLISHED];
 

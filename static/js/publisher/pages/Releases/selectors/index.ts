@@ -9,7 +9,6 @@ import {
   isInDevmode,
   getBuildId,
   isRevisionBuiltOnLauchpad,
-  jsonClone,
 } from "../helpers";
 import { sortAlphaNum, getChannelString } from "../../../../libs/channels";
 import {
