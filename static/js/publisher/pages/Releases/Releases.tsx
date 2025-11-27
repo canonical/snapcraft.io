@@ -1,11 +1,12 @@
-import { useQuery } from "react-query";
 import { useParams } from "react-router-dom";
+import { useQuery } from "react-query";
 import { Link, Strip } from "@canonical/react-components";
 
 import SectionNav from "../../components/SectionNav";
 import Release from "./Release";
-import { ReleasesAPIResponse } from "../../types/releaseTypes";
 import { setPageTitle } from "../../utils";
+
+import { ReleasesAPIResponse } from "../../types/releaseTypes";
 
 function Releases(): React.JSX.Element {
   const { snapId } = useParams();
