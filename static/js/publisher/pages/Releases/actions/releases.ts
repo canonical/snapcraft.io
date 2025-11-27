@@ -92,33 +92,6 @@ export function handleCloseResponse(
   }
 }
 
-export function getErrorMessage(error: {
-  message?: any;
-  json?: any;
-  errors?: any;
-}) {
-  let message = error.message || ERROR_MESSAGE;
-
-  if (error.errors && error.errors.length > 0) {
-    message = error.errors[0].message;
-  }
-
-  // try to find error messages in response json
-  // which may be an array or errors or object with errors propery
-  if (error.json) {
-    const errors = error.json.length ? error.json : error.json.errors;
-
-    if (errors.length) {
-      message = `${message} ${errors
-        .map((e: { message: any }) => e.message)
-        .filter((m: any) => m)
-        .join(" ")}`;
-    }
-  }
-
-  return message;
-}
-
 export function handleReleaseResponse(
   dispatch: DispatchFn,
   json: FetchReleaseResponse,
@@ -225,16 +198,17 @@ export function releaseRevisions() {
     };
 
     dispatch(hideNotification());
+
     return fetchReleases(_handleReleaseResponse, releases, snapName)
       .then(() => fetchCloses(_handleCloseResponse, snapName, pendingCloses))
       .then(() => fetchSnapReleaseStatus(snapName))
       .then((json) => dispatch(updateReleasesData(json)))
-      .catch((error) =>
+      .catch(() =>
         dispatch(
           showNotification({
             status: "error",
             appearance: "negative",
-            content: getErrorMessage(error),
+            content: ERROR_MESSAGE,
           })
         )
       )
