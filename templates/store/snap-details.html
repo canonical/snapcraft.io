@@ -196,7 +196,7 @@
             <div class="{% if countries %}grid-col-2{% else %}grid-col-4 grid-col-start-large-5{% endif %}">
               <div class="js-sschart-holder" data-live="weekly_installed_base_by_operating_system_normalized">
                 <h5 class="p-muted-heading">Users by distribution (log)</h5>
-                {% set list_limit = 15 %}
+                {% set list_limit = 15 %}{# keep the limit in sync with height of the map #}
                 {% if normalized_os|length > list_limit + 1 %}
                 <div class="snapcraft-distro-chart">
                   <div class="snapcraft-distro-chart__names">
@@ -248,7 +248,6 @@
                     <div class="snapcraft-distro-chart__bar"
                       style="width: {{ distro.value * 100 }}%;"></div>
                     {% endfor %}
-                    </div>
                   </div>
                 </div>
                 {% endif %}
