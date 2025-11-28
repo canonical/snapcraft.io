@@ -26,7 +26,16 @@ import {
   initReleasesData,
 } from "../releasesState";
 import { updateFailedRevisions } from "./failedRevisions";
-import { PendingReleaseItem, Release, ReleasesAPIResponse, DispatchFn, ReleasesReduxState } from "../../../types/releaseTypes";
+import {
+  PendingReleaseItem,
+  Release,
+  ReleasesAPIResponse,
+  DispatchFn,
+  ReleasesReduxState,
+  FetchReleaseResponse,
+  FetchReleasePayload,
+  CloseChannelsResponse,
+} from "../../../types/releaseTypes";
 
 export const UPDATE_RELEASES = "UPDATE_RELEASES";
 
@@ -37,9 +46,7 @@ function updateReleasesData(apiData: ReleasesAPIResponse) {
     channel_map: channelMap,
     snap_name: snapName,
   } = apiData.data;
-  return (
-    dispatch: DispatchFn,
-  ) => {
+  return (dispatch: DispatchFn) => {
     const revisionsList = releasesData.revisions;
     const releases = releasesData.releases;
 
@@ -53,12 +60,16 @@ function updateReleasesData(apiData: ReleasesAPIResponse) {
         dispatch(updateArchitectures(revisionsList));
         dispatch(initChannelMap(transformedChannelMap));
         dispatch(updateFailedRevisions(failedRevisions));
-      },
+      }
     );
   };
 }
 
-export function handleCloseResponse(dispatch: DispatchFn, json: any, channels: any) {
+export function handleCloseResponse(
+  dispatch: DispatchFn,
+  json: CloseChannelsResponse,
+  channels: ReleasesReduxState["pendingCloses"]
+) {
   if (json.success) {
     if (json.closed_channels && json.closed_channels.length > 0) {
       json.closed_channels.forEach((channel: string) => {
@@ -73,7 +84,7 @@ export function handleCloseResponse(dispatch: DispatchFn, json: any, channels: a
     }
   } else {
     const error = new Error(
-      `Error while closing channels: ${channels.join(", ")}.`,
+      `Error while closing channels: ${channels.join(", ")}.`
     );
     // @ts-ignore
     error.json = json;
@@ -81,38 +92,11 @@ export function handleCloseResponse(dispatch: DispatchFn, json: any, channels: a
   }
 }
 
-export function getErrorMessage(error: {
-  message?: any;
-  json?: any;
-  errors?: any;
-}) {
-  let message = error.message || ERROR_MESSAGE;
-
-  if (error.errors && error.errors.length > 0) {
-    message = error.errors[0].message;
-  }
-
-  // try to find error messages in response json
-  // which may be an array or errors or object with errors propery
-  if (error.json) {
-    const errors = error.json.length ? error.json : error.json.errors;
-
-    if (errors.length) {
-      message = `${message} ${errors
-        .map((e: { message: any }) => e.message)
-        .filter((m: any) => m)
-        .join(" ")}`;
-    }
-  }
-
-  return message;
-}
-
 export function handleReleaseResponse(
   dispatch: DispatchFn,
-  json: any,
-  release: any,
-  revisions: any,
+  json: FetchReleaseResponse,
+  release: FetchReleasePayload,
+  revisions: ReleasesReduxState["revisions"]
 ) {
   if (json.success) {
     // Update channel map based on the response
@@ -123,41 +107,39 @@ export function handleReleaseResponse(
         const series = track[seriesKey];
         Object.keys(series).forEach((archKey) => {
           const arch = series[archKey];
-          arch.forEach(
-            (map: { revision: number; version: any; channel: any }) => {
-              if (map.revision) {
-                let revision;
+          arch.forEach((map) => {
+            if (map.revision) {
+              let revision;
 
-                if (map.revision === +release.id) {
-                  // release.id is a string so turn it into a number for comparison
-                  revision = release.revision;
-                } else if (revisions[map.revision]) {
-                  revision = revisions[map.revision];
-                } else {
-                  revision = {
-                    revision: map.revision,
-                    version: map.version,
-                    architectures: release.revision.architectures,
-                  };
-                }
-
-                const channel = `${trackKey}/${map.channel}`;
-                dispatch(releaseRevisionSuccess(revision, channel));
+              if (map.revision === +release.id) {
+                // release.id is a string so turn it into a number for comparison
+                revision = release.revision;
+              } else if (revisions[map.revision]) {
+                revision = revisions[map.revision];
+              } else {
+                revision = {
+                  revision: map.revision,
+                  version: map.version,
+                  architectures: release.revision.architectures,
+                };
               }
-            },
-          );
+
+              const channel = `${trackKey}/${map.channel}`;
+              dispatch(releaseRevisionSuccess(revision, channel));
+            }
+          });
         });
       });
     });
   } else {
-    if (json.errors) {
-      throw new Error(json.errors[0]);
-    }
+    throw new Error(json.errors[0]);
   }
 }
 
 export function releaseRevisions() {
-  const mapToRelease = (pendingRelease: PendingReleaseItem) => {
+  const mapToRelease = (
+    pendingRelease: PendingReleaseItem
+  ): FetchReleasePayload => {
     let progressive = null;
 
     if (
@@ -175,21 +157,13 @@ export function releaseRevisions() {
     };
   };
 
-  return (
-    dispatch: DispatchFn,
-    getState: () => ReleasesReduxState,
-  ) => {
+  return (dispatch: DispatchFn, getState: () => ReleasesReduxState) => {
     const { pendingReleases, pendingCloses, revisions, options } = getState();
     const { snapName } = options;
 
     // To dedupe releases
-    const progressiveReleases: {
-      id: number;
-      revision: PendingReleaseItem["revision"];
-      channels: PendingReleaseItem["channel"][];
-      progressive: PendingReleaseItem["progressive"] | null;
-    }[] = [];
-    const regularReleases: Array<any> = [];
+    const progressiveReleases: FetchReleasePayload[] = [];
+    const regularReleases: FetchReleasePayload[] = [];
     Object.keys(pendingReleases).forEach((revId) => {
       Object.keys(pendingReleases[revId]).forEach((channel) => {
         const pendingRelease = pendingReleases[revId][channel];
@@ -199,8 +173,7 @@ export function releaseRevisions() {
           progressiveReleases.push(mapToRelease(pendingRelease));
         } else {
           const releaseIndex = regularReleases.findIndex(
-            (release: { revision: { revision: number } }) =>
-              release.revision.revision === parseInt(revId),
+            (release) => release.revision.revision === parseInt(revId)
           );
           if (releaseIndex === -1) {
             regularReleases.push(mapToRelease(pendingRelease));
@@ -214,36 +187,30 @@ export function releaseRevisions() {
     const releases = progressiveReleases.concat(regularReleases);
 
     const _handleReleaseResponse = (
-      json: { success: boolean; channel_map_tree: any; errors?: any },
-      release: { id: number; revision: number; channels: string[] }[],
+      json: FetchReleaseResponse,
+      release: FetchReleasePayload
     ) => {
       return handleReleaseResponse(dispatch, json, release, revisions);
     };
 
-    const _handleCloseResponse = (json: {
-      success?: boolean;
-      closed_channels?: string[];
-      error?: boolean;
-      json?: string;
-    }) => {
+    const _handleCloseResponse = (json: CloseChannelsResponse) => {
       return handleCloseResponse(dispatch, json, pendingCloses);
     };
 
     dispatch(hideNotification());
+
     return fetchReleases(_handleReleaseResponse, releases, snapName)
       .then(() => fetchCloses(_handleCloseResponse, snapName, pendingCloses))
       .then(() => fetchSnapReleaseStatus(snapName))
-      .then((json) =>
-        dispatch(updateReleasesData(json)),
-      )
-      .catch((error) =>
+      .then((json) => dispatch(updateReleasesData(json)))
+      .catch(() =>
         dispatch(
           showNotification({
             status: "error",
             appearance: "negative",
-            content: getErrorMessage(error),
-          }),
-        ),
+            content: ERROR_MESSAGE,
+          })
+        )
       )
       .then(() => dispatch(cancelPendingReleases()))
       .then(() => dispatch(closeHistory()));

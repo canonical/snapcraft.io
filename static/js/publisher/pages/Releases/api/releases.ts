@@ -1,14 +1,19 @@
-import { ReleasesAPIResponse } from "../../../types/releaseTypes";
+import {
+  CloseChannelsResponse,
+  FetchReleasePayload,
+  FetchReleaseResponse,
+  ReleasesAPIResponse,
+} from "../../../types/releaseTypes";
 import { DEFAULT_ERROR_MESSAGE as ERROR_MESSAGE } from "../constants";
 
-/**
- *
- * @param {*} onComplete
- * @param {*} releases
- * @param {string} snapName
- * @returns
- */
-export function fetchReleases(onComplete, releases, snapName) {
+export function fetchReleases(
+  onComplete: (
+    json: FetchReleaseResponse,
+    release: FetchReleasePayload
+  ) => void,
+  releases: FetchReleasePayload[],
+  snapName: string
+) {
   let queue = Promise.resolve();
 
   // handle releases as a queue
@@ -26,12 +31,9 @@ export function fetchReleases(onComplete, releases, snapName) {
   return queue;
 }
 
-/**
- *
- * @param {string} snapName
- * @returns {Promise<ReleasesAPIResponse>}
- */
-export function fetchSnapReleaseStatus(snapName) {
+export function fetchSnapReleaseStatus(
+  snapName: string
+): Promise<ReleasesAPIResponse> {
   return fetch(`/api/${snapName}/releases`, {
     method: "GET",
     mode: "cors",
@@ -50,21 +52,18 @@ export function fetchSnapReleaseStatus(snapName) {
     });
 }
 
-/**
- *
- * @param {string} snapName
- * @returns
- */
-export function fetchRelease(snapName, revision, channels, progressive) {
+export function fetchRelease(
+  snapName: string,
+  revision: number,
+  channels: FetchReleasePayload["channels"],
+  progressive: FetchReleasePayload["progressive"]
+): Promise<FetchReleaseResponse> {
   const body = {
     name: snapName,
     revision,
     channels,
+    ...(progressive ? { progressive } : {}),
   };
-
-  if (progressive) {
-    body.progressive = progressive;
-  }
 
   return fetch(`/${snapName}/releases`, {
     method: "POST",
@@ -85,30 +84,24 @@ export function fetchRelease(snapName, revision, channels, progressive) {
     });
 }
 
-/**
- *
- * @param {*} onComplete
- * @param {string} snapName
- * @param {string[]} channels
- * @returns
- */
-export function fetchCloses(onComplete, snapName, channels) {
+export function fetchCloses(
+  onComplete: (response: CloseChannelsResponse) => void,
+  snapName: string,
+  channels: string[]
+): Promise<void> {
   if (channels && channels.length) {
     return fetchClose(snapName, channels).then((json) => {
-      onComplete(json, channels);
+      onComplete(json);
     });
   } else {
     return Promise.resolve();
   }
 }
 
-/**
- *
- * @param {string} snapName
- * @param {string[]} channels
- * @returns
- */
-export function fetchClose(snapName, channels) {
+export function fetchClose(
+  snapName: string,
+  channels: string[]
+): Promise<CloseChannelsResponse> {
   return fetch(`/${snapName}/releases/close-channel`, {
     method: "POST",
     mode: "cors",
