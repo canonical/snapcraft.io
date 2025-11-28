@@ -208,9 +208,9 @@ def snap_details_views(store):
         }
         return context
 
-    def snap_has_sboms(revisions):
+    def snap_has_sboms(revisions, snap_id):
         api_url = "https://api.staging.snapcraft.io/api/v1/sboms/download"
-        res = requests.head(f"{api_url}/{revisions[0]}.spdx2.3.json")
+        res = requests.head(f"{api_url}/{snap_id}_{revisions[0]}.spdx2.3.json")
 
         if res.status_code == 200:
             return True
@@ -256,7 +256,7 @@ def snap_details_views(store):
 
         end = metrics_helper.get_last_metrics_processed_date()
 
-        has_sboms = snap_has_sboms(context["revisions"])
+        has_sboms = snap_has_sboms(context["revisions"], context["snap_id"])
 
         metrics_query_json = [
             metrics_helper.get_filter(

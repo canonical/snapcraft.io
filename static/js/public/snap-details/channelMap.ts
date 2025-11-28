@@ -38,6 +38,7 @@ type ChannelMapData = Record<string, Record<string, ChannelData[]>>;
 class ChannelMap {
   RISK_ORDER: string[];
   packageName: string;
+  snapId: string;
   currentTab: string;
   defaultTrack: string;
   selectorString: string;
@@ -56,11 +57,13 @@ class ChannelMap {
   constructor(
     selectorString: string,
     packageName: string,
+    snapId: string,
     channelMapData: ChannelMapData,
     defaultTrack: string,
   ) {
     this.RISK_ORDER = ["stable", "candidate", "beta", "edge"];
     this.packageName = packageName;
+    this.snapId = snapId;
     this.currentTab = "overview";
 
     this.defaultTrack = defaultTrack;
@@ -548,6 +551,19 @@ class ChannelMap {
     tbodyEl.innerHTML = tbody.join("");
   }
 
+  getSbomUrls(trackList: Record<string, ChannelData[]>) {
+    const tracks = Object.keys(trackList);
+    const sbomUrls: string[] = [];
+
+    tracks.forEach((track) => {
+      sbomUrls.push(
+        `https://api.staging.snapcraft.io/api/v1/sboms/download/${this.snapId}_${trackList[track][0].revision}.spdx.2.3.json`,
+      );
+    });
+
+    return sbomUrls;
+  }
+
   /**
    * Prepare the channel map tables
    *
@@ -600,18 +616,32 @@ class ChannelMap {
       }
     }
 
+    async function checkSbom(url: string) {
+      const res = await fetch(url, { method: "HEAD", mode: "no-cors" });
+
+      if (res.status === 200) {
+        return `<a href="${url}" download>SPDX file</a>`;
+      } else {
+        return "Not available";
+      }
+    }
+
+    const sbomUrls = this.getSbomUrls(trackList);
+
     // Create an array of columns
     Object.keys(trackList).forEach((track) => {
-      trackList[track].forEach((trackInfo) => {
+      trackList[track].forEach(async (trackInfo, index) => {
         const trackName = track.split("/")[0];
 
         if (this.currentTab === "security") {
+          const sbomResult = await checkSbom(sbomUrls[index]);
+
           rows.push([
             trackName,
             trackInfo["risk"],
             trackInfo["version"],
             trackInfo["revision"],
-            "HI",
+            sbomResult,
           ]);
         } else {
           rows.push([
@@ -672,8 +702,9 @@ class ChannelMap {
 export default function channelMap(
   el: string,
   packageName: string,
+  snapId: string,
   channelMapData: ChannelMapData,
   defaultTrack: string,
 ) {
-  return new ChannelMap(el, packageName, channelMapData, defaultTrack);
+  return new ChannelMap(el, packageName, snapId, channelMapData, defaultTrack);
 }
