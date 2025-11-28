@@ -105,9 +105,53 @@ tests/                   # Python unittest tests
 
 **TRUST THESE INSTRUCTIONS**: Only search if instructions are incomplete or incorrect. Commands here are validated and work.
 
+## Pull Request Guidelines
+
+When creating or updating pull requests, follow these requirements:
+
+**Always Include QA Steps**:
+- Every PR description **must** include clear "How to QA" instructions
+- QA steps should be specific, actionable, and enable reviewers to verify the changes
+- Include all necessary setup steps (e.g., environment variables, database setup, specific URLs to visit)
+- For UI changes: Specify what to click, what to look for, and expected behavior
+- For API changes: Include example requests/responses or curl commands
+- For bug fixes: Include reproduction steps for the original issue and how to verify it's fixed
+- For refactoring: Explain how to verify behavior hasn't changed (e.g., which tests to run)
+
+**QA Steps Format**:
+```markdown
+## How to QA
+1. Start the app: `dotrun`
+2. Navigate to: [specific URL or path]
+3. [Specific action to take]
+4. Verify: [Expected outcome]
+5. [Additional steps as needed]
+```
+
+**Required Context**:
+- Link to the issue or card being addressed
+- Brief explanation of what changed and why
+- Any prerequisites or dependencies
+- Screenshots for visual changes
+- Warnings about breaking changes or migrations
+- If testing requires specific app state or data shape, include instructions to achieve this (e.g., config changes, code modifications, database setup). Note that temporary changes should be removed after testing.
+
 ## Code Review Guidelines
 
 When reviewing pull requests, be a constructive and helpful reviewer:
+
+**Verify QA Steps (CRITICAL)**:
+- **Always check** that the PR description includes "How to QA" instructions
+- If QA steps are missing or incomplete, request them before proceeding with review
+- **Attempt to run** the QA steps whenever possible:
+  - Follow the provided steps exactly as written
+  - Report any steps that don't work or are unclear
+  - Verify that the expected outcomes actually occur
+  - Test edge cases mentioned in the QA steps
+- For UI changes: Follow QA steps and take screenshots to verify behavior
+- For API/backend changes: Run provided curl commands or test scripts
+- For bug fixes: Verify the original issue is resolved using the QA steps
+- Document your QA results in the review (e.g., "✅ Followed QA steps, verified expected behavior")
 
 **Verify Best Practices**:
 - Check that code follows patterns documented in this file (build sequence, testing requirements, etc.)
@@ -124,12 +168,14 @@ When reviewing pull requests, be a constructive and helpful reviewer:
 - Don't suggest changes to areas you're uncertain about - ask questions instead
 
 **Highlight Areas Needing Attention**:
+- Point out missing or incomplete QA steps in PR descriptions
 - Point out code that lacks tests or has insufficient test coverage
 - Flag changes that might have security implications (authentication, data validation, etc.)
 - Note when changes affect critical paths (authentication, payment flows, data integrity)
 - Identify potential performance issues (N+1 queries, inefficient algorithms, large bundle sizes)
 - Call out when assets need rebuilding (`yarn build` after frontend/template changes)
 - Mention when changes require documentation updates
+- Highlight QA steps that are unclear, missing prerequisites, or difficult to follow
 
 **Use Conversational Style**:
 - Ask questions to understand the author's intent: "What's the reasoning behind this approach?"
