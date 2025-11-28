@@ -192,7 +192,7 @@ describe("releases actions", () => {
 
       global.fetch = vi
         .fn()
-        .mockResolvedValue({ json: () => ({ sucess: true }) });
+        .mockResolvedValue({ json: () => ({ success: true }) });
 
       return store.dispatch(releaseRevisions()).then(() => {
         const calls = global.fetch.mock.calls;
