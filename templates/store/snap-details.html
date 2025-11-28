@@ -179,29 +179,25 @@
     {% include "store/snap-details/_distro-instructions-for-snap-support.html" %}
   {% endif %}
 
-  {% if not IS_BRAND_STORE and package_name == "hiri" %}
-    {% include "partials/_hiri-case-study.html" %}
-  {% endif %}
-
   {% if countries or normalized_os %}
     <div data-live="public_metrics_live">
-      <div class="p-strip is-shallow">
-        <div class="u-fixed-width"><hr></div>
+      <div class="{% if has_publisher_page %}p-section{% else %}p-section--deep{% endif %}">
         <div class="u-fixed-width">
-          <h4 class="p-heading--2">Where people are using {{ snap_title }}</h4>
+          <hr>
+          <h2>Where people are using {{ snap_title }}</h2>
         </div>
-        <div class="row {% if normalized_os %}u-equal-height{% endif %}">
+        <div class="grid-row {% if normalized_os %}u-equal-height{% endif %}">
           {% if countries %}
-            <div class="{% if normalized_os %}col-8{% else %}col-12{% endif %} js-snap-map-holder" data-live="installed_base_by_country_percent">
+            <div class="{% if normalized_os %}grid-col-4{% else %}grid-col-6{% endif %} grid-col-start-large-3 js-snap-map-holder" data-live="installed_base_by_country_percent">
               <div id="js-snap-map" class="snapcraft-territories"></div>
             </div>
           {% endif %}
           {% if normalized_os %}
-            {% set list_limit = 20 %}
-            {% if normalized_os|length > list_limit + 1 %}
-            <div class="col-4">
+            <div class="{% if countries %}grid-col-2{% else %}grid-col-4 grid-col-start-large-5{% endif %}">
               <div class="js-sschart-holder" data-live="weekly_installed_base_by_operating_system_normalized">
                 <h5 class="p-muted-heading">Users by distribution (log)</h5>
+                {% set list_limit = 15 %}{# keep the limit in sync with height of the map #}
+                {% if normalized_os|length > list_limit + 1 %}
                 <div class="snapcraft-distro-chart">
                   <div class="snapcraft-distro-chart__names">
                     {% for distro in normalized_os[:list_limit] %}
@@ -239,28 +235,24 @@
                     </div>
                   </div>
                 </div>
+                {% else %}
+                <div class="snapcraft-distro-chart">
+                  <div class="snapcraft-distro-chart__names">
+                    {% for distro in normalized_os %}
+                    <div class="snapcraft-distro-chart__name" title="{{ distro.name }}">
+                      {{ distro.name }}</div>
+                    {% endfor %}
+                  </div>
+                  <div class="snapcraft-distro-chart__bars">
+                    {% for distro in normalized_os %}
+                    <div class="snapcraft-distro-chart__bar"
+                      style="width: {{ distro.value * 100 }}%;"></div>
+                    {% endfor %}
+                  </div>
+                </div>
+                {% endif %}
               </div>
             </div>
-            {% else %}
-            <div class="col-4 js-snap-distro-chart-holder"
-              data-live="weekly_installed_base_by_operating_system_normalized">
-              <h5 class="p-muted-heading">Users by distribution (log)</h5>
-              <div class="snapcraft-distro-chart">
-                <div class="snapcraft-distro-chart__names">
-                  {% for distro in normalized_os %}
-                  <div class="snapcraft-distro-chart__name" title="{{ distro.name }}">
-                    {{ distro.name }}</div>
-                  {% endfor %}
-                </div>
-                <div class="snapcraft-distro-chart__bars">
-                  {% for distro in normalized_os %}
-                  <div class="snapcraft-distro-chart__bar"
-                    style="width: {{ distro.value * 100 }}%;"></div>
-                  {% endfor %}
-                </div>
-              </div>
-            </div>
-            {% endif %}
           {% endif %}
         </div>
       </div>
