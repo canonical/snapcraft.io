@@ -23,6 +23,7 @@ from webapp.extensions import csrf
 from webapp.store.logic import (
     get_categories,
 )
+from cache.cache_utility import redis_cache
 
 session = requests.Session()
 
@@ -128,27 +129,60 @@ def store_blueprint(store_query=None):
     @store.route("/explore")
     def explore_view():
         try:
-            popular_snaps = snap_recommendations.get_popular()
+            popular_snaps = redis_cache.get(
+                "explore:popular-snaps", expected_type=list
+            )
+            if not popular_snaps:
+                popular_snaps = snap_recommendations.get_popular()
+                redis_cache.set(
+                    "explore:popular-snaps", popular_snaps, ttl=3600
+                )
         except api_requests.exceptions.RequestException:
             popular_snaps = []
 
         try:
-            recent_snaps = snap_recommendations.get_recent()
+            recent_snaps = redis_cache.get(
+                "explore:recent-snaps", expected_type=list
+            )
+            if not recent_snaps:
+                recent_snaps = snap_recommendations.get_recent()
+                redis_cache.set("explore:recent-snaps", recent_snaps, ttl=3600)
         except api_requests.exceptions.RequestException:
             recent_snaps = []
 
         try:
-            trending_snaps = snap_recommendations.get_trending()
+            trending_snaps = redis_cache.get(
+                "explore:trending-snaps", expected_type=list
+            )
+            if not trending_snaps:
+                trending_snaps = snap_recommendations.get_trending()
+                redis_cache.set(
+                    "explore:trending-snaps", trending_snaps, ttl=3600
+                )
         except api_requests.exceptions.RequestException:
             trending_snaps = []
 
         try:
-            top_rated_snaps = snap_recommendations.get_top_rated()
+            top_rated_snaps = redis_cache.get(
+                "explore:top-rated-snaps", expected_type=list
+            )
+            if not top_rated_snaps:
+                top_rated_snaps = snap_recommendations.get_top_rated()
+                redis_cache.set(
+                    "explore:top-rated-snaps", top_rated_snaps, ttl=3600
+                )
         except api_requests.exceptions.RequestException:
             top_rated_snaps = []
 
         try:
-            categories_results = device_gateway.get_categories()
+            categories_results = redis_cache.get(
+                "explore:categories", expected_type=list
+            )
+            if not categories_results:
+                categories_results = device_gateway.get_categories()
+                redis_cache.set(
+                    "explore:categories", categories_results, ttl=3600
+                )
         except StoreApiError:
             categories_results = []
 
@@ -340,6 +374,13 @@ def store_blueprint(store_query=None):
 
     @store.route("/store/sitemap.xml")
     def sitemap():
+        sitemap = redis_cache.get("sitemap:xml", expected_type=str)
+        if sitemap:
+            response = flask.make_response(sitemap)
+            response.headers["Content-Type"] = "application/xml"
+            response.headers["Cache-Control"] = "public, max-age=43200"
+            return response
+
         base_url = "https://snapcraft.io/store"
 
         snaps = []
@@ -378,6 +419,9 @@ def store_blueprint(store_query=None):
             base_url=base_url,
             links=snaps,
         )
+
+        # Cache the generated sitemap for 12 hours
+        redis_cache.set("sitemap:xml", xml_sitemap, ttl=43200)
 
         response = flask.make_response(xml_sitemap)
         response.headers["Content-Type"] = "application/xml"
