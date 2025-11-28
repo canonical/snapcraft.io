@@ -2,6 +2,14 @@ import responses
 from urllib.parse import urlencode
 from webapp.app import create_app
 from tests.base_test_cases import BaseFlaskTestCase
+from unittest.mock import patch
+from cache.cache_utility import redis_cache
+
+POPULAR_PATH = "webapp.store.views.snap_recommendations.get_popular"
+RECENT_PATH = "webapp.store.views.snap_recommendations.get_recent"
+TREND_PATH = "webapp.store.views.snap_recommendations.get_trending"
+TOP_PATH = "webapp.store.views.snap_recommendations.get_top_rated"
+CATEGORIES_PATH = "webapp.store.views.device_gateway.get_categories"
 
 
 EMPTY_EXTRA_DETAILS_PAYLOAD = {"aliases": None, "package_name": "vault"}
@@ -388,6 +396,188 @@ class GetDetailsPageTest(BaseFlaskTestCase):
                 ["toto.nu-plugin-polars", "nu_plugin_polars"],
             ],
         )
+
+    @responses.activate
+    def test_explore_uses_redis_cache(self):
+        """When Redis has cached explore data, the recommendation APIs
+        and device gateway should not be called and the view should
+        return successfully using the cached values.
+        """
+        # seed redis
+        popular = [
+            {
+                "details": {
+                    "name": "/pop1",
+                    "icon": "",
+                    "title": "Pop 1",
+                    "publisher": "Pub 1",
+                    "developer_validation": None,
+                    "summary": "Popular snap",
+                },
+            }
+        ]
+        recent = [
+            {
+                "details": {
+                    "name": "/recent1",
+                    "icon": "",
+                    "title": "Recent 1",
+                    "publisher": "Pub 2",
+                    "developer_validation": None,
+                    "summary": "Recent snap",
+                },
+            }
+        ]
+        trending = [
+            {
+                "details": {
+                    "name": "/trend1",
+                    "icon": "",
+                    "title": "Trend 1",
+                    "publisher": "Pub 3",
+                    "developer_validation": None,
+                    "summary": "Trending snap",
+                },
+            }
+        ]
+        top_rated = [
+            {
+                "details": {
+                    "name": "/top1",
+                    "icon": "",
+                    "title": "Top 1",
+                    "publisher": "Pub 4",
+                    "developer_validation": None,
+                    "summary": "Top rated snap",
+                },
+            }
+        ]
+        categories = [{"slug": "cat1", "name": "Cat 1"}]
+
+        redis_cache.set("explore:popular-snaps", popular, ttl=3600)
+        redis_cache.set("explore:recent-snaps", recent, ttl=3600)
+        redis_cache.set("explore:trending-snaps", trending, ttl=3600)
+        redis_cache.set("explore:top-rated-snaps", top_rated, ttl=3600)
+        redis_cache.set("explore:categories", categories, ttl=3600)
+
+        with patch(POPULAR_PATH) as mock_popular:
+            with patch(RECENT_PATH) as mock_recent:
+                with patch(TREND_PATH) as mock_trending:
+                    with patch(TOP_PATH) as mock_top_rated:
+                        with patch(CATEGORIES_PATH) as mock_categories:
+                            response = self.client.get("/explore")
+
+                            self.assert200(response)
+
+                            mock_popular.assert_not_called()
+                            mock_recent.assert_not_called()
+                            mock_trending.assert_not_called()
+                            mock_top_rated.assert_not_called()
+                            mock_categories.assert_not_called()
+
+    @responses.activate
+    def test_explore_populates_cache_when_empty(self):
+        """When Redis cache is empty, the recommendation/device methods
+        should be called and their results stored in Redis for subsequent
+        requests.
+        """
+
+        with patch(
+            POPULAR_PATH,
+            return_value=[
+                {
+                    "details": {
+                        "name": "/popx",
+                        "icon": "",
+                        "title": "Pop X",
+                        "publisher": "Pub X",
+                        "developer_validation": None,
+                        "summary": "Popular x",
+                    }
+                }
+            ],
+        ) as mock_popular:
+            with patch(
+                RECENT_PATH,
+                return_value=[
+                    {
+                        "details": {
+                            "name": "/recentx",
+                            "icon": "",
+                            "title": "Recent X",
+                            "publisher": "Pub RX",
+                            "developer_validation": None,
+                            "summary": "Recent x",
+                        }
+                    }
+                ],
+            ) as mock_recent:
+                with patch(
+                    TREND_PATH,
+                    return_value=[
+                        {
+                            "details": {
+                                "name": "/trendx",
+                                "icon": "",
+                                "title": "Trend X",
+                                "publisher": "Pub TX",
+                                "developer_validation": None,
+                                "summary": "Trend x",
+                            }
+                        }
+                    ],
+                ) as mock_trending:
+                    with patch(
+                        TOP_PATH,
+                        return_value=[
+                            {
+                                "details": {
+                                    "name": "/topx",
+                                    "icon": "",
+                                    "title": "Top X",
+                                    "publisher": "Pub TX",
+                                    "developer_validation": None,
+                                    "summary": "Top x",
+                                }
+                            }
+                        ],
+                    ) as mock_top_rated:
+                        with patch(
+                            CATEGORIES_PATH,
+                            return_value=[{"slug": "c1", "name": "C1"}],
+                        ) as mock_categories:
+                            response = self.client.get("/explore")
+
+                            self.assert200(response)
+
+                            # ensure the methods were called to populate cache
+                            self.assertTrue(mock_popular.called)
+                            self.assertTrue(mock_recent.called)
+                            self.assertTrue(mock_trending.called)
+                            self.assertTrue(mock_top_rated.called)
+                            self.assertTrue(mock_categories.called)
+                            # cached values should now exist
+                            pop_cached = redis_cache.get(
+                                "explore:popular-snaps"
+                            )
+                            recent_cached = redis_cache.get(
+                                "explore:recent-snaps"
+                            )
+                            trend_cached = redis_cache.get(
+                                "explore:trending-snaps"
+                            )
+                            top_cached = redis_cache.get(
+                                "explore:top-rated-snaps"
+                            )
+                            categories_cached = redis_cache.get(
+                                "explore:categories"
+                            )
+
+                            assert pop_cached is not None
+                            assert recent_cached is not None
+                            assert trend_cached is not None
+                            assert top_cached is not None
+                            assert categories_cached is not None
 
 
 if __name__ == "__main__":

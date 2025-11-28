@@ -1,10 +1,10 @@
 import responses
 from urllib.parse import urlencode
+from flask_testing import TestCase
 from webapp.app import create_app
-from tests.base_test_cases import BaseFlaskTestCase
 
 
-class GetDistroPageTest(BaseFlaskTestCase):
+class GetDistroPageTest(TestCase):
     snap_payload = {
         "snap-id": "id",
         "name": "snapName",
@@ -43,7 +43,6 @@ class GetDistroPageTest(BaseFlaskTestCase):
     }
 
     def setUp(self):
-        super().setUp()
         self.snap_name = "toto"
         self.api_url = "".join(
             [
