@@ -1,8 +1,10 @@
-export const mockRevisions = [
+import { Revision } from "../types/releaseTypes";
+
+export const mockRevisions: Revision[] = [
   {
     architectures: ["arm64"],
     attributes: {},
-    base: null,
+    base: "coreXX",
     build_url: "https://example.com/build",
     channels: ["latest/edge"],
     confinement: "strict",
@@ -27,7 +29,7 @@ export const mockRevisions = [
   {
     architectures: ["arm64"],
     attributes: {},
-    base: null,
+    base: "coreXX",
     build_url: "https://example.com/build",
     channels: ["latest/edge"],
     confinement: "strict",
@@ -52,7 +54,7 @@ export const mockRevisions = [
   {
     architectures: ["arm64"],
     attributes: {},
-    base: null,
+    base: "coreXX",
     build_url: "https://example.com/build",
     channels: ["latest/edge"],
     confinement: "strict",

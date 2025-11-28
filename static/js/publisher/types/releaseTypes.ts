@@ -53,7 +53,7 @@ export type Release = {
   /**
    * The following property doesn't come from the Store backend, but rather is added by our JS for convenience;
    * its value is equivalent to `!!this.progressive.percentage`.
-   * (see static/js/publisher/pages/Releases/releasesState.js for more info)
+   * (see static/js/publisher/pages/Releases/releasesState.ts for more info)
    * Rather than having two separate Release types and keeping track of both of them, casting from one to the other,
    * etc., we just add this optional property here and pretend it actually is part of the Store backend response.
    */
@@ -95,7 +95,19 @@ export type Revision = {
   size: number;
   status: RevisionStatus;
   version: string;
+
+  /**
+   * The following properties don't come from the Store backend, but rather are added by our JS for convenience.
+   * (again, see static/js/publisher/pages/Releases/releasesState.ts for more info)
+   * Again, we just pretend this is part of the actual store response and mark them as optional for "safety".
+   */
+  channels?: string[];
+  releases?: Release[];
+  progressive?: ChannelMap["progressive"];
+  expiration?: ChannelMap["expiration-date"];
 };
+
+export type RevisionsMap = { [revision: number]: Revision };
 
 export type Channel = {
   branch: string | null;
@@ -275,16 +287,21 @@ export type ReleasesReduxState = CombinedState<{
       }
     >;
   };
-  failedRevisions: unknown[]; // TODO: what's this ???
+  failedRevisions: FailedRevision[];
   releases: Release[];
 }>;
 
+export type FailedRevision = {
+  channel: ChannelMap["channel"];
+  architecture: CPUArchitecture;
+};
+
 export type ArchitectureRevisionsMap = {
-  [arch in CPUArchitecture]: Revision & { releases: Release[] };
+  [arch in CPUArchitecture | string]: Revision;
 };
 
 export type ChannelArchitectureRevisionsMap = {
-  [channel in Channel["name"] | "AVAILABLE"]: ArchitectureRevisionsMap;
+  [channel in Channel["name"]]: ArchitectureRevisionsMap;
 };
 
 export type Options = {

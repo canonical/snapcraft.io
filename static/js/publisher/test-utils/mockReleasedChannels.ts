@@ -1,4 +1,6 @@
-export const mockReleasedChannels = {
+import { ChannelArchitectureRevisionsMap } from "../types/releaseTypes";
+
+export const mockReleasedChannels: ChannelArchitectureRevisionsMap = {
   "latest/candidate": {
     amd64: {
       architectures: ["amd64"],

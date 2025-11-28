@@ -21,7 +21,7 @@ describe("getRevisionsMap", () => {
 describe("initReleasesData", () => {
   test("returns releases data", () => {
     expect(initReleasesData(mockRevisionsMap, mockReleases)).toEqual(
-      mockReleasesData,
+      mockReleasesData
     );
   });
 });
@@ -29,12 +29,7 @@ describe("initReleasesData", () => {
 describe("getTrackingChannel", () => {
   test("returns tracking channel", () => {
     expect(
-      getTrackingChannel(
-        mockReleasedChannels,
-        "latest",
-        "candidate",
-        "ppc64el",
-      ),
+      getTrackingChannel(mockReleasedChannels, "latest", "candidate", "ppc64el")
     ).toEqual("latest/stable");
   });
 });
