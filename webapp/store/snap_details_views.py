@@ -242,21 +242,7 @@ def snap_details_views(store):
 
         end = metrics_helper.get_last_metrics_processed_date()
 
-        def snap_has_sboms(channel_map):
-            for arch in channel_map:
-                for channel in channel_map[arch]:
-                    for release in channel_map[arch][channel]:
-                        host = "https://api.staging.snapcraft.io/api/v1/sboms"
-                        file_type = "spdx2.3.json"
-                        id = context["snap-id"]
-                        rev = release["revision"]
-                        sbom_url = f"{host}/{id}_{rev}.{file_type}"
-
-                        res = requests.head(sbom_url)
-                        print("SEND", res.status_code)
-
-                        if res.status_code == 200:
-                            return True
+        def snap_has_sboms(rievisions):
             return False
 
         has_sboms = snap_has_sboms(context["channel_map"])
