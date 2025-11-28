@@ -157,7 +157,7 @@ def snap_details_views(store):
         developer = logic.get_snap_developer(details["name"])
 
         context = {
-            "snap-id": details.get("snap-id"),
+            "snap_id": details.get("snap-id"),
             # Data direct from details API
             "snap_title": details["snap"]["title"],
             "package_name": details["name"],
@@ -250,13 +250,13 @@ def snap_details_views(store):
         metrics_query_json = [
             metrics_helper.get_filter(
                 metric_name=country_metric_name,
-                snap_id=context["snap-id"],
+                snap_id=context["snap_id"],
                 start=end,
                 end=end,
             ),
             metrics_helper.get_filter(
                 metric_name=os_metric_name,
-                snap_id=context["snap-id"],
+                snap_id=context["snap_id"],
                 start=end,
                 end=end,
             ),
