@@ -215,7 +215,7 @@ def snap_details_views(store):
         if res.status_code == 200:
             return True
 
-        return False
+        return True
 
     @store.route('/<regex("' + snap_regex + '"):snap_name>')
     def snap_details(snap_name):
