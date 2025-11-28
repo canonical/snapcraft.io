@@ -135,12 +135,12 @@ class ChannelMap {
     if (!installTemplateEl) {
       installTemplateEl = document.getElementById("install-window-template");
     }
-    let channelRowTemplateEl = document.querySelector(
+    let channelVersionRowTemplateEl = document.querySelector(
       '[data-js="channel-map-row"]',
     );
-    if (!channelRowTemplateEl) {
-      channelRowTemplateEl = document.getElementById(
-        "channel-map-row-template",
+    if (!channelVersionRowTemplateEl) {
+      channelVersionRowTemplateEl = document.getElementById(
+        "channel-map-version-row-template",
       );
     }
     const channelMapVersionTableHead = document.getElementById(
@@ -150,7 +150,7 @@ class ChannelMap {
       "channel-map-security-table-head-template",
     ) as HTMLElement;
 
-    if (!installTemplateEl || !channelRowTemplateEl) {
+    if (!installTemplateEl || !channelVersionRowTemplateEl) {
       const buttonsVersions = document.querySelector(
         ".p-snap-install-buttons__versions",
       ) as HTMLElement;
@@ -159,7 +159,7 @@ class ChannelMap {
     }
 
     this.INSTALL_TEMPLATE = installTemplateEl.innerHTML;
-    this.CHANNEL_ROW_TEMPLATE = channelRowTemplateEl.innerHTML;
+    this.CHANNEL_ROW_TEMPLATE = channelVersionRowTemplateEl.innerHTML;
     this.CHANNEL_MAP_VERSION_TABLE_HEAD_TEMPLATE =
       channelMapVersionTableHead.innerHTML;
     this.CHANNEL_MAP_SECURITY_TABLE_HEAD_TEMPLATE =
