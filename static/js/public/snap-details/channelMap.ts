@@ -556,9 +556,7 @@ class ChannelMap {
     const sbomUrls: string[] = [];
 
     tracks.forEach((track) => {
-      sbomUrls.push(
-        `https://api.staging.snapcraft.io/api/v1/sboms/download/${this.snapId}_${trackList[track][0].revision}.spdx.2.3.json`,
-      );
+      sbomUrls.push(`/sbom/${this.snapId}/${trackList[track][0].revision}`);
     });
 
     return sbomUrls;
@@ -621,9 +619,9 @@ class ChannelMap {
 
       if (res.status === 200) {
         return `<a href="${url}" download>SPDX file</a>`;
-      } else {
-        return "Not available";
       }
+
+      return "Not available";
     }
 
     const sbomUrls = this.getSbomUrls(trackList);
@@ -643,6 +641,8 @@ class ChannelMap {
             trackInfo["revision"],
             sbomResult,
           ]);
+
+          this.writeTable(theadEl, tbodyEl, this.sortRows(rows));
         } else {
           rows.push([
             trackName,
@@ -651,11 +651,11 @@ class ChannelMap {
             trackInfo["released-at"],
             trackInfo["confinement"],
           ]);
+
+          this.writeTable(theadEl, tbodyEl, this.sortRows(rows));
         }
       });
     });
-
-    this.writeTable(theadEl, tbodyEl, this.sortRows(rows));
   }
 
   hideTabs() {

@@ -215,7 +215,13 @@ def snap_details_views(store):
         if res.status_code == 200:
             return True
 
-        return True
+        return False
+
+    @store.route("/sbom/<snap_id>/<revision>")
+    def get_sbom(snap_id, revision):
+        api_url = "https://api.staging.snapcraft.io/api/v1/sboms/download"
+        res = requests.get(f"{api_url}/{snap_id}_{revision}.spdx2.3.json")
+        return flask.Response(status=res.status_code)
 
     @store.route('/<regex("' + snap_regex + '"):snap_name>')
     def snap_details(snap_name):
