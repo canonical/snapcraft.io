@@ -46,7 +46,8 @@ class ChannelMap {
   channelMapData: ChannelMapData;
   events: SnapEvents;
   INSTALL_TEMPLATE: string = "";
-  CHANNEL_ROW_TEMPLATE: string | undefined;
+  CHANNEL_VERSION_ROW_TEMPLATE: string | undefined;
+  CHANNEL_SECURITY_ROW_TEMPLATE: string | undefined;
   CHANNEL_MAP_VERSION_TABLE_HEAD_TEMPLATE: string = "";
   CHANNEL_MAP_SECURITY_TABLE_HEAD_TEMPLATE: string = "";
   arch: string | undefined;
@@ -135,14 +136,12 @@ class ChannelMap {
     if (!installTemplateEl) {
       installTemplateEl = document.getElementById("install-window-template");
     }
-    let channelVersionRowTemplateEl = document.querySelector(
-      '[data-js="channel-map-row"]',
-    );
-    if (!channelVersionRowTemplateEl) {
-      channelVersionRowTemplateEl = document.getElementById(
-        "channel-map-version-row-template",
-      );
-    }
+    const channelVersionRowTemplateEl = document.getElementById(
+      "channel-map-version-row-template",
+    ) as HTMLElement;
+    const channelSecurityRowTemplateEl = document.getElementById(
+      "channel-map-security-row-template",
+    ) as HTMLElement;
     const channelMapVersionTableHead = document.getElementById(
       "channel-map-version-table-head-template",
     ) as HTMLElement;
@@ -159,7 +158,8 @@ class ChannelMap {
     }
 
     this.INSTALL_TEMPLATE = installTemplateEl.innerHTML;
-    this.CHANNEL_ROW_TEMPLATE = channelVersionRowTemplateEl.innerHTML;
+    this.CHANNEL_VERSION_ROW_TEMPLATE = channelVersionRowTemplateEl.innerHTML;
+    this.CHANNEL_SECURITY_ROW_TEMPLATE = channelSecurityRowTemplateEl.innerHTML;
     this.CHANNEL_MAP_VERSION_TABLE_HEAD_TEMPLATE =
       channelMapVersionTableHead.innerHTML;
     this.CHANNEL_MAP_SECURITY_TABLE_HEAD_TEMPLATE =
@@ -517,8 +517,8 @@ class ChannelMap {
 
       let _row: string = "";
 
-      if (this.CHANNEL_ROW_TEMPLATE) {
-        _row = this.CHANNEL_ROW_TEMPLATE.split("${rowClass}").join(
+      if (this.CHANNEL_VERSION_ROW_TEMPLATE) {
+        _row = this.CHANNEL_VERSION_ROW_TEMPLATE.split("${rowClass}").join(
           rowClass.join(" "),
         );
       }
