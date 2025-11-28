@@ -81,6 +81,8 @@ def snap_details_views(store):
             details.get("channel-map")
         )
 
+        revisions = logic.get_revisions(details.get("channel-map"))
+
         default_track = (
             details.get("default-track")
             if details.get("default-track")
@@ -96,12 +98,14 @@ def snap_details_views(store):
         )
 
         last_updated = latest_channel["channel"]["released-at"]
+
         updates = logic.get_latest_versions(
             details.get("channel-map"),
             default_track,
             lowest_risk_available,
             supported_architectures,
         )
+
         binary_filesize = latest_channel["download"]["size"]
 
         # filter out banner and banner-icon images from screenshots
@@ -200,8 +204,18 @@ def snap_details_views(store):
             },
             "links": details["snap"].get("links"),
             "updates": updates,
+            "revisions": revisions,
         }
         return context
+
+    def snap_has_sboms(revisions):
+        api_url = "https://api.staging.snapcraft.io/api/v1/sboms/download"
+        res = requests.head(f"{api_url}/{revisions[0]}.spdx2.3.json")
+
+        if res.status_code == 200:
+            return True
+
+        return False
 
     @store.route('/<regex("' + snap_regex + '"):snap_name>')
     def snap_details(snap_name):
@@ -242,10 +256,7 @@ def snap_details_views(store):
 
         end = metrics_helper.get_last_metrics_processed_date()
 
-        def snap_has_sboms(rievisions):
-            return False
-
-        has_sboms = snap_has_sboms(context["channel_map"])
+        has_sboms = snap_has_sboms(context["revisions"])
 
         metrics_query_json = [
             metrics_helper.get_filter(

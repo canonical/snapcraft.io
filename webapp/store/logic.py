@@ -315,6 +315,14 @@ def get_latest_versions(
     return default_stable, other
 
 
+def get_revisions(channel_maps: list) -> list:
+    revisions = []
+    for channel_map in channel_maps:
+        revisions.append(channel_map["revision"])
+
+    return list(reversed(sorted(revisions)))
+
+
 def get_last_updated_versions(channel_maps):
     """Get all channels in order of updates
 
