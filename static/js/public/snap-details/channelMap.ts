@@ -517,10 +517,18 @@ class ChannelMap {
 
       let _row: string = "";
 
-      if (this.CHANNEL_VERSION_ROW_TEMPLATE) {
-        _row = this.CHANNEL_VERSION_ROW_TEMPLATE.split("${rowClass}").join(
-          rowClass.join(" "),
-        );
+      if (this.currentTab === "security") {
+        if (this.CHANNEL_SECURITY_ROW_TEMPLATE) {
+          _row = this.CHANNEL_SECURITY_ROW_TEMPLATE.split("${rowClass}").join(
+            rowClass.join(" "),
+          );
+        }
+      } else {
+        if (this.CHANNEL_VERSION_ROW_TEMPLATE) {
+          _row = this.CHANNEL_VERSION_ROW_TEMPLATE.split("${rowClass}").join(
+            rowClass.join(" "),
+          );
+        }
       }
 
       row.forEach((val, index) => {
@@ -603,6 +611,7 @@ class ChannelMap {
             trackInfo["risk"],
             trackInfo["version"],
             trackInfo["revision"],
+            "HI",
           ]);
         } else {
           rows.push([
