@@ -121,7 +121,7 @@ function fetchMissingRevision(
 
 // transforming channel map list data into format used by this component
 // https://dashboard.snapcraft.io/docs/v2/en/snaps.html#snap-channel-map
-function getReleaseDataFromChannelMap(
+async function getReleaseDataFromChannelMap(
   channelMaps: ChannelMap[],
   revisionList: Revision[],
   snapName: string
