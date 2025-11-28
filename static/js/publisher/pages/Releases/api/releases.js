@@ -1,7 +1,15 @@
+import { ReleasesAPIResponse } from "../../../types/releaseTypes";
 import { DEFAULT_ERROR_MESSAGE as ERROR_MESSAGE } from "../constants";
 
+/**
+ *
+ * @param {*} onComplete
+ * @param {*} releases
+ * @param {string} snapName
+ * @returns
+ */
 export function fetchReleases(onComplete, releases, snapName) {
-  let queue = Promise.resolve(); // Q() in q
+  let queue = Promise.resolve();
 
   // handle releases as a queue
   releases.forEach((release) => {
@@ -10,7 +18,7 @@ export function fetchReleases(onComplete, releases, snapName) {
         snapName,
         release.id,
         release.channels,
-        release.progressive,
+        release.progressive
       ).then((json) => onComplete(json, release));
     }));
   });
@@ -18,6 +26,11 @@ export function fetchReleases(onComplete, releases, snapName) {
   return queue;
 }
 
+/**
+ *
+ * @param {string} snapName
+ * @returns {Promise<ReleasesAPIResponse>}
+ */
 export function fetchSnapReleaseStatus(snapName) {
   return fetch(`/api/${snapName}/releases`, {
     method: "GET",
@@ -37,6 +50,11 @@ export function fetchSnapReleaseStatus(snapName) {
     });
 }
 
+/**
+ *
+ * @param {string} snapName
+ * @returns
+ */
 export function fetchRelease(snapName, revision, channels, progressive) {
   const body = {
     name: snapName,
@@ -67,6 +85,13 @@ export function fetchRelease(snapName, revision, channels, progressive) {
     });
 }
 
+/**
+ *
+ * @param {*} onComplete
+ * @param {string} snapName
+ * @param {string[]} channels
+ * @returns
+ */
 export function fetchCloses(onComplete, snapName, channels) {
   if (channels && channels.length) {
     return fetchClose(snapName, channels).then((json) => {
@@ -77,6 +102,12 @@ export function fetchCloses(onComplete, snapName, channels) {
   }
 }
 
+/**
+ *
+ * @param {string} snapName
+ * @param {string[]} channels
+ * @returns
+ */
 export function fetchClose(snapName, channels) {
   return fetch(`/${snapName}/releases/close-channel`, {
     method: "POST",

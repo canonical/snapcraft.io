@@ -11,14 +11,12 @@ import {
 
 import { CLOSE_CHANNEL } from "../actions/pendingCloses";
 
-import { jsonClone } from "../helpers";
-
 function removePendingRelease(
   state: any,
   revision: { revision: string | number },
   channel: string | number,
 ) {
-  const newState = jsonClone(state);
+  const newState = structuredClone(state);
   if (newState[revision.revision]) {
     if (newState[revision.revision][channel]) {
       delete newState[revision.revision][channel];
@@ -104,7 +102,7 @@ function setProgressiveRelease(
   state: any,
   progressive: { percentage: number },
 ) {
-  const nextState = jsonClone(state);
+  const nextState = structuredClone(state);
 
   Object.values(nextState).forEach((pendingRelease: any) => {
     Object.values(pendingRelease).forEach((channel: any) => {
@@ -129,7 +127,7 @@ function updateProgressiveRelease(
   state: any,
   progressive: { percentage: any },
 ) {
-  const nextState = jsonClone(state);
+  const nextState = structuredClone(state);
 
   Object.values(nextState).forEach((pendingRelease: any) => {
     Object.values(pendingRelease).forEach((channel: any) => {
@@ -143,7 +141,7 @@ function updateProgressiveRelease(
 }
 
 function pauseProgressiveRelease(state: any) {
-  const nextState = jsonClone(state);
+  const nextState = structuredClone(state);
 
   Object.values(nextState).forEach((pendingRelease: any) => {
     Object.values(pendingRelease).forEach((channel: any) => {
@@ -157,7 +155,7 @@ function pauseProgressiveRelease(state: any) {
 }
 
 function resumeProgressiveRelease(state: any) {
-  const nextState = jsonClone(state);
+  const nextState = structuredClone(state);
 
   Object.values(nextState).forEach((pendingRelease: any) => {
     Object.values(pendingRelease).forEach((channel: any) => {
@@ -178,7 +176,7 @@ function cancelProgressiveRelease(
   state: any,
   previousRevision: { revision: any; architectures?: any[] },
 ) {
-  let nextState = jsonClone(state);
+  let nextState = structuredClone(state);
 
   Object.keys(nextState).forEach((revision) => {
     const pendingReleaseChannels = nextState[revision];

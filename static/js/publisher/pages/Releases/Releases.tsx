@@ -5,6 +5,8 @@ import Release from "./Release";
 import { setPageTitle } from "../../utils";
 import Loader from "../../components/Loader";
 
+import { ReleasesAPIResponse } from "../../types/releaseTypes";
+
 function Releases(): React.JSX.Element {
   const { snapId } = useParams();
   const { isLoading, isFetched, data } = useQuery({
@@ -16,7 +18,7 @@ function Releases(): React.JSX.Element {
         throw new Error("There was a problem fetching releases data");
       }
 
-      const responseData = await response.json();
+      const responseData = (await response.json()) as ReleasesAPIResponse;
 
       if (!responseData.success) {
         throw new Error("There was a problem fetching releases data");
@@ -43,6 +45,7 @@ function Releases(): React.JSX.Element {
             flags: {
               isProgressiveReleaseEnabled: true,
             },
+            snapName: data.snap_name,
           }}
         />
       )}
