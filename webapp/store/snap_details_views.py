@@ -11,6 +11,7 @@ import webapp.metrics.metrics as metrics
 import webapp.store.logic as logic
 from webapp import authentication
 from webapp.markdown import parse_markdown_description
+from cache.cache_utility import redis_cache
 
 from canonicalwebteam.flask_base.decorators import (
     exclude_xframe_options_header,
@@ -197,7 +198,6 @@ def snap_details_views(store):
             "links": details["snap"].get("links"),
             "updates": updates,
         }
-
         return context
 
     @store.route('/<regex("' + snap_regex + '"):snap_name>')
@@ -465,7 +465,14 @@ def snap_details_views(store):
                 "distro_install_steps": distro_data["install"],
             }
         )
-
+        cached_featured_snaps = redis_cache.get(
+            "featured_snaps_install_pages", expected_type=list
+        )
+        if cached_featured_snaps:
+            context.update({"featured_snaps": cached_featured_snaps})
+            return flask.render_template(
+                "store/snap-distro-install.html", **context
+            )
         try:
             featured_snaps_results = device_gateway.get_featured_items(
                 size=13, page=1
@@ -473,7 +480,6 @@ def snap_details_views(store):
 
         except StoreApiError:
             featured_snaps_results = []
-
         featured_snaps = [
             snap
             for snap in featured_snaps_results
@@ -482,7 +488,9 @@ def snap_details_views(store):
 
         for snap in featured_snaps:
             snap["icon_url"] = helpers.get_icon(snap["media"])
-
+        redis_cache.set(
+            "featured_snaps_install_pages", featured_snaps, ttl=3600
+        )
         context.update({"featured_snaps": featured_snaps})
         return flask.render_template(
             "store/snap-distro-install.html", **context

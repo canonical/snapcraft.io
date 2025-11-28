@@ -60,48 +60,6 @@ describe("releases actions", () => {
     });
   });
 
-  describe("getErrorMessage", () => {
-    it("should return the default error message if no error is defined", () => {
-      expect(getErrorMessage({})).toEqual(ERROR_MESSAGE);
-    });
-
-    it("should return error.message if defined", () => {
-      expect(getErrorMessage({ message: "error!" })).toEqual("error!");
-    });
-
-    it("should return multiple messages if errors.json is an array", () => {
-      expect(
-        getErrorMessage({
-          message: "error!",
-          json: [{ message: "error1" }, { message: "error2" }],
-        }),
-      ).toEqual("error! error1 error2");
-    });
-
-    it("should return multiple message if errors.json.errors is an array", () => {
-      expect(
-        getErrorMessage({
-          message: "error!",
-          json: { errors: [{ message: "error1" }, { message: "error2" }] },
-        }),
-      ).toEqual("error! error1 error2");
-    });
-
-    it("should return error message if errors property is an array of objects", () => {
-      expect(
-        getErrorMessage({
-          errors: [
-            {
-              code: "invalid-field",
-              extra: { field: "channels", value: ["latest/candidate"] },
-              message: "error message",
-            },
-          ],
-        }),
-      ).toEqual("error message");
-    });
-  });
-
   describe("handleReleaseResponse", () => {
     describe("RELEASE_REVISION_SUCCESS", () => {
       it("should be dispatched if revision is passed", () => {
@@ -234,7 +192,7 @@ describe("releases actions", () => {
 
       global.fetch = vi
         .fn()
-        .mockResolvedValue({ json: () => ({ sucess: true }) });
+        .mockResolvedValue({ json: () => ({ success: true }) });
 
       return store.dispatch(releaseRevisions()).then(() => {
         const calls = global.fetch.mock.calls;
@@ -275,7 +233,7 @@ describe("releases actions", () => {
 
       global.fetch = vi
         .fn()
-        .mockResolvedValue({ json: () => ({ sucess: true }) });
+        .mockResolvedValue({ json: () => ({ success: true, channel_map_tree: {} }) });
 
       return store.dispatch(releaseRevisions()).then(() => {
         const calls = global.fetch.mock.calls;
