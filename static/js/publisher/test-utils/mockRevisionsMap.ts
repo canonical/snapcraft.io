@@ -1,8 +1,10 @@
-export const mockRevisionsMap = {
+import { RevisionsMap } from "../types/releaseTypes";
+
+export const mockRevisionsMap: RevisionsMap = {
   54: {
     architectures: ["arm64"],
     attributes: {},
-    base: null,
+    base: "coreXX",
     build_url: "https://example.com/build",
     channels: [],
     confinement: "strict",
@@ -27,7 +29,7 @@ export const mockRevisionsMap = {
   58: {
     architectures: ["arm64"],
     attributes: {},
-    base: null,
+    base: "coreXX",
     build_url: "https://example.com/build",
     channels: [],
     confinement: "strict",
@@ -52,7 +54,7 @@ export const mockRevisionsMap = {
   61: {
     architectures: ["arm64"],
     attributes: {},
-    base: null,
+    base: "coreXX",
     build_url: "https://example.com/build",
     channels: [],
     confinement: "strict",
