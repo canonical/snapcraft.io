@@ -57,7 +57,7 @@ export function fetchRelease(
   revision: number,
   channels: FetchReleasePayload["channels"],
   progressive: FetchReleasePayload["progressive"]
-) {
+): Promise<FetchReleaseResponse> {
   const body = {
     name: snapName,
     revision,
@@ -88,7 +88,7 @@ export function fetchCloses(
   onComplete: (response: CloseChannelsResponse) => void,
   snapName: string,
   channels: string[]
-) {
+): Promise<void> {
   if (channels && channels.length) {
     return fetchClose(snapName, channels).then((json) => {
       onComplete(json);
@@ -115,7 +115,7 @@ export function fetchClose(
     referrer: "no-referrer",
     body: JSON.stringify({ channels }),
   })
-    .then((response) => response.json() as Promise<CloseChannelsResponse>)
+    .then((response) => response.json())
     .catch(() => {
       throw new Error(ERROR_MESSAGE);
     });
