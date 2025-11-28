@@ -38,11 +38,12 @@
     .p-carousel__item-blocker {
       &:hover {
         &::after {
+           @include vf-icon-fullscreen($colors--light-theme--icon);
+
           background-color: $color-x-light;
-          background-image: url("#{$assets-path}c566f22e-fullscreen-grey_16.svg");
           background-position: 50% 50%;
           background-repeat: no-repeat;
-          background-size: 0.75rem 0.75rem;
+          background-size: 1rem;
           border: 1px solid $color-light;
           border-radius: 2px;
           content: "";
@@ -87,7 +88,9 @@
   }
 
   .p-carousel__prev {
-    background-image: url("#{$assets-path}e8d2e45f-chevron-left.svg");
+    @include vf-icon-chevron-left-themed;
+
+    background-size: 1rem;
     left: -1rem;
 
     @media screen and (min-width: $breakpoint-large) {
@@ -96,7 +99,9 @@
   }
 
   .p-carousel__next {
-    background-image: url("#{$assets-path}9716bbab-chevron.svg");
+    @include vf-icon-chevron-right-themed;
+
+    background-size: 1rem;
     right: -1rem;
 
     @media screen and (min-width: $breakpoint-large) {
