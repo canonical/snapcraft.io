@@ -27,7 +27,9 @@ vcrpy-unittest==0.1.7
 user-agents==2.2.0
 dnspython==2.8.0
 werkzeug==2.3.8
-sentry-sdk==2.52.0
+sentry-sdk==2.39.0
+grpcio==1.74.0
+protobuf==6.32.0
 
 # Development dependencies
 Flask-Testing==0.8.1
