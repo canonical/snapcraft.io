@@ -30,10 +30,9 @@ def init_blog(app, url_prefix):
     )
 
     @blog.route("/api/snap-posts/<snap>")
-    def snap_posts(snap): 
+    def snap_posts(snap):
         cached_articles = redis_cache.get(
-            f"snap_posts_{snap}",
-            expected_type=list
+            f"snap_posts_{snap}", expected_type=list
         )
         if cached_articles:
             return flask.jsonify(cached_articles)
@@ -90,8 +89,7 @@ def init_blog(app, url_prefix):
     @blog.route("/api/series/<series>")
     def snap_series(series):
         cached_articles = redis_cache.get(
-            f"snap_series_{series}",
-            expected_type=list
+            f"snap_series_{series}", expected_type=list
         )
         if cached_articles:
             return flask.jsonify(cached_articles)
