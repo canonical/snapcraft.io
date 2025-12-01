@@ -102,7 +102,7 @@ def dns_verified_status(snap_name):
 @exchange_required
 def get_store_snaps(store_id):
     cached_store_snaps = redis_cache.get(
-        f"store-snaps-{store_id}", expected_type=list
+        f"store-snaps:{store_id}", expected_type=list
     )
     if cached_store_snaps:
         return jsonify(cached_store_snaps)
@@ -133,7 +133,7 @@ def get_store_snaps(store_id):
 
         if included_stores:
             snaps.append({"included-stores": included_stores})
-    redis_cache.set(f"store-snaps-{store_id}", snaps, ttl=300)
+    redis_cache.set(f"store-snaps:{store_id}", snaps, ttl=300)
     return jsonify(snaps)
 
 
