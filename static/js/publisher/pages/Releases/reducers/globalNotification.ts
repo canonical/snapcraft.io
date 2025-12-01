@@ -1,9 +1,20 @@
 import {
+  ReleasesAction,
+  ReleasesReduxState,
+} from "../../../types/releaseTypes";
+import {
   SHOW_NOTIFICATION,
   HIDE_NOTIFICATION,
 } from "../actions/globalNotification";
 
-export default function notification(state = { visible: false }, action) {
+type NotificationAction = ReleasesAction & {
+  payload: Partial<ReleasesReduxState["notification"]>;
+};
+
+export default function notification(
+  state: ReleasesReduxState["notification"] = { visible: false },
+  action: NotificationAction
+) {
   switch (action.type) {
     case SHOW_NOTIFICATION:
       return {

@@ -1,12 +1,25 @@
+import {
+  ReleasesAction,
+  ReleasesReduxState,
+} from "../../../types/releaseTypes";
 import { CLOSE_CHANNEL } from "../actions/pendingCloses";
 import {
   RELEASE_REVISION,
   CANCEL_PENDING_RELEASES,
 } from "../actions/pendingReleases";
 
+type PendingClosesAction = ReleasesAction & {
+  payload: {
+    channel: string;
+  };
+};
+
 // channels to be closed:
 // [ "track/risk", ... ]
-export default function pendingCloses(state = [], action) {
+export default function pendingCloses(
+  state: ReleasesReduxState["pendingCloses"] = [],
+  action: PendingClosesAction
+) {
   switch (action.type) {
     case CLOSE_CHANNEL:
       if (state.includes(action.payload.channel)) {

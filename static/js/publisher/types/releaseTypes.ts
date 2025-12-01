@@ -265,14 +265,27 @@ export type ReleasesReduxState = CombinedState<{
     isOpen: boolean;
     // TODO: more stuff???
   };
-  modal: {
+  modal: Partial<{
     visible: boolean;
-    // TODO: more stuff???
-  };
-  notification: {
+    title: string;
+    content: string;
+    actions: {
+      appearance: "positive" | "neutral" | "negative";
+      onClickAction:
+        | {
+            reduxAction: string;
+          }
+        | { type: string };
+      label: string;
+    }[];
+  }>;
+  notification: Partial<{
     visible: boolean;
-    // TODO: more stuff???
-  };
+    status: "success" | "error";
+    appearance: "positive" | "neutral" | "negative";
+    content: string;
+    canDismiss: boolean;
+  }>;
   options: Options;
   pendingCloses: Channel["name"][]; // TODO: are there any constraints on this?
   pendingReleases: {
@@ -305,10 +318,10 @@ export type ChannelArchitectureRevisionsMap = {
 };
 
 export type Options = {
-  snapName: string;
-  defaultTrack: string;
+  snapName?: string;
+  defaultTrack?: string;
   flags: {
-    isProgressiveReleaseEnabled: boolean;
+    isProgressiveReleaseEnabled?: boolean;
   };
   tracks?: NonEmptyArray<Track>;
 };
@@ -325,10 +338,11 @@ export type ProgressiveMutated = Prettify<Progressive & { key?: number }>; // TO
 export type PendingReleaseItem = {
   revision: Prettify<
     Revision & {
+      // when are these added?
       release?: Release & { progressive: ProgressiveMutated };
-      releases: Release[];
+      releases?: Release[];
     }
-  >; // when is this "release" member added?
+  >;
   channel: Channel["name"];
   previousReleases: Revision[];
   progressive: Prettify<
@@ -349,8 +363,10 @@ export type PendingReleaseItem = {
 export type DispatchFn = ThunkDispatch<
   ReleasesReduxState,
   unknown,
-  {
-    type: string;
-    payload?: unknown; // actions are so messed up that there's no good way to type this
-  }
+  ReleasesAction
 >;
+
+export type ReleasesAction = {
+  type: string;
+  payload?: unknown; // actions are so messed up that there's no good way to type this
+};

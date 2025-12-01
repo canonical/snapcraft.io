@@ -6,8 +6,48 @@ import {
   RELEASE_REVISION_SUCCESS,
   CLOSE_CHANNEL_SUCCESS,
 } from "../actions/channelMap";
+import {
+  ReleasesAction,
+  ReleasesReduxState,
+} from "../../../types/releaseTypes";
 
-function selectRevision(state, revision, toggle) {
+type ChannelMapAction = ReleasesAction &
+  (
+    | {
+        type: typeof INIT_CHANNEL_MAP;
+        payload: { channelMap: ReleasesReduxState["channelMap"] };
+      }
+    | {
+        type: typeof SELECT_REVISION;
+        payload: {
+          revision: ReleasesReduxState["revisions"][string];
+          toggle: boolean;
+        };
+      }
+    | {
+        type: typeof CLEAR_SELECTED_REVISIONS;
+        payload: never;
+      }
+    | {
+        type: typeof RELEASE_REVISION_SUCCESS;
+        payload: {
+          revision: ReleasesReduxState["revisions"][string];
+          channel: string;
+        };
+      }
+    | {
+        type: typeof CLOSE_CHANNEL_SUCCESS;
+        payload: {
+          channel: string;
+        };
+      }
+  );
+
+function selectRevision(
+  state: ReleasesReduxState["channelMap"],
+  revision: ReleasesReduxState["revisions"][string],
+  toggle: boolean
+) {
   const arch = revision.architectures[0];
 
   state = {
@@ -28,7 +68,11 @@ function selectRevision(state, revision, toggle) {
   return state;
 }
 
-function releaseRevision(state, revision, channel) {
+function releaseRevision(
+  state: ReleasesReduxState["channelMap"],
+  revision: ReleasesReduxState["revisions"][string],
+  channel: string
+) {
   state = {
     ...state,
     [channel]: { ...state[channel] },
@@ -49,7 +93,10 @@ function releaseRevision(state, revision, channel) {
   return state;
 }
 
-function closeChannel(state, channel) {
+function closeChannel(
+  state: ReleasesReduxState["channelMap"],
+  channel: string
+) {
   // if channel is already closed do nothing
   if (!state[channel]) {
     return state;
@@ -63,7 +110,10 @@ function closeChannel(state, channel) {
 
 // contains channel map for each channel in current track
 // also includes 'unassigned' fake channel to show selected unassigned revision
-export default function channelMap(state = {}, action) {
+export default function channelMap(
+  state: ReleasesReduxState["channelMap"] = {},
+  action: ChannelMapAction
+) {
   switch (action.type) {
     case INIT_CHANNEL_MAP:
       return {
@@ -73,7 +123,7 @@ export default function channelMap(state = {}, action) {
       return selectRevision(
         state,
         action.payload.revision,
-        action.payload.toggle,
+        action.payload.toggle
       );
     case CLEAR_SELECTED_REVISIONS:
       return {
@@ -84,7 +134,7 @@ export default function channelMap(state = {}, action) {
       return releaseRevision(
         state,
         action.payload.revision,
-        action.payload.channel,
+        action.payload.channel
       );
     case CLOSE_CHANNEL_SUCCESS:
       return closeChannel(state, action.payload.channel);
