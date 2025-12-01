@@ -31,8 +31,9 @@ def init_blog(app, url_prefix):
 
     @blog.route("/api/snap-posts/<snap>")
     def snap_posts(snap):
+        cached_articles_key = f"snap_posts:{snap}"
         cached_articles = redis_cache.get(
-            f"snap_posts_{snap}", expected_type=list
+            cached_articles_key, expected_type=list
         )
         if cached_articles:
             return flask.jsonify(cached_articles)
@@ -83,13 +84,14 @@ def init_blog(app, url_prefix):
                         "image": featured_media,
                     }
                 )
-        redis_cache.set(f"snap_posts_{snap}", articles, ttl=3600)
+        redis_cache.set(cached_articles_key, articles, ttl=3600)
         return flask.jsonify(articles)
 
     @blog.route("/api/series/<series>")
     def snap_series(series):
+        cached_articles_key = f"snap_series:{series}"
         cached_articles = redis_cache.get(
-            f"snap_series_{series}", expected_type=list
+            cached_articles_key, expected_type=list
         )
         if cached_articles:
             return flask.jsonify(cached_articles)
@@ -109,7 +111,7 @@ def init_blog(app, url_prefix):
                     "title": article["title"]["rendered"],
                 }
             )
-        redis_cache.set(f"snap_series_{series}", articles, ttl=3600)
+        redis_cache.set(cached_articles_key, articles, ttl=3600)
         return flask.jsonify(articles)
 
     @blog.context_processor
