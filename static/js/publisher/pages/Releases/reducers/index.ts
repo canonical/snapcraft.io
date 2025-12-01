@@ -6,6 +6,7 @@ import branches from "./branches";
 import channelMap from "./channelMap";
 import currentTrack from "./currentTrack";
 import defaultTrack from "./defaultTrack";
+import failedRevisions from "./failedRevisions";
 import history from "./history";
 import modal from "./modal";
 import notification from "./globalNotification";
@@ -14,9 +15,9 @@ import pendingCloses from "./pendingCloses";
 import pendingReleases from "./pendingReleases";
 import releases from "./releases";
 import revisions from "./revisions";
-import failedRevisions from "./failedRevisions";
+import { ReleasesReduxState } from "../../../types/releaseTypes";
 
-const releasesReducers = combineReducers({
+const releasesReducers = combineReducers<ReleasesReduxState>({
   architectures,
   availableRevisionsSelect,
   branches,
@@ -30,8 +31,8 @@ const releasesReducers = combineReducers({
   options,
   pendingCloses,
   pendingReleases,
-  revisions,
   releases,
+  revisions,
 });
 
 export default releasesReducers;

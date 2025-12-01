@@ -1,6 +1,17 @@
+import {
+  ReleasesAction,
+  ReleasesReduxState,
+} from "../../../types/releaseTypes";
 import { OPEN_BRANCHES, CLOSE_BRANCHES } from "../actions/branches";
 
-export default function branches(state = [], action) {
+type BranchesAction = ReleasesAction & {
+  payload: string;
+};
+
+export default function branches(
+  state: ReleasesReduxState["branches"] = [],
+  action: BranchesAction
+) {
   switch (action.type) {
     case OPEN_BRANCHES: {
       const newState = state.slice(0);

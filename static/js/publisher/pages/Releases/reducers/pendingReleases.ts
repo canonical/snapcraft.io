@@ -8,13 +8,19 @@ import {
   RESUME_PROGRESSIVE_RELEASE,
   CANCEL_PROGRESSIVE_RELEASE,
 } from "../actions/pendingReleases";
-
 import { CLOSE_CHANNEL } from "../actions/pendingCloses";
+import {
+  PendingReleaseItem,
+  Progressive,
+  ReleasesAction,
+  ReleasesReduxState,
+  Revision,
+} from "../../../types/releaseTypes";
 
 function removePendingRelease(
-  state: any,
-  revision: { revision: string | number },
-  channel: string | number,
+  state: ReleasesReduxState["pendingReleases"],
+  revision: Revision,
+  channel: string
 ) {
   const newState = structuredClone(state);
   if (newState[revision.revision]) {
@@ -31,11 +37,11 @@ function removePendingRelease(
 }
 
 function releaseRevision(
-  state: any,
-  revision: { architectures: any[]; revision: number },
+  state: ReleasesReduxState["pendingReleases"],
+  revision: Revision,
   channel: string,
-  progressive: null,
-  previousReleases: undefined,
+  progressive?: PendingReleaseItem["progressive"],
+  previousReleases?: PendingReleaseItem["previousReleases"]
 ) {
   state = { ...state };
 
@@ -53,7 +59,7 @@ function releaseRevision(
         state = removePendingRelease(
           state,
           pendingRelease[channel].revision,
-          channel,
+          channel
         );
       }
     });
@@ -67,7 +73,7 @@ function releaseRevision(
     state[revision.revision][channel] = {
       revision,
       channel,
-    };
+    } as PendingReleaseItem;
   }
 
   if (previousReleases) {
@@ -82,15 +88,15 @@ function releaseRevision(
 }
 
 function closeChannel(
-  state: { [s: string]: unknown } | ArrayLike<unknown>,
-  channel: string | number,
+  state: ReleasesReduxState["pendingReleases"],
+  channel: string
 ) {
   Object.values(state).forEach((pendingRelease: any) => {
     if (pendingRelease[channel]) {
       state = removePendingRelease(
         state,
         pendingRelease[channel].revision,
-        channel,
+        channel
       );
     }
   });
@@ -99,13 +105,13 @@ function closeChannel(
 }
 
 function setProgressiveRelease(
-  state: any,
-  progressive: { percentage: number },
+  state: ReleasesReduxState["pendingReleases"],
+  progressive: Progressive
 ) {
   const nextState = structuredClone(state);
 
-  Object.values(nextState).forEach((pendingRelease: any) => {
-    Object.values(pendingRelease).forEach((channel: any) => {
+  Object.values(nextState).forEach((pendingRelease) => {
+    Object.values(pendingRelease).forEach((channel) => {
       const hasPreviousReleases =
         channel.previousReleases &&
         Object.keys(channel.previousReleases).length > 0;
@@ -113,9 +119,11 @@ function setProgressiveRelease(
       if (
         hasPreviousReleases &&
         !channel.progressive &&
+        progressive.percentage &&
         progressive.percentage < 100
       ) {
-        channel.progressive = { paused: false, ...progressive };
+        channel.progressive = { ...progressive };
+        if (!channel.progressive?.paused) channel.progressive.paused = false;
       }
     });
   });
@@ -124,8 +132,8 @@ function setProgressiveRelease(
 }
 
 function updateProgressiveRelease(
-  state: any,
-  progressive: { percentage: any },
+  state: ReleasesReduxState["pendingReleases"],
+  progressive: Progressive
 ) {
   const nextState = structuredClone(state);
 
@@ -140,7 +148,7 @@ function updateProgressiveRelease(
   return nextState;
 }
 
-function pauseProgressiveRelease(state: any) {
+function pauseProgressiveRelease(state: ReleasesReduxState["pendingReleases"]) {
   const nextState = structuredClone(state);
 
   Object.values(nextState).forEach((pendingRelease: any) => {
@@ -154,7 +162,9 @@ function pauseProgressiveRelease(state: any) {
   return nextState;
 }
 
-function resumeProgressiveRelease(state: any) {
+function resumeProgressiveRelease(
+  state: ReleasesReduxState["pendingReleases"]
+) {
   const nextState = structuredClone(state);
 
   Object.values(nextState).forEach((pendingRelease: any) => {
@@ -173,8 +183,8 @@ function resumeProgressiveRelease(state: any) {
 // That means the progressive.key is ignored and other releases with the
 // same key are not affected.
 function cancelProgressiveRelease(
-  state: any,
-  previousRevision: { revision: any; architectures?: any[] },
+  state: ReleasesReduxState["pendingReleases"],
+  previousRevision: Revision
 ) {
   let nextState = structuredClone(state);
 
@@ -184,8 +194,7 @@ function cancelProgressiveRelease(
       const pendingRelease = pendingReleaseChannels[channel];
 
       if (pendingRelease.progressive) {
-        // @ts-ignore
-        nextState = releaseRevision(state, previousRevision, channel, null);
+        nextState = releaseRevision(state, previousRevision, channel);
         nextState[previousRevision.revision][channel].replaces = pendingRelease;
       }
     });
@@ -193,6 +202,54 @@ function cancelProgressiveRelease(
 
   return nextState;
 }
+
+type PendingReleasesAction = ReleasesAction &
+  (
+    | {
+        type: typeof RELEASE_REVISION;
+        payload: {
+          revision: Revision;
+          channel: string;
+          progressive?: PendingReleaseItem["progressive"];
+          previousReleases?: PendingReleaseItem["previousReleases"];
+        };
+      }
+    | {
+        type: typeof UNDO_RELEASE;
+        payload: {
+          revision: Revision;
+          channel: string;
+        };
+      }
+    | {
+        type: typeof CANCEL_PENDING_RELEASES;
+        payload: never;
+      }
+    | {
+        type: typeof CLOSE_CHANNEL;
+        payload: { channel: string };
+      }
+    | {
+        type: typeof SET_PROGRESSIVE_RELEASE_PERCENTAGE;
+        payload: Progressive;
+      }
+    | {
+        type: typeof UPDATE_PROGRESSIVE_RELEASE_PERCENTAGE;
+        payload: Progressive;
+      }
+    | {
+        type: typeof PAUSE_PROGRESSIVE_RELEASE;
+        payload: never;
+      }
+    | {
+        type: typeof RESUME_PROGRESSIVE_RELEASE;
+        payload: never;
+      }
+    | {
+        type: typeof CANCEL_PROGRESSIVE_RELEASE;
+        payload: { previousRevision: Revision };
+      }
+  );
 
 // revisions to be released:
 // key is the id of revision to release
@@ -213,8 +270,8 @@ function cancelProgressiveRelease(
 // TODO: remove `revision` from here, use only data from `revisions` state
 // to prevent duplication of revison data
 export default function pendingReleases(
-  state = {},
-  action: { type?: any; payload?: any },
+  state: ReleasesReduxState["pendingReleases"] = {},
+  action: PendingReleasesAction
 ) {
   switch (action.type) {
     case RELEASE_REVISION:
@@ -223,13 +280,13 @@ export default function pendingReleases(
         action.payload.revision,
         action.payload.channel,
         action.payload.progressive,
-        action.payload.previousReleases,
+        action.payload.previousReleases
       );
     case UNDO_RELEASE:
       return removePendingRelease(
         state,
         action.payload.revision,
-        action.payload.channel,
+        action.payload.channel
       );
     case CANCEL_PENDING_RELEASES:
       return {};
