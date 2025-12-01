@@ -1,4 +1,6 @@
-export const mockReleases = [
+import { Release } from "../types/releaseTypes";
+
+export const mockReleases: Release[] = [
   {
     architecture: "arm64",
     branch: null,

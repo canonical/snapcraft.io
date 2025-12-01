@@ -1,14 +1,21 @@
+import { Mock } from "vitest";
+import { mockRevisions } from "../../../test-utils";
+import {
+  ArchitectureRevisionsMap,
+  Revision,
+} from "../../../types/releaseTypes";
 import { AVAILABLE } from "../constants";
 import {
   getChannelName,
   isRevisionBuiltOnLauchpad,
   getRevisionsArchitectures,
   isSameVersion,
-  jsonClone,
   getPackageMetadata,
 } from "../helpers";
 
 global.fetch = vi.fn();
+
+const mockRevision = mockRevisions[0];
 
 describe("getChannelName", () => {
   it("should return track/risk pair as a name", () => {
@@ -17,7 +24,7 @@ describe("getChannelName", () => {
 
   it("should return track/risk/branch pair as a name", () => {
     expect(getChannelName("track", "risk", "branch")).toEqual(
-      "track/risk/branch",
+      "track/risk/branch"
     );
   });
 
@@ -28,36 +35,35 @@ describe("getChannelName", () => {
 
 describe("isRevisionBuiltOnLauchpad", () => {
   it("should return false for revision without build request id", () => {
-    expect(isRevisionBuiltOnLauchpad({ revision: 1 })).toBe(false);
+    expect(isRevisionBuiltOnLauchpad(mockRevision)).toBe(false);
   });
 
   it("should return false for revision without Lauchpad build request id", () => {
     expect(
       isRevisionBuiltOnLauchpad({
-        revision: 1,
+        ...mockRevision,
         attributes: { "build-request-id": "something-else" },
-      }),
+      })
     ).toBe(false);
   });
 
   it("should return true for revision with Lauchpad build request id", () => {
     expect(
       isRevisionBuiltOnLauchpad({
-        revision: 1,
-        version: "1",
+        ...mockRevision,
         attributes: { "build-request-id": "lp-123" },
-      }),
+      })
     ).toBe(true);
   });
 });
 
 describe("getRevisionsArchitectures", () => {
   it("should return unique and sorted list of architectures from all revisoins", () => {
-    const revisions = [
-      { architectures: ["test4"] },
-      { architectures: ["test2"] },
-      { architectures: ["test3", "test2", "test1"] },
-      { architectures: ["test3", "test4"] },
+    const revisions: Revision[] = [
+      { ...mockRevision, architectures: ["test4"] },
+      { ...mockRevision, architectures: ["test2"] },
+      { ...mockRevision, architectures: ["test3", "test2", "test1"] },
+      { ...mockRevision, architectures: ["test3", "test4"] },
     ];
     expect(getRevisionsArchitectures(revisions)).toEqual([
       "test1",
@@ -70,33 +76,33 @@ describe("getRevisionsArchitectures", () => {
 
 describe("isSameVersion", () => {
   it("should return true if all revisions have same version", () => {
-    const revisions = [
-      { version: "test" },
-      { version: "test" },
-      { version: "test" },
-      { version: "test" },
-    ];
+    const revisions: ArchitectureRevisionsMap = {
+      arm64: { ...mockRevision, version: "test" },
+      amd64: { ...mockRevision, version: "test" },
+      powerpc: { ...mockRevision, version: "test" },
+      riscv64: { ...mockRevision, version: "test" },
+    };
     expect(isSameVersion(revisions)).toBe(true);
   });
 
   it("should return false if revisions don't have same version", () => {
-    const revisions = [
-      { version: "test" },
-      { version: "test2" },
-      { version: "test" },
-      { version: "test2" },
-    ];
+    const revisions: ArchitectureRevisionsMap = {
+      arm64: { ...mockRevision, version: "test" },
+      amd64: { ...mockRevision, version: "test2" },
+      powerpc: { ...mockRevision, version: "test" },
+      riscv64: { ...mockRevision, version: "test2" },
+    };
     expect(isSameVersion(revisions)).toBe(false);
   });
 });
 
 describe("getTrackGuardrails", () => {
   beforeEach(() => {
-    fetch.mockClear();
+    (global.fetch as Mock).mockClear();
   });
 
   it("should return true when track-guardrails are present", async () => {
-    fetch.mockResolvedValueOnce({
+    (global.fetch as Mock).mockResolvedValueOnce({
       ok: true,
       json: () =>
         Promise.resolve({
@@ -111,7 +117,7 @@ describe("getTrackGuardrails", () => {
   });
 
   it("should return false when track-guardrails are not present", async () => {
-    fetch.mockResolvedValueOnce({
+    (global.fetch as Mock).mockResolvedValueOnce({
       ok: true,
       json: () =>
         Promise.resolve({
