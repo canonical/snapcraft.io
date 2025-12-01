@@ -8,6 +8,7 @@ from canonicalwebteam.blog import (
     build_blueprint,
     NotFoundError,
 )
+from cache.cache_utility import redis_cache
 from dateutil import parser
 from requests.exceptions import RequestException
 
@@ -29,7 +30,14 @@ def init_blog(app, url_prefix):
     )
 
     @blog.route("/api/snap-posts/<snap>")
-    def snap_posts(snap):
+    def snap_posts(snap): 
+        cached_articles = redis_cache.get(
+            f"snap_posts_{snap}",
+            expected_type=list
+        )
+        if cached_articles:
+            return flask.jsonify(cached_articles)
+
         try:
             blog_tags = blog_api.get_tag_by_slug(f"sc:snap:{snap}")
         except NotFoundError:
@@ -76,11 +84,18 @@ def init_blog(app, url_prefix):
                         "image": featured_media,
                     }
                 )
-
+        redis_cache.set(f"snap_posts_{snap}", articles, ttl=3600)
         return flask.jsonify(articles)
 
     @blog.route("/api/series/<series>")
     def snap_series(series):
+        cached_articles = redis_cache.get(
+            f"snap_series_{series}",
+            expected_type=list
+        )
+        if cached_articles:
+            return flask.jsonify(cached_articles)
+
         blog_articles = None
         articles = []
 
@@ -96,7 +111,7 @@ def init_blog(app, url_prefix):
                     "title": article["title"]["rendered"],
                 }
             )
-
+        redis_cache.set(f"snap_series_{series}", articles, ttl=3600)
         return flask.jsonify(articles)
 
     @blog.context_processor
