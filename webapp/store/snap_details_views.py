@@ -323,6 +323,8 @@ def snap_details_views(store):
 
         context["has_sboms"] = has_sboms
 
+        context["api"] = os.getenv("DEVICE_GATEWAY_API_URL")
+
         return (
             flask.render_template("store/snap-details.html", **context),
             status_code,
