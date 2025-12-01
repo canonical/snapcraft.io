@@ -91,7 +91,7 @@ function closeChannel(
   state: ReleasesReduxState["pendingReleases"],
   channel: string
 ) {
-  Object.values(state).forEach((pendingRelease: any) => {
+  Object.values(state).forEach((pendingRelease) => {
     if (pendingRelease[channel]) {
       state = removePendingRelease(
         state,
@@ -137,8 +137,8 @@ function updateProgressiveRelease(
 ) {
   const nextState = structuredClone(state);
 
-  Object.values(nextState).forEach((pendingRelease: any) => {
-    Object.values(pendingRelease).forEach((channel: any) => {
+  Object.values(nextState).forEach((pendingRelease) => {
+    Object.values(pendingRelease).forEach((channel) => {
       if (channel.progressive) {
         channel.progressive.percentage = progressive.percentage;
       }
@@ -151,8 +151,8 @@ function updateProgressiveRelease(
 function pauseProgressiveRelease(state: ReleasesReduxState["pendingReleases"]) {
   const nextState = structuredClone(state);
 
-  Object.values(nextState).forEach((pendingRelease: any) => {
-    Object.values(pendingRelease).forEach((channel: any) => {
+  Object.values(nextState).forEach((pendingRelease) => {
+    Object.values(pendingRelease).forEach((channel) => {
       if (channel.progressive) {
         channel.progressive.paused = true;
       }
@@ -167,8 +167,8 @@ function resumeProgressiveRelease(
 ) {
   const nextState = structuredClone(state);
 
-  Object.values(nextState).forEach((pendingRelease: any) => {
-    Object.values(pendingRelease).forEach((channel: any) => {
+  Object.values(nextState).forEach((pendingRelease) => {
+    Object.values(pendingRelease).forEach((channel) => {
       if (channel.progressive) {
         channel.progressive.paused = false;
       }
