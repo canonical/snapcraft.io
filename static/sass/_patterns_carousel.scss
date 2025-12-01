@@ -38,7 +38,7 @@
     .p-carousel__item-blocker {
       &:hover {
         &::after {
-           @include vf-icon-fullscreen($colors--light-theme--icon);
+          @include vf-icon-fullscreen($colors--light-theme--icon);
 
           background-color: $color-x-light;
           background-position: 50% 50%;
