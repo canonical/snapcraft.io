@@ -296,15 +296,16 @@ class ChannelMap {
     if (!this.openButton) {
       return;
     }
-    const windowWidth = document.body.scrollWidth;
-    const buttonRect = this.openButton.getBoundingClientRect();
-    const channelMapPosition = [
-      windowWidth - buttonRect.right,
-      buttonRect.y + buttonRect.height + 16 + window.scrollY,
-    ];
 
-    this.channelMapEl.style.right = `${channelMapPosition[0]}px`;
-    this.channelMapEl.style.top = `${channelMapPosition[1]}px`;
+    // align to the left side of the button
+    const buttonRect = this.openButton.getBoundingClientRect();
+    const channelMapPosition = {
+      left: buttonRect.left,
+      top: buttonRect.y + buttonRect.height + 16 + window.scrollY,
+    };
+
+    this.channelMapEl.style.left = `${channelMapPosition.left}px`;
+    this.channelMapEl.style.top = `${channelMapPosition.top}px`;
   }
 
   openChannelMap(openButton: HTMLElement) {
