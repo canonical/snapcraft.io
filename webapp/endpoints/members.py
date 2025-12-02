@@ -25,7 +25,7 @@ members = flask.Blueprint(
 @login_required
 @exchange_required
 def get_manage_members(store_id):
-    cached_store_members_key = f"{store_id}:store_members"
+    cached_store_members_key = f"store_members:{store_id}"
     cached_members = redis_cache.get(
         cached_store_members_key, expected_type=list
     )
@@ -52,7 +52,7 @@ def post_manage_members(store_id):
     try:
         dashboard.update_store_members(flask.session, store_id, members)
         res["msg"] = "Changes saved"
-        cached_store_members_key = f"{store_id}:store_members"
+        cached_store_members_key = f"store_members:{store_id}"
         redis_cache.delete(cached_store_members_key)
     except StoreApiResponseErrorList as api_response_error_list:
         codes = [error.get("code") for error in api_response_error_list.errors]
