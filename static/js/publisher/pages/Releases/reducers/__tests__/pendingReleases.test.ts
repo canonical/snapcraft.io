@@ -239,9 +239,9 @@ describe("pendingReleases", () => {
         });
       });
       it("should not add progressive state if progressive percentage is 100%", () => {
-        const releaseRevisionActionWith100Progressive = structuredClone(
-          releaseRevisionActionWithProgressive
-        );
+        const releaseRevisionActionWith100Progressive = {
+          ...releaseRevisionActionWithProgressive,
+        };
 
         releaseRevisionActionWith100Progressive.payload.progressive!.percentage = 100;
 
