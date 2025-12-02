@@ -8,7 +8,10 @@ from canonicalwebteam.exceptions import StoreApiError
 from webapp.helpers import api_session
 from webapp.decorators import login_required
 from cache.cache_utility import redis_cache
-from webapp.endpoints.utils import get_item_details_cache_key, get_snap_info_cache_key
+from webapp.endpoints.utils import (
+    get_item_details_cache_key,
+    get_snap_info_cache_key,
+)
 
 dashboard = Dashboard(api_session)
 device_gateway = DeviceGW("snap", api_session)

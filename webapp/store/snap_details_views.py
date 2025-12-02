@@ -54,7 +54,9 @@ def snap_details_views(store):
 
     def _get_context_snap_details(snap_name, supported_architectures=None):
         get_item_details_key = get_item_details_cache_key(snap_name)
-        cached_details = redis_cache.get(get_item_details_key, expected_type=dict)
+        cached_details = redis_cache.get(
+            get_item_details_key, expected_type=dict
+        )
         if cached_details:
             details = cached_details
         else:
