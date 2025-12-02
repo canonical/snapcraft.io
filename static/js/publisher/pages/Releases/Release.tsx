@@ -20,7 +20,7 @@ type Props = {
   snapName: string;
   releasesData: ReleasesData;
   channelMap: ChannelMap[];
-  tracks: Track[];
+  tracks: [Track, ...Track[]];
   options: Options;
 };
 
