@@ -1,4 +1,13 @@
-import pendingReleases from "../pendingReleases";
+import pendingReleases, {
+  CancelProgressiveReleaseAction,
+  PauseProgressiveReleaseAction,
+  PendingReleasesAction,
+  ReleaseRevisionAction,
+  ResumeProgressiveReleaseAction,
+  SetProgressiveReleasePercentageAction,
+  UndoReleaseAction,
+  UpdateProgressiveReleasePercentageAction,
+} from "../pendingReleases";
 import {
   RELEASE_REVISION,
   UNDO_RELEASE,
@@ -10,10 +19,15 @@ import {
   CANCEL_PROGRESSIVE_RELEASE,
 } from "../../actions/pendingReleases";
 import { CLOSE_CHANNEL } from "../../actions/pendingCloses";
+import { ReleasesReduxState } from "../../../../types/releaseTypes";
+import {
+  CancelPendingReleasesAction,
+  CloseChannelAction,
+} from "../pendingCloses";
 
 describe("pendingReleases", () => {
   it("should return the initial state", () => {
-    expect(pendingReleases(undefined, {})).toEqual({});
+    expect(pendingReleases(undefined, {} as PendingReleasesAction)).toEqual({});
   });
 
   describe("on RELEASE_REVISION action", () => {
@@ -23,7 +37,7 @@ describe("pendingReleases", () => {
         revision: { revision: 1, architectures: ["abc42", "test64"] },
         channel: "test/edge",
       },
-    };
+    } as unknown as ReleaseRevisionAction;
 
     describe("when state is empty", () => {
       const emptyState = {};
@@ -51,12 +65,12 @@ describe("pendingReleases", () => {
             channel: "other/edge",
           },
         },
-      };
+      } as unknown as ReleasesReduxState["pendingReleases"];
 
       it("should add new release to list of pending releases", () => {
         const result = pendingReleases(
           stateWithSamePendingRevision,
-          releaseRevisionAction,
+          releaseRevisionAction
         );
 
         expect(result[1]).toEqual({
@@ -85,12 +99,12 @@ describe("pendingReleases", () => {
             channel: "test/edge",
           },
         },
-      };
+      } as unknown as ReleasesReduxState["pendingReleases"];
 
       it("should add promoted revision to state", () => {
         const result = pendingReleases(
           stateWithPendingReleases,
-          releaseRevisionAction,
+          releaseRevisionAction
         );
 
         expect(result).toEqual({
@@ -128,12 +142,12 @@ describe("pendingReleases", () => {
             channel: "test/edge",
           },
         },
-      };
+      } as unknown as ReleasesReduxState["pendingReleases"];
 
       it("should add promoted revision to state", () => {
         const result = pendingReleases(
           stateWithPendingReleases,
-          releaseRevisionAction,
+          releaseRevisionAction
         );
 
         expect(result).toMatchObject({
@@ -149,7 +163,7 @@ describe("pendingReleases", () => {
       it("should remove pending releases from same arch and channel", () => {
         const result = pendingReleases(
           stateWithPendingReleases,
-          releaseRevisionAction,
+          releaseRevisionAction
         );
 
         expect(Object.keys(result)).not.toContain(4);
@@ -166,7 +180,7 @@ describe("pendingReleases", () => {
             abc42: { revision: 0, architectures: ["abc42"] },
           },
         },
-      };
+      } as unknown as ReleaseRevisionAction;
 
       it("should save previous revisions in release object", () => {
         const state = {
@@ -176,11 +190,11 @@ describe("pendingReleases", () => {
               channel: "test/edge",
             },
           },
-        };
+        } as unknown as ReleasesReduxState["pendingReleases"];
 
         const result = pendingReleases(
           state,
-          releaseRevisionPreviousReleasesAction,
+          releaseRevisionPreviousReleasesAction
         );
 
         expect(result).toEqual({
@@ -208,12 +222,12 @@ describe("pendingReleases", () => {
             paused: false,
           },
         },
-      };
+      } as unknown as ReleaseRevisionAction;
 
       it("should add a pending release with progressive state", () => {
         const result = pendingReleases(
           {},
-          releaseRevisionActionWithProgressive,
+          releaseRevisionActionWithProgressive
         );
 
         expect(result).toEqual({
@@ -225,15 +239,15 @@ describe("pendingReleases", () => {
         });
       });
       it("should not add progressive state if progressive percentage is 100%", () => {
-        const releaseRevisionActionWith100Progressive = {
-          ...releaseRevisionActionWithProgressive,
-        };
+        const releaseRevisionActionWith100Progressive = structuredClone(
+          releaseRevisionActionWithProgressive
+        );
 
-        releaseRevisionActionWith100Progressive.payload.progressive.percentage = 100;
+        releaseRevisionActionWith100Progressive.payload.progressive!.percentage = 100;
 
         const result = pendingReleases(
           {},
-          releaseRevisionActionWith100Progressive,
+          releaseRevisionActionWith100Progressive
         );
 
         expect(result).toEqual({
@@ -251,7 +265,7 @@ describe("pendingReleases", () => {
     const pauseProgressiveReleaseAction = {
       type: PAUSE_PROGRESSIVE_RELEASE,
       payload: "progressive-test",
-    };
+    } as PauseProgressiveReleaseAction;
 
     describe("when state is empty", () => {
       const emptyState = {};
@@ -259,7 +273,7 @@ describe("pendingReleases", () => {
       it("should not add a pendingRelease", () => {
         const result = pendingReleases(
           emptyState,
-          pauseProgressiveReleaseAction,
+          pauseProgressiveReleaseAction
         );
 
         expect(result).toEqual(emptyState);
@@ -274,12 +288,12 @@ describe("pendingReleases", () => {
             channel: "latest/stable",
           },
         },
-      };
+      } as unknown as ReleasesReduxState["pendingReleases"];
 
       it("should not change the pendingRelease", () => {
         const result = pendingReleases(
           nonProgressiveState,
-          pauseProgressiveReleaseAction,
+          pauseProgressiveReleaseAction
         );
 
         expect(result).toEqual(nonProgressiveState);
@@ -298,12 +312,12 @@ describe("pendingReleases", () => {
             },
           },
         },
-      };
+      } as unknown as ReleasesReduxState["pendingReleases"];
 
       it("should pause a key matching progressive release", () => {
         const result = pendingReleases(
           progressiveReleaseState,
-          pauseProgressiveReleaseAction,
+          pauseProgressiveReleaseAction
         );
 
         expect(result).toEqual({
@@ -325,7 +339,7 @@ describe("pendingReleases", () => {
     const resumeProgressiveReleaseAction = {
       type: RESUME_PROGRESSIVE_RELEASE,
       payload: "progressive-test",
-    };
+    } as ResumeProgressiveReleaseAction;
 
     describe("when state is empty", () => {
       const emptyState = {};
@@ -333,7 +347,7 @@ describe("pendingReleases", () => {
       it("should not add a pendingRelease", () => {
         const result = pendingReleases(
           emptyState,
-          resumeProgressiveReleaseAction,
+          resumeProgressiveReleaseAction
         );
 
         expect(result).toEqual(emptyState);
@@ -348,12 +362,12 @@ describe("pendingReleases", () => {
             channel: "latest/stable",
           },
         },
-      };
+      } as unknown as ReleasesReduxState["pendingReleases"];
 
       it("should not change the pendingRelease", () => {
         const result = pendingReleases(
           nonProgressiveState,
-          resumeProgressiveReleaseAction,
+          resumeProgressiveReleaseAction
         );
 
         expect(result).toEqual(nonProgressiveState);
@@ -372,12 +386,12 @@ describe("pendingReleases", () => {
             },
           },
         },
-      };
+      } as unknown as ReleasesReduxState["pendingReleases"];
 
       it("should resume a key matching progressive release", () => {
         const result = pendingReleases(
           progressiveReleaseState,
-          resumeProgressiveReleaseAction,
+          resumeProgressiveReleaseAction
         );
 
         expect(result).toEqual({
@@ -402,7 +416,7 @@ describe("pendingReleases", () => {
         revision: { revision: 1, architectures: ["abc42", "test64"] },
         channel: "test/edge",
       },
-    };
+    } as unknown as UndoReleaseAction;
 
     describe("when state is empty", () => {
       const emptyState = {};
@@ -426,12 +440,12 @@ describe("pendingReleases", () => {
             channel: "latest/beta",
           },
         },
-      };
+      } as unknown as ReleasesReduxState["pendingReleases"];
 
       it("should remove given channel from pending releases", () => {
         const result = pendingReleases(
           stateWithRevisionInChannel,
-          undoReleaseAction,
+          undoReleaseAction
         );
 
         expect(result).toEqual({
@@ -450,12 +464,12 @@ describe("pendingReleases", () => {
             channel: "test/edge",
           },
         },
-      };
+      } as unknown as ReleasesReduxState["pendingReleases"];
 
       it("should remove revision from the state", () => {
         const result = pendingReleases(
           stateWithRevisionInChannel,
-          undoReleaseAction,
+          undoReleaseAction
         );
 
         expect(result).toEqual({});
@@ -466,7 +480,7 @@ describe("pendingReleases", () => {
   describe("on CANCEL_PENDING_RELEASES action", () => {
     let cancelPendingReleasesAction = {
       type: CANCEL_PENDING_RELEASES,
-    };
+    } as CancelPendingReleasesAction;
 
     describe("when state is empty", () => {
       const emptyState = {};
@@ -496,12 +510,12 @@ describe("pendingReleases", () => {
             channel: "latest/stable",
           },
         },
-      };
+      } as unknown as ReleasesReduxState["pendingReleases"];
 
       it("should remove all pending releases", () => {
         const result = pendingReleases(
           stateWithPendingReleases,
-          cancelPendingReleasesAction,
+          cancelPendingReleasesAction
         );
 
         expect(result).toEqual({});
@@ -514,7 +528,7 @@ describe("pendingReleases", () => {
     const closeChannelAction = {
       type: CLOSE_CHANNEL,
       payload: { channel },
-    };
+    } as CloseChannelAction;
 
     describe("when state is empty", () => {
       const emptyState = {};
@@ -534,12 +548,12 @@ describe("pendingReleases", () => {
             channel: "latest/candidate",
           },
         },
-      };
+      } as unknown as ReleasesReduxState["pendingReleases"];
 
       it("should not change the state", () => {
         const result = pendingReleases(
           stateWithOtherPendingReleases,
-          closeChannelAction,
+          closeChannelAction
         );
 
         expect(result).toBe(stateWithOtherPendingReleases);
@@ -566,12 +580,12 @@ describe("pendingReleases", () => {
             channel: "test/edge",
           },
         },
-      };
+      } as unknown as ReleasesReduxState["pendingReleases"];
 
       it("should remove pending releases from closed channel", () => {
         const result = pendingReleases(
           stateWithPendingReleases,
-          closeChannelAction,
+          closeChannelAction
         );
 
         expect(result[2]).toBeUndefined();
@@ -586,7 +600,7 @@ describe("pendingReleases", () => {
       payload: {
         percentage: 50,
       },
-    };
+    } as SetProgressiveReleasePercentageAction;
 
     describe("when state is empty", () => {
       const emptyState = {};
@@ -606,12 +620,12 @@ describe("pendingReleases", () => {
             channel: "test/edge",
           },
         },
-      };
+      } as unknown as ReleasesReduxState["pendingReleases"];
 
       it("should not add progressive state", () => {
         const result = pendingReleases(
           stateWithPendingRevision,
-          setProgressiveAction,
+          setProgressiveAction
         );
 
         expect(result).toEqual({
@@ -631,12 +645,12 @@ describe("pendingReleases", () => {
             },
           },
         },
-      };
+      } as unknown as ReleasesReduxState["pendingReleases"];
 
       it("should add progressive state to pending revision", () => {
         const result = pendingReleases(
           stateWithPendingRevision,
-          setProgressiveAction,
+          setProgressiveAction
         );
 
         expect(result).toEqual({
@@ -666,12 +680,12 @@ describe("pendingReleases", () => {
             },
           },
         },
-      };
+      } as unknown as ReleasesReduxState["pendingReleases"];
 
       it("should not update progressive state", () => {
         const result = pendingReleases(
           stateWithPendingRevision,
-          setProgressiveAction,
+          setProgressiveAction
         );
 
         expect(result).toEqual(stateWithPendingRevision);
@@ -685,7 +699,7 @@ describe("pendingReleases", () => {
       payload: {
         percentage: 50,
       },
-    };
+    } as UpdateProgressiveReleasePercentageAction;
 
     describe("when state is empty", () => {
       const emptyState = {};
@@ -705,12 +719,12 @@ describe("pendingReleases", () => {
             channel: "test/edge",
           },
         },
-      };
+      } as unknown as ReleasesReduxState["pendingReleases"];
 
       it("should not affect the pending releases", () => {
         const result = pendingReleases(
           stateWithoutProgressiveReleases,
-          updateProgressiveAction,
+          updateProgressiveAction
         );
 
         expect(result).toEqual(stateWithoutProgressiveReleases);
@@ -742,12 +756,12 @@ describe("pendingReleases", () => {
             },
           },
         },
-      };
+      } as unknown as ReleasesReduxState["pendingReleases"];
 
       it("should update progressive releases with same key", () => {
         const result = pendingReleases(
           stateWithProgressiveReleases,
-          updateProgressiveAction,
+          updateProgressiveAction
         );
 
         expect(result["1"]["test/edge"]).toEqual({
@@ -770,7 +784,7 @@ describe("pendingReleases", () => {
           revision: 2,
         },
       },
-    };
+    } as unknown as CancelProgressiveReleaseAction;
 
     describe("when state is empty", () => {
       const emptyState = {};
@@ -778,7 +792,7 @@ describe("pendingReleases", () => {
       it("should not add a pendingRelease", () => {
         const result = pendingReleases(
           emptyState,
-          cancelProgressiveReleaseAction,
+          cancelProgressiveReleaseAction
         );
 
         expect(result).toEqual(emptyState);
@@ -793,12 +807,12 @@ describe("pendingReleases", () => {
             channel: "latest/stable",
           },
         },
-      };
+      } as unknown as ReleasesReduxState["pendingReleases"];
 
       it("should not change the pendingRelease", () => {
         const result = pendingReleases(
           nonProgressiveState,
-          cancelProgressiveReleaseAction,
+          cancelProgressiveReleaseAction
         );
 
         expect(result).toEqual(nonProgressiveState);
@@ -817,12 +831,12 @@ describe("pendingReleases", () => {
             },
           },
         },
-      };
+      } as unknown as ReleasesReduxState["pendingReleases"];
 
       it("should replace a key matching progressive release with the new release", () => {
         const result = pendingReleases(
           progressiveReleaseState,
-          cancelProgressiveReleaseAction,
+          cancelProgressiveReleaseAction
         );
 
         expect(result).toEqual({
@@ -860,12 +874,12 @@ describe("pendingReleases", () => {
             },
           },
         },
-      };
+      } as unknown as ReleasesReduxState["pendingReleases"];
 
       it("should replace only the release in the specified channel", () => {
         const result = pendingReleases(
           progressiveReleasesState,
-          cancelProgressiveReleaseAction,
+          cancelProgressiveReleaseAction
         );
 
         expect(result).toEqual({

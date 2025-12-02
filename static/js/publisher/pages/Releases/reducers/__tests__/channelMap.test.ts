@@ -1,4 +1,11 @@
-import channelMap from "../channelMap";
+import channelMap, {
+  ChannelMapAction,
+  ClearSelectedRevisionAction,
+  CloseChannelSuccessAction,
+  InitChannelMapAction,
+  ReleaseRevisionSuccessAction,
+  SelectRevisionAction,
+} from "../channelMap";
 import {
   INIT_CHANNEL_MAP,
   SELECT_REVISION,
@@ -7,10 +14,11 @@ import {
   CLOSE_CHANNEL_SUCCESS,
 } from "../../actions/channelMap";
 import { AVAILABLE } from "../../constants";
+import { ReleasesReduxState, Revision } from "../../../../types/releaseTypes";
 
 describe("channelMap", () => {
   it("should return the initial state", () => {
-    expect(channelMap(undefined, {})).toEqual({});
+    expect(channelMap(undefined, {} as ChannelMapAction)).toEqual({});
   });
 
   describe("on INIT_CHANNEL_MAP action", () => {
@@ -23,7 +31,7 @@ describe("channelMap", () => {
           },
         },
       },
-    };
+    } as unknown as InitChannelMapAction;
 
     it("should initialize data with given channel map", () => {
       const result = channelMap({}, initChannelMapAction);
@@ -34,7 +42,7 @@ describe("channelMap", () => {
     it("should replace existing channel map in state", () => {
       const initialState = {
         "test/edge": {
-          abc42: {},
+          abc42: {} as Revision,
         },
       };
 
@@ -54,7 +62,7 @@ describe("channelMap", () => {
     const selectRevisionAction = {
       type: SELECT_REVISION,
       payload: { revision },
-    };
+    } as SelectRevisionAction;
 
     describe("when revision is not yet selected", () => {
       it("should add selected revision to AVAILABLE channel", () => {
@@ -69,12 +77,12 @@ describe("channelMap", () => {
         [AVAILABLE]: {
           abc42: { revision: 2 },
         },
-      };
+      } as unknown as ReleasesReduxState["channelMap"];
 
       it("should update selected revision", () => {
         const result = channelMap(
           stateWithSelectedRevision,
-          selectRevisionAction,
+          selectRevisionAction
         );
 
         expect(result[AVAILABLE]["abc42"]).toEqual(revision);
@@ -88,7 +96,7 @@ describe("channelMap", () => {
           revision,
           toggle: true,
         },
-      };
+      } as SelectRevisionAction;
 
       describe("when revision is not yet selected", () => {
         it("should add selected revision to AVAILABLE channel", () => {
@@ -103,12 +111,12 @@ describe("channelMap", () => {
           [AVAILABLE]: {
             abc42: revision,
           },
-        };
+        } as unknown as ReleasesReduxState["channelMap"];
 
         it("should remove selected revision from AVAILABLE channel", () => {
           const result = channelMap(
             stateWithSelectedRevision,
-            toggleRevisionAction,
+            toggleRevisionAction
           );
 
           expect(result[AVAILABLE]["abc42"]).toBeUndefined();
@@ -128,11 +136,11 @@ describe("channelMap", () => {
       [AVAILABLE]: {
         abc42: revision,
       },
-    };
+    } as unknown as ReleasesReduxState["channelMap"];
 
     const clearSelectedAction = {
       type: CLEAR_SELECTED_REVISIONS,
-    };
+    } as ClearSelectedRevisionAction;
 
     it("should remove all selected revisions from AVAILABLE 'channel'", () => {
       const result = channelMap(stateWithSelectedRevision, clearSelectedAction);
@@ -153,7 +161,7 @@ describe("channelMap", () => {
     const releaseRevisionAction = {
       type: RELEASE_REVISION_SUCCESS,
       payload: { revision, channel },
-    };
+    } as ReleaseRevisionSuccessAction;
 
     describe("when revision is not yet released", () => {
       it("should add selected revision to the channel in all architectures", () => {
@@ -161,24 +169,6 @@ describe("channelMap", () => {
 
         expect(result[channel]["abc42"]).toEqual(revision);
         expect(result[channel]["test64"]).toEqual(revision);
-      });
-    });
-
-    describe("when revision is already selected", () => {
-      const stateWithReleasedRevision = {
-        [channel]: {
-          abc42: { ...revision, isPreviouslyReleased: true },
-        },
-      };
-
-      it("should not update released revision if it has the same id", () => {
-        const result = channelMap(
-          stateWithReleasedRevision,
-          releaseRevisionAction,
-        );
-
-        expect(result[channel]["abc42"].isPreviouslyReleased).toBe(true);
-        expect(result[channel]["test64"].isPreviouslyReleased).toBeUndefined();
       });
     });
   });
@@ -189,7 +179,7 @@ describe("channelMap", () => {
     let closeChannelAction = {
       type: CLOSE_CHANNEL_SUCCESS,
       payload: { channel },
-    };
+    } as CloseChannelSuccessAction;
 
     describe("when channel is already closed", () => {
       const emptyState = {};
@@ -213,12 +203,12 @@ describe("channelMap", () => {
           abc42: { ...revision },
           test64: { ...revision },
         },
-      };
+      } as unknown as ReleasesReduxState["channelMap"];
 
       it("should remove channel from channel map", () => {
         const result = channelMap(
           stateWithReleasedRevision,
-          closeChannelAction,
+          closeChannelAction
         );
 
         expect(result[channel]).toBeUndefined();

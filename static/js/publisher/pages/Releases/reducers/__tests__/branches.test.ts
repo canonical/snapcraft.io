@@ -1,9 +1,9 @@
-import branches from "../branches";
+import branches, { BranchesAction, CloseBranchesAction, OpenBranchesAction } from "../branches";
 import { OPEN_BRANCHES, CLOSE_BRANCHES } from "../../actions/branches";
 
 describe("branches", () => {
   it("should return an initial empty state", () => {
-    expect(branches(undefined, {})).toEqual([]);
+    expect(branches(undefined, {} as BranchesAction)).toEqual([]);
   });
 
   describe("on OPEN_BRANCHES action", () => {
@@ -11,7 +11,7 @@ describe("branches", () => {
       const action = {
         type: OPEN_BRANCHES,
         payload: "test",
-      };
+      } as OpenBranchesAction;
 
       const result = branches(undefined, action);
 
@@ -24,7 +24,7 @@ describe("branches", () => {
       const action = {
         type: CLOSE_BRANCHES,
         payload: "test",
-      };
+      } as CloseBranchesAction;
 
       const state = ["testing123", "test", "McTestFace", "testtest"];
 

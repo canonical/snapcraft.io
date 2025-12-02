@@ -1,10 +1,10 @@
-import modal from "../modal";
+import modal, { ModalAction } from "../modal";
 
 import { OPEN_MODAL, CLOSE_MODAL } from "../../actions/modal";
 
 describe("modal", () => {
   it("should return the initial state", () => {
-    expect(modal(undefined, {})).toEqual({
+    expect(modal(undefined, {} as ModalAction)).toEqual({
       visible: false,
     });
   });
