@@ -6,8 +6,10 @@ from typing import List, Dict, TypedDict, Any, Union
 from canonicalwebteam.exceptions import StoreApiError
 from canonicalwebteam.store_api.devicegw import DeviceGW
 
+from webapp.endpoints.utils import get_item_details_cache_key
 from webapp.helpers import get_icon
 from webapp.helpers import api_session
+from cache.cache_utility import redis_cache
 
 
 device_gateway = DeviceGW("snap", api_session)
@@ -101,11 +103,17 @@ def fetch_package(package_name: str, fields: List[str]) -> Package:
 
     :returns: a dictionary containing the fetched package.
     """
-    package = device_gateway.get_item_details(
-        name=package_name,
-        fields=fields,
-        api_version=2,
-    )
+    get_item_details_key = get_item_details_cache_key(package_name)
+    cached_package = redis_cache.get(get_item_details_key, expected_type=dict)
+    if cached_package:
+        package = cached_package
+    else:
+        package = device_gateway.get_item_details(
+            name=package_name,
+            fields=fields,
+            api_version=2,
+        )
+        redis_cache.set(get_item_details_key, package, ttl=300)
     response = make_response({"package": package})
     response.cache_control.max_age = 3600
     return response.json

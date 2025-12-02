@@ -5,6 +5,7 @@ import logging
 import humanize
 import os
 
+from webapp.endpoints.utils import get_item_details_cache_key
 import webapp.helpers as helpers
 import webapp.metrics.helper as metrics_helper
 import webapp.metrics.metrics as metrics
@@ -52,9 +53,17 @@ def snap_details_views(store):
     snap_regex_upercase = "[A-Za-z0-9-]*[A-Za-z][A-Za-z0-9-]*"
 
     def _get_context_snap_details(snap_name, supported_architectures=None):
-        details = device_gateway.get_item_details(
-            snap_name, fields=FIELDS, api_version=2
+        get_item_details_key = get_item_details_cache_key(snap_name)
+        cached_details = redis_cache.get(
+            get_item_details_key, expected_type=dict
         )
+        if cached_details:
+            details = cached_details
+        else:
+            details = device_gateway.get_item_details(
+                snap_name, fields=FIELDS, api_version=2
+            )
+            redis_cache.set(get_item_details_key, details, ttl=300)
         # 404 for any snap under quarantine
         if details["snap"]["publisher"]["username"] == "snap-quarantine":
             flask.abort(404, "No snap named {}".format(snap_name))

@@ -8,7 +8,10 @@ from canonicalwebteam.exceptions import StoreApiError
 from webapp.helpers import api_session
 from webapp.decorators import login_required
 from cache.cache_utility import redis_cache
-from webapp.endpoints.utils import get_snap_info_cache_key
+from webapp.endpoints.utils import (
+    get_item_details_cache_key,
+    get_snap_info_cache_key,
+)
 
 dashboard = Dashboard(api_session)
 device_gateway = DeviceGW("snap", api_session)
@@ -23,9 +26,17 @@ def get_publicise_data(snap_name):
         redis_cache.set(snap_info_key, snap_details, ttl=3600)
 
     try:
-        snap_public_details = device_gateway.get_item_details(
-            snap_name, api_version=2, fields=["trending", "private"]
+        get_item_details_key = get_item_details_cache_key(snap_name)
+        cached_snap_details = redis_cache.get(
+            get_item_details_key, expected_type=dict
         )
+        if cached_snap_details:
+            snap_public_details = cached_snap_details
+        else:
+            snap_public_details = device_gateway.get_item_details(
+                snap_name, api_version=2, fields=["trending", "private"]
+            )
+            redis_cache.set(get_item_details_key, snap_public_details, ttl=300)
         trending = snap_public_details["snap"]["trending"]
     except StoreApiError:
         trending = False

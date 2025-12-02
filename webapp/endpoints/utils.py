@@ -13,3 +13,7 @@ def get_snap_info_cache_key(snap_name):
 
 def get_release_history_key(snap_name):
     return f"release_history:{snap_name}"
+
+
+def get_item_details_cache_key(snap_name):
+    return f"get_item_details:{snap_name}"
