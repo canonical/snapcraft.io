@@ -88,7 +88,6 @@
         </div>
       </div>
     {% endif %}
-    <div class="row">
       {%- call(slot) package_header() -%}
         {%- if slot == 'buttons' -%}
           <button
@@ -142,7 +141,6 @@
         {% endif %}
         {%- endif -%}
       {%- endcall -%}
-    </div>
   </div>
 
   {% include "store/snap-details/_channel_map.html" %}

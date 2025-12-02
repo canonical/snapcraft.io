@@ -1,3 +1,77 @@
+{%- from 'store/_developer_info.jinja' import developer_info -%}
+{%- from 'store/_publisher_info.jinja' import publisher_info -%}
+
+{%- macro package_icon(
+    package_title,
+    icon_url,
+    image) -%}
+  {% if not icon_url %}
+    {% set icon_url = "https://assets.ubuntu.com/v1/be6eb412-snapcraft-missing-icon.svg" %}
+  {% endif %}
+
+  {% if icon_url.startswith("blob") %}
+    <img class=""
+          src="{{ icon_url | safe }}"
+          width="120"
+          height="120"
+          data-live="icon" />
+  {% else %}
+    {{ image(url=icon_url,
+          alt=package_title,
+          width=120,
+          height=120,
+          hi_def=True,
+          loading="eager",
+          attrs={"class": "", "data-live": "icon"}) | safe
+    }}
+  {% endif %}
+
+{%- endmacro -%}
+
+{# TODO: revisit _package_heading_data.jinja #}
+{%- macro package_header_data(
+    package_title,
+    icon_url,
+    developer,
+    categories,
+    image,
+    display_name,
+    username,
+    publisher,
+    developer_validation,
+    STAR_DEVELOPER,
+    VERIFIED_PUBLISHER) -%}
+
+  <div class="p-snap-heading__title">
+    <h1 class="p-snap-heading__name" data-live="title">{{ package_title }}</h1>
+
+    {# TODO:
+      Extract the section below as own slot, to avoid dependency on a lot of publisher data?
+    #}
+    <div class="u-hide--medium u-hide--large">
+      {% if developer %}
+        {{ developer_info(name=developer[0], url=developer[1]) }}
+      {% endif %}
+      {{ publisher_info(publisher, username, developer_validation, display_name, VERIFIED_PUBLISHER, STAR_DEVELOPER) }}
+
+    </div>
+    <ul class="p-inline-list--vertical-divider">
+      {% if developer %}
+        <li class="p-inline-list__item u-hide--small">{{ developer_info(name=developer[0], url=developer[1]) }}</li>
+      {% endif %}
+      <li class="p-inline-list__item u-hide--small">{{ publisher_info(publisher, username, developer_validation, display_name, VERIFIED_PUBLISHER, STAR_DEVELOPER) }}</li>
+      {% for category in categories %}
+        <li class="p-inline-list__item">
+          <a href="/search?categories={{ category.slug }}">{{ category.name }}</a>
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
+{%- endmacro -%}
+
+
+
+
 {#
 Context variables needed:
 
@@ -18,24 +92,30 @@ Other:
   VERIFIED_PUBLISHER: const (value of developer_validation)
   STAR_DEVELOPER: const (value of developer_validation)
 #}
-{% from "store/snap-details/_package_heading_data.jinja" import package_header_data %}
 {%- macro package_header() -%}
   {%- set buttons_content = caller('buttons') -%}
   {%- set has_buttons_content = buttons_content|trim|length > 0 -%}
-  <div class="p-snap-heading">
-    {{ package_header_data(package_title=snap_title,
-        icon_url=icon_url,
-        developer=developer,
-        categories=categories,
-        image=image,
-        display_name=display_name,
-        username=username,
-        publisher=publisher,
-        developer_validation=developer_validation,
-        STAR_DEVELOPER=STAR_DEVELOPER,
-        VERIFIED_PUBLISHER=VERIFIED_PUBLISHER) }}
-    {%- if has_buttons_content -%}
+  <div class="grid-row">
+    <div class="grid-col-2 grid-col-medium-1 grid-col-small-1">
+    {{ package_icon(package_title, icon_url, image) }}
+    </div>
+    <div class="grid-col-6 grid-col-medium-3 grid-col-small-3">
+      <div class="p-snap-heading p-section--shallow">
+      {{ package_header_data(package_title=snap_title,
+          icon_url=icon_url,
+          developer=developer,
+          categories=categories,
+          image=image,
+          display_name=display_name,
+          username=username,
+          publisher=publisher,
+          developer_validation=developer_validation,
+          STAR_DEVELOPER=STAR_DEVELOPER,
+          VERIFIED_PUBLISHER=VERIFIED_PUBLISHER) }}
+      </div>
+      {%- if has_buttons_content -%}
       <div class="p-snap-install-buttons">{{ buttons_content }}</div>
-    {%- endif -%}
+      {%- endif -%}
+    </div>
   </div>
 {%- endmacro -%}

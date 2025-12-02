@@ -1,5 +1,6 @@
 @use 'sass:color';
 
+// TODO: revisit the styles, clean up if needed
 @mixin snapcraft-details-heading {
   .p-snap-heading {
     display: flex;
@@ -46,8 +47,15 @@
   }
 
   .p-snap-install-buttons {
-    flex-grow: 1;
-    text-align: right;
+    // flex-grow: 1;
+    // text-align: right;
+
+    // potential workaround for mobile layout
+    // @media screen and (max-width: $breakpoint-small - 1) {
+    //   margin-left: -25vw;
+    //   position: relative;
+    //   width: calc(100vw - 2rem);
+    // }
 
     .p-snap-install-buttons__install,
     .p-snap-install-buttons__versions {
