@@ -1,16 +1,22 @@
 import { UPDATE_ARCHITECTURES } from "../actions/architectures";
 import {
-  ReleasesAction,
+  GenericReleasesAction,
   ReleasesReduxState,
 } from "../../../types/releaseTypes";
 
-type UpdateArchitecturesAction = ReleasesAction & {
-  payload: {
+export type UpdateArchitecturesAction = GenericReleasesAction<
+  typeof UPDATE_ARCHITECTURES,
+  {
     architectures: ReleasesReduxState["architectures"];
-  };
-};
+  }
+>;
 
-export default function architectures(state: ReleasesReduxState["architectures"] = [], action: UpdateArchitecturesAction) {
+export type ArchitecturesAction = UpdateArchitecturesAction;
+
+export default function architectures(
+  state: ReleasesReduxState["architectures"] = [],
+  action: ArchitecturesAction
+) {
   switch (action.type) {
     case UPDATE_ARCHITECTURES:
       return [...action.payload.architectures];

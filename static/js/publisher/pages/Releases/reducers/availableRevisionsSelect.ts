@@ -1,16 +1,18 @@
 import { AVAILABLE_REVISIONS_SELECT_UNRELEASED } from "../constants";
 import { SET_AVAILABLE_REVISIONS_SELECT } from "../actions/availableRevisionsSelect";
 import {
-  AvailableRevisionsSelect,
-  ReleasesAction,
+  GenericReleasesAction,
   ReleasesReduxState,
 } from "../../../types/releaseTypes";
 
-type AvailableRevisionsSelectAction = ReleasesAction & {
-  payload: {
-    value: AvailableRevisionsSelect;
-  };
-};
+export type SetAvailableRevisionsSelectAction = GenericReleasesAction<
+  typeof SET_AVAILABLE_REVISIONS_SELECT,
+  {
+    value: string;
+  }
+>;
+
+export type AvailableRevisionsSelectAction = SetAvailableRevisionsSelectAction;
 
 export default function availableRevisionsSelect(
   state: ReleasesReduxState["availableRevisionsSelect"] = AVAILABLE_REVISIONS_SELECT_UNRELEASED,

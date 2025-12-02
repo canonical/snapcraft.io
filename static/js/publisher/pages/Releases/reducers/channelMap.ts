@@ -7,41 +7,49 @@ import {
   CLOSE_CHANNEL_SUCCESS,
 } from "../actions/channelMap";
 import {
-  ReleasesAction,
+  GenericReleasesAction,
   ReleasesReduxState,
 } from "../../../types/releaseTypes";
 
-type ChannelMapAction = ReleasesAction &
-  (
-    | {
-        type: typeof INIT_CHANNEL_MAP;
-        payload: { channelMap: ReleasesReduxState["channelMap"] };
-      }
-    | {
-        type: typeof SELECT_REVISION;
-        payload: {
-          revision: ReleasesReduxState["revisions"][string];
-          toggle: boolean;
-        };
-      }
-    | {
-        type: typeof CLEAR_SELECTED_REVISIONS;
-        payload: never;
-      }
-    | {
-        type: typeof RELEASE_REVISION_SUCCESS;
-        payload: {
-          revision: ReleasesReduxState["revisions"][string];
-          channel: string;
-        };
-      }
-    | {
-        type: typeof CLOSE_CHANNEL_SUCCESS;
-        payload: {
-          channel: string;
-        };
-      }
-  );
+export type InitChannelMapAction = GenericReleasesAction<
+  typeof INIT_CHANNEL_MAP,
+  { channelMap: ReleasesReduxState["channelMap"] }
+>;
+
+export type SelectRevisionAction = GenericReleasesAction<
+  typeof SELECT_REVISION,
+  {
+    revision: ReleasesReduxState["revisions"][string];
+    toggle: boolean;
+  }
+>;
+
+export type ClearSelectedRevisionAction = GenericReleasesAction<
+  typeof CLEAR_SELECTED_REVISIONS,
+  never
+>;
+
+export type ReleaseRevisionSuccessAction = GenericReleasesAction<
+  typeof RELEASE_REVISION_SUCCESS,
+  {
+    revision: ReleasesReduxState["revisions"][string];
+    channel: string;
+  }
+>;
+
+export type CloseChannelSuccessAction = GenericReleasesAction<
+  typeof CLOSE_CHANNEL_SUCCESS,
+  {
+    channel: string;
+  }
+>;
+
+export type ChannelMapAction =
+  | InitChannelMapAction
+  | SelectRevisionAction
+  | ClearSelectedRevisionAction
+  | ReleaseRevisionSuccessAction
+  | CloseChannelSuccessAction;
 
 function selectRevision(
   state: ReleasesReduxState["channelMap"],
