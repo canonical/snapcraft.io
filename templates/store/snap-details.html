@@ -155,8 +155,8 @@
 
   <div class="p-section">
     <div class="u-fixed-width"><hr></div>
-    <div class="grid-row--25-75">
-      <div class="grid-col-2">
+    <div class="grid-row--25-75-on-large">
+      <div class="grid-col grid-col-order-small-1 grid-col-order-medium-1">
         {% include "store/snap-details/_details.html" %}
 
         {# EMBEDDABLE CARD SECTION - hidden in preview #}
@@ -168,7 +168,7 @@
           {% include "store/snap-details/_embedded_card_modal.html" %}
         {% endif %}
       </div>
-      <div class="grid-col-6 u-text-wrap">
+      <div class="grid-col u-text-wrap">
         {% if summary or is_preview %}<h4 class="p-heading--2" data-live="summary">{{ summary }}</h4>{% endif %}
         <div data-live="description">{{ description | safe }}</div>
       </div>
