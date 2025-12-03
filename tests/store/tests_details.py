@@ -46,6 +46,7 @@ SNAP_PAYLOAD = {
             "version": "1.0",
             "confinement": "conf",
             "download": {"size": 100000},
+            "revision": "rev-123",
         }
     ],
 }
