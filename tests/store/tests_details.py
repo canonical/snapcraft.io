@@ -56,6 +56,8 @@ class GetDetailsPageTest(BaseFlaskTestCase):
     def setUp(self):
         super().setUp()
         self.snap_name = "toto"
+        self.snap_id = "id"
+        self.revision = "rev-123"
         self.api_url = "".join(
             [
                 "https://api.snapcraft.io/v2/",
@@ -97,6 +99,13 @@ class GetDetailsPageTest(BaseFlaskTestCase):
                 self.snap_name,
                 "?",
                 urlencode({"fields": ",".join(["aliases"])}),
+            ]
+        )
+        self.sbom_url = "".join(
+            [
+                "https://api.snapcraft.io/api/v1/",
+                "sboms/download/",
+                f"sbom_snap_{self.snap_id}_{self.revision}.spdx2.3.json",
             ]
         )
 
@@ -159,6 +168,11 @@ class GetDetailsPageTest(BaseFlaskTestCase):
                 url=self.api_url_details,
                 json=extra_details_payload,
                 status=404,
+            )
+        )
+        responses.add(
+            responses.Response(
+                method="HEAD", url=self.sbom_url, json={}, status=200
             )
         )
         metrics_url = "https://api.snapcraft.io/api/v1/snaps/metrics"
@@ -262,6 +276,11 @@ class GetDetailsPageTest(BaseFlaskTestCase):
                 status=200,
             )
         )
+        responses.add(
+            responses.Response(
+                method="HEAD", url=self.sbom_url, json={}, status=200
+            )
+        )
 
         metrics_url = "https://api.snapcraft.io/api/v1/snaps/metrics"
         responses.add(
@@ -300,6 +319,11 @@ class GetDetailsPageTest(BaseFlaskTestCase):
                 status=200,
             )
         )
+        responses.add(
+            responses.Response(
+                method="HEAD", url=self.sbom_url, json={}, status=200
+            )
+        )
 
         metrics_url = "https://api.snapcraft.io/api/v1/snaps/metrics"
         responses.add(
@@ -328,6 +352,11 @@ class GetDetailsPageTest(BaseFlaskTestCase):
                 url=self.api_url_details,
                 json=EMPTY_EXTRA_DETAILS_PAYLOAD,
                 status=200,
+            )
+        )
+        responses.add(
+            responses.Response(
+                method="HEAD", url=self.sbom_url, json={}, status=200
             )
         )
 
@@ -374,6 +403,11 @@ class GetDetailsPageTest(BaseFlaskTestCase):
                 url=self.api_url_details,
                 json=payload_extra_details,
                 status=200,
+            )
+        )
+        responses.add(
+            responses.Response(
+                method="HEAD", url=self.sbom_url, json={}, status=200
             )
         )
         metrics_url = "https://api.snapcraft.io/api/v1/snaps/metrics"
