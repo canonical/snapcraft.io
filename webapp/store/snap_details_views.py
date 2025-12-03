@@ -1,5 +1,6 @@
 import flask
 from flask import Response
+import requests
 
 import logging
 import humanize
@@ -22,7 +23,10 @@ from canonicalwebteam.store_api.devicegw import DeviceGW
 from pybadges import badge
 
 device_gateway = DeviceGW("snap", helpers.api_session)
+device_gateway_sbom = DeviceGW("sbom", helpers.api_session)
+
 logger = logging.getLogger(__name__)
+
 
 FIELDS = [
     "title",
@@ -166,7 +170,7 @@ def snap_details_views(store):
         developer = logic.get_snap_developer(details["name"])
 
         context = {
-            "snap-id": details.get("snap-id"),
+            "snap_id": details.get("snap-id"),
             # Data direct from details API
             "snap_title": details["snap"]["title"],
             "package_name": details["name"],
@@ -213,6 +217,19 @@ def snap_details_views(store):
         }
         return context
 
+    def snap_has_sboms(revisions, snap_id):
+        sbom_path = f"download/sbom_snap_{snap_id}_{revisions[0]}.spdx2.3.json"
+        endpoint = device_gateway_sbom.get_endpoint_url(sbom_path)
+
+        res = requests.head(endpoint)
+
+        # backend returns 302 instead of 200 for a successful request
+        # adding the check for 200 in case this is changed without us knowing
+        if res.status_code == 200 or res.status_code == 302:
+            return True
+
+        return False
+
     @store.route('/<regex("' + snap_regex + '"):snap_name>')
     def snap_details(snap_name):
         """
@@ -255,13 +272,13 @@ def snap_details_views(store):
         metrics_query_json = [
             metrics_helper.get_filter(
                 metric_name=country_metric_name,
-                snap_id=context["snap-id"],
+                snap_id=context["snap_id"],
                 start=end,
                 end=end,
             ),
             metrics_helper.get_filter(
                 metric_name=os_metric_name,
-                snap_id=context["snap-id"],
+                snap_id=context["snap_id"],
                 start=end,
                 end=end,
             ),
@@ -293,6 +310,8 @@ def snap_details_views(store):
                 private=False,
             )
 
+        has_sboms = snap_has_sboms(context["revisions"], context["snap_id"])
+
         context.update(
             {
                 "countries": (
@@ -306,8 +325,10 @@ def snap_details_views(store):
                     not in flask.request.headers.get("User-Agent", "")
                 ),
                 "error_info": error_info,
-            }
+            },
         )
+
+        context["has_sboms"] = has_sboms
 
         return (
             flask.render_template("store/snap-details.html", **context),
