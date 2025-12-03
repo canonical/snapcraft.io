@@ -41,6 +41,7 @@ FIELDS = [
     "trending",
     "unlisted",
     "links",
+    "revision",
 ]
 
 FIELDS_EXTRA_DETAILS = [
