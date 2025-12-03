@@ -174,6 +174,7 @@ def convert_channel_maps(channel_map):
             "risk": channel["channel"].get("risk"),
             "confinement": channel.get("confinement"),
             "size": channel["download"].get("size"),
+            "revision": channel["revision"],
         }
 
         channel_map_restruct[arch][track].append(info)
@@ -312,6 +313,14 @@ def get_latest_versions(
     if other:
         other["released-at-display"] = convert_date(other["released-at"])
     return default_stable, other
+
+
+def get_revisions(channel_maps: list) -> list:
+    revisions = []
+    for channel_map in channel_maps:
+        revisions.append(channel_map["revision"])
+
+    return list(reversed(sorted(revisions)))
 
 
 def get_last_updated_versions(channel_maps):

@@ -88,6 +88,8 @@ def snap_details_views(store):
             details.get("channel-map")
         )
 
+        revisions = logic.get_revisions(details.get("channel-map"))
+
         default_track = (
             details.get("default-track")
             if details.get("default-track")
@@ -207,6 +209,7 @@ def snap_details_views(store):
             },
             "links": details["snap"].get("links"),
             "updates": updates,
+            "revisions": revisions,
         }
         return context
 
