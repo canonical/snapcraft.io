@@ -10,6 +10,7 @@ from canonicalwebteam.store_api.publishergw import PublisherGW
 # Local
 from webapp.decorators import login_required, exchange_required
 from webapp.helpers import api_publisher_session, get_brand_id
+from cache.cache_utility import redis_cache
 
 
 publisher_gateway = PublisherGW("snap", api_publisher_session)
@@ -20,10 +21,18 @@ models = flask.Blueprint(
 )
 
 
+def get_models_cache_key(store_id: str) -> str:
+    return f"models:{store_id}"
+
+
+def get_policies_cache_key(store_id: str, model_name: str) -> str:
+    return f"policies:{store_id}:{model_name}"
+
+
 @models.route("/api/store/<store_id>/models")
 @login_required
 @exchange_required
-def get_models(store_id):
+def get_models(store_id: str):
     """
     Retrieves models associated with a given store ID.
 
@@ -34,9 +43,18 @@ def get_models(store_id):
         dict: A dictionary containing the response message, success status,
         and data.
     """
+
     res = {}
     try:
-        models = publisher_gateway.get_store_models(flask.session, store_id)
+        cached_models_key = get_models_cache_key(store_id)
+        cached_models = redis_cache.get(cached_models_key, expected_type=list)
+        if cached_models is not None:
+            models = cached_models
+        else:
+            models = publisher_gateway.get_store_models(
+                flask.session, store_id
+            )
+            redis_cache.set(cached_models_key, models, ttl=3600)
         res["success"] = True
         res["data"] = models
         response = make_response(res, 200)
@@ -74,9 +92,17 @@ def get_policies(store_id: str, model_name: str):
     res = {}
 
     try:
-        policies = publisher_gateway.get_store_model_policies(
-            flask.session, brand_id, model_name
+        cached_policies_key = get_policies_cache_key(store_id, model_name)
+        cached_policies = redis_cache.get(
+            cached_policies_key, expected_type=list
         )
+        if cached_policies is not None:
+            policies = cached_policies
+        else:
+            policies = publisher_gateway.get_store_model_policies(
+                flask.session, brand_id, model_name
+            )
+            redis_cache.set(cached_policies_key, policies, ttl=3600)
         res["success"] = True
         res["data"] = policies
         response = make_response(res, 200)
@@ -131,6 +157,8 @@ def create_policy(store_id: str, model_name: str):
                 flask.session, store_id, model_name, signing_key
             )
             res["success"] = True
+            cached_policies_key = get_policies_cache_key(store_id, model_name)
+            redis_cache.delete(cached_policies_key)
         else:
             res["message"] = "Invalid signing key"
             res["success"] = False
@@ -157,6 +185,8 @@ def delete_policy(store_id: str, model_name: str, revision: str):
         )
         if response.status_code == 204:
             res = {"success": True}
+            cached_policies_key = get_policies_cache_key(store_id, model_name)
+            redis_cache.delete(cached_policies_key)
             return make_response(res, 200)
         elif response.status_code == 404:
             res = {"success": False, "message": "Policy not found"}
@@ -203,8 +233,10 @@ def create_models(store_id: str):
         publisher_gateway.create_store_model(
             flask.session, store_id, name, api_key
         )
-        res["success"] = True
+        cached_models_key = get_models_cache_key(store_id)
+        redis_cache.delete(cached_models_key)
 
+        res["success"] = True
         return make_response(res, 201)
     except StoreApiResponseErrorList as error_list:
         res["success"] = False
@@ -250,6 +282,9 @@ def update_model(store_id: str, model_name: str):
             flask.session, store_id, model_name, api_key
         )
         res["success"] = True
+
+        cached_models_key = get_models_cache_key(store_id)
+        redis_cache.delete(cached_models_key)
 
     except StoreApiResponseErrorList as error_list:
         res["success"] = False
