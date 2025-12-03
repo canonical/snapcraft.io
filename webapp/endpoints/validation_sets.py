@@ -5,6 +5,7 @@ from canonicalwebteam.store_api.dashboard import Dashboard
 
 from webapp.decorators import login_required
 from webapp.helpers import api_session
+from cache.cache_utility import redis_cache
 
 dashboard = Dashboard(api_session)
 
@@ -24,7 +25,16 @@ def get_validation_sets():
     res = {}
 
     try:
-        validation_sets_data = dashboard.get_validation_sets(flask.session)
+        cached_validation_sets = redis_cache.get(
+            "validation_sets", expected_type=dict
+        )
+        if cached_validation_sets:
+            validation_sets_data = cached_validation_sets
+        else:
+            validation_sets_data = dashboard.get_validation_sets(flask.session)
+            redis_cache.set(
+                "validation_sets", validation_sets_data, ttl=3600
+            )
         res["success"] = True
 
         if len(validation_sets_data["assertions"]) > 0:
@@ -56,9 +66,18 @@ def get_validation_set(validation_set_id):
     res = {}
 
     try:
-        validation_set = dashboard.get_validation_set(
-            flask.session, validation_set_id
+        cached_validation_set = redis_cache.get(
+            f"validation_set:{validation_set_id}", expected_type=dict
         )
+        if cached_validation_set:
+            validation_set = cached_validation_set
+        else:
+            validation_set = dashboard.get_validation_set(
+                flask.session, validation_set_id
+            )
+            redis_cache.set(
+                f"validation_set:{validation_set_id}", validation_set, ttl=3600
+            )
         res["success"] = True
 
         if len(validation_set["assertions"]) > 0:
