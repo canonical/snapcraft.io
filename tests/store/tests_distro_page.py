@@ -71,6 +71,7 @@ class GetDistroPageTest(BaseFlaskTestCase):
                                 "trending",
                                 "unlisted",
                                 "links",
+                                "revision",
                             ]
                         )
                     }

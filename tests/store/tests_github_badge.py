@@ -84,6 +84,7 @@ class GetGitHubBadgeTest(BaseFlaskTestCase):
                                 "trending",
                                 "unlisted",
                                 "links",
+                                "revision",
                             ]
                         )
                     }

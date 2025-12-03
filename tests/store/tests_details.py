@@ -81,6 +81,7 @@ class GetDetailsPageTest(BaseFlaskTestCase):
                                 "trending",
                                 "unlisted",
                                 "links",
+                                "revision",
                             ]
                         )
                     }

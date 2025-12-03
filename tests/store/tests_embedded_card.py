@@ -71,6 +71,7 @@ class GetEmbeddedCardTest(BaseFlaskTestCase):
                                 "trending",
                                 "unlisted",
                                 "links",
+                                "revision",
                             ]
                         )
                     }
