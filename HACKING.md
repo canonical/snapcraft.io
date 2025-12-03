@@ -20,7 +20,7 @@ To use this functionality, you need to set up test accounts with **GitHub** and 
 
 Go and [register a new OAuth application](https://github.com/settings/applications/new) in your GitHub account. You can fill in the form however you want, and the only important detail is that you set the "Authorization callback URL" to `http://localhost:8004/github/auth/verify`.
 
-Once you've created the application, you should be given the client id and the client secret. Update your `.env.local` file with the your secrets:
+Once you've created the application, you should be given the client id and the client secret. Update your `.env.local` file with your secrets:
 
 ```bash
 GITHUB_CLIENT_ID=<Your client id>
@@ -66,7 +66,7 @@ For development purposes, visit https://sentry.io/signup/, signup and setup a pr
 https://<user>:<secret>@sentry.io/<project_id>
 ```
 
-Create or update you `.env.local` file:
+Create or update your `.env.local` file:
 
 ```
 SENTRY_DSN=<DSN_FROM_ABOVE>
