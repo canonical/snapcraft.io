@@ -384,10 +384,10 @@ export function getSeparatePendingReleases(state: ReleasesReduxState) {
   const { pendingReleases } = state;
   const isProgressiveEnabled = isProgressiveReleaseEnabled(state);
 
-  const progressiveUpdates: { [key: string]: any } = {};
-  const newReleases: { [key: string]: any } = {};
-  const newReleasesToProgress: { [key: string]: any } = {};
-  const cancelProgressive: { [key: string]: any } = {};
+  const progressiveUpdates: { [key: string]: PendingReleaseItem } = {};
+  const newReleases: { [key: string]: PendingReleaseItem } = {};
+  const newReleasesToProgress: { [key: string]: PendingReleaseItem } = {};
+  const cancelProgressive: { [key: string]: PendingReleaseItem["replaces"] } = {};
 
   Object.keys(pendingReleases).forEach((revId) => {
     Object.keys(pendingReleases[revId]).forEach((channel) => {

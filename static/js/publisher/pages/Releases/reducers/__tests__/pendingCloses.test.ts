@@ -1,14 +1,20 @@
-import pendingCloses from "../pendingCloses";
+import pendingCloses, {
+  CancelPendingReleasesAction,
+  CloseChannelAction,
+  PendingClosesAction,
+  ReleaseRevisionAction,
+} from "../pendingCloses";
 
 import { CLOSE_CHANNEL } from "../../actions/pendingCloses";
 import {
   RELEASE_REVISION,
   CANCEL_PENDING_RELEASES,
 } from "../../actions/pendingReleases";
+import { ReleasesReduxState } from "../../../../types/releaseTypes";
 
 describe("pendingCloses", () => {
   it("should return the initial state", () => {
-    expect(pendingCloses(undefined, {})).toEqual([]);
+    expect(pendingCloses(undefined, {} as PendingClosesAction)).toEqual([]);
   });
 
   describe("on CLOSE_CHANNEL action", () => {
@@ -16,10 +22,10 @@ describe("pendingCloses", () => {
     const closeChannelAction = {
       type: CLOSE_CHANNEL,
       payload: { channel },
-    };
+    } as CloseChannelAction;
 
     describe("when state is empty", () => {
-      const emptyState = [];
+      const emptyState = [] as ReleasesReduxState["pendingCloses"];
 
       it("should add channel to pending closes", () => {
         const result = pendingCloses(emptyState, closeChannelAction);
@@ -34,7 +40,7 @@ describe("pendingCloses", () => {
       it("should add channel to pending closes", () => {
         const result = pendingCloses(
           stateWithOtherPendingCloses,
-          closeChannelAction,
+          closeChannelAction
         );
 
         expect(result).toEqual([...stateWithOtherPendingCloses, channel]);
@@ -47,7 +53,7 @@ describe("pendingCloses", () => {
       it("should not add duplicated channel to pending closes", () => {
         const result = pendingCloses(
           stateWithPendingCloses,
-          closeChannelAction,
+          closeChannelAction
         );
 
         expect(result).toEqual(stateWithPendingCloses);
@@ -62,10 +68,10 @@ describe("pendingCloses", () => {
         revision: { revision: 1, architectures: ["test64"] },
         channel: "test/edge",
       },
-    };
+    } as ReleaseRevisionAction;
 
     describe("when there are no closed channels", () => {
-      const emptyState = [];
+      const emptyState = [] as ReleasesReduxState["pendingCloses"];
 
       it("should not change the state", () => {
         const result = pendingCloses(emptyState, releaseRevisionAction);
@@ -80,7 +86,7 @@ describe("pendingCloses", () => {
       it("should not change the state", () => {
         const result = pendingCloses(
           stateWithOtherPendingCloses,
-          releaseRevisionAction,
+          releaseRevisionAction
         );
 
         expect(result).toBe(stateWithOtherPendingCloses);
@@ -93,7 +99,7 @@ describe("pendingCloses", () => {
       it("should remove pending close of the channel released to", () => {
         const result = pendingCloses(
           stateWithPendingCloses,
-          releaseRevisionAction,
+          releaseRevisionAction
         );
 
         expect(result).toEqual(["latest/candidate"]);
@@ -104,10 +110,10 @@ describe("pendingCloses", () => {
   describe("on CANCEL_PENDING_RELEASES action", () => {
     let cancelPendingReleasesAction = {
       type: CANCEL_PENDING_RELEASES,
-    };
+    } as CancelPendingReleasesAction;
 
     describe("when state is empty", () => {
-      const emptyState = [];
+      const emptyState = [] as ReleasesReduxState["pendingCloses"];
 
       it("should not change the state", () => {
         const result = pendingCloses(emptyState, cancelPendingReleasesAction);
@@ -122,7 +128,7 @@ describe("pendingCloses", () => {
       it("should remove all pending releases", () => {
         const result = pendingCloses(
           stateWithPendingCloses,
-          cancelPendingReleasesAction,
+          cancelPendingReleasesAction
         );
 
         expect(result).toEqual([]);

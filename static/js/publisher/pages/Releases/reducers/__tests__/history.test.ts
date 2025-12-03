@@ -1,17 +1,18 @@
-import history from "../history";
+import history, { CloseChannelAction, CloseHistoryAction, HistoryAction, OpenHistoryAction } from "../history";
 import { OPEN_HISTORY, CLOSE_HISTORY } from "../../actions/history";
 import { CLOSE_CHANNEL } from "../../actions/pendingCloses";
+import { ReleasesReduxState } from "../../../../types/releaseTypes";
 
 describe("history", () => {
   it("should return the initial state", () => {
-    expect(history(undefined, {})).toEqual({
+    expect(history(undefined, {} as HistoryAction)).toEqual({
       isOpen: false,
       filters: null,
     });
   });
 
   describe("on OPEN_HISTORY action", () => {
-    let openHistoryAction = {
+    let openHistoryAction: OpenHistoryAction = {
       type: OPEN_HISTORY,
       payload: {
         filters: {
@@ -22,49 +23,67 @@ describe("history", () => {
     };
 
     it("should mark history panel open", () => {
-      const result = history({}, openHistoryAction);
+      const result = history(
+        {} as ReleasesReduxState["history"],
+        openHistoryAction
+      );
 
       expect(result.isOpen).toBe(true);
     });
 
     it("should set history filters", () => {
-      const result = history({}, openHistoryAction);
+      const result = history(
+        {} as ReleasesReduxState["history"],
+        openHistoryAction
+      );
 
       expect(result.filters).toEqual(openHistoryAction.payload.filters);
     });
   });
 
   describe("on CLOSE_HISTORY action", () => {
-    let closeHistoryAction = {
+    let closeHistoryAction: CloseHistoryAction = {
       type: CLOSE_HISTORY,
     };
 
     it("should mark history panel closed", () => {
-      const result = history({}, closeHistoryAction);
+      const result = history(
+        {} as ReleasesReduxState["history"],
+        closeHistoryAction
+      );
 
       expect(result.isOpen).toBe(false);
     });
 
     it("should remove history filters", () => {
-      const result = history({}, closeHistoryAction);
+      const result = history(
+        {} as ReleasesReduxState["history"],
+        closeHistoryAction
+      );
 
       expect(result.filters).toBe(null);
     });
   });
 
   describe("on CLOSE_CHANNEL action", () => {
-    let closeChanneAction = {
+    let closeChannelAction: CloseChannelAction = {
       type: CLOSE_CHANNEL,
     };
 
     it("should mark history panel closed", () => {
-      const result = history({}, closeChanneAction);
+      const result = history(
+        {} as ReleasesReduxState["history"],
+        closeChannelAction
+      );
 
       expect(result.isOpen).toBe(false);
     });
 
     it("should remove history filters", () => {
-      const result = history({}, closeChanneAction);
+      const result = history(
+        {} as ReleasesReduxState["history"],
+        closeChannelAction
+      );
 
       expect(result.filters).toBe(null);
     });

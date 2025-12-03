@@ -1,4 +1,8 @@
-import notification from "../globalNotification";
+import notification, {
+  HideNotificationAction,
+  NotificationAction,
+  ShowNotificationAction,
+} from "../globalNotification";
 
 import {
   SHOW_NOTIFICATION,
@@ -7,13 +11,13 @@ import {
 
 describe("notification", () => {
   it("should return the initial state", () => {
-    expect(notification(undefined, {})).toEqual({
+    expect(notification(undefined, {} as NotificationAction)).toEqual({
       visible: false,
     });
   });
 
   describe("on SHOW_NOTIFICATON action", () => {
-    let showNotificationAction = {
+    let showNotificationAction: ShowNotificationAction = {
       type: SHOW_NOTIFICATION,
       payload: {
         status: "success",
@@ -35,7 +39,7 @@ describe("notification", () => {
   });
 
   describe("on HIDE_NOTIFICATION action", () => {
-    let hideNotificationAction = {
+    let hideNotificationAction: HideNotificationAction = {
       type: HIDE_NOTIFICATION,
     };
 

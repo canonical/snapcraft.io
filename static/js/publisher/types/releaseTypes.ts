@@ -7,6 +7,12 @@ type NonEmptyArray<T> = [T, ...T[]];
 
 type ISO8601Timestamp = string;
 
+type RemoveKeysWithNeverValues<T> = {
+  [K in {
+    [K in keyof T]: T[K] extends never ? never : K;
+  }[keyof T]]: T[K];
+};
+
 // TODO: these come from "../pages/Releases/constants", what should we do with them?
 export type AvailableRevisionsSelect =
   | "AVAILABLE_REVISIONS_SELECT_LAUNCHPAD"
@@ -318,8 +324,8 @@ export type ChannelArchitectureRevisionsMap = {
 };
 
 export type Options = {
-  snapName?: string;
-  defaultTrack?: string;
+  snapName: string;
+  defaultTrack: string;
   flags: {
     isProgressiveReleaseEnabled?: boolean;
   };
@@ -363,10 +369,13 @@ export type PendingReleaseItem = {
 export type DispatchFn = ThunkDispatch<
   ReleasesReduxState,
   unknown,
-  ReleasesAction
+  GenericReleasesAction
 >;
 
-export type ReleasesAction = {
-  type: string;
-  payload?: unknown; // actions are so messed up that there's no good way to type this
-};
+export type GenericReleasesAction<
+  T extends string = string,
+  P = unknown,
+> = RemoveKeysWithNeverValues<{
+  type: T;
+  payload: P;
+}>;

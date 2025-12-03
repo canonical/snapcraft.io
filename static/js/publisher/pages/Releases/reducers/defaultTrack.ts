@@ -1,12 +1,15 @@
 import {
-  ReleasesAction,
+  GenericReleasesAction,
   ReleasesReduxState,
 } from "../../../types/releaseTypes";
 import { SET_DEFAULT_TRACK_SUCCESS } from "../actions/defaultTrack";
 
-type DefaultTrackAction = ReleasesAction & {
-  payload: ReleasesReduxState["defaultTrack"];
-};
+export type SetDefaultTrackAction = GenericReleasesAction<
+  typeof SET_DEFAULT_TRACK_SUCCESS,
+  ReleasesReduxState["defaultTrack"]
+>;
+
+export type DefaultTrackAction = SetDefaultTrackAction;
 
 export default function defaultTrack(
   state: ReleasesReduxState["defaultTrack"] = "latest",

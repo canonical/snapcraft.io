@@ -1,15 +1,15 @@
-import currentTrack from "../currentTrack";
+import currentTrack, { CurrentTrackAction, SetCurrentTrackAction } from "../currentTrack";
 
 import { SET_CURRENT_TRACK } from "../../actions/currentTrack";
 
 describe("currentTrack", () => {
   it("should return the initial state", () => {
-    expect(currentTrack(undefined, {})).toEqual("");
+    expect(currentTrack(undefined, {} as CurrentTrackAction)).toEqual("");
   });
 
   describe("on SET_CURRENT_TRACK action", () => {
     const track = "test";
-    const setCurrentTrackAction = {
+    const setCurrentTrackAction: SetCurrentTrackAction = {
       type: SET_CURRENT_TRACK,
       payload: { track },
     };

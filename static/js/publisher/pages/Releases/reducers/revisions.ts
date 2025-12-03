@@ -1,14 +1,17 @@
 import { UPDATE_REVISIONS } from "../actions/revisions";
 import {
-  ReleasesAction,
+  GenericReleasesAction,
   ReleasesReduxState,
 } from "../../../types/releaseTypes";
 
-type RevisionsAction = ReleasesAction & {
-  payload: {
+export type UpdateRevisionsAction = GenericReleasesAction<
+  typeof UPDATE_REVISIONS,
+  {
     revisions: ReleasesReduxState["revisions"];
-  };
-};
+  }
+>;
+
+export type RevisionsAction = UpdateRevisionsAction;
 
 export default function revisions(
   state: ReleasesReduxState["revisions"] = {},

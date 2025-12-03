@@ -1,5 +1,5 @@
 import {
-  ReleasesAction,
+  GenericReleasesAction,
   ReleasesReduxState,
 } from "../../../types/releaseTypes";
 import {
@@ -7,9 +7,19 @@ import {
   HIDE_NOTIFICATION,
 } from "../actions/globalNotification";
 
-type NotificationAction = ReleasesAction & {
-  payload: Partial<ReleasesReduxState["notification"]>;
-};
+export type ShowNotificationAction = GenericReleasesAction<
+  typeof SHOW_NOTIFICATION,
+  Partial<ReleasesReduxState["notification"]>
+>;
+
+export type HideNotificationAction = GenericReleasesAction<
+  typeof HIDE_NOTIFICATION,
+  never
+>;
+
+export type NotificationAction =
+  | ShowNotificationAction
+  | HideNotificationAction;
 
 export default function notification(
   state: ReleasesReduxState["notification"] = { visible: false },

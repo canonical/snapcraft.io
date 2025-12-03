@@ -1,12 +1,14 @@
 import {
-  ReleasesAction,
+  GenericReleasesAction,
   ReleasesReduxState,
 } from "../../../types/releaseTypes";
 import { OPEN_BRANCHES, CLOSE_BRANCHES } from "../actions/branches";
 
-type BranchesAction = ReleasesAction & {
-  payload: string;
-};
+export type OpenBranchesAction = GenericReleasesAction<typeof OPEN_BRANCHES, string>;
+
+export type CloseBranchesAction = GenericReleasesAction<typeof CLOSE_BRANCHES, string>;
+
+export type BranchesAction = OpenBranchesAction | CloseBranchesAction;
 
 export default function branches(
   state: ReleasesReduxState["branches"] = [],
