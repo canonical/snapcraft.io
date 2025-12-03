@@ -334,7 +334,7 @@ def snap_details_views(store):
                     not in flask.request.headers.get("User-Agent", "")
                 ),
                 "error_info": error_info,
-            },
+            }
         )
 
         context["has_sboms"] = has_sboms
