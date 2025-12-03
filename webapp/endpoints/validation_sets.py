@@ -32,9 +32,7 @@ def get_validation_sets():
             validation_sets_data = cached_validation_sets
         else:
             validation_sets_data = dashboard.get_validation_sets(flask.session)
-            redis_cache.set(
-                "validation_sets", validation_sets_data, ttl=3600
-            )
+            redis_cache.set("validation_sets", validation_sets_data, ttl=3600)
         res["success"] = True
 
         if len(validation_sets_data["assertions"]) > 0:
