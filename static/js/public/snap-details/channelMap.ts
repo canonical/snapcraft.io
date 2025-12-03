@@ -143,7 +143,7 @@ class ChannelMap {
 
     if (!installTemplateEl || !channelRowTemplateEl) {
       const buttonsVersions = document.querySelector(
-        ".p-snap-install-buttons__versions",
+        "button[data-controls='channel-map-versions']",
       ) as HTMLElement;
       buttonsVersions.style.display = "none";
       return false;
@@ -305,6 +305,7 @@ class ChannelMap {
     };
 
     this.channelMapEl.style.left = `${channelMapPosition.left}px`;
+    this.channelMapEl.style.right = "1rem"; // keep it from going off screen
     this.channelMapEl.style.top = `${channelMapPosition.top}px`;
   }
 

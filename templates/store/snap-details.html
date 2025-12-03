@@ -91,7 +91,7 @@
       {%- call(slot) package_header() -%}
         {%- if slot == 'buttons' -%}
           <button
-            class="p-button p-snap-install-buttons__versions{% if is_preview %} p-tooltip p-tooltip--btm-right{% endif %}"
+            class="p-button{% if is_preview %} p-tooltip p-tooltip--btm-right{% endif %}"
             {% if is_preview %}
               aria-describedby="{{ package_name }}-preview-channel-map"
               disabled
@@ -106,7 +106,7 @@
           </button>
           {% if has_stable %}
             <button
-              class="p-button--positive p-snap-install-buttons__install{% if is_preview %} p-tooltip p-tooltip--btm-right{% endif %}"
+              class="p-button--positive{% if is_preview %} p-tooltip p-tooltip--btm-right{% endif %}"
               {% if is_preview %}
                 aria-describedby="{{ package_name }}-preview-channel-map"
                 disabled
@@ -121,24 +121,24 @@
             </button>
             {% endif %}
             {% if package_name in appliances %}
-            <p class="u-no-margin--bottom">
+            <span>
               Available as an
               <span class="p-tooltip--btm-center" style="z-index: 2;">
                 <a href="https://ubuntu.com/appliance/{{appliances[package_name]}}" >Ubuntu Appliance</a>
                 <span class="p-tooltip__message">Install a ready-made {{snap_title}} image<br />on a Raspberry Pi, an Intel NUC or try<br />it in a VM and get started.</span>
               </span>
-            </p>
+            </span>
             {% endif %}
             {% if (categories[0] and categories[0].slug == "devices-and-iot") or (categories[1] and categories[1].slug == "devices-and-iot") %}
-           <p class="u-no-margin--bottom">
-             <a
-               href="/about/contact-us"
-               data-js="contact-form-trigger"
-               data-formid="2639">
-               Contact us about Snaps and IoT&nbsp;&rsaquo;
-             </a>
-           </p>
-        {% endif %}
+            <span>
+              <a
+                href="/about/contact-us"
+                data-js="contact-form-trigger"
+                data-formid="2639">
+                Contact us about Snaps and IoT&nbsp;&rsaquo;
+              </a>
+            </span>
+            {% endif %}
         {%- endif -%}
       {%- endcall -%}
   </div>

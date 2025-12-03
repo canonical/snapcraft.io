@@ -28,7 +28,6 @@ Other:
     {{ package_icon(package_title, icon_url, image) }}
     </div>
     <div class="grid-col-6 grid-col-medium-3 grid-col-small-3">
-      <div class="p-snap-heading p-section--shallow">
       {{ package_header_data(package_title=snap_title,
           icon_url=icon_url,
           developer=developer,
@@ -40,9 +39,8 @@ Other:
           developer_validation=developer_validation,
           STAR_DEVELOPER=STAR_DEVELOPER,
           VERIFIED_PUBLISHER=VERIFIED_PUBLISHER) }}
-      </div>
       {%- if has_buttons_content -%}
-      <div class="p-snap-install-buttons">{{ buttons_content }}</div>
+      <div class="p-cta-block has-border">{{ buttons_content }}</div>
       {%- endif -%}
     </div>
   </div>

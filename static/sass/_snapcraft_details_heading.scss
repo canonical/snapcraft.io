@@ -1,6 +1,7 @@
 @use 'sass:color';
 
 // TODO: revisit the styles, clean up if needed
+// FIXME: these styles are still needed by publisher-details.html and community-publisher-details.html
 @mixin snapcraft-details-heading {
   .p-snap-heading {
     display: flex;
@@ -42,54 +43,6 @@
     @media screen and (min-width: $breakpoint-small) {
       &__title {
         margin-top: -2 * $sp-x-small;
-      }
-    }
-  }
-
-  .p-snap-install-buttons {
-    // flex-grow: 1;
-    // text-align: right;
-
-    // potential workaround for mobile layout
-    // @media screen and (max-width: $breakpoint-small - 1) {
-    //   margin-left: -25vw;
-    //   position: relative;
-    //   width: calc(100vw - 2rem);
-    // }
-
-    .p-snap-install-buttons__install,
-    .p-snap-install-buttons__versions {
-      margin-bottom: 2 * $sp-unit;
-      position: relative;
-      z-index: 5;
-    }
-
-    @media screen and (min-width: $breakpoint-small) {
-      margin-top: $sp-unit; // align with snap name baseline
-    }
-
-    button:last-of-type {
-      margin-right: 0;
-    }
-
-    .p-snap-install-buttons__install {
-      @media screen and (max-width: $breakpoint-small - 1) {
-        width: 100%;
-      }
-
-      &.is-active {
-        background-color: color.adjust($color-positive, $lightness: -10%);
-      }
-    }
-
-    .p-snap-install-buttons__versions {
-      @media screen and (max-width: $breakpoint-small - 1) {
-        margin-right: 0;
-        width: 100%;
-      }
-
-      &.is-active {
-        background-color: color.adjust($color-light, $lightness: -10%);
       }
     }
   }
