@@ -2,7 +2,6 @@
 {%- from 'store/_publisher_info.jinja' import publisher_info -%}
 
 {%- macro package_icon(
-    package_title,
     icon_url,
     image) -%}
   {% if not icon_url %}
@@ -10,14 +9,14 @@
   {% endif %}
 
   {% if icon_url.startswith("blob") %}
-    <img
-          src="{{ icon_url | safe }}"
+    <img src="{{ icon_url | safe }}"
+          alt=""
           width="120"
           height="120"
           data-live="icon" />
   {% else %}
     {{ image(url=icon_url,
-          alt=package_title,
+          alt="",
           width=120,
           height=120,
           hi_def=True,
