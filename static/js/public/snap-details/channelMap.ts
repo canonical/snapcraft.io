@@ -146,7 +146,7 @@ class ChannelMap {
         "button[data-controls='channel-map-versions']",
       ) as HTMLElement;
       if (buttonsVersions) {
-        buttonsVersions.style.display = "none";
+        buttonsVersions.classList.add("u-hide");
       }
       return false;
     }
