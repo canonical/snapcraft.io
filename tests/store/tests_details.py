@@ -46,7 +46,7 @@ SNAP_PAYLOAD = {
             "version": "1.0",
             "confinement": "conf",
             "download": {"size": 100000},
-            "revision": "rev-123",
+            "revision": 1,
         }
     ],
 }
@@ -57,7 +57,7 @@ class GetDetailsPageTest(BaseFlaskTestCase):
         super().setUp()
         self.snap_name = "toto"
         self.snap_id = "id"
-        self.revision = "rev-123"
+        self.revision = 1
         self.api_url = "".join(
             [
                 "https://api.snapcraft.io/v2/",
