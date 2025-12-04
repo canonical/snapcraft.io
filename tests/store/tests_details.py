@@ -46,6 +46,7 @@ SNAP_PAYLOAD = {
             "version": "1.0",
             "confinement": "conf",
             "download": {"size": 100000},
+            "revision": 1,
         }
     ],
 }
@@ -55,6 +56,8 @@ class GetDetailsPageTest(BaseFlaskTestCase):
     def setUp(self):
         super().setUp()
         self.snap_name = "toto"
+        self.snap_id = "id"
+        self.revision = 1
         self.api_url = "".join(
             [
                 "https://api.snapcraft.io/v2/",
@@ -81,6 +84,7 @@ class GetDetailsPageTest(BaseFlaskTestCase):
                                 "trending",
                                 "unlisted",
                                 "links",
+                                "revision",
                             ]
                         )
                     }
@@ -95,6 +99,13 @@ class GetDetailsPageTest(BaseFlaskTestCase):
                 self.snap_name,
                 "?",
                 urlencode({"fields": ",".join(["aliases"])}),
+            ]
+        )
+        self.api_url_sboms = "".join(
+            [
+                "https://api.snapcraft.io/api/v1/",
+                "sboms/download/",
+                f"sbom_snap_{self.snap_id}_{self.revision}.spdx2.3.json",
             ]
         )
 
@@ -116,6 +127,58 @@ class GetDetailsPageTest(BaseFlaskTestCase):
         self.fail(f"Context variable exists: {name}")
 
     @responses.activate
+    def test_has_sboms_success(self):
+        payload = SNAP_PAYLOAD
+
+        responses.add(
+            responses.Response(
+                method="GET", url=self.api_url, json=payload, status=200
+            )
+        )
+        responses.add(
+            responses.Response(
+                method="HEAD", url=self.api_url_sboms, json={}, status=200
+            )
+        )
+
+        metrics_url = "https://api.snapcraft.io/api/v1/snaps/metrics"
+        responses.add(
+            responses.Response(
+                method="POST", url=metrics_url, json={}, status=200
+            )
+        )
+
+        response = self.client.get(self.endpoint_url)
+
+        assert response.status_code == 200
+
+    @responses.activate
+    def test_has_sboms_error(self):
+        payload = SNAP_PAYLOAD
+
+        responses.add(
+            responses.Response(
+                method="GET", url=self.api_url, json=payload, status=200
+            )
+        )
+        responses.add(
+            responses.Response(
+                method="HEAD", url=self.api_url_sboms, json={}, status=404
+            )
+        )
+
+        metrics_url = "https://api.snapcraft.io/api/v1/snaps/metrics"
+        responses.add(
+            responses.Response(
+                method="POST", url=metrics_url, json={}, status=200
+            )
+        )
+
+        response = self.client.head(self.api_url_sboms)
+
+        assert response.status_code == 404
+
+    @responses.activate
     def test_api_404(self):
         payload = {"error-list": [{"code": "resource-not-found"}]}
         responses.add(
@@ -126,9 +189,9 @@ class GetDetailsPageTest(BaseFlaskTestCase):
 
         response = self.client.get(self.endpoint_url)
 
-        assert len(responses.calls) == 1
         called = responses.calls[0]
         assert called.request.url == self.api_url
+        assert len(responses.calls) == 1
 
         assert response.status_code == 404
 
@@ -157,6 +220,11 @@ class GetDetailsPageTest(BaseFlaskTestCase):
                 url=self.api_url_details,
                 json=extra_details_payload,
                 status=404,
+            )
+        )
+        responses.add(
+            responses.Response(
+                method="HEAD", url=self.api_url_sboms, json={}, status=200
             )
         )
         metrics_url = "https://api.snapcraft.io/api/v1/snaps/metrics"
@@ -260,6 +328,11 @@ class GetDetailsPageTest(BaseFlaskTestCase):
                 status=200,
             )
         )
+        responses.add(
+            responses.Response(
+                method="HEAD", url=self.api_url_sboms, json={}, status=200
+            )
+        )
 
         metrics_url = "https://api.snapcraft.io/api/v1/snaps/metrics"
         responses.add(
@@ -298,6 +371,11 @@ class GetDetailsPageTest(BaseFlaskTestCase):
                 status=200,
             )
         )
+        responses.add(
+            responses.Response(
+                method="HEAD", url=self.api_url_sboms, json={}, status=200
+            )
+        )
 
         metrics_url = "https://api.snapcraft.io/api/v1/snaps/metrics"
         responses.add(
@@ -326,6 +404,11 @@ class GetDetailsPageTest(BaseFlaskTestCase):
                 url=self.api_url_details,
                 json=EMPTY_EXTRA_DETAILS_PAYLOAD,
                 status=200,
+            )
+        )
+        responses.add(
+            responses.Response(
+                method="HEAD", url=self.api_url_sboms, json={}, status=200
             )
         )
 
@@ -372,6 +455,11 @@ class GetDetailsPageTest(BaseFlaskTestCase):
                 url=self.api_url_details,
                 json=payload_extra_details,
                 status=200,
+            )
+        )
+        responses.add(
+            responses.Response(
+                method="HEAD", url=self.api_url_sboms, json={}, status=200
             )
         )
         metrics_url = "https://api.snapcraft.io/api/v1/snaps/metrics"

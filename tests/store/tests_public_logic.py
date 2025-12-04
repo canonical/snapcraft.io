@@ -28,6 +28,7 @@ class StoreLogicTest(unittest.TestCase):
                 "confinement": "confinement",
                 "download": {"size": "size"},
                 "version": "version",
+                "revision": "revision",
             }
         ]
 
@@ -42,6 +43,7 @@ class StoreLogicTest(unittest.TestCase):
                         "size": "size",
                         "risk": "risk",
                         "version": "version",
+                        "revision": "revision",
                     }
                 ]
             }
@@ -63,6 +65,7 @@ class StoreLogicTest(unittest.TestCase):
                 "confinement": "confinement",
                 "download": {"size": "size"},
                 "version": "version",
+                "revision": "revision",
             },
             {
                 "channel": {
@@ -76,6 +79,7 @@ class StoreLogicTest(unittest.TestCase):
                 "confinement": "confinement",
                 "download": {"size": "size"},
                 "version": "version",
+                "revision": "revision",
             },
         ]
         result = logic.convert_channel_maps(channel_maps_list)
@@ -89,6 +93,7 @@ class StoreLogicTest(unittest.TestCase):
                         "size": "size",
                         "risk": "risk",
                         "version": "version",
+                        "revision": "revision",
                     }
                 ],
                 "track1": [
@@ -99,6 +104,7 @@ class StoreLogicTest(unittest.TestCase):
                         "size": "size",
                         "risk": "risk",
                         "version": "version",
+                        "revision": "revision",
                     }
                 ],
             }
@@ -120,6 +126,7 @@ class StoreLogicTest(unittest.TestCase):
                 "confinement": "confinement",
                 "download": {"size": "size"},
                 "version": "version",
+                "revision": "revision",
             },
             {
                 "channel": {
@@ -133,6 +140,7 @@ class StoreLogicTest(unittest.TestCase):
                 "confinement": "confinement",
                 "download": {"size": "size"},
                 "version": "version",
+                "revision": "revision",
             },
         ]
 
@@ -147,6 +155,7 @@ class StoreLogicTest(unittest.TestCase):
                         "size": "size",
                         "risk": "risk",
                         "version": "version",
+                        "revision": "revision",
                     }
                 ]
             },
@@ -159,6 +168,7 @@ class StoreLogicTest(unittest.TestCase):
                         "size": "size",
                         "risk": "risk",
                         "version": "version",
+                        "revision": "revision",
                     }
                 ]
             },

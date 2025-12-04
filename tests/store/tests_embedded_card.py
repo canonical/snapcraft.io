@@ -38,6 +38,7 @@ class GetEmbeddedCardTest(BaseFlaskTestCase):
                 "version": "1.0",
                 "confinement": "conf",
                 "download": {"size": 100000},
+                "revision": 1,
             }
         ],
     }
@@ -71,6 +72,7 @@ class GetEmbeddedCardTest(BaseFlaskTestCase):
                                 "trending",
                                 "unlisted",
                                 "links",
+                                "revision",
                             ]
                         )
                     }
