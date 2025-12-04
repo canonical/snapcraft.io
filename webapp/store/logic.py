@@ -316,10 +316,7 @@ def get_latest_versions(
 
 
 def get_revisions(channel_maps: list) -> list:
-    revisions = []
-    for channel_map in channel_maps:
-        revisions.append(channel_map["revision"])
-
+    revisions = {channel_map["revision"] for channel_map in channel_maps}
     return list(reversed(sorted(revisions)))
 
 
