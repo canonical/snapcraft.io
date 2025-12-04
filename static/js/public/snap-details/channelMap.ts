@@ -145,7 +145,9 @@ class ChannelMap {
       const buttonsVersions = document.querySelector(
         "button[data-controls='channel-map-versions']",
       ) as HTMLElement;
-      buttonsVersions.style.display = "none";
+      if (buttonsVersions) {
+        buttonsVersions.style.display = "none";
+      }
       return false;
     }
 

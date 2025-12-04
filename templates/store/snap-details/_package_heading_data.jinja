@@ -10,7 +10,7 @@
   {% endif %}
 
   {% if icon_url.startswith("blob") %}
-    <img class=""
+    <img
           src="{{ icon_url | safe }}"
           width="120"
           height="120"
@@ -22,7 +22,7 @@
           height=120,
           hi_def=True,
           loading="eager",
-          attrs={"class": "", "data-live": "icon"}) | safe
+          attrs={"data-live": "icon"}) | safe
     }}
   {% endif %}
 {%- endmacro -%}
