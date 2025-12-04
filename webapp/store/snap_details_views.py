@@ -218,10 +218,21 @@ def snap_details_views(store):
         return context
 
     def snap_has_sboms(revisions, snap_id):
+        if not revisions:
+            return False
+
+        cache_key = f"sbom_available:{snap_id}:{revisions[0]}"
+        cached_result = redis_cache.get(cache_key, expected_type=bool)
+
+        if cached_result is not None:
+            return cached_result
+
         sbom_path = f"download/sbom_snap_{snap_id}_{revisions[0]}.spdx2.3.json"
         endpoint = device_gateway_sbom.get_endpoint_url(sbom_path)
+        print(endpoint)
 
         res = requests.head(endpoint)
+        print("STATUS", res.status_code)
 
         # backend returns 302 instead of 200 for a successful request
         # adding the check for 200 in case this is changed without us knowing
@@ -237,7 +248,7 @@ def snap_details_views(store):
 
         res = requests.get(endpoint)
 
-        return res.json()
+        return flask.jsonify(res.json())
 
     @store.route('/<regex("' + snap_regex + '"):snap_name>')
     def snap_details(snap_name):
