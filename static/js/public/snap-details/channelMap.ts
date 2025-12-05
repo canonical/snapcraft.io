@@ -598,11 +598,7 @@ class ChannelMap {
     }
 
     const getSbomUrl = (revision: string): string => {
-      return `/sbom/${this.snapId}/${revision}`;
-    };
-
-    const checkForSbom = async (revision: string) => {
-      const sbomUrl = getSbomUrl;
+      return `/download/sbom_snap_${this.snapId}_${revision}.spdx2.3.json`;
     };
 
     // Create an array of columns

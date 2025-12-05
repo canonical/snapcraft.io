@@ -224,7 +224,7 @@ def snap_details_views(store):
 
         return False
 
-    @store.route("/sbom/<snap_id>/<revision>")
+    @store.route("/download/sbom_snap_<snap_id>_<revision>.spdx2.3.json")
     def get_sbom(snap_id, revision):
         sbom_path = f"download/sbom_snap_{snap_id}_{revision}.spdx2.3.json"
         endpoint = device_gateway_sbom.get_endpoint_url(sbom_path)
