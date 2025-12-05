@@ -117,6 +117,18 @@
             </tbody>
           </table>
         </div>
+        <div class="u-fixed-width p-channel-map__security-table">
+          <table>
+            <thead>
+              <tr>
+                <th>Channel</th>
+                <th>Version</th>
+                <th>Revision</th>
+                <th>Install SBOM</th>
+              </tr>
+            </thead>
+          </table>
+        </div>
       </div>
       <div class="p-strip--light is-shallow p-channel-map__slide" data-js="channel-map-install-details">
       </div>
@@ -153,6 +165,16 @@
     <td>${row[2]}</td>
     <td class="u-hide--medium u-hide--small">${row[3]}</td>
     <td class="u-align--center"><a href="#" class="p-channel-map__version-table-install">Install &rsaquo;</a></td>
+  </tr>
+</script>
+<script type="text/template" id="channel-map-security-table-row-template" data-js="channel-map-security-table-row">
+  <tr>
+    <td>${row[0]}/${row[1]}</td>
+    <td>${row[2]}</td>
+    <td>${row[3]}</td>
+    <td>
+      ${row[4] === "Not available" ? "Not available" : <a href=`${row[4]}`>Download SBOM&nbsp;<i class="p-icon--begin-downloading"></i></a>}
+    </td>
   </tr>
 </script>
 <div class="p-channel-map-overlay" data-js="close-channel-map" style="display: none"></div>
