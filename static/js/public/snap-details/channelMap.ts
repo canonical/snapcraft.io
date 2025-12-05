@@ -145,7 +145,6 @@ class ChannelMap {
         "channel-map-row-template",
       );
     }
-
     let channelSecurityRowTemplateEl = document.querySelector(
       '[data-js="channel-map-security-table-row"]',
     );
@@ -504,7 +503,7 @@ class ChannelMap {
     holder.innerHTML = newDiv.innerHTML;
   }
 
-  writeTable(el: HTMLElement, data: string[][]): void {
+  writeTable(el: HTMLElement, data: string[][], tableType?: string): void {
     let cache: string | undefined;
     const tbody = data.map((row, i) => {
       const isSameTrack = cache && row[0] === cache;
@@ -520,10 +519,16 @@ class ChannelMap {
 
       let _row: string = "";
 
-      if (this.CHANNEL_ROW_TEMPLATE) {
-        _row = this.CHANNEL_ROW_TEMPLATE.split("${rowClass}").join(
-          rowClass.join(" "),
-        );
+      if (tableType && tableType === "security") {
+        if (this.CHANNEL_SECURITY_ROW_TEMPLATE) {
+          _row = this.CHANNEL_SECURITY_ROW_TEMPLATE;
+        }
+      } else {
+        if (this.CHANNEL_ROW_TEMPLATE) {
+          _row = this.CHANNEL_ROW_TEMPLATE.split("${rowClass}").join(
+            rowClass.join(" "),
+          );
+        }
       }
 
       row.forEach((val, index) => {
@@ -548,6 +553,10 @@ class ChannelMap {
       '[data-js="channel-map-table"]',
     ) as HTMLElement;
 
+    const tbodySecurityEl = this.channelMapEl.querySelector(
+      '[data-js="channel-map-security-table"]',
+    ) as HTMLElement;
+
     // If we're on the overview tab we only want to see latest/[all risks]
     // and [all tracks]/[highest risk], so filter out anything that isn't these
     const filtered = this.currentTab === "overview";
@@ -557,6 +566,7 @@ class ChannelMap {
     let trimmedNumberOfTracks = 0;
 
     const rows: Array<string[]> = [];
+    const securityRows: Array<string[]> = [];
 
     const trackList = filtered ? {} : archData;
 
@@ -597,10 +607,19 @@ class ChannelMap {
           trackInfo["released-at"],
           trackInfo["confinement"],
         ]);
+
+        securityRows.push([
+          trackName,
+          trackInfo["risk"],
+          trackInfo["version"],
+          trackInfo["revision"],
+          "Not available",
+        ]);
       });
     });
 
     this.writeTable(tbodyEl, this.sortRows(rows));
+    this.writeTable(tbodySecurityEl, this.sortRows(securityRows), "security");
   }
 
   hideTabs() {
