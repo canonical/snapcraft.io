@@ -1,5 +1,6 @@
 import flask
 from flask import Response
+import requests
 
 import logging
 import humanize
@@ -22,7 +23,10 @@ from canonicalwebteam.store_api.devicegw import DeviceGW
 from pybadges import badge
 
 device_gateway = DeviceGW("snap", helpers.api_session)
+device_gateway_sbom = DeviceGW("sbom", helpers.api_session)
+
 logger = logging.getLogger(__name__)
+
 
 FIELDS = [
     "title",
@@ -41,6 +45,7 @@ FIELDS = [
     "trending",
     "unlisted",
     "links",
+    "revision",
 ]
 
 FIELDS_EXTRA_DETAILS = [
@@ -86,6 +91,8 @@ def snap_details_views(store):
         latest_channel = logic.get_last_updated_version(
             details.get("channel-map")
         )
+
+        revisions = logic.get_revisions(details.get("channel-map"))
 
         default_track = (
             details.get("default-track")
@@ -163,7 +170,7 @@ def snap_details_views(store):
         developer = logic.get_snap_developer(details["name"])
 
         context = {
-            "snap-id": details.get("snap-id"),
+            "snap_id": details.get("snap-id"),
             # Data direct from details API
             "snap_title": details["snap"]["title"],
             "package_name": details["name"],
@@ -206,8 +213,40 @@ def snap_details_views(store):
             },
             "links": details["snap"].get("links"),
             "updates": updates,
+            "revisions": revisions,
         }
         return context
+
+    def snap_has_sboms(revisions, snap_id):
+        if not revisions:
+            return False
+
+        cache_key = f"sbom_available:{snap_id}:{revisions[0]}"
+        cached_result = redis_cache.get(cache_key, expected_type=bool)
+
+        if cached_result is not None:
+            return cached_result
+
+        sbom_path = f"download/sbom_snap_{snap_id}_{revisions[0]}.spdx2.3.json"
+        endpoint = device_gateway_sbom.get_endpoint_url(sbom_path)
+
+        res = requests.head(endpoint)
+
+        # backend returns 302 instead of 200 for a successful request
+        # adding the check for 200 in case this is changed without us knowing
+        if res.status_code == 200 or res.status_code == 302:
+            return True
+
+        return False
+
+    @store.route("/sbom/<snap_id>/<revision>")
+    def get_sbom(snap_id, revision):
+        sbom_path = f"download/sbom_snap_{snap_id}_{revision}.spdx2.3.json"
+        endpoint = device_gateway_sbom.get_endpoint_url(sbom_path)
+
+        res = requests.get(endpoint)
+
+        return flask.jsonify(res.json())
 
     @store.route('/<regex("' + snap_regex + '"):snap_name>')
     def snap_details(snap_name):
@@ -251,13 +290,13 @@ def snap_details_views(store):
         metrics_query_json = [
             metrics_helper.get_filter(
                 metric_name=country_metric_name,
-                snap_id=context["snap-id"],
+                snap_id=context["snap_id"],
                 start=end,
                 end=end,
             ),
             metrics_helper.get_filter(
                 metric_name=os_metric_name,
-                snap_id=context["snap-id"],
+                snap_id=context["snap_id"],
                 start=end,
                 end=end,
             ),
@@ -289,6 +328,8 @@ def snap_details_views(store):
                 private=False,
             )
 
+        has_sboms = snap_has_sboms(context["revisions"], context["snap_id"])
+
         context.update(
             {
                 "countries": (
@@ -304,6 +345,8 @@ def snap_details_views(store):
                 "error_info": error_info,
             }
         )
+
+        context["has_sboms"] = has_sboms
 
         return (
             flask.render_template("store/snap-details.html", **context),
