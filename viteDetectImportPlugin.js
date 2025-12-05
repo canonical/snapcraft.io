@@ -1,5 +1,6 @@
 import { defineConfig } from "vite";
 import { execSync } from "node:child_process";
+import { EOL } from "node:os";
 import { rgPath as rg } from "@lvce-editor/ripgrep";
 
 // TODO: this could be generalized to support other regex patterns and moved into a separate NPM package
@@ -39,7 +40,7 @@ const viteDetectImportPlugin = () => ({
 
     // the string has multiple lines, some of which might be blank, so split
     // on newlines and filter out the empty strings
-    const imports = viteImports.split("\n").filter(Boolean);
+    const imports = viteImports.split(EOL).filter(Boolean);
 
     // remove possible duplicate imports, sort just for clarity
     input = Array.from(new Set(imports)).sort();
