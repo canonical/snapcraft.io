@@ -30,6 +30,7 @@ interface ChannelData {
   risk: string;
   version: string;
   channel?: string;
+  revision: string;
 }
 
 type ChannelMapData = Record<string, Record<string, ChannelData[]>>;
@@ -37,6 +38,7 @@ type ChannelMapData = Record<string, Record<string, ChannelData[]>>;
 class ChannelMap {
   RISK_ORDER: string[];
   packageName: string;
+  snapId: string;
   currentTab: string;
   defaultTrack: string;
   selectorString: string;
@@ -46,17 +48,20 @@ class ChannelMap {
   events: SnapEvents;
   INSTALL_TEMPLATE: string = "";
   CHANNEL_ROW_TEMPLATE: string | undefined;
+  CHANNEL_SECURITY_ROW_TEMPLATE: string | undefined;
   arch: string | undefined;
   openButton: HTMLElement | null | undefined;
   openScreenName: string | undefined;
   constructor(
     selectorString: string,
     packageName: string,
+    snapId: string,
     channelMapData: ChannelMapData,
     defaultTrack: string,
   ) {
     this.RISK_ORDER = ["stable", "candidate", "beta", "edge"];
     this.packageName = packageName;
+    this.snapId = snapId;
     this.currentTab = "overview";
 
     this.defaultTrack = defaultTrack;
@@ -141,6 +146,15 @@ class ChannelMap {
       );
     }
 
+    let channelSecurityRowTemplateEl = document.querySelector(
+      '[data-js="channel-map-security-table-row"]',
+    );
+    if (!channelSecurityRowTemplateEl) {
+      channelSecurityRowTemplateEl = document.getElementById(
+        "channel-map-security-table-row-template",
+      );
+    }
+
     if (!installTemplateEl || !channelRowTemplateEl) {
       const buttonsVersions = document.querySelector(
         "button[data-controls='channel-map-versions']",
@@ -153,6 +167,8 @@ class ChannelMap {
 
     this.INSTALL_TEMPLATE = installTemplateEl.innerHTML;
     this.CHANNEL_ROW_TEMPLATE = channelRowTemplateEl.innerHTML;
+    this.CHANNEL_SECURITY_ROW_TEMPLATE =
+      channelSecurityRowTemplateEl?.innerHTML;
 
     // get architectures from data
     const architectures = Object.keys(this.channelMapData);
@@ -566,7 +582,7 @@ class ChannelMap {
       // If we're filtering, but that list ends up with the same number of tracks
       // we don't need to show the tabs (we'll show the same data twice)
       if (numberOfTracks === trimmedNumberOfTracks) {
-        this.hideTabs();
+        // this.hideTabs();
       }
     }
 
@@ -631,8 +647,9 @@ class ChannelMap {
 export default function channelMap(
   el: string,
   packageName: string,
+  snapId: string,
   channelMapData: ChannelMapData,
   defaultTrack: string,
 ) {
-  return new ChannelMap(el, packageName, channelMapData, defaultTrack);
+  return new ChannelMap(el, packageName, snapId, channelMapData, defaultTrack);
 }
