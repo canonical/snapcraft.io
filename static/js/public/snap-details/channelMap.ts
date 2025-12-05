@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import SnapEvents from "../../libs/events";
 import { triggerEvent } from "../../base/ga";
+import revisions from "../../publisher/pages/Releases/reducers/revisions";
 
 interface SnapElement extends HTMLElement {
   dataset: {
@@ -592,6 +593,14 @@ class ChannelMap {
       }
     }
 
+    const getSbomUrl = (revision: string): string => {
+      return `/sbom/${this.snapId}/${revision}`;
+    };
+
+    const checkForSbom = async (revision: string) => {
+      const sbomUrl = getSbomUrl;
+    };
+
     // Create an array of columns
     Object.keys(trackList).forEach((track) => {
       trackList[track].forEach((trackInfo) => {
@@ -609,6 +618,7 @@ class ChannelMap {
           trackInfo["risk"],
           trackInfo["version"],
           trackInfo["revision"],
+          getSbomUrl(trackInfo["revision"]),
           "Not available",
         ]);
       });
