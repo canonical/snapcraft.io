@@ -1,6 +1,6 @@
 import { defineConfig } from "vite";
 import { execSync } from "node:child_process";
-import { rgPath as rg } from "@vscode/ripgrep";
+import { rgPath as rg } from "@lvce-editor/ripgrep";
 
 // TODO: this could be generalized to support other regex patterns and moved into a separate NPM package
 
