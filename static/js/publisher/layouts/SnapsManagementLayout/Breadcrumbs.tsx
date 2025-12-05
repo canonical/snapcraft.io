@@ -26,7 +26,7 @@ function Breadcrumbs(): React.JSX.Element {
           <Fragment key={i}>
             {i + 1 < segments?.length ? (
               <>
-                <Link to={to}>{label}</Link>&nbsp;/&nbsp;
+                <a href={to}>{label}</a>&nbsp;/&nbsp;
               </>
             ) : (
               label
