@@ -32,7 +32,7 @@ featured_snaps: [
         "package_name": "pycharm",
         "publisher": "JetBrains",
         "summary": "PyCharm is the only Python IDE you need",
-        "description": "Built for web, data, and AI/ML professionals, PyCharm helps you develop smarter and faster with an AI-enhanced IDE experience. It offers out-of-the-box support for Python, databases, Jupyter, Git, Conda, PyTorch, TensorFlow, Hugging Face, Django, Flask, FastAPI, and more. With its context-aware AI tools, intelligent code completion, powerful debugger, and seamless integrations, PyCharm accelerates every stage of development – from prototyping and analysis to deployment – so you can focus on writing code.",
+        "description": "Built for web, data, and AI/ML professionals, PyCharm helps you develop smarter and faster with an AI-enhanced IDE experience. It supports everything you need out of the box — from Python, Jupyter, and databases to PyTorch, TensorFlow, and modern web frameworks. From prototyping to deployment, PyCharm keeps you working efficiently and focused on your code.",
         "title": "PyCharm",
         "background": "#134732"
     },
