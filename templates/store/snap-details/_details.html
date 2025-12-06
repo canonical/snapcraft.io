@@ -4,7 +4,7 @@
 <ul class="p-list">
   <li>{{ license }}</li>
 </ul>
-<hr>
+<hr class="p-rule--muted">
 
 {% if updates %}
   <h5 class="p-muted-heading">Last updated</h5>
@@ -16,7 +16,7 @@
       <li>{{ updates[1]["released-at-display"] }} - <small>{{ updates[1]["track"] }}/{{ updates[1]["risk"] }}</small></li>
     {% endif %}
   </ul>
-  <hr>
+  <hr class="p-rule--muted">
 {% endif %}
 
 {% if links %}
@@ -30,8 +30,8 @@
         </li>
         {% endif %}
       {% endfor %}
-    </ul>  
-    <hr>
+    </ul>
+    <hr class="p-rule--muted">
   {% endif %}
 
   {% if links["contact"] %}
@@ -44,8 +44,8 @@
         </li>
         {% endif %}
       {% endfor %}
-    </ul>  
-    <hr>
+    </ul>
+    <hr class="p-rule--muted">
   {% endif %}
 
   {% if links["donations"] %}
@@ -58,8 +58,8 @@
         </li>
         {% endif %}
       {% endfor %}
-    </ul>  
-    <hr>
+    </ul>
+    <hr class="p-rule--muted">
   {% endif %}
 
   {% if links["source"] %}
@@ -72,15 +72,15 @@
         </li>
         {% endif %}
       {% endfor %}
-    </ul>  
-    <hr>
+    </ul>
+    <hr class="p-rule--muted">
   {% endif %}
 
   {%- if aliases -%}
     {%- set show_more = "Show more" -%}
     {%- set show_less = "Show less" -%}
 
-    {#- 
+    {#-
     # The list starts displaying maximum 3 elements with the rest hidden.
     # With the script provided and the link element rendered the user can toggle
     # displaying and hiding all the aliases.
@@ -106,7 +106,7 @@
         </li>
       {%- endif -%}
     </ul>
-    <hr>
+    <hr class="p-rule--muted">
 
     <script>
       // Handle aliases "show more" button
@@ -145,8 +145,8 @@
         </li>
         {% endif %}
       {% endfor %}
-    </ul>  
-    <hr>
+    </ul>
+    <hr class="p-rule--muted">
   {% endif %}
 
   <div class="p-modal js-exeternal-link-modal u-hide" id="modal">
@@ -165,7 +165,7 @@
   </div>
 
   <template id="verified-status">
-    (Ownership verified) 
+    (Ownership verified)
     <span class="p-tooltip--btm-right" aria-describedby="verified-explanation">
       <i class="p-icon--information"></i>
       <span class="p-tooltip__message" role="tooltip" id="verified-explanation">The publisher has verified that they own this domain{%- if developer_validation != VERIFIED_PUBLISHER -%}.
@@ -176,7 +176,7 @@ from the upstream project.{%- endif -%}</span>
   <script>
     // Handle verified domain status
     const primaryDomainListItem = document.querySelector("[data-js='primary-domain']");
-    
+
     function renderVerificationStatus() {
       if ("content" in document.createElement("template")) {
         const template = document.querySelector("#verified-status");
@@ -184,11 +184,11 @@ from the upstream project.{%- endif -%}</span>
         primaryDomainListItem.appendChild(clone);
       }
     }
-    
+
     if (primaryDomainListItem) {
       async function getVerifiedStatus() {
         const response = await fetch("/api/{{ package_name }}/verify");
-        
+
         if (!response.ok) {
           return;
         }
@@ -215,11 +215,11 @@ from the upstream project.{%- endif -%}</span>
     const openExternalLinkButton = externalLinkModal.querySelector(
       ".js-open-external-link"
     );
-    
+
     function openModal() {
       externalLinkModal.classList.remove("u-hide");
     }
-    
+
     function closeModal() {
       externalLinkModal.classList.add("u-hide");
     }
@@ -238,7 +238,7 @@ from the upstream project.{%- endif -%}</span>
       const searchContainer = document.createElement("span");
 
       protocolContainer.classList.add(
-        url.protocol === "https:" ? 
+        url.protocol === "https:" ?
           "external-link-protocol--positive" : "external-link-protocol--negative"
       );
 
@@ -247,12 +247,12 @@ from the upstream project.{%- endif -%}</span>
 
       protocolContainer.innerText = `${url.protocol}//`;
       hostnameContainer.innerText = url.hostname;
-      
+
       if (url.pathname && url.pathname !== "/") {
         pathContainer.innerText = url.pathname;
 
       }
-      
+
       searchContainer.innerText = url.search;
 
       externalLinkUrl.innerHTML = "";
@@ -266,13 +266,13 @@ from the upstream project.{%- endif -%}</span>
       closeModal();
     });
 
-    externalLinks.forEach((link) => { 
-      
+    externalLinks.forEach((link) => {
+
       link.addEventListener("click", (e) => {
         e.preventDefault();
         const href = e.target.href;
         openExternalLinkButton.href = href;
-        openExternalLinkButton.addEventListener("click", handleOpenExternalLink); 
+        openExternalLinkButton.addEventListener("click", handleOpenExternalLink);
         setLinkDisplayText(href);
         openModal();
       });
@@ -295,5 +295,5 @@ from the upstream project.{%- endif -%}</span>
   </ul>
 
   {% include "store/snap-details/_report_snap_modal.html" %}
-  <hr>
+  <hr class="p-rule--muted">
 {% endif %}

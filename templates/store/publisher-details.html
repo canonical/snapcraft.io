@@ -44,12 +44,12 @@
           </p>
         </div>
 
-        <div class="p-snap-install-buttons">
+        <div class="p-cta-block">
           {% if website %}
-            <a href="{{ website }}" class="p-button--positive  p-snap-install-buttons__versions">Visit publisher website</a>
+            <a href="{{ website }}" class="p-button--positive">Visit publisher website</a>
           {% endif %}
           {% if contact %}
-            <a href="{{ contact }}" class="p-button  p-snap-install-buttons__install">Contact publisher</a>
+            <a href="{{ contact }}" class="p-button">Contact publisher</a>
           {% endif %}
         </div>
 
@@ -106,7 +106,7 @@
 
   {% if featured_snaps %}
   <div class="p-strip is-shallow">
-    <div class="row u-equal-height">
+    <div class="grid-row u-equal-height">
         {% set snap = featured_snaps[0] %}
         {% include 'partials/_publisher-featured-snap.html' %}
         {% if featured_snaps[1] %}
