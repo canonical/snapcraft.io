@@ -615,34 +615,39 @@ class ChannelMap {
           trackInfo["confinement"],
         ]);
 
-        const writeSecurityTable = async (revision: string) => {
-          const sbomUrl = getSbomUrl(revision);
-          const downloadLink = `<a href="${sbomUrl}" download>SPDX file&nbsp;<i class="p-icon--begin-downloading"></i></a>`;
-          const res = await fetch(sbomUrl, { method: "HEAD" });
-
-          const rowData = [
+        if (this.hasSboms) {
+          securityRows.push([
             trackName,
             trackInfo["risk"],
             trackInfo["version"],
             trackInfo["revision"],
-          ];
+          ]);
+        }
 
-          if (res.status === 200) {
-            rowData.push(downloadLink);
-          } else {
-            rowData.push("Not available");
-          }
+        if (this.hasSboms && securityRows.length > 0) {
+          Promise.all(
+            securityRows.map(async (row) => {
+              const revision = row[3];
+              const sbomUrl = getSbomUrl(revision);
+              const downloadLink = `<a href="${sbomUrl}" download>SPDX file&nbsp;<i class="p-icon--begin-downloading"></i></a>`;
+              const res = await fetch(sbomUrl, { method: "HEAD" });
 
-          securityRows.push(rowData);
+              if (res.status === 200) {
+                row.push(downloadLink);
+              } else {
+                row.push("Not available");
+              }
 
-          this.writeTable(
-            tbodySecurityEl,
-            this.sortRows(securityRows),
-            "security",
-          );
-        };
-
-        writeSecurityTable(trackInfo["revision"]);
+              return row;
+            }),
+          ).then(() => {
+            this.writeTable(
+              tbodySecurityEl,
+              this.sortRows(securityRows),
+              "security",
+            );
+          });
+        }
       });
     });
 
