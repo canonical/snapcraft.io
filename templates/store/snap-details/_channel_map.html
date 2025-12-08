@@ -74,6 +74,7 @@
                   role="tab"
                   data-tab="overview"
                   data-js="switch-tab"
+                  aria-controls="release-versions"
                   aria-selected="true">
                     Overview
                 </a>
@@ -84,7 +85,9 @@
                   class="p-tabs__link"
                   role="tab"
                   data-tab="all"
-                  data-js="switch-tab">
+                  data-js="switch-tab"
+                  aria-controls="release-versions"
+                >
                     All releases
                 </a>
               </li>
@@ -95,7 +98,9 @@
                   class="p-tabs__link"
                   role="tab"
                   data-tab="security"
-                  data-js="switch-tab">
+                  data-js="switch-tab"
+                  aria-controls="security-information"
+                >
                     Security
                 </a>
               </li>
@@ -103,8 +108,8 @@
             </ul>
           </nav>
         </div>
-        <div class="u-fixed-width p-channel-map__version-table">
-          <table>
+        <div class="u-fixed-width p-channel-map__version-table" role="tabpanel" id="release-versions">
+          <table aria-label="Release versions">
             <thead>
               <tr>
                 <th>Channel</th>
@@ -117,8 +122,8 @@
             </tbody>
           </table>
         </div>
-        <div class="u-fixed-width p-channel-map__security-table u-hide">
-          <table>
+        <div class="u-fixed-width p-channel-map__security-table u-hide" role="tabpanel" id="security-information">
+          <table aria-label="Security information">
             <thead>
               <tr>
                 <th>Channel</th>
