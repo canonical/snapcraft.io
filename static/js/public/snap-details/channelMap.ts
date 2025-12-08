@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import SnapEvents from "../../libs/events";
 import { triggerEvent } from "../../base/ga";
-import revisions from "../../publisher/pages/Releases/reducers/revisions";
 
 interface SnapElement extends HTMLElement {
   dataset: {
@@ -613,19 +612,41 @@ class ChannelMap {
           trackInfo["confinement"],
         ]);
 
-        securityRows.push([
-          trackName,
-          trackInfo["risk"],
-          trackInfo["version"],
-          trackInfo["revision"],
-          getSbomUrl(trackInfo["revision"]),
-          "Not available",
-        ]);
+        const writeSecurityTable = async (revision: string) => {
+          const sbomUrl = getSbomUrl(revision);
+          const res = await fetch(sbomUrl, { method: "HEAD" });
+
+          const rowData = [
+            trackName,
+            trackInfo["risk"],
+            trackInfo["version"],
+            trackInfo["revision"],
+          ];
+
+          if (res.status === 200) {
+            rowData.push(
+              `<a href="${sbomUrl}" download>
+SPDX file&nbsp;<i class="p-icon--begin-downloading"></i>
+</a>`,
+            );
+          } else {
+            rowData.push("Not available");
+          }
+
+          securityRows.push(rowData);
+
+          this.writeTable(
+            tbodySecurityEl,
+            this.sortRows(securityRows),
+            "security",
+          );
+        };
+
+        writeSecurityTable(trackInfo["revision"]);
       });
     });
 
     this.writeTable(tbodyEl, this.sortRows(rows));
-    this.writeTable(tbodySecurityEl, this.sortRows(securityRows), "security");
   }
 
   hideTabs() {
