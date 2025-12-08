@@ -617,6 +617,7 @@ class ChannelMap {
 
         const writeSecurityTable = async (revision: string) => {
           const sbomUrl = getSbomUrl(revision);
+          const downloadLink = `<a href="${sbomUrl}" download>SPDX file&nbsp;<i class="p-icon--begin-downloading"></i></a>`;
           const res = await fetch(sbomUrl, { method: "HEAD" });
 
           const rowData = [
@@ -627,11 +628,7 @@ class ChannelMap {
           ];
 
           if (res.status === 200) {
-            rowData.push(
-              `<a href="${sbomUrl}" download>
-SPDX file&nbsp;<i class="p-icon--begin-downloading"></i>
-</a>`,
-            );
+            rowData.push(downloadLink);
           } else {
             rowData.push("Not available");
           }
@@ -714,7 +711,7 @@ export default function channelMap(
   snapId: string,
   channelMapData: ChannelMapData,
   defaultTrack: string,
-  hasSboms: string,
+  hasSboms: boolean,
 ) {
   return new ChannelMap(
     el,
@@ -722,6 +719,6 @@ export default function channelMap(
     snapId,
     channelMapData,
     defaultTrack,
-    hasSboms === "true" ? true : false,
+    hasSboms,
   );
 }

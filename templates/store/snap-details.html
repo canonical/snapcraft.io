@@ -394,7 +394,7 @@
 
       {% if channel_map %}
         try {
-snapcraft.public.storeDetails.channelMap('#js-channel-map', {{ package_name|tojson }}, {{ snap_id|tojson }}, {{ channel_map | tojson }}, "{{ default_track }}", "{{ has_sboms|tojson }}");
+snapcraft.public.storeDetails.channelMap('#js-channel-map', {{ package_name|tojson }}, {{ snap_id|tojson }}, {{ channel_map | tojson }}, "{{ default_track }}", {{ has_sboms|tojson }});
         } catch(e) {
           Sentry.captureException(e);
           document.querySelector('.js-open-channel-map').style.display = 'none';
