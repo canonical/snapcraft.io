@@ -696,10 +696,14 @@ class ChannelMap {
 
     if (this.currentTab === "security") {
       securityTable?.classList.remove("u-hide");
+      securityTable?.setAttribute("aria-hidden", "false");
       versionTable?.classList.add("u-hide");
+      versionTable?.setAttribute("aria-hidden", "true");
     } else {
       versionTable?.classList.remove("u-hide");
+      versionTable?.setAttribute("aria-hidden", "false");
       securityTable?.classList.add("u-hide");
+      securityTable?.setAttribute("aria-hidden", "true");
     }
 
     if (this.arch && this.arch in this.channelMapData) {
