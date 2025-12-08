@@ -41,6 +41,7 @@ class ChannelMap {
   snapId: string;
   currentTab: string;
   defaultTrack: string;
+  hasSboms: boolean;
   selectorString: string;
   channelMapEl: HTMLElement;
   channelOverlayEl: HTMLElement;
@@ -58,6 +59,7 @@ class ChannelMap {
     snapId: string,
     channelMapData: ChannelMapData,
     defaultTrack: string,
+    hasSboms: boolean,
   ) {
     this.RISK_ORDER = ["stable", "candidate", "beta", "edge"];
     this.packageName = packageName;
@@ -65,6 +67,7 @@ class ChannelMap {
     this.currentTab = "overview";
 
     this.defaultTrack = defaultTrack;
+    this.hasSboms = hasSboms;
 
     this.selectorString = selectorString;
     this.channelMapEl = document.querySelector(
@@ -591,8 +594,8 @@ class ChannelMap {
 
       // If we're filtering, but that list ends up with the same number of tracks
       // we don't need to show the tabs (we'll show the same data twice)
-      if (numberOfTracks === trimmedNumberOfTracks) {
-        // this.hideTabs();
+      if (numberOfTracks === trimmedNumberOfTracks && !this.hasSboms) {
+        this.hideTabs();
       }
     }
 
@@ -682,6 +685,21 @@ SPDX file&nbsp;<i class="p-icon--begin-downloading"></i>
     selected.removeAttribute("aria-selected");
     clickEl.setAttribute("aria-selected", "true");
 
+    const versionTable = document.querySelector(
+      ".p-channel-map__version-table",
+    );
+    const securityTable = document.querySelector(
+      ".p-channel-map__security-table",
+    );
+
+    if (this.currentTab === "security") {
+      securityTable?.classList.remove("u-hide");
+      versionTable?.classList.add("u-hide");
+    } else {
+      versionTable?.classList.remove("u-hide");
+      securityTable?.classList.add("u-hide");
+    }
+
     if (this.arch && this.arch in this.channelMapData) {
       this.prepareTable(this.channelMapData[this.arch]);
     } else if (this.arch) {
@@ -696,6 +714,14 @@ export default function channelMap(
   snapId: string,
   channelMapData: ChannelMapData,
   defaultTrack: string,
+  hasSboms: string,
 ) {
-  return new ChannelMap(el, packageName, snapId, channelMapData, defaultTrack);
+  return new ChannelMap(
+    el,
+    packageName,
+    snapId,
+    channelMapData,
+    defaultTrack,
+    hasSboms === "true" ? true : false,
+  );
 }
