@@ -654,7 +654,7 @@ class ChannelMap {
               "#channel-map-security-tab",
             );
             securityTab?.classList.remove("is-disabled");
-            securityTab?.setAttribute("is-disabled", "false");
+            securityTab?.setAttribute("aria-disabled", "false");
           });
         }
       });
