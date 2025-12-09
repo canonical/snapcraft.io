@@ -82,6 +82,8 @@ def set_cached_release_history(snap_name, snap, context, ttl=600):
     else:
         public_key = get_release_history_key(snap_name)
         redis_cache.set(public_key, context, ttl=ttl)
+
+
 def invalidate_release_history_cache(snap_name):
     public_key = get_release_history_key(snap_name)
     redis_cache.delete(public_key)
