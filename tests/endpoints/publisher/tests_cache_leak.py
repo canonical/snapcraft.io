@@ -77,7 +77,6 @@ class TestCacheLeakage(TestCase):
             "publisher": {"username": "ownerA"},
         }
 
-        # Prepare other mocks used by the listing view
         mock_device_gateway.get_categories.return_value = []
         mock_get_categories.return_value = []
         mock_categorise_media.return_value = ([], [], [])
@@ -125,7 +124,6 @@ class TestCacheLeakage(TestCase):
     ):
         self._log_in(self.client, "ownerB")
 
-        # Prepare other mocks used by the listing view
         mock_device_gateway.get_categories.return_value = []
         mock_get_categories.return_value = []
         mock_categorise_media.return_value = ([], [], [])
@@ -139,7 +137,7 @@ class TestCacheLeakage(TestCase):
 
         mock_dashboard.get_snap_info.side_effect = snap_info_side_effect
 
-        # 2) Log in as Owner B and fetch listing -> should get 404
+        # 2) Log in as Owner B and fetch listing, should get 404
         with self.client.session_transaction() as session_b:
             session_b["publisher"] = {
                 "account_id": "ownerB-id",
