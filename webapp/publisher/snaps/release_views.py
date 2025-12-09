@@ -10,7 +10,6 @@ from webapp.endpoints.utils import (
 )
 from webapp.helpers import api_publisher_session
 from webapp.decorators import login_required
-from cache.cache_utility import redis_cache
 
 dashboard = Dashboard(api_publisher_session)
 
@@ -63,8 +62,7 @@ def post_release(snap_name):
 
     try:
         response = dashboard.post_snap_release(flask.session, data)
-        release_history_key = get_release_history_key(snap_name)
-        redis_cache.delete(release_history_key)
+        invalidate_release_history_cache(snap_name)
     except StoreApiResponseErrorList as api_response_error_list:
         if api_response_error_list.status_code == 404:
             return flask.abort(404, "No snap named {}".format(snap_name))
@@ -105,8 +103,7 @@ def post_close_channel(snap_name):
 
     try:
         response = dashboard.post_close_channel(flask.session, snap_id, data)
-        release_history_key = get_release_history_key(snap_name)
-        redis_cache.delete(release_history_key)
+        invalidate_release_history_cache(snap_name)
     except StoreApiResponseErrorList as api_response_error_list:
         if api_response_error_list.status_code == 404:
             return flask.abort(404, "No snap named {}".format(snap_name))
