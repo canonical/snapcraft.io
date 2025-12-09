@@ -5,7 +5,7 @@ from cache.cache_utility import redis_cache
 
 
 class TestGetSigningKeys(TestModelServiceEndpoints):
-    def setup(self):
+    def setUp(self):
         super().setUp()
         if redis_cache.redis_available:
             try:
