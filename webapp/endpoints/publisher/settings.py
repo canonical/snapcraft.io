@@ -13,19 +13,21 @@ from canonicalwebteam.exceptions import (
 from webapp.helpers import api_publisher_session, launchpad
 from webapp.decorators import login_required
 from webapp.publisher.snaps import logic
-from cache.cache_utility import redis_cache
-from webapp.endpoints.utils import get_snap_info_cache_key
+from webapp.endpoints.utils import (
+    get_cached_snap_info,
+    set_cached_snap_info,
+    invalidate_snap_info_cache,
+)
 
 dashboard = Dashboard(api_publisher_session)
 
 
 @login_required
 def get_settings_data(snap_name):
-    snap_info_key = get_snap_info_cache_key(snap_name)
-    snap_details = redis_cache.get(snap_info_key, expected_type=dict)
+    snap_details = get_cached_snap_info(snap_name)
     if not snap_details:
         snap_details = dashboard.get_snap_info(flask.session, snap_name)
-        redis_cache.set(snap_info_key, snap_details, ttl=3600)
+        set_cached_snap_info(snap_name, snap_details)
 
     if "whitelist_country_codes" in snap_details:
         whitelist_country_codes = (
@@ -99,8 +101,7 @@ def post_settings_data(snap_name):
                 )
 
                 # Invalidate cache after successful metadata update
-                snap_info_key = get_snap_info_cache_key(snap_name)
-                redis_cache.delete(snap_info_key)
+                invalidate_snap_info_cache(snap_name)
 
                 return flask.jsonify(response)
             except StoreApiResponseErrorList as api_response_error_list:
@@ -113,15 +114,12 @@ def post_settings_data(snap_name):
 
         if error_list:
             try:
-                snap_info_key = get_snap_info_cache_key(snap_name)
-                snap_details = redis_cache.get(
-                    snap_info_key, expected_type=dict
-                )
+                snap_details = get_cached_snap_info(snap_name)
                 if not snap_details:
                     snap_details = dashboard.get_snap_info(
                         flask.session, snap_name
                     )
-                    redis_cache.set(snap_info_key, snap_details, ttl=3600)
+                    set_cached_snap_info(snap_name, snap_details)
             except StoreApiResponseErrorList as api_response_error_list:
                 if api_response_error_list.status_code == 404:
                     return flask.abort(

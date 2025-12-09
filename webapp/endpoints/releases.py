@@ -5,16 +5,17 @@ from canonicalwebteam.store_api.dashboard import Dashboard
 # Local
 from webapp.helpers import api_publisher_session
 from webapp.decorators import login_required
-from cache.cache_utility import redis_cache
-from webapp.endpoints.utils import get_release_history_key
+from webapp.endpoints.utils import (
+    get_cached_release_history,
+    set_cached_release_history,
+)
 
 dashboard = Dashboard(api_publisher_session)
 
 
 @login_required
 def get_release_history_data(snap_name):
-    release_history_key = get_release_history_key(snap_name)
-    cached_context = redis_cache.get(release_history_key, expected_type=dict)
+    cached_context = get_cached_release_history(snap_name)
     if cached_context:
         return flask.jsonify({"success": True, "data": cached_context})
 
@@ -37,5 +38,5 @@ def get_release_history_data(snap_name):
         "tracks": snap.get("tracks"),
     }
 
-    redis_cache.set(release_history_key, context, ttl=600)
+    set_cached_release_history(snap_name, snap, context)
     return flask.jsonify({"success": True, "data": context})
