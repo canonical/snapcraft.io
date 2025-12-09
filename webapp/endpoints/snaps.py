@@ -46,10 +46,9 @@ def _get_snap_link_fields(snap_name):
     details = device_gateway.get_item_details(
         snap_name, api_version=2, fields=FIELDS
     )
-    context = {
+    return {
         "links": details["snap"].get("links", {}),
     }
-    return context
 
 
 @snaps.route('/api/<regex("' + snap_regex + '"):snap_name>/verify')
