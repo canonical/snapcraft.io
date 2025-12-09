@@ -53,11 +53,6 @@ def set_cached_snap_info(snap_name, snap_details, ttl=3600):
 
 
 def invalidate_snap_info_cache(snap_name):
-    """Delete public and owner-scoped cache for the current session owner.
-
-    Note: this deletes the public key and the owner-scoped key for the
-    current session's publisher nickname (if present).
-    """
     redis_cache.delete(get_snap_info_cache_key(snap_name))
     owner = flask.session.get("publisher", {}).get("nickname")
     redis_cache.delete(get_snap_info_cache_key(snap_name, snap_owner=owner))

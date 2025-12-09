@@ -2,8 +2,7 @@ from unittest.mock import patch
 from unittest import TestCase
 import flask
 
-from webapp.endpoints.publisher import listing as listing_mod
-from webapp.endpoints import utils as utils_mod
+from webapp.endpoints.publisher import listing
 from webapp.authentication import get_publishergw_authorization_header
 
 
@@ -35,14 +34,14 @@ class TestCacheLeakage(TestCase):
         self.app = create_app(testing=True)
         self.client = self.app.test_client()
 
-    @patch.object(listing_mod.helpers, "get_yaml")
-    @patch.object(listing_mod.helpers, "get_licenses")
-    @patch.object(listing_mod.logic, "filter_categories")
-    @patch.object(listing_mod.logic, "replace_reserved_categories_key")
-    @patch.object(listing_mod.logic, "categorise_media")
-    @patch.object(listing_mod, "get_categories")
-    @patch.object(listing_mod, "device_gateway")
-    @patch.object(listing_mod, "dashboard")
+    @patch.object(listing.helpers, "get_yaml")
+    @patch.object(listing.helpers, "get_licenses")
+    @patch.object(listing.logic, "filter_categories")
+    @patch.object(listing.logic, "replace_reserved_categories_key")
+    @patch.object(listing.logic, "categorise_media")
+    @patch.object(listing, "get_categories")
+    @patch.object(listing, "device_gateway")
+    @patch.object(listing, "dashboard")
     def test_snap_info_cache_is_owner_scoped(
         self,
         mock_dashboard,
@@ -105,14 +104,14 @@ class TestCacheLeakage(TestCase):
             self.assertTrue(data1["success"])
             self.assertEqual(data1["data"]["title"], "Owner A Title")
 
-    @patch.object(listing_mod.helpers, "get_yaml")
-    @patch.object(listing_mod.helpers, "get_licenses")
-    @patch.object(listing_mod.logic, "filter_categories")
-    @patch.object(listing_mod.logic, "replace_reserved_categories_key")
-    @patch.object(listing_mod.logic, "categorise_media")
-    @patch.object(listing_mod, "get_categories")
-    @patch.object(listing_mod, "device_gateway")
-    @patch.object(listing_mod, "dashboard")
+    @patch.object(listing.helpers, "get_yaml")
+    @patch.object(listing.helpers, "get_licenses")
+    @patch.object(listing.logic, "filter_categories")
+    @patch.object(listing.logic, "replace_reserved_categories_key")
+    @patch.object(listing.logic, "categorise_media")
+    @patch.object(listing, "get_categories")
+    @patch.object(listing, "device_gateway")
+    @patch.object(listing, "dashboard")
     def test_user_cannot_access_private_snap_of_another_user(
         self,
         mock_dashboard,
