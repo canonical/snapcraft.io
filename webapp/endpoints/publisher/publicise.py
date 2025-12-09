@@ -10,7 +10,8 @@ from webapp.decorators import login_required
 from cache.cache_utility import redis_cache
 from webapp.endpoints.utils import (
     get_item_details_cache_key,
-    get_snap_info_cache_key,
+    get_cached_snap_info,
+    set_cached_snap_info,
 )
 
 dashboard = Dashboard(api_session)
@@ -19,11 +20,10 @@ device_gateway = DeviceGW("snap", api_session)
 
 @login_required
 def get_publicise_data(snap_name):
-    snap_info_key = get_snap_info_cache_key(snap_name)
-    snap_details = redis_cache.get(snap_info_key, expected_type=dict)
+    snap_details = get_cached_snap_info(snap_name)
     if not snap_details:
         snap_details = dashboard.get_snap_info(flask.session, snap_name)
-        redis_cache.set(snap_info_key, snap_details, ttl=3600)
+        set_cached_snap_info(snap_name, snap_details)
 
     try:
         get_item_details_key = get_item_details_cache_key(snap_name)

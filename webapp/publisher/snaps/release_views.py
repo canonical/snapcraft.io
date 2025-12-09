@@ -5,8 +5,8 @@ from canonicalwebteam.exceptions import StoreApiResponseErrorList
 
 # Local
 from webapp.endpoints.utils import (
-    get_snap_info_cache_key,
-    get_release_history_key,
+    invalidate_snap_info_cache,
+    invalidate_release_history_cache,
 )
 from webapp.helpers import api_publisher_session
 from webapp.decorators import login_required
@@ -138,8 +138,7 @@ def post_default_track(snap_name):
 
     try:
         dashboard.snap_metadata(flask.session, snap_id, data)
-        snap_info_key = get_snap_info_cache_key(snap_name)
-        redis_cache.delete(snap_info_key)
+        invalidate_snap_info_cache(snap_name)
     except StoreApiResponseErrorList as api_response_error_list:
         if api_response_error_list.status_code == 404:
             return flask.abort(404, "No snap named {}".format(snap_name))

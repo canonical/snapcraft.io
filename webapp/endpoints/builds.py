@@ -10,6 +10,10 @@ from canonicalwebteam.store_api.dashboard import Dashboard
 from webapp.helpers import api_publisher_session, launchpad
 from webapp.api.github import GitHub
 from webapp.decorators import login_required
+from webapp.endpoints.utils import (
+    get_cached_snap_info,
+    set_cached_snap_info,
+)
 
 GITHUB_SNAPCRAFT_USER_TOKEN = os.getenv("GITHUB_SNAPCRAFT_USER_TOKEN")
 GITHUB_WEBHOOK_HOST_URL = os.getenv("GITHUB_WEBHOOK_HOST_URL")
@@ -22,7 +26,10 @@ def get_snap_repo(snap_name):
     res = {"message": "", "success": True}
     data = {"github_orgs": [], "github_repository": None, "github_user": None}
 
-    details = dashboard.get_snap_info(flask.session, snap_name)
+    details = get_cached_snap_info(snap_name)
+    if not details:
+        details = dashboard.get_snap_info(flask.session, snap_name)
+        set_cached_snap_info(snap_name, details)
 
     # API call to make users without needed permissions refresh the session
     # Users needs package_upload_request permission to use this feature
