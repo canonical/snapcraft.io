@@ -646,6 +646,15 @@ class ChannelMap {
               this.sortRows(securityRows),
               "security",
             );
+
+            // Enable "Security" tab only when SBOM requests
+            // are complete to avoid a race condition causing
+            // the table to have not rendered
+            const securityTab = document.querySelector(
+              "#channel-map-security-tab",
+            );
+            securityTab?.classList.remove("is-disabled");
+            securityTab?.setAttribute("is-disabled", "false");
           });
         }
       });
