@@ -11,6 +11,7 @@ class TestGetSigningKeys(TestModelServiceEndpoints):
             try:
                 redis_cache.client.flushdb()
             except Exception:
+                # Ignore errors flushing Redis cache during test setup.
                 pass
         else:
             redis_cache.fallback.clear()
