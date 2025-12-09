@@ -74,14 +74,14 @@ def set_cached_release_history(snap_name, snap, context, ttl=600):
     owner = flask.session.get("publisher", {}).get("nickname")
     username = snap.get("publisher", {}).get("username")
     is_private = context.get("private")
-    if owner == username and is_private:
-        owner_key = get_release_history_key(snap_name, snap_owner=owner)
-        redis_cache.set(owner_key, context, ttl=ttl)
+    if is_private:
+        if owner == username:
+            owner_key = get_release_history_key(snap_name, snap_owner=owner)
+            redis_cache.set(owner_key, context, ttl=ttl)
+        # Do not cache private release history for non-owners
     else:
         public_key = get_release_history_key(snap_name)
         redis_cache.set(public_key, context, ttl=ttl)
-
-
 def invalidate_release_history_cache(snap_name):
     public_key = get_release_history_key(snap_name)
     redis_cache.delete(public_key)
