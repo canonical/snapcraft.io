@@ -11,7 +11,6 @@ from requests.exceptions import HTTPError
 from webapp.helpers import api_publisher_session, launchpad
 from webapp.api.github import GitHub, InvalidYAML
 from webapp.decorators import login_required
-from cache.cache_utility import redis_cache
 
 GITHUB_WEBHOOK_HOST_URL = os.getenv("GITHUB_WEBHOOK_HOST_URL")
 
@@ -80,11 +79,7 @@ def validate_repo(github_token, snap_name, gh_owner, gh_repo):
 
 @login_required
 def get_validate_repo(snap_name):
-    snap_info_key = f"snap_info:{snap_name}"
-    details = redis_cache.get(snap_info_key, expected_type=dict)
-    if not details:
-        details = dashboard.get_snap_info(flask.session, snap_name)
-        redis_cache.set(snap_info_key, details, ttl=3600)
+    details = dashboard.get_snap_info(flask.session, snap_name)
 
     owner, repo = flask.request.args.get("repo").split("/")
 
@@ -139,11 +134,7 @@ def post_build(snap_name):
 
 @login_required
 def post_disconnect_repo(snap_name):
-    snap_info_key = f"snap_info:{snap_name}"
-    details = redis_cache.get(snap_info_key, expected_type=dict)
-    if not details:
-        details = dashboard.get_snap_info(flask.session, snap_name)
-        redis_cache.set(snap_info_key, details, ttl=3600)
+    details = dashboard.get_snap_info(flask.session, snap_name)
 
     lp_snap = launchpad.get_snap_by_store_name(snap_name)
     launchpad.delete_snap(details["snap_name"])

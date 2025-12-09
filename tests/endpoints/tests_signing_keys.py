@@ -1,9 +1,20 @@
 from unittest.mock import patch, Mock
 from tests.endpoints.endpoint_testing import TestModelServiceEndpoints
 from canonicalwebteam.exceptions import StoreApiResponseErrorList
+from cache.cache_utility import redis_cache
 
 
 class TestGetSigningKeys(TestModelServiceEndpoints):
+    def setup(self):
+        super().setUp()
+        if redis_cache.redis_available:
+            try:
+                redis_cache.client.flushdb()
+            except Exception:
+                pass
+        else:
+            redis_cache.fallback.clear()
+
     @patch(
         "canonicalwebteam.store_api.dashboard.Dashboard.get_store",
         Mock(return_value={"brand-id": "BrandName"}),
