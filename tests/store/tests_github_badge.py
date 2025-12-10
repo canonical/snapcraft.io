@@ -1,10 +1,10 @@
 import responses
 from urllib.parse import urlencode
 from webapp.app import create_app
-from tests.base_test_cases import BaseFlaskTestCase
+from flask_testing import TestCase
 
 
-class GetGitHubBadgeTest(BaseFlaskTestCase):
+class GetGitHubBadgeTest(TestCase):
     snap_payload = {
         "snap-id": "id",
         "name": "snapName",

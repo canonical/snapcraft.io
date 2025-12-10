@@ -1,7 +1,7 @@
 import responses
 from urllib.parse import urlencode
+from flask_testing import TestCase
 from webapp.app import create_app
-from tests.base_test_cases import BaseFlaskTestCase
 from unittest.mock import patch
 from cache.cache_utility import redis_cache
 
@@ -52,7 +52,7 @@ SNAP_PAYLOAD = {
 }
 
 
-class GetDetailsPageTest(BaseFlaskTestCase):
+class GetDetailsPageTest(TestCase):
     def setUp(self):
         super().setUp()
         self.snap_name = "toto"

@@ -11,8 +11,6 @@ from webapp.decorators import login_required, exchange_required
 
 from canonicalwebteam.store_api.devicegw import DeviceGW
 from canonicalwebteam.store_api.dashboard import Dashboard
-from cache.cache_utility import redis_cache
-from webapp.endpoints.utils import get_item_details_cache_key
 
 device_gateway = DeviceGW("snap", helpers.api_session)
 dashboard = Dashboard(helpers.api_session)
@@ -45,21 +43,12 @@ snap_regex = "[a-z0-9-]*[a-z][a-z0-9-]*"
 
 
 def _get_snap_link_fields(snap_name):
-    get_item_details_key = get_item_details_cache_key(snap_name)
-    cached_snap_details = redis_cache.get(
-        get_item_details_key, expected_type=dict
+    details = device_gateway.get_item_details(
+        snap_name, api_version=2, fields=FIELDS
     )
-    if cached_snap_details:
-        details = cached_snap_details
-    else:
-        details = device_gateway.get_item_details(
-            snap_name, api_version=2, fields=FIELDS
-        )
-        context = {
-            "links": details["snap"].get("links", {}),
-        }
-        redis_cache.set(get_item_details_key, details, ttl=300)
-    return context
+    return {
+        "links": details["snap"].get("links", {}),
+    }
 
 
 @snaps.route('/api/<regex("' + snap_regex + '"):snap_name>/verify')
@@ -101,12 +90,6 @@ def dns_verified_status(snap_name):
 @login_required
 @exchange_required
 def get_store_snaps(store_id):
-    cached_store_snaps = redis_cache.get(
-        f"store-snaps:{store_id}", expected_type=list
-    )
-    if cached_store_snaps:
-        return jsonify(cached_store_snaps)
-
     snaps = dashboard.get_store_snaps(flask.session, store_id)
     store = dashboard.get_store(flask.session, store_id)
     if "store-whitelist" in store:
@@ -133,7 +116,6 @@ def get_store_snaps(store_id):
 
         if included_stores:
             snaps.append({"included-stores": included_stores})
-    redis_cache.set(f"store-snaps:{store_id}", snaps, ttl=300)
     return jsonify(snaps)
 
 

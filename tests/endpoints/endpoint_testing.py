@@ -1,11 +1,11 @@
 from unittest.mock import patch
 
-from tests.base_test_cases import BaseUnitTestCase
+from unittest import TestCase
 from webapp.app import create_app
 from webapp.authentication import get_publishergw_authorization_header
 
 
-class TestEndpoints(BaseUnitTestCase):
+class TestEndpoints(TestCase):
     def _log_in(self, client):
         test_macaroon = "test_macaroon"
         with client.session_transaction() as s:
