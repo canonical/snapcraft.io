@@ -47,8 +47,6 @@ function initReleasesData(
           // Technically, we should not modify the release object,
           // but to simplify other parts of the code, we do it
           // here - nice and early during initialization.
-          // It's double nasty, because we're actually modifying
-          // the revision, not the release.
           // Sorry, love Luke xox.
           release.isProgressive = false;
           if (release.progressive?.percentage) {
