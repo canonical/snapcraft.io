@@ -5,17 +5,6 @@ from cache.cache_utility import redis_cache
 
 
 class TestGetSigningKeys(TestModelServiceEndpoints):
-    def setUp(self):
-        super().setUp()
-        if redis_cache.redis_available:
-            try:
-                redis_cache.client.flushdb()
-            except Exception:
-                # Ignore errors flushing Redis cache during test setup.
-                pass
-        else:
-            redis_cache.fallback.clear()
-
     @patch(
         "canonicalwebteam.store_api.dashboard.Dashboard.get_store",
         Mock(return_value={"brand-id": "BrandName"}),
