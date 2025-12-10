@@ -613,42 +613,40 @@ class ChannelMap {
             trackInfo["revision"],
           ]);
         }
-
-        if (this.hasSboms && securityRows.length > 0) {
-          Promise.all(
-            securityRows.map(async (row) => {
-              const revision = row[3];
-              const sbomUrl = getSbomUrl(revision);
-              const downloadLink = `<a href="${sbomUrl}" download>SPDX file&nbsp;<i class="p-icon--begin-downloading"></i></a>`;
-              const res = await fetch(sbomUrl, { method: "HEAD" });
-
-              if (res.status === 200) {
-                row.push(downloadLink);
-              } else {
-                row.push("Not available");
-              }
-
-              return row;
-            }),
-          ).then(() => {
-            this.writeTable(
-              tbodySecurityEl,
-              this.sortRows(securityRows),
-              "security",
-            );
-
-            // Enable "Security" tab only when SBOM requests
-            // are complete to avoid a race condition causing
-            // the table to have not rendered
-            const securityTab = document.querySelector(
-              "#channel-map-security-tab",
-            );
-            securityTab?.classList.remove("is-disabled");
-            securityTab?.setAttribute("aria-disabled", "false");
-          });
-        }
       });
     });
+
+    if (this.hasSboms && securityRows.length > 0) {
+      Promise.all(
+        securityRows.map(async (row) => {
+          const revision = row[3];
+          const sbomUrl = getSbomUrl(revision);
+          const downloadLink = `<a href="${sbomUrl}" download>SPDX file&nbsp;<i class="p-icon--begin-downloading"></i></a>`;
+          const res = await fetch(sbomUrl, { method: "HEAD" });
+
+          if (res.status === 200) {
+            row.push(downloadLink);
+          } else {
+            row.push("Not available");
+          }
+
+          return row;
+        }),
+      ).then(() => {
+        this.writeTable(
+          tbodySecurityEl,
+          this.sortRows(securityRows),
+          "security",
+        );
+
+        // Enable "Security" tab only when SBOM requests
+        // are complete to avoid a race condition causing
+        // the table to have not rendered
+        const securityTab = document.querySelector("#channel-map-security-tab");
+        securityTab?.classList.remove("is-disabled");
+        securityTab?.setAttribute("aria-disabled", "false");
+      });
+    }
 
     this.writeTable(tbodyEl, this.sortRows(rows));
   }
