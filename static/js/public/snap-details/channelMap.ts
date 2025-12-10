@@ -140,22 +140,12 @@ class ChannelMap {
     if (!installTemplateEl) {
       installTemplateEl = document.getElementById("install-window-template");
     }
-    let channelRowTemplateEl = document.querySelector(
+    const channelRowTemplateEl = document.querySelector(
       '[data-js="channel-map-row"]',
     );
-    if (!channelRowTemplateEl) {
-      channelRowTemplateEl = document.getElementById(
-        "channel-map-row-template",
-      );
-    }
-    let channelSecurityRowTemplateEl = document.querySelector(
+    const channelSecurityRowTemplateEl = document.querySelector(
       '[data-js="channel-map-security-table-row"]',
     );
-    if (!channelSecurityRowTemplateEl) {
-      channelSecurityRowTemplateEl = document.getElementById(
-        "channel-map-security-table-row-template",
-      );
-    }
 
     if (!installTemplateEl || !channelRowTemplateEl) {
       const buttonsVersions = document.querySelector(
