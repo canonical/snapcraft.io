@@ -1,7 +1,6 @@
 from unittest.mock import patch, Mock
 from tests.endpoints.endpoint_testing import TestModelServiceEndpoints
 from canonicalwebteam.exceptions import StoreApiResponseErrorList
-from cache.cache_utility import redis_cache
 
 
 class TestGetSigningKeys(TestModelServiceEndpoints):
