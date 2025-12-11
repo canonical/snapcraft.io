@@ -3,51 +3,6 @@ from urllib.parse import urlencode
 from flask_testing import TestCase
 from webapp.app import create_app
 
-
-JETBRAINS_SEARCH_RESPONSE = {
-    "_embedded": {
-        "clickindex:package": [
-            {
-                "apps": ["space"],
-                "architecture": ["amd64"],
-                "developer_id": "28zEonXNoBLvIB7xneRbltOsp0Nf7DwS",
-                "developer_name": "jetbrains",
-                "developer_validation": "verified",
-                "media": [
-                    {
-                        "height": 512,
-                        "type": "icon",
-                        "url": (
-                            "https://dashboard.snapcraft.io/site_media/"
-                            "appmedia/2019/12/ezgif.com-gif-maker.png"
-                        ),
-                        "width": 512,
-                    },
-                    {
-                        "height": 1860,
-                        "type": "screenshot",
-                        "url": (
-                            "https://dashboard.snapcraft.io/site_media/"
-                            "appmedia/2019/12/home_for_teams.png"
-                        ),
-                        "width": 2880,
-                    },
-                ],
-                "origin": "jetbrains",
-                "package_name": "space",
-                "sections": [
-                    {
-                        "featured": False,
-                        "name": "development",
-                    },
-                ],
-                "summary": "Desktop Application for JetBrains Space",
-                "title": "Space",
-            },
-        ]
-    },
-}
-
 JETBRAINS_FIND_RESPONSE = {
     "results": [
         {
@@ -208,12 +163,6 @@ class GetPublisherPageTest(TestCase):
     def test_existant_publisher(self):
         responses.add(
             responses.GET,
-            self.api_url_publisher_items,
-            json=JETBRAINS_SEARCH_RESPONSE,
-            status=200,
-        )
-        responses.add(
-            responses.GET,
             self.api_url_find("jetbrains"),
             json=JETBRAINS_FIND_RESPONSE,
             status=200,
@@ -237,7 +186,7 @@ class GetPublisherPageTest(TestCase):
     @responses.activate
     def test_api_error(self):
         responses.add(
-            responses.GET, self.api_url_publisher_items, json={}, status=504
+            responses.GET, self.api_url_find("jetbrains"), json={}, status=504
         )
         response = self.client.get("/publisher/jetbrains")
         self.assertEqual(response.status_code, 200)
@@ -245,11 +194,10 @@ class GetPublisherPageTest(TestCase):
 
     @responses.activate
     def test_no_snaps_from_api(self):
-        payload = {"_embedded": {"clickindex:package": []}}
         responses.add(
             responses.GET,
-            self.api_url_publisher_items,
-            json=payload,
+            self.api_url_find("jetbrains"),
+            json={"results": []},
             status=200,
         )
         response = self.client.get("/publisher/jetbrains")
