@@ -230,6 +230,7 @@ def store_blueprint(store_query=None):
             "PUBLISHER_PAGES"
         ]
 
+        # special handling for some featured publishers with custom pages
         if publisher in ["kde", "snapcrafters", "jetbrains"]:
             context = helpers.get_yaml(
                 publisher_content_path + publisher + ".yaml", typ="safe"
@@ -247,42 +248,46 @@ def store_blueprint(store_query=None):
                 popular_snaps["snaps"] if popular_snaps else []
             )
 
-            if "publishers" in context:
-                context["snaps"] = []
-                for publisher in context["publishers"]:
-                    snaps_results = []
-                    try:
-                        snaps_results = device_gateway.get_publisher_items(
-                            publisher, size=500, page=1
-                        )["_embedded"]["clickindex:package"]
-                    except StoreApiError:
-                        pass
+            context["snaps"] = []
+            snaps_results = []
+            try:
+                snaps_results = device_gateway.find(
+                    publisher=publisher,
+                    fields=[
+                        "title",
+                        "summary",
+                        "media",
+                        "publisher",
+                    ],
+                )["results"]
+            except StoreApiError:
+                pass  # proceed with an empty list
 
-                    for snap in snaps_results:
-                        snap["icon_url"] = helpers.get_icon(snap["media"])
+            for snap in snaps_results:
+                item = snap["snap"]
+                item["package_name"] = snap["name"]
+                item["icon_url"] = helpers.get_icon(item["media"])
+                context["snaps"].append(item)
 
-                    context["snaps"].extend(
-                        [snap for snap in snaps_results if snap["apps"]]
-                    )
+            featured_snaps = [
+                snap["package_name"] for snap in context["featured_snaps"]
+            ]
 
-                featured_snaps = [
-                    snap["package_name"] for snap in context["featured_snaps"]
-                ]
+            context["snaps"] = [
+                snap
+                for snap in context["snaps"]
+                if snap["package_name"] not in featured_snaps
+            ]
 
-                context["snaps"] = [
-                    snap
-                    for snap in context["snaps"]
-                    if snap["package_name"] not in featured_snaps
-                ]
+            context["snaps_count"] = len(context["snaps"]) + len(
+                featured_snaps
+            )
 
-                context["snaps_count"] = len(context["snaps"]) + len(
-                    featured_snaps
-                )
+            return flask.render_template(
+                "store/publisher-details.html", **context
+            )
 
-                return flask.render_template(
-                    "store/publisher-details.html", **context
-                )
-
+        # standard page for all community publishers
         status_code = 200
         error_info = {}
         snaps_results = []

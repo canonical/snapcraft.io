@@ -9,10 +9,6 @@ website: https://www.jetbrains.com/
 contact: https://www.jetbrains.com/company/contacts/
 developer_validation: verified
 
-publishers: [
-  "28zEonXNoBLvIB7xneRbltOsp0Nf7DwS"
-]
-
 featured_snaps: [
     {
         "developer_validation": "verified",
