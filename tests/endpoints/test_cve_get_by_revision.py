@@ -3,21 +3,11 @@ from unittest.mock import patch, MagicMock
 import json
 from webapp.publisher.cve.cve_helper import CveHelper
 from werkzeug.exceptions import NotFound
-from cache.cache_utility import redis_cache
 
 
 class CveHGetByRevisionTest(unittest.TestCase):
 
     def setUp(self):
-        # Clear cache before each test
-        if redis_cache.redis_available:
-            try:
-                redis_cache.client.flushdb()
-            except Exception:
-                pass
-        else:
-            redis_cache.fallback.clear()
-
         self.file_metadata = {"download_url": "https://example.com/file.json"}
 
         self.file_content = {

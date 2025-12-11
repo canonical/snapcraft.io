@@ -1,6 +1,5 @@
 from unittest.mock import patch
 from tests.endpoints.endpoint_testing import TestEndpoints
-from cache.cache_utility import redis_cache
 
 
 class TestCveEndpoints(TestEndpoints):
@@ -25,14 +24,6 @@ class TestCveEndpoints(TestEndpoints):
 
     def setUp(self):
         super().setUp()
-        # Clear cache before each test
-        if redis_cache.redis_available:
-            try:
-                redis_cache.client.flushdb()
-            except Exception:
-                pass
-        else:
-            redis_cache.fallback.clear()
         self._log_in_with_canonical_status(is_canonical=False)
 
 

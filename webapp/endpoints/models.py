@@ -20,14 +20,6 @@ models = flask.Blueprint(
 )
 
 
-def get_models_cache_key(store_id: str) -> str:
-    return f"models:{store_id}"
-
-
-def get_policies_cache_key(store_id: str, model_name: str) -> str:
-    return f"policies:{store_id}:{model_name}"
-
-
 @models.route("/api/store/<store_id>/models")
 @login_required
 @exchange_required

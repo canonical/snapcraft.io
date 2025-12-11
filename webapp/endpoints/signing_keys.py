@@ -10,8 +10,6 @@ from canonicalwebteam.store_api.publishergw import PublisherGW
 from webapp.decorators import login_required, exchange_required
 from webapp.helpers import api_publisher_session, get_brand_id
 from webapp.endpoints.models import get_models, get_policies
-from cache.cache_utility import redis_cache
-
 
 publisher_gateway = PublisherGW("snap", api_publisher_session)
 
@@ -32,15 +30,9 @@ def get_signing_keys(store_id: str):
     brand_id = get_brand_id(flask.session, store_id)
     res = {}
     try:
-        signing_keys_cache_key = get_signing_keys_cache_key(store_id)
-        signing_keys = redis_cache.get(
-            signing_keys_cache_key, expected_type=list
+        signing_keys = publisher_gateway.get_store_signing_keys(
+            flask.session, brand_id
         )
-        if not signing_keys:
-            signing_keys = publisher_gateway.get_store_signing_keys(
-                flask.session, brand_id
-            )
-            redis_cache.set(signing_keys_cache_key, signing_keys, ttl=3600)
         res["data"] = signing_keys
         res["success"] = True
         response = make_response(res, 200)
@@ -71,8 +63,6 @@ def create_signing_key(store_id: str):
             publisher_gateway.create_store_signing_key(
                 flask.session, store_id, name
             )
-            signing_keys_cache_key = get_signing_keys_cache_key(store_id)
-            redis_cache.delete(signing_keys_cache_key)
             res["success"] = True
             return make_response(res, 200)
         else:
@@ -117,8 +107,6 @@ def delete_signing_key(store_id: str, signing_key_sha3_384: str):
 
         if response.status_code == 204:
             res["success"] = True
-            signing_keys_cache_key = get_signing_keys_cache_key(store_id)
-            redis_cache.delete(signing_keys_cache_key)
             return make_response(res, 200)
         elif response.status_code == 404:
             res["success"] = False

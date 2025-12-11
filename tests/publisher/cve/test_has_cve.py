@@ -3,21 +3,9 @@ from unittest.mock import patch
 
 from webapp.publisher.cve.cve_helper import CveHelper
 from werkzeug.exceptions import NotFound
-from cache.cache_utility import redis_cache
 
 
 class HasRevisionsWithCvesTest(unittest.TestCase):
-
-    def setUp(self):
-        # Clear cache before each test
-        if redis_cache.redis_available:
-            try:
-                redis_cache.client.flushdb()
-            except Exception:
-                pass
-        else:
-            redis_cache.fallback.clear()
-
     @patch("webapp.publisher.cve.cve_helper.CveHelper._get_cve_file_metadata")
     def test_returns_revision_numbers(self, mock_get_metadata):
         mock_get_metadata.return_value = [
