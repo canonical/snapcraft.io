@@ -11,15 +11,6 @@ snaps:
     },
     {
       "developer_validation": "verified",
-      "icon_url": "https://dashboard.snapcraft.io/site_media/appmedia/2017/07/gimp.png",
-      "origin": "snapcrafters",
-      "package_name": "gimp",
-      "publisher": "Snapcrafters",
-      "summary": "GNU Image Manipulation Program",
-      "title": "GNU Image Manipulation Program",
-    },
-    {
-      "developer_validation": "verified",
       "icon_url": "https://dashboard.snapcraft.io/site_media/appmedia/2018/02/obs-studio.png",
       "origin": "snapcrafters",
       "package_name": "obs-studio",
@@ -71,14 +62,5 @@ snaps:
       "publisher": "Snapcrafters",
       "summary": "Extensible Tool Platform and Java IDE",
       "title": "Eclipse",
-    },
-    {
-      "developer_validation": "verified",
-      "icon_url": "https://dashboard.snapcraft.io/site_media/appmedia/2016/06/cassandra.png",
-      "origin": "snapcrafters",
-      "package_name": "cassandra",
-      "publisher": "Snapcrafters",
-      "summary": "The Apache Cassandra database",
-      "title": "Cassandra",
     },
   ]
