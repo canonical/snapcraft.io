@@ -47,13 +47,9 @@ function initReleasesData(
           // Technically, we should not modify the release object,
           // but to simplify other parts of the code, we do it
           // here - nice and early during initialization.
-          // It's double nasty, because we're actually modifying
-          // the revision, not the release.
           // Sorry, love Luke xox.
           release.isProgressive = false;
-          if (release.progressive && release.progressive.percentage) {
-            release.isProgressive = true;
-
+          if (release.progressive?.percentage) {
             // Based on the note at the top of
             // https://dashboard.snapcraft.io/docs/reference/v1/snap.html#progressive-releases
             // We need to get the channelMap to hydrate the current percentage
@@ -63,23 +59,19 @@ function initReleasesData(
               );
 
               if (currentChannel) {
-                release.progressive["current-percentage"] =
-                  currentChannel.progressive["current-percentage"];
-                // if the current channel has a different percentage
-                // than the release, we need to update the release
-                // to match the current channel's percentage
-                // If the current channel is null, this means that
-                // an automatic release was completed
-                // and we need to set the percentage to 100
-                if (
-                  currentChannel.progressive.percentage !==
-                  release.progressive.percentage
-                ) {
-                  release.progressive.percentage =
-                    currentChannel.progressive.percentage || 100;
-                }
+                // the current channel might have different percentages
+                // compared to the release object, so we need to update
+                // it to match the current channel's percentages
+                release.progressive = { ...currentChannel.progressive };
               }
             }
+
+            // Now that we have the updated percentages, we can determine if
+            // this is a still ongoing progressive release: the target
+            // percentage coming from the channel map might be `null`, which
+            // means that the release has been completed. If that's the case,
+            // we shouldn't mark it as progressive
+            release.isProgressive = release.progressive.percentage !== null;
           }
 
           if (!rev.releases) {
