@@ -130,8 +130,7 @@ export function releaseRevision(
       progressive = {
         percentage: percentage,
         paused: false,
-        "current-percentage": null,
-      };
+      } as Progressive;
     }
 
     return dispatch({
@@ -153,9 +152,7 @@ export function setProgressiveReleasePercentage(
     type: SET_PROGRESSIVE_RELEASE_PERCENTAGE,
     payload: {
       percentage,
-      paused: null,
-      "current-percentage": null,
-    },
+    } as Progressive,
   };
 }
 
@@ -166,9 +163,7 @@ export function updateProgressiveReleasePercentage(
     type: UPDATE_PROGRESSIVE_RELEASE_PERCENTAGE,
     payload: {
       percentage,
-      paused: null,
-      "current-percentage": null,
-    },
+    } as Progressive,
   };
 }
 
