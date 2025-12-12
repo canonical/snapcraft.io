@@ -1,4 +1,5 @@
-import branches, { BranchesAction, CloseBranchesAction, OpenBranchesAction } from "../branches";
+import branches from "../branches";
+import { BranchesAction, CloseBranchesAction, OpenBranchesAction } from "../../actions/branches";
 import { OPEN_BRANCHES, CLOSE_BRANCHES } from "../../actions/branches";
 
 describe("branches", () => {
