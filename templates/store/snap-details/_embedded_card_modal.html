@@ -5,35 +5,47 @@
       <button class="p-modal__close js-modal-close" aria-label="Close dialog">Close</button>
     </header>
     <p>Customise your embeddable card using the options below.</p>
-    <div class="row u-no-padding">
-      <div class="col-1">
-        <label class="p-heading-label">Snap Store button:</label>
+    <div class="row">
+      <div class="col-3">
+        <h3 class="p-muted-heading">Snap Store button:</h3>
 
-        <input type="radio" name="store-button" id="store-button-dark" checked="checked" value="black">
-        <label for="store-button-dark">Dark</label>
-        <input type="radio" name="store-button" id="store-button-light" value="white">
-        <label for="store-button-light">Light</label>
-        <input type="radio" name="store-button" id="store-button-hide" value="">
-        <label for="store-button-hide">Hide button</label>
+        <label class="p-radio">
+          <input type="radio" name="store-button" id="store-button-dark" checked="checked" value="black" class="p-radio__input" aria-labelledby="store-button-dark-label">
+          <span class="p-radio__label" id="store-button-dark-label">Dark</span>
+        </label>
+        <label class="p-radio">
+          <input type="radio" name="store-button" id="store-button-light" value="white" class="p-radio__input" aria-labelledby="store-button-light-label">
+          <span class="p-radio__label" id="store-button-light-label">Light</span>
+        </label>
+        <label class="p-radio">
+          <input type="radio" name="store-button" id="store-button-hide" value="" class="p-radio__input" aria-labelledby="store-button-hide-label">
+          <span class="p-radio__label" id="store-button-hide-label">Hide button</span>
+        </label>
 
-        <label class="p-heading-label">Options:</label>
+        <h3 class="p-muted-heading">Options:</h3>
 
-        <input type="checkbox" name="show-channels" id="option-show-channels">
-        <label for="option-show-channels">Show all channels</label>
-        <input type="checkbox" name="show-summary" id="option-show-summary">
-        <label for="option-show-summary">Show summary</label>
-        <input type="checkbox" name="show-screenshot" id="option-show-screenshot" {% if not screenshots %}disabled{% endif %}>
-        <label for="option-show-screenshot">Show screenshot</label>
+        <label class="p-checkbox">
+          <input type="checkbox" name="show-channels" id="option-show-channels" class="p-checkbox__input" aria-labelledby="option-show-channels-label">
+          <span class="p-checkbox__label" id="option-show-channels-label">Show all channels</span>
+        </label>
+        <label class="p-checkbox">
+          <input type="checkbox" name="show-summary" id="option-show-summary" class="p-checkbox__input" aria-labelledby="option-show-summary-label">
+          <span class="p-checkbox__label" id="option-show-summary-label">Show summary</span>
+        </label>
+        <label class="p-checkbox">
+          <input type="checkbox" name="show-screenshot" id="option-show-screenshot" {% if not screenshots %}disabled{% endif %} class="p-checkbox__input" aria-labelledby="option-show-screenshot-label">
+          <span class="p-checkbox__label" id="option-show-screenshot-label">Show screenshot</span>
+        </label>
 
       </div>
-      <div class="col-3">
-        <label class="p-heading-label">Preview:</label>
+      <div class="col-9">
+        <h3 class="p-muted-heading">Preview:</h3>
         <iframe id="embedded-card-frame"
           class="snapcraft-publicise__embedded-frame"
           width="100%" height="320px"
           frameborder="0" style="border: 1px solid #CCC; border-radius: 2px;">
         </iframe>
-        <label class="p-heading-label">HTML:</label>
+        <h3 class="p-muted-heading">HTML:</h3>
         <div class="p-code-snippet">
           <pre class="p-code-snippet__block is-wrapped"><code id="snippet-card-html"></code></pre>
         </div>
