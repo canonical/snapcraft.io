@@ -1,7 +1,6 @@
 import { ReleasesReduxState } from "../../../types/releaseTypes";
 import {
   SET_CURRENT_TRACK,
-  SetCurrentTrackAction,
   CurrentTrackAction,
 } from "../actions/currentTrack";
 

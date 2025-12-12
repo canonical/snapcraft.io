@@ -2,8 +2,6 @@ import { ReleasesReduxState } from "../../../types/releaseTypes";
 import {
   OPEN_MODAL,
   CLOSE_MODAL,
-  OpenModalAction,
-  CloseModalAction,
   ModalAction,
 } from "../actions/modal";
 

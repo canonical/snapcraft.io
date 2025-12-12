@@ -2,8 +2,6 @@ import { ReleasesReduxState } from "../../../types/releaseTypes";
 import {
   OPEN_BRANCHES,
   CLOSE_BRANCHES,
-  OpenBranchesAction,
-  CloseBranchesAction,
   BranchesAction,
 } from "../actions/branches";
 

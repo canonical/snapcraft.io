@@ -1,6 +1,5 @@
 import {
   UPDATE_ARCHITECTURES,
-  UpdateArchitecturesAction,
   ArchitecturesAction,
 } from "../actions/architectures";
 import { ReleasesReduxState } from "../../../types/releaseTypes";

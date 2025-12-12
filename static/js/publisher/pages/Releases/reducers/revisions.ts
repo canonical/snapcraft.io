@@ -1,6 +1,5 @@
 import {
   UPDATE_REVISIONS,
-  UpdateRevisionsAction,
   RevisionsAction,
 } from "../actions/revisions";
 import { ReleasesReduxState } from "../../../types/releaseTypes";

@@ -2,8 +2,6 @@ import { ReleasesReduxState } from "../../../types/releaseTypes";
 import {
   SHOW_NOTIFICATION,
   HIDE_NOTIFICATION,
-  ShowNotificationAction,
-  HideNotificationAction,
   NotificationAction,
 } from "../actions/globalNotification";
 

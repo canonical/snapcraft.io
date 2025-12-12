@@ -5,11 +5,6 @@ import {
   CLEAR_SELECTED_REVISIONS,
   RELEASE_REVISION_SUCCESS,
   CLOSE_CHANNEL_SUCCESS,
-  InitChannelMapAction,
-  SelectRevisionAction,
-  ClearSelectedRevisionAction,
-  ReleaseRevisionSuccessAction,
-  CloseChannelSuccessAction,
   ChannelMapAction,
 } from "../actions/channelMap";
 import { ReleasesReduxState, Revision } from "../../../types/releaseTypes";

@@ -1,7 +1,6 @@
 import { ReleasesReduxState } from "../../../types/releaseTypes";
 import {
   SET_DEFAULT_TRACK_SUCCESS,
-  SetDefaultTrackSuccessAction,
   DefaultTrackAction,
 } from "../actions/defaultTrack";
 

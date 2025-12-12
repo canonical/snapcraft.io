@@ -1,7 +1,6 @@
 import { AVAILABLE_REVISIONS_SELECT_UNRELEASED } from "../constants";
 import {
   SET_AVAILABLE_REVISIONS_SELECT,
-  SetAvailableRevisionsSelectAction,
   AvailableRevisionsSelectAction,
 } from "../actions/availableRevisionsSelect";
 import { ReleasesReduxState } from "../../../types/releaseTypes";
