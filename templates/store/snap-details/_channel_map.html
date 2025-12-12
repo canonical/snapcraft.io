@@ -74,6 +74,7 @@
                   role="tab"
                   data-tab="overview"
                   data-js="switch-tab"
+                  aria-controls="release-versions"
                   aria-selected="true">
                     Overview
                 </a>
@@ -84,15 +85,33 @@
                   class="p-tabs__link"
                   role="tab"
                   data-tab="all"
-                  data-js="switch-tab">
+                  data-js="switch-tab"
+                  aria-controls="release-versions"
+                >
                     All releases
                 </a>
               </li>
+              {% if has_sboms %}
+              <li class="p-tabs__item" role="presentation">
+                <a
+                  href="#"
+                  class="p-tabs__link is-disabled"
+                  role="tab"
+                  data-tab="security"
+                  data-js="switch-tab"
+                  aria-controls="security-information"
+                  aria-disabled="true"
+                  id="channel-map-security-tab"
+                >
+                    Security
+                </a>
+              </li>
+              {% endif %}
             </ul>
           </nav>
         </div>
-        <div class="u-fixed-width p-channel-map__version-table">
-          <table>
+        <div class="u-fixed-width p-channel-map__version-table" role="tabpanel" id="release-versions" aria-hidden="false">
+          <table aria-label="Release versions">
             <thead>
               <tr>
                 <th>Channel</th>
@@ -102,6 +121,20 @@
               </tr>
             </thead>
             <tbody data-js="channel-map-table">
+            </tbody>
+          </table>
+        </div>
+        <div class="u-fixed-width p-channel-map__security-table u-hide" role="tabpanel" id="security-information" aria-hidden="true">
+          <table aria-label="Security information">
+            <thead>
+              <tr>
+                <th>Channel</th>
+                <th>Version</th>
+                <th>Revision</th>
+                <th>Download SBOM</th>
+              </tr>
+            </thead>
+            <tbody data-js="channel-map-security-table">
             </tbody>
           </table>
         </div>
@@ -141,6 +174,14 @@
     <td>${row[2]}</td>
     <td class="u-hide--medium u-hide--small">${row[3]}</td>
     <td class="u-align--center"><a href="#" class="p-channel-map__version-table-install">Install &rsaquo;</a></td>
+  </tr>
+</script>
+<script type="text/template" id="channel-map-security-table-row-template" data-js="channel-map-security-table-row">
+  <tr>
+    <td>${row[0]}/${row[1]}</td>
+    <td>${row[2]}</td>
+    <td>${row[3]}</td>
+    <td>${row[4]}</td>
   </tr>
 </script>
 <div class="p-channel-map-overlay" data-js="close-channel-map" style="display: none"></div>
