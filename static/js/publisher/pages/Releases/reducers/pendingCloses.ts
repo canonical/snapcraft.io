@@ -2,18 +2,11 @@ import {
   GenericReleasesAction,
   ReleasesReduxState,
 } from "../../../types/releaseTypes";
-import { CLOSE_CHANNEL } from "../actions/pendingCloses";
+import { CLOSE_CHANNEL, CloseChannelAction } from "../actions/pendingCloses";
 import {
   RELEASE_REVISION,
   CANCEL_PENDING_RELEASES,
 } from "../actions/pendingReleases";
-
-export type CloseChannelAction = GenericReleasesAction<
-  typeof CLOSE_CHANNEL,
-  {
-    channel: string;
-  }
->;
 
 export type ReleaseRevisionAction = GenericReleasesAction<
   typeof RELEASE_REVISION,

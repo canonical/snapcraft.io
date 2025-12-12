@@ -1,17 +1,9 @@
-import { UPDATE_REVISIONS } from "../actions/revisions";
 import {
-  GenericReleasesAction,
-  ReleasesReduxState,
-} from "../../../types/releaseTypes";
-
-export type UpdateRevisionsAction = GenericReleasesAction<
-  typeof UPDATE_REVISIONS,
-  {
-    revisions: ReleasesReduxState["revisions"];
-  }
->;
-
-export type RevisionsAction = UpdateRevisionsAction;
+  UPDATE_REVISIONS,
+  UpdateRevisionsAction,
+  RevisionsAction,
+} from "../actions/revisions";
+import { ReleasesReduxState } from "../../../types/releaseTypes";
 
 export default function revisions(
   state: ReleasesReduxState["revisions"] = {},
