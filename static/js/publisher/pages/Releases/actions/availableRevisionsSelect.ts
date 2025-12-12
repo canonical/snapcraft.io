@@ -15,6 +15,7 @@ import {
   DispatchFn,
   ReleasesReduxState,
   Revision,
+  AvailableRevisionsSelect,
 } from "../../../types/releaseTypes";
 
 export const SET_AVAILABLE_REVISIONS_SELECT = "SET_AVAILABLE_REVISIONS_SELECT";
@@ -22,14 +23,14 @@ export const SET_AVAILABLE_REVISIONS_SELECT = "SET_AVAILABLE_REVISIONS_SELECT";
 export type SetAvailableRevisionsSelectAction = GenericReleasesAction<
   typeof SET_AVAILABLE_REVISIONS_SELECT,
   {
-    value: string;
+    value: AvailableRevisionsSelect;
   }
 >;
 
 export type AvailableRevisionsSelectAction = SetAvailableRevisionsSelectAction;
 
 export function setAvailableRevisionsSelect(
-  value: string
+  value: AvailableRevisionsSelect
 ): SetAvailableRevisionsSelectAction {
   return {
     type: SET_AVAILABLE_REVISIONS_SELECT,
@@ -37,7 +38,7 @@ export function setAvailableRevisionsSelect(
   };
 }
 
-export function selectAvailableRevisions(value: string) {
+export function selectAvailableRevisions(value: AvailableRevisionsSelect) {
   return (dispatch: DispatchFn, getState: () => ReleasesReduxState) => {
     dispatch(setAvailableRevisionsSelect(value));
     dispatch(clearSelectedRevisions());

@@ -1,5 +1,11 @@
 import { CombinedState } from "redux";
 import { ThunkDispatch } from "redux-thunk";
+import {
+  AVAILABLE_REVISIONS_SELECT_ALL,
+  AVAILABLE_REVISIONS_SELECT_LAUNCHPAD,
+  AVAILABLE_REVISIONS_SELECT_RECENT,
+  AVAILABLE_REVISIONS_SELECT_UNRELEASED,
+} from "../pages/Releases/constants";
 
 type Prettify<T> = { [K in keyof T]: T[K] } & {};
 
@@ -13,12 +19,11 @@ type RemoveKeysWithNeverValues<T> = {
   }[keyof T]]: T[K];
 };
 
-// TODO: these come from "../pages/Releases/constants", what should we do with them?
 export type AvailableRevisionsSelect =
-  | "AVAILABLE_REVISIONS_SELECT_LAUNCHPAD"
-  | "AVAILABLE_REVISIONS_SELECT_UNRELEASED"
-  | "AVAILABLE_REVISIONS_SELECT_RECENT"
-  | "AVAILABLE_REVISIONS_SELECT_ALL";
+  | typeof AVAILABLE_REVISIONS_SELECT_UNRELEASED
+  | typeof AVAILABLE_REVISIONS_SELECT_RECENT
+  | typeof AVAILABLE_REVISIONS_SELECT_ALL
+  | typeof AVAILABLE_REVISIONS_SELECT_LAUNCHPAD;
 
 /**
  * Distinct type for strings for supported architectures
@@ -369,7 +374,7 @@ export type PendingReleaseItem = {
 export type DispatchFn = ThunkDispatch<
   ReleasesReduxState,
   unknown,
-  GenericReleasesAction
+  GenericReleasesAction | GenericReleasesAction<string, never>
 >;
 
 export type GenericReleasesAction<
