@@ -1,3 +1,13 @@
+import {
+  GenericReleasesAction,
+  PendingReleaseItem,
+  Progressive,
+  Revision,
+  ReleasesReduxState,
+  DispatchFn,
+  Release,
+} from "../../../types/releaseTypes";
+
 export const RELEASE_REVISION = "RELEASE_REVISION";
 export const UNDO_RELEASE = "UNDO_RELEASE";
 export const CANCEL_PENDING_RELEASES = "CANCEL_PENDING_RELEASES";
@@ -13,8 +23,72 @@ import { getPendingChannelMap, getReleases } from "../selectors";
 
 import { triggerGAEvent } from "../actions/gaEventTracking";
 
-export function releaseRevision(revision, channel, progressive) {
-  return (dispatch, getState) => {
+export type ReleaseRevisionAction = GenericReleasesAction<
+  typeof RELEASE_REVISION,
+  {
+    revision: Revision;
+    channel: string;
+    progressive?: PendingReleaseItem["progressive"];
+    previousReleases?: PendingReleaseItem["previousReleases"];
+  }
+>;
+
+export type UndoReleaseAction = GenericReleasesAction<
+  typeof UNDO_RELEASE,
+  {
+    revision: Revision;
+    channel: string;
+  }
+>;
+
+export type CancelPendingReleasesAction = GenericReleasesAction<
+  typeof CANCEL_PENDING_RELEASES,
+  never
+>;
+
+export type SetProgressiveReleasePercentageAction = GenericReleasesAction<
+  typeof SET_PROGRESSIVE_RELEASE_PERCENTAGE,
+  Progressive
+>;
+
+export type UpdateProgressiveReleasePercentageAction = GenericReleasesAction<
+  typeof UPDATE_PROGRESSIVE_RELEASE_PERCENTAGE,
+  Progressive
+>;
+
+export type PauseProgressiveReleaseAction = GenericReleasesAction<
+  typeof PAUSE_PROGRESSIVE_RELEASE,
+  never
+>;
+
+export type ResumeProgressiveReleaseAction = GenericReleasesAction<
+  typeof RESUME_PROGRESSIVE_RELEASE,
+  never
+>;
+
+export type CancelProgressiveReleaseAction = GenericReleasesAction<
+  typeof CANCEL_PROGRESSIVE_RELEASE,
+  {
+    previousRevision: Revision;
+  }
+>;
+
+export type PendingReleasesAction =
+  | ReleaseRevisionAction
+  | UndoReleaseAction
+  | CancelPendingReleasesAction
+  | SetProgressiveReleasePercentageAction
+  | UpdateProgressiveReleasePercentageAction
+  | PauseProgressiveReleaseAction
+  | ResumeProgressiveReleaseAction
+  | CancelProgressiveReleaseAction;
+
+export function releaseRevision(
+  revision: Revision,
+  channel: string,
+  progressive?: PendingReleaseItem["progressive"]
+) {
+  return (dispatch: DispatchFn, getState: () => ReleasesReduxState) => {
     const state = getState();
     const { revisions, pendingReleases } = state;
 
@@ -22,7 +96,7 @@ export function releaseRevision(revision, channel, progressive) {
       // Find all revision releases for this channel and architecture
       // that do not share the same revision number as the previous release.
       // for example [1, 1, 2, 2, 3, 2, 2, 2, 1] will return [1, 2, 3, 2, 1]
-      .reduce((acc, release) => {
+      .reduce((acc: Release[], release: Release) => {
         if (!acc.length || acc[acc.length - 1].revision !== release.revision) {
           acc.push(release);
         }
@@ -36,7 +110,7 @@ export function releaseRevision(revision, channel, progressive) {
     if (!progressive && previousReleases.length > 0 && previousReleases[0]) {
       revisionToRelease = revisions[revision.revision];
 
-      let percentage = 100;
+      let percentage: number | null = 100;
 
       // If there's already a "null" release in staging that is progressive
       // assign that value to subsequent progressive releases
@@ -56,6 +130,7 @@ export function releaseRevision(revision, channel, progressive) {
       progressive = {
         percentage: percentage,
         paused: false,
+        "current-percentage": null,
       };
     }
 
@@ -71,37 +146,47 @@ export function releaseRevision(revision, channel, progressive) {
   };
 }
 
-export function setProgressiveReleasePercentage(percentage) {
+export function setProgressiveReleasePercentage(
+  percentage: number
+): SetProgressiveReleasePercentageAction {
   return {
     type: SET_PROGRESSIVE_RELEASE_PERCENTAGE,
     payload: {
       percentage,
+      paused: null,
+      "current-percentage": null,
     },
   };
 }
 
-export function updateProgressiveReleasePercentage(percentage) {
+export function updateProgressiveReleasePercentage(
+  percentage: number
+): UpdateProgressiveReleasePercentageAction {
   return {
     type: UPDATE_PROGRESSIVE_RELEASE_PERCENTAGE,
     payload: {
       percentage,
+      paused: null,
+      "current-percentage": null,
     },
   };
 }
 
-export function pauseProgressiveRelease() {
+export function pauseProgressiveRelease(): PauseProgressiveReleaseAction {
   return {
     type: PAUSE_PROGRESSIVE_RELEASE,
   };
 }
 
-export function resumeProgressiveRelease() {
+export function resumeProgressiveRelease(): ResumeProgressiveReleaseAction {
   return {
     type: RESUME_PROGRESSIVE_RELEASE,
   };
 }
 
-export function cancelProgressiveRelease(previousRevision) {
+export function cancelProgressiveRelease(
+  previousRevision: Revision
+): CancelProgressiveReleaseAction {
   return {
     type: CANCEL_PROGRESSIVE_RELEASE,
     payload: {
@@ -110,8 +195,8 @@ export function cancelProgressiveRelease(previousRevision) {
   };
 }
 
-export function promoteRevision(revision, channel) {
-  return (dispatch, getState) => {
+export function promoteRevision(revision: Revision, channel: string) {
+  return (dispatch: DispatchFn, getState: () => ReleasesReduxState) => {
     const pendingChannelMap = getPendingChannelMap(getState());
 
     const canPromoteRevision = revision.architectures.every((arch) => {
@@ -146,8 +231,8 @@ export function promoteRevision(revision, channel) {
   };
 }
 
-export function promoteChannel(channel, targetChannel) {
-  return (dispatch, getState) => {
+export function promoteChannel(channel: string, targetChannel: string) {
+  return (dispatch: DispatchFn, getState: () => ReleasesReduxState) => {
     const pendingChannelMap = getPendingChannelMap(getState());
     const pendingInChannel = pendingChannelMap[channel];
 
@@ -159,8 +244,8 @@ export function promoteChannel(channel, targetChannel) {
   };
 }
 
-export function undoRelease(revision, channel) {
-  return (dispatch) => {
+export function undoRelease(revision: Revision, channel: string) {
+  return (dispatch: DispatchFn) => {
     dispatch(
       triggerGAEvent(
         "click-cancel-promotion",
@@ -174,7 +259,7 @@ export function undoRelease(revision, channel) {
   };
 }
 
-export function cancelPendingReleases() {
+export function cancelPendingReleases(): CancelPendingReleasesAction {
   return {
     type: CANCEL_PENDING_RELEASES,
   };

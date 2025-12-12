@@ -7,6 +7,15 @@ import {
   PAUSE_PROGRESSIVE_RELEASE,
   RESUME_PROGRESSIVE_RELEASE,
   CANCEL_PROGRESSIVE_RELEASE,
+  ReleaseRevisionAction,
+  UndoReleaseAction,
+  CancelPendingReleasesAction,
+  SetProgressiveReleasePercentageAction,
+  UpdateProgressiveReleasePercentageAction,
+  PauseProgressiveReleaseAction,
+  ResumeProgressiveReleaseAction,
+  CancelProgressiveReleaseAction,
+  PendingReleasesAction,
 } from "../actions/pendingReleases";
 import { CLOSE_CHANNEL } from "../actions/pendingCloses";
 import {
@@ -17,29 +26,6 @@ import {
   Revision,
 } from "../../../types/releaseTypes";
 
-export type ReleaseRevisionAction = GenericReleasesAction<
-  typeof RELEASE_REVISION,
-  {
-    revision: Revision;
-    channel: string;
-    progressive?: PendingReleaseItem["progressive"];
-    previousReleases?: PendingReleaseItem["previousReleases"];
-  }
->;
-
-export type UndoReleaseAction = GenericReleasesAction<
-  typeof UNDO_RELEASE,
-  {
-    revision: Revision;
-    channel: string;
-  }
->;
-
-export type CancelPendingReleasesAction = GenericReleasesAction<
-  typeof CANCEL_PENDING_RELEASES,
-  never
->;
-
 export type CloseChannelAction = GenericReleasesAction<
   typeof CLOSE_CHANNEL,
   {
@@ -47,43 +33,9 @@ export type CloseChannelAction = GenericReleasesAction<
   }
 >;
 
-export type SetProgressiveReleasePercentageAction = GenericReleasesAction<
-  typeof SET_PROGRESSIVE_RELEASE_PERCENTAGE,
-  Progressive
->;
-
-export type UpdateProgressiveReleasePercentageAction = GenericReleasesAction<
-  typeof UPDATE_PROGRESSIVE_RELEASE_PERCENTAGE,
-  Progressive
->;
-
-export type PauseProgressiveReleaseAction = GenericReleasesAction<
-  typeof PAUSE_PROGRESSIVE_RELEASE,
-  never
->;
-
-export type ResumeProgressiveReleaseAction = GenericReleasesAction<
-  typeof RESUME_PROGRESSIVE_RELEASE,
-  never
->;
-
-export type CancelProgressiveReleaseAction = GenericReleasesAction<
-  typeof CANCEL_PROGRESSIVE_RELEASE,
-  {
-    previousRevision: Revision;
-  }
->;
-
-export type PendingReleasesAction =
-  | ReleaseRevisionAction
-  | UndoReleaseAction
-  | CancelPendingReleasesAction
-  | CloseChannelAction
-  | SetProgressiveReleasePercentageAction
-  | UpdateProgressiveReleasePercentageAction
-  | PauseProgressiveReleaseAction
-  | ResumeProgressiveReleaseAction
-  | CancelProgressiveReleaseAction;
+export type PendingReleasesReducerAction =
+  | PendingReleasesAction
+  | CloseChannelAction;
 
 function removePendingRelease(
   state: ReleasesReduxState["pendingReleases"],
@@ -291,7 +243,7 @@ function cancelProgressiveRelease(
 // to prevent duplication of revison data
 export default function pendingReleases(
   state: ReleasesReduxState["pendingReleases"] = {},
-  action: PendingReleasesAction
+  action: PendingReleasesReducerAction
 ) {
   switch (action.type) {
     case RELEASE_REVISION:
