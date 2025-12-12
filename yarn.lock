@@ -942,10 +942,10 @@
     "@types/tough-cookie" "^4.0.5"
     tough-cookie "^4.1.4"
 
-"@canonical/cookie-policy@3.6.5":
-  version "3.6.5"
-  resolved "https://registry.yarnpkg.com/@canonical/cookie-policy/-/cookie-policy-3.6.5.tgz#50d82df6da2970b6b5d78d066dd94fcc1317e591"
-  integrity sha512-CQJKSkuLXhSumkIIw4YPSjR7k9561hZ3EEdMPQTkAVTxXURhm3WzJm/uyrvcAuU/a//jzWa8ScltCaHFBdACew==
+"@canonical/cookie-policy@3.7.0":
+  version "3.7.0"
+  resolved "https://registry.yarnpkg.com/@canonical/cookie-policy/-/cookie-policy-3.7.0.tgz#4f44bb6280102d7673764bd01a21b3d42c200390"
+  integrity sha512-5aQy07tZ7GTQqNb3YGXqJocAxQbibnTI/qpMhirwSi11zMuHgeSMJrVwUl1HNuw4j09yXJe7XnoPse3BlbxrTA==
 
 "@canonical/global-nav@3.8.0":
   version "3.8.0"
@@ -8266,6 +8266,11 @@ vanilla-framework@4.35.0:
   version "4.35.0"
   resolved "https://registry.yarnpkg.com/vanilla-framework/-/vanilla-framework-4.35.0.tgz#b01bbb525ad3211690c9f10580ca2e00a37a8ab1"
   integrity sha512-vF8M9vsXiOpJEonFXiTVhY0rXOzNtoWpkhBcCVpyPb4+oHBx0/FaNcX5GAiQpfdT6Q/AAeRYyWwRUDObq6R8uw==
+
+vanilla-framework@4.37.0:
+  version "4.37.0"
+  resolved "https://registry.yarnpkg.com/vanilla-framework/-/vanilla-framework-4.37.0.tgz#9f76557bd427a5994249b9f146f20135cb66c8d0"
+  integrity sha512-9cyUYfpZ9VSqlgfyG5JVNV2kY1CZaV9EmojsXCsAzevYRU0w1TJSx1nGv4UTUUmHdCmLtqnaGpx9Jpdib3J6vw==
 
 varint@^6.0.0:
   version "6.0.0"

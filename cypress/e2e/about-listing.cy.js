@@ -3,7 +3,7 @@
 describe("Test about-listing.js bundle on /about/listing page", () => {
   beforeEach(() => {
     cy.visit("http://localhost:8004/about/listing");
-    cy.get("#cookie-policy-button-accept").click();
+    cy.get("#cookie-policy-button-accept-all").click();
   });
 
   it("Sets event listeners on tabs in desktop layout", () => {
