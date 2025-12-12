@@ -35,6 +35,8 @@ import {
   FetchReleaseResponse,
   FetchReleasePayload,
   CloseChannelsResponse,
+  Revision,
+  ReleaseErrorResponse,
 } from "../../../types/releaseTypes";
 
 export const UPDATE_RELEASES = "UPDATE_RELEASES";
@@ -109,7 +111,7 @@ export function handleReleaseResponse(
           const arch = series[archKey];
           arch.forEach((map) => {
             if (map.revision) {
-              let revision;
+              let revision: Revision;
 
               if (map.revision === +release.id) {
                 // release.id is a string so turn it into a number for comparison
@@ -117,11 +119,13 @@ export function handleReleaseResponse(
               } else if (revisions[map.revision]) {
                 revision = revisions[map.revision];
               } else {
+                // TODO: when can this happen? we're doing a pretty awful cast
+                // because there are many things missing from this object...
                 revision = {
                   revision: map.revision,
                   version: map.version,
                   architectures: release.revision.architectures,
-                };
+                } as Revision;
               }
 
               const channel = `${trackKey}/${map.channel}`;
@@ -132,7 +136,7 @@ export function handleReleaseResponse(
       });
     });
   } else {
-    throw new Error(json.errors[0]);
+    throw new Error((json as ReleaseErrorResponse).errors[0]);
   }
 }
 

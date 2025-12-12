@@ -226,7 +226,7 @@ export type ReleaseChannel = {
   revision?: number;
 };
 
-type ReleaseErrorResponse = {
+export type ReleaseErrorResponse = {
   success: false;
   errors: string[];
 };
