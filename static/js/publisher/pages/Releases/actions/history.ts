@@ -8,6 +8,7 @@ export const OPEN_HISTORY = "OPEN_HISTORY";
 export const CLOSE_HISTORY = "CLOSE_HISTORY";
 
 import { triggerGAEvent } from "../actions/gaEventTracking";
+import { CloseChannelAction } from "./pendingCloses";
 
 export type OpenHistoryAction = GenericReleasesAction<
   typeof OPEN_HISTORY,
@@ -16,7 +17,7 @@ export type OpenHistoryAction = GenericReleasesAction<
 
 export type CloseHistoryAction = GenericReleasesAction<typeof CLOSE_HISTORY, never>;
 
-export type HistoryAction = OpenHistoryAction | CloseHistoryAction;
+export type HistoryAction = OpenHistoryAction | CloseHistoryAction | CloseChannelAction;
 
 export function openHistory(
   filters: ReleasesReduxState["history"]["filters"]

@@ -7,35 +7,15 @@ import {
   PAUSE_PROGRESSIVE_RELEASE,
   RESUME_PROGRESSIVE_RELEASE,
   CANCEL_PROGRESSIVE_RELEASE,
-  ReleaseRevisionAction,
-  UndoReleaseAction,
-  CancelPendingReleasesAction,
-  SetProgressiveReleasePercentageAction,
-  UpdateProgressiveReleasePercentageAction,
-  PauseProgressiveReleaseAction,
-  ResumeProgressiveReleaseAction,
-  CancelProgressiveReleaseAction,
   PendingReleasesAction,
 } from "../actions/pendingReleases";
 import { CLOSE_CHANNEL } from "../actions/pendingCloses";
 import {
   PendingReleaseItem,
   Progressive,
-  GenericReleasesAction,
   ReleasesReduxState,
   Revision,
 } from "../../../types/releaseTypes";
-
-export type CloseChannelAction = GenericReleasesAction<
-  typeof CLOSE_CHANNEL,
-  {
-    channel: string;
-  }
->;
-
-export type PendingReleasesReducerAction =
-  | PendingReleasesAction
-  | CloseChannelAction;
 
 function removePendingRelease(
   state: ReleasesReduxState["pendingReleases"],
@@ -243,7 +223,7 @@ function cancelProgressiveRelease(
 // to prevent duplication of revison data
 export default function pendingReleases(
   state: ReleasesReduxState["pendingReleases"] = {},
-  action: PendingReleasesReducerAction
+  action: PendingReleasesAction
 ) {
   switch (action.type) {
     case RELEASE_REVISION:

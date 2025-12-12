@@ -1,21 +1,12 @@
 import {
-  GenericReleasesAction,
   ReleasesReduxState,
 } from "../../../types/releaseTypes";
 import {
   OPEN_HISTORY,
   CLOSE_HISTORY,
-  OpenHistoryAction,
-  CloseHistoryAction,
+  HistoryAction,
 } from "../actions/history";
 import { CLOSE_CHANNEL } from "../actions/pendingCloses";
-
-export type CloseChannelAction = GenericReleasesAction<typeof CLOSE_CHANNEL, never>;
-
-export type HistoryAction =
-  | OpenHistoryAction
-  | CloseHistoryAction
-  | CloseChannelAction;
 
 export default function history(
   state: ReleasesReduxState["history"] = {

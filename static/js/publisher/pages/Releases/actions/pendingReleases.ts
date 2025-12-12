@@ -22,6 +22,7 @@ export const CANCEL_PROGRESSIVE_RELEASE = "CANCEL_PROGRESSIVE_RELEASE";
 import { getPendingChannelMap, getReleases } from "../selectors";
 
 import { triggerGAEvent } from "../actions/gaEventTracking";
+import { CloseChannelAction } from "./pendingCloses";
 
 export type ReleaseRevisionAction = GenericReleasesAction<
   typeof RELEASE_REVISION,
@@ -81,7 +82,8 @@ export type PendingReleasesAction =
   | UpdateProgressiveReleasePercentageAction
   | PauseProgressiveReleaseAction
   | ResumeProgressiveReleaseAction
-  | CancelProgressiveReleaseAction;
+  | CancelProgressiveReleaseAction
+  | CloseChannelAction;
 
 export function releaseRevision(
   revision: Revision,
@@ -103,7 +105,7 @@ export function releaseRevision(
 
         return acc;
       }, [])
-      .map((release) => revisions[release.revision]);
+      .map((release) => revisions[release.revision!]);
 
     let revisionToRelease = revision;
 

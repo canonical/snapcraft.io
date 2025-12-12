@@ -37,9 +37,17 @@ import {
   CloseChannelsResponse,
   Revision,
   ReleaseErrorResponse,
+  GenericReleasesAction,
 } from "../../../types/releaseTypes";
 
 export const UPDATE_RELEASES = "UPDATE_RELEASES";
+
+export type UpdateReleasesAction = GenericReleasesAction<
+  typeof UPDATE_RELEASES,
+  { releases: ReleasesReduxState["releases"] }
+>;
+
+export type ReleasesAction = UpdateReleasesAction;
 
 // returns a Redux thunk callback that unpacks the API response into the state
 function updateReleasesData(apiData: ReleasesAPIResponse) {
