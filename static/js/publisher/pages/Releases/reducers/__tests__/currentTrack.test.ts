@@ -1,4 +1,5 @@
-import currentTrack, { CurrentTrackAction, SetCurrentTrackAction } from "../currentTrack";
+import currentTrack from "../currentTrack";
+import { CurrentTrackAction, SetCurrentTrackAction } from "../../actions/currentTrack";
 
 import { SET_CURRENT_TRACK } from "../../actions/currentTrack";
 

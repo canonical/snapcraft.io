@@ -1,6 +1,7 @@
-import history, { CloseChannelAction, CloseHistoryAction, HistoryAction, OpenHistoryAction } from "../history";
+import history from "../history";
+import { CloseHistoryAction, HistoryAction, OpenHistoryAction } from "../../actions/history";
 import { OPEN_HISTORY, CLOSE_HISTORY } from "../../actions/history";
-import { CLOSE_CHANNEL } from "../../actions/pendingCloses";
+import { CLOSE_CHANNEL, CloseChannelAction } from "../../actions/pendingCloses";
 import { ReleasesReduxState } from "../../../../types/releaseTypes";
 
 describe("history", () => {
@@ -68,6 +69,9 @@ describe("history", () => {
   describe("on CLOSE_CHANNEL action", () => {
     let closeChannelAction: CloseChannelAction = {
       type: CLOSE_CHANNEL,
+      payload: {
+        channel: ""
+      }
     };
 
     it("should mark history panel closed", () => {

@@ -1,25 +1,9 @@
-import {
-  GenericReleasesAction,
-  ReleasesReduxState,
-} from "../../../types/releaseTypes";
+import { ReleasesReduxState } from "../../../types/releaseTypes";
 import {
   SHOW_NOTIFICATION,
   HIDE_NOTIFICATION,
+  NotificationAction,
 } from "../actions/globalNotification";
-
-export type ShowNotificationAction = GenericReleasesAction<
-  typeof SHOW_NOTIFICATION,
-  Partial<ReleasesReduxState["notification"]>
->;
-
-export type HideNotificationAction = GenericReleasesAction<
-  typeof HIDE_NOTIFICATION,
-  never
->;
-
-export type NotificationAction =
-  | ShowNotificationAction
-  | HideNotificationAction;
 
 export default function notification(
   state: ReleasesReduxState["notification"] = { visible: false },

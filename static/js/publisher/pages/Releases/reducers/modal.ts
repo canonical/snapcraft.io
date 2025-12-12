@@ -1,17 +1,9 @@
+import { ReleasesReduxState } from "../../../types/releaseTypes";
 import {
-  GenericReleasesAction,
-  ReleasesReduxState,
-} from "../../../types/releaseTypes";
-import { OPEN_MODAL, CLOSE_MODAL } from "../actions/modal";
-
-export type OpenModalAction = GenericReleasesAction<
-  typeof OPEN_MODAL,
-  Partial<ReleasesReduxState["modal"]>
->;
-
-export type CloseModalAction = GenericReleasesAction<typeof CLOSE_MODAL, never>;
-
-export type ModalAction = OpenModalAction | CloseModalAction;
+  OPEN_MODAL,
+  CLOSE_MODAL,
+  ModalAction,
+} from "../actions/modal";
 
 export default function modal(
   state: ReleasesReduxState["modal"] = { visible: false },

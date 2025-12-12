@@ -1,11 +1,11 @@
 import { triggerEventReleaseUI } from "../../../../base/ga";
+import { DispatchFn, ReleasesReduxState } from "../../../types/releaseTypes";
 
-export function triggerGAEvent() {
-  const eventLabelItems = [...arguments];
-  const eventAction = eventLabelItems.shift();
+export function triggerGAEvent(eventAction: string, ...args: string[]) {
+  const eventLabelItems = [...args];
   let eventLabel = "";
 
-  return (dispatch, getState) => {
+  return (_: DispatchFn, getState: () => ReleasesReduxState) => {
     const currentState = getState();
 
     if (eventLabelItems.length > 1) {

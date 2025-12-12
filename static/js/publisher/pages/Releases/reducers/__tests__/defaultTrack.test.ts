@@ -1,5 +1,5 @@
-import defaultTrack, { DefaultTrackAction } from "../defaultTrack";
-
+import defaultTrack from "../defaultTrack";
+import { DefaultTrackAction } from "../../actions/defaultTrack";
 import { SET_DEFAULT_TRACK_SUCCESS } from "../../actions/defaultTrack";
 
 describe("defaultTrack", () => {

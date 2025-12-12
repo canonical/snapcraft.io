@@ -1,7 +1,8 @@
-import availableRevisionsSelect, {
+import availableRevisionsSelect from "../availableRevisionsSelect";
+import {
   AvailableRevisionsSelectAction,
   SetAvailableRevisionsSelectAction,
-} from "../availableRevisionsSelect";
+} from "../../actions/availableRevisionsSelect";
 import { SET_AVAILABLE_REVISIONS_SELECT } from "../../actions/availableRevisionsSelect";
 import { AVAILABLE_REVISIONS_SELECT_UNRELEASED } from "../../constants";
 import { AvailableRevisionsSelect } from "../../../../types/releaseTypes";
@@ -17,7 +18,7 @@ describe("releases", () => {
     let setSelectAction: SetAvailableRevisionsSelectAction = {
       type: SET_AVAILABLE_REVISIONS_SELECT,
       payload: {
-        value: "test",
+        value: "test" as AvailableRevisionsSelect,
       },
     };
 

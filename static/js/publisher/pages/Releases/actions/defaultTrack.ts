@@ -1,10 +1,29 @@
 import { CLOSE_MODAL } from "./modal";
 import { showNotification } from "./globalNotification";
+import {
+  GenericReleasesAction,
+  ReleasesReduxState,
+  DispatchFn,
+} from "../../../types/releaseTypes";
 
 export const SET_DEFAULT_TRACK_SUCCESS = "SET_DEFAULT_TRACK_SUCCESS";
 export const SET_DEFAULT_TRACK_FAILURE = "SET_DEFAULT_TRACK_FAILURE";
 
-const fetchDefaultTrack = (snapName, track) => {
+export type SetDefaultTrackSuccessAction = GenericReleasesAction<
+  typeof SET_DEFAULT_TRACK_SUCCESS,
+  ReleasesReduxState["defaultTrack"]
+>;
+
+export type SetDefaultTrackFailureAction = GenericReleasesAction<
+  typeof SET_DEFAULT_TRACK_FAILURE,
+  never
+>;
+
+export type DefaultTrackAction =
+  | SetDefaultTrackSuccessAction
+  | SetDefaultTrackFailureAction;
+
+const fetchDefaultTrack = (snapName: string, track: string | null) => {
   return fetch(`/${snapName}/releases/default-track`, {
     method: "POST",
     mode: "cors",
@@ -12,7 +31,7 @@ const fetchDefaultTrack = (snapName, track) => {
     credentials: "same-origin",
     headers: {
       "Content-Type": "application/json; charset=utf-8",
-      "X-CSRFToken": window.CSRF_TOKEN,
+      "X-CSRFToken": (window as any).CSRF_TOKEN,
     },
     redirect: "follow",
     referrer: "no-referrer",
@@ -26,7 +45,7 @@ const fetchDefaultTrack = (snapName, track) => {
 };
 
 export function clearDefaultTrack() {
-  return (dispatch, getState) => {
+  return (dispatch: DispatchFn, getState: () => ReleasesReduxState) => {
     const { options } = getState();
     const { snapName } = options;
 
@@ -37,7 +56,7 @@ export function clearDefaultTrack() {
       });
       dispatch({
         type: CLOSE_MODAL,
-      });
+      } as any);
       dispatch(
         showNotification({
           status: "success",
@@ -51,7 +70,7 @@ export function clearDefaultTrack() {
 }
 
 export function setDefaultTrack() {
-  return (dispatch, getState) => {
+  return (dispatch: DispatchFn, getState: () => ReleasesReduxState) => {
     const { options, currentTrack } = getState();
     const { snapName } = options;
 
@@ -70,10 +89,10 @@ export function setDefaultTrack() {
           }),
         );
       })
-      .catch((errorResponse) => {
+      .catch((errorResponse: Response) => {
         dispatch({
           type: SET_DEFAULT_TRACK_FAILURE,
-        });
+        } as any);
         dispatch(
           showNotification({
             status: "error",
@@ -86,7 +105,7 @@ export function setDefaultTrack() {
       .finally(() => {
         dispatch({
           type: CLOSE_MODAL,
-        });
+        } as any);
       });
   };
 }

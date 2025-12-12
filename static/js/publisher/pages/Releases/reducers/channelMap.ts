@@ -5,55 +5,13 @@ import {
   CLEAR_SELECTED_REVISIONS,
   RELEASE_REVISION_SUCCESS,
   CLOSE_CHANNEL_SUCCESS,
+  ChannelMapAction,
 } from "../actions/channelMap";
-import {
-  GenericReleasesAction,
-  ReleasesReduxState,
-} from "../../../types/releaseTypes";
-
-export type InitChannelMapAction = GenericReleasesAction<
-  typeof INIT_CHANNEL_MAP,
-  { channelMap: ReleasesReduxState["channelMap"] }
->;
-
-export type SelectRevisionAction = GenericReleasesAction<
-  typeof SELECT_REVISION,
-  {
-    revision: ReleasesReduxState["revisions"][string];
-    toggle: boolean;
-  }
->;
-
-export type ClearSelectedRevisionAction = GenericReleasesAction<
-  typeof CLEAR_SELECTED_REVISIONS,
-  never
->;
-
-export type ReleaseRevisionSuccessAction = GenericReleasesAction<
-  typeof RELEASE_REVISION_SUCCESS,
-  {
-    revision: ReleasesReduxState["revisions"][string];
-    channel: string;
-  }
->;
-
-export type CloseChannelSuccessAction = GenericReleasesAction<
-  typeof CLOSE_CHANNEL_SUCCESS,
-  {
-    channel: string;
-  }
->;
-
-export type ChannelMapAction =
-  | InitChannelMapAction
-  | SelectRevisionAction
-  | ClearSelectedRevisionAction
-  | ReleaseRevisionSuccessAction
-  | CloseChannelSuccessAction;
+import { ReleasesReduxState, Revision } from "../../../types/releaseTypes";
 
 function selectRevision(
   state: ReleasesReduxState["channelMap"],
-  revision: ReleasesReduxState["revisions"][string],
+  revision: Revision,
   toggle: boolean
 ) {
   const arch = revision.architectures[0];
@@ -78,7 +36,7 @@ function selectRevision(
 
 function releaseRevision(
   state: ReleasesReduxState["channelMap"],
-  revision: ReleasesReduxState["revisions"][string],
+  revision: Revision,
   channel: string
 ) {
   state = {

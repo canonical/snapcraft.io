@@ -78,7 +78,7 @@ const ReleasesTableChannelHeading = (props: {
   pendingCloses: any;
   filters: any;
   promoteRevision: any;
-  triggerGAEvent: any;
+  triggerGAEvent: typeof triggerGAEvent;
   closeChannel: any;
   toggleBranches: any;
   currentTrack: any;
@@ -409,7 +409,7 @@ const mapDispatchToProps = (dispatch: any) => {
       dispatch(promoteRevision(revision, targetChannel)),
     closeChannel: (channel: any) => dispatch(closeChannel(channel)),
     toggleBranches: (channel: any) => dispatch(toggleBranches(channel)),
-    triggerGAEvent: (...eventProps: any) =>
+    triggerGAEvent: (...eventProps: Parameters<typeof triggerGAEvent>) =>
       dispatch(triggerGAEvent(...eventProps)),
   };
 };

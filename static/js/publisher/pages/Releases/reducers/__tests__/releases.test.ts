@@ -1,5 +1,5 @@
-import releases, { ReleasesAction } from "../releases";
-import { UPDATE_RELEASES } from "../../actions/releases";
+import releases from "../releases";
+import { ReleasesAction, UPDATE_RELEASES } from "../../actions/releases";
 import { ReleasesReduxState } from "../../../../types/releaseTypes";
 
 describe("releases", () => {

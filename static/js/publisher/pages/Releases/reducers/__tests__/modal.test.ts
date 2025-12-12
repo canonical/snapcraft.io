@@ -1,4 +1,5 @@
-import modal, { ModalAction } from "../modal";
+import modal from "../modal";
+import { CloseModalAction, ModalAction, OpenModalAction } from "../../actions/modal";
 
 import { OPEN_MODAL, CLOSE_MODAL } from "../../actions/modal";
 
@@ -18,7 +19,7 @@ describe("modal", () => {
         actions: [],
         closeModal: () => {},
       },
-    };
+    } as OpenModalAction;
 
     it("should mark modal as visible", () => {
       const result = modal({}, openModalAction);
@@ -34,7 +35,7 @@ describe("modal", () => {
   describe("on CLOSE_MODAL action", () => {
     let closeModalAction = {
       type: CLOSE_MODAL,
-    };
+    } as CloseModalAction;
 
     it("should mark the modal as not visible", () => {
       const result = modal({}, closeModalAction);

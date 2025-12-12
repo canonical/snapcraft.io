@@ -57,7 +57,7 @@ const ReleasesTableDroppableRow = (props: {
   revisions: any;
   promoteRevision: any;
   pendingChannelMap: any;
-  triggerGAEvent: any;
+  triggerGAEvent: typeof triggerGAEvent;
 }) => {
   const {
     currentTrack,
@@ -236,7 +236,7 @@ const mapDispatchToProps = (dispatch: any) => {
   return {
     promoteRevision: (revision: any, targetChannel: any) =>
       dispatch(promoteRevision(revision, targetChannel)),
-    triggerGAEvent: (...eventProps: any) =>
+    triggerGAEvent: (...eventProps: Parameters<typeof triggerGAEvent>) =>
       dispatch(triggerGAEvent(...eventProps)),
   };
 };
