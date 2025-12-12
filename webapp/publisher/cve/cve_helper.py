@@ -8,7 +8,6 @@ from werkzeug.exceptions import NotFound
 from webapp.publisher.snaps import (
     logic,
 )
-from cache.cache_utility import redis_cache
 
 REST_API_URL = "https://api.github.com"
 GITHUB_SNAPCRAFT_BOT_USER_TOKEN = getenv("GITHUB_SNAPCRAFT_BOT_USER_TOKEN")
@@ -119,12 +118,6 @@ class CveHelper:
 
     @staticmethod
     def get_revisions_with_cves(snap_name):
-        cve_with_revisions_cache_key = f"cve_revisions:{snap_name}"
-        cached_revision_files = redis_cache.get(
-            cve_with_revisions_cache_key, expected_type=list
-        )
-        if cached_revision_files:
-            return cached_revision_files
         try:
             contents = CveHelper._get_cve_file_metadata(
                 f"snap-cves/{snap_name}"
@@ -138,9 +131,6 @@ class CveHelper:
                 for item in contents
                 if (match := re.match(r"(\d+)\.yaml$", item["name"]))
             ]
-            redis_cache.set(
-                cve_with_revisions_cache_key, revision_files, ttl=3600
-            )
 
             return revision_files
         except NotFound:
@@ -148,13 +138,6 @@ class CveHelper:
 
     @staticmethod
     def get_cve_with_revision(snap_name, revision):
-        cve_with_revision_cache_key = f"cves:{snap_name}:{revision}"
-        cached_file_content = redis_cache.get(
-            cve_with_revision_cache_key, expected_type=list
-        )
-        if cached_file_content:
-            return cached_file_content
-
         file_metadata = CveHelper._get_cve_file_metadata(
             "snap-cves/{}.json".format(snap_name)
         )
@@ -162,9 +145,6 @@ class CveHelper:
         if file_metadata:
             file_content = CveHelper._fetch_file_content(
                 snap_name, revision, file_metadata
-            )
-            redis_cache.set(
-                cve_with_revision_cache_key, file_content, ttl=3600
             )
             return file_content
         return []
