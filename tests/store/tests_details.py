@@ -394,7 +394,7 @@ class GetDetailsPageTest(TestCase):
         """Test that package size is correctly included in channel map data"""
         payload = {
             "snap-id": "id",
-            "name": "test-snap",
+            "name": "toto",
             "default-track": None,
             "snap": {
                 "title": "Test Snap",
@@ -425,6 +425,7 @@ class GetDetailsPageTest(TestCase):
                     "version": "1.0",
                     "confinement": "strict",
                     "download": {"size": 52428800},  # 50 MB
+                    "revision": 1,
                 }
             ],
         }
@@ -432,6 +433,19 @@ class GetDetailsPageTest(TestCase):
         responses.add(
             responses.Response(
                 method="GET", url=self.api_url, json=payload, status=200
+            )
+        )
+        responses.add(
+            responses.Response(
+                method="GET",
+                url=self.api_url_details,
+                json=EMPTY_EXTRA_DETAILS_PAYLOAD,
+                status=200,
+            )
+        )
+        responses.add(
+            responses.Response(
+                method="HEAD", url=self.api_url_sboms, json={}, status=200
             )
         )
 
