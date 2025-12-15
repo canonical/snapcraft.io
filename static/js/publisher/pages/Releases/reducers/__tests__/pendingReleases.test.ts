@@ -1,4 +1,5 @@
-import pendingReleases, {
+import pendingReleases from "../pendingReleases";
+import {
   CancelProgressiveReleaseAction,
   PauseProgressiveReleaseAction,
   PendingReleasesAction,
@@ -7,7 +8,7 @@ import pendingReleases, {
   SetProgressiveReleasePercentageAction,
   UndoReleaseAction,
   UpdateProgressiveReleasePercentageAction,
-} from "../pendingReleases";
+} from "../../actions/pendingReleases";
 import {
   RELEASE_REVISION,
   UNDO_RELEASE,
@@ -18,11 +19,10 @@ import {
   RESUME_PROGRESSIVE_RELEASE,
   CANCEL_PROGRESSIVE_RELEASE,
 } from "../../actions/pendingReleases";
-import { CLOSE_CHANNEL } from "../../actions/pendingCloses";
+import { CLOSE_CHANNEL, CloseChannelAction } from "../../actions/pendingCloses";
 import { ReleasesReduxState } from "../../../../types/releaseTypes";
 import {
   CancelPendingReleasesAction,
-  CloseChannelAction,
 } from "../pendingCloses";
 
 describe("pendingReleases", () => {

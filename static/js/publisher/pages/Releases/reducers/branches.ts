@@ -1,14 +1,9 @@
+import { ReleasesReduxState } from "../../../types/releaseTypes";
 import {
-  GenericReleasesAction,
-  ReleasesReduxState,
-} from "../../../types/releaseTypes";
-import { OPEN_BRANCHES, CLOSE_BRANCHES } from "../actions/branches";
-
-export type OpenBranchesAction = GenericReleasesAction<typeof OPEN_BRANCHES, string>;
-
-export type CloseBranchesAction = GenericReleasesAction<typeof CLOSE_BRANCHES, string>;
-
-export type BranchesAction = OpenBranchesAction | CloseBranchesAction;
+  OPEN_BRANCHES,
+  CLOSE_BRANCHES,
+  BranchesAction,
+} from "../actions/branches";
 
 export default function branches(
   state: ReleasesReduxState["branches"] = [],

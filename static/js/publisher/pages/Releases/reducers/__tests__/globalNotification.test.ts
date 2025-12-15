@@ -1,8 +1,9 @@
-import notification, {
+import notification from "../globalNotification";
+import {
   HideNotificationAction,
   NotificationAction,
   ShowNotificationAction,
-} from "../globalNotification";
+} from "../../actions/globalNotification";
 
 import {
   SHOW_NOTIFICATION,

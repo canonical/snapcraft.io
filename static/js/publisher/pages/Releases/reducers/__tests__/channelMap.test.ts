@@ -1,11 +1,12 @@
-import channelMap, {
+import channelMap from "../channelMap";
+import {
   ChannelMapAction,
   ClearSelectedRevisionAction,
   CloseChannelSuccessAction,
   InitChannelMapAction,
   ReleaseRevisionSuccessAction,
   SelectRevisionAction,
-} from "../channelMap";
+} from "../../actions/channelMap";
 import {
   INIT_CHANNEL_MAP,
   SELECT_REVISION,

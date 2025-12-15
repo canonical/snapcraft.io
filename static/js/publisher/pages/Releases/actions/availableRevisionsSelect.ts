@@ -10,18 +10,36 @@ import {
   getFilteredAvailableRevisionsForArch,
 } from "../selectors";
 import { getBuildId } from "../helpers";
+import {
+  GenericReleasesAction,
+  DispatchFn,
+  ReleasesReduxState,
+  Revision,
+  AvailableRevisionsSelect,
+} from "../../../types/releaseTypes";
 
 export const SET_AVAILABLE_REVISIONS_SELECT = "SET_AVAILABLE_REVISIONS_SELECT";
 
-export function setAvailableRevisionsSelect(value) {
+export type SetAvailableRevisionsSelectAction = GenericReleasesAction<
+  typeof SET_AVAILABLE_REVISIONS_SELECT,
+  {
+    value: AvailableRevisionsSelect;
+  }
+>;
+
+export type AvailableRevisionsSelectAction = SetAvailableRevisionsSelectAction;
+
+export function setAvailableRevisionsSelect(
+  value: AvailableRevisionsSelect
+): SetAvailableRevisionsSelectAction {
   return {
     type: SET_AVAILABLE_REVISIONS_SELECT,
     payload: { value },
   };
 }
 
-export function selectAvailableRevisions(value) {
-  return (dispatch, getState) => {
+export function selectAvailableRevisions(value: AvailableRevisionsSelect) {
+  return (dispatch: DispatchFn, getState: () => ReleasesReduxState) => {
     dispatch(setAvailableRevisionsSelect(value));
     dispatch(clearSelectedRevisions());
 
@@ -29,7 +47,7 @@ export function selectAvailableRevisions(value) {
 
     // for each architecture
     const archs = getArchitectures(state);
-    let revisionsFilter = () => true;
+    let revisionsFilter: (revision: Revision) => boolean = () => true;
 
     // for Recent select only revisions from most recent uploaded version
     if (

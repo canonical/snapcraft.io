@@ -1,17 +1,8 @@
+import { ReleasesReduxState } from "../../../types/releaseTypes";
 import {
-  GenericReleasesAction,
-  ReleasesReduxState,
-} from "../../../types/releaseTypes";
-import { SET_CURRENT_TRACK } from "../actions/currentTrack";
-
-export type SetCurrentTrackAction = GenericReleasesAction<
-  typeof SET_CURRENT_TRACK,
-  {
-    track: ReleasesReduxState["currentTrack"];
-  }
->;
-
-export type CurrentTrackAction = SetCurrentTrackAction;
+  SET_CURRENT_TRACK,
+  CurrentTrackAction,
+} from "../actions/currentTrack";
 
 export default function currentTrack(
   state: ReleasesReduxState["currentTrack"] = "",

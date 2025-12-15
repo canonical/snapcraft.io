@@ -1,7 +1,8 @@
-import architectures, {
+import architectures from "../architectures";
+import {
   ArchitecturesAction,
   UpdateArchitecturesAction,
-} from "../architectures";
+} from "../../actions/architectures";
 import { UPDATE_ARCHITECTURES } from "../../actions/architectures";
 
 describe("architectures", () => {

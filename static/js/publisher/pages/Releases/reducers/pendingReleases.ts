@@ -7,83 +7,15 @@ import {
   PAUSE_PROGRESSIVE_RELEASE,
   RESUME_PROGRESSIVE_RELEASE,
   CANCEL_PROGRESSIVE_RELEASE,
+  PendingReleasesAction,
 } from "../actions/pendingReleases";
 import { CLOSE_CHANNEL } from "../actions/pendingCloses";
 import {
   PendingReleaseItem,
   Progressive,
-  GenericReleasesAction,
   ReleasesReduxState,
   Revision,
 } from "../../../types/releaseTypes";
-
-export type ReleaseRevisionAction = GenericReleasesAction<
-  typeof RELEASE_REVISION,
-  {
-    revision: Revision;
-    channel: string;
-    progressive?: PendingReleaseItem["progressive"];
-    previousReleases?: PendingReleaseItem["previousReleases"];
-  }
->;
-
-export type UndoReleaseAction = GenericReleasesAction<
-  typeof UNDO_RELEASE,
-  {
-    revision: Revision;
-    channel: string;
-  }
->;
-
-export type CancelPendingReleasesAction = GenericReleasesAction<
-  typeof CANCEL_PENDING_RELEASES,
-  never
->;
-
-export type CloseChannelAction = GenericReleasesAction<
-  typeof CLOSE_CHANNEL,
-  {
-    channel: string;
-  }
->;
-
-export type SetProgressiveReleasePercentageAction = GenericReleasesAction<
-  typeof SET_PROGRESSIVE_RELEASE_PERCENTAGE,
-  Progressive
->;
-
-export type UpdateProgressiveReleasePercentageAction = GenericReleasesAction<
-  typeof UPDATE_PROGRESSIVE_RELEASE_PERCENTAGE,
-  Progressive
->;
-
-export type PauseProgressiveReleaseAction = GenericReleasesAction<
-  typeof PAUSE_PROGRESSIVE_RELEASE,
-  never
->;
-
-export type ResumeProgressiveReleaseAction = GenericReleasesAction<
-  typeof RESUME_PROGRESSIVE_RELEASE,
-  never
->;
-
-export type CancelProgressiveReleaseAction = GenericReleasesAction<
-  typeof CANCEL_PROGRESSIVE_RELEASE,
-  {
-    previousRevision: Revision;
-  }
->;
-
-export type PendingReleasesAction =
-  | ReleaseRevisionAction
-  | UndoReleaseAction
-  | CancelPendingReleasesAction
-  | CloseChannelAction
-  | SetProgressiveReleasePercentageAction
-  | UpdateProgressiveReleasePercentageAction
-  | PauseProgressiveReleaseAction
-  | ResumeProgressiveReleaseAction
-  | CancelProgressiveReleaseAction;
 
 function removePendingRelease(
   state: ReleasesReduxState["pendingReleases"],
