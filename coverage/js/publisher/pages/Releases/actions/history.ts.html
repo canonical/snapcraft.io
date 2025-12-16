@@ -3,7 +3,7 @@
 <html lang="en">
 
 <head>
-    <title>Code coverage report for publisher/pages/Releases/actions/history.js</title>
+    <title>Code coverage report for publisher/pages/Releases/actions/history.ts</title>
     <meta charset="utf-8" />
     <link rel="stylesheet" href="../../../../prettify.css" />
     <link rel="stylesheet" href="../../../../base.css" />
@@ -19,7 +19,7 @@
 <body>
 <div class='wrapper'>
     <div class='pad1'>
-        <h1><a href="../../../../index.html">All files</a> / <a href="index.html">publisher/pages/Releases/actions</a> history.js</h1>
+        <h1><a href="../../../../index.html">All files</a> / <a href="index.html">publisher/pages/Releases/actions</a> history.ts</h1>
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
@@ -117,8 +117,46 @@
 <a name='L52'></a><a href='#L52'>52</a>
 <a name='L53'></a><a href='#L53'>53</a>
 <a name='L54'></a><a href='#L54'>54</a>
-<a name='L55'></a><a href='#L55'>55</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">6x</span>
+<a name='L55'></a><a href='#L55'>55</a>
+<a name='L56'></a><a href='#L56'>56</a>
+<a name='L57'></a><a href='#L57'>57</a>
+<a name='L58'></a><a href='#L58'>58</a>
+<a name='L59'></a><a href='#L59'>59</a>
+<a name='L60'></a><a href='#L60'>60</a>
+<a name='L61'></a><a href='#L61'>61</a>
+<a name='L62'></a><a href='#L62'>62</a>
+<a name='L63'></a><a href='#L63'>63</a>
+<a name='L64'></a><a href='#L64'>64</a>
+<a name='L65'></a><a href='#L65'>65</a>
+<a name='L66'></a><a href='#L66'>66</a>
+<a name='L67'></a><a href='#L67'>67</a>
+<a name='L68'></a><a href='#L68'>68</a>
+<a name='L69'></a><a href='#L69'>69</a>
+<a name='L70'></a><a href='#L70'>70</a>
+<a name='L71'></a><a href='#L71'>71</a>
+<a name='L72'></a><a href='#L72'>72</a>
+<a name='L73'></a><a href='#L73'>73</a>
+<a name='L74'></a><a href='#L74'>74</a>
+<a name='L75'></a><a href='#L75'>75</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -131,6 +169,8 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">11x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -171,26 +211,46 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">export const OPEN_HISTORY = "OPEN_HISTORY";
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import {
+  GenericReleasesAction,
+  ReleasesReduxState,
+  DispatchFn,
+} from "../../../types/releaseTypes";
+&nbsp;
+export const OPEN_HISTORY = "OPEN_HISTORY";
 export const CLOSE_HISTORY = "CLOSE_HISTORY";
 &nbsp;
 import { triggerGAEvent } from "../actions/gaEventTracking";
+import { CloseChannelAction } from "./pendingCloses";
 &nbsp;
-export function openHistory(filters) {
+export type OpenHistoryAction = GenericReleasesAction&lt;
+  typeof OPEN_HISTORY,
+  Partial&lt;ReleasesReduxState["history"]&gt;
+&gt;;
+&nbsp;
+export type CloseHistoryAction = GenericReleasesAction&lt;typeof CLOSE_HISTORY, never&gt;;
+&nbsp;
+export type HistoryAction = OpenHistoryAction | CloseHistoryAction | CloseChannelAction;
+&nbsp;
+export function openHistory(
+  filters: ReleasesReduxState["history"]["filters"]
+): OpenHistoryAction {
   return {
     type: OPEN_HISTORY,
     payload: { filters },
   };
 }
 &nbsp;
-export function closeHistory() {
+export function closeHistory(): CloseHistoryAction {
   return {
     type: CLOSE_HISTORY,
   };
 }
 &nbsp;
-export function toggleHistory(filters) {
-  return (dispatch, getState) =&gt; {
+export function toggleHistory(
+  filters: ReleasesReduxState["history"]["filters"]
+) {
+  return (dispatch: DispatchFn, getState: () =&gt; ReleasesReduxState) =&gt; {
     const { history } = getState();
 &nbsp;
     if (
@@ -211,7 +271,7 @@ export function toggleHistory(filters) {
           ),
         );
       }
-      dispatch(closeHistory());
+      dispatch(closeHistory() as any);
     } else {
       <span class="missing-if-branch" title="else path not taken" >E</span>if (filters) {
         dispatch(
@@ -232,7 +292,7 @@ export function toggleHistory(filters) {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-12-16T09:20:35.140Z
+                at 2025-12-16T15:50:30.556Z
             </div>
         <script src="../../../../prettify.js"></script>
         <script>

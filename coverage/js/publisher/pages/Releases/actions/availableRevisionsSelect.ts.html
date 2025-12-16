@@ -3,7 +3,7 @@
 <html lang="en">
 
 <head>
-    <title>Code coverage report for publisher/pages/Releases/actions/availableRevisionsSelect.js</title>
+    <title>Code coverage report for publisher/pages/Releases/actions/availableRevisionsSelect.ts</title>
     <meta charset="utf-8" />
     <link rel="stylesheet" href="../../../../prettify.css" />
     <link rel="stylesheet" href="../../../../base.css" />
@@ -19,7 +19,7 @@
 <body>
 <div class='wrapper'>
     <div class='pad1'>
-        <h1><a href="../../../../index.html">All files</a> / <a href="index.html">publisher/pages/Releases/actions</a> availableRevisionsSelect.js</h1>
+        <h1><a href="../../../../index.html">All files</a> / <a href="index.html">publisher/pages/Releases/actions</a> availableRevisionsSelect.ts</h1>
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
@@ -132,7 +132,32 @@
 <a name='L67'></a><a href='#L67'>67</a>
 <a name='L68'></a><a href='#L68'>68</a>
 <a name='L69'></a><a href='#L69'>69</a>
-<a name='L70'></a><a href='#L70'>70</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L70'></a><a href='#L70'>70</a>
+<a name='L71'></a><a href='#L71'>71</a>
+<a name='L72'></a><a href='#L72'>72</a>
+<a name='L73'></a><a href='#L73'>73</a>
+<a name='L74'></a><a href='#L74'>74</a>
+<a name='L75'></a><a href='#L75'>75</a>
+<a name='L76'></a><a href='#L76'>76</a>
+<a name='L77'></a><a href='#L77'>77</a>
+<a name='L78'></a><a href='#L78'>78</a>
+<a name='L79'></a><a href='#L79'>79</a>
+<a name='L80'></a><a href='#L80'>80</a>
+<a name='L81'></a><a href='#L81'>81</a>
+<a name='L82'></a><a href='#L82'>82</a>
+<a name='L83'></a><a href='#L83'>83</a>
+<a name='L84'></a><a href='#L84'>84</a>
+<a name='L85'></a><a href='#L85'>85</a>
+<a name='L86'></a><a href='#L86'>86</a>
+<a name='L87'></a><a href='#L87'>87</a>
+<a name='L88'></a><a href='#L88'>88</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -146,6 +171,17 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">19x</span>
@@ -213,18 +249,36 @@ import {
   getFilteredAvailableRevisionsForArch,
 } from "../selectors";
 import { getBuildId } from "../helpers";
+import {
+  GenericReleasesAction,
+  DispatchFn,
+  ReleasesReduxState,
+  Revision,
+  AvailableRevisionsSelect,
+} from "../../../types/releaseTypes";
 &nbsp;
 export const SET_AVAILABLE_REVISIONS_SELECT = "SET_AVAILABLE_REVISIONS_SELECT";
 &nbsp;
-export function setAvailableRevisionsSelect(value) {
+export type SetAvailableRevisionsSelectAction = GenericReleasesAction&lt;
+  typeof SET_AVAILABLE_REVISIONS_SELECT,
+  {
+    value: AvailableRevisionsSelect;
+  }
+&gt;;
+&nbsp;
+export type AvailableRevisionsSelectAction = SetAvailableRevisionsSelectAction;
+&nbsp;
+export function setAvailableRevisionsSelect(
+  value: AvailableRevisionsSelect
+): SetAvailableRevisionsSelectAction {
   return {
     type: SET_AVAILABLE_REVISIONS_SELECT,
     payload: { value },
   };
 }
 &nbsp;
-export function selectAvailableRevisions(value) {
-  return (dispatch, getState) =&gt; {
+export function selectAvailableRevisions(value: AvailableRevisionsSelect) {
+  return (dispatch: DispatchFn, getState: () =&gt; ReleasesReduxState) =&gt; {
     dispatch(setAvailableRevisionsSelect(value));
     dispatch(clearSelectedRevisions());
 &nbsp;
@@ -232,7 +286,7 @@ export function selectAvailableRevisions(value) {
 &nbsp;
     // for each architecture
     const archs = getArchitectures(state);
-    let revisionsFilter = () =&gt; true;
+    let revisionsFilter: (revision: Revision) =&gt; boolean = () =&gt; true;
 &nbsp;
     // for Recent select only revisions from most recent uploaded version
     if (
@@ -277,7 +331,7 @@ export function selectAvailableRevisions(value) {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-12-16T09:20:35.140Z
+                at 2025-12-16T15:50:30.556Z
             </div>
         <script src="../../../../prettify.js"></script>
         <script>

@@ -3,7 +3,7 @@
 <html lang="en">
 
 <head>
-    <title>Code coverage report for publisher/pages/Releases/actions/defaultTrack.js</title>
+    <title>Code coverage report for publisher/pages/Releases/actions/defaultTrack.ts</title>
     <meta charset="utf-8" />
     <link rel="stylesheet" href="../../../../prettify.css" />
     <link rel="stylesheet" href="../../../../base.css" />
@@ -19,7 +19,7 @@
 <body>
 <div class='wrapper'>
     <div class='pad1'>
-        <h1><a href="../../../../index.html">All files</a> / <a href="index.html">publisher/pages/Releases/actions</a> defaultTrack.js</h1>
+        <h1><a href="../../../../index.html">All files</a> / <a href="index.html">publisher/pages/Releases/actions</a> defaultTrack.ts</h1>
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
@@ -155,11 +155,49 @@
 <a name='L90'></a><a href='#L90'>90</a>
 <a name='L91'></a><a href='#L91'>91</a>
 <a name='L92'></a><a href='#L92'>92</a>
-<a name='L93'></a><a href='#L93'>93</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L93'></a><a href='#L93'>93</a>
+<a name='L94'></a><a href='#L94'>94</a>
+<a name='L95'></a><a href='#L95'>95</a>
+<a name='L96'></a><a href='#L96'>96</a>
+<a name='L97'></a><a href='#L97'>97</a>
+<a name='L98'></a><a href='#L98'>98</a>
+<a name='L99'></a><a href='#L99'>99</a>
+<a name='L100'></a><a href='#L100'>100</a>
+<a name='L101'></a><a href='#L101'>101</a>
+<a name='L102'></a><a href='#L102'>102</a>
+<a name='L103'></a><a href='#L103'>103</a>
+<a name='L104'></a><a href='#L104'>104</a>
+<a name='L105'></a><a href='#L105'>105</a>
+<a name='L106'></a><a href='#L106'>106</a>
+<a name='L107'></a><a href='#L107'>107</a>
+<a name='L108'></a><a href='#L108'>108</a>
+<a name='L109'></a><a href='#L109'>109</a>
+<a name='L110'></a><a href='#L110'>110</a>
+<a name='L111'></a><a href='#L111'>111</a>
+<a name='L112'></a><a href='#L112'>112</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-yes">2x</span>
@@ -249,11 +287,30 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { CLOSE_MODAL } from "./modal";
 import { showNotification } from "./globalNotification";
+import {
+  GenericReleasesAction,
+  ReleasesReduxState,
+  DispatchFn,
+} from "../../../types/releaseTypes";
 &nbsp;
 export const SET_DEFAULT_TRACK_SUCCESS = "SET_DEFAULT_TRACK_SUCCESS";
 export const SET_DEFAULT_TRACK_FAILURE = "SET_DEFAULT_TRACK_FAILURE";
 &nbsp;
-const fetchDefaultTrack = (snapName, track) =&gt; {
+export type SetDefaultTrackSuccessAction = GenericReleasesAction&lt;
+  typeof SET_DEFAULT_TRACK_SUCCESS,
+  ReleasesReduxState["defaultTrack"]
+&gt;;
+&nbsp;
+export type SetDefaultTrackFailureAction = GenericReleasesAction&lt;
+  typeof SET_DEFAULT_TRACK_FAILURE,
+  never
+&gt;;
+&nbsp;
+export type DefaultTrackAction =
+  | SetDefaultTrackSuccessAction
+  | SetDefaultTrackFailureAction;
+&nbsp;
+const fetchDefaultTrack = (snapName: string, track: string | null) =&gt; {
   return fetch(`/${snapName}/releases/default-track`, {
     method: "POST",
     mode: "cors",
@@ -261,7 +318,7 @@ const fetchDefaultTrack = (snapName, track) =&gt; {
     credentials: "same-origin",
     headers: {
       "Content-Type": "application/json; charset=utf-8",
-      "X-CSRFToken": window.CSRF_TOKEN,
+      "X-CSRFToken": (window as any).CSRF_TOKEN,
     },
     redirect: "follow",
     referrer: "no-referrer",
@@ -275,7 +332,7 @@ const fetchDefaultTrack = (snapName, track) =&gt; {
 };
 &nbsp;
 export function clearDefaultTrack() {
-  return (dispatch, getState) =&gt; {
+  return (dispatch: DispatchFn, getState: () =&gt; ReleasesReduxState) =&gt; {
     const { options } = getState();
     const { snapName } = options;
 &nbsp;
@@ -286,7 +343,7 @@ export function clearDefaultTrack() {
       });
       dispatch({
         type: CLOSE_MODAL,
-      });
+      } as any);
       dispatch(
         showNotification({
           status: "success",
@@ -300,7 +357,7 @@ export function clearDefaultTrack() {
 }
 &nbsp;
 export function setDefaultTrack() {
-  return (dispatch, getState) =&gt; {
+  return (dispatch: DispatchFn, getState: () =&gt; ReleasesReduxState) =&gt; {
     const { options, currentTrack } = getState();
     const { snapName } = options;
 &nbsp;
@@ -319,10 +376,10 @@ export function setDefaultTrack() {
           }),
         );
       })
-      .catch(<span class="fstat-no" title="function not covered" >(e</span>rrorResponse) =&gt; {
+      .catch(<span class="fstat-no" title="function not covered" >(e</span>rrorResponse: Response) =&gt; {
 <span class="cstat-no" title="statement not covered" >        dispatch({</span>
           type: SET_DEFAULT_TRACK_FAILURE,
-        });
+        } as any);
 <span class="cstat-no" title="statement not covered" >        dispatch(</span>
           showNotification({
             status: "error",
@@ -335,7 +392,7 @@ export function setDefaultTrack() {
       .finally(() =&gt; {
         dispatch({
           type: CLOSE_MODAL,
-        });
+        } as any);
       });
   };
 }
@@ -346,7 +403,7 @@ export function setDefaultTrack() {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-12-16T09:20:35.140Z
+                at 2025-12-16T15:50:30.556Z
             </div>
         <script src="../../../../prettify.js"></script>
         <script>
