@@ -1,4 +1,4 @@
-import { GenericReleasesAction, DispatchFn } from "../../../types/releaseTypes";
+import { GenericReleasesAction, DispatchFn, ReleasesReduxState } from "../../../types/releaseTypes";
 
 export const OPEN_BRANCHES = "OPEN_BRANCHES";
 export const CLOSE_BRANCHES = "CLOSE_BRANCHES";
@@ -24,7 +24,7 @@ export function closeBranches(channelName: string): CloseBranchesAction {
 }
 
 export function toggleBranches(channelName: string) {
-  return (dispatch: DispatchFn, getState: () => any) => {
+  return (dispatch: DispatchFn, getState: () => ReleasesReduxState) => {
     const { branches } = getState();
 
     if (branches.includes(channelName)) {

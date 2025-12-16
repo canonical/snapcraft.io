@@ -1,29 +1,9 @@
+import { ReleasesReduxState } from "../../../types/releaseTypes";
+import { CLOSE_CHANNEL, PendingClosesAction } from "../actions/pendingCloses";
 import {
-  GenericReleasesAction,
-  ReleasesReduxState,
-} from "../../../types/releaseTypes";
-import { CLOSE_CHANNEL, CloseChannelAction } from "../actions/pendingCloses";
-import {
-  RELEASE_REVISION,
   CANCEL_PENDING_RELEASES,
+  RELEASE_REVISION
 } from "../actions/pendingReleases";
-
-export type ReleaseRevisionAction = GenericReleasesAction<
-  typeof RELEASE_REVISION,
-  {
-    channel: string;
-  }
->;
-
-export type CancelPendingReleasesAction = GenericReleasesAction<
-  typeof CANCEL_PENDING_RELEASES,
-  never
->;
-
-export type PendingClosesAction =
-  | CloseChannelAction
-  | ReleaseRevisionAction
-  | CancelPendingReleasesAction;
 
 // channels to be closed:
 // [ "track/risk", ... ]

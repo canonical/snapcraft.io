@@ -1,5 +1,6 @@
 import pendingReleases from "../pendingReleases";
 import {
+  CancelPendingReleasesAction,
   CancelProgressiveReleaseAction,
   PauseProgressiveReleaseAction,
   PendingReleasesAction,
@@ -21,9 +22,6 @@ import {
 } from "../../actions/pendingReleases";
 import { CLOSE_CHANNEL, CloseChannelAction } from "../../actions/pendingCloses";
 import { ReleasesReduxState } from "../../../../types/releaseTypes";
-import {
-  CancelPendingReleasesAction,
-} from "../pendingCloses";
 
 describe("pendingReleases", () => {
   it("should return the initial state", () => {
