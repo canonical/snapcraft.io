@@ -14,9 +14,17 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
-      - uses: actions/setup-node@v6
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.10"
+          cache: "pip"
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v6
         with:
           node-version: 20
+          cache: "yarn"
 
       - name: Install JS dependencies
         run: yarn install --immutable
@@ -28,10 +36,9 @@ jobs:
 
       - name: Install Python requirements
         run: |
-          sudo pip3 install -r requirements.txt
-
-      - name: Install Python dependencies
-        run: sudo pip3 install coverage
+          python -m pip install --upgrade pip
+          pip3 install -r requirements.txt
+          pip3 install coverage
 
       - name: Run Python tests with coverage
         run: |
@@ -126,7 +133,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v6
         with:
-          node-version: "22"
+          node-version: 20
           cache: "yarn"
 
       - name: Install Python requirements
