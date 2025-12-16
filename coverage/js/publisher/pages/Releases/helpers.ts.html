@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">37.34% </span>
+                <span class="strong">36.58% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>31/83</span>
+                <span class='fraction'>30/82</span>
             </div>
         
             
@@ -37,16 +37,16 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">52.63% </span>
+                <span class="strong">50% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>10/19</span>
+                <span class='fraction'>9/18</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">37.5% </span>
+                <span class="strong">36.7% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>30/80</span>
+                <span class='fraction'>29/79</span>
             </div>
         
             
@@ -251,24 +251,18 @@
 <a name='L186'></a><a href='#L186'>186</a>
 <a name='L187'></a><a href='#L187'>187</a>
 <a name='L188'></a><a href='#L188'>188</a>
-<a name='L189'></a><a href='#L189'>189</a>
-<a name='L190'></a><a href='#L190'>190</a>
-<a name='L191'></a><a href='#L191'>191</a>
-<a name='L192'></a><a href='#L192'>192</a>
-<a name='L193'></a><a href='#L193'>193</a>
-<a name='L194'></a><a href='#L194'>194</a>
-<a name='L195'></a><a href='#L195'>195</a>
-<a name='L196'></a><a href='#L196'>196</a>
-<a name='L197'></a><a href='#L197'>197</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L189'></a><a href='#L189'>189</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">7x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -284,14 +278,14 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">60x</span>
+<span class="cline-any cline-yes">68x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">43x</span>
-<span class="cline-any cline-yes">43x</span>
+<span class="cline-any cline-yes">51x</span>
+<span class="cline-any cline-yes">51x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -342,16 +336,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">47x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -458,16 +442,18 @@
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { AVAILABLE, REVISION_STATUS } from "./constants";
 import { getChannelString } from "../../../libs/channels";
 import { useEffect } from "react";
+import {
+  ArchitectureRevisionsMap,
+  CPUArchitecture,
+  Release,
+  Revision,
+} from "../../types/releaseTypes";
 &nbsp;
-export function isInDevmode(revision: any) {
+export function isInDevmode(revision: Revision) {
   return revision.confinement === "devmode" || revision.grade === "devel";
 }
 &nbsp;
-export function getChannelName(
-  track: string,
-  risk: string,
-  branch?: string | undefined,
-) {
+export function getChannelName(track: string, risk: string, branch?: string) {
   if (risk === AVAILABLE) {
     return AVAILABLE;
   }
@@ -479,19 +465,19 @@ export function getChannelName(
   });
 }
 &nbsp;
-export function getBuildId(revision: { attributes: { [x: string]: any } }) {
+export function getBuildId(revision: Revision) {
   return (
     revision &amp;&amp; revision.attributes &amp;&amp; revision.attributes["build-request-id"]
   );
 }
 &nbsp;
-export function isRevisionBuiltOnLauchpad(revision: any) {
+export function isRevisionBuiltOnLauchpad(revision: Revision) {
   const buildId = getBuildId(revision);
   return !!(buildId &amp;&amp; buildId.indexOf("lp-") === 0);
 }
 &nbsp;
-export function getRevisionsArchitectures(revisions: any[]) {
-  let archs: any[] = [];
+export function getRevisionsArchitectures(revisions: Revision[]) {
+  let archs: CPUArchitecture[] = [];
 &nbsp;
   // get all architectures from all revisions
   revisions.forEach((revision) =&gt; {
@@ -505,23 +491,23 @@ export function getRevisionsArchitectures(revisions: any[]) {
 }
 &nbsp;
 export function <span class="fstat-no" title="function not covered" >getLatestRelease(</span>
-  revision: { releases?: any[] },
-  channel: string,
+  revision: { releases?: Release[] },
+  channel: string
 ) {
   const releases = <span class="cstat-no" title="statement not covered" >revision.releases;</span>
 <span class="cstat-no" title="statement not covered" >  if (!releases) {</span>
 <span class="cstat-no" title="statement not covered" >    return null;</span>
   }
-  const filteredReleases = <span class="cstat-no" title="statement not covered" >releases.filter(<span class="fstat-no" title="function not covered" >(r</span>: any) =&gt; <span class="cstat-no" title="statement not covered" >r.channel === channel)</span>;</span>
+  const filteredReleases = <span class="cstat-no" title="statement not covered" >releases.filter(<span class="fstat-no" title="function not covered" >(r</span>) =&gt; <span class="cstat-no" title="statement not covered" >r.channel === channel)</span>;</span>
 <span class="cstat-no" title="statement not covered" >  if (filteredReleases.length === 0) {</span>
 <span class="cstat-no" title="statement not covered" >    return null;</span>
   }
 <span class="cstat-no" title="statement not covered" >  return filteredReleases[0];</span>
 }
 &nbsp;
-export function isSameVersion(revisions: { version: string }[]) {
+export function isSameVersion(revisions?: ArchitectureRevisionsMap) {
   let hasSameVersion = false;
-  const versionsMap: any = {};
+  const versionsMap: { [version: string]: CPUArchitecture[] } = {};
 &nbsp;
   <span class="missing-if-branch" title="else path not taken" >E</span>if (revisions) {
     // calculate map of architectures for each version
@@ -538,16 +524,6 @@ export function isSameVersion(revisions: { version: string }[]) {
   }
 &nbsp;
   return hasSameVersion;
-}
-&nbsp;
-export function jsonClone(obj: {
-  string: string;
-  number?: number;
-  boolean?: boolean;
-  array?: (string | number | boolean)[];
-  function?: () =&gt; string;
-}) {
-  return JSON.parse(JSON.stringify(obj));
 }
 &nbsp;
 export function <span class="fstat-no" title="function not covered" >canBeReleased(r</span>evision: { status: string }) {
@@ -578,11 +554,11 @@ export function <span class="fstat-no" title="function not covered" >resizeAside
 &nbsp;
 <span class="cstat-no" title="statement not covered" >      if (panelType === "add") {</span>
 <span class="cstat-no" title="statement not covered" >        asidePanel = document.querySelector(</span>
-          "#add-track-aside-panel",
+          "#add-track-aside-panel"
         ) as HTMLElement;
       } else {
 <span class="cstat-no" title="statement not covered" >        asidePanel = document.querySelector(</span>
-          "#request-track-aside-panel",
+          "#request-track-aside-panel"
         ) as HTMLElement;
       }
 &nbsp;
@@ -658,7 +634,7 @@ export async function getPackageMetadata(snap: string) {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-10-22T22:04:46.486Z
+                at 2025-12-16T09:20:35.140Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>

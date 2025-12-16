@@ -4,14 +4,14 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>Coverage for webapp/endpoints/publisher/builds.py: 48%</title>
     <link rel="icon" sizes="32x32" href="favicon_32_cb_58284776.png">
-    <link rel="stylesheet" href="style_cb_6b508a39.css" type="text/css">
-    <script src="coverage_html_cb_6fb7b396.js" defer></script>
+    <link rel="stylesheet" href="style_cb_a5a05ca4.css" type="text/css">
+    <script src="coverage_html_cb_bcae5fc4.js" defer></script>
 </head>
 <body class="pyfile">
 <header>
     <div class="content">
         <h1>
-            <span class="text">Coverage for </span><b>webapp/endpoints/publisher/builds.py</b>:
+            <span class="text">Coverage for </span><b>webapp&#8201;/&#8201;endpoints&#8201;/&#8201;publisher&#8201;/&#8201;builds.py</b>:
             <span class="pc_cov">48%</span>
         </h1>
         <aside id="help_panel_wrapper">
@@ -64,8 +64,8 @@
             <a id="indexLink" class="nav" href="index.html">&Hat; index</a> &nbsp; &nbsp;
             <a id="nextFileLink" class="nav" href="z_329f439d48b38d79_listing_py.html">&#xbb; next</a>
             &nbsp; &nbsp; &nbsp;
-            <a class="nav" href="https://coverage.readthedocs.io/en/7.11.0">coverage.py v7.11.0</a>,
-            created at 2025-10-22 22:07 +0000
+            <a class="nav" href="https://coverage.readthedocs.io/en/7.13.0">coverage.py v7.13.0</a>,
+            created at 2025-12-16 09:22 +0000
         </p>
         <aside class="hidden">
             <button type="button" class="button_next_chunk" data-shortcut="j"></button>
@@ -139,8 +139,8 @@
     <p class="mis mis2 show_mis"><span class="n"><a id="t57" href="#t57">57</a></span><span class="t">                    <span class="str">"type"</span><span class="op">:</span> <span class="str">"SNAP_NAME_DOES_NOT_MATCH"</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
     <p class="mis mis2 show_mis"><span class="n"><a id="t58" href="#t58">58</a></span><span class="t">                    <span class="str">"message"</span><span class="op">:</span> <span class="op">(</span>&nbsp;</span><span class="r"></span></p>
     <p class="mis mis2 show_mis"><span class="n"><a id="t59" href="#t59">59</a></span><span class="t">                        <span class="str">"Name mismatch: the snapcraft.yaml uses the snap "</span>&nbsp;</span><span class="r"></span></p>
-    <p class="mis mis2 show_mis"><span class="n"><a id="t60" href="#t60">60</a></span><span class="t">                        <span class="fst">f'</span><span class="fst">name "</span><span class="op">{</span><span class="nam">gh_snap_name</span><span class="op">}</span><span class="fst">", but you\'ve registered</span><span class="fst">'</span>&nbsp;</span><span class="r"></span></p>
-    <p class="mis mis2 show_mis"><span class="n"><a id="t61" href="#t61">61</a></span><span class="t">                        <span class="fst">f'</span><span class="fst"> the name "</span><span class="op">{</span><span class="nam">snap_name</span><span class="op">}</span><span class="fst">". Update your </span><span class="fst">'</span>&nbsp;</span><span class="r"></span></p>
+    <p class="mis mis2 show_mis"><span class="n"><a id="t60" href="#t60">60</a></span><span class="t">                        <span class="str">f'name "{gh_snap_name}", but you\'ve registered'</span>&nbsp;</span><span class="r"></span></p>
+    <p class="mis mis2 show_mis"><span class="n"><a id="t61" href="#t61">61</a></span><span class="t">                        <span class="str">f' the name "{snap_name}". Update your '</span>&nbsp;</span><span class="r"></span></p>
     <p class="mis mis2 show_mis"><span class="n"><a id="t62" href="#t62">62</a></span><span class="t">                        <span class="str">"snapcraft.yaml to continue."</span>&nbsp;</span><span class="r"></span></p>
     <p class="mis mis2 show_mis"><span class="n"><a id="t63" href="#t63">63</a></span><span class="t">                    <span class="op">)</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
     <p class="mis mis2 show_mis"><span class="n"><a id="t64" href="#t64">64</a></span><span class="t">                    <span class="str">"yaml_location"</span><span class="op">:</span> <span class="nam">yaml_location</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
@@ -152,7 +152,7 @@
     <p class="mis mis2 show_mis"><span class="n"><a id="t70" href="#t70">70</a></span><span class="t">                <span class="str">"type"</span><span class="op">:</span> <span class="str">"INVALID_YAML_FILE"</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
     <p class="mis mis2 show_mis"><span class="n"><a id="t71" href="#t71">71</a></span><span class="t">                <span class="str">"message"</span><span class="op">:</span> <span class="op">(</span>&nbsp;</span><span class="r"></span></p>
     <p class="mis mis2 show_mis"><span class="n"><a id="t72" href="#t72">72</a></span><span class="t">                    <span class="str">"Invalid snapcraft.yaml: there was an issue parsing the "</span>&nbsp;</span><span class="r"></span></p>
-    <p class="mis mis2 show_mis"><span class="n"><a id="t73" href="#t73">73</a></span><span class="t">                    <span class="fst">f"</span><span class="fst">snapcraft.yaml for </span><span class="op">{</span><span class="nam">snap_name</span><span class="op">}</span><span class="fst">.</span><span class="fst">"</span>&nbsp;</span><span class="r"></span></p>
+    <p class="mis mis2 show_mis"><span class="n"><a id="t73" href="#t73">73</a></span><span class="t">                    <span class="str">f"snapcraft.yaml for {snap_name}."</span>&nbsp;</span><span class="r"></span></p>
     <p class="mis mis2 show_mis"><span class="n"><a id="t74" href="#t74">74</a></span><span class="t">                <span class="op">)</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
     <p class="mis mis2 show_mis"><span class="n"><a id="t75" href="#t75">75</a></span><span class="t">            <span class="op">}</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t76" href="#t76">76</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
@@ -231,7 +231,7 @@
     <p class="mis show_mis"><span class="n"><a id="t149" href="#t149">149</a></span><span class="t">            <span class="nam">old_hook</span> <span class="op">=</span> <span class="nam">github</span><span class="op">.</span><span class="nam">get_hook_by_url</span><span class="op">(</span>&nbsp;</span><span class="r"></span></p>
     <p class="mis mis2 show_mis"><span class="n"><a id="t150" href="#t150">150</a></span><span class="t">                <span class="nam">gh_owner</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
     <p class="mis mis2 show_mis"><span class="n"><a id="t151" href="#t151">151</a></span><span class="t">                <span class="nam">gh_repo</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
-    <p class="mis mis2 show_mis"><span class="n"><a id="t152" href="#t152">152</a></span><span class="t">                <span class="fst">f"</span><span class="op">{</span><span class="nam">GITHUB_WEBHOOK_HOST_URL</span><span class="op">}</span><span class="fst">api/</span><span class="op">{</span><span class="nam">snap_name</span><span class="op">}</span><span class="fst">/webhook/notify</span><span class="fst">"</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p class="mis mis2 show_mis"><span class="n"><a id="t152" href="#t152">152</a></span><span class="t">                <span class="str">f"{GITHUB_WEBHOOK_HOST_URL}api/{snap_name}/webhook/notify"</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
     <p class="mis mis2 show_mis"><span class="n"><a id="t153" href="#t153">153</a></span><span class="t">            <span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t154" href="#t154">154</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p class="mis show_mis"><span class="n"><a id="t155" href="#t155">155</a></span><span class="t">            <span class="key">if</span> <span class="nam">old_hook</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
@@ -254,8 +254,8 @@
             <a class="nav" href="index.html">&Hat; index</a> &nbsp; &nbsp;
             <a class="nav" href="z_329f439d48b38d79_listing_py.html">&#xbb; next</a>
             &nbsp; &nbsp; &nbsp;
-            <a class="nav" href="https://coverage.readthedocs.io/en/7.11.0">coverage.py v7.11.0</a>,
-            created at 2025-10-22 22:07 +0000
+            <a class="nav" href="https://coverage.readthedocs.io/en/7.13.0">coverage.py v7.13.0</a>,
+            created at 2025-12-16 09:22 +0000
         </p>
     </div>
 </footer>

@@ -4,14 +4,14 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>Coverage for webapp/endpoints/members.py: 68%</title>
     <link rel="icon" sizes="32x32" href="favicon_32_cb_58284776.png">
-    <link rel="stylesheet" href="style_cb_6b508a39.css" type="text/css">
-    <script src="coverage_html_cb_6fb7b396.js" defer></script>
+    <link rel="stylesheet" href="style_cb_a5a05ca4.css" type="text/css">
+    <script src="coverage_html_cb_bcae5fc4.js" defer></script>
 </head>
 <body class="pyfile">
 <header>
     <div class="content">
         <h1>
-            <span class="text">Coverage for </span><b>webapp/endpoints/members.py</b>:
+            <span class="text">Coverage for </span><b>webapp&#8201;/&#8201;endpoints&#8201;/&#8201;members.py</b>:
             <span class="pc_cov">68%</span>
         </h1>
         <aside id="help_panel_wrapper">
@@ -64,8 +64,8 @@
             <a id="indexLink" class="nav" href="index.html">&Hat; index</a> &nbsp; &nbsp;
             <a id="nextFileLink" class="nav" href="z_8c18c9b80cf7b446_models_py.html">&#xbb; next</a>
             &nbsp; &nbsp; &nbsp;
-            <a class="nav" href="https://coverage.readthedocs.io/en/7.11.0">coverage.py v7.11.0</a>,
-            created at 2025-10-22 22:07 +0000
+            <a class="nav" href="https://coverage.readthedocs.io/en/7.13.0">coverage.py v7.13.0</a>,
+            created at 2025-12-16 09:22 +0000
         </p>
         <aside class="hidden">
             <button type="button" class="button_next_chunk" data-shortcut="j"></button>
@@ -120,36 +120,35 @@
     <p class="run"><span class="n"><a id="t38" href="#t38">38</a></span><span class="t"><span class="op">@</span><span class="nam">exchange_required</span>&nbsp;</span><span class="r"></span></p>
     <p class="run"><span class="n"><a id="t39" href="#t39">39</a></span><span class="t"><span class="key">def</span> <span class="nam">post_manage_members</span><span class="op">(</span><span class="nam">store_id</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
     <p class="run"><span class="n"><a id="t40" href="#t40">40</a></span><span class="t">    <span class="nam">members</span> <span class="op">=</span> <span class="nam">json</span><span class="op">.</span><span class="nam">loads</span><span class="op">(</span><span class="nam">flask</span><span class="op">.</span><span class="nam">request</span><span class="op">.</span><span class="nam">form</span><span class="op">.</span><span class="nam">get</span><span class="op">(</span><span class="str">"members"</span><span class="op">)</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
-    <p class="pln"><span class="n"><a id="t41" href="#t41">41</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
-    <p class="run"><span class="n"><a id="t42" href="#t42">42</a></span><span class="t">    <span class="nam">res</span> <span class="op">=</span> <span class="op">{</span><span class="op">}</span>&nbsp;</span><span class="r"></span></p>
-    <p class="pln"><span class="n"><a id="t43" href="#t43">43</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
-    <p class="run"><span class="n"><a id="t44" href="#t44">44</a></span><span class="t">    <span class="key">try</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
-    <p class="run"><span class="n"><a id="t45" href="#t45">45</a></span><span class="t">        <span class="nam">dashboard</span><span class="op">.</span><span class="nam">update_store_members</span><span class="op">(</span><span class="nam">flask</span><span class="op">.</span><span class="nam">session</span><span class="op">,</span> <span class="nam">store_id</span><span class="op">,</span> <span class="nam">members</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
-    <p class="run"><span class="n"><a id="t46" href="#t46">46</a></span><span class="t">        <span class="nam">res</span><span class="op">[</span><span class="str">"msg"</span><span class="op">]</span> <span class="op">=</span> <span class="str">"Changes saved"</span>&nbsp;</span><span class="r"></span></p>
-    <p class="mis show_mis"><span class="n"><a id="t47" href="#t47">47</a></span><span class="t">    <span class="key">except</span> <span class="nam">StoreApiResponseErrorList</span> <span class="key">as</span> <span class="nam">api_response_error_list</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
-    <p class="mis show_mis"><span class="n"><a id="t48" href="#t48">48</a></span><span class="t">        <span class="nam">codes</span> <span class="op">=</span> <span class="op">[</span><span class="nam">error</span><span class="op">.</span><span class="nam">get</span><span class="op">(</span><span class="str">"code"</span><span class="op">)</span> <span class="key">for</span> <span class="nam">error</span> <span class="key">in</span> <span class="nam">api_response_error_list</span><span class="op">.</span><span class="nam">errors</span><span class="op">]</span>&nbsp;</span><span class="r"></span></p>
-    <p class="pln"><span class="n"><a id="t49" href="#t49">49</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
-    <p class="mis show_mis"><span class="n"><a id="t50" href="#t50">50</a></span><span class="t">        <span class="nam">msgs</span> <span class="op">=</span> <span class="op">[</span>&nbsp;</span><span class="r"></span></p>
-    <p class="mis mis2 show_mis"><span class="n"><a id="t51" href="#t51">51</a></span><span class="t">            <span class="fst">f"</span><span class="op">{</span><span class="nam">error</span><span class="op">.</span><span class="nam">get</span><span class="op">(</span><span class="str">'message'</span><span class="op">,</span> <span class="str">'An error occurred'</span><span class="op">)</span><span class="op">}</span><span class="fst">"</span>&nbsp;</span><span class="r"></span></p>
-    <p class="mis mis2 show_mis"><span class="n"><a id="t52" href="#t52">52</a></span><span class="t">            <span class="key">for</span> <span class="nam">error</span> <span class="key">in</span> <span class="nam">api_response_error_list</span><span class="op">.</span><span class="nam">errors</span>&nbsp;</span><span class="r"></span></p>
-    <p class="mis mis2 show_mis"><span class="n"><a id="t53" href="#t53">53</a></span><span class="t">        <span class="op">]</span>&nbsp;</span><span class="r"></span></p>
-    <p class="pln"><span class="n"><a id="t54" href="#t54">54</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
-    <p class="mis show_mis"><span class="n"><a id="t55" href="#t55">55</a></span><span class="t">        <span class="key">for</span> <span class="nam">code</span> <span class="key">in</span> <span class="nam">codes</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
-    <p class="mis show_mis"><span class="n"><a id="t56" href="#t56">56</a></span><span class="t">            <span class="nam">account_id</span> <span class="op">=</span> <span class="str">""</span>&nbsp;</span><span class="r"></span></p>
-    <p class="pln"><span class="n"><a id="t57" href="#t57">57</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
-    <p class="mis show_mis"><span class="n"><a id="t58" href="#t58">58</a></span><span class="t">            <span class="key">if</span> <span class="nam">code</span> <span class="op">==</span> <span class="str">"store-users-no-match"</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
-    <p class="mis show_mis"><span class="n"><a id="t59" href="#t59">59</a></span><span class="t">                <span class="key">if</span> <span class="nam">account_id</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
-    <p class="mis show_mis"><span class="n"><a id="t60" href="#t60">60</a></span><span class="t">                    <span class="nam">res</span><span class="op">[</span><span class="str">"msg"</span><span class="op">]</span> <span class="op">=</span> <span class="nam">code</span>&nbsp;</span><span class="r"></span></p>
-    <p class="pln"><span class="n"><a id="t61" href="#t61">61</a></span><span class="t">                <span class="key">else</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
-    <p class="mis show_mis"><span class="n"><a id="t62" href="#t62">62</a></span><span class="t">                    <span class="nam">res</span><span class="op">[</span><span class="str">"msg"</span><span class="op">]</span> <span class="op">=</span> <span class="str">"invite"</span>&nbsp;</span><span class="r"></span></p>
-    <p class="pln"><span class="n"><a id="t63" href="#t63">63</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
-    <p class="mis show_mis"><span class="n"><a id="t64" href="#t64">64</a></span><span class="t">            <span class="key">elif</span> <span class="nam">code</span> <span class="op">==</span> <span class="str">"store-users-multiple-matches"</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
-    <p class="mis show_mis"><span class="n"><a id="t65" href="#t65">65</a></span><span class="t">                <span class="nam">res</span><span class="op">[</span><span class="str">"msg"</span><span class="op">]</span> <span class="op">=</span> <span class="nam">code</span>&nbsp;</span><span class="r"></span></p>
-    <p class="pln"><span class="n"><a id="t66" href="#t66">66</a></span><span class="t">            <span class="key">else</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
-    <p class="mis show_mis"><span class="n"><a id="t67" href="#t67">67</a></span><span class="t">                <span class="key">for</span> <span class="nam">msg</span> <span class="key">in</span> <span class="nam">msgs</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
-    <p class="mis show_mis"><span class="n"><a id="t68" href="#t68">68</a></span><span class="t">                    <span class="nam">flask</span><span class="op">.</span><span class="nam">flash</span><span class="op">(</span><span class="nam">msg</span><span class="op">,</span> <span class="str">"negative"</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
-    <p class="pln"><span class="n"><a id="t69" href="#t69">69</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
-    <p class="run"><span class="n"><a id="t70" href="#t70">70</a></span><span class="t">    <span class="key">return</span> <span class="nam">jsonify</span><span class="op">(</span><span class="nam">res</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p class="run"><span class="n"><a id="t41" href="#t41">41</a></span><span class="t">    <span class="nam">res</span> <span class="op">=</span> <span class="op">{</span><span class="op">}</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t42" href="#t42">42</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p class="run"><span class="n"><a id="t43" href="#t43">43</a></span><span class="t">    <span class="key">try</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p class="run"><span class="n"><a id="t44" href="#t44">44</a></span><span class="t">        <span class="nam">dashboard</span><span class="op">.</span><span class="nam">update_store_members</span><span class="op">(</span><span class="nam">flask</span><span class="op">.</span><span class="nam">session</span><span class="op">,</span> <span class="nam">store_id</span><span class="op">,</span> <span class="nam">members</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p class="run"><span class="n"><a id="t45" href="#t45">45</a></span><span class="t">        <span class="nam">res</span><span class="op">[</span><span class="str">"msg"</span><span class="op">]</span> <span class="op">=</span> <span class="str">"Changes saved"</span>&nbsp;</span><span class="r"></span></p>
+    <p class="mis show_mis"><span class="n"><a id="t46" href="#t46">46</a></span><span class="t">    <span class="key">except</span> <span class="nam">StoreApiResponseErrorList</span> <span class="key">as</span> <span class="nam">api_response_error_list</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p class="mis show_mis"><span class="n"><a id="t47" href="#t47">47</a></span><span class="t">        <span class="nam">codes</span> <span class="op">=</span> <span class="op">[</span><span class="nam">error</span><span class="op">.</span><span class="nam">get</span><span class="op">(</span><span class="str">"code"</span><span class="op">)</span> <span class="key">for</span> <span class="nam">error</span> <span class="key">in</span> <span class="nam">api_response_error_list</span><span class="op">.</span><span class="nam">errors</span><span class="op">]</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t48" href="#t48">48</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p class="mis show_mis"><span class="n"><a id="t49" href="#t49">49</a></span><span class="t">        <span class="nam">msgs</span> <span class="op">=</span> <span class="op">[</span>&nbsp;</span><span class="r"></span></p>
+    <p class="mis mis2 show_mis"><span class="n"><a id="t50" href="#t50">50</a></span><span class="t">            <span class="str">f"{error.get('message', 'An error occurred')}"</span>&nbsp;</span><span class="r"></span></p>
+    <p class="mis mis2 show_mis"><span class="n"><a id="t51" href="#t51">51</a></span><span class="t">            <span class="key">for</span> <span class="nam">error</span> <span class="key">in</span> <span class="nam">api_response_error_list</span><span class="op">.</span><span class="nam">errors</span>&nbsp;</span><span class="r"></span></p>
+    <p class="mis mis2 show_mis"><span class="n"><a id="t52" href="#t52">52</a></span><span class="t">        <span class="op">]</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t53" href="#t53">53</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p class="mis show_mis"><span class="n"><a id="t54" href="#t54">54</a></span><span class="t">        <span class="key">for</span> <span class="nam">code</span> <span class="key">in</span> <span class="nam">codes</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p class="mis show_mis"><span class="n"><a id="t55" href="#t55">55</a></span><span class="t">            <span class="nam">account_id</span> <span class="op">=</span> <span class="str">""</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t56" href="#t56">56</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p class="mis show_mis"><span class="n"><a id="t57" href="#t57">57</a></span><span class="t">            <span class="key">if</span> <span class="nam">code</span> <span class="op">==</span> <span class="str">"store-users-no-match"</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p class="mis show_mis"><span class="n"><a id="t58" href="#t58">58</a></span><span class="t">                <span class="key">if</span> <span class="nam">account_id</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p class="mis show_mis"><span class="n"><a id="t59" href="#t59">59</a></span><span class="t">                    <span class="nam">res</span><span class="op">[</span><span class="str">"msg"</span><span class="op">]</span> <span class="op">=</span> <span class="nam">code</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t60" href="#t60">60</a></span><span class="t">                <span class="key">else</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p class="mis show_mis"><span class="n"><a id="t61" href="#t61">61</a></span><span class="t">                    <span class="nam">res</span><span class="op">[</span><span class="str">"msg"</span><span class="op">]</span> <span class="op">=</span> <span class="str">"invite"</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t62" href="#t62">62</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p class="mis show_mis"><span class="n"><a id="t63" href="#t63">63</a></span><span class="t">            <span class="key">elif</span> <span class="nam">code</span> <span class="op">==</span> <span class="str">"store-users-multiple-matches"</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p class="mis show_mis"><span class="n"><a id="t64" href="#t64">64</a></span><span class="t">                <span class="nam">res</span><span class="op">[</span><span class="str">"msg"</span><span class="op">]</span> <span class="op">=</span> <span class="nam">code</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t65" href="#t65">65</a></span><span class="t">            <span class="key">else</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p class="mis show_mis"><span class="n"><a id="t66" href="#t66">66</a></span><span class="t">                <span class="key">for</span> <span class="nam">msg</span> <span class="key">in</span> <span class="nam">msgs</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p class="mis show_mis"><span class="n"><a id="t67" href="#t67">67</a></span><span class="t">                    <span class="nam">flask</span><span class="op">.</span><span class="nam">flash</span><span class="op">(</span><span class="nam">msg</span><span class="op">,</span> <span class="str">"negative"</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t68" href="#t68">68</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p class="run"><span class="n"><a id="t69" href="#t69">69</a></span><span class="t">    <span class="key">return</span> <span class="nam">jsonify</span><span class="op">(</span><span class="nam">res</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
 </main>
 <footer>
     <div class="content">
@@ -158,8 +157,8 @@
             <a class="nav" href="index.html">&Hat; index</a> &nbsp; &nbsp;
             <a class="nav" href="z_8c18c9b80cf7b446_models_py.html">&#xbb; next</a>
             &nbsp; &nbsp; &nbsp;
-            <a class="nav" href="https://coverage.readthedocs.io/en/7.11.0">coverage.py v7.11.0</a>,
-            created at 2025-10-22 22:07 +0000
+            <a class="nav" href="https://coverage.readthedocs.io/en/7.13.0">coverage.py v7.13.0</a>,
+            created at 2025-12-16 09:22 +0000
         </p>
     </div>
 </footer>

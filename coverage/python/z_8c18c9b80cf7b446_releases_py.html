@@ -4,14 +4,14 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>Coverage for webapp/endpoints/releases.py: 100%</title>
     <link rel="icon" sizes="32x32" href="favicon_32_cb_58284776.png">
-    <link rel="stylesheet" href="style_cb_6b508a39.css" type="text/css">
-    <script src="coverage_html_cb_6fb7b396.js" defer></script>
+    <link rel="stylesheet" href="style_cb_a5a05ca4.css" type="text/css">
+    <script src="coverage_html_cb_bcae5fc4.js" defer></script>
 </head>
 <body class="pyfile">
 <header>
     <div class="content">
         <h1>
-            <span class="text">Coverage for </span><b>webapp/endpoints/releases.py</b>:
+            <span class="text">Coverage for </span><b>webapp&#8201;/&#8201;endpoints&#8201;/&#8201;releases.py</b>:
             <span class="pc_cov">100%</span>
         </h1>
         <aside id="help_panel_wrapper">
@@ -64,8 +64,8 @@
             <a id="indexLink" class="nav" href="index.html">&Hat; index</a> &nbsp; &nbsp;
             <a id="nextFileLink" class="nav" href="z_8c18c9b80cf7b446_settings_py.html">&#xbb; next</a>
             &nbsp; &nbsp; &nbsp;
-            <a class="nav" href="https://coverage.readthedocs.io/en/7.11.0">coverage.py v7.11.0</a>,
-            created at 2025-10-22 22:07 +0000
+            <a class="nav" href="https://coverage.readthedocs.io/en/7.13.0">coverage.py v7.13.0</a>,
+            created at 2025-12-16 09:22 +0000
         </p>
         <aside class="hidden">
             <button type="button" class="button_next_chunk" data-shortcut="j"></button>
@@ -94,27 +94,25 @@
     <p class="run"><span class="n"><a id="t12" href="#t12">12</a></span><span class="t"><span class="op">@</span><span class="nam">login_required</span>&nbsp;</span><span class="r"></span></p>
     <p class="run"><span class="n"><a id="t13" href="#t13">13</a></span><span class="t"><span class="key">def</span> <span class="nam">get_release_history_data</span><span class="op">(</span><span class="nam">snap_name</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
     <p class="run"><span class="n"><a id="t14" href="#t14">14</a></span><span class="t">    <span class="nam">release_history</span> <span class="op">=</span> <span class="nam">dashboard</span><span class="op">.</span><span class="nam">snap_release_history</span><span class="op">(</span><span class="nam">flask</span><span class="op">.</span><span class="nam">session</span><span class="op">,</span> <span class="nam">snap_name</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
-    <p class="pln"><span class="n"><a id="t15" href="#t15">15</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
-    <p class="run"><span class="n"><a id="t16" href="#t16">16</a></span><span class="t">    <span class="nam">channel_map</span> <span class="op">=</span> <span class="nam">dashboard</span><span class="op">.</span><span class="nam">snap_channel_map</span><span class="op">(</span><span class="nam">flask</span><span class="op">.</span><span class="nam">session</span><span class="op">,</span> <span class="nam">snap_name</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p class="run"><span class="n"><a id="t15" href="#t15">15</a></span><span class="t">    <span class="nam">channel_map</span> <span class="op">=</span> <span class="nam">dashboard</span><span class="op">.</span><span class="nam">snap_channel_map</span><span class="op">(</span><span class="nam">flask</span><span class="op">.</span><span class="nam">session</span><span class="op">,</span> <span class="nam">snap_name</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p class="run"><span class="n"><a id="t16" href="#t16">16</a></span><span class="t">    <span class="nam">snap</span> <span class="op">=</span> <span class="nam">channel_map</span><span class="op">.</span><span class="nam">get</span><span class="op">(</span><span class="str">"snap"</span><span class="op">,</span> <span class="op">{</span><span class="op">}</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t17" href="#t17">17</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
-    <p class="run"><span class="n"><a id="t18" href="#t18">18</a></span><span class="t">    <span class="nam">snap</span> <span class="op">=</span> <span class="nam">channel_map</span><span class="op">.</span><span class="nam">get</span><span class="op">(</span><span class="str">"snap"</span><span class="op">,</span> <span class="op">{</span><span class="op">}</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
-    <p class="pln"><span class="n"><a id="t19" href="#t19">19</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
-    <p class="run"><span class="n"><a id="t20" href="#t20">20</a></span><span class="t">    <span class="nam">context</span> <span class="op">=</span> <span class="op">{</span>&nbsp;</span><span class="r"></span></p>
-    <p class="run run2"><span class="n"><a id="t21" href="#t21">21</a></span><span class="t">        <span class="str">"snap_name"</span><span class="op">:</span> <span class="nam">snap_name</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
-    <p class="run run2"><span class="n"><a id="t22" href="#t22">22</a></span><span class="t">        <span class="str">"snap_title"</span><span class="op">:</span> <span class="nam">snap</span><span class="op">.</span><span class="nam">get</span><span class="op">(</span><span class="str">"title"</span><span class="op">)</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
-    <p class="run run2"><span class="n"><a id="t23" href="#t23">23</a></span><span class="t">        <span class="str">"publisher_name"</span><span class="op">:</span> <span class="nam">snap</span><span class="op">.</span><span class="nam">get</span><span class="op">(</span><span class="str">"publisher"</span><span class="op">,</span> <span class="op">{</span><span class="op">}</span><span class="op">)</span><span class="op">.</span><span class="nam">get</span><span class="op">(</span><span class="str">"display-name"</span><span class="op">,</span> <span class="op">{</span><span class="op">}</span><span class="op">)</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
-    <p class="run run2"><span class="n"><a id="t24" href="#t24">24</a></span><span class="t">        <span class="str">"release_history"</span><span class="op">:</span> <span class="nam">release_history</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
-    <p class="run run2"><span class="n"><a id="t25" href="#t25">25</a></span><span class="t">        <span class="str">"private"</span><span class="op">:</span> <span class="nam">snap</span><span class="op">.</span><span class="nam">get</span><span class="op">(</span><span class="str">"private"</span><span class="op">)</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
-    <p class="run run2"><span class="n"><a id="t26" href="#t26">26</a></span><span class="t">        <span class="str">"default_track"</span><span class="op">:</span> <span class="op">(</span>&nbsp;</span><span class="r"></span></p>
-    <p class="run run2"><span class="n"><a id="t27" href="#t27">27</a></span><span class="t">            <span class="nam">snap</span><span class="op">.</span><span class="nam">get</span><span class="op">(</span><span class="str">"default-track"</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
-    <p class="run run2"><span class="n"><a id="t28" href="#t28">28</a></span><span class="t">            <span class="key">if</span> <span class="nam">snap</span><span class="op">.</span><span class="nam">get</span><span class="op">(</span><span class="str">"default-track"</span><span class="op">)</span> <span class="key">is</span> <span class="key">not</span> <span class="key">None</span>&nbsp;</span><span class="r"></span></p>
-    <p class="run run2"><span class="n"><a id="t29" href="#t29">29</a></span><span class="t">            <span class="key">else</span> <span class="str">"latest"</span>&nbsp;</span><span class="r"></span></p>
-    <p class="run run2"><span class="n"><a id="t30" href="#t30">30</a></span><span class="t">        <span class="op">)</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
-    <p class="run run2"><span class="n"><a id="t31" href="#t31">31</a></span><span class="t">        <span class="str">"channel_map"</span><span class="op">:</span> <span class="nam">channel_map</span><span class="op">.</span><span class="nam">get</span><span class="op">(</span><span class="str">"channel-map"</span><span class="op">)</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
-    <p class="run run2"><span class="n"><a id="t32" href="#t32">32</a></span><span class="t">        <span class="str">"tracks"</span><span class="op">:</span> <span class="nam">snap</span><span class="op">.</span><span class="nam">get</span><span class="op">(</span><span class="str">"tracks"</span><span class="op">)</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
-    <p class="run run2"><span class="n"><a id="t33" href="#t33">33</a></span><span class="t">    <span class="op">}</span>&nbsp;</span><span class="r"></span></p>
-    <p class="pln"><span class="n"><a id="t34" href="#t34">34</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
-    <p class="run"><span class="n"><a id="t35" href="#t35">35</a></span><span class="t">    <span class="key">return</span> <span class="nam">flask</span><span class="op">.</span><span class="nam">jsonify</span><span class="op">(</span><span class="op">{</span><span class="str">"success"</span><span class="op">:</span> <span class="key">True</span><span class="op">,</span> <span class="str">"data"</span><span class="op">:</span> <span class="nam">context</span><span class="op">}</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p class="run"><span class="n"><a id="t18" href="#t18">18</a></span><span class="t">    <span class="nam">context</span> <span class="op">=</span> <span class="op">{</span>&nbsp;</span><span class="r"></span></p>
+    <p class="run run2"><span class="n"><a id="t19" href="#t19">19</a></span><span class="t">        <span class="str">"snap_name"</span><span class="op">:</span> <span class="nam">snap_name</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p class="run run2"><span class="n"><a id="t20" href="#t20">20</a></span><span class="t">        <span class="str">"snap_title"</span><span class="op">:</span> <span class="nam">snap</span><span class="op">.</span><span class="nam">get</span><span class="op">(</span><span class="str">"title"</span><span class="op">)</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p class="run run2"><span class="n"><a id="t21" href="#t21">21</a></span><span class="t">        <span class="str">"publisher_name"</span><span class="op">:</span> <span class="nam">snap</span><span class="op">.</span><span class="nam">get</span><span class="op">(</span><span class="str">"publisher"</span><span class="op">,</span> <span class="op">{</span><span class="op">}</span><span class="op">)</span><span class="op">.</span><span class="nam">get</span><span class="op">(</span><span class="str">"display-name"</span><span class="op">,</span> <span class="op">{</span><span class="op">}</span><span class="op">)</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p class="run run2"><span class="n"><a id="t22" href="#t22">22</a></span><span class="t">        <span class="str">"release_history"</span><span class="op">:</span> <span class="nam">release_history</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p class="run run2"><span class="n"><a id="t23" href="#t23">23</a></span><span class="t">        <span class="str">"private"</span><span class="op">:</span> <span class="nam">snap</span><span class="op">.</span><span class="nam">get</span><span class="op">(</span><span class="str">"private"</span><span class="op">)</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p class="run run2"><span class="n"><a id="t24" href="#t24">24</a></span><span class="t">        <span class="str">"default_track"</span><span class="op">:</span> <span class="op">(</span>&nbsp;</span><span class="r"></span></p>
+    <p class="run run2"><span class="n"><a id="t25" href="#t25">25</a></span><span class="t">            <span class="nam">snap</span><span class="op">.</span><span class="nam">get</span><span class="op">(</span><span class="str">"default-track"</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p class="run run2"><span class="n"><a id="t26" href="#t26">26</a></span><span class="t">            <span class="key">if</span> <span class="nam">snap</span><span class="op">.</span><span class="nam">get</span><span class="op">(</span><span class="str">"default-track"</span><span class="op">)</span> <span class="key">is</span> <span class="key">not</span> <span class="key">None</span>&nbsp;</span><span class="r"></span></p>
+    <p class="run run2"><span class="n"><a id="t27" href="#t27">27</a></span><span class="t">            <span class="key">else</span> <span class="str">"latest"</span>&nbsp;</span><span class="r"></span></p>
+    <p class="run run2"><span class="n"><a id="t28" href="#t28">28</a></span><span class="t">        <span class="op">)</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p class="run run2"><span class="n"><a id="t29" href="#t29">29</a></span><span class="t">        <span class="str">"channel_map"</span><span class="op">:</span> <span class="nam">channel_map</span><span class="op">.</span><span class="nam">get</span><span class="op">(</span><span class="str">"channel-map"</span><span class="op">)</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p class="run run2"><span class="n"><a id="t30" href="#t30">30</a></span><span class="t">        <span class="str">"tracks"</span><span class="op">:</span> <span class="nam">snap</span><span class="op">.</span><span class="nam">get</span><span class="op">(</span><span class="str">"tracks"</span><span class="op">)</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p class="run run2"><span class="n"><a id="t31" href="#t31">31</a></span><span class="t">    <span class="op">}</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t32" href="#t32">32</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p class="run"><span class="n"><a id="t33" href="#t33">33</a></span><span class="t">    <span class="key">return</span> <span class="nam">flask</span><span class="op">.</span><span class="nam">jsonify</span><span class="op">(</span><span class="op">{</span><span class="str">"success"</span><span class="op">:</span> <span class="key">True</span><span class="op">,</span> <span class="str">"data"</span><span class="op">:</span> <span class="nam">context</span><span class="op">}</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
 </main>
 <footer>
     <div class="content">
@@ -123,8 +121,8 @@
             <a class="nav" href="index.html">&Hat; index</a> &nbsp; &nbsp;
             <a class="nav" href="z_8c18c9b80cf7b446_settings_py.html">&#xbb; next</a>
             &nbsp; &nbsp; &nbsp;
-            <a class="nav" href="https://coverage.readthedocs.io/en/7.11.0">coverage.py v7.11.0</a>,
-            created at 2025-10-22 22:07 +0000
+            <a class="nav" href="https://coverage.readthedocs.io/en/7.13.0">coverage.py v7.13.0</a>,
+            created at 2025-12-16 09:22 +0000
         </p>
     </div>
 </footer>

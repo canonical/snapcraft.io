@@ -4,14 +4,14 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>Coverage for webapp/endpoints/cves.py: 21%</title>
     <link rel="icon" sizes="32x32" href="favicon_32_cb_58284776.png">
-    <link rel="stylesheet" href="style_cb_6b508a39.css" type="text/css">
-    <script src="coverage_html_cb_6fb7b396.js" defer></script>
+    <link rel="stylesheet" href="style_cb_a5a05ca4.css" type="text/css">
+    <script src="coverage_html_cb_bcae5fc4.js" defer></script>
 </head>
 <body class="pyfile">
 <header>
     <div class="content">
         <h1>
-            <span class="text">Coverage for </span><b>webapp/endpoints/cves.py</b>:
+            <span class="text">Coverage for </span><b>webapp&#8201;/&#8201;endpoints&#8201;/&#8201;cves.py</b>:
             <span class="pc_cov">21%</span>
         </h1>
         <aside id="help_panel_wrapper">
@@ -64,8 +64,8 @@
             <a id="indexLink" class="nav" href="index.html">&Hat; index</a> &nbsp; &nbsp;
             <a id="nextFileLink" class="nav" href="z_8c18c9b80cf7b446_invites_py.html">&#xbb; next</a>
             &nbsp; &nbsp; &nbsp;
-            <a class="nav" href="https://coverage.readthedocs.io/en/7.11.0">coverage.py v7.11.0</a>,
-            created at 2025-10-22 22:07 +0000
+            <a class="nav" href="https://coverage.readthedocs.io/en/7.13.0">coverage.py v7.13.0</a>,
+            created at 2025-12-16 09:22 +0000
         </p>
         <aside class="hidden">
             <button type="button" class="button_next_chunk" data-shortcut="j"></button>
@@ -111,12 +111,12 @@
     <p class="mis show_mis"><span class="n"><a id="t29" href="#t29">29</a></span><span class="t">    <span class="key">try</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
     <p class="mis show_mis"><span class="n"><a id="t30" href="#t30">30</a></span><span class="t">        <span class="nam">snap_details</span> <span class="op">=</span> <span class="nam">dashboard</span><span class="op">.</span><span class="nam">get_snap_info</span><span class="op">(</span><span class="nam">flask</span><span class="op">.</span><span class="nam">session</span><span class="op">,</span> <span class="nam">snap_name</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p class="mis show_mis"><span class="n"><a id="t31" href="#t31">31</a></span><span class="t">    <span class="key">except</span> <span class="nam">StoreApiResourceNotFound</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
-    <p class="mis show_mis"><span class="n"><a id="t32" href="#t32">32</a></span><span class="t">        <span class="key">return</span> <span class="op">(</span><span class="key">False</span><span class="op">,</span> <span class="fst">f"</span><span class="fst">CVEs data for '</span><span class="op">{</span><span class="nam">snap_name</span><span class="op">}</span><span class="fst">' snap not found.</span><span class="fst">"</span><span class="op">,</span> <span class="num">404</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p class="mis show_mis"><span class="n"><a id="t32" href="#t32">32</a></span><span class="t">        <span class="key">return</span> <span class="op">(</span><span class="key">False</span><span class="op">,</span> <span class="str">f"CVEs data for '{snap_name}' snap not found."</span><span class="op">,</span> <span class="num">404</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p class="mis show_mis"><span class="n"><a id="t33" href="#t33">33</a></span><span class="t">    <span class="key">except</span> <span class="nam">StoreApiError</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
-    <p class="mis show_mis"><span class="n"><a id="t34" href="#t34">34</a></span><span class="t">        <span class="key">return</span> <span class="op">(</span><span class="key">False</span><span class="op">,</span> <span class="fst">f"</span><span class="fst">Error fetching '</span><span class="op">{</span><span class="nam">snap_name</span><span class="op">}</span><span class="fst">' snap details.</span><span class="fst">"</span><span class="op">,</span> <span class="num">500</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p class="mis show_mis"><span class="n"><a id="t34" href="#t34">34</a></span><span class="t">        <span class="key">return</span> <span class="op">(</span><span class="key">False</span><span class="op">,</span> <span class="str">f"Error fetching '{snap_name}' snap details."</span><span class="op">,</span> <span class="num">500</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t35" href="#t35">35</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p class="mis show_mis"><span class="n"><a id="t36" href="#t36">36</a></span><span class="t">    <span class="key">if</span> <span class="key">not</span> <span class="nam">snap_details</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
-    <p class="mis show_mis"><span class="n"><a id="t37" href="#t37">37</a></span><span class="t">        <span class="key">return</span> <span class="op">(</span><span class="key">False</span><span class="op">,</span> <span class="fst">f"</span><span class="fst">CVEs data for '</span><span class="op">{</span><span class="nam">snap_name</span><span class="op">}</span><span class="fst">' snap not found.</span><span class="fst">"</span><span class="op">,</span> <span class="num">404</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p class="mis show_mis"><span class="n"><a id="t37" href="#t37">37</a></span><span class="t">        <span class="key">return</span> <span class="op">(</span><span class="key">False</span><span class="op">,</span> <span class="str">f"CVEs data for '{snap_name}' snap not found."</span><span class="op">,</span> <span class="num">404</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t38" href="#t38">38</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p class="mis show_mis"><span class="n"><a id="t39" href="#t39">39</a></span><span class="t">    <span class="key">return</span> <span class="op">(</span><span class="key">True</span><span class="op">,</span> <span class="key">None</span><span class="op">,</span> <span class="num">200</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t40" href="#t40">40</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
@@ -144,7 +144,7 @@
     <p class="mis mis2 show_mis"><span class="n"><a id="t62" href="#t62">62</a></span><span class="t">            <span class="nam">flask</span><span class="op">.</span><span class="nam">jsonify</span><span class="op">(</span>&nbsp;</span><span class="r"></span></p>
     <p class="mis mis2 show_mis"><span class="n"><a id="t63" href="#t63">63</a></span><span class="t">                <span class="op">{</span>&nbsp;</span><span class="r"></span></p>
     <p class="mis mis2 show_mis"><span class="n"><a id="t64" href="#t64">64</a></span><span class="t">                    <span class="str">"success"</span><span class="op">:</span> <span class="key">False</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
-    <p class="mis mis2 show_mis"><span class="n"><a id="t65" href="#t65">65</a></span><span class="t">                    <span class="str">"message"</span><span class="op">:</span> <span class="fst">f"</span><span class="fst">CVEs data for '</span><span class="op">{</span><span class="nam">snap_name</span><span class="op">}</span><span class="fst">' snap not found.</span><span class="fst">"</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p class="mis mis2 show_mis"><span class="n"><a id="t65" href="#t65">65</a></span><span class="t">                    <span class="str">"message"</span><span class="op">:</span> <span class="str">f"CVEs data for '{snap_name}' snap not found."</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
     <p class="mis mis2 show_mis"><span class="n"><a id="t66" href="#t66">66</a></span><span class="t">                <span class="op">}</span>&nbsp;</span><span class="r"></span></p>
     <p class="mis mis2 show_mis"><span class="n"><a id="t67" href="#t67">67</a></span><span class="t">            <span class="op">)</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
     <p class="mis mis2 show_mis"><span class="n"><a id="t68" href="#t68">68</a></span><span class="t">            <span class="num">404</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
@@ -237,8 +237,8 @@
             <a class="nav" href="index.html">&Hat; index</a> &nbsp; &nbsp;
             <a class="nav" href="z_8c18c9b80cf7b446_invites_py.html">&#xbb; next</a>
             &nbsp; &nbsp; &nbsp;
-            <a class="nav" href="https://coverage.readthedocs.io/en/7.11.0">coverage.py v7.11.0</a>,
-            created at 2025-10-22 22:07 +0000
+            <a class="nav" href="https://coverage.readthedocs.io/en/7.13.0">coverage.py v7.13.0</a>,
+            created at 2025-12-16 09:22 +0000
         </p>
     </div>
 </footer>

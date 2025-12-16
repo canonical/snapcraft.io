@@ -4,14 +4,14 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>Coverage for tests/endpoints/publisher/tests_builds.py: 100%</title>
     <link rel="icon" sizes="32x32" href="favicon_32_cb_58284776.png">
-    <link rel="stylesheet" href="style_cb_6b508a39.css" type="text/css">
-    <script src="coverage_html_cb_6fb7b396.js" defer></script>
+    <link rel="stylesheet" href="style_cb_a5a05ca4.css" type="text/css">
+    <script src="coverage_html_cb_bcae5fc4.js" defer></script>
 </head>
 <body class="pyfile">
 <header>
     <div class="content">
         <h1>
-            <span class="text">Coverage for </span><b>tests/endpoints/publisher/tests_builds.py</b>:
+            <span class="text">Coverage for </span><b>tests&#8201;/&#8201;endpoints&#8201;/&#8201;publisher&#8201;/&#8201;tests_builds.py</b>:
             <span class="pc_cov">100%</span>
         </h1>
         <aside id="help_panel_wrapper">
@@ -64,8 +64,8 @@
             <a id="indexLink" class="nav" href="index.html">&Hat; index</a> &nbsp; &nbsp;
             <a id="nextFileLink" class="nav" href="z_e15d2b3bac298400_tests_listing_py.html">&#xbb; next</a>
             &nbsp; &nbsp; &nbsp;
-            <a class="nav" href="https://coverage.readthedocs.io/en/7.11.0">coverage.py v7.11.0</a>,
-            created at 2025-10-22 22:07 +0000
+            <a class="nav" href="https://coverage.readthedocs.io/en/7.13.0">coverage.py v7.13.0</a>,
+            created at 2025-12-16 09:22 +0000
         </p>
         <aside class="hidden">
             <button type="button" class="button_next_chunk" data-shortcut="j"></button>
@@ -90,7 +90,7 @@
     <p class="run"><span class="n"><a id="t8" href="#t8">8</a></span><span class="t">        <span class="nam">super</span><span class="op">(</span><span class="op">)</span><span class="op">.</span><span class="nam">setUp</span><span class="op">(</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p class="run"><span class="n"><a id="t9" href="#t9">9</a></span><span class="t">        <span class="nam">self</span><span class="op">.</span><span class="nam">snap_name</span> <span class="op">=</span> <span class="str">"test-snap"</span>&nbsp;</span><span class="r"></span></p>
     <p class="run"><span class="n"><a id="t10" href="#t10">10</a></span><span class="t">        <span class="nam">self</span><span class="op">.</span><span class="nam">build_id</span> <span class="op">=</span> <span class="str">"12345"</span>&nbsp;</span><span class="r"></span></p>
-    <p class="run"><span class="n"><a id="t11" href="#t11">11</a></span><span class="t">        <span class="nam">self</span><span class="op">.</span><span class="nam">endpoint_url</span> <span class="op">=</span> <span class="fst">f"</span><span class="fst">/</span><span class="op">{</span><span class="nam">self</span><span class="op">.</span><span class="nam">snap_name</span><span class="op">}</span><span class="fst">/builds/</span><span class="op">{</span><span class="nam">self</span><span class="op">.</span><span class="nam">build_id</span><span class="op">}</span><span class="fst">"</span>&nbsp;</span><span class="r"></span></p>
+    <p class="run"><span class="n"><a id="t11" href="#t11">11</a></span><span class="t">        <span class="nam">self</span><span class="op">.</span><span class="nam">endpoint_url</span> <span class="op">=</span> <span class="str">f"/{self.snap_name}/builds/{self.build_id}"</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t12" href="#t12">12</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p class="run"><span class="n"><a id="t13" href="#t13">13</a></span><span class="t">    <span class="op">@</span><span class="nam">patch</span><span class="op">(</span><span class="str">"webapp.endpoints.publisher.builds.dashboard"</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p class="run"><span class="n"><a id="t14" href="#t14">14</a></span><span class="t">    <span class="key">def</span> <span class="nam">test_get_snap_build_page_success</span><span class="op">(</span><span class="nam">self</span><span class="op">,</span> <span class="nam">mock_dashboard</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
@@ -131,7 +131,7 @@
     <p class="run"><span class="n"><a id="t49" href="#t49">49</a></span><span class="t">    <span class="key">def</span> <span class="nam">setUp</span><span class="op">(</span><span class="nam">self</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
     <p class="run"><span class="n"><a id="t50" href="#t50">50</a></span><span class="t">        <span class="nam">super</span><span class="op">(</span><span class="op">)</span><span class="op">.</span><span class="nam">setUp</span><span class="op">(</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p class="run"><span class="n"><a id="t51" href="#t51">51</a></span><span class="t">        <span class="nam">self</span><span class="op">.</span><span class="nam">snap_name</span> <span class="op">=</span> <span class="str">"test-snap"</span>&nbsp;</span><span class="r"></span></p>
-    <p class="run"><span class="n"><a id="t52" href="#t52">52</a></span><span class="t">        <span class="nam">self</span><span class="op">.</span><span class="nam">endpoint_url</span> <span class="op">=</span> <span class="fst">f"</span><span class="fst">/api/</span><span class="op">{</span><span class="nam">self</span><span class="op">.</span><span class="nam">snap_name</span><span class="op">}</span><span class="fst">/builds/trigger-build</span><span class="fst">"</span>&nbsp;</span><span class="r"></span></p>
+    <p class="run"><span class="n"><a id="t52" href="#t52">52</a></span><span class="t">        <span class="nam">self</span><span class="op">.</span><span class="nam">endpoint_url</span> <span class="op">=</span> <span class="str">f"/api/{self.snap_name}/builds/trigger-build"</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t53" href="#t53">53</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p class="run"><span class="n"><a id="t54" href="#t54">54</a></span><span class="t">    <span class="op">@</span><span class="nam">patch</span><span class="op">(</span><span class="str">"webapp.endpoints.publisher.builds.launchpad"</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p class="run"><span class="n"><a id="t55" href="#t55">55</a></span><span class="t">    <span class="op">@</span><span class="nam">patch</span><span class="op">(</span><span class="str">"webapp.endpoints.publisher.builds.dashboard"</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
@@ -257,7 +257,7 @@
     <p class="run"><span class="n"><a id="t175" href="#t175">175</a></span><span class="t">    <span class="key">def</span> <span class="nam">setUp</span><span class="op">(</span><span class="nam">self</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
     <p class="run"><span class="n"><a id="t176" href="#t176">176</a></span><span class="t">        <span class="nam">super</span><span class="op">(</span><span class="op">)</span><span class="op">.</span><span class="nam">setUp</span><span class="op">(</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p class="run"><span class="n"><a id="t177" href="#t177">177</a></span><span class="t">        <span class="nam">self</span><span class="op">.</span><span class="nam">snap_name</span> <span class="op">=</span> <span class="str">"test-snap"</span>&nbsp;</span><span class="r"></span></p>
-    <p class="run"><span class="n"><a id="t178" href="#t178">178</a></span><span class="t">        <span class="nam">self</span><span class="op">.</span><span class="nam">endpoint_url</span> <span class="op">=</span> <span class="fst">f"</span><span class="fst">/api/</span><span class="op">{</span><span class="nam">self</span><span class="op">.</span><span class="nam">snap_name</span><span class="op">}</span><span class="fst">/builds/disconnect/</span><span class="fst">"</span>&nbsp;</span><span class="r"></span></p>
+    <p class="run"><span class="n"><a id="t178" href="#t178">178</a></span><span class="t">        <span class="nam">self</span><span class="op">.</span><span class="nam">endpoint_url</span> <span class="op">=</span> <span class="str">f"/api/{self.snap_name}/builds/disconnect/"</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t179" href="#t179">179</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p class="run"><span class="n"><a id="t180" href="#t180">180</a></span><span class="t">    <span class="key">def</span> <span class="nam">test_post_disconnect_repo_requires_login</span><span class="op">(</span><span class="nam">self</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t181" href="#t181">181</a></span><span class="t">        <span class="str">"""Test that the endpoint requires login"""</span>&nbsp;</span><span class="r"></span></p>
@@ -278,8 +278,8 @@
             <a class="nav" href="index.html">&Hat; index</a> &nbsp; &nbsp;
             <a class="nav" href="z_e15d2b3bac298400_tests_listing_py.html">&#xbb; next</a>
             &nbsp; &nbsp; &nbsp;
-            <a class="nav" href="https://coverage.readthedocs.io/en/7.11.0">coverage.py v7.11.0</a>,
-            created at 2025-10-22 22:07 +0000
+            <a class="nav" href="https://coverage.readthedocs.io/en/7.13.0">coverage.py v7.13.0</a>,
+            created at 2025-12-16 09:22 +0000
         </p>
     </div>
 </footer>

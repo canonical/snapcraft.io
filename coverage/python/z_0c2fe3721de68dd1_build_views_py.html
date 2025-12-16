@@ -4,14 +4,14 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>Coverage for webapp/publisher/snaps/build_views.py: 25%</title>
     <link rel="icon" sizes="32x32" href="favicon_32_cb_58284776.png">
-    <link rel="stylesheet" href="style_cb_6b508a39.css" type="text/css">
-    <script src="coverage_html_cb_6fb7b396.js" defer></script>
+    <link rel="stylesheet" href="style_cb_a5a05ca4.css" type="text/css">
+    <script src="coverage_html_cb_bcae5fc4.js" defer></script>
 </head>
 <body class="pyfile">
 <header>
     <div class="content">
         <h1>
-            <span class="text">Coverage for </span><b>webapp/publisher/snaps/build_views.py</b>:
+            <span class="text">Coverage for </span><b>webapp&#8201;/&#8201;publisher&#8201;/&#8201;snaps&#8201;/&#8201;build_views.py</b>:
             <span class="pc_cov">25%</span>
         </h1>
         <aside id="help_panel_wrapper">
@@ -64,8 +64,8 @@
             <a id="indexLink" class="nav" href="index.html">&Hat; index</a> &nbsp; &nbsp;
             <a id="nextFileLink" class="nav" href="z_0c2fe3721de68dd1_builds_py.html">&#xbb; next</a>
             &nbsp; &nbsp; &nbsp;
-            <a class="nav" href="https://coverage.readthedocs.io/en/7.11.0">coverage.py v7.11.0</a>,
-            created at 2025-10-22 22:07 +0000
+            <a class="nav" href="https://coverage.readthedocs.io/en/7.13.0">coverage.py v7.13.0</a>,
+            created at 2025-12-16 09:22 +0000
         </p>
         <aside class="hidden">
             <button type="button" class="button_next_chunk" data-shortcut="j"></button>
@@ -281,8 +281,8 @@
     <p class="mis mis2 show_mis"><span class="n"><a id="t199" href="#t199">199</a></span><span class="t">                    <span class="str">"type"</span><span class="op">:</span> <span class="str">"SNAP_NAME_DOES_NOT_MATCH"</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
     <p class="mis mis2 show_mis"><span class="n"><a id="t200" href="#t200">200</a></span><span class="t">                    <span class="str">"message"</span><span class="op">:</span> <span class="op">(</span>&nbsp;</span><span class="r"></span></p>
     <p class="mis mis2 show_mis"><span class="n"><a id="t201" href="#t201">201</a></span><span class="t">                        <span class="str">"Name mismatch: the snapcraft.yaml uses the snap "</span>&nbsp;</span><span class="r"></span></p>
-    <p class="mis mis2 show_mis"><span class="n"><a id="t202" href="#t202">202</a></span><span class="t">                        <span class="fst">f'</span><span class="fst">name "</span><span class="op">{</span><span class="nam">gh_snap_name</span><span class="op">}</span><span class="fst">", but you\'ve registered</span><span class="fst">'</span>&nbsp;</span><span class="r"></span></p>
-    <p class="mis mis2 show_mis"><span class="n"><a id="t203" href="#t203">203</a></span><span class="t">                        <span class="fst">f'</span><span class="fst"> the name "</span><span class="op">{</span><span class="nam">snap_name</span><span class="op">}</span><span class="fst">". Update your </span><span class="fst">'</span>&nbsp;</span><span class="r"></span></p>
+    <p class="mis mis2 show_mis"><span class="n"><a id="t202" href="#t202">202</a></span><span class="t">                        <span class="str">f'name "{gh_snap_name}", but you\'ve registered'</span>&nbsp;</span><span class="r"></span></p>
+    <p class="mis mis2 show_mis"><span class="n"><a id="t203" href="#t203">203</a></span><span class="t">                        <span class="str">f' the name "{snap_name}". Update your '</span>&nbsp;</span><span class="r"></span></p>
     <p class="mis mis2 show_mis"><span class="n"><a id="t204" href="#t204">204</a></span><span class="t">                        <span class="str">"snapcraft.yaml to continue."</span>&nbsp;</span><span class="r"></span></p>
     <p class="mis mis2 show_mis"><span class="n"><a id="t205" href="#t205">205</a></span><span class="t">                    <span class="op">)</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
     <p class="mis mis2 show_mis"><span class="n"><a id="t206" href="#t206">206</a></span><span class="t">                    <span class="str">"yaml_location"</span><span class="op">:</span> <span class="nam">yaml_location</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
@@ -294,7 +294,7 @@
     <p class="mis mis2 show_mis"><span class="n"><a id="t212" href="#t212">212</a></span><span class="t">                <span class="str">"type"</span><span class="op">:</span> <span class="str">"INVALID_YAML_FILE"</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
     <p class="mis mis2 show_mis"><span class="n"><a id="t213" href="#t213">213</a></span><span class="t">                <span class="str">"message"</span><span class="op">:</span> <span class="op">(</span>&nbsp;</span><span class="r"></span></p>
     <p class="mis mis2 show_mis"><span class="n"><a id="t214" href="#t214">214</a></span><span class="t">                    <span class="str">"Invalid snapcraft.yaml: there was an issue parsing the "</span>&nbsp;</span><span class="r"></span></p>
-    <p class="mis mis2 show_mis"><span class="n"><a id="t215" href="#t215">215</a></span><span class="t">                    <span class="fst">f"</span><span class="fst">snapcraft.yaml for </span><span class="op">{</span><span class="nam">snap_name</span><span class="op">}</span><span class="fst">.</span><span class="fst">"</span>&nbsp;</span><span class="r"></span></p>
+    <p class="mis mis2 show_mis"><span class="n"><a id="t215" href="#t215">215</a></span><span class="t">                    <span class="str">f"snapcraft.yaml for {snap_name}."</span>&nbsp;</span><span class="r"></span></p>
     <p class="mis mis2 show_mis"><span class="n"><a id="t216" href="#t216">216</a></span><span class="t">                <span class="op">)</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
     <p class="mis mis2 show_mis"><span class="n"><a id="t217" href="#t217">217</a></span><span class="t">            <span class="op">}</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t218" href="#t218">218</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
@@ -339,7 +339,7 @@
     <p class="mis show_mis"><span class="n"><a id="t257" href="#t257">257</a></span><span class="t">        <span class="key">return</span> <span class="nam">flask</span><span class="op">.</span><span class="nam">redirect</span><span class="op">(</span><span class="nam">redirect_url</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t258" href="#t258">258</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p class="mis show_mis"><span class="n"><a id="t259" href="#t259">259</a></span><span class="t">    <span class="nam">lp_snap</span> <span class="op">=</span> <span class="nam">launchpad</span><span class="op">.</span><span class="nam">get_snap_by_store_name</span><span class="op">(</span><span class="nam">details</span><span class="op">[</span><span class="str">"snap_name"</span><span class="op">]</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
-    <p class="mis show_mis"><span class="n"><a id="t260" href="#t260">260</a></span><span class="t">    <span class="nam">git_url</span> <span class="op">=</span> <span class="fst">f"</span><span class="fst">https://github.com/</span><span class="op">{</span><span class="nam">owner</span><span class="op">}</span><span class="fst">/</span><span class="op">{</span><span class="nam">repo</span><span class="op">}</span><span class="fst">"</span>&nbsp;</span><span class="r"></span></p>
+    <p class="mis show_mis"><span class="n"><a id="t260" href="#t260">260</a></span><span class="t">    <span class="nam">git_url</span> <span class="op">=</span> <span class="str">f"https://github.com/{owner}/{repo}"</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t261" href="#t261">261</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p class="mis show_mis"><span class="n"><a id="t262" href="#t262">262</a></span><span class="t">    <span class="key">if</span> <span class="key">not</span> <span class="nam">lp_snap</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
     <p class="mis show_mis"><span class="n"><a id="t263" href="#t263">263</a></span><span class="t">        <span class="nam">lp_snap_name</span> <span class="op">=</span> <span class="nam">md5</span><span class="op">(</span><span class="nam">git_url</span><span class="op">.</span><span class="nam">encode</span><span class="op">(</span><span class="str">"UTF-8"</span><span class="op">)</span><span class="op">)</span><span class="op">.</span><span class="nam">hexdigest</span><span class="op">(</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
@@ -355,7 +355,7 @@
     <p class="mis show_mis"><span class="n"><a id="t273" href="#t273">273</a></span><span class="t">        <span class="key">if</span> <span class="nam">repo_exist</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
     <p class="mis show_mis"><span class="n"><a id="t274" href="#t274">274</a></span><span class="t">            <span class="nam">flask</span><span class="op">.</span><span class="nam">flash</span><span class="op">(</span>&nbsp;</span><span class="r"></span></p>
     <p class="mis mis2 show_mis"><span class="n"><a id="t275" href="#t275">275</a></span><span class="t">                <span class="str">"The specified repository is being used by another snap:"</span>&nbsp;</span><span class="r"></span></p>
-    <p class="mis mis2 show_mis"><span class="n"><a id="t276" href="#t276">276</a></span><span class="t">                <span class="fst">f"</span><span class="fst"> </span><span class="op">{</span><span class="nam">repo_exist</span><span class="op">[</span><span class="str">'store_name'</span><span class="op">]</span><span class="op">}</span><span class="fst">"</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p class="mis mis2 show_mis"><span class="n"><a id="t276" href="#t276">276</a></span><span class="t">                <span class="str">f" {repo_exist['store_name']}"</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
     <p class="mis mis2 show_mis"><span class="n"><a id="t277" href="#t277">277</a></span><span class="t">                <span class="str">"negative"</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
     <p class="mis mis2 show_mis"><span class="n"><a id="t278" href="#t278">278</a></span><span class="t">            <span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p class="mis show_mis"><span class="n"><a id="t279" href="#t279">279</a></span><span class="t">            <span class="key">return</span> <span class="nam">flask</span><span class="op">.</span><span class="nam">redirect</span><span class="op">(</span><span class="nam">redirect_url</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
@@ -372,7 +372,7 @@
     <p class="pln"><span class="n"><a id="t290" href="#t290">290</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t291" href="#t291">291</a></span><span class="t">        <span class="com"># Create webhook in the repo, it should also trigger the first build</span>&nbsp;</span><span class="r"></span></p>
     <p class="mis show_mis"><span class="n"><a id="t292" href="#t292">292</a></span><span class="t">        <span class="nam">github_hook_url</span> <span class="op">=</span> <span class="op">(</span>&nbsp;</span><span class="r"></span></p>
-    <p class="mis mis2 show_mis"><span class="n"><a id="t293" href="#t293">293</a></span><span class="t">            <span class="fst">f"</span><span class="op">{</span><span class="nam">GITHUB_WEBHOOK_HOST_URL</span><span class="op">}</span><span class="fst">api/</span><span class="op">{</span><span class="nam">snap_name</span><span class="op">}</span><span class="fst">/webhook/notify</span><span class="fst">"</span>&nbsp;</span><span class="r"></span></p>
+    <p class="mis mis2 show_mis"><span class="n"><a id="t293" href="#t293">293</a></span><span class="t">            <span class="str">f"{GITHUB_WEBHOOK_HOST_URL}api/{snap_name}/webhook/notify"</span>&nbsp;</span><span class="r"></span></p>
     <p class="mis mis2 show_mis"><span class="n"><a id="t294" href="#t294">294</a></span><span class="t">        <span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p class="mis show_mis"><span class="n"><a id="t295" href="#t295">295</a></span><span class="t">        <span class="key">try</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
     <p class="mis show_mis"><span class="n"><a id="t296" href="#t296">296</a></span><span class="t">            <span class="nam">hook</span> <span class="op">=</span> <span class="nam">github</span><span class="op">.</span><span class="nam">get_hook_by_url</span><span class="op">(</span><span class="nam">owner</span><span class="op">,</span> <span class="nam">repo</span><span class="op">,</span> <span class="nam">github_hook_url</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
@@ -390,7 +390,7 @@
     <p class="mis show_mis"><span class="n"><a id="t308" href="#t308">308</a></span><span class="t">    <span class="key">elif</span> <span class="nam">lp_snap</span><span class="op">[</span><span class="str">"git_repository_url"</span><span class="op">]</span> <span class="op">!=</span> <span class="nam">git_url</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t309" href="#t309">309</a></span><span class="t">        <span class="com"># In the future, create a new record, delete the old one</span>&nbsp;</span><span class="r"></span></p>
     <p class="mis show_mis"><span class="n"><a id="t310" href="#t310">310</a></span><span class="t">        <span class="key">raise</span> <span class="nam">AttributeError</span><span class="op">(</span>&nbsp;</span><span class="r"></span></p>
-    <p class="mis mis2 show_mis"><span class="n"><a id="t311" href="#t311">311</a></span><span class="t">            <span class="fst">f"</span><span class="fst">Snap </span><span class="op">{</span><span class="nam">snap_name</span><span class="op">}</span><span class="fst"> already has a build repository associated</span><span class="fst">"</span>&nbsp;</span><span class="r"></span></p>
+    <p class="mis mis2 show_mis"><span class="n"><a id="t311" href="#t311">311</a></span><span class="t">            <span class="str">f"Snap {snap_name} already has a build repository associated"</span>&nbsp;</span><span class="r"></span></p>
     <p class="mis mis2 show_mis"><span class="n"><a id="t312" href="#t312">312</a></span><span class="t">        <span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t313" href="#t313">313</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p class="mis show_mis"><span class="n"><a id="t314" href="#t314">314</a></span><span class="t">    <span class="key">return</span> <span class="nam">flask</span><span class="op">.</span><span class="nam">redirect</span><span class="op">(</span><span class="nam">redirect_url</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
@@ -518,7 +518,7 @@
     <p class="mis show_mis"><span class="n"><a id="t436" href="#t436">436</a></span><span class="t">    <span class="key">try</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
     <p class="mis show_mis"><span class="n"><a id="t437" href="#t437">437</a></span><span class="t">        <span class="nam">github</span><span class="op">.</span><span class="nam">get_user</span><span class="op">(</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p class="mis show_mis"><span class="n"><a id="t438" href="#t438">438</a></span><span class="t">    <span class="key">except</span> <span class="nam">Unauthorized</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
-    <p class="mis show_mis"><span class="n"><a id="t439" href="#t439">439</a></span><span class="t">        <span class="key">return</span> <span class="nam">flask</span><span class="op">.</span><span class="nam">redirect</span><span class="op">(</span><span class="fst">f"</span><span class="fst">/github/auth?back=</span><span class="op">{</span><span class="nam">flask</span><span class="op">.</span><span class="nam">request</span><span class="op">.</span><span class="nam">path</span><span class="op">}</span><span class="fst">"</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p class="mis show_mis"><span class="n"><a id="t439" href="#t439">439</a></span><span class="t">        <span class="key">return</span> <span class="nam">flask</span><span class="op">.</span><span class="nam">redirect</span><span class="op">(</span><span class="str">f"/github/auth?back={flask.request.path}"</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t440" href="#t440">440</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p class="mis show_mis"><span class="n"><a id="t441" href="#t441">441</a></span><span class="t">    <span class="nam">gh_link</span> <span class="op">=</span> <span class="nam">lp_snap</span><span class="op">[</span><span class="str">"git_repository_url"</span><span class="op">]</span><span class="op">[</span><span class="num">19</span><span class="op">:</span><span class="op">]</span>&nbsp;</span><span class="r"></span></p>
     <p class="mis show_mis"><span class="n"><a id="t442" href="#t442">442</a></span><span class="t">    <span class="nam">gh_owner</span><span class="op">,</span> <span class="nam">gh_repo</span> <span class="op">=</span> <span class="nam">gh_link</span><span class="op">.</span><span class="nam">split</span><span class="op">(</span><span class="str">"/"</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
@@ -526,7 +526,7 @@
     <p class="mis show_mis"><span class="n"><a id="t444" href="#t444">444</a></span><span class="t">    <span class="key">try</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t445" href="#t445">445</a></span><span class="t">        <span class="com"># Remove old BSI webhook if present</span>&nbsp;</span><span class="r"></span></p>
     <p class="mis show_mis"><span class="n"><a id="t446" href="#t446">446</a></span><span class="t">        <span class="nam">old_url</span> <span class="op">=</span> <span class="op">(</span>&nbsp;</span><span class="r"></span></p>
-    <p class="mis mis2 show_mis"><span class="n"><a id="t447" href="#t447">447</a></span><span class="t">            <span class="fst">f"</span><span class="fst">https://build.snapcraft.io/</span><span class="op">{</span><span class="nam">gh_owner</span><span class="op">}</span><span class="fst">/</span><span class="op">{</span><span class="nam">gh_repo</span><span class="op">}</span><span class="fst">/webhook/notify</span><span class="fst">"</span>&nbsp;</span><span class="r"></span></p>
+    <p class="mis mis2 show_mis"><span class="n"><a id="t447" href="#t447">447</a></span><span class="t">            <span class="str">f"https://build.snapcraft.io/{gh_owner}/{gh_repo}/webhook/notify"</span>&nbsp;</span><span class="r"></span></p>
     <p class="mis mis2 show_mis"><span class="n"><a id="t448" href="#t448">448</a></span><span class="t">        <span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p class="mis show_mis"><span class="n"><a id="t449" href="#t449">449</a></span><span class="t">        <span class="nam">old_hook</span> <span class="op">=</span> <span class="nam">github</span><span class="op">.</span><span class="nam">get_hook_by_url</span><span class="op">(</span><span class="nam">gh_owner</span><span class="op">,</span> <span class="nam">gh_repo</span><span class="op">,</span> <span class="nam">old_url</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t450" href="#t450">450</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
@@ -539,7 +539,7 @@
     <p class="pln"><span class="n"><a id="t457" href="#t457">457</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t458" href="#t458">458</a></span><span class="t">        <span class="com"># Remove current hook</span>&nbsp;</span><span class="r"></span></p>
     <p class="mis show_mis"><span class="n"><a id="t459" href="#t459">459</a></span><span class="t">        <span class="nam">github_hook_url</span> <span class="op">=</span> <span class="op">(</span>&nbsp;</span><span class="r"></span></p>
-    <p class="mis mis2 show_mis"><span class="n"><a id="t460" href="#t460">460</a></span><span class="t">            <span class="fst">f"</span><span class="op">{</span><span class="nam">GITHUB_WEBHOOK_HOST_URL</span><span class="op">}</span><span class="fst">api/</span><span class="op">{</span><span class="nam">snap_name</span><span class="op">}</span><span class="fst">/webhook/notify</span><span class="fst">"</span>&nbsp;</span><span class="r"></span></p>
+    <p class="mis mis2 show_mis"><span class="n"><a id="t460" href="#t460">460</a></span><span class="t">            <span class="str">f"{GITHUB_WEBHOOK_HOST_URL}api/{snap_name}/webhook/notify"</span>&nbsp;</span><span class="r"></span></p>
     <p class="mis mis2 show_mis"><span class="n"><a id="t461" href="#t461">461</a></span><span class="t">        <span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p class="mis show_mis"><span class="n"><a id="t462" href="#t462">462</a></span><span class="t">        <span class="nam">snapcraft_hook</span> <span class="op">=</span> <span class="nam">github</span><span class="op">.</span><span class="nam">get_hook_by_url</span><span class="op">(</span>&nbsp;</span><span class="r"></span></p>
     <p class="mis mis2 show_mis"><span class="n"><a id="t463" href="#t463">463</a></span><span class="t">            <span class="nam">gh_owner</span><span class="op">,</span> <span class="nam">gh_repo</span><span class="op">,</span> <span class="nam">github_hook_url</span>&nbsp;</span><span class="r"></span></p>
@@ -572,8 +572,8 @@
             <a class="nav" href="index.html">&Hat; index</a> &nbsp; &nbsp;
             <a class="nav" href="z_0c2fe3721de68dd1_builds_py.html">&#xbb; next</a>
             &nbsp; &nbsp; &nbsp;
-            <a class="nav" href="https://coverage.readthedocs.io/en/7.11.0">coverage.py v7.11.0</a>,
-            created at 2025-10-22 22:07 +0000
+            <a class="nav" href="https://coverage.readthedocs.io/en/7.13.0">coverage.py v7.13.0</a>,
+            created at 2025-12-16 09:22 +0000
         </p>
     </div>
 </footer>
