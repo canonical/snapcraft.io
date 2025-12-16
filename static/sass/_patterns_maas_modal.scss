@@ -87,8 +87,10 @@ $color-modal-controls: rgba($color-x-dark, 0.2);
 
   // navigation
   .vbox-close {
-    background: url("#{$assets-path}345e40a0-close_16_white.svg") no-repeat;
+    @include vf-icon-close($colors--dark-theme--icon); // close icon is on dark modal background
+
     background-position: center;
+    background-repeat: no-repeat;
     background-size: 1rem;
     color: $color-x-light;
     cursor: pointer;
@@ -131,12 +133,16 @@ $color-modal-controls: rgba($color-x-dark, 0.2);
   }
 
   .vbox-prev {
-    background-image: url("#{$assets-path}e8d2e45f-chevron-left.svg");
+    @include vf-icon-chevron-left-themed;
+
+    background-size: 1rem;
     left: 1rem;
   }
 
   .vbox-next {
-    background-image: url("#{$assets-path}9716bbab-chevron.svg");
+    @include vf-icon-chevron-right-themed;
+
+    background-size: 1rem;
     right: 1rem;
   }
 

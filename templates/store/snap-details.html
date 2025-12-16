@@ -57,11 +57,11 @@
 {% block content %}
   {% if is_preview %}
     <div class="snapcraft-p-sticky sticky-shadow" style="z-index: 100;">
-      <div class="row">
-        <div class="col-7">
+      <div class="grid-row">
+        <div class="grid-col-6">
             <p class="u-no-margin--bottom" id="preview-message">You are previewing the listing page for {{package_name}}</p>
         </div>
-        <div class="col-5 --dark">
+        <div class="grid-col-2 --dark">
           <div class="u-align--right u-clearfix">
             <button class="p-button--base js-edit">Edit</button>
             <button class="p-button js-revert" disabled="disabled">Revert</button>
@@ -78,7 +78,7 @@
   {% endif %}
   <div class="p-strip is-shallow">
     {% if is_users_snap and not is_preview %}
-      <div class="row js-snap-owner-notification">
+      <div class="u-fixed-width js-snap-owner-notification">
         <div class="p-notification--information">
           <div class="p-notification__content">
             <p class="p-notification__message">
@@ -88,89 +88,90 @@
         </div>
       </div>
     {% endif %}
-    <div class="row">
       {%- call(slot) package_header() -%}
         {%- if slot == 'buttons' -%}
-          <button
-            class="p-button p-snap-install-buttons__versions{% if is_preview %} p-tooltip p-tooltip--btm-right{% endif %}"
-            {% if is_preview %}
-              aria-describedby="{{ package_name }}-preview-channel-map"
-              disabled
-            {% endif %}
-            data-js="open-channel-map"
-            data-controls="channel-map-versions"
-            aria-controls="channel-map-versions">
-            {{ default_track }}/{{ lowest_risk_available }} {{ version }}&nbsp;&nbsp;<i class="p-icon--chevron-down"></i>
-            {% if is_preview %}
-            <span class="p-tooltip__message u-align--center" role="tooltip" id="{{ package_name }}-preview-channel-map">This content is being displayed for preview purposes</span>
-            {% endif %}
-          </button>
-          {% if has_stable %}
+          <div class="p-cta-block u-no-padding--bottom">
             <button
-              class="p-button--positive p-snap-install-buttons__install{% if is_preview %} p-tooltip p-tooltip--btm-right{% endif %}"
+              class="p-button{% if is_preview %} p-tooltip p-tooltip--btm-right{% endif %}"
               {% if is_preview %}
                 aria-describedby="{{ package_name }}-preview-channel-map"
                 disabled
               {% endif %}
               data-js="open-channel-map"
-              data-controls="channel-map-install"
-              aria-controls="channel-map-install">
-                Install
-                {% if is_preview %}
+              data-controls="channel-map-versions"
+              aria-controls="channel-map-versions">
+              {{ default_track }}/{{ lowest_risk_available }} {{ version }}&nbsp;&nbsp;<i class="p-icon--chevron-down"></i>
+              {% if is_preview %}
               <span class="p-tooltip__message u-align--center" role="tooltip" id="{{ package_name }}-preview-channel-map">This content is being displayed for preview purposes</span>
               {% endif %}
             </button>
-            {% endif %}
+            {% if has_stable %}
+              <button
+                class="p-button--positive{% if is_preview %} p-tooltip p-tooltip--btm-right{% endif %}"
+                {% if is_preview %}
+                  aria-describedby="{{ package_name }}-preview-channel-map"
+                  disabled
+                {% endif %}
+                data-js="open-channel-map"
+                data-controls="channel-map-install"
+                aria-controls="channel-map-install">
+                  Install
+                  {% if is_preview %}
+                <span class="p-tooltip__message u-align--center" role="tooltip" id="{{ package_name }}-preview-channel-map">This content is being displayed for preview purposes</span>
+                {% endif %}
+              </button>
+              {% endif %}
+            </div>
             {% if package_name in appliances %}
             <p class="u-no-margin--bottom">
               Available as an
               <span class="p-tooltip--btm-center" style="z-index: 2;">
-                <a href="https://ubuntu.com/appliance/{{appliances[package_name]}}" >Ubuntu Appliance</a>
+                <a href="https://ubuntu.com/appliance/{{appliances[package_name]}}" >Ubuntu Appliance&nbsp;&rsaquo;</a>
                 <span class="p-tooltip__message">Install a ready-made {{snap_title}} image<br />on a Raspberry Pi, an Intel NUC or try<br />it in a VM and get started.</span>
               </span>
             </p>
             {% endif %}
             {% if (categories[0] and categories[0].slug == "devices-and-iot") or (categories[1] and categories[1].slug == "devices-and-iot") %}
-           <p class="u-no-margin--bottom">
-             <a
-               href="/about/contact-us"
-               data-js="contact-form-trigger"
-               data-formid="2639">
-               Contact us about Snaps and IoT&nbsp;&rsaquo;
-             </a>
-           </p>
-        {% endif %}
+            <p class="u-no-margin--bottom">
+              Contact us about
+              <a
+                href="/about/contact-us"
+                data-js="contact-form-trigger"
+                data-formid="2639">
+                Snaps and IoT&nbsp;&rsaquo;
+              </a>
+            </p>
+            {% endif %}
         {%- endif -%}
       {%- endcall -%}
-    </div>
   </div>
 
   {% include "store/snap-details/_channel_map.html" %}
 
   {% if screenshots or video or is_preview %}
-    <div class="p-strip is-shallow">
+    <div class="p-section">
       {% include "store/snap-details/_screenshots.html" %}
     </div>
   {% endif %}
 
-  <div class="p-strip is-shallow u-no-padding--top">
+  <div class="p-section">
     <div class="u-fixed-width"><hr></div>
-    <div class="row">
-      <div class="col-8 u-text-wrap">
-        {% if summary or is_preview %}<h4 class="p-heading--2" data-live="summary">{{ summary }}</h4>{% endif %}
-        <div data-live="description">{{ description | safe }}</div>
-      </div>
-      <div class="col-4">
+    <div class="grid-row--25-75-on-large">
+      <div class="grid-col grid-col-order-small-1 grid-col-order-medium-1">
         {% include "store/snap-details/_details.html" %}
 
         {# EMBEDDABLE CARD SECTION - hidden in preview #}
         {% if not IS_BRAND_STORE %}
-          <h4 class="p-heading--5">Share this snap</h4>
+          <h3 class="p-muted-heading">Share this snap</h3>
           <p>Generate an embeddable card to be shared on external websites.</p>
           <p><button class="p-button js-embedded-card-toggle" {% if is_preview %}disabled{% endif %}>Create embeddable card</button></p>
 
           {% include "store/snap-details/_embedded_card_modal.html" %}
         {% endif %}
+      </div>
+      <div class="grid-col u-text-wrap">
+        {% if summary or is_preview %}<h4 class="p-heading--2" data-live="summary">{{ summary }}</h4>{% endif %}
+        <div data-live="description">{{ description | safe }}</div>
       </div>
     </div>
   </div>
@@ -179,29 +180,25 @@
     {% include "store/snap-details/_distro-instructions-for-snap-support.html" %}
   {% endif %}
 
-  {% if not IS_BRAND_STORE and package_name == "hiri" %}
-    {% include "partials/_hiri-case-study.html" %}
-  {% endif %}
-
   {% if countries or normalized_os %}
     <div data-live="public_metrics_live">
-      <div class="p-strip is-shallow">
-        <div class="u-fixed-width"><hr></div>
+      <div class="{% if has_publisher_page %}p-section{% else %}p-section--deep{% endif %}">
         <div class="u-fixed-width">
-          <h4 class="p-heading--2">Where people are using {{ snap_title }}</h4>
+          <hr>
+          <h2>Where people are using {{ snap_title }}</h2>
         </div>
-        <div class="row {% if normalized_os %}u-equal-height{% endif %}">
+        <div class="grid-row {% if normalized_os %}u-equal-height{% endif %}">
           {% if countries %}
-            <div class="{% if normalized_os %}col-8{% else %}col-12{% endif %} js-snap-map-holder" data-live="installed_base_by_country_percent">
+            <div class="{% if normalized_os %}grid-col-4{% else %}grid-col-6{% endif %} grid-col-start-large-3 js-snap-map-holder" data-live="installed_base_by_country_percent">
               <div id="js-snap-map" class="snapcraft-territories"></div>
             </div>
           {% endif %}
           {% if normalized_os %}
-            {% set list_limit = 20 %}
-            {% if normalized_os|length > list_limit + 1 %}
-            <div class="col-4">
+            <div class="{% if countries %}grid-col-2{% else %}grid-col-4 grid-col-start-large-5{% endif %}">
               <div class="js-sschart-holder" data-live="weekly_installed_base_by_operating_system_normalized">
-                <h5 class="p-muted-heading">Users by distribution (log)</h5>
+                <h3 class="p-muted-heading">Users by distribution (log)</h3>
+                {% set list_limit = 15 %}{# keep the limit in sync with height of the map #}
+                {% if normalized_os|length > list_limit + 1 %}
                 <div class="snapcraft-distro-chart">
                   <div class="snapcraft-distro-chart__names">
                     {% for distro in normalized_os[:list_limit] %}
@@ -239,28 +236,24 @@
                     </div>
                   </div>
                 </div>
+                {% else %}
+                <div class="snapcraft-distro-chart">
+                  <div class="snapcraft-distro-chart__names">
+                    {% for distro in normalized_os %}
+                    <div class="snapcraft-distro-chart__name" title="{{ distro.name }}">
+                      {{ distro.name }}</div>
+                    {% endfor %}
+                  </div>
+                  <div class="snapcraft-distro-chart__bars">
+                    {% for distro in normalized_os %}
+                    <div class="snapcraft-distro-chart__bar"
+                      style="width: {{ distro.value * 100 }}%;"></div>
+                    {% endfor %}
+                  </div>
+                </div>
+                {% endif %}
               </div>
             </div>
-            {% else %}
-            <div class="col-4 js-snap-distro-chart-holder"
-              data-live="weekly_installed_base_by_operating_system_normalized">
-              <h5 class="p-muted-heading">Users by distribution (log)</h5>
-              <div class="snapcraft-distro-chart">
-                <div class="snapcraft-distro-chart__names">
-                  {% for distro in normalized_os %}
-                  <div class="snapcraft-distro-chart__name" title="{{ distro.name }}">
-                    {{ distro.name }}</div>
-                  {% endfor %}
-                </div>
-                <div class="snapcraft-distro-chart__bars">
-                  {% for distro in normalized_os %}
-                  <div class="snapcraft-distro-chart__bar"
-                    style="width: {{ distro.value * 100 }}%;"></div>
-                  {% endfor %}
-                </div>
-              </div>
-            </div>
-            {% endif %}
           {% endif %}
         </div>
       </div>
@@ -268,41 +261,68 @@
   {% endif %}
 
   {% if has_publisher_page %}
-  <div class="p-strip is-shallow">
-      <div class="u-fixed-width u-clearfix">
-        <h3 class="p-heading--4 u-float-left">More snaps from {{ display_name(publisher, username) }}</h3>
-        <a class="p-button u-float-right" href="/publisher/{{ username }}" title="View all snaps from {{ display_name(publisher, username) }}">View all snaps</a>
-      </div>
-      {% if publisher_featured_snaps %}
-        {% if publisher_featured_snaps[1]%}
-          <div class="row u-equal-height">
-        {% else %}
-          <div class="row">
-        {% endif %}
-        {% set snap = publisher_featured_snaps[0] %}
-        {% include 'partials/_publisher-featured-snap.html' %}
-        {% if publisher_featured_snaps[1] %}
-          {% set snap = publisher_featured_snaps[1] %}
-          {% include 'partials/_publisher-featured-snap.html' %}
-        {% endif %}
-        </div>
-      </div>
-      {% endif %}
-      {% if publisher_snaps %}
-        <div class="p-strip is-shallow">
-          <div class="row">
+  <div class="p-section--deep">
+    {% if publisher_featured_snaps and publisher_featured_snaps|length > 1 %}
+    {# with 2 or more featured snaps use full width of the section #}
+    <div class="u-fixed-width">
+      <hr />
+      <h2>More from {{ display_name(publisher, username) }}</h2>
+    </div>
+    <div class="grid-row u-equal-height">
+        {% for snap in publisher_featured_snaps %}
+
+            {% include 'partials/_publisher-featured-snap.html' %}
+
+        {% endfor %}
+
+        {% if publisher_snaps %}
             {% for snap in publisher_snaps %}
               {% set hide_publisher = True %}
               {% set show_summary = True %}
-              <div class="col-3">
+              <div class="grid-col-2">
                 {% include "store/_media-object-snap-partial.html" %}
               </div>
             {% endfor %}
-          </div>
-        </div>
-      {% endif %}
+        {% endif %}
     </div>
+    <div class="u-fixed-width">
+      <a class="p-button u-float-right" href="/publisher/{{ username }}" title="View all snaps from {{ display_name(publisher, username) }}">View all snaps</a>
+    </div>
+    {% else %}
+    <div class="u-fixed-width">
+      <hr />
+    </div>
+    <div class="grid-row--50-50">
+      <div class="grid-col">
+        <h2>More from {{ display_name(publisher, username) }}</h2>
+      </div>
+
+      <div class="grid-col">
+        <div class="grid-row">
+        {% if publisher_featured_snaps %}
+          {% set snap = publisher_featured_snaps[0] %}
+          <div class="grid-col-4">
+            {% include 'partials/_publisher-featured-snap.html' %}
+          </div>
+        {% endif %}
+
+        {% if publisher_snaps %}
+            {% for snap in publisher_snaps %}
+              {% set hide_publisher = True %}
+              {% set show_summary = True %}
+              <div class="grid-col-2">
+                {% include "store/_media-object-snap-partial.html" %}
+              </div>
+            {% endfor %}
+        {% endif %}
+        </div>
+        <a class="p-button u-float-right" href="/publisher/{{ username }}" title="View all snaps from {{ display_name(publisher, username) }}">View all snaps</a>
+      </div>
+    </div>
+    {% endif %}
+  </div>
   {% endif %}
+
   {% if is_preview %}
     </div>
   {% endif %}
@@ -374,7 +394,7 @@
 
       {% if channel_map %}
         try {
-            snapcraft.public.storeDetails.channelMap('#js-channel-map', {{ package_name|tojson }}, {{ channel_map | tojson }}, "{{ default_track }}");
+          snapcraft.public.storeDetails.channelMap('#js-channel-map', {{ package_name|tojson }}, {{ snap_id|tojson }}, {{ channel_map | tojson }}, "{{ default_track }}", {{ has_sboms|tojson }});
         } catch(e) {
           Sentry.captureException(e);
           document.querySelector('.js-open-channel-map').style.display = 'none';

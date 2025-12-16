@@ -30,6 +30,7 @@ interface ChannelData {
   risk: string;
   version: string;
   channel?: string;
+  revision: string;
 }
 
 type ChannelMapData = Record<string, Record<string, ChannelData[]>>;
@@ -37,8 +38,10 @@ type ChannelMapData = Record<string, Record<string, ChannelData[]>>;
 class ChannelMap {
   RISK_ORDER: string[];
   packageName: string;
+  snapId: string;
   currentTab: string;
   defaultTrack: string;
+  hasSboms: boolean;
   selectorString: string;
   channelMapEl: HTMLElement;
   channelOverlayEl: HTMLElement;
@@ -46,20 +49,25 @@ class ChannelMap {
   events: SnapEvents;
   INSTALL_TEMPLATE: string = "";
   CHANNEL_ROW_TEMPLATE: string | undefined;
+  CHANNEL_SECURITY_ROW_TEMPLATE: string | undefined;
   arch: string | undefined;
   openButton: HTMLElement | null | undefined;
   openScreenName: string | undefined;
   constructor(
     selectorString: string,
     packageName: string,
+    snapId: string,
     channelMapData: ChannelMapData,
     defaultTrack: string,
+    hasSboms: boolean,
   ) {
     this.RISK_ORDER = ["stable", "candidate", "beta", "edge"];
     this.packageName = packageName;
+    this.snapId = snapId;
     this.currentTab = "overview";
 
     this.defaultTrack = defaultTrack;
+    this.hasSboms = hasSboms;
 
     this.selectorString = selectorString;
     this.channelMapEl = document.querySelector(
@@ -132,25 +140,27 @@ class ChannelMap {
     if (!installTemplateEl) {
       installTemplateEl = document.getElementById("install-window-template");
     }
-    let channelRowTemplateEl = document.querySelector(
+    const channelRowTemplateEl = document.querySelector(
       '[data-js="channel-map-row"]',
     );
-    if (!channelRowTemplateEl) {
-      channelRowTemplateEl = document.getElementById(
-        "channel-map-row-template",
-      );
-    }
+    const channelSecurityRowTemplateEl = document.querySelector(
+      '[data-js="channel-map-security-table-row"]',
+    );
 
     if (!installTemplateEl || !channelRowTemplateEl) {
       const buttonsVersions = document.querySelector(
-        ".p-snap-install-buttons__versions",
+        "button[data-controls='channel-map-versions']",
       ) as HTMLElement;
-      buttonsVersions.style.display = "none";
+      if (buttonsVersions) {
+        buttonsVersions.classList.add("u-hide");
+      }
       return false;
     }
 
     this.INSTALL_TEMPLATE = installTemplateEl.innerHTML;
     this.CHANNEL_ROW_TEMPLATE = channelRowTemplateEl.innerHTML;
+    this.CHANNEL_SECURITY_ROW_TEMPLATE =
+      channelSecurityRowTemplateEl?.innerHTML;
 
     // get architectures from data
     const architectures = Object.keys(this.channelMapData);
@@ -296,15 +306,17 @@ class ChannelMap {
     if (!this.openButton) {
       return;
     }
-    const windowWidth = document.body.scrollWidth;
-    const buttonRect = this.openButton.getBoundingClientRect();
-    const channelMapPosition = [
-      windowWidth - buttonRect.right,
-      buttonRect.y + buttonRect.height + 16 + window.scrollY,
-    ];
 
-    this.channelMapEl.style.right = `${channelMapPosition[0]}px`;
-    this.channelMapEl.style.top = `${channelMapPosition[1]}px`;
+    // align to the left side of the button
+    const buttonRect = this.openButton.getBoundingClientRect();
+    const channelMapPosition = {
+      left: buttonRect.left,
+      top: buttonRect.y + buttonRect.height + 16 + window.scrollY,
+    };
+
+    this.channelMapEl.style.left = `${channelMapPosition.left}px`;
+    this.channelMapEl.style.right = "1rem"; // keep it from going off screen
+    this.channelMapEl.style.top = `${channelMapPosition.top}px`;
   }
 
   openChannelMap(openButton: HTMLElement) {
@@ -484,7 +496,7 @@ class ChannelMap {
     holder.innerHTML = newDiv.innerHTML;
   }
 
-  writeTable(el: HTMLElement, data: string[][]): void {
+  writeTable(el: HTMLElement, data: string[][], tableType?: string): void {
     let cache: string | undefined;
     const tbody = data.map((row, i) => {
       const isSameTrack = cache && row[0] === cache;
@@ -500,10 +512,16 @@ class ChannelMap {
 
       let _row: string = "";
 
-      if (this.CHANNEL_ROW_TEMPLATE) {
-        _row = this.CHANNEL_ROW_TEMPLATE.split("${rowClass}").join(
-          rowClass.join(" "),
-        );
+      if (tableType && tableType === "security") {
+        if (this.CHANNEL_SECURITY_ROW_TEMPLATE) {
+          _row = this.CHANNEL_SECURITY_ROW_TEMPLATE;
+        }
+      } else {
+        if (this.CHANNEL_ROW_TEMPLATE) {
+          _row = this.CHANNEL_ROW_TEMPLATE.split("${rowClass}").join(
+            rowClass.join(" "),
+          );
+        }
       }
 
       row.forEach((val, index) => {
@@ -528,6 +546,10 @@ class ChannelMap {
       '[data-js="channel-map-table"]',
     ) as HTMLElement;
 
+    const tbodySecurityEl = this.channelMapEl.querySelector(
+      '[data-js="channel-map-security-table"]',
+    ) as HTMLElement;
+
     // If we're on the overview tab we only want to see latest/[all risks]
     // and [all tracks]/[highest risk], so filter out anything that isn't these
     const filtered = this.currentTab === "overview";
@@ -537,6 +559,7 @@ class ChannelMap {
     let trimmedNumberOfTracks = 0;
 
     const rows: Array<string[]> = [];
+    const securityRows: Array<string[]> = [];
 
     const trackList = filtered ? {} : archData;
 
@@ -561,10 +584,14 @@ class ChannelMap {
 
       // If we're filtering, but that list ends up with the same number of tracks
       // we don't need to show the tabs (we'll show the same data twice)
-      if (numberOfTracks === trimmedNumberOfTracks) {
+      if (numberOfTracks === trimmedNumberOfTracks && !this.hasSboms) {
         this.hideTabs();
       }
     }
+
+    const getSbomUrl = (revision: string): string => {
+      return `/download/sbom_snap_${this.snapId}_${revision}.spdx2.3.json`;
+    };
 
     // Create an array of columns
     Object.keys(trackList).forEach((track) => {
@@ -577,8 +604,49 @@ class ChannelMap {
           trackInfo["released-at"],
           trackInfo["confinement"],
         ]);
+
+        if (this.hasSboms) {
+          securityRows.push([
+            trackName,
+            trackInfo["risk"],
+            trackInfo["version"],
+            trackInfo["revision"],
+          ]);
+        }
       });
     });
+
+    if (this.hasSboms && securityRows.length > 0) {
+      Promise.all(
+        securityRows.map(async (row) => {
+          const revision = row[3];
+          const sbomUrl = getSbomUrl(revision);
+          const downloadLink = `<a href="${sbomUrl}" download>SPDX file&nbsp;<i class="p-icon--begin-downloading"></i></a>`;
+          const res = await fetch(sbomUrl, { method: "HEAD" });
+
+          if (res.status === 200) {
+            row.push(downloadLink);
+          } else {
+            row.push("Not available");
+          }
+
+          return row;
+        }),
+      ).then(() => {
+        this.writeTable(
+          tbodySecurityEl,
+          this.sortRows(securityRows),
+          "security",
+        );
+
+        // Enable "Security" tab only when SBOM requests
+        // are complete to avoid a race condition causing
+        // the table to have not rendered
+        const securityTab = document.querySelector("#channel-map-security-tab");
+        securityTab?.classList.remove("is-disabled");
+        securityTab?.setAttribute("aria-disabled", "false");
+      });
+    }
 
     this.writeTable(tbodyEl, this.sortRows(rows));
   }
@@ -616,6 +684,25 @@ class ChannelMap {
     selected.removeAttribute("aria-selected");
     clickEl.setAttribute("aria-selected", "true");
 
+    const versionTable = document.querySelector(
+      ".p-channel-map__version-table",
+    );
+    const securityTable = document.querySelector(
+      ".p-channel-map__security-table",
+    );
+
+    if (this.currentTab === "security") {
+      securityTable?.classList.remove("u-hide");
+      securityTable?.setAttribute("aria-hidden", "false");
+      versionTable?.classList.add("u-hide");
+      versionTable?.setAttribute("aria-hidden", "true");
+    } else {
+      versionTable?.classList.remove("u-hide");
+      versionTable?.setAttribute("aria-hidden", "false");
+      securityTable?.classList.add("u-hide");
+      securityTable?.setAttribute("aria-hidden", "true");
+    }
+
     if (this.arch && this.arch in this.channelMapData) {
       this.prepareTable(this.channelMapData[this.arch]);
     } else if (this.arch) {
@@ -627,8 +714,17 @@ class ChannelMap {
 export default function channelMap(
   el: string,
   packageName: string,
+  snapId: string,
   channelMapData: ChannelMapData,
   defaultTrack: string,
+  hasSboms: boolean,
 ) {
-  return new ChannelMap(el, packageName, channelMapData, defaultTrack);
+  return new ChannelMap(
+    el,
+    packageName,
+    snapId,
+    channelMapData,
+    defaultTrack,
+    hasSboms,
+  );
 }

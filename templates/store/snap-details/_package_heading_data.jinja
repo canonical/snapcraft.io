@@ -1,6 +1,31 @@
 {%- from 'store/_developer_info.jinja' import developer_info -%}
 {%- from 'store/_publisher_info.jinja' import publisher_info -%}
 
+{%- macro package_icon(
+    icon_url,
+    image) -%}
+  {% if not icon_url %}
+    {% set icon_url = "https://assets.ubuntu.com/v1/be6eb412-snapcraft-missing-icon.svg" %}
+  {% endif %}
+
+  {% if icon_url.startswith("blob") %}
+    <img src="{{ icon_url | safe }}"
+          alt=""
+          width="120"
+          height="120"
+          data-live="icon" />
+  {% else %}
+    {{ image(url=icon_url,
+          alt="",
+          width=120,
+          height=120,
+          hi_def=True,
+          loading="eager",
+          attrs={"data-live": "icon"}) | safe
+    }}
+  {% endif %}
+{%- endmacro -%}
+
 {%- macro package_header_data(
     package_title,
     icon_url,
@@ -13,32 +38,8 @@
     developer_validation,
     STAR_DEVELOPER,
     VERIFIED_PUBLISHER) -%}
-  {% if icon_url %}
-    {% if icon_url.startswith("blob") %}
-      <img class="p-snap-heading__icon"
-           src="{{ icon_url | safe }}"
-           width="60"
-           height="60"
-           data-live="icon" />
-    {% else %}
-      {{ image(url=icon_url,
-            alt=package_title,
-            width=60,
-            height=60,
-            hi_def=True,
-            loading="eager",
-            attrs={"class": "p-snap-heading__icon", "data-live": "icon"}) | safe
-      }}
-    {% endif %}
-  {% else %}
-    <img class="p-snap-heading__icon"
-         src="https://assets.ubuntu.com/v1/be6eb412-snapcraft-missing-icon.svg"
-         alt=""
-         data-live="icon" />
-  {% endif %}
-  <div class="p-snap-heading__title">
-    <h1 class="p-heading--2 p-snap-heading__name" data-live="title">{{ package_title }}</h1>
-
+  <div class="p-section--shallow">
+    <h1 class="u-sv-1" data-live="title">{{ package_title }}</h1>
     {# TODO:
       Extract the section below as own slot, to avoid dependency on a lot of publisher data?
     #}
@@ -47,7 +48,6 @@
         {{ developer_info(name=developer[0], url=developer[1]) }}
       {% endif %}
       {{ publisher_info(publisher, username, developer_validation, display_name, VERIFIED_PUBLISHER, STAR_DEVELOPER) }}
-
     </div>
     <ul class="p-inline-list--vertical-divider">
       {% if developer %}
