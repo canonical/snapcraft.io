@@ -15,7 +15,7 @@ import { triggerGAEvent } from "../actions/gaEventTracking";
 import { getSeparatePendingReleases } from "../selectors";
 
 type Props = {
-  triggerGAEvent: Function;
+  triggerGAEvent: typeof triggerGAEvent;
   cancelPendingReleases: Function;
   setProgressiveReleasePercentage: Function;
   releaseRevisions: Function;
@@ -176,7 +176,7 @@ const mapDispatchToProps = (dispatch: any) => {
     cancelPendingReleases: () => dispatch(cancelPendingReleases()),
     setProgressiveReleasePercentage: (percentage: number) =>
       dispatch(setProgressiveReleasePercentage(percentage)),
-    triggerGAEvent: (...eventProps: any) =>
+    triggerGAEvent: (...eventProps: Parameters<typeof triggerGAEvent>) =>
       dispatch(triggerGAEvent(...eventProps)),
   };
 };

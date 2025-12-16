@@ -1,4 +1,5 @@
-import revisions, { RevisionsAction, UpdateRevisionsAction } from "../revisions";
+import revisions from "../revisions";
+import { RevisionsAction, UpdateRevisionsAction } from "../../actions/revisions";
 import { UPDATE_REVISIONS } from "../../actions/revisions";
 import { ReleasesReduxState } from "../../../../types/releaseTypes";
 

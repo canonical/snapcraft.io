@@ -1,17 +1,8 @@
-import { UPDATE_ARCHITECTURES } from "../actions/architectures";
 import {
-  GenericReleasesAction,
-  ReleasesReduxState,
-} from "../../../types/releaseTypes";
-
-export type UpdateArchitecturesAction = GenericReleasesAction<
-  typeof UPDATE_ARCHITECTURES,
-  {
-    architectures: ReleasesReduxState["architectures"];
-  }
->;
-
-export type ArchitecturesAction = UpdateArchitecturesAction;
+  UPDATE_ARCHITECTURES,
+  ArchitecturesAction,
+} from "../actions/architectures";
+import { ReleasesReduxState } from "../../../types/releaseTypes";
 
 export default function architectures(
   state: ReleasesReduxState["architectures"] = [],

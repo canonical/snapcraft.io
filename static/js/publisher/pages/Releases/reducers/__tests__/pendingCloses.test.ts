@@ -1,11 +1,9 @@
 import pendingCloses, {
   CancelPendingReleasesAction,
-  CloseChannelAction,
   PendingClosesAction,
   ReleaseRevisionAction,
 } from "../pendingCloses";
-
-import { CLOSE_CHANNEL } from "../../actions/pendingCloses";
+import { CLOSE_CHANNEL, CloseChannelAction } from "../../actions/pendingCloses";
 import {
   RELEASE_REVISION,
   CANCEL_PENDING_RELEASES,
