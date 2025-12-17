@@ -191,6 +191,7 @@ def snap_details_views(store):
             "filesize": humanize.naturalsize(binary_filesize),
             "last_updated": logic.convert_date(last_updated),
             "last_updated_raw": last_updated,
+            "old_snap_info": logic.is_snap_old(last_updated),
             "is_users_snap": is_users_snap,
             "unlisted": details.get("snap", {}).get("unlisted", False),
             "developer": developer,
