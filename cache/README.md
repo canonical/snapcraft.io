@@ -12,7 +12,7 @@ This setup provides a local Redis instance for development and testing purposes.
    ```
    KEYS *
    ```
-4. To exit the interactive promt, run
+4. To exit the interactive prompt, run
    ```
    exit
    ```
