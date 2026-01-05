@@ -49,7 +49,7 @@ SEARCH_API_URL = "https://www.googleapis.com/customsearch/v1"
 SEARCH_CUSTOM_ID = "009048213575199080868:i3zoqdwqk8o"
 
 # Ratings service configuration
-# Set RATINGS_SERVICE_URL to enable ratings (e.g., "ratings.example.com:443")
+# Set RATINGS_SERVICE_URL to enable ratings (e.g., "ratings.ubuntu.com")
 RATINGS_SERVICE_URL = os.getenv("RATINGS_SERVICE_URL")
 
 APP_NAME = "snapcraft"

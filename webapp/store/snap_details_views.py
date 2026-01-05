@@ -10,6 +10,7 @@ import webapp.helpers as helpers
 import webapp.metrics.helper as metrics_helper
 import webapp.metrics.metrics as metrics
 import webapp.store.logic as logic
+from webapp.ratings import RatingsClient
 from webapp import authentication
 from webapp.markdown import parse_markdown_description
 from cache.cache_utility import redis_cache
@@ -25,6 +26,17 @@ device_gateway = DeviceGW("snap", helpers.api_session)
 device_gateway_sbom = DeviceGW("sbom", helpers.api_session)
 
 logger = logging.getLogger(__name__)
+
+ratings_client = None
+
+
+def get_ratings_client():
+    global ratings_client
+    if ratings_client is None:
+        ratings_url = flask.current_app.config.get("RATINGS_SERVICE_URL")
+        if ratings_url:
+            ratings_client = RatingsClient(ratings_url)
+    return ratings_client
 
 
 FIELDS = [
@@ -268,14 +280,9 @@ def snap_details_views(store):
             ]
 
         ratings_data = None
-        if flask.current_app.config.get("RATINGS_SERVICE_URL"):
+        ratings_client = get_ratings_client()
+        if ratings_client:
             try:
-                from webapp.ratings import RatingsClient
-
-                ratings_url = flask.current_app.config.get(
-                    "RATINGS_SERVICE_URL"
-                )
-                ratings_client = RatingsClient(ratings_url)
                 ratings_data = ratings_client.get_snap_rating(
                     context.get("snap_id")
                 )
@@ -284,10 +291,9 @@ def snap_details_views(store):
                     and ratings_data.get("ratings_band")
                     == "insufficient-votes"
                 ):
-
                     ratings_data = None
             except Exception:
-                logger.warning(f"Failed to fetch ratings for {snap_name}")
+                logger.exception(f"Failed to fetch ratings for {snap_name}")
                 ratings_data = None
         context["ratings"] = ratings_data
 
