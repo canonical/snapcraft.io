@@ -286,6 +286,30 @@ def snap_details_views(store):
                 for alias_obj in extra_details["aliases"]
             ]
 
+        ratings_data = None
+        if flask.current_app.config.get("RATINGS_SERVICE_URL"):
+            try:
+                from webapp.ratings import RatingsClient
+
+                ratings_url = flask.current_app.config.get(
+                    "RATINGS_SERVICE_URL"
+                )
+                ratings_client = RatingsClient(ratings_url)
+                ratings_data = ratings_client.get_snap_rating(
+                    context.get("snap_id")
+                )
+                if (
+                    ratings_data
+                    and ratings_data.get("ratings_band")
+                    == "insufficient-votes"
+                ):
+
+                    ratings_data = None
+            except Exception:
+                logger.warning(f"Failed to fetch ratings for {snap_name}")
+                ratings_data = None
+        context["ratings"] = ratings_data
+
         country_metric_name = "weekly_installed_base_by_country_percent"
         os_metric_name = "weekly_installed_base_by_operating_system_normalized"
 
