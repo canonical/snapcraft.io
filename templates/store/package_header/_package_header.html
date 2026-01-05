@@ -17,6 +17,7 @@ Other:
   display_name: template function
   VERIFIED_PUBLISHER: const (value of developer_validation)
   STAR_DEVELOPER: const (value of developer_validation)
+  ratings: the overall rating band of the snap (and total votes)
 #}
 
 {%- from 'store/package_header/_package_header_data.html' import package_header_data, package_icon -%}
@@ -39,7 +40,8 @@ Other:
           publisher=publisher,
           developer_validation=developer_validation,
           STAR_DEVELOPER=STAR_DEVELOPER,
-          VERIFIED_PUBLISHER=VERIFIED_PUBLISHER) }}
+          VERIFIED_PUBLISHER=VERIFIED_PUBLISHER,
+          ratings=ratings) }}
       {%- if has_buttons_content -%}
       <div class="p-section--shallow">{{ buttons_content }}</div>
       {%- endif -%}
