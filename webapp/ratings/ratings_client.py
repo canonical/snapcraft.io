@@ -28,7 +28,6 @@ class RatingsClient:
         self.timeout = timeout
         self.token = None
 
-        # Create a long-lived channel following gRPC best practices
         if self.use_ssl:
             creds = grpc.ssl_channel_credentials()
             self.channel = grpc.secure_channel(self.channel_address, creds)
