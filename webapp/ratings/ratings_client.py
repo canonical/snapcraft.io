@@ -21,7 +21,7 @@ USER_ID = sha256(b"snapcraft.io").hexdigest()
 
 class RatingsClient:
     def __init__(
-        self, channel_address: str, use_ssl: bool = True, timeout: float = 5.0
+        self, channel_address: str, use_ssl: bool = True, timeout: float = 30.0
     ):
         self.channel_address = channel_address
         self.use_ssl = use_ssl
@@ -32,6 +32,7 @@ class RatingsClient:
         if self.use_ssl:
             creds = grpc.ssl_channel_credentials()
             self.channel = grpc.secure_channel(self.channel_address, creds)
+            logger.info("Created secure gRPC channel to ratings service")
         else:
             self.channel = grpc.insecure_channel(self.channel_address)
 
