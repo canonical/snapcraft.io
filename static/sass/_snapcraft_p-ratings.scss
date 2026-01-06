@@ -1,0 +1,19 @@
+@mixin snapcraft-p-ratings {
+  .p-snap-ratings {
+    &__band {
+      &--very-good,
+      &--good {
+        color: $color-positive;
+      }
+
+      &--neutral {
+        color: $color-caution;
+      }
+
+      &--poor,
+      &--very-poor {
+        color: $color-negative;
+      }
+    }
+  }
+}
