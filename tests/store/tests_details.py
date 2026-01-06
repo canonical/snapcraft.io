@@ -486,6 +486,226 @@ class GetDetailsPageTest(TestCase):
         )
 
     @responses.activate
+    def test_snap_details_with_ratings(self):
+        """Test snap details page includes ratings when available."""
+        payload = SNAP_PAYLOAD
+
+        responses.add(
+            responses.Response(
+                method="GET", url=self.api_url, json=payload, status=200
+            )
+        )
+        responses.add(
+            responses.Response(
+                method="GET",
+                url=self.api_url_details,
+                json=EMPTY_EXTRA_DETAILS_PAYLOAD,
+                status=200,
+            )
+        )
+        responses.add(
+            responses.Response(
+                method="HEAD", url=self.api_url_sboms, json={}, status=200
+            )
+        )
+        metrics_url = "https://api.snapcraft.io/api/v1/snaps/metrics"
+        responses.add(
+            responses.Response(
+                method="POST", url=metrics_url, json={}, status=200
+            )
+        )
+
+        mock_ratings_data = {
+            "snap_id": "id",
+            "total_votes": 150,
+            "ratings_band": "very-good",
+        }
+
+        with patch(
+            "webapp.store.snap_details_views.get_ratings_client"
+        ) as mock_get_client:
+            mock_client = mock_get_client.return_value
+            mock_client.get_snap_rating.return_value = mock_ratings_data
+
+            response = self.client.get(self.endpoint_url)
+
+            assert response.status_code == 200
+            self.assert_context("ratings", mock_ratings_data)
+            mock_client.get_snap_rating.assert_called_once_with("id")
+
+    @responses.activate
+    def test_snap_details_with_insufficient_ratings(self):
+        """Test snap details excludes insufficient ratings."""
+        payload = SNAP_PAYLOAD
+
+        responses.add(
+            responses.Response(
+                method="GET", url=self.api_url, json=payload, status=200
+            )
+        )
+        responses.add(
+            responses.Response(
+                method="GET",
+                url=self.api_url_details,
+                json=EMPTY_EXTRA_DETAILS_PAYLOAD,
+                status=200,
+            )
+        )
+        responses.add(
+            responses.Response(
+                method="HEAD", url=self.api_url_sboms, json={}, status=200
+            )
+        )
+        metrics_url = "https://api.snapcraft.io/api/v1/snaps/metrics"
+        responses.add(
+            responses.Response(
+                method="POST", url=metrics_url, json={}, status=200
+            )
+        )
+
+        mock_ratings_data = {
+            "snap_id": "id",
+            "total_votes": 5,
+            "ratings_band": "insufficient-votes",
+        }
+
+        with patch(
+            "webapp.store.snap_details_views.get_ratings_client"
+        ) as mock_get_client:
+            mock_client = mock_get_client.return_value
+            mock_client.get_snap_rating.return_value = mock_ratings_data
+
+            response = self.client.get(self.endpoint_url)
+
+            assert response.status_code == 200
+            self.assert_context("ratings", None)
+            mock_client.get_snap_rating.assert_called_once_with("id")
+
+    @responses.activate
+    def test_snap_details_ratings_error(self):
+        """Test snap details page handles ratings fetch errors gracefully."""
+        payload = SNAP_PAYLOAD
+
+        responses.add(
+            responses.Response(
+                method="GET", url=self.api_url, json=payload, status=200
+            )
+        )
+        responses.add(
+            responses.Response(
+                method="GET",
+                url=self.api_url_details,
+                json=EMPTY_EXTRA_DETAILS_PAYLOAD,
+                status=200,
+            )
+        )
+        responses.add(
+            responses.Response(
+                method="HEAD", url=self.api_url_sboms, json={}, status=200
+            )
+        )
+        metrics_url = "https://api.snapcraft.io/api/v1/snaps/metrics"
+        responses.add(
+            responses.Response(
+                method="POST", url=metrics_url, json={}, status=200
+            )
+        )
+
+        with patch(
+            "webapp.store.snap_details_views.get_ratings_client"
+        ) as mock_get_client:
+            mock_client = mock_get_client.return_value
+            mock_client.get_snap_rating.side_effect = Exception("gRPC error")
+
+            response = self.client.get(self.endpoint_url)
+
+            assert response.status_code == 200
+            self.assert_context("ratings", None)
+            mock_client.get_snap_rating.assert_called_once_with("id")
+
+    @responses.activate
+    def test_snap_details_no_ratings_client(self):
+        """Test snap details when ratings client not configured."""
+        payload = SNAP_PAYLOAD
+
+        responses.add(
+            responses.Response(
+                method="GET", url=self.api_url, json=payload, status=200
+            )
+        )
+        responses.add(
+            responses.Response(
+                method="GET",
+                url=self.api_url_details,
+                json=EMPTY_EXTRA_DETAILS_PAYLOAD,
+                status=200,
+            )
+        )
+        responses.add(
+            responses.Response(
+                method="HEAD", url=self.api_url_sboms, json={}, status=200
+            )
+        )
+        metrics_url = "https://api.snapcraft.io/api/v1/snaps/metrics"
+        responses.add(
+            responses.Response(
+                method="POST", url=metrics_url, json={}, status=200
+            )
+        )
+
+        with patch(
+            "webapp.store.snap_details_views.get_ratings_client"
+        ) as mock_get_client:
+            mock_get_client.return_value = None
+
+            response = self.client.get(self.endpoint_url)
+
+            assert response.status_code == 200
+            self.assert_context("ratings", None)
+
+    @responses.activate
+    def test_snap_details_ratings_returns_none(self):
+        """Test snap details page when ratings client returns None."""
+        payload = SNAP_PAYLOAD
+
+        responses.add(
+            responses.Response(
+                method="GET", url=self.api_url, json=payload, status=200
+            )
+        )
+        responses.add(
+            responses.Response(
+                method="GET",
+                url=self.api_url_details,
+                json=EMPTY_EXTRA_DETAILS_PAYLOAD,
+                status=200,
+            )
+        )
+        responses.add(
+            responses.Response(
+                method="HEAD", url=self.api_url_sboms, json={}, status=200
+            )
+        )
+        metrics_url = "https://api.snapcraft.io/api/v1/snaps/metrics"
+        responses.add(
+            responses.Response(
+                method="POST", url=metrics_url, json={}, status=200
+            )
+        )
+
+        with patch(
+            "webapp.store.snap_details_views.get_ratings_client"
+        ) as mock_get_client:
+            mock_client = mock_get_client.return_value
+            mock_client.get_snap_rating.return_value = None
+
+            response = self.client.get(self.endpoint_url)
+
+            assert response.status_code == 200
+            self.assert_context("ratings", None)
+            mock_client.get_snap_rating.assert_called_once_with("id")
+
+    @responses.activate
     def test_explore_uses_redis_cache(self):
         """When Redis has cached explore data, the recommendation APIs
         and device gateway should not be called and the view should
