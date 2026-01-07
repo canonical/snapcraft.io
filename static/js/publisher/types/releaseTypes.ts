@@ -1,4 +1,4 @@
-import { CombinedState } from "redux";
+import { CombinedState, Store } from "redux";
 import { ThunkDispatch } from "redux-thunk";
 import {
   AVAILABLE_REVISIONS_SELECT_ALL,
@@ -371,12 +371,6 @@ export type PendingReleaseItem = {
 /**
  * Helper types for the Redux actions and Dispatch
  */
-export type DispatchFn = ThunkDispatch<
-  ReleasesReduxState,
-  unknown,
-  GenericReleasesAction | GenericReleasesAction<string, never>
->;
-
 export type GenericReleasesAction<
   T extends string = string,
   P = unknown,
@@ -384,3 +378,17 @@ export type GenericReleasesAction<
   type: T;
   payload: P;
 }>;
+
+type ReleasesAction =
+  | GenericReleasesAction
+  | GenericReleasesAction<string, never>;
+
+export type DispatchFn = ThunkDispatch<
+  ReleasesReduxState,
+  unknown,
+  ReleasesAction
+>;
+
+export type ReleasesReduxStore = Store<ReleasesReduxState, ReleasesAction> & {
+  dispatch: DispatchFn;
+};

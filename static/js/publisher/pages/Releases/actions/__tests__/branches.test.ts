@@ -1,8 +1,5 @@
 import configureMockStore from "redux-mock-store";
 import thunk from "redux-thunk";
-
-const mockStore = configureMockStore([thunk]);
-
 import {
   OPEN_BRANCHES,
   CLOSE_BRANCHES,
@@ -10,6 +7,10 @@ import {
   closeBranches,
   toggleBranches,
 } from "../branches";
+import { DispatchFn, ReleasesReduxState } from "../../../../types/releaseTypes";
+
+const mockStore = configureMockStore<ReleasesReduxState, DispatchFn>([thunk]);
+
 
 describe("branches actions", () => {
   describe("openBranches", () => {
@@ -30,7 +31,7 @@ describe("branches actions", () => {
     it("should create an OPEN_BRANCHES action if the branch isn't in the branches list", () => {
       const store = mockStore({
         branches: [],
-      });
+      } as unknown as ReleasesReduxState);
 
       store.dispatch(toggleBranches("test"));
 
@@ -41,7 +42,7 @@ describe("branches actions", () => {
     it("should create a CLOSE_BRANCHES action if the branch is in the branches list", () => {
       const store = mockStore({
         branches: ["test"],
-      });
+      } as unknown as ReleasesReduxState);
 
       store.dispatch(toggleBranches("test"));
 

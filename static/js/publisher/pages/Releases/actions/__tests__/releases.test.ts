@@ -1,23 +1,29 @@
 import configureStore from "redux-mock-store";
 import thunk from "redux-thunk";
 
-const middlewares = [thunk];
-const mockStore = configureStore(middlewares);
-
-import { DEFAULT_ERROR_MESSAGE as ERROR_MESSAGE } from "../../constants";
+const mockStore = configureStore<ReleasesReduxState, DispatchFn>([thunk]);
 
 import {
   UPDATE_RELEASES,
   handleCloseResponse,
-  getErrorMessage,
   handleReleaseResponse,
   updateReleases,
   releaseRevisions,
 } from "../releases";
+import {
+  CloseChannelsResponse,
+  DispatchFn,
+  FetchReleasePayload,
+  FetchReleaseResponse,
+  Release,
+  ReleasesReduxState,
+  Revision,
+} from "../../../../types/releaseTypes";
+import { Mock } from "vitest";
 
 describe("releases actions", () => {
   describe("updateReleases", () => {
-    let releases = [{ revision: 1 }, { revision: 2 }];
+    let releases = [{ revision: 1 }, { revision: 2 }] as Release[];
 
     it("should create an action to update releases list", () => {
       expect(updateReleases(releases).type).toBe(UPDATE_RELEASES);
@@ -30,14 +36,14 @@ describe("releases actions", () => {
 
   describe("handleCloseResponse", () => {
     it("should dispatch CLOSE_CHANNEL_SUCCESS when successfull", () => {
-      const store = mockStore({});
+      const store = mockStore({} as ReleasesReduxState);
 
       const dispatch = store.dispatch;
 
       const apiResponse = {
         success: true,
         closed_channels: ["edge"],
-      };
+      } as CloseChannelsResponse;
 
       handleCloseResponse(dispatch, apiResponse, ["latest/edge"]);
 
@@ -53,7 +59,7 @@ describe("releases actions", () => {
 
     it("should throw an error if the API responds with an error", () => {
       expect(() => {
-        handleCloseResponse(() => {}, { error: true, json: "nope" }, [
+        handleCloseResponse(() => {}, { success: false, errors: ["nope"] }, [
           "latest/edge",
         ]);
       }).toThrow();
@@ -63,7 +69,7 @@ describe("releases actions", () => {
   describe("handleReleaseResponse", () => {
     describe("RELEASE_REVISION_SUCCESS", () => {
       it("should be dispatched if revision is passed", () => {
-        const store = mockStore({});
+        const store = mockStore({} as ReleasesReduxState);
 
         const dispatch = store.dispatch;
         const json = {
@@ -82,7 +88,7 @@ describe("releases actions", () => {
               },
             },
           },
-        };
+        } as unknown as FetchReleaseResponse;
 
         const release = [
           {
@@ -90,18 +96,18 @@ describe("releases actions", () => {
             revision: 3,
             channels: ["latest/edge"],
           },
-        ];
+        ] as unknown as FetchReleasePayload;
 
         const revision = {
           architectures: ["amd64"],
           revision: 3,
-        };
+        } as unknown as Revision;
 
         const revisions = {
           3: revision,
         };
 
-        handleReleaseResponse(dispatch, json, release, revisions, "latest");
+        handleReleaseResponse(dispatch, json, release, revisions);
 
         const actions = store.getActions();
 
@@ -115,7 +121,7 @@ describe("releases actions", () => {
       });
 
       it("should be dispatched if there are no revisions", () => {
-        const store = mockStore({});
+        const store = mockStore({} as ReleasesReduxState);
 
         const dispatch = store.dispatch;
         const json = {
@@ -134,7 +140,7 @@ describe("releases actions", () => {
               },
             },
           },
-        };
+        } as unknown as FetchReleaseResponse;
 
         const revision = {
           architectures: ["amd64"],
@@ -146,9 +152,9 @@ describe("releases actions", () => {
           id: 4,
           revision: revision,
           channels: ["latest/edge"],
-        };
+        } as unknown as FetchReleasePayload;
 
-        handleReleaseResponse(dispatch, json, release, {}, "latest");
+        handleReleaseResponse(dispatch, json, release, {});
 
         const actions = store.getActions();
 
@@ -165,7 +171,7 @@ describe("releases actions", () => {
 
   describe("releaseRevisions", () => {
     afterEach(() => {
-      global.fetch.mockRestore();
+      (global.fetch as Mock).mockRestore();
     });
 
     it("should generate progressive key if null", () => {
@@ -188,14 +194,14 @@ describe("releases actions", () => {
             },
           },
         },
-      });
+      } as unknown as ReleasesReduxState);
 
       global.fetch = vi
         .fn()
         .mockResolvedValue({ json: () => ({ success: true }) });
 
       return store.dispatch(releaseRevisions()).then(() => {
-        const calls = global.fetch.mock.calls;
+        const calls = (global.fetch as Mock).mock.calls;
 
         expect(JSON.parse(calls[0][1].body).progressive.key).toBeDefined();
       });
@@ -229,14 +235,14 @@ describe("releases actions", () => {
             },
           },
         },
+      } as unknown as ReleasesReduxState);
+
+      global.fetch = vi.fn().mockResolvedValue({
+        json: () => ({ success: true, channel_map_tree: {} }),
       });
 
-      global.fetch = vi
-        .fn()
-        .mockResolvedValue({ json: () => ({ success: true, channel_map_tree: {} }) });
-
       return store.dispatch(releaseRevisions()).then(() => {
-        const calls = global.fetch.mock.calls;
+        const calls = (global.fetch as Mock).mock.calls;
 
         expect(calls.length).toEqual(3); // 2 posts and 1 get
 
@@ -295,7 +301,7 @@ describe("releases actions", () => {
           3: revision,
         },
         architectures: [],
-      });
+      } as unknown as ReleasesReduxState);
 
       global.fetch = vi
         .fn()
@@ -395,7 +401,7 @@ describe("releases actions", () => {
           },
           {
             payload: {
-              failedRevisions: []
+              failedRevisions: [],
             },
             type: "UPDATE_FAILED_REVISIONS",
           },
@@ -413,7 +419,7 @@ describe("releases actions", () => {
           defaultTrack: "latest",
         },
         pendingReleases: {},
-      });
+      } as unknown as ReleasesReduxState);
 
       global.fetch = vi
         .fn()
@@ -471,7 +477,8 @@ describe("releases actions", () => {
           3: revision,
         },
         architectures: [],
-      });
+      } as unknown as ReleasesReduxState);
+
       global.fetch = vi
         .fn()
         // fetchReleases API Response
@@ -584,7 +591,7 @@ describe("releases actions", () => {
           },
           {
             payload: {
-              failedRevisions: []
+              failedRevisions: [],
             },
             type: "UPDATE_FAILED_REVISIONS",
           },

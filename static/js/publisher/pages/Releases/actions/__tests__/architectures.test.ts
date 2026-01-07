@@ -1,3 +1,4 @@
+import { Revision } from "../../../../types/releaseTypes";
 import { UPDATE_ARCHITECTURES, updateArchitectures } from "../architectures";
 
 describe("architectures actions", () => {
@@ -10,7 +11,7 @@ describe("architectures actions", () => {
         channels: ["stable"],
         architectures: ["amd64", "test2"],
       },
-    ];
+    ] as unknown as Revision[];
 
     it("should create an action to update architectures list", () => {
       expect(updateArchitectures(revisions).type).toBe(UPDATE_ARCHITECTURES);

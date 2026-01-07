@@ -1,7 +1,7 @@
 import configureMockStore from "redux-mock-store";
 import thunk from "redux-thunk";
 
-const mockStore = configureMockStore([thunk]);
+const mockStore = configureMockStore<ReleasesReduxState, DispatchFn>([thunk]);
 
 import {
   OPEN_HISTORY,
@@ -10,6 +10,15 @@ import {
   closeHistory,
   toggleHistory,
 } from "../history";
+import {
+  DispatchFn,
+  Options,
+  ReleasesReduxState,
+} from "../../../../types/releaseTypes";
+
+declare global {
+  var dataLayer: Array<DataLayerEvent>;
+}
 
 describe("history actions", () => {
   const dummyFilters = {
@@ -20,10 +29,13 @@ describe("history actions", () => {
   };
 
   beforeEach(() => {
-    global.dataLayer = { push: vi.fn() };
+    const dataLayer: Array<DataLayerEvent> = [];
+    dataLayer.push = vi.fn();
+    global.dataLayer = dataLayer;
   });
 
   afterEach(() => {
+    // @ts-expect-error we're resetting the array between tests
     global.dataLayer = undefined;
   });
 
@@ -43,6 +55,7 @@ describe("history actions", () => {
     });
 
     it("should not supply any payload", () => {
+      // @ts-expect-error: we're checking that the payload doesn't exist
       expect(closeHistory().payload).toBeUndefined();
     });
   });
@@ -53,14 +66,14 @@ describe("history actions", () => {
         const store = mockStore({
           options: {
             snapName: "test",
-          },
+          } as Options,
           history: {
             isOpen: true,
             filters: {
               ...dummyFilters,
             },
           },
-        });
+        } as ReleasesReduxState);
 
         store.dispatch(toggleHistory(dummyFilters));
 
@@ -77,9 +90,9 @@ describe("history actions", () => {
             isOpen: true,
             filters: null,
           },
-        });
+        } as ReleasesReduxState);
 
-        store.dispatch(toggleHistory());
+        store.dispatch(toggleHistory(null));
 
         const actions = store.getActions();
         const expectedAction = closeHistory();
@@ -92,14 +105,14 @@ describe("history actions", () => {
         const store = mockStore({
           options: {
             snapName: "test",
-          },
+          } as Options,
           history: {
             isOpen: true,
             filters: {
               ...dummyFilters,
             },
           },
-        });
+        } as ReleasesReduxState);
         const testFilters = {
           ...dummyFilters,
           arch: "test321",
@@ -117,12 +130,12 @@ describe("history actions", () => {
         const store = mockStore({
           options: {
             snapName: "test",
-          },
+          } as Options,
           history: {
             isOpen: false,
             filters: null,
           },
-        });
+        } as ReleasesReduxState);
 
         store.dispatch(toggleHistory(dummyFilters));
 

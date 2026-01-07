@@ -1,7 +1,7 @@
 import configureMockStore from "redux-mock-store";
 import thunk from "redux-thunk";
 
-const mockStore = configureMockStore([thunk]);
+const mockStore = configureMockStore<ReleasesReduxState, DispatchFn>([thunk]);
 
 import reducers from "../../reducers";
 
@@ -25,32 +25,45 @@ import {
   resumeProgressiveRelease,
   cancelProgressiveRelease,
 } from "../pendingReleases";
+import {
+  DispatchFn,
+  PendingReleaseItem,
+  ReleasesReduxState,
+  Revision,
+} from "../../../../types/releaseTypes";
+
+declare global {
+  var dataLayer: Array<DataLayerEvent>;
+}
 
 describe("pendingReleases actions", () => {
   const revision = {
     revision: 1,
     architectures: ["test64"],
-  };
+  } as unknown as Revision;
   const revision2 = {
     revision: 2,
     architectures: ["test64"],
-  };
+  } as unknown as Revision;
   const channel = "test/edge";
-  const previousReleases = [];
-  const initialState = reducers(undefined, {});
+  const previousReleases: PendingReleaseItem["previousReleases"] = [];
+  const initialState = reducers(undefined, { type: undefined });
   const stateWithRevisions = {
     ...initialState,
     revisions: {
       [revision.revision]: revision,
       [revision2.revision]: revision2,
     },
-  };
+  } as ReleasesReduxState;
 
   beforeEach(() => {
-    global.dataLayer = { push: vi.fn() };
+    const dataLayer: Array<DataLayerEvent> = [];
+    dataLayer.push = vi.fn();
+    global.dataLayer = dataLayer;
   });
 
   afterEach(() => {
+    // @ts-expect-error we're resetting the array between tests
     global.dataLayer = undefined;
   });
 
@@ -58,21 +71,21 @@ describe("pendingReleases actions", () => {
     const store = mockStore(stateWithRevisions);
     it("should create an action to promote revision", () => {
       expect(store.dispatch(releaseRevision(revision, channel)).type).toBe(
-        RELEASE_REVISION,
+        RELEASE_REVISION
       );
     });
 
     it("should supply a payload with revision", () => {
       const store = mockStore(stateWithRevisions);
       expect(
-        store.dispatch(releaseRevision(revision, channel)).payload.revision,
+        store.dispatch(releaseRevision(revision, channel)).payload.revision
       ).toEqual(revision);
     });
 
     it("should supply a payload with channel", () => {
       const store = mockStore(stateWithRevisions);
       expect(
-        store.dispatch(releaseRevision(revision, channel)).payload.channel,
+        store.dispatch(releaseRevision(revision, channel)).payload.channel
       ).toEqual(channel);
     });
 
@@ -86,10 +99,10 @@ describe("pendingReleases actions", () => {
             revision: 2,
           },
         ],
-      };
+      } as ReleasesReduxState;
       const store = mockStore(stateWithPreviousReleases);
       expect(
-        store.dispatch(releaseRevision(revision, channel)).payload.progressive,
+        store.dispatch(releaseRevision(revision, channel)).payload.progressive
       ).toEqual({
         percentage: 100,
         paused: false,
@@ -99,7 +112,7 @@ describe("pendingReleases actions", () => {
     it("should not supply a payload with a progressive release if there aren't previous releases", () => {
       const store = mockStore(stateWithRevisions);
       expect(
-        store.dispatch(releaseRevision(revision, channel)).payload.progressive,
+        store.dispatch(releaseRevision(revision, channel)).payload.progressive
       ).toBeUndefined();
     });
 
@@ -107,7 +120,7 @@ describe("pendingReleases actions", () => {
       const store = mockStore(stateWithRevisions);
       expect(
         store.dispatch(releaseRevision(revision, channel)).payload
-          .previousReleases,
+          .previousReleases
       ).toEqual([]);
     });
 
@@ -130,7 +143,7 @@ describe("pendingReleases actions", () => {
             achitectures: ["test64"],
           },
         },
-      };
+      } as unknown as ReleasesReduxState;
 
       it("should return previous revisions, if available", () => {
         const store = mockStore(stateWithPreviousReleases);
@@ -145,8 +158,8 @@ describe("pendingReleases actions", () => {
         const dispatch = store.dispatch(
           releaseRevision(revisionWithRelease, channel)(
             store.dispatch,
-            store.getState,
-          ),
+            store.getState as () => ReleasesReduxState
+          )
         );
 
         expect(dispatch.payload.previousReleases).toEqual([
@@ -168,7 +181,7 @@ describe("pendingReleases actions", () => {
         const actions = store.getActions();
         const expectedAction = releaseRevision(revision, channel)(
           store.dispatch,
-          store.getState,
+          store.getState
         );
 
         expect(actions).toContainEqual(expectedAction);
@@ -224,7 +237,7 @@ describe("pendingReleases actions", () => {
           [revision.revision]: revision,
           [revision2.revision]: revision2,
         },
-      };
+      } as unknown as ReleasesReduxState;
 
       it("should dispatch RELEASE_REVISION for each revision to promote", () => {
         const store = mockStore(stateWithReleasedRevisions);
@@ -241,7 +254,7 @@ describe("pendingReleases actions", () => {
             progressive: actions.find(
               (action) =>
                 action.payload.revision.revision === revision.revision &&
-                action.payload.channel === targetChannel,
+                action.payload.channel === targetChannel
             ).payload.progressive,
           },
         });
@@ -251,7 +264,7 @@ describe("pendingReleases actions", () => {
             progressive: actions.find(
               (action) =>
                 action.payload.revision.revision === revision2.revision &&
-                action.payload.channel === targetChannel,
+                action.payload.channel === targetChannel
             ).payload.progressive,
             revision: revision2,
             channel: targetChannel,
@@ -266,27 +279,27 @@ describe("pendingReleases actions", () => {
     const store = mockStore(stateWithRevisions);
     it("should create an action to undo release of revision", () => {
       expect(store.dispatch(undoRelease(revision, channel)).type).toBe(
-        UNDO_RELEASE,
+        UNDO_RELEASE
       );
     });
 
     it("should supply a payload with revision", () => {
       expect(
-        store.dispatch(undoRelease(revision, channel)).payload.revision,
+        store.dispatch(undoRelease(revision, channel)).payload.revision
       ).toEqual(revision);
     });
 
     it("should supply a payload with channel", () => {
       expect(
-        store.dispatch(undoRelease(revision, channel)).payload.channel,
+        store.dispatch(undoRelease(revision, channel)).payload.channel
       ).toEqual(channel);
     });
   });
 
   describe("cancelPendingReleases", () => {
     it("should create an action to cancel pending releases", () => {
-      expect(cancelPendingReleases(revision, channel).type).toBe(
-        CANCEL_PENDING_RELEASES,
+      expect(cancelPendingReleases().type).toBe(
+        CANCEL_PENDING_RELEASES
       );
     });
   });
@@ -296,13 +309,13 @@ describe("pendingReleases actions", () => {
 
     it("should create an action to set release progressive percentage", () => {
       expect(setProgressiveReleasePercentage(percentage).type).toBe(
-        SET_PROGRESSIVE_RELEASE_PERCENTAGE,
+        SET_PROGRESSIVE_RELEASE_PERCENTAGE
       );
     });
 
     it("should supply a payload with percentage", () => {
       expect(
-        setProgressiveReleasePercentage(percentage).payload.percentage,
+        setProgressiveReleasePercentage(percentage).payload.percentage
       ).toEqual(percentage);
     });
   });
@@ -312,13 +325,13 @@ describe("pendingReleases actions", () => {
 
     it("should create an action to update release percentage", () => {
       expect(updateProgressiveReleasePercentage(percentage).type).toBe(
-        UPDATE_PROGRESSIVE_RELEASE_PERCENTAGE,
+        UPDATE_PROGRESSIVE_RELEASE_PERCENTAGE
       );
     });
 
     it("should supply a payload with percentage", () => {
       expect(
-        updateProgressiveReleasePercentage(percentage).payload.percentage,
+        updateProgressiveReleasePercentage(percentage).payload.percentage
       ).toEqual(percentage);
     });
   });
@@ -351,17 +364,17 @@ describe("pendingReleases actions", () => {
       size: 4096,
       status: "Published",
       version: "1.8.0",
-    };
+    } as unknown as Revision;
 
     it("should create an action to cancel a release", () => {
       expect(cancelProgressiveRelease(previousRevision).type).toBe(
-        CANCEL_PROGRESSIVE_RELEASE,
+        CANCEL_PROGRESSIVE_RELEASE
       );
     });
 
     it("should supply a revision in the payload", () => {
       expect(
-        cancelProgressiveRelease(previousRevision).payload.previousRevision,
+        cancelProgressiveRelease(previousRevision).payload.previousRevision
       ).toBe(previousRevision);
     });
   });

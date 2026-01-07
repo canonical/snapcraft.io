@@ -1,8 +1,5 @@
 import configureMockStore from "redux-mock-store";
 import thunk from "redux-thunk";
-
-const mockStore = configureMockStore([thunk]);
-
 import {
   SET_AVAILABLE_REVISIONS_SELECT,
   setAvailableRevisionsSelect,
@@ -18,14 +15,21 @@ import {
   AVAILABLE_REVISIONS_SELECT_UNRELEASED,
   AVAILABLE_REVISIONS_SELECT_LAUNCHPAD,
 } from "../../constants";
+import {
+  AvailableRevisionsSelect,
+  DispatchFn,
+  ReleasesReduxState,
+} from "../../../../types/releaseTypes";
+
+const mockStore = configureMockStore<ReleasesReduxState, DispatchFn>([thunk]);
 
 describe("availableRevisionsSelect actions", () => {
   describe("setAvailableRevisionsSelect", () => {
-    const value = "test";
+    const value = "test" as AvailableRevisionsSelect;
 
     it("should create an action to set value of available revisions select", () => {
       expect(setAvailableRevisionsSelect(value).type).toBe(
-        SET_AVAILABLE_REVISIONS_SELECT,
+        SET_AVAILABLE_REVISIONS_SELECT
       );
     });
 
@@ -35,13 +39,13 @@ describe("availableRevisionsSelect actions", () => {
   });
 
   describe("selectAvailableRevisions", () => {
-    const value = "test";
+    const value = "test" as AvailableRevisionsSelect;
     const revisions = {
       1: { revision: 1, architectures: ["test64", "amd42"] },
       2: { revision: 2, architectures: ["test64"] },
       3: { revision: 3, architectures: ["abc42"], channels: ["test/edge"] },
-    };
-    let store;
+    } as unknown as ReleasesReduxState["revisions"];
+    let store: ReturnType<typeof mockStore>;
 
     beforeEach(() => {
       store = mockStore({
@@ -50,14 +54,14 @@ describe("availableRevisionsSelect actions", () => {
         availableRevisionsSelect: AVAILABLE_REVISIONS_SELECT_UNRELEASED,
         revisions,
         architectures: ["abc42", "amd42", "test64"],
-      });
+      } as ReleasesReduxState);
 
       store.dispatch(selectAvailableRevisions(value));
     });
 
     it("should dispatch SET_AVAILABLE_REVISIONS_SELECT action", () => {
       expect(store.getActions()).toContainEqual(
-        setAvailableRevisionsSelect(value),
+        setAvailableRevisionsSelect(value)
       );
     });
 
@@ -72,7 +76,7 @@ describe("availableRevisionsSelect actions", () => {
 
     it("should not dispatch SELECT_REVISION action for not selected revisions", () => {
       expect(store.getActions()).not.toContainEqual(
-        selectRevision(revisions[3]),
+        selectRevision(revisions[3])
       );
     });
 
@@ -88,7 +92,7 @@ describe("availableRevisionsSelect actions", () => {
             // so this is the value we expect after the actions are dispatched
             availableRevisionsSelect: AVAILABLE_REVISIONS_SELECT_RECENT,
             revisions,
-          });
+          } as ReleasesReduxState);
           store.dispatch(selectAvailableRevisions(value));
 
           const actions = store.getActions();
@@ -98,7 +102,7 @@ describe("availableRevisionsSelect actions", () => {
               expect.objectContaining({
                 type: SELECT_REVISION,
               }),
-            ]),
+            ])
           );
         });
       });
@@ -123,7 +127,7 @@ describe("availableRevisionsSelect actions", () => {
             architectures: ["arch3"],
             created_at: new Date(),
           },
-        };
+        } as unknown as ReleasesReduxState["revisions"];
 
         beforeEach(() => {
           store = mockStore({
@@ -132,23 +136,23 @@ describe("availableRevisionsSelect actions", () => {
             availableRevisionsSelect: AVAILABLE_REVISIONS_SELECT_RECENT,
             revisions,
             architectures: ["arch1", "arch2", "arch3"],
-          });
+          } as ReleasesReduxState);
 
           store.dispatch(selectAvailableRevisions(value));
         });
 
         it("should dispatch SELECT_REVISION action for latest revisions with most recent version", () => {
           expect(store.getActions()).toContainEqual(
-            selectRevision(revisions[1]),
+            selectRevision(revisions[1])
           );
           expect(store.getActions()).toContainEqual(
-            selectRevision(revisions[3]),
+            selectRevision(revisions[3])
           );
         });
 
         it("should not dispatch SELECT_REVISION action for latest revisions with other versions", () => {
           expect(store.getActions()).not.toContainEqual(
-            selectRevision(revisions[2]),
+            selectRevision(revisions[2])
           );
         });
       });
@@ -166,7 +170,7 @@ describe("availableRevisionsSelect actions", () => {
             // so this is the value we expect after the actions are dispatched
             availableRevisionsSelect: AVAILABLE_REVISIONS_SELECT_LAUNCHPAD,
             revisions,
-          });
+          } as ReleasesReduxState);
           store.dispatch(selectAvailableRevisions(value));
 
           const actions = store.getActions();
@@ -176,7 +180,7 @@ describe("availableRevisionsSelect actions", () => {
               expect.objectContaining({
                 type: SELECT_REVISION,
               }),
-            ]),
+            ])
           );
         });
       });
@@ -201,7 +205,7 @@ describe("availableRevisionsSelect actions", () => {
             attributes: { "build-request-id": "lp-1" },
             created_at: new Date(),
           },
-        };
+        } as unknown as ReleasesReduxState["revisions"];
 
         beforeEach(() => {
           store = mockStore({
@@ -210,23 +214,23 @@ describe("availableRevisionsSelect actions", () => {
             availableRevisionsSelect: AVAILABLE_REVISIONS_SELECT_LAUNCHPAD,
             revisions,
             architectures: ["arch1", "arch2", "arch3"],
-          });
+          } as ReleasesReduxState);
 
           store.dispatch(selectAvailableRevisions(value));
         });
 
         it("should dispatch SELECT_REVISION action for latest revisions with most recent build id", () => {
           expect(store.getActions()).toContainEqual(
-            selectRevision(revisions[1]),
+            selectRevision(revisions[1])
           );
           expect(store.getActions()).toContainEqual(
-            selectRevision(revisions[3]),
+            selectRevision(revisions[3])
           );
         });
 
         it("should not dispatch SELECT_REVISION action for latest revisions with other versions", () => {
           expect(store.getActions()).not.toContainEqual(
-            selectRevision(revisions[2]),
+            selectRevision(revisions[2])
           );
         });
       });
