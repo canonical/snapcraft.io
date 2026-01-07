@@ -22,6 +22,7 @@ describe("notification actions", () => {
       const hideNotificationAction = hideNotification();
 
       expect(hideNotificationAction.type).toBe(HIDE_NOTIFICATION);
+      // @ts-expect-error: we're checking that the payload doesn't exist
       expect(hideNotificationAction.payload).toBeUndefined();
     });
   });

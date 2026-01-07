@@ -1,3 +1,4 @@
+import { ReleasesReduxState } from "../../../../types/releaseTypes";
 import { UPDATE_REVISIONS, updateRevisions } from "../revisions";
 
 describe("revisions actions", () => {
@@ -6,7 +7,7 @@ describe("revisions actions", () => {
       1: { revision: 1 },
       2: { revision: 2 },
       3: { revision: 3, channels: ["stable"] },
-    };
+    } as unknown as ReleasesReduxState["revisions"];
 
     it("should create an action to update revisions list", () => {
       expect(updateRevisions(revisions).type).toBe(UPDATE_REVISIONS);

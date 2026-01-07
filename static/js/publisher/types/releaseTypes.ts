@@ -1,4 +1,4 @@
-import { CombinedState } from "redux";
+import { CombinedState, Store } from "redux";
 import { ThunkDispatch } from "redux-thunk";
 import {
   AVAILABLE_REVISIONS_SELECT_ALL,
@@ -6,6 +6,7 @@ import {
   AVAILABLE_REVISIONS_SELECT_RECENT,
   AVAILABLE_REVISIONS_SELECT_UNRELEASED,
 } from "../pages/Releases/constants";
+import { MockStoreEnhanced } from "redux-mock-store";
 
 type Prettify<T> = { [K in keyof T]: T[K] } & {};
 
@@ -371,12 +372,6 @@ export type PendingReleaseItem = {
 /**
  * Helper types for the Redux actions and Dispatch
  */
-export type DispatchFn = ThunkDispatch<
-  ReleasesReduxState,
-  unknown,
-  GenericReleasesAction | GenericReleasesAction<string, never>
->;
-
 export type GenericReleasesAction<
   T extends string = string,
   P = unknown,
@@ -384,3 +379,22 @@ export type GenericReleasesAction<
   type: T;
   payload: P;
 }>;
+
+type ReleasesAction =
+  | GenericReleasesAction
+  | GenericReleasesAction<string, never>;
+
+export type DispatchFn = ThunkDispatch<
+  ReleasesReduxState,
+  unknown,
+  ReleasesAction
+>;
+
+export type ReleasesReduxStore = Store<ReleasesReduxState, ReleasesAction> & {
+  dispatch: DispatchFn;
+};
+
+export type ReleasesMockReduxStore = MockStoreEnhanced<
+  Partial<ReleasesReduxState>,
+  DispatchFn
+>;

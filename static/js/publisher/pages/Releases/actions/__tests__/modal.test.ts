@@ -17,6 +17,7 @@ describe("modal actions", () => {
     it("should create an action to close the modal", () => {
       const modalAction = closeModal();
       expect(modalAction.type).toBe(CLOSE_MODAL);
+      // @ts-expect-error: we're checking that the payload doesn't exist
       expect(modalAction.payload).toBeUndefined();
     });
   });

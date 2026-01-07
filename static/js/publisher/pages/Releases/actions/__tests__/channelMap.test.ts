@@ -1,3 +1,4 @@
+import { ChannelArchitectureRevisionsMap, Revision } from "../../../../types/releaseTypes";
 import {
   INIT_CHANNEL_MAP,
   SELECT_REVISION,
@@ -17,12 +18,12 @@ describe("channelMap actions", () => {
     "latest/beta": {
       test: {},
     },
-  };
+  } as unknown as ChannelArchitectureRevisionsMap;
 
   const revision = {
     revision: 1,
     version: "1",
-  };
+  } as Revision;
 
   const channel = "test/edge";
 

@@ -2,7 +2,7 @@ import configureStore from "redux-mock-store";
 import thunk from "redux-thunk";
 
 const middlewares = [thunk];
-const mockStore = configureStore(middlewares);
+const mockStore = configureStore<ReleasesReduxState, DispatchFn>(middlewares);
 
 import {
   SET_DEFAULT_TRACK_SUCCESS,
@@ -10,6 +10,12 @@ import {
   setDefaultTrack,
 } from "../defaultTrack";
 import { CLOSE_MODAL } from "../modal";
+import { Mock } from "vitest";
+import {
+  DispatchFn,
+  Options,
+  ReleasesReduxState,
+} from "../../../../types/releaseTypes";
 
 describe("defaultTrack actions", () => {
   beforeEach(() => {
@@ -22,7 +28,7 @@ describe("defaultTrack actions", () => {
   });
 
   afterEach(() => {
-    global.fetch.mockRestore();
+    (global.fetch as Mock).mockRestore();
   });
 
   describe("SET_DEFAULT_TRACK_SUCCESS", () => {
@@ -31,10 +37,10 @@ describe("defaultTrack actions", () => {
         const store = mockStore({
           options: {
             snapName: "test",
-          },
+          } as Options,
           currentTrack: "test",
           defaultTrack: "nope",
-        });
+        } as ReleasesReduxState);
 
         return store.dispatch(setDefaultTrack()).then(() => {
           const actions = store.getActions();
@@ -48,7 +54,7 @@ describe("defaultTrack actions", () => {
               status: "success",
               appearance: "positive",
               content: expect.stringContaining(
-                "The default track for test has been set to test.",
+                "The default track for test has been set to test."
               ),
               canDismiss: true,
             },
@@ -65,8 +71,8 @@ describe("defaultTrack actions", () => {
         const store = mockStore({
           options: {
             snapName: "test",
-          },
-        });
+          } as Options,
+        } as ReleasesReduxState);
 
         return store.dispatch(clearDefaultTrack()).then(() => {
           const actions = store.getActions();
@@ -83,7 +89,7 @@ describe("defaultTrack actions", () => {
               status: "success",
               appearance: "positive",
               content: expect.stringContaining(
-                "The default track for test has been removed. All new installations without a specified track (e.g. `sudo snap install test`) will receive updates from latest track.",
+                "The default track for test has been removed. All new installations without a specified track (e.g. `sudo snap install test`) will receive updates from latest track."
               ),
               canDismiss: true,
             },
