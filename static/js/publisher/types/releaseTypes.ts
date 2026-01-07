@@ -6,7 +6,6 @@ import {
   AVAILABLE_REVISIONS_SELECT_RECENT,
   AVAILABLE_REVISIONS_SELECT_UNRELEASED,
 } from "../pages/Releases/constants";
-import { MockStoreEnhanced } from "redux-mock-store";
 
 type Prettify<T> = { [K in keyof T]: T[K] } & {};
 
@@ -393,8 +392,3 @@ export type DispatchFn = ThunkDispatch<
 export type ReleasesReduxStore = Store<ReleasesReduxState, ReleasesAction> & {
   dispatch: DispatchFn;
 };
-
-export type ReleasesMockReduxStore = MockStoreEnhanced<
-  Partial<ReleasesReduxState>,
-  DispatchFn
->;

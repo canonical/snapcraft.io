@@ -18,7 +18,6 @@ import {
 import {
   AvailableRevisionsSelect,
   DispatchFn,
-  ReleasesMockReduxStore,
   ReleasesReduxState,
 } from "../../../../types/releaseTypes";
 
@@ -46,7 +45,7 @@ describe("availableRevisionsSelect actions", () => {
       2: { revision: 2, architectures: ["test64"] },
       3: { revision: 3, architectures: ["abc42"], channels: ["test/edge"] },
     } as unknown as ReleasesReduxState["revisions"];
-    let store: ReleasesMockReduxStore;
+    let store: ReturnType<typeof mockStore>;
 
     beforeEach(() => {
       store = mockStore({
