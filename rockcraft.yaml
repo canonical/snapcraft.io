@@ -23,7 +23,7 @@ parts:
       set -eux
       # install dependencies
       npm install -g yarn
-      yarn install
+      yarn install --immutable
       # build the UI
       yarn run build
       mkdir -p "$CRAFT_PART_INSTALL/flask/app"
@@ -34,6 +34,7 @@ parts:
     prime:
       - flask/app/.env
       - flask/app/app.py
+      - flask/app/cache
       - flask/app/webapp
       - flask/app/templates
       # - flask/app/static # it already gets copied in the build-ui step
