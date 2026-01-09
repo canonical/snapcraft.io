@@ -17,8 +17,8 @@ description: The charm for the snapcraft.io website, built with the PaaS app cha
 extensions:
   - flask-framework
 
-requires:
-  tracing:
-    interface: tracing
-    optional: true
-    limit: 1
+# requires:
+#   tracing:
+#     interface: tracing
+#     optional: true
+#     limit: 1
