@@ -26,8 +26,8 @@ parts:
       yarn install
       # build the UI
       yarn run build
-      # mkdir -p "$CRAFT_PART_INSTALL/flask/app"
-      # cp -r static "$CRAFT_PART_INSTALL/flask/app/"
+      mkdir -p "$CRAFT_PART_INSTALL/flask/app"
+      cp -r static "$CRAFT_PART_INSTALL/flask/app/"
   flask-framework/install-app:
     after:
       - build-ui
@@ -36,7 +36,7 @@ parts:
       - flask/app/app.py
       - flask/app/webapp
       - flask/app/templates
-      - flask/app/static
+      # - flask/app/static # it already gets copied in the build-ui step
       - flask/app/redirects.yaml
       - flask/app/security.txt
       - flask/app/robots.txt
