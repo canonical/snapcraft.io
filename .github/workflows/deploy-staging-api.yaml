@@ -1,0 +1,21 @@
+name: Pack and Deploy Staging API
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy-staging-api-env-on-merge-into-main:
+    # dispatch another copy of the deploy.yaml workflow that deploys the Staging API env
+    uses: ./.github/workflows/deploy.yaml
+    permissions:
+      contents: read
+      deployments: write
+      packages: write
+    with:
+      environment: Staging API
+    secrets:
+      VAULT_APPROLE_ROLE_ID: ${{ secrets.VAULT_APPROLE_ROLE_ID }}
+      VAULT_APPROLE_SECRET_ID: ${{ secrets.VAULT_APPROLE_SECRET_ID }}
+      CHARMHUB_TOKEN: ${{ secrets.CHARMHUB_TOKEN }}
