@@ -70,3 +70,7 @@ coverage/
 .webcache_blog/
 .coverage
 cypress/screenshots/
+
+# Charming artifacts
+*.charm
+*.rock
