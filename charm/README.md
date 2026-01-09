@@ -51,5 +51,6 @@ echo "{IP_OF_VM} snapcraft.local" | sudo tee -a /etc/hosts
 
 
 ## Design Decisions:
+
 - To keep the codebase clean and charm libraries updated, they are only fetched before packing the charm in the [GitHub Actions workflow](https://github.com/canonical/webteam-devops/blob/7041da8810758715a73e1f8be67b2e68f0e1d58f/.github/workflows/deploy.yaml#L97).
 - As all our work is open source, the charm is publicly available on [snapcraft](https://charmhub.io/snapcraft-io), the rock image is also included as a resource. This significantly simplifies deployment.
