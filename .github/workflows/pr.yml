@@ -74,6 +74,20 @@ jobs:
           docker run --network="host" -v .:/app cypress/base:22.18.0 \
             bash "-c" "cd /app && npx cypress install && yarn run test-e2e"
 
+  pack-rock:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup LXD
+        uses: canonical/setup-lxd@main
+
+      - name: Setup rockcraft
+        run: sudo snap install rockcraft --classic
+
+      - name: Pack rock
+        run: rockcraft pack
+
   lint-python:
     runs-on: ubuntu-latest
     permissions:
