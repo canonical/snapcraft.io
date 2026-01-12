@@ -77,12 +77,75 @@ class TemplateUtilsTest(unittest.TestCase):
         result = template_utils.install_snippet("test", "latest", "edge", "")
         self.assertTrue(result, "sudo snap install test --edge")
 
+    def test_format_display_name(self):
+        # Test basic display name
+        result = template_utils.format_display_name("Test User")
+        self.assertEqual(result, "Test User")
+
+        # Test emoji removal
+        result = template_utils.format_display_name("Test 🚀 User 💻")
+        self.assertEqual(result, "Test  User ")
+
+        # Test HTML escaping
+        result = template_utils.format_display_name(
+            "<script>alert('xss')</script>"
+        )
+        self.assertEqual(
+            result, "&lt;script&gt;alert(&#39;xss&#39;)&lt;/script&gt;"
+        )
+
+        # Test both emoji removal and HTML escaping
+        result = template_utils.format_display_name("Test 😀 <b>Bold</b>")
+        self.assertEqual(result, "Test  &lt;b&gt;Bold&lt;/b&gt;")
+
+        # Test ampersand escaping
+        result = template_utils.format_display_name("Test & Company")
+        self.assertEqual(result, "Test &amp; Company")
+
+        # Test quotes escaping
+        result = template_utils.format_display_name('Test "quoted" name')
+        self.assertEqual(result, "Test &#34;quoted&#34; name")
+
     def test_display_name(self):
+        # Test when display name and username are the same (case-insensitive)
         result = template_utils.display_name("Toto", "toto")
         self.assertEqual(result, "Toto")
 
+        result = template_utils.display_name("toto", "TOTO")
+        self.assertEqual(result, "toto")
+
+        # Test when display name and username are different
         result = template_utils.display_name("Toto", "username")
         self.assertEqual(result, "Toto (username)")
+
+        # Test with emoji in display name
+        result = template_utils.display_name("Toto 🚀", "toto")
+        self.assertEqual(result, "Toto  (toto)")
+
+        result = template_utils.display_name("Test 💻 User", "testuser")
+        self.assertEqual(result, "Test  User (testuser)")
+
+        # Test HTML escaping in display name
+        result = template_utils.display_name(
+            "<script>alert('xss')</script>", "user"
+        )
+        self.assertEqual(
+            result, "&lt;script&gt;alert(&#39;xss&#39;)&lt;/script&gt; (user)"
+        )
+
+        # Test HTML escaping in username
+        result = template_utils.display_name("Test User", "<script>")
+        self.assertEqual(result, "Test User (&lt;script&gt;)")
+
+        # Test HTML escaping in both display name and username
+        result = template_utils.display_name("<b>Bold</b>", "<i>italic</i>")
+        self.assertEqual(
+            result, "&lt;b&gt;Bold&lt;/b&gt; (&lt;i&gt;italic&lt;/i&gt;)"
+        )
+
+        # Test combined: emoji and HTML escaping
+        result = template_utils.display_name("Test 😀 <script>", "user<b>")
+        self.assertEqual(result, "Test  &lt;script&gt; (user&lt;b&gt;)")
 
     def test_join(self):
         result = template_utils.join(["item1", "item2"], "-")
