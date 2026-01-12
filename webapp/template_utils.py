@@ -3,6 +3,7 @@ import hashlib
 import os
 from dateutil import parser
 from emoji import replace_emoji
+from markupsafe import escape
 
 
 # generator functions for templates
@@ -117,20 +118,22 @@ def format_number(number: int):
 
 def format_display_name(display_name):
     """Template function that formats the displayed name
-    primarily to remove emoji
+    primarily to remove emoji and escape for safe HTML rendering
     """
-    return replace_emoji(display_name, replace="")
+    return escape(replace_emoji(display_name, replace=""))
 
 
 def display_name(display_name, username):
     """Template function that returns the displayed name if the username
-    is the same, or the dispayed name and the username if differents
+    is the same, or the displayed name and the username if different,
+    escaping both for safe HTML rendering
     """
-    display_name = format_display_name(display_name)
-    if display_name.lower() == username.lower():
-        return display_name
+    safe_display_name = format_display_name(display_name)
+    safe_username = escape(username)
+    if safe_display_name.lower() == safe_username.lower():
+        return safe_display_name
     else:
-        return f"{display_name} ({username})"
+        return f"{safe_display_name} ({safe_username})"
 
 
 def format_date(timestamp, format):
