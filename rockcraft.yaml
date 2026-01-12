@@ -40,5 +40,5 @@ parts:
       # - flask/app/static # it already gets copied in the build-ui step
       - flask/app/deleted.yaml
       - flask/app/redirects.yaml
-      - flask/app/security.txt
+      - flask/app/security.md
       - flask/app/robots.txt
