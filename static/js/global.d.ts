@@ -8,7 +8,7 @@ type DataLayerEvent = {
 
 declare interface Window {
   dataLayer: Array<DataLayerEvent>;
-  __REDUX_DEVTOOLS_EXTENSION_COMPOSE__?: typeof compose;
+  __REDUX_DEVTOOLS_EXTENSION_COMPOSE__?: <R>(a: R) => R;
   MktoForms2: {
     loadForm: (
       baseUrl: string,

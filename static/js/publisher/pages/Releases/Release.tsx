@@ -1,4 +1,4 @@
-import { createStore, applyMiddleware, compose } from "redux";
+import { legacy_createStore as createStore, applyMiddleware, compose } from "redux";
 import thunk from "redux-thunk";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { Provider } from "react-redux";
@@ -10,6 +10,7 @@ import {
   ChannelMap,
   Track,
   Options,
+  ReleasesReduxStore,
 } from "../../types/releaseTypes";
 
 // setup redux store with thunk middleware and devtools extension:
@@ -31,7 +32,7 @@ function Release({
   tracks,
   options,
 }: Props): React.JSX.Element {
-  const store = createStore(
+  const store: ReleasesReduxStore = createStore(
     releases,
     {
       currentTrack: options.defaultTrack || "latest",
@@ -53,8 +54,6 @@ function Release({
           snapName={snapName}
           releasesData={releasesData}
           channelMap={channelMap}
-          // @ts-ignore
-          options={options}
         />
       </DndProvider>
     </Provider>
