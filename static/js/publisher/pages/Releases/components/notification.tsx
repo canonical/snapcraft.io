@@ -28,7 +28,7 @@ class Notification extends Component<NotificationProps> {
       <div className={`p-notification ${className}`}>
         <div className="p-notification__content">
           <p className={notificationStyle("message")}>
-            {status && this.getStatus(this.props.status)} {children}
+            {status && this.getStatus(status)} {children}
           </p>
           {canDismiss && (
             <button
