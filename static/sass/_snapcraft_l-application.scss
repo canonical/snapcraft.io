@@ -185,7 +185,7 @@
 
   // Sidenav toggle tooltip is rendered over .l-navigation which has z-index: 103;
   // this rule makes sure all tooltips are visible even if they overlap the sidenav
-  .l-navigation[class^="p-tooltip"] {
+  .l-navigation [class^="p-tooltip"] {
     z-index: 104;
   }
 
