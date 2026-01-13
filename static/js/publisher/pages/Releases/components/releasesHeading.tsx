@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { useQuery } from "react-query";
-import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import {
   Row,
@@ -25,8 +24,26 @@ import {
 import DefaultTrackModifier from "./defaultTrackModifier";
 import ReleasesTable from "./releasesTable";
 import TrackInfo from "./TrackInfo";
+import { ReleasesReduxState, DispatchFn } from "../../../types/releaseTypes";
 
-function ReleasesHeading(props) {
+interface OwnProps {
+  snapName: string;
+}
+
+interface StateProps {
+  tracks: string[];
+  currentTrack: string;
+  defaultTrack: string;
+}
+
+interface DispatchProps {
+  setCurrentTrack: typeof setCurrentTrack;
+  closeHistoryPanel: typeof closeHistory;
+}
+
+type ReleasesHeadingProps = OwnProps & StateProps & DispatchProps;
+
+function ReleasesHeading(props: ReleasesHeadingProps) {
   resizeAsidePanel("request");
   resizeAsidePanel("add");
 
@@ -62,7 +79,7 @@ function ReleasesHeading(props) {
     setIsOpen(!isOpen);
   };
 
-  const handleSelect = (track) => {
+  const handleSelect = (track: string) => {
     props.setCurrentTrack(track);
     setIsOpen(false);
   };
@@ -78,7 +95,10 @@ function ReleasesHeading(props) {
 
   const isTrackNameFilled = trackName.trim().length > 0;
   const [isLoading, setIsLoading] = useState(false);
-  const [notification, setNotification] = useState(null);
+  const [notification, setNotification] = useState<{
+    type: string;
+    message: string;
+  } | null>(null);
 
   const { data, guardrailsLoading, error } = useQuery(
     ["snapData", props.snapName],
@@ -113,28 +133,28 @@ function ReleasesHeading(props) {
     trackGuardrailsStatus = "add";
   }
 
-  const handleTrackNameChange = (event) => {
+  const handleTrackNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setTrackNameError("");
     const { value } = event.target;
     setTrackName(value);
   };
 
-  const handleVersionPatternChange = (event) => {
+  const handleVersionPatternChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setVersionPattern(event.target.value);
   };
 
-  const handlePhasingPercentageChange = (event) => {
+  const handlePhasingPercentageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
     setPhasingPercentage(value);
     const error = validatePhasingPercentage(value);
     setPhasingPercentageError(error);
   };
 
-  const showNotification = (type, message) => {
+  const showNotification = (type: string, message: string) => {
     setNotification({ type, message });
   };
 
-  const [successNotification, setSuccessNotification] = useState(null);
+  const [successNotification, setSuccessNotification] = useState<string | null>(null);
   const [trackNameError, setTrackNameError] = useState("");
 
   const handleAddTrack = async () => {
@@ -562,16 +582,7 @@ function ReleasesHeading(props) {
   );
 }
 
-ReleasesHeading.propTypes = {
-  tracks: PropTypes.array.isRequired,
-  setCurrentTrack: PropTypes.func.isRequired,
-  closeHistoryPanel: PropTypes.func.isRequired,
-  currentTrack: PropTypes.string.isRequired,
-  defaultTrack: PropTypes.string,
-  snapName: PropTypes.string.isRequired,
-};
-
-const mapStateToProps = (state) => {
+const mapStateToProps = (state: ReleasesReduxState): StateProps => {
   return {
     tracks: getTracks(state),
     currentTrack: state.currentTrack,
@@ -579,7 +590,7 @@ const mapStateToProps = (state) => {
   };
 };
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = (dispatch: DispatchFn): DispatchProps => {
   return {
     setCurrentTrack: (track) => dispatch(setCurrentTrack(track)),
     closeHistoryPanel: () => dispatch(closeHistory()),

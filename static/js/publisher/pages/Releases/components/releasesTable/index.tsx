@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
 import {
@@ -20,11 +19,45 @@ import { getChannelName, getBuildId } from "../../helpers";
 import HistoryPanel from "../historyPanel";
 import ReleasesTableDroppableRow from "./droppableRow";
 import ReleasesTableRevisionsRow from "./revisionsRow";
+import {
+  ReleasesReduxState,
+  DispatchFn,
+  Revision,
+  CPUArchitecture,
+  Release,
+} from "../../../../types/releaseTypes";
 
 const MAX_BRANCHES = 5;
 const MAX_BUILDS = 5;
 
-class ReleasesTable extends Component {
+type Branch = Pick<Release, "track" | "risk" | "branch" | "when" | "revision"> & {
+  expiration: string;
+};
+
+interface StateProps {
+  filters: ReleasesReduxState["history"]["filters"];
+  isHistoryOpen: boolean;
+  archs: CPUArchitecture[];
+  branches: Branch[];
+  openBranches: string[];
+  currentTrack: string;
+  launchpadRevisions: Revision[];
+  allRevisions: Revision[];
+}
+
+interface DispatchProps {
+  selectAvailableRevisions: typeof selectAvailableRevisions;
+  closeHistory: typeof closeHistory;
+}
+
+type ReleasesTableProps = StateProps & DispatchProps;
+
+interface ReleasesTableState {
+  showAllRisksBranches: string[];
+  showAllBuilds: boolean;
+}
+
+class ReleasesTable extends Component<ReleasesTableProps, ReleasesTableState> {
   constructor(props) {
     super(props);
 
@@ -38,7 +71,7 @@ class ReleasesTable extends Component {
     this.props.selectAvailableRevisions(AVAILABLE_REVISIONS_SELECT_ALL);
   }
 
-  handleToggleShowMoreBranches(risk) {
+  handleToggleShowMoreBranches(risk: string) {
     const { showAllRisksBranches } = this.state;
     const newList = showAllRisksBranches.slice(0);
 
@@ -60,7 +93,7 @@ class ReleasesTable extends Component {
     });
   }
 
-  renderChannelRow(risk, branch) {
+  renderChannelRow(risk: string, branch?: Branch) {
     let rowKey = risk;
     if (branch) {
       rowKey += `-${branch.branch}`;
@@ -71,7 +104,7 @@ class ReleasesTable extends Component {
     );
   }
 
-  renderBuildRow(revisions) {
+  renderBuildRow(revisions: Record<string, Revision>) {
     const rowKey = `${BUILD}-${getBuildId(Object.values(revisions)[0])}`;
 
     return (
@@ -312,24 +345,7 @@ class ReleasesTable extends Component {
   }
 }
 
-ReleasesTable.propTypes = {
-  // state
-  isHistoryOpen: PropTypes.bool,
-  filters: PropTypes.object,
-  archs: PropTypes.array.isRequired,
-  branches: PropTypes.array.isRequired,
-  openBranches: PropTypes.array.isRequired,
-  currentTrack: PropTypes.string.isRequired,
-
-  launchpadRevisions: PropTypes.array,
-  allRevisions: PropTypes.array,
-
-  // actions
-  selectAvailableRevisions: PropTypes.func,
-  closeHistory: PropTypes.func,
-};
-
-const mapStateToProps = (state) => {
+const mapStateToProps = (state: ReleasesReduxState): StateProps => {
   return {
     filters: state.history.filters,
     isHistoryOpen: state.history.isOpen,
@@ -342,7 +358,7 @@ const mapStateToProps = (state) => {
   };
 };
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = (dispatch: DispatchFn): DispatchProps => {
   return {
     selectAvailableRevisions: (value) =>
       dispatch(selectAvailableRevisions(value)),
