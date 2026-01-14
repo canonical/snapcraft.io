@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import {
   ArchitectureRevisionsMap,
   CPUArchitecture,
+  LaunchpadBuildRevision,
   Release,
   Revision,
 } from "../../types/releaseTypes";
@@ -24,7 +25,9 @@ export function getChannelName(track: string, risk: string, branch?: string) {
   });
 }
 
-export function getBuildId(revision: Revision) {
+export function getBuildId<T extends Revision | LaunchpadBuildRevision>(
+  revision: T
+): T["attributes"]["build-request-id"] {
   return (
     revision && revision.attributes && revision.attributes["build-request-id"]
   );

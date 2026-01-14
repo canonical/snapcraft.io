@@ -25,6 +25,7 @@ import {
   Revision,
   CPUArchitecture,
   Release,
+  LaunchpadBuildRevision,
 } from "../../../../types/releaseTypes";
 
 const MAX_BRANCHES = 5;
@@ -41,12 +42,12 @@ interface StateProps {
   branches: Branch[];
   openBranches: string[];
   currentTrack: string;
-  launchpadRevisions: Revision[];
+  launchpadRevisions: LaunchpadBuildRevision[];
   allRevisions: Revision[];
 }
 
 interface DispatchProps {
-  selectAvailableRevisions: typeof selectAvailableRevisions;
+  selectAvailableRevisions: (...args: Parameters<typeof selectAvailableRevisions>) => void;
   closeHistory: typeof closeHistory;
 }
 
@@ -371,7 +372,7 @@ const mapStateToProps = (state: ReleasesReduxState): StateProps => {
 const mapDispatchToProps = (dispatch: DispatchFn): DispatchProps => {
   return {
     selectAvailableRevisions: (value) =>
-      dispatch(selectAvailableRevisions(value) as any),
+      dispatch(selectAvailableRevisions(value)),
     closeHistory: () => dispatch(closeHistory()),
   };
 };

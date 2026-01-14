@@ -83,15 +83,26 @@ export type SnapConfinement = "strict" | "classic" | "devmode";
 
 export type RevisionGrade = "stable" | "devel";
 
-export type Revision = {
-  architectures: NonEmptyArray<CPUArchitecture>;
-  attributes: {
-    "build-request-id"?: string; // available if it's a Launchpad build
-    "build-request-timestamp"?: ISO8601Timestamp; // available if it's a Launchpad build
-
+type RevisionAttributes<isLpBuild extends boolean> = Prettify<
+  (isLpBuild extends true
+    ? {
+        // values are available because it's a Launchpad build
+        "build-request-id": string;
+        "build-request-timestamp": ISO8601Timestamp;
+      }
+    : {
+        // we can't assume it's a Launchpad build
+        "build-request-id"?: string;
+        "build-request-timestamp"?: ISO8601Timestamp;
+      }) & {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     [key: string]: any; // store docs declare `attributes` as a generic "object" type
-  };
+  }
+>;
+
+export type Revision<isLpBuild extends boolean = false> = {
+  architectures: NonEmptyArray<CPUArchitecture>;
+  attributes: RevisionAttributes<isLpBuild>;
   base: string; // "coreXX"
   build_url: string | null; // available if it's a Launchpad build
   confinement: SnapConfinement;
@@ -117,6 +128,8 @@ export type Revision = {
   progressive?: ChannelMap["progressive"];
   expiration?: ChannelMap["expiration-date"];
 };
+
+export type LaunchpadBuildRevision = Revision<true>;
 
 export type RevisionsMap = { [revision: number]: Revision };
 
