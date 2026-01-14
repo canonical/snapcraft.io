@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
 import { getTracks, getTrackRevisions } from "../selectors";
@@ -8,9 +7,26 @@ import {
   showNotification,
   hideNotification,
 } from "../actions/globalNotification";
+import { ReleasesReduxState, DispatchFn, ArchitectureRevisionsMap } from "../../../types/releaseTypes";
 
-class DefaultTrackModifier extends Component {
-  constructor(props) {
+interface StateProps {
+  defaultTrack: string;
+  currentTrack: string;
+  tracks: string[];
+  latestTrackRevisions: ArchitectureRevisionsMap[];
+  snapName: string;
+}
+
+interface DispatchProps {
+  openModal: typeof openModal;
+  showNotification: typeof showNotification;
+  hideNotification: typeof hideNotification;
+}
+
+type DefaultTrackModifierProps = StateProps & DispatchProps;
+
+class DefaultTrackModifier extends Component<DefaultTrackModifierProps> {
+  constructor(props: DefaultTrackModifierProps) {
     super(props);
 
     this.setDefaultTrackHandler = this.setDefaultTrackHandler.bind(this);
@@ -132,16 +148,7 @@ class DefaultTrackModifier extends Component {
   }
 }
 
-DefaultTrackModifier.propTypes = {
-  defaultTrack: PropTypes.string,
-  currentTrack: PropTypes.string.isRequired,
-  openModal: PropTypes.func.isRequired,
-  showNotification: PropTypes.func.isRequired,
-  latestTrackRevisions: PropTypes.array.isRequired,
-  snapName: PropTypes.string.isRequired,
-};
-
-const mapStateToProps = (state) => ({
+const mapStateToProps = (state: ReleasesReduxState): StateProps => ({
   currentTrack: state.currentTrack,
   tracks: getTracks(state),
   latestTrackRevisions: getTrackRevisions(state, "latest"),
@@ -149,7 +156,7 @@ const mapStateToProps = (state) => ({
   defaultTrack: state.defaultTrack,
 });
 
-const mapDispatchToProps = (dispatch) => ({
+const mapDispatchToProps = (dispatch: DispatchFn): DispatchProps => ({
   openModal: (payload) => dispatch(openModal(payload)),
   showNotification: (payload) => dispatch(showNotification(payload)),
   hideNotification: () => dispatch(hideNotification()),

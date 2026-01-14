@@ -2,7 +2,7 @@ import { Tooltip } from "@canonical/react-components";
 
 type TrackInfoProps = {
   versionPattern: string | null;
-  automaticPhasingPercentage: string | null;
+  automaticPhasingPercentage: number | string | null;
 };
 
 export default function TrackInfo({

@@ -1,5 +1,4 @@
 import React, { Fragment, useState, useEffect } from "react";
-import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
 import Notification from "./components/globalNotification";
@@ -18,8 +17,39 @@ import {
   getReleaseDataFromChannelMap,
 } from "./releasesState";
 import { updateFailedRevisions } from "./actions/failedRevisions";
+import {
+  ReleasesReduxState,
+  ReleasesData,
+  ChannelMap,
+  DispatchFn,
+} from "../../types/releaseTypes";
 
-const ReleasesController = ({
+// Props coming from parent component
+interface OwnProps {
+  snapName: string;
+  releasesData: ReleasesData;
+  channelMap: ChannelMap[];
+}
+
+// Props from mapStateToProps
+interface StateProps {
+  showModal: ReleasesReduxState["modal"]["visible"];
+  notification: ReleasesReduxState["notification"];
+}
+
+// Props from mapDispatchToProps
+interface DispatchProps {
+  initChannelMap: typeof initChannelMap;
+  updateArchitectures: typeof updateArchitectures;
+  updateRevisions: typeof updateRevisions;
+  updateFailedRevisions: typeof updateFailedRevisions;
+  updateReleases: typeof updateReleases;
+}
+
+// Combined props for the component
+type ReleasesControllerProps = OwnProps & StateProps & DispatchProps;
+
+const ReleasesController: React.FC<ReleasesControllerProps> = ({
   snapName,
   releasesData,
   channelMap,
@@ -97,29 +127,14 @@ const ReleasesController = ({
   );
 };
 
-ReleasesController.propTypes = {
-  snapName: PropTypes.string.isRequired,
-  releasesData: PropTypes.object.isRequired,
-  channelMap: PropTypes.array.isRequired,
-
-  notification: PropTypes.object,
-  showModal: PropTypes.bool,
-
-  initChannelMap: PropTypes.func,
-  updateArchitectures: PropTypes.func,
-  updateReleases: PropTypes.func,
-  updateRevisions: PropTypes.func,
-  updateFailedRevisions: PropTypes.func,
-};
-
-const mapStateToProps = (state) => {
+const mapStateToProps = (state: ReleasesReduxState): StateProps => {
   return {
     showModal: state.modal.visible,
     notification: state.notification,
   };
 };
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = (dispatch: DispatchFn): DispatchProps => {
   return {
     initChannelMap: (channelMap) => dispatch(initChannelMap(channelMap)),
     updateArchitectures: (revisions) =>
