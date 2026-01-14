@@ -25,7 +25,7 @@ export function getChannelName(track: string, risk: string, branch?: string) {
   });
 }
 
-export function getBuildId<T extends Revision | LaunchpadBuildRevision>(
+export function getBuildId<T extends Revision<boolean>>(
   revision: T
 ): T["attributes"]["build-request-id"] {
   return (

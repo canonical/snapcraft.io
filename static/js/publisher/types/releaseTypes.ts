@@ -83,26 +83,20 @@ export type SnapConfinement = "strict" | "classic" | "devmode";
 
 export type RevisionGrade = "stable" | "devel";
 
-type RevisionAttributes<isLpBuild extends boolean> = Prettify<
-  (isLpBuild extends true
-    ? {
-        // values are available because it's a Launchpad build
-        "build-request-id": string;
-        "build-request-timestamp": ISO8601Timestamp;
-      }
-    : {
-        // we can't assume it's a Launchpad build
-        "build-request-id"?: string;
-        "build-request-timestamp"?: ISO8601Timestamp;
-      }) & {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    [key: string]: any; // store docs declare `attributes` as a generic "object" type
-  }
->;
+type RevisionAttributes = Prettify<{
+  // values are available because it's a Launchpad build
+  "build-request-id": string;
+  "build-request-timestamp": ISO8601Timestamp;
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  [key: string]: any; // store docs declare `attributes` as a generic "object" type
+}>;
 
 export type Revision<isLpBuild extends boolean = false> = {
   architectures: NonEmptyArray<CPUArchitecture>;
-  attributes: RevisionAttributes<isLpBuild>;
+  attributes: isLpBuild extends true
+    ? RevisionAttributes // attributes are only available if we know it's a LP build, we must check and cast manually
+    : Prettify<Partial<RevisionAttributes>>; // when we don't know whether this is a LP build the attributes might still be there
   base: string; // "coreXX"
   build_url: string | null; // available if it's a Launchpad build
   confinement: SnapConfinement;
@@ -129,6 +123,7 @@ export type Revision<isLpBuild extends boolean = false> = {
   expiration?: ChannelMap["expiration-date"];
 };
 
+// this type is for manual casts only, if Revision["attributes"]["build-request-id"] exists then you can cast
 export type LaunchpadBuildRevision = Revision<true>;
 
 export type RevisionsMap = { [revision: number]: Revision };
