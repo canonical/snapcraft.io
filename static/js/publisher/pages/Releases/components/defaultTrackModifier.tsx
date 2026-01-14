@@ -7,13 +7,13 @@ import {
   showNotification,
   hideNotification,
 } from "../actions/globalNotification";
-import { ReleasesReduxState, DispatchFn, Revision } from "../../../types/releaseTypes";
+import { ReleasesReduxState, DispatchFn, ArchitectureRevisionsMap } from "../../../types/releaseTypes";
 
 interface StateProps {
   defaultTrack: string;
   currentTrack: string;
   tracks: string[];
-  latestTrackRevisions: Revision[];
+  latestTrackRevisions: ArchitectureRevisionsMap[];
   snapName: string;
 }
 
@@ -26,7 +26,7 @@ interface DispatchProps {
 type DefaultTrackModifierProps = StateProps & DispatchProps;
 
 class DefaultTrackModifier extends Component<DefaultTrackModifierProps> {
-  constructor(props) {
+  constructor(props: DefaultTrackModifierProps) {
     super(props);
 
     this.setDefaultTrackHandler = this.setDefaultTrackHandler.bind(this);

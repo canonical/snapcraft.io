@@ -100,7 +100,7 @@ function ReleasesHeading(props: ReleasesHeadingProps) {
     message: string;
   } | null>(null);
 
-  const { data, guardrailsLoading, error } = useQuery(
+  const { data, isLoading: guardrailsLoading, error } = useQuery(
     ["snapData", props.snapName],
     async () => {
       const response = await getPackageMetadata(props.snapName);
