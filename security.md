@@ -1,5 +1,5 @@
 Contact: mailto:security@ubuntu.com
-Expires: 2025-12-31T00:00:00.000Z
+Expires: 2026-12-31T00:00:00.000Z
 Preferred-Languages: en
 
 To report a security issue, please email [security@ubuntu.com](mailto:security@ubuntu.com) with a description of the issue, the steps you took to create the issue, affected versions, and, if known, mitigations for the issue.
