@@ -194,8 +194,9 @@ function ReleasesHeading(props: ReleasesHeadingProps) {
         setTrackNameError(errorMessage);
       }
     } catch (error) {
-      console.error("Error:", error.message);
-      showNotification("Error", error.message);
+      const e = error as Error;
+      console.error("Error:", e.message);
+      showNotification("Error", e.message);
     } finally {
       setIsLoading(false);
     }
@@ -561,7 +562,7 @@ function ReleasesHeading(props: ReleasesHeadingProps) {
                     setNotification(null);
                   }}
                   disabled={
-                    !isTrackNameFilled || phasingPercentageError || isLoading
+                    !isTrackNameFilled || !!phasingPercentageError || isLoading
                   }
                 >
                   {isLoading ? (
