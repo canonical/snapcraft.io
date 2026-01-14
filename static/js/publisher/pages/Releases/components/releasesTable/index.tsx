@@ -58,7 +58,7 @@ interface ReleasesTableState {
 }
 
 class ReleasesTable extends Component<ReleasesTableProps, ReleasesTableState> {
-  constructor(props) {
+  constructor(props: ReleasesTableProps) {
     super(props);
 
     this.state = {
@@ -132,7 +132,7 @@ class ReleasesTable extends Component<ReleasesTableProps, ReleasesTableState> {
       <>
         {this.renderChannelRow(AVAILABLE)}
         {isHistoryOpen &&
-          filters.risk === AVAILABLE &&
+          filters?.risk === AVAILABLE &&
           this.renderHistoryPanel()}
       </>
     );
@@ -153,7 +153,7 @@ class ReleasesTable extends Component<ReleasesTableProps, ReleasesTableState> {
     const { showAllBuilds } = this.state;
 
     const revisions = this.props.allRevisions;
-    const revisionsMap = revisions.reduce((acc, item) => {
+    const revisionsMap: Record<string, Revision[]> = revisions.reduce((acc, item) => {
       const buildId = getBuildId(item);
       if (buildId) {
         if (!acc[buildId]) {
@@ -163,7 +163,7 @@ class ReleasesTable extends Component<ReleasesTableProps, ReleasesTableState> {
         acc[buildId].push(item);
       }
       return acc;
-    }, {});
+    }, {} as Record<string, Revision[]>);
 
     const builds = lpRevisions
       .map(getBuildId)
@@ -171,7 +171,7 @@ class ReleasesTable extends Component<ReleasesTableProps, ReleasesTableState> {
       .map((buildId) => {
         const revs = revisionsMap[buildId];
 
-        const revsMap = {};
+        const revsMap: Record<string, Revision> = {};
 
         revs.forEach((r) => {
           r.architectures.forEach((arch) => {
@@ -233,7 +233,17 @@ class ReleasesTable extends Component<ReleasesTableProps, ReleasesTableState> {
     const { showAllRisksBranches } = this.state;
 
     // rows can consist of a channel row or expanded history panel
-    const rows = [];
+    interface RowData {
+      risk: string;
+      branch?: string | null;
+    }
+    
+    interface Row {
+      data?: RowData;
+      node: React.ReactNode;
+    }
+    
+    const rows: Row[] = [];
 
     RISKS.forEach((risk) => {
       const risksBranches = branches.filter((branch) => branch.risk === risk);
@@ -290,17 +300,17 @@ class ReleasesTable extends Component<ReleasesTableProps, ReleasesTableState> {
     // if any channel is in current filters
     // inject history panel after that channel row
     if (isHistoryOpen && filters && filters.risk) {
-      const historyPanelRow = {
+      const historyPanelRow: Row = {
         node: this.renderHistoryPanel(),
       };
 
       const rowIndex = rows.findIndex((r) => {
-        if (filters.branch) {
+        if (filters.branch && r.data) {
           return (
             r.data.risk === filters.risk && r.data.branch === filters.branch
           );
         }
-        return r.data.risk === filters.risk;
+        return r.data?.risk === filters.risk;
       });
 
       if (rowIndex > -1) {
@@ -361,7 +371,7 @@ const mapStateToProps = (state: ReleasesReduxState): StateProps => {
 const mapDispatchToProps = (dispatch: DispatchFn): DispatchProps => {
   return {
     selectAvailableRevisions: (value) =>
-      dispatch(selectAvailableRevisions(value)),
+      dispatch(selectAvailableRevisions(value) as any),
     closeHistory: () => dispatch(closeHistory()),
   };
 };
