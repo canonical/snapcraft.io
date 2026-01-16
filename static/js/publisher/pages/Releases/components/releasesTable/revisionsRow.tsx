@@ -1,14 +1,31 @@
 import React from "react";
-import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
 import { getArchitectures } from "../../selectors";
 import { isSameVersion } from "../../helpers";
 import ReleasesTableRevisionCell from "./revisionCell";
 import ReleasesTableRow from "./row";
+import {
+  ReleasesReduxState,
+  CPUArchitecture,
+  ArchitectureRevisionsMap,
+} from "../../../../types/releaseTypes";
+
+interface OwnProps {
+  risk: string;
+  revisions?: ArchitectureRevisionsMap;
+  buildRequestId?: string;
+}
+
+interface StateProps {
+  currentTrack: string;
+  archs: CPUArchitecture[];
+}
+
+type ReleasesTableRevisionsRowProps = OwnProps & StateProps;
 
 // releases table row based on list of revisions (unrelated to channel map)
-const ReleasesTableRevisionsRow = (props) => {
+const ReleasesTableRevisionsRow = (props: ReleasesTableRevisionsRowProps) => {
   const { currentTrack, risk, revisions, archs, buildRequestId } = props;
   const showVersion = !isSameVersion(revisions);
 
@@ -21,7 +38,7 @@ const ReleasesTableRevisionsRow = (props) => {
         {buildRequestId}
       </p>
       <div className="p-releases-table__row--container">
-        <ReleasesTableRow risk={risk} revisions={revisions}>
+        <ReleasesTableRow risk={risk} revisions={revisions} canDrag={true}>
           {archs.map((arch) => {
             return (
               <ReleasesTableRevisionCell
@@ -38,18 +55,7 @@ const ReleasesTableRevisionsRow = (props) => {
   );
 };
 
-ReleasesTableRevisionsRow.propTypes = {
-  // props
-  risk: PropTypes.string.isRequired,
-  revisions: PropTypes.object,
-  buildRequestId: PropTypes.string,
-
-  // state
-  currentTrack: PropTypes.string.isRequired,
-  archs: PropTypes.array.isRequired,
-};
-
-const mapStateToProps = (state) => {
+const mapStateToProps = (state: ReleasesReduxState): StateProps => {
   return {
     currentTrack: state.currentTrack,
     archs: getArchitectures(state),

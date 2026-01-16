@@ -1,5 +1,4 @@
 import React from "react";
-import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
 import { getArchitectures, getPendingChannelMap } from "../../selectors";
@@ -7,9 +6,48 @@ import { isSameVersion, getChannelName } from "../../helpers";
 
 import ReleasesTableReleaseCell from "./releaseCell";
 import ReleasesTableRow from "./row";
+import {
+  ReleasesReduxState,
+  CPUArchitecture,
+  ChannelArchitectureRevisionsMap,
+  Channel,
+  Revision,
+} from "../../../../types/releaseTypes";
+
+// Type for branch object based on usage in the component
+interface Branch {
+  branch: string;
+}
+
+// Type for draggedItem based on usage in droppableRow.tsx
+interface DraggedItem {
+  revisions: Revision[];
+  architectures: CPUArchitecture[];
+  risk: string;
+  branch: string | null;
+  type: string;
+}
+
+interface OwnProps {
+  risk: string;
+  branch?: Branch;
+  // Props from DnD
+  isOverParent?: boolean;
+  draggedItem?: DraggedItem;
+  canDrop?: boolean;
+}
+
+interface StateProps {
+  currentTrack: string;
+  pendingCloses: Channel["name"][];
+  pendingChannelMap: ChannelArchitectureRevisionsMap;
+  archs: CPUArchitecture[];
+}
+
+type ReleasesTableChannelRowProps = OwnProps & StateProps;
 
 // releases table row based on channel data
-const ReleasesTableChannelRow = (props) => {
+const ReleasesTableChannelRow = (props: ReleasesTableChannelRowProps) => {
   const {
     currentTrack,
     risk,
@@ -53,6 +91,7 @@ const ReleasesTableChannelRow = (props) => {
             isOverParent={
               isOverParent &&
               canDrop &&
+              draggedItem &&
               draggedItem.architectures.indexOf(arch) !== -1
             }
           />
@@ -62,23 +101,7 @@ const ReleasesTableChannelRow = (props) => {
   );
 };
 
-ReleasesTableChannelRow.propTypes = {
-  // props
-  risk: PropTypes.string.isRequired,
-  branch: PropTypes.object,
-  // props dnd
-  isOverParent: PropTypes.bool,
-  draggedItem: PropTypes.object,
-  canDrop: PropTypes.bool,
-
-  // state
-  currentTrack: PropTypes.string.isRequired,
-  pendingCloses: PropTypes.array.isRequired,
-  pendingChannelMap: PropTypes.object,
-  archs: PropTypes.array,
-};
-
-const mapStateToProps = (state) => {
+const mapStateToProps = (state: ReleasesReduxState): StateProps => {
   return {
     currentTrack: state.currentTrack,
     pendingCloses: state.pendingCloses,
