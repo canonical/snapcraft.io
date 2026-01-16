@@ -1,6 +1,5 @@
 /* eslint-disable */
-import React, { Component } from "react";
-import PropTypes from "prop-types";
+import React, { Component, ReactNode } from "react";
 import { connect } from "react-redux";
 
 import Notification from "./notification";
@@ -12,6 +11,15 @@ import {
   AVAILABLE_REVISIONS_SELECT_ALL,
 } from "../constants";
 import { getBuildId, getChannelName, isInDevmode } from "../helpers";
+import type {
+  Revision,
+  ReleasesReduxState,
+  DispatchFn,
+  AvailableRevisionsSelect,
+  PendingReleaseItem,
+  CPUArchitecture,
+  Channel,
+} from "../../../types/releaseTypes";
 
 import RevisionsListRow from "./revisionsListRow";
 import { closeHistory } from "../actions/history";
@@ -29,26 +37,61 @@ import {
 } from "../selectors";
 import { relative } from "@sentry/utils";
 
-class RevisionsList extends Component {
-  constructor() {
-    super();
+interface RevisionsListFilters {
+  arch?: CPUArchitecture;
+  risk?: string;
+  track?: string;
+  branch?: string | null;
+}
+
+interface RevisionsListProps {
+  // state
+  revisions: { [revision: string]: Revision };
+  filters: RevisionsListFilters | null;
+  pendingReleases: { [revision: string]: { [channel: string]: PendingReleaseItem } };
+  availableRevisionsSelect: AvailableRevisionsSelect;
+
+  // computed state (selectors)
+  showChannels?: boolean;
+  filteredReleaseHistory: Revision[];
+  selectedRevisions: number[];
+  selectedArchitectures: CPUArchitecture[];
+  filteredAvailableRevisions: Revision[];
+  getSelectedRevision: (arch: CPUArchitecture) => Revision | undefined;
+  getFilteredAvailableRevisionsForArch: (arch: CPUArchitecture) => Revision[];
+  pendingChannelMap: { [channel: string]: { [arch: string]: Revision } };
+  isProgressiveReleaseEnabled?: boolean;
+  getPendingRelease: (channel: Channel["name"], arch: CPUArchitecture) => PendingReleaseItem | null;
+
+  // actions
+  closeHistoryPanel: () => void;
+  toggleRevision: (revision: Revision) => void;
+}
+
+interface RevisionsListState {
+  [key: string]: boolean | undefined;
+}
+
+class RevisionsList extends Component<RevisionsListProps, RevisionsListState> {
+  constructor(props: RevisionsListProps) {
+    super(props);
 
     this.state = {};
   }
 
-  selectVersionClick(revisions) {
+  selectVersionClick(revisions: Revision[]) {
     revisions.forEach((revision) => this.props.toggleRevision(revision));
   }
 
   renderRow(
-    revision,
-    releasedRevision,
-    isSelectable,
-    showChannels,
-    isPending,
-    isActive,
-    showBuildRequest,
-    progressiveBeingCancelled,
+    revision: Revision,
+    releasedRevision: Revision | null,
+    isSelectable: boolean,
+    showChannels: boolean,
+    isPending: boolean,
+    isActive: boolean,
+    showBuildRequest: boolean,
+    progressiveBeingCancelled: boolean,
   ) {
     const rowKey = `revision-row-${revision.revision}-${
       revision.release ? revision.release.channel : new Date().getTime()
@@ -73,7 +116,7 @@ class RevisionsList extends Component {
   }
 
   // Moves the active revision to the top of the list
-  getSortedRevisions(activeRevision, revisions) {
+  getSortedRevisions(activeRevision: Revision | undefined, revisions: Revision[]) {
     const activeRevisionIndex = revisions.findIndex(
       (revision) =>
         activeRevision && revision.revision === activeRevision.revision,
@@ -87,12 +130,12 @@ class RevisionsList extends Component {
   }
 
   renderRows(
-    revisions,
-    isSelectable,
-    showChannels,
-    activeRevision,
-    showBuildRequest,
-    progressiveReleaseBeingCancelled,
+    revisions: Revision[],
+    isSelectable: boolean,
+    showChannels: boolean,
+    activeRevision: Revision | undefined,
+    showBuildRequest: boolean,
+    progressiveReleaseBeingCancelled: PendingReleaseItem | null,
   ) {
     const sortedRevisions = this.getSortedRevisions(activeRevision, revisions);
 
@@ -124,12 +167,12 @@ class RevisionsList extends Component {
     });
   }
 
-  onCloseClick(event) {
+  onCloseClick(event: React.MouseEvent<HTMLAnchorElement>) {
     event.preventDefault();
     this.props.closeHistoryPanel();
   }
 
-  showAllRevisions(key) {
+  showAllRevisions(key: string) {
     this.setState({
       [key]: true,
     });
@@ -446,31 +489,7 @@ class RevisionsList extends Component {
   }
 }
 
-RevisionsList.propTypes = {
-  // state
-  revisions: PropTypes.object.isRequired,
-  filters: PropTypes.object,
-  pendingReleases: PropTypes.object.isRequired,
-  availableRevisionsSelect: PropTypes.string.isRequired,
-
-  // computed state (selectors)
-  showChannels: PropTypes.bool,
-  filteredReleaseHistory: PropTypes.array,
-  selectedRevisions: PropTypes.array.isRequired,
-  selectedArchitectures: PropTypes.array.isRequired,
-  filteredAvailableRevisions: PropTypes.array.isRequired,
-  getSelectedRevision: PropTypes.func.isRequired,
-  getFilteredAvailableRevisionsForArch: PropTypes.func.isRequired,
-  pendingChannelMap: PropTypes.object,
-  isProgressiveReleaseEnabled: PropTypes.bool,
-  getPendingRelease: PropTypes.func.isRequired,
-
-  // actions
-  closeHistoryPanel: PropTypes.func.isRequired,
-  toggleRevision: PropTypes.func.isRequired,
-};
-
-const mapStateToProps = (state) => {
+const mapStateToProps = (state: ReleasesReduxState) => {
   return {
     availableRevisionsSelect: state.availableRevisionsSelect,
     showChannels:
@@ -483,22 +502,22 @@ const mapStateToProps = (state) => {
     pendingReleases: state.pendingReleases,
     pendingChannelMap: getPendingChannelMap(state),
     selectedRevisions: getSelectedRevisions(state),
-    getSelectedRevision: (arch) => getSelectedRevision(state, arch),
+    getSelectedRevision: (arch: CPUArchitecture) => getSelectedRevision(state, arch),
     filteredReleaseHistory: getFilteredReleaseHistory(state),
     selectedArchitectures: getSelectedArchitectures(state),
     filteredAvailableRevisions: getFilteredAvailableRevisions(state),
-    getFilteredAvailableRevisionsForArch: (arch) =>
+    getFilteredAvailableRevisionsForArch: (arch: CPUArchitecture) =>
       getFilteredAvailableRevisionsForArch(state, arch),
     isProgressiveReleaseEnabled: isProgressiveReleaseEnabled(state),
-    getPendingRelease: (channel, arch) =>
+    getPendingRelease: (channel: Channel["name"], arch: CPUArchitecture) =>
       getPendingRelease(state, channel, arch),
   };
 };
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = (dispatch: DispatchFn) => {
   return {
     closeHistoryPanel: () => dispatch(closeHistory()),
-    toggleRevision: (revision) => dispatch(toggleRevision(revision)),
+    toggleRevision: (revision: Revision) => dispatch(toggleRevision(revision)),
   };
 };
 

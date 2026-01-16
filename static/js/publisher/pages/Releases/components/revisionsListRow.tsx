@@ -1,6 +1,5 @@
 /* eslint-disable */
 import React from "react";
-import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
 import { format } from "date-fns";
@@ -8,6 +7,7 @@ import { format } from "date-fns";
 import { canBeReleased } from "../helpers";
 import { getChannelString } from "../../../../libs/channels.js";
 import { toggleRevision } from "../actions/channelMap";
+import type { Revision, ReleasesReduxState, DispatchFn } from "../../../types/releaseTypes";
 
 import {
   getSelectedRevisions,
@@ -17,7 +17,26 @@ import {
 import RevisionLabel from "./revisionLabel";
 import ProgressiveReleaseProgressChart from "./ProgressiveReleaseProgressChart";
 
-const RevisionsListRow = (props) => {
+interface RevisionsListRowProps {
+  // props
+  revision: Revision;
+  releasedRevision?: Revision | null;
+  isSelectable?: boolean;
+  showChannels?: boolean;
+  isPending?: boolean;
+  isActive?: boolean;
+  showBuildRequest: boolean;
+  progressiveBeingCancelled?: boolean;
+
+  // computed state (selectors)
+  selectedRevisions: number[];
+  isProgressiveReleaseEnabled?: boolean;
+
+  // actions
+  toggleRevision: (revision: Revision) => void;
+}
+
+const RevisionsListRow = (props: RevisionsListRowProps) => {
   const {
     revision,
     releasedRevision,
@@ -44,7 +63,7 @@ const RevisionsListRow = (props) => {
   const isProgressive =
     (rowRelease?.isProgressive && isActive) || currentRelease?.isProgressive;
 
-  let channel;
+  let channel: string | undefined;
   if (revision.release) {
     channel = getChannelString(revision.release);
   }
@@ -155,35 +174,16 @@ const RevisionsListRow = (props) => {
   );
 };
 
-RevisionsListRow.propTypes = {
-  // props
-  revision: PropTypes.object.isRequired,
-  releasedRevision: PropTypes.object,
-  isSelectable: PropTypes.bool,
-  showChannels: PropTypes.bool,
-  isPending: PropTypes.bool,
-  isActive: PropTypes.bool,
-  showBuildRequest: PropTypes.bool.isRequired,
-  progressiveBeingCancelled: PropTypes.bool,
-
-  // computed state (selectors)
-  selectedRevisions: PropTypes.array.isRequired,
-  isProgressiveReleaseEnabled: PropTypes.bool,
-
-  // actions
-  toggleRevision: PropTypes.func.isRequired,
-};
-
-const mapStateToProps = (state) => {
+const mapStateToProps = (state: ReleasesReduxState) => {
   return {
     selectedRevisions: getSelectedRevisions(state),
     isProgressiveReleaseEnabled: isProgressiveReleaseEnabled(state),
   };
 };
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = (dispatch: DispatchFn) => {
   return {
-    toggleRevision: (revision) => dispatch(toggleRevision(revision)),
+    toggleRevision: (revision: Revision) => dispatch(toggleRevision(revision)),
   };
 };
 
