@@ -22,11 +22,19 @@ interface UpdatesProps {
   pendingCloses: Channel["name"][];
 }
 
-interface ReleasesConfirmDetailsProps {
+interface OwnProps {
   updates: UpdatesProps;
+}
+
+interface StateProps {
   isProgressiveReleaseEnabled?: boolean;
+}
+
+interface DispatchProps {
   updateProgressiveReleasePercentage?: (percentage: number) => void;
 }
+
+type ReleasesConfirmDetailsProps = OwnProps & StateProps & DispatchProps;
 
 const ReleasesConfirmDetails = ({
   updates,
@@ -132,11 +140,11 @@ const ReleasesConfirmDetails = ({
   );
 };
 
-const mapStateToProps = (state: ReleasesReduxState) => ({
+const mapStateToProps = (state: ReleasesReduxState): StateProps => ({
   isProgressiveReleaseEnabled: isProgressiveReleaseEnabled(state),
 });
 
-const mapDispatchToProps = (dispatch: DispatchFn) => {
+const mapDispatchToProps = (dispatch: DispatchFn): DispatchProps => {
   return {
     updateProgressiveReleasePercentage: (percentage: number) =>
       dispatch(updateProgressiveReleasePercentage(percentage)),

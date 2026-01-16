@@ -44,14 +44,15 @@ interface RevisionsListFilters {
   branch?: string | null;
 }
 
-interface RevisionsListProps {
-  // state
+interface OwnProps {
+  // No own props - all props come from Redux
+}
+
+interface StateProps {
   revisions: { [revision: string]: Revision };
   filters: RevisionsListFilters | null;
   pendingReleases: { [revision: string]: { [channel: string]: PendingReleaseItem } };
   availableRevisionsSelect: AvailableRevisionsSelect;
-
-  // computed state (selectors)
   showChannels?: boolean;
   filteredReleaseHistory: Revision[];
   selectedRevisions: number[];
@@ -62,11 +63,14 @@ interface RevisionsListProps {
   pendingChannelMap: { [channel: string]: { [arch: string]: Revision } };
   isProgressiveReleaseEnabled?: boolean;
   getPendingRelease: (channel: Channel["name"], arch: CPUArchitecture) => PendingReleaseItem | null;
+}
 
-  // actions
+interface DispatchProps {
   closeHistoryPanel: () => void;
   toggleRevision: (revision: Revision) => void;
 }
+
+type RevisionsListProps = OwnProps & StateProps & DispatchProps;
 
 interface RevisionsListState {
   [key: string]: boolean | undefined;
@@ -489,7 +493,7 @@ class RevisionsList extends Component<RevisionsListProps, RevisionsListState> {
   }
 }
 
-const mapStateToProps = (state: ReleasesReduxState) => {
+const mapStateToProps = (state: ReleasesReduxState): StateProps => {
   return {
     availableRevisionsSelect: state.availableRevisionsSelect,
     showChannels:
@@ -514,7 +518,7 @@ const mapStateToProps = (state: ReleasesReduxState) => {
   };
 };
 
-const mapDispatchToProps = (dispatch: DispatchFn) => {
+const mapDispatchToProps = (dispatch: DispatchFn): DispatchProps => {
   return {
     closeHistoryPanel: () => dispatch(closeHistory()),
     toggleRevision: (revision: Revision) => dispatch(toggleRevision(revision)),

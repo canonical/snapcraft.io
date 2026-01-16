@@ -17,8 +17,7 @@ import {
 import RevisionLabel from "./revisionLabel";
 import ProgressiveReleaseProgressChart from "./ProgressiveReleaseProgressChart";
 
-interface RevisionsListRowProps {
-  // props
+interface OwnProps {
   revision: Revision;
   releasedRevision?: Revision | null;
   isSelectable?: boolean;
@@ -27,14 +26,18 @@ interface RevisionsListRowProps {
   isActive?: boolean;
   showBuildRequest: boolean;
   progressiveBeingCancelled?: boolean;
+}
 
-  // computed state (selectors)
+interface StateProps {
   selectedRevisions: number[];
   isProgressiveReleaseEnabled?: boolean;
+}
 
-  // actions
+interface DispatchProps {
   toggleRevision: (revision: Revision) => void;
 }
+
+type RevisionsListRowProps = OwnProps & StateProps & DispatchProps;
 
 const RevisionsListRow = (props: RevisionsListRowProps) => {
   const {
@@ -174,14 +177,14 @@ const RevisionsListRow = (props: RevisionsListRowProps) => {
   );
 };
 
-const mapStateToProps = (state: ReleasesReduxState) => {
+const mapStateToProps = (state: ReleasesReduxState): StateProps => {
   return {
     selectedRevisions: getSelectedRevisions(state),
     isProgressiveReleaseEnabled: isProgressiveReleaseEnabled(state),
   };
 };
 
-const mapDispatchToProps = (dispatch: DispatchFn) => {
+const mapDispatchToProps = (dispatch: DispatchFn): DispatchProps => {
   return {
     toggleRevision: (revision: Revision) => dispatch(toggleRevision(revision)),
   };
