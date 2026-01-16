@@ -1,15 +1,8 @@
 import {
-  GenericReleasesAction,
   ReleasesReduxState,
 } from "../../../types/releaseTypes";
-import { UPDATE_FAILED_REVISIONS } from "../actions/failedRevisions";
+import { FailedRevisionsAction, UPDATE_FAILED_REVISIONS } from "../actions/failedRevisions";
 
-export type UpdateFailedRevisionsAction = GenericReleasesAction<
-  typeof UPDATE_FAILED_REVISIONS,
-  { failedRevisions: ReleasesReduxState["failedRevisions"] }
->;
-
-export type FailedRevisionsAction = UpdateFailedRevisionsAction;
 
 export default function failedRevisions(
   state: ReleasesReduxState["failedRevisions"] = [],
