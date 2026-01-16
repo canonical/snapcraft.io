@@ -1,13 +1,19 @@
 import React from "react";
-import PropTypes from "prop-types";
 
 import { DND_ITEM_REVISIONS } from "../dnd";
 
 import { canBeReleased } from "../../helpers";
 import { ReleasesTableCellView, RevisionInfo, EmptyInfo } from "./cellViews";
+import { Revision, CPUArchitecture } from "../../../../types/releaseTypes";
+
+interface ReleasesTableRevisionCellProps {
+  revision?: Revision | null;
+  showVersion?: boolean; // Not used in the component logic, only in propTypes
+  arch: CPUArchitecture;
+}
 
 // releases table cell with data for a specific revision (unrelated to channel map)
-const ReleasesTableRevisionCell = (props) => {
+const ReleasesTableRevisionCell = (props: ReleasesTableRevisionCellProps) => {
   const { revision, arch } = props;
 
   const item = {
@@ -26,12 +32,6 @@ const ReleasesTableRevisionCell = (props) => {
       {revision ? <RevisionInfo revision={revision} /> : <EmptyInfo />}
     </ReleasesTableCellView>
   );
-};
-
-ReleasesTableRevisionCell.propTypes = {
-  revision: PropTypes.object,
-  showVersion: PropTypes.bool,
-  arch: PropTypes.string,
 };
 
 export default ReleasesTableRevisionCell;
