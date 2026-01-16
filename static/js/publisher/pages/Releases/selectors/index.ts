@@ -13,10 +13,12 @@ import {
   CPUArchitecture,
   LaunchpadBuildRevision,
   PendingReleaseItem,
+  Progressive,
   ProgressiveChanges,
   ProgressiveMutated,
   Release,
   ReleasesReduxState,
+  Revision,
 } from "../../../types/releaseTypes";
 
 // returns true if isProgressiveReleaseEnabled feature flag is enabled
@@ -198,12 +200,15 @@ export function getTracks(state: ReleasesReduxState) {
   return sortAlphaNum([...new Set(tracks)], "latest");
 }
 
+export type Branch = Pick<
+  Release,
+  "track" | "risk" | "branch" | "when" | "revision"
+> & {
+  expiration: string;
+};
+
 export function getBranches(state: ReleasesReduxState) {
-  const branches: Array<
-    Pick<Release, "track" | "risk" | "branch" | "when" | "revision"> & {
-      expiration: string;
-    }
-  > = [];
+  const branches: Branch[] = [];
   const { currentTrack, releases } = state;
 
   const now = Date.now();
@@ -279,7 +284,9 @@ export function hasBuildRequestId(state: ReleasesReduxState) {
 
 // return revisions built by launchpad
 export function getLaunchpadRevisions(state: ReleasesReduxState) {
-  return getAllRevisions(state).filter(isRevisionBuiltOnLauchpad) as LaunchpadBuildRevision[];
+  return getAllRevisions(state).filter(
+    isRevisionBuiltOnLauchpad
+  ) as LaunchpadBuildRevision[];
 }
 
 export function getRevisionsFromBuild(
@@ -291,6 +298,12 @@ export function getRevisionsFromBuild(
   );
 }
 
+type PreviousRevisionState = Partial<
+  Pick<Revision, "attributes" | "confinement" | "releases" | "revision" | "version">
+>;
+
+export type ProgressiveState = [PreviousRevisionState | null, Progressive | null];
+
 // return an array of 2 items:
 // [
 //    the previous revision number,
@@ -301,15 +314,15 @@ export function getProgressiveState(
   channel: string,
   arch: CPUArchitecture,
   isPending: boolean
-) {
+): ProgressiveState {
   if (!isProgressiveReleaseEnabled(state)) {
-    return [null, null, null]; // TODO: "return an array of 2 items", so why are we returning 3 nulls then?
+    return [null, null];
   }
 
   const { releases, pendingReleases, revisions } = state;
 
-  let previousRevision = null;
-  let pendingProgressiveStatus = null;
+  let previousRevision: PreviousRevisionState | null = null;
+  let pendingProgressiveStatus: Progressive | null = null;
 
   const allReleases = releases.filter(
     (item) => channel === getChannelString(item) && arch === item.architecture
@@ -326,7 +339,7 @@ export function getProgressiveState(
       // that is not the current release.
       previousRevision = allReleases.find(
         (r) => r.revision !== release.revision
-      );
+      ) as PreviousRevisionState;
 
       if (previousRevision && previousRevision.revision) {
         previousRevision = revisions[previousRevision.revision];
@@ -388,7 +401,8 @@ export function getSeparatePendingReleases(state: ReleasesReduxState) {
   const progressiveUpdates: { [key: string]: PendingReleaseItem } = {};
   const newReleases: { [key: string]: PendingReleaseItem } = {};
   const newReleasesToProgress: { [key: string]: PendingReleaseItem } = {};
-  const cancelProgressive: { [key: string]: PendingReleaseItem["replaces"] } = {};
+  const cancelProgressive: { [key: string]: PendingReleaseItem["replaces"] } =
+    {};
 
   Object.keys(pendingReleases).forEach((revId) => {
     Object.keys(pendingReleases[revId]).forEach((channel) => {

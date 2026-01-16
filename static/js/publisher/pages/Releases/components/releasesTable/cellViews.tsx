@@ -1,5 +1,4 @@
 import React, { Fragment } from "react";
-import PropTypes from "prop-types";
 
 import RevisionLabel from "../revisionLabel";
 import ContextualMenu from "../contextualMenu";
@@ -12,9 +11,10 @@ import {
 } from "../../helpers";
 import { useDragging, Handle } from "../dnd";
 
-import { promoteRevision } from "../../actions/pendingReleases";
-
 import ReleaseMenuItem from "./releaseMenuItem";
+import { Revision, CPUArchitecture } from "../../../../types/releaseTypes";
+import { DraggedItem } from "./types";
+import { ProgressiveState } from "../../selectors";
 
 // content of a cell when channel is closed
 export const CloseChannelInfo = () => (
@@ -24,33 +24,37 @@ export const CloseChannelInfo = () => (
   </Fragment>
 );
 
+interface UnassignedInfoProps {
+  availableCount?: number;
+}
+
 // content of an empty cell in 'Available' row (when nothing was assigned)
-export const UnassignedInfo = ({ availableCount }) => (
+export const UnassignedInfo = ({ availableCount }: UnassignedInfoProps) => (
   <span className="p-release-data__info">
     <span className="p-release-data__title">Add revision</span>
     <span className="p-release-data__meta">{availableCount} available</span>
   </span>
 );
 
-UnassignedInfo.propTypes = {
-  availableCount: PropTypes.number,
-};
-
 export const FailedInfo = () => {
   return (
     <Fragment>
       <span className="p-release-data__info--error">
-        <i class="p-icon--error"></i>
+        <i className="p-icon--error"></i>
         <span className="p-release-data__info--error-text">
           An error occurred
         </span>
       </span>
     </Fragment>
   );
+};
+
+interface EmptyInfoProps {
+  trackingChannel?: string | null;
 }
 
 // content of empty cell in channel row (nothing released or tracking channel)
-export const EmptyInfo = ({ trackingChannel }) => {
+export const EmptyInfo = ({ trackingChannel }: EmptyInfoProps) => {
   const trackingChannelSplit = trackingChannel
     ? trackingChannel.split("/")
     : null;
@@ -58,11 +62,13 @@ export const EmptyInfo = ({ trackingChannel }) => {
   return (
     <Fragment>
       <span className="p-release-data__info--empty">
-        {trackingChannel ? (
+        {trackingChannelSplit ? (
           <small>
             Tracking {trackingChannelSplit[0]}/{trackingChannelSplit[1]}
           </small>
-        ) : "-"}
+        ) : (
+          "-"
+        )}
       </span>
 
       <span className="p-tooltip__message u-hide--small">
@@ -74,15 +80,19 @@ export const EmptyInfo = ({ trackingChannel }) => {
   );
 };
 
-EmptyInfo.propTypes = {
-  trackingChannel: PropTypes.string,
-};
+interface ProgressiveTooltipProps {
+  revision: Revision;
+  previousRevision?: ProgressiveState[0];
+}
 
-const ProgressiveTooltip = ({ revision, previousRevision }) => {
-  const { progressive } = revision?.releases?.[0];
+const ProgressiveTooltip = ({
+  revision,
+  previousRevision,
+}: ProgressiveTooltipProps) => {
+  const progressive = revision?.releases?.[0]?.progressive;
 
   if (!progressive) {
-    return;
+    return null;
   }
 
   const previousRevisionData = (
@@ -90,8 +100,8 @@ const ProgressiveTooltip = ({ revision, previousRevision }) => {
       <strong>{previousRevision?.revision || "Unknown"}</strong>
       <br />
       <strong>
-        {Math.round(100 - progressive["current-percentage"]) || 0}% →{" "}
-        {Math.round(100 - progressive.percentage)}%
+        {Math.round(100 - (progressive["current-percentage"] ?? 0)) || 0}% →{" "}
+        {Math.round(100 - (progressive.percentage ?? 0))}%
       </strong>
       <br />
       <strong>{previousRevision?.version || "Unknown"}</strong>
@@ -111,8 +121,8 @@ const ProgressiveTooltip = ({ revision, previousRevision }) => {
       <strong>{revision.revision} (progressive)</strong>
       <br />
       <strong>
-        {Math.round(progressive["current-percentage"]) || 0}% →{" "}
-        {Math.round(progressive.percentage)}%
+        {Math.round(progressive["current-percentage"] ?? 0) || 0}% →{" "}
+        {Math.round(progressive.percentage ?? 0)}%
       </strong>
       <br />
       <strong>{revision.version}</strong>
@@ -154,10 +164,13 @@ const ProgressiveTooltip = ({ revision, previousRevision }) => {
   );
 };
 
-ProgressiveTooltip.propTypes = {
-  revision: PropTypes.object,
-  previousRevision: PropTypes.object,
-};
+interface RevisionInfoProps {
+  revision: Revision;
+  isPending?: boolean;
+  previousRevision?: ProgressiveState[0];
+  risk?: string;
+  channel?: string;
+}
 
 // contents of a cell with a revision
 export const RevisionInfo = ({
@@ -166,7 +179,7 @@ export const RevisionInfo = ({
   previousRevision,
   risk,
   channel,
-}) => {
+}: RevisionInfoProps) => {
   let buildIcon = null;
 
   if (isRevisionBuiltOnLauchpad(revision)) {
@@ -175,7 +188,7 @@ export const RevisionInfo = ({
 
   const releasable = canBeReleased(revision);
 
-  const blockedMessage = (revision) => (
+  const blockedMessage = (revision: Revision) => (
     <Fragment>
       Can’t be released: <b>{revision.status}.</b>
       <br />
@@ -189,6 +202,7 @@ export const RevisionInfo = ({
   // This mimics what the snapcraft cli does as some fields may be
   // present even if a release is not progressive
   const isProgressive =
+    currentRelease &&
     currentRelease?.length > 0 &&
       currentRelease[0].isProgressive &&
       risk !== "AVAILABLE"
@@ -271,16 +285,19 @@ export const RevisionInfo = ({
   );
 };
 
-RevisionInfo.propTypes = {
-  revision: PropTypes.object,
-  isPending: PropTypes.bool,
-  previousRevision: PropTypes.object,
-  risk: PropTypes.string,
-  channel: PropTypes.string,
-};
+interface ReleasesTableCellViewProps {
+  item: DraggedItem;
+  canDrag: boolean;
+  className?: string;
+  children?: React.ReactNode;
+  actions?: React.ReactNode;
+  cellType?: string;
+  current?: string;
+  arch?: CPUArchitecture;
+}
 
 // generic draggable view of releases table cell
-export const ReleasesTableCellView = (props) => {
+export const ReleasesTableCellView = (props: ReleasesTableCellViewProps) => {
   const { item, canDrag, children, actions, cellType, current, arch } = props;
 
   const [isDragging, isGrabbing, drag] = useDragging({
@@ -295,7 +312,7 @@ export const ReleasesTableCellView = (props) => {
     canDrag ? "is-draggable" : "",
   ].join(" ");
 
-  const className = `${classNames} ${props.className}`;
+  const className = `${classNames} ${props.className || ""}`;
 
   return (
     <div
@@ -332,11 +349,8 @@ export const ReleasesTableCellView = (props) => {
                   return (
                     <ReleaseMenuItem
                       key={risk}
-                      currentTrack={risk}
                       risk={risk}
-                      pendingChannelMap={RISKS_WITH_AVAILABLE}
                       item={item}
-                      promoteRevision={promoteRevision}
                       current={current}
                     />
                   );
@@ -350,15 +364,4 @@ export const ReleasesTableCellView = (props) => {
       {actions}
     </div>
   );
-};
-
-ReleasesTableCellView.propTypes = {
-  item: PropTypes.object,
-  canDrag: PropTypes.bool,
-  className: PropTypes.string,
-  children: PropTypes.node,
-  actions: PropTypes.node,
-  cellType: PropTypes.string,
-  current: PropTypes.string,
-  arch: PropTypes.string,
 };

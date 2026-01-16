@@ -1,7 +1,6 @@
-import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
-import { getPendingChannelMap } from "../../selectors";
+import { Branch, getPendingChannelMap } from "../../selectors";
 import { useDrop, DND_ITEM_REVISIONS } from "../dnd";
 
 import { promoteRevision } from "../../actions/pendingReleases";
@@ -17,16 +16,40 @@ import {
 } from "../../helpers";
 
 import ReleasesTableChannelRow from "./channelRow";
+import {
+  ReleasesReduxState,
+  DispatchFn,
+  Revision,
+  ChannelArchitectureRevisionsMap,
+} from "../../../../types/releaseTypes";
+import { DraggedItem } from "./types";
+
+interface OwnProps {
+  risk: string;
+  branch?: Branch;
+}
+
+interface StateProps {
+  currentTrack: string;
+  pendingChannelMap: ChannelArchitectureRevisionsMap;
+}
+
+interface DispatchProps {
+  promoteRevision: (revision: Revision, targetChannel: string) => void;
+  triggerGAEvent: (...eventProps: Parameters<typeof triggerGAEvent>) => void;
+}
+
+type ReleasesTableDroppableRowProps = OwnProps & StateProps & DispatchProps;
 
 const getRevisionsToDrop = (
-  revisions: any[],
+  revisions: Revision[],
   targetChannel: string,
-  channelMap: { [x: string]: any },
-) => {
+  channelMap: ChannelArchitectureRevisionsMap,
+): Revision[] => {
   const targetChannelArchs = channelMap[targetChannel];
 
   return revisions.filter((revision) => {
-    return revision.architectures.some((arch: string | number) => {
+    return revision.architectures.some((arch) => {
       // if nothing released to target channel in this arch
       if (!targetChannelArchs || !targetChannelArchs[arch]) {
         return true;
@@ -50,20 +73,11 @@ const getRevisionsToDrop = (
 };
 
 // releases table row with channel data that can be a drop target for revisions
-const ReleasesTableDroppableRow = (props: {
-  currentTrack: any;
-  risk: any;
-  branch: any;
-  revisions: any;
-  promoteRevision: any;
-  pendingChannelMap: any;
-  triggerGAEvent: typeof triggerGAEvent;
-}) => {
+const ReleasesTableDroppableRow = (props: ReleasesTableDroppableRowProps) => {
   const {
     currentTrack,
     risk,
     branch,
-    revisions,
     promoteRevision,
     pendingChannelMap,
     triggerGAEvent,
@@ -75,9 +89,9 @@ const ReleasesTableDroppableRow = (props: {
 
   const [{ isOver, canDrop, item }, drop] = useDrop({
     accept: DND_ITEM_REVISIONS,
-    drop: (item: any) => {
+    drop: (item: DraggedItem) => {
       item.revisions.forEach(
-        (r: { status: string }) =>
+        (r) =>
           canBeReleased(r) && promoteRevision(r, channel),
       );
 
@@ -97,7 +111,7 @@ const ReleasesTableDroppableRow = (props: {
         );
       }
     },
-    canDrop: (item) => {
+    canDrop: (item: DraggedItem) => {
       const draggedRevisions = item.revisions;
 
       const branchName = branch ? branch.branch : null;
@@ -159,7 +173,7 @@ const ReleasesTableDroppableRow = (props: {
 
   const versions = pendingChannelMap[channel];
 
-  const currentVersions: any[] = [];
+  const currentVersions: string[] = [];
 
   if (versions) {
     for (const [value] of Object.entries(versions)) {
@@ -198,8 +212,6 @@ const ReleasesTableDroppableRow = (props: {
           <ReleasesTableChannelRow
             risk={risk}
             branch={branch}
-            // @ts-ignore
-            revisions={revisions}
             isOverParent={isOver}
             draggedItem={item}
             canDrop={canDrop}
@@ -210,31 +222,16 @@ const ReleasesTableDroppableRow = (props: {
   );
 };
 
-ReleasesTableDroppableRow.propTypes = {
-  // props
-  risk: PropTypes.string.isRequired,
-  branch: PropTypes.object,
-  revisions: PropTypes.object,
-
-  // state
-  currentTrack: PropTypes.string.isRequired,
-  pendingChannelMap: PropTypes.object,
-
-  // actions
-  promoteRevision: PropTypes.func.isRequired,
-  triggerGAEvent: PropTypes.func.isRequired,
-};
-
-const mapStateToProps = (state: any) => {
+const mapStateToProps = (state: ReleasesReduxState): StateProps => {
   return {
     currentTrack: state.currentTrack,
     pendingChannelMap: getPendingChannelMap(state),
   };
 };
 
-const mapDispatchToProps = (dispatch: any) => {
+const mapDispatchToProps = (dispatch: DispatchFn): DispatchProps => {
   return {
-    promoteRevision: (revision: any, targetChannel: any) =>
+    promoteRevision: (revision: Revision, targetChannel: string) =>
       dispatch(promoteRevision(revision, targetChannel)),
     triggerGAEvent: (...eventProps: Parameters<typeof triggerGAEvent>) =>
       dispatch(triggerGAEvent(...eventProps)),

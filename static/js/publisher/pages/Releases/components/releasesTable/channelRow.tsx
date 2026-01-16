@@ -1,15 +1,38 @@
-import React from "react";
-import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
-import { getArchitectures, getPendingChannelMap } from "../../selectors";
-import { isSameVersion, getChannelName } from "../../helpers";
+import { Branch, getArchitectures, getPendingChannelMap } from "../../selectors";
+import { getChannelName } from "../../helpers";
 
 import ReleasesTableReleaseCell from "./releaseCell";
 import ReleasesTableRow from "./row";
+import {
+  ReleasesReduxState,
+  CPUArchitecture,
+  ChannelArchitectureRevisionsMap,
+  Channel,
+} from "../../../../types/releaseTypes";
+import { DraggedItem } from "./types";
+
+interface OwnProps {
+  risk: string;
+  branch?: Branch;
+  // Props from DnD
+  isOverParent?: boolean;
+  draggedItem?: DraggedItem;
+  canDrop?: boolean;
+}
+
+interface StateProps {
+  currentTrack: string;
+  pendingCloses: Channel["name"][];
+  pendingChannelMap: ChannelArchitectureRevisionsMap;
+  archs: CPUArchitecture[];
+}
+
+type ReleasesTableChannelRowProps = OwnProps & StateProps;
 
 // releases table row based on channel data
-const ReleasesTableChannelRow = (props) => {
+const ReleasesTableChannelRow = (props: ReleasesTableChannelRowProps) => {
   const {
     currentTrack,
     risk,
@@ -28,17 +51,12 @@ const ReleasesTableChannelRow = (props) => {
 
   const { canDrop, draggedItem, isOverParent } = props;
 
-  const showVersion = !isSameVersion(revisions);
-
   return (
     <ReleasesTableRow
       risk={risk}
       branch={branch}
       revisions={revisions}
       canDrag={canDrag}
-      isOverParent={isOverParent}
-      draggedItem={draggedItem}
-      canDrop={canDrop}
     >
       {archs.map((arch) => {
         return (
@@ -49,10 +67,10 @@ const ReleasesTableChannelRow = (props) => {
             risk={risk}
             branch={branch}
             arch={arch}
-            showVersion={showVersion}
             isOverParent={
               isOverParent &&
               canDrop &&
+              draggedItem &&
               draggedItem.architectures.indexOf(arch) !== -1
             }
           />
@@ -62,23 +80,7 @@ const ReleasesTableChannelRow = (props) => {
   );
 };
 
-ReleasesTableChannelRow.propTypes = {
-  // props
-  risk: PropTypes.string.isRequired,
-  branch: PropTypes.object,
-  // props dnd
-  isOverParent: PropTypes.bool,
-  draggedItem: PropTypes.object,
-  canDrop: PropTypes.bool,
-
-  // state
-  currentTrack: PropTypes.string.isRequired,
-  pendingCloses: PropTypes.array.isRequired,
-  pendingChannelMap: PropTypes.object,
-  archs: PropTypes.array,
-};
-
-const mapStateToProps = (state) => {
+const mapStateToProps = (state: ReleasesReduxState): StateProps => {
   return {
     currentTrack: state.currentTrack,
     pendingCloses: state.pendingCloses,
