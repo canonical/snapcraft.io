@@ -1,5 +1,12 @@
 import React from "react";
-import PropTypes from "prop-types";
+
+interface ReleasesConfirmActionsProps {
+  isCancelEnabled?: boolean;
+  cancelPendingReleases?: () => void;
+  isApplyEnabled?: boolean;
+  applyPendingReleases?: () => void;
+  isLoading?: boolean;
+}
 
 const ReleasesConfirmActions = ({
   isCancelEnabled,
@@ -7,7 +14,7 @@ const ReleasesConfirmActions = ({
   isApplyEnabled,
   applyPendingReleases,
   isLoading,
-}) => (
+}: ReleasesConfirmActionsProps) => (
   <div className="p-releases-confirm__buttons u-align--right">
     <button
       className="u-no-margin--bottom u-no-margin--right"
@@ -25,13 +32,5 @@ const ReleasesConfirmActions = ({
     </button>
   </div>
 );
-
-ReleasesConfirmActions.propTypes = {
-  isCancelEnabled: PropTypes.bool,
-  cancelPendingReleases: PropTypes.func,
-  isApplyEnabled: PropTypes.bool,
-  applyPendingReleases: PropTypes.func,
-  isLoading: PropTypes.bool,
-};
 
 export default ReleasesConfirmActions;

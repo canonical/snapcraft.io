@@ -1,9 +1,13 @@
 import React, { Fragment } from "react";
-import PropTypes from "prop-types";
+import type { Channel } from "../../../types/releaseTypes";
 
-const CloseChannelsRow = ({ channels }) => {
+interface CloseChannelsRowProps {
+  channels: Channel["name"][];
+}
+
+const CloseChannelsRow = ({ channels }: CloseChannelsRowProps) => {
   let group = Array.from(channels);
-  let last;
+  let last: string | undefined;
   if (channels.length > 1) {
     last = group.pop();
   }
@@ -13,9 +17,9 @@ const CloseChannelsRow = ({ channels }) => {
       <span>
         {group
           .map((channel) => <b key={channel}>{channel}</b>)
-          .reduce((acc, el) => {
+          .reduce<(JSX.Element | string)[]>((acc, el) => {
             return acc === null ? [el] : [...acc, ", ", el];
-          }, null)}
+          }, null as unknown as (JSX.Element | string)[])}
         {last ? (
           <Fragment>
             {" "}
@@ -27,10 +31,6 @@ const CloseChannelsRow = ({ channels }) => {
       </span>
     </div>
   );
-};
-
-CloseChannelsRow.propTypes = {
-  channels: PropTypes.array,
 };
 
 export default CloseChannelsRow;

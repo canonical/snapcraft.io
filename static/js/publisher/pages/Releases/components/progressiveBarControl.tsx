@@ -1,27 +1,38 @@
 import React from "react";
 import { connect } from "react-redux";
-import PropTypes from "prop-types";
 
 import { updateProgressiveReleasePercentage } from "../actions/pendingReleases";
+import type { PendingReleaseItem, DispatchFn } from "../../../types/releaseTypes";
+import type { ProgressiveType } from "./releasesConfirmDetails/types";
 
 import progressiveTypes from "./releasesConfirmDetails/types";
 
 import { InteractiveProgressiveBar } from "./progressiveBar";
-class ProgressiveBarControl extends React.Component {
-  constructor(props) {
+
+interface ProgressiveBarControlProps {
+  release: PendingReleaseItem;
+  type?: ProgressiveType;
+  globalPercentage?: number;
+  updateGlobalPercentage?: (percentage: number) => void;
+  updateProgressiveReleasePercentage?: (percentage: number) => void;
+  minPercentage?: number;
+}
+
+class ProgressiveBarControl extends React.Component<ProgressiveBarControlProps> {
+  constructor(props: ProgressiveBarControlProps) {
     super(props);
 
     this.onChangeHandler = this.onChangeHandler.bind(this);
   }
 
-  onChangeHandler(percentage) {
+  onChangeHandler(percentage: number) {
     const { updateProgressiveReleasePercentage, updateGlobalPercentage } =
       this.props;
 
     if (updateGlobalPercentage) {
       updateGlobalPercentage(percentage);
     }
-    updateProgressiveReleasePercentage(percentage);
+    updateProgressiveReleasePercentage?.(percentage);
   }
 
   render() {
@@ -99,18 +110,9 @@ class ProgressiveBarControl extends React.Component {
   }
 }
 
-ProgressiveBarControl.propTypes = {
-  release: PropTypes.object,
-  type: PropTypes.string,
-  globalPercentage: PropTypes.number,
-  updateGlobalPercentage: PropTypes.func,
-  updateProgressiveReleasePercentage: PropTypes.func,
-  minPercentage: PropTypes.number,
-};
-
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = (dispatch: DispatchFn) => {
   return {
-    updateProgressiveReleasePercentage: (percentage) =>
+    updateProgressiveReleasePercentage: (percentage: number) =>
       dispatch(updateProgressiveReleasePercentage(percentage)),
   };
 };

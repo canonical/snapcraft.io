@@ -1,5 +1,12 @@
 import React from "react";
-import PropTypes from "prop-types";
+
+interface ProgressiveBarProps {
+  percentage?: number;
+  targetPercentage?: number;
+  readonly?: boolean;
+  disabled?: boolean;
+  minPercentage?: number;
+}
 
 const ProgressiveBar = ({
   percentage,
@@ -7,7 +14,7 @@ const ProgressiveBar = ({
   readonly = true,
   disabled,
   minPercentage = 0,
-}) => {
+}: ProgressiveBarProps) => {
   let current = percentage;
 
   // If the target can move below the current percentage
@@ -61,23 +68,36 @@ const ProgressiveBar = ({
   );
 };
 
-ProgressiveBar.propTypes = {
-  percentage: PropTypes.number,
-  targetPercentage: PropTypes.number,
-  readonly: PropTypes.bool,
-  disabled: PropTypes.bool,
-  minPercentage: PropTypes.number,
-};
+interface InteractiveProgressiveBarProps {
+  percentage?: number;
+  singleDirection?: number;
+  onChange?: (percentage: number) => void;
+  targetPercentage?: number;
+  disabled?: boolean;
+  minPercentage?: number;
+}
 
-class InteractiveProgressiveBar extends React.Component {
-  constructor(props) {
+interface InteractiveProgressiveBarState {
+  current: number;
+  scrubTarget: number;
+  scrubStart: number | null;
+  mousePosition: number;
+}
+
+class InteractiveProgressiveBar extends React.Component<
+  InteractiveProgressiveBarProps,
+  InteractiveProgressiveBarState
+> {
+  barHolder: React.RefObject<HTMLDivElement>;
+
+  constructor(props: InteractiveProgressiveBarProps) {
     super(props);
 
     this.barHolder = React.createRef();
 
     this.state = {
-      current: props.percentage,
-      scrubTarget: props.targetPercentage || props.percentage,
+      current: props.percentage || 0,
+      scrubTarget: props.targetPercentage || props.percentage || 0,
       scrubStart: null,
       mousePosition: 0,
     };
@@ -97,10 +117,13 @@ class InteractiveProgressiveBar extends React.Component {
 
   // Ensure that if the targetPercentage is changed,
   // it overrides the scrubTarget state
-  static getDerivedStateFromProps(props, state) {
+  static getDerivedStateFromProps(
+    props: InteractiveProgressiveBarProps,
+    state: InteractiveProgressiveBarState
+  ): InteractiveProgressiveBarState {
     const newState = { ...state };
     if (props.targetPercentage !== state.scrubTarget) {
-      newState.scrubTarget = props.targetPercentage;
+      newState.scrubTarget = props.targetPercentage || 0;
     }
 
     return newState;
@@ -109,7 +132,7 @@ class InteractiveProgressiveBar extends React.Component {
   // This is here because of https://github.com/facebook/react/issues/6436
   componentDidMount() {
     const { disabled } = this.props;
-    if (!disabled) {
+    if (!disabled && this.barHolder.current) {
       this.barHolder.current.addEventListener("wheel", this.onWheelHandler);
     }
   }
@@ -117,10 +140,12 @@ class InteractiveProgressiveBar extends React.Component {
   componentWillUnmount() {
     window.removeEventListener("mouseup", this.onMouseUpHandler);
     window.removeEventListener("mousemove", this.onMouseMoveHandler);
-    this.barHolder.current.removeEventListener("wheel", this.onWheelHandler);
+    if (this.barHolder.current) {
+      this.barHolder.current.removeEventListener("wheel", this.onWheelHandler);
+    }
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps: InteractiveProgressiveBarProps) {
     const { disabled: prevDisabled } = prevProps;
     const { disabled: nextDisabled } = this.props;
 
@@ -136,7 +161,7 @@ class InteractiveProgressiveBar extends React.Component {
     }
   }
 
-  scrubTo(target) {
+  scrubTo(target: number) {
     const { current } = this.state;
     const { singleDirection, onChange, minPercentage } = this.props;
 
@@ -180,16 +205,20 @@ class InteractiveProgressiveBar extends React.Component {
     }
   }
 
-  onMouseDownHandler(e) {
+  onMouseDownHandler(e: React.MouseEvent<HTMLDivElement>) {
     this.setState({
       mousePosition: e.clientX,
       scrubStart: this.state.scrubTarget,
     });
   }
 
-  onMouseMoveHandler(e) {
+  onMouseMoveHandler(e: MouseEvent) {
     const { mousePosition, scrubStart } = this.state;
     if (!scrubStart) {
+      return;
+    }
+
+    if (!this.barHolder.current) {
       return;
     }
 
@@ -210,7 +239,7 @@ class InteractiveProgressiveBar extends React.Component {
     });
   }
 
-  onWheelHandler(e) {
+  onWheelHandler(e: WheelEvent) {
     const { disabled } = this.props;
     if (disabled) {
       return;
@@ -253,14 +282,5 @@ class InteractiveProgressiveBar extends React.Component {
     );
   }
 }
-
-InteractiveProgressiveBar.propTypes = {
-  percentage: PropTypes.number,
-  singleDirection: PropTypes.number,
-  onChange: PropTypes.func,
-  targetPercentage: PropTypes.number,
-  disabled: PropTypes.bool,
-  minPercentage: PropTypes.number,
-};
 
 export { ProgressiveBar, InteractiveProgressiveBar };

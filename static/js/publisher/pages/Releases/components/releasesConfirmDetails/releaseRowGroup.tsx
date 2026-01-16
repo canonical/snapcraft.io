@@ -1,9 +1,13 @@
-import PropTypes from "prop-types";
+import type { PendingReleaseItem } from "../../../types/releaseTypes";
 
 import progressiveTypes from "./types";
 import ReleaseRow from "./releaseRow";
 
-const ReleaseRowGroup = ({ releases }) => {
+interface ReleaseRowGroupProps {
+  releases: { [key: string]: PendingReleaseItem };
+}
+
+const ReleaseRowGroup = ({ releases }: ReleaseRowGroupProps) => {
   return (
     <div className="p-release-details-group">
       {Object.keys(releases).map((releaseKey) => {
@@ -18,10 +22,6 @@ const ReleaseRowGroup = ({ releases }) => {
       })}
     </div>
   );
-};
-
-ReleaseRowGroup.propTypes = {
-  releases: PropTypes.object,
 };
 
 export default ReleaseRowGroup;
