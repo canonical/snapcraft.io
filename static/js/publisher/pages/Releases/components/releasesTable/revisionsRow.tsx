@@ -13,7 +13,7 @@ import {
 
 interface OwnProps {
   risk: string;
-  revisions?: ArchitectureRevisionsMap;
+  revisions: ArchitectureRevisionsMap;
   buildRequestId?: string;
 }
 

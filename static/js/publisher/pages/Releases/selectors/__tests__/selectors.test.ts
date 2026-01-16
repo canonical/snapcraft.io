@@ -947,7 +947,7 @@ describe("getProgressiveState", () => {
         "arch2",
         false
       )
-    ).toEqual([null, null, null]);
+    ).toEqual([null, null]);
   });
 });
 

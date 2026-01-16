@@ -15,6 +15,7 @@ import {
   getFilteredAvailableRevisionsForArch,
   getProgressiveState,
   hasPendingRelease,
+  Branch,
 } from "../../selectors";
 
 import {
@@ -35,11 +36,6 @@ import {
   Revision,
   FailedRevision,
 } from "../../../../types/releaseTypes";
-
-// Type for branch object based on usage in the component
-interface Branch {
-  branch: string;
-}
 
 interface OwnProps {
   track: string;
@@ -62,11 +58,10 @@ interface StateProps {
   getProgressiveState: (
     channel: string,
     arch: CPUArchitecture,
-    isPending: boolean,
-  ) => [Revision | null, unknown]; // Returns tuple from selectors/index.ts getProgressiveState
+    isPending: boolean
+  ) => ReturnType<typeof getProgressiveState>;
   hasPendingRelease: (channel: string, arch: CPUArchitecture) => boolean;
 }
-
 interface DispatchProps {
   toggleHistoryPanel: (
     filters: ReleasesReduxState["history"]["filters"],
@@ -110,8 +105,8 @@ const ReleasesTableReleaseCell = (props: ReleasesTableReleaseCellProps) => {
   // check if there is a pending release in this cell
   const pendingRelease = hasPendingRelease(channel, arch);
 
-  let previousRevision: Revision | null = null;
-  let pendingProgressiveState: unknown = null;
+  let previousRevision: ReturnType<typeof getProgressiveState>[0] = null;
+  let pendingProgressiveState:  ReturnType<typeof getProgressiveState>[1] = null;
 
   if (currentRevision) {
     [previousRevision, pendingProgressiveState] = getProgressiveState(

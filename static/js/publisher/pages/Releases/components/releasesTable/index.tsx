@@ -26,6 +26,7 @@ import {
   Revision,
   CPUArchitecture,
   LaunchpadBuildRevision,
+  ArchitectureRevisionsMap,
 } from "../../../../types/releaseTypes";
 
 const MAX_BRANCHES = 5;
@@ -101,7 +102,7 @@ class ReleasesTable extends Component<ReleasesTableProps, ReleasesTableState> {
     );
   }
 
-  renderBuildRow(revisions: Record<string, Revision>) {
+  renderBuildRow(revisions: ArchitectureRevisionsMap) {
     const rowKey = `${BUILD}-${getBuildId(Object.values(revisions)[0])}`;
 
     return (

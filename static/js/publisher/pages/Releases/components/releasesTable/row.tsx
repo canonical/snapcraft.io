@@ -5,11 +5,7 @@ import { useDragging, DND_ITEM_REVISIONS } from "../dnd";
 import { getRevisionsArchitectures } from "../../helpers";
 import ReleasesTableChannelHeading from "./channelHeading";
 import { ArchitectureRevisionsMap, Revision } from "../../../../types/releaseTypes";
-
-// Type for branch object based on usage
-interface Branch {
-  branch: string;
-}
+import { Branch } from "../../selectors";
 
 // Type for draggedItem based on usage in other components
 interface DraggedItem {
@@ -21,10 +17,10 @@ interface DraggedItem {
 }
 
 interface ReleasesTableRowProps {
+  revisions: ArchitectureRevisionsMap;
+  risk: string;
   canDrag?: boolean;
-  risk?: string;
   branch?: Branch;
-  revisions?: ArchitectureRevisionsMap;
   canDrop?: boolean;
   children?: React.ReactNode;
   isOverParent?: boolean; // Passed to children but not used in this component
