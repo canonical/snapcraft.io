@@ -41,7 +41,9 @@ function ReleaseMenuItem(props: ReleaseMenuItemProps) {
   const risk = `${props.currentTrack}/${props.risk}`;
   const devModeRisk = props.risk === "stable" || props.risk === "candidate";
   const hasDevmodeRevisions =
-    Object.values(props.item.revisions).filter((v) => !!v).some(isInDevmode) && devModeRisk;
+    Object.values(props.item.revisions)
+      .filter((v): v is Revision => !!v)
+      .some(isInDevmode) && devModeRisk;
 
   return (
     <span
