@@ -38,7 +38,7 @@ const ReleasesTableRevisionsRow = (props: ReleasesTableRevisionsRowProps) => {
         {buildRequestId}
       </p>
       <div className="p-releases-table__row--container">
-        <ReleasesTableRow risk={risk} revisions={revisions} canDrag={true}>
+        <ReleasesTableRow risk={risk} revisions={revisions}>
           {archs.map((arch) => {
             return (
               <ReleasesTableRevisionCell
