@@ -545,7 +545,25 @@
 <a name='L480'></a><a href='#L480'>480</a>
 <a name='L481'></a><a href='#L481'>481</a>
 <a name='L482'></a><a href='#L482'>482</a>
-<a name='L483'></a><a href='#L483'>483</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L483'></a><a href='#L483'>483</a>
+<a name='L484'></a><a href='#L484'>484</a>
+<a name='L485'></a><a href='#L485'>485</a>
+<a name='L486'></a><a href='#L486'>486</a>
+<a name='L487'></a><a href='#L487'>487</a>
+<a name='L488'></a><a href='#L488'>488</a>
+<a name='L489'></a><a href='#L489'>489</a>
+<a name='L490'></a><a href='#L490'>490</a>
+<a name='L491'></a><a href='#L491'>491</a>
+<a name='L492'></a><a href='#L492'>492</a>
+<a name='L493'></a><a href='#L493'>493</a>
+<a name='L494'></a><a href='#L494'>494</a>
+<a name='L495'></a><a href='#L495'>495</a>
+<a name='L496'></a><a href='#L496'>496</a>
+<a name='L497'></a><a href='#L497'>497</a>
+<a name='L498'></a><a href='#L498'>498</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -749,6 +767,9 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -832,8 +853,16 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -934,6 +963,7 @@
 <span class="cline-any cline-yes">6x</span>
 <span class="cline-any cline-yes">6x</span>
 <span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">6x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">6x</span>
@@ -1040,11 +1070,14 @@ import {
   ArchitectureRevisionsMap,
   AvailableRevisionsSelect,
   CPUArchitecture,
+  LaunchpadBuildRevision,
   PendingReleaseItem,
+  Progressive,
   ProgressiveChanges,
   ProgressiveMutated,
   Release,
   ReleasesReduxState,
+  Revision,
 } from "../../../types/releaseTypes";
 &nbsp;
 // returns true if isProgressiveReleaseEnabled feature flag is enabled
@@ -1226,12 +1259,15 @@ export function getTracks(state: ReleasesReduxState) {
   return sortAlphaNum([...new Set(tracks)], "latest");
 }
 &nbsp;
+export type Branch = Pick&lt;
+  Release,
+  "track" | "risk" | "branch" | "when" | "revision"
+&gt; &amp; {
+  expiration: string;
+};
+&nbsp;
 export function getBranches(state: ReleasesReduxState) {
-  const branches: Array&lt;
-    Pick&lt;Release, "track" | "risk" | "branch" | "when" | "revision"&gt; &amp; {
-      expiration: string;
-    }
-  &gt; = [];
+  const branches: Branch[] = [];
   const { currentTrack, releases } = state;
 &nbsp;
   const now = Date.now();
@@ -1307,7 +1343,9 @@ export function hasBuildRequestId(state: ReleasesReduxState) {
 &nbsp;
 // return revisions built by launchpad
 export function getLaunchpadRevisions(state: ReleasesReduxState) {
-  return getAllRevisions(state).filter(isRevisionBuiltOnLauchpad);
+  return getAllRevisions(state).filter(
+    isRevisionBuiltOnLauchpad
+  ) as LaunchpadBuildRevision[];
 }
 &nbsp;
 export function getRevisionsFromBuild(
@@ -1319,6 +1357,12 @@ export function getRevisionsFromBuild(
   );
 }
 &nbsp;
+type PreviousRevisionState = Partial&lt;
+  Pick&lt;Revision, "attributes" | "confinement" | "releases" | "revision" | "version"&gt;
+&gt;;
+&nbsp;
+export type ProgressiveState = [PreviousRevisionState | null, Progressive | null];
+&nbsp;
 // return an array of 2 items:
 // [
 //    the previous revision number,
@@ -1329,15 +1373,15 @@ export function getProgressiveState(
   channel: string,
   arch: CPUArchitecture,
   isPending: boolean
-) {
+): ProgressiveState {
   if (!isProgressiveReleaseEnabled(state)) {
-    return [null, null, null]; // TODO: "return an array of 2 items", so why are we returning 3 nulls then?
+    return [null, null];
   }
 &nbsp;
   const { releases, pendingReleases, revisions } = state;
 &nbsp;
-  let previousRevision = null;
-  let pendingProgressiveStatus = null;
+  let previousRevision: PreviousRevisionState | null = null;
+  let pendingProgressiveStatus: Progressive | null = null;
 &nbsp;
   const allReleases = releases.filter(
     (item) =&gt; channel === getChannelString(item) &amp;&amp; arch === item.architecture
@@ -1354,7 +1398,7 @@ export function getProgressiveState(
       // that is not the current release.
       previousRevision = allReleases.find(
         (r) =&gt; r.revision !== release.revision
-      );
+      ) as PreviousRevisionState;
 &nbsp;
       <span class="missing-if-branch" title="else path not taken" >E</span>if (previousRevision &amp;&amp; previousRevision.revision) {
         previousRevision = revisions[previousRevision.revision];
@@ -1416,7 +1460,8 @@ export function getSeparatePendingReleases(state: ReleasesReduxState) {
   const progressiveUpdates: { [key: string]: PendingReleaseItem } = {};
   const newReleases: { [key: string]: PendingReleaseItem } = {};
   const newReleasesToProgress: { [key: string]: PendingReleaseItem } = {};
-  const cancelProgressive: { [key: string]: PendingReleaseItem["replaces"] } = {};
+  const cancelProgressive: { [key: string]: PendingReleaseItem["replaces"] } =
+    {};
 &nbsp;
   Object.keys(pendingReleases).forEach((revId) =&gt; {
     Object.keys(pendingReleases[revId]).forEach((channel) =&gt; {
@@ -1516,7 +1561,7 @@ export function getReleases(
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-01-15T22:05:22.496Z
+                at 2026-01-16T22:05:27.559Z
             </div>
         <script src="../../../../prettify.js"></script>
         <script>
