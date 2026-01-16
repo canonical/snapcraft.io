@@ -198,12 +198,15 @@ export function getTracks(state: ReleasesReduxState) {
   return sortAlphaNum([...new Set(tracks)], "latest");
 }
 
+export type Branch = Pick<
+  Release,
+  "track" | "risk" | "branch" | "when" | "revision"
+> & {
+  expiration: string;
+};
+
 export function getBranches(state: ReleasesReduxState) {
-  const branches: Array<
-    Pick<Release, "track" | "risk" | "branch" | "when" | "revision"> & {
-      expiration: string;
-    }
-  > = [];
+  const branches: Branch[] = [];
   const { currentTrack, releases } = state;
 
   const now = Date.now();

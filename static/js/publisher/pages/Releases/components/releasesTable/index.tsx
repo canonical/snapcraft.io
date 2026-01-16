@@ -12,6 +12,7 @@ import {
   getBranches,
   getLaunchpadRevisions,
   getAllRevisions,
+  Branch,
 } from "../../selectors";
 import { selectAvailableRevisions, closeHistory } from "../../actions";
 
@@ -24,16 +25,11 @@ import {
   DispatchFn,
   Revision,
   CPUArchitecture,
-  Release,
   LaunchpadBuildRevision,
 } from "../../../../types/releaseTypes";
 
 const MAX_BRANCHES = 5;
 const MAX_BUILDS = 5;
-
-type Branch = Pick<Release, "track" | "risk" | "branch" | "when" | "revision"> & {
-  expiration: string;
-};
 
 interface StateProps {
   filters: ReleasesReduxState["history"]["filters"];
