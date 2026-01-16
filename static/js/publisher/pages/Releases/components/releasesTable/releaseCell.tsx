@@ -36,6 +36,7 @@ import {
   Revision,
   FailedRevision,
 } from "../../../../types/releaseTypes";
+import { DraggedItem } from "./types";
 
 interface OwnProps {
   track: string;
@@ -130,11 +131,11 @@ const ReleasesTableReleaseCell = (props: ReleasesTableReleaseCellProps) => {
 
   const canDrag = currentRevision && !isChannelPendingClose && releasable;
 
-  const item = {
+  const item: DraggedItem = {
     revisions: [currentRevision],
     architectures: currentRevision ? currentRevision.architectures : [],
     risk,
-    branch,
+    branch: branchName,
     type: DND_ITEM_REVISIONS,
   };
 

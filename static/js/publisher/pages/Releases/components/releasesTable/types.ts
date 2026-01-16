@@ -7,6 +7,6 @@ export type DraggedItem = {
   revisions: Revision[];
   architectures: CPUArchitecture[];
   risk: string;
-  branch: string | undefined;
+  branch: string | null;
   type: string;
 };
