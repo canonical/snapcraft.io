@@ -4,17 +4,9 @@ import { useDragging, DND_ITEM_REVISIONS } from "../dnd";
 
 import { getRevisionsArchitectures } from "../../helpers";
 import ReleasesTableChannelHeading from "./channelHeading";
-import { ArchitectureRevisionsMap, Revision } from "../../../../types/releaseTypes";
+import { ArchitectureRevisionsMap } from "../../../../types/releaseTypes";
 import { Branch } from "../../selectors";
-
-// Type for draggedItem based on usage in other components
-interface DraggedItem {
-  revisions: Revision[];
-  architectures: string[];
-  risk?: string;
-  branch: string | null;
-  type: string;
-}
+import { DraggedItem } from "./types";
 
 interface ReleasesTableRowProps {
   revisions: ArchitectureRevisionsMap;
