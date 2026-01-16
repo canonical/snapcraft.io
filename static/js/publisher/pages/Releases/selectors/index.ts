@@ -316,7 +316,7 @@ export function getProgressiveState(
   isPending: boolean
 ): ProgressiveState {
   if (!isProgressiveReleaseEnabled(state)) {
-    return [null, null]; // TODO: "return an array of 2 items", so why are we returning 3 nulls then?
+    return [null, null];
   }
 
   const { releases, pendingReleases, revisions } = state;
