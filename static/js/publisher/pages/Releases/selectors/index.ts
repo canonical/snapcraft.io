@@ -11,6 +11,7 @@ import {
   ArchitectureRevisionsMap,
   AvailableRevisionsSelect,
   CPUArchitecture,
+  LaunchpadBuildRevision,
   PendingReleaseItem,
   ProgressiveChanges,
   ProgressiveMutated,
@@ -278,7 +279,7 @@ export function hasBuildRequestId(state: ReleasesReduxState) {
 
 // return revisions built by launchpad
 export function getLaunchpadRevisions(state: ReleasesReduxState) {
-  return getAllRevisions(state).filter(isRevisionBuiltOnLauchpad);
+  return getAllRevisions(state).filter(isRevisionBuiltOnLauchpad) as LaunchpadBuildRevision[];
 }
 
 export function getRevisionsFromBuild(

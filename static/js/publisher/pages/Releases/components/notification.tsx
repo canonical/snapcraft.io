@@ -1,7 +1,7 @@
 import React, { Component } from "react";
-import PropTypes from "prop-types";
+import { ReleasesReduxState } from "../../../types/releaseTypes";
 
-const notificationStyle = (element = "", modifier = "") => {
+const notificationStyle = (element = "", modifier = ""): string => {
   element = element ? "__" + element : "";
   modifier = modifier ? "--" + modifier : "";
 
@@ -10,7 +10,15 @@ const notificationStyle = (element = "", modifier = "") => {
   return className;
 };
 
-class Notification extends Component {
+interface NotificationProps {
+  children?: React.ReactNode;
+  appearance?: ReleasesReduxState["notification"]["appearance"];
+  status?: ReleasesReduxState["notification"]["status"];
+  canDismiss?: boolean;
+  hideNotification?: () => void;
+}
+
+class Notification extends Component<NotificationProps> {
   render() {
     const { status, appearance, canDismiss, hideNotification, children } =
       this.props;
@@ -20,7 +28,7 @@ class Notification extends Component {
       <div className={`p-notification ${className}`}>
         <div className="p-notification__content">
           <p className={notificationStyle("message")}>
-            {status && this.getStatus(this.props.status)} {children}
+            {status && this.getStatus(status)} {children}
           </p>
           {canDismiss && (
             <button
@@ -36,24 +44,11 @@ class Notification extends Component {
     );
   }
 
-  getStatus(status) {
+  getStatus(status: string): React.JSX.Element {
     const statusString = status.charAt(0).toUpperCase() + status.slice(1);
 
     return <span className={notificationStyle("status")}>{statusString}:</span>;
   }
 }
-
-Notification.propTypes = {
-  children: PropTypes.node,
-  appearance: PropTypes.oneOf([
-    "positive",
-    "caution",
-    "negative",
-    "information",
-  ]),
-  status: PropTypes.string,
-  canDismiss: PropTypes.bool,
-  hideNotification: PropTypes.func,
-};
 
 export default Notification;

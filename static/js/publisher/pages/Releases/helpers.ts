@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import {
   ArchitectureRevisionsMap,
   CPUArchitecture,
+  LaunchpadBuildRevision,
   Release,
   Revision,
 } from "../../types/releaseTypes";
@@ -24,7 +25,9 @@ export function getChannelName(track: string, risk: string, branch?: string) {
   });
 }
 
-export function getBuildId(revision: Revision) {
+export function getBuildId<T extends Revision<boolean>>(
+  revision: T
+): T["attributes"]["build-request-id"] {
   return (
     revision && revision.attributes && revision.attributes["build-request-id"]
   );
@@ -167,22 +170,62 @@ export function numericalSort(a: string, b: string) {
   return a.localeCompare(b);
 }
 
-export async function getPackageMetadata(snap: string) {
-  const url = `/api/packages/${snap}`;
-  try {
-    const response = await fetch(url, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+interface PackageMetadata {
+  id: string;
+  private: boolean;
+  publisher: {
+    id: string;
+    username: string | null;
+    "display-name": string | null;
+    email?: string;
+    validation?: string;
+  };
+  status: string;
+  store: string;
+  type: string;
+  authority: string | null;
+  contact: string | null;
+  description: string | null;
+  name: string | null;
+  summary: string | null;
+  title: string | null;
+  website: string | null;
+  "default-track": string | null;
+  links: Record<string, string[]> | null; // e.g. { "homepage": ["https://example.com"] }
+  media: {
+    type: "icon"; // technically it's an enum
+    url: string;
+  }[];
+  "track-guardrails":
+    | {
+        pattern: string;
+        "created-at": string;
+      }[]
+    | null;
+  tracks:
+    | {
+        name: string;
+        "version-pattern": string | null;
+        "created-at": string;
+        "automatic-phasing-percentage": number | null;
+      }[]
+    | null;
+}
 
-    if (!response.ok) {
-      throw new Error("There was a problem fetching the snap's metadata");
-    }
-    const data = await response.json();
-    return data.data;
-  } catch (e) {
-    return { error: e };
+export async function getPackageMetadata(
+  snap: string
+): Promise<PackageMetadata> {
+  const url = `/api/packages/${snap}`;
+  const response = await fetch(url, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error("There was a problem fetching the snap's metadata");
   }
+  const data = await response.json();
+  return data.data;
 }
