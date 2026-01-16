@@ -357,11 +357,8 @@ export const ReleasesTableCellView = (props: ReleasesTableCellViewProps) => {
                   return (
                     <ReleaseMenuItem
                       key={risk}
-                      currentTrack={risk}
                       risk={risk}
-                      pendingChannelMap={RISKS_WITH_AVAILABLE}
                       item={item}
-                      promoteRevision={promoteRevision}
                       current={current}
                     />
                   );
