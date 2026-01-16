@@ -36,7 +36,7 @@ interface StateProps {
 
 interface DispatchProps {
   promoteRevision: (revision: Revision, targetChannel: string) => void;
-  triggerGAEvent: typeof triggerGAEvent;
+  triggerGAEvent: (...eventProps: Parameters<typeof triggerGAEvent>) => void;
 }
 
 type ReleasesTableDroppableRowProps = OwnProps & StateProps & DispatchProps;
@@ -78,7 +78,6 @@ const ReleasesTableDroppableRow = (props: ReleasesTableDroppableRowProps) => {
     currentTrack,
     risk,
     branch,
-    revisions,
     promoteRevision,
     pendingChannelMap,
     triggerGAEvent,
@@ -213,8 +212,6 @@ const ReleasesTableDroppableRow = (props: ReleasesTableDroppableRowProps) => {
           <ReleasesTableChannelRow
             risk={risk}
             branch={branch}
-            // @ts-ignore
-            revisions={revisions}
             isOverParent={isOver}
             draggedItem={item}
             canDrop={canDrop}

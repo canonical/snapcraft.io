@@ -51,17 +51,12 @@ const ReleasesTableChannelRow = (props: ReleasesTableChannelRowProps) => {
 
   const { canDrop, draggedItem, isOverParent } = props;
 
-  const showVersion = !isSameVersion(revisions);
-
   return (
     <ReleasesTableRow
       risk={risk}
       branch={branch}
       revisions={revisions}
       canDrag={canDrag}
-      isOverParent={isOverParent}
-      draggedItem={draggedItem}
-      canDrop={canDrop}
     >
       {archs.map((arch) => {
         return (
@@ -72,7 +67,6 @@ const ReleasesTableChannelRow = (props: ReleasesTableChannelRowProps) => {
             risk={risk}
             branch={branch}
             arch={arch}
-            showVersion={showVersion}
             isOverParent={
               isOverParent &&
               canDrop &&
