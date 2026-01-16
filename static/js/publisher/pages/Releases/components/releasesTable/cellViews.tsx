@@ -11,10 +11,10 @@ import {
 } from "../../helpers";
 import { useDragging, Handle } from "../dnd";
 
-import { promoteRevision } from "../../actions/pendingReleases";
-
 import ReleaseMenuItem from "./releaseMenuItem";
 import { Revision, CPUArchitecture } from "../../../../types/releaseTypes";
+import { DraggedItem } from "./types";
+import { ProgressiveState } from "../../selectors";
 
 // content of a cell when channel is closed
 export const CloseChannelInfo = () => (
@@ -50,7 +50,7 @@ export const FailedInfo = () => {
 };
 
 interface EmptyInfoProps {
-  trackingChannel?: string;
+  trackingChannel?: string | null;
 }
 
 // content of empty cell in channel row (nothing released or tracking channel)
@@ -62,7 +62,7 @@ export const EmptyInfo = ({ trackingChannel }: EmptyInfoProps) => {
   return (
     <Fragment>
       <span className="p-release-data__info--empty">
-        {trackingChannel ? (
+        {trackingChannelSplit ? (
           <small>
             Tracking {trackingChannelSplit[0]}/{trackingChannelSplit[1]}
           </small>
@@ -82,7 +82,7 @@ export const EmptyInfo = ({ trackingChannel }: EmptyInfoProps) => {
 
 interface ProgressiveTooltipProps {
   revision: Revision;
-  previousRevision?: Revision | null;
+  previousRevision?: ProgressiveState[0];
 }
 
 const ProgressiveTooltip = ({
@@ -167,7 +167,7 @@ const ProgressiveTooltip = ({
 interface RevisionInfoProps {
   revision: Revision;
   isPending?: boolean;
-  previousRevision?: Revision | null;
+  previousRevision?: ProgressiveState[0];
   risk?: string;
   channel?: string;
 }
@@ -202,6 +202,7 @@ export const RevisionInfo = ({
   // This mimics what the snapcraft cli does as some fields may be
   // present even if a release is not progressive
   const isProgressive =
+    currentRelease &&
     currentRelease?.length > 0 &&
       currentRelease[0].isProgressive &&
       risk !== "AVAILABLE"
@@ -284,17 +285,8 @@ export const RevisionInfo = ({
   );
 };
 
-// Type for drag item based on usage in the component
-interface DragItem {
-  revisions: (Revision | null | undefined)[];
-  architectures: CPUArchitecture[];
-  type: string;
-  risk?: string;
-  branch?: unknown; // Type is not clear from usage, marking as unknown
-}
-
 interface ReleasesTableCellViewProps {
-  item: DragItem;
+  item: DraggedItem;
   canDrag: boolean;
   className?: string;
   children?: React.ReactNode;

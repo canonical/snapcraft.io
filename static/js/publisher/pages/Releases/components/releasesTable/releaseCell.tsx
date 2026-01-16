@@ -16,6 +16,7 @@ import {
   getProgressiveState,
   hasPendingRelease,
   Branch,
+  ProgressiveState,
 } from "../../selectors";
 
 import {
@@ -60,7 +61,7 @@ interface StateProps {
     channel: string,
     arch: CPUArchitecture,
     isPending: boolean
-  ) => ReturnType<typeof getProgressiveState>;
+  ) => ProgressiveState;
   hasPendingRelease: (channel: string, arch: CPUArchitecture) => boolean;
 }
 interface DispatchProps {
@@ -106,8 +107,8 @@ const ReleasesTableReleaseCell = (props: ReleasesTableReleaseCellProps) => {
   // check if there is a pending release in this cell
   const pendingRelease = hasPendingRelease(channel, arch);
 
-  let previousRevision: ReturnType<typeof getProgressiveState>[0] = null;
-  let pendingProgressiveState:  ReturnType<typeof getProgressiveState>[1] = null;
+  let previousRevision: ProgressiveState[0] = null;
+  let pendingProgressiveState: ProgressiveState[1] = null;
 
   if (currentRevision) {
     [previousRevision, pendingProgressiveState] = getProgressiveState(

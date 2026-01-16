@@ -298,9 +298,11 @@ export function getRevisionsFromBuild(
   );
 }
 
-type ProgressiveState = Partial<
-  Pick<Revision, "attributes" | "confinement" | "revision" | "version">
+type PreviousRevisionState = Partial<
+  Pick<Revision, "attributes" | "confinement" | "releases" | "revision" | "version">
 >;
+
+export type ProgressiveState = [PreviousRevisionState | null, Progressive | null];
 
 // return an array of 2 items:
 // [
@@ -312,14 +314,14 @@ export function getProgressiveState(
   channel: string,
   arch: CPUArchitecture,
   isPending: boolean
-): [ProgressiveState | null, Progressive | null] {
+): ProgressiveState {
   if (!isProgressiveReleaseEnabled(state)) {
     return [null, null]; // TODO: "return an array of 2 items", so why are we returning 3 nulls then?
   }
 
   const { releases, pendingReleases, revisions } = state;
 
-  let previousRevision: ProgressiveState | null = null;
+  let previousRevision: PreviousRevisionState | null = null;
   let pendingProgressiveStatus: Progressive | null = null;
 
   const allReleases = releases.filter(
@@ -337,7 +339,7 @@ export function getProgressiveState(
       // that is not the current release.
       previousRevision = allReleases.find(
         (r) => r.revision !== release.revision
-      ) as ProgressiveState;
+      ) as PreviousRevisionState;
 
       if (previousRevision && previousRevision.revision) {
         previousRevision = revisions[previousRevision.revision];
