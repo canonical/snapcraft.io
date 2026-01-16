@@ -33,8 +33,14 @@ import {
 import reducers from "../../reducers";
 import { ReleasesReduxState } from "../../../../types/releaseTypes";
 
+function getInitialState() {
+  return reducers(undefined, {
+    type: "",
+  }) as unknown as ReleasesReduxState;
+}
+
 describe("getFilteredReleaseHistory", () => {
-  const initialState = reducers(undefined, {}) as unknown as ReleasesReduxState;
+  const initialState = getInitialState();
   const stateWithRevisions = {
     ...initialState,
     revisions: {
@@ -176,7 +182,7 @@ describe("getFilteredReleaseHistory", () => {
 });
 
 describe("getSelectedRevisions", () => {
-  const initialState = reducers(undefined, {}) as unknown as ReleasesReduxState;
+  const initialState = getInitialState();
 
   const stateWithSelectedRevisions = {
     ...initialState,
@@ -198,7 +204,7 @@ describe("getSelectedRevisions", () => {
 });
 
 describe("getSelectedRevision", () => {
-  const initialState = reducers(undefined, {}) as unknown as ReleasesReduxState;
+  const initialState = getInitialState();
 
   const stateWithSelectedRevisions = {
     ...initialState,
@@ -222,7 +228,7 @@ describe("getSelectedRevision", () => {
 });
 
 describe("getSelectedArchitectures", () => {
-  const initialState = reducers(undefined, {}) as unknown as ReleasesReduxState;
+  const initialState = getInitialState();
 
   const stateWithSelectedRevisions = {
     ...initialState,
@@ -247,7 +253,7 @@ describe("getSelectedArchitectures", () => {
 });
 
 describe("hasDevmodeRevisions", () => {
-  const initialState = reducers(undefined, {}) as unknown as ReleasesReduxState;
+  const initialState = getInitialState();
   const stateWithReleasedRevisions = {
     ...initialState,
     channelMap: {
@@ -378,7 +384,7 @@ describe("getPendingChannelMap", () => {
 });
 
 describe("getFilteredAvailableRevisions", () => {
-  const initialState = reducers(undefined, {}) as unknown as ReleasesReduxState;
+  const initialState = getInitialState();
 
   const dayAgo = new Date();
   dayAgo.setDate(dayAgo.getDate() - 1);
@@ -481,7 +487,7 @@ describe("getFilteredAvailableRevisions", () => {
 
 describe("getFilteredAvailableRevisionsByArch", () => {
   const arch = "test64";
-  const initialState = reducers(undefined, {}) as unknown as ReleasesReduxState;
+  const initialState = getInitialState();
   const stateWithRevisions = {
     ...initialState,
     revisions: {
@@ -522,7 +528,7 @@ describe("getFilteredAvailableRevisionsByArch", () => {
 });
 
 describe("getArchitectures", () => {
-  const initialState = reducers(undefined, {});
+  const initialState = getInitialState();
   const stateWithArchitectures = {
     ...initialState,
     architectures: ["test64", "amd42", "abc64"],
@@ -538,7 +544,7 @@ describe("getArchitectures", () => {
 });
 
 describe("getTracks", () => {
-  const initialState = reducers(undefined, {});
+  const initialState = getInitialState();
   const stateWithReleases = {
     ...initialState,
     options: {
@@ -730,7 +736,7 @@ describe("getBranches", () => {
 });
 
 describe("hasBuildRequestId", () => {
-  const initialState = reducers(undefined, {}) as unknown as ReleasesReduxState;
+  const initialState = getInitialState();
   const stateWithoutBuildRequestId = {
     ...initialState,
     revisions: {
@@ -760,7 +766,7 @@ describe("hasBuildRequestId", () => {
 });
 
 describe("getLaunchpadRevisions", () => {
-  const initialState = reducers(undefined, {}) as unknown as ReleasesReduxState;
+  const initialState = getInitialState();
   const stateWithLauchpadBuilds = {
     ...initialState,
     revisions: {
@@ -797,7 +803,7 @@ describe("getLaunchpadRevisions", () => {
 });
 
 describe("getRevisionsFromBuild", () => {
-  const initialState = reducers(undefined, {}) as unknown as ReleasesReduxState;
+  const initialState = getInitialState();
   const stateWithLauchpadBuilds = {
     ...initialState,
     revisions: {
@@ -833,7 +839,7 @@ describe("getRevisionsFromBuild", () => {
 });
 
 describe("getProgressiveState", () => {
-  const initialState = reducers(undefined, {}) as unknown as ReleasesReduxState;
+  const initialState = getInitialState();
   const stateWithProgressiveEnabled = {
     ...initialState,
     options: {
@@ -947,12 +953,12 @@ describe("getProgressiveState", () => {
         "arch2",
         false
       )
-    ).toEqual([null, null, null]);
+    ).toEqual([null, null]);
   });
 });
 
 describe("isProgressiveReleaseEnabled", () => {
-  const initialState = reducers(undefined, {}) as unknown as ReleasesReduxState;
+  const initialState = getInitialState();
   const stateWithProgressiveEnabled = {
     ...initialState,
     options: {
@@ -985,7 +991,7 @@ describe("isProgressiveReleaseEnabled", () => {
 });
 
 describe("hasRelease", () => {
-  const initialState = reducers(undefined, {}) as unknown as ReleasesReduxState;
+  const initialState = getInitialState();
   const stateWithARelease = {
     ...initialState,
     releases: [
@@ -1037,10 +1043,7 @@ describe("hasRelease", () => {
   });
 
   describe("getSeparatePendingReleases", () => {
-    const initialState = reducers(
-      undefined,
-      {}
-    ) as unknown as ReleasesReduxState;
+    const initialState = getInitialState();
 
     describe("with progressive releases disabled", () => {
       const stateWithPendingReleaseToProgress = {
@@ -1266,7 +1269,7 @@ describe("hasRelease", () => {
 });
 
 describe("getPendingRelease", () => {
-  const initialState = reducers(undefined, {}) as unknown as ReleasesReduxState;
+  const initialState = getInitialState();
   const state = {
     ...initialState,
     pendingReleases: {

@@ -13,7 +13,7 @@ export function isInDevmode(revision: Revision) {
   return revision.confinement === "devmode" || revision.grade === "devel";
 }
 
-export function getChannelName(track: string, risk: string, branch?: string) {
+export function getChannelName(track: string, risk: string, branch?: string | null) {
   if (risk === AVAILABLE) {
     return AVAILABLE;
   }

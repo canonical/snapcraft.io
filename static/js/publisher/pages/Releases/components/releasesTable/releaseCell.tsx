@@ -1,5 +1,4 @@
 import React from "react";
-import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { AVAILABLE } from "../../constants";
 import { getTrackingChannel } from "../../releasesState";
@@ -16,6 +15,8 @@ import {
   getFilteredAvailableRevisionsForArch,
   getProgressiveState,
   hasPendingRelease,
+  Branch,
+  ProgressiveState,
 } from "../../selectors";
 
 import {
@@ -27,8 +28,53 @@ import {
   FailedInfo,
 } from "./cellViews";
 
+import {
+  ReleasesReduxState,
+  DispatchFn,
+  CPUArchitecture,
+  ChannelArchitectureRevisionsMap,
+  Channel,
+  Revision,
+  FailedRevision,
+} from "../../../../types/releaseTypes";
+import { DraggedItem } from "./types";
+
+interface OwnProps {
+  track: string;
+  risk: string;
+  arch: CPUArchitecture;
+  branch?: Branch;
+  isOverParent?: boolean;
+  revision?: Revision; // Not used in the component logic, only in propTypes
+  current?: string;
+  showVersion?: boolean; // Not used in the component logic, only in propTypes
+}
+
+interface StateProps {
+  channelMap: ChannelArchitectureRevisionsMap;
+  filters: ReleasesReduxState["history"]["filters"];
+  pendingCloses: Channel["name"][];
+  failedRevisions: FailedRevision[];
+  pendingChannelMap: ChannelArchitectureRevisionsMap;
+  getAvailableCount: (arch: CPUArchitecture) => number;
+  getProgressiveState: (
+    channel: string,
+    arch: CPUArchitecture,
+    isPending: boolean
+  ) => ProgressiveState;
+  hasPendingRelease: (channel: string, arch: CPUArchitecture) => boolean;
+}
+interface DispatchProps {
+  toggleHistoryPanel: (
+    filters: ReleasesReduxState["history"]["filters"],
+  ) => void;
+  undoRelease: (revision: Revision, channel: string) => void;
+}
+
+type ReleasesTableReleaseCellProps = OwnProps & StateProps & DispatchProps;
+
 // releases table cell with data from channel map release
-const ReleasesTableReleaseCell = (props) => {
+const ReleasesTableReleaseCell = (props: ReleasesTableReleaseCellProps) => {
   const {
     track,
     risk,
@@ -45,9 +91,11 @@ const ReleasesTableReleaseCell = (props) => {
     toggleHistoryPanel,
     getProgressiveState,
     current,
-    failedRevisions
+    failedRevisions,
   } = props;
-  const failed = !!failedRevisions.find(rev => rev.architecture === arch && rev.channel === `${track}/${risk}`)
+  const failed = !!failedRevisions.find(
+    (rev) => rev.architecture === arch && rev.channel === `${track}/${risk}`,
+  );
   const branchName = branch ? branch.branch : null;
 
   const channel = getChannelName(track, risk, branchName);
@@ -59,8 +107,8 @@ const ReleasesTableReleaseCell = (props) => {
   // check if there is a pending release in this cell
   const pendingRelease = hasPendingRelease(channel, arch);
 
-  let previousRevision;
-  let pendingProgressiveState;
+  let previousRevision: ProgressiveState[0] = null;
+  let pendingProgressiveState: ProgressiveState[1] = null;
 
   if (currentRevision) {
     [previousRevision, pendingProgressiveState] = getProgressiveState(
@@ -84,20 +132,29 @@ const ReleasesTableReleaseCell = (props) => {
 
   const canDrag = currentRevision && !isChannelPendingClose && releasable;
 
-  const item = {
+  const item: DraggedItem = {
     revisions: [currentRevision],
     architectures: currentRevision ? currentRevision.architectures : [],
     risk,
-    branch,
+    branch: branchName,
     type: DND_ITEM_REVISIONS,
   };
 
-  function handleHistoryIconClick(arch, risk, track, branchName) {
+  function handleHistoryIconClick(
+    arch: CPUArchitecture,
+    risk: string,
+    track: string,
+    branchName: string | null,
+  ) {
     window.scrollTo(0, 0);
     toggleHistoryPanel({ arch, risk, track, branch: branchName });
   }
 
-  function undoClick(revision, channel, event) {
+  function undoClick(
+    revision: Revision,
+    channel: string,
+    event: React.MouseEvent,
+  ) {
     event.stopPropagation();
     undoRelease(revision, channel);
   }
@@ -179,51 +236,30 @@ const ReleasesTableReleaseCell = (props) => {
   );
 };
 
-ReleasesTableReleaseCell.propTypes = {
-  // state
-  channelMap: PropTypes.object,
-  filters: PropTypes.object,
-  pendingCloses: PropTypes.array,
-  pendingChannelMap: PropTypes.object,
-  failedRevisions: PropTypes.object,
-  // compute state
-  getAvailableCount: PropTypes.func,
-  hasPendingRelease: PropTypes.func,
-  getProgressiveState: PropTypes.func,
-  // actions
-  toggleHistoryPanel: PropTypes.func.isRequired,
-  undoRelease: PropTypes.func.isRequired,
-  // props
-  track: PropTypes.string,
-  risk: PropTypes.string,
-  arch: PropTypes.string,
-  branch: PropTypes.object,
-  isOverParent: PropTypes.bool,
-
-  revision: PropTypes.object,
-  current: PropTypes.string,
-};
-
-const mapStateToProps = (state) => {
+const mapStateToProps = (state: ReleasesReduxState): StateProps => {
   return {
     channelMap: state.channelMap,
     filters: state.history.filters,
     pendingCloses: state.pendingCloses,
     failedRevisions: state.failedRevisions,
     pendingChannelMap: getPendingChannelMap(state),
-    getAvailableCount: (arch) =>
+    getAvailableCount: (arch: CPUArchitecture) =>
       getFilteredAvailableRevisionsForArch(state, arch).length,
-    getProgressiveState: (channel, arch, isPending) =>
-      getProgressiveState(state, channel, arch, isPending),
-    hasPendingRelease: (channel, arch) =>
+    getProgressiveState: (
+      channel: string,
+      arch: CPUArchitecture,
+      isPending: boolean,
+    ) => getProgressiveState(state, channel, arch, isPending),
+    hasPendingRelease: (channel: string, arch: CPUArchitecture) =>
       hasPendingRelease(state, channel, arch),
   };
 };
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = (dispatch: DispatchFn): DispatchProps => {
   return {
-    toggleHistoryPanel: (filters) => dispatch(toggleHistory(filters)),
-    undoRelease: (revision, channel) =>
+    toggleHistoryPanel: (filters: ReleasesReduxState["history"]["filters"]) =>
+      dispatch(toggleHistory(filters)),
+    undoRelease: (revision: Revision, channel: string) =>
       dispatch(undoRelease(revision, channel)),
   };
 };

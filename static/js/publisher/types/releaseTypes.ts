@@ -121,6 +121,7 @@ export type Revision<isLpBuild extends boolean = false> = {
   releases?: Release[];
   progressive?: ChannelMap["progressive"];
   expiration?: ChannelMap["expiration-date"];
+  changed?: boolean;
 };
 
 // this type is for manual casts only, if Revision["attributes"]["build-request-id"] exists then you can cast
