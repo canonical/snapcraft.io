@@ -1,6 +1,6 @@
 import { connect } from "react-redux";
 
-import { getPendingChannelMap } from "../../selectors";
+import { Branch, getPendingChannelMap } from "../../selectors";
 import { useDrop, DND_ITEM_REVISIONS } from "../dnd";
 
 import { promoteRevision } from "../../actions/pendingReleases";
@@ -21,27 +21,12 @@ import {
   DispatchFn,
   Revision,
   ChannelArchitectureRevisionsMap,
-  CPUArchitecture,
 } from "../../../../types/releaseTypes";
-
-// Type for branch object based on usage
-interface Branch {
-  branch: string;
-}
-
-// Type for draggedItem based on the drop callback and canDrop logic
-interface DraggedItem {
-  revisions: Revision[];
-  architectures: CPUArchitecture[];
-  risk: string;
-  branch: string | null;
-  type: string;
-}
+import { DraggedItem } from "./types";
 
 interface OwnProps {
   risk: string;
   branch?: Branch;
-  revisions?: unknown; // Not used in the component logic, only passed through
 }
 
 interface StateProps {

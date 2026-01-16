@@ -1,8 +1,7 @@
-import React from "react";
 import { connect } from "react-redux";
 
-import { getArchitectures, getPendingChannelMap } from "../../selectors";
-import { isSameVersion, getChannelName } from "../../helpers";
+import { Branch, getArchitectures, getPendingChannelMap } from "../../selectors";
+import { getChannelName } from "../../helpers";
 
 import ReleasesTableReleaseCell from "./releaseCell";
 import ReleasesTableRow from "./row";
@@ -11,22 +10,8 @@ import {
   CPUArchitecture,
   ChannelArchitectureRevisionsMap,
   Channel,
-  Revision,
 } from "../../../../types/releaseTypes";
-
-// Type for branch object based on usage in the component
-interface Branch {
-  branch: string;
-}
-
-// Type for draggedItem based on usage in droppableRow.tsx
-interface DraggedItem {
-  revisions: Revision[];
-  architectures: CPUArchitecture[];
-  risk: string;
-  branch: string | null;
-  type: string;
-}
+import { DraggedItem } from "./types";
 
 interface OwnProps {
   risk: string;
