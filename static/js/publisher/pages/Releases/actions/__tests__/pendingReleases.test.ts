@@ -153,7 +153,7 @@ describe("pendingReleases actions", () => {
           release: {
             architecture: "test64",
           },
-        };
+        } as Revision;
 
         const dispatch = store.dispatch(
           releaseRevision(revisionWithRelease, channel)(
