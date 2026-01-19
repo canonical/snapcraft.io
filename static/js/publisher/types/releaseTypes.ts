@@ -277,9 +277,9 @@ export type ReleasesReduxState = CombinedState<{
   defaultTrack: string;
   history: {
     filters: {
-      arch?: Release["architecture"];
-      track?: Release["track"];
-      risk?: Release["risk"];
+      arch: Release["architecture"];
+      track: Release["track"];
+      risk: Release["risk"];
       branch?: Release["branch"];
     } | null;
     isOpen: boolean;
