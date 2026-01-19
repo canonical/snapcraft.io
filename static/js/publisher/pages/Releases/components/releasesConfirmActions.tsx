@@ -1,11 +1,11 @@
 import React from "react";
 
 interface ReleasesConfirmActionsProps {
-  isCancelEnabled?: boolean;
-  cancelPendingReleases?: () => void;
-  isApplyEnabled?: boolean;
-  applyPendingReleases?: () => void;
-  isLoading?: boolean;
+  isCancelEnabled: boolean;
+  cancelPendingReleases: () => void;
+  isApplyEnabled: boolean;
+  applyPendingReleases: () => void;
+  isLoading: boolean;
 }
 
 const ReleasesConfirmActions = ({

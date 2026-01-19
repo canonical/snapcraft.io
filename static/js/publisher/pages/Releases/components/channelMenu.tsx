@@ -52,7 +52,7 @@ export default class ChannelMenu extends Component<ChannelMenuProps> {
         <span
           className={className}
           onClick={
-            isDisabled ? null : this.promoteToChannelClick.bind(this, channel)
+            isDisabled ? undefined : this.promoteToChannelClick.bind(this, channel)
           }
         >
           {display ? display : channel}

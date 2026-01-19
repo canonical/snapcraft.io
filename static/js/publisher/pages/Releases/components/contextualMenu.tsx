@@ -44,7 +44,7 @@ export default class ContextualMenu extends Component<ContextualMenuProps> {
     }
 
     if (isClosed && dropdownEl) {
-      dropdownEl.setAttribute("aria-hidden", false);
+      dropdownEl.setAttribute("aria-hidden", "false");
 
       if (tooltipMessage) {
         tooltipMessage.classList.add("u-hide");
@@ -83,7 +83,7 @@ export default class ContextualMenu extends Component<ContextualMenuProps> {
         <button
           className={className}
           title={title}
-          onClick={isDisabled ? null : this.dropdownButtonClick.bind(this)}
+          onClick={isDisabled ? undefined : this.dropdownButtonClick.bind(this)}
         >
           {this.renderIcon()}
         </button>

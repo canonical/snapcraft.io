@@ -1,9 +1,9 @@
 import React from "react";
 
 interface ProgressiveBarProps {
-  percentage?: number;
-  targetPercentage?: number;
-  readonly?: boolean;
+  percentage: number;
+  targetPercentage: number;
+  readonly: boolean;
   disabled?: boolean;
   minPercentage?: number;
 }
@@ -88,7 +88,7 @@ class InteractiveProgressiveBar extends React.Component<
   InteractiveProgressiveBarProps,
   InteractiveProgressiveBarState
 > {
-  barHolder: React.RefObject<HTMLDivElement>;
+  barHolder: React.RefObject<HTMLDivElement | null>;
 
   constructor(props: InteractiveProgressiveBarProps) {
     super(props);

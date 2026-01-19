@@ -94,7 +94,7 @@ const RevisionsListRow = (props: RevisionsListRowProps) => {
     <tr
       key={id}
       className={className}
-      onClick={isSelectable && releasable ? revisionSelectChange : null}
+      onClick={isSelectable && releasable ? revisionSelectChange : undefined}
     >
       <td data-heading="Revision">
         {isSelectable ? (
@@ -137,13 +137,13 @@ const RevisionsListRow = (props: RevisionsListRowProps) => {
           <ProgressiveReleaseProgressChart
             currentPercentage={
               currentRelease
-                ? 100 - currentRelease.progressive["current-percentage"]
-                : rowRelease.progressive["current-percentage"]
+                ? 100 - (currentRelease.progressive["current-percentage"] ?? 0)
+                : rowRelease?.progressive["current-percentage"] ?? 0
             }
             targetPercentage={
               currentRelease
-                ? 100 - currentRelease.progressive.percentage
-                : rowRelease.progressive.percentage
+                ? 100 - (currentRelease.progressive.percentage ?? 0)
+                : rowRelease?.progressive.percentage ?? 0
             }
             isPreviousRevision={!isActive}
           />
@@ -153,7 +153,7 @@ const RevisionsListRow = (props: RevisionsListRowProps) => {
       )}
 
       {showChannels && (
-        <td data-heading="Channels">{revision.channels.join(", ")}</td>
+        <td data-heading="Channels">{revision.channels?.join(", ")}</td>
       )}
       <td data-heading="Release date">
         {isPending && <em>pending release</em>}
