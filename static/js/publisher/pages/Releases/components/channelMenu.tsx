@@ -1,15 +1,33 @@
 import React, { Component } from "react";
-import PropTypes from "prop-types";
 
 import ContextualMenu from "./contextualMenu";
 
-export default class ChannelMenu extends Component {
-  constructor(props) {
+interface TargetChannel {
+  channel: string;
+  display?: string;
+  isDisabled: boolean;
+  reason?: string;
+}
+
+interface ChannelMenuProps {
+  channel: string;
+  targetChannels: TargetChannel[];
+  tooltip?: string;
+  promoteToChannel: (channel: string) => void;
+  closeChannel?: (channel: string) => void;
+  gaEvent: (channel: string, action: string) => void;
+}
+
+export default class ChannelMenu extends Component<ChannelMenuProps> {
+  menu: ContextualMenu | null = null;
+  setMenuRef: (menu: ContextualMenu | null) => void;
+
+  constructor(props: ChannelMenuProps) {
     super(props);
-    this.setMenuRef = (menu) => (this.menu = menu);
+    this.setMenuRef = (menu: ContextualMenu | null) => (this.menu = menu);
   }
 
-  promoteToChannelClick(targetChannel, event) {
+  promoteToChannelClick(targetChannel: string, event: React.MouseEvent) {
     this.props.gaEvent(targetChannel, "promote");
 
     this.props.promoteToChannel(targetChannel);
@@ -19,7 +37,7 @@ export default class ChannelMenu extends Component {
     }
   }
 
-  renderItem(targetChannel) {
+  renderItem(targetChannel: TargetChannel) {
     const { channel, display, isDisabled, reason } = targetChannel;
     const className = [
       "p-contextual-menu__link is-indented",
@@ -34,7 +52,7 @@ export default class ChannelMenu extends Component {
         <span
           className={className}
           onClick={
-            isDisabled ? null : this.promoteToChannelClick.bind(this, channel)
+            isDisabled ? undefined : this.promoteToChannelClick.bind(this, channel)
           }
         >
           {display ? display : channel}
@@ -61,10 +79,10 @@ export default class ChannelMenu extends Component {
     );
   }
 
-  closeChannelClick(channel, event) {
+  closeChannelClick(channel: string, event: React.MouseEvent) {
     this.props.gaEvent(channel, "close");
 
-    this.props.closeChannel(channel);
+    this.props.closeChannel?.(channel);
 
     if (this.menu) {
       this.menu.itemClickHandler(event);
@@ -122,12 +140,3 @@ export default class ChannelMenu extends Component {
     );
   }
 }
-
-ChannelMenu.propTypes = {
-  channel: PropTypes.string.isRequired,
-  targetChannels: PropTypes.array.isRequired,
-  tooltip: PropTypes.string,
-  promoteToChannel: PropTypes.func.isRequired,
-  closeChannel: PropTypes.func,
-  gaEvent: PropTypes.func.isRequired,
-};

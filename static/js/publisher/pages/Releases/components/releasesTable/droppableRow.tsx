@@ -90,7 +90,7 @@ const ReleasesTableDroppableRow = (props: ReleasesTableDroppableRowProps) => {
   const [{ isOver, canDrop, item }, drop] = useDrop({
     accept: DND_ITEM_REVISIONS,
     drop: (item: DraggedItem) => {
-      item.revisions.forEach(
+      item.revisions.filter((v): v is Revision => !!v).forEach(
         (r) =>
           canBeReleased(r) && promoteRevision(r, channel),
       );
@@ -145,7 +145,7 @@ const ReleasesTableDroppableRow = (props: ReleasesTableDroppableRowProps) => {
 
       // can't drop devmode to stable/candidate
       if (risk === STABLE || risk === CANDIDATE) {
-        const hasDevmodeRevisions = draggedRevisions.some(isInDevmode);
+        const hasDevmodeRevisions = draggedRevisions.filter((v): v is Revision => !!v).some(isInDevmode);
 
         if (hasDevmodeRevisions) {
           return false;
@@ -154,7 +154,7 @@ const ReleasesTableDroppableRow = (props: ReleasesTableDroppableRowProps) => {
 
       // can't drop same revisions
       if (
-        !getRevisionsToDrop(draggedRevisions, dropChannel, pendingChannelMap)
+        !getRevisionsToDrop(draggedRevisions.filter((v): v is Revision => !!v), dropChannel, pendingChannelMap)
           .length
       ) {
         return false;

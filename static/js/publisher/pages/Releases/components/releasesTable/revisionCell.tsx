@@ -1,14 +1,13 @@
-import React from "react";
-
 import { DND_ITEM_REVISIONS } from "../dnd";
 
 import { canBeReleased } from "../../helpers";
 import { ReleasesTableCellView, RevisionInfo, EmptyInfo } from "./cellViews";
 import { Revision, CPUArchitecture } from "../../../../types/releaseTypes";
+import { DraggedItem } from "./types";
 
 interface ReleasesTableRevisionCellProps {
-  revision?: Revision | null;
-  showVersion?: boolean; // Not used in the component logic, only in propTypes
+  revision: Revision | null;
+  showVersion: boolean; // Not used in the component logic, only in propTypes
   arch: CPUArchitecture;
 }
 
@@ -19,12 +18,13 @@ const ReleasesTableRevisionCell = (props: ReleasesTableRevisionCellProps) => {
   const item = {
     revisions: [revision],
     architectures: revision ? revision.architectures : [],
-    type: DND_ITEM_REVISIONS,
+    type: DND_ITEM_REVISIONS
   };
 
   return (
     <ReleasesTableCellView
-      item={item}
+      /* cast `item` forcefully because object doesn't have `risk` and `branch` */
+      item={item as unknown as DraggedItem}
       canDrag={!!revision && canBeReleased(revision)}
       cellType="revision"
       arch={arch}

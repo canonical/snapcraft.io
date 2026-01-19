@@ -1,7 +1,11 @@
 import React from "react";
-import PropTypes from "prop-types";
+import type { PendingReleaseItem } from "../../../../types/releaseTypes";
 
-const CancelProgressiveRow = ({ release }) => {
+interface CancelProgressiveRowProps {
+  release: PendingReleaseItem;
+}
+
+const CancelProgressiveRow = ({ release }: CancelProgressiveRowProps) => {
   const revisionInfo = release.revision;
 
   return revisionInfo.architectures.map((arch) => {
@@ -19,10 +23,6 @@ const CancelProgressiveRow = ({ release }) => {
       </div>
     );
   });
-};
-
-CancelProgressiveRow.propTypes = {
-  release: PropTypes.object,
 };
 
 export default CancelProgressiveRow;

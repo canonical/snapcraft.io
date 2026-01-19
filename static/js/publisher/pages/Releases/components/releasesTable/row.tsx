@@ -6,7 +6,6 @@ import { getRevisionsArchitectures } from "../../helpers";
 import ReleasesTableChannelHeading from "./channelHeading";
 import { ArchitectureRevisionsMap } from "../../../../types/releaseTypes";
 import { Branch } from "../../selectors";
-import { DraggedItem } from "./types";
 
 interface ReleasesTableRowProps {
   revisions: ArchitectureRevisionsMap;
@@ -15,8 +14,6 @@ interface ReleasesTableRowProps {
   branch?: Branch;
   canDrop?: boolean;
   children?: React.ReactNode;
-  isOverParent?: boolean; // Passed to children but not used in this component
-  draggedItem?: DraggedItem; // Passed to children but not used in this component
 }
 
 // generic releases table row component

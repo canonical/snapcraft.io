@@ -1,6 +1,13 @@
-import PropTypes from "prop-types";
+import { ReactNode } from "react";
+import type { Revision, Channel } from "../../../../types/releaseTypes";
 
-const ReleaseRow = ({ type, revisionInfo, channel }) => (
+interface ReleaseRowProps {
+  type?: string;
+  revisionInfo: Revision;
+  channel: Channel["name"] | ReactNode;
+}
+
+const ReleaseRow = ({ type, revisionInfo, channel }: ReleaseRowProps) => (
   <p>
     <span className="p-tooltip--btm-center">
       {type} <strong>{revisionInfo.revision}</strong> to{" "}
@@ -12,11 +19,5 @@ const ReleaseRow = ({ type, revisionInfo, channel }) => (
     </span>
   </p>
 );
-
-ReleaseRow.propTypes = {
-  type: PropTypes.string,
-  revisionInfo: PropTypes.object,
-  channel: PropTypes.node,
-};
 
 export default ReleaseRow;

@@ -1,6 +1,4 @@
-/* eslint-disable */
 import React, { Component } from "react";
-import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
 import Notification from "./notification";
@@ -12,6 +10,15 @@ import {
   AVAILABLE_REVISIONS_SELECT_ALL,
 } from "../constants";
 import { getBuildId, getChannelName, isInDevmode } from "../helpers";
+import type {
+  Revision,
+  ReleasesReduxState,
+  DispatchFn,
+  AvailableRevisionsSelect,
+  PendingReleaseItem,
+  CPUArchitecture,
+  Channel,
+} from "../../../types/releaseTypes";
 
 import RevisionsListRow from "./revisionsListRow";
 import { closeHistory } from "../actions/history";
@@ -26,36 +33,65 @@ import {
   getFilteredAvailableRevisionsForArch,
   isProgressiveReleaseEnabled,
   getPendingRelease,
+  ReleaseHistoryItem,
 } from "../selectors";
-import { relative } from "@sentry/utils";
 
-class RevisionsList extends Component {
-  constructor() {
-    super();
+interface OwnProps {
+  // No own props - all props come from Redux
+}
+
+interface StateProps {
+  revisions: { [revision: string]: Revision };
+  filters: ReleasesReduxState["history"]["filters"];
+  pendingReleases: { [revision: string]: { [channel: string]: PendingReleaseItem } };
+  availableRevisionsSelect: AvailableRevisionsSelect;
+  showChannels?: boolean;
+  filteredReleaseHistory: ReleaseHistoryItem[];
+  selectedRevisions: number[];
+  selectedArchitectures: CPUArchitecture[];
+  filteredAvailableRevisions: Revision[];
+  getSelectedRevision: (arch: CPUArchitecture) => Revision | undefined;
+  getFilteredAvailableRevisionsForArch: (arch: CPUArchitecture) => Revision[];
+  pendingChannelMap: { [channel: string]: { [arch: string]: Revision } };
+  isProgressiveReleaseEnabled?: boolean;
+  getPendingRelease: (channel: Channel["name"], arch: CPUArchitecture) => PendingReleaseItem | null;
+}
+
+interface DispatchProps {
+  closeHistoryPanel: () => void;
+  toggleRevision: (revision: Revision) => void;
+}
+
+type RevisionsListProps = OwnProps & StateProps & DispatchProps;
+
+interface RevisionsListState {
+  [key: string]: boolean | undefined;
+}
+
+class RevisionsList extends Component<RevisionsListProps, RevisionsListState> {
+  constructor(props: RevisionsListProps) {
+    super(props);
 
     this.state = {};
   }
 
-  selectVersionClick(revisions) {
+  selectVersionClick(revisions: Revision[]) {
     revisions.forEach((revision) => this.props.toggleRevision(revision));
   }
 
   renderRow(
-    revision,
-    releasedRevision,
-    isSelectable,
-    showChannels,
-    isPending,
-    isActive,
-    showBuildRequest,
-    progressiveBeingCancelled,
+    revision: Revision,
+    releasedRevision: Revision | null,
+    isSelectable: boolean,
+    showChannels: boolean,
+    isPending: boolean,
+    isActive: boolean,
+    showBuildRequest: boolean,
+    progressiveBeingCancelled: boolean,
   ) {
     const rowKey = `revision-row-${revision.revision}-${
       revision.release ? revision.release.channel : new Date().getTime()
     }`;
-
-    const risk = this.props.filters.risk;
-    const track = this.props.filters.track;
 
     return (
       <RevisionsListRow
@@ -73,7 +109,7 @@ class RevisionsList extends Component {
   }
 
   // Moves the active revision to the top of the list
-  getSortedRevisions(activeRevision, revisions) {
+  getSortedRevisions(activeRevision: Revision | null, revisions: Revision[]) {
     const activeRevisionIndex = revisions.findIndex(
       (revision) =>
         activeRevision && revision.revision === activeRevision.revision,
@@ -87,18 +123,18 @@ class RevisionsList extends Component {
   }
 
   renderRows(
-    revisions,
-    isSelectable,
-    showChannels,
-    activeRevision,
-    showBuildRequest,
-    progressiveReleaseBeingCancelled,
+    revisions: Revision[],
+    isSelectable: boolean,
+    showChannels: boolean,
+    activeRevision: Revision | null,
+    showBuildRequest: boolean,
+    progressiveReleaseBeingCancelled: PendingReleaseItem["replaces"] | null,
   ) {
     const sortedRevisions = this.getSortedRevisions(activeRevision, revisions);
 
     return sortedRevisions.map((revision, index) => {
       const isActive =
-        activeRevision && revision.revision === activeRevision.revision;
+        !!(activeRevision && revision.revision === activeRevision.revision);
 
       const progressiveBeingCancelled =
         progressiveReleaseBeingCancelled &&
@@ -106,7 +142,7 @@ class RevisionsList extends Component {
           ? true
           : false;
 
-      let releasedRevision = sortedRevisions[index - 1];
+      let releasedRevision: Revision | null = sortedRevisions[index - 1];
       if (index !== 1 || !releasedRevision?.release?.isProgressive) {
         releasedRevision = null;
       }
@@ -124,12 +160,12 @@ class RevisionsList extends Component {
     });
   }
 
-  onCloseClick(event) {
+  onCloseClick(event: React.MouseEvent<HTMLButtonElement>) {
     event.preventDefault();
     this.props.closeHistoryPanel();
   }
 
-  showAllRevisions(key) {
+  showAllRevisions(key: string) {
     this.setState({
       [key]: true,
     });
@@ -145,17 +181,17 @@ class RevisionsList extends Component {
       getPendingRelease,
     } = this.props;
     let filteredRevisions = filteredAvailableRevisions;
-    let title = "Latest revisions";
+    let title: React.ReactNode = "Latest revisions";
     let filters = this.props.filters;
     let isReleaseHistory = false;
     let pendingRelease = null;
 
     // selected revision in current architecture
-    let selectedRevision;
+    let selectedRevision: Revision | undefined;
     // list of revisions from other architectures that have same version (and are not selected yet)
-    let selectedVersionRevisions = [];
+    let selectedVersionRevisions: Revision[] = [];
     // list of architectures with revisions in selected version
-    let selectedVersionRevisionsArchs = [];
+    let selectedVersionRevisionsArchs: CPUArchitecture[] = [];
 
     let key;
     let showAllRevisions = false;
@@ -224,7 +260,7 @@ class RevisionsList extends Component {
         // but only one (latest) per architecture
         filteredAvailableRevisions.forEach((revision) => {
           if (
-            revision.version === selectedRevision.version &&
+            revision.version === selectedRevision!.version &&
             revision.architectures.some(
               (arch) => selectedVersionRevisionsArchs.indexOf(arch) === -1,
             )
@@ -266,14 +302,14 @@ class RevisionsList extends Component {
         key += `/${availableRevisionsSelect}`;
       }
 
-      showAllRevisions = this.state[key];
+      showAllRevisions = !!this.state[key];
     }
 
     const hasDevmodeRevisions = filteredRevisions.some(isInDevmode);
 
-    let activeRevision = null;
+    let activeRevision: Revision | null = null;
 
-    if (this.props.filters) {
+    if (filters) {
       const activeChannel = getChannelName(filters.track, filters.risk);
       activeRevision = pendingChannelMap[activeChannel]
         ? pendingChannelMap[activeChannel][filters.arch]
@@ -287,8 +323,8 @@ class RevisionsList extends Component {
     const showProgressiveReleases =
       isProgressiveReleaseEnabled && !showChannels;
 
-    const progressiveReleaseBeingCancelled =
-      isProgressiveReleaseEnabled && pendingRelease && pendingRelease.replaces;
+    const progressiveReleaseBeingCancelled: PendingReleaseItem["replaces"] | null =
+      isProgressiveReleaseEnabled && pendingRelease && pendingRelease.replaces || null;
 
     const showPendingRelease =
       pendingRelease &&
@@ -308,7 +344,7 @@ class RevisionsList extends Component {
         <div className="u-clearfix" style={{ position: "relative" }}>
           <p
             role="heading"
-            aria-level="4"
+            aria-level={4}
             className="u-float-left p-heading--4"
           >
             {title}
@@ -337,7 +373,7 @@ class RevisionsList extends Component {
         )}
         {!isReleaseHistory && selectedVersionRevisions.length > 0 && (
           <div className="p-releases-confirm">
-            <b>{selectedRevision.version}</b> is available in{" "}
+            <b>{selectedRevision!.version}</b> is available in{" "}
             <span className="p-tooltip">
               <span className="p-help">
                 {selectedVersionRevisionsArchs.length} other architecture
@@ -384,12 +420,12 @@ class RevisionsList extends Component {
           <tbody>
             {showPendingRelease &&
               this.renderRow(
-                pendingRelease.revision,
-                pendingRelease.previousReleases[0],
+                pendingRelease!.revision,
+                pendingRelease!.previousReleases[0],
                 !isReleaseHistory,
-                showChannels,
+                !!showChannels,
                 true,
-                activeRevision.revision === pendingRelease.revision.revision,
+                activeRevision?.revision === pendingRelease?.revision.revision,
                 showBuildRequest,
                 false,
               )}
@@ -399,14 +435,14 @@ class RevisionsList extends Component {
                   ? filteredRevisions
                   : filteredRevisions.slice(0, 5),
                 !isReleaseHistory,
-                showChannels,
+                !!showChannels,
                 activeRevision,
                 showBuildRequest,
                 progressiveReleaseBeingCancelled,
               )
             ) : (
               <tr>
-                <td colSpan="4">
+                <td colSpan={4}>
                   <em>No releases</em>
                 </td>
               </tr>
@@ -435,7 +471,7 @@ class RevisionsList extends Component {
 
             <button
               className="p-button--link u-no-margin--bottom"
-              onClick={this.showAllRevisions.bind(this, key)}
+              onClick={this.showAllRevisions.bind(this, key!)}
             >
               Show more
             </button>
@@ -446,31 +482,7 @@ class RevisionsList extends Component {
   }
 }
 
-RevisionsList.propTypes = {
-  // state
-  revisions: PropTypes.object.isRequired,
-  filters: PropTypes.object,
-  pendingReleases: PropTypes.object.isRequired,
-  availableRevisionsSelect: PropTypes.string.isRequired,
-
-  // computed state (selectors)
-  showChannels: PropTypes.bool,
-  filteredReleaseHistory: PropTypes.array,
-  selectedRevisions: PropTypes.array.isRequired,
-  selectedArchitectures: PropTypes.array.isRequired,
-  filteredAvailableRevisions: PropTypes.array.isRequired,
-  getSelectedRevision: PropTypes.func.isRequired,
-  getFilteredAvailableRevisionsForArch: PropTypes.func.isRequired,
-  pendingChannelMap: PropTypes.object,
-  isProgressiveReleaseEnabled: PropTypes.bool,
-  getPendingRelease: PropTypes.func.isRequired,
-
-  // actions
-  closeHistoryPanel: PropTypes.func.isRequired,
-  toggleRevision: PropTypes.func.isRequired,
-};
-
-const mapStateToProps = (state) => {
+const mapStateToProps = (state: ReleasesReduxState): StateProps => {
   return {
     availableRevisionsSelect: state.availableRevisionsSelect,
     showChannels:
@@ -483,22 +495,22 @@ const mapStateToProps = (state) => {
     pendingReleases: state.pendingReleases,
     pendingChannelMap: getPendingChannelMap(state),
     selectedRevisions: getSelectedRevisions(state),
-    getSelectedRevision: (arch) => getSelectedRevision(state, arch),
+    getSelectedRevision: (arch: CPUArchitecture) => getSelectedRevision(state, arch),
     filteredReleaseHistory: getFilteredReleaseHistory(state),
     selectedArchitectures: getSelectedArchitectures(state),
     filteredAvailableRevisions: getFilteredAvailableRevisions(state),
-    getFilteredAvailableRevisionsForArch: (arch) =>
+    getFilteredAvailableRevisionsForArch: (arch: CPUArchitecture) =>
       getFilteredAvailableRevisionsForArch(state, arch),
     isProgressiveReleaseEnabled: isProgressiveReleaseEnabled(state),
-    getPendingRelease: (channel, arch) =>
+    getPendingRelease: (channel: Channel["name"], arch: CPUArchitecture) =>
       getPendingRelease(state, channel, arch),
   };
 };
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = (dispatch: DispatchFn): DispatchProps => {
   return {
     closeHistoryPanel: () => dispatch(closeHistory()),
-    toggleRevision: (revision) => dispatch(toggleRevision(revision)),
+    toggleRevision: (revision: Revision) => dispatch(toggleRevision(revision)),
   };
 };
 

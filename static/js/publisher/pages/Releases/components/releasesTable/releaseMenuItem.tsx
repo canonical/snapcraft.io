@@ -10,14 +10,10 @@ import {
   Revision,
   ChannelArchitectureRevisionsMap,
 } from "../../../../types/releaseTypes";
-
-// Type for item based on usage in cellViews.tsx
-interface MenuItem {
-  revisions: (Revision | null | undefined)[];
-}
+import { DraggedItem } from "./types";
 
 interface OwnProps {
-  item: MenuItem;
+  item: DraggedItem;
   risk: string;
   current?: string;
   // These props are passed but not used in component, only in Redux connect
