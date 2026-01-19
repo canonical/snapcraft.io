@@ -118,6 +118,7 @@ export type Revision<isLpBuild extends boolean = false> = {
    * Again, we just pretend this is part of the actual store response and mark them as optional for "safety".
    */
   channels?: string[];
+  release?: Release & { progressive: ProgressiveMutated }; // this might be unused?
   releases?: Release[];
   progressive?: ChannelMap["progressive"];
   expiration?: ChannelMap["expiration-date"];
@@ -356,13 +357,7 @@ export type ProgressiveChanges = {
 export type ProgressiveMutated = Prettify<Progressive & { key?: number }>; // TODO: why/when is this a thing?
 
 export type PendingReleaseItem = {
-  revision: Prettify<
-    Revision & {
-      // when are these added?
-      release?: Release & { progressive: ProgressiveMutated };
-      releases?: Release[];
-    }
-  >;
+  revision: Revision;
   channel: Channel["name"];
   previousReleases: Revision[];
   progressive: Prettify<
