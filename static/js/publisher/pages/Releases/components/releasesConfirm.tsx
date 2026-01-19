@@ -12,30 +12,24 @@ import {
 } from "../actions/pendingReleases";
 import { releaseRevisions } from "../actions/releases";
 import { triggerGAEvent } from "../actions/gaEventTracking";
-import { getSeparatePendingReleases } from "../selectors";
+import { getSeparatePendingReleases, SeparatePendingReleases } from "../selectors";
 import type { ReleasesReduxState, DispatchFn, PendingReleaseItem, Channel } from "../../../types/releaseTypes";
-
-interface UpdatesProps {
-  newReleasesToProgress: { [key: string]: PendingReleaseItem };
-  progressiveUpdates: { [key: string]: PendingReleaseItem };
-  cancelProgressive: { [key: string]: PendingReleaseItem };
-  newReleases: { [key: string]: PendingReleaseItem };
-  pendingCloses: Channel["name"][];
-}
 
 interface OwnProps {
   // No own props - all props come from Redux
 }
 
 interface StateProps {
-  updates: UpdatesProps;
+  updates: SeparatePendingReleases & {
+    pendingCloses: ReleasesReduxState["pendingCloses"];
+  };
 }
 
 interface DispatchProps {
-  triggerGAEvent: typeof triggerGAEvent;
+  triggerGAEvent: (...eventProps: Parameters<typeof triggerGAEvent>) => void;
   cancelPendingReleases: () => void;
   setProgressiveReleasePercentage: (percentage: number) => void;
-  releaseRevisions: () => Promise<void>;
+  releaseRevisions: () => Promise<unknown>;
 }
 
 type ReleasesConfirmProps = OwnProps & StateProps & DispatchProps;
@@ -47,7 +41,7 @@ type ReleasesConfirmState = {
 };
 
 class ReleasesConfirm extends Component<ReleasesConfirmProps, ReleasesConfirmState> {
-  stickyBar: RefObject<HTMLDivElement>;
+  stickyBar: RefObject<HTMLDivElement | null>;
   
   constructor(props: ReleasesConfirmProps) {
     super(props);
@@ -105,7 +99,7 @@ class ReleasesConfirm extends Component<ReleasesConfirmProps, ReleasesConfirmSta
 
   onPercentageChange(event: React.ChangeEvent<HTMLInputElement>) {
     this.setState({
-      percentage: event.target.value,
+      percentage: +event.target.value,
     });
   }
 
@@ -122,7 +116,9 @@ class ReleasesConfirm extends Component<ReleasesConfirmProps, ReleasesConfirmSta
     const { isLoading, showDetails } = this.state;
     const { updates } = this.props;
 
-    const updatesCount = Object.keys(updates).reduce((acc, update) => {
+    const updatesCount = (
+      Object.keys(updates) as (keyof ReleasesConfirmProps["updates"])[]
+    ).reduce((acc, update) => {
       if (Array.isArray(updates[update])) {
         //pendingCloses are an array
         return acc + updates[update].length;

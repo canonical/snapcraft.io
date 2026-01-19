@@ -365,11 +365,7 @@ export type PendingReleaseItem = {
       changes?: ProgressiveChanges;
     }
   >;
-  replaces: {
-    revision: Revision;
-    channel: Channel["name"];
-    progressive: Progressive;
-  };
+  replaces?: PendingReleaseItem;
 };
 
 /**

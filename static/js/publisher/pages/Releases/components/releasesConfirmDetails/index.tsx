@@ -3,8 +3,8 @@ import { connect } from "react-redux";
 import { Row, Col } from "@canonical/react-components";
 
 import { updateProgressiveReleasePercentage } from "../../actions/pendingReleases";
-import { isProgressiveReleaseEnabled } from "../../selectors";
-import type { Channel, PendingReleaseItem, ReleasesReduxState, DispatchFn } from "../../../../types/releaseTypes";
+import { isProgressiveReleaseEnabled, SeparatePendingReleases } from "../../selectors";
+import type { ReleasesReduxState, DispatchFn } from "../../../../types/releaseTypes";
 
 import progressiveTypes from "./types";
 import ReleaseRow from "./releaseRow";
@@ -13,16 +13,10 @@ import ProgressiveBarControl from "../progressiveBarControl";
 import ReleaseRowGroup from "./releaseRowGroup";
 import CloseChannelsRow from "./closeChannelsRow";
 
-interface UpdatesProps {
-  newReleasesToProgress: { [key: string]: PendingReleaseItem };
-  progressiveUpdates: { [key: string]: PendingReleaseItem };
-  cancelProgressive: { [key: string]: PendingReleaseItem };
-  newReleases: { [key: string]: PendingReleaseItem };
-  pendingCloses: Channel["name"][];
-}
-
 interface OwnProps {
-  updates: UpdatesProps;
+  updates: SeparatePendingReleases & {
+    pendingCloses: ReleasesReduxState["pendingCloses"];
+  };
 }
 
 interface StateProps {
