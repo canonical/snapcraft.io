@@ -36,7 +36,8 @@ class ProgressiveBarControl extends React.Component<ProgressiveBarControlProps> 
   }
 
   render() {
-    const { release, type, globalPercentage, minPercentage } = this.props;
+    const { release, type, globalPercentage, minPercentage: _minPercentage } = this.props;
+    const minPercentage = _minPercentage ?? 0;
 
     if (!release.progressive) {
       return false;
@@ -51,11 +52,11 @@ class ProgressiveBarControl extends React.Component<ProgressiveBarControlProps> 
       switch (type) {
         case progressiveTypes.RELEASE:
           startingPercentage = targetPercentage =
-            release.progressive.percentage;
+            release.progressive.percentage ?? 100;
           break;
         case progressiveTypes.UPDATE:
-          startingPercentage = release.revision.release.progressive.percentage;
-          targetPercentage = release.progressive.percentage;
+          startingPercentage = release.revision.release?.progressive.percentage ?? 100;
+          targetPercentage = release.progressive.percentage ?? 100;
           break;
         default:
       }
