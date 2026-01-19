@@ -1,4 +1,4 @@
-import { Component, createRef } from "react";
+import { Component, createRef, RefObject } from "react";
 import { connect } from "react-redux";
 
 import debounce from "../../../../libs/debounce";
@@ -13,24 +13,43 @@ import {
 import { releaseRevisions } from "../actions/releases";
 import { triggerGAEvent } from "../actions/gaEventTracking";
 import { getSeparatePendingReleases } from "../selectors";
+import type { ReleasesReduxState, DispatchFn, PendingReleaseItem, Channel } from "../../../types/releaseTypes";
 
-type Props = {
+interface UpdatesProps {
+  newReleasesToProgress: { [key: string]: PendingReleaseItem };
+  progressiveUpdates: { [key: string]: PendingReleaseItem };
+  cancelProgressive: { [key: string]: PendingReleaseItem };
+  newReleases: { [key: string]: PendingReleaseItem };
+  pendingCloses: Channel["name"][];
+}
+
+interface OwnProps {
+  // No own props - all props come from Redux
+}
+
+interface StateProps {
+  updates: UpdatesProps;
+}
+
+interface DispatchProps {
   triggerGAEvent: typeof triggerGAEvent;
-  cancelPendingReleases: Function;
-  setProgressiveReleasePercentage: Function;
-  releaseRevisions: Function;
-  updates: any;
-};
+  cancelPendingReleases: () => void;
+  setProgressiveReleasePercentage: (percentage: number) => void;
+  releaseRevisions: () => Promise<void>;
+}
 
-type State = {
+type ReleasesConfirmProps = OwnProps & StateProps & DispatchProps;
+
+type ReleasesConfirmState = {
   isLoading: boolean;
   showDetails: boolean;
   percentage?: number;
 };
 
-class ReleasesConfirm extends Component<Props, State> {
-  stickyBar: any;
-  constructor(props: Props) {
+class ReleasesConfirm extends Component<ReleasesConfirmProps, ReleasesConfirmState> {
+  stickyBar: RefObject<HTMLDivElement>;
+  
+  constructor(props: ReleasesConfirmProps) {
     super(props);
 
     this.state = {
@@ -45,12 +64,14 @@ class ReleasesConfirm extends Component<Props, State> {
     document.addEventListener(
       "scroll",
       debounce(() => {
-        const stickyBarRec = this.stickyBar.current.getBoundingClientRect();
-        const top = stickyBarRec.top;
-        const scrollX = window.scrollX;
-        const topPosition = top + scrollX;
+        if (this.stickyBar.current) {
+          const stickyBarRec = this.stickyBar.current.getBoundingClientRect();
+          const top = stickyBarRec.top;
+          const scrollX = window.scrollX;
+          const topPosition = top + scrollX;
 
-        this.stickyBar.current.classList.toggle("is-pinned", topPosition === 0);
+          this.stickyBar.current.classList.toggle("is-pinned", topPosition === 0);
+        }
       }, 500),
     );
   }
@@ -82,7 +103,7 @@ class ReleasesConfirm extends Component<Props, State> {
     });
   }
 
-  onPercentageChange(event: { target: { value: any } }) {
+  onPercentageChange(event: React.ChangeEvent<HTMLInputElement>) {
     this.setState({
       percentage: event.target.value,
     });
@@ -161,7 +182,7 @@ class ReleasesConfirm extends Component<Props, State> {
   }
 }
 
-const mapStateToProps = (state: any) => {
+const mapStateToProps = (state: ReleasesReduxState): StateProps => {
   return {
     updates: {
       ...getSeparatePendingReleases(state),
@@ -170,7 +191,7 @@ const mapStateToProps = (state: any) => {
   };
 };
 
-const mapDispatchToProps = (dispatch: any) => {
+const mapDispatchToProps = (dispatch: DispatchFn): DispatchProps => {
   return {
     releaseRevisions: () => dispatch(releaseRevisions()),
     cancelPendingReleases: () => dispatch(cancelPendingReleases()),
