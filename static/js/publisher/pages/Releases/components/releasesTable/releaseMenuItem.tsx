@@ -48,9 +48,11 @@ function ReleaseMenuItem(props: ReleaseMenuItemProps) {
         props.current === risk || hasDevmodeRevisions ? "is-disabled" : ""
       }`}
       onClick={() => {
-        props.item.revisions.forEach((r) => {
-          return r && canBeReleased(r) && props.promoteRevision(r, risk);
-        });
+        props.item.revisions
+          .filter((v): v is Revision => !!v)
+          .forEach((r) => {
+            return r && canBeReleased(r) && props.promoteRevision(r, risk);
+          });
       }}
     >
       {risk}
