@@ -4,8 +4,7 @@ import { Row, Col } from "@canonical/react-components";
 
 import { updateProgressiveReleasePercentage } from "../../actions/pendingReleases";
 import { isProgressiveReleaseEnabled } from "../../selectors";
-import type { PendingReleaseItem, ReleasesReduxState, DispatchFn } from "../../../types/releaseTypes";
-import type { Channel } from "../../../types/releaseTypes";
+import type { Channel, PendingReleaseItem, ReleasesReduxState, DispatchFn } from "../../../../types/releaseTypes";
 
 import progressiveTypes from "./types";
 import ReleaseRow from "./releaseRow";

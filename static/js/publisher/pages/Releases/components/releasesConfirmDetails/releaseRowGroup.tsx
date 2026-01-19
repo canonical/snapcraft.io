@@ -1,4 +1,4 @@
-import type { PendingReleaseItem } from "../../../types/releaseTypes";
+import type { PendingReleaseItem } from "../../../../types/releaseTypes";
 
 import progressiveTypes from "./types";
 import ReleaseRow from "./releaseRow";

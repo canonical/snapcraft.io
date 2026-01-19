@@ -1,5 +1,5 @@
 import { ReactNode } from "react";
-import type { Revision, Channel } from "../../../types/releaseTypes";
+import type { Revision, Channel } from "../../../../types/releaseTypes";
 
 interface ReleaseRowProps {
   type?: string;

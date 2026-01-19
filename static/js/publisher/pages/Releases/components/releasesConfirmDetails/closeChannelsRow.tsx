@@ -1,5 +1,5 @@
 import React, { Fragment } from "react";
-import type { Channel } from "../../../types/releaseTypes";
+import type { Channel } from "../../../../types/releaseTypes";
 
 interface CloseChannelsRowProps {
   channels: Channel["name"][];
