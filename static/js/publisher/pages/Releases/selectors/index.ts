@@ -26,8 +26,10 @@ export function isProgressiveReleaseEnabled(state: ReleasesReduxState) {
   return !!state.options.flags.isProgressiveReleaseEnabled;
 }
 
+export type ReleaseHistoryItem = ReleasesReduxState["revisions"][string] & { release: Release };
+
 // returns release history filtered by history filters
-export function getFilteredReleaseHistory(state: ReleasesReduxState) {
+export function getFilteredReleaseHistory(state: ReleasesReduxState): ReleaseHistoryItem[] {
   const releases = state.releases;
   const revisions = state.revisions;
   const filters = state.history.filters;
