@@ -177,6 +177,22 @@ When reviewing pull requests, be a constructive and helpful reviewer:
 - Mention when changes require documentation updates
 - Highlight QA steps that are unclear, missing prerequisites, or difficult to follow
 
+**Security: Flask Template Autoescaping (CRITICAL)**:
+- **Always verify** that templates with user-generated content use autoescaped extensions
+- Flask [autoescapes templates](https://flask.palletsprojects.com/en/stable/templating/#control-autoescaping) with these extensions: `.html`, `.htm`, `.xml`, `.xhtml`, `.svg`
+- **Flag any template** with different extensions (e.g., `.jinja`, `.jinja2`, `.txt`, `.js`) that contains user input
+- For non-autoescaped templates:
+  - Request explicit escaping using `{{ variable|e }}` or `{% autoescape true %}...{% endautoescape %}`
+  - Ask developer to verify all data passed to the template is properly escaped
+  - Consider suggesting renaming to an autoescaped extension if appropriate
+- **Red flags** to watch for:
+  - New template files with non-standard extensions (not `.html`, `.htm`, `.xml`, `.xhtml`, `.svg`)
+  - Use of `{% autoescape false %}` without clear justification
+  - Rendering user input in templates without escaping
+  - Use of `render_template_string()` with user-controlled content
+  - Use of `|safe` filter or `Markup()` with unsanitized user input
+- Cross-site scripting (XSS) vulnerabilities are critical - be vigilant about template escaping
+
 **Use Conversational Style**:
 - Ask questions to understand the author's intent: "What's the reasoning behind this approach?"
 - Suggest alternatives as questions: "Have you considered using X instead? It might simplify Y."
@@ -193,6 +209,7 @@ When reviewing pull requests, be a constructive and helpful reviewer:
 - Check accessibility for UI changes (semantic HTML, ARIA labels, keyboard navigation)
 - Verify responsive design for frontend changes
 - Ensure UI components use Vanilla Framework patterns instead of custom implementations where possible
+- Always check for security vulnerabilities, especially around template escaping, input validation, and authentication
 
 ## Maintaining These Instructions
 
