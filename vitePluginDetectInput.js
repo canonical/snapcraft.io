@@ -71,7 +71,7 @@ const DEFAULT_PLUGIN_CONFIG = {
   matchCallback: (match) => match.at(-1),
   glob: "**/*",
   globOptions: {
-    ignore: ["**/node_module/*", "**/.venv/*", "**/venv/*"],
+    ignore: ["**/node_modules/*", "**/.venv/*", "**/venv/*"],
   },
 };
 
