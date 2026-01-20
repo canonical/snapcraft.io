@@ -2,50 +2,49 @@ import react from "@vitejs/plugin-react-swc";
 import { defineConfig, loadEnv } from "vite";
 import autoprefixer from "autoprefixer";
 import { execSync } from "node:child_process";
+import { rgPath as rg } from "@vscode/ripgrep";
 
 /**
  * Plugin that automatically detects and injects entry points based on the
+ * vite_import(...) calls
  */
-const flaskViteImportPlugin = () => ({
-  name: "flask-build-input-config",
+const viteFlaskImportPlugin = () => ({
+  name: "vite-flask-import-plugin",
   config(config, env) {
     // In dev mode we don't need to define entry points
     if (env.mode === "development") return config;
 
     let input = [];
 
-    try {
-      // In production mode the entry points are the arguments of all the
-      // `vite_import(...)` calls in templates/
-      const viteImports =
-        execSync(
-          // TODO: do it in Node to make it truly portable`
-          `grep -rnoh --include '*.html' -e 'vite_import\\((.*)\\)'`,
-        ).toString() || ""; // big multi-line string wit the format
-      // `vite_import(<filename>)`
+    // In production mode the entry points can be read by parsing the strings
+    // passed as arguments to the `vite_import(...)` calls in templates/; we
+    // use ripgrep to search for all `vite_import(<filename>)` calls, the
+    // result is a big multi-line string with all the file names
+    const viteImports =
+      execSync(
+        `${rg} -oNI -t 'html' -e 'vite_import\\((.+)\\)' -r "\\$1" ./templates`,
+      ).toString() || "";
 
-      // filenames are contained in strings with either " or ' as delimiters
-      const imports = viteImports
-        .replaceAll(`"`, `'`) // replace all " with '
-        .split(`'`) // split on '
-        .filter((_, i) => i % 2 === 1); // the filenames sit at odd indices
+    // filenames are contained in strings with either " or ' as delimiters
+    const imports = viteImports
+      .replaceAll(/["']/g, "") // remove all " and '
+      .split("\n")
+      .filter(Boolean); // remove empty strings
 
-      // remove possible duplicate imports, sort just for clarity
-      input = Array.from(new Set(imports)).sort();
+    // remove possible duplicate imports, sort just for clarity
+    input = Array.from(new Set(imports)).sort();
 
-      console.info("Building bundles for the following entry points:", input);
-    } catch (e) {
-      throw new Error(
-        "Vite: Couldn't find any entry points for production build\n" +
-          e.toString(),
-      );
+    if (input.length === 0) {
+      throw new Error("⚠️ Can't find any entry points for production build");
     }
 
-    // this will be deep-merged with the current config
+    console.log("🔍 Detected entry points:");
+    for (const file of input) console.log("  " + file);
+
     return defineConfig({
       build: {
         rollupOptions: {
-          input,
+          input, // this will be deep-merged into the current config
         },
       },
     });
@@ -55,7 +54,7 @@ const flaskViteImportPlugin = () => ({
 const env = loadEnv("all", process.cwd());
 
 export default defineConfig({
-  plugins: [flaskViteImportPlugin(), react()],
+  plugins: [viteFlaskImportPlugin(), react()],
   server: {
     port: env?.VITE_PORT || 5173,
     host: true,
