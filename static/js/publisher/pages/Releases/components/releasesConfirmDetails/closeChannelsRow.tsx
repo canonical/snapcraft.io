@@ -17,9 +17,9 @@ const CloseChannelsRow = ({ channels }: CloseChannelsRowProps) => {
       <span>
         {group
           .map((channel) => <b key={channel}>{channel}</b>)
-          .reduce<(JSX.Element | string)[]>((acc, el) => {
+          .reduce<React.ReactNode[] | null>((acc, el) => {
             return acc === null ? [el] : [...acc, ", ", el];
-          }, null as unknown as (JSX.Element | string)[])}
+          }, null as (React.ReactNode[] | null))}
         {last ? (
           <Fragment>
             {" "}
