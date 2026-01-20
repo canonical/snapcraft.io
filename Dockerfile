@@ -23,6 +23,7 @@ FROM yarn-dependencies AS build
 ADD static/js static/js
 ADD static/sass static/sass
 ADD vite.config.js .
+ADD viteDetectImportPlugin.js .
 ADD tsconfig.json .
 ADD templates .
 RUN yarn install
