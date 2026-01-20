@@ -1,61 +1,18 @@
 import react from "@vitejs/plugin-react-swc";
 import { defineConfig, loadEnv } from "vite";
 import autoprefixer from "autoprefixer";
-import { execSync } from "node:child_process";
-
-/**
- * Plugin that automatically detects and injects entry points based on the
- */
-const flaskViteImportPlugin = () => ({
-  name: "flask-build-input-config",
-  config(config, env) {
-    // In dev mode we don't need to define entry points
-    if (env.mode === "development") return config;
-
-    let input = [];
-
-    try {
-      // In production mode the entry points are the arguments of all the
-      // `vite_import(...)` calls in templates/
-      const viteImports =
-        execSync(
-          // TODO: do it in Node to make it truly portable`
-          `grep -rnoh --include '*.html' -e 'vite_import\\((.*)\\)'`,
-        ).toString() || ""; // big multi-line string wit the format
-      // `vite_import(<filename>)`
-
-      // filenames are contained in strings with either " or ' as delimiters
-      const imports = viteImports
-        .replaceAll(`"`, `'`) // replace all " with '
-        .split(`'`) // split on '
-        .filter((_, i) => i % 2 === 1); // the filenames sit at odd indices
-
-      // remove possible duplicate imports, sort just for clarity
-      input = Array.from(new Set(imports)).sort();
-
-      console.info("Building bundles for the following entry points:", input);
-    } catch (e) {
-      throw new Error(
-        "Vite: Couldn't find any entry points for production build\n" +
-          e.toString(),
-      );
-    }
-
-    // this will be deep-merged with the current config
-    return defineConfig({
-      build: {
-        rollupOptions: {
-          input,
-        },
-      },
-    });
-  },
-});
+import vitePluginDetectInput from "./vitePluginDetectInput";
 
 const env = loadEnv("all", process.cwd());
 
 export default defineConfig({
-  plugins: [flaskViteImportPlugin(), react()],
+  plugins: [
+    vitePluginDetectInput({
+      regex: /vite_import\(["'](.+)["']\)/g,
+      glob: "./templates/**/*.html",
+    }),
+    react(),
+  ],
   server: {
     port: env?.VITE_PORT || 5173,
     host: true,
