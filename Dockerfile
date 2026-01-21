@@ -24,7 +24,8 @@ ADD static/js static/js
 ADD static/sass static/sass
 ADD vite.config.js .
 ADD tsconfig.json .
-ADD templates .
+ADD templates templates
+ADD vitePluginDetectInput.js .
 RUN yarn install
 RUN yarn run build
 

@@ -82,6 +82,7 @@
     "sass-embedded": "1.93.2",
     "swiper": "11.2.0",
     "topojson-client": "3.1.0",
+    "tinyglobby": "0.2.15",
     "typescript": "5.3.3",
     "uuid": "11.0.4",
     "vanilla-framework": "4.35.0",
