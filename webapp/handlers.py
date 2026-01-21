@@ -76,7 +76,12 @@ CSP = {
         "'self'",
         "assets.ubuntu.com",
     ],
-    "script-src": [],
+    "script-src": [
+        "nonce-c4b6e1e692eb",
+        "nonce-64e769d4a163",
+        "nonce-3fcaedd3d3f5",
+        "nonce-4c034a7d15dc",
+    ],
     "connect-src": [
         "'self'",
         "ubuntu.com",

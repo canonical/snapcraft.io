@@ -6,7 +6,7 @@ Collaboration for {% if display_title %}{{ display_title }}{% else %}{{ snap_tit
 
 {% block content %}
 <main id="main-content"></main>
-<script>
+<script nonce="4c034a7d15dc">
   window.SENTRY_DSN = "{{ SENTRY_DSN }}";
   window.CSRF_TOKEN = "{{ csrf_token() }}";
   window.data = JSON.parse({{ collaborations_data|tojson }});
