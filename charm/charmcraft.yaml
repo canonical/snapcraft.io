@@ -1,0 +1,121 @@
+name: snapcraft-io
+
+type: charm
+
+bases:
+  - build-on:
+      - name: ubuntu
+        channel: "22.04"
+    run-on:
+      - name: ubuntu
+        channel: "22.04"
+
+summary: The charm for the snapcraft.io website
+
+description: The charm for the snapcraft.io website, built with the PaaS app charmer
+
+extensions:
+  - flask-framework
+
+config:
+  options:
+    sentry-dsn:
+      description: "Sentry Data Source Name for the project"
+      type: string
+
+    environment:
+      description: "Environment in which the application is running, mostly useless for the charmed version of the app"
+      default: "production"
+      type: string
+
+    marketo-client-id:
+      description: "Marketo API client ID"
+      type: string
+
+    marketo-client-secret:
+      description: "Marketo API client secret"
+      type: string
+
+    github-client-id:
+      description: "GitHub OAuth application ID for prompting users for access to their repositories"
+      type: string
+
+    github-client-secret:
+      description: "GitHub OAuth application client secret for prompting users for access to their repositories"
+      type: string
+
+    github-snapcraft-user-token:
+      description: "GitHub application token for automated builds"
+      type: string
+
+    github-snapcraft-bot-user-token:
+      description: "GitHub application token for CVE data"
+      type: string
+
+    github-webhook-secret:
+      description: "Secret salt used for signing automated build webhooks"
+      type: string
+
+    github-webhook-host-url:
+      description: "URL of the automated build webhooks' host"
+      type: string
+
+    lp-api-username:
+      description: "Launchpad API username"
+      type: string
+
+    lp-api-token:
+      description: "Launchpad API token"
+      type: string
+
+    lp-api-token-secret:
+      description: "Launchpad API secret"
+      type: string
+
+    youtube-api-key:
+      description: "API key used to access the YouTube Data API for retrieving and displaying YouTube video content on snapcraft.io"
+      type: string
+
+    discourse-api-key:
+      description: "API key used by the application to authenticate with the configured Discourse forum"
+      type: string
+
+    discourse-api-username:
+      description: "Discourse username to associate with API requests to the Discourse forum"
+      type: string
+
+    dns-verification-salt:
+      description: "Secret salt used when generating DNS verification tokens to confirm domain ownership"
+      type: string
+
+    login-url:
+      description: "Base URL for SSO login redirects"
+      default: "https://login.ubuntu.com"
+      type: string
+
+    bsi-url:
+      description: "Base URL for the Build Snapcraft IO service used for automated builds"
+      default: "https://build.snapcraft.io"
+      type: string
+
+    snapstore-dashboard-api-url:
+      description: "Base URL for SCA backend"
+      default: "https://dashboard.snapcraft.io/"
+      type: string
+
+    publishergw-url:
+      description: "Base URL for Publisher Gateway API"
+      default: "https://api.charmhub.io"
+      type: string
+
+    devicegw-url:
+      description: "Base URL for Device Gateway API"
+      default: "https://api.snapcraft.io/"
+      type: string
+
+
+# requires:
+#   tracing:
+#     interface: tracing
+#     optional: true
+#     limit: 1
