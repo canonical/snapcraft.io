@@ -2,8 +2,10 @@ import socket
 from urllib.parse import unquote, urlparse, urlunparse
 
 import base64
+import copy
 import hashlib
 import re
+import secrets
 import sentry_sdk
 
 import flask
@@ -176,6 +178,7 @@ def snapcraft_utility_processor():
         "BSI_URL": BSI_URL,
         "now": datetime.now(),
         "user_is_canonical": user_is_canonical,
+        "CSP_NONCE": getattr(flask.g, "CSP_NONCE", ""),
         # Functions
         "contains": template_utils.contains,
         "join": template_utils.join,
@@ -309,6 +312,13 @@ def set_handlers(app):
     # Global tasks for all requests
     # ===
     @app.before_request
+    def generate_nonce():
+        """
+        Generate a cryptographically secure random nonce for CSP
+        """
+        flask.g.CSP_NONCE = secrets.token_urlsafe(16)
+
+    @app.before_request
     def clear_trailing():
         """
         Remove trailing slashes from all routes
@@ -338,16 +348,29 @@ def set_handlers(app):
         return list(directive_items)
 
     # Find all script elements in the response and add their hashes to the CSP.
-    def add_script_hashes_to_csp(response):
+    # Also add nonce for use in inline script elements
+    def add_script_hashes_and_nonce_to_csp(response):
         response.freeze()
         decoded_content = b"".join(response.response).decode(
             "utf-8", errors="replace"
         )
 
-        CSP["script-src"] = CSP_SCRIPT_SRC + get_csp_directive(
+        # Create a fresh copy of CSP for this request to
+        # prevent multiple nonces in the CSP headers
+        request_csp = copy.deepcopy(CSP)
+
+        # Use getattr to handle cases where CSP_NONCE might not be set
+        csp_nonce = getattr(flask.g, "CSP_NONCE", "")
+        if csp_nonce:
+            csp_nonce_value = f"'nonce-{csp_nonce}'"
+            request_csp["script-src-elem"] = CSP["script-src-elem"] + [
+                csp_nonce_value
+            ]
+
+        request_csp["script-src"] = CSP_SCRIPT_SRC + get_csp_directive(
             decoded_content, r'onclick\s*=\s*"(.*?)"'
         )
-        return CSP
+        return request_csp
 
     @app.after_request
     def add_headers(response):
@@ -386,7 +409,7 @@ def set_handlers(app):
                             "stale-if-error=86400",
                         }
                     )
-        csp = add_script_hashes_to_csp(response)
+        csp = add_script_hashes_and_nonce_to_csp(response)
         response.headers["Content-Security-Policy"] = helpers.get_csp_as_str(
             csp
         )
