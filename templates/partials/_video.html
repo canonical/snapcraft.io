@@ -15,7 +15,7 @@
   <div id="asciicastplayer"></div>
 {% endif %}
 
-<script>
+<script nonce="{{ CSP_NONCE }}">
   document.addEventListener("DOMContentLoaded", function() {
     const vimeoplayerFrame = document.getElementById("vimeoplayer");
     const asciicastplayerFrame = document.getElementById("asciicastplayer");
