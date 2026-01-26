@@ -357,18 +357,22 @@ def set_handlers(app):
         # prevent multiple nonces in the CSP headers
         request_csp = copy.deepcopy(CSP)
 
-        # Use getattr to handle cases where CSP_NONCE might not be set
+        # Handle cases where CSP_NONCE might not be set
         csp_nonce = getattr(request, "CSP_NONCE", "")
-        if csp_nonce:
-            csp_nonce_value = f"'nonce-{csp_nonce}'"
+        csp_nonce_value = f"'nonce-{csp_nonce}'" if csp_nonce else ""
+
+        # Include CSP_NONCE in script-src along with other directives
+        script_src_values = CSP_SCRIPT_SRC + get_csp_directive(
+            decoded_content, r'onclick\s*=\s*"(.*?)"'
+        )
+
+        if csp_nonce_value:
             request_csp["script-src-elem"] = CSP["script-src-elem"] + [
                 csp_nonce_value
             ]
-            request_csp["script-src"] = CSP["script-src"] + [csp_nonce_value]
+            script_src_values.append(csp_nonce_value)
 
-        request_csp["script-src"] = CSP_SCRIPT_SRC + get_csp_directive(
-            decoded_content, r'onclick\s*=\s*"(.*?)"'
-        )
+        request_csp["script-src"] = script_src_values
         return request_csp
 
     @app.after_request
