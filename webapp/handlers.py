@@ -176,7 +176,7 @@ def snapcraft_utility_processor():
         "BSI_URL": BSI_URL,
         "now": datetime.now(),
         "user_is_canonical": user_is_canonical,
-        "CSP_NONCE": getattr(flask.g, "CSP_NONCE", ""),
+        "CSP_NONCE": getattr(request, "CSP_NONCE", ""),
         # Functions
         "contains": template_utils.contains,
         "join": template_utils.join,
@@ -314,7 +314,7 @@ def set_handlers(app):
         """
         Generate a cryptographically secure random nonce for CSP
         """
-        flask.g.CSP_NONCE = secrets.token_urlsafe(16)
+        request.CSP_NONCE = secrets.token_urlsafe(16)
 
     @app.before_request
     def clear_trailing():
@@ -358,7 +358,7 @@ def set_handlers(app):
         request_csp = copy.deepcopy(CSP)
 
         # Use getattr to handle cases where CSP_NONCE might not be set
-        csp_nonce = getattr(flask.g, "CSP_NONCE", "")
+        csp_nonce = getattr(request, "CSP_NONCE", "")
         if csp_nonce:
             csp_nonce_value = f"'nonce-{csp_nonce}'"
             request_csp["script-src-elem"] = CSP["script-src-elem"] + [
