@@ -364,6 +364,7 @@ def set_handlers(app):
             request_csp["script-src-elem"] = CSP["script-src-elem"] + [
                 csp_nonce_value
             ]
+            request_csp["script-src"] = CSP["script-src"] + [csp_nonce_value]
 
         request_csp["script-src"] = CSP_SCRIPT_SRC + get_csp_directive(
             decoded_content, r'onclick\s*=\s*"(.*?)"'
