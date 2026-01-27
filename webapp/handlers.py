@@ -95,7 +95,8 @@ CSP = {
     "frame-src": [
         "'self'",
         "td.doubleclick.net",
-        "www.youtube.com/",
+        "www.youtube.com",
+        "youtube.com",
         "asciinema.org",
         "player.vimeo.com",
         "snapcraft.io",
