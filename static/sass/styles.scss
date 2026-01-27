@@ -165,8 +165,6 @@ $color-social-icon-foreground: $color-light;
 @include snapcraft-p-featured-snaps;
 @import "snapcraft_p-app-pagination";
 @include snapcraft-app-pagination;
-@import "snapcraft_p-ratings";
-@include snapcraft-p-ratings;
 @import "patterns_p-filter-panel";
 @import "snapcraft_l-application";
 @include snapcraft-l-application;
@@ -183,6 +181,8 @@ $color-social-icon-foreground: $color-light;
 @include vf-p-icon-toggle-side-nav;
 @include vf-p-icon-log-out;
 @include vf-p-icon-restart;
+@include vf-p-icon-thumbs-up;
+@include vf-p-icon-thumbs-down;
 
 dl {
   margin-bottom: $spv--x-large;
