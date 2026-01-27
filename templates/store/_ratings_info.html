@@ -2,17 +2,17 @@
 {%- if ratings and ratings.total_votes > 0  -%}
 <span class="p-snap-ratings">
   {%- if ratings.ratings_band == "very-good" -%}
-    <span class="p-snap-ratings__band p-snap-ratings__band--very-good" title="Very good rating">Very good</span>
+    <span title="Very good rating"><i class="p-icon--thumbs-up"></i> Very good</span>
   {%- elif ratings.ratings_band == "good" -%}
-    <span class="p-snap-ratings__band p-snap-ratings__band--good" title="Good rating">Good</span>
+    <span title="Good rating"><i class="p-icon--thumbs-up"></i> Good</span>
   {%- elif ratings.ratings_band == "neutral" -%}
-    <span class="p-snap-ratings__band p-snap-ratings__band--neutral" title="Neutral rating">Neutral</span>
+    <span title="Neutral rating"><i class="p-icon--minus"></i> Neutral</span>
   {%- elif ratings.ratings_band == "poor" -%}
-    <span class="p-snap-ratings__band p-snap-ratings__band--poor" title="Poor rating">Poor</span>
+    <span title="Poor rating"><i class="p-icon--thumbs-down"></i>  Poor</span>
   {%- elif ratings.ratings_band == "very-poor" -%}
-    <span class="p-snap-ratings__band p-snap-ratings__band--very-poor" title="Very poor rating">Very poor</span>
+    <span title="Very poor rating"><i class="p-icon--thumbs-down"></i> Very poor</span>
   {%- endif -%}
-  <span class="p-snap-ratings__votes"> ({{ ratings.total_votes }} votes)</span>
+  <span> ({{ ratings.total_votes }} votes)</span>
 </span>
 {%- endif -%}
 {%- endmacro -%}
