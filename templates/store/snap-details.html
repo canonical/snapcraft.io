@@ -19,7 +19,7 @@
 {% endblock %}
 
 {% block meta_schema %}
-  <script type="application/ld+json">
+  <script type="application/ld+json" nonce="{{ CSP_NONCE }}">
     {
       "@context": "https://schema.org",
       "@type": "SoftwareApplication",
@@ -346,7 +346,7 @@
 {% endblock %}
 
 {% block scripts %}
-  <script>
+  <script nonce="{{ CSP_NONCE }}">
     window.addEventListener("DOMContentLoaded", function() {
       try {
         snapcraft.public.storeDetails.initExpandableArea();
