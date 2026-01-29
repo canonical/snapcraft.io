@@ -161,7 +161,7 @@
 {% endblock %}
 
 {% block scripts %}
-<script>
+<script nonce="{{ CSP_NONCE }}">
   window.addEventListener("DOMContentLoaded", function() {
     try {
        // Based on Vanilla side navigation example
