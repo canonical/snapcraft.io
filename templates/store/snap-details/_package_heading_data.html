@@ -1,6 +1,5 @@
 {%- from 'store/_developer_info.html' import developer_info -%}
 {%- from 'store/_publisher_info.html' import publisher_info -%}
-{%- from 'store/_ratings_info.html' import ratings_info -%}
 
 {%- macro package_icon(
     icon_url,
@@ -38,8 +37,7 @@
     publisher,
     developer_validation,
     STAR_DEVELOPER,
-    VERIFIED_PUBLISHER,
-    ratings) -%}
+    VERIFIED_PUBLISHER) -%}
   <div class="p-section--shallow">
     <h1 class="u-sv-1" data-live="title">{{ package_title }}</h1>
     {# TODO:
@@ -50,7 +48,6 @@
         {{ developer_info(name=developer[0], url=developer[1]) }}
       {% endif %}
       {{ publisher_info(publisher, username, developer_validation, display_name, VERIFIED_PUBLISHER, STAR_DEVELOPER) }}
-      {{ ratings_info(ratings) }}
     </div>
     <ul class="p-inline-list--vertical-divider">
       {% if developer %}
@@ -62,9 +59,6 @@
           <a href="/search?categories={{ category.slug }}">{{ category.name }}</a>
         </li>
       {% endfor %}
-      {% if ratings and ratings.total_votes > 0 %}
-        <li class="p-inline-list__item u-hide--small">{{ ratings_info(ratings) }}</li>
-      {% endif %}
     </ul>
   </div>
 {%- endmacro -%}
