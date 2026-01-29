@@ -26,8 +26,10 @@ export function isProgressiveReleaseEnabled(state: ReleasesReduxState) {
   return !!state.options.flags.isProgressiveReleaseEnabled;
 }
 
+export type ReleaseHistoryItem = ReleasesReduxState["revisions"][string] & { release: Release };
+
 // returns release history filtered by history filters
-export function getFilteredReleaseHistory(state: ReleasesReduxState) {
+export function getFilteredReleaseHistory(state: ReleasesReduxState): ReleaseHistoryItem[] {
   const releases = state.releases;
   const revisions = state.revisions;
   const filters = state.history.filters;
@@ -393,16 +395,25 @@ export function hasRelease(
     : false;
 }
 
+type PendingReleaseMap = { [key: string]: PendingReleaseItem };
+
+export type SeparatePendingReleases = Record<
+  | "progressiveUpdates"
+  | "newReleases"
+  | "newReleasesToProgress"
+  | "cancelProgressive",
+  PendingReleaseMap
+>;
+
 // Separate pendingRelease actions
-export function getSeparatePendingReleases(state: ReleasesReduxState) {
+export function getSeparatePendingReleases(state: ReleasesReduxState): SeparatePendingReleases {
   const { pendingReleases } = state;
   const isProgressiveEnabled = isProgressiveReleaseEnabled(state);
 
-  const progressiveUpdates: { [key: string]: PendingReleaseItem } = {};
-  const newReleases: { [key: string]: PendingReleaseItem } = {};
-  const newReleasesToProgress: { [key: string]: PendingReleaseItem } = {};
-  const cancelProgressive: { [key: string]: PendingReleaseItem["replaces"] } =
-    {};
+  const progressiveUpdates: PendingReleaseMap = {};
+  const newReleases: PendingReleaseMap = {};
+  const newReleasesToProgress: PendingReleaseMap = {};
+  const cancelProgressive: PendingReleaseMap = {};
 
   Object.keys(pendingReleases).forEach((revId) => {
     Object.keys(pendingReleases[revId]).forEach((channel) => {

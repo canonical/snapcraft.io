@@ -1,15 +1,22 @@
 import React from "react";
-import PropTypes from "prop-types";
+import type { Revision } from "../../../types/releaseTypes";
 
 import { isInDevmode } from "../helpers";
+
+interface RevisionLabelProps {
+  revision: Revision;
+  showTooltip?: boolean;
+  isProgressive?: boolean;
+  previousRevision?: number;
+}
 
 export default function RevisionLabel({
   revision,
   showTooltip,
   isProgressive,
   previousRevision,
-}) {
-  let revisionLabel = revision.revision;
+}: RevisionLabelProps) {
+  let revisionLabel: string | number = revision.revision;
 
   if (isProgressive) {
     revisionLabel = `${
@@ -45,10 +52,3 @@ export default function RevisionLabel({
 
   return revisionLabel;
 }
-
-RevisionLabel.propTypes = {
-  revision: PropTypes.object.isRequired,
-  showTooltip: PropTypes.bool,
-  isProgressive: PropTypes.bool,
-  previousRevision: PropTypes.number,
-};

@@ -1,9 +1,19 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
+import React, { Component, ReactNode } from "react";
 
-export default class ContextualMenu extends Component {
-  constructor() {
-    super();
+interface ContextualMenuProps {
+  isDisabled?: boolean;
+  label?: ReactNode | string;
+  title?: string;
+  children?: ReactNode;
+  className?: string;
+  isWide?: boolean;
+  position?: "left" | "center"; // right is by default
+  appearance?: "base" | "neutral";
+}
+
+export default class ContextualMenu extends Component<ContextualMenuProps> {
+  constructor(props: ContextualMenuProps) {
+    super(props);
     this.closeAllDropdowns = this.closeAllDropdowns.bind(this);
   }
 
@@ -16,16 +26,16 @@ export default class ContextualMenu extends Component {
     window.removeEventListener("click", this.closeAllDropdowns);
   }
 
-  itemClickHandler(event) {
+  itemClickHandler(event: React.MouseEvent) {
     this.closeAllDropdowns();
     event.preventDefault(); // prevent link from changing URL
     event.stopPropagation(); // prevent event from propagating to parent button and opening dropdown again
   }
 
-  dropdownButtonClick(event) {
-    const dropdownEl = event.target.nextSibling;
-    const isClosed = dropdownEl.getAttribute("aria-hidden") === "true";
-    const tooltipMessage = dropdownEl.parentNode.previousSibling;
+  dropdownButtonClick(event: React.MouseEvent<HTMLButtonElement>) {
+    const dropdownEl = (event.target as HTMLButtonElement).nextSibling as HTMLElement | null;
+    const isClosed = dropdownEl?.getAttribute("aria-hidden") === "true";
+    const tooltipMessage = dropdownEl?.parentNode?.previousSibling as HTMLElement | null;
 
     this.closeAllDropdowns();
 
@@ -34,7 +44,7 @@ export default class ContextualMenu extends Component {
     }
 
     if (isClosed && dropdownEl) {
-      dropdownEl.setAttribute("aria-hidden", false);
+      dropdownEl.setAttribute("aria-hidden", "false");
 
       if (tooltipMessage) {
         tooltipMessage.classList.add("u-hide");
@@ -45,11 +55,10 @@ export default class ContextualMenu extends Component {
   }
 
   closeAllDropdowns() {
-    [].slice
-      .call(document.querySelectorAll(".p-contextual-menu__dropdown"))
-      .forEach((dropdown) => {
-        dropdown.setAttribute("aria-hidden", true);
-      });
+    const dropdowns = document.querySelectorAll(".p-contextual-menu__dropdown");
+    Array.from(dropdowns).forEach((dropdown) => {
+      dropdown.setAttribute("aria-hidden", "true");
+    });
   }
 
   renderIcon() {
@@ -74,7 +83,7 @@ export default class ContextualMenu extends Component {
         <button
           className={className}
           title={title}
-          onClick={isDisabled ? null : this.dropdownButtonClick.bind(this)}
+          onClick={isDisabled ? undefined : this.dropdownButtonClick.bind(this)}
         >
           {this.renderIcon()}
         </button>
@@ -88,14 +97,3 @@ export default class ContextualMenu extends Component {
     );
   }
 }
-
-ContextualMenu.propTypes = {
-  isDisabled: PropTypes.bool,
-  label: PropTypes.oneOfType([PropTypes.node, PropTypes.string]),
-  title: PropTypes.string,
-  children: PropTypes.node,
-  className: PropTypes.string,
-  isWide: PropTypes.bool,
-  position: PropTypes.oneOf(["left", "center"]), // right is by default
-  appearance: PropTypes.oneOf(["base", "neutral"]),
-};

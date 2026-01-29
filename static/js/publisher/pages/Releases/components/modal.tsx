@@ -1,13 +1,36 @@
-import React, { Component } from "react";
+import React, { Component, ReactNode } from "react";
 import { connect } from "react-redux";
-import { PropTypes } from "prop-types";
 
 import { closeModal } from "../actions/modal";
-
 import { setDefaultTrack, clearDefaultTrack } from "../actions/defaultTrack";
+import type { ReleasesReduxState, DispatchFn } from "../../../types/releaseTypes";
 
-class ModalActionButton extends Component {
-  constructor(props) {
+type ModalAction = {
+  appearance: "positive" | "neutral" | "negative";
+  onClickAction:
+    | {
+        reduxAction: string;
+      }
+    | { type: string };
+  label: string;
+};
+
+interface ModalActionButtonProps {
+  onClickAction: ModalAction["onClickAction"];
+  appearance: ModalAction["appearance"];
+  children: ReactNode;
+  dispatch: DispatchFn;
+  setDefaultTrack?: () => void;
+  clearDefaultTrack?: () => void;
+  [key: string]: unknown; // For dynamic redux action props
+}
+
+interface ModalActionButtonState {
+  loading: boolean;
+}
+
+class ModalActionButton extends Component<ModalActionButtonProps, ModalActionButtonState> {
+  constructor(props: ModalActionButtonProps) {
     super(props);
 
     this.onClickHandler = this.onClickHandler.bind(this);
@@ -20,14 +43,12 @@ class ModalActionButton extends Component {
   onClickHandler() {
     const { onClickAction, dispatch } = this.props;
 
-    if (onClickAction.reduxAction) {
+    if ("reduxAction" in onClickAction) {
       const { reduxAction } = onClickAction;
-      if (
-        this.props[reduxAction] &&
-        typeof this.props[reduxAction] == "function"
-      ) {
+      const reduxActionFn = this.props[reduxAction];
+      if (reduxActionFn && typeof reduxActionFn === "function") {
         // If an action is passed, perform the specific action
-        this.props[onClickAction.reduxAction]();
+        (reduxActionFn as () => void)();
       }
     } else {
       // Otherwise dispatch the action object
@@ -63,14 +84,7 @@ class ModalActionButton extends Component {
   }
 }
 
-ModalActionButton.propTypes = {
-  onClickAction: PropTypes.object.isRequired,
-  appearance: PropTypes.string.isRequired,
-  children: PropTypes.node.isRequired,
-  dispatch: PropTypes.func.isRequired,
-};
-
-const mapActionButtonDispatchToProps = (dispatch) => ({
+const mapActionButtonDispatchToProps = (dispatch: DispatchFn) => ({
   dispatch,
   setDefaultTrack: () => dispatch(setDefaultTrack()),
   clearDefaultTrack: () => dispatch(clearDefaultTrack()),
@@ -81,7 +95,14 @@ const ModalActionButtonWrapped = connect(
   mapActionButtonDispatchToProps,
 )(ModalActionButton);
 
-const Modal = ({ title, content, actions, closeModal }) => {
+interface ModalProps {
+  title?: string;
+  content?: ReactNode;
+  actions?: ModalAction[];
+  closeModal: () => void;
+}
+
+const Modal = ({ title, content, actions = [], closeModal }: ModalProps) => {
   if (!title && !content) {
     return null;
   }
@@ -121,16 +142,9 @@ const Modal = ({ title, content, actions, closeModal }) => {
   );
 };
 
-Modal.propTypes = {
-  title: PropTypes.string.isRequired,
-  content: PropTypes.node.isRequired,
-  actions: PropTypes.array.isRequired,
-  closeModal: PropTypes.func.isRequired,
-};
+const mapStateToProps = (state: ReleasesReduxState) => state.modal || {};
 
-const mapStateToProps = ({ modal }) => modal || {};
-
-const mapModalDispatchToProps = (dispatch) => ({
+const mapModalDispatchToProps = (dispatch: DispatchFn) => ({
   closeModal: () => dispatch(closeModal()),
 });
 
