@@ -16,7 +16,6 @@ python -m grpc_tools.protoc \
   --proto_path="$PROTO_DIR" \
   --python_out="$GEN_DIR" \
   --grpc_python_out="$GEN_DIR" \
-  -Icollector/generated="$GEN_DIR" \
   "$PROTO_DIR"/*.proto
 
 

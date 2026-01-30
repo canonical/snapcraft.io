@@ -29,7 +29,7 @@ class TestRatingsClient(unittest.TestCase):
         )
         self.assertEqual(client.channel, mock_channel)
         self.assertTrue(client.use_ssl)
-        self.assertEqual(client.timeout, 30.0)
+        self.assertEqual(client.timeout, 10.0)
 
     @patch("webapp.ratings.ratings_client.grpc.insecure_channel")
     def test_init_insecure_channel(self, mock_insecure_channel):

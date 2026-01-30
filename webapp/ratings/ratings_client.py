@@ -89,7 +89,7 @@ class RatingsClient:
     def get_snap_rating(
         self, snap_id: str, _retry: bool = True
     ) -> Optional[Dict[str, Any]]:
-        """Get rating for a snap, with automatic token refresh on auth failure."""
+        """Get rating for a snap"""
         if not snap_id:
             logger.error("snap_id cannot be empty")
             return None
