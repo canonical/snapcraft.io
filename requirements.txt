@@ -30,6 +30,7 @@ werkzeug==2.3.8
 sentry-sdk==2.39.0
 grpcio==1.74.0
 protobuf==6.32.0
+gevent==25.9.1
 
 # Development dependencies
 Flask-Testing==0.8.1
