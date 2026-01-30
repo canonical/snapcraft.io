@@ -1,5 +1,5 @@
 {%- macro ratings_info(ratings) -%}
-{%- if ratings and ratings.total_votes > 0  -%}
+{%- if ratings -%}
 <span class="p-snap-ratings">
   {%- if ratings.ratings_band == "very-good" -%}
     <span title="Very good rating"><i class="p-icon--thumbs-up"></i> Very good</span>
@@ -8,7 +8,7 @@
   {%- elif ratings.ratings_band == "neutral" -%}
     <span title="Neutral rating"><i class="p-icon--minus"></i> Neutral</span>
   {%- elif ratings.ratings_band == "poor" -%}
-    <span title="Poor rating"><i class="p-icon--thumbs-down"></i>  Poor</span>
+    <span title="Poor rating"><i class="p-icon--thumbs-down"></i> Poor</span>
   {%- elif ratings.ratings_band == "very-poor" -%}
     <span title="Very poor rating"><i class="p-icon--thumbs-down"></i> Very poor</span>
   {%- endif -%}
