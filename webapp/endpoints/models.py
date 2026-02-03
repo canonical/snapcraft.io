@@ -262,3 +262,42 @@ def update_model(store_id: str, model_name: str):
     if res["success"]:
         return make_response(res, 200)
     return make_response(res, 500)
+
+
+@models.route("/api/store/<store_id>/models/remodel-allowlist")
+@login_required
+@exchange_required
+def get_remodel_allowlist(store_id: str):
+    """
+    Retrieves remodels associated with a given store ID.
+
+    Args:
+        store_id (int): The ID of the store for which to retrieve remodels.
+
+    Returns:
+        dict: A dictionary containing the response message, success status,
+        and data.
+    """
+
+    res = {}
+    try:
+        allowlist = publisher_gateway.get_remodel_allowlist(
+            flask.session, store_id
+        )
+        res["success"] = True
+        res["data"] = allowlist
+        response = make_response(res, 200)
+        response.cache_control.max_age = "3600"
+    except StoreApiResponseErrorList as error_list:
+        error_messages = [
+            f"{error.get('message', 'An error occurred')}"
+            for error in error_list.errors
+        ]
+        if "unauthorized" in error_messages:
+            res["message"] = "Store not found"
+        else:
+            res["message"] = " ".join(error_messages)
+        res["success"] = False
+        response = make_response(res, 500)
+
+    return response
