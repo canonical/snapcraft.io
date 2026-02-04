@@ -411,6 +411,81 @@
             }
           });
         }
+
+      const previewSaveButton = document.querySelector('.js-save');
+      const previewRevertButton = document.querySelector('.js-revert');
+
+      const getOpenerButtons = () => {
+        if (!window.opener) {
+          return { saveButton: null, revertButton: null };
+        }
+
+        try {
+          const openerDocument = window.opener.document;
+          return {
+            saveButton: openerDocument.querySelector(
+              '[data-js="save-and-preview-save"]'
+            ),
+            revertButton: openerDocument.querySelector(
+              '[data-js="save-and-preview-revert"]'
+            )
+          };
+        } catch (error) {
+          return { saveButton: null, revertButton: null };
+        }
+      };
+
+      const syncPreviewButtons = () => {
+        const { saveButton, revertButton } = getOpenerButtons();
+
+        if (previewSaveButton) {
+          previewSaveButton.disabled = !saveButton || saveButton.disabled;
+        }
+
+        if (previewRevertButton) {
+          previewRevertButton.disabled = !revertButton || revertButton.disabled;
+        }
+      };
+
+        const sendPreviewAction = (action) => {
+          if (!window.opener) {
+            return false;
+          }
+
+        window.opener.postMessage(
+          { type: "snapcraft-preview-action", action },
+          window.location.origin
+        );
+        window.opener.focus();
+        window.close();
+
+          return true;
+        };
+
+        const attachPreviewAction = (button, action) => {
+          if (!button) {
+            return;
+          }
+
+          button.addEventListener("click", (event) => {
+            const { saveButton, revertButton } = getOpenerButtons();
+            const openerButton = action === "save" ? saveButton : revertButton;
+
+            if (!openerButton) {
+              event.preventDefault();
+              return;
+            }
+
+            if (!sendPreviewAction(action)) {
+              event.preventDefault();
+            }
+          });
+        };
+
+        syncPreviewButtons();
+
+        attachPreviewAction(previewSaveButton, "save");
+        attachPreviewAction(previewRevertButton, "revert");
       {% endif %}
     });
   </script>
