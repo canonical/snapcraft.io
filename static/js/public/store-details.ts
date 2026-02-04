@@ -6,6 +6,7 @@ import initReportSnap from "./snap-details/reportSnap";
 import initEmbeddedCardModal from "./snap-details/embeddedCard";
 import { snapDetailsPosts } from "./snap-details/blog-posts";
 import initExpandableArea from "./expandable-area";
+import initSnapRatings from "./snap-details/ratings";
 import declareGlobal from "../libs/declare";
 
 declareGlobal("snapcraft.public.storeDetails", {
@@ -17,4 +18,5 @@ declareGlobal("snapcraft.public.storeDetails", {
   initExpandableArea,
   initReportSnap,
   videos,
+  initSnapRatings,
 });
