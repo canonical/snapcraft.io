@@ -7,6 +7,7 @@ import initEmbeddedCardModal from "./snap-details/embeddedCard";
 import { snapDetailsPosts } from "./snap-details/blog-posts";
 import initExpandableArea from "./expandable-area";
 import initCopyCommand from "./snap-details/copyCommand";
+import initSnapRatings from "./snap-details/ratings";
 import declareGlobal from "../libs/declare";
 import { trackPageView } from "@canonical/analytics-events";
 
@@ -25,4 +26,5 @@ declareGlobal("snapcraft.public.storeDetails", {
   initExpandableArea,
   initReportSnap,
   videos,
+  initSnapRatings,
 });
