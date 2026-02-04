@@ -83,6 +83,7 @@ CSP = {
         "*.analytics.google.com",
         "stats.g.doubleclick.net",
         "www.googletagmanager.com",
+        "docs.google.com",
         "sentry.is.canonical.com",
         "www.google-analytics.com",
         "plausible.io",
