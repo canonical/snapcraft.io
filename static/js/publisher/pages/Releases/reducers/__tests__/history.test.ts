@@ -19,6 +19,7 @@ describe("history", () => {
         filters: {
           track: "latest",
           arch: "abc42",
+          risk: ""
         },
       },
     };

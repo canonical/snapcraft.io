@@ -121,7 +121,7 @@
 </div>
 
 <!-- end of tutorial feedback -->
-<script>
+<script nonce="{{ CSP_NONCE }}">
   (function () {
     var tutorialFeedbackOptions = document.querySelector('.p-tutorial__feedback-options');
     var tutorialFeedbackIcons = document.querySelectorAll('.p-tutorial__feedback-icon');
@@ -145,7 +145,7 @@
   })();
 </script>
 
-<script>
+<script nonce="{{ CSP_NONCE }}">
   (function () {
     function setActiveLink(navigationItems) {
       [].forEach.call(navigationItems, function (item) {
@@ -193,7 +193,7 @@
   })();
 </script>
 
-<script>
+<script nonce="{{ CSP_NONCE }}">
   (function () {
     var polls = document.querySelectorAll('.poll');
 
@@ -220,7 +220,7 @@
   })();
 </script>
 
-<script>
+<script nonce="{{ CSP_NONCE }}">
   (function () {
     var toggleSidebar = document.querySelector('.p-sidebar__toggle');
     var sidebar = document.querySelector('.p-sidebar__content');

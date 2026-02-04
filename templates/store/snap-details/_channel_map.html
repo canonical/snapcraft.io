@@ -144,7 +144,7 @@
     </div>
   </div>
 </div>
-<script type="text/template" id="install-window-template" data-js="install-window">
+<script type="text/template" id="install-window-template" data-js="install-window" nonce="{{ CSP_NONCE }}">
   <div class="u-fixed-width">
     <a href="#" data-js="slide-all-versions">&lsaquo; All versions</a>
   </div>
@@ -168,7 +168,7 @@
     </p>
   </div>
 </script>
-<script type="text/template" id="channel-map-row-template" data-js="channel-map-row">
+<script type="text/template" id="channel-map-row-template" data-js="channel-map-row" nonce="{{ CSP_NONCE }}">
   <tr class="${rowClass}" data-js="slide-install-instructions" data-channel="${row[0]}/${row[1]}" data-confinement="${row[4]}">
     <td>${row[0]}/${row[1]}</td>
     <td>${row[2]}</td>
@@ -176,7 +176,7 @@
     <td class="u-align--center"><a href="#" class="p-channel-map__version-table-install">Install &rsaquo;</a></td>
   </tr>
 </script>
-<script type="text/template" id="channel-map-security-table-row-template" data-js="channel-map-security-table-row">
+<script type="text/template" id="channel-map-security-table-row-template" data-js="channel-map-security-table-row" nonce="{{ CSP_NONCE }}">
   <tr>
     <td>${row[0]}/${row[1]}</td>
     <td>${row[2]}</td>

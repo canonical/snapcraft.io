@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { Row, Col, Button } from "@canonical/react-components";
 
 import debounce from "../../../libs/debounce";
@@ -32,6 +32,66 @@ function SaveAndPreview({
   if (mainPanel) {
     mainPanel.addEventListener("scroll", debounce(handleScroll, 10, false));
   }
+
+  useEffect(() => {
+    if (!showPreview) {
+      return;
+    }
+
+    const handlePreviewAction = (event: MessageEvent): void => {
+      if (event.origin !== window.location.origin) {
+        return;
+      }
+
+      const data = event.data as { type?: string; action?: string } | null;
+      if (!data || data.type !== "snapcraft-preview-action") {
+        return;
+      }
+
+      const sourceWindow = event.source as Window | null;
+      const closePreview = (): void => {
+        if (sourceWindow && typeof sourceWindow.close === "function") {
+          sourceWindow.close();
+        }
+      };
+
+      if (data.action === "revert") {
+        if (isDirty) {
+          reset();
+        }
+        closePreview();
+        return;
+      }
+
+      if (data.action === "save") {
+        if (!isDirty || isSaving) {
+          closePreview();
+          return;
+        }
+
+        const formElement =
+          (stickyBar.current?.closest("form") as HTMLFormElement | null) ??
+          null;
+        if (!formElement) {
+          return;
+        }
+
+        if (typeof formElement.requestSubmit === "function") {
+          formElement.requestSubmit();
+        } else {
+          formElement.dispatchEvent(
+            new Event("submit", { bubbles: true, cancelable: true }),
+          );
+        }
+        closePreview();
+      }
+    };
+
+    window.addEventListener("message", handlePreviewAction);
+    return () => {
+      window.removeEventListener("message", handlePreviewAction);
+    };
+  }, [isDirty, isSaving, reset, showPreview]);
 
   return (
     <>
@@ -70,6 +130,7 @@ function SaveAndPreview({
                 appearance="default"
                 disabled={!isDirty}
                 type="reset"
+                data-js="save-and-preview-revert"
                 onClick={() => {
                   reset();
                 }}
@@ -81,6 +142,7 @@ function SaveAndPreview({
                 disabled={!isDirty || isSaving}
                 type="submit"
                 style={{ minWidth: "68px" }}
+                data-js="save-and-preview-save"
               >
                 {isSaving ? (
                   <i className="p-icon--spinner is-light u-animation--spin">

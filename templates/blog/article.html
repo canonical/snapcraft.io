@@ -9,7 +9,7 @@
 {% endif %}
 
 {% block meta_schema %}
-<script type="application/ld+json">
+<script type="application/ld+json" nonce="{{ CSP_NONCE }}">
     {
       "@context": "http://schema.org",
       "@id": "https://snapcraft.io/#article",
@@ -98,7 +98,7 @@
   </section>
 {% endif %}
 
-<script type="text/template" id="blog-series-item-template">
+<script type="text/template" id="blog-series-item-template" nonce="{{ CSP_NONCE }}">
   <li class="p-list__item">
     <h5>
       <a href="/blog/${slug}" class="p-blog-list__item ${className}">
@@ -114,7 +114,7 @@
 {% endblock %}
 
 {% block scripts %}
-  <script>
+  <script nonce="{{ CSP_NONCE }}">
     window.addEventListener("DOMContentLoaded", function() {
       try {
         {% if is_in_series %}

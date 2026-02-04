@@ -74,11 +74,6 @@ env: &env
       key: lp-api-token-secret
       name: snapcraft-io
 
-  - name: YOUTUBE_API_KEY
-    secretKeyRef:
-      key: youtube-api-key
-      name: snapcraft-io
-
   - name: DISCOURSE_API_KEY
     secretKeyRef:
       key: discourse-api-key

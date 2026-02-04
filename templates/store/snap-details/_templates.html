@@ -2,19 +2,19 @@
 {% set article_title = {'rendered': '${title}'} %}
 {% set article = {'slug': '${slug}', 'title': article_title, 'image': '${image}'} %}
 {% set container_class = "${container_class}" %}
-<script type="text/template" id="blog-article-template">
+<script type="text/template" id="blog-article-template" nonce="{{ CSP_NONCE }}">
   {% include 'partials/blog-card--minimal.html' %}
 </script>
 
 {% set video = {'type': 'youtube', 'url': '${url}', 'id': '${id}'} %}
-<script type="text/template" id="video-youtube-template">
+<script type="text/template" id="video-youtube-template" nonce="{{ CSP_NONCE }}">
   {% include 'partials/_video.html' %}
 </script>
 {% set video = {'type': 'vimeo', 'url': '${url}', 'id': '${id}'} %}
-<script type="text/template" id="video-vimeo-template">
+<script type="text/template" id="video-vimeo-template" nonce="{{ CSP_NONCE }}">
   {% include 'partials/_video.html' %}
 </script>
 {% set video = {'type': 'asciinema', 'url': '${url}', 'id': '${id}'} %}
-<script type="text/template" id="video-asciinema-template">
+<script type="text/template" id="video-asciinema-template" nonce="{{ CSP_NONCE }}">
   {% include 'partials/_video.html' %}
 </script>

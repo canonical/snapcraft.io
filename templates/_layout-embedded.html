@@ -45,7 +45,7 @@
 
     {% block scripts %}{% endblock %}
 
-    <script type="application/ld+json">
+    <script type="application/ld+json" nonce="{{ CSP_NONCE }}">
       {
         "@context": "http://schema.org/",
         "@id": "https://snapcraft.io/#organization",

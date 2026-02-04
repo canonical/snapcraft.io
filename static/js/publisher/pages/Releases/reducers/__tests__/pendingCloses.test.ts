@@ -1,12 +1,10 @@
-import pendingCloses, {
-  CancelPendingReleasesAction,
-  PendingClosesAction,
-  ReleaseRevisionAction,
-} from "../pendingCloses";
-import { CLOSE_CHANNEL, CloseChannelAction } from "../../actions/pendingCloses";
+import pendingCloses from "../pendingCloses";
+import { CLOSE_CHANNEL, CloseChannelAction, PendingClosesAction } from "../../actions/pendingCloses";
 import {
   RELEASE_REVISION,
   CANCEL_PENDING_RELEASES,
+  ReleaseRevisionAction,
+  CancelPendingReleasesAction,
 } from "../../actions/pendingReleases";
 import { ReleasesReduxState } from "../../../../types/releaseTypes";
 
@@ -66,7 +64,7 @@ describe("pendingCloses", () => {
         revision: { revision: 1, architectures: ["test64"] },
         channel: "test/edge",
       },
-    } as ReleaseRevisionAction;
+    } as unknown as ReleaseRevisionAction;
 
     describe("when there are no closed channels", () => {
       const emptyState = [] as ReleasesReduxState["pendingCloses"];

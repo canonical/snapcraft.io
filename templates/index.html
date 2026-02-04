@@ -164,12 +164,12 @@
 {{ vite_import('static/js/public/homepage.ts') }}
 {{ vite_import('static/js/public/featured-snaps.ts') }}
 {% if nps %}
-<script src="//app-sjg.marketo.com/js/forms2/js/forms2.min.js" defer></script>
+<script src="//app-sjg.marketo.com/js/forms2/js/forms2.min.js" defer nonce="{{ CSP_NONCE }}"></script>
 {% endif %}
 {% endblock %}
 
 {% block scripts %}
-<script>
+<script nonce="{{ CSP_NONCE }}">
   window.addEventListener("DOMContentLoaded", function () {
     try {
       snapcraft.public.homepage.initFSFLanguageSelect();

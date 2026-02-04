@@ -8,7 +8,7 @@
   </section>
 </div>
 
-<script type="text/template" id="contactFormTemplate">
+<script type="text/template" id="contactFormTemplate" nonce="{{ CSP_NONCE }}">
   {% with formid="{{formid}}",
    product="appstore",
    returnURL="https://snapcraft.io/about/thank-you" %}

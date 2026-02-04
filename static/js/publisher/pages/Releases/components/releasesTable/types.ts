@@ -4,7 +4,7 @@ import {
 } from "../../../../types/releaseTypes";
 
 export type DraggedItem = {
-  revisions: Revision[];
+  revisions: (Revision | null)[];
   architectures: CPUArchitecture[];
   risk: string;
   branch: string | null;

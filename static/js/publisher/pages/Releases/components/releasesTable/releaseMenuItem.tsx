@@ -10,14 +10,10 @@ import {
   Revision,
   ChannelArchitectureRevisionsMap,
 } from "../../../../types/releaseTypes";
-
-// Type for item based on usage in cellViews.tsx
-interface MenuItem {
-  revisions: (Revision | null | undefined)[];
-}
+import { DraggedItem } from "./types";
 
 interface OwnProps {
-  item: MenuItem;
+  item: DraggedItem;
   risk: string;
   current?: string;
   // These props are passed but not used in component, only in Redux connect
@@ -52,9 +48,11 @@ function ReleaseMenuItem(props: ReleaseMenuItemProps) {
         props.current === risk || hasDevmodeRevisions ? "is-disabled" : ""
       }`}
       onClick={() => {
-        props.item.revisions.forEach((r) => {
-          return r && canBeReleased(r) && props.promoteRevision(r, risk);
-        });
+        props.item.revisions
+          .filter((v): v is Revision => !!v)
+          .forEach((r) => {
+            return r && canBeReleased(r) && props.promoteRevision(r, risk);
+          });
       }}
     >
       {risk}

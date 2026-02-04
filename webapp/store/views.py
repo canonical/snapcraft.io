@@ -18,7 +18,6 @@ from webapp.api.exceptions import ApiError
 from webapp.store.snap_details_views import snap_details_views
 from webapp.helpers import api_publisher_session, api_session
 from flask.json import jsonify
-import os
 from webapp.extensions import csrf
 from webapp.store.logic import (
     get_categories,
@@ -27,7 +26,6 @@ from cache.cache_utility import redis_cache
 
 session = requests.Session()
 
-YOUTUBE_API_KEY = os.getenv("YOUTUBE_API_KEY")
 dashboard = Dashboard(api_session)
 publisher_gateway = PublisherGW("snap", api_publisher_session)
 device_gateway = DeviceGW("snap", api_session)
@@ -199,22 +197,6 @@ def store_blueprint(store_query=None):
             trending_snaps=trending_snaps,
             top_rated_snaps=top_rated_snaps,
         )
-
-    @store.route("/youtube", methods=["POST"])
-    def get_video_thumbnail_data():
-        body = flask.request.form
-        thumbnail_url = "https://www.googleapis.com/youtube/v3/videos"
-        thumbnail_data = session.get(
-            (
-                f"{thumbnail_url}?id={body['videoId']}"
-                f"&part=snippet&key={YOUTUBE_API_KEY}"
-            )
-        )
-
-        if thumbnail_data:
-            return thumbnail_data.json()
-
-        return {}
 
     @store.route("/publisher/<regex('[a-z0-9-]*[a-z][a-z0-9-]*'):publisher>")
     def publisher_details(publisher):

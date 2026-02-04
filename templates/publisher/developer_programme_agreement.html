@@ -43,7 +43,7 @@
 {% endblock %}
 
 {% block scripts %}
-<script>
+<script nonce="{{ CSP_NONCE }}">
   window.addEventListener("DOMContentLoaded", function() {
     try {
       var checkbox = document.querySelector('#id_i_agree');

@@ -20,7 +20,7 @@
 {% endblock %}
 
 {% block meta_schema %}
-  <script type="application/ld+json">
+  <script type="application/ld+json" nonce="{{ CSP_NONCE }}">
     {
       "@context": "https://schema.org",
       "@type": "SoftwareApplication",

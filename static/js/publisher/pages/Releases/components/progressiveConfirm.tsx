@@ -1,7 +1,17 @@
 import React from "react";
-import PropTypes from "prop-types";
+import type { PendingReleaseItem } from "../../../types/releaseTypes";
 
-const ProgressiveConfirm = ({ percentage, newReleases, onChange }) => {
+interface ProgressiveConfirmProps {
+  percentage?: string;
+  newReleases?: { [key: string]: PendingReleaseItem };
+  onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
+}
+
+const ProgressiveConfirm = ({
+  percentage,
+  newReleases = {},
+  onChange,
+}: ProgressiveConfirmProps) => {
   const releasesCount = Object.keys(newReleases).length;
   return (
     <div className="p-releases-confirm__rollout">
@@ -43,12 +53,6 @@ const ProgressiveConfirm = ({ percentage, newReleases, onChange }) => {
       </label>
     </div>
   );
-};
-
-ProgressiveConfirm.propTypes = {
-  percentage: PropTypes.string,
-  newReleases: PropTypes.object,
-  onChange: PropTypes.func,
 };
 
 export default ProgressiveConfirm;

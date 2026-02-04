@@ -1,6 +1,7 @@
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import "@testing-library/jest-dom";
+import type { FormEvent } from "react";
 
 import SaveAndPreview from "./SaveAndPreview";
 
@@ -10,6 +11,7 @@ const renderComponent = (
   isDirty: boolean,
   isSaving: boolean,
   isValid: boolean,
+  showPreview = false,
 ) => {
   return render(
     <SaveAndPreview
@@ -18,9 +20,14 @@ const renderComponent = (
       reset={reset}
       isSaving={isSaving}
       isValid={isValid}
+      showPreview={showPreview}
     />,
   );
 };
+
+beforeEach(() => {
+  reset.mockClear();
+});
 
 test("the 'Revert' button is disabled by default", () => {
   renderComponent(false, false, true);
@@ -76,4 +83,70 @@ test("revert button resets the form", async () => {
   await waitFor(() => {
     expect(reset).toHaveBeenCalled();
   });
+});
+
+test("preview action revert resets the form", () => {
+  render(
+    <form>
+      <SaveAndPreview
+        snapName="test-snap-name"
+        isDirty={true}
+        reset={reset}
+        isSaving={false}
+        isValid={true}
+        showPreview={true}
+      />
+    </form>,
+  );
+
+  const previewWindow = { close: vi.fn() } as unknown as Window;
+
+  window.dispatchEvent(
+    new MessageEvent("message", {
+      data: { type: "snapcraft-preview-action", action: "revert" },
+      origin: window.location.origin,
+      source: previewWindow,
+    }),
+  );
+
+  expect(reset).toHaveBeenCalled();
+});
+
+test("preview action save submits the form", () => {
+  const handleSubmit = vi.fn((event: FormEvent<HTMLFormElement>) =>
+    event.preventDefault(),
+  );
+
+  const { container } = render(
+    <form onSubmit={handleSubmit}>
+      <SaveAndPreview
+        snapName="test-snap-name"
+        isDirty={true}
+        reset={reset}
+        isSaving={false}
+        isValid={true}
+        showPreview={true}
+      />
+    </form>,
+  );
+
+  const previewWindow = { close: vi.fn() } as unknown as Window;
+
+  const form = container.querySelector("form") as HTMLFormElement;
+  if (form) {
+    Object.defineProperty(form, "requestSubmit", {
+      value: undefined,
+      writable: true,
+    });
+  }
+
+  window.dispatchEvent(
+    new MessageEvent("message", {
+      data: { type: "snapcraft-preview-action", action: "save" },
+      origin: window.location.origin,
+      source: previewWindow,
+    }),
+  );
+
+  expect(handleSubmit).toHaveBeenCalled();
 });

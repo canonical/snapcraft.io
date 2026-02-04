@@ -1,6 +1,5 @@
 /* eslint-disable */
 import React from "react";
-import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
 import { format } from "date-fns";
@@ -8,6 +7,7 @@ import { format } from "date-fns";
 import { canBeReleased } from "../helpers";
 import { getChannelString } from "../../../../libs/channels.js";
 import { toggleRevision } from "../actions/channelMap";
+import type { Revision, ReleasesReduxState, DispatchFn } from "../../../types/releaseTypes";
 
 import {
   getSelectedRevisions,
@@ -17,7 +17,29 @@ import {
 import RevisionLabel from "./revisionLabel";
 import ProgressiveReleaseProgressChart from "./ProgressiveReleaseProgressChart";
 
-const RevisionsListRow = (props) => {
+interface OwnProps {
+  revision: Revision;
+  releasedRevision?: Revision | null;
+  isSelectable?: boolean;
+  showChannels?: boolean;
+  isPending?: boolean;
+  isActive?: boolean;
+  showBuildRequest: boolean;
+  progressiveBeingCancelled?: boolean;
+}
+
+interface StateProps {
+  selectedRevisions: number[];
+  isProgressiveReleaseEnabled?: boolean;
+}
+
+interface DispatchProps {
+  toggleRevision: (revision: Revision) => void;
+}
+
+type RevisionsListRowProps = OwnProps & StateProps & DispatchProps;
+
+const RevisionsListRow = (props: RevisionsListRowProps) => {
   const {
     revision,
     releasedRevision,
@@ -44,7 +66,7 @@ const RevisionsListRow = (props) => {
   const isProgressive =
     (rowRelease?.isProgressive && isActive) || currentRelease?.isProgressive;
 
-  let channel;
+  let channel: string | undefined;
   if (revision.release) {
     channel = getChannelString(revision.release);
   }
@@ -72,7 +94,7 @@ const RevisionsListRow = (props) => {
     <tr
       key={id}
       className={className}
-      onClick={isSelectable && releasable ? revisionSelectChange : null}
+      onClick={isSelectable && releasable ? revisionSelectChange : undefined}
     >
       <td data-heading="Revision">
         {isSelectable ? (
@@ -115,13 +137,13 @@ const RevisionsListRow = (props) => {
           <ProgressiveReleaseProgressChart
             currentPercentage={
               currentRelease
-                ? 100 - currentRelease.progressive["current-percentage"]
-                : rowRelease.progressive["current-percentage"]
+                ? 100 - (currentRelease.progressive["current-percentage"] ?? 0)
+                : rowRelease?.progressive["current-percentage"] ?? 0
             }
             targetPercentage={
               currentRelease
-                ? 100 - currentRelease.progressive.percentage
-                : rowRelease.progressive.percentage
+                ? 100 - (currentRelease.progressive.percentage ?? 0)
+                : rowRelease?.progressive.percentage ?? 0
             }
             isPreviousRevision={!isActive}
           />
@@ -131,7 +153,7 @@ const RevisionsListRow = (props) => {
       )}
 
       {showChannels && (
-        <td data-heading="Channels">{revision.channels.join(", ")}</td>
+        <td data-heading="Channels">{revision.channels?.join(", ")}</td>
       )}
       <td data-heading="Release date">
         {isPending && <em>pending release</em>}
@@ -155,35 +177,16 @@ const RevisionsListRow = (props) => {
   );
 };
 
-RevisionsListRow.propTypes = {
-  // props
-  revision: PropTypes.object.isRequired,
-  releasedRevision: PropTypes.object,
-  isSelectable: PropTypes.bool,
-  showChannels: PropTypes.bool,
-  isPending: PropTypes.bool,
-  isActive: PropTypes.bool,
-  showBuildRequest: PropTypes.bool.isRequired,
-  progressiveBeingCancelled: PropTypes.bool,
-
-  // computed state (selectors)
-  selectedRevisions: PropTypes.array.isRequired,
-  isProgressiveReleaseEnabled: PropTypes.bool,
-
-  // actions
-  toggleRevision: PropTypes.func.isRequired,
-};
-
-const mapStateToProps = (state) => {
+const mapStateToProps = (state: ReleasesReduxState): StateProps => {
   return {
     selectedRevisions: getSelectedRevisions(state),
     isProgressiveReleaseEnabled: isProgressiveReleaseEnabled(state),
   };
 };
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = (dispatch: DispatchFn): DispatchProps => {
   return {
-    toggleRevision: (revision) => dispatch(toggleRevision(revision)),
+    toggleRevision: (revision: Revision) => dispatch(toggleRevision(revision)),
   };
 };
 

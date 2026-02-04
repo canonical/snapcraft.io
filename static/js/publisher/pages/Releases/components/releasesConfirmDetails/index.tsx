@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { connect } from "react-redux";
 import { Row, Col } from "@canonical/react-components";
-import PropTypes from "prop-types";
 
 import { updateProgressiveReleasePercentage } from "../../actions/pendingReleases";
-import { isProgressiveReleaseEnabled } from "../../selectors";
+import { isProgressiveReleaseEnabled, SeparatePendingReleases } from "../../selectors";
+import type { ReleasesReduxState, DispatchFn } from "../../../../types/releaseTypes";
 
 import progressiveTypes from "./types";
 import ReleaseRow from "./releaseRow";
@@ -13,7 +13,26 @@ import ProgressiveBarControl from "../progressiveBarControl";
 import ReleaseRowGroup from "./releaseRowGroup";
 import CloseChannelsRow from "./closeChannelsRow";
 
-const ReleasesConfirmDetails = ({ updates, isProgressiveReleaseEnabled }) => {
+interface OwnProps {
+  updates: SeparatePendingReleases & {
+    pendingCloses: ReleasesReduxState["pendingCloses"];
+  };
+}
+
+interface StateProps {
+  isProgressiveReleaseEnabled?: boolean;
+}
+
+interface DispatchProps {
+  updateProgressiveReleasePercentage?: (percentage: number) => void;
+}
+
+type ReleasesConfirmDetailsProps = OwnProps & StateProps & DispatchProps;
+
+const ReleasesConfirmDetails = ({
+  updates,
+  isProgressiveReleaseEnabled,
+}: ReleasesConfirmDetailsProps) => {
   const [globalPercentage, setGlobalPercentage] = useState(100);
 
   const progressiveReleases = updates.newReleasesToProgress;
@@ -52,7 +71,7 @@ const ReleasesConfirmDetails = ({ updates, isProgressiveReleaseEnabled }) => {
     1,
   );
 
-  const updatePercentage = (percentage) => {
+  const updatePercentage = (percentage: number) => {
     setGlobalPercentage(percentage);
     updateProgressiveReleasePercentage(percentage);
   };
@@ -114,19 +133,13 @@ const ReleasesConfirmDetails = ({ updates, isProgressiveReleaseEnabled }) => {
   );
 };
 
-ReleasesConfirmDetails.propTypes = {
-  updates: PropTypes.object.isRequired,
-  isProgressiveReleaseEnabled: PropTypes.bool,
-  updateProgressiveReleasePercentage: PropTypes.func,
-};
-
-const mapStateToProps = (state) => ({
+const mapStateToProps = (state: ReleasesReduxState): StateProps => ({
   isProgressiveReleaseEnabled: isProgressiveReleaseEnabled(state),
 });
 
-const mapDispatchToProps = (dispatch) => {
+const mapDispatchToProps = (dispatch: DispatchFn): DispatchProps => {
   return {
-    updateProgressiveReleasePercentage: (percentage) =>
+    updateProgressiveReleasePercentage: (percentage: number) =>
       dispatch(updateProgressiveReleasePercentage(percentage)),
   };
 };
