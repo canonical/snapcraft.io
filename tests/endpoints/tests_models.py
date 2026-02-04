@@ -162,3 +162,103 @@ class TestUpdateModel(TestModelServiceEndpoints):
         self.assertEqual(response.status_code, 500)
         self.assertFalse(data["success"])
         self.assertEqual(data["message"], "Model not found")
+
+
+class TestGetRemodelAllowlist(TestModelServiceEndpoints):
+    @patch(
+        "canonicalwebteam.store_api.publishergw.PublisherGW"
+        + ".get_remodel_allowlist"
+    )
+    def test_get_remodel_allowlist_success(self, mock_get_remodel_allowlist):
+        mock_allowlist = {
+            "allowlist": [
+                {
+                    "created-at": "2026-02-03T11:31:06Z",
+                    "created-by": "test-user-id",
+                    "description": "Test description",
+                    "from-model": "test-from-model",
+                    "from-serial": "test-from-serial",
+                    "modified-at": None,
+                    "modified-by": None,
+                    "to-model": "test-to-model",
+                }
+            ]
+        }
+        mock_get_remodel_allowlist.return_value = mock_allowlist
+
+        response = self.client.get("/api/store/1/models/remodel-allowlist")
+        data = response.json
+
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(data["success"])
+        self.assertEqual(data["data"], mock_allowlist)
+
+    @patch(
+        "canonicalwebteam.store_api.publishergw.PublisherGW"
+        + ".get_remodel_allowlist"
+    )
+    def test_get_remodel_allowlist_empty(self, mock_get_remodel_allowlist):
+        mock_get_remodel_allowlist.return_value = {"allowlist": []}
+
+        response = self.client.get("/api/store/1/models/remodel-allowlist")
+        data = response.json
+
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(data["success"])
+        self.assertEqual(data["data"]["allowlist"], [])
+
+    @patch(
+        "canonicalwebteam.store_api.publishergw.PublisherGW"
+        + ".get_remodel_allowlist"
+    )
+    def test_get_remodel_allowlist_unauthorized(
+        self, mock_get_remodel_allowlist
+    ):
+        mock_get_remodel_allowlist.side_effect = StoreApiResponseErrorList(
+            "unauthorized", 401, [{"message": "unauthorized"}]
+        )
+
+        response = self.client.get("/api/store/1/models/remodel-allowlist")
+        data = response.json
+
+        self.assertEqual(response.status_code, 500)
+        self.assertFalse(data["success"])
+        self.assertEqual(data["message"], "Store not found")
+
+    @patch(
+        "canonicalwebteam.store_api.publishergw.PublisherGW"
+        + ".get_remodel_allowlist"
+    )
+    def test_get_remodel_allowlist_store_not_found(
+        self, mock_get_remodel_allowlist
+    ):
+        mock_get_remodel_allowlist.side_effect = StoreApiResponseErrorList(
+            "Store not found", 404, [{"message": "Store not found"}]
+        )
+
+        response = self.client.get("/api/store/999/models/remodel-allowlist")
+        data = response.json
+
+        self.assertEqual(response.status_code, 500)
+        self.assertFalse(data["success"])
+        self.assertEqual(data["message"], "Store not found")
+
+    @patch(
+        "canonicalwebteam.store_api.publishergw.PublisherGW"
+        + ".get_remodel_allowlist"
+    )
+    def test_get_remodel_allowlist_general_error(
+        self, mock_get_remodel_allowlist
+    ):
+        mock_get_remodel_allowlist.side_effect = StoreApiResponseErrorList(
+            "Internal server error",
+            500,
+            [{"message": "Internal server error"}],
+        )
+
+        response = self.client.get("/api/store/1/models/remodel-allowlist")
+        data = response.json
+
+        self.assertEqual(response.status_code, 500)
+        self.assertFalse(data["success"])
+        self.assertEqual(data["message"], "Internal server error")
