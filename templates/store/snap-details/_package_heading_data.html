@@ -50,9 +50,8 @@
         {{ developer_info(name=developer[0], url=developer[1]) }}
       {% endif %}
       {{ publisher_info(publisher, username, developer_validation, display_name, VERIFIED_PUBLISHER, STAR_DEVELOPER) }}
-      {{ ratings_info(ratings) }}
     </div>
-    <ul class="p-inline-list--vertical-divider">
+    <ul class="p-inline-list--vertical-divider" id="js-snap-details-list">
       {% if developer %}
         <li class="p-inline-list__item u-hide--small">{{ developer_info(name=developer[0], url=developer[1]) }}</li>
       {% endif %}
@@ -62,9 +61,6 @@
           <a href="/search?categories={{ category.slug }}">{{ category.name }}</a>
         </li>
       {% endfor %}
-      {% if ratings and ratings.total_votes > 0 %}
-        <li class="p-inline-list__item u-hide--small">{{ ratings_info(ratings) }}</li>
-      {% endif %}
     </ul>
   </div>
 {%- endmacro -%}

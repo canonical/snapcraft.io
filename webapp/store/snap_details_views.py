@@ -11,7 +11,6 @@ import webapp.helpers as helpers
 import webapp.metrics.helper as metrics_helper
 import webapp.metrics.metrics as metrics
 import webapp.store.logic as logic
-from webapp.ratings import RatingsClient
 from webapp import authentication
 from webapp.markdown import parse_markdown_description
 from cache.cache_utility import redis_cache
@@ -27,17 +26,6 @@ device_gateway = DeviceGW("snap", helpers.api_session)
 device_gateway_sbom = DeviceGW("sbom", helpers.api_session)
 
 logger = logging.getLogger(__name__)
-
-ratings_client = None
-
-
-def get_ratings_client():
-    global ratings_client
-    if ratings_client is None:
-        ratings_url = flask.current_app.config.get("RATINGS_SERVICE_URL")
-        if ratings_url:
-            ratings_client = RatingsClient(ratings_url)
-    return ratings_client
 
 
 FIELDS = [
@@ -280,8 +268,6 @@ def snap_details_views(store):
 
         context = _get_context_snap_details(snap_name)
 
-        ratings_client_instance = get_ratings_client()
-
         def fetch_extra_details():
             try:
                 # the empty string channel makes the store API not filter by
@@ -293,26 +279,6 @@ def snap_details_views(store):
             except Exception:
                 logger.exception("Details endpoint returned an error")
                 return None
-
-        def fetch_ratings(ratings_client):
-            ratings_data = None
-            if ratings_client:
-                try:
-                    ratings_data = ratings_client.get_snap_rating(
-                        context.get("snap_id")
-                    )
-                    if (
-                        ratings_data
-                        and ratings_data.get("ratings_band")
-                        == "insufficient-votes"
-                    ):
-                        ratings_data = None
-                except Exception:
-                    logger.exception(
-                        f"Failed to fetch ratings for {snap_name}"
-                    )
-                    ratings_data = None
-            return ratings_data
 
         def fetch_metrics():
             country_metric_name = "weekly_installed_base_by_country_percent"
@@ -343,7 +309,6 @@ def snap_details_views(store):
             return snap_has_sboms(context["revisions"], context["snap_id"])
 
         greenlet_extra_details = spawn(fetch_extra_details)
-        greenlet_ratings = spawn(fetch_ratings, ratings_client_instance)
         greenlet_metrics = spawn(fetch_metrics)
         greenlet_sboms = spawn(fetch_sboms)
 
@@ -351,14 +316,12 @@ def snap_details_views(store):
         joinall(
             [
                 greenlet_extra_details,
-                greenlet_ratings,
                 greenlet_metrics,
                 greenlet_sboms,
             ]
         )
 
         extra_details = greenlet_extra_details.get()
-        ratings_data = greenlet_ratings.get()
         metrics_response = greenlet_metrics.get()
         has_sboms = greenlet_sboms.get()
 
@@ -371,7 +334,7 @@ def snap_details_views(store):
                 for alias_obj in extra_details["aliases"]
             ]
 
-        context["ratings"] = ratings_data
+        context["ratings"] = None
 
         os_metrics = None
         country_devices = None
