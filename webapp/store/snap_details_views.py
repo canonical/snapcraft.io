@@ -535,24 +535,30 @@ def snap_details_views(store):
 
     @store.route("/report", methods=["POST"])
     def report_snap():
-        form_url = "/".join(
-            [
-                "https://docs.google.com",
-                "forms",
-                "d",
-                "e",
-                "1FAIpQLSc5w1Ow6hRGs-VvBXmDtPOZaadYHEpsqCl2RbKEenluBvaw3Q",
-                "formResponse",
-            ]
-        )
+        form_url = flask.current_app.config.get("REPORT_SHEET_URL")
+        if not form_url:
+            logger.warning("REPORT_SHEET_URL is not configured")
+            return flask.jsonify({"error": "report_url_missing"}), 503
 
         fields = flask.request.form
 
-        # If the honeypot is activated or a URL is included in the message,
-        # say "OK" to avoid spam
-        if (
-            "entry.13371337" in fields and fields["entry.13371337"] == "on"
-        ) or "http" in fields["entry.1974584359"]:
-            return "", 200
+        payload = {
+            "snap_name": fields.get("snap_name", ""),
+            "reason": fields.get("reason", ""),
+            "comment": fields.get("comment", ""),
+            "email": fields.get("email", ""),
+        }
 
-        return flask.jsonify({"url": form_url}), 200
+        try:
+            response = requests.post(form_url, data=payload)
+            if not response.ok:
+                logger.warning(
+                    "Report sheet webhook returned %s",
+                    response.status_code,
+                )
+                return flask.jsonify({"error": "report_failed"}), 502
+        except requests.RequestException:
+            logger.exception("Report sheet webhook request failed")
+            return flask.jsonify({"error": "report_failed"}), 502
+
+        return flask.jsonify({"ok": True}), 200
