@@ -14,7 +14,7 @@ Flask-WTF==1.2.2
 bleach==6.3.0
 emoji==2.15.0
 feedgen==1.0.0
-humanize==4.15.0
+humanize==4.9.0
 mistune==2.0.5
 pybadges==3.0.1
 pycountry==23.12.11
