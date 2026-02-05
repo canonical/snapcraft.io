@@ -3,7 +3,7 @@
 describe("Test store.js bundle on /store page", () => {
   beforeEach(() => {
     cy.visit("http://localhost:8004/store");
-    cy.get("#cookie-policy-button-accept").click();
+    cy.get("#cookie-policy-button-accept-all").click();
   });
 
   it("Renders correctly", () => {

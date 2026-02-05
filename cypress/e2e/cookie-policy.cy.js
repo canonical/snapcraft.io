@@ -10,7 +10,7 @@ describe("Test cookie-policy.js bundle on / page", () => {
   });
 
   it("Closes when accepting", () => {
-    cy.get("#cookie-policy-button-accept").click();
+    cy.get("#cookie-policy-button-accept-all").click();
     cy.get("dialog.cookie-policy").should("not.exist");
   });
 
