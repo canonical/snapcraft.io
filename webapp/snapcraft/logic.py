@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 
 from webapp import helpers
 
@@ -14,7 +14,7 @@ def get_livestreams():
     )
 
     if livestreams:
-        now = datetime.now()
+        now = datetime.now(timezone.utc)
         lead_time = 4  # 4 days
         cooldown_time = 2  # 2 days
 
