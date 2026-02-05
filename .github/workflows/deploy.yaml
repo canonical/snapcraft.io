@@ -1,0 +1,64 @@
+name: Pack and Deploy
+
+on:
+  push:
+    branches:
+      - main
+      - staging
+  workflow_call:
+    inputs:
+      environment:
+        description: 'Environment (Production, Staging or Staging API)'
+        required: true
+        type: string
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment (Production, Staging or Staging API)'
+        required: true
+        type: choice
+        options:
+          - Production
+          - Staging
+          - Staging API
+
+jobs:
+  setup:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    environment: ${{ github.event.inputs.environment != '' && github.event.inputs.environment || (github.ref == 'refs/heads/main' && 'Production' || 'Staging') }}
+    outputs:
+      charm_name: ${{ steps.setup-vars.outputs.charm_name }}
+      channel: ${{ steps.setup-vars.outputs.channel }}
+      juju_controller_name: ${{ steps.setup-vars.outputs.juju_controller_name }}
+      juju_model_name: ${{ steps.setup-vars.outputs.juju_model_name }}
+      environment: ${{ steps.setup-vars.outputs.environment }}
+    steps:
+      - name: setup vars
+        id: setup-vars
+        run: |
+          echo "charm_name=${{ vars.CHARM_NAME }}" >> $GITHUB_OUTPUT
+          echo "channel=${{ vars.CHANNEL }}" >> $GITHUB_OUTPUT
+          echo "juju_controller_name=${{ vars.JUJU_CONTROLLER_NAME }}" >> $GITHUB_OUTPUT
+          echo "juju_model_name=${{ vars.JUJU_MODEL_NAME }}" >> $GITHUB_OUTPUT
+          echo "environment=${{ github.event.inputs.environment != '' && github.event.inputs.environment || (github.ref == 'refs/heads/main' && 'Production' || 'Staging') }}" >> $GITHUB_OUTPUT
+
+  deploy:
+    needs: setup
+    name: Deploy
+    uses: canonical/webteam-devops/.github/workflows/deploy.yaml@fix-charmcraft-upload
+    permissions:
+      contents: read
+      deployments: write
+      packages: write
+    with:
+      environment: ${{ needs.setup.outputs.environment }}
+      charm_name: ${{ needs.setup.outputs.charm_name }}
+      channel: ${{ needs.setup.outputs.channel }}
+      juju_controller_name: ${{ needs.setup.outputs.juju_controller_name }}
+      juju_model_name: ${{ needs.setup.outputs.juju_model_name }}
+    secrets:
+      VAULT_APPROLE_ROLE_ID: ${{ secrets.VAULT_APPROLE_ROLE_ID }}
+      VAULT_APPROLE_SECRET_ID: ${{ secrets.VAULT_APPROLE_SECRET_ID }}
+      CHARMHUB_TOKEN: ${{ secrets.CHARMHUB_TOKEN }}
