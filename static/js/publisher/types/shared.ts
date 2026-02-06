@@ -176,3 +176,15 @@ export type TerritoriesMetricsData = {
     percentage_of_users: number;
   };
 };
+
+export type Remodel = {
+  "created-at": string;
+  "created-by": string;
+  description?: string | null;
+  "from-model": string;
+  "from-serial": string;
+  "modified-at": string | null;
+  "modified-by": string | null;
+  "to-model": string;
+  serials: number;
+};

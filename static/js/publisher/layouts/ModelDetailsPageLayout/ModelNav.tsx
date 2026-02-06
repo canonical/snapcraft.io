@@ -26,6 +26,16 @@ function ModelNav({ sectionName }: { sectionName: string }): React.JSX.Element {
             Policies
           </Link>
         </li>
+        <li className="p-tabs__item">
+          <Link
+            to={`/admin/${id}/models/${model_id}/remodel`}
+            className="p-tabs__link"
+            aria-selected={sectionName === "remodel"}
+            role="tab"
+          >
+            Remodel
+          </Link>
+        </li>
       </ul>
     </nav>
   );
