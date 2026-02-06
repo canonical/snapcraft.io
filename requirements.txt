@@ -26,7 +26,7 @@ ruamel.yaml==0.18.5
 vcrpy-unittest==0.1.7
 user-agents==2.2.0
 dnspython==2.8.0
-werkzeug==2.3.8
+werkzeug==3.1.5
 sentry-sdk==2.52.0
 
 # Development dependencies
