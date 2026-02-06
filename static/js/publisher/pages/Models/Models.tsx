@@ -60,9 +60,10 @@ function Models(): React.JSX.Element {
     const signal = controller.signal;
 
     if (!modelsIsLoading && !modelsError && models) {
+      const modelIds = [...new Set(models.map((m) => m.name))];
       setModelsList(models);
       setFilter(searchParams.get("filter") || "");
-      getPolicies({ models, id, setPolicies, signal });
+      getPolicies({ modelIds, id, setPolicies, signal });
     }
 
     return () => {

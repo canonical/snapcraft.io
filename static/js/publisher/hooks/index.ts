@@ -15,6 +15,7 @@ import useFetchAccountSnaps from "./useFetchAccountSnaps";
 import useFetchPublishedSnapMetrics from "./useFetchPublishedSnapMetrics";
 import useSortTableData from "./useSortTableData";
 import useAccountKeys from "./useAccountKeys";
+import useRemodels from "./useRemodels";
 
 export {
   useValidationSets,
@@ -34,4 +35,5 @@ export {
   useFetchPublishedSnapMetrics,
   useSortTableData,
   useAccountKeys,
+  useRemodels,
 };

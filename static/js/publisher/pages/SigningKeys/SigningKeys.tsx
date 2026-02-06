@@ -77,8 +77,9 @@ function SigningKeys(): React.JSX.Element {
     const signal = controller.signal;
 
     if (!modelsIsLoading && !modelsIsError && models) {
+      const modelIds = [...new Set(models.map((m) => m["name"]))];
       getPolicies({
-        models,
+        modelIds,
         id,
         setPolicies,
         signal,
