@@ -114,10 +114,6 @@
   },
   "resolutions": {
     "vitest/**/glob": "13.0.1",
-    "lodash": "4.17.23",
-    "eslint/**/minimatch": "10.1.2",
-    "eslint-*/minimatch": "10.1.2",
-    "@typescript-eslint/**/minimatch": "10.1.2",
-    "@vitest/coverage-v8/**/minimatch": "10.1.2"
+    "lodash": "4.17.23"
   }
 }
