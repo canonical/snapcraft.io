@@ -106,7 +106,7 @@
     "eslint-plugin-jsx-a11y": "^6.9.0",
     "eslint-plugin-prettier": "5.5.5",
     "eslint-plugin-react": "7.37.5",
-    "msw": "2.12.8",
+    "msw": "2.12.9",
     "stylelint": "17.1.1",
     "stylelint-config-standard-scss": "17.0.0",
     "stylelint-order": "7.0.1",
