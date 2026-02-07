@@ -11,7 +11,6 @@ from flask.json import jsonify
 from webapp.decorators import login_required, exchange_required
 from webapp.helpers import api_session
 
-
 dashboard = Dashboard(api_session)
 
 invites = flask.Blueprint(

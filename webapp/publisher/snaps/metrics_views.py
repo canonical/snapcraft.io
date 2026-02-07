@@ -15,7 +15,6 @@ from webapp.helpers import api_session
 from webapp.decorators import login_required
 from webapp.publisher.snaps import logic
 
-
 dashboard = Dashboard(api_session)
 device_gateway = DeviceGW("snap", api_session)
 

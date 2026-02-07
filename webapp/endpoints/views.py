@@ -12,7 +12,6 @@ from flask.json import jsonify
 from webapp.decorators import login_required, exchange_required
 from webapp.helpers import api_publisher_session, api_session, get_brand_id
 
-
 dashboard = Dashboard(api_session)
 publisher_gateway = PublisherGW("snap", api_publisher_session)
 
