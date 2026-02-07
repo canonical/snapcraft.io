@@ -8,7 +8,6 @@ from canonicalwebteam.exceptions import (
 from webapp.helpers import api_publisher_session
 from tests.endpoints.endpoint_testing import TestModelServiceEndpoints
 
-
 candid = CandidClient(api_publisher_session)
 
 
