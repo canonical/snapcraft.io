@@ -106,6 +106,24 @@ def snap_details_views(store):
             lowest_risk_available,
             supported_architectures,
         )
+
+        # Determine the most recent update date from updates tuple
+        # updates[0] is the stable channel, updates[1] is the most
+        # recent non-stable
+        most_recent_update = None
+        if updates[0] and updates[1]:
+            # Compare both and use the most recent
+            date_0 = updates[0].get("released-at")
+            date_1 = updates[1].get("released-at")
+            if date_0 and date_1:
+                most_recent_update = max(date_0, date_1)
+            else:
+                most_recent_update = date_0 or date_1
+        elif updates[0]:
+            most_recent_update = updates[0].get("released-at")
+        elif updates[1]:
+            most_recent_update = updates[1].get("released-at")
+
         binary_filesize = latest_channel["download"]["size"]
 
         # filter out banner and banner-icon images from screenshots
@@ -191,7 +209,7 @@ def snap_details_views(store):
             "filesize": humanize.naturalsize(binary_filesize),
             "last_updated": logic.convert_date(last_updated),
             "last_updated_raw": last_updated,
-            "old_snap_info": logic.is_snap_old(last_updated),
+            "old_snap_info": logic.is_snap_old(most_recent_update),
             "is_users_snap": is_users_snap,
             "unlisted": details.get("snap", {}).get("unlisted", False),
             "developer": developer,
