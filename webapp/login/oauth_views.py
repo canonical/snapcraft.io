@@ -6,7 +6,6 @@ from webapp.api.requests import Session
 from urllib.parse import urlencode
 from werkzeug.exceptions import BadRequest
 
-
 oauth = flask.Blueprint(
     "oauth", __name__, template_folder="/templates", static_folder="/static"
 )
