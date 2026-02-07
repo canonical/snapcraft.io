@@ -86,6 +86,11 @@ env: &env
       key: dns-verification-salt
       name: snapcraft-io
 
+  - name: REPORT_SHEET_URL
+    secretKeyRef:
+      key: report-sheet-url
+      name: snapcraft-io
+
 memoryLimit: 256Mi
 
 extraHosts:
