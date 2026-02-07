@@ -50,7 +50,6 @@ from webapp.api.exceptions import (
 
 from datetime import datetime
 
-
 CSP = {
     "default-src": ["'self'"],
     "img-src": [
