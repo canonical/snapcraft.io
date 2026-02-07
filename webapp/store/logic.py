@@ -194,13 +194,9 @@ def convert_date(date_to_convert):
     :param date_to_convert: Date to convert
     :returns: Readable date
     """
-    date_parsed = parser.parse(date_to_convert)
-    # Ensure we have a timezone-aware datetime
-    if date_parsed.tzinfo is None:
-        date_parsed = date_parsed.replace(tzinfo=datetime.timezone.utc)
-
-    now = datetime.datetime.now(datetime.timezone.utc)
-    delta = now - datetime.timedelta(days=1)
+    local_timezone = datetime.datetime.utcnow().tzinfo
+    date_parsed = parser.parse(date_to_convert).replace(tzinfo=local_timezone)
+    delta = datetime.datetime.utcnow() - datetime.timedelta(days=1)
 
     if delta < date_parsed:
         return humanize.naturalday(date_parsed).title()
