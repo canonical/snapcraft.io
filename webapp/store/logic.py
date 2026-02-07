@@ -5,6 +5,7 @@ from urllib.parse import parse_qs, urlparse
 
 import humanize
 from dateutil import parser
+from dateutil.relativedelta import relativedelta
 from webapp import helpers
 
 
@@ -245,11 +246,10 @@ def is_snap_old(last_updated_date, old_threshold_years=2.0):
 
         now = datetime.datetime.now(datetime.timezone.utc)
 
-        days_diff = (now - date_parsed).days
-        years_diff = days_diff / 365.25  # Account for leap years
-        years_since_update = int(years_diff)
+        delta = relativedelta(now, date_parsed)
+        years_since_update = delta.years
 
-        is_old = days_diff >= (old_threshold_years * 365.25)
+        is_old = years_since_update >= old_threshold_years
 
         return {
             "is_old": is_old,
