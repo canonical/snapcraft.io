@@ -87,6 +87,7 @@ jobs:
           filters: |
             py:
               - '**/*.py'
+            py_dependencies:
               - 'requirements.txt'
 
       - name: Install dotrun
@@ -121,6 +122,9 @@ jobs:
           filters: |
             scss:
               - '**/*.scss'
+            js_dependencies:
+              - 'package.json'
+              - 'yarn.lock'
 
       - name: Install SCSS dependencies
         if: ${{ steps.filter.outputs.scss == 'true' }}
@@ -150,7 +154,7 @@ jobs:
               - '**/*.jsx'
             tsx:
               - '**/*.tsx'
-            package.json:
+            js_dependencies:
               - 'package.json'
               - 'yarn.lock'
 
@@ -177,6 +181,7 @@ jobs:
           filters: |
             py:
               - '**/*.py'
+            py_dependencies:
               - 'requirements.txt'
 
       - name: Install dotrun
@@ -226,7 +231,7 @@ jobs:
               - '**/*.jsx'
             tsx:
               - '**/*.tsx'
-            package.json:
+            js_dependencies:
               - 'package.json'
               - 'yarn.lock'
 
