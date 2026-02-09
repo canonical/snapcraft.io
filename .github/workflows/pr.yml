@@ -173,6 +173,7 @@ jobs:
           filters: |
             py:
               - '**/*.py'
+              - 'requirements.txt'
 
       - name: Install dotrun
         if: ${{ steps.filter.outputs.py == 'true' }}
