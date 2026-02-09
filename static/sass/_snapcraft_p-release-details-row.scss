@@ -8,10 +8,10 @@
     }
 
     &__progress {
+      column-gap: 0.5rem;
       display: grid;
       flex: 1;
       font-weight: 400;
-      column-gap: 0.5rem;
       grid-template-columns: auto 8rem;
     }
 
