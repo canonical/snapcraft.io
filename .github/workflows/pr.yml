@@ -150,6 +150,9 @@ jobs:
               - '**/*.jsx'
             tsx:
               - '**/*.tsx'
+            package.json:
+              - 'package.json'
+              - 'yarn.lock'
 
       - name: Install JS dependencies
         if: ${{ steps.filter.outputs.js == 'true' || steps.filter.outputs.ts == 'true' || steps.filter.outputs.jsx == 'true' || steps.filter.outputs.tsx == 'true' }}
@@ -223,6 +226,9 @@ jobs:
               - '**/*.jsx'
             tsx:
               - '**/*.tsx'
+            package.json:
+              - 'package.json'
+              - 'yarn.lock'
 
       - uses: actions/setup-node@v6
         with:
