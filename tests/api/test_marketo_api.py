@@ -8,7 +8,6 @@ import responses
 # Local modules
 import webapp.api.marketo as marketo_api
 
-
 responses.mock.assert_all_requests_are_fired = True
 
 

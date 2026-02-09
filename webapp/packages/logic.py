@@ -11,7 +11,6 @@ from webapp.helpers import get_icon
 from webapp.helpers import api_session
 from cache.cache_utility import redis_cache
 
-
 device_gateway = DeviceGW("snap", api_session)
 
 Packages = TypedDict(
@@ -259,7 +258,7 @@ def format_slug(slug):
 
 
 def parse_categories(
-    categories_json: Dict[str, List[Dict[str, str]]]
+    categories_json: Dict[str, List[Dict[str, str]]],
 ) -> List[Dict[str, str]]:
     """
     :param categories_json: The returned json from store_api.get_categories()

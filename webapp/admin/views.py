@@ -10,7 +10,6 @@ from canonicalwebteam.store_api.devicegw import DeviceGW
 from webapp.decorators import login_required, exchange_required
 from webapp.helpers import api_publisher_session, api_session
 
-
 dashboard = Dashboard(api_session)
 publisher_gateway = PublisherGW("snap", api_publisher_session)
 device_gateway = DeviceGW("snap", api_session)

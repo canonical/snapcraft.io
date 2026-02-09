@@ -5,7 +5,6 @@ import os
 import flask
 from canonicalwebteam.store_api.dashboard import Dashboard
 
-
 # Local
 from webapp.helpers import api_publisher_session, launchpad
 from webapp.api.github import GitHub
