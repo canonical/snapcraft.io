@@ -11,7 +11,6 @@ from canonicalwebteam.store_api.dashboard import Dashboard
 from webapp.decorators import login_required, exchange_required
 from webapp.helpers import api_session
 
-
 dashboard = Dashboard(api_session)
 
 members = flask.Blueprint(

@@ -52,9 +52,7 @@ def post_register_name():
 
         if api_response_error_list.status_code == 400:
             res["data"]["error_code"] = "no-permission"
-            res[
-                "message"
-            ] = """You don't have permission
+            res["message"] = """You don't have permission
                 to register a snap in this store.
                 Please see store administrator."""
 
