@@ -1,4 +1,4 @@
-import vitest from '@vitest/eslint-plugin'
+import vitest from "@vitest/eslint-plugin";
 import react from "eslint-plugin-react";
 import prettier from "eslint-plugin-prettier";
 import jsxA11Y from "eslint-plugin-jsx-a11y";
@@ -48,7 +48,7 @@ export default [
         Object.entries({
           ...globals.browser,
           ...globals.node,
-          ...vitest.environments.env.globals
+          ...vitest.environments.env.globals,
         }).map(([key, value]) => [key.trim(), value]),
       ),
       parser: babelParser,
@@ -103,4 +103,3 @@ export default [
     },
   },
 ];
-
