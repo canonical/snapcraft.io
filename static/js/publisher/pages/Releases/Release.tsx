@@ -1,5 +1,5 @@
 import { legacy_createStore as createStore, applyMiddleware, compose } from "redux";
-import thunk from "redux-thunk";
+import { thunk } from "redux-thunk";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { Provider } from "react-redux";
 import { DndProvider } from "react-dnd";
