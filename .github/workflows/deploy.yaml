@@ -47,7 +47,7 @@ jobs:
   deploy:
     needs: setup
     name: Deploy
-    uses: canonical/webteam-devops/.github/workflows/deploy.yaml@fix-charmcraft-upload
+    uses: canonical/webteam-devops/.github/workflows/deploy.yaml@correct-image-id-selection
     permissions:
       contents: read
       deployments: write
