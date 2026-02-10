@@ -90,6 +90,7 @@ jobs:
           py:
             - '**/*.py'
             - 'requirements.txt'
+            - 'templates/**/*'
           js:
             - '**/*.js'
             - '**/*.ts'
@@ -99,6 +100,9 @@ jobs:
             - 'yarn.lock'
             - 'eslint.config.mjs'
             - 'vitest.config.js'
+            - 'vite.config.js'
+            - 'tsconfig.json'
+            - 'babel.config.json'
           scss:
             - '**/*.scss'
             - '.stylelintrc'
