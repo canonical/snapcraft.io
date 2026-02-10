@@ -74,40 +74,63 @@ jobs:
           docker run --network="host" -v .:/app cypress/base:22.18.0 \
             bash "-c" "cd /app && npx cypress install && yarn run test-e2e"
 
+  changes:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: read
+    outputs:
+      py: ${{ steps.filter.outputs.py }}
+      js: ${{ steps.filter.outputs.js }}
+      scss: ${{ steps.filter.outputs.scss }}
+    steps:
+    - uses: dorny/paths-filter@v3
+      id: filter
+      with:
+        filters: |
+          py:
+            - '**/*.py'
+            - 'requirements.txt'
+          js:
+            - '**/*.js'
+            - '**/*.ts'
+            - '**/*.jsx'
+            - '**/*.tsx'
+            - 'package.json'
+            - 'yarn.lock'
+            - 'eslint.config.mjs'
+          scss:
+            - '**/*.scss'
+            - '.stylelintrc'
+            - 'package.json'
+            - 'yarn.lock'
+
   lint-python:
+    needs: changes
+    if: ${{ needs.changes.outputs.py == 'true' }}
     runs-on: ubuntu-latest
     permissions:
       contents: read
     steps:
       - name: Checkout
         uses: actions/checkout@v6
-      - uses: dorny/paths-filter@v3
-        id: filter
-        with:
-          filters: |
-            py:
-              - '**/*.py'
-              - 'requirements.txt'
 
       - name: Install dotrun
-        if: ${{ steps.filter.outputs.py == 'true' }}
         run: sudo pip3 install dotrun
 
       - name: Install dependencies
-        if: ${{ steps.filter.outputs.py == 'true' }}
         run: |
           sudo chmod -R 777 .
           dotrun install
 
       - name: Build assets
-        if: ${{ steps.filter.outputs.py == 'true' }}
         run: dotrun build
 
       - name: Lint python
-        if: ${{ steps.filter.outputs.py == 'true' }}
         run: dotrun lint-python
 
   lint-scss:
+    needs: changes
+    if: ${{ needs.changes.outputs.scss == 'true' }}
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -115,25 +138,15 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v6
 
-      - uses: dorny/paths-filter@v3
-        id: filter
-        with:
-          filters: |
-            scss:
-              - '**/*.scss'
-              - '.stylelintrc'
-              - 'package.json'
-              - 'yarn.lock'
-
       - name: Install SCSS dependencies
-        if: ${{ steps.filter.outputs.scss == 'true' }}
         run: yarn install --immutable
 
       - name: Lint SCSS
-        if: ${{ steps.filter.outputs.scss == 'true' }}
         run: yarn lint-scss
 
   lint-js:
+    needs: changes
+    if: ${{ needs.changes.outputs.js == 'true' }}
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -141,32 +154,15 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v6
 
-      - uses: dorny/paths-filter@v3
-        id: filter
-        with:
-          filters: |
-            js:
-              - '**/*.js'
-            ts:
-              - '**/*.ts'
-            jsx:
-              - '**/*.jsx'
-            tsx:
-              - '**/*.tsx'
-            dependencies:
-              - 'package.json'
-              - 'yarn.lock'
-              - 'eslint.config.mjs'
-
       - name: Install JS dependencies
-        if: ${{ steps.filter.outputs.js == 'true' || steps.filter.outputs.ts == 'true' || steps.filter.outputs.jsx == 'true' || steps.filter.outputs.tsx == 'true' || steps.filter.outputs.dependencies == 'true' }}
         run: yarn install --immutable
 
       - name: Lint JS
-        if: ${{ steps.filter.outputs.js == 'true' || steps.filter.outputs.ts == 'true' || steps.filter.outputs.jsx == 'true' || steps.filter.outputs.tsx == 'true' || steps.filter.outputs.dependencies == 'true' }}
         run: yarn lint-js
 
   test-python:
+    needs: changes
+    if: ${{ needs.changes.outputs.py == 'true' }}
     runs-on: ubuntu-latest
     permissions:
       pull-requests: write
@@ -175,81 +171,49 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
-      - uses: dorny/paths-filter@v3
-        id: filter
-        with:
-          filters: |
-            py:
-              - '**/*.py'
-              - 'requirements.txt'
-
       - name: Install dotrun
-        if: ${{ steps.filter.outputs.py == 'true' }}
         run: sudo pip3 install dotrun
 
       - name: Install dependencies
-        if: ${{ steps.filter.outputs.py == 'true' }}
         run: |
           sudo chmod -R 777 .
           dotrun install
 
       - name: Install dependencies
-        if: ${{ steps.filter.outputs.py == 'true' }}
         run: sudo pip3 install coverage
 
       - name: Build resources
-        if: ${{ steps.filter.outputs.py == 'true' }}
         run: dotrun build
 
       - name: Run python tests with coverage
-        if: ${{ steps.filter.outputs.py == 'true' }}
         run: dotrun test-python-job
 
       - name: Upload coverage to Codecov
-        if: ${{ steps.filter.outputs.py == 'true' }}
         uses: codecov/codecov-action@v5
         with:
           flags: python
 
   test-js:
+    needs: changes
+    if: ${{ needs.changes.outputs.js == 'true' }}
     runs-on: ubuntu-latest
     permissions:
       contents: read
     steps:
       - uses: actions/checkout@v6
 
-      - uses: dorny/paths-filter@v3
-        id: filter
-        with:
-          filters: |
-            js:
-              - '**/*.js'
-            ts:
-              - '**/*.ts'
-            jsx:
-              - '**/*.jsx'
-            tsx:
-              - '**/*.tsx'
-            dependencies:
-              - 'package.json'
-              - 'yarn.lock'
-              - 'vitest.config.js'
-
       - uses: actions/setup-node@v6
         with:
           node-version: 24
 
       - name: Install dependencies
-        if: ${{ steps.filter.outputs.js == 'true' || steps.filter.outputs.ts == 'true' || steps.filter.outputs.jsx == 'true' || steps.filter.outputs.tsx == 'true' || steps.filter.outputs.dependencies == 'true' }}
         run: yarn install --immutable
 
       - name: Run JS tests with coverage
-        if: ${{ steps.filter.outputs.js == 'true' || steps.filter.outputs.ts == 'true' || steps.filter.outputs.jsx == 'true' || steps.filter.outputs.tsx == 'true' || steps.filter.outputs.dependencies == 'true' }}
         run: |
           yarn test-js --coverage
 
       - name: Upload coverage to Codecov
-        if: ${{ steps.filter.outputs.js == 'true' || steps.filter.outputs.ts == 'true' || steps.filter.outputs.jsx == 'true' || steps.filter.outputs.tsx == 'true' || steps.filter.outputs.dependencies == 'true' }}
         uses: codecov/codecov-action@v5
         with:
           flags: javascript
