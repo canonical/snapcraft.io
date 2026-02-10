@@ -15,7 +15,6 @@ from webapp.packages.logic import (
 )
 from webapp.helpers import api_session
 
-
 FIELDS = [
     "title",
     "summary",
