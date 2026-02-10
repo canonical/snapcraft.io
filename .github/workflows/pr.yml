@@ -87,7 +87,6 @@ jobs:
           filters: |
             py:
               - '**/*.py'
-            py_dependencies:
               - 'requirements.txt'
 
       - name: Install dotrun
@@ -122,7 +121,7 @@ jobs:
           filters: |
             scss:
               - '**/*.scss'
-            js_dependencies:
+              - '.stylelintrc'
               - 'package.json'
               - 'yarn.lock'
 
@@ -154,16 +153,17 @@ jobs:
               - '**/*.jsx'
             tsx:
               - '**/*.tsx'
-            js_dependencies:
+            dependencies:
               - 'package.json'
               - 'yarn.lock'
+              - 'eslint.config.mjs'
 
       - name: Install JS dependencies
-        if: ${{ steps.filter.outputs.js == 'true' || steps.filter.outputs.ts == 'true' || steps.filter.outputs.jsx == 'true' || steps.filter.outputs.tsx == 'true' }}
+        if: ${{ steps.filter.outputs.js == 'true' || steps.filter.outputs.ts == 'true' || steps.filter.outputs.jsx == 'true' || steps.filter.outputs.tsx == 'true' || steps.filter.outputs.dependencies == 'true' }}
         run: yarn install --immutable
 
       - name: Lint JS
-        if: ${{ steps.filter.outputs.js == 'true' || steps.filter.outputs.ts == 'true' || steps.filter.outputs.jsx == 'true' || steps.filter.outputs.tsx == 'true' }}
+        if: ${{ steps.filter.outputs.js == 'true' || steps.filter.outputs.ts == 'true' || steps.filter.outputs.jsx == 'true' || steps.filter.outputs.tsx == 'true' || steps.filter.outputs.dependencies == 'true' }}
         run: yarn lint-js
 
   test-python:
@@ -181,7 +181,6 @@ jobs:
           filters: |
             py:
               - '**/*.py'
-            py_dependencies:
               - 'requirements.txt'
 
       - name: Install dotrun
@@ -231,25 +230,26 @@ jobs:
               - '**/*.jsx'
             tsx:
               - '**/*.tsx'
-            js_dependencies:
+            dependencies:
               - 'package.json'
               - 'yarn.lock'
+              - 'vitest.config.js'
 
       - uses: actions/setup-node@v6
         with:
           node-version: 24
 
       - name: Install dependencies
-        if: ${{ steps.filter.outputs.js == 'true' || steps.filter.outputs.ts == 'true' || steps.filter.outputs.jsx == 'true' || steps.filter.outputs.tsx == 'true' }}
+        if: ${{ steps.filter.outputs.js == 'true' || steps.filter.outputs.ts == 'true' || steps.filter.outputs.jsx == 'true' || steps.filter.outputs.tsx == 'true' || steps.filter.outputs.dependencies == 'true' }}
         run: yarn install --immutable
 
       - name: Run JS tests with coverage
-        if: ${{ steps.filter.outputs.js == 'true' || steps.filter.outputs.ts == 'true' || steps.filter.outputs.jsx == 'true' || steps.filter.outputs.tsx == 'true' }}
+        if: ${{ steps.filter.outputs.js == 'true' || steps.filter.outputs.ts == 'true' || steps.filter.outputs.jsx == 'true' || steps.filter.outputs.tsx == 'true' || steps.filter.outputs.dependencies == 'true' }}
         run: |
           yarn test-js --coverage
 
       - name: Upload coverage to Codecov
-        if: ${{ steps.filter.outputs.js == 'true' || steps.filter.outputs.ts == 'true' || steps.filter.outputs.jsx == 'true' || steps.filter.outputs.tsx == 'true' }}
+        if: ${{ steps.filter.outputs.js == 'true' || steps.filter.outputs.ts == 'true' || steps.filter.outputs.jsx == 'true' || steps.filter.outputs.tsx == 'true' || steps.filter.outputs.dependencies == 'true' }}
         uses: codecov/codecov-action@v5
         with:
           flags: javascript
