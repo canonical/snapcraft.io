@@ -7,7 +7,13 @@ import useRemodels from "../useRemodels";
 
 import type { ReactNode } from "react";
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: false,
+    },
+  },
+});
 
 const createWrapper = () => {
   return ({ children }: { children: ReactNode }) => (
@@ -71,34 +77,34 @@ describe("useRemodels", () => {
       wrapper: createWrapper(),
     });
 
-    await waitFor(() => result.current.isSuccess);
-
     await waitFor(() => {
-      expect(result.current.data).toEqual(remodelsResponse.allowlist);
+      expect(result.current.isSuccess).toBe(true);
     });
+
+    expect(result.current.data).toEqual(remodelsResponse.allowlist);
   });
 
-  test("returns no data if request fails", async () => {
+  test("returns error if request fails", async () => {
     const { result } = renderHook(() => useRemodels("test-brand-id-fail"), {
       wrapper: createWrapper(),
     });
 
-    await waitFor(() => result.current.isSuccess);
-
     await waitFor(() => {
-      expect(result.current.data).toBeUndefined();
+      expect(result.current.isError).toBe(true);
     });
+
+    expect(result.current.data).toBeUndefined();
   });
 
-  test("returns no data if error", async () => {
+  test("returns error if network error", async () => {
     const { result } = renderHook(() => useRemodels("test-brand-id-error"), {
       wrapper: createWrapper(),
     });
 
-    await waitFor(() => result.current.isError);
-
     await waitFor(() => {
-      expect(result.current.data).toBeUndefined();
+      expect(result.current.isError).toBe(true);
     });
+
+    expect(result.current.data).toBeUndefined();
   });
 });
