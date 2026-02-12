@@ -1,9 +1,9 @@
 import { Dispatch, SetStateAction } from "react";
 
-import type { Model, Policy } from "../types/shared";
+import type { Policy } from "../types/shared";
 
 type Options = {
-  models: Model[];
+  modelIds: string[];
   id: string | undefined;
   setPolicies: Dispatch<SetStateAction<Policy[]>>;
   signal?: AbortSignal;
@@ -11,15 +11,15 @@ type Options = {
 };
 
 const getPolicies = async ({
-  models,
+  modelIds,
   id,
   setPolicies,
   signal,
   setEnableTableActions,
 }: Options) => {
   const data = await Promise.all(
-    models.map((model) => {
-      return fetch(`/api/store/${id}/models/${model.name}/policies`, {
+    modelIds.map((modelId) => {
+      return fetch(`/api/store/${id}/models/${modelId}/policies`, {
         signal,
       });
     }),
