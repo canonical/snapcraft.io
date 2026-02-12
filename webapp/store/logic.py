@@ -5,6 +5,7 @@ from urllib.parse import parse_qs, urlparse
 
 import humanize
 from dateutil import parser
+from dateutil.relativedelta import relativedelta
 from webapp import helpers
 
 
@@ -201,6 +202,36 @@ def convert_date(date_to_convert):
         return humanize.naturalday(date_parsed).title()
     else:
         return date_parsed.strftime("%-d %B %Y")
+
+
+def is_snap_old(last_updated_date, old_threshold_years=2.0):
+    """Check if a snap is considered 'old' based on its last update date
+
+    A snap is considered old if it hasn't been updated in the specified
+    number of years (default: 2 years).
+
+    :param last_updated_date: The last updated date string in ISO format
+    :param old_threshold_years: Number of years to consider a snap old
+                                (default: 2)
+    :returns: True if snap is old, False otherwise
+    """
+    if not last_updated_date:
+        return False
+
+    try:
+        date_parsed = parser.parse(last_updated_date)
+        if date_parsed.tzinfo is None:
+            date_parsed = date_parsed.replace(tzinfo=datetime.timezone.utc)
+
+        now = datetime.datetime.now(datetime.timezone.utc)
+
+        delta = relativedelta(now, date_parsed)
+        years_since_update = delta.years
+
+        return years_since_update >= old_threshold_years
+    except (ValueError, TypeError):
+        # If we can't parse the date, assume it's not old
+        return False
 
 
 categories_list = [

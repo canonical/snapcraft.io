@@ -16,6 +16,15 @@
       <li>{{ updates[1]["released-at-display"] }} - <small>{{ updates[1]["track"] }}/{{ updates[1]["risk"] }}</small></li>
     {% endif %}
   </ul>
+  {% if old_snap_info %}
+  <div class="p-notification--caution is-borderless">
+    <div class="p-notification__content">
+      <p class="p-notification__message">
+        This snap hasn't been updated in a while. It might be unmaintained and have stability or security issues.
+      </p>
+    </div>
+  </div>
+  {% endif %}
   <hr class="p-rule--muted">
 {% endif %}
 
