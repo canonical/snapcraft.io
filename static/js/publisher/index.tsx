@@ -126,6 +126,7 @@ root.render(
                     <Route path="policies" element={<Policies />} />
                     <Route path="policies/create" element={<Policies />} />
                     <Route path="remodel" element={<Remodel />} />
+                    <Route path="remodel/configure" element={<Remodel />} />
                   </Route>
                 </Route>
               </Route>
