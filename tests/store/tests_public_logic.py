@@ -486,54 +486,43 @@ class StoreLogicTest(unittest.TestCase):
     def test_is_snap_old_empty_date(self):
         """Test that empty or None date returns not old"""
         result = logic.is_snap_old(None)
-        self.assertFalse(result["is_old"])
-        self.assertEqual(result["years_since_update"], 0)
+        self.assertFalse(result)
 
         result = logic.is_snap_old("")
-        self.assertFalse(result["is_old"])
-        self.assertEqual(result["years_since_update"], 0)
+        self.assertFalse(result)
 
     def test_is_snap_old_invalid_date(self):
         """Test that invalid date returns not old"""
         result = logic.is_snap_old("invalid-date")
-        self.assertFalse(result["is_old"])
-        self.assertEqual(result["years_since_update"], 0)
+        self.assertFalse(result)
 
     @freeze_time("2024-01-01")
     def test_is_snap_old_recent_snap(self):
         """Test that a recently updated snap is not considered old"""
         recent_date = "2023-06-01T10:00:00Z"
         result = logic.is_snap_old(recent_date)
-        self.assertFalse(result["is_old"])
-        self.assertEqual(result["years_since_update"], 0)
-        self.assertIn("last_updated_formatted", result)
+        self.assertFalse(result)
 
-    @freeze_time("2024-01-02")
+    @freeze_time("2024-01-02T10:00:00Z")
     def test_is_snap_old_exactly_two_years(self):
-        """Test that a snap updated over 2 years ago is considered old"""
-        old_date = "2021-12-01T10:00:00Z"  # Over 2 years ago
+        """Test that a snap updated exactly 2 years ago is considered old"""
+        old_date = "2022-01-02T10:00:00Z"  # Exactly 2 years ago
         result = logic.is_snap_old(old_date)
-        self.assertTrue(result["is_old"])
-        self.assertEqual(result["years_since_update"], 2)
-        self.assertIn("last_updated_formatted", result)
+        self.assertTrue(result)
 
     @freeze_time("2024-01-02")
     def test_is_snap_old_very_old_snap(self):
         """Test that a very old snap is considered old"""
         very_old_date = "2020-01-01T10:00:00Z"
         result = logic.is_snap_old(very_old_date)
-        self.assertTrue(result["is_old"])
-        self.assertEqual(result["years_since_update"], 4)
-        self.assertIn("last_updated_formatted", result)
+        self.assertTrue(result)
 
     @freeze_time("2024-01-01")
     def test_is_snap_old_just_under_two_years(self):
         """Test that a snap updated just under 2 years ago is not old"""
         almost_old_date = "2022-02-01T10:00:00Z"
         result = logic.is_snap_old(almost_old_date)
-        self.assertFalse(result["is_old"])
-        self.assertEqual(result["years_since_update"], 1)
-        self.assertIn("last_updated_formatted", result)
+        self.assertFalse(result)
 
     @freeze_time("2024-01-02")
     def test_is_snap_old_custom_threshold(self):
@@ -542,12 +531,11 @@ class StoreLogicTest(unittest.TestCase):
 
         # With default threshold (2 years), should not be old
         result = logic.is_snap_old(date_one_year_ago)
-        self.assertFalse(result["is_old"])
+        self.assertFalse(result)
 
         # With custom threshold (1 year), should be old
         result = logic.is_snap_old(date_one_year_ago, old_threshold_years=1)
-        self.assertTrue(result["is_old"])
-        self.assertEqual(result["years_since_update"], 1)
+        self.assertTrue(result)
 
     def test_is_snap_old_different_date_formats(self):
         """Test that different ISO date formats are handled correctly"""
@@ -562,19 +550,4 @@ class StoreLogicTest(unittest.TestCase):
         for date_str in dates_to_test:
             with freeze_time("2024-01-02"):
                 result = logic.is_snap_old(date_str)
-                self.assertTrue(
-                    result["is_old"], f"Failed for date format: {date_str}"
-                )
-                self.assertEqual(result["years_since_update"], 4)
-
-    def test_convert_date_month_year(self):
-        """Test the month-year date formatting function"""
-        test_cases = [
-            ("2022-01-14T10:00:00Z", "January 2022"),
-            ("2020-12-25T15:30:00Z", "December 2020"),
-            ("2019-06-01T00:00:00Z", "June 2019"),
-        ]
-
-        for date_str, expected in test_cases:
-            result = logic.convert_date_month_year(date_str)
-            self.assertEqual(result, expected, f"Failed for date: {date_str}")
+                self.assertTrue(result, f"Failed for date format: {date_str}")

@@ -204,22 +204,6 @@ def convert_date(date_to_convert):
         return date_parsed.strftime("%-d %B %Y")
 
 
-def convert_date_month_year(date_to_convert):
-    """Convert date to month and year format: Month Year
-
-    Format of date to convert: 2019-01-12T16:48:41.821037+00:00
-    Output: January 2019
-
-    :param date_to_convert: Date to convert
-    :returns: Month and year only
-    """
-    date_parsed = parser.parse(date_to_convert)
-    if date_parsed.tzinfo is None:
-        date_parsed = date_parsed.replace(tzinfo=datetime.timezone.utc)
-
-    return date_parsed.strftime("%B %Y")
-
-
 def is_snap_old(last_updated_date, old_threshold_years=2.0):
     """Check if a snap is considered 'old' based on its last update date
 
@@ -229,11 +213,10 @@ def is_snap_old(last_updated_date, old_threshold_years=2.0):
     :param last_updated_date: The last updated date string in ISO format
     :param old_threshold_years: Number of years to consider a snap old
                                 (default: 2)
-    :returns: Dictionary with 'is_old' boolean and 'years_since_update'
-              integer
+    :returns: True if snap is old, False otherwise
     """
     if not last_updated_date:
-        return {"is_old": False, "years_since_update": 0}
+        return False
 
     try:
         date_parsed = parser.parse(last_updated_date)
@@ -245,18 +228,10 @@ def is_snap_old(last_updated_date, old_threshold_years=2.0):
         delta = relativedelta(now, date_parsed)
         years_since_update = delta.years
 
-        is_old = years_since_update >= old_threshold_years
-
-        return {
-            "is_old": is_old,
-            "years_since_update": years_since_update,
-            "last_updated_formatted": convert_date_month_year(
-                last_updated_date
-            ),
-        }
+        return years_since_update >= old_threshold_years
     except (ValueError, TypeError):
         # If we can't parse the date, assume it's not old
-        return {"is_old": False, "years_since_update": 0}
+        return False
 
 
 categories_list = [
