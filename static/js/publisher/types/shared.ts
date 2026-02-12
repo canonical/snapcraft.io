@@ -182,7 +182,7 @@ export type Remodel = {
   "created-by": string;
   description?: string | null;
   "from-model": string;
-  "from-serial": string;
+  "from-serial": string | null;
   "modified-at": string | null;
   "modified-by": string | null;
   "to-model": string;
