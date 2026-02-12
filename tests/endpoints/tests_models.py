@@ -261,3 +261,84 @@ class TestGetRemodelAllowlist(TestModelServiceEndpoints):
         self.assertEqual(response.status_code, 500)
         self.assertFalse(data["success"])
         self.assertEqual(data["message"], "Internal server error")
+
+
+class TestCreateRemodelAllowlist(TestModelServiceEndpoints):
+    @patch(
+        "canonicalwebteam.store_api.publishergw.PublisherGW"
+        + ".create_remodel_allowlist"
+    )
+    def test_create_remodel_allowlist_success(
+        self, mock_create_remodel_allowlist
+    ):
+        mock_create_remodel_allowlist.return_value = None
+
+        payload = {
+            "description": "Test remodel allowlist",
+            "from-model": "test-from-model",
+            "from-serial": "test-from-serial",
+            "to-model": "test-to-model",
+        }
+
+        response = self.client.post(
+            "/api/store/1/models/remodel-allowlist", json=payload
+        )
+        data = response.json
+
+        self.assertEqual(response.status_code, 201)
+        self.assertTrue(data["success"])
+        mock_create_remodel_allowlist.assert_called_once()
+
+    @patch(
+        "canonicalwebteam.store_api.publishergw.PublisherGW"
+        + ".create_remodel_allowlist"
+    )
+    def test_create_remodel_allowlist_store_not_found(
+        self, mock_create_remodel_allowlist
+    ):
+        mock_create_remodel_allowlist.side_effect = StoreApiResponseErrorList(
+            "Store not found", 404, [{"message": "Store not found"}]
+        )
+
+        payload = {
+            "description": "Test remodel allowlist",
+            "from-model": "test-from-model",
+            "to-model": "test-to-model",
+        }
+
+        response = self.client.post(
+            "/api/store/999/models/remodel-allowlist", json=payload
+        )
+        data = response.json
+
+        self.assertEqual(response.status_code, 404)
+        self.assertFalse(data["success"])
+        self.assertEqual(data["message"], "Store not found")
+
+    @patch(
+        "canonicalwebteam.store_api.publishergw.PublisherGW"
+        + ".create_remodel_allowlist"
+    )
+    def test_create_remodel_allowlist_general_error(
+        self, mock_create_remodel_allowlist
+    ):
+        mock_create_remodel_allowlist.side_effect = StoreApiResponseErrorList(
+            "Internal server error",
+            500,
+            [{"message": "An error occurred"}],
+        )
+
+        payload = {
+            "description": "Test remodel allowlist",
+            "from-model": "test-from-model",
+            "to-model": "test-to-model",
+        }
+
+        response = self.client.post(
+            "/api/store/999/models/remodel-allowlist", json=payload
+        )
+        data = response.json
+
+        self.assertEqual(response.status_code, 500)
+        self.assertFalse(data["success"])
+        self.assertEqual(data["message"], "An error occurred")
