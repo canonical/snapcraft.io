@@ -300,3 +300,50 @@ def get_remodel_allowlist(store_id: str):
         response = make_response(res, 500)
 
     return response
+
+
+@models.route(
+    "/api/store/<store_id>/models/remodel-allowlist", methods=["POST"]
+)
+@login_required
+@exchange_required
+def create_remodel_allowlist(store_id: str):
+    """
+    Create a remodel allowlist for a given store.
+
+    Args:
+        store_id (str): The ID of the store.
+
+    Returns:
+        dict: A dictionary containing the response message and success
+        status.
+    """
+    res = {}
+
+    try:
+        allowlist = flask.request.json
+        publisher_gateway.create_remodel_allowlist(
+            flask.session, store_id, allowlist
+        )
+
+        res["success"] = True
+        return make_response(res, 201)
+    except StoreApiResponseErrorList as error_list:
+        res["success"] = False
+        messages = [
+            f"{error.get('message', 'An error occurred')}"
+            for error in error_list.errors
+        ]
+        res["message"] = " ".join(messages)
+        return make_response(res, error_list.status_code)
+
+    except StoreApiResourceNotFound:
+        res["success"] = False
+        res["message"] = "Models not found"
+        return make_response(res, 404)
+
+    except Exception:
+        res["success"] = False
+        res["message"] = "An error occurred"
+
+    return make_response(res, 500)
