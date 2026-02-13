@@ -544,11 +544,8 @@ def snap_details_views(store):
 
         # If the honeypot is activated or a URL is included in the comment,
         # silently reject to avoid spam
-        if (
-            "confirm" in fields and fields["confirm"] == "on"
-        ) or "http" in fields.get("comment", ""):
+        if "confirm" in fields or "http" in fields.get("comment", ""):
             return flask.jsonify({"ok": True}), 200
-
         payload = {
             "snap_name": fields.get("snap_name", ""),
             "reason": fields.get("reason", ""),
