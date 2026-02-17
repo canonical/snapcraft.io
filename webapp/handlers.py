@@ -70,6 +70,8 @@ CSP = {
         "w.usabilla.com",
         "connect.facebook.net",
         "snap.licdn.com",
+        "www.google.com",
+        "www.gstatic.com",
     ],
     "font-src": [
         "'self'",
@@ -102,6 +104,8 @@ CSP = {
         "snapcraft.io",
         "www.facebook.com",
         "snap:",
+        "www.google.com",
+        "www.gstatic.com",
     ],
     "style-src": [
         "'self'",

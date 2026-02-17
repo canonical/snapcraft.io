@@ -328,6 +328,9 @@ def snap_details_views(store):
                     not in flask.request.headers.get("User-Agent", "")
                 ),
                 "error_info": error_info,
+                "recaptcha_site_key": flask.current_app.config.get(
+                    "RECAPTCHA_SITE_KEY"
+                ),
             }
         )
 
@@ -541,6 +544,37 @@ def snap_details_views(store):
             return flask.jsonify({"error": "report_url_missing"}), 503
 
         fields = flask.request.form
+
+        # Verify reCAPTCHA
+        recaptcha_response = fields.get("g-recaptcha-response")
+        if not recaptcha_response:
+            logger.warning("Missing reCAPTCHA response")
+            return flask.jsonify({"error": "missing_recaptcha"}), 400
+
+        recaptcha_secret = flask.current_app.config.get("RECAPTCHA_SECRET_KEY")
+        recaptcha_verify_url = (
+            "https://www.google.com/recaptcha/api/siteverify"
+        )
+
+        try:
+            recaptcha_result = requests.post(
+                recaptcha_verify_url,
+                data={
+                    "secret": recaptcha_secret,
+                    "response": recaptcha_response,
+                },
+            )
+            recaptcha_data = recaptcha_result.json()
+
+            if not recaptcha_data.get("success"):
+                logger.warning(
+                    "reCAPTCHA verification failed: %s",
+                    recaptcha_data.get("error-codes", []),
+                )
+                return flask.jsonify({"error": "recaptcha_failed"}), 400
+        except requests.RequestException:
+            logger.exception("reCAPTCHA verification request failed")
+            return flask.jsonify({"error": "recaptcha_failed"}), 502
 
         payload = {
             "snap_name": fields.get("snap_name", ""),

@@ -22,6 +22,11 @@ function initForm(modal: HTMLElement): void {
     "Submit report",
   );
 
+  // Reset reCAPTCHA
+  if ((window as any).grecaptcha) {
+    (window as any).grecaptcha.reset();
+  }
+
   showEl(modal.querySelector(".js-report-snap-form") as HTMLElement);
   hideEl(modal.querySelector(".js-report-snap-success") as HTMLElement);
   hideEl(modal.querySelector(".js-report-snap-error") as HTMLElement);
@@ -68,10 +73,20 @@ export default function initReportSnap(
       "Submitting…",
     );
 
+    // Get reCAPTCHA token
+    const recaptchaResponse = (window as any).grecaptcha?.getResponse();
+    if (!recaptchaResponse) {
+      showError(modal);
+      return;
+    }
+
     try {
+      const formData = new FormData(reportForm);
+      formData.append("g-recaptcha-response", recaptchaResponse);
+
       const resp = await fetch(formURL, {
         method: "POST",
-        body: new FormData(reportForm),
+        body: formData,
       });
 
       if (!resp.ok) {
