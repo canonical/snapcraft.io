@@ -1081,13 +1081,13 @@
   dependencies:
     vanilla-framework "4.35.0"
 
-"@canonical/react-components@3.6.0":
-  version "3.6.0"
-  resolved "https://registry.yarnpkg.com/@canonical/react-components/-/react-components-3.6.0.tgz#59a1c48ad6c0d4425e1a7a0f96b7d3e5d592b1bd"
-  integrity sha512-yEj3RIQJgMSJUF3Anxz3JmxGFCZ80hL1qCWL1BaBiIPwvltIEp55NvFd6k79Rbwts9dJJMP+7xSs7f40fbtj9w==
+"@canonical/react-components@3.12.1":
+  version "3.12.1"
+  resolved "https://registry.yarnpkg.com/@canonical/react-components/-/react-components-3.12.1.tgz#b81219ec75c8907ee0005ab2d05d3a53556687f8"
+  integrity sha512-fZhOi2NHFHpOyG90oQ0wZBPJuW8cfXBdW3RCIPTZWyxXYxEQH4SSXJTgfOpz2q396Q+cRP1eps2YvEz4Crp3eQ==
   dependencies:
     "@types/jest" "29.5.14"
-    "@types/node" "20.17.19"
+    "@types/node" "20.19.30"
     "@types/react" "19.0.10"
     "@types/react-dom" "19.0.4"
     "@types/react-table" "7.7.20"
@@ -1097,10 +1097,10 @@
     prop-types "15.8.1"
     react-table "7.8.0"
 
-"@canonical/react-components@3.9.0":
-  version "3.9.0"
-  resolved "https://registry.yarnpkg.com/@canonical/react-components/-/react-components-3.9.0.tgz#90be4574d6f3a8e8240d90ac16a869fe4bb32e4b"
-  integrity sha512-F9Tk/hBhkIYwJ1ePbjX8mTigfeTtHPF+1reAnu6dOSPHOwN3ehIJZDzAtXFQbXB41D0fSwujJ+JZA/gKrPUJZQ==
+"@canonical/react-components@3.6.0":
+  version "3.6.0"
+  resolved "https://registry.yarnpkg.com/@canonical/react-components/-/react-components-3.6.0.tgz#59a1c48ad6c0d4425e1a7a0f96b7d3e5d592b1bd"
+  integrity sha512-yEj3RIQJgMSJUF3Anxz3JmxGFCZ80hL1qCWL1BaBiIPwvltIEp55NvFd6k79Rbwts9dJJMP+7xSs7f40fbtj9w==
   dependencies:
     "@types/jest" "29.5.14"
     "@types/node" "20.17.19"
@@ -2634,6 +2634,13 @@
   integrity sha512-LEwC7o1ifqg/6r2gn9Dns0f1rhK+fPFDoMiceTJ6kWmVk6bgXBI/9IOWfVan4WiAavK9pIVWdX0/e3J+eEUh5A==
   dependencies:
     undici-types "~6.19.2"
+
+"@types/node@20.19.30":
+  version "20.19.30"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-20.19.30.tgz#84fa87498ade5cd2b6ba8f8eec01d3b138ca60d0"
+  integrity sha512-WJtwWJu7UdlvzEAUm484QNg5eAoq5QR08KDNx7g45Usrs2NtOPiX8ugDqmKdXkyL03rBqU5dYNYVQetEpBHq2g==
+  dependencies:
+    undici-types "~6.21.0"
 
 "@types/prop-types@*":
   version "15.7.15"
@@ -8382,6 +8389,11 @@ undici-types@~6.19.2:
   version "6.19.8"
   resolved "https://registry.yarnpkg.com/undici-types/-/undici-types-6.19.8.tgz#35111c9d1437ab83a7cdc0abae2f26d88eda0a02"
   integrity sha512-ve2KP6f/JnbPBFyobGHuerC9g1FYGn/F8n1LWTwNxCEzd6IfqTwUQcNXgEtmmQ6DlRrC1hrSrBnCZPokRrDHjw==
+
+undici-types@~6.21.0:
+  version "6.21.0"
+  resolved "https://registry.yarnpkg.com/undici-types/-/undici-types-6.21.0.tgz#691d00af3909be93a7faa13be61b3a5b50ef12cb"
+  integrity sha512-iwDZqg0QAGrg9Rav5H4n0M64c3mkR59cJ6wQp+7C4nI0gsmExaedaYLNO44eT4AtBBwjbTiGPMlt2Md0T9H9JQ==
 
 undici-types@~7.8.0:
   version "7.8.0"
