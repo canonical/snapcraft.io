@@ -178,6 +178,8 @@ def snap_details_views(store):
 
         developer = logic.get_snap_developer(details["name"])
 
+        is_last_updated_old = logic.is_snap_old(last_updated)
+
         context = {
             "snap_id": details.get("snap-id"),
             # Data direct from details API
@@ -209,7 +211,8 @@ def snap_details_views(store):
             "filesize": humanize.naturalsize(binary_filesize),
             "last_updated": logic.convert_date(last_updated),
             "last_updated_raw": last_updated,
-            "old_snap_info": logic.is_snap_old(most_recent_update),
+            "is_snap_old": logic.is_snap_old(most_recent_update),
+            "is_last_updated_old": is_last_updated_old,
             "is_users_snap": is_users_snap,
             "unlisted": details.get("snap", {}).get("unlisted", False),
             "developer": developer,

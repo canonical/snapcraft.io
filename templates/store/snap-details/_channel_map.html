@@ -3,6 +3,16 @@
     <div class="p-strip--light is-shallow">
       <div class="u-fixed-width">
         <p class="p-heading--4">Install {{ default_track }}/{{ lowest_risk_available }} of {{ snap_title }}</p>
+        {% if is_last_updated_old %}
+          <div class="p-notification--caution is-borderless is-inline" style="background-color: transparent;">
+            <div class="p-notification__content">
+              <p class="p-notification__message">
+                This channel hasn't been updated in a while. It might be unmaintained and have stability or security issues.
+              </p>
+            </div>
+          </div>
+        {% endif %}
+
         <p>Ubuntu 16.04 or later?</p>
         <button
           data-snap="{{ package_name }}
@@ -144,13 +154,30 @@
     </div>
   </div>
 </div>
+
+<script type="text/template" id="install-warnings-template" data-js="install-warnings" nonce="{{ CSP_NONCE }}">
+  <div class="p-notification--caution is-borderless is-inline" style="background-color: transparent;">
+    <div class="p-notification__content">
+      <p class="p-notification__message">
+        ${warning}
+      </p>
+    </div>
+  </div>
+</script>
+
 <script type="text/template" id="install-window-template" data-js="install-window" nonce="{{ CSP_NONCE }}">
   <div class="u-fixed-width">
     <a href="#" data-js="slide-all-versions">&lsaquo; All versions</a>
   </div>
   <div class="u-fixed-width">
-  <p class="p-heading--4">Install ${channel} of {{ snap_title }}</p>
-  <span data-js="warning"></span>
+    <p class="p-heading--4">Install ${channel} of {{ snap_title }}</p>
+    <div class="p-notification--caution is-borderless is-inline" style="background-color: transparent;">
+      <div class="p-notification__content">
+        <p class="p-notification__message" data-js="warning">
+          This snap in this channel hasn't been updated since March 2023. Contact the developer to ask for an update.
+        </p>
+      </div>
+    </div>
     <p>Ubuntu 16.04 or later?</p>
     <button data-snap="{{ package_name }}?channel=${channel}" class="p-view-store-button" data-js="open-desktop">View in Desktop store</button>
     <p class="p-form-help-text">Make sure <a href="/docs/installing-snapd">snap support</a> is enabled in your Desktop store.</p>
@@ -168,6 +195,7 @@
     </p>
   </div>
 </script>
+
 <script type="text/template" id="channel-map-row-template" data-js="channel-map-row" nonce="{{ CSP_NONCE }}">
   <tr class="${rowClass}" data-js="slide-install-instructions" data-channel="${row[0]}/${row[1]}" data-confinement="${row[4]}">
     <td>${row[0]}/${row[1]}</td>
@@ -176,6 +204,7 @@
     <td class="u-align--center"><a href="#" class="p-channel-map__version-table-install">Install &rsaquo;</a></td>
   </tr>
 </script>
+
 <script type="text/template" id="channel-map-security-table-row-template" data-js="channel-map-security-table-row" nonce="{{ CSP_NONCE }}">
   <tr>
     <td>${row[0]}/${row[1]}</td>
@@ -184,4 +213,5 @@
     <td>${row[4]}</td>
   </tr>
 </script>
+
 <div class="p-channel-map-overlay" data-js="close-channel-map" style="display: none"></div>

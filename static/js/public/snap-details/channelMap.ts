@@ -15,6 +15,12 @@ function isSnapElement(target: HTMLElement): target is SnapElement {
   );
 }
 
+function getDateNYearsAgo(n: number): Date {
+  const date = new Date();
+  date.setFullYear(date.getFullYear() - n);
+  return date;
+}
+
 interface SlideInstallInstructionsElement extends HTMLElement {
   dataset: {
     channel: string;
@@ -476,10 +482,22 @@ class ChannelMap {
         "Snaps on the candidate channel need additional real world experimentation before the move to stable.";
     }
 
-    const template = this.INSTALL_TEMPLATE.split("${channel}")
-      .join(channel)
-      .split("${paramString}")
-      .join(paramString);
+    const template = this.INSTALL_TEMPLATE.replace(
+      "${channel}",
+      channel,
+    ).replace("${paramString}", paramString);
+
+    const [track, risk] = channel.split("/");
+    const release = this.channelMapData[this.arch!][track].find(
+      (c) => c.risk === risk,
+    );
+    if (release) {
+      const releaseDate = new Date(release["released-at"]);
+
+      if (releaseDate < getDateNYearsAgo(2)) {
+        warning = `This channel hasn't been updated in a while. It might be unmaintained and have stability or security issues.`;
+      }
+    }
 
     const newDiv = document.createElement("div");
     newDiv.innerHTML = template;
