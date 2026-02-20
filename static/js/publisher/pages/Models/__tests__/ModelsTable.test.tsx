@@ -48,16 +48,17 @@ describe("ModelsTable", () => {
 
     const user = userEvent.setup();
     const columnHeader = screen.getByRole("columnheader", { name: /Name/ });
+    const columnHeaderBtn = screen.getByRole("button", { name: /Name/ });
 
     expect(columnHeader.getAttribute("aria-sort")).toBe("none");
 
-    await user.click(columnHeader);
+    await user.click(columnHeaderBtn);
     expect(columnHeader.getAttribute("aria-sort")).toBe("ascending");
 
-    await user.click(columnHeader);
+    await user.click(columnHeaderBtn);
     expect(columnHeader.getAttribute("aria-sort")).toBe("descending");
 
-    await user.click(columnHeader);
+    await user.click(columnHeaderBtn);
     expect(columnHeader.getAttribute("aria-sort")).toBe("none");
   });
 
@@ -68,16 +69,19 @@ describe("ModelsTable", () => {
     const columnHeader = screen.getByRole("columnheader", {
       name: "Last updated",
     });
+    const columnHeaderBtn = screen.getByRole("button", {
+      name: "Last updated",
+    });
 
     expect(columnHeader.getAttribute("aria-sort")).toBe("none");
 
-    await user.click(columnHeader);
+    await user.click(columnHeaderBtn);
     expect(columnHeader.getAttribute("aria-sort")).toBe("ascending");
 
-    await user.click(columnHeader);
+    await user.click(columnHeaderBtn);
     expect(columnHeader.getAttribute("aria-sort")).toBe("descending");
 
-    await user.click(columnHeader);
+    await user.click(columnHeaderBtn);
     expect(columnHeader.getAttribute("aria-sort")).toBe("none");
   });
 
@@ -88,16 +92,19 @@ describe("ModelsTable", () => {
     const columnHeader = screen.getByRole("columnheader", {
       name: "Created date",
     });
+    const columnHeaderBtn = screen.getByRole("button", {
+      name: "Created date",
+    });
 
     expect(columnHeader.getAttribute("aria-sort")).toBe("none");
 
-    await user.click(columnHeader);
+    await user.click(columnHeaderBtn);
     expect(columnHeader.getAttribute("aria-sort")).toBe("ascending");
 
-    await user.click(columnHeader);
+    await user.click(columnHeaderBtn);
     expect(columnHeader.getAttribute("aria-sort")).toBe("descending");
 
-    await user.click(columnHeader);
+    await user.click(columnHeaderBtn);
     expect(columnHeader.getAttribute("aria-sort")).toBe("none");
   });
 });
