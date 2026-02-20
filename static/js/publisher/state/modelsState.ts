@@ -1,5 +1,4 @@
 import { atom } from "jotai";
-import { atomFamily } from "jotai-family";
 
 import { policiesListState } from "./policiesState";
 
@@ -51,17 +50,9 @@ const filteredModelsListState = atom<Array<Model>>((get) => {
   return getFilteredModels(modelsWithPolicies, filter);
 });
 
-const currentModelState = atomFamily((modelId) =>
-  atom((get) => {
-    const models = get(modelsListState);
-    return models.find((model) => model.name === modelId);
-  }),
-);
-
 export {
   modelsListState,
   modelsListFilterState,
   newModelState,
   filteredModelsListState,
-  currentModelState,
 };

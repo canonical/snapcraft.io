@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useParams } from "react-router-dom";
 import { useAtomValue, useSetAtom } from "jotai";
 import { useMutation } from "react-query";
@@ -12,7 +12,7 @@ import {
   Notification,
 } from "@canonical/react-components";
 
-import { modelsListState, currentModelState } from "../../state/modelsState";
+import { modelsListState } from "../../state/modelsState";
 import { brandIdState, brandStoreState } from "../../state/brandStoreState";
 import { useModels } from "../../hooks";
 import { setPageTitle } from "../../utils";
@@ -22,8 +22,7 @@ import { PortalEntrance } from "../Portals/Portals";
 function Model() {
   const { id, model_id } = useParams();
   const brandId = useAtomValue(brandIdState);
-  const currentModel = useAtomValue(currentModelState(model_id));
-  const [newApiKey, setNewApiKey] = useState("");
+  const [apiKey, setApiKey] = useState("");
   const [showSuccessNotification, setShowSuccessNotificaton] = useState(false);
   const [showErrorNotification, setShowErrorNotificaton] = useState(false);
   const setModelsList = useSetAtom(modelsListState);
@@ -47,7 +46,9 @@ function Model() {
       }
 
       if (response.ok) {
+        refetch();
         setShowSuccessNotificaton(true);
+
         setTimeout(() => {
           setShowSuccessNotificaton(false);
         }, 5000);
@@ -63,10 +64,12 @@ function Model() {
     data: models,
     isLoading: modelsIsLoading,
     error: modelsError,
+    refetch,
   }: {
     data: ModelType[] | undefined;
     isLoading: boolean;
     error: unknown;
+    refetch: () => void;
   } = useModels(brandId);
 
   const handleError = () => {
@@ -75,6 +78,24 @@ function Model() {
       setShowErrorNotificaton(false);
     }, 5000);
   };
+
+  const currentModel = useMemo(() => {
+    if (!models) {
+      return;
+    }
+
+    const current = models.find((model) => model.name === model_id);
+
+    if (!current) {
+      return;
+    }
+
+    if (current["api-key"]) {
+      setApiKey(current["api-key"]);
+    }
+
+    return current;
+  }, [models, model_id]);
 
   currentModel && brandStore
     ? setPageTitle(`${currentModel.name} in ${brandStore.name}`)
@@ -94,26 +115,28 @@ function Model() {
 
   return (
     <>
-      <div className="u-fixed-width u-align--right">
-        <Button
-          type="button"
-          onClick={() => {
-            setNewApiKey("");
-          }}
-          disabled={!newApiKey}
-        >
-          Revert
-        </Button>
-        <Button
-          type="submit"
-          appearance="positive"
-          className="u-no-margin--right"
-          disabled={!newApiKey}
-          form="save-model-form"
-        >
-          Save
-        </Button>
-      </div>
+      {currentModel && !currentModel["api-key"] && (
+        <div className="u-fixed-width u-align--right">
+          <Button
+            type="button"
+            onClick={() => {
+              setApiKey("");
+            }}
+            disabled={!apiKey}
+          >
+            Revert
+          </Button>
+          <Button
+            type="submit"
+            appearance="positive"
+            className="u-no-margin--right"
+            disabled={!apiKey}
+            form="save-model-form"
+          >
+            Save
+          </Button>
+        </div>
+      )}
 
       {currentModel && (
         <form
@@ -121,7 +144,7 @@ function Model() {
           id="save-model-form"
           onSubmit={(event) => {
             event.preventDefault();
-            mutation.mutate(newApiKey);
+            mutation.mutate(apiKey);
           }}
         >
           <Row>
@@ -156,27 +179,35 @@ function Model() {
                 id="api-key-field"
                 label="API key"
                 labelClassName="u-off-screen"
-                value={newApiKey || currentModel["api-key"] || ""}
-                placeholder="yx6dnxsWQ3XUB5gza8idCuMvwmxtk1xBpa9by8TuMit5dgGnv"
+                value={apiKey}
                 className="read-only-dark u-no-margin--bottom"
-                readOnly
+                readOnly={currentModel["api-key"] !== null}
+                onChange={(e) => {
+                  if (currentModel["api-key"] !== null) {
+                    return;
+                  }
+
+                  setApiKey(e.target.value);
+                }}
               />
             </Col>
-            <Col size={3} className="u-align--right">
-              <Button
-                type="button"
-                className="u-no-margin--bottom"
-                onClick={() => {
-                  setNewApiKey(
-                    randomstring.generate({
-                      length: 50,
-                    }),
-                  );
-                }}
-              >
-                Generate key
-              </Button>
-            </Col>
+            {!currentModel["api-key"] && (
+              <Col size={3} className="u-align--right">
+                <Button
+                  type="button"
+                  className="u-no-margin--bottom"
+                  onClick={() => {
+                    setApiKey(
+                      randomstring.generate({
+                        length: 50,
+                      }),
+                    );
+                  }}
+                >
+                  Generate key
+                </Button>
+              </Col>
+            )}
           </Row>
           <div className="u-fixed-width">
             <hr />
