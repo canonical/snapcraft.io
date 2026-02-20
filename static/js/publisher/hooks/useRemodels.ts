@@ -1,10 +1,10 @@
 import { useQuery, UseQueryResult } from "react-query";
-import type { Remodel as RemodelType } from "../types/shared";
+import type { Remodel } from "../types/shared";
 
 const useRemodels = (
   brandId: string | undefined,
-): UseQueryResult<RemodelType[], Error> => {
-  return useQuery<RemodelType[], Error>({
+): UseQueryResult<Remodel[], Error> => {
+  return useQuery<Remodel[], Error>({
     queryKey: ["remodels", brandId],
     queryFn: async () => {
       const response = await fetch(
@@ -21,7 +21,13 @@ const useRemodels = (
         throw new Error(remodelsData.message);
       }
 
-      return remodelsData.data.allowlist;
+      return remodelsData.data.allowlist.sort((a: Remodel, b: Remodel) => {
+        if (a["created-at"] > b["created-at"]) {
+          return -1;
+        }
+
+        return 1;
+      });
     },
     enabled: !!brandId,
   });
