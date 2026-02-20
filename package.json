@@ -27,7 +27,7 @@
     "@babel/preset-typescript": "7.28.5",
     "@canonical/cookie-policy": "3.8.4",
     "@canonical/global-nav": "3.8.0",
-    "@canonical/react-components": "3.12.1",
+    "@canonical/react-components": "3.12.2",
     "@canonical/store-components": "0.55.0",
     "@dnd-kit/core": "6.3.1",
     "@dnd-kit/sortable": "10.0.0",
