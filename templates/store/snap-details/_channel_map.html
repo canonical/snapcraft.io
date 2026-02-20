@@ -3,11 +3,11 @@
     <div class="p-strip--light is-shallow">
       <div class="u-fixed-width">
         <p class="p-heading--4">Install {{ default_track }}/{{ lowest_risk_available }} of {{ snap_title }}</p>
-        {% if last_updated_warning %}
+        {% if is_last_updated_old %}
           <div class="p-notification--caution is-borderless is-inline" style="background-color: transparent;">
             <div class="p-notification__content">
               <p class="p-notification__message">
-                {{ last_updated_warning }}
+                This channel hasn't been updated in a while. It might be unmaintained and have stability or security issues.
               </p>
             </div>
           </div>

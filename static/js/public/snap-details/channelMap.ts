@@ -15,9 +15,9 @@ function isSnapElement(target: HTMLElement): target is SnapElement {
   );
 }
 
-function getDateNMonthsAgo(n: number): Date {
+function getDateNYearsAgo(n: number): Date {
   const date = new Date();
-  date.setMonth(date.getMonth() - n);
+  date.setFullYear(date.getFullYear() - n);
   return date;
 }
 
@@ -494,10 +494,8 @@ class ChannelMap {
     if (release) {
       const releaseDate = new Date(release["released-at"]);
 
-      if (releaseDate < getDateNMonthsAgo(24)) {
-        warning = "This channel has not received updates in the past two years";
-      } else if (releaseDate < getDateNMonthsAgo(12)) {
-        warning = "This channel has not received updates in the past year";
+      if (releaseDate < getDateNYearsAgo(2)) {
+        warning = `This channel hasn't been updated in a while. It might be unmaintained and have stability or security issues.`;
       }
     }
 
