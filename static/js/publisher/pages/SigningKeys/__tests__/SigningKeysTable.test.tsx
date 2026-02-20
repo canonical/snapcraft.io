@@ -51,16 +51,17 @@ describe("SigningKeysTable", () => {
 
     const user = userEvent.setup();
     const columnHeader = screen.getByRole("columnheader", { name: /Name/ });
+    const columnHeaderBtn = screen.getByRole("button", { name: /Name/ });
 
     expect(columnHeader.getAttribute("aria-sort")).toBe("none");
 
-    await user.click(columnHeader);
+    await user.click(columnHeaderBtn);
     expect(columnHeader.getAttribute("aria-sort")).toBe("ascending");
 
-    await user.click(columnHeader);
+    await user.click(columnHeaderBtn);
     expect(columnHeader.getAttribute("aria-sort")).toBe("descending");
 
-    await user.click(columnHeader);
+    await user.click(columnHeaderBtn);
     expect(columnHeader.getAttribute("aria-sort")).toBe("none");
   });
 
@@ -71,36 +72,19 @@ describe("SigningKeysTable", () => {
     const columnHeader = screen.getByRole("columnheader", {
       name: "Created date",
     });
-
-    expect(columnHeader.getAttribute("aria-sort")).toBe("none");
-
-    await user.click(columnHeader);
-    expect(columnHeader.getAttribute("aria-sort")).toBe("ascending");
-
-    await user.click(columnHeader);
-    expect(columnHeader.getAttribute("aria-sort")).toBe("descending");
-
-    await user.click(columnHeader);
-    expect(columnHeader.getAttribute("aria-sort")).toBe("none");
-  });
-
-  it("sorts the 'Created date' column when clicking the column header", async () => {
-    renderComponent();
-
-    const user = userEvent.setup();
-    const columnHeader = screen.getByRole("columnheader", {
+    const columnHeaderBtn = screen.getByRole("button", {
       name: "Created date",
     });
 
     expect(columnHeader.getAttribute("aria-sort")).toBe("none");
 
-    await user.click(columnHeader);
+    await user.click(columnHeaderBtn);
     expect(columnHeader.getAttribute("aria-sort")).toBe("ascending");
 
-    await user.click(columnHeader);
+    await user.click(columnHeaderBtn);
     expect(columnHeader.getAttribute("aria-sort")).toBe("descending");
 
-    await user.click(columnHeader);
+    await user.click(columnHeaderBtn);
     expect(columnHeader.getAttribute("aria-sort")).toBe("none");
   });
 });
