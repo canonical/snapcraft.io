@@ -1,5 +1,5 @@
 import { atom, useAtomValue, useSetAtom } from "jotai";
-import { atomFamily } from "jotai/utils";
+import { atomFamily } from "jotai-family";
 import { useCallback, useEffect } from "react";
 import { createPortal } from "react-dom";
 
