@@ -2,8 +2,9 @@ import responses
 from urllib.parse import urlencode
 from flask_testing import TestCase
 from webapp.app import create_app
-from unittest.mock import patch
+from unittest.mock import patch, MagicMock
 from cache.cache_utility import redis_cache
+import json
 
 POPULAR_PATH = "webapp.store.views.snap_recommendations.get_popular"
 RECENT_PATH = "webapp.store.views.snap_recommendations.get_recent"
@@ -484,6 +485,274 @@ class GetDetailsPageTest(TestCase):
                 ["toto.nu-plugin-polars", "nu_plugin_polars"],
             ],
         )
+
+    @responses.activate
+    def test_snap_details_with_ratings(self):
+        """Test snap details renders successfully."""
+        payload = SNAP_PAYLOAD
+
+        responses.add(
+            responses.Response(
+                method="GET", url=self.api_url, json=payload, status=200
+            )
+        )
+        responses.add(
+            responses.Response(
+                method="GET",
+                url=self.api_url_details,
+                json=EMPTY_EXTRA_DETAILS_PAYLOAD,
+                status=200,
+            )
+        )
+        responses.add(
+            responses.Response(
+                method="HEAD", url=self.api_url_sboms, json={}, status=200
+            )
+        )
+        metrics_url = "https://api.snapcraft.io/api/v1/snaps/metrics"
+        responses.add(
+            responses.Response(
+                method="POST", url=metrics_url, json={}, status=200
+            )
+        )
+
+        response = self.client.get(self.endpoint_url)
+
+        assert response.status_code == 200
+        # Ratings fetched client-side
+        self.assert_context("ratings", None)
+
+    @responses.activate
+    def test_snap_details_insufficient_ratings(self):
+        """Test snap details renders regardless of ratings."""
+        payload = SNAP_PAYLOAD
+
+        responses.add(
+            responses.Response(
+                method="GET", url=self.api_url, json=payload, status=200
+            )
+        )
+        responses.add(
+            responses.Response(
+                method="GET",
+                url=self.api_url_details,
+                json=EMPTY_EXTRA_DETAILS_PAYLOAD,
+                status=200,
+            )
+        )
+        responses.add(
+            responses.Response(
+                method="HEAD", url=self.api_url_sboms, json={}, status=200
+            )
+        )
+        metrics_url = "https://api.snapcraft.io/api/v1/snaps/metrics"
+        responses.add(
+            responses.Response(
+                method="POST", url=metrics_url, json={}, status=200
+            )
+        )
+
+        response = self.client.get(self.endpoint_url)
+
+        assert response.status_code == 200
+        # Ratings should be None on server side (fetched client-side)
+        self.assert_context("ratings", None)
+
+    @responses.activate
+    def test_snap_details_ratings_error(self):
+        """Test snap details page renders even if ratings fetch fails later."""
+        payload = SNAP_PAYLOAD
+
+        responses.add(
+            responses.Response(
+                method="GET", url=self.api_url, json=payload, status=200
+            )
+        )
+        responses.add(
+            responses.Response(
+                method="GET",
+                url=self.api_url_details,
+                json=EMPTY_EXTRA_DETAILS_PAYLOAD,
+                status=200,
+            )
+        )
+        responses.add(
+            responses.Response(
+                method="HEAD", url=self.api_url_sboms, json={}, status=200
+            )
+        )
+        metrics_url = "https://api.snapcraft.io/api/v1/snaps/metrics"
+        responses.add(
+            responses.Response(
+                method="POST", url=metrics_url, json={}, status=200
+            )
+        )
+
+        response = self.client.get(self.endpoint_url)
+
+        assert response.status_code == 200
+        # Ratings should be None on server side (fetched client-side)
+        self.assert_context("ratings", None)
+
+    def test_get_snap_ratings_endpoint_success(self):
+        """Test /api/snap/<snap_id>/ratings returns ratings data."""
+        snap_id = "test-snap-id"
+        ratings_data = {
+            "snap_id": snap_id,
+            "total_votes": 150,
+            "ratings_band": "very-good",
+        }
+
+        # Clear cache first
+        redis_cache.delete(f"snap_ratings:{snap_id}")
+
+        with patch(
+            "webapp.endpoints.views.get_ratings_client"
+        ) as mock_get_client:
+            mock_client = MagicMock()
+            mock_get_client.return_value = mock_client
+            mock_client.get_snap_rating.return_value = ratings_data
+
+            response = self.client.get(f"/api/snap/{snap_id}/ratings")
+
+            assert response.status_code == 200
+            data = json.loads(response.data)
+            assert data == ratings_data
+            mock_client.get_snap_rating.assert_called_once_with(snap_id)
+
+        # Clean up
+        redis_cache.delete(f"snap_ratings:{snap_id}")
+
+    def test_get_snap_ratings_endpoint_insufficient_votes(self):
+        """Test /api/snap/<snap_id>/ratings returns None."""
+        snap_id = "test-snap-id"
+        ratings_data = {
+            "snap_id": snap_id,
+            "total_votes": 5,
+            "ratings_band": "insufficient-votes",
+        }
+
+        with patch(
+            "webapp.endpoints.views.get_ratings_client"
+        ) as mock_get_client:
+            mock_client = MagicMock()
+            mock_get_client.return_value = mock_client
+            mock_client.get_snap_rating.return_value = ratings_data
+
+            response = self.client.get(f"/api/snap/{snap_id}/ratings")
+
+            assert response.status_code == 200
+            data = json.loads(response.data)
+            assert data is None
+
+    def test_get_snap_ratings_endpoint_no_ratings_client(self):
+        """Test ratings endpoint when service not configured."""
+        snap_id = "test-snap-id"
+
+        with patch(
+            "webapp.endpoints.views.get_ratings_client"
+        ) as mock_get_client:
+            mock_get_client.return_value = None
+
+            response = self.client.get(f"/api/snap/{snap_id}/ratings")
+
+            assert response.status_code == 200
+            data = json.loads(response.data)
+            assert data is None
+
+    def test_get_snap_ratings_endpoint_error(self):
+        """Test ratings endpoint handles errors gracefully."""
+        snap_id = "test-snap-id"
+
+        with patch(
+            "webapp.endpoints.views.get_ratings_client"
+        ) as mock_get_client:
+            mock_client = MagicMock()
+            mock_get_client.return_value = mock_client
+            exc = Exception("gRPC error")
+            mock_client.get_snap_rating.side_effect = exc
+
+            response = self.client.get(f"/api/snap/{snap_id}/ratings")
+
+            assert response.status_code == 200
+            data = json.loads(response.data)
+            assert data is None
+
+    def test_get_snap_ratings_endpoint_missing_snap_id(self):
+        """Test ratings endpoint without snap_id."""
+        response = self.client.get("/api/snap//ratings")
+        # Flask routing won't match this, so it should be 404
+        assert response.status_code == 404
+
+    def test_get_snap_ratings_endpoint_caching(self):
+        """Test ratings endpoint caches results in Redis."""
+        snap_id = "test-snap-id"
+        ratings_data = {
+            "snap_id": snap_id,
+            "total_votes": 100,
+            "ratings_band": "good",
+        }
+
+        # Clear cache first
+        redis_cache.delete(f"snap_ratings:{snap_id}")
+
+        with patch(
+            "webapp.endpoints.views.get_ratings_client"
+        ) as mock_get_client:
+            mock_client = MagicMock()
+            mock_get_client.return_value = mock_client
+            mock_client.get_snap_rating.return_value = ratings_data
+
+            # First request should call ratings client
+            response1 = self.client.get(f"/api/snap/{snap_id}/ratings")
+            assert response1.status_code == 200
+            assert json.loads(response1.data) == ratings_data
+            assert mock_client.get_snap_rating.call_count == 1
+
+            # Second request should use cache
+            response2 = self.client.get(f"/api/snap/{snap_id}/ratings")
+            assert response2.status_code == 200
+            assert json.loads(response2.data) == ratings_data
+            # Should still be 1, not 2 (cache hit)
+            assert mock_client.get_snap_rating.call_count == 1
+
+        # Clean up
+        redis_cache.delete(f"snap_ratings:{snap_id}")
+
+    def test_get_snap_ratings_endpoint_caching_insufficient(self):
+        """Test ratings endpoint caches insufficient-votes."""
+        snap_id = "test-snap-id"
+        ratings_data = {
+            "snap_id": snap_id,
+            "total_votes": 5,
+            "ratings_band": "insufficient-votes",
+        }
+
+        # Clear cache first
+        redis_cache.delete(f"snap_ratings:{snap_id}")
+
+        with patch(
+            "webapp.endpoints.views.get_ratings_client"
+        ) as mock_get_client:
+            mock_client = MagicMock()
+            mock_get_client.return_value = mock_client
+            mock_client.get_snap_rating.return_value = ratings_data
+
+            # First request should call ratings client
+            response1 = self.client.get(f"/api/snap/{snap_id}/ratings")
+            assert response1.status_code == 200
+            assert json.loads(response1.data) is None
+            assert mock_client.get_snap_rating.call_count == 1
+
+            # Second request should use cache
+            response2 = self.client.get(f"/api/snap/{snap_id}/ratings")
+            assert response2.status_code == 200
+            assert json.loads(response2.data) is None
+            # Should still be 1, not 2 (cache hit)
+            assert mock_client.get_snap_rating.call_count == 1
+
+        # Clean up
+        redis_cache.delete(f"snap_ratings:{snap_id}")
 
     @responses.activate
     def test_explore_uses_redis_cache(self):

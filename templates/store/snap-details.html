@@ -366,6 +366,12 @@
         Sentry.captureException(e);
       }
 
+      try {
+        snapcraft.public.storeDetails.initSnapRatings('{{ snap_id }}', ['#js-snap-details-list']);
+      } catch(e) {
+        Sentry.captureException(e);
+      }
+
       {% if not is_preview %}
       try {
         snapcraft.public.storeDetails.initReportSnap(

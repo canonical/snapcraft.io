@@ -3,7 +3,7 @@
     "lint-js": "eslint static/js",
     "lint-a11y": "eslint -c eslint-a11y.config.js static/js",
     "lint-scss": "stylelint static/**/*.scss",
-    "lint-python": "flake8 webapp tests && black --diff --check --line-length 79 webapp tests",
+    "lint-python": "flake8 webapp tests --exclude=webapp/ratings/generated && black --diff --check --line-length 79 webapp tests --exclude=webapp/ratings/generated",
     "test": "yarn run test-python && yarn run test-js-all && yarn run lint-scss",
     "test-e2e": "cypress run --quiet",
     "test-js": "vitest run",

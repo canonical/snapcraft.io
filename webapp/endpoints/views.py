@@ -7,13 +7,30 @@ from canonicalwebteam.exceptions import (
 from canonicalwebteam.store_api.dashboard import Dashboard
 from canonicalwebteam.store_api.publishergw import PublisherGW
 from flask.json import jsonify
+import logging
 
 # Local
 from webapp.decorators import login_required, exchange_required
 from webapp.helpers import api_publisher_session, api_session, get_brand_id
+from webapp.ratings import RatingsClient
+from cache.cache_utility import redis_cache
+
+logger = logging.getLogger(__name__)
 
 dashboard = Dashboard(api_session)
 publisher_gateway = PublisherGW("snap", api_publisher_session)
+
+ratings_client = None
+
+
+def get_ratings_client():
+    global ratings_client
+    if ratings_client is None:
+        ratings_url = flask.current_app.config.get("RATINGS_SERVICE_URL")
+        if ratings_url:
+            ratings_client = RatingsClient(ratings_url)
+    return ratings_client
+
 
 endpoints = flask.Blueprint(
     "endpoints",
@@ -81,3 +98,39 @@ def get_brand_store(store_id: str):
     response.cache_control.max_age = 3600
 
     return response
+
+
+@endpoints.route("/api/snap/<snap_id>/ratings")
+def get_snap_ratings(snap_id):
+    """
+    Get ratings for a snap by snap_id.
+    """
+    if not snap_id:
+        return jsonify({"error": "snap_id is required"}), 400
+
+    cache_key = f"snap_ratings:{snap_id}"
+    cached_ratings = redis_cache.get(cache_key)
+    if cached_ratings is not None:
+        return cached_ratings, 200
+
+    try:
+        ratings_client = get_ratings_client()
+        if not ratings_client:
+            return jsonify(None), 200
+
+        ratings_data = ratings_client.get_snap_rating(snap_id)
+
+        if (
+            ratings_data
+            and ratings_data.get("ratings_band") == "insufficient-votes"
+        ):
+            redis_cache.set(cache_key, None, ttl=86400)
+            return jsonify(None), 200
+
+        if ratings_data:
+            redis_cache.set(cache_key, ratings_data, ttl=86400)
+
+        return jsonify(ratings_data), 200
+    except Exception as e:
+        logger.error(f"Error fetching ratings for snap {snap_id}: {e}")
+        return jsonify(None), 200

@@ -1,6 +1,7 @@
 import flask
 from flask import Response
 import requests
+from gevent import spawn, joinall
 
 import logging
 import humanize
@@ -266,16 +267,63 @@ def snap_details_views(store):
         status_code = 200
 
         context = _get_context_snap_details(snap_name)
-        try:
-            # the empty string channel makes the store API not filter by
-            # the default channel 'latest/stable', which gives errors for
-            # snaps that don't use that channel
-            extra_details = device_gateway.get_snap_details(
-                snap_name, channel="", fields=FIELDS_EXTRA_DETAILS
+
+        def fetch_extra_details():
+            try:
+                # the empty string channel makes the store API not filter by
+                # the default channel 'latest/stable', which gives errors for
+                # snaps that don't use that channel
+                return device_gateway.get_snap_details(
+                    snap_name, channel="", fields=FIELDS_EXTRA_DETAILS
+                )
+            except Exception:
+                logger.exception("Details endpoint returned an error")
+                return None
+
+        def fetch_metrics():
+            country_metric_name = "weekly_installed_base_by_country_percent"
+            os_metric_name = (
+                "weekly_installed_base_by_operating_system_normalized"
             )
-        except Exception:
-            logger.exception("Details endpoint returned an error")
-            extra_details = None
+
+            end = metrics_helper.get_last_metrics_processed_date()
+
+            metrics_query_json = [
+                metrics_helper.get_filter(
+                    metric_name=country_metric_name,
+                    snap_id=context["snap_id"],
+                    start=end,
+                    end=end,
+                ),
+                metrics_helper.get_filter(
+                    metric_name=os_metric_name,
+                    snap_id=context["snap_id"],
+                    start=end,
+                    end=end,
+                ),
+            ]
+
+            return device_gateway.get_public_metrics(metrics_query_json)
+
+        def fetch_sboms():
+            return snap_has_sboms(context["revisions"], context["snap_id"])
+
+        greenlet_extra_details = spawn(fetch_extra_details)
+        greenlet_metrics = spawn(fetch_metrics)
+        greenlet_sboms = spawn(fetch_sboms)
+
+        # Wait for all requests to complete
+        joinall(
+            [
+                greenlet_extra_details,
+                greenlet_metrics,
+                greenlet_sboms,
+            ]
+        )
+
+        extra_details = greenlet_extra_details.get()
+        metrics_response = greenlet_metrics.get()
+        has_sboms = greenlet_sboms.get()
 
         if extra_details and extra_details["aliases"]:
             context["aliases"] = [
@@ -286,33 +334,16 @@ def snap_details_views(store):
                 for alias_obj in extra_details["aliases"]
             ]
 
-        country_metric_name = "weekly_installed_base_by_country_percent"
-        os_metric_name = "weekly_installed_base_by_operating_system_normalized"
-
-        end = metrics_helper.get_last_metrics_processed_date()
-
-        metrics_query_json = [
-            metrics_helper.get_filter(
-                metric_name=country_metric_name,
-                snap_id=context["snap_id"],
-                start=end,
-                end=end,
-            ),
-            metrics_helper.get_filter(
-                metric_name=os_metric_name,
-                snap_id=context["snap_id"],
-                start=end,
-                end=end,
-            ),
-        ]
-
-        metrics_response = device_gateway.get_public_metrics(
-            metrics_query_json
-        )
+        context["ratings"] = None
 
         os_metrics = None
         country_devices = None
         if metrics_response:
+            country_metric_name = "weekly_installed_base_by_country_percent"
+            os_metric_name = (
+                "weekly_installed_base_by_operating_system_normalized"
+            )
+
             oses = metrics_helper.find_metric(metrics_response, os_metric_name)
             os_metrics = metrics.OsMetric(
                 name=oses["metric_name"],
@@ -331,8 +362,6 @@ def snap_details_views(store):
                 status=territories["status"],
                 private=False,
             )
-
-        has_sboms = snap_has_sboms(context["revisions"], context["snap_id"])
 
         context.update(
             {

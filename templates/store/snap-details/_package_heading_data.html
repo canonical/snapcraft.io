@@ -1,5 +1,6 @@
 {%- from 'store/_developer_info.html' import developer_info -%}
 {%- from 'store/_publisher_info.html' import publisher_info -%}
+{%- from 'store/_ratings_info.html' import ratings_info -%}
 
 {%- macro package_icon(
     icon_url,
@@ -37,7 +38,8 @@
     publisher,
     developer_validation,
     STAR_DEVELOPER,
-    VERIFIED_PUBLISHER) -%}
+    VERIFIED_PUBLISHER,
+    ratings) -%}
   <div class="p-section--shallow">
     <h1 class="u-sv-1" data-live="title">{{ package_title }}</h1>
     {# TODO:
@@ -49,7 +51,7 @@
       {% endif %}
       {{ publisher_info(publisher, username, developer_validation, display_name, VERIFIED_PUBLISHER, STAR_DEVELOPER) }}
     </div>
-    <ul class="p-inline-list--vertical-divider">
+    <ul class="p-inline-list--vertical-divider" id="js-snap-details-list">
       {% if developer %}
         <li class="p-inline-list__item u-hide--small">{{ developer_info(name=developer[0], url=developer[1]) }}</li>
       {% endif %}
