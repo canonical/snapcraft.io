@@ -116,7 +116,8 @@
               <tr>
                 <th>Channel</th>
                 <th>Version</th>
-                <th width="25%" class="u-hide--medium u-hide--small">Published</th>
+                <th width="18%" class="u-hide--medium u-hide--small">Download Size</th>
+                <th width="20%" class="u-hide--medium u-hide--small">Published</th>
                 <th width="12%"></th>
               </tr>
             </thead>
@@ -169,10 +170,11 @@
   </div>
 </script>
 <script type="text/template" id="channel-map-row-template" data-js="channel-map-row" nonce="{{ CSP_NONCE }}">
-  <tr class="${rowClass}" data-js="slide-install-instructions" data-channel="${row[0]}/${row[1]}" data-confinement="${row[4]}">
+  <tr class="${rowClass}" data-js="slide-install-instructions" data-channel="${row[0]}/${row[1]}" data-confinement="${row[5]}">
     <td>${row[0]}/${row[1]}</td>
     <td>${row[2]}</td>
     <td class="u-hide--medium u-hide--small">${row[3]}</td>
+    <td class="u-hide--medium u-hide--small">${row[4]}</td>
     <td class="u-align--center"><a href="#" class="p-channel-map__version-table-install">Install &rsaquo;</a></td>
   </tr>
 </script>
