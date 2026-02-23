@@ -24,7 +24,7 @@ config:
       type: string
 
     environment:
-      description: ""
+      description: "Environment in which the application is running, mostly useless for the charmed version of the app"
       default: "production"
       type: string
 
@@ -73,19 +73,19 @@ config:
       type: string
 
     youtube-api-key:
-      description: ""
+      description: "API key used to access the YouTube Data API for retrieving and displaying YouTube video content on snapcraft.io"
       type: string
 
     discourse-api-key:
-      description: ""
+      description: "API key used by the application to authenticate with the configured Discourse forum"
       type: string
 
     discourse-api-username:
-      description: ""
+      description: "Discourse username to associate with API requests to the Discourse forum"
       type: string
 
     dns-verification-salt:
-      description: ""
+      description: "Secret salt used when generating DNS verification tokens to confirm domain ownership"
       type: string
 
     login-url:
@@ -94,7 +94,7 @@ config:
       type: string
 
     bsi-url:
-      description: ""
+      description: "Base URL for the Build Snapcraft IO service used for automated builds"
       default: "https://build.snapcraft.io"
       type: string
 
