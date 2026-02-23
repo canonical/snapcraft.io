@@ -20,7 +20,7 @@ extensions:
 config:
   options:
     sentry-dsn:
-      description: ""
+      description: "Sentry Data Source Name for the project"
       type: string
 
     environment:
@@ -29,47 +29,47 @@ config:
       type: string
 
     marketo-client-id:
-      description: ""
+      description: "Marketo API client ID"
       type: string
 
     marketo-client-secret:
-      description: ""
+      description: "Marketo API client secret"
       type: string
 
     github-client-id:
-      description: ""
+      description: "GitHub OAuth application ID for prompting users for access to their repositories"
       type: string
 
     github-client-secret:
-      description: ""
+      description: "GitHub OAuth application client secret for prompting users for access to their repositories"
       type: string
 
     github-snapcraft-user-token:
-      description: ""
+      description: "GitHub application token for automated builds"
       type: string
 
     github-snapcraft-bot-user-token:
-      description: ""
+      description: "GitHub application token for CVE data"
       type: string
 
     github-webhook-secret:
-      description: ""
+      description: "Secret salt used for signing automated build webhooks"
       type: string
 
     github-webhook-host-url:
-      description: ""
+      description: "URL of the automated build webhooks' host"
       type: string
 
     lp-api-username:
-      description: ""
+      description: "Launchpad API username"
       type: string
 
     lp-api-token:
-      description: ""
+      description: "Launchpad API token"
       type: string
 
     lp-api-token-secret:
-      description: ""
+      description: "Launchpad API secret"
       type: string
 
     youtube-api-key:
@@ -87,6 +87,22 @@ config:
     dns-verification-salt:
       description: ""
       type: string
+
+    login-url:
+      description: "Base URL for SSO login redirects"
+      default: "https://login.ubuntu.com"
+      type: string
+
+    bsi-url:
+      description: ""
+      default: "https://build.snapcraft.io"
+      type: string
+
+    snapstore-dashboard-api-url:
+      description: "Base URL for SCA backend"
+      default: "https://dashboard.snapcraft.io/"
+      type: string
+
 
 # requires:
 #   tracing:
