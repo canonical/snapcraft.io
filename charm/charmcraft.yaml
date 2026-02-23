@@ -103,7 +103,6 @@ config:
       default: "https://dashboard.snapcraft.io/"
       type: string
 
-
 # requires:
 #   tracing:
 #     interface: tracing
