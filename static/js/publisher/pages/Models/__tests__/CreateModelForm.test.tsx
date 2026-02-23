@@ -30,7 +30,7 @@ const renderComponent = () => {
 };
 
 describe("CreateModelForm", () => {
-  it("disables 'Add model' button if no new model name", async () => {
+  it("disables 'Add model' button if no new model name or API key", async () => {
     renderComponent();
     expect(screen.getByRole("button", { name: "Add model" })).toHaveAttribute(
       "aria-disabled",
@@ -38,16 +38,46 @@ describe("CreateModelForm", () => {
     );
   });
 
-  it("enables 'Add model' button if there is a new model name", async () => {
+  it("disables 'Add model' button if new model name but no API key", async () => {
     const user = userEvent.setup();
     renderComponent();
     await user.type(
       screen.getByRole("textbox", { name: "Name" }),
       "test-model-name",
     );
+    expect(screen.getByRole("button", { name: "Add model" })).toHaveAttribute(
+      "aria-disabled",
+      "true",
+    );
+  });
+
+  it("disables 'Add model' button if new API key but no new model name", async () => {
+    const user = userEvent.setup();
+    renderComponent();
+    await user.type(
+      screen.getByRole("textbox", { name: "API key" }),
+      "AJXdC7aAMrQfElvccQAV0lPkJ0bEnmdjDxuL6C1Di0kxILmiyk",
+    );
+    expect(screen.getByRole("button", { name: "Add model" })).toHaveAttribute(
+      "aria-disabled",
+      "true",
+    );
+  });
+
+  it("enables 'Add model' button if there is a new model name and API key", async () => {
+    const user = userEvent.setup();
+    renderComponent();
+    await user.type(
+      screen.getByRole("textbox", { name: "Name" }),
+      "test-model-name",
+    );
+    await user.type(
+      screen.getByRole("textbox", { name: "API key" }),
+      "AJXdC7aAMrQfElvccQAV0lPkJ0bEnmdjDxuL6C1Di0kxILmiyk",
+    );
     expect(
       screen.getByRole("button", { name: "Add model" }),
-    ).not.toBeDisabled();
+    ).not.toHaveAttribute("aria-disabled");
   });
 
   it("generates an API key when clicking 'Generate key'", async () => {
