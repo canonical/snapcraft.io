@@ -482,10 +482,10 @@ class ChannelMap {
         "Snaps on the candidate channel need additional real world experimentation before the move to stable.";
     }
 
-    const template = this.INSTALL_TEMPLATE.replace(
+    const template = this.INSTALL_TEMPLATE.replaceAll(
       "${channel}",
       channel,
-    ).replace("${paramString}", paramString);
+    ).replaceAll("${paramString}", paramString);
 
     const [track, risk] = channel.split("/");
     const release = this.channelMapData[this.arch!][track].find(
