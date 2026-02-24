@@ -178,11 +178,7 @@ def snap_details_views(store):
 
         developer = logic.get_snap_developer(details["name"])
 
-        last_updated_warning = None
-        if logic.is_snap_old(last_updated):
-            last_updated_warning = f"{default_track}/{lowest_risk_available} has not received updates in the past two years"
-        elif logic.is_snap_old(last_updated, 1):
-            last_updated_warning = f"{default_track}/{lowest_risk_available} has not received updates in the past year"
+        is_last_updated_old = logic.is_snap_old(last_updated)
 
         context = {
             "snap_id": details.get("snap-id"),
@@ -215,8 +211,8 @@ def snap_details_views(store):
             "filesize": humanize.naturalsize(binary_filesize),
             "last_updated": logic.convert_date(last_updated),
             "last_updated_raw": last_updated,
-            "old_snap_info": logic.is_snap_old(most_recent_update),
-            "last_updated_warning": last_updated_warning,
+            "is_snap_old": logic.is_snap_old(most_recent_update),
+            "is_last_updated_old": is_last_updated_old,
             "is_users_snap": is_users_snap,
             "unlisted": details.get("snap", {}).get("unlisted", False),
             "developer": developer,
