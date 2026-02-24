@@ -9,7 +9,6 @@ import { checkModelNameExists, setPageTitle } from "../../utils";
 
 import {
   modelsListState,
-  newModelState,
   filteredModelsListState,
 } from "../../state/modelsState";
 import {
@@ -29,11 +28,13 @@ function CreateModelForm({
   setShowNotification,
   setShowErrorNotification,
 }: Props): React.JSX.Element {
+  const API_KEY_LENGTH = 50;
   const navigate = useNavigate();
   const location = useLocation();
   const { id } = useParams();
   const brandId = useAtomValue(brandIdState);
-  const [newModel, setNewModel] = useAtom(newModelState);
+  const [newModelName, setNewModelName] = useState("");
+  const [apiKey, setApiKey] = useState("");
   const stores = useAtom(brandStoresState);
   const currentStore = stores[0].find((store: Store) => store.id === id);
   const modelsList = useAtomValue(filteredModelsListState);
@@ -47,10 +48,11 @@ function CreateModelForm({
     setShowErrorNotification(true);
     setIsSaving(false);
     setModelsList((oldModelsList: Array<Model>) => {
-      return oldModelsList.filter((model) => model.name !== newModel.name);
+      return oldModelsList.filter((model) => model.name !== newModelName);
     });
     navigate(`/admin/${id}/models`);
-    setNewModel({ name: "", apiKey: "" });
+    setNewModelName("");
+    setApiKey("");
     setTimeout(() => {
       setShowErrorNotification(false);
     }, 5000);
@@ -66,8 +68,8 @@ function CreateModelForm({
       formData.set("name", newModel.name);
       formData.set("api_key", newModel.apiKey);
 
-      setNewModel({ name: "", apiKey: "" });
-
+      setNewModelName("");
+      setApiKey("");
       setModelsList((oldModelsList: Array<Model>) => {
         return [
           {
@@ -115,7 +117,7 @@ function CreateModelForm({
     <form
       onSubmit={(event) => {
         event.preventDefault();
-        mutation.mutate({ name: newModel.name, apiKey: newModel.apiKey });
+        mutation.mutate({ name: newModelName, apiKey });
       }}
       style={{ height: "100%" }}
     >
@@ -144,14 +146,13 @@ function CreateModelForm({
               placeholder="e.g. display-name-123"
               label="Name"
               help="Name should contain lowercase alphanumeric characters and hyphens only"
-              value={newModel.name}
+              value={newModelName}
               onChange={(e) => {
-                const value = e.target.value;
-                setNewModel({ ...newModel, name: value });
+                setNewModelName(e.target.value);
               }}
               error={
-                checkModelNameExists(newModel.name, modelsList)
-                  ? `Model ${newModel.name} already exists`
+                checkModelNameExists(newModelName, modelsList)
+                  ? `Model ${newModelName} already exists`
                   : null
               }
               required
@@ -160,21 +161,19 @@ function CreateModelForm({
               type="text"
               id="api-key-field"
               label="API key"
-              value={newModel.apiKey}
-              placeholder="yx6dnxsWQ3XUB5gza8idCuMvwmxtk1xBpa9by8TuMit5dgGnv"
-              className="read-only-dark"
-              readOnly
+              value={apiKey}
+              required
+              maxLength={API_KEY_LENGTH}
+              onChange={(e) => {
+                setApiKey(e.target.value);
+              }}
+              help={`API key should be exactly ${API_KEY_LENGTH} alphanumeric characters long (${apiKey.length}/${API_KEY_LENGTH})`}
             />
             <Button
               type="button"
               className="u-no-margin--bottom"
               onClick={() => {
-                setNewModel({
-                  ...newModel,
-                  apiKey: randomstring.generate({
-                    length: 50,
-                  }),
-                });
+                setApiKey(randomstring.generate({ length: API_KEY_LENGTH }));
               }}
             >
               Generate key
@@ -188,7 +187,8 @@ function CreateModelForm({
                 className="p-button u-no-margin--bottom"
                 to={`/admin/${id}/models`}
                 onClick={() => {
-                  setNewModel({ name: "", apiKey: "" });
+                  setNewModelName("");
+                  setApiKey("");
                   setShowErrorNotification(false);
                 }}
               >
@@ -199,8 +199,9 @@ function CreateModelForm({
                 appearance="positive"
                 className="u-no-margin--bottom u-no-margin--right"
                 disabled={
-                  !newModel.name ||
-                  checkModelNameExists(newModel.name, modelsList)
+                  !newModelName ||
+                  apiKey.length !== API_KEY_LENGTH ||
+                  checkModelNameExists(newModelName, modelsList)
                 }
               >
                 Add model
