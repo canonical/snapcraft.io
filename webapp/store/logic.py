@@ -392,6 +392,23 @@ def get_last_updated_version(channel_maps):
     return newest_channel
 
 
+def is_snap_too_old(date_str, n):
+    """Get the oldest channel that was created
+
+    :param date_str: ISO format string
+    :param n: number of months since update after which the snap
+        is considered "too old"
+
+    :returns: whether `date_str` was at least `n` months ago
+    """
+    local_timezone = datetime.datetime.utcnow().tzinfo
+    date_parsed = parser.parse(date_str).replace(tzinfo=local_timezone)
+
+    n_months_ago = datetime.datetime.utcnow() - relativedelta(months=n)
+
+    return date_parsed < n_months_ago
+
+
 def has_stable(channel_maps_list):
     """Use the channel map to find out if the snap has a stable release
 
