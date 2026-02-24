@@ -502,9 +502,13 @@ class ChannelMap {
     const newDiv = document.createElement("div");
     newDiv.innerHTML = template;
 
-    const warningEl = newDiv.querySelector("[data-js='warning']");
-    if (warningEl) {
-      warningEl.innerHTML = warning;
+    if (warning) {
+      const warningEl = newDiv.querySelector("[data-js='warning']");
+      if (warningEl) {
+        warningEl.innerHTML = warning;
+      }
+    } else {
+      newDiv.querySelector(".p-notification--caution")?.remove();
     }
 
     const holder = document.querySelector(

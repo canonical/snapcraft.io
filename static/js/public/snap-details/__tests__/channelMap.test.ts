@@ -215,16 +215,6 @@ describe("Channel map popup", () => {
     expect(getByText(document.body, /--beta/)).not.toBeNull();
   });
 
-  test("beta channel has warning", async () => {
-    const user = userEvent.setup();
-    const btn = document.querySelector(
-      `[data-js="slide-install-instructions"][data-channel="latest/beta"]`,
-    )!;
-    await user.click(btn);
-
-    expect(document.querySelector(`.p-notification--caution`)).not.toBeNull();
-  });
-
   test("edge channel has warning", async () => {
     const user = userEvent.setup();
     const btn = document.querySelector(
