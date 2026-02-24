@@ -15,6 +15,12 @@ function isSnapElement(target: HTMLElement): target is SnapElement {
   );
 }
 
+function getDateNMonthsAgo(n: number): Date {
+  const date = new Date();
+  date.setMonth(date.getMonth() - n);
+  return date;
+}
+
 interface SlideInstallInstructionsElement extends HTMLElement {
   dataset: {
     channel: string;
@@ -476,10 +482,24 @@ class ChannelMap {
         "Snaps on the candidate channel need additional real world experimentation before the move to stable.";
     }
 
-    const template = this.INSTALL_TEMPLATE.split("${channel}")
-      .join(channel)
-      .split("${paramString}")
-      .join(paramString);
+    const template = this.INSTALL_TEMPLATE.replace(
+      "${channel}",
+      channel,
+    ).replace("${paramString}", paramString);
+
+    const [track, risk] = channel.split("/");
+    const release = this.channelMapData[this.arch!][track].find(
+      (c) => c.risk === risk,
+    );
+    if (release) {
+      const releaseDate = new Date(release["released-at"]);
+
+      if (releaseDate < getDateNMonthsAgo(24)) {
+        warning = "This channel has not received updates in the past two years";
+      } else if (releaseDate < getDateNMonthsAgo(12)) {
+        warning = "This channel has not received updates in the past year";
+      }
+    }
 
     const newDiv = document.createElement("div");
     newDiv.innerHTML = template;
