@@ -20,16 +20,21 @@ PERMISSIONS = [
 ]
 
 
-SESSION_DATA_KEYS = [
+SESSION_AUTH_KEYS = [
     "macaroons",
     "macaroon_root",
     "macaroon_discharge",
     "publisher",
-    "github_auth_secret",
     "developer_token",
     "exchanged_developer_token",
     "csrf_token",
-]  # keys for data stored in the session that should be cleared on logout
+]
+
+SESSION_INTEGRATION_KEYS = [
+    "github_auth_secret",
+]
+
+SESSION_DATA_KEYS = SESSION_AUTH_KEYS + SESSION_INTEGRATION_KEYS
 
 
 def get_authorization_header(root, discharge):
@@ -65,6 +70,16 @@ def empty_session(session):
     Empty the session, used to logout.
     """
     for key in SESSION_DATA_KEYS:
+        session.pop(key, None)
+
+
+def reset_auth_session(session):
+    """
+    Clear Snapcraft auth keys while preserving integration tokens
+    (e.g. github_auth_secret). Used when re-authentication is needed
+    but third-party tokens are still valid.
+    """
+    for key in SESSION_AUTH_KEYS:
         session.pop(key, None)
 
 
