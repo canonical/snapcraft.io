@@ -2,10 +2,13 @@ import { storageCommands } from "./storageCommands";
 
 describe("storage commands", () => {
   let ignoreChangeOnUnload;
+  const _window = window;
+  window.location = _window.location;
 
   beforeEach(() => {
+    delete window.location;
+    window.location = { reload: jest.fn() };
     window.focus = jest.fn();
-    window.location.reload = jest.fn();
     ignoreChangeOnUnload = jest.fn();
   });
 
@@ -13,7 +16,7 @@ describe("storage commands", () => {
     storageCommands(
       {
         key: "test-command",
-        newValue: "edit"
+        newValue: "edit",
       },
       document.createElement("form"),
       "test",
@@ -27,7 +30,7 @@ describe("storage commands", () => {
         storageCommands(
           {
             key: "test2-command",
-            newValue: "edit"
+            newValue: "edit",
           },
           document.createElement("form"),
           "test",
@@ -43,7 +46,7 @@ describe("storage commands", () => {
         storageCommands(
           {
             key: "test-command",
-            newValue: "green"
+            newValue: "green",
           },
           document.createElement("form"),
           "test",
@@ -60,7 +63,7 @@ describe("storage commands", () => {
       storageCommands(
         {
           key: "test-command",
-          newValue: "edit"
+          newValue: "edit",
         },
         document.createElement("form"),
         "test",
@@ -83,7 +86,7 @@ describe("storage commands", () => {
       storageCommands(
         {
           key: "test-command",
-          newValue: "revert"
+          newValue: "revert",
         },
         document.createElement("form"),
         "test",
@@ -118,7 +121,7 @@ describe("storage commands", () => {
       storageCommands(
         {
           key: "test-command",
-          newValue: "save"
+          newValue: "save",
         },
         form,
         "test",

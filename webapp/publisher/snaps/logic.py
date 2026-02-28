@@ -51,6 +51,23 @@ def get_snaps_account_info(account_info):
     return user_snaps, registered_snaps
 
 
+def get_stores(stores, roles):
+    """Get list of stores where the user has the specified roles
+
+    :param stores: The account stores
+    :param roles: The requested roles to filter
+
+    :return: A list of stores
+    """
+    user_stores = []
+
+    for store in stores:
+        if not set(roles).isdisjoint(store["roles"]):
+            user_stores.append(store)
+
+    return user_stores
+
+
 def get_snap_names_by_ownership(account_info):
     """Get list of snaps names user is collaborator of
 
@@ -82,7 +99,7 @@ def verify_base_metrics(active_devices):
 
     :return: The base metric if it's available, 'version' if not
     """
-    if active_devices not in ("version", "os", "channel"):
+    if active_devices not in ("version", "os", "channel", "architecture"):
         return "version"
 
     return active_devices
@@ -131,6 +148,8 @@ def get_installed_based_metric(installed_base_metric):
         return "weekly_installed_base_by_operating_system"
     elif installed_base_metric == "channel":
         return "weekly_installed_base_by_channel"
+    elif installed_base_metric == "architecture":
+        return "weekly_installed_base_by_architecture"
 
 
 def is_snap_on_stable(channel_maps_list):
@@ -212,17 +231,20 @@ def build_changed_images(
                 info.append(current_screenshot)
                 break
         for new_screenshot in new_screenshots:
-            is_same = (
-                changed_screenshot["status"] == "new"
-                and changed_screenshot["name"] == new_screenshot.filename
-            )
+            if new_screenshot:
+                is_same = (
+                    changed_screenshot["status"] == "new"
+                    and changed_screenshot["name"] == new_screenshot.filename
+                )
 
-            if is_same:
-                image_built = build_image_info(new_screenshot, "screenshot")
-                if image_built not in info:
-                    info.append(image_built)
-                    images_files.append(new_screenshot)
-                    break
+                if is_same:
+                    image_built = build_image_info(
+                        new_screenshot, "screenshot"
+                    )
+                    if image_built not in info:
+                        info.append(image_built)
+                        images_files.append(new_screenshot)
+                        break
 
     # Add new icon
     if icon is not None:
@@ -265,6 +287,7 @@ def filter_changes_data(changes):
         "license",
         "video_urls",
         "categories",
+        "update_metadata_on_release",
     ]
 
     return {key: changes[key] for key in whitelist if key in changes}

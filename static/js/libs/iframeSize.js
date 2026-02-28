@@ -29,7 +29,7 @@ function sizeIframe(wrapperSelector) {
   iframe.height = width / IFRAME_RATIO;
 }
 
-export default wrapperSelector => {
+export default (wrapperSelector) => {
   window.addEventListener(
     "resize",
     debounce(sizeIframe.bind(this, wrapperSelector), 100)

@@ -2,15 +2,20 @@
 
 {% block meta_copydoc %}{% endblock %}
 
-{% block meta_title %}Install {{ snap_title }} for Linux using the Snap Store | Snapcraft{% endblock %}
-
+{% block meta_title %}Install {{ snap_title }} on Linux | Snap Store{% endblock %}
 {% block meta_description %}Get the latest version of {{ snap_title }} for Linux - {{ summary }}{% endblock %}
+{% block meta_image %}{% if icon_url %}{{ icon_url }}{% else %}https://assets.ubuntu.com/v1/be6eb412-snapcraft-missing-icon.svg{% endif %}{% endblock %}
 
-{% if icon_url %}
-  {% block meta_image %}
-    {{ icon_url }}
-  {% endblock %}
-{% endif %}
+{% block meta_image_width %}200{% endblock %}
+{% block meta_image_height %}200{% endblock %}
+{% block meta_twitter_card %}summary{% endblock %}
+{% block meta_image_alt %}{{ snap_title }} snap logo{% endblock %}
+
+{% block extra_meta %}
+  {% if unlisted %}
+    <meta name="robots" content="noindex" />
+  {% endif %}
+{% endblock %}
 
 {% block meta_schema %}
   <script type="application/ld+json">
@@ -20,6 +25,11 @@
       "name": "{{ snap_title }}",
       "description": "{{ summary }}",
       "datePublished": "{{ last_updated_raw }}",
+      {% if categories|length > 0 %}
+      "applicationCategory": "{{ categories[0]['name'] }}",
+      {% else %}
+      "applicationCategory": "other",
+      {% endif %}
       {% if screenhots and screenshots|length > 0 %}
       "screenshot": "{{ screenshots[0] }}",
       {% endif %}
@@ -52,8 +62,8 @@
         </div>
         <div class="col-5 --dark">
           <div class="u-align--right u-clearfix">
-            <button class="p-button--base u-no-margin--bottom js-edit">Edit</button>
-            <button class="p-button--neutral u-no-margin--bottom js-revert" disabled="disabled">Revert</button>
+            <button class="p-button--base js-edit">Edit</button>
+            <button class="p-button--neutral js-revert" disabled="disabled">Revert</button>
             <span class="--dark">
               <button class="p-button--positive u-no-margin--bottom js-save" disabled="disabled">Save</button>
             </span>
@@ -108,18 +118,24 @@
               aria-controls="channel-map-install">
                 Install
                 {% if is_preview %}
-                  <span class="p-tooltip__message u-align--center" role="tooltip" id="{{ package_name }}-preview-channel-map">This content is being displayed for preview purposes</span>
-                {% endif %}
+              <span class="p-tooltip__message u-align--center" role="tooltip" id="{{ package_name }}-preview-channel-map">This content is being displayed for preview purposes</span>
+              {% endif %}
             </button>
-          {% endif %}
+            {% endif %}
+            {% if package_name in appliances %}
+            <p class="u-no-margin--bottom">
+              Available as an
+              <span class="p-tooltip--btm-center" style="z-index: 2;">
+                <a href="https://ubuntu.com/appliance/{{appliances[package_name]}}" class="p-link--external">Ubuntu Appliance</a>
+                <span class="p-tooltip__message">Install a ready-made {{snap_title}} image<br />on a Raspberry Pi, an Intel NUC or try<br />it in a VM and get started.</span>
+              </span>
+            </p>
+            {% endif %}
         </div>
       {% else %}
         <div class="p-snap-install-buttons">
-          <div class="p-code-copyable">
-            <input class="p-code-copyable__input" id="snap-install-stable" value="sudo snap install {{ package_name }}" readonly="readonly">
-            <button class="p-code-copyable__action js-clipboard-copy" data-clipboard-target="#snap-install-stable">
-              Copy to clipboard
-            </button>
+          <div class="p-code-snippet">
+            <pre class="p-code-snippet__block--icon"><code>sudo snap install {{ package_name }}</code></pre>
           </div>
         </div>
       {% endif %}
@@ -139,7 +155,7 @@
 
   <div class="p-strip is-shallow">
     <div class="row">
-      <div class="col-8">
+      <div class="col-8 u-text-wrap">
         {% if summary or is_preview %}<h4 data-live="summary">{{ summary }}</h4>{% endif %}
         <div data-live="description">{{ description | safe }}</div>
         {% if website or is_preview %}<p><a href="{{ website }}" data-live="website">Developer website</a></p>{% endif %}
@@ -164,6 +180,27 @@
     </div>
   </div>
 
+  {% if not IS_BRAND_STORE %}
+    {% if package_name == "hiri" %}
+      {% include "partials/_hiri-case-study.html" %}
+    {% else %}
+      <div data-js="blog-articles" class="u-hide">
+        <div class="u-fixed-width">
+          <hr />
+        </div>
+        <div class="p-strip is-shallow">
+          <div class="row">
+            <div class="col-3">
+              <h3 class="p-heading--4">Related blog posts</h3>
+            </div>
+          </div>
+          <div class="row u-equal-height" data-js="blog-article-list" data-snap="{{ package_name }}">
+          </div>
+        </div>
+      </div>
+    {% endif %}
+  {% endif %}
+
   {% if countries or normalized_os %}
     <div data-live="public_metrics_live">
       <div class="u-fixed-width">
@@ -179,49 +216,56 @@
             </div>
           {% endif %}
           {% if normalized_os %}
-            <div class="col-4 js-snap-distro-chart-holder" data-live="weekly_installed_base_by_operating_system_normalized">
+            {% if normalized_os|length > 21 %}
+            <div class="col-4 p-show-more is-collapsed is-deep" data-js="js-show-more">
+              <div class="js-snap-distro-chart-holder" data-live="weekly_installed_base_by_operating_system_normalized">
+                <h4>Users by distribution (log)</h4>
+                <div class="snapcraft-distro-chart">
+                  <div class="snapcraft-distro-chart__names">
+                    {% for distro in normalized_os %}
+                    <div class="snapcraft-distro-chart__name" title="{{ distro.name }}">{{ distro.name }}</div>
+                    {% endfor %}
+                  </div>
+                  <div class="snapcraft-distro-chart__bars">
+                    {% for distro in normalized_os %}
+                      <div
+                        class="snapcraft-distro-chart__bar"
+                        style="width: {{ distro.value * 100 }}%;"
+                      ></div>
+                    {% endfor %}
+                  </div>
+                </div>
+              </div>
+              <div class="p-show-more__fade">
+                <div class="p-show-more__link-container">
+                  <a href="/{{ package_name }}" class="p-show-more__link">Show more</a>
+                </div>
+              </div>
+            </div>
+            {% else %}
+            <div class="col-4 js-snap-distro-chart-holder"
+              data-live="weekly_installed_base_by_operating_system_normalized">
               <h4>Users by distribution (log)</h4>
               <div class="snapcraft-distro-chart">
                 <div class="snapcraft-distro-chart__names">
                   {% for distro in normalized_os %}
-                  <div class="snapcraft-distro-chart__name" title="{{ distro.name }}">{{ distro.name }}</div>
+                  <div class="snapcraft-distro-chart__name" title="{{ distro.name }}">
+                    {{ distro.name }}</div>
                   {% endfor %}
                 </div>
                 <div class="snapcraft-distro-chart__bars">
                   {% for distro in normalized_os %}
-                    <div
-                      class="snapcraft-distro-chart__bar"
-                      style="width: {{ distro.value * 100 }}%"
-                    ></div>
+                  <div class="snapcraft-distro-chart__bar"
+                    style="width: {{ distro.value * 100 }}%;"></div>
                   {% endfor %}
                 </div>
               </div>
             </div>
+            {% endif %}
           {% endif %}
         </div>
       </div>
     </div>
-  {% endif %}
-
-  {% if not IS_BRAND_STORE %}
-    {% if package_name == "hiri" %}
-      {% include "partials/_hiri-case-study.html" %}
-    {% else %}
-      <div data-js="blog-articles" class="u-hide">
-        <div class="u-fixed-width">
-          <hr />
-        </div>
-        <div class="p-strip is-shallow">
-          <div class="row">
-            <div class="col-3">
-              <h3 class="p-heading--four">Related blog posts</h3>
-            </div>
-          </div>
-          <div class="row u-equal-height" data-js="blog-article-list" data-snap="{{ package_name }}">
-          </div>
-        </div>
-      </div>
-    {% endif %}
   {% endif %}
 
   {% if not IS_BRAND_STORE %}
@@ -244,7 +288,7 @@
   {% if has_publisher_page %}
   <div class="p-strip is-shallow">
       <div class="u-fixed-width u-clearfix">
-        <h3 class="p-heading--four u-float-left">More snaps from {{ display_name(publisher, username) }}</h3>
+        <h3 class="p-heading--4 u-float-left">More snaps from {{ display_name(publisher, username) }}</h3>
         <a class="p-button--neutral u-float-right" href="/publisher/{{ username }}" title="View all snaps from {{ display_name(publisher, username) }}">View all snaps</a>
       </div>
       {% if publisher_featured_snaps %}
@@ -285,7 +329,7 @@
     <div class="u-fixed-width">
       <div class="p-notification--negative">
         <p class="p-notification__response">
-          <span class="p-notification__status">Error:</span> API request failed
+          <span class="p-notification__title">Error:</span> API request failed
         </p>
       </div>
     </div>
@@ -294,82 +338,82 @@
   {% include "store/snap-details/_templates.html" %}
 {% endblock %}
 
-{% block scripts_modules %}
-  <script src="{{ static_url('js/modules/clipboard.min.js') }}"></script>
+{% block scripts_includes %}
+  <script src="{{ static_url('js/dist/store-details.js') }}" defer></script>
+  {% if is_preview %}
+    <script src="{{ static_url('js/dist/publisher.js') }}" defer></script>
+  {% endif %}
 {% endblock %}
 
 {% block scripts %}
-  <script src="{{ static_url('js/dist/public.js') }}"></script>
-  {% if is_preview %}
-    <script src="{{ static_url('js/dist/publisher.js') }}"></script>
-  {% endif %}
   <script>
-    Raven.context(function () {
-      {% if not is_preview %}
-      try {
-        snapcraft.public.screenshots('#js-snap-screenshots');
-      } catch(e) {
-        Raven.captureException(e);
-      }
-      {% endif %}
-
-      try {
-        snapcraft.public.videos('.js-video-slide');
-      } catch(e) {
-        Raven.captureException(e);
-      }
-
-      try {
-        snapcraft.public.snapDetailsPosts('[data-js="blog-article-list"]', '#blog-article-template', '[data-js="blog-articles"]');
-      } catch(e) {
-        Raven.captureException(e);
-      }
-
-      {% if not is_preview and not IS_BRAND_STORE %}
-      try {
-        snapcraft.public.initReportSnap(
-          '{{ package_name }}', '.js-modal-open', '#report-snap-modal',
-          document.getElementById('report-snap-form').action
-        );
-      } catch(e) {
-        Raven.captureException(e);
-      }
-
-      try {
-        snapcraft.public.initEmbeddedCardModal('{{ package_name }}');
-      } catch(e) {
-        Raven.captureException(e);
-      }
-      {% endif %}
-
-      {% if countries %}
+    window.addEventListener("DOMContentLoaded", function() {
+      Raven.context(function () {
         try {
-          snapcraft.public.map('#js-snap-map', {{ countries | tojson }});
+          snapcraft.public.storeDetails.initExpandableArea();
+        } catch (e) {
+          Raven.captureException(e);
+        }
+
+        {% if not is_preview %}
+        try {
+          snapcraft.public.storeDetails.screenshots('#js-snap-screenshots');
         } catch(e) {
           Raven.captureException(e);
-          document.querySelector('.js-snap-map-holder').style.display = 'none';
         }
-      {% endif %}
+        {% endif %}
 
-      {% if not IS_BRAND_STORE and channel_map %}
         try {
-          document.addEventListener('DOMContentLoaded', function() {
-            snapcraft.public.channelMap('#js-channel-map', {{ package_name|tojson }}, {{ channel_map | tojson }}, "{{ default_track }}");
-          });
+          snapcraft.public.storeDetails.videos('.js-video-slide');
         } catch(e) {
-          console.log(e);
           Raven.captureException(e);
-          document.querySelector('.js-open-channel-map').style.display = 'none';
         }
-      {% endif %}
 
-      if (typeof ClipboardJS !== 'undefined') {
-        new ClipboardJS('.js-clipboard-copy');
-      }
+        try {
+          snapcraft.public.storeDetails.snapDetailsPosts('[data-js="blog-article-list"]', '#blog-article-template', '[data-js="blog-articles"]');
+        } catch(e) {
+          Raven.captureException(e);
+        }
 
-      {% if is_preview %}
-        snapcraft.publisher.preview({{ package_name|tojson }});
-      {% endif %}
+        {% if not is_preview and not IS_BRAND_STORE %}
+        try {
+          snapcraft.public.storeDetails.initReportSnap(
+            '{{ package_name }}', '.js-modal-open', '#report-snap-modal',
+            document.getElementById('report-snap-form').action
+          );
+        } catch(e) {
+          Raven.captureException(e);
+        }
+
+        try {
+          snapcraft.public.storeDetails.initEmbeddedCardModal('{{ package_name }}');
+        } catch(e) {
+          Raven.captureException(e);
+        }
+        {% endif %}
+
+        {% if countries %}
+          try {
+            snapcraft.public.storeDetails.map('#js-snap-map', {{ countries | tojson }});
+          } catch(e) {
+            Raven.captureException(e);
+            document.querySelector('.js-snap-map-holder').style.display = 'none';
+          }
+        {% endif %}
+
+        {% if not IS_BRAND_STORE and channel_map %}
+          try {
+              snapcraft.public.storeDetails.channelMap('#js-channel-map', {{ package_name|tojson }}, {{ channel_map | tojson }}, "{{ default_track }}");
+          } catch(e) {
+            Raven.captureException(e);
+            document.querySelector('.js-open-channel-map').style.display = 'none';
+          }
+        {% endif %}
+
+        {% if is_preview %}
+          snapcraft.publisher.preview({{ package_name|tojson }});
+        {% endif %}
+      });
     });
   </script>
 {% endblock %}

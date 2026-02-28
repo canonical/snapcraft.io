@@ -14,7 +14,7 @@ class Media extends React.Component {
 
     this.state = {
       mediaData: props.mediaData,
-      errors: {}
+      errors: {},
     };
   }
 
@@ -29,7 +29,7 @@ class Media extends React.Component {
 
   markForDeletion(key) {
     this.setState({
-      mediaData: this.state.mediaData.filter(item => item.url !== key)
+      mediaData: this.state.mediaData.filter((item) => item.url !== key),
     });
   }
 
@@ -46,14 +46,14 @@ class Media extends React.Component {
           url: URL.createObjectURL(file),
           name: file.name,
           type: "screenshot",
-          status: "new"
+          status: "new",
         });
       }
     }
 
     this.setState({
       mediaData: newMediaData,
-      errors: errors
+      errors: errors,
     });
   }
 
@@ -77,7 +77,7 @@ class Media extends React.Component {
       return (
         <div className="p-notification--negative">
           <p className="p-notification__response">
-            {Object.keys(errors).map(fileName => (
+            {Object.keys(errors).map((fileName) => (
               <Fragment key={`errors-${fileName}`}>
                 {fileName}
                 &nbsp;
@@ -152,7 +152,7 @@ class Media extends React.Component {
     newMediaData.splice(newIndex, 0, moved[0]);
 
     this.setState({
-      mediaData: newMediaData
+      mediaData: newMediaData,
     });
   }
 
@@ -183,14 +183,14 @@ Media.defaultProps = {
   mediaLimit: 5,
   mediaData: [],
   updateState: () => {},
-  restrictions: {}
+  restrictions: {},
 };
 
 Media.propTypes = {
   mediaLimit: PropTypes.number,
   mediaData: PropTypes.array,
   updateState: PropTypes.func,
-  restrictions: PropTypes.object
+  restrictions: PropTypes.object,
 };
 
 export { Media as default };

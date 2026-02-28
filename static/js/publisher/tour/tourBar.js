@@ -25,5 +25,5 @@ export default function TourBar({ showTour }) {
 }
 
 TourBar.propTypes = {
-  showTour: PropTypes.func
+  showTour: PropTypes.func,
 };

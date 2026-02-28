@@ -7,27 +7,27 @@ export const CLOSE_CHANNEL_SUCCESS = "CLOSE_CHANNEL_SUCCESS";
 export function initChannelMap(channelMap) {
   return {
     type: INIT_CHANNEL_MAP,
-    payload: { channelMap }
+    payload: { channelMap },
   };
 }
 
 export function selectRevision(revision) {
   return {
     type: SELECT_REVISION,
-    payload: { revision, toggle: false }
+    payload: { revision, toggle: false },
   };
 }
 
 export function toggleRevision(revision) {
   return {
     type: SELECT_REVISION,
-    payload: { revision, toggle: true }
+    payload: { revision, toggle: true },
   };
 }
 
 export function clearSelectedRevisions() {
   return {
-    type: CLEAR_SELECTED_REVISIONS
+    type: CLEAR_SELECTED_REVISIONS,
   };
 }
 
@@ -36,8 +36,8 @@ export function releaseRevisionSuccess(revision, channel) {
     type: RELEASE_REVISION_SUCCESS,
     payload: {
       revision,
-      channel
-    }
+      channel,
+    },
   };
 }
 
@@ -45,7 +45,7 @@ export function closeChannelSuccess(channel) {
   return {
     type: CLOSE_CHANNEL_SUCCESS,
     payload: {
-      channel
-    }
+      channel,
+    },
   };
 }

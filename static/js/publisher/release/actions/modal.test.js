@@ -2,7 +2,7 @@ import { OPEN_MODAL, CLOSE_MODAL, openModal, closeModal } from "./modal";
 
 describe("modal actions", () => {
   const dummyPayload = {
-    title: "test"
+    title: "test",
   };
 
   describe("openModal", () => {

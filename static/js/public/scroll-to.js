@@ -24,7 +24,7 @@ export function initLinkScroll(link, { offset = 0 }) {
     const href = link.dataset.scrollTo || link.getAttribute("href");
     const target = document.querySelector(href);
     if (target) {
-      link.addEventListener("click", event => {
+      link.addEventListener("click", (event) => {
         event.preventDefault();
         animateScrollTo(target, offset);
         setTimeout(() => window.history.pushState({}, null, href), 100);

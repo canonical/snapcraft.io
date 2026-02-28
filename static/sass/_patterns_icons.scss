@@ -1,0 +1,37 @@
+@mixin snapcraft-p-icons {
+  .p-icon--initial {
+    @extend %vf-is-bordered;
+    @extend %vf-bg--x-light;
+    @extend %small-text;
+
+    border-radius: 100%;
+    font-style: normal;
+    height: 1.5rem;
+    margin-bottom: 0;
+    text-align: center;
+    text-transform: uppercase;
+    width: 1.5rem;
+  }
+
+  .p-icon--snapcraft-cube {
+    @extend %icon;
+
+    background-image: url("data:image/svg+xml,%3Csvg width='24' height='24' xmlns='http://www.w3.org/2000/svg' fill='none'%3E%3Cpath stroke='%23111' stroke-width='1.5' d='m12.124.935 9.5 5.428a.251.251 0 0 1 .126.217v10.84a.25.25 0 0 1-.126.217l-9.5 5.428a.25.25 0 0 1-.248 0l-9.5-5.428-.371.65.371-.65a.251.251 0 0 1-.126-.217V6.58a.25.25 0 0 1 .126-.217l9.5-5.428a.25.25 0 0 1 .248 0z'/%3E%3Cpath stroke='%23111' stroke-width='1.5' d='m3 6.75 8.496 4.956a.999.999 0 0 0 1.008 0L21 6.75M12 22.5V12'/%3E%3C/svg%3E");
+  }
+
+  %snapcraft-icon-chevrons {
+    @extend %icon;
+
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16'%3E%3Cpath d='M6.375.35 0 8l6.375 7.65 1.36-1.133L2.304 8l5.431-6.517L6.375.35zm8.265 0L8.265 8l6.375 7.65L16 14.517 10.569 8 16 1.483 14.64.35z' fill='%23fff' /%3E%3C/svg%3E");
+  }
+
+  .p-icon--left-chevrons {
+    @extend %snapcraft-icon-chevrons;
+  }
+
+  .p-icon--right-chevrons {
+    @extend %snapcraft-icon-chevrons;
+
+    transform: rotate(180deg);
+  }
+}

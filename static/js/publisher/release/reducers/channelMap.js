@@ -4,7 +4,7 @@ import {
   SELECT_REVISION,
   CLEAR_SELECTED_REVISIONS,
   RELEASE_REVISION_SUCCESS,
-  CLOSE_CHANNEL_SUCCESS
+  CLOSE_CHANNEL_SUCCESS,
 } from "../actions/channelMap";
 
 function selectRevision(state, revision, toggle) {
@@ -12,7 +12,7 @@ function selectRevision(state, revision, toggle) {
 
   state = {
     ...state,
-    [AVAILABLE]: { ...state[AVAILABLE] }
+    [AVAILABLE]: { ...state[AVAILABLE] },
   };
 
   if (
@@ -31,10 +31,10 @@ function selectRevision(state, revision, toggle) {
 function releaseRevision(state, revision, channel) {
   state = {
     ...state,
-    [channel]: { ...state[channel] }
+    [channel]: { ...state[channel] },
   };
 
-  revision.architectures.forEach(arch => {
+  revision.architectures.forEach((arch) => {
     const currentlyReleased = state[channel][arch];
 
     // only update revision in channel map if it changed since last time
@@ -67,7 +67,7 @@ export default function channelMap(state = {}, action) {
   switch (action.type) {
     case INIT_CHANNEL_MAP:
       return {
-        ...action.payload.channelMap
+        ...action.payload.channelMap,
       };
     case SELECT_REVISION:
       return selectRevision(
@@ -78,7 +78,7 @@ export default function channelMap(state = {}, action) {
     case CLEAR_SELECTED_REVISIONS:
       return {
         ...state,
-        [AVAILABLE]: {}
+        [AVAILABLE]: {},
       };
     case RELEASE_REVISION_SUCCESS:
       return releaseRevision(

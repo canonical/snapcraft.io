@@ -54,7 +54,7 @@ class BaseTestCases:
             discharge = pymacaroons.Macaroon("3rd", "a_ident", "a_caveat_key")
 
             with client.session_transaction() as s:
-                s["openid"] = {
+                s["publisher"] = {
                     "image": None,
                     "nickname": "Toto",
                     "fullname": "El Toto",
@@ -233,7 +233,7 @@ class BaseTestCases:
                     method=self.method_api,
                     url=self.api_url,
                     json={},
-                    status=500,
+                    status=401,
                     headers={"WWW-Authenticate": "Macaroon needs_refresh=1"},
                 )
             )
@@ -369,7 +369,10 @@ class BaseTestCases:
         def test_account_no_username_logged_in(self):
             payload = {
                 "error_list": [
-                    {"code": "user-not-ready", "message": "missing namespace"}
+                    {
+                        "code": "user-not-ready",
+                        "message": "missing store username",
+                    }
                 ]
             }
             responses.add(

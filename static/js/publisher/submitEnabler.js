@@ -15,7 +15,7 @@ function submitEnabler(formSelector, buttonSelectors) {
     throw new Error(`${formSelector} is not a valid element`);
   }
 
-  const buttonEls = buttonSelectors.map(selector =>
+  const buttonEls = buttonSelectors.map((selector) =>
     document.querySelector(selector)
   );
 
@@ -27,10 +27,10 @@ function submitEnabler(formSelector, buttonSelectors) {
     initialStateJson[key] = value;
   }
 
-  buttonEls.forEach(button => {
+  buttonEls.forEach((button) => {
     if (button) {
       button.setAttribute("disabled", "disabled");
-      button.classList.add("is--disabled");
+      button.classList.add("is-disabled");
     }
   });
 
@@ -43,13 +43,13 @@ function submitEnabler(formSelector, buttonSelectors) {
     }
 
     const diff = shallowDiff(initialStateJson, newStateJson);
-    buttonEls.forEach(button => {
+    buttonEls.forEach((button) => {
       if (diff) {
         button.removeAttribute("disabled");
-        button.classList.remove("is--disabled");
+        button.classList.remove("is-disabled");
       } else {
         button.setAttribute("disabled", "disabled");
-        button.classList.add("is--disabled");
+        button.classList.add("is-disabled");
       }
     });
   });

@@ -13,7 +13,7 @@ function getCategory(holder) {
   const category = holder.dataset.category;
 
   // Write the html and init the carousel
-  const writeCategory = function(response) {
+  const writeCategory = function (response) {
     holder.innerHTML = response;
 
     getColour(holder, IMAGE_SELECTOR, IMAGE_PARENT_SELECTOR);
@@ -23,7 +23,7 @@ function getCategory(holder) {
 
   // Use fetch ¯\_(ツ)_/¯
   return fetch(url)
-    .then(response => {
+    .then((response) => {
       if (!response.ok) {
         return;
       }

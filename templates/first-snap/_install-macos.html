@@ -25,11 +25,10 @@
             </h4>
             <span class="p-stepped-list__content">
               {% set snippet_value = "brew install snapcraft" %}
-              {% set snippet_id = "macos-install-snapcraft" %}
               {% include "/partials/_code-snippet.html" %}
             </span>
         </li>
-        <li class="p-stepped-list__item"> 
+        <li class="p-stepped-list__item">
           <h4 class="p-stepped-list__title u-no-limit">
             <span>
               <a href="https://multipass.run/install" target="_blank" class="p-link--external">Install Multipass</a>, a virtualisation product from <br/>Canonical that can set up a complete Linux environment <br/>in a couple of minutes:
@@ -37,7 +36,6 @@
           </h4>
           <span class="p-stepped-list__content">
             {% set snippet_value = "brew cask install multipass" %}
-            {% set snippet_id = "macos-install-multipass" %}
             {% include "/partials/_code-snippet.html" %}
           </span>
         </li>
@@ -59,7 +57,6 @@
           </h4>
           <span class="p-stepped-list__content">
             {% set snippet_value = "docker run hello-world" %}
-            {% set snippet_id = "macos-docker" %}
             {% include "/partials/_code-snippet.html" %}
             <p>
               If you don't see the "Hello from Docker!" message, consult the Docker documentation for troubleshooting steps.
@@ -72,7 +69,6 @@
           </h4>
           <span class="p-stepped-list__content">
             {% set snippet_value = "docker pull snapcore/snapcraft" %}
-            {% set snippet_id = "macos-docker-pull" %}
             {% include "/partials/_code-snippet.html" %}
           </span>
         </li>

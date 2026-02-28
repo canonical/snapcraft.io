@@ -6,7 +6,7 @@ import { getTracks, getTrackRevisions } from "../selectors";
 import { CLOSE_MODAL, openModal } from "../actions/modal";
 import {
   showNotification,
-  hideNotification
+  hideNotification,
 } from "../actions/globalNotification";
 
 class DefaultTrackModifier extends Component {
@@ -27,18 +27,18 @@ class DefaultTrackModifier extends Component {
         {
           appearance: "positive",
           onClickAction: {
-            reduxAction: "clearDefaultTrack"
+            reduxAction: "clearDefaultTrack",
           },
-          label: `Clear ${defaultTrack} as default track`
+          label: `Clear ${defaultTrack} as default track`,
         },
         {
           appearance: "neutral",
           onClickAction: {
-            type: CLOSE_MODAL
+            type: CLOSE_MODAL,
           },
-          label: "Cancel"
-        }
-      ]
+          label: "Cancel",
+        },
+      ],
     });
   }
 
@@ -52,18 +52,18 @@ class DefaultTrackModifier extends Component {
         {
           appearance: "positive",
           onClickAction: {
-            reduxAction: "setDefaultTrack"
+            reduxAction: "setDefaultTrack",
           },
-          label: `Set ${currentTrack} as default track`
+          label: `Set ${currentTrack} as default track`,
         },
         {
           appearance: "neutral",
           onClickAction: {
-            type: CLOSE_MODAL
+            type: CLOSE_MODAL,
           },
-          label: "Cancel"
-        }
-      ]
+          label: "Cancel",
+        },
+      ],
     });
   }
 
@@ -94,7 +94,7 @@ class DefaultTrackModifier extends Component {
 
   renderClearLink() {
     return (
-      <p>
+      <p className="u-no-margin--bottom">
         This is the default track for the snap.&nbsp;
         <a
           className="p-tooltip p-tooltip--btm-right"
@@ -143,22 +143,22 @@ DefaultTrackModifier.propTypes = {
   showNotification: PropTypes.func.isRequired,
   latestTrackRevisions: PropTypes.array.isRequired,
   csrfToken: PropTypes.string.isRequired,
-  snapName: PropTypes.string.isRequired
+  snapName: PropTypes.string.isRequired,
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   currentTrack: state.currentTrack,
   tracks: getTracks(state),
   latestTrackRevisions: getTrackRevisions(state, "latest"),
   csrfToken: state.options.csrfToken,
   snapName: state.options.snapName,
-  defaultTrack: state.defaultTrack
+  defaultTrack: state.defaultTrack,
 });
 
-const mapDispatchToProps = dispatch => ({
-  openModal: payload => dispatch(openModal(payload)),
-  showNotification: payload => dispatch(showNotification(payload)),
-  hideNotification: () => dispatch(hideNotification())
+const mapDispatchToProps = (dispatch) => ({
+  openModal: (payload) => dispatch(openModal(payload)),
+  showNotification: (payload) => dispatch(showNotification(payload)),
+  hideNotification: () => dispatch(hideNotification()),
 });
 
 export default connect(

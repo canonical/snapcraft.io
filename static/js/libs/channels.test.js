@@ -2,7 +2,7 @@ import {
   sortChannels,
   parseChannel,
   createChannelTree,
-  sortAlphaNum
+  sortAlphaNum,
 } from "./channels";
 
 describe("parseChannel", () => {
@@ -15,8 +15,8 @@ describe("parseChannel", () => {
         format: {
           track: false,
           risk: true,
-          branch: false
-        }
+          branch: false,
+        },
       });
     });
   });
@@ -30,8 +30,8 @@ describe("parseChannel", () => {
         format: {
           track: true,
           risk: true,
-          branch: false
-        }
+          branch: false,
+        },
       });
     });
   });
@@ -45,8 +45,8 @@ describe("parseChannel", () => {
         format: {
           track: false,
           risk: true,
-          branch: true
-        }
+          branch: true,
+        },
       });
     });
   });
@@ -61,8 +61,8 @@ describe("parseChannel", () => {
           format: {
             track: false,
             risk: true,
-            branch: false
-          }
+            branch: false,
+          },
         });
       });
     });
@@ -73,7 +73,7 @@ describe("createChannelTree", () => {
   let channelList;
   describe("risk only", () => {
     beforeEach(() => {
-      channelList = ["stable", "beta", "candidate", "edge"].map(channel =>
+      channelList = ["stable", "beta", "candidate", "edge"].map((channel) =>
         parseChannel(channel)
       );
     });
@@ -87,43 +87,43 @@ describe("createChannelTree", () => {
               name: "stable",
               branches: {
                 _base: {
-                  name: "_base"
-                }
-              }
+                  name: "_base",
+                },
+              },
             },
             beta: {
               name: "beta",
               branches: {
                 _base: {
-                  name: "_base"
-                }
-              }
+                  name: "_base",
+                },
+              },
             },
             candidate: {
               name: "candidate",
               branches: {
                 _base: {
-                  name: "_base"
-                }
-              }
+                  name: "_base",
+                },
+              },
             },
             edge: {
               name: "edge",
               branches: {
                 _base: {
-                  name: "_base"
-                }
-              }
-            }
-          }
-        }
+                  name: "_base",
+                },
+              },
+            },
+          },
+        },
       });
     });
   });
 
   describe("track/risk", () => {
     beforeEach(() => {
-      channelList = ["stable", "latest/edge", "test/candidate"].map(channel =>
+      channelList = ["stable", "latest/edge", "test/candidate"].map((channel) =>
         parseChannel(channel)
       );
     });
@@ -136,19 +136,19 @@ describe("createChannelTree", () => {
               name: "stable",
               branches: {
                 _base: {
-                  name: "_base"
-                }
-              }
+                  name: "_base",
+                },
+              },
             },
             edge: {
               name: "edge",
               branches: {
                 _base: {
-                  name: "_base"
-                }
-              }
-            }
-          }
+                  name: "_base",
+                },
+              },
+            },
+          },
         },
         test: {
           name: "test",
@@ -157,21 +157,24 @@ describe("createChannelTree", () => {
               name: "candidate",
               branches: {
                 _base: {
-                  name: "_base"
-                }
-              }
-            }
-          }
-        }
+                  name: "_base",
+                },
+              },
+            },
+          },
+        },
       });
     });
   });
 
   describe("risk/branch", () => {
     beforeEach(() => {
-      channelList = ["stable", "beta/test", "edge/1.0.1", "edge/hotfix"].map(
-        channel => parseChannel(channel)
-      );
+      channelList = [
+        "stable",
+        "beta/test",
+        "edge/1.0.1",
+        "edge/hotfix",
+      ].map((channel) => parseChannel(channel));
     });
 
     it("should return latest tracks with different branches on the tracks", () => {
@@ -183,31 +186,31 @@ describe("createChannelTree", () => {
               name: "stable",
               branches: {
                 _base: {
-                  name: "_base"
-                }
-              }
+                  name: "_base",
+                },
+              },
             },
             beta: {
               name: "beta",
               branches: {
                 test: {
-                  name: "test"
-                }
-              }
+                  name: "test",
+                },
+              },
             },
             edge: {
               name: "edge",
               branches: {
                 hotfix: {
-                  name: "hotfix"
+                  name: "hotfix",
                 },
                 "1.0.1": {
-                  name: "1.0.1"
-                }
-              }
-            }
-          }
-        }
+                  name: "1.0.1",
+                },
+              },
+            },
+          },
+        },
       });
     });
   });
@@ -217,8 +220,8 @@ describe("createChannelTree", () => {
         "stable",
         "stable/test",
         "stable/1.0.1",
-        "stable/hotfix"
-      ].map(channel => parseChannel(channel));
+        "stable/hotfix",
+      ].map((channel) => parseChannel(channel));
     });
     it("should return no branch risk, above all branches", () => {
       expect(createChannelTree(channelList)).toEqual({
@@ -229,21 +232,21 @@ describe("createChannelTree", () => {
               name: "stable",
               branches: {
                 _base: {
-                  name: "_base"
+                  name: "_base",
                 },
                 test: {
-                  name: "test"
+                  name: "test",
                 },
                 "1.0.1": {
-                  name: "1.0.1"
+                  name: "1.0.1",
                 },
                 hotfix: {
-                  name: "hotfix"
-                }
-              }
-            }
-          }
-        }
+                  name: "hotfix",
+                },
+              },
+            },
+          },
+        },
       });
     });
   });
@@ -259,7 +262,7 @@ describe("sortAlphaNum", () => {
       "5",
       "2",
       "1",
-      "0"
+      "0",
     ]);
   });
 
@@ -267,7 +270,7 @@ describe("sortAlphaNum", () => {
     expect(sortAlphaNum(["0.0.1", "1.0.1", "2.0.2"])).toEqual([
       "2.0.2",
       "1.0.1",
-      "0.0.1"
+      "0.0.1",
     ]);
   });
 
@@ -276,7 +279,7 @@ describe("sortAlphaNum", () => {
       "aaa",
       "cccc",
       "test",
-      "zzzzz"
+      "zzzzz",
     ]);
   });
 
@@ -286,7 +289,7 @@ describe("sortAlphaNum", () => {
       "zzz",
       "11",
       "5",
-      "0.0.1"
+      "0.0.1",
     ]);
   });
 
@@ -316,11 +319,11 @@ describe("sortChannels", () => {
               name: "stable",
               branches: [
                 {
-                  name: "_base"
-                }
-              ]
-            }
-          ]
+                  name: "_base",
+                },
+              ],
+            },
+          ],
         },
         {
           name: "zzz",
@@ -329,11 +332,11 @@ describe("sortChannels", () => {
               name: "edge",
               branches: [
                 {
-                  name: "_base"
-                }
-              ]
-            }
-          ]
+                  name: "_base",
+                },
+              ],
+            },
+          ],
         },
         {
           name: "5.9.0",
@@ -342,11 +345,11 @@ describe("sortChannels", () => {
               name: "candidate",
               branches: [
                 {
-                  name: "_base"
-                }
-              ]
-            }
-          ]
+                  name: "_base",
+                },
+              ],
+            },
+          ],
         },
         {
           name: "1",
@@ -355,12 +358,12 @@ describe("sortChannels", () => {
               name: "beta",
               branches: [
                 {
-                  name: "_base"
-                }
-              ]
-            }
-          ]
-        }
+                  name: "_base",
+                },
+              ],
+            },
+          ],
+        },
       ]);
     });
   });
@@ -377,11 +380,11 @@ describe("sortChannels", () => {
               name: "stable",
               branches: [
                 {
-                  name: "_base"
-                }
-              ]
-            }
-          ]
+                  name: "_base",
+                },
+              ],
+            },
+          ],
         },
         {
           name: "zzz",
@@ -390,11 +393,11 @@ describe("sortChannels", () => {
               name: "edge",
               branches: [
                 {
-                  name: "_base"
-                }
-              ]
-            }
-          ]
+                  name: "_base",
+                },
+              ],
+            },
+          ],
         },
         {
           name: "1",
@@ -403,20 +406,20 @@ describe("sortChannels", () => {
               name: "candidate",
               branches: [
                 {
-                  name: "_base"
-                }
-              ]
+                  name: "_base",
+                },
+              ],
             },
             {
               name: "beta",
               branches: [
                 {
-                  name: "_base"
-                }
-              ]
-            }
-          ]
-        }
+                  name: "_base",
+                },
+              ],
+            },
+          ],
+        },
       ]);
     });
   });
@@ -430,7 +433,7 @@ describe("sortChannels", () => {
             "stable",
             "1/beta/1.0.1",
             "1/beta/hotfix",
-            "1/candidate"
+            "1/candidate",
           ]).tree
         ).toEqual([
           {
@@ -440,11 +443,11 @@ describe("sortChannels", () => {
                 name: "stable",
                 branches: [
                   {
-                    name: "_base"
-                  }
-                ]
-              }
-            ]
+                    name: "_base",
+                  },
+                ],
+              },
+            ],
           },
           {
             name: "zzz",
@@ -453,11 +456,11 @@ describe("sortChannels", () => {
                 name: "edge",
                 branches: [
                   {
-                    name: "_base"
-                  }
-                ]
-              }
-            ]
+                    name: "_base",
+                  },
+                ],
+              },
+            ],
           },
           {
             name: "1",
@@ -466,23 +469,23 @@ describe("sortChannels", () => {
                 name: "candidate",
                 branches: [
                   {
-                    name: "_base"
-                  }
-                ]
+                    name: "_base",
+                  },
+                ],
               },
               {
                 name: "beta",
                 branches: [
                   {
-                    name: "hotfix"
+                    name: "hotfix",
                   },
                   {
-                    name: "1.0.1"
-                  }
-                ]
-              }
-            ]
-          }
+                    name: "1.0.1",
+                  },
+                ],
+              },
+            ],
+          },
         ]);
       });
       it("should return as a list", () => {
@@ -492,14 +495,14 @@ describe("sortChannels", () => {
             "stable",
             "1/beta/1.0.1",
             "1/beta/hotfix",
-            "1/candidate"
+            "1/candidate",
           ]).list
         ).toEqual([
           "stable",
           "zzz/edge",
           "1/candidate",
           "1/beta/hotfix",
-          "1/beta/1.0.1"
+          "1/beta/1.0.1",
         ]);
       });
     });
@@ -510,7 +513,7 @@ describe("sortChannels", () => {
       it("should return with default track as latest", () => {
         expect(
           sortChannels(["latest/stable", "test/stable"], {
-            defaultTrack: "test"
+            defaultTrack: "test",
           }).list
         ).toEqual(["test/stable", "latest/stable"]);
       });
@@ -520,7 +523,7 @@ describe("sortChannels", () => {
       it("should maintain the format", () => {
         expect(
           sortChannels(["test/stable", "stable"], {
-            maintainFormat: true
+            maintainFormat: true,
           }).list
         ).toEqual(["stable", "test/stable"]);
       });

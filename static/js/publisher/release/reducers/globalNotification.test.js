@@ -2,13 +2,13 @@ import notification from "./globalNotification";
 
 import {
   SHOW_NOTIFICATION,
-  HIDE_NOTIFICATION
+  HIDE_NOTIFICATION,
 } from "../actions/globalNotification";
 
 describe("notification", () => {
   it("should return the initial state", () => {
     expect(notification(undefined, {})).toEqual({
-      visible: false
+      visible: false,
     });
   });
 
@@ -19,8 +19,8 @@ describe("notification", () => {
         status: "success",
         appearance: "positive",
         content: "Notification content",
-        canDismiss: false
-      }
+        canDismiss: false,
+      },
     };
 
     it("should mark notification as visible", () => {
@@ -29,14 +29,14 @@ describe("notification", () => {
       expect(result.visible).toBe(true);
       expect(result).toEqual({
         ...showNotificationAction.payload,
-        visible: true
+        visible: true,
       });
     });
   });
 
   describe("on HIDE_NOTIFICATION action", () => {
     let hideNotificationAction = {
-      type: HIDE_NOTIFICATION
+      type: HIDE_NOTIFICATION,
     };
 
     it("should mark the notification as not visible", () => {

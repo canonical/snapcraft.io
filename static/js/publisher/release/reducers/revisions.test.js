@@ -13,9 +13,9 @@ describe("revisions", () => {
         revisions: {
           1: { revision: 1 },
           2: { revision: 2 },
-          3: { revision: 3, channels: ["stable"] }
-        }
-      }
+          3: { revision: 3, channels: ["stable"] },
+        },
+      },
     };
 
     it("should add revisions to state", () => {
@@ -27,7 +27,7 @@ describe("revisions", () => {
     it("should update existing revisions in state", () => {
       const initialState = {
         1: { revision: 1 },
-        3: { revision: 3 }
+        3: { revision: 3 },
       };
 
       const result = revisions(initialState, updateRevisionsAction);

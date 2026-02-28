@@ -10,7 +10,7 @@ describe("branches", () => {
     it("should add branch to branches list", () => {
       const action = {
         type: OPEN_BRANCHES,
-        payload: "test"
+        payload: "test",
       };
 
       const result = branches(undefined, action);
@@ -23,7 +23,7 @@ describe("branches", () => {
     it("should remove branch from branches list", () => {
       const action = {
         type: CLOSE_BRANCHES,
-        payload: "test"
+        payload: "test",
       };
 
       const state = ["testing123", "test", "McTestFace", "testtest"];

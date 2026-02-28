@@ -1,20 +1,48 @@
 <!doctype html>
-
 <html lang="en">
   <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block meta_title %}{{ webapp_config['STORE_NAME'] }} - Snaps are universal Linux packages{% endblock %}</title>
 
     <!-- Preconnect to establish early connections to important third-party origins -->
     <link rel="preconnect" href="https://www.google-analytics.com">
     <link rel="preconnect" href="https://assets.ubuntu.com">
     <link rel="preconnect" href="https://munchkin.marketo.net">
 
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-KCGXHQS');</script>
+    <!-- End Google Tag Manager -->
+
+    <link rel="stylesheet" href="{{ static_url('css/styles.css') }}" />
+    {% if webapp_config['CUSTOM_STYLES'] %}
+      <style type="text/css">
+        {{ webapp_config['CUSTOM_STYLES'] }}
+      </style>
+    {% endif %}
+
+    {% block scripts_modules %}{% endblock %}
+    <script src="{{ static_url('js/modules/raven.min.js') }}" defer></script>
+    <script>
+      window.addEventListener("DOMContentLoaded", function() {
+        Raven.config('{{ SENTRY_DSN }}', {
+          whitelistUrls: ['staging.snapcraft.io', 'snapcraft.io'],
+          release: '{{ COMMIT_ID }}',
+          environment: '{{ ENVIRONMENT }}'
+        }).install();
+      });
+    </script>
+
+    <script src="{{ static_url('js/dist/base.js') }}" defer></script>
+    {% block scripts_includes %}{% endblock %}
+
     <meta name="description" content="{% block meta_description %}Snaps are containerised software packages that are simple to create and install. They auto-update and are safe to run. And because they bundle their dependencies, they work on all major Linux systems without modification.{% endblock %}">
     <meta name="robots" content="noindex">
-
-    <title>{% block meta_title %}{{ webapp_config['STORE_NAME'] }} - Snaps are universal Linux packages{% endblock %}</title>
 
     {% block meta %}
       <meta property="og:title" content="{{ self.meta_title() }}"/>
@@ -29,29 +57,15 @@
       <meta property="twitter:url" content="https://snapcraft.io{{ self.meta_path() }}" />
     {% endblock %}
 
+    {% block extra_meta %}{% endblock %}
+
     <link rel="icon" type="image/png" href="https://assets.ubuntu.com/v1/fdc99abe-ico_16px.png" sizes="16x16" />
     <link rel="icon" type="image/png" href="https://assets.ubuntu.com/v1/0f3c662c-ico_32px.png" sizes="32x32" />
-
-    <link rel="stylesheet" href="{{ static_url('css/styles.css') }}" />
-
-    {% if webapp_config['CUSTOM_STYLES'] %}
-      <style type="text/css">
-        {{ webapp_config['CUSTOM_STYLES'] }}
-      </style>
-    {% endif %}
-
-    <!-- Google Tag Manager -->
-    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-    })(window,document,'script','dataLayer','GTM-K92JCQ');</script>
-    <!-- End Google Tag Manager -->
   </head>
 
   <body class="has-sticky-footer">
     <!-- Google Tag Manager (noscript) -->
-    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-K92JCQ"
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KCGXHQS"
     height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <!-- End Google Tag Manager (noscript) -->
 
@@ -61,17 +75,6 @@
 
     {% include "_footer-brandstore.html" %}
 
-    {% block scripts_modules %}{% endblock %}
-    <script src="{{ static_url('js/modules/raven.min.js') }}"></script>
-    <script>
-      Raven.config('{{ SENTRY_PUBLIC_DSN }}', {
-        whitelistUrls: ['staging.snapcraft.io', 'snapcraft.io'],
-        release: '{{ COMMIT_ID }}',
-        environment: '{{ ENVIRONMENT }}'
-      }).install();
-    </script>
-
-    <script src="{{ static_url('js/dist/base.js') }}"></script>
     {% block scripts %}{% endblock %}
 
     <script type="application/ld+json">

@@ -13,7 +13,7 @@ class ModalActionButton extends Component {
     this.onClickHandler = this.onClickHandler.bind(this);
 
     this.state = {
-      loading: false
+      loading: false,
     };
   }
 
@@ -35,7 +35,7 @@ class ModalActionButton extends Component {
     }
 
     this.setState({
-      loading: true
+      loading: true,
     });
   }
 
@@ -47,7 +47,7 @@ class ModalActionButton extends Component {
       `p-button--${appearance}`,
       "u-no-margin--bottom",
       "u-float-right",
-      ["positive", "negative"].indexOf(appearance) > -1 ? "is--dark" : ""
+      ["positive", "negative"].indexOf(appearance) > -1 ? "is--dark" : "",
     ];
 
     return (
@@ -67,13 +67,13 @@ ModalActionButton.propTypes = {
   onClickAction: PropTypes.object.isRequired,
   appearance: PropTypes.string.isRequired,
   children: PropTypes.node.isRequired,
-  dispatch: PropTypes.func.isRequired
+  dispatch: PropTypes.func.isRequired,
 };
 
-const mapActionButtonDispatchToProps = dispatch => ({
+const mapActionButtonDispatchToProps = (dispatch) => ({
   dispatch,
   setDefaultTrack: () => dispatch(setDefaultTrack()),
-  clearDefaultTrack: () => dispatch(clearDefaultTrack())
+  clearDefaultTrack: () => dispatch(clearDefaultTrack()),
 });
 
 const ModalActionButtonWrapped = connect(
@@ -125,16 +125,13 @@ Modal.propTypes = {
   title: PropTypes.string.isRequired,
   content: PropTypes.node.isRequired,
   actions: PropTypes.array.isRequired,
-  closeModal: PropTypes.func.isRequired
+  closeModal: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = ({ modal }) => modal || {};
 
-const mapModalDispatchToProps = dispatch => ({
-  closeModal: () => dispatch(closeModal())
+const mapModalDispatchToProps = (dispatch) => ({
+  closeModal: () => dispatch(closeModal()),
 });
 
-export default connect(
-  mapStateToProps,
-  mapModalDispatchToProps
-)(Modal);
+export default connect(mapStateToProps, mapModalDispatchToProps)(Modal);

@@ -9,7 +9,7 @@ Releases and revision history for {% if snap_title %}{{ snap_title }}{% else %}{
   {% set selected_tab='release' %}
   {% include "publisher/_header.html" %}
 
-  <section class="p-strip is-shallow">
+  <section class="p-strip is-shallow u-no-padding--top">
     <div id="release-history">
       {% if release_history["error-list"] %}
         <div class="row">
@@ -28,20 +28,30 @@ Releases and revision history for {% if snap_title %}{{ snap_title }}{% else %}{
 
 {% endblock %}
 
+{% block scripts_includes %}
+  <script src="{{ static_url('js/dist/release.js') }}" defer></script>
+{% endblock %}
 
 {% block scripts %}
   {% if "error-list" not in release_history %}
-    <script src="{{ static_url('js/dist/release.js') }}"></script>
     <script>
-      snapcraft.release.initReleases('#release-history',
-        {{ snap_name|tojson }},
-        {{ release_history|tojson }},
-        {{ channel_maps_list|tojson }},
-        {
-          defaultTrack: {% if default_track %}{{ default_track|tojson }}{% else %}"latest"{% endif %},
-          csrfToken: {{ csrf_token()|tojson }}
-        }
-      );
+      window.addEventListener("DOMContentLoaded", function() {
+        Raven.context(function () {
+          snapcraft.release.initReleases('#release-history',
+            {{ snap_name|tojson }},
+            {{ release_history|tojson }},
+            {{ channel_map|tojson }},
+            {{ tracks|tojson }},
+            {
+              defaultTrack: {% if default_track %}{{ default_track|tojson }}{% else %}"latest"{% endif %},
+              csrfToken: {{ csrf_token()|tojson }},
+              flags: {
+                isProgressiveReleaseEnabled: false
+              }
+            }
+          );
+        });
+      });
     </script>
   {% endif %}
 {% endblock %}

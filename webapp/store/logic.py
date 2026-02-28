@@ -5,6 +5,7 @@ from urllib.parse import parse_qs, urlparse
 
 import humanize
 from dateutil import parser
+from webapp import helpers
 
 
 def get_n_random_snaps(snaps, choice_number):
@@ -13,20 +14,6 @@ def get_n_random_snaps(snaps, choice_number):
         return random.sample(snaps, choice_number)
 
     return snaps
-
-
-def get_searched_snaps(search_results):
-    """Get search snaps from API response
-
-    :param search_results: the body responsed by the API
-
-    :returns: The list of the searched snaps
-    """
-    return (
-        search_results["_embedded"]["clickindex:package"]
-        if "_embedded" in search_results
-        else []
-    )
 
 
 def get_snap_banner_url(snap_result):
@@ -172,6 +159,7 @@ def convert_channel_maps(channel_map):
     :returns: The channel maps reshaped
     """
     channel_map_restruct = {}
+
     for channel in channel_map:
         arch = channel.get("channel").get("architecture")
         track = channel.get("channel").get("track")
@@ -181,13 +169,14 @@ def convert_channel_maps(channel_map):
             channel_map_restruct[arch][track] = []
 
         info = {
-            "created-at": convert_date(channel.get("created-at")),
+            "released-at": convert_date(channel["channel"].get("released-at")),
             "version": channel.get("version"),
-            "channel": channel.get("channel").get("name"),
-            "risk": channel.get("channel").get("risk"),
+            "channel": channel["channel"].get("name"),
+            "risk": channel["channel"].get("risk"),
             "confinement": channel.get("confinement"),
-            "size": channel.get("download").get("size"),
+            "size": channel["download"].get("size"),
         }
+
         channel_map_restruct[arch][track].append(info)
 
     return channel_map_restruct
@@ -230,6 +219,20 @@ categories_list = [
 blacklist = ["featured"]
 
 
+def format_category_name(slug):
+    """Format category name into a standard title format
+
+    :param slug: The hypen spaced, lowercase slug to be formatted
+    :return: The formatted string
+    """
+    return (
+        slug.title()
+        .replace("-", " ")
+        .replace("And", "and")
+        .replace("Iot", "IoT")
+    )
+
+
 def get_categories(categories_json):
     """Retrieve and flatten the nested array from the legacy API response.
 
@@ -239,20 +242,15 @@ def get_categories(categories_json):
 
     categories = []
 
-    if "_embedded" in categories_json:
-        for cat in categories_json["_embedded"]["clickindex:sections"]:
-            if (
-                cat["name"] not in categories_list
-                and cat["name"] not in blacklist
-            ):
-                categories_list.append(cat["name"])
+    if "categories" in categories_json:
+        for cat in categories_json["categories"]:
+            if cat["name"] not in categories_list:
+                if cat["name"] not in blacklist:
+                    categories_list.append(cat["name"])
 
         for category in categories_list:
             categories.append(
-                {
-                    "slug": category,
-                    "name": category.capitalize().replace("-", " "),
-                }
+                {"slug": category, "name": format_category_name(category)}
             )
 
     return categories
@@ -271,7 +269,7 @@ def get_snap_categories(snap_categories):
             categories.append(
                 {
                     "slug": cat["name"],
-                    "name": cat["name"].capitalize().replace("-", " "),
+                    "name": format_category_name(cat["name"]),
                 }
             )
 
@@ -341,42 +339,31 @@ def get_lowest_available_risk(channel_map, track):
     return lowest_available_risk
 
 
-def get_confinement(channel_map, track, risk):
-    """Get the confinement for a channel
+def extract_info_channel_map(channel_map, track, risk):
+    """Get the confinement and version for a channel
 
     :param channel_map: Channel map list
     :param track: The track of the channel
     :param risk: The risk of the channel
 
-    :returns: The confinement
+    :returns: Dict containing confinement and version
     """
+    context = {
+        "confinement": None,
+        "version": None,
+    }
+
     for arch in channel_map:
         if track in channel_map[arch]:
             releases = channel_map[arch][track]
             for release in releases:
                 if release["risk"] == risk:
-                    return release["confinement"]
+                    context["confinement"] = release.get("confinement")
+                    context["version"] = release.get("version")
 
-    return None
+                    return context
 
-
-def get_version(channel_map, track, risk):
-    """Get the version for a channel
-
-    :param channel_map: Channel map list
-    :param track: The track of the channel
-    :param risk: The risk of the channel
-
-    :returns: The version
-    """
-    for arch in channel_map:
-        if track in channel_map[arch]:
-            releases = channel_map[arch][track]
-            for release in releases:
-                if release["risk"] == risk:
-                    return release["version"]
-
-    return None
+    return context
 
 
 def get_video_embed_code(url):
@@ -416,7 +403,7 @@ def filter_screenshots(media):
     banner_regex = r"/banner(\-icon)?(_.*)?\.(png|jpg)"
 
     return [
-        m["url"]
+        m
         for m in media
         if m["type"] == "screenshot" and not re.search(banner_regex, m["url"])
     ][:5]
@@ -426,10 +413,13 @@ def get_icon(media):
     return [m["url"] for m in media if m["type"] == "icon"]
 
 
-def get_videos(media):
-    return [
-        get_video_embed_code(m["url"]) for m in media if m["type"] == "video"
-    ]
+def get_video(media):
+    video = None
+    for m in media:
+        if m["type"] == "video":
+            video = get_video_embed_code(m["url"])
+            break
+    return video
 
 
 def promote_snap_with_icon(snaps):
@@ -447,3 +437,21 @@ def promote_snap_with_icon(snaps):
         snaps.insert(0, snaps.pop(snap_with_icon_index))
 
     return snaps
+
+
+def get_snap_developer(snap_name):
+    """Is this a special snap published by Canonical?
+    Show some developer information
+
+    :param snap_name: The name of a snap
+
+    :returns: a list of [display_name, url]
+
+    """
+    filename = "store/content/developers/snaps.yaml"
+    snaps = helpers.get_yaml(filename, typ="rt")
+
+    if snaps and snap_name in snaps:
+        return snaps[snap_name]
+
+    return None

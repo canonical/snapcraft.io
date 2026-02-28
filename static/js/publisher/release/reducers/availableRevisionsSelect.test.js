@@ -13,8 +13,8 @@ describe("releases", () => {
     let setSelectAction = {
       type: SET_AVAILABLE_REVISIONS_SELECT,
       payload: {
-        value: "test"
-      }
+        value: "test",
+      },
     };
 
     it("should set new value in state", () => {

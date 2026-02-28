@@ -1,110 +1,231 @@
+{# The "layout_no_of_columns" variable can be set to suit the required design. If not set it defaults to 12 columns. Set the value using {% with %}{% endwith%} syntax when you include this partial #}
+
+{% if not layout_no_of_columns %}
+  {% set layout_no_of_columns=12 %}
+{% endif%}
+
 <div class="row js-fsf-language-select" id="language">
-  <div class="col-small-2 col-medium-3 col-2 col-lang-select">
-    <a class="p-card p-logo-link p-flow-link" href="/first-snap/python" data-flow-link="python">
+  <div class="col-small-2 col-medium-3 col-2 col-lang-select--{% if layout_no_of_columns==12 %}3{% elif layout_no_of_columns==8 %}4{% endif%}">
+    <a class="p-card p-logo-link p-flow-link u-align--center" href="/first-snap/python" data-flow-link="python">
       <header class="p-card__header">
-        <img src="https://assets.ubuntu.com/v1/5398ed20-logo-python.svg" alt="">
+        {{
+          image(
+            url="https://assets.ubuntu.com/v1/5398ed20-logo-python.svg",
+            alt="Python",
+            width="97",
+            height="97",
+            hi_def=True
+          ) | safe
+        }}
       </header>
       <span>Python</span>
     </a>
   </div>
-  <div class="col-small-2 col-medium-3 col-2 col-lang-select">
-    <a class="p-logo-link p-card p-flow-link" href="/first-snap/pre-built" data-flow-link="pre-built">
+  <div class="col-small-2 col-medium-3 col-2 col-lang-select--{% if layout_no_of_columns==12 %}3{% elif layout_no_of_columns==8 %}4{% endif %}">
+    <a class="p-logo-link p-card p-flow-link u-align--center" href="/first-snap/pre-built" data-flow-link="pre-built">
       <header class="p-card__header">
-        <img src="https://assets.ubuntu.com/v1/701da9c0-icon-prepackaged-apps.svg" alt="">
+        {{
+          image(
+            url="https://assets.ubuntu.com/v1/701da9c0-icon-prepackaged-apps.svg",
+            alt="Pre-built",
+            width="97",
+            height="97",
+            hi_def=True
+          ) | safe
+        }}
       </header>
       <span>Pre-built apps</span>
     </a>
   </div>
-  <div class="col-small-2 col-medium-3 col-2 col-lang-select">
-    <a class="p-logo-link p-card p-flow-link" href="/first-snap/c" data-flow-link="c">
+  <div class="col-small-2 col-medium-3 col-2 col-lang-select--{% if layout_no_of_columns==12 %}3{% elif layout_no_of_columns==8 %}4{% endif %}">
+    <a class="p-logo-link p-card p-flow-link u-align--center" href="/first-snap/c" data-flow-link="c">
       <header class="p-card__header">
-        <img src="https://assets.ubuntu.com/v1/dcc8c108-logo-cpp.svg" alt="">
+        {{
+          image(
+            url="https://assets.ubuntu.com/v1/dcc8c108-logo-cpp.svg",
+            alt="C/C++",
+            width="97",
+            height="97",
+            hi_def=True
+          ) | safe
+        }}
       </header>
       <span>C/C++</span>
     </a>
   </div>
-  <div class="col-small-2 col-medium-3 col-2 col-lang-select">
-    <a class="p-logo-link p-card p-flow-link" href="/first-snap/golang" data-flow-link="go">
+  <div class="col-small-2 col-medium-3 col-2 col-lang-select--{% if layout_no_of_columns==12 %}3{% elif layout_no_of_columns==8 %}4{% endif %}">
+    <a class="p-logo-link p-card p-flow-link u-align--center" href="/first-snap/golang" data-flow-link="go">
       <header class="p-card__header">
-        <img src="https://assets.ubuntu.com/v1/158bd625-logo-go.svg" alt="">
+        {{
+          image(
+            url="https://assets.ubuntu.com/v1/158bd625-logo-go.svg",
+            alt="Go",
+            width="97",
+            height="97",
+            hi_def=True
+          ) | safe
+        }}
       </header>
       <span>Go</span>
     </a>
   </div>
-  <div class="col-small-2 col-medium-3 col-2 col-lang-select">
-    <a class="p-logo-link p-card p-flow-link" href="/first-snap/java" data-flow-link="java">
+  <div class="col-small-2 col-medium-3 col-2 col-lang-select--{% if layout_no_of_columns==12 %}3{% elif layout_no_of_columns==8 %}4{% endif %}">
+    <a class="p-logo-link p-card p-flow-link u-align--center" href="/first-snap/java" data-flow-link="java">
       <header class="p-card__header">
-        <img src="https://assets.ubuntu.com/v1/f6840095-logo-java.svg" alt="">
+        {{
+          image(
+            url="https://assets.ubuntu.com/v1/f6840095-logo-java.svg",
+            alt="Java",
+            width="97",
+            height="97",
+            hi_def=True
+          ) | safe
+        }}
       </header>
       <span>Java</span>
     </a>
   </div>
-  <div class="col-small-2 col-medium-3 col-2 col-lang-select">
-    <a class="p-logo-link p-card p-flow-link" href="/first-snap/node" data-flow-link="node">
+  <div class="col-small-2 col-medium-3 col-2 col-lang-select--{% if layout_no_of_columns==12 %}3{% elif layout_no_of_columns==8 %}4{% endif %}">
+    <a class="p-logo-link p-card p-flow-link u-align--center" href="/first-snap/node" data-flow-link="node">
       <header class="p-card__header">
-        <img src="https://assets.ubuntu.com/v1/7a4dcddb-logo-node.svg" alt="">
+        {{
+          image(
+            url="https://assets.ubuntu.com/v1/7a4dcddb-logo-node.svg",
+            alt="Node.js",
+            width="97",
+            height="97",
+            hi_def=True
+          ) | safe
+        }}
       </header>
       <span>Node.js</span>
     </a>
   </div>
-  <div class="col-small-2 col-medium-3 col-2 col-lang-select">
-    <a class="p-logo-link p-card p-flow-link" href="/docs/build-snaps/electron" data-flow-link="electron">
+  <div class="col-small-2 col-medium-3 col-2 col-lang-select--{% if layout_no_of_columns==12 %}3{% elif layout_no_of_columns==8 %}4{% endif %}">
+    <a class="p-logo-link p-card p-flow-link u-align--center" href="/docs/build-snaps/electron" data-flow-link="electron">
       <header class="p-card__header">
-        <img src="https://assets.ubuntu.com/v1/4ab5c788-logo-electron.svg" alt="">
+        {{
+          image(
+            url="https://assets.ubuntu.com/v1/4ab5c788-logo-electron.svg",
+            alt="Electron",
+            width="97",
+            height="97",
+            hi_def=True
+          ) | safe
+        }}
       </header>
       <span>Electron</span>
     </a>
   </div>
-  <div class="col-small-2 col-medium-3 col-2 col-lang-select">
-    <a class="p-logo-link p-card p-flow-link" href="/first-snap/ruby" data-flow-link="ruby">
+  <div class="col-small-2 col-medium-3 col-2 col-lang-select--{% if layout_no_of_columns==12 %}3{% elif layout_no_of_columns==8 %}4{% endif %}">
+    <a class="p-logo-link p-card p-flow-link u-align--center" href="/first-snap/flutter" data-flow-link="flutter">
       <header class="p-card__header">
-        <img src="https://assets.ubuntu.com/v1/eacdd4e1-logo-ruby.svg" alt="">
+        {{
+          image(
+            url="https://assets.ubuntu.com/v1/d654c17e-Flutter_logo.svg",
+            alt="Flutter",
+            width="97",
+            height="97",
+            hi_def=True
+          ) | safe
+        }}
+      </header>
+      <span>Flutter</span>
+    </a>
+  </div>
+  <div class="col-small-2 col-medium-3 col-2 col-lang-select--{% if layout_no_of_columns==12 %}3{% elif layout_no_of_columns==8 %}4{% endif %}">
+    <a class="p-logo-link p-card p-flow-link u-align--center" href="/first-snap/ruby" data-flow-link="ruby">
+      <header class="p-card__header">
+        {{
+          image(
+            url="https://assets.ubuntu.com/v1/eacdd4e1-logo-ruby.svg",
+            alt="Ruby",
+            width="97",
+            height="97",
+            hi_def=True
+          ) | safe
+        }}
       </header>
       <span>Ruby</span>
     </a>
   </div>
-  <div class="col-small-2 col-medium-3 col-2 col-lang-select">
-    <a class="p-logo-link p-card p-flow-link" href="/first-snap/rust" data-flow-link="rust">
+  <div class="col-small-2 col-medium-3 col-2 col-lang-select--{% if layout_no_of_columns==12 %}3{% elif layout_no_of_columns==8 %}4{% endif %}">
+    <a class="p-logo-link p-card p-flow-link u-align--center" href="/first-snap/rust" data-flow-link="rust">
       <header class="p-card__header">
-        <img src="https://assets.ubuntu.com/v1/6677836e-logo-rust.svg" alt="">
+        {{
+          image(
+            url="https://assets.ubuntu.com/v1/6677836e-logo-rust.svg",
+            alt="Rust",
+            width="97",
+            height="97",
+            hi_def=True
+          ) | safe
+        }}
       </header>
       <span>Rust</span>
     </a>
   </div>
-  <div class="col-small-2 col-medium-3 col-2 col-lang-select">
-    <a class="p-logo-link p-card p-flow-link" href="/first-snap/moos" data-flow-link="moos">
+  <div class="col-small-2 col-medium-3 col-2 col-lang-select--{% if layout_no_of_columns==12 %}3{% elif layout_no_of_columns==8 %}4{% endif %}">
+    <a class="p-logo-link p-card p-flow-link u-align--center" href="/first-snap/moos" data-flow-link="moos">
       <header class="p-card__header">
-        <img src="https://assets.ubuntu.com/v1/4c371ff8-logo-moos.svg" alt="">
+        {{
+          image(
+            url="https://assets.ubuntu.com/v1/4c371ff8-logo-moos.svg",
+            alt="MOOS",
+            width="97",
+            height="97",
+            hi_def=True
+          ) | safe
+        }}
       </header>
       <span>MOOS</span>
     </a>
   </div>
-  <div class="col-small-2 col-medium-3 col-2 col-lang-select">
-    <a class="p-logo-link p-card p-flow-link" href="/first-snap/ros" data-flow-link="ros">
+  <div class="col-small-2 col-medium-3 col-2 col-lang-select--{% if layout_no_of_columns==12 %}3{% elif layout_no_of_columns==8 %}4{% endif %}">
+    <a class="p-logo-link p-card p-flow-link u-align--center" href="/first-snap/ros" data-flow-link="ros">
       <header class="p-card__header">
-        <img src="https://assets.ubuntu.com/v1/f2b40fc0-logo-ros.svg" alt="">
+        {{
+          image(
+            url="https://assets.ubuntu.com/v1/f2b40fc0-logo-ros.svg",
+            alt="ROS",
+            width="97",
+            height="97",
+            hi_def=True
+          ) | safe
+        }}
       </header>
       <span>ROS</span>
     </a>
   </div>
-  <div class="col-small-2 col-medium-3 col-2 col-lang-select">
-    <a class="p-logo-link p-card p-flow-link" href="/first-snap/ros2" data-flow-link="ros2">
+  <div class="col-small-2 col-medium-3 col-2 col-lang-select--{% if layout_no_of_columns==12 %}3{% elif layout_no_of_columns==8 %}4{% endif %}">
+    <a class="p-logo-link p-card p-flow-link u-align--center" href="/first-snap/ros2" data-flow-link="ros2">
       <header class="p-card__header">
-        <img src="https://assets.ubuntu.com/v1/7dad0dcc-logo-ros2.svg" alt="">
+        {{
+          image(
+            url="https://assets.ubuntu.com/v1/7dad0dcc-logo-ros2.svg",
+            alt="ROS 2",
+            width="97",
+            height="97",
+            hi_def=True
+          ) | safe
+        }}
       </header>
       <span>ROS 2</span>
     </a>
   </div>
-  {% include "home/_fsf_c.html" %}
-  {% include "home/_fsf_electron.html" %}
-  {% include "home/_fsf_go.html" %}
-  {% include "home/_fsf_java.html" %}
-  {% include "home/_fsf_moos.html" %}
-  {% include "home/_fsf_node.html" %}
-  {% include "home/_fsf_pre-built.html" %}
-  {% include "home/_fsf_python.html" %}
-  {% include "home/_fsf_ros.html" %}
-  {% include "home/_fsf_ros2.html" %}
-  {% include "home/_fsf_ruby.html" %}
-  {% include "home/_fsf_rust.html" %}
+  {% with columns=layout_no_of_columns %}
+    {% include "home/_fsf_c.html" %}
+    {% include "home/_fsf_electron.html" %}
+    {% include "home/_fsf_flutter.html" %}
+    {% include "home/_fsf_go.html" %}
+    {% include "home/_fsf_java.html" %}
+    {% include "home/_fsf_moos.html" %}
+    {% include "home/_fsf_node.html" %}
+    {% include "home/_fsf_pre-built.html" %}
+    {% include "home/_fsf_python.html" %}
+    {% include "home/_fsf_ros.html" %}
+    {% include "home/_fsf_ros2.html" %}
+    {% include "home/_fsf_ruby.html" %}
+    {% include "home/_fsf_rust.html" %}
+  {% endwith %}
 </div>

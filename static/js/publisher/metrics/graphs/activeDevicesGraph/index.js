@@ -9,14 +9,14 @@ import {
   prepareLineData,
   prepareScales,
   prepareAnnotationsData,
-  prepareAxis
+  prepareAxis,
 } from "./dataProcessing";
 import {
   renderXAxis,
   renderYAxis,
   renderArea,
   renderLines,
-  renderAnnotations
+  renderAnnotations,
 } from "./rendering";
 import { tooltips } from "./tooltips";
 
@@ -25,7 +25,7 @@ class ActiveDevicesGraph {
    *
    * @param {string} holderSelector CSS selector for the element containing the graph
    * @param {object} rawData
-   * @param {string[]} rawdata.buckets The list of dates in the format YYYY-MM-DD
+   * @param {string[]} rawdata.buckets The list of dates in the format yyyy-MM-dd
    * @param {{name: string, values: number[]}[]} rawData.series The different series to show on the graph
    * @param {object} options
    * @param {boolean} options.area Whether to use graph areas
@@ -33,7 +33,7 @@ class ActiveDevicesGraph {
    * @param {string} options.graphType If 'channel' items will be sorted by risk
    * @param {string} options.defaultTrack The default track
    * @param {object} options.annotations Annotations series
-   * @param {string[]} options.annotations.buckets The list of date in the format YYYY-MM-DD
+   * @param {string[]} options.annotations.buckets The list of date in the format yyyy-MM-dd
    * @param {string} options.annotations.name The name of the series
    * @param {{date: string, display_date: string, display_name: string, name: string, values: number[]}} options.annotations.series
    */
@@ -50,7 +50,7 @@ class ActiveDevicesGraph {
         top: 20,
         right: 0,
         bottom: 30,
-        left: 50
+        left: 50,
       },
       options.margin || {}
     );
@@ -60,7 +60,7 @@ class ActiveDevicesGraph {
         top: 0,
         right: 0,
         bottom: 16,
-        left: 16
+        left: 16,
       },
       options.padding || {}
     );
@@ -89,16 +89,16 @@ class ActiveDevicesGraph {
 
     this.lines = line()
       .curve(curveMonotoneX)
-      .x(d => this.xScale(d.date))
-      .y(d => this.yScale(d.value));
+      .x((d) => this.xScale(d.date))
+      .y((d) => this.yScale(d.value));
 
     this.areas = area()
       .curve(curveMonotoneX)
-      .x(d => this.xScale(d.data.date))
-      .y0(d => this.yScale(d[0]))
-      .y1(d => this.yScale(d[1]));
+      .x((d) => this.xScale(d.data.date))
+      .y0((d) => this.yScale(d[0]))
+      .y1((d) => this.yScale(d[1]));
 
-    this.shortValue = number =>
+    this.shortValue = (number) =>
       number < 1000 ? number : format(".2s")(number);
 
     this._prepareSVG();
@@ -112,10 +112,7 @@ class ActiveDevicesGraph {
 
     const resize = debounce(() => {
       if (this.hasRendered) {
-        this._prepareSVG()
-          ._prepareData()
-          .render()
-          .enableTooltip();
+        this._prepareSVG()._prepareData().render().enableTooltip();
       }
     }, 100);
 
@@ -167,7 +164,7 @@ class ActiveDevicesGraph {
   /**
    *
    * @param {object} data
-   * @param {string[]} data.buckets The list of dates in the format YYYY-MM-DD
+   * @param {string[]} data.buckets The list of dates in the format yyyy-MM-dd
    * @param {{name: string, values: number[]}[]} data.series The different series to show on the graph
    * @returns {ActiveDevicesGraph}
    */

@@ -1,14 +1,9 @@
 @mixin snapcraft-distro-chart {
 
   $bar-color: #084081;
+  $color-transparent-white: rgba(255, 255, 255, 0);
 
   .snapcraft-distro-chart {
-
-    @media screen and (min-width: $breakpoint-medium) {
-      max-height: 80vh;
-      overflow: auto;
-    }
-
     &__names,
     &__bars {
       display: block;
@@ -28,7 +23,7 @@
     }
 
     &__name {
-      font-size: .75rem;
+      font-size: 0.75rem;
       line-height: 1rem;
       margin-top: 1px;
       overflow: hidden;
@@ -42,7 +37,16 @@
       clear: left;
       float: left;
       height: 1px;
-      margin: .53125rem 0 .46875rem;
+      margin: 0.53125rem 0 0.46875rem;
+    }
+
+    &__more {
+      background: linear-gradient($color-transparent-white, $color-x-light 80%);
+      bottom: 0;
+      height: 68px;
+      padding-top: 3rem;
+      position: absolute;
+      width: 100%;
     }
   }
 }

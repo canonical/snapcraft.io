@@ -3,12 +3,12 @@
 
 // Production steps of ECMA-262, Edition 6, 22.1.2.1
 if (!Array.from) {
-  Array.from = (function() {
+  Array.from = (function () {
     var toStr = Object.prototype.toString;
-    var isCallable = function(fn) {
+    var isCallable = function (fn) {
       return typeof fn === "function" || toStr.call(fn) === "[object Function]";
     };
-    var toInteger = function(value) {
+    var toInteger = function (value) {
       var number = Number(value);
       if (isNaN(number)) {
         return 0;
@@ -19,7 +19,7 @@ if (!Array.from) {
       return (number > 0 ? 1 : -1) * Math.floor(Math.abs(number));
     };
     var maxSafeInteger = Math.pow(2, 53) - 1;
-    var toLength = function(value) {
+    var toLength = function (value) {
       var len = toInteger(value);
       return Math.min(Math.max(len, 0), maxSafeInteger);
     };
@@ -97,7 +97,7 @@ if (!Array.from) {
 // https://tc39.github.io/ecma262/#sec-array.prototype.includes
 if (!Array.prototype.includes) {
   Object.defineProperty(Array.prototype, "includes", {
-    value: function(searchElement, fromIndex) {
+    value: function (searchElement, fromIndex) {
       if (this == null) {
         throw new TypeError('"this" is null or not defined');
       }
@@ -147,14 +147,14 @@ if (!Array.prototype.includes) {
 
       // 8. Return false
       return false;
-    }
+    },
   });
 }
 
 // String.contains
 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/includes
 if (!String.prototype.includes) {
-  String.prototype.includes = function(search, start) {
+  String.prototype.includes = function (search, start) {
     "use strict";
     if (typeof start !== "number") {
       start = 0;
@@ -178,7 +178,7 @@ if (!Element.prototype.matches) {
 }
 
 if (!Element.prototype.closest) {
-  Element.prototype.closest = function(s) {
+  Element.prototype.closest = function (s) {
     var el = this;
     if (!document.documentElement.contains(el)) return null;
     do {
@@ -227,14 +227,14 @@ if (typeof Object.assign != "function") {
       return to;
     },
     writable: true,
-    configurable: true
+    configurable: true,
   });
 }
 
 // Array.some
 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/some
 if (!Array.prototype.some) {
-  Array.prototype.some = function(fun, thisArg) {
+  Array.prototype.some = function (fun, thisArg) {
     "use strict";
 
     if (this == null) {

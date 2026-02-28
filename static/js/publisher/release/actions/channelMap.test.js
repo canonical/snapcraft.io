@@ -9,19 +9,19 @@ import {
   toggleRevision,
   clearSelectedRevisions,
   releaseRevisionSuccess,
-  closeChannelSuccess
+  closeChannelSuccess,
 } from "./channelMap";
 
 describe("channelMap actions", () => {
   const channelMap = {
     "latest/beta": {
-      test: {}
-    }
+      test: {},
+    },
   };
 
   const revision = {
     revision: 1,
-    version: "1"
+    version: "1",
   };
 
   const channel = "test/edge";

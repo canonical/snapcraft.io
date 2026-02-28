@@ -8,7 +8,7 @@ import {
   CLOSE_BRANCHES,
   openBranches,
   closeBranches,
-  toggleBranches
+  toggleBranches,
 } from "./branches";
 
 describe("branches actions", () => {
@@ -29,7 +29,7 @@ describe("branches actions", () => {
   describe("toggleBranches", () => {
     it("should create an OPEN_BRANCHES action if the branch isn't in the branches list", () => {
       const store = mockStore({
-        branches: []
+        branches: [],
       });
 
       store.dispatch(toggleBranches("test"));
@@ -40,7 +40,7 @@ describe("branches actions", () => {
     });
     it("should create a CLOSE_BRANCHES action if the branch is in the branches list", () => {
       const store = mockStore({
-        branches: ["test"]
+        branches: ["test"],
       });
 
       store.dispatch(toggleBranches("test"));

@@ -34,8 +34,11 @@
     display: none;
 
     .is-error & {
-      color: $color-negative;
       display: block;
     }
+  }
+
+  .p-text-optional {
+    color: $color-mid-dark;
   }
 }

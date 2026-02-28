@@ -57,4 +57,4 @@ class GetReleasesHistoryJson(BaseTestCases.EndpointLoggedIn):
         response = self.client.get(self.endpoint_url)
 
         self.check_call_by_api_url(responses.calls)
-        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.status_code, 502)

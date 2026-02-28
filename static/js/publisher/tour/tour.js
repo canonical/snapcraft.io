@@ -10,17 +10,14 @@ export default function Tour({
   steps,
   onTourStarted,
   onTourClosed,
-  startTour = false
+  startTour = false,
 }) {
   // send metrics event if tour started automatically
-  useEffect(
-    () => {
-      if (startTour) {
-        tourStartedAutomatically();
-      }
-    },
-    [startTour]
-  );
+  useEffect(() => {
+    if (startTour) {
+      tourStartedAutomatically();
+    }
+  }, [startTour]);
 
   const [isTourOpen, setIsTourOpen] = useState(startTour);
 
@@ -28,17 +25,14 @@ export default function Tour({
   const hideTour = () => setIsTourOpen(false);
 
   // trigger callbacks when tour is started or finished
-  useEffect(
-    () => {
-      if (isTourOpen && onTourStarted) {
-        onTourStarted();
-      }
-      if (!isTourOpen && onTourClosed) {
-        onTourClosed();
-      }
-    },
-    [isTourOpen]
-  );
+  useEffect(() => {
+    if (isTourOpen && onTourStarted) {
+      onTourStarted();
+    }
+    if (!isTourOpen && onTourClosed) {
+      onTourClosed();
+    }
+  }, [isTourOpen]);
 
   return (
     <Fragment>
@@ -53,5 +47,5 @@ Tour.propTypes = {
   steps: PropTypes.array.isRequired,
   startTour: PropTypes.bool,
   onTourStarted: PropTypes.func,
-  onTourClosed: PropTypes.func
+  onTourClosed: PropTypes.func,
 };

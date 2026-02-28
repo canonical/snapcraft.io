@@ -100,5 +100,5 @@ export {
   cullYAxis,
   formatAxis,
   formatXAxisTickLabels,
-  formatYAxisTickLabels
+  formatYAxisTickLabels,
 };

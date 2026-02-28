@@ -1,4 +1,11 @@
 name: test-xsv-{name}
+linux:
+  - action: "Install the snap:"
+    command: sudo snap install --devmode --dangerous *.snap
+  - action: "List your installed snaps to confirm:"
+    command: snap list
+  - action: "Run the snap:"
+    command: ${name} -h
 macos:
   - action: "Create a Linux virtual machine for testing snaps:"
     command: multipass launch -n testvm

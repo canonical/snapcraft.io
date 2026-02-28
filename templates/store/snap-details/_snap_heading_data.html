@@ -1,14 +1,32 @@
 {% if icon_url %}
-  <img class="p-snap-heading__icon" src="{{ icon_url }}" alt="{{ snap_title }} snap" data-live="icon" />
+  {{
+    image(
+      url=icon_url,
+      alt=snap_title,
+      width=60,
+      height=60,
+      hi_def=True,
+      loading="eager",
+      attrs={"class": "p-snap-heading__icon", "data-live": "icon"}
+    ) | safe
+  }}
 {% else %}
   <img class="p-snap-heading__icon" src="https://assets.ubuntu.com/v1/be6eb412-snapcraft-missing-icon.svg" alt="" data-live="icon" />
 {% endif %}
 <div class="p-snap-heading__title">
-  <h1 class="p-heading--two p-snap-heading__name" data-live="title">{{ snap_title }}</h1>
+  <h1 class="p-heading--2 p-snap-heading__name" data-live="title">{{ snap_title }}</h1>
   <div class="u-hide u-show--small">
+    {% if developer %}
+    {% include 'store/_snap-header-developer-information.html' %}
+    {% endif %}
     {% include 'store/_snap-header-information.html' %}
   </div>
   <ul class="p-inline-list--middot">
+    {% if developer %}
+      <li class="p-inline-list__item u-hide--small">
+        {% include 'store/_snap-header-developer-information.html' %}
+      </li>
+    {% endif %}
     <li class="p-inline-list__item u-hide--small">
       {% include 'store/_snap-header-information.html' %}
     </li>

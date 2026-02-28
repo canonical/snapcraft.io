@@ -87,7 +87,7 @@ MediaList.propTypes = {
   mediaData: PropTypes.array,
   restrictions: PropTypes.object,
   mediaChanged: PropTypes.func,
-  markForDeletion: PropTypes.func
+  markForDeletion: PropTypes.func,
 };
 
 export default SortableContainer(MediaList);

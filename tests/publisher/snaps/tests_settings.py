@@ -1,5 +1,10 @@
+import os
+
 import responses
 from tests.publisher.endpoint_testing import BaseTestCases
+
+
+LP_API_USERNAME = os.getenv("LP_API_USERNAME")
 
 
 class SettingsPageNotAuth(BaseTestCases.EndpointLoggedOut):
@@ -52,9 +57,30 @@ class GetSettingsPage(BaseTestCases.EndpointLoggedInErrorHandling):
             "store": "stotore",
             "keywords": [],
             "status": "published",
+            "publisher": {"display-name": "test"},
+            "update_metadata_on_release": True,
         }
 
         responses.add(responses.GET, self.api_url, json=payload, status=200)
+
+        launchpad_url = "".join(
+            [
+                "https://api.launchpad.net",
+                "/devel/+snaps?ws.op=findByStoreName",
+                f"&owner=%2F~{LP_API_USERNAME}",
+                "&store_name=",
+                f'"{snap_name}"',
+            ]
+        )
+
+        launchpad_payload = {"snaps": [{"store_name": snap_name}]}
+
+        responses.add(
+            responses.GET,
+            launchpad_url,
+            json=launchpad_payload,
+            status=200,
+        )
 
         response = self.client.get(self.endpoint_url)
 
@@ -71,3 +97,4 @@ class GetSettingsPage(BaseTestCases.EndpointLoggedInErrorHandling):
         self.assert_context("store", "stotore")
         self.assert_context("keywords", [])
         self.assert_context("status", "published")
+        self.assert_context("update_metadata_on_release", True)

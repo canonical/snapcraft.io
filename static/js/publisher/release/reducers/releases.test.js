@@ -10,8 +10,8 @@ describe("releases", () => {
     let updateReleasesAction = {
       type: UPDATE_RELEASES,
       payload: {
-        releases: [{ revision: 1 }, { revision: 2 }, { revision: 3 }]
-      }
+        releases: [{ revision: 1 }, { revision: 2 }, { revision: 3 }],
+      },
     };
 
     it("should add new releases to state", () => {

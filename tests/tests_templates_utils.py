@@ -74,14 +74,6 @@ class TemplateUtilsTest(unittest.TestCase):
         )
         self.assertTrue(result, "sudo snap install skype --classic")
 
-    def test_install_snippet_with_classic_and_default_track(self):
-        result = template_utils.install_snippet(
-            "node", "10", "stable", "classic"
-        )
-        self.assertTrue(
-            result, "sudo snap install node --channel=10/stable --classic"
-        )
-
     def test_install_snippet_with_non_stable_risk_level(self):
         result = template_utils.install_snippet("test", "latest", "edge", "")
         self.assertTrue(result, "sudo snap install test --edge")
@@ -104,3 +96,22 @@ class TemplateUtilsTest(unittest.TestCase):
     def test_static_url(self):
         result = template_utils.static_url("images/rocket.png")
         self.assertEqual(result, "/static/images/rocket.png?v=7d7c26f")
+
+    def test_format_date(self):
+        result = template_utils.format_date(
+            "2019-09-02T09:27:58.930567+00:00", "%d %B %Y"
+        )
+        self.assertEquals(result, "02 September 2019")
+
+    def test_format_member_role(self):
+        result = template_utils.format_member_role("admin")
+        self.assertEquals(result, "admin")
+
+        result = template_utils.format_member_role("review")
+        self.assertEquals(result, "reviewer")
+
+        result = template_utils.format_member_role("view")
+        self.assertEquals(result, "viewer")
+
+        result = template_utils.format_member_role("access")
+        self.assertEquals(result, "publisher")

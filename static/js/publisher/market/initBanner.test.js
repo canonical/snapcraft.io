@@ -16,7 +16,7 @@ describe("initBanner", () => {
   });
 
   it("should throw if there is no bannerHolderEl", () => {
-    expect(function() {
+    expect(function () {
       initBanner(".testing-it");
     }).toThrow();
   });
@@ -35,8 +35,8 @@ describe("initBanner", () => {
         {
           url: "/banner_123123.png",
           type: "banner",
-          status: "uploaded"
-        }
+          status: "uploaded",
+        },
       ],
       () => {}
     );

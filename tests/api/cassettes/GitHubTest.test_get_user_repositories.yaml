@@ -1,0 +1,151 @@
+interactions:
+- request:
+    body: '{"query": "{\n              viewer {\n                repositories(\n                    first:
+      100,\n                    privacy: PUBLIC,\n                    ownerAffiliations:
+      [OWNER],\n                \n                ) {\n              edges {\n                node
+      {\n                  name\n                }\n              }\n              pageInfo
+      {\n                hasNextPage\n                endCursor\n              }\n            }\n          }\n        }"}'
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '473'
+      Content-Type:
+      - application/json
+      User-Agent:
+      - storefront (516d523a5dba207e721d0f8e56d031af100ce611;devel)
+    method: POST
+    uri: https://api.github.com/graphql
+  response:
+    body:
+      string: !!binary |
+        H4sIAAAAAAAAA3WPPwvCMBDFv8vNWWx1sNBBdLAIxkko4nCYa41oEpL4J4Z+d5Pd3HLv3g8e7yII
+        9AhNhJekN9msLBntpNdWkss3iTGLUwSlBWVH4SNt8OT8DKaJ/SVVkdRFMi+SRSJnBgZH6tSgc4sr
+        uj19/CFZ0Ax4d8SAlFg/rdPpEejrY7hUy8BVH7jZ8s1t131XbZuS0vwAWZ+8kvoAAAA=
+    headers:
+      Access-Control-Allow-Origin:
+      - '*'
+      Access-Control-Expose-Headers:
+      - ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining,
+        X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval,
+        X-GitHub-Media-Type
+      Cache-Control:
+      - no-cache
+      Content-Encoding:
+      - gzip
+      Content-Security-Policy:
+      - default-src 'none'
+      Content-Type:
+      - application/json; charset=utf-8
+      Date:
+      - Mon, 17 Feb 2020 13:33:31 GMT
+      Referrer-Policy:
+      - origin-when-cross-origin, strict-origin-when-cross-origin
+      Server:
+      - GitHub.com
+      Status:
+      - 200 OK
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubdomains; preload
+      Transfer-Encoding:
+      - chunked
+      Vary:
+      - Accept-Encoding, Accept, X-Requested-With
+      X-Accepted-OAuth-Scopes:
+      - repo
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - deny
+      X-GitHub-Media-Type:
+      - github.v4
+      X-GitHub-Request-Id:
+      - AA88:D864:762CC31:8C7B0A0:5E4A962A
+      X-OAuth-Client-Id:
+      - cdeb3a60fecee4208395
+      X-OAuth-Scopes:
+      - read:org, repo
+      X-RateLimit-Limit:
+      - '5000'
+      X-RateLimit-Remaining:
+      - '4998'
+      X-RateLimit-Reset:
+      - '1581950009'
+      X-XSS-Protection:
+      - 1; mode=block
+    status:
+      code: 200
+      message: OK
+- request:
+    body: '{"query": "{\n              viewer {\n                repositories(\n                    first:
+      100,\n                    privacy: PUBLIC,\n                    ownerAffiliations:
+      [OWNER],\n                \n                ) {\n              edges {\n                node
+      {\n                  name\n                }\n              }\n              pageInfo
+      {\n                hasNextPage\n                endCursor\n              }\n            }\n          }\n        }"}'
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '473'
+      Content-Type:
+      - application/json
+      User-Agent:
+      - storefront (516d523a5dba207e721d0f8e56d031af100ce611;devel)
+    method: POST
+    uri: https://api.github.com/graphql
+  response:
+    body:
+      string: '{"message":"Bad credentials","documentation_url":"https://developer.github.com/v4"}'
+    headers:
+      Access-Control-Allow-Origin:
+      - '*'
+      Access-Control-Expose-Headers:
+      - ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining,
+        X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval,
+        X-GitHub-Media-Type
+      Content-Length:
+      - '83'
+      Content-Security-Policy:
+      - default-src 'none'
+      Content-Type:
+      - application/json; charset=utf-8
+      Date:
+      - Mon, 17 Feb 2020 13:33:31 GMT
+      Referrer-Policy:
+      - origin-when-cross-origin, strict-origin-when-cross-origin
+      Server:
+      - GitHub.com
+      Status:
+      - 401 Unauthorized
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubdomains; preload
+      Vary:
+      - Accept-Encoding, Accept, X-Requested-With
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - deny
+      X-GitHub-Media-Type:
+      - github.v4
+      X-GitHub-Request-Id:
+      - AA88:D864:762CD9B:8C7B1F5:5E4A962B
+      X-RateLimit-Limit:
+      - '0'
+      X-RateLimit-Remaining:
+      - '0'
+      X-RateLimit-Reset:
+      - '1581950011'
+      X-XSS-Protection:
+      - 1; mode=block
+    status:
+      code: 401
+      message: Unauthorized
+version: 1

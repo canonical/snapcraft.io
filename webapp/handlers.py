@@ -2,10 +2,13 @@ import socket
 from urllib.parse import unquote, urlparse, urlunparse
 
 import flask
-
 import prometheus_client
+import user_agents
 import webapp.template_utils as template_utils
+from canonicalwebteam import image_template
 from webapp import authentication
+
+from datetime import datetime
 
 badge_counter = prometheus_client.Counter(
     "badge_counter", "A counter of badges requests"
@@ -14,6 +17,12 @@ badge_counter = prometheus_client.Counter(
 badge_logged_in_counter = prometheus_client.Counter(
     "badge_logged_in_counter",
     "A counter of badges requests of logged in users",
+)
+
+accept_encoding_counter = prometheus_client.Counter(
+    "accept_encoding_counter",
+    "A counter for Accept-Encoding headers, split by browser",
+    ["accept_encoding", "browser_family"],
 )
 
 
@@ -27,9 +36,15 @@ def set_handlers(app):
         """
 
         if authentication.is_authenticated(flask.session):
-            user_name = flask.session["openid"]["fullname"]
+            user_name = flask.session["publisher"]["fullname"]
+            user_is_canonical = flask.session["publisher"].get(
+                "is_canonical", False
+            )
+            stores = flask.session["publisher"].get("stores")
         else:
             user_name = None
+            user_is_canonical = False
+            stores = []
 
         page_slug = template_utils.generate_slug(flask.request.path)
 
@@ -41,7 +56,7 @@ def set_handlers(app):
         return {
             # Variables
             "LOGIN_URL": app.config["LOGIN_URL"],
-            "SENTRY_PUBLIC_DSN": app.config["SENTRY_PUBLIC_DSN"],
+            "SENTRY_DSN": app.config["SENTRY_DSN"],
             "COMMIT_ID": app.config["COMMIT_ID"],
             "ENVIRONMENT": app.config["ENVIRONMENT"],
             "host_url": flask.request.host_url,
@@ -52,6 +67,8 @@ def set_handlers(app):
             "webapp_config": app.config["WEBAPP_CONFIG"],
             "BSI_URL": app.config["BSI_URL"],
             "IS_BRAND_STORE": is_brand_store,
+            "now": datetime.now(),
+            "user_is_canonical": user_is_canonical,
             # Functions
             "contains": template_utils.contains,
             "join": template_utils.join,
@@ -59,19 +76,14 @@ def set_handlers(app):
             "format_number": template_utils.format_number,
             "display_name": template_utils.display_name,
             "install_snippet": template_utils.install_snippet,
+            "format_date": template_utils.format_date,
+            "format_member_role": template_utils.format_member_role,
+            "image": image_template,
+            "stores": stores,
         }
 
     # Error handlers
     # ===
-    @app.errorhandler(404)
-    def page_not_found(error):
-        """
-        For 404 pages, display the 404.html template,
-        passing through the error description.
-        """
-
-        return flask.render_template("404.html", error=error.description), 404
-
     @app.errorhandler(500)
     @app.errorhandler(501)
     @app.errorhandler(502)
@@ -112,6 +124,23 @@ def set_handlers(app):
 
     @app.before_request
     def prometheus_metrics():
+        # Accept-encoding counter
+        # ===
+        agent_string = flask.request.headers.get("User-Agent")
+
+        # Exclude probes, which happen behind the cache
+        if agent_string and not agent_string.startswith(
+            ("kube-probe", "Prometheus")
+        ):
+            agent = user_agents.parse(agent_string or "")
+
+            accept_encoding_counter.labels(
+                accept_encoding=flask.request.headers.get("Accept-Encoding"),
+                browser_family=agent.browser.family,
+            ).inc()
+
+        # Badge counters
+        # ===
         if "/static/images/badges" in flask.request.url:
             if flask.session:
                 badge_logged_in_counter.inc()

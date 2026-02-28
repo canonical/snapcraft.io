@@ -1,5 +1,5 @@
 import React from "react";
-import { render, fireEvent, cleanup } from "react-testing-library";
+import { render, fireEvent, cleanup } from "@testing-library/react";
 
 import Tour from "./tour";
 
@@ -13,8 +13,8 @@ jest.mock("./tourOverlay", () => jest.fn().mockReturnValue(null));
 describe("Tour", () => {
   const steps = [
     {
-      id: "test-step"
-    }
+      id: "test-step",
+    },
   ];
 
   afterEach(cleanup);
@@ -37,7 +37,7 @@ describe("Tour", () => {
 
       expect(TourOverlay).toBeCalledWith(
         expect.objectContaining({
-          steps
+          steps,
         }),
         expect.any(Object)
       );
@@ -50,7 +50,7 @@ describe("Tour", () => {
 
       expect(TourOverlay).toBeCalledWith(
         expect.objectContaining({
-          steps
+          steps,
         }),
         expect.any(Object)
       );

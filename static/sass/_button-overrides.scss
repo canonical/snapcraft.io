@@ -1,10 +1,27 @@
 @mixin button-overrides {
+  .p-button--outline {
+    @extend %vf-button-base;
+
+    border-color: $color-x-light;
+    color: $color-x-light;
+
+    &:visited {
+      color: $color-x-light;
+    }
+
+    &:hover,
+    &:active:hover {
+      background-color: rgba($color-mid-x-light, 0.2);
+    }
+  }
+
   .is-inline--right {
     margin-right: $sp-medium;
   }
 
   .p-icon--github {
     @extend %icon;
+
     background-image: url('#{$assets-path}61d83c7e-icon-github.svg');
   }
 
@@ -22,7 +39,7 @@
       margin-top: 0;
 
       &:hover {
-        background-color: transparentize($color-x-light, .8);
+        background-color: transparentize($color-x-light, 0.8);
       }
     }
   }

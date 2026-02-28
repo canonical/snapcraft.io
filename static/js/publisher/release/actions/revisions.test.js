@@ -5,7 +5,7 @@ describe("revisions actions", () => {
     let revisions = {
       1: { revision: 1 },
       2: { revision: 2 },
-      3: { revision: 3, channels: ["stable"] }
+      3: { revision: 3, channels: ["stable"] },
     };
 
     it("should create an action to update revisions list", () => {

@@ -4,9 +4,9 @@ from io import StringIO
 
 import flask
 from webapp import helpers
-from webapp.first_snap import logic
 
 YAML_KEY_REGEXP = re.compile(r"([^\s:]*)(:.*)")
+FSF_FLOW = "first-snap"
 
 
 first_snap = flask.Blueprint(
@@ -55,7 +55,7 @@ def get_language(language):
     if not directory_exists(filename):
         return flask.abort(404)
 
-    context = {"language": language}
+    context = {"language": language, "fsf_flow": FSF_FLOW}
     return flask.render_template(
         "first-snap/install-snapcraft.html", **context
     )
@@ -105,8 +105,8 @@ def get_package(language, operating_system):
     snap_name = steps["name"]
     has_user_chosen_name = False
 
-    if flask.session.get("openid"):
-        user_name = flask.session["openid"]["nickname"]
+    if "publisher" in flask.session:
+        user_name = flask.session["publisher"]["nickname"]
         snap_name = snap_name.replace("{name}", user_name)
 
     if snap_name_cookie in flask.request.cookies:
@@ -119,6 +119,7 @@ def get_package(language, operating_system):
         "steps": steps,
         "snap_name": snap_name,
         "has_user_chosen_name": has_user_chosen_name,
+        "fsf_flow": FSF_FLOW,
     }
 
     snapcraft_yaml = helpers.get_yaml(
@@ -134,11 +135,13 @@ def get_package(language, operating_system):
         return flask.abort(404)
 
 
-@first_snap.route("/<language>/<operating_system>/build")
+@first_snap.route("/<language>/<operating_system>/build-and-test")
 def get_build(language, operating_system):
-    filename = f"first_snap/content/{language}/build.yaml"
+    build_filename = f"first_snap/content/{language}/build.yaml"
+    test_filename = f"first_snap/content/{language}/test.yaml"
     snap_name_cookie = f"fsf_snap_name_{language}"
-    steps = helpers.get_yaml(filename, typ="rt")
+    build_steps = helpers.get_yaml(build_filename, typ="rt")
+    test_steps = helpers.get_yaml(test_filename, typ="rt")
     operating_system_parts = operating_system.split("-")
 
     operating_system_only = operating_system_parts[0]
@@ -149,16 +152,19 @@ def get_build(language, operating_system):
     )
 
     if (
-        (not steps)
-        or (operating_system_only not in steps)
-        or (install_type not in steps[operating_system_only])
+        (not (build_steps and test_steps))
+        or (
+            (operating_system_only not in build_steps)
+            and (operating_system_only not in test_steps)
+        )
+        or (install_type not in build_steps[operating_system_only])
     ):
         return flask.abort(404)
 
-    snap_name = steps["name"]
+    snap_name = build_steps["name"]
 
-    if flask.session.get("openid"):
-        user_name = flask.session["openid"]["nickname"]
+    if "publisher" in flask.session:
+        user_name = flask.session["publisher"]["nickname"]
         snap_name = snap_name.replace("{name}", user_name)
 
     if snap_name_cookie in flask.request.cookies:
@@ -167,57 +173,22 @@ def get_build(language, operating_system):
     context = {
         "language": language,
         "os": operating_system,
-        "steps": steps[operating_system_only][install_type],
+        "build_steps": build_steps[operating_system_only][install_type],
+        "test_steps": test_steps[operating_system_only],
         "snap_name": snap_name,
+        "fsf_flow": FSF_FLOW,
     }
 
-    return flask.render_template("first-snap/build.html", **context)
-
-
-@first_snap.route("/<language>/<operating_system>/test")
-def get_test(language, operating_system):
-    filename = f"first_snap/content/{language}/test.yaml"
-    snap_name_cookie = f"fsf_snap_name_{language}"
-    steps = helpers.get_yaml(filename, typ="rt")
-
-    operating_system_only = operating_system.split("-")[0]
-
-    if not steps or operating_system_only not in steps:
-        return flask.abort(404)
-
-    snap_name = steps["name"]
-
-    if flask.session.get("openid"):
-        user_name = flask.session["openid"]["nickname"]
-        snap_name = snap_name.replace("{name}", user_name)
-
-    if snap_name_cookie in flask.request.cookies:
-        snap_name = flask.request.cookies.get(snap_name_cookie)
-
-    converted_steps = []
-
-    for step in steps[operating_system_only]:
-        action = logic.convert_md(step["action"])
-        converted_steps.append(
-            {
-                "action": action,
-                "warning": step["warning"] if "warning" in step else None,
-                "command": step["command"] if "command" in step else None,
-            }
-        )
-
-    context = {
-        "language": language,
-        "os": operating_system,
-        "steps": converted_steps,
-        "snap_name": snap_name,
-    }
-
-    return flask.render_template("first-snap/test.html", **context)
+    return flask.render_template("first-snap/build-and-test.html", **context)
 
 
 @first_snap.route("/<language>/<operating_system>/push")
 def get_push(language, operating_system):
+    return flask.redirect(f"/first-snap/{language}/{operating_system}/upload")
+
+
+@first_snap.route("/<language>/<operating_system>/upload")
+def get_upload(language, operating_system):
     filename = f"first_snap/content/{language}/package.yaml"
     snap_name_cookie = f"fsf_snap_name_{language}"
 
@@ -229,15 +200,15 @@ def get_push(language, operating_system):
     snap_name = data["name"]
     has_user_chosen_name = False
 
-    if flask.session.get("openid"):
-        user_name = flask.session["openid"]["nickname"]
+    if "publisher" in flask.session:
+        user_name = flask.session["publisher"]["nickname"]
         snap_name = snap_name.replace("{name}", user_name)
 
     if snap_name_cookie in flask.request.cookies:
         snap_name = flask.request.cookies.get(snap_name_cookie)
         has_user_chosen_name = True
 
-    flask_user = flask.session.get("openid", {})
+    flask_user = flask.session.get("publisher", {})
 
     if "nickname" in flask_user:
         user = {
@@ -255,6 +226,7 @@ def get_push(language, operating_system):
         "user": user,
         "snap_name": snap_name,
         "has_user_chosen_name": has_user_chosen_name,
+        "fsf_flow": FSF_FLOW,
     }
 
-    return flask.render_template("first-snap/push.html", **context)
+    return flask.render_template("first-snap/upload.html", **context)

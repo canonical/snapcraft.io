@@ -1,5 +1,7 @@
 @mixin snapcraft-p-media-object--snap {
   .p-media-object--snap {
+    width: 100%;
+
     .p-media-object__details {
       overflow: hidden;
     }
@@ -12,25 +14,25 @@
     }
 
     .p-media-object__content {
-      margin-top: -.5rem;
+      margin-top: -0.5rem;
 
       p {
+        -webkit-box-orient: vertical;
         color: $color-mid-dark;
         display: -webkit-box;
-        text-decoration: none;
+        -webkit-line-clamp: 2;
         max-height: 3.4rem;
         overflow: hidden;
-        -webkit-line-clamp: 2;
-        -webkit-box-orient: vertical;
+        text-decoration: none;
       }
 
       p + p {
+        -webkit-box-orient: vertical;
         color: $color-dark;
         display: -webkit-box;
+        -webkit-line-clamp: 2;
         max-height: 3.4rem;
         overflow: hidden;
-        -webkit-line-clamp: 2;
-        -webkit-box-orient: vertical;
       }
     }
 
@@ -71,8 +73,8 @@
       .p-media-object__content {
         p {
           color: transparent;
-          position: relative;
           display: -webkit-box;
+          position: relative;
 
           &::before {
             background: $color-mid-light;

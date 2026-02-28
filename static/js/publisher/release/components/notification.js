@@ -17,7 +17,7 @@ class Notification extends Component {
       appearance,
       canDismiss,
       hideNotification,
-      children
+      children,
     } = this.props;
     const className = notificationStyle("", appearance);
 
@@ -53,11 +53,11 @@ Notification.propTypes = {
     "positive",
     "caution",
     "negative",
-    "information"
+    "information",
   ]),
   status: PropTypes.string,
   canDismiss: PropTypes.bool,
-  hideNotification: PropTypes.func
+  hideNotification: PropTypes.func,
 };
 
 export default Notification;

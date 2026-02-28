@@ -1,7 +1,7 @@
 import { CLOSE_CHANNEL } from "../actions/pendingCloses";
 import {
   RELEASE_REVISION,
-  CANCEL_PENDING_RELEASES
+  CANCEL_PENDING_RELEASES,
 } from "../actions/pendingReleases";
 
 // channels to be closed:

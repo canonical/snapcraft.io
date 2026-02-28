@@ -2,7 +2,6 @@ import os
 
 import requests
 
-import requests_cache
 from pybreaker import CircuitBreaker, CircuitBreakerError
 from webapp.api.exceptions import (
     ApiCircuitBreaker,
@@ -11,27 +10,14 @@ from webapp.api.exceptions import (
 )
 
 
-class TimeoutHTTPAdapter(requests.adapters.HTTPAdapter):
-    def __init__(self, timeout=None, *args, **kwargs):
-        self.timeout = timeout
-        super().__init__(*args, **kwargs)
-
-    def send(self, *args, **kwargs):
-        kwargs["timeout"] = self.timeout
-        return super().send(*args, **kwargs)
-
-
 class BaseSession:
     """A base session interface to implement common functionality
 
     Create an interface to manage exceptions and return API exceptions
     """
 
-    def __init__(self, timeout=(0.5, 3), *args, **kwargs):
+    def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-
-        self.mount("http://", TimeoutHTTPAdapter(timeout=timeout))
-        self.mount("https://", TimeoutHTTPAdapter(timeout=timeout))
 
         # TODO allow user to choose it's own user agent
         storefront_header = "storefront ({commit_hash};{environment})".format(
@@ -43,10 +29,14 @@ class BaseSession:
         self.headers.update(headers)
         self.api_breaker = CircuitBreaker(fail_max=5, reset_timeout=60)
 
-    def request(self, method, url, **kwargs):
+    def request(self, method, url, timeout=12, **kwargs):
         try:
             request = self.api_breaker.call(
-                super().request, method=method, url=url, **kwargs
+                super().request,
+                method=method,
+                url=url,
+                timeout=timeout,
+                **kwargs
             )
         except requests.exceptions.Timeout:
             raise ApiTimeoutError(
@@ -58,7 +48,9 @@ class BaseSession:
             )
         except CircuitBreakerError:
             raise ApiCircuitBreaker(
-                "Requests are closed because of too many failures".format(url)
+                "Requests are closed because of too many failures {}".format(
+                    url
+                )
             )
 
         return request
@@ -68,17 +60,6 @@ class Session(BaseSession, requests.Session):
     pass
 
 
-class CachedSession(BaseSession, requests_cache.CachedSession):
-    def __init__(self, *args, **kwargs):
-        # Set cache defaults
-        options = {
-            "backend": "sqlite",
-            "expire_after": 5,
-            # Include headers in cache key
-            "include_get_headers": True,
-            "old_data_on_error": True,
-        }
-
-        options.update(kwargs)
-
-        super().__init__(*args, **options)
+class PublisherSession(BaseSession, requests.Session):
+    def request(self, method, url, timeout=None, **kwargs):
+        return super().request(method, url, timeout, **kwargs)

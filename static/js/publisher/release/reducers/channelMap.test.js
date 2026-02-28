@@ -4,7 +4,7 @@ import {
   SELECT_REVISION,
   CLEAR_SELECTED_REVISIONS,
   RELEASE_REVISION_SUCCESS,
-  CLOSE_CHANNEL_SUCCESS
+  CLOSE_CHANNEL_SUCCESS,
 } from "../actions/channelMap";
 import { AVAILABLE } from "../constants";
 
@@ -19,10 +19,10 @@ describe("channelMap", () => {
       payload: {
         channelMap: {
           "latest/beta": {
-            test: {}
-          }
-        }
-      }
+            test: {},
+          },
+        },
+      },
     };
 
     it("should initialize data with given channel map", () => {
@@ -34,8 +34,8 @@ describe("channelMap", () => {
     it("should replace existing channel map in state", () => {
       const initialState = {
         "test/edge": {
-          abc42: {}
-        }
+          abc42: {},
+        },
       };
 
       const result = channelMap(initialState, initChannelMapAction);
@@ -48,12 +48,12 @@ describe("channelMap", () => {
     const revision = {
       revision: 1,
       version: "1",
-      architectures: ["abc42"]
+      architectures: ["abc42"],
     };
 
     const selectRevisionAction = {
       type: SELECT_REVISION,
-      payload: { revision }
+      payload: { revision },
     };
 
     describe("when revision is not yet selected", () => {
@@ -67,8 +67,8 @@ describe("channelMap", () => {
     describe("when revision is already selected", () => {
       const stateWithSelectedRevision = {
         [AVAILABLE]: {
-          abc42: { revision: 2 }
-        }
+          abc42: { revision: 2 },
+        },
       };
 
       it("should update selected revision", () => {
@@ -86,8 +86,8 @@ describe("channelMap", () => {
         ...selectRevisionAction,
         payload: {
           revision,
-          toggle: true
-        }
+          toggle: true,
+        },
       };
 
       describe("when revision is not yet selected", () => {
@@ -101,8 +101,8 @@ describe("channelMap", () => {
       describe("when revision is already selected", () => {
         const stateWithSelectedRevision = {
           [AVAILABLE]: {
-            abc42: revision
-          }
+            abc42: revision,
+          },
         };
 
         it("should remove selected revision from AVAILABLE channel", () => {
@@ -121,17 +121,17 @@ describe("channelMap", () => {
     const revision = {
       revision: 1,
       version: "1",
-      architectures: ["abc42"]
+      architectures: ["abc42"],
     };
 
     const stateWithSelectedRevision = {
       [AVAILABLE]: {
-        abc42: revision
-      }
+        abc42: revision,
+      },
     };
 
     const clearSelectedAction = {
-      type: CLEAR_SELECTED_REVISIONS
+      type: CLEAR_SELECTED_REVISIONS,
     };
 
     it("should remove all selected revisions from AVAILABLE 'channel'", () => {
@@ -145,14 +145,14 @@ describe("channelMap", () => {
     const revision = {
       revision: 1,
       version: "1",
-      architectures: ["abc42", "test64"]
+      architectures: ["abc42", "test64"],
     };
 
     const channel = "test/edge";
 
     const releaseRevisionAction = {
       type: RELEASE_REVISION_SUCCESS,
-      payload: { revision, channel }
+      payload: { revision, channel },
     };
 
     describe("when revision is not yet released", () => {
@@ -167,8 +167,8 @@ describe("channelMap", () => {
     describe("when revision is already selected", () => {
       const stateWithReleasedRevision = {
         [channel]: {
-          abc42: { ...revision, isPreviouslyReleased: true }
-        }
+          abc42: { ...revision, isPreviouslyReleased: true },
+        },
       };
 
       it("should not update released revision if it has the same id", () => {
@@ -188,7 +188,7 @@ describe("channelMap", () => {
 
     let closeChannelAction = {
       type: CLOSE_CHANNEL_SUCCESS,
-      payload: { channel }
+      payload: { channel },
     };
 
     describe("when channel is already closed", () => {
@@ -205,14 +205,14 @@ describe("channelMap", () => {
       const revision = {
         revision: 1,
         version: "1",
-        architectures: ["abc42", "test64"]
+        architectures: ["abc42", "test64"],
       };
 
       const stateWithReleasedRevision = {
         [channel]: {
           abc42: { ...revision },
-          test64: { ...revision }
-        }
+          test64: { ...revision },
+        },
       };
 
       it("should remove channel from channel map", () => {

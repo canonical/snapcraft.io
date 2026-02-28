@@ -4,14 +4,14 @@ export const CLOSE_BRANCHES = "CLOSE_BRANCHES";
 export function openBranches(channelName) {
   return {
     type: OPEN_BRANCHES,
-    payload: channelName
+    payload: channelName,
   };
 }
 
 export function closeBranches(channelName) {
   return {
     type: CLOSE_BRANCHES,
-    payload: channelName
+    payload: channelName,
   };
 }
 

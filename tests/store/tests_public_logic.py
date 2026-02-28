@@ -22,6 +22,7 @@ class StoreLogicTest(unittest.TestCase):
                     "architecture": "arch",
                     "track": "track",
                     "risk": "risk",
+                    "released-at": "2019-01-12T16:48:41.821037+00:00",
                 },
                 "created-at": "2019-01-12T16:48:41.821037+00:00",
                 "confinement": "confinement",
@@ -36,7 +37,7 @@ class StoreLogicTest(unittest.TestCase):
                 "track": [
                     {
                         "channel": "channel",
-                        "created-at": "12 January 2019",
+                        "released-at": "12 January 2019",
                         "confinement": "confinement",
                         "size": "size",
                         "risk": "risk",
@@ -56,6 +57,7 @@ class StoreLogicTest(unittest.TestCase):
                     "architecture": "arch",
                     "track": "track",
                     "risk": "risk",
+                    "released-at": "2019-01-12T16:48:41.821037+00:00",
                 },
                 "created-at": "2019-01-12T16:48:41.821037+00:00",
                 "confinement": "confinement",
@@ -68,6 +70,7 @@ class StoreLogicTest(unittest.TestCase):
                     "architecture": "arch",
                     "track": "track1",
                     "risk": "risk",
+                    "released-at": "2019-01-12T16:48:41.821037+00:00",
                 },
                 "created-at": "2019-01-12T16:48:41.821037+00:00",
                 "confinement": "confinement",
@@ -81,7 +84,7 @@ class StoreLogicTest(unittest.TestCase):
                 "track": [
                     {
                         "channel": "channel",
-                        "created-at": "12 January 2019",
+                        "released-at": "12 January 2019",
                         "confinement": "confinement",
                         "size": "size",
                         "risk": "risk",
@@ -91,7 +94,7 @@ class StoreLogicTest(unittest.TestCase):
                 "track1": [
                     {
                         "channel": "channel",
-                        "created-at": "12 January 2019",
+                        "released-at": "12 January 2019",
                         "confinement": "confinement",
                         "size": "size",
                         "risk": "risk",
@@ -111,6 +114,7 @@ class StoreLogicTest(unittest.TestCase):
                     "architecture": "arch",
                     "track": "track",
                     "risk": "risk",
+                    "released-at": "2019-01-12T16:48:41.821037+00:00",
                 },
                 "created-at": "2019-01-12T16:48:41.821037+00:00",
                 "confinement": "confinement",
@@ -123,6 +127,7 @@ class StoreLogicTest(unittest.TestCase):
                     "architecture": "arch1",
                     "track": "track",
                     "risk": "risk",
+                    "released-at": "2019-01-12T16:48:41.821037+00:00",
                 },
                 "created-at": "2019-01-12T16:48:41.821037+00:00",
                 "confinement": "confinement",
@@ -137,7 +142,7 @@ class StoreLogicTest(unittest.TestCase):
                 "track": [
                     {
                         "channel": "channel",
-                        "created-at": "12 January 2019",
+                        "released-at": "12 January 2019",
                         "confinement": "confinement",
                         "size": "size",
                         "risk": "risk",
@@ -149,7 +154,7 @@ class StoreLogicTest(unittest.TestCase):
                 "track": [
                     {
                         "channel": "channel",
-                        "created-at": "12 January 2019",
+                        "released-at": "12 January 2019",
                         "confinement": "confinement",
                         "size": "size",
                         "risk": "risk",
@@ -202,17 +207,23 @@ class StoreLogicTest(unittest.TestCase):
                 ]
             }
         }
-        edge_version = logic.get_version(channel_map, "track", "edge")
+        edge_version = logic.extract_info_channel_map(
+            channel_map, "track", "edge"
+        )["version"]
         self.assertEqual(edge_version, "12")
 
-        stable_version = logic.get_version(channel_map, "track", "stable")
+        stable_version = logic.extract_info_channel_map(
+            channel_map, "track", "stable"
+        )["version"]
         self.assertEqual(stable_version, "10")
 
     def test_get_no_version(self):
         channel_map = {
             "arch": {"track": [{"risk": "stable", "version": "10"}]}
         }
-        no_version = logic.get_version(channel_map, "track", "edge")
+        no_version = logic.extract_info_channel_map(
+            channel_map, "track", "edge"
+        )["version"]
         self.assertEqual(no_version, None)
 
     def test_get_confinement(self):
@@ -224,28 +235,32 @@ class StoreLogicTest(unittest.TestCase):
                 ]
             }
         }
-        classic_result = logic.get_confinement(channel_map, "track", "edge")
+        classic_result = logic.extract_info_channel_map(
+            channel_map, "track", "edge"
+        )["confinement"]
         self.assertEqual(classic_result, "classic")
 
-        strict_result = logic.get_confinement(channel_map, "track", "stable")
+        strict_result = logic.extract_info_channel_map(
+            channel_map, "track", "stable"
+        )["confinement"]
         self.assertEqual(strict_result, "strict")
 
     def test_get_no_confinement(self):
         channel_map = {
             "arch": {"track": [{"risk": "stable", "confinement": "strict"}]}
         }
-        no_version = logic.get_confinement(channel_map, "track", "edge")
+        no_version = logic.extract_info_channel_map(
+            channel_map, "track", "edge"
+        )["confinement"]
         self.assertEqual(no_version, None)
 
     def test_get_categories(self):
         categories = {
-            "_embedded": {
-                "clickindex:sections": [
-                    {"name": "featured"},
-                    {"name": "test"},
-                    {"name": "development"},
-                ]
-            }
+            "categories": [
+                {"name": "featured"},
+                {"name": "test"},
+                {"name": "development"},
+            ]
         }
         category_list = logic.get_categories(categories)
         self.assertTrue(

@@ -16,7 +16,7 @@ class Events {
   _handleEvent(type, event) {
     const eventTarget = event.target;
 
-    this.events[type].forEach(ev => {
+    this.events[type].forEach((ev) => {
       const target =
         typeof ev.selector === "string"
           ? eventTarget.closest(ev.selector)
@@ -42,7 +42,7 @@ class Events {
 
     this.events[type].push({
       selector: selector,
-      func: func
+      func: func,
     });
 
     if (!this.availableHandles.includes(type)) {
@@ -57,8 +57,8 @@ class Events {
      *
      * @param {{eventType: {selector: Function}}} eventTypes
      */
-    Object.keys(eventTypes).forEach(type => {
-      Object.keys(eventTypes[type]).forEach(selector => {
+    Object.keys(eventTypes).forEach((type) => {
+      Object.keys(eventTypes[type]).forEach((selector) => {
         this.addEvent(type, selector, eventTypes[type][selector]);
       });
     });

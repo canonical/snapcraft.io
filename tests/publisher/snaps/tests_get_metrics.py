@@ -45,6 +45,7 @@ class GetMetricsPostMetrics(BaseTestCases.EndpointLoggedInErrorHandling):
             "categories": {
                 "items": [{"name": "test", "since": "2018-01-01T00:00:00"}]
             },
+            "publisher": {"display-name": "test"},
         }
 
         responses.add(responses.GET, self.info_url, json=payload, status=200)
@@ -83,7 +84,7 @@ class GetMetricsPostMetrics(BaseTestCases.EndpointLoggedInErrorHandling):
 
         response = self.client.get(self.endpoint_url)
 
-        self.assertEqual(2, len(responses.calls))
+        self.assertEqual(3, len(responses.calls))
         called = responses.calls[0]
         self.assertEqual(self.info_url, called.request.url)
         self.assertEqual(
@@ -133,7 +134,7 @@ class GetMetricsPostMetrics(BaseTestCases.EndpointLoggedInErrorHandling):
 
         response = self.client.get(self.endpoint_url + "?period=1y")
 
-        self.assertEqual(2, len(responses.calls))
+        self.assertEqual(3, len(responses.calls))
         called = responses.calls[0]
         self.assertEqual(self.info_url, called.request.url)
         self.assertEqual(
@@ -183,7 +184,7 @@ class GetMetricsPostMetrics(BaseTestCases.EndpointLoggedInErrorHandling):
 
         response = self.client.get(self.endpoint_url + "?period=30d")
 
-        self.assertEqual(2, len(responses.calls))
+        self.assertEqual(3, len(responses.calls))
         called = responses.calls[0]
         self.assertEqual(self.info_url, called.request.url)
         self.assertEqual(
@@ -233,7 +234,7 @@ class GetMetricsPostMetrics(BaseTestCases.EndpointLoggedInErrorHandling):
 
         response = self.client.get(self.endpoint_url + "?period=7d")
 
-        self.assertEqual(2, len(responses.calls))
+        self.assertEqual(3, len(responses.calls))
         called = responses.calls[0]
         self.assertEqual(self.info_url, called.request.url)
         self.assertEqual(
@@ -287,7 +288,7 @@ class GetMetricsPostMetrics(BaseTestCases.EndpointLoggedInErrorHandling):
 
         response = self.client.get(self.endpoint_url + "?period=3m")
 
-        self.assertEqual(2, len(responses.calls))
+        self.assertEqual(3, len(responses.calls))
         called = responses.calls[0]
         self.assertEqual(self.info_url, called.request.url)
         self.assertEqual(
@@ -321,7 +322,9 @@ class GetMetricsPostMetrics(BaseTestCases.EndpointLoggedInErrorHandling):
             "metrics": [
                 {
                     "status": "OK",
-                    "series": [{"values": random_values, "name": "0.1"}],
+                    "series": [
+                        {"values": random_values, "name": "ubuntu/0.1"}
+                    ],
                     "buckets": dates,
                     "metric_name": "weekly_installed_base_by_operating_system",
                 },
@@ -339,7 +342,7 @@ class GetMetricsPostMetrics(BaseTestCases.EndpointLoggedInErrorHandling):
             self.endpoint_url + "?period=7d&active-devices=os"
         )
 
-        self.assertEqual(2, len(responses.calls))
+        self.assertEqual(3, len(responses.calls))
         called = responses.calls[0]
         self.assertEqual(self.info_url, called.request.url)
         self.assertEqual(
@@ -373,7 +376,9 @@ class GetMetricsPostMetrics(BaseTestCases.EndpointLoggedInErrorHandling):
             "metrics": [
                 {
                     "status": "OK",
-                    "series": [{"values": random_values, "name": "0.1"}],
+                    "series": [
+                        {"values": random_values, "name": "ubuntu/0.1"}
+                    ],
                     "buckets": dates,
                     "metric_name": "weekly_installed_base_by_operating_system",
                 },
@@ -391,7 +396,7 @@ class GetMetricsPostMetrics(BaseTestCases.EndpointLoggedInErrorHandling):
             self.endpoint_url + "?period=1y&active-devices=os"
         )
 
-        self.assertEqual(2, len(responses.calls))
+        self.assertEqual(3, len(responses.calls))
         called = responses.calls[0]
         self.assertEqual(self.info_url, called.request.url)
         self.assertEqual(
@@ -425,7 +430,9 @@ class GetMetricsPostMetrics(BaseTestCases.EndpointLoggedInErrorHandling):
             "metrics": [
                 {
                     "status": "OK",
-                    "series": [{"values": random_values, "name": "0.1"}],
+                    "series": [
+                        {"values": random_values, "name": "ubuntu/0.1"}
+                    ],
                     "buckets": dates,
                     "metric_name": "weekly_installed_base_by_operating_system",
                 },
@@ -443,7 +450,7 @@ class GetMetricsPostMetrics(BaseTestCases.EndpointLoggedInErrorHandling):
             self.endpoint_url + "?period=30d&active-devices=os"
         )
 
-        self.assertEqual(2, len(responses.calls))
+        self.assertEqual(3, len(responses.calls))
         called = responses.calls[0]
         self.assertEqual(self.info_url, called.request.url)
         self.assertEqual(
@@ -481,7 +488,9 @@ class GetMetricsPostMetrics(BaseTestCases.EndpointLoggedInErrorHandling):
             "metrics": [
                 {
                     "status": "OK",
-                    "series": [{"values": random_values, "name": "0.1"}],
+                    "series": [
+                        {"values": random_values, "name": "ubuntu/0.1"}
+                    ],
                     "buckets": dates,
                     "metric_name": "weekly_installed_base_by_operating_system",
                 },
@@ -499,7 +508,7 @@ class GetMetricsPostMetrics(BaseTestCases.EndpointLoggedInErrorHandling):
             self.endpoint_url + "?period=3m&active-devices=os"
         )
 
-        self.assertEqual(2, len(responses.calls))
+        self.assertEqual(3, len(responses.calls))
         called = responses.calls[0]
         self.assertEqual(self.info_url, called.request.url)
         self.assertEqual(

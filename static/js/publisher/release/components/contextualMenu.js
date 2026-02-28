@@ -40,7 +40,7 @@ export default class ContextualMenu extends Component {
   closeAllDropdowns() {
     [].slice
       .call(document.querySelectorAll(".p-contextual-menu__dropdown"))
-      .forEach(dropdown => {
+      .forEach((dropdown) => {
         dropdown.setAttribute("aria-hidden", true);
       });
   }
@@ -57,8 +57,8 @@ export default class ContextualMenu extends Component {
       "p-promote-button",
       buttonClass,
       menuClass,
-      isDisabled ? "is--disabled" : "",
-      this.props.className || ""
+      isDisabled ? "is-disabled" : "",
+      this.props.className || "",
     ].join(" ");
 
     return (
@@ -87,5 +87,5 @@ ContextualMenu.propTypes = {
   className: PropTypes.string,
   isWide: PropTypes.bool,
   position: PropTypes.oneOf(["left", "center"]), // right is by default
-  appearance: PropTypes.oneOf(["base", "neutral"])
+  appearance: PropTypes.oneOf(["base", "neutral"]),
 };

@@ -6,11 +6,11 @@ export const toggleClassWhenStickyOnTop = (el, className) => {
   }
 };
 
-export const toggleShadowWhenSticky = el => {
+export const toggleShadowWhenSticky = (el) => {
   toggleClassWhenStickyOnTop(el, "sticky-shadow");
 };
 
-export default function() {
+export default function () {
   const stickyBar = document.querySelector(".js-sticky-bar");
   toggleShadowWhenSticky(stickyBar);
   const onScroll = throttle(() => toggleShadowWhenSticky(stickyBar), 30);

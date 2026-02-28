@@ -7,8 +7,8 @@ function initFSFLanguageSelect(rootEl) {
   );
 
   const closeDetails = () => {
-    flowDetails.forEach(e => e.classList.add("u-hide"));
-    flowLinks.forEach(l => l.classList.remove("is-open"));
+    flowDetails.forEach((e) => e.classList.add("u-hide"));
+    flowLinks.forEach((l) => l.classList.remove("is-open"));
     if (window.history.pushState) {
       window.history.pushState(null, null, "#");
     } else {
@@ -16,8 +16,32 @@ function initFSFLanguageSelect(rootEl) {
     }
   };
 
-  const openDetails = link => {
+  // reset expandable yaml files to being truncated
+  const resetExpandableYaml = () => {
+    const showMoreContainer = [].slice.call(
+      document.querySelectorAll("[data-js='js-show-more']")
+    );
+
+    if (showMoreContainer && showMoreContainer.length > 0) {
+      showMoreContainer.forEach((el) => {
+        const fadeEL = el.querySelector(".p-show-more__fade");
+
+        if (fadeEL) {
+          fadeEL.classList.remove("u-hide");
+          el.classList.add("is-collapsed");
+        }
+      });
+    }
+  };
+
+  const openDetails = (link) => {
     if (link && link.dataset.flowLink) {
+      // Trigger the first snap flow ABC test. Can be removed once the test is finished
+      const { dataLayer } = window;
+      if (dataLayer) {
+        dataLayer.push({ event: "optimize.activate" });
+      }
+
       // find where the next row of links starts to insert details panel before
       var top = link.offsetTop;
 
@@ -32,6 +56,8 @@ function initFSFLanguageSelect(rootEl) {
         }
       }
       const isOpen = link.classList.contains("is-open");
+
+      resetExpandableYaml();
 
       closeDetails();
 
@@ -59,12 +85,12 @@ function initFSFLanguageSelect(rootEl) {
 
       window.scrollTo({
         top: viewportOffset + window.scrollY,
-        behaviour: "smooth"
+        behaviour: "smooth",
       });
     }
   };
 
-  rootEl.addEventListener("click", event => {
+  rootEl.addEventListener("click", (event) => {
     var link = event.target.closest(".p-flow-link");
 
     if (link) {

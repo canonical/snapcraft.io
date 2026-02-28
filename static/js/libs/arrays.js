@@ -18,8 +18,8 @@ function arraysEqual(oldArray, newArray) {
     return false;
   }
 
-  const _oldArray = oldArray.splice(0);
-  const _newArray = newArray.splice(0);
+  const _oldArray = [...oldArray];
+  const _newArray = [...newArray];
 
   _oldArray.sort();
   _newArray.sort();

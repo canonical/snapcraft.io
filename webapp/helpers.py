@@ -1,14 +1,22 @@
 import json
-
-import flask
 import os
 
+import flask
+from canonicalwebteam.launchpad import Launchpad
 from ruamel.yaml import YAML
-from werkzeug.routing import BaseConverter
-
+from webapp.api.requests import PublisherSession, Session
 
 _yaml = YAML(typ="rt")
 _yaml_safe = YAML(typ="safe")
+api_session = Session()
+api_publisher_session = PublisherSession()
+
+launchpad = Launchpad(
+    username=os.getenv("LP_API_USERNAME"),
+    token=os.getenv("LP_API_TOKEN"),
+    secret=os.getenv("LP_API_TOKEN_SECRET"),
+    session=api_publisher_session,
+)
 
 
 def get_yaml_loader(typ="safe"):
@@ -17,18 +25,10 @@ def get_yaml_loader(typ="safe"):
     return _yaml
 
 
-class RegexConverter(BaseConverter):
-    def __init__(self, url_map, *items):
-        super(RegexConverter, self).__init__(url_map)
-        self.regex = items[0]
-
-
 def get_licenses():
     try:
         with open("webapp/licenses.json") as f:
-            licenses_file = json.load(f)
-
-        licenses = licenses_file["licenses"]
+            licenses = json.load(f)["licenses"]
 
         def _build_custom_license(license_id, license_name):
             return {"licenseId": license_id, "name": license_name}
@@ -36,6 +36,9 @@ def get_licenses():
         CUSTOM_LICENSES = [
             _build_custom_license("Proprietary", "Proprietary"),
             _build_custom_license("Other Open Source", "Other Open Source"),
+            _build_custom_license(
+                "AGPL-3.0+", "GNU Affero General Public License v3.0 or later"
+            ),
         ]
 
         licenses = licenses + CUSTOM_LICENSES
@@ -43,14 +46,6 @@ def get_licenses():
         licenses = []
 
     return licenses
-
-
-def get_default_track(snap_name):
-    # until default tracks are supported by the API we special case node
-    # to use 10, rather then latest
-    default_track = "10" if snap_name == "node" else None
-
-    return default_track
 
 
 def get_file(filename, replaces={}):

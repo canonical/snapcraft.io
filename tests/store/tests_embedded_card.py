@@ -1,4 +1,5 @@
 import responses
+from urllib.parse import urlencode
 from flask_testing import TestCase
 from webapp.app import create_app
 
@@ -23,6 +24,8 @@ class GetEmbeddedCardTest(TestCase):
                 "validation": True,
             },
             "categories": [{"name": "test"}],
+            "trending": False,
+            "unlisted": False,
         },
         "channel-map": [
             {
@@ -31,6 +34,7 @@ class GetEmbeddedCardTest(TestCase):
                     "name": "stable",
                     "risk": "stable",
                     "track": "latest",
+                    "released-at": "2018-09-18T14:45:28.064633+00:00",
                 },
                 "created-at": "2018-09-18T14:45:28.064633+00:00",
                 "version": "1.0",
@@ -47,9 +51,31 @@ class GetEmbeddedCardTest(TestCase):
                 "https://api.snapcraft.io/v2/",
                 "snaps/info/",
                 self.snap_name,
-                "?fields=title,summary,description,license,contact,website,",
-                "publisher,prices,media,download,version,created-at,"
-                "confinement,categories",
+                "?",
+                urlencode(
+                    {
+                        "fields": ",".join(
+                            [
+                                "title",
+                                "summary",
+                                "description",
+                                "license",
+                                "contact",
+                                "website",
+                                "publisher",
+                                "prices",
+                                "media",
+                                "download",
+                                "version",
+                                "created-at",
+                                "confinement",
+                                "categories",
+                                "trending",
+                                "unlisted",
+                            ]
+                        )
+                    }
+                ),
             ]
         )
         self.endpoint_url = "/" + self.snap_name + "/embedded"

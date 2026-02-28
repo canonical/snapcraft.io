@@ -1,4 +1,5 @@
 import responses
+from urllib.parse import urlencode
 from flask_testing import TestCase
 from webapp.app import create_app
 
@@ -13,9 +14,31 @@ class GetDetailsPageTest(TestCase):
                 "https://api.snapcraft.io/v2/",
                 "snaps/info/",
                 self.snap_name,
-                "?fields=title,summary,description,license,contact,website,",
-                "publisher,prices,media,download,version,created-at,"
-                "confinement,categories",
+                "?",
+                urlencode(
+                    {
+                        "fields": ",".join(
+                            [
+                                "title",
+                                "summary",
+                                "description",
+                                "license",
+                                "contact",
+                                "website",
+                                "publisher",
+                                "prices",
+                                "media",
+                                "download",
+                                "version",
+                                "created-at",
+                                "confinement",
+                                "categories",
+                                "trending",
+                                "unlisted",
+                            ]
+                        )
+                    }
+                ),
             ]
         )
         self.endpoint_url = "/" + self.snap_name
@@ -94,6 +117,8 @@ class GetDetailsPageTest(TestCase):
                     "validation": True,
                 },
                 "categories": [{"name": "test"}],
+                "trending": False,
+                "unlisted": False,
             },
         }
 
@@ -126,6 +151,8 @@ class GetDetailsPageTest(TestCase):
                     "validation": True,
                 },
                 "categories": [{"name": "test"}],
+                "trending": False,
+                "unlisted": False,
             },
             "channel-map": [
                 {
@@ -134,6 +161,7 @@ class GetDetailsPageTest(TestCase):
                         "name": "stable",
                         "risk": "stable",
                         "track": "latest",
+                        "released-at": "2018-09-18T14:45:28.064633+00:00",
                     },
                     "created-at": "2018-09-18T14:45:28.064633+00:00",
                     "version": "1.0",
@@ -158,7 +186,7 @@ class GetDetailsPageTest(TestCase):
 
         with self.client.session_transaction() as s:
             # make test session 'authenticated'
-            s["openid"] = {"nickname": "toto", "fullname": "Totinio"}
+            s["publisher"] = {"nickname": "toto", "fullname": "Totinio"}
             s["macaroon_root"] = "test"
             s["macaroon_discharge"] = "test"
             # mock test user snaps list
@@ -188,6 +216,8 @@ class GetDetailsPageTest(TestCase):
                     "validation": True,
                 },
                 "categories": [{"name": "test"}],
+                "trending": False,
+                "unlisted": False,
             },
             "channel-map": [
                 {
@@ -196,6 +226,7 @@ class GetDetailsPageTest(TestCase):
                         "name": "stable",
                         "risk": "stable",
                         "track": "latest",
+                        "released-at": "2018-09-18T14:45:28.064633+00:00",
                     },
                     "created-at": "2018-09-18T14:45:28.064633+00:00",
                     "version": "1.0",
@@ -242,6 +273,8 @@ class GetDetailsPageTest(TestCase):
                     "validation": True,
                 },
                 "categories": [{"name": "test"}],
+                "trending": False,
+                "unlisted": False,
             },
             "channel-map": [
                 {
@@ -250,6 +283,7 @@ class GetDetailsPageTest(TestCase):
                         "name": "stable",
                         "risk": "stable",
                         "track": "latest",
+                        "released-at": "2018-09-18T14:45:28.064633+00:00",
                     },
                     "created-at": "2018-09-18T14:45:28.064633+00:00",
                     "version": "1.0",
@@ -273,7 +307,7 @@ class GetDetailsPageTest(TestCase):
         )
 
         with self.client.session_transaction() as s:
-            s["openid"] = {"nickname": "greg"}
+            s["publisher"] = {"nickname": "greg"}
 
         response = self.client.get(self.endpoint_url)
 

@@ -1,4 +1,5 @@
 import responses
+from urllib.parse import urlencode
 from flask_testing import TestCase
 from webapp.app import create_app
 
@@ -23,6 +24,8 @@ class GetDistroPageTest(TestCase):
                 "validation": True,
             },
             "categories": [{"name": "test"}],
+            "trending": False,
+            "unlisted": False,
         },
         "channel-map": [
             {
@@ -31,6 +34,7 @@ class GetDistroPageTest(TestCase):
                     "name": "stable",
                     "risk": "stable",
                     "track": "latest",
+                    "released-at": "2018-09-18T14:45:28.064633+00:00",
                 },
                 "created-at": "2018-09-18T14:45:28.064633+00:00",
                 "version": "1.0",
@@ -47,17 +51,52 @@ class GetDistroPageTest(TestCase):
                 "https://api.snapcraft.io/v2/",
                 "snaps/info/",
                 self.snap_name,
-                "?fields=title,summary,description,license,contact,website,",
-                "publisher,prices,media,download,version,created-at,"
-                "confinement,categories",
+                "?",
+                urlencode(
+                    {
+                        "fields": ",".join(
+                            [
+                                "title",
+                                "summary",
+                                "description",
+                                "license",
+                                "contact",
+                                "website",
+                                "publisher",
+                                "prices",
+                                "media",
+                                "download",
+                                "version",
+                                "created-at",
+                                "confinement",
+                                "categories",
+                                "trending",
+                                "unlisted",
+                            ]
+                        )
+                    }
+                ),
             ]
         )
         self.featured_snaps_api_url = "".join(
             [
                 "https://api.snapcraft.io/api/v1/",
                 "snaps/search",
-                "?confinement=strict,classic&section=featured&scope=wide",
-                "&fields=package_name,title,icon_url",
+                "?",
+                urlencode(
+                    {
+                        "q": "",
+                        "size": "13",
+                        "page": "1",
+                        "scope": "wide",
+                        "confinement": "strict,classic",
+                        "fields": "package_name,title,summary,icon_url,"
+                        "architecture,media,publisher,"
+                        "developer_validation,origin,apps,sections",
+                        "arch": "wide",
+                        "section": "featured",
+                    }
+                ),
             ]
         )
         self.endpoint_url = "/install/" + self.snap_name + "/debian"

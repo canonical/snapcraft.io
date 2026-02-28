@@ -75,6 +75,15 @@ class DescriptionInlineGrammar(InlineGrammar):
         # https://github.com/CanonicalLtd/snap-squad/issues/936
         self.code = re.compile(r"^(`)([ \S]*?[^`])\1(?!`)")
 
+        # Rewrite to support parentheses inside URLs:
+        # https://github.com/canonical-web-and-design/snapcraft.io/issues/2424
+        self.url = re.compile(
+            r"""^([(])?(https?:\/\/[^\s<]+[^<.,:"'\]\s])(?(1)([)]))"""
+        )
+        self.text = re.compile(
+            r"^[\s\S]+?(?=[\\<!\[_*`~]|\(?https?://| {2,}\n|$)"
+        )
+
 
 class DescriptionInline(InlineLexer):
     grammar_class = DescriptionInlineGrammar
@@ -104,6 +113,21 @@ class DescriptionInline(InlineLexer):
         "strikethrough",
         "text",
     ]
+
+    def output_url(self, m):
+        output = []
+        output.append(m.group(1) or "")
+
+        # Allow symbols < and > inside the URL
+        link = m.group(2).replace("&lt;", "<").replace("&gt;", ">")
+
+        if self._in_link:
+            output.append(self.renderer.text(link))
+        else:
+            output.append(self.renderer.autolink(link, False))
+
+        output.append(m.group(3) or "")
+        return "".join(output)
 
 
 renderer = Renderer()

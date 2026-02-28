@@ -22,7 +22,10 @@ Account details — Linux software in the Snap Store
   {% endwith %}
   <div class="u-fixed-width u-clearfix">
     <h3 class="u-float-left">Publisher account details</h3>
+    {# We don't show it for Candid users #}
+    {% if not "macaroons" in session %}
     <a href="{{ LOGIN_URL }}" class="p-link--external u-float-right">Edit details</a>
+    {% endif %}
   </div>
   {% if errors %}
   <div class="row">
@@ -97,12 +100,17 @@ Account details — Linux software in the Snap Store
 </section>
 {% endblock %}
 
+{% block scripts_includes %}
+<script src="{{ static_url('js/dist/publisher.js') }}" defer></script>
+{% endblock %}
+
 {% block scripts %}
 {% if subscriptions %}
-<script src="{{ static_url('js/dist/publisher.js') }}"></script>
 <script>
-  Raven.context(function () {
-    snapcraft.publisher.submitEnabler(".js-preferences-form", [".js-preferences-form button[type='submit']"]);
+  window.addEventListener("DOMContentLoaded", function() {
+    Raven.context(function () {
+      snapcraft.publisher.submitEnabler(".js-preferences-form", [".js-preferences-form button[type='submit']"]);
+    });
   });
 </script>
 {% endif %}

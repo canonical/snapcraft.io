@@ -59,12 +59,14 @@ class GetListingPage(BaseTestCases.EndpointLoggedInErrorHandling):
             "license": "License",
             "video_urls": [],
             "categories": {"items": []},
+            "status": "published",
+            "update_metadata_on_release": True,
         }
 
         responses.add(responses.GET, self.api_url, json=payload, status=200)
         responses.add(
             responses.GET,
-            "https://api.snapcraft.io/api/v1/snaps/sections",
+            "https://api.snapcraft.io/v2/snaps/categories?type=shared",
             json=[],
             status=200,
         )
@@ -115,12 +117,14 @@ class GetListingPage(BaseTestCases.EndpointLoggedInErrorHandling):
             "license": "license",
             "video_urls": [],
             "categories": {"items": []},
+            "status": "published",
+            "update_metadata_on_release": True,
         }
 
         responses.add(responses.GET, self.api_url, json=payload, status=200)
         responses.add(
             responses.GET,
-            "https://api.snapcraft.io/api/v1/snaps/sections",
+            "https://api.snapcraft.io/v2/snaps/categories?type=shared",
             json=[],
             status=200,
         )
@@ -153,12 +157,14 @@ class GetListingPage(BaseTestCases.EndpointLoggedInErrorHandling):
             "license": "license",
             "video_urls": [],
             "categories": {"items": []},
+            "status": "published",
+            "update_metadata_on_release": True,
         }
 
         responses.add(responses.GET, self.api_url, json=payload, status=200)
         responses.add(
             responses.GET,
-            "https://api.snapcraft.io/api/v1/snaps/sections",
+            "https://api.snapcraft.io/v2/snaps/categories?type=shared",
             json=[],
             status=200,
         )
@@ -197,12 +203,14 @@ class GetListingPage(BaseTestCases.EndpointLoggedInErrorHandling):
             "license": "license",
             "video_urls": [],
             "categories": {"items": []},
+            "status": "published",
+            "update_metadata_on_release": True,
         }
 
         responses.add(responses.GET, self.api_url, json=payload, status=200)
         responses.add(
             responses.GET,
-            "https://api.snapcraft.io/api/v1/snaps/sections",
+            "https://api.snapcraft.io/v2/snaps/categories?type=shared",
             json=[],
             status=200,
         )
@@ -235,12 +243,14 @@ class GetListingPage(BaseTestCases.EndpointLoggedInErrorHandling):
             "license": "license",
             "video_urls": ["https://youtube.com/watch?v=1234"],
             "categories": {"items": []},
+            "status": "published",
+            "update_metadata_on_release": True,
         }
 
         responses.add(responses.GET, self.api_url, json=payload, status=200)
         responses.add(
             responses.GET,
-            "https://api.snapcraft.io/api/v1/snaps/sections",
+            "https://api.snapcraft.io/v2/snaps/categories?type=shared",
             json=[],
             status=200,
         )
@@ -273,12 +283,14 @@ class GetListingPage(BaseTestCases.EndpointLoggedInErrorHandling):
             "license": "license",
             "video_urls": ["https://youtube.com/watch?v=1234"],
             "categories": {"items": []},
+            "status": "published",
+            "update_metadata_on_release": True,
         }
 
         responses.add(responses.GET, self.api_url, json=payload, status=200)
         responses.add(
             responses.GET,
-            "https://api.snapcraft.io/api/v1/snaps/sections",
+            "https://api.snapcraft.io/v2/snaps/categories?type=shared",
             json=[],
             status=500,
         )

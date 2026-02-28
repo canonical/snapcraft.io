@@ -1,7 +1,7 @@
 import { initEmbeddedCardPicker } from "../../publisher/publicise";
 
-const showEl = el => el.classList.remove("u-hide");
-const hideEl = el => el.classList.add("u-hide");
+const showEl = (el) => el.classList.remove("u-hide");
+const hideEl = (el) => el.classList.add("u-hide");
 
 function toggleModal(modal, show, initCallback) {
   if (typeof show === "undefined") {
@@ -48,15 +48,15 @@ export default function initEmbeddedCardModal(snapName) {
     codeElement,
     buttonRadios,
     optionButtons,
-    updateHeightCallback
+    updateHeightCallback,
   });
 
-  toggle.addEventListener("click", event => {
+  toggle.addEventListener("click", (event) => {
     event.preventDefault();
     toggleModal(modal, true, initFrame);
   });
 
-  modal.addEventListener("click", event => {
+  modal.addEventListener("click", (event) => {
     const target = event.target;
 
     if (target.closest(".js-modal-close") || target === modal) {

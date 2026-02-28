@@ -17,29 +17,4 @@ class LogoutRedirects(BaseTestCases.BaseAppTesting):
 
         self.assertEqual(302, response.status_code)
 
-        self.assertEqual(
-            (
-                "https://login.ubuntu.com/+logout"
-                "?return_to=http%3A%2F%2Flocalhost%2F&return_now=True"
-            ),
-            response.location,
-        )
-
-    def test_no_redirect_logout(self):
-        bad_param_response = self.client.get(
-            self.endpoint_url + "?no_redirect=false"
-        )
-
-        self.assertEqual(302, bad_param_response.status_code)
-        self.assertEqual(
-            (
-                "https://login.ubuntu.com/+logout"
-                "?return_to=http%3A%2F%2Flocalhost%2F&return_now=True"
-            ),
-            bad_param_response.location,
-        )
-
-        response = self.client.get(self.endpoint_url + "?no_redirect=true")
-
-        self.assertEqual(302, response.status_code)
         self.assertEqual("http://localhost/", response.location)

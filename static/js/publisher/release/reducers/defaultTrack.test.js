@@ -13,7 +13,7 @@ describe("defaultTrack", () => {
         {},
         {
           type: SET_DEFAULT_TRACK_SUCCESS,
-          payload: "test"
+          payload: "test",
         }
       );
 

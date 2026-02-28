@@ -1,4 +1,5 @@
 import responses
+from urllib.parse import urlencode
 from flask_testing import TestCase
 from webapp.app import create_app
 
@@ -8,16 +9,38 @@ class GetSearchViewTest(TestCase):
 
     def setUp(self):
         self.categories_api_url = (
-            "https://api.snapcraft.io/api/v1/snaps/sections"
+            "https://api.snapcraft.io/v2/snaps/categories?type=shared"
         )
         self.search_snap_api_url = "".join(
             [
                 "https://api.snapcraft.io/api/v1/",
                 "snaps/search",
-                "?q={snap_name}&page={page}&size={size}&scope=wide&arch=wide",
-                "&confinement=strict,classic",
-                "&fields=package_name,title,summary,icon_url,publisher,",
-                "developer_validation,origin",
+                "?",
+                "q={snap_name}&",
+                "size={size}&",
+                "page={page}&",
+                urlencode(
+                    {
+                        "scope": "wide",
+                        "confinement": "strict,classic",
+                        "fields": ",".join(
+                            [
+                                "package_name",
+                                "title",
+                                "summary",
+                                "icon_url",
+                                "architecture",
+                                "media",
+                                "publisher",
+                                "developer_validation",
+                                "origin",
+                                "apps",
+                                "sections",
+                            ]
+                        ),
+                        "arch": "wide",
+                    }
+                ),
             ]
         )
 
@@ -42,7 +65,7 @@ class GetSearchViewTest(TestCase):
         payload = {"_embedded": {"clickindex:package": {}}, "total": 0}
 
         search_api_formated = self.search_snap_api_url.format(
-            snap_name="snap", page="1", size="25"
+            snap_name="snap", page="1", size="44"
         )
         responses.add(
             responses.Response(
@@ -62,14 +85,13 @@ class GetSearchViewTest(TestCase):
         self.assert_context("featured_snaps", [])
         self.assert_context("total", 0)
         self.assert_context("links", {"next": "/search?q=snap&page=2"})
-        self.assert_context("error_info", {})
 
     @responses.activate
     def test_search_q_with_zero_as_page(self):
         payload = {"_embedded": {"clickindex:package": {}}, "total": 0}
 
         search_api_formated = self.search_snap_api_url.format(
-            snap_name="snap", page="1", size="25"
+            snap_name="snap", page="1", size="44"
         )
         responses.add(
             responses.Response(
@@ -90,7 +112,6 @@ class GetSearchViewTest(TestCase):
         self.assert_context("searched_snaps", {})
         self.assert_context("total", 0)
         self.assert_context("links", {"next": "/search?q=snap&page=2"})
-        self.assert_context("error_info", {})
 
     @responses.activate
     def test_search_q_with_results(self):
@@ -111,7 +132,7 @@ class GetSearchViewTest(TestCase):
         }
 
         search_api_formated = self.search_snap_api_url.format(
-            snap_name="snap", page="1", size="25"
+            snap_name="snap", page="1", size="44"
         )
         responses.add(
             responses.Response(
@@ -139,8 +160,6 @@ class GetSearchViewTest(TestCase):
         self.assert_context("total", 3)
         self.assert_context("links", {})
 
-        self.assert_context("error_info", {})
-
     @responses.activate
     def test_search_q_with_results_but_no_total(self):
         payload = {
@@ -159,7 +178,7 @@ class GetSearchViewTest(TestCase):
         }
 
         search_api_formated = self.search_snap_api_url.format(
-            snap_name="snap", page="1", size="25"
+            snap_name="snap", page="1", size="44"
         )
         responses.add(
             responses.Response(
@@ -187,22 +206,20 @@ class GetSearchViewTest(TestCase):
         self.assert_context("total", None)
         self.assert_context("links", {"next": "/search?q=snap&page=2"})
 
-        self.assert_context("error_info", {})
-
     @responses.activate
     def test_search_q_with_category(self):
         snap_list = [
-            {"package_name": "toto", "icon_url": ""},
-            {"package_name": "tata", "icon_url": "tata.jpg"},
-            {"package_name": "tutu", "icon_url": "tutu.jpg"},
-            {"package_name": "tete", "icon_url": ""},
+            {"package_name": "toto", "icon_url": "", "media": []},
+            {"package_name": "tata", "icon_url": "tata.jpg", "media": []},
+            {"package_name": "tutu", "icon_url": "tutu.jpg", "media": []},
+            {"package_name": "tete", "icon_url": "", "media": []},
         ]
 
         for i in range(0, 144):
             snap_list.append({"package_name": "toto" + str(i), "icon_url": ""})
 
         payload = {
-            "_embedded": {"clickindex:package": snap_list[:47]},
+            "_embedded": {"clickindex:package": snap_list[:44]},
             "total": 144,
             "_links": {
                 "last": {"href": "http://url.c?q=snap&size=1&page=1"},
@@ -212,8 +229,9 @@ class GetSearchViewTest(TestCase):
         }
 
         search_api_formated = self.search_snap_api_url.format(
-            snap_name="snap", page="1", size="47"
+            snap_name="", page="1", size="44"
         )
+        search_api_formated += "&section=toto"
         responses.add(
             responses.Response(
                 method="GET", url=search_api_formated, json=payload, status=200
@@ -229,9 +247,9 @@ class GetSearchViewTest(TestCase):
         self.assert_context("category", "toto")
         self.assert_context("category_display", "Toto")
         self.assert_context(
-            "featured_snaps", [snap_list[1], snap_list[0]] + snap_list[2:19]
+            "featured_snaps", [snap_list[1], snap_list[0]] + snap_list[2:16]
         )
-        self.assert_context("searched_snaps", snap_list[19:47])
+        self.assert_context("searched_snaps", snap_list[16:44])
         self.assert_context("page", 1)
         self.assert_context("total", 144)
         self.assert_context(
@@ -241,8 +259,6 @@ class GetSearchViewTest(TestCase):
                 "next": "/search?category=toto&page=2",
             },
         )
-
-        self.assert_context("error_info", {})
 
     @responses.activate
     def test_search_q_with_category_page_2(self):
@@ -267,8 +283,9 @@ class GetSearchViewTest(TestCase):
         }
 
         search_api_formated = self.search_snap_api_url.format(
-            snap_name="snap", page="2", size="48"
+            snap_name="", page="2", size="44"
         )
+        search_api_formated += "&section=toto"
         responses.add(
             responses.Response(
                 method="GET", url=search_api_formated, json=payload, status=200
@@ -297,15 +314,13 @@ class GetSearchViewTest(TestCase):
             },
         )
 
-        self.assert_context("error_info", {})
-
     @responses.activate
     def test_search_q_with_category_featured(self):
         snap_list = [
-            {"package_name": "toto", "icon_url": ""},
-            {"package_name": "tata", "icon_url": "tata.jpg"},
-            {"package_name": "tutu", "icon_url": "tutu.jpg"},
-            {"package_name": "tete", "icon_url": ""},
+            {"package_name": "toto", "icon_url": "", "media": []},
+            {"package_name": "tata", "icon_url": "tata.jpg", "media": []},
+            {"package_name": "tutu", "icon_url": "tutu.jpg", "media": []},
+            {"package_name": "tete", "icon_url": "", "media": []},
         ]
 
         for i in range(0, 44):
@@ -322,8 +337,9 @@ class GetSearchViewTest(TestCase):
         }
 
         search_api_formated = self.search_snap_api_url.format(
-            snap_name="snap", page="2", size="48"
+            snap_name="", page="1", size="44"
         )
+        search_api_formated += "&section=featured"
         responses.add(
             responses.Response(
                 method="GET", url=search_api_formated, json=payload, status=200
@@ -347,5 +363,3 @@ class GetSearchViewTest(TestCase):
         self.assert_context("page", 1)
         self.assert_context("total", 44)
         self.assert_context("links", {})
-
-        self.assert_context("error_info", {})

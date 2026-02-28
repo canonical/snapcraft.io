@@ -2,6 +2,8 @@
 import hashlib
 import os
 
+from dateutil import parser
+
 
 # generator functions for templates
 def generate_slug(path):
@@ -118,3 +120,26 @@ def display_name(display_name, username):
         return display_name
     else:
         return f"{display_name} ({username})"
+
+
+def format_date(timestamp, format):
+    """Template function that returns a formatted date
+    based on the given timestamp
+    """
+    datestring = parser.parse(timestamp)
+
+    return datestring.strftime(format)
+
+
+def format_member_role(role):
+    """Template function that returns the
+    correct label for a members role
+    """
+    roles = {
+        "admin": "admin",
+        "review": "reviewer",
+        "view": "viewer",
+        "access": "publisher",
+    }
+
+    return roles[role]
