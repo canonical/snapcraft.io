@@ -4,7 +4,6 @@ on: pull_request
 env:
   SECRET_KEY: insecure_test_key
   LP_API_USERNAME: test_lp_user
-  ANALYTICS_ENDPOINT: https://marketplace-analytics.staging.canonical.com/k8s-stg-marketplace-marketplace-analytics-marketplace-analytics/analytics/events
 
 jobs:
   run-image:
