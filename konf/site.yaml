@@ -140,7 +140,7 @@ staging:
   env:
     - name: ANALYTICS_ENDPOINT
       value: https://marketplace-analytics.staging.canonical.com/k8s-stg-marketplace-marketplace-analytics-marketplace-analytics/analytics/events
- 
+
   routes:
     - paths: [/docs, /tutorials]
       name: snapcraft-io-discourse
