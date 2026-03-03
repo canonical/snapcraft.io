@@ -153,3 +153,8 @@ staging:
       replicas: 2
       memoryLimit: 256Mi
       env: *env
+
+demo:
+  env:
+    - name: ANALYTICS_ENDPOINT
+      value: https://marketplace-analytics.staging.canonical.com/k8s-stg-marketplace-marketplace-analytics-marketplace-analytics/analytics/events
