@@ -92,6 +92,7 @@ CSP = {
         "*.snapcraft.io",
         "*.snapcraftcontent.com",
         "marketplace-analytics.staging.canonical.com",
+        "marketplace-analytics.canonical.com",
         "www.google.com",
     ],
     "frame-src": [
