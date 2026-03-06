@@ -128,6 +128,7 @@ root.render(
                     <Route path="remodel" element={<Remodel />} />
                   </Route>
                 </Route>
+                <Route path="*" element={<Navigate to="../snaps" replace />} />
               </Route>
             </Route>
           </Route>
