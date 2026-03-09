@@ -29,13 +29,13 @@ function PoliciesTable({
   setShowDeletePolicyNotification,
   setShowDeletePolicyErrorNotification,
 }: Props): React.JSX.Element {
-  const { id, model_id } = useParams();
+  const { id, modelId } = useParams();
   const brandId = useAtomValue(brandIdState);
   const [policiesList, setPoliciesList] = useAtom(filteredPoliciesListState);
   const [showModal, setShowModal] = useState<boolean>(false);
   const [selectedPolicy, setSelectedPolicy] = useState<number | undefined>();
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const { refetch } = usePolicies(id, model_id) as UsePoliciesResponse;
+  const { refetch } = usePolicies(id, modelId) as UsePoliciesResponse;
 
   const deletePolicy = async (policyRevision: number | undefined) => {
     if (policyRevision === undefined) {
@@ -52,7 +52,7 @@ function PoliciesTable({
     formData.set("csrf_token", window.CSRF_TOKEN);
 
     const response = await fetch(
-      `/api/store/${brandId}/models/${model_id}/policies/${policyRevision}`,
+      `/api/store/${brandId}/models/${modelId}/policies/${policyRevision}`,
       {
         method: "DELETE",
         body: formData,

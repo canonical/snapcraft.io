@@ -1,11 +1,12 @@
 import { useQuery, UseQueryResult } from "react-query";
-import type { Remodel as RemodelType } from "../types/shared";
+import type { Remodel } from "../types/shared";
 
 const useRemodels = (
   brandId: string | undefined,
-): UseQueryResult<RemodelType[], Error> => {
-  return useQuery<RemodelType[], Error>({
-    queryKey: ["remodels", brandId],
+  modelId: string | undefined,
+): UseQueryResult<Remodel[], Error> => {
+  return useQuery<Remodel[], Error>({
+    queryKey: ["remodels", brandId, modelId],
     queryFn: async () => {
       const response = await fetch(
         `/api/store/${brandId}/models/remodel-allowlist`,
@@ -15,13 +16,31 @@ const useRemodels = (
         throw new Error("There was a problem fetching remodels");
       }
 
-      const remodelsData = await response.json();
+      const data = await response.json();
 
-      if (!remodelsData.success) {
-        throw new Error(remodelsData.message);
+      if (!data.success) {
+        throw new Error(data.message);
       }
 
-      return remodelsData.data.allowlist;
+      const remodelsForCurrentModel = data.data.allowlist.filter(
+        (remodel: Remodel) => {
+          return (
+            remodel["from-model"] === modelId || remodel["to-model"] === modelId
+          );
+        },
+      );
+
+      return remodelsForCurrentModel.sort((a: Remodel, b: Remodel) => {
+        if (a["created-at"] > b["created-at"]) {
+          return -1;
+        }
+
+        if (a["created-at"] < b["created-at"]) {
+          return 1;
+        }
+
+        return 0;
+      });
     },
     enabled: !!brandId,
   });
