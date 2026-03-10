@@ -1,6 +1,7 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
+import { useCombobox } from "downshift";
 import { useAtomValue } from "jotai";
-import { useParams, NavLink } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 
 import { brandStoresState } from "../../state/brandStoreState";
 
@@ -10,121 +11,129 @@ type Props = {
   nativeNavLink?: boolean;
 };
 
-// TODO: refactor this and use Downshift to have proper a11y
 function StoreSelector({ nativeNavLink }: Props): React.JSX.Element {
   const { id } = useParams();
-  const selectorRef = useRef<HTMLDivElement>(null);
+  const navigate = useNavigate();
   const brandStoresList = useAtomValue(brandStoresState);
-  const [showStoreSelector, setShowStoreSelector] = useState<boolean>(false);
-  const [searchValue, setSearchValue] = useState("");
-  const [filteredBrandStores, setFilteredBrandstores] =
+  const [filteredStores, setFilteredStores] =
     useState<Store[]>(brandStoresList);
 
-  // close the store list when clicking outside of this component
   useEffect(() => {
-    const clickOutsideListener = (e: MouseEvent) => {
-      if (!selectorRef.current?.contains(e.target as HTMLElement)) {
-        setShowStoreSelector(false);
-      }
-    };
-
-    window.addEventListener("click", clickOutsideListener);
-
-    return () => {
-      window.removeEventListener("click", clickOutsideListener);
-    };
-  }, []);
-
-  const getStoreName = (id: string | undefined) => {
-    if (!id) {
-      return;
-    }
-
-    const targetStore = brandStoresList.find((store) => store.id === id);
-
-    if (targetStore) {
-      return targetStore.name;
-    }
-
-    return "Select a store";
-  };
-
-  useEffect(() => {
-    setFilteredBrandstores(brandStoresList);
+    setFilteredStores(brandStoresList);
   }, [brandStoresList]);
 
+  const getStoreName = (storeId: string | undefined) => {
+    if (!storeId) {
+      return "Select a store";
+    }
+
+    const targetStore = brandStoresList.find((store) => store.id === storeId);
+    return targetStore ? targetStore.name : "Select a store";
+  };
+
+  const {
+    isOpen,
+    getLabelProps,
+    getToggleButtonProps,
+    getMenuProps,
+    getInputProps,
+    getItemProps,
+    reset,
+  } = useCombobox<Store>({
+    items: filteredStores,
+    itemToString: (item) => (item ? item.name : ""),
+    onInputValueChange: ({ inputValue = "" }) => {
+      setFilteredStores(
+        brandStoresList.filter((store) =>
+          store.name.toLowerCase().includes(inputValue.toLowerCase()),
+        ),
+      );
+    },
+    onIsOpenChange: ({ isOpen }) => {
+      if (!isOpen) {
+        setFilteredStores(brandStoresList);
+      }
+    },
+    onSelectedItemChange: ({ selectedItem }) => {
+      if (!selectedItem) return;
+      if (nativeNavLink) {
+        window.location.href = `/admin/${selectedItem.id}/snaps`;
+      } else {
+        navigate(`/admin/${selectedItem.id}/snaps`);
+      }
+    },
+    stateReducer: (_state, actionAndChanges) => {
+      const { type, changes } = actionAndChanges;
+      switch (type) {
+        case useCombobox.stateChangeTypes.ItemClick:
+        case useCombobox.stateChangeTypes.InputKeyDownEnter:
+          return { ...changes, inputValue: "" };
+        default:
+          return changes;
+      }
+    },
+  });
+
+  const { id: inputId, ...inputProps } = getInputProps();
+
   return (
-    <div className="store-selector" ref={selectorRef}>
+    <div className="store-selector">
       <button
         className="store-selector__button u-no-margin--bottom"
-        onClick={() => {
-          setShowStoreSelector(!showStoreSelector);
-        }}
+        {...getToggleButtonProps()}
       >
         {id !== undefined ? getStoreName(id) : "Select a store"}
       </button>
-      {showStoreSelector && (
-        <div className="store-selector__panel">
-          <div className="p-search-box u-no-margin--bottom">
-            <label htmlFor="search-stores" className="u-off-screen">
-              Search stores
-            </label>
-            <input
-              type="search"
-              className="p-search-box__input"
-              id="search-stores"
-              name="search-stores"
-              placeholder="Search"
-              value={searchValue}
-              onInput={(e) => {
-                const value = (e.target as HTMLInputElement).value;
-                setSearchValue(value);
-                if (value.length > 0) {
-                  setFilteredBrandstores(
-                    brandStoresList.filter((store) => {
-                      const storeName = store.name.toLowerCase();
-                      return storeName.includes(value.toLowerCase());
-                    }),
-                  );
-                } else {
-                  setFilteredBrandstores(brandStoresList);
-                }
-              }}
-            />
-            <button
-              type="reset"
-              className="p-search-box__reset"
-              onClick={() => {
-                setSearchValue("");
-                setFilteredBrandstores(brandStoresList);
-              }}
-            >
-              <i className="p-icon--close">Close</i>
-            </button>
-            <button type="submit" className="p-search-box__button">
-              <i className="p-icon--search">Search</i>
-            </button>
-          </div>
-          <ul className="store-selector__list" style={{ listStyle: "none" }}>
-            {filteredBrandStores.map((store: Store) => (
-              <li key={store.id} className="store-selector__item">
-                {nativeNavLink ? (
-                  <a href={`/admin/${store.id}/snaps`}>{store.name}</a>
-                ) : (
-                  <NavLink
-                    to={`/admin/${store.id}/snaps`}
-                    onClick={() => {
-                      setShowStoreSelector(false);
-                    }}
-                  >
-                    {store.name}
-                  </NavLink>
-                )}
+      <div
+        className="store-selector__panel"
+        style={{ display: isOpen ? "block" : "none" }}
+      >
+        <div className="p-search-box u-no-margin--bottom">
+          <label
+            htmlFor={inputId}
+            className="u-off-screen"
+            {...getLabelProps()}
+          >
+            Search stores
+          </label>
+          <input
+            type="search"
+            id={inputId}
+            className="p-search-box__input"
+            name="search-stores"
+            placeholder="Search"
+            {...inputProps}
+          />
+          <button
+            type="reset"
+            className="p-search-box__reset"
+            onClick={() => {
+              reset();
+            }}
+          >
+            <i className="p-icon--close">Close</i>
+          </button>
+          <button type="submit" className="p-search-box__button">
+            <i className="p-icon--search">Search</i>
+          </button>
+        </div>
+        <ul
+          className="store-selector__list"
+          style={{ listStyle: "none" }}
+          {...getMenuProps()}
+        >
+          {isOpen &&
+            filteredStores.map((store: Store, index: number) => (
+              <li
+                key={store.id}
+                className="store-selector__item"
+                {...getItemProps({ item: store, index })}
+              >
+                {store.name}
               </li>
             ))}
-          </ul>
-        </div>
-      )}
+        </ul>
+      </div>
     </div>
   );
 }
