@@ -20,7 +20,10 @@
               ?channel={{ default_track }}/{{ lowest_risk_available }}
             {% endif %}"
           class="p-view-store-button"
-          data-js="open-desktop">
+          data-js="open-desktop"
+          data-analytics-click
+          data-analytics-target="snap_details_view_in_desktop_store"
+          data-analytics-channel="{{ default_track }}/{{ lowest_risk_available }}">
             View in Desktop store
         </button>
         <p class="p-form-help-text">Make sure <a href="/docs/installing-snapd">snap support</a> is enabled in your Desktop store.</p>
@@ -30,9 +33,10 @@
       </div>
       <div class="u-fixed-width">
         <p><b>Install using the command line</b></p>
-        <div class="p-code-snippet">
+        <div class="p-code-snippet" style="position: relative;">
           <pre class="p-code-snippet__block--icon"><code id="snap-install">{{ install_snippet(
           package_name, default_track, lowest_risk_available, confinement) }}</code></pre>
+          <button class="u-no-margin--bottom" title="Copy to clipboard" data-js="copy-install-command" data-copy-target="snap-install" data-analytics-click data-analytics-target="snap_details_copy_install_command" data-analytics-channel="{{ default_track }}/{{ lowest_risk_available }}" style="position: absolute; top: 0.5rem; right: 0.5rem; background: transparent; border: none; cursor: pointer; padding: 0.25rem;"><i class="p-icon--copy" style="opacity: 0.7;"></i></button>
         </div>
         <p class="p-form-help-text">
           Don't have snapd? <a href="/docs/installing-snapd">Get set up for snaps</a>.
@@ -167,7 +171,7 @@
       </div>
     </div>
     <p>Ubuntu 16.04 or later?</p>
-    <button data-snap="{{ package_name }}?channel=${channel}" class="p-view-store-button" data-js="open-desktop">View in Desktop store</button>
+    <button data-snap="{{ package_name }}?channel=${channel}" class="p-view-store-button" data-js="open-desktop" data-analytics-click data-analytics-target="snap_details_channel_view_in_desktop_store" data-analytics-channel="${channel}">View in Desktop store</button>
     <p class="p-form-help-text">Make sure <a href="/docs/installing-snapd">snap support</a> is enabled in your Desktop store.</p>
   </div>
   <div class="u-fixed-width">
@@ -175,8 +179,9 @@
   </div>
   <div class="u-fixed-width">
     <p><b>Install using the command line</b></p>
-    <div class="p-code-snippet">
+    <div class="p-code-snippet" style="position: relative;">
       <pre class="p-code-snippet__block--icon is-wrapped"><code id="snap-install-alt">sudo snap install {{ package_name }}${paramString}</code></pre>
+      <button class="u-no-margin--bottom" title="Copy to clipboard" data-js="copy-install-command" data-copy-target="snap-install-alt" data-analytics-click data-analytics-target="snap_details_channel_copy_install_command" data-analytics-channel="${channel}" style="position: absolute; top: 0.5rem; right: 0.5rem; background: transparent; border: none; cursor: pointer; padding: 0.25rem;"><i class="p-icon--copy" style="opacity: 0.7;"></i></button>
     </div>
     <p class="p-form-help-text">
       Don't have snapd? <a href="/docs/installing-snapd">Get set up for snaps</a>.
@@ -189,7 +194,7 @@
     <td>${row[0]}/${row[1]}</td>
     <td>${row[2]}</td>
     <td class="u-hide--medium u-hide--small">${row[3]}</td>
-    <td class="u-align--center"><a href="#" class="p-channel-map__version-table-install">Install &rsaquo;</a></td>
+    <td class="u-align--center"><a href="#" class="p-channel-map__version-table-install" data-analytics-click data-analytics-target="snap_details_channel_version_install" data-analytics-channel="${row[0]}/${row[1]}" data-analytics-version="${row[2]}">Install &rsaquo;</a></td>
   </tr>
 </script>
 
