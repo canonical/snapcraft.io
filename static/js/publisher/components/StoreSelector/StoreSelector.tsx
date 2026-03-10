@@ -1,6 +1,8 @@
+import { useMemo } from "react";
 import Downshift from "downshift";
 import { useAtomValue } from "jotai";
 import { useParams, useNavigate } from "react-router-dom";
+import { Icon } from "@canonical/react-components";
 
 import { brandStoresState } from "../../state/brandStoreState";
 
@@ -10,22 +12,40 @@ type Props = {
   nativeNavLink?: boolean;
 };
 
+function StoreSelectorPlaceholder(): React.JSX.Element {
+  return (
+    <div className="store-selector">
+      <label className="u-off-screen" htmlFor="store-selector-placeholder">
+        Search stores
+      </label>
+      <input
+        id="store-selector-placeholder"
+        type="search"
+        readOnly
+        className="store-selector__input u-no-margin--bottom"
+        name="search-stores"
+        placeholder="Select a store"
+      />
+      <button className="store-selector__button p-button--base has-icon u-no-margin">
+        <Icon name="chevron-down" />
+      </button>
+    </div>
+  );
+}
+
 function StoreSelector({ nativeNavLink }: Props): React.JSX.Element {
   const { id } = useParams();
   const navigate = useNavigate();
   const brandStoresList = useAtomValue(brandStoresState);
 
-  const getStoreName = (storeId: string | undefined) => {
-    if (!storeId) {
-      return "Select a store";
-    }
+  const activeStore = useMemo(
+    () => brandStoresList.find((store) => store.id === id),
+    [brandStoresList, id],
+  );
+  const activeStoreName = activeStore?.name ?? "";
 
-    const targetStore = brandStoresList.find((store) => store.id === storeId);
-    return targetStore ? targetStore.name : "Select a store";
-  };
-
-  return (
-    <Downshift
+  return brandStoresList.length > 0 ? (
+    <Downshift<Store>
       onChange={(selectedStore) => {
         if (!selectedStore) return;
         if (nativeNavLink) {
@@ -34,59 +54,63 @@ function StoreSelector({ nativeNavLink }: Props): React.JSX.Element {
           navigate(`/admin/${selectedStore.id}/snaps`);
         }
       }}
-      itemToString={() => ""}
+      initialSelectedItem={activeStore}
+      onUserAction={(a, { isOpen, setState }) => {
+        const { clickButton, unknown } = Downshift.stateChangeTypes;
+
+        switch (a.type) {
+          case clickButton:
+            setState({
+              inputValue: isOpen ? "" : activeStoreName,
+            });
+            break;
+          case unknown:
+            // Downshift doesn't track click events on the input, this is an ugly workaround
+            if (Object.hasOwn(a, "isOpen")) {
+              setState({
+                inputValue: a.isOpen ? "" : activeStoreName,
+              });
+            }
+            break;
+          default:
+            break;
+        }
+      }}
+      itemToString={(selectedStore) => selectedStore?.name ?? ""}
     >
       {({
         getInputProps,
         getItemProps,
         getMenuProps,
         getLabelProps,
+        getToggleButtonProps,
         isOpen,
         inputValue,
         toggleMenu,
-        reset,
       }) => {
-        const { id: inputId, ...inputProps } = getInputProps();
-
         return (
           <div className="store-selector">
-            <button
-              className="store-selector__button u-no-margin--bottom"
+            {/* label is provided by getLabelProps */}
+            {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
+            <label className="u-off-screen" {...getLabelProps()}>
+              Search stores
+            </label>
+            <input
+              type="search"
+              className="store-selector__input u-no-margin--bottom"
+              name="search-stores"
+              placeholder="Select a store"
+              {...getInputProps()}
               onClick={() => toggleMenu()}
-              aria-haspopup="listbox"
-              aria-expanded={isOpen}
+            />
+            <button
+              className="store-selector__button p-button--base has-icon u-no-margin"
+              {...getToggleButtonProps()}
             >
-              {id !== undefined ? getStoreName(id) : "Select a store"}
+              <Icon name={isOpen ? "chevron-up" : "chevron-down"} />
             </button>
             {isOpen && (
               <div className="store-selector__panel">
-                <div className="p-search-box u-no-margin--bottom">
-                  <label
-                    htmlFor={inputId}
-                    className="u-off-screen"
-                    {...getLabelProps()}
-                  >
-                    Search stores
-                  </label>
-                  <input
-                    type="search"
-                    id={inputId}
-                    className="p-search-box__input"
-                    name="search-stores"
-                    placeholder="Search"
-                    {...inputProps}
-                  />
-                  <button
-                    type="reset"
-                    className="p-search-box__reset"
-                    onClick={() => reset()}
-                  >
-                    <i className="p-icon--close">Close</i>
-                  </button>
-                  <button type="submit" className="p-search-box__button">
-                    <i className="p-icon--search">Search</i>
-                  </button>
-                </div>
                 <ul
                   className="store-selector__list"
                   style={{ listStyle: "none" }}
@@ -116,6 +140,8 @@ function StoreSelector({ nativeNavLink }: Props): React.JSX.Element {
         );
       }}
     </Downshift>
+  ) : (
+    <StoreSelectorPlaceholder />
   );
 }
 
