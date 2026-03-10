@@ -48,7 +48,7 @@ describe("StoreSelector", () => {
     await user.click(screen.getByRole("button", { name: "Test store" }));
 
     await waitFor(() => {
-      expect(screen.getByRole("combobox")).toBeInTheDocument();
+      expect(screen.getByRole("searchbox")).toBeInTheDocument();
     });
   });
 
@@ -59,8 +59,9 @@ describe("StoreSelector", () => {
     await user.click(screen.getByRole("button", { name: "Test store" }));
 
     await waitFor(() => {
-      const input = screen.getByRole("combobox");
-      expect(input).toHaveAccessibleName("Search stores");
+      expect(
+        screen.getByRole("searchbox", { name: "Search stores" }),
+      ).toBeInTheDocument();
     });
   });
 
@@ -85,7 +86,7 @@ describe("StoreSelector", () => {
     renderComponent();
 
     await user.click(screen.getByRole("button", { name: "Test store" }));
-    await user.type(screen.getByRole("combobox"), "Test");
+    await user.type(screen.getByRole("searchbox"), "Test");
 
     await waitFor(() => {
       expect(
@@ -140,7 +141,7 @@ describe("StoreSelector", () => {
     renderComponent();
 
     await user.click(screen.getByRole("button", { name: "Test store" }));
-    await user.type(screen.getByRole("combobox"), "Test");
+    await user.type(screen.getByRole("searchbox"), "Test");
 
     await waitFor(() => {
       expect(
@@ -151,8 +152,8 @@ describe("StoreSelector", () => {
     await user.click(screen.getByRole("button", { name: "Close" }));
 
     await waitFor(() => {
-      // Panel is closed after reset, so no options are visible
-      expect(screen.queryByRole("combobox")).not.toBeInTheDocument();
+      // Panel is closed after reset, so the search input is no longer visible
+      expect(screen.queryByRole("searchbox")).not.toBeInTheDocument();
     });
   });
 });
