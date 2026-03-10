@@ -19,11 +19,11 @@ vi.mock("react-router-dom", async (importOriginal) => ({
   useNavigate: () => mockNavigate,
 }));
 
-function renderComponent(nativeNavLink?: boolean) {
+function renderComponent() {
   return render(
     <BrowserRouter>
       <JotaiTestProvider initialValues={[[brandStoresState, storesResponse]]}>
-        <StoreSelector nativeNavLink={nativeNavLink} />
+        <StoreSelector />
       </JotaiTestProvider>
     </BrowserRouter>,
   );

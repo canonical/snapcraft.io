@@ -8,10 +8,6 @@ import { brandStoresState } from "../../state/brandStoreState";
 
 import type { Store } from "../../types/shared";
 
-type Props = {
-  nativeNavLink?: boolean;
-};
-
 function StoreSelectorPlaceholder(): React.JSX.Element {
   return (
     <div className="store-selector">
@@ -33,7 +29,7 @@ function StoreSelectorPlaceholder(): React.JSX.Element {
   );
 }
 
-function StoreSelector({ nativeNavLink }: Props): React.JSX.Element {
+function StoreSelector(): React.JSX.Element {
   const { id } = useParams();
   const navigate = useNavigate();
   const brandStoresList = useAtomValue(brandStoresState);
@@ -48,11 +44,7 @@ function StoreSelector({ nativeNavLink }: Props): React.JSX.Element {
     <Downshift<Store>
       onChange={(selectedStore) => {
         if (!selectedStore) return;
-        if (nativeNavLink) {
-          window.location.href = `/admin/${selectedStore.id}/snaps`;
-        } else {
-          navigate(`/admin/${selectedStore.id}/snaps`);
-        }
+        navigate(`/admin/${selectedStore.id}/snaps`);
       }}
       initialSelectedItem={activeStore}
       onUserAction={(a, { isOpen, setState }) => {
