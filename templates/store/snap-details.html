@@ -114,7 +114,9 @@
                 {% endif %}
                 data-js="open-channel-map"
                 data-controls="channel-map-install"
-                aria-controls="channel-map-install">
+                aria-controls="channel-map-install"
+                data-analytics-click
+                data-analytics-target="snap_details_install_button">
                   Install
                   {% if is_preview %}
                 <span class="p-tooltip__message u-align--center" role="tooltip" id="{{ package_name }}-preview-channel-map">This content is being displayed for preview purposes</span>
