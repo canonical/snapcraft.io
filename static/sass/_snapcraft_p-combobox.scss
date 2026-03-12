@@ -1,0 +1,70 @@
+@use "sass:map";
+
+@mixin snapcraft-p-combobox {
+  .p-combobox {
+    position: relative;
+    margin: $spv--small $sph--large;
+
+    &__controls {
+      position: relative;
+    }
+
+    &__input {
+      padding-left: $spv--small; // align text to icons in sidenav
+      padding-right: 2rem;
+      cursor: pointer;
+      margin-bottom: 0 !important;
+      text-overflow: ellipsis;
+    }
+
+    &__toggle {
+      &:hover {
+        background-color: transparent;
+        border-color: transparent;
+      }
+
+      position: absolute;
+      right: 0;
+      top: 0;
+      bottom: 0;
+    }
+
+    &__options-panel {
+      background-color: $colors--theme--background-hover;
+      border: 1px solid $colors--theme--border-default;
+      left: 0;
+      position: absolute;
+      top: 100%;
+      width: 100%;
+      z-index: 1;
+      padding: 0;
+      margin: 0;
+      list-style: none;
+
+      &:not(.active) {
+        visibility: hidden;
+      }
+    }
+
+    &__option {
+      border-bottom: 1px solid $colors--theme--border-low-contrast;
+      color: $colors--theme--text-default;
+      display: block;
+      overflow: hidden;
+      padding: $spv--small $sph--small;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+
+      &:last-child {
+        border-bottom: 0;
+      }
+
+      &:hover,
+      &[aria-selected="true"] {
+        background-color: $colors--theme--background-default;
+        text-decoration: none;
+        cursor: pointer;
+      }
+    }
+  }
+}
