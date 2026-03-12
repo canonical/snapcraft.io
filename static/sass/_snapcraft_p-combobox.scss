@@ -2,18 +2,18 @@
 
 @mixin snapcraft-p-combobox {
   .p-combobox {
-    position: relative;
     margin: $spv--small $sph--large;
+    position: relative;
 
     &__controls {
       position: relative;
     }
 
     &__input {
-      padding-left: $spv--small; // align text to icons in sidenav
-      padding-right: 2rem;
       cursor: pointer;
       margin-bottom: 0 !important;
+      padding-left: $spv--small; // align text to icons in sidenav
+      padding-right: 2rem;
       text-overflow: ellipsis;
     }
 
@@ -23,23 +23,23 @@
         border-color: transparent;
       }
 
+      bottom: 0;
       position: absolute;
       right: 0;
       top: 0;
-      bottom: 0;
     }
 
     &__options-panel {
       background-color: $colors--theme--background-hover;
       border: 1px solid $colors--theme--border-default;
       left: 0;
+      list-style: none;
+      margin: 0;
+      padding: 0;
       position: absolute;
       top: 100%;
       width: 100%;
       z-index: 1;
-      padding: 0;
-      margin: 0;
-      list-style: none;
 
       &:not(.active) {
         visibility: hidden;
@@ -62,8 +62,8 @@
       &:hover,
       &[aria-selected="true"] {
         background-color: $colors--theme--background-default;
-        text-decoration: none;
         cursor: pointer;
+        text-decoration: none;
       }
     }
   }
