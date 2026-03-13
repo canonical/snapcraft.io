@@ -211,6 +211,8 @@ describe("ComboBox", () => {
   it("arrow keys open the listbox", async () => {
     renderComponent();
 
+    expect(elements.listbox).not.toHaveClass("active");
+
     await userEvent.type(elements.input, "{arrowdown}");
 
     expect(elements.listbox).toHaveClass("active");
@@ -257,7 +259,7 @@ describe("ComboBox", () => {
 
   it("enter selects an element", async () => {
     renderComponent();
-    await userEvent.type(elements.input, "1{arrowdown}{enter}");
+    await userEvent.type(elements.input, "{arrowdown}{enter}");
 
     // listbox closes
     expect(elements.listbox).not.toHaveClass("active");
@@ -265,5 +267,45 @@ describe("ComboBox", () => {
     expect(elements.input.value).toEqual("Option 1");
     // callback is called
     expect(onChange).toHaveBeenCalledWith("option-1");
+  });
+
+  it("blurring selects an element", async () => {
+    renderComponent();
+    await userEvent.type(elements.input, "{arrowdown}{tab}");
+
+    // listbox closes
+    expect(elements.listbox).not.toHaveClass("active");
+    // value changes
+    expect(elements.input.value).toEqual("Option 1");
+    // callback is called
+    expect(onChange).toHaveBeenCalledWith("option-1");
+  });
+
+  it("arrow key navigation doesn't loop at the bottom", async () => {
+    renderComponent();
+    await userEvent.type(elements.input, "{arrowdown}".repeat(10));
+
+    const lastOption = elements.listbox.lastChild! as HTMLLIElement;
+    expect(lastOption).toHaveAttribute("aria-selected", "true");
+  });
+
+  it("arrow up key navigation doesn't select options when starting from an empty state", async () => {
+    renderComponent();
+    await userEvent.type(elements.input, "{arrowup}".repeat(10));
+
+    for (const element of elements.listbox.children) {
+      expect(element).toHaveAttribute("aria-selected", "false");
+    }
+  });
+
+  it("arrow key navigation doesn't loop at the top", async () => {
+    renderComponent();
+    await userEvent.type(
+      elements.input,
+      "{arrowdown}{arrowdown}" + "{arrowup}".repeat(10),
+    );
+
+    const firstOption = elements.listbox.firstChild! as HTMLLIElement;
+    expect(firstOption).toHaveAttribute("aria-selected", "true");
   });
 });

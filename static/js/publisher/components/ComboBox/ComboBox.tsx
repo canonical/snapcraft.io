@@ -50,11 +50,11 @@ const ComboBox: FC<ComboBoxProps> = ({
     (prevState, action) => {
       const { type, ...changes } = action;
 
+      // console.log(type, prevState, changes);
+
       const nextState = { ...prevState, ...changes };
 
-      // Opening the dropdown should always bring focus on the input
-      if (changes.isOpen) inputRef.current?.focus();
-
+      // This is an improvement from the UX POV
       // When opening the combobox dropdown to see all the options we have two cases where
       // we should show all options:
       //   1. inputValue is empty; this is trivial
@@ -73,12 +73,27 @@ const ComboBox: FC<ComboBoxProps> = ({
         : true;
       nextState.showAllOptions = inputValueEmpty || userHasTypedAfterOpening;
 
-      nextState.filteredOptions = options.filter(
-        (item) =>
-          !nextState.inputValue ||
-          nextState.showAllOptions ||
-          onSearch(item, nextState.inputValue),
-      );
+      // filter the options when inputValue changes
+      if (Object.hasOwn(changes, "inputValue")) {
+        nextState.filteredOptions = options.filter(
+          (item) =>
+            !nextState.inputValue ||
+            nextState.showAllOptions ||
+            onSearch(item, nextState.inputValue),
+        );
+      }
+
+      // Everything below is patching out some of Downshift's behavior that doesn't match the
+      // WAI Combobox pattern description
+      // for more info, see https://www.w3.org/WAI/ARIA/apg/patterns/combobox/
+
+      // focus should move to the first value that matches the filter when results change
+      if (Object.hasOwn(changes, "inputValue")) {
+        nextState.highlightedIndex = 0;
+      }
+
+      // Opening the dropdown should always bring focus on the input
+      if (changes.isOpen) inputRef.current?.focus();
 
       // When opening the dropdown with an option already selected, the default highlighted
       // option should be the one that's been selected previously
@@ -90,12 +105,69 @@ const ComboBox: FC<ComboBoxProps> = ({
           selectedIndex !== -1 ? selectedIndex : null;
       }
 
-      // pressing the "escape" key should just close the dropdown, not reset its state value
-      if (type === Downshift.stateChangeTypes.keyDownEscape) {
-        nextState.inputValue = prevState.inputValue;
-        nextState.selectedItem = prevState.selectedItem;
+      // fixes for certain keyboard interactions
+      switch (type) {
+        // Downshift implements arrow keys navigation, but it cycles the options in the list
+        // when it reaches the extremes; the WAI spec prescribes that this shouldn't happen;
+        // if the user presses "up" on the first option or "down" on the last one, we should
+        // ignore the change Downshift proposes
+        case Downshift.stateChangeTypes.keyDownArrowUp: {
+          if (prevState.highlightedIndex === 0) {
+            nextState.highlightedIndex = 0;
+          } else if (prevState.highlightedIndex === null) {
+            // when opening the dropdown without a selected value, Downshift makes the first
+            // "up" press move navigation to the bottom; this is wrong
+            nextState.highlightedIndex = null;
+          }
+
+          break;
+        }
+        case Downshift.stateChangeTypes.keyDownArrowDown: {
+          const lastIndex = prevState.filteredOptions.length - 1;
+          if (prevState.highlightedIndex === lastIndex) {
+            nextState.highlightedIndex = lastIndex;
+          }
+          break;
+        }
+
+        // Downshift closes the dropdown when pressing the "escape" key, but also resets the
+        // selected value to the default one; the latter shouldn't happen, we restore the last
+        // selected value (if available) instead
+        case Downshift.stateChangeTypes.keyDownEscape: {
+          nextState.inputValue = prevState.selectedItem?.label ?? "";
+          nextState.selectedItem = prevState.selectedItem;
+          break;
+        }
+
+        // blurring the input, via keyboard, with an option highlighted means selecting it;
+        // Downshift doesn't do this, it behaves as if we pressed "escape" instead
+        case Downshift.stateChangeTypes.blurInput: {
+          if (prevState.highlightedIndex !== null) {
+            // restore the previous state, select the item and dispatch onChange
+            nextState.filteredOptions = prevState.filteredOptions;
+            nextState.highlightedIndex = prevState.highlightedIndex;
+            nextState.selectedItem =
+              prevState.filteredOptions[prevState.highlightedIndex!];
+            nextState.inputValue = nextState.selectedItem.label;
+
+            // we have to dispatch onChange manually; since we don't have control over it and
+            // don't know what it does, we run it in a setTimeout callback so it doesn't trigger
+            // a rerender loop
+            if (onChange) {
+              setTimeout(() => {
+                onChange?.(nextState.selectedItem!.value);
+              }, 0);
+            }
+          }
+          break;
+        }
+
+        default: {
+          break;
+        }
       }
 
+      // console.log(nextState);
       return nextState;
     },
     { options, value },
@@ -104,10 +176,7 @@ const ComboBox: FC<ComboBoxProps> = ({
       return {
         selectedItem: selectedItem ?? null,
         inputValue: selectedItem?.label ?? "",
-        filteredOptions: options.filter(
-          (item) =>
-            !value || item.label.toLowerCase().includes(value.toLowerCase()),
-        ),
+        filteredOptions: options,
         isOpen: false,
         highlightedIndex: null,
         showAllOptions: true,
