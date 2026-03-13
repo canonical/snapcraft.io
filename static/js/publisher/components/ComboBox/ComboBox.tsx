@@ -8,9 +8,11 @@ export interface ComboBoxItem {
 }
 
 export interface ComboBoxProps {
+  name: string;
   options: ComboBoxItem[];
   value: ComboBoxItem["value"];
   onChange?: (value: ComboBoxItem["value"] | null) => void;
+  onSearch?: (item: ComboBoxItem, inputValue: string) => boolean;
   placeholder?: string;
   label?: string;
   labelClassName?: string;
@@ -21,6 +23,12 @@ interface ComboBoxState extends DownshiftState<ComboBoxItem> {
   showAllOptions: boolean;
 }
 
+// default filter function, case-insensitive partial match between item.label and inputValue
+const defaultFilter: ComboBoxProps["onSearch"] = (
+  item: ComboBoxItem,
+  inputValue: string,
+) => item.label.toLowerCase().includes(inputValue.toLowerCase());
+
 const ComboBox: FC<ComboBoxProps> = ({
   options,
   value,
@@ -28,7 +36,10 @@ const ComboBox: FC<ComboBoxProps> = ({
   label,
   labelClassName,
   placeholder,
+  onSearch: onSearch,
 }) => {
+  onSearch = onSearch ?? defaultFilter; // if no filter is provided use a default
+
   const inputRef = useRef<HTMLInputElement>(null);
 
   const [comboBoxState, dispatch] = useReducer<
@@ -39,16 +50,10 @@ const ComboBox: FC<ComboBoxProps> = ({
     (prevState, action) => {
       const { type, ...changes } = action;
 
-      console.log(prevState, type, changes);
-      const nextState = {
-        ...prevState,
-        ...changes,
-      };
+      const nextState = { ...prevState, ...changes };
 
-      // Opening the dropdown in any way should focus on the input
-      if (changes.isOpen) {
-        inputRef.current?.focus();
-      }
+      // Opening the dropdown should always bring focus on the input
+      if (changes.isOpen) inputRef.current?.focus();
 
       // When opening the combobox dropdown to see all the options we have two cases where
       // we should show all options:
@@ -72,11 +77,11 @@ const ComboBox: FC<ComboBoxProps> = ({
         (item) =>
           !nextState.inputValue ||
           nextState.showAllOptions ||
-          item.label.toLowerCase().includes(nextState.inputValue.toLowerCase()),
+          onSearch(item, nextState.inputValue),
       );
 
-      // When opening the dropdown with an option being already selected, the default highlighted
-      // option should be the that's been selected previously
+      // When opening the dropdown with an option already selected, the default highlighted
+      // option should be the one that's been selected previously
       if (Object.hasOwn(changes, "isOpen")) {
         const selectedIndex = nextState.filteredOptions.findIndex(
           (item) => item.label === nextState.inputValue,
@@ -142,10 +147,7 @@ const ComboBox: FC<ComboBoxProps> = ({
       {...comboBoxState}
       onChange={(item) => onChange?.(item?.value ?? null)}
       itemToString={(item) => (item ? item.label : "")}
-      onStateChange={(changes, _stateAndHelpers) => {
-        console.log(changes);
-        dispatch(changes);
-      }}
+      onStateChange={(changes) => dispatch(changes)}
     >
       {({
         getInputProps,

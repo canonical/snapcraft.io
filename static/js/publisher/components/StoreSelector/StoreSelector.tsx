@@ -2,7 +2,7 @@ import { useAtomValue } from "jotai";
 import { useParams, useNavigate } from "react-router-dom";
 
 import { brandStoresState } from "../../state/brandStoreState";
-import ComboBox from "./ComboBox";
+import ComboBox from "../ComboBox/ComboBox";
 
 function StoreSelector(): React.JSX.Element {
   const { id } = useParams();
@@ -11,6 +11,7 @@ function StoreSelector(): React.JSX.Element {
 
   return (
     <ComboBox
+      name="store-selector"
       options={brandStoresList.map((store) => ({
         label: store.name,
         value: store.id,
