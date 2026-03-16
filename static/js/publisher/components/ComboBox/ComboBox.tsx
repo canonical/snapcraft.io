@@ -132,7 +132,7 @@ const ComboBox: FC<ComboBoxProps> = ({
         }
 
         // Downshift closes the dropdown when pressing the "escape" key, but also resets the
-        // selected value to the *default* one; if Downshift doesn't get a default value prop it 
+        // selected value to the *default* one; if Downshift doesn't get a default value prop it
         // resets the value entirely. This shouldn't happen, so we restore the last selected value
         // (if available)
         case Downshift.stateChangeTypes.keyDownEscape: {
@@ -213,7 +213,8 @@ const ComboBox: FC<ComboBoxProps> = ({
     <Downshift<ComboBoxItem>
       {...comboBoxState}
       itemToString={(item) => (item ? item.label : "")}
-      onStateChange={(changes) => dispatch(changes)}>
+      onStateChange={(changes) => dispatch(changes)}
+    >
       {({
         getInputProps,
         getItemProps,
@@ -227,14 +228,16 @@ const ComboBox: FC<ComboBoxProps> = ({
           <div>
             <label
               {...getLabelProps()}
-              className={`p-combobox__label ${labelClassName}`}>
+              className={`p-combobox__label ${labelClassName}`}
+            >
               {label ?? "Select"}
             </label>
             <div
               // we created a root element that doesn't match what Downshift normally expects, so
               // we pass this option to suppress an annoying error
               {...getRootProps({}, { suppressRefError: true })}
-              className="p-combobox__controls">
+              className="p-combobox__controls"
+            >
               <input
                 {...getInputProps({ ref: inputRef })}
                 type="search"
@@ -245,7 +248,8 @@ const ComboBox: FC<ComboBoxProps> = ({
               <button
                 {...getToggleButtonProps()}
                 className="p-combobox__toggle p-button--base has-icon u-no-margin"
-                tabIndex={-1}>
+                tabIndex={-1}
+              >
                 <Icon
                   name={comboBoxState.isOpen ? "chevron-up" : "chevron-down"}
                 />
@@ -254,13 +258,15 @@ const ComboBox: FC<ComboBoxProps> = ({
           </div>
           <ul
             className={`p-combobox__options-panel ${comboBoxState.isOpen ? "active" : ""}`}
-            {...getMenuProps()}>
+            {...getMenuProps()}
+          >
             {comboBoxState.isOpen &&
               comboBoxState.filteredOptions.map((item) => (
                 <li
                   {...getItemProps({ item })}
                   key={item.value}
-                  className="p-combobox__option">
+                  className="p-combobox__option"
+                >
                   {item.label}
                 </li>
               ))}
