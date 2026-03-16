@@ -47,6 +47,12 @@ describe("StoreSelector", () => {
     expect(input.value).toEqual("Test store");
   });
 
+  it("doesn't trigger navigation on mount", () => {
+    renderComponent();
+
+    expect(mockNavigate).not.toHaveBeenCalled();
+  });
+
   it("triggers navigation when changing combobox value", async () => {
     const user = userEvent.setup();
     renderComponent();

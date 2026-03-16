@@ -11,7 +11,6 @@ function StoreSelector(): React.JSX.Element {
 
   return (
     <ComboBox
-      name="store-selector"
       options={brandStoresList.map((store) => ({
         label: store.name,
         value: store.id,

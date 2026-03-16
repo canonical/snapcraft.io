@@ -8,7 +8,6 @@ export interface ComboBoxItem {
 }
 
 export interface ComboBoxProps {
-  name: string;
   options: ComboBoxItem[];
   value: ComboBoxItem["value"];
   onChange?: (value: ComboBoxItem["value"] | null) => void;
@@ -201,9 +200,16 @@ const ComboBox: FC<ComboBoxProps> = ({
     }
   }, [value, options]);
 
+  const firstRenderRef = useRef(true);
+
   // Run the onChange callback when we change the selectedItem. We don't pass the callback as a
   // Downshift prop because it wouldn't run when we set the selectedItem inside the state reducer
   useEffect(() => {
+    if (firstRenderRef.current) {
+      firstRenderRef.current = false;
+      return;
+    }
+
     if (onChange) {
       onChange?.(comboBoxState.selectedItem?.value ?? null);
     }
@@ -228,7 +234,7 @@ const ComboBox: FC<ComboBoxProps> = ({
           <div>
             <label
               {...getLabelProps()}
-              className={`p-combobox__label ${labelClassName}`}
+              className={`p-combobox__label ${labelClassName ?? ""}`}
             >
               {label ?? "Select"}
             </label>

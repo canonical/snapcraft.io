@@ -17,12 +17,11 @@ let actions: {
   focus: () => Promise<void>;
 };
 
-const onChange = vi.fn((_: string | null) => {});
+const onChange = vi.fn();
 
 function renderComponent(props?: Partial<ComboBoxProps>) {
   const renderResult = render(
     <ComboBox
-      name="test-combobox"
       options={[1, 2, 3, 4, 5].map((i) => ({
         value: `option-${i}`,
         label: `Option ${i}`,
@@ -55,6 +54,7 @@ function renderComponent(props?: Partial<ComboBoxProps>) {
 
 describe("ComboBox", () => {
   beforeEach(() => {
+    onChange.mockClear();
     document.body.innerHTML = "";
     // @ts-expect-error: resetting
     elements = undefined;
@@ -195,14 +195,16 @@ describe("ComboBox", () => {
   });
 
   it("listbox is not filtered when opening for the first time after setting a value", async () => {
-    renderComponent({ value: "Option 1" });
+    renderComponent({ value: "option-1" });
     await actions.toggle();
 
     expect(elements.listbox.children.length).toBe(5);
   });
 
   it("listbox does filter when changing input even with a value already set", async () => {
-    renderComponent({ value: "Option 1" });
+    renderComponent({ value: "option-1" });
+
+    await userEvent.clear(elements.input);
     await userEvent.type(elements.input, "1");
 
     expect(elements.listbox.children.length).toBe(1);
@@ -255,6 +257,12 @@ describe("ComboBox", () => {
       "aria-activedescendant",
       firstOption.id,
     );
+  });
+
+  it("doesn't trigger onChange on mount", () => {
+    renderComponent();
+
+    expect(onChange).not.toHaveBeenCalled();
   });
 
   it("enter selects an element", async () => {
