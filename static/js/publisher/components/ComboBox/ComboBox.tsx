@@ -36,9 +36,9 @@ const ComboBox: FC<ComboBoxProps> = ({
   label,
   labelClassName,
   placeholder,
-  onSearch: onSearch,
+  onSearch,
 }) => {
-  onSearch = onSearch ?? defaultFilter; // if no filter is provided use a default
+  onSearch = onSearch ?? defaultFilter; // if no filter is provided use the default one
 
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -49,8 +49,6 @@ const ComboBox: FC<ComboBoxProps> = ({
   >(
     (prevState, action) => {
       const { type, ...changes } = action;
-
-      // console.log(type, prevState, changes);
 
       const nextState = { ...prevState, ...changes };
 
@@ -87,22 +85,25 @@ const ComboBox: FC<ComboBoxProps> = ({
       // WAI Combobox pattern description
       // for more info, see https://www.w3.org/WAI/ARIA/apg/patterns/combobox/
 
-      // focus should move to the first value that matches the filter when results change
-      if (Object.hasOwn(changes, "inputValue")) {
-        nextState.highlightedIndex = 0;
-      }
-
-      // Opening the dropdown should always bring focus on the input
-      if (changes.isOpen) inputRef.current?.focus();
-
-      // When opening the dropdown with an option already selected, the default highlighted
-      // option should be the one that's been selected previously
       if (Object.hasOwn(changes, "isOpen")) {
+        // When opening the dropdown with an option already selected, the default highlighted
+        // option should be the one that's been selected previously
         const selectedIndex = nextState.filteredOptions.findIndex(
           (item) => item.label === nextState.inputValue,
         );
         nextState.highlightedIndex =
           selectedIndex !== -1 ? selectedIndex : null;
+
+        // Opening the dropdown should always bring focus on the input
+        if (changes.isOpen) inputRef.current?.focus();
+      }
+
+      // every time inputValue changes, the first option should be highlighted
+      if (
+        Object.hasOwn(changes, "inputValue") &&
+        nextState.filteredOptions.length > 0
+      ) {
+        nextState.highlightedIndex = 0;
       }
 
       // fixes for certain keyboard interactions
@@ -112,52 +113,41 @@ const ComboBox: FC<ComboBoxProps> = ({
         // if the user presses "up" on the first option or "down" on the last one, we should
         // ignore the change Downshift proposes
         case Downshift.stateChangeTypes.keyDownArrowUp: {
-          if (prevState.highlightedIndex === 0) {
-            nextState.highlightedIndex = 0;
-          } else if (prevState.highlightedIndex === null) {
-            // when opening the dropdown without a selected value, Downshift makes the first
-            // "up" press move navigation to the bottom; this is wrong
-            nextState.highlightedIndex = null;
+          // check for an "integer underflow" (we were at index 0 and moved to index N > 0);
+          // also, when opening the dropdown without a selected value prevState.highlightedIndex is
+          // null -> the first "up" keypress press moves the highlightedIndex to the bottom; this is
+          // obviously wrong. Since null becomes 0 when doing number comparisons, the following
+          // check covers this case as well.
+          if (nextState.highlightedIndex! > prevState.highlightedIndex!) {
+            nextState.highlightedIndex = prevState.highlightedIndex;
           }
-
           break;
         }
         case Downshift.stateChangeTypes.keyDownArrowDown: {
-          const lastIndex = prevState.filteredOptions.length - 1;
-          if (prevState.highlightedIndex === lastIndex) {
-            nextState.highlightedIndex = lastIndex;
+          // check for an "integer overflow" (we were at index N > 0 and moved to index 0);
+          if (nextState.highlightedIndex! < prevState.highlightedIndex!) {
+            nextState.highlightedIndex = prevState.highlightedIndex;
           }
           break;
         }
 
         // Downshift closes the dropdown when pressing the "escape" key, but also resets the
-        // selected value to the default one; the latter shouldn't happen, we restore the last
-        // selected value (if available) instead
+        // selected value to the *default* one; if Downshift doesn't get a default value prop it 
+        // resets the value entirely. This shouldn't happen, so we restore the last selected value
+        // (if available)
         case Downshift.stateChangeTypes.keyDownEscape: {
           nextState.inputValue = prevState.selectedItem?.label ?? "";
           nextState.selectedItem = prevState.selectedItem;
           break;
         }
 
-        // blurring the input, via keyboard, with an option highlighted means selecting it;
-        // Downshift doesn't do this, it behaves as if we pressed "escape" instead
+        // tab-ing after highlighting an option means selecting it; Downshift doesn't do this,
+        // instead it just closes the dropdown and resets the previous state
         case Downshift.stateChangeTypes.blurInput: {
           if (prevState.highlightedIndex !== null) {
-            // restore the previous state, select the item and dispatch onChange
-            nextState.filteredOptions = prevState.filteredOptions;
-            nextState.highlightedIndex = prevState.highlightedIndex;
             nextState.selectedItem =
               prevState.filteredOptions[prevState.highlightedIndex!];
             nextState.inputValue = nextState.selectedItem.label;
-
-            // we have to dispatch onChange manually; since we don't have control over it and
-            // don't know what it does, we run it in a setTimeout callback so it doesn't trigger
-            // a rerender loop
-            if (onChange) {
-              setTimeout(() => {
-                onChange?.(nextState.selectedItem!.value);
-              }, 0);
-            }
           }
           break;
         }
@@ -167,10 +157,10 @@ const ComboBox: FC<ComboBoxProps> = ({
         }
       }
 
-      // console.log(nextState);
       return nextState;
     },
     { options, value },
+    // init function finds the selected item based on the options and value props
     ({ options, value }) => {
       const selectedItem = options.find((item) => item.value === value);
       return {
@@ -211,13 +201,19 @@ const ComboBox: FC<ComboBoxProps> = ({
     }
   }, [value, options]);
 
+  // Run the onChange callback when we change the selectedItem. We don't pass the callback as a
+  // Downshift prop because it wouldn't run when we set the selectedItem inside the state reducer
+  useEffect(() => {
+    if (onChange) {
+      onChange?.(comboBoxState.selectedItem?.value ?? null);
+    }
+  }, [comboBoxState.selectedItem]);
+
   return (
     <Downshift<ComboBoxItem>
       {...comboBoxState}
-      onChange={(item) => onChange?.(item?.value ?? null)}
       itemToString={(item) => (item ? item.label : "")}
-      onStateChange={(changes) => dispatch(changes)}
-    >
+      onStateChange={(changes) => dispatch(changes)}>
       {({
         getInputProps,
         getItemProps,
@@ -231,14 +227,14 @@ const ComboBox: FC<ComboBoxProps> = ({
           <div>
             <label
               {...getLabelProps()}
-              className={`p-combobox__label ${labelClassName}`}
-            >
+              className={`p-combobox__label ${labelClassName}`}>
               {label ?? "Select"}
             </label>
             <div
+              // we created a root element that doesn't match what Downshift normally expects, so
+              // we pass this option to suppress an annoying error
               {...getRootProps({}, { suppressRefError: true })}
-              className="p-combobox__controls"
-            >
+              className="p-combobox__controls">
               <input
                 {...getInputProps({ ref: inputRef })}
                 type="search"
@@ -249,8 +245,7 @@ const ComboBox: FC<ComboBoxProps> = ({
               <button
                 {...getToggleButtonProps()}
                 className="p-combobox__toggle p-button--base has-icon u-no-margin"
-                tabIndex={-1}
-              >
+                tabIndex={-1}>
                 <Icon
                   name={comboBoxState.isOpen ? "chevron-up" : "chevron-down"}
                 />
@@ -259,15 +254,13 @@ const ComboBox: FC<ComboBoxProps> = ({
           </div>
           <ul
             className={`p-combobox__options-panel ${comboBoxState.isOpen ? "active" : ""}`}
-            {...getMenuProps()}
-          >
+            {...getMenuProps()}>
             {comboBoxState.isOpen &&
               comboBoxState.filteredOptions.map((item) => (
                 <li
                   {...getItemProps({ item })}
                   key={item.value}
-                  className="p-combobox__option"
-                >
+                  className="p-combobox__option">
                   {item.label}
                 </li>
               ))}
