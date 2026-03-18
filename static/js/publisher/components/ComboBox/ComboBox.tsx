@@ -175,29 +175,13 @@ const ComboBox: FC<ComboBoxProps> = ({
 
   // part of comboBoxState is based on the props, we must keep the state in sync with them
   useEffect(() => {
-    // reset the selectedItem when props.value is reset
-    if (!value && comboBoxState.selectedItem !== null) {
-      dispatch({
-        type: Downshift.stateChangeTypes.unknown,
-        selectedItem: null,
-        inputValue: "",
-      });
-    }
+    const selectedItem = options.find((item) => item.value === value);
 
-    // update the inputValue and selectedItem when props.value or props.items change
-    if (
-      value &&
-      options.length > 0 &&
-      value !== comboBoxState.selectedItem?.value
-    ) {
-      const selectedItem = options.find((item) => item.value === value);
-
-      dispatch({
-        type: Downshift.stateChangeTypes.unknown,
-        selectedItem: selectedItem ?? null,
-        inputValue: selectedItem?.label ?? "",
-      });
-    }
+    dispatch({
+      type: Downshift.stateChangeTypes.unknown,
+      selectedItem: selectedItem ?? null,
+      inputValue: selectedItem?.label ?? "",
+    });
   }, [value, options]);
 
   const firstRenderRef = useRef(true);
@@ -213,7 +197,7 @@ const ComboBox: FC<ComboBoxProps> = ({
     if (onChange) {
       onChange?.(comboBoxState.selectedItem?.value ?? null);
     }
-  }, [comboBoxState.selectedItem]);
+  }, [comboBoxState.selectedItem?.value]);
 
   return (
     <Downshift<ComboBoxItem>
