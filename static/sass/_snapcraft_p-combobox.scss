@@ -13,6 +13,13 @@
       padding-left: $spv--small; // align text to icons in sidenav
       padding-right: 2rem;
       text-overflow: ellipsis;
+
+      &::-webkit-search-decoration,
+      &::-webkit-search-cancel-button,
+      &::-webkit-search-results-button,
+      &::-webkit-search-results-decoration {
+        -webkit-appearance:none;
+      }
     }
 
     &__toggle {
