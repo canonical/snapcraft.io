@@ -7,6 +7,7 @@ import {
   Row,
   Strip,
 } from "@canonical/react-components";
+import { trackEvent } from "@canonical/analytics-events";
 
 import { PackageFilter } from "../PackageFilter";
 
@@ -127,11 +128,25 @@ function PackageList({
                 ))}
               {!isFetching &&
                 data &&
-                data.packages.map((packageData: Package) => (
+                data.packages.map((packageData: Package, index: number) => (
                   <Col
                     size={3}
                     style={{ marginBottom: "1.5rem" }}
                     key={packageData.id}
+                    onClick={() => {
+                      const query = searchParams.get("q");
+                      if (query) {
+                        const searchId = sessionStorage.getItem("search_id") || "";
+                        trackEvent("snap_store_search_result_clicked", {
+                          search_id: searchId,
+                          query,
+                          position:
+                            (parseInt(currentPage) - 1) * ITEMS_PER_PAGE +
+                            index +
+                            1,
+                        });
+                      }
+                    }}
                   >
                     <DefaultCard data={packageData} />
                   </Col>

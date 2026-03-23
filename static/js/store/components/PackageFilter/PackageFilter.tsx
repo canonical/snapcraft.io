@@ -2,6 +2,7 @@ import { Button } from "@canonical/react-components";
 import { useState } from "react";
 import { Filters } from "@canonical/store-components";
 import { useSearchParams } from "react-router-dom";
+import { trackEvent } from "@canonical/analytics-events";
 import { getArchitectures, getCategoryOrder } from "../../utils";
 
 import type { Category, Packages } from "../../types";
@@ -46,6 +47,16 @@ export const PackageFilter = ({
 
     searchParams.delete("page");
     setSearchParams(searchParams);
+
+    const query = searchParams.get("q");
+    if (query) {
+      const searchId = sessionStorage.getItem("search_id") || "";
+      trackEvent("snap_store_search_category_filtered", {
+        search_id: searchId,
+        query,
+        category: categoryNames.join(","),
+      });
+    }
   };
 
   const onArchitectureChange = (item: string): void => {
