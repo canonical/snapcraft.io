@@ -8,7 +8,7 @@ export const OPEN_HISTORY = "OPEN_HISTORY";
 export const CLOSE_HISTORY = "CLOSE_HISTORY";
 
 import { triggerGAEvent } from "../actions/gaEventTracking";
-import { CloseChannelAction } from "./pendingCloses";
+import { CloseChannelAction } from "./pendingChanges";
 
 export type OpenHistoryAction = GenericReleasesAction<
   typeof OPEN_HISTORY,

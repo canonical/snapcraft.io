@@ -8,6 +8,7 @@ import {
 
 export const SET_DEFAULT_TRACK_SUCCESS = "SET_DEFAULT_TRACK_SUCCESS";
 export const SET_DEFAULT_TRACK_FAILURE = "SET_DEFAULT_TRACK_FAILURE";
+export const INIT_DEFAULT_TRACK = "INIT_DEFAULT_TRACK";
 
 export type SetDefaultTrackSuccessAction = GenericReleasesAction<
   typeof SET_DEFAULT_TRACK_SUCCESS,
@@ -19,9 +20,15 @@ export type SetDefaultTrackFailureAction = GenericReleasesAction<
   never
 >;
 
+export type InitDefaultTrackAction = GenericReleasesAction<
+  typeof INIT_DEFAULT_TRACK,
+  ReleasesReduxState["defaultTrack"]
+>;
+
 export type DefaultTrackAction =
   | SetDefaultTrackSuccessAction
-  | SetDefaultTrackFailureAction;
+  | SetDefaultTrackFailureAction
+  | InitDefaultTrackAction;
 
 const fetchDefaultTrack = (snapName: string, track: string | null) => {
   return fetch(`/${snapName}/releases/default-track`, {
@@ -43,6 +50,13 @@ const fetchDefaultTrack = (snapName: string, track: string | null) => {
     return response.json();
   });
 };
+
+export function initDefaultTrack(track: ReleasesReduxState["defaultTrack"]) {
+  return {
+    type: INIT_DEFAULT_TRACK,
+    payload: { track },
+  };
+}
 
 export function clearDefaultTrack() {
   return (dispatch: DispatchFn, getState: () => ReleasesReduxState) => {

@@ -4,8 +4,8 @@ import { useEffect } from "react";
 import {
   ArchitectureRevisionsMap,
   CPUArchitecture,
-  LaunchpadBuildRevision,
   Release,
+  ReleasesReduxState,
   Revision,
 } from "../../types/releaseTypes";
 
@@ -228,4 +228,16 @@ export async function getPackageMetadata(
   }
   const data = await response.json();
   return data.data;
+}
+
+export function getArrayOfChannelNames(
+  channels: ReleasesReduxState["pendingChanges"]["pendingCloses"]
+) {
+  const channelNames: string[] = [];
+  Object.keys(channels).forEach((orderIndex) => {
+    const numericOrderIndex = Number(orderIndex);
+    const channel = channels[numericOrderIndex];
+    channelNames.push(channel);
+  });
+  return channelNames;
 }

@@ -1,4 +1,4 @@
-import { combineReducers } from "redux";
+import { combineReducers, Reducer, ReducersMapObject } from "redux";
 
 import architectures from "./architectures";
 import availableRevisionsSelect from "./availableRevisionsSelect";
@@ -11,28 +11,32 @@ import history from "./history";
 import modal from "./modal";
 import notification from "./globalNotification";
 import options from "./options";
-import pendingCloses from "./pendingCloses";
-import pendingReleases from "./pendingReleases";
+import pendingChanges from "./pendingChanges";
 import releases from "./releases";
 import revisions from "./revisions";
-import { ReleasesReduxState } from "../../../types/releaseTypes";
 
-const releasesReducers = combineReducers<ReleasesReduxState>({
+import { ReleasesReduxState } from "../../../types/releaseTypes";
+import { RootAction } from "../actions";
+
+const reducersMap: ReducersMapObject<ReleasesReduxState, RootAction> = {
   architectures,
   availableRevisionsSelect,
   branches,
   channelMap,
   currentTrack,
   defaultTrack,
-  failedRevisions,
   history,
   modal,
   notification,
   options,
-  pendingCloses,
-  pendingReleases,
+  pendingChanges,
   releases,
   revisions,
-});
+  failedRevisions,
+};
+
+const releasesReducers = (
+    combineReducers(reducersMap) as unknown
+  ) as Reducer<ReleasesReduxState, RootAction>;
 
 export default releasesReducers;

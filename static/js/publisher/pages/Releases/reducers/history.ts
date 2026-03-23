@@ -1,19 +1,19 @@
 import {
   ReleasesReduxState,
 } from "../../../types/releaseTypes";
+import { RootAction } from "../actions";
 import {
   OPEN_HISTORY,
   CLOSE_HISTORY,
-  HistoryAction,
 } from "../actions/history";
-import { CLOSE_CHANNEL } from "../actions/pendingCloses";
+import { CLOSE_CHANNEL } from "../actions/pendingChanges";
 
 export default function history(
   state: ReleasesReduxState["history"] = {
     filters: null,
     isOpen: false,
   },
-  action: HistoryAction
+  action: RootAction
 ) {
   switch (action.type) {
     case OPEN_HISTORY:

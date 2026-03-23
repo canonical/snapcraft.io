@@ -1,17 +1,16 @@
-import { legacy_createStore as createStore, applyMiddleware, compose } from "redux";
+import { legacy_createStore as createStore, applyMiddleware, compose, StoreEnhancer } from "redux";
 import { thunk } from "redux-thunk";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { Provider } from "react-redux";
 import { DndProvider } from "react-dnd";
 import ReleasesController from "./releasesController";
-import releases from "./reducers";
+import releasesReducers from "./reducers";
 import {
-  ReleasesData,
-  ChannelMap,
-  Track,
-  Options,
+  ReleasesAPIResponse,
+  ReleasesReduxState,
   ReleasesReduxStore,
 } from "../../types/releaseTypes";
+import { RootAction } from "./actions";
 
 // setup redux store with thunk middleware and devtools extension:
 // https://github.com/zalmoxisus/redux-devtools-extension#12-advanced-store-setup
@@ -19,32 +18,16 @@ const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
 type Props = {
   snapName: string;
-  releasesData: ReleasesData;
-  channelMap: ChannelMap[];
-  tracks: [Track, ...Track[]];
-  options: Options;
+  apiData: ReleasesAPIResponse;
 };
 
 function Release({
   snapName,
-  releasesData,
-  channelMap,
-  tracks,
-  options,
+  apiData,
 }: Props): React.JSX.Element {
-  const store: ReleasesReduxStore = createStore(
-    releases,
-    {
-      currentTrack: options.defaultTrack || "latest",
-      defaultTrack: options.defaultTrack,
-      options: {
-        ...options,
-        // @ts-ignore
-        snapName,
-        tracks,
-      },
-    },
-    composeEnhancers(applyMiddleware(thunk)),
+  const store: ReleasesReduxStore = createStore<ReleasesReduxState, RootAction>(
+    releasesReducers,
+    composeEnhancers(applyMiddleware(thunk)) as StoreEnhancer,
   );
 
   return (
@@ -52,8 +35,7 @@ function Release({
       <DndProvider backend={HTML5Backend}>
         <ReleasesController
           snapName={snapName}
-          releasesData={releasesData}
-          channelMap={channelMap}
+          apiData={apiData}
         />
       </DndProvider>
     </Provider>

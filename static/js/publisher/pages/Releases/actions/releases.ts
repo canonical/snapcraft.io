@@ -5,7 +5,7 @@ import {
 
 import { updateArchitectures } from "./architectures";
 import { hideNotification, showNotification } from "./globalNotification";
-import { cancelPendingReleases } from "./pendingReleases";
+import { cancelPendingReleases } from "./pendingChanges";
 import {
   releaseRevisionSuccess,
   closeChannelSuccess,
@@ -13,6 +13,7 @@ import {
 } from "./channelMap";
 import { updateRevisions } from "./revisions";
 import { closeHistory } from "./history";
+import { releasesReady } from "./options";
 
 import {
   fetchSnapReleaseStatus,
@@ -39,6 +40,7 @@ import {
   ReleaseErrorResponse,
   GenericReleasesAction,
 } from "../../../types/releaseTypes";
+import { getArrayOfChannelNames } from "../helpers";
 
 export const UPDATE_RELEASES = "UPDATE_RELEASES";
 
@@ -50,7 +52,7 @@ export type UpdateReleasesAction = GenericReleasesAction<
 export type ReleasesAction = UpdateReleasesAction;
 
 // returns a Redux thunk callback that unpacks the API response into the state
-function updateReleasesData(apiData: ReleasesAPIResponse) {
+export function updateReleasesData(apiData: ReleasesAPIResponse) {
   const {
     release_history: releasesData,
     channel_map: channelMap,
@@ -60,7 +62,7 @@ function updateReleasesData(apiData: ReleasesAPIResponse) {
     const revisionsList = releasesData.revisions;
     const releases = releasesData.releases;
 
-    getReleaseDataFromChannelMap(channelMap, revisionsList, snapName).then(
+    return getReleaseDataFromChannelMap(channelMap, revisionsList, snapName).then(
       ([transformedChannelMap, revisionsListAdditions, failedRevisions]) => {
         revisionsList.push(...revisionsListAdditions);
         const revisionsMap = getRevisionsMap(revisionsList);
@@ -70,6 +72,7 @@ function updateReleasesData(apiData: ReleasesAPIResponse) {
         dispatch(updateArchitectures(revisionsList));
         dispatch(initChannelMap(transformedChannelMap));
         dispatch(updateFailedRevisions(failedRevisions));
+        dispatch(releasesReady(true));
       }
     );
   };
@@ -78,7 +81,7 @@ function updateReleasesData(apiData: ReleasesAPIResponse) {
 export function handleCloseResponse(
   dispatch: DispatchFn,
   json: CloseChannelsResponse,
-  channels: ReleasesReduxState["pendingCloses"]
+  channels: ReleasesReduxState["pendingChanges"]["pendingCloses"]
 ) {
   if (json.success) {
     if (json.closed_channels && json.closed_channels.length > 0) {
@@ -93,8 +96,9 @@ export function handleCloseResponse(
       });
     }
   } else {
+    const channelNames = getArrayOfChannelNames(channels);
     const error = new Error(
-      `Error while closing channels: ${channels.join(", ")}.`
+      `Error while closing channels: ${channelNames.join(", ")}.`
     );
     // @ts-ignore
     error.json = json;
@@ -170,22 +174,26 @@ export function releaseRevisions() {
   };
 
   return (dispatch: DispatchFn, getState: () => ReleasesReduxState) => {
-    const { pendingReleases, pendingCloses, revisions, options } = getState();
+    const { pendingChanges, revisions, options } = getState();
     const { snapName } = options;
+    const pendingReleases = pendingChanges.pendingReleases;
+    const pendingCloses = pendingChanges.pendingCloses;
 
     // To dedupe releases
     const progressiveReleases: FetchReleasePayload[] = [];
     const regularReleases: FetchReleasePayload[] = [];
-    Object.keys(pendingReleases).forEach((revId) => {
-      Object.keys(pendingReleases[revId]).forEach((channel) => {
-        const pendingRelease = pendingReleases[revId][channel];
-
+    Object.keys(pendingReleases).forEach((orderIndex) => {
+      const numericOrderIndex = Number(orderIndex);
+      const revId = pendingReleases[numericOrderIndex].revision;
+      const channels = pendingReleases[numericOrderIndex].channels;
+      Object.keys(channels).forEach((channel) => {
+        const pendingRelease = channels[channel];
         if (pendingRelease.progressive) {
           // first move progressive releases out
           progressiveReleases.push(mapToRelease(pendingRelease));
         } else {
           const releaseIndex = regularReleases.findIndex(
-            (release) => release.revision.revision === parseInt(revId)
+            (release) => release.revision.revision === revId
           );
           if (releaseIndex === -1) {
             regularReleases.push(mapToRelease(pendingRelease));
@@ -212,7 +220,7 @@ export function releaseRevisions() {
     dispatch(hideNotification());
 
     return fetchReleases(_handleReleaseResponse, releases, snapName)
-      .then(() => fetchCloses(_handleCloseResponse, snapName, pendingCloses))
+      .then(() => fetchCloses(_handleCloseResponse, snapName, getArrayOfChannelNames(pendingCloses)))
       .then(() => fetchSnapReleaseStatus(snapName))
       .then((json) => dispatch(updateReleasesData(json)))
       .catch(() =>

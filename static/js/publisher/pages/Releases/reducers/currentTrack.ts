@@ -1,12 +1,12 @@
 import { ReleasesReduxState } from "../../../types/releaseTypes";
+import { RootAction } from "../actions";
 import {
   SET_CURRENT_TRACK,
-  CurrentTrackAction,
 } from "../actions/currentTrack";
 
 export default function currentTrack(
   state: ReleasesReduxState["currentTrack"] = "",
-  action: CurrentTrackAction
+  action: RootAction
 ) {
   switch (action.type) {
     case SET_CURRENT_TRACK:

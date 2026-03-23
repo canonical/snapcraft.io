@@ -1,13 +1,24 @@
 import { ReleasesReduxState } from "../../../types/releaseTypes";
+import { RootAction } from "../actions";
+import {
+  RELEASES_READY,
+} from "../actions/options";
 
-// Currently these options are only set as initial state in
-// static/js/publisher/pages/Releases/Release.tsx
 export default function options(
   state: ReleasesReduxState["options"] = {
     flags: {},
     snapName: "",
-    defaultTrack: "",
-  }
+    releasesReady: false,
+  },
+  action: RootAction
 ) {
-  return state;
+  switch (action.type) {
+    case RELEASES_READY:
+      return {
+        ...state,
+        ...action.payload,
+      };
+    default:
+      return state;
+  }
 }

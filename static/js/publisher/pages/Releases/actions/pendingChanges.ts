@@ -7,7 +7,58 @@ import {
   DispatchFn,
   Release,
 } from "../../../types/releaseTypes";
+import { getPendingChannelMap, getReleases } from "../selectors";
+import { triggerGAEvent } from "../actions/gaEventTracking";
 
+export type PendingChangesAction =
+  | ReleaseRevisionAction
+  | UndoReleaseAction
+  | CancelPendingReleasesAction
+  | SetProgressiveReleasePercentageAction
+  | UpdateProgressiveReleasePercentageAction
+  | PauseProgressiveReleaseAction
+  | ResumeProgressiveReleaseAction
+  | CancelProgressiveReleaseAction
+  | CloseChannelAction;
+
+/**
+ * Update order index for the changes action
+ */
+export const UPDATE_ORDER_INDEX_INC = "UPDATE_ORDER_INDEX_INC";
+
+export type IncrementOrderIndexAction = GenericReleasesAction<
+  typeof UPDATE_ORDER_INDEX_INC,
+  never
+>;
+
+export function incrementOrderIndex(): IncrementOrderIndexAction {
+  return {
+    type: UPDATE_ORDER_INDEX_INC,
+  }
+}
+
+/**
+ * Closing channel changes
+ */
+export const CLOSE_CHANNEL = "CLOSE_CHANNEL";
+
+export type CloseChannelAction = GenericReleasesAction<
+  typeof CLOSE_CHANNEL,
+  {
+    channel: string;
+  }
+>;
+
+export function closeChannel(channel: string): CloseChannelAction {
+  return {
+    type: CLOSE_CHANNEL,
+    payload: { channel },
+  };
+}
+
+/**
+ * Updating releases changes
+ */
 export const RELEASE_REVISION = "RELEASE_REVISION";
 export const UNDO_RELEASE = "UNDO_RELEASE";
 export const CANCEL_PENDING_RELEASES = "CANCEL_PENDING_RELEASES";
@@ -18,11 +69,6 @@ export const UPDATE_PROGRESSIVE_RELEASE_PERCENTAGE =
 export const PAUSE_PROGRESSIVE_RELEASE = "PAUSE_PROGRESSIVE_RELEASE";
 export const RESUME_PROGRESSIVE_RELEASE = "RESUME_PROGRESSIVE_RELEASE";
 export const CANCEL_PROGRESSIVE_RELEASE = "CANCEL_PROGRESSIVE_RELEASE";
-
-import { getPendingChannelMap, getReleases } from "../selectors";
-
-import { triggerGAEvent } from "../actions/gaEventTracking";
-import { CloseChannelAction } from "./pendingCloses";
 
 export type ReleaseRevisionAction = GenericReleasesAction<
   typeof RELEASE_REVISION,
@@ -74,17 +120,6 @@ export type CancelProgressiveReleaseAction = GenericReleasesAction<
   }
 >;
 
-export type PendingReleasesAction =
-  | ReleaseRevisionAction
-  | UndoReleaseAction
-  | CancelPendingReleasesAction
-  | SetProgressiveReleasePercentageAction
-  | UpdateProgressiveReleasePercentageAction
-  | PauseProgressiveReleaseAction
-  | ResumeProgressiveReleaseAction
-  | CancelProgressiveReleaseAction
-  | CloseChannelAction;
-
 export function releaseRevision(
   revision: Revision,
   channel: string,
@@ -92,7 +127,8 @@ export function releaseRevision(
 ) {
   return (dispatch: DispatchFn, getState: () => ReleasesReduxState) => {
     const state = getState();
-    const { revisions, pendingReleases } = state;
+    const { revisions, pendingChanges } = state;
+    const pendingReleases = pendingChanges.pendingReleases;
 
     const previousReleases = getReleases(state, revision.architectures, channel)
       // Find all revision releases for this channel and architecture
@@ -116,9 +152,11 @@ export function releaseRevision(
 
       // If there's already a "null" release in staging that is progressive
       // assign that value to subsequent progressive releases
-      Object.keys(pendingReleases).forEach((revision) => {
-        Object.keys(pendingReleases[revision]).forEach((channel) => {
-          const release = pendingReleases[revision][channel];
+      Object.keys(pendingReleases).forEach((orderIndex) => {
+        const numericOrderIndex = Number(orderIndex);
+        const channels = pendingReleases[numericOrderIndex].channels;
+        Object.keys(channels).forEach((channel) => {
+          const release = channels[channel];
 
           if (release.progressive && percentage === 100) {
             percentage = release.progressive.percentage;
