@@ -2,7 +2,11 @@ import { initFSFLanguageSelect } from "./fsf-language-select";
 import nps from "./nps";
 import initExpandableArea from "./expandable-area";
 import declareGlobal from "../libs/declare";
-import { trackEvent } from "@canonical/analytics-events";
+import { trackEvent, trackPageView } from "@canonical/analytics-events";
+
+if (window.ANALYTICS_ENDPOINT) {
+  trackPageView("snap_home_page");
+}
 
 function initHomeSearchTracking(): void {
   const form = document.querySelector(
