@@ -136,7 +136,8 @@ function PackageList({
                     onClick={() => {
                       const query = searchParams.get("q");
                       if (query) {
-                        const searchId = sessionStorage.getItem("search_id") || "";
+                        const searchId =
+                          sessionStorage.getItem("search_id") || "";
                         trackEvent("snap_store_search_result_clicked", {
                           search_id: searchId,
                           query,
