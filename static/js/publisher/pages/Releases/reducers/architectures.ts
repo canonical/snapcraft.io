@@ -1,12 +1,12 @@
 import {
   UPDATE_ARCHITECTURES,
-  ArchitecturesAction,
 } from "../actions/architectures";
 import { ReleasesReduxState } from "../../../types/releaseTypes";
+import { RootAction } from "../actions";
 
 export default function architectures(
   state: ReleasesReduxState["architectures"] = [],
-  action: ArchitecturesAction
+  action: RootAction
 ) {
   switch (action.type) {
     case UPDATE_ARCHITECTURES:

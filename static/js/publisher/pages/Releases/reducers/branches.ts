@@ -1,13 +1,13 @@
 import { ReleasesReduxState } from "../../../types/releaseTypes";
+import { RootAction } from "../actions";
 import {
   OPEN_BRANCHES,
   CLOSE_BRANCHES,
-  BranchesAction,
 } from "../actions/branches";
 
 export default function branches(
   state: ReleasesReduxState["branches"] = [],
-  action: BranchesAction
+  action: RootAction
 ) {
   switch (action.type) {
     case OPEN_BRANCHES: {

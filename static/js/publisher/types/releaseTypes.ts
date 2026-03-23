@@ -1,4 +1,4 @@
-import { CombinedState, Store } from "redux";
+import { Store } from "redux";
 import { ThunkDispatch } from "redux-thunk";
 import {
   AVAILABLE_REVISIONS_SELECT_ALL,
@@ -269,7 +269,7 @@ export type CloseChannelsResponse =
 /**
  * Types for the Redux state used in the Releases page
  */
-export type ReleasesReduxState = CombinedState<{
+export type ReleasesReduxState = {
   architectures: CPUArchitecture[];
   availableRevisionsSelect: AvailableRevisionsSelect;
   branches: string[]; // TODO: are there any constraints on this?
@@ -308,10 +308,13 @@ export type ReleasesReduxState = CombinedState<{
     canDismiss: boolean;
   }>;
   options: Options;
-  pendingCloses: Channel["name"][]; // TODO: are there any constraints on this?
-  pendingReleases: {
-    [revision: string]: {
-      [channel: Channel["name"]]: PendingReleaseItem;
+  pendingChanges: {
+    changeOrderIndex: number;
+    pendingCloses: {
+      [order: number]: Channel["name"]; // TODO: are there any constraints on this?
+    }
+    pendingReleases: {
+      [order: number]: PendingRelease;
     };
   };
   revisions: {
@@ -323,7 +326,7 @@ export type ReleasesReduxState = CombinedState<{
   };
   failedRevisions: FailedRevision[];
   releases: Release[];
-}>;
+};
 
 export type FailedRevision = {
   channel: ChannelMap["channel"];
@@ -340,10 +343,10 @@ export type ChannelArchitectureRevisionsMap = {
 
 export type Options = {
   snapName: string;
-  defaultTrack: string;
   flags: {
     isProgressiveReleaseEnabled?: boolean;
   };
+  releasesReady: boolean;
   tracks?: NonEmptyArray<Track>;
 };
 
@@ -355,6 +358,13 @@ export type ProgressiveChanges = {
 }[keyof Progressive][];
 
 export type ProgressiveMutated = Prettify<Progressive & { key?: number }>; // TODO: why/when is this a thing?
+
+export type PendingRelease = {
+  revision: number;
+  channels: {
+    [channel: Channel["name"]]: PendingReleaseItem;
+  }
+}
 
 export type PendingReleaseItem = {
   revision: Revision;

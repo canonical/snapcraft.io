@@ -136,16 +136,6 @@ class ReleasesTable extends Component<ReleasesTableProps, ReleasesTableState> {
     );
   }
 
-  renderAvailableRevisions() {
-    return (
-      <>
-        <h5>Promote from uploaded revisions</h5>
-
-        {this.renderAvailableRevisionsRow()}
-      </>
-    );
-  }
-
   renderLaunchpadBuilds() {
     const lpRevisions = this.props.launchpadRevisions;
     const { showAllBuilds } = this.state;

@@ -5,9 +5,9 @@ import {
   CLEAR_SELECTED_REVISIONS,
   RELEASE_REVISION_SUCCESS,
   CLOSE_CHANNEL_SUCCESS,
-  ChannelMapAction,
 } from "../actions/channelMap";
 import { ReleasesReduxState, Revision } from "../../../types/releaseTypes";
+import { RootAction } from "../actions";
 
 function selectRevision(
   state: ReleasesReduxState["channelMap"],
@@ -78,7 +78,7 @@ function closeChannel(
 // also includes 'unassigned' fake channel to show selected unassigned revision
 export default function channelMap(
   state: ReleasesReduxState["channelMap"] = {},
-  action: ChannelMapAction
+  action: RootAction
 ) {
   switch (action.type) {
     case INIT_CHANNEL_MAP:

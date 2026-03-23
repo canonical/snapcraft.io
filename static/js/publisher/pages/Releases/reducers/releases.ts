@@ -1,11 +1,12 @@
-import { ReleasesAction, UPDATE_RELEASES } from "../actions/releases";
+import { UPDATE_RELEASES } from "../actions/releases";
 import {
   ReleasesReduxState,
 } from "../../../types/releaseTypes";
+import { RootAction } from "../actions";
 
 export default function releases(
   state: ReleasesReduxState["releases"] = [],
-  action: ReleasesAction
+  action: RootAction
 ) {
   switch (action.type) {
     case UPDATE_RELEASES:

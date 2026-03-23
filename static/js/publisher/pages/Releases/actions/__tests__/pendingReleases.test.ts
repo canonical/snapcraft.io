@@ -24,7 +24,7 @@ import {
   pauseProgressiveRelease,
   resumeProgressiveRelease,
   cancelProgressiveRelease,
-} from "../pendingReleases";
+} from "../pendingChanges";
 import {
   DispatchFn,
   PendingReleaseItem,
