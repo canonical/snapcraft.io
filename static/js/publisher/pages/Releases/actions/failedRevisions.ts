@@ -9,7 +9,9 @@ export type UpdateFailedRevisionsAction = GenericReleasesAction<
 
 export type FailedRevisionsAction = UpdateFailedRevisionsAction;
 
-export function updateFailedRevisions(failedRevisions: FailedRevision[]) {
+export function updateFailedRevisions(
+  failedRevisions: FailedRevision[]
+): FailedRevisionsAction {
   return {
     type: UPDATE_FAILED_REVISIONS,
     payload: { failedRevisions },

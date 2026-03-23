@@ -237,7 +237,7 @@ export function releaseRevisions() {
   };
 }
 
-export function updateReleases(releases: Release[]) {
+export function updateReleases(releases: Release[]): ReleasesAction {
   return {
     type: UPDATE_RELEASES,
     payload: { releases },
