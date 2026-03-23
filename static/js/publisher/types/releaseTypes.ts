@@ -6,6 +6,7 @@ import {
   AVAILABLE_REVISIONS_SELECT_RECENT,
   AVAILABLE_REVISIONS_SELECT_UNRELEASED,
 } from "../pages/Releases/constants";
+import { RootAction } from "../pages/Releases/actions";
 
 type Prettify<T> = { [K in keyof T]: T[K] } & {};
 
@@ -275,7 +276,7 @@ export type ReleasesReduxState = {
   branches: string[]; // TODO: are there any constraints on this?
   channelMap: ChannelArchitectureRevisionsMap;
   currentTrack: string;
-  defaultTrack: string;
+  defaultTrack: string | null;
   history: {
     filters: {
       arch: Release["architecture"];
@@ -389,16 +390,12 @@ export type GenericReleasesAction<
   payload: P;
 }>;
 
-type ReleasesAction =
-  | GenericReleasesAction
-  | GenericReleasesAction<string, never>;
-
 export type DispatchFn = ThunkDispatch<
   ReleasesReduxState,
   unknown,
-  ReleasesAction
+  RootAction
 >;
 
-export type ReleasesReduxStore = Store<ReleasesReduxState, ReleasesAction> & {
+export type ReleasesReduxStore = Store<ReleasesReduxState, RootAction> & {
   dispatch: DispatchFn;
 };
