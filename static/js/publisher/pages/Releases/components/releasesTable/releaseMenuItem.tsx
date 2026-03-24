@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 
-import { promoteRevision } from "../../actions/pendingReleases";
+import { promoteRevision } from "../../actions/pendingChanges";
 import { getPendingChannelMap } from "../../selectors";
 import { canBeReleased, isInDevmode } from "../../helpers";
 import {

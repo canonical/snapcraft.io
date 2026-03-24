@@ -10,7 +10,7 @@ import {
 import { ReleasesReduxState, DispatchFn, ArchitectureRevisionsMap } from "../../../types/releaseTypes";
 
 interface StateProps {
-  defaultTrack: string;
+  defaultTrack: string | null;
   currentTrack: string;
   tracks: string[];
   latestTrackRevisions: ArchitectureRevisionsMap[];

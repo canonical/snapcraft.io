@@ -9,7 +9,7 @@ import { SendGAEventAction } from "./gaEventTracking";
 import { NotificationAction } from "./globalNotification";
 import { HistoryAction } from "./history";
 import { ModalAction } from "./modal";
-import { ReleasesReadyAction } from "./options";
+import { OptionsAction } from "./options";
 import { PendingChangesAction } from "./pendingChanges";
 import { ReleasesAction } from "./releases";
 import { RevisionsAction } from "./revisions";
@@ -22,6 +22,7 @@ export * from "./defaultTrack";
 export * from "./history";
 export * from "./modal";
 export * from "./globalNotification";
+export * from "./options";
 export * from "./pendingChanges";
 export * from "./releases";
 export * from "./revisions";
@@ -38,7 +39,7 @@ export type RootAction =
   | NotificationAction
   | HistoryAction
   | ModalAction
-  | ReleasesReadyAction
+  | OptionsAction
   | PendingChangesAction
   | ReleasesAction
   | RevisionsAction;
