@@ -1,4 +1,4 @@
-import { CLOSE_MODAL } from "./modal";
+import { CLOSE_MODAL, CloseModalAction } from "./modal";
 import { showNotification } from "./globalNotification";
 import {
   GenericReleasesAction,
@@ -70,7 +70,7 @@ export function clearDefaultTrack() {
       });
       dispatch({
         type: CLOSE_MODAL,
-      } as any);
+      } as CloseModalAction);
       dispatch(
         showNotification({
           status: "success",
@@ -106,7 +106,7 @@ export function setDefaultTrack() {
       .catch((errorResponse: Response) => {
         dispatch({
           type: SET_DEFAULT_TRACK_FAILURE,
-        } as any);
+        } as SetDefaultTrackFailureAction);
         dispatch(
           showNotification({
             status: "error",
@@ -119,7 +119,7 @@ export function setDefaultTrack() {
       .finally(() => {
         dispatch({
           type: CLOSE_MODAL,
-        } as any);
+        } as CloseModalAction);
       });
   };
 }

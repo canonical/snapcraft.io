@@ -63,7 +63,7 @@ const ReleasesController: React.FC<ReleasesControllerProps> = ({
       tracks: apiData.data.tracks
     });
     updateReleasesData(apiData);
-  }, [ready]);
+  }, []);
 
   const { visible } = notification;
   return (

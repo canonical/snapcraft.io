@@ -58,7 +58,7 @@ export function toggleHistory(
           ),
         );
       }
-      dispatch(closeHistory() as any);
+      dispatch(closeHistory() as CloseHistoryAction);
     } else {
       if (filters) {
         dispatch(

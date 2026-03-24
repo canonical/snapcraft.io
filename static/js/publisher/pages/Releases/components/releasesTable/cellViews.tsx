@@ -2,7 +2,7 @@ import React, { Fragment } from "react";
 
 import RevisionLabel from "../revisionLabel";
 import ContextualMenu from "../contextualMenu";
-import { RISKS, RISKS_WITH_AVAILABLE } from "../../constants";
+import { RISKS } from "../../constants";
 
 import {
   isInDevmode,
