@@ -41,6 +41,7 @@ const ValidationSet = importComponent(() => import("./pages/ValidationSet"));
 const ValidationSets = importComponent(() => import("./pages/ValidationSets"));
 const AccountKeys = importComponent(() => import("./pages/AccountKeys"));
 const Remodel = importComponent(() => import("./pages/Remodel"));
+const SerialLogs = importComponent(() => import("./pages/SerialLogs"));
 
 Sentry.init({
   dsn: window.SENTRY_DSN,
@@ -127,6 +128,7 @@ root.render(
                     <Route path="policies/create" element={<Policies />} />
                     <Route path="remodel" element={<Remodel />} />
                     <Route path="remodel/configure" element={<Remodel />} />
+                    <Route path="serial-log" element={<SerialLogs />} />
                   </Route>
                 </Route>
                 <Route path="*" element={<Navigate to="../snaps" replace />} />
