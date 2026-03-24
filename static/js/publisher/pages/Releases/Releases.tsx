@@ -28,6 +28,8 @@ function Releases(): React.JSX.Element {
     },
   });
 
+  // TODO: fix missing currentTrack and wrong options
+
   setPageTitle(`Releases for ${snapId}`);
 
   return (

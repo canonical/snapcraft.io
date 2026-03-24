@@ -377,7 +377,7 @@ const ReleasesTableChannelHeading = (props: ReleasesTableChannelHeadingProps) =>
         )}
       </div>
 
-      {numberOfBranches && numberOfBranches > 0 && (
+      {!!numberOfBranches && numberOfBranches > 0 && (
         <span
           className={`p-releases-table__branches ${
             hasOpenBranches ? "is-open" : ""
@@ -389,7 +389,7 @@ const ReleasesTableChannelHeading = (props: ReleasesTableChannelHeadingProps) =>
         </span>
       )}
 
-      {branch && timeUntilExpiration && (
+      {!!branch && !!timeUntilExpiration && (
         <span className="p-releases-table__branch-timeleft" title={branch.when}>
           {timeUntilExpiration}
         </span>
