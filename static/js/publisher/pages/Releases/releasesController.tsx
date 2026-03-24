@@ -6,7 +6,12 @@ import ReleasesHeading from "./components/releasesHeading";
 import ReleasesConfirm from "./components/releasesConfirm";
 import Modal from "./components/modal";
 
-import { initDefaultTrack, setCurrentTrack, updateReleasesData } from "./actions";
+import {
+  initDefaultTrack,
+  setCurrentTrack,
+  updateReleasesData,
+  initOptions
+} from "./actions";
 
 import {
   ReleasesAPIResponse,
@@ -32,6 +37,7 @@ interface DispatchProps {
   updateReleasesData: (apiData: ReleasesAPIResponse) => Promise<void>;
   setCurrentTrack: (track: ReleasesReduxState["currentTrack"]) => void;
   initDefaultTrack: (track: ReleasesReduxState["defaultTrack"]) => void;
+  initOptions: (options: ReleasesReduxState["options"]) => void;
 }
 
 // Combined props for the component
@@ -48,13 +54,14 @@ const ReleasesController: React.FC<ReleasesControllerProps> = ({
   useEffect(() => {
     setCurrentTrack(apiData.data.default_track || "latest"),
     initDefaultTrack(apiData.data.default_track),
-      // options: {
-      //   snapName: apiData.data.snap_name,
-      //   flags: {
-      //     isProgressiveReleaseEnabled: true,
-      //   },
-      //   tracks: apiData.data.tracks
-      // },
+    initOptions({
+      releasesReady: false,
+      snapName: apiData.data.snap_name,
+      flags: {
+        isProgressiveReleaseEnabled: true,
+      },
+      tracks: apiData.data.tracks
+    });
     updateReleasesData(apiData);
   }, [ready]);
 
@@ -117,6 +124,7 @@ const mapDispatchToProps = (dispatch: DispatchFn): DispatchProps => {
     updateReleasesData: (apiData) => dispatch(updateReleasesData(apiData)),
     setCurrentTrack: (track) => dispatch(setCurrentTrack(track)),
     initDefaultTrack: (track) => dispatch(initDefaultTrack(track)),
+    initOptions: (options) => dispatch(initOptions(options))
   };
 };
 

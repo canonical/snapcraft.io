@@ -6,7 +6,7 @@ import {
   AVAILABLE_REVISIONS_SELECT_RECENT,
   AVAILABLE_REVISIONS_SELECT_UNRELEASED,
 } from "../pages/Releases/constants";
-import { RootAction } from "../pages/Releases/actions";
+import { CLOSE_MODAL, RootAction } from "../pages/Releases/actions";
 
 type Prettify<T> = { [K in keyof T]: T[K] } & {};
 
@@ -297,7 +297,7 @@ export type ReleasesReduxState = {
         | {
             reduxAction: string;
           }
-        | { type: string };
+        | { type: typeof CLOSE_MODAL };
       label: string;
     }[];
   }>;

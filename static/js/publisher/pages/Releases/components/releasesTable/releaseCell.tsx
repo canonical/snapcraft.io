@@ -8,7 +8,7 @@ import { getChannelName, canBeReleased } from "../../helpers";
 import { DND_ITEM_REVISIONS } from "../dnd";
 
 import { toggleHistory } from "../../actions/history";
-import { undoRelease } from "../../actions/pendingReleases";
+import { undoRelease } from "../../actions/pendingChanges";
 
 import {
   getPendingChannelMap,
@@ -240,7 +240,7 @@ const mapStateToProps = (state: ReleasesReduxState): StateProps => {
   return {
     channelMap: state.channelMap,
     filters: state.history.filters,
-    pendingCloses: state.pendingCloses,
+    pendingCloses: Object.values(state.pendingChanges.pendingCloses),
     failedRevisions: state.failedRevisions,
     pendingChannelMap: getPendingChannelMap(state),
     getAvailableCount: (arch: CPUArchitecture) =>

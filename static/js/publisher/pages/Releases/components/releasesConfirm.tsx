@@ -9,7 +9,7 @@ import ReleasesConfirmActions from "./releasesConfirmActions";
 import {
   cancelPendingReleases,
   setProgressiveReleasePercentage,
-} from "../actions/pendingReleases";
+} from "../actions/pendingChanges";
 import { releaseRevisions } from "../actions/releases";
 import { triggerGAEvent } from "../actions/gaEventTracking";
 import { getSeparatePendingReleases, SeparatePendingReleases } from "../selectors";
@@ -21,7 +21,7 @@ interface OwnProps {
 
 interface StateProps {
   updates: SeparatePendingReleases & {
-    pendingCloses: ReleasesReduxState["pendingCloses"];
+    pendingCloses: ReleasesReduxState["pendingChanges"]["pendingCloses"];
   };
 }
 
@@ -182,7 +182,7 @@ const mapStateToProps = (state: ReleasesReduxState): StateProps => {
   return {
     updates: {
       ...getSeparatePendingReleases(state),
-      pendingCloses: state.pendingCloses,
+      pendingCloses: state.pendingChanges.pendingCloses,
     },
   };
 };

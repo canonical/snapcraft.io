@@ -2,7 +2,7 @@ import { useState } from "react";
 import { connect } from "react-redux";
 import { Row, Col } from "@canonical/react-components";
 
-import { updateProgressiveReleasePercentage } from "../../actions/pendingReleases";
+import { updateProgressiveReleasePercentage } from "../../actions/pendingChanges";
 import { isProgressiveReleaseEnabled, SeparatePendingReleases } from "../../selectors";
 import type { ReleasesReduxState, DispatchFn } from "../../../../types/releaseTypes";
 
@@ -15,7 +15,7 @@ import CloseChannelsRow from "./closeChannelsRow";
 
 interface OwnProps {
   updates: SeparatePendingReleases & {
-    pendingCloses: ReleasesReduxState["pendingCloses"];
+    pendingCloses: ReleasesReduxState["pendingChanges"]["pendingCloses"];
   };
 }
 
@@ -39,7 +39,7 @@ const ReleasesConfirmDetails = ({
   const progressiveUpdates = updates.progressiveUpdates;
   const progressiveCancellations = updates.cancelProgressive;
   const newReleases = updates.newReleases;
-  const pendingCloses = updates.pendingCloses;
+  const pendingCloses = Object.values(updates.pendingCloses);
 
   const showProgressiveReleases =
     isProgressiveReleaseEnabled && Object.keys(progressiveReleases).length > 0;

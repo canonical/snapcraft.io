@@ -51,10 +51,10 @@ const fetchDefaultTrack = (snapName: string, track: string | null) => {
   });
 };
 
-export function initDefaultTrack(track: ReleasesReduxState["defaultTrack"]) {
+export function initDefaultTrack(track: ReleasesReduxState["defaultTrack"]): DefaultTrackAction {
   return {
     type: INIT_DEFAULT_TRACK,
-    payload: { track },
+    payload: track,
   };
 }
 

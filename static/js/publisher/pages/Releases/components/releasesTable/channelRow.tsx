@@ -83,7 +83,7 @@ const ReleasesTableChannelRow = (props: ReleasesTableChannelRowProps) => {
 const mapStateToProps = (state: ReleasesReduxState): StateProps => {
   return {
     currentTrack: state.currentTrack,
-    pendingCloses: state.pendingCloses,
+    pendingCloses: Object.values(state.pendingChanges.pendingCloses),
     pendingChannelMap: getPendingChannelMap(state),
     archs: getArchitectures(state),
   };

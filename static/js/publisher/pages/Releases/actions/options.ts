@@ -21,4 +21,22 @@ export function releasesReady(
   }
 }
 
-export type OptionsAction = ReleasesReadyAction;
+export const INIT_OPTIONS = "INIT_OPTIONS";
+
+export type InitOptionsAction = GenericReleasesAction<
+  typeof INIT_OPTIONS,
+  ReleasesReduxState["options"]
+>;
+
+export function initOptions(
+  options: ReleasesReduxState["options"]
+): InitOptionsAction {
+  return {
+    type: INIT_OPTIONS,
+    payload: options
+  }
+}
+
+export type OptionsAction =
+  | ReleasesReadyAction
+  | InitOptionsAction;

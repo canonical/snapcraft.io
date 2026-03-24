@@ -1,6 +1,7 @@
 import { ReleasesReduxState } from "../../../types/releaseTypes";
 import { RootAction } from "../actions";
 import {
+  INIT_OPTIONS,
   RELEASES_READY,
 } from "../actions/options";
 
@@ -18,6 +19,10 @@ export default function options(
         ...state,
         ...action.payload,
       };
+    case INIT_OPTIONS:
+      return {
+        ...action.payload
+      }
     default:
       return state;
   }

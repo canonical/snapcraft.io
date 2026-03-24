@@ -33,7 +33,7 @@ interface OwnProps {
 interface StateProps {
   tracks: string[];
   currentTrack: string;
-  defaultTrack: string;
+  defaultTrack: string | null;
 }
 
 interface DispatchProps {

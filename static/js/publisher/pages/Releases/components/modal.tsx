@@ -1,7 +1,7 @@
 import React, { Component, ReactNode } from "react";
 import { connect } from "react-redux";
 
-import { closeModal } from "../actions/modal";
+import { CLOSE_MODAL, closeModal, CloseModalAction } from "../actions/modal";
 import { setDefaultTrack, clearDefaultTrack } from "../actions/defaultTrack";
 import type { ReleasesReduxState, DispatchFn } from "../../../types/releaseTypes";
 
@@ -11,7 +11,9 @@ type ModalAction = {
     | {
         reduxAction: string;
       }
-    | { type: string };
+    | {
+        type: typeof CLOSE_MODAL;
+      }
   label: string;
 };
 
@@ -52,7 +54,7 @@ class ModalActionButton extends Component<ModalActionButtonProps, ModalActionBut
       }
     } else {
       // Otherwise dispatch the action object
-      dispatch(onClickAction);
+      dispatch(onClickAction as CloseModalAction);
     }
 
     this.setState({

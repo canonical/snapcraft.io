@@ -12,8 +12,7 @@ import {
 } from "../../selectors";
 import { Handle } from "../dnd";
 
-import { promoteRevision } from "../../actions/pendingReleases";
-import { closeChannel } from "../../actions/pendingCloses";
+import { closeChannel, promoteRevision } from "../../actions/pendingChanges";
 
 import { toggleBranches } from "../../actions/branches";
 

@@ -43,7 +43,6 @@ interface OwnProps {
 interface StateProps {
   revisions: { [revision: string]: Revision };
   filters: ReleasesReduxState["history"]["filters"];
-  pendingReleases: { [revision: string]: { [channel: string]: PendingReleaseItem } };
   availableRevisionsSelect: AvailableRevisionsSelect;
   showChannels?: boolean;
   filteredReleaseHistory: ReleaseHistoryItem[];
@@ -492,7 +491,6 @@ const mapStateToProps = (state: ReleasesReduxState): StateProps => {
         state.availableRevisionsSelect === AVAILABLE_REVISIONS_SELECT_ALL),
     filters: state.history.filters,
     revisions: state.revisions,
-    pendingReleases: state.pendingReleases,
     pendingChannelMap: getPendingChannelMap(state),
     selectedRevisions: getSelectedRevisions(state),
     getSelectedRevision: (arch: CPUArchitecture) => getSelectedRevision(state, arch),
