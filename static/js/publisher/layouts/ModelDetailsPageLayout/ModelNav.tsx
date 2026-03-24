@@ -36,6 +36,16 @@ function ModelNav({ sectionName }: { sectionName: string }): React.JSX.Element {
             Remodel
           </Link>
         </li>
+        <li className="p-tabs__item">
+          <Link
+            to={`/admin/${id}/models/${modelId}/serial-log`}
+            className="p-tabs__link"
+            aria-selected={sectionName === "serialLog"}
+            role="tab"
+          >
+            Serial log
+          </Link>
+        </li>
       </ul>
     </nav>
   );

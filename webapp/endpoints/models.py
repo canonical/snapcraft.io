@@ -356,10 +356,9 @@ def get_serial_log(store_id: str, model_name: str):
     res = {}
 
     try:
-        brand_id = get_brand_id(flask.session, store_id)
         logs = publisher_gateway.get_store_model_serial_log(
             flask.session,
-            brand_id,
+            store_id,
             model_name,
         )
         res["data"] = logs["items"]

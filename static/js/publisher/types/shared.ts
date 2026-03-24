@@ -188,3 +188,10 @@ export type Remodel = {
   "to-model": string;
   serials?: number;
 };
+
+export type SerialLog = {
+  "brand-id": string;
+  "created-at": string;
+  "model-name": string;
+  serial: string;
+};
