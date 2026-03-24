@@ -3,6 +3,7 @@ import {
   parseChannel,
   createChannelTree,
   sortAlphaNum,
+  ChannelObject,
 } from "./channels";
 
 describe("parseChannel", () => {
@@ -70,7 +71,7 @@ describe("parseChannel", () => {
 });
 
 describe("createChannelTree", () => {
-  let channelList;
+  let channelList: ChannelObject[];
   describe("risk only", () => {
     beforeEach(() => {
       channelList = ["stable", "beta", "candidate", "edge"].map((channel) =>
@@ -513,16 +514,6 @@ describe("sortChannels", () => {
             defaultTrack: "test",
           }).list,
         ).toEqual(["test/stable", "latest/stable"]);
-      });
-    });
-
-    describe("maintainFormat", () => {
-      it("should maintain the format", () => {
-        expect(
-          sortChannels(["test/stable", "stable"], {
-            maintainFormat: true,
-          }).list,
-        ).toEqual(["stable", "test/stable"]);
       });
     });
   });

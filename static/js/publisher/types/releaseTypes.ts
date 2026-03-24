@@ -278,12 +278,7 @@ export type ReleasesReduxState = {
   currentTrack: string;
   defaultTrack: string | null;
   history: {
-    filters: {
-      arch: Release["architecture"];
-      track: Release["track"];
-      risk: Release["risk"];
-      branch?: Release["branch"];
-    } | null;
+    filters: HistoryFilters | null;
     isOpen: boolean;
     // TODO: more stuff???
   };
@@ -327,6 +322,20 @@ export type ReleasesReduxState = {
   };
   failedRevisions: FailedRevision[];
   releases: Release[];
+};
+
+export type HistoryFilters = {
+  arch: Release["architecture"];
+  track: Release["track"];
+  risk: Release["risk"];
+  branch?: Release["branch"];
+}
+
+export type TargetChannel = {
+  channel: string;
+  isDisabled: boolean;
+  display?: string;
+  reason?: JSX.Element;
 };
 
 export type FailedRevision = {
