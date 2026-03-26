@@ -51,6 +51,7 @@ export const PackageFilter = ({
     const query = searchParams.get("q");
     if (query) {
       const searchId = sessionStorage.getItem("search_id") || "";
+      console.log("[analytics] snap_store_search_category_filtered", { search_id: searchId, query, category: categoryNames.join(",") });
       trackEvent("snap_store_search_category_filtered", {
         search_id: searchId,
         query,

@@ -32,6 +32,7 @@ export const SearchInput = ({
       const searchId = crypto.randomUUID();
       sessionStorage.setItem("search_id", searchId);
 
+      console.log("[analytics] snap_store_search_submitted", { search_id: searchId, query: searchRef.current.value });
       trackEvent("snap_store_search_submitted", {
         search_id: searchId,
         query: searchRef.current.value,
