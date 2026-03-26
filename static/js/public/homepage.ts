@@ -20,7 +20,10 @@ function initHomeSearchTracking(): void {
         const searchId = crypto.randomUUID();
         sessionStorage.setItem("search_id", searchId);
 
-        console.log("[analytics] snap_home_search_submitted", { search_id: searchId, query: input.value });
+        console.log("[analytics] snap_home_search_submitted", {
+          search_id: searchId,
+          query: input.value,
+        });
         trackEvent("snap_home_search_submitted", {
           search_id: searchId,
           query: input.value,
