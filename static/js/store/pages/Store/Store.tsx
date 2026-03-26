@@ -63,7 +63,15 @@ function Store(): React.JSX.Element {
         });
       }
     }
-  }, [searchTerm, status, currentPage, searchParams, packagesCount, data, isFetching]);
+  }, [
+    searchTerm,
+    status,
+    currentPage,
+    searchParams,
+    packagesCount,
+    data,
+    isFetching,
+  ]);
 
   const searchRef = useRef<HTMLInputElement | null>(null);
   const searchSummaryRef = useRef<HTMLDivElement>(null);
