@@ -7,7 +7,6 @@ import Root from "./layouts/Root";
 import Store from "./pages/Store";
 
 if (window.ANALYTICS_ENDPOINT) {
-  console.log("[analytics] trackPageView: snap_store_page");
   trackPageView("snap_store_page");
 }
 

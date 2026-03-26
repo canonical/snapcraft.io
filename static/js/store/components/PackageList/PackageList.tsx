@@ -138,17 +138,6 @@ function PackageList({
                       if (query) {
                         const searchId =
                           sessionStorage.getItem("search_id") || "";
-                        console.log(
-                          "[analytics] snap_store_search_result_clicked",
-                          {
-                            search_id: searchId,
-                            query,
-                            position:
-                              (parseInt(currentPage) - 1) * ITEMS_PER_PAGE +
-                              index +
-                              1,
-                          },
-                        );
                         trackEvent("snap_store_search_result_clicked", {
                           search_id: searchId,
                           query,

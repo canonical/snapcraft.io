@@ -40,12 +40,6 @@ function Store(): React.JSX.Element {
       }
 
       if (packagesCount > 0) {
-        console.log("[analytics] snap_store_search_results_loaded", {
-          search_id: searchId,
-          query: searchTerm,
-          total_items: data?.total_items ?? 0,
-          page: currentPage,
-        });
         trackEvent("snap_store_search_results_loaded", {
           search_id: searchId,
           query: searchTerm,
@@ -53,10 +47,6 @@ function Store(): React.JSX.Element {
           page: currentPage,
         });
       } else {
-        console.log("[analytics] snap_store_search_no_results", {
-          search_id: searchId,
-          query: searchTerm,
-        });
         trackEvent("snap_store_search_no_results", {
           search_id: searchId,
           query: searchTerm,
