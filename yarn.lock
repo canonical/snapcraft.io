@@ -924,10 +924,10 @@
     hashery "^1.5.0"
     keyv "^5.6.0"
 
-"@canonical/analytics-events@1.0.4":
-  version "1.0.4"
-  resolved "https://registry.yarnpkg.com/@canonical/analytics-events/-/analytics-events-1.0.4.tgz#27440161a7970f2f2a990dd0597e70685706c3b4"
-  integrity sha512-+ChQJHpwpBQxuSdVwNv1YSGSzX6z6QeCmfxKqo8K02Hk2nJGuIdwEfi4yIa/KxVOhxaFLO7fy7ACSsBkTGeGRA==
+"@canonical/analytics-events@1.0.5":
+  version "1.0.5"
+  resolved "https://registry.yarnpkg.com/@canonical/analytics-events/-/analytics-events-1.0.5.tgz#88a18381a657196ea5f21b5932a41c5afce69999"
+  integrity sha512-GMFbPJ83FcN+ItLcc1czYp0HUA96uLfu+35B0NWEVCL/Wy/CRc0o8Ab1DgAyjBw16reIP+SkAg9k/NBwNj1Tjg==
 
 "@canonical/cookie-policy@3.8.4":
   version "3.8.4"
