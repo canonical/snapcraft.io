@@ -32,13 +32,7 @@ function Store(): React.JSX.Element {
   const isResultExist = status === "success" && packagesCount > 0;
 
   useEffect(() => {
-    if (searchTerm && status === "success") {
-      const categories = searchParams.get("categories") || "";
-      const searchKey = `${searchTerm}_${currentPage}_${categories}`;
-      const lastTracked = sessionStorage.getItem("last_tracked_search");
-      if (lastTracked === searchKey) return;
-      sessionStorage.setItem("last_tracked_search", searchKey);
-
+    if (searchTerm && status === "success" && !isFetching) {
       let searchId = sessionStorage.getItem("search_id");
       if (!searchId) {
         searchId = crypto.randomUUID();
@@ -69,7 +63,7 @@ function Store(): React.JSX.Element {
         });
       }
     }
-  }, [searchTerm, status, currentPage, searchParams, packagesCount, data]);
+  }, [searchTerm, status, currentPage, searchParams, packagesCount, data, isFetching]);
 
   const searchRef = useRef<HTMLInputElement | null>(null);
   const searchSummaryRef = useRef<HTMLDivElement>(null);
