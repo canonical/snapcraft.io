@@ -347,3 +347,34 @@ def create_remodel_allowlist(store_id: str):
         res["message"] = "An error occurred"
 
     return make_response(res, 500)
+
+
+@models.route("/api/store/<store_id>/models/<model_name>/serial-log")
+@login_required
+@exchange_required
+def get_serial_log(store_id: str, model_name: str):
+    res = {}
+
+    try:
+        brand_id = get_brand_id(flask.session, store_id)
+        logs = publisher_gateway.get_store_model_serial_log(
+            flask.session,
+            brand_id,
+            model_name,
+        )
+        res["data"] = logs["items"]
+        res["success"] = True
+        response = make_response(res, 200)
+    except StoreApiResponseErrorList as error_list:
+        error_messages = [
+            f"{error.get('message', 'An error occurred')}"
+            for error in error_list.errors
+        ]
+        if "unauthorized" in error_messages:
+            res["message"] = "Store not found"
+        else:
+            res["message"] = " ".join(error_messages)
+        res["success"] = False
+        response = make_response(res, 500)
+
+    return response
