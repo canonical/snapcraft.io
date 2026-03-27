@@ -1,4 +1,5 @@
 import { Button } from "@canonical/react-components";
+import { trackEvent } from "@canonical/analytics-events";
 import { useSearchParams, useNavigate, useLocation } from "react-router-dom";
 
 import type { RefObject } from "react";
@@ -27,6 +28,14 @@ export const SearchInput = ({
       searchParams.delete("page");
       searchParams.set("q", searchRef.current.value);
       setSearchParams(searchParams);
+
+      const searchId = crypto.randomUUID();
+      sessionStorage.setItem("search_id", searchId);
+
+      trackEvent("snap_store_search_submitted", {
+        search_id: searchId,
+        query: searchRef.current.value,
+      });
     }
     if (searchSummaryRef && searchSummaryRef.current) {
       searchSummaryRef.current.scrollIntoView({

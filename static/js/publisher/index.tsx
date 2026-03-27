@@ -121,13 +121,15 @@ root.render(
                 <Route path="models">
                   <Route index element={<Models />} />
                   <Route path="create" element={<Models />} />
-                  <Route path=":model_id" element={<ModelDetailsPageLayout />}>
+                  <Route path=":modelId" element={<ModelDetailsPageLayout />}>
                     <Route index element={<Model />} />
                     <Route path="policies" element={<Policies />} />
                     <Route path="policies/create" element={<Policies />} />
                     <Route path="remodel" element={<Remodel />} />
+                    <Route path="remodel/configure" element={<Remodel />} />
                   </Route>
                 </Route>
+                <Route path="*" element={<Navigate to="../snaps" replace />} />
               </Route>
             </Route>
           </Route>

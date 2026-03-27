@@ -59,16 +59,17 @@ describe("PoliciesTable", () => {
 
     const user = userEvent.setup();
     const columnHeader = screen.getByRole("columnheader", { name: "Revision" });
+    const columnHeaderBtn = screen.getByRole("button", { name: "Revision" });
 
     expect(columnHeader.getAttribute("aria-sort")).toBe("none");
 
-    await user.click(columnHeader);
+    await user.click(columnHeaderBtn);
     expect(columnHeader.getAttribute("aria-sort")).toBe("ascending");
 
-    await user.click(columnHeader);
+    await user.click(columnHeaderBtn);
     expect(columnHeader.getAttribute("aria-sort")).toBe("descending");
 
-    await user.click(columnHeader);
+    await user.click(columnHeaderBtn);
     expect(columnHeader.getAttribute("aria-sort")).toBe("none");
   });
 
@@ -79,16 +80,17 @@ describe("PoliciesTable", () => {
     const columnHeader = screen.getByRole("columnheader", {
       name: "Signing key",
     });
+    const columnHeaderBtn = screen.getByRole("button", { name: "Signing key" });
 
     expect(columnHeader.getAttribute("aria-sort")).toBe("none");
 
-    await user.click(columnHeader);
+    await user.click(columnHeaderBtn);
     expect(columnHeader.getAttribute("aria-sort")).toBe("ascending");
 
-    await user.click(columnHeader);
+    await user.click(columnHeaderBtn);
     expect(columnHeader.getAttribute("aria-sort")).toBe("descending");
 
-    await user.click(columnHeader);
+    await user.click(columnHeaderBtn);
     expect(columnHeader.getAttribute("aria-sort")).toBe("none");
   });
 
@@ -99,16 +101,19 @@ describe("PoliciesTable", () => {
     const columnHeader = screen.getByRole("columnheader", {
       name: "Creation date",
     });
+    const columnHeaderBtn = screen.getByRole("button", {
+      name: "Creation date",
+    });
 
     expect(columnHeader.getAttribute("aria-sort")).toBe("none");
 
-    await user.click(columnHeader);
+    await user.click(columnHeaderBtn);
     expect(columnHeader.getAttribute("aria-sort")).toBe("ascending");
 
-    await user.click(columnHeader);
+    await user.click(columnHeaderBtn);
     expect(columnHeader.getAttribute("aria-sort")).toBe("descending");
 
-    await user.click(columnHeader);
+    await user.click(columnHeaderBtn);
     expect(columnHeader.getAttribute("aria-sort")).toBe("none");
   });
 
@@ -119,16 +124,19 @@ describe("PoliciesTable", () => {
     const columnHeader = screen.getByRole("columnheader", {
       name: "Last updated",
     });
+    const columnHeaderBtn = screen.getByRole("button", {
+      name: "Last updated",
+    });
 
     expect(columnHeader.getAttribute("aria-sort")).toBe("none");
 
-    await user.click(columnHeader);
+    await user.click(columnHeaderBtn);
     expect(columnHeader.getAttribute("aria-sort")).toBe("ascending");
 
-    await user.click(columnHeader);
+    await user.click(columnHeaderBtn);
     expect(columnHeader.getAttribute("aria-sort")).toBe("descending");
 
-    await user.click(columnHeader);
+    await user.click(columnHeaderBtn);
     expect(columnHeader.getAttribute("aria-sort")).toBe("none");
   });
 });
