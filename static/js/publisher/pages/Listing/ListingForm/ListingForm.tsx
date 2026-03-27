@@ -120,7 +120,7 @@ function ListingForm({ data, refetch }: Props): React.JSX.Element {
                   version of the snapcraft.yaml released to the stable channel.{" "}
                   <a
                     className="p-link--external"
-                    href="/docs/snapcraft-top-level-metadata"
+                    href="https://documentation.ubuntu.com/snapcraft/stable/reference/project-file/snapcraft-yaml"
                   >
                     Learn more
                   </a>

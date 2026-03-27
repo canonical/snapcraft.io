@@ -1,3 +1,18 @@
-<div class="p-code-snippet">
+<div class="p-code-snippet" style="position: relative;">
   <pre class="p-code-snippet__block--icon is-wrapped"><code {% if snippet_id %}id="snippet-{{ snippet_id }}"{% endif %}>{{ snippet_value }}</code></pre>
+  {% if snippet_id %}
+  <button
+    class="p-button--base is-dense has-icon u-no-margin--bottom"
+    title="Copy to clipboard"
+    data-js="copy-install-command"
+    data-copy-target="snippet-{{ snippet_id }}"
+    {% if snippet_analytics_target %}
+      data-analytics-click
+      data-analytics-target="{{ snippet_analytics_target }}"
+    {% endif %}
+    style="position: absolute; top: 0.5rem; right: 0.5rem;"
+  >
+    <i class="p-icon--copy">Copy to clipboard</i>
+  </button>
+  {% endif %}
 </div>
