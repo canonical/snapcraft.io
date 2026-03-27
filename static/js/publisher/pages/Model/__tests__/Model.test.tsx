@@ -40,7 +40,7 @@ const renderComponent = () => {
 vi.mock("react-router-dom", async (importOriginal) => ({
   ...(await importOriginal()),
   useParams: () => ({
-    model_id: "model-1",
+    modelId: "model-1",
   }),
 }));
 

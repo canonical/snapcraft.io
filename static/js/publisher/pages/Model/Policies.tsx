@@ -27,11 +27,11 @@ import { isClosedPanel, setPageTitle } from "../../utils";
 import { PortalEntrance } from "../Portals/Portals";
 
 function Policies(): React.JSX.Element {
-  const { id, model_id } = useParams();
+  const { id, modelId } = useParams();
   const location = useLocation();
   const navigate = useNavigate();
   const { isLoading, isError, error, refetch, data }: UsePoliciesResponse =
-    usePolicies(id, model_id);
+    usePolicies(id, modelId);
   const signingKeys = useSigningKeys(id);
   const setPoliciesList = useSetAtom(policiesListState);
   const setFilter = useSetAtom(policiesListFilterState);
@@ -87,7 +87,7 @@ function Policies(): React.JSX.Element {
         <Col size={6} className="u-align--right">
           <Link
             className="p-button--positive"
-            to={`/admin/${id}/models/${model_id}/policies/create`}
+            to={`/admin/${id}/models/${modelId}/policies/create`}
           >
             Create policy
           </Link>
@@ -177,13 +177,13 @@ function Policies(): React.JSX.Element {
             isClosedPanel(location.pathname, "create") ? "u-hide" : ""
           }`}
           onClick={() => {
-            navigate(`/admin/${id}/models/${model_id}/policies`);
+            navigate(`/admin/${id}/models/${modelId}/policies`);
             setNewSigningKey({ name: "" });
             setShowErrorNotification(false);
           }}
           onKeyDown={(e) => {
             if (e.key === "Enter" || e.key === " ") {
-              navigate(`/admin/${id}/models/${model_id}/policies`);
+              navigate(`/admin/${id}/models/${modelId}/policies`);
               setNewSigningKey({ name: "" });
               setShowErrorNotification(false);
             }

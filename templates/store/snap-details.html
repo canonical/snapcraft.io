@@ -114,7 +114,9 @@
                 {% endif %}
                 data-js="open-channel-map"
                 data-controls="channel-map-install"
-                aria-controls="channel-map-install">
+                aria-controls="channel-map-install"
+                data-analytics-click
+                data-analytics-target="snap_details_install_button">
                   Install
                   {% if is_preview %}
                 <span class="p-tooltip__message u-align--center" role="tooltip" id="{{ package_name }}-preview-channel-map">This content is being displayed for preview purposes</span>
@@ -189,7 +191,7 @@
         </div>
         <div class="grid-row {% if normalized_os %}u-equal-height{% endif %}">
           {% if countries %}
-            <div class="{% if normalized_os %}grid-col-4{% else %}grid-col-6{% endif %} grid-col-start-large-3 js-snap-map-holder" data-live="installed_base_by_country_percent">
+            <div class="{% if normalized_os %}grid-col-4{% else %}grid-col-6{% endif %} grid-col-start-large-3 js-snap-map-holder" data-live="installed_base_by_country_percent" data-analytics-view data-analytics-hover data-analytics-target="snap_details_map_installed_base_by_country_percent" >
               <div id="js-snap-map" class="snapcraft-territories"></div>
             </div>
           {% endif %}
@@ -231,7 +233,7 @@
                     </div>
                     <div class="p-show-more__fade">
                       <div class="p-show-more__link-container">
-                        <button class="p-button--link p-show-more__link is-small u-no-padding" aria-expanded="false">Show more</button>
+                        <button class="p-button--link p-show-more__link is-small u-no-padding" aria-expanded="false" data-analytics-click data-analytics-target="snap_details_map_show_more_distributions">Show more</button>
                       </div>
                     </div>
                   </div>
