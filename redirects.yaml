@@ -134,6 +134,7 @@ docs/defining-a-command/?: https://documentation.ubuntu.com/snapcraft/stable/tut
 docs/snapcraft-docker-images/?: https://documentation.ubuntu.com/snapcraft/stable/how-to/crafting/specify-a-base/#containers
 docs/snapcraft-tutorials/?: https://documentation.ubuntu.com/snapcraft/stable/tutorials/
 docs/snapcraft-reference/?: https://documentation.ubuntu.com/snapcraft/stable/reference/
+docs/snapcraft-top-level-metadata/?: https://documentation.ubuntu.com/snapcraft/stable/reference/project-file/snapcraft-yaml/
 
 # Legacy forum redirects for pages that don't exist in RTD.
 # These are temporary and will be replaced when Snapcraft 7 is migrated.

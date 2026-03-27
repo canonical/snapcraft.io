@@ -73,9 +73,12 @@ afterAll(() => {
 
 describe("useRemodels", () => {
   test("returns remodels data", async () => {
-    const { result } = renderHook(() => useRemodels("test-brand-id"), {
-      wrapper: createWrapper(),
-    });
+    const { result } = renderHook(
+      () => useRemodels("test-brand-id", "test-to-model"),
+      {
+        wrapper: createWrapper(),
+      },
+    );
 
     await waitFor(() => {
       expect(result.current.isSuccess).toBe(true);
@@ -85,9 +88,12 @@ describe("useRemodels", () => {
   });
 
   test("returns error if request fails", async () => {
-    const { result } = renderHook(() => useRemodels("test-brand-id-fail"), {
-      wrapper: createWrapper(),
-    });
+    const { result } = renderHook(
+      () => useRemodels("test-brand-id-fail", "test-to-model"),
+      {
+        wrapper: createWrapper(),
+      },
+    );
 
     await waitFor(() => {
       expect(result.current.isError).toBe(true);
@@ -97,9 +103,12 @@ describe("useRemodels", () => {
   });
 
   test("returns error if network error", async () => {
-    const { result } = renderHook(() => useRemodels("test-brand-id-error"), {
-      wrapper: createWrapper(),
-    });
+    const { result } = renderHook(
+      () => useRemodels("test-brand-id-error", "test-to-model"),
+      {
+        wrapper: createWrapper(),
+      },
+    );
 
     await waitFor(() => {
       expect(result.current.isError).toBe(true);

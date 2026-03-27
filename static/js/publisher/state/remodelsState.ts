@@ -1,7 +1,5 @@
 import { atom } from "jotai";
 
-import { policiesListState } from "./policiesState";
-
 import type { Remodel } from "../types/shared";
 
 const remodelsListState = atom([] as Remodel[]);
@@ -31,19 +29,8 @@ function getFilteredRemodels(
 const filteredRemodelsListState = atom<Array<Remodel>>((get) => {
   const filter = get(remodelsListFilterState);
   const remodels = get(remodelsListState);
-  const policies = get(policiesListState);
-  const remodelsWithPolicies = remodels.map((remodel) => {
-    const remodelSerials = policies.filter(
-      (p) => p["model-name"] === remodel["to-model"],
-    );
 
-    return {
-      ...remodel,
-      serials: remodelSerials.length,
-    };
-  });
-
-  return getFilteredRemodels(remodelsWithPolicies, filter);
+  return getFilteredRemodels(remodels, filter);
 });
 
 export {

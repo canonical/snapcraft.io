@@ -342,3 +342,109 @@ class TestCreateRemodelAllowlist(TestModelServiceEndpoints):
         self.assertEqual(response.status_code, 500)
         self.assertFalse(data["success"])
         self.assertEqual(data["message"], "An error occurred")
+
+
+class TestGetSerialLog(TestModelServiceEndpoints):
+    @patch(
+        "canonicalwebteam.store_api.publishergw.PublisherGW"
+        + ".get_store_model_serial_log"
+    )
+    @patch("canonicalwebteam.store_api.dashboard.Dashboard.get_store")
+    def test_get_serial_log_success(self, mock_get_store, mock_get_serial_log):
+        mock_serial_log = [
+            {
+                "brand-id": "test-brand-id",
+                "created-at": "2026-03-23T04:00:23.875000",
+                "model-name": "test-model",
+                "serial": "test-serial",
+            }
+        ]
+        mock_get_serial_log.return_value = {"items": mock_serial_log}
+        mock_get_store.return_value = {"brand-id": "test-brand-id"}
+
+        response = self.client.get("/api/store/1/models/test-model/serial-log")
+        data = response.json
+
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(data["success"])
+        self.assertEqual(data["data"], mock_serial_log)
+
+    @patch(
+        "canonicalwebteam.store_api.publishergw.PublisherGW"
+        + ".get_store_model_serial_log"
+    )
+    @patch("canonicalwebteam.store_api.dashboard.Dashboard.get_store")
+    def test_get_serial_log_empty(self, mock_get_store, mock_get_serial_log):
+        mock_get_serial_log.return_value = {"items": []}
+        mock_get_store.return_value = {"brand-id": "test-brand-id"}
+
+        response = self.client.get("/api/store/1/models/test-model/serial-log")
+        data = response.json
+
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(data["success"])
+        self.assertEqual(data["data"], [])
+
+    @patch(
+        "canonicalwebteam.store_api.publishergw.PublisherGW"
+        + ".get_store_model_serial_log"
+    )
+    @patch("canonicalwebteam.store_api.dashboard.Dashboard.get_store")
+    def test_get_serial_log_unauthorized(
+        self, mock_get_store, mock_get_serial_log
+    ):
+        mock_get_serial_log.side_effect = StoreApiResponseErrorList(
+            "unauthorized", 401, [{"message": "unauthorized"}]
+        )
+        mock_get_store.return_value = {"brand-id": "test-brand-id"}
+
+        response = self.client.get("/api/store/1/models/test-model/serial-log")
+        data = response.json
+
+        self.assertEqual(response.status_code, 500)
+        self.assertFalse(data["success"])
+        self.assertEqual(data["message"], "Store not found")
+
+    @patch(
+        "canonicalwebteam.store_api.publishergw.PublisherGW"
+        + ".get_store_model_serial_log"
+    )
+    @patch("canonicalwebteam.store_api.dashboard.Dashboard.get_store")
+    def test_get_serial_log_store_not_found(
+        self, mock_get_store, mock_get_serial_log
+    ):
+        mock_get_serial_log.side_effect = StoreApiResponseErrorList(
+            "Store not found", 404, [{"message": "Store not found"}]
+        )
+        mock_get_store.return_value = {"brand-id": "test-brand-id"}
+
+        response = self.client.get(
+            "/api/store/999/models/test-model/serial-log"
+        )
+        data = response.json
+
+        self.assertEqual(response.status_code, 500)
+        self.assertFalse(data["success"])
+        self.assertEqual(data["message"], "Store not found")
+
+    @patch(
+        "canonicalwebteam.store_api.publishergw.PublisherGW"
+        + ".get_store_model_serial_log"
+    )
+    @patch("canonicalwebteam.store_api.dashboard.Dashboard.get_store")
+    def test_get_serial_log_general_error(
+        self, mock_get_store, mock_get_serial_log
+    ):
+        mock_get_serial_log.side_effect = StoreApiResponseErrorList(
+            "Internal server error",
+            500,
+            [{"message": "Internal server error"}],
+        )
+        mock_get_store.return_value = {"brand-id": "test-brand-id"}
+
+        response = self.client.get("/api/store/1/models/test-model/serial-log")
+        data = response.json
+
+        self.assertEqual(response.status_code, 500)
+        self.assertFalse(data["success"])
+        self.assertEqual(data["message"], "Internal server error")

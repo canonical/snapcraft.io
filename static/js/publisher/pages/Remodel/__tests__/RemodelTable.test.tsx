@@ -43,7 +43,7 @@ describe("RemodelTable", () => {
     ).toBeInTheDocument();
 
     expect(
-      screen.getByRole("columnheader", { name: "Allowed devices" }),
+      screen.getByRole("columnheader", { name: "Serial" }),
     ).toBeInTheDocument();
 
     expect(

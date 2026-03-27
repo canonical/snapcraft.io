@@ -24,6 +24,7 @@ from webapp.config import (
     DNS_VERIFICATION_SALT,
     IS_DEVELOPMENT,
     VITE_PORT,
+    ANALYTICS_ENDPOINT,
 )
 
 from canonicalwebteam.exceptions import (
@@ -90,6 +91,8 @@ CSP = {
         "px.ads.linkedin.com",
         "*.snapcraft.io",
         "*.snapcraftcontent.com",
+        "marketplace-analytics.staging.canonical.com",
+        "marketplace-analytics.canonical.com",
         "www.google.com",
     ],
     "frame-src": [
@@ -192,6 +195,7 @@ def snapcraft_utility_processor():
         "stores": stores,
         "format_link": template_utils.format_link,
         "DNS_VERIFICATION_SALT": DNS_VERIFICATION_SALT,
+        "ANALYTICS_ENDPOINT": ANALYTICS_ENDPOINT,
     }
 
 
