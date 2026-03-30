@@ -28,8 +28,7 @@ function install(language: unknown, fsfFlow: string): void {
       ) as HTMLLinkElement;
       if (paginationBtn) {
         paginationBtn.classList.remove("is-disabled");
-        paginationBtn.href =
-          `/${encodeURIComponent(fsfFlow)}/${encodeURIComponent(String(language))}/${encodeURIComponent(selectedOs)}/package`;
+        paginationBtn.href = `/${encodeURIComponent(fsfFlow)}/${encodeURIComponent(String(language))}/${encodeURIComponent(selectedOs)}/package`;
       }
     }
   }

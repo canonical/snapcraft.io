@@ -394,9 +394,7 @@ describe("RepoSelector", () => {
       expect(templateLink).toBeInTheDocument();
       const href = templateLink.getAttribute("href");
       // Verify special characters in branch name are encoded
-      expect(href).toContain(
-        encodeURIComponent("branch/with special#chars"),
-      );
+      expect(href).toContain(encodeURIComponent("branch/with special#chars"));
       // Verify the URL starts with the expected GitHub base
       expect(href).toMatch(
         /^https:\/\/github\.com\/johndoe\/test-snap-id\/new\//,
