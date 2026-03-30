@@ -46,7 +46,7 @@ function generateYamlTemplateUrl(
     return;
   }
 
-  const url = `https://github.com/${org}/${repo}/new/${branch}`;
+  const url = `https://github.com/${encodeURIComponent(org)}/${encodeURIComponent(repo)}/new/${encodeURIComponent(branch || "")}`;
   const searchParams = new URLSearchParams();
   const templateContent = `# After registering a name on snapcraft.io, commit an uncommented line:
 # name: ${snapId}
