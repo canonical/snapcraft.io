@@ -18,6 +18,12 @@ function buildObjectFromPath(path: string, value: unknown): Mergeable {
 
 function deepMerge(target: Mergeable, source: Mergeable, override: boolean) {
   for (const key of Object.keys(source)) {
+    // Guard against prototype pollution (CodeQL js/prototype-pollution-utility)
+    const isBlockedKey = key === "__proto__" || key === "constructor" || key === "prototype";
+    const isInheritedProperty = !Object.prototype.hasOwnProperty.call(target, key) && typeof target[key] !== "undefined";
+    if (isBlockedKey || isInheritedProperty) {
+      continue;
+    }
     if (typeof target[key] === "object" && typeof source[key] === "object") {
       target[key] = deepMerge(
         target[key] as Mergeable,
