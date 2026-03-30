@@ -361,6 +361,47 @@ describe("RepoSelector", () => {
     expect((repoInput as HTMLInputElement).value).toBe("");
   });
 
+  test("encodes special characters in the YAML template URL", async () => {
+    const reposWithMatch = [
+      { name: "test-snap-id", nameWithOwner: "johndoe/test-snap-id" },
+    ];
+
+    server.use(
+      http.get("/publisher/github/get-repos", () => {
+        return HttpResponse.json(reposWithMatch);
+      }),
+      http.get("/api/test-snap-id/builds/validate-repo", () => {
+        return HttpResponse.json({
+          success: false,
+          error: {
+            type: "MISSING_YAML_FILE",
+            message: "Missing snapcraft.yaml file",
+          },
+          data: { default_branch: "branch/with special#chars" },
+        });
+      }),
+    );
+
+    renderComponent();
+
+    const user = userEvent.setup();
+    const orgSelect = screen.getByLabelText("Select an organization");
+
+    await user.selectOptions(orgSelect, "johndoe");
+
+    await waitFor(() => {
+      const templateLink = screen.getByText("get started with a template");
+      expect(templateLink).toBeInTheDocument();
+      const href = templateLink.getAttribute("href");
+      // Verify special characters in branch name are encoded
+      expect(href).toContain(encodeURIComponent("branch/with special#chars"));
+      // Verify the URL starts with the expected GitHub base
+      expect(href).toMatch(
+        /^https:\/\/github\.com\/johndoe\/test-snap-id\/new\//,
+      );
+    });
+  });
+
   test("handles manual validation errors when user types repository name", async () => {
     // Use repos that DON'T match the snap name to avoid autofill
     const nonMatchingRepos = [
