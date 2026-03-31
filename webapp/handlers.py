@@ -132,7 +132,7 @@ if IS_DEVELOPMENT:
     CSP_SCRIPT_SRC.append(f"localhost:{VITE_PORT}")
 
 
-def refresh_redirect(path):
+def refresh_redirect():
     try:
         macaroon_discharge = authentication.get_refreshed_discharge(
             flask.session["macaroon_discharge"]
@@ -146,7 +146,13 @@ def refresh_redirect(path):
         return flask.abort(502, str(api_error))
 
     flask.session["macaroon_discharge"] = macaroon_discharge
-    return flask.redirect(path)
+    return flask.redirect(
+        flask.url_for(
+            flask.request.endpoint,
+            **flask.request.view_args,
+            **flask.request.args,
+        )
+    )
 
 
 def snapcraft_utility_processor():
@@ -282,7 +288,9 @@ def set_handlers(app):
             "macaroon-authorization-required",
         ]:
             authentication.empty_session(flask.session)
-            return flask.redirect(f"/login?next={flask.request.path}")
+            return flask.redirect(
+                flask.url_for("login.login_handler", next=flask.request.path)
+            )
 
         status_code = 502
         codes = [
@@ -309,7 +317,7 @@ def set_handlers(app):
 
     @app.errorhandler(PublisherMacaroonRefreshRequired)
     def handle_publisher_macaroon_refresh_required(error):
-        return refresh_redirect(flask.request.path)
+        return refresh_redirect()
 
     # Global tasks for all requests
     # ===
