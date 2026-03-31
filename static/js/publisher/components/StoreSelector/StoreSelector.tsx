@@ -26,6 +26,7 @@ function StoreSelector(): React.JSX.Element {
       label="Select store"
       placeholder="Select store"
       labelClassName="u-off-screen"
+      required
       onChange={(storeId) => {
         if (!storeId) return;
         navigate(`/admin/${storeId}/snaps`);

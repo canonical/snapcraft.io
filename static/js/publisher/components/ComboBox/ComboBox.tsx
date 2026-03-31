@@ -10,6 +10,7 @@ export interface ComboBoxItem {
 export interface ComboBoxProps {
   options: ComboBoxItem[];
   value: ComboBoxItem["value"];
+  required?: boolean;
   onChange?: (value: ComboBoxItem["value"] | null) => void;
   onSearch?: (item: ComboBoxItem, inputValue: string) => boolean;
   placeholder?: string;
@@ -32,6 +33,7 @@ const ComboBox: FC<ComboBoxProps> = ({
   options,
   value,
   onChange,
+  required,
   label,
   labelClassName,
   placeholder,
@@ -56,8 +58,8 @@ const ComboBox: FC<ComboBoxProps> = ({
       // we should show all options:
       //   1. inputValue is empty; this is trivial
       //   2. we have previously selected an item and we're opening the dropdown without
-      // changing inputValue.
-      // Opening the combobox after selecting an option, means we already have an inputValue.
+      //      changing inputValue.
+      // In the second case that would mean we already have an inputValue.
       // Normally this would filter out all elements that aren't the selected one, and the
       // user would have to clear the text in the input box before searching and selecting
       // a new element, which is awful from a UX POV...
@@ -107,36 +109,19 @@ const ComboBox: FC<ComboBoxProps> = ({
 
       // fixes for certain keyboard interactions
       switch (type) {
-        // Downshift implements arrow keys navigation, but it cycles the options in the list
-        // when it reaches the extremes; the WAI spec prescribes that this shouldn't happen;
-        // if the user presses "up" on the first option or "down" on the last one, we should
-        // ignore the change Downshift proposes
-        case Downshift.stateChangeTypes.keyDownArrowUp: {
-          // check for an "integer underflow" (we were at index 0 and moved to index N > 0);
-          // also, when opening the dropdown without a selected value prevState.highlightedIndex is
-          // null -> the first "up" keypress press moves the highlightedIndex to the bottom; this is
-          // obviously wrong. Since null becomes 0 when doing number comparisons, the following
-          // check covers this case as well.
-          if (nextState.highlightedIndex! > prevState.highlightedIndex!) {
-            nextState.highlightedIndex = prevState.highlightedIndex;
-          }
-          break;
-        }
-        case Downshift.stateChangeTypes.keyDownArrowDown: {
-          // check for an "integer overflow" (we were at index N > 0 and moved to index 0);
-          if (nextState.highlightedIndex! < prevState.highlightedIndex!) {
-            nextState.highlightedIndex = prevState.highlightedIndex;
-          }
-          break;
-        }
-
         // Downshift closes the dropdown when pressing the "escape" key, but also resets the
-        // selected value to the *default* one; if Downshift doesn't get a default value prop it
-        // resets the value entirely. This shouldn't happen, so we restore the last selected value
-        // (if available)
+        // selected value to `initialValue`; if Downshift doesn't get a default value prop it
+        // resets the value entirely. This implementation falls in the latter case.
+        // The correct behavior is:
+        //    1. pressing "escape" with the popup open means "close the popup"
+        //    2. pressing "escape" with the popup closed means "reset the state"
+        // Also, if the combobox is marked as `required` the user shouldn't be able to reset
+        // the value, so we reinstate the previous selected value in this case as well.
         case Downshift.stateChangeTypes.keyDownEscape: {
-          nextState.inputValue = prevState.selectedItem?.label ?? "";
-          nextState.selectedItem = prevState.selectedItem;
+          if (prevState.isOpen || required) {
+            nextState.inputValue = prevState.selectedItem?.label ?? "";
+            nextState.selectedItem = prevState.selectedItem;
+          }
           break;
         }
 
@@ -145,7 +130,7 @@ const ComboBox: FC<ComboBoxProps> = ({
         case Downshift.stateChangeTypes.blurInput: {
           if (prevState.highlightedIndex !== null) {
             nextState.selectedItem =
-              prevState.filteredOptions[prevState.highlightedIndex!];
+              prevState.filteredOptions[prevState.highlightedIndex];
             nextState.inputValue = nextState.selectedItem.label;
           }
           break;
