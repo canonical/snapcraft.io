@@ -1,0 +1,28 @@
+name: Demo
+on:
+  pull_request:
+    types:
+      - opened
+      - reopened
+      - synchronize
+permissions:
+  pull-requests: write
+  packages: write
+
+# Ensure only one demo runs at a time.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    name: Deploy Demo
+    uses: canonical/webteam-devops/.github/workflows/start-demo.yaml@demos
+    with:
+      juju-model-name: "795798e4-922f-49c7-9169-004ffc17df90@serviceaccount/k8s-marketplace-demos-default"
+      juju-model-uuid: "b765a126-883d-440b-847d-0bd30a4f8318"
+    secrets:
+      demos_juju_client_id: ${{ secrets.DEMOS_JUJU_CLIENT_ID }}
+      demos_juju_client_secret: ${{ secrets.DEMOS_JUJU_CLIENT_SECRET }}
+      demos_s3_access_key_id: ${{ secrets.DEMOS_S3_ACCESS_KEY_ID }}
+      demos_s3_secret_access_key: ${{ secrets.DEMOS_S3_SECRET_ACCESS_KEY }}
