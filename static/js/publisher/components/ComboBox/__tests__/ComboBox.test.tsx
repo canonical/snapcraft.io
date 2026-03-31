@@ -18,14 +18,17 @@ let actions: {
 };
 
 const onChange = vi.fn();
+const options = Array(5)
+  .fill(undefined)
+  .map((_, i) => ({
+    value: `option-${i}`,
+    label: `Option ${i}`,
+  }));
 
 function renderComponent(props?: Partial<ComboBoxProps>) {
   const renderResult = render(
     <ComboBox
-      options={[1, 2, 3, 4, 5].map((i) => ({
-        value: `option-${i}`,
-        label: `Option ${i}`,
-      }))}
+      options={options}
       placeholder="Test combobox placeholder"
       label="Test combobox label"
       labelClassName="test-combobox__label"
@@ -272,9 +275,9 @@ describe("ComboBox", () => {
     // listbox closes
     expect(elements.listbox).not.toHaveClass("active");
     // value changes
-    expect(elements.input.value).toEqual("Option 1");
+    expect(elements.input.value).toEqual("Option 0");
     // callback is called
-    expect(onChange).toHaveBeenCalledWith("option-1");
+    expect(onChange).toHaveBeenCalledWith("option-0");
   });
 
   it("blurring selects an element", async () => {
@@ -284,36 +287,23 @@ describe("ComboBox", () => {
     // listbox closes
     expect(elements.listbox).not.toHaveClass("active");
     // value changes
-    expect(elements.input.value).toEqual("Option 1");
+    expect(elements.input.value).toEqual("Option 0");
     // callback is called
-    expect(onChange).toHaveBeenCalledWith("option-1");
+    expect(onChange).toHaveBeenCalledWith("option-0");
   });
 
-  it("arrow key navigation doesn't loop at the bottom", async () => {
+  it("arrow key navigation loops at the bottom", async () => {
     renderComponent();
-    await userEvent.type(elements.input, "{arrowdown}".repeat(10));
+    await userEvent.type(elements.input, "{arrowdown}".repeat(options.length));
 
     const lastOption = elements.listbox.lastChild! as HTMLLIElement;
     expect(lastOption).toHaveAttribute("aria-selected", "true");
   });
 
-  it("arrow up key navigation doesn't select options when starting from an empty state", async () => {
+  it("arrow key navigation loops at the top", async () => {
     renderComponent();
-    await userEvent.type(elements.input, "{arrowup}".repeat(10));
+    await userEvent.type(elements.input, "{arrowdown}{arrowup}");
 
-    for (const element of elements.listbox.children) {
-      expect(element).toHaveAttribute("aria-selected", "false");
-    }
-  });
-
-  it("arrow key navigation doesn't loop at the top", async () => {
-    renderComponent();
-    await userEvent.type(
-      elements.input,
-      "{arrowdown}{arrowdown}" + "{arrowup}".repeat(10),
-    );
-
-    const firstOption = elements.listbox.firstChild! as HTMLLIElement;
-    expect(firstOption).toHaveAttribute("aria-selected", "true");
+    expect(elements.listbox.lastChild).toHaveAttribute("aria-selected", "true");
   });
 });

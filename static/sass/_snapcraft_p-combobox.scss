@@ -40,13 +40,13 @@
       left: 0;
       list-style: none;
       margin: 0;
+      max-height: 15rem;
+      overflow: auto;
       padding: 0;
       position: absolute;
       top: 100%;
       width: 100%;
       z-index: 1;
-      max-height: 15rem;
-      overflow: auto;
 
       &:not(.active) {
         visibility: hidden;
