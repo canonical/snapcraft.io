@@ -45,6 +45,8 @@
       top: 100%;
       width: 100%;
       z-index: 1;
+      max-height: 15rem;
+      overflow: auto;
 
       &:not(.active) {
         visibility: hidden;
