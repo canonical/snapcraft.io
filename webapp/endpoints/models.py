@@ -1,4 +1,5 @@
 # Packages
+from logging import log
 import flask
 from flask import make_response
 from canonicalwebteam.exceptions import (
@@ -356,10 +357,40 @@ def get_serial_logs(store_id: str, model_name: str):
     res = {}
 
     try:
-        logs = publisher_gateway.get_store_model_serial_log(
+        logs = publisher_gateway.get_store_model_serial_logs(
             flask.session,
             store_id,
             model_name,
+        )
+        res["data"] = logs["items"]
+        res["success"] = True
+        response = make_response(res, 200)
+    except StoreApiResponseErrorList as error_list:
+        error_messages = [
+            f"{error.get('message', 'An error occurred')}"
+            for error in error_list.errors
+        ]
+        if "unauthorized" in error_messages:
+            res["message"] = "Store not found"
+        else:
+            res["message"] = " ".join(error_messages)
+        res["success"] = False
+        response = make_response(res, 500)
+
+    return response
+
+
+@models.route(
+    "/api/store/<store_id>/models/<model_name>/serial/<serial>/serial-log"
+)
+@login_required
+@exchange_required
+def get_serial_log(store_id: str, model_name: str, serial: str):
+    res = {}
+
+    try:
+        logs = publisher_gateway.get_store_model_serial_log(
+            flask.session, store_id, model_name, serial
         )
         res["data"] = logs["items"]
         res["success"] = True
