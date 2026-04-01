@@ -9,28 +9,28 @@ resource "juju_application" "demo" {
   config = {
     bsi-url = "https://build.snapcraft.io"
     devicegw-url = "https://api.snapcraft.io/"
-    discourse-api-key = data.juju_secret.snapcraft_io-discourse_api_key.secret_uri
+    discourse-api-key = "secret:${data.juju_secret.snapcraft_io-discourse_api_key.secret_id}"
     discourse-api-username = "system"
-    dns-verification-salt = data.juju_secret.snapcraft_io-dns_verification_salt.secret_uri
+    dns-verification-salt = "secret:${data.juju_secret.snapcraft_io-dns_verification_salt.secret_id}"
     environment = "production"
     flask-preferred-url-scheme = "HTTPS"
-    flask-secret-key = data.juju_secret.snapcraft_io-flask_secret_key.secret_uri
+    flask-secret-key = "secret:${data.juju_secret.snapcraft_io-flask_secret_key.secret_id}"
     github-client-id = "029a65c1d9dc821b0227"
-    github-client-secret = data.juju_secret.snapcraft_io-github_client_secret.secret_uri
-    github-snapcraft-bot-user-token = data.juju_secret.snapcraft_io-github_snapcraft_bot_user_token.secret_uri
-    github-snapcraft-user-token = data.juju_secret.snapcraft_io-github_snapcraft_user_token.secret_uri
+    github-client-secret = "secret:${data.juju_secret.snapcraft_io-github_client_secret.secret_id}"
+    github-snapcraft-bot-user-token = "secret:${data.juju_secret.snapcraft_io-github_snapcraft_bot_user_token.secret_id}"
+    github-snapcraft-user-token = "secret:${data.juju_secret.snapcraft_io-github_snapcraft_user_token.secret_id}"
     github-webhook-host-url = "https://snapcraft.io/"
-    github-webhook-secret = data.juju_secret.snapcraft_io-github_webhook_secret.secret_uri
+    github-webhook-secret = "secret:${data.juju_secret.snapcraft_io-github_webhook_secret.secret_id}"
     login-url = "https://login.ubuntu.com"
-    lp-api-token = data.juju_secret.snapcraft_io-lp_api_token.secret_uri
-    lp-api-token-secret = data.juju_secret.snapcraft_io-lp_api_token_secret.secret_uri
+    lp-api-token = "secret:${data.juju_secret.snapcraft_io-lp_api_token.secret_id}"
+    lp-api-token-secret = "secret:${data.juju_secret.snapcraft_io-lp_api_token_secret.secret_id}"
     lp-api-username = "build.snapcraft.io"
-    marketo-client-id = data.juju_secret.snapcraft_io-marketo_client_id.secret_uri
-    marketo-client-secret = data.juju_secret.snapcraft_io-marketo_client_secret.secret_uri
+    marketo-client-id = "secret:${data.juju_secret.snapcraft_io-marketo_client_id.secret_id}"
+    marketo-client-secret = "secret:${data.juju_secret.snapcraft_io-marketo_client_secret.secret_id}"
     publishergw-url = "https://api.charmhub.io"
     report-sheet-url = "https://script.google.com/macros/s/AKfycbywNDNVeD4_xnE36HP7gJUbbLHNrrcxgy0yVuwr0poPfGoDnH0Vl1oOWjnRXNtLkrcmlQ/exec"
     snapstore-dashboard-api-url = "https://dashboard.snapcraft.io/"
-    youtube-api-key = data.juju_secret.snapcraft_io-youtube_api_key.secret_uri
+    youtube-api-key = "secret:${data.juju_secret.snapcraft_io-youtube_api_key.secret_id}"
   }
 }
 
