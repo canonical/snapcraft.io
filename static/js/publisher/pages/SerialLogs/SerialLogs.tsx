@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useAtomValue, useSetAtom } from "jotai";
 import { useParams, useSearchParams } from "react-router-dom";
 import { Notification, Icon, Row, Col } from "@canonical/react-components";
@@ -15,7 +16,6 @@ import SerialLogsTable from "./SerialLogsTable";
 
 import type { UseQueryResult } from "react-query";
 import type { SerialLog } from "../../types/shared";
-import { useEffect } from "react";
 
 function SerialLogs() {
   const { id, modelId } = useParams();

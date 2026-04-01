@@ -8,7 +8,8 @@ function ModelDetailsPageLayout() {
     pathname.endsWith("policies") || pathname.endsWith("policies/create");
   const isRemodel =
     pathname.endsWith("remodel") || pathname.endsWith("remodel/configure");
-  const isSerialLog = pathname.endsWith("serial-log");
+  const isSerialLog =
+    pathname.endsWith("serial-log") || pathname.includes("/serial-log/");
 
   const getSectionName = () => {
     if (isPolicies) {
