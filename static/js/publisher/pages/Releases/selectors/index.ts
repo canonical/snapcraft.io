@@ -7,12 +7,11 @@ import {
 } from "../constants";
 import { isInDevmode, getBuildId, isRevisionBuiltOnLauchpad } from "../helpers";
 import { sortAlphaNum, getChannelString } from "../../../../libs/channels";
-import {
+import type {
   ArchitectureRevisionsMap,
   AvailableRevisionsSelect,
   CPUArchitecture,
   LaunchpadBuildRevision,
-  PendingRelease,
   PendingReleaseItem,
   Progressive,
   ProgressiveChanges,

@@ -2,8 +2,8 @@ import { DND_ITEM_REVISIONS } from "../dnd";
 
 import { canBeReleased } from "../../helpers";
 import { ReleasesTableCellView, RevisionInfo, EmptyInfo } from "./cellViews";
-import { Revision, CPUArchitecture } from "../../../../types/releaseTypes";
-import { DraggedItem } from "./types";
+import type { Revision, CPUArchitecture } from "../../../../types/releaseTypes";
+import type { DraggedItem } from "./types";
 
 interface ReleasesTableRevisionCellProps {
   revision: Revision | null;

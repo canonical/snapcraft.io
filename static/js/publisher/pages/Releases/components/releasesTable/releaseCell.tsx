@@ -15,8 +15,8 @@ import {
   getFilteredAvailableRevisionsForArch,
   getProgressiveState,
   hasPendingRelease,
-  Branch,
-  ProgressiveState,
+  type Branch,
+  type ProgressiveState,
 } from "../../selectors";
 
 import {
@@ -28,16 +28,16 @@ import {
   FailedInfo,
 } from "./cellViews";
 
-import {
+import type {
   ReleasesReduxState,
-  DispatchFn,
   CPUArchitecture,
   ChannelArchitectureRevisionsMap,
   Channel,
   Revision,
   FailedRevision,
 } from "../../../../types/releaseTypes";
-import { DraggedItem } from "./types";
+import type { DispatchFn } from "../../store";
+import type { DraggedItem } from "./types";
 
 interface OwnProps {
   track: string;

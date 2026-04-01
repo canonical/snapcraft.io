@@ -1,5 +1,4 @@
 /* eslint-disable */
-import React from "react";
 import { connect } from "react-redux";
 
 import { format } from "date-fns";
@@ -7,7 +6,8 @@ import { format } from "date-fns";
 import { canBeReleased } from "../helpers";
 import { getChannelString } from "../../../../libs/channels.js";
 import { toggleRevision } from "../actions/channelMap";
-import type { Revision, ReleasesReduxState, DispatchFn } from "../../../types/releaseTypes";
+import type { Revision, ReleasesReduxState } from "../../../types/releaseTypes";
+import type { DispatchFn } from "../store";
 
 import {
   getSelectedRevisions,

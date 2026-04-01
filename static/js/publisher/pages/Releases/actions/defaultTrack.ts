@@ -1,10 +1,10 @@
-import { CLOSE_MODAL, CloseModalAction } from "./modal";
+import { CLOSE_MODAL, type CloseModalAction } from "./modal";
 import { showNotification } from "./globalNotification";
 import {
   GenericReleasesAction,
   ReleasesReduxState,
-  DispatchFn,
 } from "../../../types/releaseTypes";
+import type { DispatchFn } from "../store";
 
 export const SET_DEFAULT_TRACK_SUCCESS = "SET_DEFAULT_TRACK_SUCCESS";
 export const SET_DEFAULT_TRACK_FAILURE = "SET_DEFAULT_TRACK_FAILURE";

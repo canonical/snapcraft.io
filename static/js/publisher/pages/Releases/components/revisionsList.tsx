@@ -13,12 +13,12 @@ import { getBuildId, getChannelName, isInDevmode } from "../helpers";
 import type {
   Revision,
   ReleasesReduxState,
-  DispatchFn,
   AvailableRevisionsSelect,
   PendingReleaseItem,
   CPUArchitecture,
   Channel,
 } from "../../../types/releaseTypes";
+import type { DispatchFn } from "../store";
 
 import RevisionsListRow from "./revisionsListRow";
 import { closeHistory } from "../actions/history";
@@ -33,7 +33,7 @@ import {
   getFilteredAvailableRevisionsForArch,
   isProgressiveReleaseEnabled,
   getPendingRelease,
-  ReleaseHistoryItem,
+  type ReleaseHistoryItem,
 } from "../selectors";
 
 interface OwnProps {

@@ -6,8 +6,8 @@ import {
   RELEASE_REVISION_SUCCESS,
   CLOSE_CHANNEL_SUCCESS,
 } from "../actions/channelMap";
-import { ReleasesReduxState, Revision } from "../../../types/releaseTypes";
-import { RootAction } from "../actions";
+import type { ReleasesReduxState, Revision } from "../../../types/releaseTypes";
+import type { RootAction } from "../actions";
 
 function selectRevision(
   state: ReleasesReduxState["channelMap"],

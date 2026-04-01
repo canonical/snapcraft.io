@@ -1,9 +1,10 @@
-import React, { Component, ReactNode } from "react";
+import { Component, ReactNode } from "react";
 import { connect } from "react-redux";
 
-import { CLOSE_MODAL, closeModal, CloseModalAction } from "../actions/modal";
+import { CLOSE_MODAL, closeModal, type CloseModalAction } from "../actions/modal";
 import { setDefaultTrack, clearDefaultTrack } from "../actions/defaultTrack";
-import type { ReleasesReduxState, DispatchFn } from "../../../types/releaseTypes";
+import type { ReleasesReduxState } from "../../../types/releaseTypes";
+import type { DispatchFn } from "../store";
 
 type ModalAction = {
   appearance: "positive" | "neutral" | "negative";

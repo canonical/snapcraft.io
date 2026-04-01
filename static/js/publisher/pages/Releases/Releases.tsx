@@ -5,7 +5,7 @@ import Release from "./Release";
 import { setPageTitle } from "../../utils";
 import Loader from "../../components/Loader";
 
-import { ReleasesAPIResponse } from "../../types/releaseTypes";
+import type { ReleasesAPIResponse } from "../../types/releaseTypes";
 
 function Releases(): React.JSX.Element {
   const { snapId } = useParams();
@@ -27,8 +27,6 @@ function Releases(): React.JSX.Element {
       return responseData;
     },
   });
-
-  // TODO: fix missing currentTrack and wrong options
 
   setPageTitle(`Releases for ${snapId}`);
 

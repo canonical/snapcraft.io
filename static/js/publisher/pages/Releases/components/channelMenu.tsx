@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 
 import ContextualMenu from "./contextualMenu";
-import { TargetChannel } from "../../../types/releaseTypes";
+import type { TargetChannel } from "../../../types/releaseTypes";
 
 interface ChannelMenuProps {
   channel: string;

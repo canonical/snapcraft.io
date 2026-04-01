@@ -3,8 +3,9 @@ import { connect } from "react-redux";
 import { Row, Col } from "@canonical/react-components";
 
 import { updateProgressiveReleasePercentage } from "../../actions/pendingChanges";
-import { isProgressiveReleaseEnabled, SeparatePendingReleases } from "../../selectors";
-import type { ReleasesReduxState, DispatchFn } from "../../../../types/releaseTypes";
+import { isProgressiveReleaseEnabled, type SeparatePendingReleases } from "../../selectors";
+import type { ReleasesReduxState } from "../../../../types/releaseTypes";
+import type { DispatchFn } from "../../store";
 
 import progressiveTypes from "./types";
 import ReleaseRow from "./releaseRow";

@@ -1,7 +1,7 @@
 import { AVAILABLE, REVISION_STATUS } from "./constants";
 import { getChannelString } from "../../../libs/channels";
 import { useEffect } from "react";
-import {
+import type {
   ArchitectureRevisionsMap,
   CPUArchitecture,
   Release,

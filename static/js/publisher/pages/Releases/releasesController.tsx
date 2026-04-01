@@ -13,11 +13,11 @@ import {
   initOptions
 } from "./actions";
 
-import {
+import type {
   ReleasesAPIResponse,
   ReleasesReduxState,
-  DispatchFn,
 } from "../../types/releaseTypes";
+import type { DispatchFn } from "./store";
 
 // Props coming from parent component
 interface OwnProps {

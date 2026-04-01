@@ -12,8 +12,9 @@ import {
 } from "../actions/pendingChanges";
 import { releaseRevisions } from "../actions/releases";
 import { triggerGAEvent } from "../actions/gaEventTracking";
-import { getSeparatePendingReleases, SeparatePendingReleases } from "../selectors";
-import type { ReleasesReduxState, DispatchFn, PendingReleaseItem, Channel } from "../../../types/releaseTypes";
+import { getSeparatePendingReleases, type SeparatePendingReleases } from "../selectors";
+import type { ReleasesReduxState } from "../../../types/releaseTypes";
+import type { DispatchFn } from "../store";
 
 interface OwnProps {
   // No own props - all props come from Redux

@@ -1,4 +1,4 @@
-import {
+import type {
   GenericReleasesAction,
   ReleasesReduxState,
 } from "../../../types/releaseTypes";

@@ -1,5 +1,5 @@
-import { ReleasesReduxState } from "../../../types/releaseTypes";
-import { RootAction } from "../actions";
+import type { ReleasesReduxState } from "../../../types/releaseTypes";
+import type { RootAction } from "../actions";
 import {
   SET_DEFAULT_TRACK_SUCCESS,
 } from "../actions/defaultTrack";

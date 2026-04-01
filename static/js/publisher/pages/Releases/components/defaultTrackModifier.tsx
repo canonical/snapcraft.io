@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import { Component } from "react";
 import { connect } from "react-redux";
 
 import { getTracks, getTrackRevisions } from "../selectors";
@@ -7,7 +7,8 @@ import {
   showNotification,
   hideNotification,
 } from "../actions/globalNotification";
-import { ReleasesReduxState, DispatchFn, ArchitectureRevisionsMap } from "../../../types/releaseTypes";
+import type { ReleasesReduxState, ArchitectureRevisionsMap } from "../../../types/releaseTypes";
+import type { DispatchFn } from "../store";
 
 interface StateProps {
   defaultTrack: string | null;

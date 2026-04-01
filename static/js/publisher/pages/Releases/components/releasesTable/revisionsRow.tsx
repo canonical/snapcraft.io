@@ -1,11 +1,10 @@
-import React from "react";
 import { connect } from "react-redux";
 
 import { getArchitectures } from "../../selectors";
 import { isSameVersion } from "../../helpers";
 import ReleasesTableRevisionCell from "./revisionCell";
 import ReleasesTableRow from "./row";
-import {
+import type {
   ReleasesReduxState,
   CPUArchitecture,
   ArchitectureRevisionsMap,

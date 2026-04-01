@@ -1,8 +1,8 @@
 import {
   UPDATE_ARCHITECTURES,
 } from "../actions/architectures";
-import { ReleasesReduxState } from "../../../types/releaseTypes";
-import { RootAction } from "../actions";
+import type { ReleasesReduxState } from "../../../types/releaseTypes";
+import type { RootAction } from "../actions";
 
 export default function architectures(
   state: ReleasesReduxState["architectures"] = [],

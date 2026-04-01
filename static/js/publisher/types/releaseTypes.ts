@@ -1,12 +1,10 @@
-import { Store } from "redux";
-import { ThunkDispatch } from "redux-thunk";
 import {
   AVAILABLE_REVISIONS_SELECT_ALL,
   AVAILABLE_REVISIONS_SELECT_LAUNCHPAD,
   AVAILABLE_REVISIONS_SELECT_RECENT,
   AVAILABLE_REVISIONS_SELECT_UNRELEASED,
 } from "../pages/Releases/constants";
-import { CLOSE_MODAL, RootAction } from "../pages/Releases/actions";
+import { CLOSE_MODAL } from "../pages/Releases/actions";
 
 type Prettify<T> = { [K in keyof T]: T[K] } & {};
 
@@ -308,7 +306,7 @@ export type ReleasesReduxState = {
     changeOrderIndex: number;
     pendingCloses: {
       [order: number]: Channel["name"]; // TODO: are there any constraints on this?
-    }
+    };
     pendingReleases: {
       [order: number]: PendingRelease;
     };
@@ -329,7 +327,7 @@ export type HistoryFilters = {
   track: Release["track"];
   risk: Release["risk"];
   branch?: Release["branch"];
-}
+};
 
 export type TargetChannel = {
   channel: string;
@@ -373,8 +371,8 @@ export type PendingRelease = {
   revision: number;
   channels: {
     [channel: Channel["name"]]: PendingReleaseItem;
-  }
-}
+  };
+};
 
 export type PendingReleaseItem = {
   revision: Revision;
@@ -398,13 +396,3 @@ export type GenericReleasesAction<
   type: T;
   payload: P;
 }>;
-
-export type DispatchFn = ThunkDispatch<
-  ReleasesReduxState,
-  unknown,
-  RootAction
->;
-
-export type ReleasesReduxStore = Store<ReleasesReduxState, RootAction> & {
-  dispatch: DispatchFn;
-};
