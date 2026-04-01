@@ -3,7 +3,7 @@ import { renderHook, waitFor } from "@testing-library/react";
 import { http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
 
-import useSerialLog from "../useSerialLog";
+import useSerialLogs from "../useSerialLogs";
 
 import type { ReactNode } from "react";
 
@@ -65,10 +65,10 @@ afterAll(() => {
   server.close();
 });
 
-describe("useSerialLog", () => {
+describe("useSerialLogs", () => {
   test("returns serial log data", async () => {
     const { result } = renderHook(
-      () => useSerialLog("test-brand", "test-model"),
+      () => useSerialLogs("test-brand", "test-model"),
       {
         wrapper: createWrapper(),
       },
@@ -83,7 +83,7 @@ describe("useSerialLog", () => {
 
   test("returns error if request fails", async () => {
     const { result } = renderHook(
-      () => useSerialLog("test-brand-fail", "test-model"),
+      () => useSerialLogs("test-brand-fail", "test-model"),
       {
         wrapper: createWrapper(),
       },
@@ -98,7 +98,7 @@ describe("useSerialLog", () => {
 
   test("returns error if network error", async () => {
     const { result } = renderHook(
-      () => useSerialLog("test-brand-error", "test-model"),
+      () => useSerialLogs("test-brand-error", "test-model"),
       {
         wrapper: createWrapper(),
       },

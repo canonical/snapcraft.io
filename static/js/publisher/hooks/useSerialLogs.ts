@@ -1,12 +1,12 @@
 import { useQuery, UseQueryResult } from "react-query";
 import type { SerialLog } from "../types/shared";
 
-const useSerialLog = (
+const useSerialLogs = (
   brandId: string | undefined,
   modelId: string | undefined,
 ): UseQueryResult<SerialLog[], Error> => {
   return useQuery<SerialLog[], Error>({
-    queryKey: ["serialLog", brandId, modelId],
+    queryKey: ["serialLogs", brandId, modelId],
     queryFn: async () => {
       const response = await fetch(
         `/api/store/${brandId}/models/${modelId}/serial-log`,
@@ -28,4 +28,4 @@ const useSerialLog = (
   });
 };
 
-export default useSerialLog;
+export default useSerialLogs;

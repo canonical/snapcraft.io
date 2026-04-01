@@ -2,7 +2,7 @@ import { useAtomValue, useSetAtom } from "jotai";
 import { useParams, useSearchParams } from "react-router-dom";
 import { Notification, Icon, Row, Col } from "@canonical/react-components";
 
-import { useSerialLog } from "../../hooks";
+import { useSerialLogs } from "../../hooks";
 import {
   serialLogListState,
   serialLogListFilterState,
@@ -25,7 +25,7 @@ function SerialLog() {
     isError,
     error,
     data,
-  }: UseQueryResult<SerialLog[], Error> = useSerialLog(brandId, modelId);
+  }: UseQueryResult<SerialLog[], Error> = useSerialLogs(brandId, modelId);
   const setSerialLog = useSetAtom(serialLogListState);
   const setFilter = useSetAtom(serialLogListFilterState);
   const brandStore = useAtomValue(brandStoreState(id));
