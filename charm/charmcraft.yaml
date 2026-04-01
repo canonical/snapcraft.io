@@ -17,6 +17,12 @@ description: The charm for the snapcraft.io website, built with the PaaS app cha
 extensions:
   - flask-framework
 
+requires:
+  redis:
+    interface: redis
+    optional: true
+    limit: 1
+
 config:
   options:
     sentry-dsn:
@@ -30,11 +36,11 @@ config:
 
     marketo-client-id:
       description: "Marketo API client ID"
-      type: string
+      type: secret
 
     marketo-client-secret:
       description: "Marketo API client secret"
-      type: string
+      type: secret
 
     github-client-id:
       description: "GitHub OAuth application ID for prompting users for access to their repositories"
@@ -42,19 +48,19 @@ config:
 
     github-client-secret:
       description: "GitHub OAuth application client secret for prompting users for access to their repositories"
-      type: string
+      type: secret
 
     github-snapcraft-user-token:
       description: "GitHub application token for automated builds"
-      type: string
+      type: secret
 
     github-snapcraft-bot-user-token:
       description: "GitHub application token for CVE data"
-      type: string
+      type: secret
 
     github-webhook-secret:
       description: "Secret salt used for signing automated build webhooks"
-      type: string
+      type: secret
 
     github-webhook-host-url:
       description: "URL of the automated build webhooks' host"
@@ -66,19 +72,19 @@ config:
 
     lp-api-token:
       description: "Launchpad API token"
-      type: string
+      type: secret
 
     lp-api-token-secret:
       description: "Launchpad API secret"
-      type: string
+      type: secret
 
     youtube-api-key:
       description: "API key used to access the YouTube Data API for retrieving and displaying YouTube video content on snapcraft.io"
-      type: string
+      type: secret
 
     discourse-api-key:
       description: "API key used by the application to authenticate with the configured Discourse forum"
-      type: string
+      type: secret
 
     discourse-api-username:
       description: "Discourse username to associate with API requests to the Discourse forum"
@@ -86,7 +92,7 @@ config:
 
     dns-verification-salt:
       description: "Secret salt used when generating DNS verification tokens to confirm domain ownership"
-      type: string
+      type: secret
 
     login-url:
       description: "Base URL for SSO login redirects"
