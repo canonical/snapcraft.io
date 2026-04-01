@@ -1,7 +1,6 @@
 import pendingReleases from "../pendingReleases";
 import {
   CancelPendingReleasesAction,
-  CancelProgressiveReleaseAction,
   PauseProgressiveReleaseAction,
   PendingReleasesAction,
   ReleaseRevisionAction,
@@ -9,7 +8,7 @@ import {
   SetProgressiveReleasePercentageAction,
   UndoReleaseAction,
   UpdateProgressiveReleasePercentageAction,
-} from "../../actions/pendingReleases";
+} from "../../actions/pendingChanges";
 import {
   RELEASE_REVISION,
   UNDO_RELEASE,
@@ -18,7 +17,6 @@ import {
   UPDATE_PROGRESSIVE_RELEASE_PERCENTAGE,
   PAUSE_PROGRESSIVE_RELEASE,
   RESUME_PROGRESSIVE_RELEASE,
-  CANCEL_PROGRESSIVE_RELEASE,
 } from "../../actions/pendingReleases";
 import { CLOSE_CHANNEL, CloseChannelAction } from "../../actions/pendingCloses";
 import { ReleasesReduxState } from "../../../../types/releaseTypes";

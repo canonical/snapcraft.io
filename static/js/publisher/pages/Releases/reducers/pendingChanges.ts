@@ -15,7 +15,6 @@ import {
   UPDATE_PROGRESSIVE_RELEASE_PERCENTAGE,
   PAUSE_PROGRESSIVE_RELEASE,
   RESUME_PROGRESSIVE_RELEASE,
-  CANCEL_PROGRESSIVE_RELEASE,
 } from "../actions/pendingChanges";
 
 export default function pendingChanges(
@@ -51,12 +50,13 @@ export function pendingCloses(
       if (alreadyExistingChannel) {
         return state;
       }
+      const newState = updatePendingReleasesForClosingChannel(state, action.payload.channel)
       return {
-        ...state,
-        changeOrderIndex: state.changeOrderIndex + 1,
+        ...newState,
+        changeOrderIndex: newState.changeOrderIndex + 1,
         pendingCloses: {
           ...pendingCloses,
-          [state.changeOrderIndex]: action.payload.channel,
+          [newState.changeOrderIndex]: action.payload.channel,
         },
       };
     case CANCEL_PENDING_RELEASES:
@@ -70,6 +70,22 @@ export function pendingCloses(
   }
 }
 
+function updatePendingReleasesForClosingChannel(
+  state: ReleasesReduxState["pendingChanges"],
+  channel: string
+) {
+  Object.values(state.pendingReleases).forEach((pendingRelease) => {
+    if (pendingRelease.channels[channel]) {
+      state = removePendingRelease(
+        state,
+        pendingRelease.channels[channel].revision,
+        channel
+      );
+    }
+  });
+
+  return state;
+}
 
 function getPendingReleaseByRevision(
   state: ReleasesReduxState["pendingChanges"],
@@ -172,23 +188,6 @@ function releaseRevision(
   };
 }
 
-function closeChannel(
-  state: ReleasesReduxState["pendingChanges"],
-  channel: string
-) {
-  Object.values(state.pendingReleases).forEach((pendingRelease) => {
-    if (pendingRelease.channels[channel]) {
-      state = removePendingRelease(
-        state,
-        pendingRelease.channels[channel].revision,
-        channel
-      );
-    }
-  });
-
-  return state;
-}
-
 function setProgressiveRelease(
   state: ReleasesReduxState["pendingChanges"],
   progressive: Progressive
@@ -275,31 +274,6 @@ function resumeProgressiveRelease(
   };
 }
 
-// This only works on the channel/arch the cancel button is pressed on
-// because we're using the previousRevision from that specific combo.
-// That means the progressive.key is ignored and other releases with the
-// same key are not affected.
-function cancelProgressiveRelease(
-  state: ReleasesReduxState["pendingChanges"],
-  previousRevision: Revision
-) {
-  let nextState = structuredClone(state);
-
-  Object.entries(nextState.pendingReleases).forEach(([orderIndexStr, pendingRelease]) => {
-    Object.keys(pendingRelease.channels).forEach((channel) => {
-      const current = parseInt(orderIndexStr);
-      const pendingReleaseItem = pendingRelease.channels[channel];
-
-      if (pendingReleaseItem.progressive) {
-        nextState = releaseRevision(nextState, previousRevision, channel);
-        nextState.pendingReleases[current].channels[channel].replaces = pendingReleaseItem;
-      }
-    });
-  });
-
-  return nextState;
-}
-
 // revisions to be released:
 // key is the id of revision to release
 // value is object containing release object and channels to release to
@@ -341,14 +315,6 @@ export function pendingReleases(
         action.payload.revision,
         action.payload.channel
       );
-    case CANCEL_PENDING_RELEASES:
-      return {
-        changeOrderIndex: 0,
-        pendingCloses: {},
-        pendingReleases: {}
-      };
-    case CLOSE_CHANNEL:
-      return closeChannel(state, action.payload.channel);
     case SET_PROGRESSIVE_RELEASE_PERCENTAGE:
       return setProgressiveRelease(state, action.payload);
     case UPDATE_PROGRESSIVE_RELEASE_PERCENTAGE:
@@ -357,8 +323,6 @@ export function pendingReleases(
       return pauseProgressiveRelease(state);
     case RESUME_PROGRESSIVE_RELEASE:
       return resumeProgressiveRelease(state);
-    case CANCEL_PROGRESSIVE_RELEASE:
-      return cancelProgressiveRelease(state, action.payload.previousRevision);
     default:
       return state;
   }

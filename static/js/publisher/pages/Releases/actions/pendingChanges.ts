@@ -18,7 +18,6 @@ export type PendingChangesAction =
   | UpdateProgressiveReleasePercentageAction
   | PauseProgressiveReleaseAction
   | ResumeProgressiveReleaseAction
-  | CancelProgressiveReleaseAction
   | CloseChannelAction;
 
 /**
@@ -111,13 +110,6 @@ export type PauseProgressiveReleaseAction = GenericReleasesAction<
 export type ResumeProgressiveReleaseAction = GenericReleasesAction<
   typeof RESUME_PROGRESSIVE_RELEASE,
   never
->;
-
-export type CancelProgressiveReleaseAction = GenericReleasesAction<
-  typeof CANCEL_PROGRESSIVE_RELEASE,
-  {
-    previousRevision: Revision;
-  }
 >;
 
 export function releaseRevision(
@@ -216,17 +208,6 @@ export function pauseProgressiveRelease(): PauseProgressiveReleaseAction {
 export function resumeProgressiveRelease(): ResumeProgressiveReleaseAction {
   return {
     type: RESUME_PROGRESSIVE_RELEASE,
-  };
-}
-
-export function cancelProgressiveRelease(
-  previousRevision: Revision
-): CancelProgressiveReleaseAction {
-  return {
-    type: CANCEL_PROGRESSIVE_RELEASE,
-    payload: {
-      previousRevision,
-    },
   };
 }
 
