@@ -25,10 +25,10 @@
     "@babel/preset-env": "7.29.0",
     "@babel/preset-react": "7.28.5",
     "@babel/preset-typescript": "7.28.5",
-    "@canonical/analytics-events": "1.0.4",
-    "@canonical/cookie-policy": "3.8.4",
+    "@canonical/analytics-events": "1.0.5",
+    "@canonical/cookie-policy": "3.10.0",
     "@canonical/global-nav": "3.8.0",
-    "@canonical/react-components": "3.12.1",
+    "@canonical/react-components": "4.0.1",
     "@canonical/store-components": "0.55.0",
     "@dnd-kit/core": "6.3.1",
     "@dnd-kit/sortable": "10.0.0",
@@ -87,20 +87,20 @@
     "topojson-client": "3.1.0",
     "typescript": "5.9.3",
     "uuid": "13.0.0",
-    "vanilla-framework": "4.44.0",
+    "vanilla-framework": "4.46.0",
     "vite": "7.3.1"
   },
   "devDependencies": {
     "@babel/eslint-parser": "7.28.6",
-    "@percy/cli": "1.31.8",
+    "@percy/cli": "1.31.10",
     "@types/cypress": "1.1.6",
     "@types/d3": "7.4.3",
     "@types/redux-mock-store": "^1.5.0",
     "@types/uuid": "11.0.0",
-    "@typescript-eslint/eslint-plugin": "^8.19.1",
-    "@typescript-eslint/parser": "^8.19.1",
+    "@typescript-eslint/eslint-plugin": "^8.58.0",
+    "@typescript-eslint/parser": "^8.58.0",
     "@vitest/coverage-v8": "4.0.18",
-    "@vitest/ui": "4.0.18",
+    "@vitest/ui": "4.1.2",
     "concurrently": "9.2.1",
     "cypress": "15.10.0",
     "eslint": "9.39.2",
@@ -109,13 +109,15 @@
     "eslint-plugin-prettier": "5.5.5",
     "eslint-plugin-react": "7.37.5",
     "msw": "2.12.8",
-    "stylelint": "17.1.1",
+    "stylelint": "17.6.0",
     "stylelint-config-standard-scss": "17.0.0",
     "stylelint-order": "7.0.1",
     "vitest": "^4.0.0"
   },
   "resolutions": {
     "vitest/**/glob": "13.0.1",
-    "lodash": "4.17.23"
+    "lodash": "4.17.23",
+    "picomatch": ">=2.3.2",
+    "brace-expansion": ">=2.0.2"
   }
 }

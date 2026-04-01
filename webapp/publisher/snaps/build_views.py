@@ -436,7 +436,9 @@ def get_update_gh_webhooks(snap_name):
     try:
         github.get_user()
     except Unauthorized:
-        return flask.redirect(f"/github/auth?back={flask.request.path}")
+        return flask.redirect(
+            flask.url_for("oauth.github_auth", back=flask.request.path)
+        )
 
     gh_link = lp_snap["git_repository_url"][19:]
     gh_owner, gh_repo = gh_link.split("/")

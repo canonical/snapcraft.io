@@ -184,6 +184,10 @@
     }
 
     try {
+      snapcraft.public.homepage.initHomeSearchTracking();
+    } catch(e) {}
+
+    try {
       snapcraft.public.featuredSnaps.init({{ featured_categories|safe }});
     } catch(e) {
       Sentry.captureException(e);
