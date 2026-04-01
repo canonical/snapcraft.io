@@ -2,9 +2,9 @@ import { atom } from "jotai";
 
 import type { SerialLog } from "../types/shared";
 
-const serialLogListState = atom([] as SerialLog[]);
+const serialLogsListState = atom([] as SerialLog[]);
 
-const serialLogListFilterState = atom("" as string);
+const serialLogsListFilterState = atom("" as string);
 
 function getFilteredSerialLogs(
   serialLogs: Array<SerialLog>,
@@ -29,14 +29,14 @@ function getFilteredSerialLogs(
 }
 
 const filteredSerialLogsListState = atom<Array<SerialLog>>((get) => {
-  const filter = get(serialLogListFilterState);
-  const serialLogs = get(serialLogListState);
+  const filter = get(serialLogsListFilterState);
+  const serialLogs = get(serialLogsListState);
 
   return getFilteredSerialLogs(serialLogs, filter);
 });
 
 export {
-  serialLogListState,
-  serialLogListFilterState,
+  serialLogsListState,
+  serialLogsListFilterState,
   filteredSerialLogsListState,
 };

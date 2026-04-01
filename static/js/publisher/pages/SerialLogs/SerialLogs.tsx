@@ -4,20 +4,20 @@ import { Notification, Icon, Row, Col } from "@canonical/react-components";
 
 import { useSerialLogs } from "../../hooks";
 import {
-  serialLogListState,
-  serialLogListFilterState,
-} from "../../state/serialLogState";
+  serialLogsListState,
+  serialLogsListFilterState,
+} from "../../state/serialLogsState";
 import { brandIdState, brandStoreState } from "../../state/brandStoreState";
 import { setPageTitle } from "../../utils";
 
 import Filter from "../../components/Filter";
-import SerialLogTable from "./SerialLogTable";
+import SerialLogsTable from "./SerialLogsTable";
 
 import type { UseQueryResult } from "react-query";
 import type { SerialLog } from "../../types/shared";
 import { useEffect } from "react";
 
-function SerialLog() {
+function SerialLogs() {
   const { id, modelId } = useParams();
   const brandId = useAtomValue(brandIdState);
   const {
@@ -26,8 +26,8 @@ function SerialLog() {
     error,
     data,
   }: UseQueryResult<SerialLog[], Error> = useSerialLogs(brandId, modelId);
-  const setSerialLog = useSetAtom(serialLogListState);
-  const setFilter = useSetAtom(serialLogListFilterState);
+  const setSerialLogs = useSetAtom(serialLogsListState);
+  const setFilter = useSetAtom(serialLogsListFilterState);
   const brandStore = useAtomValue(brandStoreState(id));
   const [searchParams] = useSearchParams();
 
@@ -37,7 +37,7 @@ function SerialLog() {
 
   useEffect(() => {
     if (!isLoading && !isError && data) {
-      setSerialLog(data);
+      setSerialLogs(data);
       setFilter(searchParams.get("filter") || "");
     }
   }, [isLoading, data, error, brandId, id]);
@@ -57,14 +57,14 @@ function SerialLog() {
           <Row>
             <Col size={6}>
               <Filter
-                state={serialLogListFilterState}
+                state={serialLogsListFilterState}
                 label="Search serial logs"
                 placeholder="Search serial logs"
               />
             </Col>
           </Row>
           <div className="u-flex-column u-flex-grow">
-            <SerialLogTable />
+            <SerialLogsTable />
           </div>
         </>
       )}
@@ -72,4 +72,4 @@ function SerialLog() {
   );
 }
 
-export default SerialLog;
+export default SerialLogs;

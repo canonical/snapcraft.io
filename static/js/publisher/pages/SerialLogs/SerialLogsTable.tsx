@@ -4,12 +4,12 @@ import { MainTable, TablePagination } from "@canonical/react-components";
 import { format } from "date-fns";
 
 import { brandStoreState } from "../../state/brandStoreState";
-import { filteredSerialLogsListState } from "../../state/serialLogState";
+import { filteredSerialLogsListState } from "../../state/serialLogsState";
 import { useSortTableData } from "../../hooks";
 
 import type { SerialLog } from "../../types/shared";
 
-function SerialLogTable(): React.JSX.Element {
+function SerialLogsTable(): React.JSX.Element {
   const { id, modelId } = useParams();
   const serialLogs = useAtomValue(filteredSerialLogsListState);
   const brandStore = useAtomValue(brandStoreState(id));
@@ -67,4 +67,4 @@ function SerialLogTable(): React.JSX.Element {
   );
 }
 
-export default SerialLogTable;
+export default SerialLogsTable;
