@@ -352,7 +352,7 @@ def create_remodel_allowlist(store_id: str):
 @models.route("/api/store/<store_id>/models/<model_name>/serial-log")
 @login_required
 @exchange_required
-def get_serial_log(store_id: str, model_name: str):
+def get_serial_logs(store_id: str, model_name: str):
     res = {}
 
     try:

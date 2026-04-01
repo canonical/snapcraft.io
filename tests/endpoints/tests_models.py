@@ -347,10 +347,12 @@ class TestCreateRemodelAllowlist(TestModelServiceEndpoints):
 class TestGetSerialLog(TestModelServiceEndpoints):
     @patch(
         "canonicalwebteam.store_api.publishergw.PublisherGW"
-        + ".get_store_model_serial_log"
+        + ".get_store_model_serial_logs"
     )
     @patch("canonicalwebteam.store_api.dashboard.Dashboard.get_store")
-    def test_get_serial_log_success(self, mock_get_store, mock_get_serial_log):
+    def test_get_serial_logs_success(
+        self, mock_get_store, mock_get_serial_logs
+    ):
         mock_serial_log = [
             {
                 "brand-id": "test-brand-id",
@@ -359,7 +361,7 @@ class TestGetSerialLog(TestModelServiceEndpoints):
                 "serial": "test-serial",
             }
         ]
-        mock_get_serial_log.return_value = {"items": mock_serial_log}
+        mock_get_serial_logs.return_value = {"items": mock_serial_log}
         mock_get_store.return_value = {"brand-id": "test-brand-id"}
 
         response = self.client.get("/api/store/1/models/test-model/serial-log")
@@ -374,8 +376,8 @@ class TestGetSerialLog(TestModelServiceEndpoints):
         + ".get_store_model_serial_log"
     )
     @patch("canonicalwebteam.store_api.dashboard.Dashboard.get_store")
-    def test_get_serial_log_empty(self, mock_get_store, mock_get_serial_log):
-        mock_get_serial_log.return_value = {"items": []}
+    def test_get_serial_logs_empty(self, mock_get_store, mock_get_serial_logs):
+        mock_get_serial_logs.return_value = {"items": []}
         mock_get_store.return_value = {"brand-id": "test-brand-id"}
 
         response = self.client.get("/api/store/1/models/test-model/serial-log")
@@ -390,10 +392,10 @@ class TestGetSerialLog(TestModelServiceEndpoints):
         + ".get_store_model_serial_log"
     )
     @patch("canonicalwebteam.store_api.dashboard.Dashboard.get_store")
-    def test_get_serial_log_unauthorized(
-        self, mock_get_store, mock_get_serial_log
+    def test_get_serial_logs_unauthorized(
+        self, mock_get_store, mock_get_serial_logs
     ):
-        mock_get_serial_log.side_effect = StoreApiResponseErrorList(
+        mock_get_serial_logs.side_effect = StoreApiResponseErrorList(
             "unauthorized", 401, [{"message": "unauthorized"}]
         )
         mock_get_store.return_value = {"brand-id": "test-brand-id"}
@@ -410,10 +412,10 @@ class TestGetSerialLog(TestModelServiceEndpoints):
         + ".get_store_model_serial_log"
     )
     @patch("canonicalwebteam.store_api.dashboard.Dashboard.get_store")
-    def test_get_serial_log_store_not_found(
-        self, mock_get_store, mock_get_serial_log
+    def test_get_serial_logs_store_not_found(
+        self, mock_get_store, mock_get_serial_logs
     ):
-        mock_get_serial_log.side_effect = StoreApiResponseErrorList(
+        mock_get_serial_logs.side_effect = StoreApiResponseErrorList(
             "Store not found", 404, [{"message": "Store not found"}]
         )
         mock_get_store.return_value = {"brand-id": "test-brand-id"}
@@ -432,10 +434,10 @@ class TestGetSerialLog(TestModelServiceEndpoints):
         + ".get_store_model_serial_log"
     )
     @patch("canonicalwebteam.store_api.dashboard.Dashboard.get_store")
-    def test_get_serial_log_general_error(
-        self, mock_get_store, mock_get_serial_log
+    def test_get_serial_logs_general_error(
+        self, mock_get_store, mock_get_serial_logs
     ):
-        mock_get_serial_log.side_effect = StoreApiResponseErrorList(
+        mock_get_serial_logs.side_effect = StoreApiResponseErrorList(
             "Internal server error",
             500,
             [{"message": "Internal server error"}],
