@@ -15,11 +15,9 @@ function SerialLogTable(): React.JSX.Element {
   const brandStore = useAtomValue(brandStoreState(id));
 
   const headers = [
-    { content: "Brand", sortKey: "brand-id" },
-    { content: "Model", sortKey: "model-name" },
+    { content: "Brand" },
+    { content: "Model" },
     { content: "Serial number" },
-    { content: "Revision" },
-    { content: "Fingerprint" },
     { content: "Date", sortKey: "created-at" },
   ];
 
@@ -29,13 +27,14 @@ function SerialLogTable(): React.JSX.Element {
         { content: brandStore?.name },
         { content: serialLog["model-name"] },
         { content: serialLog.serial },
-        { content: "" },
-        { content: "" },
-        { content: format(new Date(serialLog["created-at"]), "dd/MM/yyyy") },
+        {
+          content: format(
+            new Date(serialLog["created-at"]),
+            "dd/MM/yyyy 'at' HH:mm",
+          ),
+        },
       ],
       sortData: {
-        "brand-id": serialLog["brand-id"],
-        "model-name": serialLog["model-name"],
         "created-at": serialLog["created-at"],
       },
     };
