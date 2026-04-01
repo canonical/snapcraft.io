@@ -233,11 +233,5 @@ export async function getPackageMetadata(
 export function getArrayOfChannelNames(
   channels: ReleasesReduxState["pendingChanges"]["pendingCloses"]
 ) {
-  const channelNames: string[] = [];
-  Object.keys(channels).forEach((orderIndex) => {
-    const numericOrderIndex = Number(orderIndex);
-    const channel = channels[numericOrderIndex];
-    channelNames.push(channel);
-  });
-  return channelNames;
+  return Object.values(channels);
 }
