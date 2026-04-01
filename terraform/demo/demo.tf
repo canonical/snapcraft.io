@@ -56,6 +56,7 @@ resource "juju_application" "redis" {
 
   charm {
     name = "redis-k8s"
+    channel = "latest/edge"
   }
 }
 
