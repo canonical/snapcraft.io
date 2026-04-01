@@ -1,5 +1,5 @@
 import { useAtomValue } from "jotai";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { MainTable, TablePagination } from "@canonical/react-components";
 import { format } from "date-fns";
 
@@ -10,7 +10,7 @@ import { useSortTableData } from "../../hooks";
 import type { SerialLog } from "../../types/shared";
 
 function SerialLogTable(): React.JSX.Element {
-  const { id } = useParams();
+  const { id, modelId } = useParams();
   const serialLogs = useAtomValue(filteredSerialLogsListState);
   const brandStore = useAtomValue(brandStoreState(id));
 
@@ -26,7 +26,15 @@ function SerialLogTable(): React.JSX.Element {
       columns: [
         { content: brandStore?.name },
         { content: serialLog["model-name"] },
-        { content: serialLog.serial },
+        {
+          content: (
+            <Link
+              to={`/admin/${id}/models/${modelId}/serial-log/${serialLog.serial}`}
+            >
+              {serialLog.serial}
+            </Link>
+          ),
+        },
         {
           content: format(
             new Date(serialLog["created-at"]),
