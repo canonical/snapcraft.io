@@ -1,8 +1,8 @@
-import {
+import type {
   GenericReleasesAction,
   ReleasesReduxState,
-  DispatchFn,
 } from "../../../types/releaseTypes";
+import type { DispatchFn } from "../store";
 
 export const OPEN_HISTORY = "OPEN_HISTORY";
 export const CLOSE_HISTORY = "CLOSE_HISTORY";

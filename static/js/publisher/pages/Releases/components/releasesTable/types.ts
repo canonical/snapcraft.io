@@ -1,4 +1,4 @@
-import {
+import type {
   CPUArchitecture,
   Revision,
 } from "../../../../types/releaseTypes";

@@ -8,7 +8,7 @@ export type ChannelObject = {
     track: boolean;
     risk: boolean;
     branch: boolean;
-  }
+  };
 };
 
 export type ChannelOptions = {
@@ -17,22 +17,25 @@ export type ChannelOptions = {
 
 export type ChannelTree = {
   [track: string]: TrackObject;
-}
+};
 
 type TrackObject = {
   name: string;
   risks: RiskObject[];
-}
+};
 
 type RiskObject = {
   name: string;
   branches: string[];
-}
+};
 
 /**
  * Parse a channel string into a ChannelObject.
  */
-function parseChannel(channelString: string, options?: ChannelOptions): ChannelObject {
+function parseChannel(
+  channelString: string,
+  options?: ChannelOptions,
+): ChannelObject {
   const format = {
     track: false,
     risk: false,
@@ -85,32 +88,31 @@ function parseChannel(channelString: string, options?: ChannelOptions): ChannelO
 function createChannelTree(channelList: ChannelObject[]) {
   const tracks: ChannelTree = {};
 
-  channelList
-    .forEach((channel) => {
-      if (channel.track) {
-        if (!tracks[channel.track]) {
-          tracks[channel.track] = {
-            name: channel.track,
-            risks: [],
+  channelList.forEach((channel) => {
+    if (channel.track) {
+      if (!tracks[channel.track]) {
+        tracks[channel.track] = {
+          name: channel.track,
+          risks: [],
+        };
+      }
+      const track = tracks[channel.track];
+      if (channel.risk) {
+        let risk = track.risks.find((riskObj) => riskObj.name === channel.risk);
+        if (!risk) {
+          const newRisk = {
+            name: channel.risk,
+            branches: [],
           };
+          track.risks.push(newRisk);
+          risk = newRisk;
         }
-        const track = tracks[channel.track];
-        if (channel.risk) {
-          let risk = track.risks.find((riskObj) => riskObj.name === channel.risk);
-          if (!risk) {
-            const newRisk = {
-              name: channel.risk,
-              branches: []
-            };
-            track.risks.push(newRisk);
-            risk = newRisk;
-          }
-          if (channel.branch) {
-            risk.branches.push(channel.branch);
-          }
+        if (channel.branch) {
+          risk.branches.push(channel.branch);
         }
       }
-    });
+    }
+  });
 
   return tracks;
 }
@@ -125,9 +127,9 @@ function createChannelTree(channelList: ChannelObject[]) {
  *    - descending
  */
 function sortAlphaNum(list: string[], hoistValue?: string): string[] {
-  let numbers: string[] = [];
+  const numbers: string[] = [];
+  const hoistList: string[] = [];
   let strings: string[] = [];
-  let hoistList: string[] = [];
   list.forEach((item) => {
     // numbers are defined by any string starting any of the following patterns:
     //   just a number – 1,2,3,4,
@@ -210,7 +212,10 @@ function sortChannels(channels: string[], options?: { defaultTrack: string }) {
     sortedByTrack.forEach((track) => {
       if (track.risks) {
         track.risks.forEach((risk) => {
-          if (risk.branches.length > 1 || (risk.branches.length === 1 && risk.branches[0] !== "_base")) {
+          if (
+            risk.branches.length > 1 ||
+            (risk.branches.length === 1 && risk.branches[0] !== "_base")
+          ) {
             risk.branches.forEach((branch) => {
               const format = channelList.find(
                 (item) =>

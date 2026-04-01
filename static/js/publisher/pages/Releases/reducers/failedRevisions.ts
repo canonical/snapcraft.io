@@ -1,7 +1,7 @@
-import {
+import type {
   ReleasesReduxState,
 } from "../../../types/releaseTypes";
-import { RootAction } from "../actions";
+import type { RootAction } from "../actions";
 import { UPDATE_FAILED_REVISIONS } from "../actions/failedRevisions";
 
 

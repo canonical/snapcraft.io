@@ -27,11 +27,10 @@ import {
   initReleasesData,
 } from "../releasesState";
 import { updateFailedRevisions } from "./failedRevisions";
-import {
+import type {
   PendingReleaseItem,
   Release,
   ReleasesAPIResponse,
-  DispatchFn,
   ReleasesReduxState,
   FetchReleaseResponse,
   FetchReleasePayload,
@@ -40,6 +39,7 @@ import {
   ReleaseErrorResponse,
   GenericReleasesAction,
 } from "../../../types/releaseTypes";
+import type { DispatchFn } from "../store";
 import { getArrayOfChannelNames } from "../helpers";
 
 export const UPDATE_RELEASES = "UPDATE_RELEASES";

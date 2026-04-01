@@ -33,6 +33,7 @@
     "@dnd-kit/core": "6.3.1",
     "@dnd-kit/sortable": "10.0.0",
     "@dnd-kit/utilities": "3.2.2",
+    "@reduxjs/toolkit": "^2.11.2",
     "@sentry/browser": "10.38.0",
     "@sentry/react": "10.38.0",
     "@testing-library/dom": "10.4.1",

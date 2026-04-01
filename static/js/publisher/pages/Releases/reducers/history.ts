@@ -1,7 +1,7 @@
-import {
+import type {
   ReleasesReduxState,
 } from "../../../types/releaseTypes";
-import { RootAction } from "../actions";
+import type { RootAction } from "../actions";
 import {
   OPEN_HISTORY,
   CLOSE_HISTORY,

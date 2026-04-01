@@ -1,16 +1,15 @@
-import React from "react";
 import { connect } from "react-redux";
 
 import { promoteRevision } from "../../actions/pendingChanges";
 import { getPendingChannelMap } from "../../selectors";
 import { canBeReleased, isInDevmode } from "../../helpers";
-import {
+import type {
   ReleasesReduxState,
-  DispatchFn,
   Revision,
   ChannelArchitectureRevisionsMap,
 } from "../../../../types/releaseTypes";
-import { DraggedItem } from "./types";
+import type { DispatchFn } from "../../store";
+import type { DraggedItem } from "./types";
 
 interface OwnProps {
   item: DraggedItem;

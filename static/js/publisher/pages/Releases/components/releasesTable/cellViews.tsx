@@ -12,9 +12,9 @@ import {
 import { useDragging, Handle } from "../dnd";
 
 import ReleaseMenuItem from "./releaseMenuItem";
-import { Revision, CPUArchitecture } from "../../../../types/releaseTypes";
-import { DraggedItem } from "./types";
-import { ProgressiveState } from "../../selectors";
+import type { Revision, CPUArchitecture } from "../../../../types/releaseTypes";
+import type { DraggedItem } from "./types";
+import type { ProgressiveState } from "../../selectors";
 
 // content of a cell when channel is closed
 export const CloseChannelInfo = () => (

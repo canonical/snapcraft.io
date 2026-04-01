@@ -3,8 +3,8 @@ import {
   parseChannel,
   createChannelTree,
   sortAlphaNum,
-  ChannelObject,
 } from "./channels";
+import type { ChannelObject } from "./channels";
 
 describe("parseChannel", () => {
   describe("risk", () => {

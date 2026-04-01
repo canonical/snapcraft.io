@@ -1,12 +1,12 @@
-import {
+import type {
   GenericReleasesAction,
   PendingReleaseItem,
   Progressive,
   Revision,
   ReleasesReduxState,
-  DispatchFn,
   Release,
 } from "../../../types/releaseTypes";
+import type { DispatchFn } from "../store";
 import { getPendingChannelMap, getReleases } from "../selectors";
 import { triggerGAEvent } from "../actions/gaEventTracking";
 

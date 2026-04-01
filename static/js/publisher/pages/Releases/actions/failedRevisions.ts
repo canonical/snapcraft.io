@@ -1,4 +1,8 @@
-import { FailedRevision, GenericReleasesAction, ReleasesReduxState } from "../../../types/releaseTypes";
+import type {
+  FailedRevision,
+  GenericReleasesAction,
+  ReleasesReduxState
+} from "../../../types/releaseTypes";
 
 export const UPDATE_FAILED_REVISIONS = "UPDATE_FAILED_REVISIONS";
 

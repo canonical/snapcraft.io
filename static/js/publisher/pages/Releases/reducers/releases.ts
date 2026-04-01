@@ -1,8 +1,8 @@
 import { UPDATE_RELEASES } from "../actions/releases";
-import {
+import type {
   ReleasesReduxState,
 } from "../../../types/releaseTypes";
-import { RootAction } from "../actions";
+import type { RootAction } from "../actions";
 
 export default function releases(
   state: ReleasesReduxState["releases"] = [],

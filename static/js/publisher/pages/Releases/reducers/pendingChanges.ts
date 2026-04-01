@@ -1,11 +1,11 @@
-import {
+import type {
   PendingRelease,
   PendingReleaseItem,
   Progressive,
   ReleasesReduxState,
   Revision,
 } from "../../../types/releaseTypes";
-import { RootAction } from "../actions";
+import type { RootAction } from "../actions";
 import {
   CLOSE_CHANNEL,
   RELEASE_REVISION,

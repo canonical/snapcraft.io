@@ -2,12 +2,12 @@ import { Fragment } from "react";
 import { connect } from "react-redux";
 import { format, formatDistanceToNow } from "date-fns";
 
-import { sortChannels } from "../../../../../libs/channels.js";
+import { sortChannels } from "../../../../../libs/channels";
 
 import {
   getPendingChannelMap,
   getBranches,
-  Branch,
+  type Branch,
 } from "../../selectors";
 import { Handle } from "../dnd";
 
@@ -34,15 +34,15 @@ import {
   getLatestRelease,
 } from "../../helpers";
 import ChannelMenu from "../channelMenu";
-import {
+import type {
   ArchitectureRevisionsMap,
   ChannelArchitectureRevisionsMap,
-  DispatchFn,
   HistoryFilters,
   ReleasesReduxState,
   Revision,
   TargetChannel
-} from "../../../../types/releaseTypes.js";
+} from "../../../../types/releaseTypes";
+import type { DispatchFn } from "../../store";
 
 const disabledBecauseDevmode = (
   <Fragment>

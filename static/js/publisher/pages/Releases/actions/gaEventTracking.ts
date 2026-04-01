@@ -1,5 +1,6 @@
 import { triggerEventReleaseUI } from "../../../../base/ga";
-import { DispatchFn, GenericReleasesAction, ReleasesReduxState } from "../../../types/releaseTypes";
+import type { GenericReleasesAction, ReleasesReduxState } from "../../../types/releaseTypes";
+import type { DispatchFn } from "../store";
 
 export const GA_EVENT_SENT = "GA_EVENT_SENT";
 

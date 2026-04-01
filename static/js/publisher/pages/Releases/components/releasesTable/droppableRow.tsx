@@ -1,6 +1,6 @@
 import { connect } from "react-redux";
 
-import { Branch, getPendingChannelMap } from "../../selectors";
+import { type Branch, getPendingChannelMap } from "../../selectors";
 import { useDrop, DND_ITEM_REVISIONS } from "../dnd";
 
 import { promoteRevision } from "../../actions/pendingChanges";
@@ -16,13 +16,13 @@ import {
 } from "../../helpers";
 
 import ReleasesTableChannelRow from "./channelRow";
-import {
+import type {
   ReleasesReduxState,
-  DispatchFn,
   Revision,
   ChannelArchitectureRevisionsMap,
 } from "../../../../types/releaseTypes";
-import { DraggedItem } from "./types";
+import type { DispatchFn } from "../../store";
+import type { DraggedItem } from "./types";
 
 interface OwnProps {
   risk: string;
