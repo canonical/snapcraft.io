@@ -128,7 +128,7 @@ const ComboBox: FC<ComboBoxProps> = ({
         // tab-ing after highlighting an option means selecting it; Downshift doesn't do this,
         // instead it just closes the dropdown and resets the previous state
         case Downshift.stateChangeTypes.blurInput: {
-          if (prevState.highlightedIndex !== null) {
+          if (prevState.isOpen && prevState.highlightedIndex !== null) {
             nextState.selectedItem =
               prevState.filteredOptions[prevState.highlightedIndex];
             nextState.inputValue = nextState.selectedItem.label;
