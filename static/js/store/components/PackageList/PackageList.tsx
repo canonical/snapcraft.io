@@ -7,9 +7,9 @@ import {
   Row,
   Strip,
 } from "@canonical/react-components";
-import { trackEvent } from "@canonical/analytics-events";
 
 import { PackageFilter } from "../PackageFilter";
+import { trackSearchResultClicked } from "../../utils";
 
 import type { RefObject } from "react";
 import type { Category, Package, Packages } from "../../types";
@@ -136,16 +136,12 @@ function PackageList({
                     onClick={() => {
                       const query = searchParams.get("q");
                       if (query) {
-                        const searchId =
-                          sessionStorage.getItem("search_id") || "";
-                        trackEvent("snap_store_search_result_clicked", {
-                          search_id: searchId,
+                        trackSearchResultClicked(
                           query,
-                          position:
-                            (parseInt(currentPage) - 1) * ITEMS_PER_PAGE +
+                          (parseInt(currentPage) - 1) * ITEMS_PER_PAGE +
                             index +
                             1,
-                        });
+                        );
                       }
                     }}
                   >

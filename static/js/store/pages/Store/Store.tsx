@@ -1,12 +1,12 @@
 import { useEffect, useRef } from "react";
 import { useLocation, useSearchParams } from "react-router-dom";
-import { trackEvent } from "@canonical/analytics-events";
 
 import Banner from "../../components/Banner";
 import PackageList from "../../components/PackageList/PackageList";
 import EmptyResultSection from "../../components/EmptyResultSection";
 
 import { usePackages } from "../../hooks";
+import { trackSearchResultsLoaded, trackSearchNoResults } from "../../utils";
 
 function Store(): React.JSX.Element {
   const { search } = useLocation();
@@ -31,37 +31,24 @@ function Store(): React.JSX.Element {
   const packagesCount = data?.packages ? data?.packages.length : 0;
   const isResultExist = status === "success" && packagesCount > 0;
 
+  const lastTrackedSearch = useRef<string>("");
+
   useEffect(() => {
     if (searchTerm && status === "success" && !isFetching) {
-      let searchId = sessionStorage.getItem("search_id");
-      if (!searchId) {
-        searchId = crypto.randomUUID();
-        sessionStorage.setItem("search_id", searchId);
-      }
+      if (lastTrackedSearch.current === searchTerm) return;
+      lastTrackedSearch.current = searchTerm;
 
-      if (packagesCount > 0) {
-        trackEvent("snap_store_search_results_loaded", {
-          search_id: searchId,
-          query: searchTerm,
-          total_items: data?.total_items ?? 0,
-          page: currentPage,
-        });
+      if ((data?.total_items ?? 0) > 0) {
+        trackSearchResultsLoaded(
+          searchTerm,
+          data?.total_items ?? 0,
+          parseInt(currentPage),
+        );
       } else {
-        trackEvent("snap_store_search_no_results", {
-          search_id: searchId,
-          query: searchTerm,
-        });
+        trackSearchNoResults(searchTerm);
       }
     }
-  }, [
-    searchTerm,
-    status,
-    currentPage,
-    searchParams,
-    packagesCount,
-    data,
-    isFetching,
-  ]);
+  }, [searchTerm, status, currentPage, isFetching, packagesCount, data]);
 
   const searchRef = useRef<HTMLInputElement | null>(null);
   const searchSummaryRef = useRef<HTMLDivElement>(null);

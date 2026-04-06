@@ -2,7 +2,8 @@ import { initFSFLanguageSelect } from "./fsf-language-select";
 import nps from "./nps";
 import initExpandableArea from "./expandable-area";
 import declareGlobal from "../libs/declare";
-import { trackEvent, trackPageView } from "@canonical/analytics-events";
+import { trackPageView } from "@canonical/analytics-events";
+import { trackSearchSubmitted } from "../store/utils/searchTracker";
 
 if (window.ANALYTICS_ENDPOINT) {
   trackPageView("snap_home_page");
@@ -17,15 +18,9 @@ function initHomeSearchTracking(): void {
     form.addEventListener("submit", () => {
       const input = form.querySelector("input[name='q']") as HTMLInputElement;
       if (input?.value) {
-        const searchId = crypto.randomUUID();
-        sessionStorage.setItem("search_id", searchId);
-
-        trackEvent("snap_home_search_submitted", {
-          search_id: searchId,
-          query: input.value,
-        });
+        trackSearchSubmitted("home", input.value);
       }
-    });
+    }, { once: true });
   }
 }
 
