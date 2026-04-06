@@ -15,12 +15,16 @@ function initHomeSearchTracking(): void {
   ) as HTMLFormElement | null;
 
   if (form) {
-    form.addEventListener("submit", () => {
-      const input = form.querySelector("input[name='q']") as HTMLInputElement;
-      if (input?.value) {
-        trackSearchSubmitted("home", input.value);
-      }
-    }, { once: true });
+    form.addEventListener(
+      "submit",
+      () => {
+        const input = form.querySelector("input[name='q']") as HTMLInputElement;
+        if (input?.value) {
+          trackSearchSubmitted("home", input.value);
+        }
+      },
+      { once: true },
+    );
   }
 }
 
