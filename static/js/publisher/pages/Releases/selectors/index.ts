@@ -276,9 +276,10 @@ export function hasPendingRelease(
 
   // check if there is a pending release in this cell
   return (
-    currentRevision &&
-    (!releasedRevision ||
-      releasedRevision.revision !== currentRevision.revision)
+    currentRevision 
+      ? (!releasedRevision ||
+        releasedRevision.revision !== currentRevision.revision)
+      : false
   );
 }
 
@@ -453,13 +454,6 @@ export function getSeparatePendingReleases(state: ReleasesReduxState): SeparateP
         const newState = releaseCopy.progressive;
 
         const changes = [] as ProgressiveChanges;
-        if (newState.paused !== previousState.paused) {
-          changes.push({
-            key: "paused",
-            value: newState.paused,
-          });
-        }
-
         if (newState.percentage !== previousState.percentage) {
           changes.push({
             key: "percentage",

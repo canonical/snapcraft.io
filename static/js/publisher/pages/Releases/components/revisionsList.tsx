@@ -17,12 +17,13 @@ import type {
   PendingReleaseItem,
   CPUArchitecture,
   Channel,
+  ChannelArchitectureRevisionsMap,
 } from "../../../types/releaseTypes";
-import type { DispatchFn } from "../store";
+import type { AppDispatch } from "../store";
 
 import RevisionsListRow from "./revisionsListRow";
-import { closeHistory } from "../actions/history";
-import { toggleRevision } from "../actions/channelMap";
+import { closeHistory } from "../slices/history";
+import { toggleRevision } from "../slices/channelMap";
 import {
   getFilteredReleaseHistory,
   getPendingChannelMap,
@@ -51,7 +52,7 @@ interface StateProps {
   filteredAvailableRevisions: Revision[];
   getSelectedRevision: (arch: CPUArchitecture) => Revision | undefined;
   getFilteredAvailableRevisionsForArch: (arch: CPUArchitecture) => Revision[];
-  pendingChannelMap: { [channel: string]: { [arch: string]: Revision } };
+  pendingChannelMap: ChannelArchitectureRevisionsMap;
   isProgressiveReleaseEnabled?: boolean;
   getPendingRelease: (channel: Channel["name"], arch: CPUArchitecture) => PendingReleaseItem | null;
 }
@@ -311,7 +312,7 @@ class RevisionsList extends Component<RevisionsListProps, RevisionsListState> {
     if (filters) {
       const activeChannel = getChannelName(filters.track, filters.risk);
       activeRevision = pendingChannelMap[activeChannel]
-        ? pendingChannelMap[activeChannel][filters.arch]
+        ? pendingChannelMap[activeChannel][filters.arch] || null
         : null;
     }
 
@@ -505,7 +506,7 @@ const mapStateToProps = (state: ReleasesReduxState): StateProps => {
   };
 };
 
-const mapDispatchToProps = (dispatch: DispatchFn): DispatchProps => {
+const mapDispatchToProps = (dispatch: AppDispatch): DispatchProps => {
   return {
     closeHistoryPanel: () => dispatch(closeHistory()),
     toggleRevision: (revision: Revision) => dispatch(toggleRevision(revision)),

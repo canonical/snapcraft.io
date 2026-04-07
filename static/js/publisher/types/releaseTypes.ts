@@ -5,6 +5,7 @@ import {
   AVAILABLE_REVISIONS_SELECT_UNRELEASED,
 } from "../pages/Releases/constants";
 import { RootState } from "../pages/Releases/store";
+import { CLOSE_MODAL_ACTION_NAME } from "../pages/Releases/slices/modal";
 
 export type Prettify<T> = { [K in keyof T]: T[K] } & {};
 
@@ -45,7 +46,6 @@ export type Series = "16" | (string & {}); // series is and will always be 16, b
 
 export type Progressive = {
   "current-percentage": number | null;
-  paused: boolean | null;
   percentage: number | null;
 };
 
@@ -294,10 +294,8 @@ export type ModalState = Partial<{
   actions: {
     appearance: "positive" | "neutral" | "negative";
     onClickAction:
-      | {
-          reduxAction: string;
-        }
-      | { type: "modal/closeModal" };
+      | { reduxAction: string }
+      | { type: typeof CLOSE_MODAL_ACTION_NAME };
     label: string;
   }[];
 }>;

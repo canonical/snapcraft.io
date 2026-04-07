@@ -7,6 +7,7 @@ import type {
   PendingChangesState,
   Release,
   Revision,
+  RevisionStatus,
 } from "../../types/releaseTypes";
 
 export function isInDevmode(revision: Revision) {
@@ -90,7 +91,7 @@ export function isSameVersion(revisions?: ArchitectureRevisionsMap) {
   return hasSameVersion;
 }
 
-export function canBeReleased(revision: { status: string }) {
+export function canBeReleased(revision: { status: RevisionStatus }) {
   const allowed = [REVISION_STATUS.PUBLISHED, REVISION_STATUS.UNPUBLISHED];
 
   return revision && allowed.includes(revision.status);

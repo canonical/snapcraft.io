@@ -27,7 +27,10 @@ const ReleasesTableRow = ({
 }: ReleasesTableRowProps) => {
   canDrag = !!revisions && canDrag;
 
-  const draggedRevisions = canDrag ? Object.values(revisions) : [];
+  const draggedRevisions = canDrag
+    ? Object.values(revisions)
+        .filter((revision) => revision !== undefined)
+    : [];
 
   const [isDragging, isGrabbing, drag] = useDragging({
     item: {

@@ -1,27 +1,21 @@
 import { connect } from "react-redux";
-
 import { type Branch, getPendingChannelMap } from "../../selectors";
 import { useDrop, DND_ITEM_REVISIONS } from "../dnd";
-
-import { promoteRevision } from "../../actions/pendingChanges";
-import { triggerGAEvent } from "../../actions/gaEventTracking";
-
+import { promoteRevision } from "../../slices/pendingChanges";
 import { STABLE, CANDIDATE, BETA, EDGE } from "../../constants";
-
 import {
   getChannelName,
   isInDevmode,
   canBeReleased,
   getLatestRelease,
 } from "../../helpers";
-
 import ReleasesTableChannelRow from "./channelRow";
 import type {
   ReleasesReduxState,
   Revision,
   ChannelArchitectureRevisionsMap,
 } from "../../../../types/releaseTypes";
-import type { DispatchFn } from "../../store";
+import { triggerGAEvent, type AppDispatch } from "../../store";
 import type { DraggedItem } from "./types";
 
 interface OwnProps {
@@ -177,7 +171,11 @@ const ReleasesTableDroppableRow = (props: ReleasesTableDroppableRowProps) => {
 
   if (versions) {
     for (const [value] of Object.entries(versions)) {
-      if (value && !currentVersions.includes(versions[value].version)) {
+      if (
+        value
+        && versions[value]
+        && !currentVersions.includes(versions[value].version)
+      ) {
         currentVersions.push(versions[value].version);
       }
     }
@@ -229,7 +227,7 @@ const mapStateToProps = (state: ReleasesReduxState): StateProps => {
   };
 };
 
-const mapDispatchToProps = (dispatch: DispatchFn): DispatchProps => {
+const mapDispatchToProps = (dispatch: AppDispatch): DispatchProps => {
   return {
     promoteRevision: (revision: Revision, targetChannel: string) =>
       dispatch(promoteRevision(revision, targetChannel)),

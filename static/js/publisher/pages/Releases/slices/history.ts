@@ -16,7 +16,7 @@ const historySlice = createSlice({
       isOpen: false,
     } as HistoryState,
   reducers: {
-    openHistory(_state, action: PayloadAction<HistoryFilters>) {
+    openHistory(_state, action: PayloadAction<HistoryFilters | null>) {
       return {
         isOpen: true,
         filters: action.payload,
@@ -32,7 +32,7 @@ const historySlice = createSlice({
 export const { openHistory, closeHistory } = historySlice.actions;
 export default historySlice.reducer;
 
-export function toggleHistory(filters: HistoryFilters) {
+export function toggleHistory(filters: HistoryFilters | null) {
   return (dispatch: AppDispatch, getState: () => RootState) => {
     const { history } = getState();
     if (

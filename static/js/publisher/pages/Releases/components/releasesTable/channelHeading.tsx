@@ -1,22 +1,15 @@
 import { Fragment } from "react";
 import { connect } from "react-redux";
 import { format, formatDistanceToNow } from "date-fns";
-
 import { sortChannels } from "../../../../../libs/channels";
-
 import {
   getPendingChannelMap,
   getBranches,
   type Branch,
 } from "../../selectors";
 import { Handle } from "../dnd";
-
-import { closeChannel, promoteRevision } from "../../actions/pendingChanges";
-
-import { toggleBranches } from "../../actions/branches";
-
-import { triggerGAEvent } from "../../actions/gaEventTracking";
-
+import { closeChannel, promoteRevision } from "../../slices/pendingChanges";
+import { toggleBranches } from "../../slices/branches";
 import {
   RISKS_WITH_AVAILABLE as RISKS,
   AVAILABLE,
@@ -26,7 +19,6 @@ import {
   BETA,
   EDGE,
 } from "../../constants";
-
 import {
   getChannelName,
   isInDevmode,
@@ -42,7 +34,7 @@ import type {
   Revision,
   TargetChannel
 } from "../../../../types/releaseTypes";
-import type { DispatchFn } from "../../store";
+import { triggerGAEvent, type AppDispatch } from "../../store";
 
 const disabledBecauseDevmode = (
   <Fragment>
@@ -70,7 +62,7 @@ const canReleaseToChannel = (
         targetChannel,
       )?.isProgressive;
 
-      return (
+      return currentRevisionsByArch[arch] && (
         currentRevisionsByArch[arch].revision !==
           targetRevisionsByArch[arch].revision || isProgressiveRelease
       );
@@ -172,7 +164,10 @@ const ReleasesTableChannelHeading = (props: ReleasesTableChannelHeadingProps) =>
 
     // check for devmode revisions
     if (risk !== STABLE && risk !== CANDIDATE) {
-      const hasDevmodeRevisions = Object.values(rowRevisions).some(isInDevmode);
+      const hasDevmodeRevisions = Object
+        .values(rowRevisions)
+        .filter((revision) => revision !== undefined)
+        .some(isInDevmode);
 
       // remove stable/beta channels as targets if any revision is in devmode
       if (hasDevmodeRevisions) {
@@ -263,26 +258,28 @@ const ReleasesTableChannelHeading = (props: ReleasesTableChannelHeadingProps) =>
     // calculate map of architectures for each version
     for (const arch in rowRevisions) {
       const revision = rowRevisions[arch];
-      const version = revision.version;
-      if (!versionsMap[version]) {
-        versionsMap[version] = [];
-      }
-      versionsMap[version].push(arch);
-
-      const buildRequestId =
-        revision.attributes && revision.attributes["build-request-id"];
-
-      if (buildRequestId) {
-        if (!buildMap[buildRequestId]) {
-          buildMap[buildRequestId] = [];
+      if (revision) {
+        const version = revision.version;
+        if (!versionsMap[version]) {
+          versionsMap[version] = [];
         }
-        buildMap[buildRequestId].push(revision);
+        versionsMap[version].push(arch);
+
+        const buildRequestId =
+          revision.attributes && revision.attributes["build-request-id"];
+
+        if (buildRequestId) {
+          if (!buildMap[buildRequestId]) {
+            buildMap[buildRequestId] = [];
+          }
+          buildMap[buildRequestId].push(revision);
+        }
       }
     }
 
     hasSameVersion = Object.keys(versionsMap).length === 1;
     if (hasSameVersion) {
-      channelVersion = Object.values(rowRevisions)[0].version;
+      channelVersion = Object.values(rowRevisions).shift()?.version || "";
     } else {
       channelVersion = "Multiple versions";
     }
@@ -290,7 +287,7 @@ const ReleasesTableChannelHeading = (props: ReleasesTableChannelHeadingProps) =>
     isLaunchpadBuild = Object.keys(buildMap).length > 0;
     if (isLaunchpadBuild) {
       channelBuild = Object.keys(buildMap)[0];
-      const timestamp = Object.values(revisions)[0].attributes["build-request-timestamp"];
+      const timestamp = Object.values(revisions).shift()?.attributes["build-request-timestamp"];
       channelBuildDate = timestamp && new Date(timestamp);
     }
   }
@@ -422,7 +419,7 @@ const mapStateToProps = (
   };
 };
 
-const mapDispatchToProps = (dispatch: DispatchFn): DispatchProps => {
+const mapDispatchToProps = (dispatch: AppDispatch): DispatchProps => {
   return {
     promoteRevision: (revision: Revision, targetChannel: string) =>
       dispatch(promoteRevision(revision, targetChannel)),

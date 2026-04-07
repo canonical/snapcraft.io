@@ -2,13 +2,18 @@ import { Component } from "react";
 import { connect } from "react-redux";
 
 import { getTracks, getTrackRevisions } from "../selectors";
-import { CLOSE_MODAL, openModal } from "../actions/modal";
+import { CLOSE_MODAL_ACTION_NAME, openModal } from "../slices/modal";
 import {
   showNotification,
   hideNotification,
-} from "../actions/globalNotification";
-import type { ReleasesReduxState, ArchitectureRevisionsMap } from "../../../types/releaseTypes";
-import type { DispatchFn } from "../store";
+} from "../slices/notification";
+import type {
+  ArchitectureRevisionsMap,
+  ModalState,
+  NotificationState,
+  ReleasesReduxState,
+} from "../../../types/releaseTypes";
+import type { AppDispatch } from "../store";
 
 interface StateProps {
   defaultTrack: string | null;
@@ -19,9 +24,9 @@ interface StateProps {
 }
 
 interface DispatchProps {
-  openModal: typeof openModal;
-  showNotification: typeof showNotification;
-  hideNotification: typeof hideNotification;
+  openModal: (payload: ModalState) => void;
+  showNotification: (payload: NotificationState) => void;
+  hideNotification: () => void;
 }
 
 type DefaultTrackModifierProps = StateProps & DispatchProps;
@@ -51,7 +56,7 @@ class DefaultTrackModifier extends Component<DefaultTrackModifierProps> {
         {
           appearance: "neutral",
           onClickAction: {
-            type: CLOSE_MODAL,
+            type: CLOSE_MODAL_ACTION_NAME,
           },
           label: "Cancel",
         },
@@ -76,7 +81,7 @@ class DefaultTrackModifier extends Component<DefaultTrackModifierProps> {
         {
           appearance: "neutral",
           onClickAction: {
-            type: CLOSE_MODAL,
+            type: CLOSE_MODAL_ACTION_NAME,
           },
           label: "Cancel",
         },
@@ -157,7 +162,7 @@ const mapStateToProps = (state: ReleasesReduxState): StateProps => ({
   defaultTrack: state.defaultTrack,
 });
 
-const mapDispatchToProps = (dispatch: DispatchFn): DispatchProps => ({
+const mapDispatchToProps = (dispatch: AppDispatch): DispatchProps => ({
   openModal: (payload) => dispatch(openModal(payload)),
   showNotification: (payload) => dispatch(showNotification(payload)),
   hideNotification: () => dispatch(hideNotification()),

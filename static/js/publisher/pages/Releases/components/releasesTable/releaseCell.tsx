@@ -7,8 +7,8 @@ import HistoryIcon from "../historyIcon";
 import { getChannelName, canBeReleased } from "../../helpers";
 import { DND_ITEM_REVISIONS } from "../dnd";
 
-import { toggleHistory } from "../../actions/history";
-import { undoRelease } from "../../actions/pendingChanges";
+import { toggleHistory } from "../../slices/history";
+import { undoRelease } from "../../slices/pendingChanges";
 
 import {
   getPendingChannelMap,
@@ -36,7 +36,7 @@ import type {
   Revision,
   FailedRevision,
 } from "../../../../types/releaseTypes";
-import type { DispatchFn } from "../../store";
+import type { AppDispatch } from "../../store";
 import type { DraggedItem } from "./types";
 
 interface OwnProps {
@@ -109,6 +109,8 @@ const ReleasesTableReleaseCell = (props: ReleasesTableReleaseCellProps) => {
 
   let previousRevision: ProgressiveState[0] = null;
   let pendingProgressiveState: ProgressiveState[1] = null;
+  let releasable = false;
+  let item: DraggedItem | undefined;
 
   if (currentRevision) {
     [previousRevision, pendingProgressiveState] = getProgressiveState(
@@ -116,6 +118,14 @@ const ReleasesTableReleaseCell = (props: ReleasesTableReleaseCellProps) => {
       arch,
       pendingRelease,
     );
+    releasable = canBeReleased(currentRevision);
+    item = {
+      revisions: [currentRevision],
+      architectures: currentRevision ? currentRevision.architectures : [],
+      risk,
+      branch: branchName,
+      type: DND_ITEM_REVISIONS,
+    };
   }
 
   const isChannelPendingClose = pendingCloses.includes(channel);
@@ -128,17 +138,8 @@ const ReleasesTableReleaseCell = (props: ReleasesTableReleaseCellProps) => {
     filters.risk === risk &&
     filters.branch === branchName;
   const isHighlighted = isPending || (isUnassigned && currentRevision);
-  const releasable = canBeReleased(currentRevision);
-
   const canDrag = currentRevision && !isChannelPendingClose && releasable;
 
-  const item: DraggedItem = {
-    revisions: [currentRevision],
-    architectures: currentRevision ? currentRevision.architectures : [],
-    risk,
-    branch: branchName,
-    type: DND_ITEM_REVISIONS,
-  };
 
   function handleHistoryIconClick(
     arch: CPUArchitecture,
@@ -168,7 +169,7 @@ const ReleasesTableReleaseCell = (props: ReleasesTableReleaseCellProps) => {
     currentRevision?.changed && isUnassigned ? "current-change" : "",
   ].join(" ");
 
-  const actionsNode = pendingRelease ? (
+  const actionsNode = pendingRelease && currentRevision ? (
     <div className="p-release-buttons">
       <button
         className="p-action-button p-tooltip p-tooltip--btm-center"
@@ -210,7 +211,7 @@ const ReleasesTableReleaseCell = (props: ReleasesTableReleaseCellProps) => {
 
   const showHistoryIcon = currentRevision || isUnassigned;
 
-  return (
+  return (item && canDrag &&
     <ReleasesTableCellView
       actions={actionsNode}
       item={item}
@@ -255,7 +256,7 @@ const mapStateToProps = (state: ReleasesReduxState): StateProps => {
   };
 };
 
-const mapDispatchToProps = (dispatch: DispatchFn): DispatchProps => {
+const mapDispatchToProps = (dispatch: AppDispatch): DispatchProps => {
   return {
     toggleHistoryPanel: (filters: ReleasesReduxState["history"]["filters"]) =>
       dispatch(toggleHistory(filters)),

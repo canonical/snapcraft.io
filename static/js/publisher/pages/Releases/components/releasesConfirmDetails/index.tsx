@@ -2,10 +2,10 @@ import { useState } from "react";
 import { connect } from "react-redux";
 import { Row, Col } from "@canonical/react-components";
 
-import { updateProgressiveReleasePercentage } from "../../actions/pendingChanges";
+import { updateProgressiveRelease } from "../../slices/pendingChanges";
 import { isProgressiveReleaseEnabled, type SeparatePendingReleases } from "../../selectors";
-import type { ReleasesReduxState } from "../../../../types/releaseTypes";
-import type { DispatchFn } from "../../store";
+import type { Progressive, ReleasesReduxState } from "../../../../types/releaseTypes";
+import type { AppDispatch } from "../../store";
 
 import progressiveTypes from "./types";
 import ReleaseRow from "./releaseRow";
@@ -25,7 +25,7 @@ interface StateProps {
 }
 
 interface DispatchProps {
-  updateProgressiveReleasePercentage?: (percentage: number) => void;
+  updateProgressiveRelease?: (percentage: Progressive) => void;
 }
 
 type ReleasesConfirmDetailsProps = OwnProps & StateProps & DispatchProps;
@@ -74,7 +74,7 @@ const ReleasesConfirmDetails = ({
 
   const updatePercentage = (percentage: number) => {
     setGlobalPercentage(percentage);
-    updateProgressiveReleasePercentage(percentage);
+    updateProgressiveRelease({ percentage, "current-percentage": null });
   };
 
   return (
@@ -138,10 +138,10 @@ const mapStateToProps = (state: ReleasesReduxState): StateProps => ({
   isProgressiveReleaseEnabled: isProgressiveReleaseEnabled(state),
 });
 
-const mapDispatchToProps = (dispatch: DispatchFn): DispatchProps => {
+const mapDispatchToProps = (dispatch: AppDispatch): DispatchProps => {
   return {
-    updateProgressiveReleasePercentage: (percentage: number) =>
-      dispatch(updateProgressiveReleasePercentage(percentage)),
+    updateProgressiveRelease: (percentage: Progressive) =>
+      dispatch(updateProgressiveRelease(percentage)),
   };
 };
 

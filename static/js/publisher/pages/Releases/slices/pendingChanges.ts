@@ -58,7 +58,6 @@ export function releaseRevision(
       // updated, or the progressive object is removed completely
       progressive = {
         percentage: percentage,
-        paused: false,
       } as Progressive;
     }
 
@@ -183,7 +182,7 @@ value is object containing release object and channels to release to
     <channel>: {
       revision: { revision: <revisionId>, version, ... },
       channel: <channel>,
-      progressive: { key, percentage, paused },
+      progressive: { key, percentage },
       previousReleases: {
         <arch>: { revision: <revisionId>, version, ... }
       },
@@ -324,9 +323,6 @@ const pendingReleasesSlice = createSlice({
             progressive.percentage < 100
           ) {
             channel.progressive = { ...progressive };
-            if (!channel.progressive?.paused) {
-              channel.progressive.paused = false;
-            }
           }
         });
       });
