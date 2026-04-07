@@ -6,18 +6,15 @@ import ReleasesHeading from "./components/releasesHeading";
 import ReleasesConfirm from "./components/releasesConfirm";
 import Modal from "./components/modal";
 
-import {
-  initDefaultTrack,
-  setCurrentTrack,
-  updateReleasesData,
-  initOptions
-} from "./actions";
-
 import type {
   ReleasesAPIResponse,
   ReleasesReduxState,
 } from "../../types/releaseTypes";
-import type { DispatchFn } from "./store";
+import type { AppDispatch } from "./store";
+import { updateReleasesData } from "./slices/releases";
+import { setCurrentTrack } from "./slices/currentTrack";
+import { initDefaultTrack } from "./slices/defaultTrack";
+import { initOptions } from "./slices/options";
 
 // Props coming from parent component
 interface OwnProps {
@@ -34,7 +31,7 @@ interface StateProps {
 
 // Props from mapDispatchToProps
 interface DispatchProps {
-  updateReleasesData: (apiData: ReleasesAPIResponse) => Promise<void>;
+  updateReleasesData: (apiData: ReleasesAPIResponse) => void;
   setCurrentTrack: (track: ReleasesReduxState["currentTrack"]) => void;
   initDefaultTrack: (track: ReleasesReduxState["defaultTrack"]) => void;
   initOptions: (options: ReleasesReduxState["options"]) => void;
@@ -122,7 +119,7 @@ const mapStateToProps = (state: ReleasesReduxState): StateProps => {
   };
 };
 
-const mapDispatchToProps = (dispatch: DispatchFn): DispatchProps => {
+const mapDispatchToProps = (dispatch: AppDispatch): DispatchProps => {
   return {
     updateReleasesData: (apiData) => dispatch(updateReleasesData(apiData)),
     setCurrentTrack: (track) => dispatch(setCurrentTrack(track)),

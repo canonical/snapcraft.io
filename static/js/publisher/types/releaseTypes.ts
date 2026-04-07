@@ -4,9 +4,9 @@ import {
   AVAILABLE_REVISIONS_SELECT_RECENT,
   AVAILABLE_REVISIONS_SELECT_UNRELEASED,
 } from "../pages/Releases/constants";
-import { CLOSE_MODAL } from "../pages/Releases/actions";
+import { RootState } from "../pages/Releases/store";
 
-type Prettify<T> = { [K in keyof T]: T[K] } & {};
+export type Prettify<T> = { [K in keyof T]: T[K] } & {};
 
 type NonEmptyArray<T> = [T, ...T[]];
 
@@ -268,59 +268,60 @@ export type CloseChannelsResponse =
 /**
  * Types for the Redux state used in the Releases page
  */
-export type ReleasesReduxState = {
-  architectures: CPUArchitecture[];
-  availableRevisionsSelect: AvailableRevisionsSelect;
-  branches: string[]; // TODO: are there any constraints on this?
-  channelMap: ChannelArchitectureRevisionsMap;
-  currentTrack: string;
-  defaultTrack: string | null;
-  history: {
-    filters: HistoryFilters | null;
-    isOpen: boolean;
-    // TODO: more stuff???
-  };
-  modal: Partial<{
-    visible: boolean;
-    title: string;
-    content: string;
-    actions: {
-      appearance: "positive" | "neutral" | "negative";
-      onClickAction:
-        | {
-            reduxAction: string;
-          }
-        | { type: typeof CLOSE_MODAL };
-      label: string;
-    }[];
-  }>;
-  notification: Partial<{
-    visible: boolean;
-    status: "success" | "error";
-    appearance: "positive" | "neutral" | "negative";
-    content: string;
-    canDismiss: boolean;
-  }>;
-  options: Options;
-  pendingChanges: {
-    changeOrderIndex: number;
-    pendingCloses: {
-      [order: number]: Channel["name"]; // TODO: are there any constraints on this?
-    };
-    pendingReleases: {
-      [order: number]: PendingRelease;
-    };
-  };
-  revisions: {
-    [revision: string]: Prettify<
-      Revision & {
-        channels?: Channel["name"][];
-      }
-    >;
-  };
-  failedRevisions: FailedRevision[];
-  releases: Release[];
+export type ArchitecturesState = CPUArchitecture[];
+export type AvailableRevisionsSelectState = AvailableRevisionsSelect;
+export type BranchesState = string[];
+export type ChannelMapState = ChannelArchitectureRevisionsMap;
+export type CurrentTrackState = string;
+export type DefaultTrackState = string | null;
+export type FailedRevisionsState = FailedRevision[];
+export type NotificationState = Partial<{
+  visible: boolean;
+  status: "success" | "error";
+  appearance: "positive" | "neutral" | "negative";
+  content: string;
+  canDismiss: boolean;
+}>;
+export type HistoryState = {
+  filters: HistoryFilters | null;
+  isOpen: boolean;
+  // TODO: more stuff???
 };
+export type ModalState = Partial<{
+  visible: boolean;
+  title: string;
+  content: string;
+  actions: {
+    appearance: "positive" | "neutral" | "negative";
+    onClickAction:
+      | {
+          reduxAction: string;
+        }
+      | { type: "modal/closeModal" };
+    label: string;
+  }[];
+}>;
+export type OptionsState = Options;
+export type PendingChangesState = {
+  changeOrderIndex: number;
+  pendingCloses: {
+    [order: number]: Channel["name"]; // TODO: are there any constraints on this?
+  };
+  pendingReleases: {
+    [order: number]: PendingRelease;
+  };
+};
+export type ReleasesState = Release[];
+export type RevisionsState = {
+  [revision: string]: Prettify<
+    Revision & {
+      channels?: Channel["name"][];
+    }
+  >;
+};
+
+// alias for the root state
+export type ReleasesReduxState = RootState;
 
 export type HistoryFilters = {
   arch: Release["architecture"];
@@ -342,7 +343,7 @@ export type FailedRevision = {
 };
 
 export type ArchitectureRevisionsMap = {
-  [arch in CPUArchitecture | string]: Revision;
+  [arch in CPUArchitecture]?: Revision;
 };
 
 export type ChannelArchitectureRevisionsMap = {

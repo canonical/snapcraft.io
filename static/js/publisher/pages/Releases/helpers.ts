@@ -4,8 +4,8 @@ import { useEffect } from "react";
 import type {
   ArchitectureRevisionsMap,
   CPUArchitecture,
+  PendingChangesState,
   Release,
-  ReleasesReduxState,
   Revision,
 } from "../../types/releaseTypes";
 
@@ -75,11 +75,13 @@ export function isSameVersion(revisions?: ArchitectureRevisionsMap) {
     // calculate map of architectures for each version
     for (const arch in revisions) {
       const revision = revisions[arch];
-      const version = revision.version;
-      if (!versionsMap[version]) {
-        versionsMap[version] = [];
+      if (revision) {
+        const version = revision.version;
+        if (!versionsMap[version]) {
+          versionsMap[version] = [];
+        }
+        versionsMap[version].push(arch);
       }
-      versionsMap[version].push(arch);
     }
 
     hasSameVersion = Object.keys(versionsMap).length === 1;
@@ -231,7 +233,7 @@ export async function getPackageMetadata(
 }
 
 export function getArrayOfChannelNames(
-  channels: ReleasesReduxState["pendingChanges"]["pendingCloses"]
+  channels: PendingChangesState["pendingCloses"]
 ) {
   return Object.values(channels);
 }

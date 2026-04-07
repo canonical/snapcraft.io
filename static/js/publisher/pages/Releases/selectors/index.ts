@@ -77,9 +77,10 @@ export function getFilteredReleaseHistory(state: ReleasesReduxState): ReleaseHis
 // returns list of selected revisions, to know which ones to render selected
 export function getSelectedRevisions(state: ReleasesReduxState) {
   if (state.channelMap[AVAILABLE]) {
-    return Object.values(state.channelMap[AVAILABLE]).map(
-      (revision) => revision.revision
-    );
+    return Object
+      .values(state.channelMap[AVAILABLE])
+      .map((revision) => revision?.revision)
+      .filter((revision) => revision !== undefined);
   }
 
   return [];
@@ -107,7 +108,10 @@ export function getSelectedArchitectures(state: ReleasesReduxState) {
 // return true if there are any devmode revisions in the state
 export function hasDevmodeRevisions(state: ReleasesReduxState) {
   return Object.values(state.channelMap).some((archReleases) => {
-    return Object.values(archReleases).some(isInDevmode);
+    return Object
+      .values(archReleases)
+      .filter((revision) => revision !== undefined)
+      .some(isInDevmode);
   });
 }
 
@@ -142,6 +146,10 @@ export function getPendingChannelMap(state: ReleasesReduxState) {
 // get all revisions ordered from newest (based on revsion id)
 export function getAllRevisions(state: ReleasesReduxState) {
   return Object.values(state.revisions).reverse();
+}
+
+export function getRevisionById(state: ReleasesReduxState, id: number) {
+  return getAllRevisions(state).find((rev) => rev.revision === id);
 }
 
 // get all revisions not released to any channel yet
