@@ -6,7 +6,7 @@ import PackageList from "../../components/PackageList/PackageList";
 import EmptyResultSection from "../../components/EmptyResultSection";
 
 import { usePackages } from "../../hooks";
-import { trackSearchResultsLoaded, trackSearchNoResults } from "../../utils";
+import { trackSearchResults } from "../../utils";
 
 function Store(): React.JSX.Element {
   const { search } = useLocation();
@@ -31,24 +31,21 @@ function Store(): React.JSX.Element {
   const packagesCount = data?.packages ? data?.packages.length : 0;
   const isResultExist = status === "success" && packagesCount > 0;
 
-  const lastTrackedSearch = useRef<string>("");
+  const lastTrackedKey = useRef<string>("");
 
   useEffect(() => {
-    if (searchTerm && status === "success" && !isFetching) {
-      if (lastTrackedSearch.current === searchTerm) return;
-      lastTrackedSearch.current = searchTerm;
+    if (!searchTerm || status !== "success" || isFetching) return;
 
-      if ((data?.total_items ?? 0) > 0) {
-        trackSearchResultsLoaded(
-          searchTerm,
-          data?.total_items ?? 0,
-          parseInt(currentPage),
-        );
-      } else {
-        trackSearchNoResults(searchTerm);
-      }
-    }
-  }, [searchTerm, status, currentPage, isFetching, packagesCount, data]);
+    const trackingKey = `${searchTerm}-${currentPage}`;
+    if (lastTrackedKey.current === trackingKey) return;
+    lastTrackedKey.current = trackingKey;
+
+    trackSearchResults(
+      searchTerm,
+      data?.total_items ?? 0,
+      parseInt(currentPage),
+    );
+  }, [searchTerm, status, currentPage, isFetching, data]);
 
   const searchRef = useRef<HTMLInputElement | null>(null);
   const searchSummaryRef = useRef<HTMLDivElement>(null);

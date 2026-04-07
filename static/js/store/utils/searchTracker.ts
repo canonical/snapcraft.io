@@ -11,8 +11,16 @@ function generateSearchId(): string {
   return id;
 }
 
-function getSearchId(): string {
-  return activeSearchId || sessionStorage.getItem(SEARCH_ID_KEY) || "";
+function getOrCreateSearchId(): string {
+  if (activeSearchId) return activeSearchId;
+
+  const stored = sessionStorage.getItem(SEARCH_ID_KEY);
+  if (stored) {
+    activeSearchId = stored;
+    return stored;
+  }
+
+  return generateSearchId();
 }
 
 export function trackSearchSubmitted(
@@ -28,37 +36,34 @@ export function trackSearchSubmitted(
   trackEvent(target, { search_id: searchId, query });
 }
 
-export function trackSearchResultsLoaded(
+export function trackSearchResults(
   query: string,
   totalItems: number,
   page: number,
 ): void {
-  const searchId = getSearchId();
+  const searchId = getOrCreateSearchId();
   if (!searchId) return;
 
-  trackEvent("snap_store_search_results_loaded", {
-    search_id: searchId,
-    query,
-    total_items: totalItems,
-    page,
-  });
-}
-
-export function trackSearchNoResults(query: string): void {
-  const searchId = getSearchId();
-  if (!searchId) return;
-
-  trackEvent("snap_store_search_no_results_v2", {
-    search_id: searchId,
-    query,
-  });
+  if (totalItems > 0) {
+    trackEvent("snap_store_search_results_loaded", {
+      search_id: searchId,
+      query,
+      total_items: totalItems,
+      page,
+    });
+  } else {
+    trackEvent("snap_store_search_no_results_v2", {
+      search_id: searchId,
+      query,
+    });
+  }
 }
 
 export function trackSearchResultClicked(
   query: string,
   position: number,
 ): void {
-  const searchId = getSearchId();
+  const searchId = getOrCreateSearchId();
   if (!searchId) return;
 
   trackEvent("snap_store_search_result_clicked", {

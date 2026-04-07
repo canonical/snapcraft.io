@@ -4,7 +4,6 @@ import getCategoryOrder from "./getCategoryOrder";
 export { getArchitectures, getCategoryOrder };
 export {
   trackSearchSubmitted,
-  trackSearchResultsLoaded,
-  trackSearchNoResults,
+  trackSearchResults,
   trackSearchResultClicked,
 } from "./searchTracker";
