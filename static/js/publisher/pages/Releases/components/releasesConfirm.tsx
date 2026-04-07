@@ -12,8 +12,9 @@ import {
 } from "../slices/pendingChanges";
 import { releaseRevisions } from "../slices/releases";
 import { getSeparatePendingReleases, type SeparatePendingReleases } from "../selectors";
+import { triggerGAEvent } from "../analytics";
 import type { Progressive, ReleasesReduxState } from "../../../types/releaseTypes";
-import { triggerGAEvent, type AppDispatch } from "../store";
+import type { AppDispatch } from "../store";
 
 interface OwnProps {
   // No own props - all props come from Redux

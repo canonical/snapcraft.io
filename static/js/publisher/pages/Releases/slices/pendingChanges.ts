@@ -1,6 +1,6 @@
 import { createSlice, Draft, PayloadAction } from "@reduxjs/toolkit";
 import { getPendingChannelMap, getReleases } from "../selectors";
-import { triggerGAEvent } from "../store";
+import { triggerGAEvent } from "../analytics";
 import type {
   PendingChangesState,
   PendingRelease,

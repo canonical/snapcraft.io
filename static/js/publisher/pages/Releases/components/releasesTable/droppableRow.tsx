@@ -10,12 +10,13 @@ import {
   getLatestRelease,
 } from "../../helpers";
 import ReleasesTableChannelRow from "./channelRow";
+import { triggerGAEvent } from "../../analytics";
 import type {
   ReleasesReduxState,
   Revision,
   ChannelArchitectureRevisionsMap,
 } from "../../../../types/releaseTypes";
-import { triggerGAEvent, type AppDispatch } from "../../store";
+import type { AppDispatch } from "../../store";
 import type { DraggedItem } from "./types";
 
 interface OwnProps {

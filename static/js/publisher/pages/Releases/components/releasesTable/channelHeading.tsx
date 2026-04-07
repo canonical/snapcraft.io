@@ -26,6 +26,7 @@ import {
   getLatestRelease,
 } from "../../helpers";
 import ChannelMenu from "../channelMenu";
+import { triggerGAEvent } from "../../analytics";
 import type {
   ArchitectureRevisionsMap,
   ChannelArchitectureRevisionsMap,
@@ -34,7 +35,7 @@ import type {
   Revision,
   TargetChannel
 } from "../../../../types/releaseTypes";
-import { triggerGAEvent, type AppDispatch } from "../../store";
+import type { AppDispatch } from "../../store";
 
 const disabledBecauseDevmode = (
   <Fragment>

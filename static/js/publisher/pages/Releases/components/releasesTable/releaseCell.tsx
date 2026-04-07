@@ -138,7 +138,7 @@ const ReleasesTableReleaseCell = (props: ReleasesTableReleaseCellProps) => {
     filters.risk === risk &&
     filters.branch === branchName;
   const isHighlighted = isPending || (isUnassigned && currentRevision);
-  const canDrag = currentRevision && !isChannelPendingClose && releasable;
+  const canDrag = (currentRevision && !isChannelPendingClose && releasable) || false;
 
 
   function handleHistoryIconClick(
@@ -200,18 +200,18 @@ const ReleasesTableReleaseCell = (props: ReleasesTableReleaseCellProps) => {
   } else if (isUnassigned) {
     cellInfoNode = <UnassignedInfo availableCount={getAvailableCount(arch)} />;
   } else if (failed) {
-    cellInfoNode = <FailedInfo />
+    cellInfoNode = <FailedInfo />;
   } else {
     cellInfoNode = (
       <EmptyInfo
         trackingChannel={getTrackingChannel(channelMap, track, risk, arch)}
-      />
+      />  
     );
   }
 
   const showHistoryIcon = currentRevision || isUnassigned;
 
-  return (item && canDrag &&
+  return (
     <ReleasesTableCellView
       actions={actionsNode}
       item={item}

@@ -1,8 +1,8 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import {
-  triggerGAEvent,
-  type AppDispatch,
-  type RootState,
+import { triggerGAEvent } from "../analytics";
+import type {
+  AppDispatch,
+  RootState,
 } from "../store";
 import type {
   HistoryFilters,

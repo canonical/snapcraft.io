@@ -204,7 +204,7 @@ export function getFilteredAvailableRevisionsForArch(
 // get list of architectures of uploaded revisions
 export function getArchitectures(state: ReleasesReduxState) {
   return state.architectures && state.architectures.length > 0
-    ? state.architectures.sort()
+    ? [...state.architectures].sort()
     : [];
 }
 
