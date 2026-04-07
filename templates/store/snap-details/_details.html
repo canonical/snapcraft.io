@@ -117,7 +117,7 @@
     </ul>
     <hr class="p-rule--muted">
 
-    <script nonce="{{ CSP_NONCE }}">
+    <script>
       // Handle aliases "show more" button
       const list = document.querySelector(".js-expandable-list");
       const showMoreButton = document.querySelector(".js-toggle-full-list");
@@ -182,7 +182,7 @@ It does not guarantee the Snap is an official upload
 from the upstream project.{%- endif -%}</span>
   </template>
 
-  <script nonce="{{ CSP_NONCE }}">
+  <script>
     // Handle verified domain status
     const primaryDomainListItem = document.querySelector("[data-js='primary-domain']");
 
