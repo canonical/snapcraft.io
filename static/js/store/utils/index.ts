@@ -3,6 +3,7 @@ import getCategoryOrder from "./getCategoryOrder";
 
 export { getArchitectures, getCategoryOrder };
 export {
+  getSearchId,
   trackSearchSubmitted,
   trackSearchResults,
   trackSearchResultClicked,

@@ -6,7 +6,7 @@ import PackageList from "../../components/PackageList/PackageList";
 import EmptyResultSection from "../../components/EmptyResultSection";
 
 import { usePackages } from "../../hooks";
-import { trackSearchResults } from "../../utils";
+import { getSearchId, trackSearchResults } from "../../utils";
 
 function Store(): React.JSX.Element {
   const { search } = useLocation();
@@ -36,7 +36,8 @@ function Store(): React.JSX.Element {
   useEffect(() => {
     if (!searchTerm || status !== "success" || isFetching) return;
 
-    const trackingKey = `${searchTerm}-${currentPage}`;
+    const searchId = getSearchId();
+    const trackingKey = `${searchId}-${searchTerm}-${currentPage}`;
     if (lastTrackedKey.current === trackingKey) return;
     lastTrackedKey.current = trackingKey;
 
