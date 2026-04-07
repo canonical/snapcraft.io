@@ -51,10 +51,12 @@ export function trackSearchResults(
 export function trackSearchResultClicked(
   query: string,
   position: number,
+  snapName: string,
 ): void {
   trackEvent("snap_store_search_result_clicked", {
     search_id: getSearchId(),
     query,
     position,
+    snap_name: snapName,
   });
 }

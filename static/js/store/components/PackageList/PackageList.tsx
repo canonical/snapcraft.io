@@ -141,6 +141,7 @@ function PackageList({
                           (parseInt(currentPage) - 1) * ITEMS_PER_PAGE +
                             index +
                             1,
+                          packageData.package.name,
                         );
                       }
                     }}
