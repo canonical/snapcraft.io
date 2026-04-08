@@ -116,6 +116,7 @@
   },
   "resolutions": {
     "vitest/**/glob": "13.0.1",
+    "vitest/vite": "7.3.2",
     "lodash": "4.18.1",
     "picomatch": ">=2.3.2",
     "brace-expansion": ">=2.0.2",
