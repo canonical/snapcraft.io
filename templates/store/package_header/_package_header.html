@@ -1,7 +1,5 @@
-{% from "store/snap-details/_package_heading_data.html" import package_header_data, package_icon %}
-
 {#
-Context variables needed:
+Context variables needed for `package_header`:
 
 Snap data:
   snap_title: Title of the snap
@@ -20,12 +18,15 @@ Other:
   VERIFIED_PUBLISHER: const (value of developer_validation)
   STAR_DEVELOPER: const (value of developer_validation)
 #}
+
+{%- from 'store/package_header/_package_header_data.html' import package_header_data, package_icon -%}
+
 {%- macro package_header() -%}
   {%- set buttons_content = caller('buttons') -%}
   {%- set has_buttons_content = buttons_content|trim|length > 0 -%}
   <div class="grid-row">
     <div class="grid-col-2 grid-col-medium-1 grid-col-small-1">
-    {{ package_icon(icon_url, image) }}
+      {{ package_icon(icon_url, image) }}
     </div>
     <div class="grid-col-6 grid-col-medium-3 grid-col-small-3">
       {{ package_header_data(package_title=snap_title,
