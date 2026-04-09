@@ -199,7 +199,7 @@ const ComboBox: FC<ComboBoxProps> = ({
         getRootProps,
         toggleMenu,
       }) => (
-        <div className="p-combobox" style={{ position: "relative" }}>
+        <div className="p-combobox">
           <div>
             <label
               {...getLabelProps()}
@@ -222,7 +222,7 @@ const ComboBox: FC<ComboBoxProps> = ({
               />
               <button
                 {...getToggleButtonProps()}
-                className="p-combobox__toggle p-button--base has-icon u-no-margin"
+                className="p-combobox__toggle p-button--base has-icon"
                 tabIndex={-1}
               >
                 <Icon

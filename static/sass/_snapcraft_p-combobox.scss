@@ -9,16 +9,17 @@
 
     &__input {
       cursor: pointer;
-      margin-bottom: 0 !important;
+      margin-bottom: 0;
       padding-left: $spv--small; // align text to icons in sidenav
-      padding-right: 2rem;
+      padding-right: 2 * $sph--large; // width of the toggle button, twice its horizontal padding
       text-overflow: ellipsis;
 
+      // chromium browsers show a few buttons inside search inputs by default, hide them
       &::-webkit-search-decoration,
       &::-webkit-search-cancel-button,
       &::-webkit-search-results-button,
       &::-webkit-search-results-decoration {
-        appearance:none;
+        -webkit-appearance: none; // stylelint-disable-line property-no-vendor-prefix
       }
     }
 
@@ -29,6 +30,7 @@
       }
 
       bottom: 0;
+      margin-bottom: 0;
       position: absolute;
       right: 0;
       top: 0;
