@@ -4,9 +4,10 @@ import {
   AVAILABLE_REVISIONS_SELECT_RECENT,
   AVAILABLE_REVISIONS_SELECT_UNRELEASED,
 } from "../pages/Releases/constants";
-import { CLOSE_MODAL } from "../pages/Releases/actions";
+import { RootState } from "../pages/Releases/store";
+import { CLOSE_MODAL_ACTION_NAME } from "../pages/Releases/slices/modal";
 
-type Prettify<T> = { [K in keyof T]: T[K] } & {};
+export type Prettify<T> = { [K in keyof T]: T[K] } & {};
 
 type NonEmptyArray<T> = [T, ...T[]];
 
@@ -45,8 +46,8 @@ export type Series = "16" | (string & {}); // series is and will always be 16, b
 
 export type Progressive = {
   "current-percentage": number | null;
-  paused: boolean | null;
   percentage: number | null;
+  changes?: ProgressiveChanges;
 };
 
 export type Release = {
@@ -117,7 +118,8 @@ export type Revision<isLpBuild extends boolean = false> = {
    * Again, we just pretend this is part of the actual store response and mark them as optional for "safety".
    */
   channels?: string[];
-  release?: Release & { progressive: ProgressiveMutated }; // this might be unused?
+  // difference between release and releases? do we need both?
+  release?: Release;
   releases?: Release[];
   progressive?: ChannelMap["progressive"];
   expiration?: ChannelMap["expiration-date"];
@@ -268,59 +270,58 @@ export type CloseChannelsResponse =
 /**
  * Types for the Redux state used in the Releases page
  */
-export type ReleasesReduxState = {
-  architectures: CPUArchitecture[];
-  availableRevisionsSelect: AvailableRevisionsSelect;
-  branches: string[]; // TODO: are there any constraints on this?
-  channelMap: ChannelArchitectureRevisionsMap;
-  currentTrack: string;
-  defaultTrack: string | null;
-  history: {
-    filters: HistoryFilters | null;
-    isOpen: boolean;
-    // TODO: more stuff???
-  };
-  modal: Partial<{
-    visible: boolean;
-    title: string;
-    content: string;
-    actions: {
-      appearance: "positive" | "neutral" | "negative";
-      onClickAction:
-        | {
-            reduxAction: string;
-          }
-        | { type: typeof CLOSE_MODAL };
-      label: string;
-    }[];
-  }>;
-  notification: Partial<{
-    visible: boolean;
-    status: "success" | "error";
-    appearance: "positive" | "neutral" | "negative";
-    content: string;
-    canDismiss: boolean;
-  }>;
-  options: Options;
-  pendingChanges: {
-    changeOrderIndex: number;
-    pendingCloses: {
-      [order: number]: Channel["name"]; // TODO: are there any constraints on this?
-    };
-    pendingReleases: {
-      [order: number]: PendingRelease;
-    };
-  };
-  revisions: {
-    [revision: string]: Prettify<
-      Revision & {
-        channels?: Channel["name"][];
-      }
-    >;
-  };
-  failedRevisions: FailedRevision[];
-  releases: Release[];
+export type ArchitecturesState = CPUArchitecture[];
+export type AvailableRevisionsSelectState = AvailableRevisionsSelect;
+export type BranchesState = string[];
+export type ChannelMapState = ChannelArchitectureRevisionsMap;
+export type CurrentTrackState = string;
+export type DefaultTrackState = string | null;
+export type FailedRevisionsState = FailedRevision[];
+export type NotificationState = Partial<{
+  visible: boolean;
+  status: "success" | "error";
+  appearance: "positive" | "neutral" | "negative";
+  content: string;
+  canDismiss: boolean;
+}>;
+export type HistoryState = {
+  filters: HistoryFilters | null;
+  isOpen: boolean;
+  // TODO: more stuff???
 };
+export type ModalState = Partial<{
+  visible: boolean;
+  title: string;
+  content: string;
+  actions: {
+    appearance: "positive" | "neutral" | "negative";
+    onClickAction:
+      | { reduxAction: string }
+      | { type: typeof CLOSE_MODAL_ACTION_NAME };
+    label: string;
+  }[];
+}>;
+export type OptionsState = Options;
+export type PendingChangesState = {
+  changeOrderIndex: number;
+  pendingCloses: {
+    [order: number]: Channel["name"]; // TODO: are there any constraints on this?
+  };
+  pendingReleases: {
+    [order: number]: PendingRelease;
+  };
+};
+export type ReleasesState = Release[];
+export type RevisionsState = {
+  [revision: string]: Prettify<
+    Revision & {
+      channels?: Channel["name"][];
+    }
+  >;
+};
+
+// alias for the root state
+export type ReleasesReduxState = RootState;
 
 export type HistoryFilters = {
   arch: Release["architecture"];
@@ -342,7 +343,7 @@ export type FailedRevision = {
 };
 
 export type ArchitectureRevisionsMap = {
-  [arch in CPUArchitecture | string]: Revision;
+  [arch in CPUArchitecture]?: Revision;
 };
 
 export type ChannelArchitectureRevisionsMap = {
@@ -365,8 +366,6 @@ export type ProgressiveChanges = {
   };
 }[keyof Progressive][];
 
-export type ProgressiveMutated = Prettify<Progressive & { key?: number }>; // TODO: why/when is this a thing?
-
 export type PendingRelease = {
   revision: number;
   channels: {
@@ -378,11 +377,7 @@ export type PendingReleaseItem = {
   revision: Revision;
   channel: Channel["name"];
   previousReleases: Revision[];
-  progressive: Prettify<
-    Progressive & {
-      changes?: ProgressiveChanges;
-    }
-  >;
+  progressive: Progressive;
   replaces?: PendingReleaseItem;
 };
 

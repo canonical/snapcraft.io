@@ -5,9 +5,9 @@ import { format } from "date-fns";
 
 import { canBeReleased } from "../helpers";
 import { getChannelString } from "../../../../libs/channels.js";
-import { toggleRevision } from "../actions/channelMap";
+import { toggleRevision } from "../slices/channelMap";
 import type { Revision, ReleasesReduxState } from "../../../types/releaseTypes";
-import type { DispatchFn } from "../store";
+import type { AppDispatch } from "../store";
 
 import {
   getSelectedRevisions,
@@ -184,7 +184,7 @@ const mapStateToProps = (state: ReleasesReduxState): StateProps => {
   };
 };
 
-const mapDispatchToProps = (dispatch: DispatchFn): DispatchProps => {
+const mapDispatchToProps = (dispatch: AppDispatch): DispatchProps => {
   return {
     toggleRevision: (revision: Revision) => dispatch(toggleRevision(revision)),
   };

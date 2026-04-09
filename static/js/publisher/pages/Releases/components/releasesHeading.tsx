@@ -11,8 +11,8 @@ import {
   Accordion,
 } from "@canonical/react-components";
 
-import { setCurrentTrack } from "../actions/currentTrack";
-import { closeHistory } from "../actions/history";
+import { setCurrentTrack } from "../slices/currentTrack";
+import { closeHistory } from "../slices/history";
 import { getTracks } from "../selectors";
 import {
   validatePhasingPercentage,
@@ -25,7 +25,7 @@ import DefaultTrackModifier from "./defaultTrackModifier";
 import ReleasesTable from "./releasesTable";
 import TrackInfo from "./TrackInfo";
 import type { ReleasesReduxState } from "../../../types/releaseTypes";
-import type { DispatchFn } from "../store";
+import type { AppDispatch } from "../store";
 
 interface OwnProps {
   snapName: string;
@@ -38,8 +38,8 @@ interface StateProps {
 }
 
 interface DispatchProps {
-  setCurrentTrack: typeof setCurrentTrack;
-  closeHistoryPanel: typeof closeHistory;
+  setCurrentTrack: (track: string) => void;
+  closeHistoryPanel: () => void;
 }
 
 type ReleasesHeadingProps = OwnProps & StateProps & DispatchProps;
@@ -592,7 +592,7 @@ const mapStateToProps = (state: ReleasesReduxState): StateProps => {
   };
 };
 
-const mapDispatchToProps = (dispatch: DispatchFn): DispatchProps => {
+const mapDispatchToProps = (dispatch: AppDispatch): DispatchProps => {
   return {
     setCurrentTrack: (track) => dispatch(setCurrentTrack(track)),
     closeHistoryPanel: () => dispatch(closeHistory()),

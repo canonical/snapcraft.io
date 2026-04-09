@@ -7,14 +7,14 @@ import ReleasesConfirmDetails from "./releasesConfirmDetails/";
 import ReleasesConfirmActions from "./releasesConfirmActions";
 
 import {
-  cancelPendingReleases,
-  setProgressiveReleasePercentage,
-} from "../actions/pendingChanges";
-import { releaseRevisions } from "../actions/releases";
-import { triggerGAEvent } from "../actions/gaEventTracking";
+  cancelPendingChanges,
+  setProgressiveRelease,
+} from "../slices/pendingChanges";
+import { releaseRevisions } from "../slices/releases";
 import { getSeparatePendingReleases, type SeparatePendingReleases } from "../selectors";
-import type { ReleasesReduxState } from "../../../types/releaseTypes";
-import type { DispatchFn } from "../store";
+import { triggerGAEvent } from "../analytics";
+import type { Progressive, ReleasesReduxState } from "../../../types/releaseTypes";
+import type { AppDispatch } from "../store";
 
 interface OwnProps {
   // No own props - all props come from Redux
@@ -29,7 +29,7 @@ interface StateProps {
 interface DispatchProps {
   triggerGAEvent: (...eventProps: Parameters<typeof triggerGAEvent>) => void;
   cancelPendingReleases: () => void;
-  setProgressiveReleasePercentage: (percentage: number) => void;
+  setProgressiveRelease: (percentage: Progressive) => void;
   releaseRevisions: () => Promise<unknown>;
 }
 
@@ -87,7 +87,10 @@ class ReleasesConfirm extends Component<ReleasesConfirmProps, ReleasesConfirmSta
     });
 
     if (this.state.percentage && +this.state.percentage !== 100) {
-      this.props.setProgressiveReleasePercentage(+this.state.percentage);
+      this.props.setProgressiveRelease({
+        percentage: +this.state.percentage,
+        "current-percentage": null,
+      });
     }
 
     this.props.releaseRevisions().then(() => {
@@ -188,12 +191,12 @@ const mapStateToProps = (state: ReleasesReduxState): StateProps => {
   };
 };
 
-const mapDispatchToProps = (dispatch: DispatchFn): DispatchProps => {
+const mapDispatchToProps = (dispatch: AppDispatch): DispatchProps => {
   return {
     releaseRevisions: () => dispatch(releaseRevisions()),
-    cancelPendingReleases: () => dispatch(cancelPendingReleases()),
-    setProgressiveReleasePercentage: (percentage: number) =>
-      dispatch(setProgressiveReleasePercentage(percentage)),
+    cancelPendingReleases: () => dispatch(cancelPendingChanges()),
+    setProgressiveRelease: (percentage: Progressive) =>
+      dispatch(setProgressiveRelease(percentage)),
     triggerGAEvent: (...eventProps: Parameters<typeof triggerGAEvent>) =>
       dispatch(triggerGAEvent(...eventProps)),
   };
