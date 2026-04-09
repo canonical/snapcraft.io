@@ -1,131 +1,37 @@
-import { useState, useEffect, useRef } from "react";
 import { useAtomValue } from "jotai";
-import { useParams, NavLink } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
+import { useMemo } from "react";
 
 import { brandStoresState } from "../../state/brandStoreState";
+import ComboBox from "../ComboBox/ComboBox";
 
-import type { Store } from "../../types/shared";
-
-type Props = {
-  nativeNavLink?: boolean;
-};
-
-// TODO: refactor this and use Downshift to have proper a11y
-function StoreSelector({ nativeNavLink }: Props): React.JSX.Element {
+function StoreSelector(): React.JSX.Element {
   const { id } = useParams();
-  const selectorRef = useRef<HTMLDivElement>(null);
+  const navigate = useNavigate();
   const brandStoresList = useAtomValue(brandStoresState);
-  const [showStoreSelector, setShowStoreSelector] = useState<boolean>(false);
-  const [searchValue, setSearchValue] = useState("");
-  const [filteredBrandStores, setFilteredBrandstores] =
-    useState<Store[]>(brandStoresList);
 
-  // close the store list when clicking outside of this component
-  useEffect(() => {
-    const clickOutsideListener = (e: MouseEvent) => {
-      if (!selectorRef.current?.contains(e.target as HTMLElement)) {
-        setShowStoreSelector(false);
-      }
-    };
-
-    window.addEventListener("click", clickOutsideListener);
-
-    return () => {
-      window.removeEventListener("click", clickOutsideListener);
-    };
-  }, []);
-
-  const getStoreName = (id: string | undefined) => {
-    if (!id) {
-      return;
-    }
-
-    const targetStore = brandStoresList.find((store) => store.id === id);
-
-    if (targetStore) {
-      return targetStore.name;
-    }
-
-    return "Select a store";
-  };
-
-  useEffect(() => {
-    setFilteredBrandstores(brandStoresList);
-  }, [brandStoresList]);
+  const comboBoxOptions = useMemo(
+    () =>
+      brandStoresList.map((store) => ({
+        label: store.name,
+        value: store.id,
+      })),
+    [brandStoresList],
+  );
 
   return (
-    <div className="store-selector" ref={selectorRef}>
-      <button
-        className="store-selector__button u-no-margin--bottom"
-        onClick={() => {
-          setShowStoreSelector(!showStoreSelector);
-        }}
-      >
-        {id !== undefined ? getStoreName(id) : "Select a store"}
-      </button>
-      {showStoreSelector && (
-        <div className="store-selector__panel">
-          <div className="p-search-box u-no-margin--bottom">
-            <label htmlFor="search-stores" className="u-off-screen">
-              Search stores
-            </label>
-            <input
-              type="search"
-              className="p-search-box__input"
-              id="search-stores"
-              name="search-stores"
-              placeholder="Search"
-              value={searchValue}
-              onInput={(e) => {
-                const value = (e.target as HTMLInputElement).value;
-                setSearchValue(value);
-                if (value.length > 0) {
-                  setFilteredBrandstores(
-                    brandStoresList.filter((store) => {
-                      const storeName = store.name.toLowerCase();
-                      return storeName.includes(value.toLowerCase());
-                    }),
-                  );
-                } else {
-                  setFilteredBrandstores(brandStoresList);
-                }
-              }}
-            />
-            <button
-              type="reset"
-              className="p-search-box__reset"
-              onClick={() => {
-                setSearchValue("");
-                setFilteredBrandstores(brandStoresList);
-              }}
-            >
-              <i className="p-icon--close">Close</i>
-            </button>
-            <button type="submit" className="p-search-box__button">
-              <i className="p-icon--search">Search</i>
-            </button>
-          </div>
-          <ul className="store-selector__list" style={{ listStyle: "none" }}>
-            {filteredBrandStores.map((store: Store) => (
-              <li key={store.id} className="store-selector__item">
-                {nativeNavLink ? (
-                  <a href={`/admin/${store.id}/snaps`}>{store.name}</a>
-                ) : (
-                  <NavLink
-                    to={`/admin/${store.id}/snaps`}
-                    onClick={() => {
-                      setShowStoreSelector(false);
-                    }}
-                  >
-                    {store.name}
-                  </NavLink>
-                )}
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
-    </div>
+    <ComboBox
+      options={comboBoxOptions}
+      value={id ?? ""}
+      label="Select store"
+      placeholder="Select store"
+      labelClassName="u-off-screen"
+      required
+      onChange={(storeId) => {
+        if (!storeId) return;
+        navigate(`/admin/${storeId}/snaps`);
+      }}
+    />
   );
 }
 
