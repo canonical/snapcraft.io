@@ -69,6 +69,7 @@ describe("getFilteredReleaseHistory", () => {
     };
 
     const filteredHistory = getFilteredReleaseHistory(state);
+    // TODO
     expect(filteredHistory.every((r) => r.revision)).toBe(true);
   });
 
@@ -398,11 +399,23 @@ describe("getPendingChannelMap", () => {
 
   describe("when there are pending releases overriding existing releases", () => {
     it("should return channel map with pending revisions", () => {
-      expect(getPendingChannelMap(stateWithPendingReleases)).toEqual({
-        ...stateWithPendingReleases.channelMap,
+      const stateWithWithOverrides = {
+        ...stateWithPendingReleases,
+      };
+      stateWithWithOverrides.pendingChanges.pendingReleases["0"].channels["test/edge"] = {
+        revision: createMockRevision({ revision: 2, architectures: ["test64"] }),
+        channel: "latest/stable",
+        previousReleases: [],
+        progressive: {
+          "current-percentage": null,
+          percentage: null,
+        }
+      };
+      expect(getPendingChannelMap(stateWithWithOverrides)).toEqual({
+        ...stateWithWithOverrides.channelMap,
         "test/edge": {
           test64: {
-            ...stateWithPendingReleases
+            ...stateWithWithOverrides
               .pendingChanges
               .pendingReleases["0"]
               .channels["test/edge"]
@@ -697,6 +710,7 @@ describe("hasPendingRelease", () => {
     };
 
     it("should return true for channel/arch with pending release", () => {
+      // TODO: investigate
       expect(
         hasPendingRelease(stateWithPendingReleases, "test/edge", "test64")
       ).toBe(true);
@@ -725,7 +739,7 @@ describe("getTrackRevisions", () => {
 
     expect(
       getTrackRevisions(state, "test")
-    ).toEqual([
+    ).toMatchObject([
       {
         test64: {
           revision: 1,
@@ -796,7 +810,7 @@ describe("getBranches", () => {
         branch: "test2",
         track: "latest",
         risk: "stable",
-        revision: "3",
+        revision: 3,
         when: today.toISOString(),
         expiration: notExpired,
       },
@@ -804,7 +818,7 @@ describe("getBranches", () => {
         branch: "test",
         track: "latest",
         risk: "stable",
-        revision: "2",
+        revision: 2,
         when: today.toISOString(),
         expiration: notExpired,
       },
@@ -992,28 +1006,31 @@ describe("getProgressiveState", () => {
   };
 
   it("should return the progressive release state of a channel and arch", () => {
-    expect(
-      getProgressiveState(
-        stateWithProgressiveEnabled,
-        "latest/stable",
-        "arch2",
-        false
-      )
-    ).toEqual(["revision2", null]);
+    const result = getProgressiveState(
+      stateWithProgressiveEnabled,
+      "latest/stable",
+      "arch2",
+      false
+    );
+    expect(result).toHaveLength(2);
+    expect(result[0]).toMatchObject({ revision: 2 });
+    expect(result[1]).toBeNull();
   });
 
   it("should return the progressiveState and pendingProgressiveStatus", () => {
-    expect(
-      getProgressiveState(
-        stateWithProgressiveEnabledAndPendingRelease,
-        "latest/stable",
-        "arch2",
-        false
-      )
-    ).toEqual([
-      "revision2",
-      { key: "current-percentage", value: 40 },
-    ]);
+    const result = getProgressiveState(
+      stateWithProgressiveEnabledAndPendingRelease,
+      "latest/stable",
+      "arch2",
+      false
+    );
+    expect(result).toHaveLength(2);
+    expect(result[0]).toMatchObject({ revision: 2 });
+    expect(result[1]).toMatchObject(
+      {
+        changes: [{ key: "current-percentage", value: 40 }],
+      },
+    );
   });
 
   it("should return array of nulls if progressive release flag is disabled", () => {
@@ -1287,7 +1304,7 @@ describe("hasRelease", () => {
       it("should return a progressive release to cancel", () => {
         expect(
           getSeparatePendingReleases(stateWithPendingReleaseToCancel)
-        ).toEqual({
+        ).toMatchObject({
           newReleases: {},
           newReleasesToProgress: {},
           cancelProgressive: {

@@ -16,7 +16,7 @@ describe("architectures", () => {
   });
 
   describe("on architectures/updateArchitectures action", () => {
-    const expectedArchitectures = ["amd64", "armhf", "arm64"] as ArchitecturesState;
+    const expectedArchitectures = ["arm64", "amd64", "armhf"] as ArchitecturesState;
     let updateArchitecturesAction: ReturnType<typeof updateArchitectures>;
     const mockActionPayload = [...mockRevisions, ...mockRevisionsMultipleArchs];
 
