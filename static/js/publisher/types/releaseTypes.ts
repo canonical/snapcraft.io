@@ -47,6 +47,7 @@ export type Series = "16" | (string & {}); // series is and will always be 16, b
 export type Progressive = {
   "current-percentage": number | null;
   percentage: number | null;
+  changes?: ProgressiveChanges;
 };
 
 export type Release = {
@@ -117,7 +118,8 @@ export type Revision<isLpBuild extends boolean = false> = {
    * Again, we just pretend this is part of the actual store response and mark them as optional for "safety".
    */
   channels?: string[];
-  release?: Release & { progressive: ProgressiveMutated }; // this might be unused?
+  // difference between release and releases? do we need both?
+  release?: Release;
   releases?: Release[];
   progressive?: ChannelMap["progressive"];
   expiration?: ChannelMap["expiration-date"];
@@ -364,8 +366,6 @@ export type ProgressiveChanges = {
   };
 }[keyof Progressive][];
 
-export type ProgressiveMutated = Prettify<Progressive & { key?: number }>; // TODO: why/when is this a thing?
-
 export type PendingRelease = {
   revision: number;
   channels: {
@@ -377,11 +377,7 @@ export type PendingReleaseItem = {
   revision: Revision;
   channel: Channel["name"];
   previousReleases: Revision[];
-  progressive: Prettify<
-    Progressive & {
-      changes?: ProgressiveChanges;
-    }
-  >;
+  progressive: Progressive;
   replaces?: PendingReleaseItem;
 };
 

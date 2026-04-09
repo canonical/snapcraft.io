@@ -37,15 +37,12 @@ const ReleasesConfirmDetails = ({
   const [globalPercentage, setGlobalPercentage] = useState(100);
 
   const progressiveReleases = updates.newReleasesToProgress;
-  const progressiveUpdates = updates.progressiveUpdates;
   const progressiveCancellations = updates.cancelProgressive;
   const newReleases = updates.newReleases;
   const pendingCloses = Object.values(updates.pendingCloses);
 
   const showProgressiveReleases =
     isProgressiveReleaseEnabled && Object.keys(progressiveReleases).length > 0;
-  const showProgressiveUpdates =
-    isProgressiveReleaseEnabled && Object.keys(progressiveUpdates).length > 0;
   const showProgressiveCancellations =
     isProgressiveReleaseEnabled &&
     Object.keys(progressiveCancellations).length > 0;
@@ -82,16 +79,6 @@ const ReleasesConfirmDetails = ({
       {showProgressiveReleases && (
         <ReleaseRowGroup releases={progressiveReleases} />
       )}
-      {showProgressiveUpdates &&
-        Object.keys(progressiveUpdates).map((releaseKey) => {
-          return (
-            <ReleaseRow
-              type={progressiveTypes.UPDATE}
-              revisionInfo={progressiveUpdates[releaseKey].revision}
-              channel={progressiveUpdates[releaseKey].channel}
-            />
-          );
-        })}
       {showProgressiveCancellations &&
         Object.keys(progressiveCancellations).map((releaseKey) => {
           return (

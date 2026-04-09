@@ -182,7 +182,7 @@ value is object containing release object and channels to release to
     <channel>: {
       revision: { revision: <revisionId>, version, ... },
       channel: <channel>,
-      progressive: { key, percentage },
+      progressive: { changes, percentage, current-percentage },
       previousReleases: {
         <arch>: { revision: <revisionId>, version, ... }
       },
@@ -198,7 +198,7 @@ TODO: remove `revision` from the PendingReleaseItem type
 export type ReleaseRevisionPayload = {
   revision: Revision;
   channel: string;
-  progressive?: PendingReleaseItem["progressive"];
+  progressive?: Progressive;
   previousReleases?: PendingReleaseItem["previousReleases"];
 };
 

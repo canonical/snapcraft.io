@@ -15,7 +15,6 @@ import type {
   PendingReleaseItem,
   Progressive,
   ProgressiveChanges,
-  ProgressiveMutated,
   Release,
   ReleasesReduxState,
   Revision,
@@ -413,7 +412,6 @@ export function hasRelease(
 type PendingReleaseMap = { [key: string]: PendingReleaseItem };
 
 export type SeparatePendingReleases = Record<
-  | "progressiveUpdates"
   | "newReleases"
   | "newReleasesToProgress"
   | "cancelProgressive",
@@ -425,7 +423,6 @@ export function getSeparatePendingReleases(state: ReleasesReduxState): SeparateP
   const { pendingReleases } = state.pendingChanges;
   const isProgressiveEnabled = isProgressiveReleaseEnabled(state);
 
-  const progressiveUpdates: PendingReleaseMap = {};
   const newReleases: PendingReleaseMap = {};
   const newReleasesToProgress: PendingReleaseMap = {};
   const cancelProgressive: PendingReleaseMap = {};
@@ -450,7 +447,7 @@ export function getSeparatePendingReleases(state: ReleasesReduxState): SeparateP
         // and the new state.
         const previousState = releaseCopy.revision.release
           ? releaseCopy.revision.release.progressive
-          : ({} as ProgressiveMutated);
+          : ({} as Progressive);
         const newState = releaseCopy.progressive;
 
         const changes = [] as ProgressiveChanges;
@@ -461,13 +458,7 @@ export function getSeparatePendingReleases(state: ReleasesReduxState): SeparateP
           });
         }
 
-        if (previousState.key) {
-          // Add this to the copy of the pendingRelease state
-          releaseCopy.progressive.changes = changes;
-          progressiveUpdates[`${revId}-${channel}`] = releaseCopy;
-        } else {
-          newReleasesToProgress[`${revId}-${channel}`] = releaseCopy;
-        }
+        newReleasesToProgress[`${revId}-${channel}`] = releaseCopy;
       } else {
         newReleases[`${revId}-${channel}`] = releaseCopy;
       }
@@ -475,7 +466,6 @@ export function getSeparatePendingReleases(state: ReleasesReduxState): SeparateP
   });
 
   return {
-    progressiveUpdates,
     newReleases,
     newReleasesToProgress,
     cancelProgressive,
