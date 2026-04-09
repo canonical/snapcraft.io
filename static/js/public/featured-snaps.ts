@@ -126,11 +126,7 @@ function buildCard(
 
     content.addEventListener("click", () => {
       if (category === "featured") {
-        trackFeaturedSnapClicked(
-          data.package_name,
-          index + 1,
-          "home",
-        );
+        trackFeaturedSnapClicked(data.package_name, index + 1, "home");
       }
     });
   }

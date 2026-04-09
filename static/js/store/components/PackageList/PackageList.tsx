@@ -9,7 +9,10 @@ import {
 } from "@canonical/react-components";
 
 import { PackageFilter } from "../PackageFilter";
-import { trackSearchResultClicked, trackFeaturedSnapClicked } from "../../utils";
+import {
+  trackSearchResultClicked,
+  trackFeaturedSnapClicked,
+} from "../../utils";
 
 import type { RefObject } from "react";
 import type { Category, Package, Packages } from "../../types";
