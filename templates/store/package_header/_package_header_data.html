@@ -1,5 +1,5 @@
-{%- from 'store/_developer_info.html' import developer_info -%}
-{%- from 'store/_publisher_info.html' import publisher_info -%}
+{%- from 'store/package_header/_developer_info.html' import developer_info -%}
+{%- from 'store/package_header/_publisher_info.html' import publisher_info -%}
 
 {%- macro package_icon(
     icon_url,
@@ -40,9 +40,6 @@
     VERIFIED_PUBLISHER) -%}
   <div class="p-section--shallow">
     <h1 class="u-sv-1" data-live="title">{{ package_title }}</h1>
-    {# TODO:
-      Extract the section below as own slot, to avoid dependency on a lot of publisher data?
-    #}
     <div class="u-hide--medium u-hide--large">
       {% if developer %}
         {{ developer_info(name=developer[0], url=developer[1]) }}
