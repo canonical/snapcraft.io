@@ -1,4 +1,5 @@
 import declareGlobal from "../libs/declare";
+import { trackFeaturedSnapClicked } from "../store/utils/featuredTracker";
 
 type PackageData = {
   apps: Array<string>;
@@ -31,21 +32,26 @@ async function buildCards(category: string): Promise<void> {
     );
 
     featuredSnapCards.forEach((featuredSnapCard, index) => {
-      buildCard(featuredSnapCard, localData[index]);
+      buildCard(featuredSnapCard, localData[index], category, index);
     });
   } else {
     const response = await fetch(`/store/featured-snaps/${category}`);
     const data: Array<PackageData> = await response.json();
 
     featuredSnapCards.forEach((featuredSnapCard, index) => {
-      buildCard(featuredSnapCard, data[index]);
+      buildCard(featuredSnapCard, data[index], category, index);
     });
 
     window.sessionStorage.setItem(category, JSON.stringify(data));
   }
 }
 
-function buildCard(featuredSnapCard: Element, data: PackageData) {
+function buildCard(
+  featuredSnapCard: Element,
+  data: PackageData,
+  category: string,
+  index: number,
+) {
   const placeholder = featuredSnapCard.querySelector(
     "[data-js='featured-snap-card-placeholder']",
   ) as HTMLElement;
@@ -117,6 +123,16 @@ function buildCard(featuredSnapCard: Element, data: PackageData) {
     }
 
     content.appendChild(clone);
+
+    content.addEventListener("click", () => {
+      if (category === "featured") {
+        trackFeaturedSnapClicked(
+          data.package_name,
+          index + 1,
+          "home",
+        );
+      }
+    });
   }
 
   placeholder.classList.add("u-hide");
