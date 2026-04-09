@@ -30,59 +30,66 @@ import {
   getReleases,
 } from "../index";
 
-import reducers from "../../reducers";
-import { ReleasesReduxState } from "../../../../types/releaseTypes";
+import { store } from "../../store";
+import type { ReleasesReduxState } from "../../../../types/releaseTypes";
+import {
+  createMockPendingChanges,
+  createMockPendingReleaseItem,
+  createMockRelease,
+  createMockRevision
+} from "../../../../test-utils";
 
 function getInitialState() {
-  return reducers(undefined, {
-    type: "",
-  }) as unknown as ReleasesReduxState;
+  return store.getState();
 }
 
 describe("getFilteredReleaseHistory", () => {
   const initialState = getInitialState();
-  const stateWithRevisions = {
+  const stateWithRevisions: ReleasesReduxState = {
     ...initialState,
     revisions: {
-      1: { revision: 1, version: "1" },
-      2: { revision: 2, version: "2" },
-      3: { revision: 3, version: "3" },
+      1: createMockRevision({ revision: 1, version: "1" }),
+      2: createMockRevision({ revision: 2, version: "2" }),
+      3: createMockRevision({ revision: 3, version: "3" }),
     },
-  } as unknown as ReleasesReduxState;
+  };
 
   it("should return empty list for initial state", () => {
     expect(getFilteredReleaseHistory(initialState)).toEqual([]);
   });
 
   it("should return only releases of revisions (ignore closing channels)", () => {
-    const state = {
+    const state: ReleasesReduxState = {
       ...stateWithRevisions,
       releases: [
-        { risk: "test", revision: 1 },
-        { risk: "test" },
-        { risk: "test", revision: 2 },
+        createMockRelease({ risk: "test", revision: 1 }),
+        createMockRelease({ risk: "test" }),
+        createMockRelease({ risk: "test", revision: 2 }),
       ],
-    } as unknown as ReleasesReduxState;
+    };
 
     const filteredHistory = getFilteredReleaseHistory(state);
     expect(filteredHistory.every((r) => r.revision)).toBe(true);
   });
 
   it("should return only releases in given architecture", () => {
-    const state = {
+    const state: ReleasesReduxState = {
       ...stateWithRevisions,
       releases: [
-        { architecture: "test", revision: 1 },
-        { architecture: "test", revision: 2 },
-        { architecture: "abcd", revision: 2 },
-        { architecture: "test", revision: 3 },
+        createMockRelease({ architecture: "test", revision: 1 }),
+        createMockRelease({ architecture: "test", revision: 2 }),
+        createMockRelease({ architecture: "abcd", revision: 2 }),
+        createMockRelease({ architecture: "test", revision: 3 }),
       ],
       history: {
+        isOpen: true,
         filters: {
           arch: "test",
+          track: "",
+          risk: "",
         },
       },
-    } as unknown as ReleasesReduxState;
+    };
 
     const filteredHistory = getFilteredReleaseHistory(state);
     const isEveryReleaseInTestArch = filteredHistory.every(
@@ -92,20 +99,23 @@ describe("getFilteredReleaseHistory", () => {
   });
 
   it("should return only releases in given track", () => {
-    const state = {
+    const state: ReleasesReduxState = {
       ...stateWithRevisions,
       releases: [
-        { track: "test", revision: 1 },
-        { track: "test", revision: 2 },
-        { track: "abcd", revision: 2 },
-        { track: "test", revision: 3 },
+        createMockRelease({ track: "test", revision: 1 }),
+        createMockRelease({ track: "test", revision: 2 }),
+        createMockRelease({ track: "abcd", revision: 2 }),
+        createMockRelease({ track: "test", revision: 3 }),
       ],
       history: {
+        isOpen: true,
         filters: {
+          arch: "amd64",
           track: "test",
+          risk: "",
         },
       },
-    } as unknown as ReleasesReduxState;
+    };
 
     const filteredHistory = getFilteredReleaseHistory(state);
     const isEveryReleaseInTestTrack = filteredHistory.every(
@@ -115,20 +125,23 @@ describe("getFilteredReleaseHistory", () => {
   });
 
   it("should return only releases in given risk", () => {
-    const state = {
+    const state: ReleasesReduxState = {
       ...stateWithRevisions,
       releases: [
-        { risk: "test", revision: 1 },
-        { risk: "test", revision: 2 },
-        { risk: "abcd", revision: 2 },
-        { risk: "test", revision: 3 },
+        createMockRelease({ risk: "test", revision: 1 }),
+        createMockRelease({ risk: "test", revision: 2 }),
+        createMockRelease({ risk: "abcd", revision: 2 }),
+        createMockRelease({ risk: "test", revision: 3 }),
       ],
       history: {
+        isOpen: true,
         filters: {
+          arch: "amd64",
+          track: "latest",
           risk: "test",
         },
       },
-    } as unknown as ReleasesReduxState;
+    };
 
     const filteredHistory = getFilteredReleaseHistory(state);
     const isEveryReleaseInTestRisk = filteredHistory.every(
@@ -138,19 +151,23 @@ describe("getFilteredReleaseHistory", () => {
   });
 
   it("should return only releases in given branch", () => {
-    const state = {
+    const state: ReleasesReduxState = {
       ...stateWithRevisions,
       releases: [
-        { branch: "test", revision: 1 },
-        { revision: 1 },
-        { revision: 2 },
+        createMockRelease({ branch: "test", revision: 1 }),
+        createMockRelease({ revision: 1 }),
+        createMockRelease({ revision: 2 }),
       ],
       history: {
+        isOpen: true,
         filters: {
+          arch: "amd64",
+          track: "latest",
+          risk: "stable",
           branch: "test",
         },
       },
-    } as unknown as ReleasesReduxState;
+    };
 
     const filteredHistory = getFilteredReleaseHistory(state);
     const isEveryReleaseInTestBranch = filteredHistory.every(
@@ -160,15 +177,15 @@ describe("getFilteredReleaseHistory", () => {
   });
 
   it("should return only one latest release of every revision", () => {
-    const state = {
+    const state: ReleasesReduxState = {
       ...stateWithRevisions,
       releases: [
-        { revision: 1 },
-        { revision: 2 },
-        { revision: 1 },
-        { revision: 3 },
+        createMockRelease({ revision: 1 }),
+        createMockRelease({ revision: 2 }),
+        createMockRelease({ revision: 1 }),
+        createMockRelease({ revision: 3 }),
       ],
-    } as unknown as ReleasesReduxState;
+    };
 
     const filteredRevisions = getFilteredReleaseHistory(state).map(
       (r) => r.revision
@@ -184,15 +201,15 @@ describe("getFilteredReleaseHistory", () => {
 describe("getSelectedRevisions", () => {
   const initialState = getInitialState();
 
-  const stateWithSelectedRevisions = {
+  const stateWithSelectedRevisions: ReleasesReduxState = {
     ...initialState,
     channelMap: {
       [AVAILABLE]: {
-        abc42: { revision: 1, version: "1" },
-        test64: { revision: 2, version: "2" },
+        abc42: createMockRevision({ revision: 1, version: "1" }),
+        test64: createMockRevision({ revision: 2, version: "2" }),
       },
     },
-  } as unknown as ReleasesReduxState;
+  };
 
   it("should be empty for initial state", () => {
     expect(getSelectedRevisions(initialState)).toHaveLength(0);
@@ -206,15 +223,15 @@ describe("getSelectedRevisions", () => {
 describe("getSelectedRevision", () => {
   const initialState = getInitialState();
 
-  const stateWithSelectedRevisions = {
+  const stateWithSelectedRevisions: ReleasesReduxState = {
     ...initialState,
     channelMap: {
       [AVAILABLE]: {
-        abc42: { revision: 1, version: "1" },
-        test64: { revision: 2, version: "2" },
+        abc42: createMockRevision({ revision: 1, version: "1" }),
+        test64: createMockRevision({ revision: 2, version: "2" }),
       },
     },
-  } as unknown as ReleasesReduxState;
+  };
 
   it("should be empty for initial state", () => {
     expect(getSelectedRevision(initialState, "test64")).toBeUndefined();
@@ -230,15 +247,15 @@ describe("getSelectedRevision", () => {
 describe("getSelectedArchitectures", () => {
   const initialState = getInitialState();
 
-  const stateWithSelectedRevisions = {
+  const stateWithSelectedRevisions: ReleasesReduxState = {
     ...initialState,
     channelMap: {
       [AVAILABLE]: {
-        abc42: { revision: 1, version: "1" },
-        test64: { revision: 2, version: "2" },
+        abc42: createMockRevision({ architectures: ["abc42"], revision: 1, version: "1" }),
+        test64: createMockRevision({ architectures: ["test64"], revision: 2, version: "2" }),
       },
     },
-  } as unknown as ReleasesReduxState;
+  };
 
   it("should be empty for initial state", () => {
     expect(getSelectedArchitectures(initialState)).toHaveLength(0);
@@ -254,38 +271,43 @@ describe("getSelectedArchitectures", () => {
 
 describe("hasDevmodeRevisions", () => {
   const initialState = getInitialState();
-  const stateWithReleasedRevisions = {
+  const stateWithReleasedRevisions: ReleasesReduxState = {
     ...initialState,
     channelMap: {
       "test/edge": {
-        abc42: { revision: 1, version: "1" },
-        test64: { revision: 2, version: "2" },
-        armf: { revision: 3, version: "3" },
+        abc42: createMockRevision({ architectures: ["abc42"], revision: 1, version: "1" }),
+        test64: createMockRevision({ architectures: ["test64"], revision: 2, version: "2" }),
+        armhf: createMockRevision({ architectures: ["armhf"], revision: 3, version: "3" }),
       },
     },
-  } as unknown as ReleasesReduxState;
+  };
 
-  const stateWithConfinementDevmode = {
+  const stateWithConfinementDevmode: ReleasesReduxState = {
     ...initialState,
     channelMap: {
       "test/edge": {
-        abc42: { revision: 1, version: "1" },
-        test64: { revision: 2, version: "2", confinement: "devmode" },
-        armf: { revision: 3, version: "3" },
+        abc42: createMockRevision({ architectures: ["abc42"], revision: 1, version: "1" }),
+        test64: createMockRevision({
+          architectures: ["test64"],
+          revision: 2,
+          version: "2",
+          confinement: "devmode"
+        }),
+        armhf: createMockRevision({ architectures: ["armhf"], revision: 3, version: "3" }),
       },
     },
-  } as unknown as ReleasesReduxState;
+  };
 
-  const stateWithGradeDevel = {
+  const stateWithGradeDevel: ReleasesReduxState = {
     ...initialState,
     channelMap: {
       "test/edge": {
-        abc42: { revision: 1, version: "1" },
-        test64: { revision: 2, version: "2", grade: "devel" },
-        armf: { revision: 3, version: "3" },
+        abc42: createMockRevision({ revision: 1, version: "1" }),
+        test64: createMockRevision({ revision: 2, version: "2", grade: "devel" }),
+        armhf: createMockRevision({ revision: 3, version: "3" }),
       },
     },
-  } as unknown as ReleasesReduxState;
+  };
 
   it("should be false for initial empty state", () => {
     expect(hasDevmodeRevisions(initialState)).toBe(false);
@@ -305,15 +327,50 @@ describe("hasDevmodeRevisions", () => {
 });
 
 describe("getPendingChannelMap", () => {
-  describe("when there are no pending releases", () => {
-    const stateWithNoPendingReleases = {
-      channelMap: {
-        "test/edge": {
-          test64: { revision: 1 },
+  const initialState = getInitialState();
+  const stateWithPendingReleases: ReleasesReduxState = {
+    ...initialState,
+    channelMap: {
+      "test/edge": {
+        test64: createMockRevision({ revision: 1 }),
+      },
+    },
+    pendingChanges: {
+      changeOrderIndex: 1,
+      pendingReleases: {
+        0: {
+          revision: 2,
+          channels: {
+            "latest/stable": {
+              revision: createMockRevision({ revision: 2, architectures: ["test64"] }),
+              channel: "latest/stable",
+              previousReleases: [],
+              progressive: {
+                "current-percentage": null,
+                percentage: null,
+              }
+            },
+          },
         },
       },
-      pendingReleases: {},
-    } as unknown as ReleasesReduxState;
+      pendingCloses: {},
+    },
+  };
+
+  describe("when there are no pending releases", () => {
+    const stateWithNoPendingReleases: ReleasesReduxState = {
+      ...initialState,
+      channelMap: {
+        "test/edge": {
+          test64: createMockRevision({ revision: 1 }),
+        },
+      },
+      pendingChanges: {
+        changeOrderIndex: 0,
+        pendingReleases: {},
+        pendingCloses: {},
+      },
+    };
 
     it("should return channel map as it is", () => {
       expect(getPendingChannelMap(stateWithNoPendingReleases)).toEqual(
@@ -323,28 +380,15 @@ describe("getPendingChannelMap", () => {
   });
 
   describe("when there are pending releases to other channels", () => {
-    const stateWithPendingReleases = {
-      channelMap: {
-        "test/edge": {
-          test64: { revision: 1 },
-        },
-      },
-      pendingReleases: {
-        2: {
-          "latest/stable": {
-            revision: { revision: 2, architectures: ["test64"] },
-            channel: "latest/stable",
-          },
-        },
-      },
-    } as unknown as ReleasesReduxState;
-
     it("should return channel map with pending revisions added", () => {
       expect(getPendingChannelMap(stateWithPendingReleases)).toEqual({
         ...stateWithPendingReleases.channelMap,
         "latest/stable": {
           test64: {
-            ...stateWithPendingReleases.pendingReleases["2"]["latest/stable"]
+            ...stateWithPendingReleases
+              .pendingChanges
+              .pendingReleases["0"]
+              .channels["latest/stable"]
               .revision,
           },
         },
@@ -353,28 +397,15 @@ describe("getPendingChannelMap", () => {
   });
 
   describe("when there are pending releases overriding existing releases", () => {
-    const stateWithPendingReleases = {
-      channelMap: {
-        "test/edge": {
-          test64: { revision: 1 },
-        },
-      },
-      pendingReleases: {
-        2: {
-          "test/edge": {
-            revision: { revision: 2, architectures: ["test64"] },
-            channel: "test/edge",
-          },
-        },
-      },
-    } as unknown as ReleasesReduxState;
-
     it("should return channel map with pending revisions", () => {
       expect(getPendingChannelMap(stateWithPendingReleases)).toEqual({
         ...stateWithPendingReleases.channelMap,
         "test/edge": {
           test64: {
-            ...stateWithPendingReleases.pendingReleases["2"]["test/edge"]
+            ...stateWithPendingReleases
+              .pendingChanges
+              .pendingReleases["0"]
+              .channels["test/edge"]
               .revision,
           },
         },
@@ -392,31 +423,35 @@ describe("getFilteredAvailableRevisions", () => {
   const moreThenWeekAgo = new Date();
   moreThenWeekAgo.setDate(moreThenWeekAgo.getDate() - 8);
 
-  const stateWithRevisions = {
+  const stateWithRevisions: ReleasesReduxState = {
     ...initialState,
     revisions: {
-      1: { revision: 1, version: "1", created_at: dayAgo },
-      2: {
+      1: createMockRevision({
+        revision: 1,
+        version: "1",
+        created_at: dayAgo.toISOString()
+      }),
+      2: createMockRevision({
         revision: 2,
         version: "2",
         channels: [],
-        created_at: moreThenWeekAgo,
-      },
-      3: {
+        created_at: moreThenWeekAgo.toISOString(),
+      }),
+      3: createMockRevision({
         revision: 3,
         version: "3",
         channels: ["test/edge"],
-        created_at: dayAgo,
-      },
-      4: {
+        created_at: dayAgo.toISOString(),
+      }),
+      4: createMockRevision({
         revision: 4,
         version: "4",
         channels: ["test/edge"],
-        created_at: moreThenWeekAgo,
+        created_at: moreThenWeekAgo.toISOString(),
         attributes: { "build-request-id": "lp-1234" },
-      },
+      }),
     },
-  } as unknown as ReleasesReduxState;
+  };
 
   describe("when there are no revisions", () => {
     it("should return empty list", () => {
@@ -426,10 +461,10 @@ describe("getFilteredAvailableRevisions", () => {
 
   describe("when there are some revisions in state", () => {
     describe("when 'All' is selected in available revisions select", () => {
-      const stateWithAllSelected = {
+      const stateWithAllSelected: ReleasesReduxState = {
         ...stateWithRevisions,
         availableRevisionsSelect: AVAILABLE_REVISIONS_SELECT_ALL,
-      } as unknown as ReleasesReduxState;
+      };
 
       it("should return all revisions by default", () => {
         expect(getFilteredAvailableRevisions(stateWithAllSelected)).toEqual([
@@ -442,10 +477,10 @@ describe("getFilteredAvailableRevisions", () => {
     });
 
     describe("when 'Unreleased' are selected in available revisions select", () => {
-      const stateWithUnreleasedSelected = {
+      const stateWithUnreleasedSelected: ReleasesReduxState = {
         ...stateWithRevisions,
         availableRevisionsSelect: AVAILABLE_REVISIONS_SELECT_UNRELEASED,
-      } as unknown as ReleasesReduxState;
+      };
 
       it("should return only unreleased revisions", () => {
         expect(
@@ -458,10 +493,10 @@ describe("getFilteredAvailableRevisions", () => {
     });
 
     describe("when 'Recent' are selected in available revisions select", () => {
-      const stateWithRecentSelected = {
+      const stateWithRecentSelected: ReleasesReduxState = {
         ...stateWithRevisions,
         availableRevisionsSelect: AVAILABLE_REVISIONS_SELECT_RECENT,
-      } as unknown as ReleasesReduxState;
+      };
 
       it("should return unreleased revisions not older then a week", () => {
         expect(getFilteredAvailableRevisions(stateWithRecentSelected)).toEqual([
@@ -471,10 +506,10 @@ describe("getFilteredAvailableRevisions", () => {
     });
 
     describe("when 'Lauchpad' is selected in available revisions select", () => {
-      const stateWithLaunchpadSelected = {
+      const stateWithLaunchpadSelected: ReleasesReduxState = {
         ...stateWithRevisions,
         availableRevisionsSelect: AVAILABLE_REVISIONS_SELECT_LAUNCHPAD,
-      } as unknown as ReleasesReduxState;
+      };
 
       it("should return unreleased revisions not older then a week", () => {
         expect(
@@ -488,19 +523,19 @@ describe("getFilteredAvailableRevisions", () => {
 describe("getFilteredAvailableRevisionsByArch", () => {
   const arch = "test64";
   const initialState = getInitialState();
-  const stateWithRevisions = {
+  const stateWithRevisions: ReleasesReduxState = {
     ...initialState,
     revisions: {
-      1: { revision: 1, architectures: [arch], version: "1" },
-      2: { revision: 2, architectures: ["amd42"], version: "2", channels: [] },
-      3: {
+      1: createMockRevision({ revision: 1, architectures: [arch], version: "1" }),
+      2: createMockRevision({ revision: 2, architectures: ["amd42"], version: "2", channels: [] }),
+      3: createMockRevision({
         revision: 3,
         architectures: [arch, "amd42"],
         version: "3",
         channels: ["test/edge"],
-      },
+      }),
     },
-  } as unknown as ReleasesReduxState;
+  };
 
   describe("when there are no revisions", () => {
     it("should return empty list", () => {
@@ -511,10 +546,10 @@ describe("getFilteredAvailableRevisionsByArch", () => {
   });
 
   describe("when there are some revisions in state", () => {
-    const stateWithAllSelected = {
+    const stateWithAllSelected: ReleasesReduxState = {
       ...stateWithRevisions,
       availableRevisionsSelect: AVAILABLE_REVISIONS_SELECT_ALL,
-    } as unknown as ReleasesReduxState;
+    };
 
     it("should return selected revisions by for given architecture", () => {
       expect(
@@ -529,10 +564,10 @@ describe("getFilteredAvailableRevisionsByArch", () => {
 
 describe("getArchitectures", () => {
   const initialState = getInitialState();
-  const stateWithArchitectures = {
+  const stateWithArchitectures: ReleasesReduxState = {
     ...initialState,
     architectures: ["test64", "amd42", "abc64"],
-  } as unknown as ReleasesReduxState;
+  };
 
   it("should return alphabetical list of all architectures", () => {
     expect(getArchitectures(stateWithArchitectures)).toEqual([
@@ -545,17 +580,38 @@ describe("getArchitectures", () => {
 
 describe("getTracks", () => {
   const initialState = getInitialState();
-  const stateWithReleases = {
+  const stateWithReleases: ReleasesReduxState = {
     ...initialState,
     options: {
+      ...initialState.options,
       tracks: [
-        { name: "latest" },
-        { name: "test" },
-        { name: "latest" },
-        { name: "12" },
+        {
+          name: "latest",
+          status: "default",
+          "creation-date": null,
+          "version-pattern": null,
+        },
+        {
+          name: "test",
+          status: "active",
+          "creation-date": null,
+          "version-pattern": null,
+        },
+        {
+          name: "latest",
+          status: "active",
+          "creation-date": null,
+          "version-pattern": null,
+        },
+        {
+          name: "12",
+          status: "active",
+          "creation-date": null,
+          "version-pattern": null,
+        },
       ],
     },
-  } as unknown as ReleasesReduxState;
+  };
 
   it("should return list of all tracks", () => {
     expect(getTracks(stateWithReleases)).toEqual(["latest", "test", "12"]);
@@ -563,15 +619,22 @@ describe("getTracks", () => {
 });
 
 describe("hasPendingRelease", () => {
+  const initialState = getInitialState();
+
   describe("when there are no pending releases", () => {
-    const stateWithNoPendingReleases = {
+    const stateWithNoPendingReleases: ReleasesReduxState = {
+      ...initialState,
       channelMap: {
         "test/edge": {
-          test64: { revision: 1 },
+          test64: createMockRevision({ revision: 1 }),
         },
       },
-      pendingReleases: {},
-    } as unknown as ReleasesReduxState;
+      pendingChanges: {
+        changeOrderIndex: 0,
+        pendingReleases: {},
+        pendingCloses: {},
+      },
+    };
 
     it("should return false", () => {
       expect(
@@ -581,21 +644,24 @@ describe("hasPendingRelease", () => {
   });
 
   describe("when there are pending releases to other channels", () => {
-    const stateWithPendingReleases = {
+    const stateWithPendingReleases: ReleasesReduxState = {
+      ...initialState,
       channelMap: {
         "test/edge": {
-          test64: { revision: 1 },
+          test64: createMockRevision({ revision: 1 }),
         },
       },
-      pendingReleases: {
-        2: {
-          "latest/stable": {
-            revision: { revision: 2, architectures: ["test64"] },
-            channel: "latest/stable",
+      pendingChanges: createMockPendingChanges(
+        [{
+          revision: 2,
+          channel: "latest/stable",
+          pendingReleaseItem: {
+            revision: createMockRevision({ revision: 2, architectures: ["test64"] }),
           },
-        },
-      },
-    } as unknown as ReleasesReduxState;
+        }],
+        [],
+      ),
+    };
 
     it("should return false for channel/arch without pending release", () => {
       expect(
@@ -611,21 +677,24 @@ describe("hasPendingRelease", () => {
   });
 
   describe("when there are pending releases overriding existing releases", () => {
-    const stateWithPendingReleases = {
+    const stateWithPendingReleases: ReleasesReduxState = {
+      ...initialState,
       channelMap: {
         "test/edge": {
-          test64: { revision: 1 },
+          test64: createMockRevision({ revision: 1 }),
         },
       },
-      pendingReleases: {
-        2: {
-          "test/edge": {
-            revision: { revision: 2, architectures: ["test64"] },
-            channel: "test/edge",
+      pendingChanges: createMockPendingChanges(
+        [{
+          revision: 2,
+          channel: "test/edge",
+          pendingReleaseItem: {
+            revision: createMockRevision({ revision: 2, architectures: ["test64"] }),
           },
-        },
-      },
-    } as unknown as ReleasesReduxState;
+        }],
+        [],
+      ),
+    };
 
     it("should return true for channel/arch with pending release", () => {
       expect(
@@ -636,21 +705,26 @@ describe("hasPendingRelease", () => {
 });
 
 describe("getTrackRevisions", () => {
+  const initialState = getInitialState();
+
   it("should return revisions in a given track", () => {
-    const channelMap = {
-      "test/edge": {
-        test64: { revision: 1 },
-      },
-      stable: {
-        test64: { revision: 1 },
-      },
-      "test/stable": {
-        test64: { revision: 2 },
-      },
+    const state: ReleasesReduxState = {
+      ...initialState,
+      channelMap: {
+        "test/edge": {
+          test64: createMockRevision({ revision: 1 }),
+        },
+        stable: {
+          test64: createMockRevision({ revision: 1 }),
+        },
+        "test/stable": {
+          test64: createMockRevision({ revision: 2 }),
+        },
+      }
     };
 
     expect(
-      getTrackRevisions({ channelMap } as unknown as ReleasesReduxState, "test")
+      getTrackRevisions(state, "test")
     ).toEqual([
       {
         test64: {
@@ -667,6 +741,8 @@ describe("getTrackRevisions", () => {
 });
 
 describe("getBranches", () => {
+  const initialState = getInitialState();
+
   it("should return branches on the currentTrack, ordered by oldest first", () => {
     const today = new Date();
     const expired = new Date(
@@ -676,43 +752,44 @@ describe("getBranches", () => {
       new Date().setDate(today.getDate() + 24)
     ).toISOString();
 
-    const state = {
+    const state: ReleasesReduxState = {
+      ...initialState,
       currentTrack: "latest",
       releases: [
-        {
+        createMockRelease({
           branch: null,
           track: "latest",
           risk: "stable",
-          revision: "1",
+          revision: 1,
           when: today.toISOString(),
           "expiration-date": notExpired,
-        },
-        {
+        }),
+        createMockRelease({
           branch: "test",
           track: "latest",
           risk: "stable",
-          revision: "2",
+          revision: 2,
           when: today.toISOString(),
           "expiration-date": notExpired,
-        },
-        {
+        }),
+        createMockRelease({
           branch: "test2",
           track: "latest",
           risk: "stable",
-          revision: "3",
+          revision: 3,
           when: today.toISOString(),
           "expiration-date": notExpired,
-        },
-        {
+        }),
+        createMockRelease({
           branch: "test",
           track: "test",
           risk: "stable",
-          revision: "4",
+          revision: 4,
           when: today.toISOString(),
           "expiration-date": expired,
-        },
+        }),
       ],
-    } as unknown as ReleasesReduxState;
+    };
 
     expect(getBranches(state)).toEqual([
       {
@@ -737,25 +814,26 @@ describe("getBranches", () => {
 
 describe("hasBuildRequestId", () => {
   const initialState = getInitialState();
-  const stateWithoutBuildRequestId = {
+  const stateWithoutBuildRequestId: ReleasesReduxState = {
     ...initialState,
     revisions: {
-      1: { revision: 1, version: "1" },
-      2: { revision: 2, version: "2" },
-      3: { revision: 3, version: "3" },
+      1: createMockRevision({ revision: 1, version: "1" }),
+      2: createMockRevision({ revision: 2, version: "2" }),
+      3: createMockRevision({ revision: 3, version: "3" }),
     },
-  } as unknown as ReleasesReduxState;
-  const stateWithBuildRequestId = {
+  };
+  const stateWithBuildRequestId: ReleasesReduxState = {
     ...stateWithoutBuildRequestId,
     revisions: {
       ...stateWithoutBuildRequestId.revisions,
-      4: {
+      4: createMockRevision({
         revision: 4,
         version: "4",
         attributes: { "build-request-id": "test-1234" },
-      },
+      }),
     },
-  } as unknown as ReleasesReduxState;
+  };
+
   it("should return false if none of the revisions have build-request-id attribute", () => {
     expect(hasBuildRequestId(stateWithoutBuildRequestId)).toBe(false);
   });
@@ -767,23 +845,23 @@ describe("hasBuildRequestId", () => {
 
 describe("getLaunchpadRevisions", () => {
   const initialState = getInitialState();
-  const stateWithLauchpadBuilds = {
+  const stateWithLauchpadBuilds: ReleasesReduxState = {
     ...initialState,
     revisions: {
-      1: { revision: 1, version: "1" },
-      2: { revision: 2, version: "2" },
-      3: {
+      1: createMockRevision({ revision: 1, version: "1" }),
+      2: createMockRevision({ revision: 2, version: "2" }),
+      3: createMockRevision({
         revision: 3,
         version: "3",
         attributes: { "build-request-id": "lp-1234" },
-      },
-      4: {
+      }),
+      4: createMockRevision({
         revision: 4,
         version: "4",
         attributes: { "build-request-id": "lp-1234" },
-      },
+      }),
     },
-  } as unknown as ReleasesReduxState;
+  };
 
   it("should return only revisions with Lauchpad builds", () => {
     expect(getLaunchpadRevisions(stateWithLauchpadBuilds).length).toEqual(2);
@@ -804,28 +882,28 @@ describe("getLaunchpadRevisions", () => {
 
 describe("getRevisionsFromBuild", () => {
   const initialState = getInitialState();
-  const stateWithLauchpadBuilds = {
+  const stateWithLauchpadBuilds: ReleasesReduxState = {
     ...initialState,
     revisions: {
-      1: { revision: 1, version: "1" },
-      2: { revision: 2, version: "2" },
-      3: {
+      1: createMockRevision({ revision: 1, version: "1" }),
+      2: createMockRevision({ revision: 2, version: "2" }),
+      3: createMockRevision({
         revision: 3,
         version: "3",
         attributes: { "build-request-id": "lp-1234" },
-      },
-      4: {
+      }),
+      4: createMockRevision({
         revision: 4,
         version: "4",
         attributes: { "build-request-id": "lp-1234" },
-      },
-      5: {
+      }),
+      5: createMockRevision({
         revision: 5,
         version: "5",
         attributes: { "build-request-id": "lp-5432" },
-      },
+      }),
     },
-  } as unknown as ReleasesReduxState;
+  };
 
   it("should return only revisions with given build id", () => {
     const revisions = getRevisionsFromBuild(stateWithLauchpadBuilds, "lp-1234");
@@ -840,7 +918,7 @@ describe("getRevisionsFromBuild", () => {
 
 describe("getProgressiveState", () => {
   const initialState = getInitialState();
-  const stateWithProgressiveEnabled = {
+  const stateWithProgressiveEnabled: ReleasesReduxState = {
     ...initialState,
     options: {
       ...initialState.options,
@@ -849,50 +927,37 @@ describe("getProgressiveState", () => {
       },
     },
     releases: [
-      {
+      createMockRelease({
         architecture: "arch1",
-        branch: null,
         track: "latest",
         risk: "stable",
-        revision: "1",
+        revision: 1,
         isProgressive: false,
-        progressive: null,
-      },
-      {
+      }),
+      createMockRelease({
+        architecture: "arch2",
+        track: "latest",
+        risk: "stable",
+        revision: 3,
+        isProgressive: true,
+      }),
+      createMockRelease({
         architecture: "arch2",
         branch: null,
         track: "latest",
         risk: "stable",
-        revision: "3",
+        revision: 2,
         isProgressive: true,
-        progressive: {
-          key: "test",
-          percentage: 60,
-          paused: false,
-        },
-      },
-      {
-        architecture: "arch2",
-        branch: null,
-        track: "latest",
-        risk: "stable",
-        revision: "2",
-        isProgressive: true,
-        progressive: {
-          key: "test",
-          percentage: 50,
-          paused: false,
-        },
-      },
+      }),
     ],
     revisions: {
-      3: "revision3",
-      2: "revision2",
-      1: "revision1",
+      3: createMockRevision({ revision: 3 }),
+      2: createMockRevision({ revision: 2 }),
+      1: createMockRevision({ revision: 1 }),
     },
-  } as unknown as ReleasesReduxState;
+  };
 
-  const stateWithProgressiveDisabled = {
+  const stateWithProgressiveDisabled: ReleasesReduxState = {
     ...stateWithProgressiveEnabled,
     options: {
       ...initialState.options,
@@ -900,25 +965,31 @@ describe("getProgressiveState", () => {
         isProgressiveReleaseEnabled: false,
       },
     },
-  } as unknown as ReleasesReduxState;
+  };
 
-  const stateWithProgressiveEnabledAndPendingRelease = {
+  const stateWithProgressiveEnabledAndPendingRelease: ReleasesReduxState = {
     ...stateWithProgressiveEnabled,
-    pendingReleases: {
-      3: {
-        "latest/stable": {
-          revision: { revision: "3", architectures: ["arch2"] },
-          channel: "latest/stable",
-          isProgressive: true,
+    pendingChanges: createMockPendingChanges(
+      [{
+        revision: 3,
+        channel: "latest/stable",
+        pendingReleaseItem: {
+          revision: createMockRevision({ revision: 3, architectures: ["arch2"] }),
           progressive: {
-            key: "progressive-test",
-            percentage: 40,
-            paused: false,
+            "current-percentage": null,
+            percentage: null,
+            changes: [
+              {
+                key: "current-percentage",
+                value: 40,
+              }
+            ],
           },
-        },
-      },
-    },
-  } as unknown as ReleasesReduxState;
+        }
+      }],
+      [],
+    ),
+  };
 
   it("should return the progressive release state of a channel and arch", () => {
     expect(
@@ -941,7 +1012,7 @@ describe("getProgressiveState", () => {
       )
     ).toEqual([
       "revision2",
-      { key: "progressive-test", paused: false, percentage: 40 },
+      { key: "current-percentage", value: 40 },
     ]);
   });
 
@@ -959,7 +1030,7 @@ describe("getProgressiveState", () => {
 
 describe("isProgressiveReleaseEnabled", () => {
   const initialState = getInitialState();
-  const stateWithProgressiveEnabled = {
+  const stateWithProgressiveEnabled: ReleasesReduxState = {
     ...initialState,
     options: {
       ...initialState.options,
@@ -967,9 +1038,9 @@ describe("isProgressiveReleaseEnabled", () => {
         isProgressiveReleaseEnabled: true,
       },
     },
-  } as unknown as ReleasesReduxState;
+  };
 
-  const stateWithProgressiveDisabled = {
+  const stateWithProgressiveDisabled: ReleasesReduxState = {
     ...initialState,
     options: {
       ...initialState.options,
@@ -977,7 +1048,7 @@ describe("isProgressiveReleaseEnabled", () => {
         isProgressiveReleaseEnabled: false,
       },
     },
-  } as unknown as ReleasesReduxState;
+  };
 
   it("should be true with isProgressiveReleaseEnabled flag turned on", () => {
     expect(isProgressiveReleaseEnabled(stateWithProgressiveEnabled)).toBe(true);
@@ -992,37 +1063,45 @@ describe("isProgressiveReleaseEnabled", () => {
 
 describe("hasRelease", () => {
   const initialState = getInitialState();
-  const stateWithARelease = {
+  const stateWithARelease: ReleasesReduxState = {
     ...initialState,
     releases: [
-      { architecture: "arm64", risk: "beta", track: "latest", revision: 1 },
+      createMockRelease(
+        { architecture: "arm64", risk: "beta", track: "latest", revision: 1 },
+      ),
     ],
-  } as unknown as ReleasesReduxState;
-  const stateWithAClose = {
+  };
+  const stateWithAClose: ReleasesReduxState = {
     ...initialState,
     releases: [
-      { architecture: "arm64", risk: "beta", track: "latest", revision: null },
+      createMockRelease(
+        { architecture: "arm64", risk: "beta", track: "latest", revision: null },
+      ),
     ],
-  } as unknown as ReleasesReduxState;
-  const stateWithMultipleArchAndChannels = {
+  };
+  const stateWithMultipleArchAndChannels: ReleasesReduxState = {
     ...initialState,
     releases: [
-      { architecture: "amd64", risk: "stable", track: "latest", revision: 1 },
-      {
+      createMockRelease(
+        { architecture: "amd64", risk: "stable", track: "latest", revision: 1 },
+      ),
+      createMockRelease({
         architecture: "arm64",
         risk: "candidate",
         track: "latest",
         revision: 2,
-      },
-      {
+      }),
+      createMockRelease({
         architecture: "arm64",
         risk: "stable",
         track: "latest",
         revision: null,
-      },
-      { architecture: "arm64", risk: "beta", track: "latest", revision: 3 },
+      }),
+      createMockRelease(
+        { architecture: "arm64", risk: "beta", track: "latest", revision: 3 },
+      ),
     ],
-  } as unknown as ReleasesReduxState;
+  };
 
   it("should return false if there are no releases", () => {
     expect(hasRelease(initialState, "latest/beta", "arm64")).toBe(false);
@@ -1046,25 +1125,27 @@ describe("hasRelease", () => {
     const initialState = getInitialState();
 
     describe("with progressive releases disabled", () => {
-      const stateWithPendingReleaseToProgress = {
+      const stateWithPendingReleaseToProgress: ReleasesReduxState = {
         ...initialState,
-        pendingReleases: {
-          1: {
-            "latest/stable": {
-              revision: { revision: 1, architectures: ["amd64"] },
-              channel: "latest/stable",
-            },
-          },
-        },
+        pendingChanges: createMockPendingChanges(
+          [{
+            revision: 1,
+            channel: "latest/stable",
+            pendingReleaseItem: {
+              revision: createMockRevision({ revision: 1, architectures: ["amd64"] }),
+            }
+          }],
+          [],
+        ),
         releases: [
-          {
+          createMockRelease({
             architecture: "amd64",
             track: "latest",
             risk: "stable",
-            revision: { revision: 2, architectures: ["amd64"] },
-          },
+            revision: 2,
+          }),
         ],
-      } as unknown as ReleasesReduxState;
+      };
 
       it("should return new releases and ignore releases to progress", () => {
         expect(
@@ -1072,19 +1153,19 @@ describe("hasRelease", () => {
         ).toEqual({
           newReleases: {
             "1-latest/stable":
-              stateWithPendingReleaseToProgress.pendingReleases["1"][
-                "latest/stable"
-              ],
+              stateWithPendingReleaseToProgress
+                .pendingChanges
+                .pendingReleases["0"]
+                .channels["latest/stable"],
           },
           newReleasesToProgress: {},
-          progressiveUpdates: {},
           cancelProgressive: {},
         });
       });
     });
 
     describe("with progressive releases enabled", () => {
-      const stateWithFlagEnabled = {
+      const stateWithFlagEnabled: ReleasesReduxState = {
         ...initialState,
         options: {
           ...initialState.options,
@@ -1092,105 +1173,83 @@ describe("hasRelease", () => {
             isProgressiveReleaseEnabled: true,
           },
         },
-      } as unknown as ReleasesReduxState;
+      };
 
-      const stateWithPendingRelease = {
+      const stateWithPendingRelease: ReleasesReduxState = {
         ...stateWithFlagEnabled,
-        pendingReleases: {
-          1: {
-            "latest/stable": {
-              revision: { revision: 1, architectures: ["amd64"] },
-              channel: "latest/stable",
+        pendingChanges: createMockPendingChanges(
+          [{
+            revision: 1,
+            channel: "latest/stable",
+            pendingReleaseItem: {
+              revision: createMockRevision({ revision: 1, architectures: ["amd64"] }),
             },
-          },
-        },
-      } as unknown as ReleasesReduxState;
+          }],
+          [],
+        ),
+      };
 
-      const stateWithPendingReleaseToProgress = {
+      const stateWithPendingReleaseToProgress: ReleasesReduxState = {
         ...stateWithFlagEnabled,
-        pendingReleases: {
-          1: {
-            "latest/stable": {
-              revision: { revision: 1, architectures: ["amd64"] },
-              channel: "latest/stable",
+        pendingChanges: createMockPendingChanges(
+          [{
+            revision: 1,
+            channel: "latest/stable",
+            pendingReleaseItem: {
+              revision: createMockRevision({ revision: 1, architectures: ["amd64"] }),
               progressive: {
-                key: "progressive-test",
-                percentage: 100,
-                paused: false,
+                "current-percentage": null,
+                percentage: null,
+                changes: [{
+                  key: "percentage",
+                  value: 100,
+                }]
               },
-              previousReleases: [{ revision: 2 }],
-            },
-          },
-        },
+              previousReleases: [
+                createMockRevision({ revision: 2 }),
+              ],
+            }
+          }],
+          [],
+        ),
         releases: [
-          {
+          createMockRelease({
             architecture: "amd64",
             track: "latest",
             risk: "stable",
-            revision: { revision: 2, architectures: ["amd64"] },
-          },
+            revision: 2,
+          }),
         ],
-      } as unknown as ReleasesReduxState;
+      };
 
-      const stateWithPendingReleaseToUpdate = {
+      const stateWithPendingReleaseToCancel: ReleasesReduxState = {
         ...stateWithFlagEnabled,
-        pendingReleases: {
-          1: {
-            "latest/stable": {
-              revision: {
-                revision: 1,
-                architectures: ["amd64"],
-                release: {
-                  progressive: {
-                    key: "progressive-test",
-                    percentage: 20,
-                    paused: false,
-                  },
-                },
-              },
-              channel: "latest/stable",
-              progressive: {
-                key: "progressive-test",
-                percentage: 40,
-                paused: false,
-              },
-              previousReleases: [
-                {
-                  revision: 2,
-                },
-              ],
-            },
-          },
-        },
-      } as unknown as ReleasesReduxState;
-
-      const stateWithPendingReleaseToCancel = {
-        ...stateWithFlagEnabled,
-        pendingReleases: {
-          2: {
-            "latest/stable": {
-              revision: {
+        pendingChanges: createMockPendingChanges(
+          [{
+            revision: 2,
+            channel: "latest/stable",
+            pendingReleaseItem: {
+              revision: createMockRevision({
                 revision: 2,
                 architectures: ["amd64"],
-              },
-              channel: "latest/stable",
-              replaces: {
+              }),
+              replaces: createMockPendingReleaseItem({
                 revision: {
                   architectures: ["amd64"],
                   revision: 1,
                 },
                 channel: "latest/stable",
-              },
+              }),
             },
-          },
-        },
-      } as unknown as ReleasesReduxState;
+          }],
+          [],
+        ),
+      };
 
       it("should return nothing if there are no pending releases", () => {
         expect(getSeparatePendingReleases(initialState)).toEqual({
           newReleases: {},
           newReleasesToProgress: {},
-          progressiveUpdates: {},
           cancelProgressive: {},
         });
       });
@@ -1199,10 +1258,12 @@ describe("hasRelease", () => {
         expect(getSeparatePendingReleases(stateWithPendingRelease)).toEqual({
           newReleases: {
             "1-latest/stable":
-              stateWithPendingRelease.pendingReleases["1"]["latest/stable"],
+              stateWithPendingRelease
+                .pendingChanges
+                .pendingReleases["0"]
+                .channels["latest/stable"],
           },
           newReleasesToProgress: {},
-          progressiveUpdates: {},
           cancelProgressive: {},
         });
       });
@@ -1214,33 +1275,10 @@ describe("hasRelease", () => {
           newReleases: {},
           newReleasesToProgress: {
             "1-latest/stable":
-              stateWithPendingReleaseToProgress.pendingReleases["1"][
-                "latest/stable"
-              ],
-          },
-          progressiveUpdates: {},
-          cancelProgressive: {},
-        });
-      });
-
-      it("should return a pending release to update", () => {
-        expect(
-          getSeparatePendingReleases(stateWithPendingReleaseToUpdate)
-        ).toEqual({
-          newReleases: {},
-          newReleasesToProgress: {},
-          progressiveUpdates: {
-            "1-latest/stable": {
-              ...stateWithPendingReleaseToUpdate.pendingReleases["1"][
-                "latest/stable"
-              ],
-              progressive: {
-                changes: [{ key: "percentage", value: 40 }],
-                key: "progressive-test",
-                paused: false,
-                percentage: 40,
-              },
-            },
+              stateWithPendingReleaseToProgress
+                .pendingChanges
+                .pendingReleases["0"]
+                .channels["latest/stable"],
           },
           cancelProgressive: {},
         });
@@ -1252,7 +1290,6 @@ describe("hasRelease", () => {
         ).toEqual({
           newReleases: {},
           newReleasesToProgress: {},
-          progressiveUpdates: {},
           cancelProgressive: {
             "1-latest/stable": {
               channel: "latest/stable",
@@ -1270,33 +1307,40 @@ describe("hasRelease", () => {
 
 describe("getPendingRelease", () => {
   const initialState = getInitialState();
-  const state = {
+  const state: ReleasesReduxState = {
     ...initialState,
-    pendingReleases: {
-      1: {
-        "latest/stable": {
+    pendingChanges: createMockPendingChanges(
+      [
+        {
+          revision: 1,
           channel: "latest/stable",
-          revision: {
-            revision: 1,
-            architectures: ["amd64"],
+          pendingReleaseItem: {
+            revision: {
+              revision: 1,
+              architectures: ["amd64"],
+            },
           },
         },
-        "latest/candidate": {
+        {
+          revision: 1,
           channel: "latest/candidate",
-          revision: {
-            revision: 1,
-            architectures: ["amd64"],
+          pendingReleaseItem: {
+            revision: {
+              revision: 1,
+              architectures: ["amd64"],
+            },
           },
-        },
-      },
-    },
-  } as unknown as ReleasesReduxState;
+        }
+      ],
+      [],
+    ),
+  };
 
   it("should return the correct release", () => {
     const result = getPendingRelease(state, "latest/stable", "amd64");
 
     expect(result).toEqual({
-      ...state.pendingReleases["1"]["latest/stable"],
+      ...state.pendingChanges.pendingReleases["0"].channels["latest/stable"],
     });
   });
 
@@ -1308,11 +1352,14 @@ describe("getPendingRelease", () => {
 });
 
 describe("getReleases", () => {
+  const initialState = getInitialState();
+
   it("should return nothing if there are no releases", () => {
     const result = getReleases(
       {
+        ...initialState,
         releases: [],
-      } as unknown as ReleasesReduxState,
+      } as ReleasesReduxState,
       "amd64",
       "latest/stable"
     );
@@ -1322,19 +1369,20 @@ describe("getReleases", () => {
 
   it("should return any release that matches", () => {
     const releases = [
-      {
+      createMockRelease({
         architecture: "amd64",
         channel: "latest/stable",
-      },
-      {
+      }),
+      createMockRelease({
         architecture: "arm64",
         channel: "latest/stable",
-      },
+      }),
     ];
     const result = getReleases(
       {
+        ...initialState,
         releases,
-      } as unknown as ReleasesReduxState,
+      } as ReleasesReduxState,
       ["amd64"],
       "latest/stable"
     );

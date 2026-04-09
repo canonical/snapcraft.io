@@ -9,7 +9,6 @@ export const mockReleasesData: Release[] = [
     isProgressive: false,
     progressive: {
       "current-percentage": null,
-      paused: null,
       percentage: null,
     },
     revision: 61,
@@ -25,7 +24,6 @@ export const mockReleasesData: Release[] = [
     isProgressive: false,
     progressive: {
       "current-percentage": null,
-      paused: null,
       percentage: null,
     },
     revision: 58,
@@ -41,7 +39,6 @@ export const mockReleasesData: Release[] = [
     isProgressive: true,
     progressive: {
       "current-percentage": null,
-      paused: null,
       percentage: 10,
     },
     revision: 54,

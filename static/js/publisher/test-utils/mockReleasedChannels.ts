@@ -23,7 +23,6 @@ export const mockReleasedChannels: ChannelArchitectureRevisionsMap = {
       expiration: null,
       progressive: {
         "current-percentage": 100,
-        paused: null,
         percentage: null,
       },
       channels: ["latest/candidate", "latest/beta", "latest/stable"],
@@ -49,7 +48,6 @@ export const mockReleasedChannels: ChannelArchitectureRevisionsMap = {
       expiration: null,
       progressive: {
         "current-percentage": 0,
-        paused: null,
         percentage: null,
       },
       channels: ["latest/beta", "latest/stable", "latest/candidate"],
@@ -79,7 +77,6 @@ export const mockReleasedChannels: ChannelArchitectureRevisionsMap = {
       expiration: null,
       progressive: {
         "current-percentage": 0,
-        paused: null,
         percentage: null,
       },
       channels: ["latest/edge", "latest/candidate", "latest/stable"],
@@ -107,7 +104,6 @@ export const mockReleasedChannels: ChannelArchitectureRevisionsMap = {
       expiration: null,
       progressive: {
         "current-percentage": null,
-        paused: null,
         percentage: null,
       },
       channels: ["latest/edge"],
@@ -137,7 +133,6 @@ export const mockReleasedChannels: ChannelArchitectureRevisionsMap = {
       expiration: null,
       progressive: {
         "current-percentage": 0,
-        paused: false,
         percentage: 50,
       },
       channels: ["latest/edge", "latest/stable"],
@@ -165,7 +160,6 @@ export const mockReleasedChannels: ChannelArchitectureRevisionsMap = {
       expiration: null,
       progressive: {
         "current-percentage": 100,
-        paused: null,
         percentage: null,
       },
       channels: ["latest/candidate", "latest/beta", "latest/stable"],
@@ -195,7 +189,6 @@ export const mockReleasedChannels: ChannelArchitectureRevisionsMap = {
       expiration: null,
       progressive: {
         "current-percentage": 0,
-        paused: false,
         percentage: 50,
       },
       channels: ["latest/edge", "latest/stable"],
@@ -225,7 +218,6 @@ export const mockReleasedChannels: ChannelArchitectureRevisionsMap = {
       expiration: null,
       progressive: {
         "current-percentage": 0,
-        paused: null,
         percentage: null,
       },
       channels: ["latest/edge", "latest/candidate", "latest/stable"],
@@ -255,7 +247,6 @@ export const mockReleasedChannels: ChannelArchitectureRevisionsMap = {
       expiration: null,
       progressive: {
         "current-percentage": 0,
-        paused: null,
         percentage: null,
       },
       channels: ["latest/edge", "latest/stable"],
@@ -285,7 +276,6 @@ export const mockReleasedChannels: ChannelArchitectureRevisionsMap = {
       expiration: null,
       progressive: {
         "current-percentage": 0,
-        paused: null,
         percentage: null,
       },
       channels: ["latest/edge", "latest/stable"],
