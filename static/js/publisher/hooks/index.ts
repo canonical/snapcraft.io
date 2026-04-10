@@ -16,6 +16,8 @@ import useFetchPublishedSnapMetrics from "./useFetchPublishedSnapMetrics";
 import useSortTableData from "./useSortTableData";
 import useAccountKeys from "./useAccountKeys";
 import useRemodels from "./useRemodels";
+import useSerialLogs from "./useSerialLogs";
+import useSerialLog from "./useSerialLog";
 
 export {
   useValidationSets,
@@ -36,4 +38,6 @@ export {
   useSortTableData,
   useAccountKeys,
   useRemodels,
+  useSerialLogs,
+  useSerialLog,
 };
