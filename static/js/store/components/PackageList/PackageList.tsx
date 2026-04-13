@@ -9,7 +9,10 @@ import {
 } from "@canonical/react-components";
 
 import { PackageFilter } from "../PackageFilter";
-import { trackSearchResultClicked } from "../../utils";
+import {
+  trackSearchResultClicked,
+  trackFeaturedSnapClicked,
+} from "../../utils";
 
 import type { RefObject } from "react";
 import type { Category, Package, Packages } from "../../types";
@@ -142,6 +145,14 @@ function PackageList({
                             index +
                             1,
                           packageData.package.name,
+                        );
+                      } else if (isFeatured) {
+                        trackFeaturedSnapClicked(
+                          packageData.package.name,
+                          (parseInt(currentPage) - 1) * ITEMS_PER_PAGE +
+                            index +
+                            1,
+                          "store",
                         );
                       }
                     }}
