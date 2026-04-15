@@ -22,7 +22,7 @@ import RemodelTable from "./RemodelTable";
 import ConfigureRemodelForm from "./ConfigureRemodelForm";
 
 import type { UseQueryResult } from "react-query";
-import type { Remodel } from "../../types/shared";
+import type { Remodel, RemodelResponse, ApiResponse } from "../../types/shared";
 
 function Remodel(): React.JSX.Element {
   const { id, modelId } = useParams();
@@ -33,7 +33,10 @@ function Remodel(): React.JSX.Element {
     error,
     data,
     refetch,
-  }: UseQueryResult<Remodel[], Error> = useRemodels(brandId, modelId);
+  }: UseQueryResult<ApiResponse<RemodelResponse>, Error> = useRemodels(
+    brandId,
+    modelId,
+  );
   const setRemodels = useSetAtom(remodelsListState);
   const setFilter = useSetAtom(remodelsListFilterState);
   const [showNotification, setShowNotification] = useState(false);
@@ -49,7 +52,7 @@ function Remodel(): React.JSX.Element {
 
   useEffect(() => {
     if (!isLoading && !isError && data) {
-      setRemodels(data);
+      setRemodels(data.data?.allowlist || []);
       setFilter(searchParams.get("filter") || "");
     }
   }, [isLoading, error, data, brandId, id]);
@@ -67,6 +70,10 @@ function Remodel(): React.JSX.Element {
             <Icon name="spinner" className="u-animation--spin" />
             &nbsp;Fetching remodels...
           </p>
+        ) : data && data.success === false ? (
+          <Notification severity="caution">
+            {data.message || "Unable to fetch remodels"}
+          </Notification>
         ) : (
           <>
             <Row>

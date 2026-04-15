@@ -34,19 +34,18 @@ const remodelsResponse = {
       "to-model": "test-to-model",
     },
   ],
+  "next-cursor": null,
 };
 
 const handlers = [
   http.get("/api/store/test-brand-id/models/remodel-allowlist", () => {
     return HttpResponse.json({
       data: remodelsResponse,
-      message: "",
       success: true,
     });
   }),
   http.get("/api/store/test-brand-id-fail/models/remodel-allowlist", () => {
     return HttpResponse.json({
-      data: [],
       message: "There was a problem fetching remodels",
       success: false,
     });
@@ -84,7 +83,10 @@ describe("useRemodels", () => {
       expect(result.current.isSuccess).toBe(true);
     });
 
-    expect(result.current.data).toEqual(remodelsResponse.allowlist);
+    expect(result.current.data).toEqual({
+      data: remodelsResponse,
+      success: true,
+    });
   });
 
   test("returns error if request fails", async () => {
@@ -96,10 +98,13 @@ describe("useRemodels", () => {
     );
 
     await waitFor(() => {
-      expect(result.current.isError).toBe(true);
+      expect(result.current.isSuccess).toBe(true);
     });
 
-    expect(result.current.data).toBeUndefined();
+    expect(result.current.data).toEqual({
+      message: "There was a problem fetching remodels",
+      success: false,
+    });
   });
 
   test("returns error if network error", async () => {

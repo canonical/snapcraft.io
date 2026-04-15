@@ -1,10 +1,19 @@
 import { BrowserRouter } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "react-query";
+import { vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 
 import "@testing-library/jest-dom";
 
 import Remodel from "../Remodel";
+import { useRemodels, useModels, useSortTableData } from "../../../hooks";
+
+import type { UseQueryResult } from "react-query";
+import type {
+  ApiResponse,
+  RemodelResponse,
+  Model,
+} from "../../../types/shared";
 
 const mockFilterQuery = "test-model";
 
@@ -18,6 +27,12 @@ vi.mock("../../Portals/Portals", async (importOriginal) => ({
   PortalEntrance: ({ children }: { children: React.ReactNode }) => (
     <>{children}</>
   ),
+}));
+
+vi.mock("../../../hooks", () => ({
+  useRemodels: vi.fn(),
+  useModels: vi.fn(),
+  useSortTableData: vi.fn(),
 }));
 
 const queryClient = new QueryClient({
@@ -39,16 +54,91 @@ function renderComponent() {
   );
 }
 
+const useRemodelsNoPermissions = {
+  data: {
+    message: "There was a problem fetching remodels",
+    success: false,
+  },
+  isLoading: false,
+  isError: false,
+} as UseQueryResult<ApiResponse<RemodelResponse>, Error>;
+
+const useRemodelsPermissions = {
+  data: {
+    data: { allowlist: [], "next-cursor": null },
+    success: true,
+  },
+  isLoading: false,
+  isError: false,
+} as unknown as UseQueryResult<ApiResponse<RemodelResponse>, Error>;
+
+const mockUseModels = vi.mocked(useModels);
+mockUseModels.mockReturnValue({
+  data: [],
+} as unknown as UseQueryResult<Model[], Error>);
+
+const mockUseSortTableData = vi.mocked(useSortTableData);
+mockUseSortTableData.mockReturnValue({
+  rows: [],
+  updateSort: vi.fn(),
+});
+
+const mockUseRemodels = vi.mocked(useRemodels);
+
 describe("Remodel", () => {
-  it("displays a filter input", () => {
+  it("displays message if user has no remodels access", () => {
+    mockUseRemodels.mockReturnValue(useRemodelsNoPermissions);
+    renderComponent();
+    expect(
+      screen.getByText("There was a problem fetching remodels"),
+    ).toBeInTheDocument();
+  });
+
+  it("doesn't display filter if user has no remodels access", () => {
+    mockUseRemodels.mockReturnValue(useRemodelsNoPermissions);
+    renderComponent();
+    expect(screen.queryByLabelText("Search remodels")).not.toBeInTheDocument();
+  });
+
+  it("doesn't display table if user has no remodels access", () => {
+    mockUseRemodels.mockReturnValue(useRemodelsNoPermissions);
+    renderComponent();
+    expect(screen.queryByTestId("remodel-table")).not.toBeInTheDocument();
+  });
+
+  it("doesn't display 'Configure' button if user has no remodels access", () => {
+    mockUseRemodels.mockReturnValue(useRemodelsNoPermissions);
+    renderComponent();
+    expect(
+      screen.queryByRole("link", { name: "Configure remodels" }),
+    ).not.toBeInTheDocument();
+  });
+
+  it("doesn't display message if user has remodels access", () => {
+    mockUseRemodels.mockReturnValue(useRemodelsPermissions);
+    renderComponent();
+    expect(
+      screen.queryByText("There was a problem fetching remodels"),
+    ).not.toBeInTheDocument();
+  });
+
+  it("displays filter if user has remodels access", () => {
+    mockUseRemodels.mockReturnValue(useRemodelsPermissions);
     renderComponent();
     expect(screen.getByLabelText("Search remodels")).toBeInTheDocument();
   });
 
-  it("populates filter with the filter query parameter", () => {
+  it("displays table if user has remodels access", () => {
+    mockUseRemodels.mockReturnValue(useRemodelsPermissions);
     renderComponent();
-    expect(screen.getByLabelText("Search remodels")).toHaveValue(
-      mockFilterQuery,
-    );
+    expect(screen.getByTestId("remodel-table")).toBeInTheDocument();
+  });
+
+  it("displays 'Configure' button if user has remodels access", () => {
+    mockUseRemodels.mockReturnValue(useRemodelsPermissions);
+    renderComponent();
+    expect(
+      screen.getByRole("link", { name: "Configure remodels" }),
+    ).toBeInTheDocument();
   });
 });

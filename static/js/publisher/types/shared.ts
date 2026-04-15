@@ -188,3 +188,14 @@ export type Remodel = {
   "to-model": string;
   serials?: number;
 };
+
+export type RemodelResponse = {
+  allowlist: Remodel[];
+  "next-cursor": string | null;
+};
+
+export type ApiResponse<T> = {
+  data?: T;
+  success: boolean;
+  message?: string;
+};
