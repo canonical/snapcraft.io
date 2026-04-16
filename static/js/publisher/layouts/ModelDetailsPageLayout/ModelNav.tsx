@@ -1,7 +1,13 @@
 import { Link, useParams } from "react-router-dom";
+import { useAtomValue } from "jotai";
+
+import { useRemodels } from "../../hooks";
+import { brandIdState } from "../../state/brandStoreState";
 
 function ModelNav({ sectionName }: { sectionName: string }): React.JSX.Element {
   const { id, modelId } = useParams();
+  const brandId = useAtomValue(brandIdState);
+  const { data } = useRemodels(brandId, modelId);
 
   return (
     <nav className="p-tabs">
@@ -26,6 +32,18 @@ function ModelNav({ sectionName }: { sectionName: string }): React.JSX.Element {
             Policies
           </Link>
         </li>
+        {data?.success && (
+          <li className="p-tabs__item">
+            <Link
+              to={`/admin/${id}/models/${modelId}/remodel`}
+              className="p-tabs__link"
+              aria-selected={sectionName === "remodel"}
+              role="tab"
+            >
+              Remodel
+            </Link>
+          </li>
+        )}
       </ul>
     </nav>
   );
