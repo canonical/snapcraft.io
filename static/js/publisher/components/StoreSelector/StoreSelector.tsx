@@ -6,7 +6,7 @@ import { brandStoresState } from "../../state/brandStoreState";
 import ComboBox from "../ComboBox/ComboBox";
 
 function StoreSelector(): React.JSX.Element {
-  const { id } = useParams();
+  const { id: storeId } = useParams();
   const navigate = useNavigate();
   const brandStoresList = useAtomValue(brandStoresState);
 
@@ -22,14 +22,15 @@ function StoreSelector(): React.JSX.Element {
   return (
     <ComboBox
       options={comboBoxOptions}
-      value={id ?? ""}
+      value={storeId ?? ""}
       label="Select store"
       placeholder="Select store"
       labelClassName="u-off-screen"
       required
-      onChange={(storeId) => {
-        if (!storeId) return;
-        navigate(`/admin/${storeId}/snaps`);
+      onChange={(newStoreId) => {
+        if (!newStoreId) return;
+        if (storeId === newStoreId) return;
+        navigate(`/admin/${newStoreId}/snaps`);
       }}
     />
   );
