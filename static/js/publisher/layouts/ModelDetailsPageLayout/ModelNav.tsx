@@ -7,7 +7,7 @@ import { brandIdState } from "../../state/brandStoreState";
 function ModelNav({ sectionName }: { sectionName: string }): React.JSX.Element {
   const { id, modelId } = useParams();
   const brandId = useAtomValue(brandIdState);
-  const { data } = useRemodels(brandId, modelId);
+  const { data: remodelsData } = useRemodels(brandId, modelId);
 
   return (
     <nav className="p-tabs">
@@ -32,7 +32,7 @@ function ModelNav({ sectionName }: { sectionName: string }): React.JSX.Element {
             Policies
           </Link>
         </li>
-        {data?.success && (
+        {remodelsData?.success && (
           <li className="p-tabs__item">
             <Link
               to={`/admin/${id}/models/${modelId}/remodel`}
