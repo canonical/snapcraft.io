@@ -238,13 +238,15 @@ const ComboBox: FC<ComboBoxProps> = ({
           </div>
           <ul
             className={`p-combobox__options-panel ${comboBoxState.isOpen ? "active" : ""}`}
-            {...getMenuProps()}>
+            {...getMenuProps()}
+          >
             {comboBoxState.isOpen &&
               comboBoxState.filteredOptions.map((item) => (
                 <li
                   {...getItemProps({ item })}
                   key={item.value}
-                  className="p-combobox__option">
+                  className="p-combobox__option"
+                >
                   {item.label}
                 </li>
               ))}
