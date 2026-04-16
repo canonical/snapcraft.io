@@ -115,7 +115,7 @@ describe("ComboBox", () => {
 
   it("listbox has correct attributes", () => {
     renderComponent();
-    expect(elements.input).toHaveAttribute(
+    expect(elements.listbox).toHaveAttribute(
       "aria-labelledby",
       elements.label.id,
     );

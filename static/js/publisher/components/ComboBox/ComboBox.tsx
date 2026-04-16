@@ -169,23 +169,25 @@ const ComboBox: FC<ComboBoxProps> = ({
     });
   }, [value, options]);
 
-  // we don't run onChange until after we actually render some real options to choose from, this
-  // avoids running it multiple times with and empty value during init (e.g. when fetching the
-  // options from an API)
   const isOnchangeDisabledRef = useRef(true);
 
   // Run the onChange callback when we change the selectedItem. We don't pass the callback as a
   // Downshift prop because it wouldn't run when we set the selectedItem inside the state reducer
   useEffect(() => {
-    if (isOnchangeDisabledRef.current) {
-      if (options?.length > 0) {
-        isOnchangeDisabledRef.current = false;
-      }
-      return;
-    }
-
+    if (isOnchangeDisabledRef.current) return;
     onChange?.(comboBoxState.selectedItem?.value ?? null);
   }, [comboBoxState.selectedItem?.value]);
+
+  // we don't run onChange until after we actually render some real options to choose from, this
+  // avoids running it multiple times with an empty selectedItem.value during init (e.g. when
+  // fetching the options from an API and we're waiting for the response); it's IMPORTANT that this
+  // effect runs after the one that triggers onChange, because we want to make sure not to trigger
+  // it on the first render
+  useEffect(() => {
+    if (isOnchangeDisabledRef.current && options?.length > 0) {
+      isOnchangeDisabledRef.current = false;
+    }
+  }, [options]);
 
   return (
     <Downshift<ComboBoxItem>
@@ -236,15 +238,13 @@ const ComboBox: FC<ComboBoxProps> = ({
           </div>
           <ul
             className={`p-combobox__options-panel ${comboBoxState.isOpen ? "active" : ""}`}
-            {...getMenuProps()}
-          >
+            {...getMenuProps()}>
             {comboBoxState.isOpen &&
               comboBoxState.filteredOptions.map((item) => (
                 <li
                   {...getItemProps({ item })}
                   key={item.value}
-                  className="p-combobox__option"
-                >
+                  className="p-combobox__option">
                   {item.label}
                 </li>
               ))}
