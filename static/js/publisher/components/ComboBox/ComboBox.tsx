@@ -169,19 +169,22 @@ const ComboBox: FC<ComboBoxProps> = ({
     });
   }, [value, options]);
 
-  const firstRenderRef = useRef(true);
+  // we don't run onChange until after we actually render some real options to choose from, this
+  // avoids running it multiple times with and empty value during init (e.g. when fetching the
+  // options from an API)
+  const isOnchangeDisabledRef = useRef(true);
 
   // Run the onChange callback when we change the selectedItem. We don't pass the callback as a
   // Downshift prop because it wouldn't run when we set the selectedItem inside the state reducer
   useEffect(() => {
-    if (firstRenderRef.current) {
-      firstRenderRef.current = false;
+    if (isOnchangeDisabledRef.current) {
+      if (options?.length > 0) {
+        isOnchangeDisabledRef.current = false;
+      }
       return;
     }
 
-    if (onChange) {
-      onChange?.(comboBoxState.selectedItem?.value ?? null);
-    }
+    onChange?.(comboBoxState.selectedItem?.value ?? null);
   }, [comboBoxState.selectedItem?.value]);
 
   return (
