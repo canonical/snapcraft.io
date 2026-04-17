@@ -26,13 +26,13 @@ juju deploy ./*.charm --resource flask-app-image=localhost:32000/snapcraft-io:1
 
 This will deploy the charm with the rock image you just uploaded attached as a resource.
 
-once `juju status` reports the charm as `active`, you can test the webserver:
+Once `juju status` reports the charm as `active`, you can test the webserver:
 
 ```bash
 curl {IP_OF_SNAPCRAFT_IO_UNIT}:8000
 ```
 
-to connect using a browser, the easiest way is to integrate with `nginx-ingress-integrator`:
+To connect using a browser, the easiest way is to integrate with `nginx-ingress-integrator`:
 
 ```bash
 juju deploy nginx-ingress-integrator --trust
@@ -47,9 +47,9 @@ multipass ls # Get the IP of the VM
 echo "{IP_OF_VM} snapcraft.local" | sudo tee -a /etc/hosts
 ```
 
-> Note: login will not work using this setup, if you'd like to access publisher pages, change the domain to `staging.snapcraft.io`, but make sure to remove the line from `/etc/hosts/` after you're done.
+> Note: login will not work using this setup, if you'd like to access publisher pages, change the domain to `staging.snapcraft.io`, but make sure to remove the line from `/etc/hosts` after you're done.
 
 
 ## Design Decisions:
-- To keep the codebase clean and charm libraries updated, they are only fetched before packing the charm in the [Github Actions workflow](https://github.com/canonical/snapcraft.io/blob/main/.github/workflows/publish_charm.yaml#L25).
+- To keep the codebase clean and charm libraries updated, they are only fetched before packing the charm in the [GitHub Actions workflow](https://github.com/canonical/webteam-devops/blob/7041da8810758715a73e1f8be67b2e68f0e1d58f/.github/workflows/deploy.yaml#L97).
 - As all our work is open source, the charm is publicly available on [snapcraft](https://charmhub.io/snapcraft-io), the rock image is also included as a resource. This significantly simplifies deployment.
