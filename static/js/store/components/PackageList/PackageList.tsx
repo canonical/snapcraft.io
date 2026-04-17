@@ -37,8 +37,7 @@ function PackageList({
   // Treat as featured when the user is explicitly on the featured category,
   // or on the default store view (no categories, no search/filters).
   const isFeatured =
-    (selectedCategories.length === 1 &&
-      selectedCategories[0] === "featured") ||
+    (selectedCategories.length === 1 && selectedCategories[0] === "featured") ||
     (selectedCategories.length === 0 &&
       Array.from(searchParams.keys()).every((key) =>
         ["page", "categories"].includes(key),
