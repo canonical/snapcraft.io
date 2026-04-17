@@ -17,6 +17,8 @@ on:
 jobs:
   setup:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     environment: ${{ github.event.inputs.environment != '' && github.event.inputs.environment || (github.ref == 'refs/heads/main' && 'Production' || 'Staging') }}
     outputs:
       charm_name: ${{ steps.setup-vars.outputs.charm_name }}
@@ -38,6 +40,9 @@ jobs:
     needs: setup
     name: Deploy
     uses: canonical/webteam-devops/.github/workflows/deploy.yaml@main
+    permissions:
+      contents: read
+      deployments: write
     with:
       environment: ${{ needs.setup.outputs.environment }}
       charm_name: ${{ needs.setup.outputs.charm_name }}
