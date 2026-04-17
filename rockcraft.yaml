@@ -1,0 +1,42 @@
+name: snapcraft-io
+base: bare
+build-base: ubuntu@22.04
+version: "0.1"
+summary: Rocked snapcraft.io
+description: |
+  This is the rockcraft for the snapcraft.io website.
+platforms:
+  amd64:
+  arm64:
+
+extensions:
+  - flask-framework
+
+parts:
+  build-ui:
+    plugin: nil
+    source: .
+    source-type: local
+    build-snaps:
+      - node/22/stable
+    override-build: |
+      set -eux
+      # install dependencies
+      npm install -g yarn
+      yarn install
+      # build the UI
+      yarn run build
+      # mkdir -p "$CRAFT_PART_INSTALL/flask/app"
+      # cp -r static "$CRAFT_PART_INSTALL/flask/app/"
+  flask-framework/install-app:
+    after:
+      - build-ui
+    prime:
+      - flask/app/.env
+      - flask/app/app.py
+      - flask/app/webapp
+      - flask/app/templates
+      - flask/app/static
+      - flask/app/redirects.yaml
+      - flask/app/security.txt
+      - flask/app/robots.txt
