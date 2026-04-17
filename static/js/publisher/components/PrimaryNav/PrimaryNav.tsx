@@ -104,8 +104,9 @@ function PrimaryNav(): React.JSX.Element {
                         component: NavLink,
                         to: `/admin/${storeId}/models`,
                         icon: "models",
-                        "aria-current":
-                          location.pathname === `/admin/${storeId}/models`,
+                        "aria-current": !!location.pathname.match(
+                          RegExp(`/admin/${storeId}/models(/.*|$)`),
+                        ),
                       }
                     : null,
                   brandId
