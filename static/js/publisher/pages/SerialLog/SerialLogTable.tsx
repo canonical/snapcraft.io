@@ -18,8 +18,12 @@ function SerialLogTable(): React.JSX.Element {
     { content: "Brand" },
     {
       content: "Model",
+      sortKey: "model-name",
     },
-    { content: "Serial" },
+    {
+      content: "Serial",
+      sortKey: "serial",
+    },
     {
       content: "Created date",
       className: "u-align--right",

@@ -15,11 +15,7 @@ import Filter from "../../components/Filter";
 import SerialLogTable from "./SerialLogTable";
 
 import type { UseQueryResult } from "react-query";
-import type {
-  SerialLog,
-  SerialLogResponse,
-  ApiResponse,
-} from "../../types/shared";
+import type { SerialLogResponse, ApiResponse } from "../../types/shared";
 
 function SerialLog(): React.JSX.Element {
   const { id, modelId } = useParams();

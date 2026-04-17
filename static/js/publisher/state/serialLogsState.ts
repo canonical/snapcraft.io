@@ -7,14 +7,14 @@ const serialLogsListState = atom([] as SerialLog[]);
 const serialLogsListFilterState = atom("" as string);
 
 function getFilteredSerialLogs(
-  SerialLogs: Array<SerialLog>,
+  serialLogs: Array<SerialLog>,
   filterQuery?: string | null,
 ) {
   if (!filterQuery) {
-    return SerialLogs;
+    return serialLogs;
   }
 
-  return SerialLogs.filter((serialLog: SerialLog) => {
+  return serialLogs.filter((serialLog: SerialLog) => {
     if (serialLog.serial && serialLog.serial.includes(filterQuery)) {
       return true;
     }
