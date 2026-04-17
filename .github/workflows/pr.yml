@@ -109,6 +109,20 @@ jobs:
             - 'package.json'
             - 'yarn.lock'
 
+  pack-rock:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup LXD
+        uses: canonical/setup-lxd@main
+
+      - name: Setup rockcraft
+        run: sudo snap install rockcraft --classic
+
+      - name: Pack rock
+        run: rockcraft pack
+
   lint-python:
     needs: changes
     if: ${{ needs.changes.outputs.py == 'true' }}
