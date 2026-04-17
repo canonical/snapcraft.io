@@ -194,6 +194,20 @@ export type RemodelResponse = {
   "next-cursor": string | null;
 };
 
+export type SerialLog = {
+  "brand-id": string;
+  "created-at": string;
+  "model-name": string;
+  serial: string;
+  "serial-assertion"?: string;
+  "serial-sign-key-sha3-384"?: string;
+};
+
+export type SerialLogResponse = {
+  items: SerialLog[];
+  "next-cursor": string | null;
+};
+
 export type ApiResponse<T> = {
   data?: T;
   success: boolean;

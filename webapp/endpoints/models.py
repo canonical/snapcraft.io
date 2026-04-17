@@ -356,13 +356,12 @@ def get_serial_log(store_id: str, model_name: str):
     res = {}
 
     try:
-        brand_id = get_brand_id(flask.session, store_id)
-        logs = publisher_gateway.get_store_model_serial_log(
+        logs = publisher_gateway.get_store_model_serial_logs(
             flask.session,
-            brand_id,
+            store_id,
             model_name,
         )
-        res["data"] = logs["items"]
+        res["data"] = logs
         res["success"] = True
         response = make_response(res, 200)
     except StoreApiResponseErrorList as error_list:
