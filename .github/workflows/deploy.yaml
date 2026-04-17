@@ -5,15 +5,23 @@ on:
     branches:
       - main
       - staging
+  workflow_call:
+    inputs:
+      environment:
+        description: 'Environment (Production, Staging or Staging API)'
+        required: true
+        type: string
   workflow_dispatch:
     inputs:
       environment:
-        description: 'Environment (Production or Staging)'
+        description: 'Environment (Production, Staging or Staging API)'
         required: true
         type: choice
         options:
           - Production
           - Staging
+          - Staging API
+
 jobs:
   setup:
     runs-on: ubuntu-latest
