@@ -23,6 +23,11 @@ requires:
     optional: true
     limit: 1
 
+  tracing:
+    interface: tracing
+    optional: true
+    limit: 1
+
 config:
   options:
     sentry-dsn:

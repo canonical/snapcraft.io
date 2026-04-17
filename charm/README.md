@@ -1,6 +1,6 @@
 # The Charm for the snapcraft.io website
 
-This charm was created using the [PaaS App Charmer](https://canonical-12-factor-app-support.readthedocs-hosted.com/latest/)
+This charm was created using the [PaaS App Charmer](https://juju.is/docs/sdk/paas-charm)
 
 ## Local development
 
