@@ -113,6 +113,10 @@ config:
       default: "https://api.snapcraft.io/"
       type: string
 
+    report-sheet-url:
+      description: "URL for the reported snaps spreadsheet on Google docs"
+      type: string
+
 
 # requires:
 #   tracing:
