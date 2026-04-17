@@ -11,6 +11,7 @@ import webapp.config  # noqa: F401
 import sentry_sdk
 
 from canonicalwebteam.flask_base.app import FlaskBase
+import webapp.config
 from webapp.blog.views import init_blog
 from webapp.docs.views import init_docs
 from webapp.extensions import csrf, vite
