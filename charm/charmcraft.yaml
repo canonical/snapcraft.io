@@ -103,6 +103,17 @@ config:
       default: "https://dashboard.snapcraft.io/"
       type: string
 
+    publishergw-url:
+      description: "Base URL for Publisher Gateway API"
+      default: "https://api.charmhub.io"
+      type: string
+
+    devicegw-url:
+      description: "Base URL for Device Gateway API"
+      default: "https://api.snapcraft.io/"
+      type: string
+
+
 # requires:
 #   tracing:
 #     interface: tracing
