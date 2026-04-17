@@ -43,6 +43,7 @@ jobs:
     permissions:
       contents: read
       deployments: write
+      packages: write
     with:
       environment: ${{ needs.setup.outputs.environment }}
       charm_name: ${{ needs.setup.outputs.charm_name }}
