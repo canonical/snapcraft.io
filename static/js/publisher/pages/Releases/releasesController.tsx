@@ -1,4 +1,4 @@
-import React, { Fragment, useState, useEffect } from "react";
+import React, { Fragment, useEffect } from "react";
 import { connect } from "react-redux";
 
 import Notification from "./components/globalNotification";
@@ -6,44 +6,38 @@ import ReleasesHeading from "./components/releasesHeading";
 import ReleasesConfirm from "./components/releasesConfirm";
 import Modal from "./components/modal";
 
-import { updateArchitectures } from "./actions/architectures";
-import { updateRevisions } from "./actions/revisions";
-import { updateReleases } from "./actions/releases";
-import { initChannelMap } from "./actions/channelMap";
+import {
+  initDefaultTrack,
+  setCurrentTrack,
+  updateReleasesData,
+  initOptions
+} from "./actions";
 
-import {
-  getRevisionsMap,
-  initReleasesData,
-  getReleaseDataFromChannelMap,
-} from "./releasesState";
-import { updateFailedRevisions } from "./actions/failedRevisions";
-import {
+import type {
+  ReleasesAPIResponse,
   ReleasesReduxState,
-  ReleasesData,
-  ChannelMap,
-  DispatchFn,
 } from "../../types/releaseTypes";
+import type { DispatchFn } from "./store";
 
 // Props coming from parent component
 interface OwnProps {
   snapName: string;
-  releasesData: ReleasesData;
-  channelMap: ChannelMap[];
+  apiData: ReleasesAPIResponse;
 }
 
 // Props from mapStateToProps
 interface StateProps {
   showModal: ReleasesReduxState["modal"]["visible"];
   notification: ReleasesReduxState["notification"];
+  ready: ReleasesReduxState["options"]["releasesReady"];
 }
 
 // Props from mapDispatchToProps
 interface DispatchProps {
-  initChannelMap: typeof initChannelMap;
-  updateArchitectures: typeof updateArchitectures;
-  updateRevisions: typeof updateRevisions;
-  updateFailedRevisions: typeof updateFailedRevisions;
-  updateReleases: typeof updateReleases;
+  updateReleasesData: (apiData: ReleasesAPIResponse) => Promise<void>;
+  setCurrentTrack: (track: ReleasesReduxState["currentTrack"]) => void;
+  initDefaultTrack: (track: ReleasesReduxState["defaultTrack"]) => void;
+  initOptions: (options: ReleasesReduxState["options"]) => void;
 }
 
 // Combined props for the component
@@ -51,34 +45,27 @@ type ReleasesControllerProps = OwnProps & StateProps & DispatchProps;
 
 const ReleasesController: React.FC<ReleasesControllerProps> = ({
   snapName,
-  releasesData,
-  channelMap,
-  updateArchitectures,
-  updateReleases,
-  updateRevisions,
-  updateFailedRevisions,
-  initChannelMap,
+  apiData,
+  updateReleasesData,
+  setCurrentTrack,
+  initDefaultTrack,
+  initOptions,
   notification,
   showModal,
+  ready,
 }) => {
-  const [ready, setReady] = useState(false);
-  const revisionsList = releasesData.revisions;
-
   useEffect(() => {
-    getReleaseDataFromChannelMap(channelMap, revisionsList, snapName).then(
-      ([transformedChannelMap, revisionsListAdditions, failedRevisions]) => {
-        revisionsList.push(...revisionsListAdditions);
-        const revisionsMap = getRevisionsMap(revisionsList);
-
-        initReleasesData(revisionsMap, releasesData.releases, channelMap);
-        updateRevisions(revisionsMap);
-        updateReleases(releasesData.releases);
-        updateArchitectures(revisionsList);
-        initChannelMap(transformedChannelMap);
-        updateFailedRevisions(failedRevisions);
-        setReady(true);
+    setCurrentTrack(apiData.data.default_track || "latest"),
+    initDefaultTrack(apiData.data.default_track),
+    initOptions({
+      releasesReady: false,
+      snapName: apiData.data.snap_name,
+      flags: {
+        isProgressiveReleaseEnabled: true,
       },
-    );
+      tracks: apiData.data.tracks
+    });
+    updateReleasesData(apiData);
   }, []);
 
   const { visible } = notification;
@@ -131,17 +118,16 @@ const mapStateToProps = (state: ReleasesReduxState): StateProps => {
   return {
     showModal: state.modal.visible,
     notification: state.notification,
+    ready: state.options.releasesReady,
   };
 };
 
 const mapDispatchToProps = (dispatch: DispatchFn): DispatchProps => {
   return {
-    initChannelMap: (channelMap) => dispatch(initChannelMap(channelMap)),
-    updateArchitectures: (revisions) =>
-      dispatch(updateArchitectures(revisions)),
-    updateRevisions: (revisions) => dispatch(updateRevisions(revisions)),
-    updateFailedRevisions: (failedRevisions) => dispatch(updateFailedRevisions(failedRevisions)),
-    updateReleases: (releases) => dispatch(updateReleases(releases)),
+    updateReleasesData: (apiData) => dispatch(updateReleasesData(apiData)),
+    setCurrentTrack: (track) => dispatch(setCurrentTrack(track)),
+    initDefaultTrack: (track) => dispatch(initDefaultTrack(track)),
+    initOptions: (options) => dispatch(initOptions(options))
   };
 };
 

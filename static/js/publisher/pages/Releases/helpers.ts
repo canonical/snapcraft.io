@@ -1,11 +1,11 @@
 import { AVAILABLE, REVISION_STATUS } from "./constants";
 import { getChannelString } from "../../../libs/channels";
 import { useEffect } from "react";
-import {
+import type {
   ArchitectureRevisionsMap,
   CPUArchitecture,
-  LaunchpadBuildRevision,
   Release,
+  ReleasesReduxState,
   Revision,
 } from "../../types/releaseTypes";
 
@@ -228,4 +228,10 @@ export async function getPackageMetadata(
   }
   const data = await response.json();
   return data.data;
+}
+
+export function getArrayOfChannelNames(
+  channels: ReleasesReduxState["pendingChanges"]["pendingCloses"]
+) {
+  return Object.values(channels);
 }

@@ -4,8 +4,8 @@ import { useDragging, DND_ITEM_REVISIONS } from "../dnd";
 
 import { getRevisionsArchitectures } from "../../helpers";
 import ReleasesTableChannelHeading from "./channelHeading";
-import { ArchitectureRevisionsMap } from "../../../../types/releaseTypes";
-import { Branch } from "../../selectors";
+import type { ArchitectureRevisionsMap } from "../../../../types/releaseTypes";
+import type { Branch } from "../../selectors";
 
 interface ReleasesTableRowProps {
   revisions: ArchitectureRevisionsMap;

@@ -1,13 +1,13 @@
-import { ReleasesReduxState } from "../../../types/releaseTypes";
+import type { ReleasesReduxState } from "../../../types/releaseTypes";
+import type { RootAction } from "../actions";
 import {
   SHOW_NOTIFICATION,
   HIDE_NOTIFICATION,
-  NotificationAction,
 } from "../actions/globalNotification";
 
 export default function notification(
   state: ReleasesReduxState["notification"] = { visible: false },
-  action: NotificationAction
+  action: RootAction
 ) {
   switch (action.type) {
     case SHOW_NOTIFICATION:

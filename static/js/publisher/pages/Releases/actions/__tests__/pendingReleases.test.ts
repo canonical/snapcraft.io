@@ -23,8 +23,7 @@ import {
   updateProgressiveReleasePercentage,
   pauseProgressiveRelease,
   resumeProgressiveRelease,
-  cancelProgressiveRelease,
-} from "../pendingReleases";
+} from "../pendingChanges";
 import {
   DispatchFn,
   PendingReleaseItem,
@@ -345,37 +344,6 @@ describe("pendingReleases actions", () => {
   describe("resumeProgressiverelease", () => {
     it("should create an action to resume a release", () => {
       expect(resumeProgressiveRelease().type).toBe(RESUME_PROGRESSIVE_RELEASE);
-    });
-  });
-
-  describe("cancelProgressiverelease", () => {
-    const previousRevision = {
-      architectures: ["amd64"],
-      attributes: {},
-      base: "core18",
-      build_url: null,
-      channels: ["latest/edge"],
-      confinement: "strict",
-      created_at: "2019-07-16T08:58:04Z",
-      epoch: { read: null, write: null },
-      grade: "stable",
-      revision: 3,
-      "sha3-384": "test",
-      size: 4096,
-      status: "Published",
-      version: "1.8.0",
-    } as unknown as Revision;
-
-    it("should create an action to cancel a release", () => {
-      expect(cancelProgressiveRelease(previousRevision).type).toBe(
-        CANCEL_PROGRESSIVE_RELEASE
-      );
-    });
-
-    it("should supply a revision in the payload", () => {
-      expect(
-        cancelProgressiveRelease(previousRevision).payload.previousRevision
-      ).toBe(previousRevision);
     });
   });
 });

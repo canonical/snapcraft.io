@@ -1,4 +1,5 @@
-import { GenericReleasesAction, DispatchFn, ReleasesReduxState } from "../../../types/releaseTypes";
+import type { GenericReleasesAction, ReleasesReduxState } from "../../../types/releaseTypes";
+import type { DispatchFn } from "../store";
 
 export const OPEN_BRANCHES = "OPEN_BRANCHES";
 export const CLOSE_BRANCHES = "CLOSE_BRANCHES";

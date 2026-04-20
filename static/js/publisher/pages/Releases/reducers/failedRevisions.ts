@@ -1,12 +1,13 @@
-import {
+import type {
   ReleasesReduxState,
 } from "../../../types/releaseTypes";
-import { FailedRevisionsAction, UPDATE_FAILED_REVISIONS } from "../actions/failedRevisions";
+import type { RootAction } from "../actions";
+import { UPDATE_FAILED_REVISIONS } from "../actions/failedRevisions";
 
 
 export default function failedRevisions(
   state: ReleasesReduxState["failedRevisions"] = [],
-  action: FailedRevisionsAction
+  action: RootAction
 ) {
   switch (action.type) {
     case UPDATE_FAILED_REVISIONS:

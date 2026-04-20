@@ -1,13 +1,14 @@
-import { CLOSE_MODAL } from "./modal";
+import { CLOSE_MODAL, type CloseModalAction } from "./modal";
 import { showNotification } from "./globalNotification";
 import {
   GenericReleasesAction,
   ReleasesReduxState,
-  DispatchFn,
 } from "../../../types/releaseTypes";
+import type { DispatchFn } from "../store";
 
 export const SET_DEFAULT_TRACK_SUCCESS = "SET_DEFAULT_TRACK_SUCCESS";
 export const SET_DEFAULT_TRACK_FAILURE = "SET_DEFAULT_TRACK_FAILURE";
+export const INIT_DEFAULT_TRACK = "INIT_DEFAULT_TRACK";
 
 export type SetDefaultTrackSuccessAction = GenericReleasesAction<
   typeof SET_DEFAULT_TRACK_SUCCESS,
@@ -19,9 +20,15 @@ export type SetDefaultTrackFailureAction = GenericReleasesAction<
   never
 >;
 
+export type InitDefaultTrackAction = GenericReleasesAction<
+  typeof INIT_DEFAULT_TRACK,
+  ReleasesReduxState["defaultTrack"]
+>;
+
 export type DefaultTrackAction =
   | SetDefaultTrackSuccessAction
-  | SetDefaultTrackFailureAction;
+  | SetDefaultTrackFailureAction
+  | InitDefaultTrackAction;
 
 const fetchDefaultTrack = (snapName: string, track: string | null) => {
   return fetch(`/${snapName}/releases/default-track`, {
@@ -44,6 +51,13 @@ const fetchDefaultTrack = (snapName: string, track: string | null) => {
   });
 };
 
+export function initDefaultTrack(track: ReleasesReduxState["defaultTrack"]): DefaultTrackAction {
+  return {
+    type: INIT_DEFAULT_TRACK,
+    payload: track,
+  };
+}
+
 export function clearDefaultTrack() {
   return (dispatch: DispatchFn, getState: () => ReleasesReduxState) => {
     const { options } = getState();
@@ -56,7 +70,7 @@ export function clearDefaultTrack() {
       });
       dispatch({
         type: CLOSE_MODAL,
-      } as any);
+      } as CloseModalAction);
       dispatch(
         showNotification({
           status: "success",
@@ -92,7 +106,7 @@ export function setDefaultTrack() {
       .catch((errorResponse: Response) => {
         dispatch({
           type: SET_DEFAULT_TRACK_FAILURE,
-        } as any);
+        } as SetDefaultTrackFailureAction);
         dispatch(
           showNotification({
             status: "error",
@@ -105,7 +119,7 @@ export function setDefaultTrack() {
       .finally(() => {
         dispatch({
           type: CLOSE_MODAL,
-        } as any);
+        } as CloseModalAction);
       });
   };
 }

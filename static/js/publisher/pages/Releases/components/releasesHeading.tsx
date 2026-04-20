@@ -24,7 +24,8 @@ import {
 import DefaultTrackModifier from "./defaultTrackModifier";
 import ReleasesTable from "./releasesTable";
 import TrackInfo from "./TrackInfo";
-import { ReleasesReduxState, DispatchFn } from "../../../types/releaseTypes";
+import type { ReleasesReduxState } from "../../../types/releaseTypes";
+import type { DispatchFn } from "../store";
 
 interface OwnProps {
   snapName: string;
@@ -33,7 +34,7 @@ interface OwnProps {
 interface StateProps {
   tracks: string[];
   currentTrack: string;
-  defaultTrack: string;
+  defaultTrack: string | null;
 }
 
 interface DispatchProps {

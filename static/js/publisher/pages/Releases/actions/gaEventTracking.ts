@@ -1,5 +1,13 @@
 import { triggerEventReleaseUI } from "../../../../base/ga";
-import { DispatchFn, ReleasesReduxState } from "../../../types/releaseTypes";
+import type { GenericReleasesAction, ReleasesReduxState } from "../../../types/releaseTypes";
+import type { DispatchFn } from "../store";
+
+export const GA_EVENT_SENT = "GA_EVENT_SENT";
+
+export type SendGAEventAction = GenericReleasesAction<
+  typeof GA_EVENT_SENT,
+  never
+>;
 
 export function triggerGAEvent(eventAction: string, ...args: string[]) {
   const eventLabelItems = [...args];
@@ -18,6 +26,6 @@ export function triggerGAEvent(eventAction: string, ...args: string[]) {
       eventLabel = currentState.options.snapName;
     }
     triggerEventReleaseUI(eventAction, eventLabel);
-    return { type: "GA_EVENT_SENT" };
+    return { type: GA_EVENT_SENT };
   };
 }

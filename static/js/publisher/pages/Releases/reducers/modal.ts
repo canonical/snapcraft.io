@@ -1,13 +1,13 @@
-import { ReleasesReduxState } from "../../../types/releaseTypes";
+import type { ReleasesReduxState } from "../../../types/releaseTypes";
+import type { RootAction } from "../actions";
 import {
   OPEN_MODAL,
   CLOSE_MODAL,
-  ModalAction,
 } from "../actions/modal";
 
 export default function modal(
   state: ReleasesReduxState["modal"] = { visible: false },
-  action: ModalAction
+  action: RootAction
 ) {
   switch (action.type) {
     case OPEN_MODAL:

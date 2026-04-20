@@ -1,14 +1,14 @@
-import {
+import type {
   GenericReleasesAction,
   ReleasesReduxState,
-  DispatchFn,
 } from "../../../types/releaseTypes";
+import type { DispatchFn } from "../store";
 
 export const OPEN_HISTORY = "OPEN_HISTORY";
 export const CLOSE_HISTORY = "CLOSE_HISTORY";
 
 import { triggerGAEvent } from "../actions/gaEventTracking";
-import { CloseChannelAction } from "./pendingCloses";
+import { CloseChannelAction } from "./pendingChanges";
 
 export type OpenHistoryAction = GenericReleasesAction<
   typeof OPEN_HISTORY,
@@ -58,7 +58,7 @@ export function toggleHistory(
           ),
         );
       }
-      dispatch(closeHistory() as any);
+      dispatch(closeHistory() as CloseHistoryAction);
     } else {
       if (filters) {
         dispatch(

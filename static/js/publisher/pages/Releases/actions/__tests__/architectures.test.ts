@@ -1,4 +1,4 @@
-import { Revision } from "../../../../types/releaseTypes";
+import type { Revision } from "../../../../types/releaseTypes";
 import { UPDATE_ARCHITECTURES, updateArchitectures } from "../architectures";
 
 describe("architectures actions", () => {

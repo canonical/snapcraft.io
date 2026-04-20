@@ -8,15 +8,15 @@ import { getChannelName, canBeReleased } from "../../helpers";
 import { DND_ITEM_REVISIONS } from "../dnd";
 
 import { toggleHistory } from "../../actions/history";
-import { undoRelease } from "../../actions/pendingReleases";
+import { undoRelease } from "../../actions/pendingChanges";
 
 import {
   getPendingChannelMap,
   getFilteredAvailableRevisionsForArch,
   getProgressiveState,
   hasPendingRelease,
-  Branch,
-  ProgressiveState,
+  type Branch,
+  type ProgressiveState,
 } from "../../selectors";
 
 import {
@@ -28,16 +28,16 @@ import {
   FailedInfo,
 } from "./cellViews";
 
-import {
+import type {
   ReleasesReduxState,
-  DispatchFn,
   CPUArchitecture,
   ChannelArchitectureRevisionsMap,
   Channel,
   Revision,
   FailedRevision,
 } from "../../../../types/releaseTypes";
-import { DraggedItem } from "./types";
+import type { DispatchFn } from "../../store";
+import type { DraggedItem } from "./types";
 
 interface OwnProps {
   track: string;
@@ -240,7 +240,7 @@ const mapStateToProps = (state: ReleasesReduxState): StateProps => {
   return {
     channelMap: state.channelMap,
     filters: state.history.filters,
-    pendingCloses: state.pendingCloses,
+    pendingCloses: Object.values(state.pendingChanges.pendingCloses),
     failedRevisions: state.failedRevisions,
     pendingChannelMap: getPendingChannelMap(state),
     getAvailableCount: (arch: CPUArchitecture) =>

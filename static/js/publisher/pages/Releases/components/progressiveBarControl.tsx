@@ -1,9 +1,10 @@
 import React from "react";
 import { connect } from "react-redux";
 
-import { updateProgressiveReleasePercentage } from "../actions/pendingReleases";
-import type { PendingReleaseItem, DispatchFn } from "../../../types/releaseTypes";
+import { updateProgressiveReleasePercentage } from "../actions/pendingChanges";
+import type { PendingReleaseItem } from "../../../types/releaseTypes";
 import type { ProgressiveType } from "./releasesConfirmDetails/types";
+import type { DispatchFn } from "../store";
 
 import progressiveTypes from "./releasesConfirmDetails/types";
 

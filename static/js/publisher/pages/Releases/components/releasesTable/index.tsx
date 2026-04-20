@@ -12,7 +12,7 @@ import {
   getBranches,
   getLaunchpadRevisions,
   getAllRevisions,
-  Branch,
+  type Branch,
 } from "../../selectors";
 import { selectAvailableRevisions, closeHistory } from "../../actions";
 
@@ -20,14 +20,14 @@ import { getChannelName, getBuildId } from "../../helpers";
 import HistoryPanel from "../historyPanel";
 import ReleasesTableDroppableRow from "./droppableRow";
 import ReleasesTableRevisionsRow from "./revisionsRow";
-import {
+import type {
   ReleasesReduxState,
-  DispatchFn,
   Revision,
   CPUArchitecture,
   LaunchpadBuildRevision,
   ArchitectureRevisionsMap,
 } from "../../../../types/releaseTypes";
+import type { DispatchFn } from "../../store";
 
 const MAX_BRANCHES = 5;
 const MAX_BUILDS = 5;
@@ -132,16 +132,6 @@ class ReleasesTable extends Component<ReleasesTableProps, ReleasesTableState> {
         {isHistoryOpen &&
           filters?.risk === AVAILABLE &&
           this.renderHistoryPanel()}
-      </>
-    );
-  }
-
-  renderAvailableRevisions() {
-    return (
-      <>
-        <h5>Promote from uploaded revisions</h5>
-
-        {this.renderAvailableRevisionsRow()}
       </>
     );
   }

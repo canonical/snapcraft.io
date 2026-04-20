@@ -3,7 +3,8 @@ import { connect } from "react-redux";
 import { hideNotification } from "../actions/globalNotification";
 
 import Notification from "./notification";
-import { ReleasesReduxState, DispatchFn } from "../../../types/releaseTypes";
+import type { ReleasesReduxState } from "../../../types/releaseTypes";
+import type { DispatchFn } from "../store";
 
 interface StateProps {
   children?: string;

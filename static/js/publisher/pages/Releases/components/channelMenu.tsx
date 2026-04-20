@@ -1,18 +1,12 @@
 import React, { Component } from "react";
 
 import ContextualMenu from "./contextualMenu";
-
-interface TargetChannel {
-  channel: string;
-  display?: string;
-  isDisabled: boolean;
-  reason?: string;
-}
+import type { TargetChannel } from "../../../types/releaseTypes";
 
 interface ChannelMenuProps {
   channel: string;
   targetChannels: TargetChannel[];
-  tooltip?: string;
+  tooltip?: JSX.Element;
   promoteToChannel: (channel: string) => void;
   closeChannel?: (channel: string) => void;
   gaEvent: (channel: string, action: string) => void;

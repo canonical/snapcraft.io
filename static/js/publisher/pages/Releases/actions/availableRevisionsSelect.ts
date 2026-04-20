@@ -10,13 +10,13 @@ import {
   getFilteredAvailableRevisionsForArch,
 } from "../selectors";
 import { getBuildId } from "../helpers";
-import {
+import type {
   GenericReleasesAction,
-  DispatchFn,
   ReleasesReduxState,
   Revision,
   AvailableRevisionsSelect,
 } from "../../../types/releaseTypes";
+import type { DispatchFn } from "../store";
 
 export const SET_AVAILABLE_REVISIONS_SELECT = "SET_AVAILABLE_REVISIONS_SELECT";
 

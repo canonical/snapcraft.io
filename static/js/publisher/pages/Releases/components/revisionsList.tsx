@@ -13,12 +13,12 @@ import { getBuildId, getChannelName, isInDevmode } from "../helpers";
 import type {
   Revision,
   ReleasesReduxState,
-  DispatchFn,
   AvailableRevisionsSelect,
   PendingReleaseItem,
   CPUArchitecture,
   Channel,
 } from "../../../types/releaseTypes";
+import type { DispatchFn } from "../store";
 
 import RevisionsListRow from "./revisionsListRow";
 import { closeHistory } from "../actions/history";
@@ -33,7 +33,7 @@ import {
   getFilteredAvailableRevisionsForArch,
   isProgressiveReleaseEnabled,
   getPendingRelease,
-  ReleaseHistoryItem,
+  type ReleaseHistoryItem,
 } from "../selectors";
 
 interface OwnProps {
@@ -43,7 +43,6 @@ interface OwnProps {
 interface StateProps {
   revisions: { [revision: string]: Revision };
   filters: ReleasesReduxState["history"]["filters"];
-  pendingReleases: { [revision: string]: { [channel: string]: PendingReleaseItem } };
   availableRevisionsSelect: AvailableRevisionsSelect;
   showChannels?: boolean;
   filteredReleaseHistory: ReleaseHistoryItem[];
@@ -492,7 +491,6 @@ const mapStateToProps = (state: ReleasesReduxState): StateProps => {
         state.availableRevisionsSelect === AVAILABLE_REVISIONS_SELECT_ALL),
     filters: state.history.filters,
     revisions: state.revisions,
-    pendingReleases: state.pendingReleases,
     pendingChannelMap: getPendingChannelMap(state),
     selectedRevisions: getSelectedRevisions(state),
     getSelectedRevision: (arch: CPUArchitecture) => getSelectedRevision(state, arch),

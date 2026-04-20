@@ -5,13 +5,13 @@ import Release from "./Release";
 import { setPageTitle } from "../../utils";
 import Loader from "../../components/Loader";
 
-import { ReleasesAPIResponse } from "../../types/releaseTypes";
+import type { ReleasesAPIResponse } from "../../types/releaseTypes";
 
 function Releases(): React.JSX.Element {
   const { snapId } = useParams();
   const { isLoading, isFetched, data } = useQuery({
     queryKey: ["releases", snapId],
-    queryFn: async () => {
+    queryFn: async (): Promise<ReleasesAPIResponse> => {
       const response = await fetch(`/api/${snapId}/releases`);
 
       if (!response.ok) {
@@ -24,7 +24,7 @@ function Releases(): React.JSX.Element {
         throw new Error("There was a problem fetching releases data");
       }
 
-      return responseData.data;
+      return responseData;
     },
   });
 
@@ -37,16 +37,7 @@ function Releases(): React.JSX.Element {
       {isFetched && data && (
         <Release
           snapName={snapId || ""}
-          releasesData={data.release_history}
-          channelMap={data.channel_map}
-          tracks={data.tracks}
-          options={{
-            defaultTrack: data.default_track,
-            flags: {
-              isProgressiveReleaseEnabled: true,
-            },
-            snapName: data.snap_name,
-          }}
+          apiData={data}
         />
       )}
     </>

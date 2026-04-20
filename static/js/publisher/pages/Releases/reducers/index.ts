@@ -11,28 +11,25 @@ import history from "./history";
 import modal from "./modal";
 import notification from "./globalNotification";
 import options from "./options";
-import pendingCloses from "./pendingCloses";
-import pendingReleases from "./pendingReleases";
+import pendingChanges from "./pendingChanges";
 import releases from "./releases";
 import revisions from "./revisions";
-import { ReleasesReduxState } from "../../../types/releaseTypes";
 
-const releasesReducers = combineReducers<ReleasesReduxState>({
+const releasesReducers = combineReducers({
   architectures,
   availableRevisionsSelect,
   branches,
   channelMap,
   currentTrack,
   defaultTrack,
-  failedRevisions,
   history,
   modal,
   notification,
   options,
-  pendingCloses,
-  pendingReleases,
+  pendingChanges,
   releases,
   revisions,
+  failedRevisions,
 });
 
 export default releasesReducers;

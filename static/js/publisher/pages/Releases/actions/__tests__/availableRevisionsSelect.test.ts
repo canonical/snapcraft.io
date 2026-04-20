@@ -15,7 +15,7 @@ import {
   AVAILABLE_REVISIONS_SELECT_UNRELEASED,
   AVAILABLE_REVISIONS_SELECT_LAUNCHPAD,
 } from "../../constants";
-import {
+import type {
   AvailableRevisionsSelect,
   DispatchFn,
   ReleasesReduxState,
