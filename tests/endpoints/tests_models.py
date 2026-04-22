@@ -344,6 +344,434 @@ class TestCreateRemodelAllowlist(TestModelServiceEndpoints):
         self.assertEqual(data["message"], "An error occurred")
 
 
+class TestUpdateRemodelAllowlist(TestModelServiceEndpoints):
+    @patch(
+        "canonicalwebteam.store_api.publishergw.PublisherGW"
+        + ".update_remodel_allowlist"
+    )
+    def test_update_remodel_allowlist_success(
+        self, mock_update_remodel_allowlist
+    ):
+        mock_update_remodel_allowlist.return_value = None
+
+        payload = {
+            "description": "Updated remodel allowlist",
+            "from-model": "updated-from-model",
+            "from-serial": "updated-from-serial",
+            "to-model": "updated-to-model",
+        }
+
+        response = self.client.patch(
+            "/api/store/1/models/remodel-allowlist", json=payload
+        )
+        data = response.json
+
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(data["success"])
+        # Verify dict payload was wrapped in a list
+        mock_update_remodel_allowlist.assert_called_once_with(
+            mock_update_remodel_allowlist.call_args[0][0],  # flask.session
+            "1",  # store_id
+            [payload],  # Dict should be wrapped in a list
+        )
+
+    @patch(
+        "canonicalwebteam.store_api.publishergw.PublisherGW"
+        + ".update_remodel_allowlist"
+    )
+    def test_update_remodel_allowlist_store_not_found(
+        self, mock_update_remodel_allowlist
+    ):
+        mock_update_remodel_allowlist.side_effect = StoreApiResponseErrorList(
+            "Store not found", 404, [{"message": "Store not found"}]
+        )
+
+        payload = {
+            "description": "Updated remodel allowlist",
+            "from-model": "updated-from-model",
+            "to-model": "updated-to-model",
+        }
+
+        response = self.client.patch(
+            "/api/store/999/models/remodel-allowlist", json=payload
+        )
+        data = response.json
+
+        self.assertEqual(response.status_code, 404)
+        self.assertFalse(data["success"])
+        self.assertEqual(data["message"], "Store not found")
+
+    @patch(
+        "canonicalwebteam.store_api.publishergw.PublisherGW"
+        + ".update_remodel_allowlist"
+    )
+    def test_update_remodel_allowlist_models_not_found(
+        self, mock_update_remodel_allowlist
+    ):
+        mock_update_remodel_allowlist.side_effect = StoreApiResourceNotFound(
+            "Remodel allowlist not found",
+            404,
+            [{"message": "Remodel allowlist not found"}],
+        )
+
+        payload = {
+            "description": "Updated remodel allowlist",
+            "from-model": "updated-from-model",
+            "to-model": "updated-to-model",
+        }
+
+        response = self.client.patch(
+            "/api/store/1/models/remodel-allowlist", json=payload
+        )
+        data = response.json
+
+        self.assertEqual(response.status_code, 404)
+        self.assertFalse(data["success"])
+        self.assertEqual(data["message"], "Remodel allowlist not found")
+
+    @patch(
+        "canonicalwebteam.store_api.publishergw.PublisherGW"
+        + ".update_remodel_allowlist"
+    )
+    def test_update_remodel_allowlist_api_error(
+        self, mock_update_remodel_allowlist
+    ):
+        mock_update_remodel_allowlist.side_effect = StoreApiResponseErrorList(
+            "Internal server error",
+            500,
+            [{"message": "An error occurred"}],
+        )
+
+        payload = {
+            "description": "Updated remodel allowlist",
+            "from-model": "updated-from-model",
+            "to-model": "updated-to-model",
+        }
+
+        response = self.client.patch(
+            "/api/store/1/models/remodel-allowlist", json=payload
+        )
+        data = response.json
+
+        self.assertEqual(response.status_code, 500)
+        self.assertFalse(data["success"])
+        self.assertEqual(data["message"], "An error occurred")
+
+    @patch(
+        "canonicalwebteam.store_api.publishergw.PublisherGW"
+        + ".update_remodel_allowlist"
+    )
+    def test_update_remodel_allowlist_general_exception(
+        self, mock_update_remodel_allowlist
+    ):
+        mock_update_remodel_allowlist.side_effect = Exception(
+            "Unexpected error"
+        )
+
+        payload = {
+            "description": "Updated remodel allowlist",
+            "from-model": "updated-from-model",
+            "to-model": "updated-to-model",
+            "from-serial": "test-serial",
+        }
+
+        response = self.client.patch(
+            "/api/store/1/models/remodel-allowlist", json=payload
+        )
+        data = response.json
+
+        self.assertEqual(response.status_code, 500)
+        self.assertFalse(data["success"])
+        self.assertEqual(data["message"], "An error occurred")
+
+    def test_update_remodel_allowlist_missing_json_payload(self):
+        """Test update remodel allowlist with missing JSON payload."""
+        response = self.client.patch(
+            "/api/store/1/models/remodel-allowlist",
+            headers={"Content-Type": "application/json"},
+            data="",
+        )
+        data = response.json
+
+        self.assertEqual(response.status_code, 400)
+        self.assertFalse(data["success"])
+        self.assertEqual(data["message"], "Missing or invalid JSON payload")
+
+    def test_update_remodel_allowlist_invalid_json_payload(self):
+        """Test update remodel allowlist with invalid JSON payload."""
+        response = self.client.patch(
+            "/api/store/1/models/remodel-allowlist",
+            headers={"Content-Type": "application/json"},
+            data="{invalid json}",
+        )
+        data = response.json
+
+        self.assertEqual(response.status_code, 400)
+        self.assertFalse(data["success"])
+        self.assertEqual(data["message"], "Missing or invalid JSON payload")
+
+    def test_update_remodel_allowlist_no_content_type(self):
+        """Test update remodel allowlist without content-type header."""
+        response = self.client.patch(
+            "/api/store/1/models/remodel-allowlist", data='{"test": "data"}'
+        )
+        data = response.json
+
+        self.assertEqual(response.status_code, 400)
+        self.assertFalse(data["success"])
+        self.assertEqual(data["message"], "Missing or invalid JSON payload")
+
+    @patch(
+        "canonicalwebteam.store_api.publishergw.PublisherGW"
+        + ".update_remodel_allowlist"
+    )
+    def test_update_remodel_allowlist_with_list_payload(
+        self, mock_update_remodel_allowlist
+    ):
+        mock_update_remodel_allowlist.return_value = None
+
+        payload = [
+            {
+                "description": "Updated remodel allowlist 1",
+                "from-model": "updated-from-model-1",
+                "from-serial": "updated-from-serial-1",
+                "to-model": "updated-to-model-1",
+            },
+            {
+                "description": "Updated remodel allowlist 2",
+                "from-model": "updated-from-model-2",
+                "from-serial": "updated-from-serial-2",
+                "to-model": "updated-to-model-2",
+            },
+        ]
+
+        response = self.client.patch(
+            "/api/store/1/models/remodel-allowlist", json=payload
+        )
+        data = response.json
+
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(data["success"])
+        # Verify the list was passed as-is, not wrapped in another list
+        mock_update_remodel_allowlist.assert_called_once_with(
+            mock_update_remodel_allowlist.call_args[0][0],  # flask.session
+            "1",  # store_id
+            payload,  # Should be the original list, not [payload]
+        )
+
+
+class TestDeleteRemodelAllowlist(TestModelServiceEndpoints):
+    @patch(
+        "canonicalwebteam.store_api.publishergw.PublisherGW"
+        + ".delete_remodel_allowlist"
+    )
+    def test_delete_remodel_allowlist_success(
+        self, mock_delete_remodel_allowlist
+    ):
+        mock_delete_remodel_allowlist.return_value = None
+
+        payload = {
+            "from-model": "test-from-model",
+            "from-serial": "test-from-serial",
+            "to-model": "test-to-model",
+        }
+
+        response = self.client.delete(
+            "/api/store/1/models/remodel-allowlist", json=payload
+        )
+        data = response.json
+
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(data["success"])
+        # Verify dict payload was wrapped in a list
+        mock_delete_remodel_allowlist.assert_called_once_with(
+            mock_delete_remodel_allowlist.call_args[0][0],  # flask.session
+            "1",  # store_id
+            [payload],  # Dict should be wrapped in a list
+        )
+
+    @patch(
+        "canonicalwebteam.store_api.publishergw.PublisherGW"
+        + ".delete_remodel_allowlist"
+    )
+    def test_delete_remodel_allowlist_store_not_found(
+        self, mock_delete_remodel_allowlist
+    ):
+        mock_delete_remodel_allowlist.side_effect = StoreApiResponseErrorList(
+            "Store not found", 404, [{"message": "Store not found"}]
+        )
+
+        payload = {
+            "from-model": "test-from-model",
+            "from-serial": "test-from-serial",
+            "to-model": "test-to-model",
+        }
+
+        response = self.client.delete(
+            "/api/store/999/models/remodel-allowlist", json=payload
+        )
+        data = response.json
+
+        self.assertEqual(response.status_code, 404)
+        self.assertFalse(data["success"])
+        self.assertEqual(data["message"], "Store not found")
+
+    @patch(
+        "canonicalwebteam.store_api.publishergw.PublisherGW"
+        + ".delete_remodel_allowlist"
+    )
+    def test_delete_remodel_allowlist_allowlist_not_found(
+        self, mock_delete_remodel_allowlist
+    ):
+        mock_delete_remodel_allowlist.side_effect = StoreApiResourceNotFound(
+            "Remodel allowlist not found",
+            404,
+            [{"message": "Remodel allowlist not found"}],
+        )
+
+        payload = {
+            "from-model": "test-from-model",
+            "from-serial": "test-from-serial",
+            "to-model": "test-to-model",
+        }
+
+        response = self.client.delete(
+            "/api/store/1/models/remodel-allowlist", json=payload
+        )
+        data = response.json
+
+        self.assertEqual(response.status_code, 404)
+        self.assertFalse(data["success"])
+        self.assertEqual(data["message"], "Remodel allowlist not found")
+
+    @patch(
+        "canonicalwebteam.store_api.publishergw.PublisherGW"
+        + ".delete_remodel_allowlist"
+    )
+    def test_delete_remodel_allowlist_api_error(
+        self, mock_delete_remodel_allowlist
+    ):
+        mock_delete_remodel_allowlist.side_effect = StoreApiResponseErrorList(
+            "Internal server error",
+            500,
+            [{"message": "An error occurred"}],
+        )
+
+        payload = {
+            "from-model": "test-from-model",
+            "from-serial": "test-from-serial",
+            "to-model": "test-to-model",
+        }
+
+        response = self.client.delete(
+            "/api/store/1/models/remodel-allowlist", json=payload
+        )
+        data = response.json
+
+        self.assertEqual(response.status_code, 500)
+        self.assertFalse(data["success"])
+        self.assertEqual(data["message"], "An error occurred")
+
+    @patch(
+        "canonicalwebteam.store_api.publishergw.PublisherGW"
+        + ".delete_remodel_allowlist"
+    )
+    def test_delete_remodel_allowlist_general_exception(
+        self, mock_delete_remodel_allowlist
+    ):
+        mock_delete_remodel_allowlist.side_effect = Exception(
+            "Unexpected error"
+        )
+
+        payload = {
+            "from-model": "test-from-model",
+            "from-serial": "test-serial",
+            "to-model": "test-to-model",
+        }
+
+        response = self.client.delete(
+            "/api/store/1/models/remodel-allowlist", json=payload
+        )
+        data = response.json
+
+        self.assertEqual(response.status_code, 500)
+        self.assertFalse(data["success"])
+        self.assertEqual(data["message"], "An error occurred")
+
+    def test_delete_remodel_allowlist_missing_json_payload(self):
+        """Test delete remodel allowlist with missing JSON payload."""
+        response = self.client.delete(
+            "/api/store/1/models/remodel-allowlist",
+            headers={"Content-Type": "application/json"},
+            data="",
+        )
+        data = response.json
+
+        self.assertEqual(response.status_code, 400)
+        self.assertFalse(data["success"])
+        self.assertEqual(data["message"], "Missing or invalid JSON payload")
+
+    def test_delete_remodel_allowlist_invalid_json_payload(self):
+        """Test delete remodel allowlist with invalid JSON payload."""
+        response = self.client.delete(
+            "/api/store/1/models/remodel-allowlist",
+            headers={"Content-Type": "application/json"},
+            data="{invalid json}",
+        )
+        data = response.json
+
+        self.assertEqual(response.status_code, 400)
+        self.assertFalse(data["success"])
+        self.assertEqual(data["message"], "Missing or invalid JSON payload")
+
+    def test_delete_remodel_allowlist_no_content_type(self):
+        """Test delete remodel allowlist without content-type header."""
+        response = self.client.delete(
+            "/api/store/1/models/remodel-allowlist", data='{"test": "data"}'
+        )
+        data = response.json
+
+        self.assertEqual(response.status_code, 400)
+        self.assertFalse(data["success"])
+        self.assertEqual(data["message"], "Missing or invalid JSON payload")
+
+    @patch(
+        "canonicalwebteam.store_api.publishergw.PublisherGW"
+        + ".delete_remodel_allowlist"
+    )
+    def test_delete_remodel_allowlist_with_list_payload(
+        self, mock_delete_remodel_allowlist
+    ):
+        mock_delete_remodel_allowlist.return_value = None
+
+        payload = [
+            {
+                "from-model": "test-from-model-1",
+                "from-serial": "test-from-serial-1",
+                "to-model": "test-to-model-1",
+            },
+            {
+                "from-model": "test-from-model-2",
+                "from-serial": "test-from-serial-2",
+                "to-model": "test-to-model-2",
+            },
+        ]
+
+        response = self.client.delete(
+            "/api/store/1/models/remodel-allowlist", json=payload
+        )
+        data = response.json
+
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(data["success"])
+        # Verify the list was passed as-is, not wrapped in another list
+        mock_delete_remodel_allowlist.assert_called_once_with(
+            mock_delete_remodel_allowlist.call_args[0][0],  # flask.session
+            "1",  # store_id
+            payload,  # Should be the original list, not [payload]
+        )
+
+
 class TestGetSerialLog(TestModelServiceEndpoints):
     @patch(
         "canonicalwebteam.store_api.publishergw.PublisherGW"
