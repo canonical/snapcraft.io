@@ -353,6 +353,10 @@ def create_remodel_allowlist(store_id: str):
 @login_required
 @exchange_required
 def get_serial_log(store_id: str, model_name: str):
+    start_time = flask.request.args.get("start-time")
+    end_time = flask.request.args.get("end-time")
+    page_size = flask.request.args.get("page-size")
+    cursor = flask.request.args.get("next-page")
     res = {}
 
     try:
@@ -360,6 +364,10 @@ def get_serial_log(store_id: str, model_name: str):
             flask.session,
             store_id,
             model_name,
+            start_time,
+            end_time,
+            page_size,
+            cursor,
         )
         res["data"] = logs
         res["success"] = True
