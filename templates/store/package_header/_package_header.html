@@ -22,8 +22,8 @@ Other:
 {%- from 'store/package_header/_package_header_data.html' import package_header_data, package_icon -%}
 
 {%- macro package_header() -%}
-  {%- set buttons_content = caller('buttons') -%}
-  {%- set has_buttons_content = buttons_content|trim|length > 0 -%}
+  {%- set additional_info_content = caller('additional_info') -%}
+  {%- set has_additional_info_content = additional_info_content|trim|length > 0 -%}
   <div class="grid-row">
     <div class="grid-col-2 grid-col-medium-1 grid-col-small-1">
       {{ package_icon(icon_url, image) }}
@@ -40,9 +40,14 @@ Other:
           developer_validation=developer_validation,
           STAR_DEVELOPER=STAR_DEVELOPER,
           VERIFIED_PUBLISHER=VERIFIED_PUBLISHER) }}
-      {%- if has_buttons_content -%}
-      <div class="p-section--shallow">{{ buttons_content }}</div>
-      {%- endif -%}
     </div>
   </div>
+  {%- if has_additional_info_content -%}
+  <div class="grid-row">
+    <div class="grid-col-2 grid-col-medium-1 grid-col-small-1"></div>
+    <div class="grid-col-6 grid-col-medium-3 grid-col-small-3">
+      <div class="p-section--shallow">{{ additional_info_content }}</div>
+    </div>
+  </div>
+  {%- endif -%}
 {%- endmacro -%}
