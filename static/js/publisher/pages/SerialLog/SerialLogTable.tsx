@@ -4,26 +4,19 @@ import { MainTable, TablePagination } from "@canonical/react-components";
 import { format } from "date-fns";
 
 import { brandStoreState } from "../../state/brandStoreState";
-import { filteredSerialLogsListState } from "../../state/serialLogsState";
-import { useSortTableData } from "../../hooks";
+import { serialLogsListState } from "../../state/serialLogsState";
 
 import type { SerialLog } from "../../types/shared";
 
 function SerialLogTable(): React.JSX.Element {
   const { id } = useParams();
-  const serialLogs = useAtomValue(filteredSerialLogsListState);
+  const serialLogs = useAtomValue(serialLogsListState);
   const brandStore = useAtomValue(brandStoreState(id));
 
   const headers = [
     { content: "Brand" },
-    {
-      content: "Model",
-      sortKey: "model-name",
-    },
-    {
-      content: "Serial",
-      sortKey: "serial",
-    },
+    { content: "Model" },
+    { content: "Serial" },
     {
       content: "Created date",
       className: "u-align--right",
@@ -44,20 +37,16 @@ function SerialLogTable(): React.JSX.Element {
     };
   });
 
-  const { rows: sortedRows, updateSort } = useSortTableData({ rows });
-
   return (
     <TablePagination
-      data={sortedRows}
+      data={rows}
       pageLimits={[25, 50, 100, 200]}
       position="below"
     >
       <MainTable
         data-testid="serial-log-table"
-        sortable
-        emptyStateMsg="No serial logs match this filter"
+        emptyStateMsg="No serial logs found"
         headers={headers}
-        onUpdateSort={updateSort}
       />
     </TablePagination>
   );

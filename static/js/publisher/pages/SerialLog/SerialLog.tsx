@@ -1,17 +1,13 @@
 import { useEffect } from "react";
 import { useAtomValue, useSetAtom } from "jotai";
-import { useParams, useSearchParams } from "react-router-dom";
-import { Notification, Icon, Row, Col } from "@canonical/react-components";
+import { useParams } from "react-router-dom";
+import { Notification, Icon } from "@canonical/react-components";
 
 import { useSerialLogs } from "../../hooks";
-import {
-  serialLogsListFilterState,
-  serialLogsListState,
-} from "../../state/serialLogsState";
+import { serialLogsListState } from "../../state/serialLogsState";
 import { brandIdState, brandStoreState } from "../../state/brandStoreState";
 import { setPageTitle } from "../../utils";
 
-import Filter from "../../components/Filter";
 import SerialLogTable from "./SerialLogTable";
 
 import type { UseQueryResult } from "react-query";
@@ -30,9 +26,7 @@ function SerialLog(): React.JSX.Element {
     modelId,
   );
   const setSerialLogs = useSetAtom(serialLogsListState);
-  const setFilter = useSetAtom(serialLogsListFilterState);
   const brandStore = useAtomValue(brandStoreState(id));
-  const [searchParams] = useSearchParams();
 
   brandStore
     ? setPageTitle(`Serial logs in ${brandStore.name}`)
@@ -41,9 +35,8 @@ function SerialLog(): React.JSX.Element {
   useEffect(() => {
     if (!isLoading && !isError && data) {
       setSerialLogs(data.data?.items || []);
-      setFilter(searchParams.get("filter") || "");
     }
-  }, [isLoading, error, data, brandId, id]);
+  }, [isLoading, isError, data]);
 
   return (
     <>
@@ -63,20 +56,9 @@ function SerialLog(): React.JSX.Element {
             {data.message || "Unable to fetch serial logs"}
           </Notification>
         ) : (
-          <>
-            <Row>
-              <Col size={6}>
-                <Filter
-                  state={serialLogsListFilterState}
-                  label="Search serial logs"
-                  placeholder="Search serial logs"
-                />
-              </Col>
-            </Row>
-            <div className="u-flex-column u-flex-grow">
-              <SerialLogTable />
-            </div>
-          </>
+          <div className="u-flex-column u-flex-grow">
+            <SerialLogTable />
+          </div>
         )}
       </div>
     </>
