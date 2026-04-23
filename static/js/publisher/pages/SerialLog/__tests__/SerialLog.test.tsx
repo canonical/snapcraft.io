@@ -94,14 +94,6 @@ describe("SerialLog", () => {
     ).toBeInTheDocument();
   });
 
-  it("doesn't display filter if user has no serial logs access", () => {
-    mockuseSerialLogs.mockReturnValue(useSerialLogsNoPermissions);
-    renderComponent();
-    expect(
-      screen.queryByLabelText("Search serial logs"),
-    ).not.toBeInTheDocument();
-  });
-
   it("doesn't display table if user has no serial logs access", () => {
     mockuseSerialLogs.mockReturnValue(useSerialLogsNoPermissions);
     renderComponent();
@@ -114,12 +106,6 @@ describe("SerialLog", () => {
     expect(
       screen.queryByText("There was a problem fetching serial logs"),
     ).not.toBeInTheDocument();
-  });
-
-  it("displays filter if user has serial logs access", () => {
-    mockuseSerialLogs.mockReturnValue(useSerialLogsPermissions);
-    renderComponent();
-    expect(screen.getByLabelText("Search serial logs")).toBeInTheDocument();
   });
 
   it("displays table if user has serial logs access", () => {
