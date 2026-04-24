@@ -1,23 +1,14 @@
 import { useEffect, useState } from "react";
 import { useAtomValue, useSetAtom } from "jotai";
-import {
-  useParams,
-  useSearchParams,
-  Link,
-  useNavigate,
-} from "react-router-dom";
+import { useParams, Link, useNavigate, useLocation } from "react-router-dom";
 import { Notification, Icon, Row, Col } from "@canonical/react-components";
 
 import { useRemodels } from "../../hooks";
-import {
-  remodelsListFilterState,
-  remodelsListState,
-} from "../../state/remodelsState";
+import { remodelsListState } from "../../state/remodelsState";
 import { brandIdState, brandStoreState } from "../../state/brandStoreState";
 import { setPageTitle, isClosedPanel } from "../../utils";
 import { PortalEntrance } from "../Portals/Portals";
 
-import Filter from "../../components/Filter";
 import RemodelTable from "./RemodelTable";
 import ConfigureRemodelForm from "./ConfigureRemodelForm";
 
@@ -26,6 +17,7 @@ import type { Remodel, RemodelResponse, ApiResponse } from "../../types/shared";
 
 function Remodel(): React.JSX.Element {
   const { id, modelId } = useParams();
+  const location = useLocation();
   const brandId = useAtomValue(brandIdState);
   const {
     isLoading,
@@ -38,12 +30,10 @@ function Remodel(): React.JSX.Element {
     modelId,
   );
   const setRemodels = useSetAtom(remodelsListState);
-  const setFilter = useSetAtom(remodelsListFilterState);
   const [showNotification, setShowNotification] = useState(false);
   const [showErrorNotification, setShowErrorNotification] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const brandStore = useAtomValue(brandStoreState(id));
-  const [searchParams] = useSearchParams();
   const navigate = useNavigate();
 
   brandStore
@@ -53,9 +43,8 @@ function Remodel(): React.JSX.Element {
   useEffect(() => {
     if (!isLoading && !isError && data) {
       setRemodels(data.data?.allowlist || []);
-      setFilter(searchParams.get("filter") || "");
     }
-  }, [isLoading, error, data, brandId, id]);
+  }, [isLoading, isError, data, brandId, id]);
 
   return (
     <>
@@ -77,14 +66,7 @@ function Remodel(): React.JSX.Element {
         ) : (
           <>
             <Row>
-              <Col size={6}>
-                <Filter
-                  state={remodelsListFilterState}
-                  label="Search remodels"
-                  placeholder="Search remodels"
-                />
-              </Col>
-              <Col size={6} className="u-align--right">
+              <Col size={12} className="u-align--right">
                 <Link
                   className={`p-button--positive ${isError && !data ? "is-disabled" : ""}`}
                   to={`/admin/${id}/models/${modelId}/remodel/configure`}

@@ -94,12 +94,6 @@ describe("Remodel", () => {
     ).toBeInTheDocument();
   });
 
-  it("doesn't display filter if user has no remodels access", () => {
-    mockUseRemodels.mockReturnValue(useRemodelsNoPermissions);
-    renderComponent();
-    expect(screen.queryByLabelText("Search remodels")).not.toBeInTheDocument();
-  });
-
   it("doesn't display table if user has no remodels access", () => {
     mockUseRemodels.mockReturnValue(useRemodelsNoPermissions);
     renderComponent();
@@ -120,12 +114,6 @@ describe("Remodel", () => {
     expect(
       screen.queryByText("There was a problem fetching remodels"),
     ).not.toBeInTheDocument();
-  });
-
-  it("displays filter if user has remodels access", () => {
-    mockUseRemodels.mockReturnValue(useRemodelsPermissions);
-    renderComponent();
-    expect(screen.getByLabelText("Search remodels")).toBeInTheDocument();
   });
 
   it("displays table if user has remodels access", () => {
