@@ -1,6 +1,12 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useAtomValue, useSetAtom } from "jotai";
-import { useParams, Link, useNavigate, useLocation } from "react-router-dom";
+import {
+  useParams,
+  Link,
+  useNavigate,
+  useLocation,
+  useSearchParams,
+} from "react-router-dom";
 import { Notification, Icon, Row, Col } from "@canonical/react-components";
 
 import { useRemodels } from "../../hooks";
@@ -17,8 +23,17 @@ import type { Remodel, RemodelResponse, ApiResponse } from "../../types/shared";
 
 function Remodel(): React.JSX.Element {
   const { id, modelId } = useParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const location = useLocation();
   const brandId = useAtomValue(brandIdState);
+  const [currentCursor, setCurrentCursor] = useState<string | null>(null);
+  const [nextCursor, setNextCursor] = useState<string | null>(null);
+  const cursorHistory = useRef<Array<string | null>>([]);
+
+  const pageSizeParam = searchParams.get("page-size");
+  const parsedPageSize = pageSizeParam ? parseInt(pageSizeParam) : NaN;
+  const pageSize = Number.isInteger(parsedPageSize) ? parsedPageSize : 25;
+
   const {
     isLoading,
     isError,
@@ -27,7 +42,11 @@ function Remodel(): React.JSX.Element {
     refetch,
   }: UseQueryResult<ApiResponse<RemodelResponse>, Error> = useRemodels(
     brandId,
-    modelId,
+    {
+      fromModel: modelId,
+      pageSize: pageSize,
+      page: currentCursor,
+    },
   );
   const setRemodels = useSetAtom(remodelsListState);
   const [showNotification, setShowNotification] = useState(false);
@@ -36,13 +55,36 @@ function Remodel(): React.JSX.Element {
   const brandStore = useAtomValue(brandStoreState(id));
   const navigate = useNavigate();
 
+  const handlePageForward = () => {
+    cursorHistory.current.push(currentCursor);
+    setCurrentCursor(nextCursor);
+  };
+
+  const handlePageBack = () => {
+    const lastCursor = cursorHistory.current.pop();
+    setCurrentCursor(lastCursor || null);
+  };
+
+  const handlePageSizeChange = (newPageSize: number) => {
+    // Need to reset current page when changing page size
+    // because otherwise the cursor history gets out of sync
+    setCurrentCursor(null);
+    cursorHistory.current = [];
+    setSearchParams({ "page-size": newPageSize.toString() });
+  };
+
   brandStore
     ? setPageTitle(`Remodels in ${brandStore.name}`)
     : setPageTitle("Remodels");
 
   useEffect(() => {
-    if (!isLoading && !isError && data) {
+    if (isLoading || isError) {
+      return;
+    }
+
+    if (data) {
       setRemodels(data.data?.allowlist || []);
+      setNextCursor(data.data?.["next-cursor"] || null);
     }
   }, [isLoading, isError, data, brandId, id]);
 
@@ -76,7 +118,18 @@ function Remodel(): React.JSX.Element {
               </Col>
             </Row>
             <div className="u-flex-column u-flex-grow">
-              <RemodelTable />
+              {data && (
+                <RemodelTable
+                  handlePageForward={handlePageForward}
+                  handlePageBack={handlePageBack}
+                  handlePageSizeChange={handlePageSizeChange}
+                  forwardDisabled={!nextCursor}
+                  backDisabled={
+                    cursorHistory.current.length < 1 || currentCursor === null
+                  }
+                  pageSize={pageSize}
+                />
+              )}
             </div>
           </>
         )}

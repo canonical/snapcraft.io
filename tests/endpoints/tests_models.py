@@ -262,6 +262,119 @@ class TestGetRemodelAllowlist(TestModelServiceEndpoints):
         self.assertFalse(data["success"])
         self.assertEqual(data["message"], "Internal server error")
 
+    @patch(
+        "canonicalwebteam.store_api.publishergw.PublisherGW"
+        + ".get_remodel_allowlist"
+    )
+    def test_get_remodel_allowlist_with_page_parameter(
+        self, mock_get_remodel_allowlist
+    ):
+        mock_get_remodel_allowlist.return_value = {"allowlist": []}
+
+        response = self.client.get(
+            "/api/store/1/models/remodel-allowlist?page=2"
+        )
+        data = response.json
+
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(data["success"])
+        mock_get_remodel_allowlist.assert_called_once_with(
+            mock_get_remodel_allowlist.call_args[0][0],  # flask.session
+            "1",  # store_id
+            {"cursor": "2", "from-model": None, "page-size": None},  # params
+        )
+
+    @patch(
+        "canonicalwebteam.store_api.publishergw.PublisherGW"
+        + ".get_remodel_allowlist"
+    )
+    def test_get_remodel_allowlist_with_from_model_parameter(
+        self, mock_get_remodel_allowlist
+    ):
+        mock_get_remodel_allowlist.return_value = {"allowlist": []}
+
+        response = self.client.get(
+            "/api/store/1/models/remodel-allowlist?from-model=test-model"
+        )
+        data = response.json
+
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(data["success"])
+        mock_get_remodel_allowlist.assert_called_once_with(
+            mock_get_remodel_allowlist.call_args[0][0],  # flask.session
+            "1",  # store_id
+            {"cursor": None, "from-model": "test-model", "page-size": None},
+        )
+
+    @patch(
+        "canonicalwebteam.store_api.publishergw.PublisherGW"
+        + ".get_remodel_allowlist"
+    )
+    def test_get_remodel_allowlist_with_page_size_parameter(
+        self, mock_get_remodel_allowlist
+    ):
+        mock_get_remodel_allowlist.return_value = {"allowlist": []}
+
+        response = self.client.get(
+            "/api/store/1/models/remodel-allowlist?page-size=50"
+        )
+        data = response.json
+
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(data["success"])
+        mock_get_remodel_allowlist.assert_called_once_with(
+            mock_get_remodel_allowlist.call_args[0][0],  # flask.session
+            "1",  # store_id
+            {"cursor": None, "from-model": None, "page-size": "50"},
+        )
+
+    @patch(
+        "canonicalwebteam.store_api.publishergw.PublisherGW"
+        + ".get_remodel_allowlist"
+    )
+    def test_get_remodel_allowlist_with_multiple_parameters(
+        self, mock_get_remodel_allowlist
+    ):
+        mock_get_remodel_allowlist.return_value = {"allowlist": []}
+
+        response = self.client.get(
+            "/api/store/1/models/remodel-allowlist"
+            "?page=3&from-model=ubuntu-core&page-size=25"
+        )
+        data = response.json
+
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(data["success"])
+        mock_get_remodel_allowlist.assert_called_once_with(
+            mock_get_remodel_allowlist.call_args[0][0],  # flask.session
+            "1",  # store_id
+            {
+                "cursor": "3",
+                "from-model": "ubuntu-core",
+                "page-size": "25",
+            },
+        )
+
+    @patch(
+        "canonicalwebteam.store_api.publishergw.PublisherGW"
+        + ".get_remodel_allowlist"
+    )
+    def test_get_remodel_allowlist_with_no_parameters(
+        self, mock_get_remodel_allowlist
+    ):
+        mock_get_remodel_allowlist.return_value = {"allowlist": []}
+
+        response = self.client.get("/api/store/1/models/remodel-allowlist")
+        data = response.json
+
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(data["success"])
+        mock_get_remodel_allowlist.assert_called_once_with(
+            mock_get_remodel_allowlist.call_args[0][0],  # flask.session
+            "1",  # store_id
+            {"cursor": None, "from-model": None, "page-size": None},
+        )
+
 
 class TestCreateRemodelAllowlist(TestModelServiceEndpoints):
     @patch(

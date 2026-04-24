@@ -278,10 +278,18 @@ def get_remodel_allowlist(store_id: str):
         and data.
     """
 
+    params = {
+        # rename `cursor` to `page` on our side for clarity
+        "cursor": flask.request.args.get("page"),
+        "from-model": flask.request.args.get("from-model"),
+        "page-size": flask.request.args.get("page-size"),
+    }
+
     res = {}
+
     try:
         allowlist = publisher_gateway.get_remodel_allowlist(
-            flask.session, store_id
+            flask.session, store_id, params
         )
         res["success"] = True
         res["data"] = allowlist
