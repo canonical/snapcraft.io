@@ -17,6 +17,12 @@ description: The charm for the snapcraft.io website, built with the PaaS app cha
 extensions:
   - flask-framework
 
+requires:
+  redis:
+    interface: redis
+    optional: true
+    limit: 1
+
 config:
   options:
     sentry-dsn:
@@ -28,65 +34,50 @@ config:
       default: "production"
       type: string
 
-    marketo-client-id:
-      description: "Marketo API client ID"
-      type: string
+    marketo:
+      type: secret
+      description: |
+        Marketo API credentials. Must contain following keys:
+          client-id: client ID
+          client-secret: client-secret
 
-    marketo-client-secret:
-      description: "Marketo API client secret"
-      type: string
+    github:
+      type: secret
+      description: |
+        Needed for various functionality. Must contain following keys:
+          client-id: OAuth application ID for prompting users for access to their repositories
+          client-secret: OAuth application client secret for prompting users for access to their repositories
+          snapcraft-bot-user-token: GitHub application token for CVE data
+          snapcraft-user-token: application token for automated builds
+          webhook-host-url: URL of the automated build webhooks' host
+          webhook-secret: Secret salt used for signing automated build webhooks
 
-    github-client-id:
-      description: "GitHub OAuth application ID for prompting users for access to their repositories"
-      type: string
+    lp:
+      type: secret
+      description: |
+        Launchpad API credentials to access the snapcraft build service. Must contain following keys:
+          api-token-secret: Launchpad API token secret
+          api-token: Launchpad API token
+          api-username: Launchpad API username
 
-    github-client-secret:
-      description: "GitHub OAuth application client secret for prompting users for access to their repositories"
-      type: string
+    youtube:
+      type: secret
+      description: |
+        Must contain following keys:
+          api-key: API key used to access the YouTube Data API for retrieving and displaying YouTube video content on snapcraft.io
 
-    github-snapcraft-user-token:
-      description: "GitHub application token for automated builds"
-      type: string
+    discourse:
+      type: secret
+      description: |
+        Must contain following keys:
+          api-key: API key used by the application to authenticate with the configured Discourse forum
+          api-username: Discourse username to associate with API requests to the Discourse forum
 
-    github-snapcraft-bot-user-token:
-      description: "GitHub application token for CVE data"
-      type: string
-
-    github-webhook-secret:
-      description: "Secret salt used for signing automated build webhooks"
-      type: string
-
-    github-webhook-host-url:
-      description: "URL of the automated build webhooks' host"
-      type: string
-
-    lp-api-username:
-      description: "Launchpad API username"
-      type: string
-
-    lp-api-token:
-      description: "Launchpad API token"
-      type: string
-
-    lp-api-token-secret:
-      description: "Launchpad API secret"
-      type: string
-
-    youtube-api-key:
-      description: "API key used to access the YouTube Data API for retrieving and displaying YouTube video content on snapcraft.io"
-      type: string
-
-    discourse-api-key:
-      description: "API key used by the application to authenticate with the configured Discourse forum"
-      type: string
-
-    discourse-api-username:
-      description: "Discourse username to associate with API requests to the Discourse forum"
-      type: string
-
-    dns-verification-salt:
-      description: "Secret salt used when generating DNS verification tokens to confirm domain ownership"
-      type: string
+    dns-verification:
+      type: secret
+      description: |
+        Must contain following keys:
+          salt: Secret salt used when generating DNS verification tokens to confirm domain ownership
 
     login-url:
       description: "Base URL for SSO login redirects"
@@ -116,10 +107,3 @@ config:
     report-sheet-url:
       description: "URL for the reported snaps spreadsheet on Google docs"
       type: string
-
-
-# requires:
-#   tracing:
-#     interface: tracing
-#     optional: true
-#     limit: 1
