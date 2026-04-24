@@ -23,11 +23,14 @@ requires:
     optional: true
     limit: 1
 
+<<<<<<< HEAD
   tracing:
     interface: tracing
     optional: true
     limit: 1
 
+=======
+>>>>>>> 650ecb9489 (feat: refactor config options into secrets)
 config:
   options:
     sentry-dsn:
