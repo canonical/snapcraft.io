@@ -26,7 +26,7 @@ requires:
 config:
   options:
     sentry-dsn:
-      description: "Sentry Data Source Name for the project"
+      description: "Sentry Data Source Name for the project."
       type: string
 
     environment:
