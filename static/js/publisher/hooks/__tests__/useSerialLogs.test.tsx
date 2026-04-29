@@ -169,14 +169,14 @@ describe("useSerialLogs", () => {
     });
   });
 
-  test("returns serial logs data with nextPage param", async () => {
+  test("returns serial logs data with page param", async () => {
     server.use(
       http.get(
         "/api/store/test-brand-id/models/test-model/serial-log",
         ({ request }) => {
           const url = new URL(request.url);
 
-          expect(url.searchParams.get("next-page")).toBe("nextpagecursor");
+          expect(url.searchParams.get("page")).toBe("pagecursor");
           return HttpResponse.json({
             data: serialLogsResponse,
             success: true,
@@ -188,7 +188,7 @@ describe("useSerialLogs", () => {
     const { result } = renderHook(
       () =>
         useSerialLogs("test-brand-id", "test-model", {
-          nextPage: "nextpagecursor",
+          page: "pagecursor",
         }),
       {
         wrapper: createWrapper(),
@@ -205,7 +205,7 @@ describe("useSerialLogs", () => {
     });
   });
 
-  test("returns serial logs data with startTime, endTime, pageSize and nextPage params", async () => {
+  test("returns serial logs data with startTime, endTime, pageSize and page params", async () => {
     server.use(
       http.get(
         "/api/store/test-brand-id/models/test-model/serial-log",
@@ -218,7 +218,7 @@ describe("useSerialLogs", () => {
             "2026-03-28T04:00:23.875000",
           );
           expect(url.searchParams.get("page-size")).toBe("10");
-          expect(url.searchParams.get("next-page")).toBe("nextpagecursor");
+          expect(url.searchParams.get("page")).toBe("pagecursor");
           return HttpResponse.json({
             data: serialLogsResponse,
             success: true,
@@ -235,7 +235,7 @@ describe("useSerialLogs", () => {
             endTime: "2026-03-28T04:00:23.875000",
           },
           pageSize: 10,
-          nextPage: "nextpagecursor",
+          page: "pagecursor",
         }),
       {
         wrapper: createWrapper(),
