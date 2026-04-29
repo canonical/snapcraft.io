@@ -25,7 +25,7 @@ def generate_slug(path):
     ):
         return "account"
 
-    if path == "/" or path.startswith("/first-snap"):
+    if path == "/":
         return "home"
 
     if path.startswith("/build"):

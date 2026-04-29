@@ -32,9 +32,6 @@ class TemplateUtilsTest(unittest.TestCase):
         result = template_utils.generate_slug("/")
         self.assertEqual(result, "home")
 
-        result = template_utils.generate_slug("/first-snap")
-        self.assertEqual(result, "home")
-
         result = template_utils.generate_slug("/build")
         self.assertEqual(result, "build")
 
