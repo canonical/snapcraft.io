@@ -890,45 +890,56 @@ class TestGetSerialLog(TestModelServiceEndpoints):
         "canonicalwebteam.store_api.publishergw.PublisherGW"
         + ".get_store_model_serial_logs"
     )
-    def test_get_serial_log_success(self, mock_get_serial_log):
-        mock_serial_log = [
-            {
-                "brand-id": "test-brand-id",
-                "created-at": "2026-03-23T04:00:23.875000",
-                "model-name": "test-model",
-                "serial": "test-serial",
-            }
-        ]
-        mock_get_serial_log.return_value = mock_serial_log
-        response = self.client.get("/api/store/1/models/test-model/serial-log")
+    def test_get_serial_log_success(self, mock_get_serial_logs):
+        mock_serial_logs = {
+            "items": [
+                {
+                    "brand-id": "test-brand-id",
+                    "created-at": "2026-03-27T14:34:23.666Z",
+                    "model-name": "test-model",
+                    "serial": "test-serial",
+                }
+            ]
+        }
+        mock_get_serial_logs.return_value = mock_serial_logs
+
+        response = self.client.get(
+            "/api/store/test-store-id/models/test-model/serial-log"
+        )
         data = response.json
 
         self.assertEqual(response.status_code, 200)
         self.assertTrue(data["success"])
-        self.assertEqual(data["data"], mock_serial_log)
+        self.assertEqual(data["data"], mock_serial_logs)
 
     @patch(
         "canonicalwebteam.store_api.publishergw.PublisherGW"
         + ".get_store_model_serial_logs"
     )
-    def test_get_serial_log_empty(self, mock_get_serial_log):
-        mock_get_serial_log.return_value = []
-        response = self.client.get("/api/store/1/models/test-model/serial-log")
+    def test_get_serial_log_empty(self, mock_get_serial_logs):
+        mock_get_serial_logs.return_value = {"items": []}
+
+        response = self.client.get(
+            "/api/store/test-store-id/models/test-model/serial-log"
+        )
         data = response.json
 
         self.assertEqual(response.status_code, 200)
         self.assertTrue(data["success"])
-        self.assertEqual(data["data"], [])
+        self.assertEqual(data["data"]["items"], [])
 
     @patch(
         "canonicalwebteam.store_api.publishergw.PublisherGW"
         + ".get_store_model_serial_logs"
     )
-    def test_get_serial_log_unauthorized(self, mock_get_serial_log):
-        mock_get_serial_log.side_effect = StoreApiResponseErrorList(
+    def test_get_serial_log_unauthorized(self, mock_get_serial_logs):
+        mock_get_serial_logs.side_effect = StoreApiResponseErrorList(
             "unauthorized", 401, [{"message": "unauthorized"}]
         )
-        response = self.client.get("/api/store/1/models/test-model/serial-log")
+
+        response = self.client.get(
+            "/api/store/test-store-id/models/test-model/serial-log"
+        )
         data = response.json
 
         self.assertEqual(response.status_code, 500)
@@ -939,10 +950,11 @@ class TestGetSerialLog(TestModelServiceEndpoints):
         "canonicalwebteam.store_api.publishergw.PublisherGW"
         + ".get_store_model_serial_logs"
     )
-    def test_get_serial_log_store_not_found(self, mock_get_serial_log):
-        mock_get_serial_log.side_effect = StoreApiResponseErrorList(
+    def test_get_serial_log_store_not_found(self, mock_get_serial_logs):
+        mock_get_serial_logs.side_effect = StoreApiResponseErrorList(
             "Store not found", 404, [{"message": "Store not found"}]
         )
+
         response = self.client.get(
             "/api/store/999/models/test-model/serial-log"
         )
@@ -956,13 +968,16 @@ class TestGetSerialLog(TestModelServiceEndpoints):
         "canonicalwebteam.store_api.publishergw.PublisherGW"
         + ".get_store_model_serial_logs"
     )
-    def test_get_serial_log_general_error(self, mock_get_serial_log):
-        mock_get_serial_log.side_effect = StoreApiResponseErrorList(
+    def test_get_serial_log_general_error(self, mock_get_serial_logs):
+        mock_get_serial_logs.side_effect = StoreApiResponseErrorList(
             "Internal server error",
             500,
             [{"message": "Internal server error"}],
         )
-        response = self.client.get("/api/store/1/models/test-model/serial-log")
+
+        response = self.client.get(
+            "/api/store/test-store-id/models/test-model/serial-log"
+        )
         data = response.json
 
         self.assertEqual(response.status_code, 500)
@@ -973,137 +988,140 @@ class TestGetSerialLog(TestModelServiceEndpoints):
         "canonicalwebteam.store_api.publishergw.PublisherGW"
         + ".get_store_model_serial_logs"
     )
-    def test_get_serial_log_with_time_range(self, mock_get_serial_log):
-        mock_serial_log = []
-        mock_get_serial_log.return_value = mock_serial_log
+    def test_get_serial_log_with_page_parameter(self, mock_get_serial_logs):
+        mock_get_serial_logs.return_value = {"items": []}
+
         response = self.client.get(
-            "/api/store/1/models/test-model/serial-log"
-            "?start-time=2026-06-01T00:00:00Z"
-            "&end-time=2026-06-30T23:59:59Z"
+            "/api/store/test-store-id/models/test-model/serial-log?"
+            "page=page-cursor"
         )
         data = response.json
 
         self.assertEqual(response.status_code, 200)
         self.assertTrue(data["success"])
-        self.assertEqual(data["data"], [])
-
-        mock_get_serial_log.assert_called_once()
-        # Arguments are passed positionally:
-        # (session, store_id, model_name, start_time, end_time, page_size)
-        self.assertEqual(
-            mock_get_serial_log.call_args.args[3],
-            "2026-06-01T00:00:00Z",
-        )
-        self.assertEqual(
-            mock_get_serial_log.call_args.args[4],
-            "2026-06-30T23:59:59Z",
+        mock_get_serial_logs.assert_called_once_with(
+            mock_get_serial_logs.call_args[0][0],
+            "test-store-id",
+            "test-model",
+            {
+                "cursor": "page-cursor",
+                "start_time": None,
+                "end_time": None,
+                "page_size": None,
+            },
         )
 
     @patch(
         "canonicalwebteam.store_api.publishergw.PublisherGW"
         + ".get_store_model_serial_logs"
     )
-    def test_get_serial_log_with_page_size(self, mock_get_serial_log):
-        mock_serial_log = [
-            {
-                "brand-id": "test-brand-id",
-                "created-at": "2026-03-23T04:00:23.875000",
-                "model-name": "test-model",
-                "serial": "test-serial",
-            }
-        ]
-        mock_get_serial_log.return_value = mock_serial_log
+    def test_get_serial_log_with_start_and_end_time_parameter(
+        self, mock_get_serial_logs
+    ):
+        mock_get_serial_logs.return_value = {"items": []}
+
         response = self.client.get(
-            "/api/store/1/models/test-model/serial-log?page-size=50"
+            "/api/store/test-store-id/models/test-model/serial-log?"
+            "start-time=2026-04-01T23:59:59Z&"
+            "end-time=2026-04-30T23:59:59Z"
         )
         data = response.json
 
         self.assertEqual(response.status_code, 200)
         self.assertTrue(data["success"])
-        self.assertEqual(data["data"], mock_serial_log)
+        mock_get_serial_logs.assert_called_once_with(
+            mock_get_serial_logs.call_args[0][0],
+            "test-store-id",
+            "test-model",
+            {
+                "cursor": None,
+                "start_time": "2026-04-01T23:59:59Z",
+                "end_time": "2026-04-30T23:59:59Z",
+                "page_size": None,
+            },
+        )
 
-        mock_get_serial_log.assert_called_once()
-        # Arguments are passed positionally:
-        # session, store_id, model_name, start_time,
-        # end_time, page_size, cursor
-        self.assertEqual(
-            mock_get_serial_log.call_args.args[5],
-            "50",
+    @patch(
+        "canonicalwebteam.store_api.publishergw"
+        ".PublisherGW.get_store_model_serial_logs"
+    )
+    def test_get_serial_log_with_page_size_parameter(
+        self, mock_get_serial_logs
+    ):
+        mock_get_serial_logs.return_value = {"items": []}
+
+        response = self.client.get(
+            "/api/store/test-store-id/models/test-model/serial-log?"
+            "page-size=25"
+        )
+        data = response.json
+
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(data["success"])
+        mock_get_serial_logs.assert_called_once_with(
+            mock_get_serial_logs.call_args[0][0],
+            "test-store-id",
+            "test-model",
+            {
+                "cursor": None,
+                "start_time": None,
+                "end_time": None,
+                "page_size": "25",
+            },
         )
 
     @patch(
         "canonicalwebteam.store_api.publishergw.PublisherGW"
         + ".get_store_model_serial_logs"
     )
-    def test_get_serial_log_with_next_page(self, mock_get_serial_log):
-        mock_serial_log = [
-            {
-                "brand-id": "test-brand-id",
-                "created-at": "2026-03-23T04:00:23.875000",
-                "model-name": "test-model",
-                "serial": "test-serial",
-            }
-        ]
-        mock_get_serial_log.return_value = mock_serial_log
+    def test_get_serial_log_with_multiple_parameters(
+        self, mock_get_serial_logs
+    ):
+        mock_get_serial_logs.return_value = {"items": []}
+
         response = self.client.get(
-            "/api/store/1/models/test-model/serial-log?next-page=nextpage"
+            "/api/store/test-store-id/models/test-model/serial-log"
+            "?page=page-cursor&start-time=2026-04-01T00:00:00Z&"
+            "end-time=2026-04-30T23:59:59Z&page-size=25"
         )
         data = response.json
 
         self.assertEqual(response.status_code, 200)
         self.assertTrue(data["success"])
-        self.assertEqual(data["data"], mock_serial_log)
-
-        mock_get_serial_log.assert_called_once()
-        # Arguments are passed positionally:
-        # session, store_id, model_name, start_time,
-        # end_time, page_size, cursor
-        self.assertEqual(
-            mock_get_serial_log.call_args.args[6],
-            "nextpage",
+        mock_get_serial_logs.assert_called_once_with(
+            mock_get_serial_logs.call_args[0][0],
+            "test-store-id",
+            "test-model",
+            {
+                "cursor": "page-cursor",
+                "start_time": "2026-04-01T00:00:00Z",
+                "end_time": "2026-04-30T23:59:59Z",
+                "page_size": "25",
+            },
         )
 
     @patch(
         "canonicalwebteam.store_api.publishergw.PublisherGW"
         + ".get_store_model_serial_logs"
     )
-    def test_get_serial_log_with_all_parameters(self, mock_get_serial_log):
-        mock_serial_log = [
-            {
-                "brand-id": "test-brand-id",
-                "created-at": "2026-03-23T04:00:23.875000",
-                "model-name": "test-model",
-                "serial": "test-serial",
-            }
-        ]
-        mock_get_serial_log.return_value = mock_serial_log
+    def test_get_serial_log_with_no_parameters(self, mock_get_serial_logs):
+        mock_get_serial_logs.return_value = {"items": []}
+
         response = self.client.get(
-            "/api/store/1/models/test-model/serial-log"
-            "?start-time=2026-01-01T00:00:00Z"
-            "&end-time=2026-12-31T23:59:59Z"
-            "&page-size=25"
-            "&next-page=nextpage"
+            "/api/store/test-store-id/models/test-model/serial-log"
         )
         data = response.json
 
         self.assertEqual(response.status_code, 200)
         self.assertTrue(data["success"])
-        self.assertEqual(data["data"], mock_serial_log)
-
-        mock_get_serial_log.assert_called_once()
-        # Arguments are passed positionally:
-        # session, store_id, model_name, start_time,
-        # end_time, page_size, cursor
-        self.assertEqual(
-            mock_get_serial_log.call_args.args[3],
-            "2026-01-01T00:00:00Z",
+        mock_get_serial_logs.assert_called_once_with(
+            mock_get_serial_logs.call_args[0][0],
+            "test-store-id",
+            "test-model",
+            {
+                "cursor": None,
+                "start_time": None,
+                "end_time": None,
+                "page_size": None,
+            },
         )
-        self.assertEqual(
-            mock_get_serial_log.call_args.args[4],
-            "2026-12-31T23:59:59Z",
-        )
-        self.assertEqual(
-            mock_get_serial_log.call_args.args[5],
-            "25",
-        )
-        self.assertEqual(mock_get_serial_log.call_args.args[6], "nextpage")

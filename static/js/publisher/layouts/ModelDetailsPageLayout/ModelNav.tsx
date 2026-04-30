@@ -1,13 +1,14 @@
 import { Link, useParams } from "react-router-dom";
 import { useAtomValue } from "jotai";
 
-import { useRemodels } from "../../hooks";
+import { useRemodels, useSerialLogs } from "../../hooks";
 import { brandIdState } from "../../state/brandStoreState";
 
 function ModelNav({ sectionName }: { sectionName: string }): React.JSX.Element {
   const { id, modelId } = useParams();
   const brandId = useAtomValue(brandIdState);
   const { data: remodelsData } = useRemodels(brandId);
+  const { data: serialLogsData } = useSerialLogs(brandId, modelId);
 
   return (
     <nav className="p-tabs">
@@ -41,6 +42,18 @@ function ModelNav({ sectionName }: { sectionName: string }): React.JSX.Element {
               role="tab"
             >
               Remodel
+            </Link>
+          </li>
+        )}
+        {serialLogsData?.success && (
+          <li className="p-tabs__item">
+            <Link
+              to={`/admin/${id}/models/${modelId}/serial-log`}
+              className="p-tabs__link"
+              aria-selected={sectionName === "serial-log"}
+              role="tab"
+            >
+              Serial log
             </Link>
           </li>
         )}
