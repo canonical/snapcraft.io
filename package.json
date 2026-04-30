@@ -28,7 +28,7 @@
     "@canonical/analytics-events": "1.0.5",
     "@canonical/cookie-policy": "3.10.0",
     "@canonical/global-nav": "3.8.0",
-    "@canonical/react-components": "4.0.1",
+    "@canonical/react-components": "4.5.0",
     "@canonical/store-components": "0.55.0",
     "@dnd-kit/core": "6.3.1",
     "@dnd-kit/sortable": "10.0.0",
@@ -87,7 +87,7 @@
     "topojson-client": "3.1.0",
     "typescript": "5.9.3",
     "uuid": "13.0.0",
-    "vanilla-framework": "4.46.0",
+    "vanilla-framework": "4.50.0",
     "vite": "7.3.2"
   },
   "devDependencies": {

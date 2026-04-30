@@ -968,10 +968,10 @@
     prop-types "15.8.1"
     react-table "7.8.0"
 
-"@canonical/react-components@4.0.1":
-  version "4.0.1"
-  resolved "https://registry.yarnpkg.com/@canonical/react-components/-/react-components-4.0.1.tgz#73175f6ab82fa8e0971be98c1efff37cb317784f"
-  integrity sha512-lfD/SoSZQVgttKi4isgkSraowyQNxAodnSWk/Ksmv8A1gO9Oz3dRcPdKnMDfGx3ih8Lb1n+gBZFcDgq+dbmY2g==
+"@canonical/react-components@4.5.0":
+  version "4.5.0"
+  resolved "https://registry.yarnpkg.com/@canonical/react-components/-/react-components-4.5.0.tgz#2309b8c2fe7f109ad563471a148167cf7e6bf343"
+  integrity sha512-OqQzAYDWokJWU2WkCnmcztQrx4QjiLs5qqG0D4dRQI27ZE4h+0a9jfxluPmKKJ8OGNrPk2HyJj6S+km0xFFXag==
   dependencies:
     "@types/jest" "30.0.0"
     "@types/node" "20.19.30"
@@ -8714,10 +8714,10 @@ vanilla-framework@4.35.0:
   resolved "https://registry.yarnpkg.com/vanilla-framework/-/vanilla-framework-4.35.0.tgz#b01bbb525ad3211690c9f10580ca2e00a37a8ab1"
   integrity sha512-vF8M9vsXiOpJEonFXiTVhY0rXOzNtoWpkhBcCVpyPb4+oHBx0/FaNcX5GAiQpfdT6Q/AAeRYyWwRUDObq6R8uw==
 
-vanilla-framework@4.46.0:
-  version "4.46.0"
-  resolved "https://registry.yarnpkg.com/vanilla-framework/-/vanilla-framework-4.46.0.tgz#0d255c1f57c621ceea1d3a9309832ade383c98ff"
-  integrity sha512-CaDd8QOeCmz6KhawYe3mPpNDP7KS/BxaYUq5/DwPmBU/pLQAvAkvUwizsW4b0+ua0eCgiVx0ILamfcd/V3/dyw==
+vanilla-framework@4.50.0:
+  version "4.50.0"
+  resolved "https://registry.yarnpkg.com/vanilla-framework/-/vanilla-framework-4.50.0.tgz#510a56d73b876eb357deb95a6495a8eef5113c9b"
+  integrity sha512-eDGesUKYO0v+uIsRNHvg8XWcb+do0n6SYsLt/P7XVZSneUFvGbAx702mZXma/BliOI4tygB0EGZ/6bXuTsTTPA==
 
 varint@^6.0.0:
   version "6.0.0"
