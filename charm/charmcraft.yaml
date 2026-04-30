@@ -1,0 +1,109 @@
+name: snapcraft-io
+
+type: charm
+
+bases:
+  - build-on:
+      - name: ubuntu
+        channel: "22.04"
+    run-on:
+      - name: ubuntu
+        channel: "22.04"
+
+summary: The charm for the snapcraft.io website
+
+description: The charm for the snapcraft.io website, built with the PaaS app charmer
+
+extensions:
+  - flask-framework
+
+requires:
+  redis:
+    interface: redis
+    optional: true
+    limit: 1
+
+config:
+  options:
+    sentry-dsn:
+      description: "Sentry Data Source Name for the project"
+      type: string
+
+    environment:
+      description: "Environment in which the application is running, mostly useless for the charmed version of the app"
+      default: "production"
+      type: string
+
+    marketo:
+      type: secret
+      description: |
+        Marketo API credentials. Must contain following keys:
+          client-id: client ID
+          client-secret: client-secret
+
+    github:
+      type: secret
+      description: |
+        Needed for various functionality. Must contain following keys:
+          client-id: OAuth application ID for prompting users for access to their repositories
+          client-secret: OAuth application client secret for prompting users for access to their repositories
+          snapcraft-bot-user-token: GitHub application token for CVE data
+          snapcraft-user-token: application token for automated builds
+          webhook-host-url: URL of the automated build webhooks' host
+          webhook-secret: Secret salt used for signing automated build webhooks
+
+    lp:
+      type: secret
+      description: |
+        Launchpad API credentials to access the snapcraft build service. Must contain following keys:
+          api-token-secret: Launchpad API token secret
+          api-token: Launchpad API token
+          api-username: Launchpad API username
+
+    youtube:
+      type: secret
+      description: |
+        Must contain following keys:
+          api-key: API key used to access the YouTube Data API for retrieving and displaying YouTube video content on snapcraft.io
+
+    discourse:
+      type: secret
+      description: |
+        Must contain following keys:
+          api-key: API key used by the application to authenticate with the configured Discourse forum
+          api-username: Discourse username to associate with API requests to the Discourse forum
+
+    dns-verification:
+      type: secret
+      description: |
+        Must contain following keys:
+          salt: Secret salt used when generating DNS verification tokens to confirm domain ownership
+
+    login-url:
+      description: "Base URL for SSO login redirects"
+      default: "https://login.ubuntu.com"
+      type: string
+
+    bsi-url:
+      description: "Base URL for the Build Snapcraft IO service used for automated builds"
+      default: "https://build.snapcraft.io"
+      type: string
+
+    snapstore-dashboard-api-url:
+      description: "Base URL for SCA backend"
+      default: "https://dashboard.snapcraft.io/"
+      type: string
+
+    publishergw-url:
+      description: "Base URL for Publisher Gateway API"
+      default: "https://api.charmhub.io"
+      type: string
+
+    devicegw-url:
+      description: "Base URL for Device Gateway API"
+      default: "https://api.snapcraft.io/"
+      type: string
+
+    report-sheet-url:
+      description: "URL for the reported snaps spreadsheet on Google docs"
+      type: string
