@@ -39,16 +39,16 @@
     developer_validation,
     STAR_DEVELOPER,
     VERIFIED_PUBLISHER) -%}
-  <div class="p-section--shallow">
+  <div class="p-section--shallow p-package-header">
     <h1 class="u-sv-1" data-live="title">
       {{ package_title }}
 
       {# check if the package title could be misleading #}
       {% if package_title.replace(" ", "-").lower() != package_name %}
-        <span class="p-heading--5 p-tooltip--btm-center" aria-label='(registered as "{{ package_name }}")'>
-          ({{ package_name }})
-          <span class="p-tooltip__message" style="font-weight: 400">Package name</span>
-        </span>
+      <span class="p-tooltip--btm-center p-package-header__name" style="--length: {{ package_name | length }};" aria-label='(registered as "{{ package_name }}")'>
+        ({{ package_name }})
+        <span class="p-tooltip__message">Package name</span>
+      </span>
       {% endif %}
     </h1>
     <div class="u-hide--medium u-hide--large">

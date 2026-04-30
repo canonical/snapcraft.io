@@ -106,4 +106,39 @@
       opacity: 0.3;
     }
   }
+
+  .p-package-header {
+    container: pkgname / inline-size;
+
+    &__name {
+      display: inline-block;
+      white-space: nowrap;
+
+      .p-tooltip__message {
+        font-weight: 400;
+      }
+
+      --length: 40; // default value, it should be overridden via inline styles on the element
+      --fs-ratio: 1.765; // height/width (1rem/1ch) ratio measured in the browser
+      // we take the full width of the container and divide it by the number of characters in the
+      // package name (+2 to account for the parentheses): this is the horizontal space that each
+      // character has on average; we multiply this by the fs-ratio to get the font size
+      --target-font-size: calc(
+        (100cqw / (2 + var(--length))) * var(--fs-ratio)
+      );
+      // we limit the font size to the smallest and largest available sizes
+      --max-font-size: #{map-get($settings-text-h1-mobile, font-size)}rem; // size of the title
+      --min-font-size: #{map-get($settings-text-h5-mobile, font-size)}rem; // smallest size we allow
+      font-size: clamp(
+        var(--min-font-size),
+        var(--target-font-size),
+        var(--max-font-size)
+      );
+
+      @media (min-width: $breakpoint-heading-threshold) {
+        --min-font-size: #{map-get($settings-text-h5, font-size)}rem;
+        --max-font-size: #{map-get($settings-text-h1, font-size)}rem;
+      }
+    }
+  }
 }
