@@ -390,6 +390,91 @@ class GetDetailsPageTest(TestCase):
         self.assert_context("is_users_snap", False)
 
     @responses.activate
+    def test_package_size_in_channel_map(self):
+        """Test that package size is correctly included in channel map data"""
+        payload = {
+            "snap-id": "id",
+            "name": "toto",
+            "default-track": None,
+            "snap": {
+                "title": "Test Snap",
+                "summary": "This is a test snap",
+                "description": "this is a description",
+                "media": [],
+                "license": "MIT",
+                "publisher": {
+                    "display-name": "Test Publisher",
+                    "username": "testpub",
+                    "validation": True,
+                },
+                "categories": [{"name": "test"}],
+                "trending": False,
+                "unlisted": False,
+                "links": {},
+            },
+            "channel-map": [
+                {
+                    "channel": {
+                        "architecture": "amd64",
+                        "name": "stable",
+                        "risk": "stable",
+                        "track": "latest",
+                        "released-at": "2018-09-18T14:45:28.064633+00:00",
+                    },
+                    "created-at": "2018-09-18T14:45:28.064633+00:00",
+                    "version": "1.0",
+                    "confinement": "strict",
+                    "download": {"size": 52428800},  # 50 MB
+                    "revision": 1,
+                }
+            ],
+        }
+
+        responses.add(
+            responses.Response(
+                method="GET", url=self.api_url, json=payload, status=200
+            )
+        )
+        responses.add(
+            responses.Response(
+                method="GET",
+                url=self.api_url_details,
+                json=EMPTY_EXTRA_DETAILS_PAYLOAD,
+                status=200,
+            )
+        )
+        responses.add(
+            responses.Response(
+                method="HEAD", url=self.api_url_sboms, json={}, status=200
+            )
+        )
+
+        metrics_url = "https://api.snapcraft.io/api/v1/snaps/metrics"
+        responses.add(
+            responses.Response(
+                method="POST", url=metrics_url, json={}, status=200
+            )
+        )
+
+        response = self.client.get(self.endpoint_url)
+
+        assert response.status_code == 200
+        # Check that channel_map contains size information
+        context = self.get_context_variable("channel_map")
+        self.assertIsNotNone(context)
+        # Check that size is included in the channel map data structure
+        self.assertIn("amd64", context)
+        self.assertIn("latest", context["amd64"])
+        channel_data = context["amd64"]["latest"][0]
+        self.assertEqual(channel_data["size"], 52428800)
+        # Check that the Download Size column header is in the HTML
+        expected_header = (
+            b'<th width="18%" class="u-hide--medium u-hide--small">'
+            b"Download Size</th>"
+        )
+        self.assertIn(expected_header, response.data)
+
+    @responses.activate
     def test_user_connected_on_not_own_snap(self):
         payload = SNAP_PAYLOAD
 
