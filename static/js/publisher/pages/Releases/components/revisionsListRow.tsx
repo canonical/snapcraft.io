@@ -16,6 +16,7 @@ import {
 
 import RevisionLabel from "./revisionLabel";
 import ProgressiveReleaseProgressChart from "./ProgressiveReleaseProgressChart";
+import { updateRevision } from "../slices/revisions";
 
 interface OwnProps {
   revision: Revision;
@@ -35,6 +36,7 @@ interface StateProps {
 
 interface DispatchProps {
   toggleRevision: (revision: Revision) => void;
+  updateRevision: (revision: Revision) => void;
 }
 
 type RevisionsListRowProps = OwnProps & StateProps & DispatchProps;
@@ -72,7 +74,7 @@ const RevisionsListRow = (props: RevisionsListRowProps) => {
   }
 
   function revisionSelectChange() {
-    revision.changed = true;
+    props.updateRevision({ ...revision, changed: true });
     props.toggleRevision(revision);
   }
 
@@ -187,6 +189,7 @@ const mapStateToProps = (state: ReleasesReduxState): StateProps => {
 const mapDispatchToProps = (dispatch: AppDispatch): DispatchProps => {
   return {
     toggleRevision: (revision: Revision) => dispatch(toggleRevision(revision)),
+    updateRevision: (revision: Revision) => dispatch(updateRevision(revision)),
   };
 };
 

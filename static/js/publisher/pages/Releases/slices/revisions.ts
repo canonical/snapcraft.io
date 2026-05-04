@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import type {
+  Revision,
   RevisionsState,
 } from "../../../types/releaseTypes";
 
@@ -11,8 +12,11 @@ const revisionsSlice = createSlice({
     updateRevisions(_state, action: PayloadAction<RevisionsState>) {
       return action.payload;
     },
+    updateRevision(state, action: PayloadAction<Revision>) {
+      state[action.payload.revision] = action.payload;
+    }
   }
 });
 
-export const { updateRevisions } = revisionsSlice.actions;
+export const { updateRevision, updateRevisions } = revisionsSlice.actions;
 export default revisionsSlice.reducer;
