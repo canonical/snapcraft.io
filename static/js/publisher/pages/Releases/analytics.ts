@@ -12,9 +12,8 @@ export function triggerGAEvent(eventAction: string, ...args: string[]) {
     const currentState = getState();
 
     if (eventLabelItems.length > 1) {
-      eventLabel = `from:${currentState.options.snapName}/
-      ${eventLabelItems[0]} to:${currentState.options.snapName}/
-      ${eventLabelItems[1]}`;
+      eventLabel = `from:${currentState.options.snapName}/${eventLabelItems[0]} `
+        + `to:${currentState.options.snapName}/${eventLabelItems[1]}`;
     } else if (eventLabelItems.length === 1) {
       eventLabel = `${currentState.options.snapName}/${eventLabelItems[0]}`;
     } else {
