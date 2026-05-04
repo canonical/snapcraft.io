@@ -7,7 +7,7 @@ import { brandIdState } from "../../state/brandStoreState";
 function ModelNav({ sectionName }: { sectionName: string }): React.JSX.Element {
   const { id, modelId } = useParams();
   const brandId = useAtomValue(brandIdState);
-  const { data: remodelsData } = useRemodels(brandId, modelId);
+  const { data: remodelsData } = useRemodels(brandId);
 
   return (
     <nav className="p-tabs">
