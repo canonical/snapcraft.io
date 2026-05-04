@@ -3,7 +3,7 @@ import { renderHook, waitFor } from "@testing-library/react";
 import { http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
 
-import useRemodels from "../useRemodels";
+import useSerialLogs from "../useSerialLogs";
 
 import type { ReactNode } from "react";
 
@@ -21,38 +21,39 @@ const createWrapper = () => {
   );
 };
 
-const remodelsResponse = {
-  allowlist: [
+const serialLogsResponse = {
+  items: [
     {
+      "brand-id": "test-brand-id",
       "created-at": "2023-09-05T11:55:53.732366",
-      "created-by": "John Doe",
-      description: "Test description",
-      "from-model": "test-from-model",
-      "from-serial": "test-from-serial",
-      "modified-at": null,
-      "modified-by": null,
-      "to-model": "test-to-model",
+      "model-name": "test-model",
+      serial: "test-serial",
+      "serial-assertion": "test-assertion",
+      "serial-sign-key-sha3-384": "test-sha3",
     },
   ],
   "next-cursor": null,
 };
 
 const handlers = [
-  http.get("/api/store/test-brand-id/models/remodel-allowlist", () => {
+  http.get("/api/store/test-brand-id/models/test-model/serial-log", () => {
     return HttpResponse.json({
-      data: remodelsResponse,
+      data: serialLogsResponse,
       success: true,
     });
   }),
-  http.get("/api/store/test-brand-id-fail/models/remodel-allowlist", () => {
+  http.get("/api/store/test-brand-id-fail/models/test-model/serial-log", () => {
     return HttpResponse.json({
-      message: "There was a problem fetching remodels",
+      message: "There was a problem fetching serial logs",
       success: false,
     });
   }),
-  http.get("/api/store/test-brand-id-error/models/remodel-allowlist", () => {
-    return HttpResponse.error();
-  }),
+  http.get(
+    "/api/store/test-brand-id-error/models/test-model/serial-log",
+    () => {
+      return HttpResponse.error();
+    },
+  ),
 ];
 
 const server = setupServer(...handlers);
@@ -70,65 +71,35 @@ afterAll(() => {
   server.close();
 });
 
-describe("useRemodels", () => {
-  test("returns remodels data", async () => {
-    const { result } = renderHook(() => useRemodels("test-brand-id"), {
-      wrapper: createWrapper(),
-    });
+describe("useSerialLogs", () => {
+  test("returns serial logs data", async () => {
+    const { result } = renderHook(
+      () => useSerialLogs("test-brand-id", "test-model"),
+      {
+        wrapper: createWrapper(),
+      },
+    );
 
     await waitFor(() => {
       expect(result.current.isSuccess).toBe(true);
     });
 
     expect(result.current.data).toEqual({
-      data: remodelsResponse,
+      data: serialLogsResponse,
       success: true,
     });
   });
 
-  test("returns remodels data with pageSize param", async () => {
+  test("returns serial logs data with pageSize param", async () => {
     server.use(
       http.get(
-        "/api/store/test-brand-id/models/remodel-allowlist",
+        "/api/store/test-brand-id/models/test-model/serial-log",
         ({ request }) => {
           const url = new URL(request.url);
 
           expect(url.searchParams.get("page-size")).toBe("10");
           return HttpResponse.json({
-            data: remodelsResponse,
-            success: true,
-          });
-        },
-      ),
-    );
-
-    const { result } = renderHook(
-      () => useRemodels("test-brand-id", { pageSize: 10 }),
-      {
-        wrapper: createWrapper(),
-      },
-    );
-
-    await waitFor(() => {
-      expect(result.current.isSuccess).toBe(true);
-    });
-
-    expect(result.current.data).toEqual({
-      data: remodelsResponse,
-      success: true,
-    });
-  });
-
-  test("returns remodels data with page param", async () => {
-    server.use(
-      http.get(
-        "/api/store/test-brand-id/models/remodel-allowlist",
-        ({ request }) => {
-          const url = new URL(request.url);
-
-          expect(url.searchParams.get("page")).toBe("next_cursor_value");
-          return HttpResponse.json({
-            data: remodelsResponse,
+            data: serialLogsResponse,
             success: true,
           });
         },
@@ -137,8 +108,8 @@ describe("useRemodels", () => {
 
     const { result } = renderHook(
       () =>
-        useRemodels("test-brand-id", {
-          page: "next_cursor_value",
+        useSerialLogs("test-brand-id", "test-model", {
+          pageSize: 10,
         }),
       {
         wrapper: createWrapper(),
@@ -150,21 +121,25 @@ describe("useRemodels", () => {
     });
 
     expect(result.current.data).toEqual({
-      data: remodelsResponse,
+      data: serialLogsResponse,
       success: true,
     });
   });
 
-  test("returns remodels data with fromModel param", async () => {
+  test("returns serial logs data with startTime and endTime params", async () => {
     server.use(
       http.get(
-        "/api/store/test-brand-id/models/remodel-allowlist",
+        "/api/store/test-brand-id/models/test-model/serial-log",
         ({ request }) => {
           const url = new URL(request.url);
-
-          expect(url.searchParams.get("from-model")).toBe("test-from-model");
+          expect(url.searchParams.get("start-time")).toBe(
+            "2026-03-24T04:00:23.875000",
+          );
+          expect(url.searchParams.get("end-time")).toBe(
+            "2026-03-28T04:00:23.875000",
+          );
           return HttpResponse.json({
-            data: remodelsResponse,
+            data: serialLogsResponse,
             success: true,
           });
         },
@@ -173,8 +148,11 @@ describe("useRemodels", () => {
 
     const { result } = renderHook(
       () =>
-        useRemodels("test-brand-id", {
-          fromModel: "test-from-model",
+        useSerialLogs("test-brand-id", "test-model", {
+          interval: {
+            startTime: "2026-03-24T04:00:23.875000",
+            endTime: "2026-03-28T04:00:23.875000",
+          },
         }),
       {
         wrapper: createWrapper(),
@@ -186,23 +164,21 @@ describe("useRemodels", () => {
     });
 
     expect(result.current.data).toEqual({
-      data: remodelsResponse,
+      data: serialLogsResponse,
       success: true,
     });
   });
 
-  test("returns remodels data with pageSize, page and fromModel param", async () => {
+  test("returns serial logs data with nextPage param", async () => {
     server.use(
       http.get(
-        "/api/store/test-brand-id/models/remodel-allowlist",
+        "/api/store/test-brand-id/models/test-model/serial-log",
         ({ request }) => {
           const url = new URL(request.url);
 
-          expect(url.searchParams.get("page-size")).toBe("25");
-          expect(url.searchParams.get("page")).toBe("cursor123");
-          expect(url.searchParams.get("from-model")).toBe("test-from-model");
+          expect(url.searchParams.get("next-page")).toBe("nextpagecursor");
           return HttpResponse.json({
-            data: remodelsResponse,
+            data: serialLogsResponse,
             success: true,
           });
         },
@@ -211,10 +187,8 @@ describe("useRemodels", () => {
 
     const { result } = renderHook(
       () =>
-        useRemodels("test-brand-id", {
-          pageSize: 25,
-          page: "cursor123",
-          fromModel: "test-from-model",
+        useSerialLogs("test-brand-id", "test-model", {
+          nextPage: "nextpagecursor",
         }),
       {
         wrapper: createWrapper(),
@@ -226,30 +200,83 @@ describe("useRemodels", () => {
     });
 
     expect(result.current.data).toEqual({
-      data: remodelsResponse,
+      data: serialLogsResponse,
+      success: true,
+    });
+  });
+
+  test("returns serial logs data with startTime, endTime, pageSize and nextPage params", async () => {
+    server.use(
+      http.get(
+        "/api/store/test-brand-id/models/test-model/serial-log",
+        ({ request }) => {
+          const url = new URL(request.url);
+          expect(url.searchParams.get("start-time")).toBe(
+            "2026-03-24T04:00:23.875000",
+          );
+          expect(url.searchParams.get("end-time")).toBe(
+            "2026-03-28T04:00:23.875000",
+          );
+          expect(url.searchParams.get("page-size")).toBe("10");
+          expect(url.searchParams.get("next-page")).toBe("nextpagecursor");
+          return HttpResponse.json({
+            data: serialLogsResponse,
+            success: true,
+          });
+        },
+      ),
+    );
+
+    const { result } = renderHook(
+      () =>
+        useSerialLogs("test-brand-id", "test-model", {
+          interval: {
+            startTime: "2026-03-24T04:00:23.875000",
+            endTime: "2026-03-28T04:00:23.875000",
+          },
+          pageSize: 10,
+          nextPage: "nextpagecursor",
+        }),
+      {
+        wrapper: createWrapper(),
+      },
+    );
+
+    await waitFor(() => {
+      expect(result.current.isSuccess).toBe(true);
+    });
+
+    expect(result.current.data).toEqual({
+      data: serialLogsResponse,
       success: true,
     });
   });
 
   test("returns error if request fails", async () => {
-    const { result } = renderHook(() => useRemodels("test-brand-id-fail"), {
-      wrapper: createWrapper(),
-    });
+    const { result } = renderHook(
+      () => useSerialLogs("test-brand-id-fail", "test-model"),
+      {
+        wrapper: createWrapper(),
+      },
+    );
 
     await waitFor(() => {
       expect(result.current.isSuccess).toBe(true);
     });
 
     expect(result.current.data).toEqual({
-      message: "There was a problem fetching remodels",
+      message: "There was a problem fetching serial logs",
       success: false,
     });
   });
 
   test("returns error if network error", async () => {
-    const { result } = renderHook(() => useRemodels("test-brand-id-error"), {
-      wrapper: createWrapper(),
-    });
+    const { result } = renderHook(
+      () => useSerialLogs("test-brand-id-error", "test-model"),
+      {
+        wrapper: createWrapper(),
+      },
+    );
 
     await waitFor(() => {
       expect(result.current.isError).toBe(true);

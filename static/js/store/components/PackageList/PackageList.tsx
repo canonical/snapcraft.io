@@ -9,7 +9,10 @@ import {
 } from "@canonical/react-components";
 
 import { PackageFilter } from "../PackageFilter";
-import { trackSearchResultClicked } from "../../utils";
+import {
+  trackSearchResultClicked,
+  trackFeaturedSnapClicked,
+} from "../../utils";
 
 import type { RefObject } from "react";
 import type { Category, Package, Packages } from "../../types";
@@ -31,9 +34,14 @@ function PackageList({
 
   const selectedCategories =
     searchParams.get("categories")?.split(",").filter(Boolean) || [];
+  // Treat as featured when the user is explicitly on the featured category,
+  // or on the default store view (no categories, no search/filters).
   const isFeatured =
-    selectedCategories.length === 0 ||
-    (selectedCategories.length === 1 && selectedCategories[0] === "featured");
+    (selectedCategories.length === 1 && selectedCategories[0] === "featured") ||
+    (selectedCategories.length === 0 &&
+      Array.from(searchParams.keys()).every((key) =>
+        ["page", "categories"].includes(key),
+      ));
 
   const packagesCount = data?.packages ? data?.packages.length : 0;
 
@@ -142,6 +150,14 @@ function PackageList({
                             index +
                             1,
                           packageData.package.name,
+                        );
+                      } else if (isFeatured) {
+                        trackFeaturedSnapClicked(
+                          packageData.package.name,
+                          (parseInt(currentPage) - 1) * ITEMS_PER_PAGE +
+                            index +
+                            1,
+                          "store",
                         );
                       }
                     }}

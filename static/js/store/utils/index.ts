@@ -8,3 +8,4 @@ export {
   trackSearchResults,
   trackSearchResultClicked,
 } from "./searchTracker";
+export { trackFeaturedSnapClicked } from "./featuredTracker";

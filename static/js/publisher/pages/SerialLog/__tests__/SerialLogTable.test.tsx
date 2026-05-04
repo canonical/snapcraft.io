@@ -3,7 +3,7 @@ import { QueryClientProvider, QueryClient } from "react-query";
 import { render, screen } from "@testing-library/react";
 import "@testing-library/jest-dom";
 
-import RemodelTable from "../RemodelTable";
+import SerialLogTable from "../SerialLogTable";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -18,27 +18,27 @@ const renderComponent = () => {
   return render(
     <BrowserRouter>
       <QueryClientProvider client={queryClient}>
-        <RemodelTable />
+        <SerialLogTable />
       </QueryClientProvider>
     </BrowserRouter>,
   );
 };
 
-describe("RemodelTable", () => {
+describe("SerialLogTable", () => {
   it("renders", () => {
     renderComponent();
-    expect(screen.getByTestId("remodel-table")).toBeInTheDocument();
+    expect(screen.getByTestId("serial-log-table")).toBeInTheDocument();
   });
 
   it("renders the correct columns", () => {
     renderComponent();
 
     expect(
-      screen.getByRole("columnheader", { name: "Target model" }),
+      screen.getByRole("columnheader", { name: "Brand" }),
     ).toBeInTheDocument();
 
     expect(
-      screen.getByRole("columnheader", { name: "Original model" }),
+      screen.getByRole("columnheader", { name: "Model" }),
     ).toBeInTheDocument();
 
     expect(
@@ -47,10 +47,6 @@ describe("RemodelTable", () => {
 
     expect(
       screen.getByRole("columnheader", { name: "Created date" }),
-    ).toBeInTheDocument();
-
-    expect(
-      screen.getByRole("columnheader", { name: "Note" }),
     ).toBeInTheDocument();
   });
 });
