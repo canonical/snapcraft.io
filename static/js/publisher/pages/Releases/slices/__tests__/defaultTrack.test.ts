@@ -6,8 +6,23 @@ import reducer, {
 } from "../defaultTrack";
 import rootReducer from "../index";
 import { Mock } from "vitest";
+import { RootState } from "../../store";
 
-const makeStore = (preloadedState: Record<string, unknown> = {}) =>
+
+const mockFetch = vi.fn();
+
+beforeAll(() => {
+  vi.stubGlobal("fetch", mockFetch);
+});
+
+afterAll(() => {
+  vi.unstubAllGlobals();
+});
+
+
+const initialState: RootState = configureStore({ reducer: rootReducer }).getState();
+
+const createMockStore = (preloadedState: RootState = initialState) =>
   configureStore({ reducer: rootReducer, preloadedState });
 
 describe("defaultTrack", () => {
@@ -24,18 +39,19 @@ describe("defaultTrack", () => {
 
   describe("setDefaultTrack async thunk", () => {
     beforeEach(() => {
-      global.fetch = vi.fn().mockResolvedValue({
+      mockFetch.mockResolvedValue({
         ok: true,
         json: () => ({ success: true }),
       });
     });
 
     afterEach(() => {
-      (global.fetch as Mock).mockRestore();
+      mockFetch.mockRestore();
     });
 
     it("should set the default track to the current track on success", async () => {
-      const store = makeStore({
+      const store = createMockStore({
+        ...initialState,
         options: { snapName: "test", flags: {}, releasesReady: false },
         currentTrack: "test",
         defaultTrack: "nope",
@@ -47,7 +63,8 @@ describe("defaultTrack", () => {
     });
 
     it("should show a success notification on success", async () => {
-      const store = makeStore({
+      const store = createMockStore({
+        ...initialState,
         options: { snapName: "test", flags: {}, releasesReady: false },
         currentTrack: "test",
       });
@@ -59,7 +76,8 @@ describe("defaultTrack", () => {
     });
 
     it("should close the modal on success", async () => {
-      const store = makeStore({
+      const store = createMockStore({
+        ...initialState,
         options: { snapName: "test", flags: {}, releasesReady: false },
         currentTrack: "test",
         modal: { visible: true },
@@ -73,18 +91,19 @@ describe("defaultTrack", () => {
 
   describe("clearDefaultTrack async thunk", () => {
     beforeEach(() => {
-      global.fetch = vi.fn().mockResolvedValue({
+      mockFetch.mockResolvedValue({
         ok: true,
         json: () => ({ success: true }),
       });
     });
 
     afterEach(() => {
-      (global.fetch as Mock).mockRestore();
+      mockFetch.mockRestore();
     });
 
     it("should set the default track to null on success", async () => {
-      const store = makeStore({
+      const store = createMockStore({
+        ...initialState,
         options: { snapName: "test", flags: {}, releasesReady: false },
         defaultTrack: "test",
       });
@@ -95,7 +114,8 @@ describe("defaultTrack", () => {
     });
 
     it("should show a success notification on success", async () => {
-      const store = makeStore({
+      const store = createMockStore({
+        ...initialState,
         options: { snapName: "test", flags: {}, releasesReady: false },
       });
 
@@ -106,7 +126,8 @@ describe("defaultTrack", () => {
     });
 
     it("should close the modal on success", async () => {
-      const store = makeStore({
+      const store = createMockStore({
+        ...initialState,
         options: { snapName: "test", flags: {}, releasesReady: false },
         modal: { visible: true },
       });
