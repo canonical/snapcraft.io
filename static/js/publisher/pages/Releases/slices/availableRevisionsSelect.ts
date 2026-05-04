@@ -19,6 +19,12 @@ import type {
 } from "../../../types/releaseTypes";
 import type { AppDispatch, RootState } from "../store";
 
+// TODO: can we remove this slice and all references?
+// We are currently only using AVAILABLE_REVISIONS_SELECT_ALL,
+// set in releasesTable/index.tsx > componentDidMount.
+// There's no way to change it anywhere.
+
+
 const availableRevisionsSelectSlice = createSlice({
   name: "availableRevisionsSelect",
   initialState: AVAILABLE_REVISIONS_SELECT_UNRELEASED as AvailableRevisionsSelectState,

@@ -10,9 +10,7 @@ const modalSlice = createSlice({
   initialState: { visible: false } as ModalState,
   reducers: {
     openModal(_state, action: PayloadAction<ModalState>) {
-      const modalProps = action.payload;
-      modalProps.visible = true;
-      return modalProps;
+      return { ...action.payload, visible: true };
     },
     closeModal(state) {
       state.visible = false;

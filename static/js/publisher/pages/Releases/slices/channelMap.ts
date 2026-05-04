@@ -8,6 +8,9 @@ function handleRevisionSelection(
   toggle: boolean,
 ) {
   const arch = revision.architectures[0];
+  if (!state[AVAILABLE]) {
+    state[AVAILABLE] = {};
+  }
   if (
     toggle &&
     state[AVAILABLE][arch] &&
@@ -43,9 +46,11 @@ const channelMapSlice = createSlice({
     releaseRevisionSuccess(state, action: PayloadAction<ReleaseRevisionSuccessPayload>) {
       const revision = action.payload.revision;
       const channel = action.payload.channel;
+      if (!state[channel]) {
+        state[channel] = {};
+      }
       revision.architectures.forEach((arch) => {
-        const currentChannel = state[channel] || {};
-        const currentlyReleased = currentChannel[arch];
+        const currentlyReleased = state[channel][arch];
         // only update revision in channel map if it changed since last time
         if (
           !currentlyReleased ||

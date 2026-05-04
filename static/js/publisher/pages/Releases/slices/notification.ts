@@ -6,9 +6,7 @@ const notificationSlice = createSlice({
   initialState: { visible: false } as NotificationState,
   reducers: {
     showNotification(_state, action: PayloadAction<NotificationState>) {
-      const notificationProps = action.payload;
-      notificationProps.visible = true;
-      return notificationProps;
+      return { ...action.payload, visible: true };
     },
     hideNotification(state) {
       state.visible = false;
