@@ -66,39 +66,44 @@ describe("availableRevisionsSelect", () => {
     describe("when architectures and revisions are available", () => {
       const revision1 = {
         revision: 1,
-        architectures: ["test64", "amd42"],
-        version: "0.1.0",
+        architectures: ["test64", "abc42"],
+        version: "0.2.0",
       } as unknown as Revision;
       const revision2 = {
         revision: 2,
-        architectures: ["test64"],
-        version: "0.2.0",
+        architectures: ["test64", "amd42"],
+        version: "0.3.0",
       } as unknown as Revision;
 
       beforeEach(() => {
         vi.mocked(getArchitectures).mockReturnValue(["abc42", "amd42", "test64"]);
+        vi.mocked(getFilteredAvailableRevisions).mockImplementation(
+          (state) => [revision2, revision1]);
         vi.mocked(getFilteredAvailableRevisionsForArch).mockImplementation(
           (_state, arch) => {
-            if (arch === "test64") return [revision1, revision2];
-            if (arch === "amd42") return [revision1];
+            if (arch === "test64") return [revision2, revision1];
+            if (arch === "amd42" || arch === "abc42") return [revision1];
             return [];
           },
         );
       });
 
-      it("should dispatch selectRevision for the latest revision in each arch", () => {
+      it("should dispatch selectRevision for the latest revision in each arch where it is available", () => {
         selectAvailableRevisions(AVAILABLE_REVISIONS_SELECT_ALL)(dispatch, getState);
-        expect(dispatch).toHaveBeenCalledWith(selectRevision(revision1));
         expect(dispatch).toHaveBeenCalledWith(selectRevision(revision2));
       });
 
-      it("should not dispatch selectRevision for arches with no available revisions", () => {
-        selectAvailableRevisions("test" as AvailableRevisionsSelect)(dispatch, getState);
+      it("should not dispatch selectRevision for arches without the latest revision", () => {
+        selectAvailableRevisions(AVAILABLE_REVISIONS_SELECT_ALL)(dispatch, getState);
         const selectRevisionCalls = (dispatch as ReturnType<typeof vi.fn>).mock.calls
+          // get first and only parameter of each call to dispatch, which is the action passed
           .map((call) => call[0])
-          .filter((action) => action.type === selectRevision(revision1).type);
-        const selectedRevisions = selectRevisionCalls.map((a) => a.payload);
-        expect(selectedRevisions).not.toContainEqual(expect.objectContaining({ revision: 3 }));
+          .filter((action) =>  action.type === "channelMap/selectRevision");
+        const selectedRevisions = selectRevisionCalls.map((a) => a.payload as unknown as Revision);
+        // we should not find any revision with 
+        expect(selectedRevisions.every(
+            (rev) => rev.architectures.find((arch) => arch === "abc42") === undefined))
+          .toBe(true);
       });
     });
 
@@ -123,23 +128,24 @@ describe("availableRevisionsSelect", () => {
       describe("when there are revisions in state", () => {
         const revision1 = {
           revision: 1,
-          version: "1.test",
+          version: "1",
           architectures: ["arch1"],
         } as unknown as Revision;
         const revision2 = {
           revision: 2,
-          version: "2.test",
+          version: "2",
           architectures: ["arch2"],
         } as unknown as Revision;
         const revision3 = {
           revision: 3,
-          version: "1.test",
+          version: "1",
           architectures: ["arch3"],
         } as unknown as Revision;
 
         beforeEach(() => {
           vi.mocked(getArchitectures).mockReturnValue(["arch1", "arch2", "arch3"]);
-          vi.mocked(getFilteredAvailableRevisions).mockReturnValue([revision1, revision3, revision2]);
+          // the method returns the revisions ordered by revision (higher version first)
+          vi.mocked(getFilteredAvailableRevisions).mockReturnValue([revision3, revision2, revision1]);
           vi.mocked(getFilteredAvailableRevisionsForArch).mockImplementation(
             (_state, arch) => {
               if (arch === "arch1") return [revision1];
@@ -150,7 +156,7 @@ describe("availableRevisionsSelect", () => {
           );
         });
 
-        it("should dispatch selectRevision for revisions with the most recent version", () => {
+        it("should dispatch selectRevision for revisions with version equal to the newest revision", () => {
           selectAvailableRevisions(value)(dispatch, getState);
           expect(dispatch).toHaveBeenCalledWith(selectRevision(revision1));
           expect(dispatch).toHaveBeenCalledWith(selectRevision(revision3));
