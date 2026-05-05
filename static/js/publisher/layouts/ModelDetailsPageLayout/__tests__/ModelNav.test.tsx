@@ -5,19 +5,19 @@ import { vi } from "vitest";
 import "@testing-library/jest-dom";
 
 import ModelNav from "../ModelNav";
-import { useRemodels, useSerialLogs } from "../../../hooks";
-
-import type { UseQueryResult } from "react-query";
-import type {
-  ApiResponse,
-  RemodelResponse,
-  SerialLogResponse,
-} from "../../../types/shared";
+import { useEndpointAvailability } from "../../../hooks";
 
 vi.mock("../../../hooks", () => ({
-  useRemodels: vi.fn(),
-  useSerialLogs: vi.fn(),
+  useEndpointAvailability: vi.fn(),
 }));
+
+vi.mock("react-router-dom", async () => {
+  const actual = await vi.importActual("react-router-dom");
+  return {
+    ...actual,
+    useParams: vi.fn(() => ({ id: "test-id", modelId: "test-model-id" })),
+  };
+});
 
 vi.mock("../../../state/brandStoreState", () => ({
   brandIdState: "mock-brand-id",
@@ -40,28 +40,16 @@ const renderComponent = (sectionName: string) => {
 };
 
 describe("ModelNav", () => {
-  it("highlights the correct navigation item", () => {
-    const mockUseRemodels = vi.mocked(useRemodels);
-    mockUseRemodels.mockReturnValue({
-      data: {
-        success: true,
-        data: {
-          allowlist: [],
-          "next-cursor": null,
-        },
-      },
-    } as unknown as UseQueryResult<ApiResponse<RemodelResponse>, Error>);
+  const mockUseEndpointAvailability = vi.mocked(useEndpointAvailability);
 
-    const mockUseSerialLogs = vi.mocked(useSerialLogs);
-    mockUseSerialLogs.mockReturnValue({
-      data: {
-        success: true,
-        data: {
-          items: [],
-          "next-cursor": null,
-        },
-      },
-    } as unknown as UseQueryResult<ApiResponse<SerialLogResponse>, Error>);
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+  it("highlights the correct navigation item", () => {
+    mockUseEndpointAvailability.mockReturnValue({
+      isRemodelAvailable: true,
+      isSerialLogAvailable: true,
+    });
 
     renderComponent("policies");
     const currentLink = screen.getByRole("tab", { name: "Policies" });
@@ -69,83 +57,31 @@ describe("ModelNav", () => {
   });
 
   it("doesn't highlight other navigation links", () => {
-    const mockUseRemodels = vi.mocked(useRemodels);
-    mockUseRemodels.mockReturnValue({
-      data: {
-        success: true,
-        data: {
-          allowlist: [],
-          "next-cursor": null,
-        },
-      },
-    } as unknown as UseQueryResult<ApiResponse<RemodelResponse>, Error>);
-
-    const mockUseSerialLogs = vi.mocked(useSerialLogs);
-    mockUseSerialLogs.mockReturnValue({
-      data: {
-        success: true,
-        data: {
-          items: [],
-          "next-cursor": null,
-        },
-      },
-    } as unknown as UseQueryResult<ApiResponse<SerialLogResponse>, Error>);
+    mockUseEndpointAvailability.mockReturnValue({
+      isRemodelAvailable: true,
+      isSerialLogAvailable: true,
+    });
 
     renderComponent("policies");
     const currentLink = screen.getByRole("tab", { name: "Overview" });
     expect(currentLink.getAttribute("aria-selected")).toBe("false");
   });
 
-  it("shows Remodel tab when useRemodels returns success: true", () => {
-    const mockUseRemodels = vi.mocked(useRemodels);
-    mockUseRemodels.mockReturnValue({
-      data: {
-        success: true,
-        data: {
-          allowlist: [],
-          "next-cursor": null,
-        },
-      },
-    } as unknown as UseQueryResult<ApiResponse<RemodelResponse>, Error>);
-
-    const mockUseSerialLogs = vi.mocked(useSerialLogs);
-    mockUseSerialLogs.mockReturnValue({
-      data: {
-        success: true,
-        data: {
-          items: [],
-          "next-cursor": null,
-        },
-      },
-    } as unknown as UseQueryResult<ApiResponse<SerialLogResponse>, Error>);
+  it("shows Remodel tab when endpoint is available", () => {
+    mockUseEndpointAvailability.mockReturnValue({
+      isRemodelAvailable: true,
+      isSerialLogAvailable: false,
+    });
 
     renderComponent("overview");
     expect(screen.getByRole("tab", { name: "Remodel" })).toBeInTheDocument();
   });
 
-  it("hides Remodel tab when useRemodels returns success: false", () => {
-    const mockUseRemodels = vi.mocked(useRemodels);
-    mockUseRemodels.mockReturnValue({
-      data: {
-        success: false,
-        message: "Remodeling not available",
-        data: {
-          allowlist: [],
-          "next-cursor": null,
-        },
-      },
-    } as unknown as UseQueryResult<ApiResponse<RemodelResponse>, Error>);
-
-    const mockUseSerialLogs = vi.mocked(useSerialLogs);
-    mockUseSerialLogs.mockReturnValue({
-      data: {
-        success: false,
-        data: {
-          items: [],
-          "next-cursor": null,
-        },
-      },
-    } as unknown as UseQueryResult<ApiResponse<SerialLogResponse>, Error>);
+  it("hides Remodel tab when endpoint is not available", () => {
+    mockUseEndpointAvailability.mockReturnValue({
+      isRemodelAvailable: false,
+      isSerialLogAvailable: false,
+    });
 
     renderComponent("overview");
     expect(
@@ -153,20 +89,25 @@ describe("ModelNav", () => {
     ).not.toBeInTheDocument();
   });
 
-  it("hides Remodel tab when useRemodels returns no data", () => {
-    const mockUseRemodels = vi.mocked(useRemodels);
-    mockUseRemodels.mockReturnValue({
-      data: undefined,
-    } as unknown as UseQueryResult<ApiResponse<RemodelResponse>, Error>);
+  it("shows Serial log tab when endpoint is available", () => {
+    mockUseEndpointAvailability.mockReturnValue({
+      isRemodelAvailable: false,
+      isSerialLogAvailable: true,
+    });
 
-    const mockUseSerialLogs = vi.mocked(useSerialLogs);
-    mockUseSerialLogs.mockReturnValue({
-      data: undefined,
-    } as unknown as UseQueryResult<ApiResponse<SerialLogResponse>, Error>);
+    renderComponent("overview");
+    expect(screen.getByRole("tab", { name: "Serial log" })).toBeInTheDocument();
+  });
+
+  it("hides Serial log tab when endpoint is not available", () => {
+    mockUseEndpointAvailability.mockReturnValue({
+      isRemodelAvailable: false,
+      isSerialLogAvailable: false,
+    });
 
     renderComponent("overview");
     expect(
-      screen.queryByRole("tab", { name: "Remodel" }),
+      screen.queryByRole("tab", { name: "Serial log" }),
     ).not.toBeInTheDocument();
   });
 });
