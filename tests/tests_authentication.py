@@ -17,16 +17,10 @@ class TestResetAuthSession(unittest.TestCase):
             self.assertNotIn(key, session)
 
     def test_reset_auth_session_preserves_integration_keys(self):
-        session = {}
-        session["github_auth_secret"] = "gh-token-123"
-        for key in SESSION_AUTH_KEYS:
-            session[key] = "value"
-
+        session = {key: f"{key}-value" for key in SESSION_INTEGRATION_KEYS}
         reset_auth_session(session)
-
-        self.assertEqual(session["github_auth_secret"], "gh-token-123")
-        for key in SESSION_AUTH_KEYS:
-            self.assertNotIn(key, session)
+        for key in SESSION_INTEGRATION_KEYS:
+            self.assertEqual(session[key], f"{key}-value")
 
     def test_empty_session_clears_everything(self):
         session = {key: "value" for key in SESSION_DATA_KEYS}
@@ -38,4 +32,9 @@ class TestResetAuthSession(unittest.TestCase):
         self.assertEqual(
             set(SESSION_DATA_KEYS),
             set(SESSION_AUTH_KEYS) | set(SESSION_INTEGRATION_KEYS),
+        )
+
+    def test_session_keys_are_disjoint(self):
+        self.assertEqual(
+            set(SESSION_AUTH_KEYS).intersection(set(SESSION_INTEGRATION_KEYS)), set()
         )
