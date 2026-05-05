@@ -194,7 +194,7 @@ jobs:
         run: dotrun test-python-job
 
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v5
+        uses: codecov/codecov-action@v6
         with:
           flags: python
 
@@ -219,7 +219,7 @@ jobs:
           yarn test-js --coverage
 
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v5
+        uses: codecov/codecov-action@v6
         with:
           flags: javascript
 
