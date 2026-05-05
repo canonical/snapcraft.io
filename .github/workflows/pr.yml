@@ -83,7 +83,7 @@ jobs:
       js: ${{ steps.filter.outputs.js }}
       scss: ${{ steps.filter.outputs.scss }}
     steps:
-    - uses: dorny/paths-filter@v3
+    - uses: dorny/paths-filter@v4
       id: filter
       with:
         filters: |
