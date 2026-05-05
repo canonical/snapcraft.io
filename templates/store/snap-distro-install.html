@@ -1,5 +1,5 @@
 {% extends "_layout.html" %}
-{% from "store/_package_header.html" import package_header with context %}
+{% from "store/package_header/_package_header.html" import package_header with context %}
 
 {% block meta_copydoc %}{% endblock %}
 
@@ -20,7 +20,7 @@
 {% endblock %}
 
 {% block meta_schema %}
-  <script type="application/ld+json" nonce="{{ CSP_NONCE }}">
+  <script type="application/ld+json">
     {
       "@context": "https://schema.org",
       "@type": "SoftwareApplication",
