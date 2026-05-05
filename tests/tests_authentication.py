@@ -36,5 +36,6 @@ class TestResetAuthSession(unittest.TestCase):
 
     def test_session_keys_are_disjoint(self):
         self.assertEqual(
-            set(SESSION_AUTH_KEYS).intersection(set(SESSION_INTEGRATION_KEYS)), set()
+            set(SESSION_AUTH_KEYS).intersection(set(SESSION_INTEGRATION_KEYS)),
+            set(),
         )
