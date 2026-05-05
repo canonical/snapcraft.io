@@ -31,7 +31,7 @@ describe("options", () => {
   describe("on options/initOptions action", () => {
     it("should replace the options state with given data", () => {
       const newOptions: OptionsState = {
-        flags: { someFlag: true },
+        flags: { isProgressiveReleaseEnabled: true },
         snapName: "my-snap",
         releasesReady: false,
       };

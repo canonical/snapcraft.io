@@ -220,6 +220,8 @@ export const releaseRevisions = createAsyncThunk<
     const pendingCloses = pendingChanges.pendingCloses;
     const releases = dedupeReleases(pendingChanges.pendingReleases);
     dispatch(hideNotification());
+    // TODO: we're doing a lot of sequential network requests
+    // should we display a loading state in the UI
 
     try {
       await fetchReleases(

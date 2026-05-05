@@ -7,6 +7,8 @@ describe("modal", () => {
     expect(reducer(undefined, {} as UnknownAction)).toEqual({ visible: false });
   });
 
+  const initState: ModalState = {};
+
   describe("on modal/openModal action", () => {
     const modalPayload = {
       title: "Modal title",
@@ -16,19 +18,19 @@ describe("modal", () => {
     } as unknown as ModalState;
 
     it("should mark modal as visible", () => {
-      const result = reducer({} as ModalState, openModal(modalPayload));
+      const result = reducer(initState, openModal(modalPayload));
       expect(result.visible).toBe(true);
     });
 
     it("should include the payload data in state", () => {
-      const result = reducer({} as ModalState, openModal(modalPayload));
+      const result = reducer(initState, openModal(modalPayload));
       expect(result).toEqual({ ...modalPayload, visible: true });
     });
   });
 
   describe("on modal/closeModal action", () => {
     it("should create an action to close the modal", () => {
-      const result = reducer({} as ModalState, closeModal());
+      const result = reducer(initState, closeModal());
       expect(result.visible).toBe(false);
     });
   });

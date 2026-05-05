@@ -16,6 +16,10 @@ describe("history", () => {
   });
 
   describe("on history/openHistory action", () => {
+    const initState: HistoryState = {
+      filters: null,
+      isOpen: false,
+    };
     const filters: HistoryFilters = {
       track: "latest",
       arch: "abc42",
