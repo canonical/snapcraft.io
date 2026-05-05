@@ -1,0 +1,60 @@
+@mixin snapcraft-p-table-pagination-controls {
+  .table-pagination-controls {
+    align-items: baseline;
+    display: flex;
+    margin: $spv--large 0;
+
+    @media screen and (max-width: $breakpoint-small) {
+      justify-content: flex-end;
+    }
+
+    .description {
+      flex-grow: 1;
+
+      @media screen and (max-width: $breakpoint-small) {
+        display: none;
+      }
+    }
+
+    .back {
+      margin: 0 0 0 $spv--large;
+
+      .p-icon--chevron-down {
+        rotate: 90deg;
+      }
+    }
+
+    .next {
+      margin: 0 $spv--large 0 0;
+
+      .p-icon--chevron-down {
+        rotate: 270deg;
+      }
+    }
+
+    .pagination-input {
+      margin: 0 $spv--large;
+      min-width: 0;
+      width: 4rem;
+    }
+
+    .pagination-item-count {
+      margin: 0 $spv--large 0 0;
+    }
+
+    .pagination-select {
+      margin-bottom: 0;
+      margin-left: $spv--x-large;
+      min-width: 0;
+      width: 7rem;
+    }
+
+    @media screen and (max-width: $breakpoint-small) {
+      .back,
+      .next {
+        margin-left: 0;
+        margin-right: 0;
+      }
+    }
+  }
+}

@@ -170,7 +170,7 @@
   {% set article_title = {'rendered': '${title}'} %}
   {% set article = {'slug': '${slug}', 'title': article_title} %}
   {% if blog_slug %}
-    <script type="text/template" id="blog-article-template" nonce="{{ CSP_NONCE }}">
+    <script type="text/template" id="blog-article-template">
       {% include 'partials/blog-card--minimal.html' %}
     </script>
   {% endif %}
@@ -185,7 +185,7 @@
 
 {% block scripts %}
   {% if blog_slug %}
-    <script nonce="{{ CSP_NONCE }}">
+    <script>
       window.addEventListener("DOMContentLoaded", function() {
         try {
           snapcraft.public.publisherDetails.snapDetailsPosts('[data-js="blog-article-list"]', '#blog-article-template', '[data-js="blog-articles"]');

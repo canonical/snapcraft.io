@@ -1,5 +1,6 @@
 import { Button } from "@canonical/react-components";
 import { useSearchParams, useNavigate, useLocation } from "react-router-dom";
+import { trackSearchSubmitted } from "../../utils";
 
 import type { RefObject } from "react";
 
@@ -27,6 +28,8 @@ export const SearchInput = ({
       searchParams.delete("page");
       searchParams.set("q", searchRef.current.value);
       setSearchParams(searchParams);
+
+      trackSearchSubmitted("store", searchRef.current.value);
     }
     if (searchSummaryRef && searchSummaryRef.current) {
       searchSummaryRef.current.scrollIntoView({

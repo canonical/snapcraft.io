@@ -14,11 +14,10 @@
     <link rel="preload" href="https://assets.ubuntu.com/v1/9689339a-snapcraft-hero-background--light.png" as="image">
 
     <!-- Google Tag Manager -->
-    <script nonce="{{ CSP_NONCE }}">(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
     new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
     j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-    'https://www.googletagmanager.com/gtm.js?id='+i+dl;var n=d.querySelector('[nonce]');
-    n&&j.setAttribute('nonce',n.nonce||n.getAttribute('nonce'));f.parentNode.insertBefore(j,f);
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
     })(window,document,'script','dataLayer','GTM-KCGXHQS');</script>
     <!-- End Google Tag Manager -->
 
@@ -26,7 +25,7 @@
 
     {{ vite_import('static/js/base/base.ts') }}
     {% block scripts_includes %}{% endblock %}
-    <script src="https://assets.ubuntu.com/v1/703e23c9-lazysizes+noscript+native-loading.5.1.2.min.js" defer nonce="{{ CSP_NONCE }}"></script>
+    <script src="https://assets.ubuntu.com/v1/703e23c9-lazysizes+noscript+native-loading.5.1.2.min.js" defer></script>
 
     <meta name="description" content="{% block meta_description %}Snaps are containerised software packages that are simple to create and install. They auto-update and are safe to run. And because they bundle their dependencies, they work on all major Linux systems without modification.{% endblock %}">
     <meta name="copydoc" content="{% block meta_copydoc %}{% endblock %}">
@@ -81,14 +80,14 @@
 
     {% block scripts %}{% endblock %}
 
-    <script nonce="{{ CSP_NONCE }}">
+    <script>
       window.COMMIT_ID = "{{ COMMIT_ID }}";
       window.ENVIRONMENT = "{{ ENVIRONMENT }}";
       window.SENTRY_DSN = "{{ SENTRY_DSN }}";
       window.ANALYTICS_ENDPOINT = "{{ ANALYTICS_ENDPOINT }}";
     </script>
 
-  <script type="application/ld+json" nonce="{{ CSP_NONCE }}">
+  <script type="application/ld+json">
       {
         "@context": "http://schema.org/",
         "@id": "https://snapcraft.io/#organization",
@@ -107,7 +106,7 @@
       }
     </script>
 
-    <script type="application/ld+json" nonce="{{ CSP_NONCE }}">
+    <script type="application/ld+json">
       {
         "@context": "http://schema.org",
         "@id": "https://snapcraft.io/#website",
