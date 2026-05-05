@@ -28,6 +28,7 @@
 
 {%- macro package_header_data(
     package_title,
+    package_name,
     icon_url,
     developer,
     categories,
@@ -38,8 +39,18 @@
     developer_validation,
     STAR_DEVELOPER,
     VERIFIED_PUBLISHER) -%}
-  <div class="p-section--shallow">
-    <h1 class="u-sv-1" data-live="title">{{ package_title }}</h1>
+  <div class="p-section--shallow p-package-header">
+    <h1 class="u-sv-1" data-live="title">
+      {{ package_title }}
+
+      {# check if the package title could be misleading #}
+      {% if package_title.replace(" ", "-").lower() != package_name %}
+      <span class="p-tooltip--btm-center p-package-header__name" style="--length: {{ package_name | length }};" aria-label='(registered as "{{ package_name }}")'>
+        ({{ package_name }})
+        <span class="p-tooltip__message">Package name</span>
+      </span>
+      {% endif %}
+    </h1>
     <div class="u-hide--medium u-hide--large">
       {% if developer %}
         {{ developer_info(name=developer[0], url=developer[1]) }}
