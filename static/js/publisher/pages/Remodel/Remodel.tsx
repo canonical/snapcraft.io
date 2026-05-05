@@ -70,7 +70,10 @@ function Remodel(): React.JSX.Element {
     // because otherwise the cursor history gets out of sync
     setCurrentCursor(null);
     cursorHistory.current = [];
-    setSearchParams({ "page-size": newPageSize.toString() });
+    setSearchParams((params) => {
+      params.set("page-size", newPageSize.toString());
+      return params;
+    });
   };
 
   brandStore

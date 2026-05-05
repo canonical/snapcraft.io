@@ -5,13 +5,18 @@ import { vi } from "vitest";
 import "@testing-library/jest-dom";
 
 import ModelNav from "../ModelNav";
-import { useRemodels } from "../../../hooks";
+import { useRemodels, useSerialLogs } from "../../../hooks";
 
 import type { UseQueryResult } from "react-query";
-import type { ApiResponse, RemodelResponse } from "../../../types/shared";
+import type {
+  ApiResponse,
+  RemodelResponse,
+  SerialLogResponse,
+} from "../../../types/shared";
 
 vi.mock("../../../hooks", () => ({
   useRemodels: vi.fn(),
+  useSerialLogs: vi.fn(),
 }));
 
 vi.mock("../../../state/brandStoreState", () => ({
@@ -47,6 +52,17 @@ describe("ModelNav", () => {
       },
     } as unknown as UseQueryResult<ApiResponse<RemodelResponse>, Error>);
 
+    const mockUseSerialLogs = vi.mocked(useSerialLogs);
+    mockUseSerialLogs.mockReturnValue({
+      data: {
+        success: true,
+        data: {
+          items: [],
+          "next-cursor": null,
+        },
+      },
+    } as unknown as UseQueryResult<ApiResponse<SerialLogResponse>, Error>);
+
     renderComponent("policies");
     const currentLink = screen.getByRole("tab", { name: "Policies" });
     expect(currentLink.getAttribute("aria-selected")).toBe("true");
@@ -63,6 +79,17 @@ describe("ModelNav", () => {
         },
       },
     } as unknown as UseQueryResult<ApiResponse<RemodelResponse>, Error>);
+
+    const mockUseSerialLogs = vi.mocked(useSerialLogs);
+    mockUseSerialLogs.mockReturnValue({
+      data: {
+        success: true,
+        data: {
+          items: [],
+          "next-cursor": null,
+        },
+      },
+    } as unknown as UseQueryResult<ApiResponse<SerialLogResponse>, Error>);
 
     renderComponent("policies");
     const currentLink = screen.getByRole("tab", { name: "Overview" });
@@ -81,6 +108,17 @@ describe("ModelNav", () => {
       },
     } as unknown as UseQueryResult<ApiResponse<RemodelResponse>, Error>);
 
+    const mockUseSerialLogs = vi.mocked(useSerialLogs);
+    mockUseSerialLogs.mockReturnValue({
+      data: {
+        success: true,
+        data: {
+          items: [],
+          "next-cursor": null,
+        },
+      },
+    } as unknown as UseQueryResult<ApiResponse<SerialLogResponse>, Error>);
+
     renderComponent("overview");
     expect(screen.getByRole("tab", { name: "Remodel" })).toBeInTheDocument();
   });
@@ -98,6 +136,17 @@ describe("ModelNav", () => {
       },
     } as unknown as UseQueryResult<ApiResponse<RemodelResponse>, Error>);
 
+    const mockUseSerialLogs = vi.mocked(useSerialLogs);
+    mockUseSerialLogs.mockReturnValue({
+      data: {
+        success: false,
+        data: {
+          items: [],
+          "next-cursor": null,
+        },
+      },
+    } as unknown as UseQueryResult<ApiResponse<SerialLogResponse>, Error>);
+
     renderComponent("overview");
     expect(
       screen.queryByRole("tab", { name: "Remodel" }),
@@ -109,6 +158,11 @@ describe("ModelNav", () => {
     mockUseRemodels.mockReturnValue({
       data: undefined,
     } as unknown as UseQueryResult<ApiResponse<RemodelResponse>, Error>);
+
+    const mockUseSerialLogs = vi.mocked(useSerialLogs);
+    mockUseSerialLogs.mockReturnValue({
+      data: undefined,
+    } as unknown as UseQueryResult<ApiResponse<SerialLogResponse>, Error>);
 
     renderComponent("overview");
     expect(

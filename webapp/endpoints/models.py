@@ -473,21 +473,19 @@ def delete_remodel_allowlist(store_id: str):
 @login_required
 @exchange_required
 def get_serial_log(store_id: str, model_name: str):
-    start_time = flask.request.args.get("start-time")
-    end_time = flask.request.args.get("end-time")
-    page_size = flask.request.args.get("page-size")
-    cursor = flask.request.args.get("next-page")
+    params = {
+        # rename `cursor` to `page` on our side for clarity
+        "cursor": flask.request.args.get("page"),
+        "start_time": flask.request.args.get("start-time"),
+        "end_time": flask.request.args.get("end-time"),
+        "page_size": flask.request.args.get("page-size"),
+    }
+
     res = {}
 
     try:
         logs = publisher_gateway.get_store_model_serial_logs(
-            flask.session,
-            store_id,
-            model_name,
-            start_time,
-            end_time,
-            page_size,
-            cursor,
+            flask.session, store_id, model_name, params
         )
         res["data"] = logs
         res["success"] = True

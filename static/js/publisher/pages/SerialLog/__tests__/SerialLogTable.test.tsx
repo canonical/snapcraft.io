@@ -18,7 +18,14 @@ const renderComponent = () => {
   return render(
     <BrowserRouter>
       <QueryClientProvider client={queryClient}>
-        <SerialLogTable />
+        <SerialLogTable
+          handlePageForward={vi.fn()}
+          handlePageBack={vi.fn()}
+          handlePageSizeChange={vi.fn()}
+          forwardDisabled={false}
+          backDisabled={true}
+          pageSize={10}
+        />
       </QueryClientProvider>
     </BrowserRouter>,
   );
