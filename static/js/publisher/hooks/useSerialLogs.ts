@@ -5,8 +5,8 @@ const useSerialLogs = (
   brandId: string | undefined,
   modelId: string | undefined,
   urlSearchParams?: {
+    page?: string | null;
     pageSize?: number;
-    nextPage?: string;
     interval?: {
       startTime: string;
       endTime: string;
@@ -19,7 +19,7 @@ const useSerialLogs = (
   );
 
   if (urlSearchParams) {
-    const { interval, pageSize, nextPage } = urlSearchParams;
+    const { interval, pageSize, page } = urlSearchParams;
 
     if (interval) {
       url.searchParams.set("start-time", interval.startTime);
@@ -30,15 +30,22 @@ const useSerialLogs = (
       url.searchParams.set("page-size", pageSize.toString());
     }
 
-    if (nextPage) {
-      url.searchParams.set("next-page", nextPage);
+    if (page) {
+      url.searchParams.set("page", page);
     }
   }
 
   return useQuery<ApiResponse<SerialLogResponse>, Error>({
-    queryKey: ["serials", brandId, modelId, urlSearchParams],
+    queryKey: [
+      "serials",
+      brandId,
+      modelId,
+      urlSearchParams?.page,
+      urlSearchParams?.pageSize,
+      urlSearchParams?.interval,
+    ],
     queryFn: async () => {
-      const response = await fetch(url.toString());
+      const response = await fetch(url);
       const responseData = await response.json();
 
       return responseData;
