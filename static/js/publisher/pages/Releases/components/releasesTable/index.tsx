@@ -123,7 +123,7 @@ class ReleasesTable extends Component<ReleasesTableProps, ReleasesTableState> {
 
   renderHistoryPanel() {
     return (
-      <div className="p-releases-table__row">
+      <div key={'historyPanel'} className="p-releases-table__row">
         <HistoryPanel />
       </div>
     );

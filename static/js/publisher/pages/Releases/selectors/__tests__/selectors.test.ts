@@ -69,7 +69,6 @@ describe("getFilteredReleaseHistory", () => {
     };
 
     const filteredHistory = getFilteredReleaseHistory(state);
-    // TODO
     expect(filteredHistory.every((r) => r.revision)).toBe(true);
   });
 
@@ -402,7 +401,7 @@ describe("getPendingChannelMap", () => {
       const stateWithWithOverrides = {
         ...stateWithPendingReleases,
       };
-      stateWithWithOverrides.pendingChanges.pendingReleases["0"].channels["test/edge"] = {
+      stateWithWithOverrides.pendingChanges.pendingReleases["0"].channels["latest/stable"] = {
         revision: createMockRevision({ revision: 2, architectures: ["test64"] }),
         channel: "latest/stable",
         previousReleases: [],
@@ -413,12 +412,12 @@ describe("getPendingChannelMap", () => {
       };
       expect(getPendingChannelMap(stateWithWithOverrides)).toEqual({
         ...stateWithWithOverrides.channelMap,
-        "test/edge": {
+        "latest/stable": {
           test64: {
             ...stateWithWithOverrides
               .pendingChanges
               .pendingReleases["0"]
-              .channels["test/edge"]
+              .channels["latest/stable"]
               .revision,
           },
         },
@@ -702,6 +701,7 @@ describe("hasPendingRelease", () => {
           revision: 2,
           channel: "test/edge",
           pendingReleaseItem: {
+            channel: "test/edge",
             revision: createMockRevision({ revision: 2, architectures: ["test64"] }),
           },
         }],
@@ -710,7 +710,6 @@ describe("hasPendingRelease", () => {
     };
 
     it("should return true for channel/arch with pending release", () => {
-      // TODO: investigate
       expect(
         hasPendingRelease(stateWithPendingReleases, "test/edge", "test64")
       ).toBe(true);

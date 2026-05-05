@@ -377,7 +377,7 @@ export type PendingReleaseItem = {
   revision: Revision;
   channel: Channel["name"];
   previousReleases: Revision[];
-  progressive: Progressive;
+  progressive?: Progressive;
   replaces?: PendingReleaseItem;
 };
 

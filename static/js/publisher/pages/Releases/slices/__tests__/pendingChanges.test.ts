@@ -10,30 +10,37 @@ import reducer, {
   promoteChannel,
   undoRelease,
   closeChannel,
+  incrementOrderIndex,
 } from "../pendingChanges";
 import historyReducer from "../history";
 import type {
   PendingChangesState,
+  PendingReleaseItem,
+  Progressive,
   Revision,
 } from "../../../../types/releaseTypes";
 import type { AppDispatch, RootState } from "../../store";
+import { getReleases, getPendingChannelMap } from "../../selectors";
+import { createMockRelease, createMockRevision } from "../../../../test-utils";
+import * as analytics from "../../analytics";
 
-vi.mock("../analytics", () => ({
-  triggerGAEvent: vi.fn().mockReturnValue({ type: "analytics/triggerGAEvent" }),
-}));
 
 vi.mock("../../selectors", () => ({
   getReleases: vi.fn().mockReturnValue([]),
   getPendingChannelMap: vi.fn().mockReturnValue({}),
 }));
 
-import { getReleases, getPendingChannelMap } from "../../selectors";
-
 const initialState: PendingChangesState = {
   changeOrderIndex: 0,
   pendingCloses: {},
   pendingReleases: {},
 };
+
+const emptyPendingReleaseItem: PendingReleaseItem = {
+  revision: createMockRevision({}),
+  channel: "",
+  previousReleases: [],
+}
 
 const findPendingRelease = (state: PendingChangesState, revisionId: number) =>
   Object.values(state.pendingReleases).find((pr) => pr.revision === revisionId);
@@ -43,9 +50,22 @@ describe("pendingChanges", () => {
     expect(reducer(undefined, {} as UnknownAction)).toEqual(initialState);
   });
 
+  // ─── incrementOrderIndex ────────────────────────────────────────────────────
+
+  describe("on pendigChanges/incrementOrderIndex action", () => {
+    it("should increase changeOrderIndex by one", () => {
+      const result = reducer(initialState, incrementOrderIndex());
+      expect(result).toMatchObject({
+        changeOrderIndex: 1,
+        pendingCloses: {},
+        pendingReleases: {},
+      });
+    });
+  });
+
   // ─── addPendingRelease ──────────────────────────────────────────────────────
 
-  describe("on pendingReleases/addPendingRelease action", () => {
+  describe("on pendingChanges/addPendingRelease action", () => {
     const revision = {
       revision: 1,
       architectures: ["abc42", "test64"],
@@ -70,7 +90,8 @@ describe("pendingChanges", () => {
             revision: 1,
             channels: {
               "other/edge": {
-                revision: { revision: 1, architectures: ["abc42", "test64"] } as Revision,
+                ...emptyPendingReleaseItem,
+                revision: createMockRevision({ revision: 1, architectures: ["abc42", "test64"] }),
                 channel: "other/edge",
               },
             },
@@ -102,8 +123,10 @@ describe("pendingChanges", () => {
             revision: 2,
             channels: {
               "other/edge": {
-                revision: { revision: 2, architectures: ["test64"] } as Revision,
+                ...emptyPendingReleaseItem,
+                revision: createMockRevision({ revision: 2, architectures: ["test64"] }),
                 channel: "other/edge",
+                
               },
             },
           },
@@ -111,7 +134,8 @@ describe("pendingChanges", () => {
             revision: 3,
             channels: {
               [channel]: {
-                revision: { revision: 3, architectures: ["armf"] } as Revision,
+                ...emptyPendingReleaseItem,
+                revision: createMockRevision({ revision: 3, architectures: ["armf"] }),
                 channel,
               },
             },
@@ -120,6 +144,7 @@ describe("pendingChanges", () => {
             revision: 4,
             channels: {
               [channel]: {
+                ...emptyPendingReleaseItem,
                 revision: conflictingRevision,
                 channel,
               },
@@ -130,21 +155,25 @@ describe("pendingChanges", () => {
 
       it("should add the promoted revision to state", () => {
         const result = reducer(stateWithConflict, addPendingRelease({ revision, channel }));
-        expect(findPendingRelease(result, 1)).toBeDefined();
+        const pendingRelease = findPendingRelease(result, 1);
+        expect(pendingRelease).toBeDefined();
+        expect(pendingRelease!.revision).toEqual(1);
+        expect(Object.keys(pendingRelease!.channels)).toHaveLength(1);
+        expect(pendingRelease!.channels[channel].channel).toEqual(channel);
       });
 
       it("should remove the conflicting pending release for the same arch and channel", () => {
         const result = reducer(stateWithConflict, addPendingRelease({ revision, channel }));
-        const pr4 = findPendingRelease(result, 4);
-        expect(pr4?.channels[channel]).toBeUndefined();
+        const conflictingPendingRelease = findPendingRelease(result, 4);
+        expect(conflictingPendingRelease).toBeUndefined();
       });
     });
 
     describe("when previousReleases are provided", () => {
       it("should save previousReleases in the pending release item", () => {
-        const previousReleases = {
-          abc42: { revision: 0, architectures: ["abc42"] } as unknown as Revision,
-        };
+        const previousReleases = [
+          createMockRevision({ revision: 0, architectures: ["abc42"] }),
+        ];
         const result = reducer(
           initialState,
           addPendingRelease({ revision, channel, previousReleases }),
@@ -156,7 +185,10 @@ describe("pendingChanges", () => {
 
     describe("when progressive state is provided", () => {
       it("should add a pending release with the progressive state", () => {
-        const progressive = { percentage: 10 };
+        const progressive: Progressive = {
+          "current-percentage": 0,
+          percentage: 10
+        };
         const result = reducer(
           initialState,
           addPendingRelease({ revision, channel, progressive }),
@@ -169,12 +201,19 @@ describe("pendingChanges", () => {
 
   // ─── removePendingRelease ───────────────────────────────────────────────────
 
-  describe("on pendingReleases/removePendingRelease action", () => {
+  describe("on pendingChanges/removePendingRelease action", () => {
     const revision = {
       revision: 1,
       architectures: ["abc42", "test64"],
     } as unknown as Revision;
     const channel = "test/edge";
+
+    describe("when state is empty", () => {
+      it("should not change state if revision is not pending", () => {
+        const result = reducer(initialState, removePendingRelease({ revision, channel }));
+        expect(result).toEqual(initialState);
+      });
+    });
 
     describe("when revision has pending releases in multiple channels", () => {
       it("should remove only the given channel from pending releases", () => {
@@ -185,8 +224,16 @@ describe("pendingChanges", () => {
             0: {
               revision: 1,
               channels: {
-                [channel]: { revision, channel },
-                "latest/beta": { revision, channel: "latest/beta" },
+                [channel]: {
+                  ...emptyPendingReleaseItem,
+                  revision,
+                  channel
+                },
+                "latest/beta": {
+                  ...emptyPendingReleaseItem,
+                  revision,
+                  channel: "latest/beta"
+                },
               },
             },
           },
@@ -197,6 +244,7 @@ describe("pendingChanges", () => {
           removePendingRelease({ revision, channel }),
         );
         const pr = findPendingRelease(result, 1);
+        expect(pr).toBeDefined();
         expect(pr!.channels[channel]).toBeUndefined();
         expect(pr!.channels["latest/beta"]).toBeDefined();
       });
@@ -210,7 +258,13 @@ describe("pendingChanges", () => {
           pendingReleases: {
             0: {
               revision: 1,
-              channels: { [channel]: { revision, channel } },
+              channels: {
+                [channel]: {
+                  ...emptyPendingReleaseItem,
+                  revision,
+                  channel
+                }
+              },
             },
           },
         };
@@ -226,7 +280,12 @@ describe("pendingChanges", () => {
 
   // ─── cancelPendingChanges ───────────────────────────────────────────────────
 
-  describe("on pendingReleases/cancelPendingChanges action", () => {
+  describe("on pendingChanges/cancelPendingChanges action", () => {
+    it("should not change state if empty", () => {
+      const result = reducer(initialState, cancelPendingChanges());
+      expect(result).toEqual(initialState);
+    });
+
     it("should clear all pending releases", () => {
       const stateWithPendingReleases: PendingChangesState = {
         changeOrderIndex: 2,
@@ -236,7 +295,8 @@ describe("pendingChanges", () => {
             revision: 1,
             channels: {
               "latest/beta": {
-                revision: { revision: 1 } as Revision,
+                ...emptyPendingReleaseItem,
+                revision: createMockRevision({ revision: 1 }),
                 channel: "latest/beta",
               },
             },
@@ -245,7 +305,8 @@ describe("pendingChanges", () => {
             revision: 2,
             channels: {
               "latest/stable": {
-                revision: { revision: 2 } as Revision,
+                ...emptyPendingReleaseItem,
+                revision: createMockRevision({ revision: 2 }),
                 channel: "latest/stable",
               },
             },
@@ -254,6 +315,7 @@ describe("pendingChanges", () => {
       };
 
       const result = reducer(stateWithPendingReleases, cancelPendingChanges());
+      expect(result.changeOrderIndex).toEqual(0);
       expect(result.pendingReleases).toEqual({});
     });
 
@@ -265,14 +327,18 @@ describe("pendingChanges", () => {
       };
 
       const result = reducer(stateWithPendingCloses, cancelPendingChanges());
+      expect(result.changeOrderIndex).toEqual(0);
       expect(result.pendingCloses).toEqual({});
     });
   });
 
   // ─── setProgressiveRelease ──────────────────────────────────────────────────
 
-  describe("on pendingReleases/setProgressiveRelease action", () => {
-    const progressive = { percentage: 50 };
+  describe("on pendingChanges/setProgressiveRelease action", () => {
+    const progressive: Progressive = {
+      "current-percentage": 10,
+      percentage: 50
+    };
 
     describe("when state is empty", () => {
       it("should not affect empty state", () => {
@@ -291,7 +357,8 @@ describe("pendingChanges", () => {
               revision: 1,
               channels: {
                 "test/edge": {
-                  revision: { revision: 1, architectures: ["abc42"] } as Revision,
+                  ...emptyPendingReleaseItem,
+                  revision: createMockRevision({ revision: 1, architectures: ["abc42"] }),
                   channel: "test/edge",
                 },
               },
@@ -314,11 +381,12 @@ describe("pendingChanges", () => {
             revision: 1,
             channels: {
               "test/edge": {
-                revision: { revision: 1, architectures: ["abc42", "test64"] } as Revision,
+                ...emptyPendingReleaseItem,
+                revision: createMockRevision({ revision: 1, architectures: ["abc42", "test64"] }),
                 channel: "test/edge",
-                previousReleases: {
-                  abc42: { revision: 0, architectures: ["abc42"] } as unknown as Revision,
-                },
+                previousReleases: [
+                  createMockRevision({ revision: 0, architectures: ["abc42"] }),
+                ],
               },
             },
           },
@@ -334,7 +402,10 @@ describe("pendingChanges", () => {
 
     describe("when pending releases already have progressive state", () => {
       it("should not update existing progressive state", () => {
-        const existingProgressive = { percentage: 20 };
+        const existingProgressive: Progressive = {
+          "current-percentage": 10,
+          percentage: 20
+        };
         const stateWithProgressiveRelease: PendingChangesState = {
           changeOrderIndex: 1,
           pendingCloses: {},
@@ -343,7 +414,8 @@ describe("pendingChanges", () => {
               revision: 1,
               channels: {
                 "test/edge": {
-                  revision: { revision: 1, architectures: ["abc42", "test64"] } as Revision,
+                  ...emptyPendingReleaseItem,
+                  revision: createMockRevision({ revision: 1, architectures: ["abc42", "test64"] }),
                   channel: "test/edge",
                   progressive: existingProgressive,
                 },
@@ -361,8 +433,11 @@ describe("pendingChanges", () => {
 
   // ─── updateProgressiveRelease ───────────────────────────────────────────────
 
-  describe("on pendingReleases/updateProgressiveRelease action", () => {
-    const newProgressive = { percentage: 50 };
+  describe("on pendingChanges/updateProgressiveRelease action", () => {
+    const newProgressive: Progressive = {
+      "current-percentage": 10,
+      percentage: 50
+    };
 
     describe("when state is empty", () => {
       it("should not affect empty state", () => {
@@ -381,7 +456,8 @@ describe("pendingChanges", () => {
               revision: 1,
               channels: {
                 "test/edge": {
-                  revision: { revision: 1 } as Revision,
+                  ...emptyPendingReleaseItem,
+                  revision: createMockRevision({ revision: 1 }),
                   channel: "test/edge",
                 },
               },
@@ -405,9 +481,13 @@ describe("pendingChanges", () => {
               revision: 1,
               channels: {
                 "test/edge": {
-                  revision: { revision: 1 } as Revision,
+                  ...emptyPendingReleaseItem,
+                  revision: createMockRevision({ revision: 1 }),
                   channel: "test/edge",
-                  progressive: { percentage: 20 },
+                  progressive: {
+                    "current-percentage": null,
+                    percentage: 10
+                  },
                 },
               },
             },
@@ -416,7 +496,9 @@ describe("pendingChanges", () => {
 
         const result = reducer(stateWithProgressive, updateProgressiveRelease(newProgressive));
         const pr = findPendingRelease(result, 1);
+        expect(pr).toBeDefined();
         expect(pr!.channels["test/edge"].progressive!.percentage).toEqual(50);
+        expect(pr!.channels["test/edge"].progressive!["current-percentage"]).toEqual(10);
       });
     });
   });
@@ -460,12 +542,18 @@ describe("pendingChanges", () => {
           releases: [{ architecture: "test64", channel, revision: 2 }],
         }) as unknown as RootState;
 
-      vi.mocked(getReleases).mockReturnValue([
-        { architecture: "test64", channel, revision: 2 },
-      ]);
+      const mockedRelease = createMockRelease({ architecture: "test64", channel, revision: 1 });
+      vi.mocked(getReleases).mockReturnValue([mockedRelease]);
 
       releaseRevision(revision, channel)(dispatch, getState);
 
+      expect(dispatch).toHaveBeenCalledWith(
+        addPendingRelease(
+          expect.objectContaining({
+            previousReleases: expect.arrayContaining([revision]),
+          }),
+        ),
+      );
       expect(dispatch).toHaveBeenCalledWith(
         addPendingRelease(
           expect.objectContaining({
@@ -564,6 +652,22 @@ describe("pendingChanges", () => {
     } as unknown as Revision;
     const channel = "test/edge";
 
+    it("should trigger a GA event", () => {
+      const dispatch = vi.fn() as unknown as AppDispatch;
+      // simplification of the triggerGAEvent thunk return value to make testing easier
+      const mockGAEvent = { type: "analytics/triggerGAEvent" };
+      vi.spyOn(analytics, "triggerGAEvent")
+        .mockReturnValue(mockGAEvent as any);
+
+      undoRelease(revision, channel)(dispatch);
+
+      expect(analytics.triggerGAEvent).toHaveBeenCalledWith(
+        "click-cancel-promotion",
+        "test/edge/test64",
+      );
+      expect(dispatch).toHaveBeenCalledWith(mockGAEvent);
+    });
+
     it("should dispatch removePendingRelease with the given revision and channel", () => {
       const dispatch = vi.fn() as unknown as AppDispatch;
 
@@ -576,10 +680,12 @@ describe("pendingChanges", () => {
   // ─── closeChannel thunk ─────────────────────────────────────────────────────
 
   describe("closeChannel thunk", () => {
-    const makeStore = () =>
-      configureStore({
+    const makeStore = () => {
+      const store = configureStore({
         reducer: { pendingChanges: reducer, history: historyReducer },
       });
+      return store as typeof store & { dispatch: AppDispatch };
+    };
 
     it("should add channel to pending closes", () => {
       const store = makeStore();
@@ -587,6 +693,7 @@ describe("pendingChanges", () => {
       expect(Object.values(store.getState().pendingChanges.pendingCloses)).toContain(
         "test/edge",
       );
+      expect(store.getState().pendingChanges.changeOrderIndex).toEqual(1);
     });
 
     it("should not add duplicate channel to pending closes", () => {

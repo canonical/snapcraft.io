@@ -333,6 +333,7 @@ const pendingReleasesSlice = createSlice({
         Object.values(pendingRelease.channels).forEach((channel) => {
           if (channel.progressive) {
             channel.progressive.percentage = progressive.percentage;
+            channel.progressive["current-percentage"] = progressive["current-percentage"];
           }
         });
       });
@@ -340,7 +341,7 @@ const pendingReleasesSlice = createSlice({
   }
 });
 
-// Don't export addPendingClose because we want the users to use the thunk CloseChannel
+// don't export addPendingClose to force using the thunk CloseChannel
 const { addPendingClose } = pendingReleasesSlice.actions;
 
 export const {

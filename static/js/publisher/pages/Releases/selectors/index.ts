@@ -36,7 +36,7 @@ export function getFilteredReleaseHistory(state: ReleasesReduxState): ReleaseHis
   return (
     releases
       // only releases of revisions (ignore closing channels)
-      .filter((release) => release.revision)
+      .filter((release) => release.revision && revisions[release.revision])
       // only releases in given architecture
       .filter((release) => {
         return filters && filters.arch
