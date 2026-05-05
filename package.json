@@ -28,7 +28,7 @@
     "@canonical/analytics-events": "1.0.5",
     "@canonical/cookie-policy": "3.10.0",
     "@canonical/global-nav": "3.8.0",
-    "@canonical/react-components": "4.0.1",
+    "@canonical/react-components": "4.5.1",
     "@canonical/store-components": "0.55.0",
     "@dnd-kit/core": "6.3.1",
     "@dnd-kit/sortable": "10.0.0",
@@ -63,7 +63,7 @@
     "jotai": "2.17.1",
     "jotai-family": "1.0.1",
     "nanoid": "5.1.6",
-    "postcss": "8.5.6",
+    "postcss": "8.5.10",
     "postcss-cli": "11.0.1",
     "prettier": "3.8.1",
     "prop-types": "15.8.1",
@@ -86,9 +86,9 @@
     "tinyglobby": "0.2.15",
     "topojson-client": "3.1.0",
     "typescript": "5.9.3",
-    "uuid": "13.0.0",
-    "vanilla-framework": "4.46.0",
-    "vite": "7.3.1"
+    "uuid": "14.0.0",
+    "vanilla-framework": "4.50.0",
+    "vite": "7.3.2"
   },
   "devDependencies": {
     "@babel/eslint-parser": "7.28.6",
@@ -99,8 +99,8 @@
     "@types/uuid": "11.0.0",
     "@typescript-eslint/eslint-plugin": "^8.58.0",
     "@typescript-eslint/parser": "^8.58.0",
-    "@vitest/coverage-v8": "4.0.18",
-    "@vitest/ui": "4.1.2",
+    "@vitest/coverage-v8": "4.1.3",
+    "@vitest/ui": "4.1.3",
     "concurrently": "9.2.1",
     "cypress": "15.10.0",
     "eslint": "9.39.2",
@@ -112,12 +112,14 @@
     "stylelint": "17.6.0",
     "stylelint-config-standard-scss": "17.0.0",
     "stylelint-order": "7.0.1",
-    "vitest": "^4.0.0"
+    "vitest": "4.1.3"
   },
   "resolutions": {
     "vitest/**/glob": "13.0.1",
-    "lodash": "4.17.23",
+    "vitest/vite": "7.3.2",
+    "lodash": "4.18.1",
     "picomatch": ">=2.3.2",
-    "brace-expansion": ">=2.0.2"
+    "brace-expansion": ">=2.0.2",
+    "@tootallnate/once": "3.0.1"
   }
 }

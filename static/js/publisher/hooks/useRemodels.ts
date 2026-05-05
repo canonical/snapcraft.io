@@ -1,46 +1,47 @@
 import { useQuery, UseQueryResult } from "react-query";
-import type { Remodel } from "../types/shared";
+import type { RemodelResponse, ApiResponse } from "../types/shared";
 
 const useRemodels = (
   brandId: string | undefined,
-  modelId: string | undefined,
-): UseQueryResult<Remodel[], Error> => {
-  return useQuery<Remodel[], Error>({
-    queryKey: ["remodels", brandId, modelId],
+  urlSearchParams?: {
+    page?: string | null;
+    pageSize?: number;
+    fromModel?: string;
+  },
+): UseQueryResult<ApiResponse<RemodelResponse>, Error> => {
+  const url = new URL(
+    `/api/store/${brandId}/models/remodel-allowlist`,
+    window.location.origin,
+  );
+
+  if (urlSearchParams) {
+    const { page, pageSize, fromModel } = urlSearchParams;
+
+    if (page) {
+      url.searchParams.set("page", page);
+    }
+
+    if (pageSize) {
+      url.searchParams.set("page-size", pageSize.toString());
+    }
+
+    if (fromModel) {
+      url.searchParams.set("from-model", fromModel);
+    }
+  }
+
+  return useQuery<ApiResponse<RemodelResponse>, Error>({
+    queryKey: [
+      "remodels",
+      brandId,
+      urlSearchParams?.page,
+      urlSearchParams?.pageSize,
+      urlSearchParams?.fromModel,
+    ],
     queryFn: async () => {
-      const response = await fetch(
-        `/api/store/${brandId}/models/remodel-allowlist`,
-      );
-
-      if (!response.ok) {
-        throw new Error("There was a problem fetching remodels");
-      }
-
-      const data = await response.json();
-
-      if (!data.success) {
-        throw new Error(data.message);
-      }
-
-      const remodelsForCurrentModel = data.data.allowlist.filter(
-        (remodel: Remodel) => {
-          return (
-            remodel["from-model"] === modelId || remodel["to-model"] === modelId
-          );
-        },
-      );
-
-      return remodelsForCurrentModel.sort((a: Remodel, b: Remodel) => {
-        if (a["created-at"] > b["created-at"]) {
-          return -1;
-        }
-
-        if (a["created-at"] < b["created-at"]) {
-          return 1;
-        }
-
-        return 0;
-      });
+      const response = await fetch(url);
+      const responseData = await response.json();
+      return responseData;
     },
     enabled: !!brandId,
   });
