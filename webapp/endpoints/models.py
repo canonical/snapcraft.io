@@ -278,10 +278,18 @@ def get_remodel_allowlist(store_id: str):
         and data.
     """
 
+    params = {
+        # rename `cursor` to `page` on our side for clarity
+        "cursor": flask.request.args.get("page"),
+        "from-model": flask.request.args.get("from-model"),
+        "page-size": flask.request.args.get("page-size"),
+    }
+
     res = {}
+
     try:
         allowlist = publisher_gateway.get_remodel_allowlist(
-            flask.session, store_id
+            flask.session, store_id, params
         )
         res["success"] = True
         res["data"] = allowlist
@@ -347,3 +355,151 @@ def create_remodel_allowlist(store_id: str):
         res["message"] = "An error occurred"
 
     return make_response(res, 500)
+
+
+@models.route(
+    "/api/store/<store_id>/models/remodel-allowlist", methods=["PATCH"]
+)
+@login_required
+@exchange_required
+def update_remodel_allowlist(store_id: str):
+    """
+    Update a remodel allowlist for a given store.
+
+    Args:
+        store_id (str): The ID of the store.
+
+    Returns:
+        dict: A dictionary containing the response message and success
+        status.
+    """
+    res = {}
+
+    try:
+        allowlist = flask.request.get_json(silent=True)
+        if allowlist is None:
+            res["success"] = False
+            res["message"] = "Missing or invalid JSON payload"
+            return make_response(res, 400)
+
+        # Only wrap in list if payload is a dict, not already a list
+        allowlist_param = (
+            [allowlist] if isinstance(allowlist, dict) else allowlist
+        )
+        publisher_gateway.update_remodel_allowlist(
+            flask.session, store_id, allowlist_param
+        )
+
+        res["success"] = True
+        return make_response(res, 200)
+    except StoreApiResponseErrorList as error_list:
+        res["success"] = False
+        messages = [
+            f"{error.get('message', 'An error occurred')}"
+            for error in error_list.errors
+        ]
+        res["message"] = " ".join(messages)
+        return make_response(res, error_list.status_code)
+
+    except StoreApiResourceNotFound:
+        res["success"] = False
+        res["message"] = "Remodel allowlist not found"
+        return make_response(res, 404)
+
+    except Exception:
+        res["success"] = False
+        res["message"] = "An error occurred"
+
+    return make_response(res, 500)
+
+
+@models.route(
+    "/api/store/<store_id>/models/remodel-allowlist", methods=["DELETE"]
+)
+@login_required
+@exchange_required
+def delete_remodel_allowlist(store_id: str):
+    """
+    Delete a remodel allowlist for a given store.
+
+    Args:
+        store_id (str): The ID of the store.
+
+    Returns:
+        dict: A dictionary containing the response message and success
+        status.
+    """
+    res = {}
+
+    try:
+        allowlist = flask.request.get_json(silent=True)
+        if allowlist is None:
+            res["success"] = False
+            res["message"] = "Missing or invalid JSON payload"
+            return make_response(res, 400)
+
+        # Only wrap in list if payload is a dict, not already a list
+        allowlist_param = (
+            [allowlist] if isinstance(allowlist, dict) else allowlist
+        )
+        publisher_gateway.delete_remodel_allowlist(
+            flask.session, store_id, allowlist_param
+        )
+
+        res["success"] = True
+        return make_response(res, 200)
+    except StoreApiResponseErrorList as error_list:
+        res["success"] = False
+        messages = [
+            f"{error.get('message', 'An error occurred')}"
+            for error in error_list.errors
+        ]
+        res["message"] = " ".join(messages)
+        return make_response(res, error_list.status_code)
+
+    except StoreApiResourceNotFound:
+        res["success"] = False
+        res["message"] = "Remodel allowlist not found"
+        return make_response(res, 404)
+
+    except Exception:
+        res["success"] = False
+        res["message"] = "An error occurred"
+
+    return make_response(res, 500)
+
+
+@models.route("/api/store/<store_id>/models/<model_name>/serial-log")
+@login_required
+@exchange_required
+def get_serial_log(store_id: str, model_name: str):
+    params = {
+        # rename `cursor` to `page` on our side for clarity
+        "cursor": flask.request.args.get("page"),
+        "start_time": flask.request.args.get("start-time"),
+        "end_time": flask.request.args.get("end-time"),
+        "page_size": flask.request.args.get("page-size"),
+    }
+
+    res = {}
+
+    try:
+        logs = publisher_gateway.get_store_model_serial_logs(
+            flask.session, store_id, model_name, params
+        )
+        res["data"] = logs
+        res["success"] = True
+        response = make_response(res, 200)
+    except StoreApiResponseErrorList as error_list:
+        error_messages = [
+            f"{error.get('message', 'An error occurred')}"
+            for error in error_list.errors
+        ]
+        if "unauthorized" in error_messages:
+            res["message"] = "Store not found"
+        else:
+            res["message"] = " ".join(error_messages)
+        res["success"] = False
+        response = make_response(res, 500)
+
+    return response

@@ -1,53 +1,95 @@
-import { useEffect } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useAtomValue, useSetAtom } from "jotai";
-import { useParams, useSearchParams } from "react-router-dom";
+import {
+  useParams,
+  Link,
+  useNavigate,
+  useLocation,
+  useSearchParams,
+} from "react-router-dom";
 import { Notification, Icon, Row, Col } from "@canonical/react-components";
 
 import { useRemodels } from "../../hooks";
-import {
-  remodelsListFilterState,
-  remodelsListState,
-} from "../../state/remodelsState";
-import { policiesListState } from "../../state/policiesState";
+import { remodelsListState } from "../../state/remodelsState";
 import { brandIdState, brandStoreState } from "../../state/brandStoreState";
-import { setPageTitle, getPolicies } from "../../utils";
+import { setPageTitle, isClosedPanel } from "../../utils";
+import { PortalEntrance } from "../Portals/Portals";
 
-import Filter from "../../components/Filter";
 import RemodelTable from "./RemodelTable";
+import ConfigureRemodelForm from "./ConfigureRemodelForm";
 
 import type { UseQueryResult } from "react-query";
-import type { Remodel } from "../../types/shared";
+import type { Remodel, RemodelResponse, ApiResponse } from "../../types/shared";
 
 function Remodel(): React.JSX.Element {
-  const { id } = useParams();
+  const { id, modelId } = useParams();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const location = useLocation();
   const brandId = useAtomValue(brandIdState);
-  const { isLoading, isError, error, data }: UseQueryResult<Remodel[], Error> =
-    useRemodels(brandId);
+  const [currentCursor, setCurrentCursor] = useState<string | null>(null);
+  const [nextCursor, setNextCursor] = useState<string | null>(null);
+  const cursorHistory = useRef<Array<string | null>>([]);
+
+  const pageSizeParam = searchParams.get("page-size");
+  const parsedPageSize = pageSizeParam ? parseInt(pageSizeParam) : NaN;
+  const pageSize = Number.isInteger(parsedPageSize) ? parsedPageSize : 25;
+
+  const {
+    isLoading,
+    isError,
+    error,
+    data,
+    refetch,
+  }: UseQueryResult<ApiResponse<RemodelResponse>, Error> = useRemodels(
+    brandId,
+    {
+      fromModel: modelId,
+      pageSize: pageSize,
+      page: currentCursor,
+    },
+  );
   const setRemodels = useSetAtom(remodelsListState);
-  const setPolicies = useSetAtom(policiesListState);
-  const setFilter = useSetAtom(remodelsListFilterState);
+  const [showNotification, setShowNotification] = useState(false);
+  const [showErrorNotification, setShowErrorNotification] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
   const brandStore = useAtomValue(brandStoreState(id));
-  const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
+
+  const handlePageForward = () => {
+    cursorHistory.current.push(currentCursor);
+    setCurrentCursor(nextCursor);
+  };
+
+  const handlePageBack = () => {
+    const lastCursor = cursorHistory.current.pop();
+    setCurrentCursor(lastCursor || null);
+  };
+
+  const handlePageSizeChange = (newPageSize: number) => {
+    // Need to reset current page when changing page size
+    // because otherwise the cursor history gets out of sync
+    setCurrentCursor(null);
+    cursorHistory.current = [];
+    setSearchParams((params) => {
+      params.set("page-size", newPageSize.toString());
+      return params;
+    });
+  };
 
   brandStore
     ? setPageTitle(`Remodels in ${brandStore.name}`)
     : setPageTitle("Remodels");
 
   useEffect(() => {
-    const controller = new AbortController();
-    const signal = controller.signal;
-
-    if (!isLoading && !isError && data) {
-      const modelIds = [...new Set(data.map((r) => r["to-model"]))];
-      setRemodels(data);
-      setFilter(searchParams.get("filter") || "");
-      getPolicies({ modelIds, id, setPolicies, signal });
+    if (isLoading || isError) {
+      return;
     }
 
-    return () => {
-      controller.abort();
-    };
-  }, [isLoading, error, data, brandId, id]);
+    if (data) {
+      setRemodels(data.data?.allowlist || []);
+      setNextCursor(data.data?.["next-cursor"] || null);
+    }
+  }, [isLoading, isError, data, brandId, id]);
 
   return (
     <>
@@ -62,23 +104,98 @@ function Remodel(): React.JSX.Element {
             <Icon name="spinner" className="u-animation--spin" />
             &nbsp;Fetching remodels...
           </p>
+        ) : data && data.success === false ? (
+          <Notification severity="caution">
+            {data.message || "Unable to fetch remodels"}
+          </Notification>
         ) : (
           <>
             <Row>
-              <Col size={6}>
-                <Filter
-                  state={remodelsListFilterState}
-                  label="Search remodels"
-                  placeholder="Search remodels"
-                />
+              <Col size={12} className="u-align--right">
+                <Link
+                  className={`p-button--positive ${isError && !data ? "is-disabled" : ""}`}
+                  to={`/admin/${id}/models/${modelId}/remodel/configure`}
+                >
+                  Configure remodels
+                </Link>
               </Col>
             </Row>
             <div className="u-flex-column u-flex-grow">
-              <RemodelTable />
+              {data && (
+                <RemodelTable
+                  handlePageForward={handlePageForward}
+                  handlePageBack={handlePageBack}
+                  handlePageSizeChange={handlePageSizeChange}
+                  forwardDisabled={!nextCursor}
+                  backDisabled={
+                    cursorHistory.current.length < 1 || currentCursor === null
+                  }
+                  pageSize={pageSize}
+                />
+              )}
             </div>
           </>
         )}
       </div>
+
+      <PortalEntrance name="notification">
+        {showNotification && (
+          <div className="u-fixed-width">
+            <Notification
+              severity="positive"
+              onDismiss={() => {
+                setShowNotification(false);
+              }}
+            >
+              New remodel configured
+            </Notification>
+          </div>
+        )}
+
+        {showErrorNotification && (
+          <div className="u-fixed-width">
+            <Notification
+              severity="negative"
+              onDismiss={() => {
+                setShowErrorNotification(false);
+              }}
+            >
+              {errorMessage || "Unable to configure remodel"}
+            </Notification>
+          </div>
+        )}
+      </PortalEntrance>
+
+      <PortalEntrance name="aside">
+        <div
+          className={`l-aside__overlay ${
+            isClosedPanel(location.pathname, "configure") ? "u-hide" : ""
+          }`}
+          onClick={() => {
+            navigate(`/admin/${id}/models/${modelId}/remodel`);
+          }}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              navigate(`/admin/${id}/models/${modelId}/remodel`);
+            }
+          }}
+          role="button"
+          tabIndex={0}
+          aria-label="Return to remodels"
+        ></div>
+        <aside
+          className={`l-aside ${
+            isClosedPanel(location.pathname, "configure") ? "is-collapsed" : ""
+          }`}
+        >
+          <ConfigureRemodelForm
+            refetch={refetch}
+            setShowNotification={setShowNotification}
+            setShowErrorNotification={setShowErrorNotification}
+            setErrorMessage={setErrorMessage}
+          />
+        </aside>
+      </PortalEntrance>
     </>
   );
 }

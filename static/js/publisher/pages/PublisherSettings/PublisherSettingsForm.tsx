@@ -402,7 +402,10 @@ function PublisherSettingsForm({ settings }: Props) {
                     the latest revision pushed to the stable channel. If you
                     manually edit the Listing page, the automatic updates will
                     be turned off.{" "}
-                    <a href="/docs/snapcraft-top-level-metadata">Learn more</a>.
+                    <a href="https://documentation.ubuntu.com/snapcraft/stable/reference/project-file/snapcraft-yaml">
+                      Learn more
+                    </a>
+                    .
                   </span>
                 </label>
                 {getValues("update_metadata_on_release") && (

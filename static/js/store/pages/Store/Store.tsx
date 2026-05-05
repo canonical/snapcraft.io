@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { useLocation, useSearchParams } from "react-router-dom";
 
 import Banner from "../../components/Banner";
@@ -6,6 +6,7 @@ import PackageList from "../../components/PackageList/PackageList";
 import EmptyResultSection from "../../components/EmptyResultSection";
 
 import { usePackages } from "../../hooks";
+import { getSearchId, trackSearchResults } from "../../utils";
 
 function Store(): React.JSX.Element {
   const { search } = useLocation();
@@ -29,6 +30,23 @@ function Store(): React.JSX.Element {
   const { data, status, isFetching } = usePackages(queryString);
   const packagesCount = data?.packages ? data?.packages.length : 0;
   const isResultExist = status === "success" && packagesCount > 0;
+
+  const lastTrackedKey = useRef<string>("");
+
+  useEffect(() => {
+    if (!searchTerm || status !== "success" || isFetching) return;
+
+    const searchId = getSearchId();
+    const trackingKey = `${searchId}-${searchTerm}-${currentPage}`;
+    if (lastTrackedKey.current === trackingKey) return;
+    lastTrackedKey.current = trackingKey;
+
+    trackSearchResults(
+      searchTerm,
+      data?.total_items ?? 0,
+      parseInt(currentPage),
+    );
+  }, [searchTerm, status, currentPage, isFetching, data]);
 
   const searchRef = useRef<HTMLInputElement | null>(null);
   const searchSummaryRef = useRef<HTMLDivElement>(null);

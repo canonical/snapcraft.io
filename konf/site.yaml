@@ -100,6 +100,10 @@ extraHosts:
 # Overrides for production
 production:
   replicas: 5
+  env:
+    - name: ANALYTICS_ENDPOINT
+      value: https://marketplace-analytics.canonical.com/k8s-prod-marketplace-analytics-marketplace-analytics/analytics/events
+
   nginxConfigurationSnippet: |
     if ($host = 'docs.snapcraft.io' ) {
       rewrite ^ https://snapcraft.io/docs$request_uri? permanent;
@@ -153,3 +157,8 @@ staging:
       replicas: 2
       memoryLimit: 256Mi
       env: *env
+
+demo:
+  env:
+    - name: ANALYTICS_ENDPOINT
+      value: https://marketplace-analytics.staging.canonical.com/k8s-stg-marketplace-marketplace-analytics-marketplace-analytics/analytics/events

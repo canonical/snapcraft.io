@@ -28,7 +28,10 @@ function EmptySnapList(): React.JSX.Element {
             <code>snap</code> an application using familiar languages.
           </p>
           <p>
-            <Link href="/docs/build-snaps/languages" className="p-button">
+            <Link
+              href="https://documentation.ubuntu.com/snapcraft/stable/how-to/integrations/#languages"
+              className="p-button"
+            >
               Choose a language guide
             </Link>
           </p>

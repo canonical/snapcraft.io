@@ -20,7 +20,7 @@ import type { Model as ModelType } from "../../types/shared";
 import { PortalEntrance } from "../Portals/Portals";
 
 function Model() {
-  const { id, model_id } = useParams();
+  const { id, modelId } = useParams();
   const brandId = useAtomValue(brandIdState);
   const [apiKey, setApiKey] = useState("");
   const [showSuccessNotification, setShowSuccessNotificaton] = useState(false);
@@ -34,7 +34,7 @@ function Model() {
       formData.set("csrf_token", window.CSRF_TOKEN);
       formData.set("api_key", apiKey);
 
-      return fetch(`/api/store/${brandId}/models/${model_id}`, {
+      return fetch(`/api/store/${brandId}/models/${modelId}`, {
         method: "PATCH",
         body: formData,
       });
@@ -84,7 +84,7 @@ function Model() {
       return;
     }
 
-    const current = models.find((model) => model.name === model_id);
+    const current = models.find((model) => model.name === modelId);
 
     if (!current) {
       return;
@@ -95,7 +95,7 @@ function Model() {
     }
 
     return current;
-  }, [models, model_id]);
+  }, [models, modelId]);
 
   currentModel && brandStore
     ? setPageTitle(`${currentModel.name} in ${brandStore.name}`)

@@ -196,7 +196,7 @@
 {% endblock %}
 
 {% block scripts %}
-<script nonce="{{ CSP_NONCE }}">
+<script>
   window.addEventListener("DOMContentLoaded", function () {
     try {
       snapcraft.about.initFSFLanguageSelect(document.querySelector('.js-fsf-language-select'));

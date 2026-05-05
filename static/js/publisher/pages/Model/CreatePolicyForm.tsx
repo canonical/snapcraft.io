@@ -24,7 +24,7 @@ function CreatePolicyForm({
   setShowErrorNotification,
   refetchPolicies,
 }: Props): React.JSX.Element {
-  const { id, model_id } = useParams();
+  const { id, modelId } = useParams();
   const brandId = useAtomValue(brandIdState);
   const navigate = useNavigate();
   const location = useLocation();
@@ -37,7 +37,7 @@ function CreatePolicyForm({
 
   const handleError = () => {
     setShowErrorNotification(true);
-    navigate(`/admin/${id}/models/${model_id}/policies`);
+    navigate(`/admin/${id}/models/${modelId}/policies`);
     setNewSigningKey({ name: "" });
     setIsSaving(false);
     setTimeout(() => {
@@ -56,7 +56,7 @@ function CreatePolicyForm({
 
       setNewSigningKey({ name: "" });
 
-      return fetch(`/api/store/${brandId}/models/${model_id}/policies`, {
+      return fetch(`/api/store/${brandId}/models/${modelId}/policies`, {
         method: "POST",
         body: formData,
       });
@@ -77,7 +77,7 @@ function CreatePolicyForm({
       setShowNotification(true);
       setIsSaving(false);
       refetchPolicies();
-      navigate(`/admin/${id}/models/${model_id}/policies`);
+      navigate(`/admin/${id}/models/${modelId}/policies`);
       setTimeout(() => {
         setShowNotification(false);
       }, 5000);
@@ -158,7 +158,7 @@ function CreatePolicyForm({
             <div className="u-align--right">
               <Link
                 className="p-button u-no-margin--bottom"
-                to={`/admin/${id}/models/${model_id}/policies`}
+                to={`/admin/${id}/models/${modelId}/policies`}
                 onClick={() => {
                   setNewSigningKey({ name: "" });
                   setShowErrorNotification(false);

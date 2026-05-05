@@ -1,9 +1,14 @@
 import { createRoot } from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "react-query";
+import { trackPageView } from "@canonical/analytics-events";
 
 import Root from "./layouts/Root";
 import Store from "./pages/Store";
+
+if (window.ANALYTICS_ENDPOINT) {
+  trackPageView("snap_store_page");
+}
 
 const router = createBrowserRouter([
   {

@@ -38,7 +38,9 @@ def login_required(func):
                 },
             )
 
-            return flask.redirect(f"/login?next={flask.request.path}")
+            return flask.redirect(
+                flask.url_for("login.login_handler", next=flask.request.path)
+            )
 
         publisher = flask.session.get("publisher")
         user = publisher["email"]

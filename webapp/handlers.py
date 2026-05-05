@@ -2,10 +2,8 @@ import socket
 from urllib.parse import unquote, urlparse, urlunparse
 
 import base64
-import copy
 import hashlib
 import re
-import secrets
 import sentry_sdk
 
 import flask
@@ -24,6 +22,7 @@ from webapp.config import (
     DNS_VERIFICATION_SALT,
     IS_DEVELOPMENT,
     VITE_PORT,
+    ANALYTICS_ENDPOINT,
 )
 
 from canonicalwebteam.exceptions import (
@@ -70,6 +69,8 @@ CSP = {
         "w.usabilla.com",
         "connect.facebook.net",
         "snap.licdn.com",
+        # This is necessary for Google Tag Manager to function properly.
+        "'unsafe-inline'",
     ],
     "font-src": [
         "'self'",
@@ -79,6 +80,7 @@ CSP = {
     "connect-src": [
         "'self'",
         "ubuntu.com",
+        "analytics.google.com",
         "*.analytics.google.com",
         "stats.g.doubleclick.net",
         "www.googletagmanager.com",
@@ -90,6 +92,8 @@ CSP = {
         "px.ads.linkedin.com",
         "*.snapcraft.io",
         "*.snapcraftcontent.com",
+        "marketplace-analytics.staging.canonical.com",
+        "marketplace-analytics.canonical.com",
         "www.google.com",
     ],
     "frame-src": [
@@ -129,7 +133,7 @@ if IS_DEVELOPMENT:
     CSP_SCRIPT_SRC.append(f"localhost:{VITE_PORT}")
 
 
-def refresh_redirect(path):
+def refresh_redirect():
     try:
         macaroon_discharge = authentication.get_refreshed_discharge(
             flask.session["macaroon_discharge"]
@@ -143,7 +147,13 @@ def refresh_redirect(path):
         return flask.abort(502, str(api_error))
 
     flask.session["macaroon_discharge"] = macaroon_discharge
-    return flask.redirect(path)
+    return flask.redirect(
+        flask.url_for(
+            flask.request.endpoint,
+            **flask.request.view_args,
+            **flask.request.args,
+        )
+    )
 
 
 def snapcraft_utility_processor():
@@ -176,7 +186,6 @@ def snapcraft_utility_processor():
         "BSI_URL": BSI_URL,
         "now": datetime.now(),
         "user_is_canonical": user_is_canonical,
-        "CSP_NONCE": getattr(request, "CSP_NONCE", ""),
         # Functions
         "contains": template_utils.contains,
         "join": template_utils.join,
@@ -192,6 +201,7 @@ def snapcraft_utility_processor():
         "stores": stores,
         "format_link": template_utils.format_link,
         "DNS_VERIFICATION_SALT": DNS_VERIFICATION_SALT,
+        "ANALYTICS_ENDPOINT": ANALYTICS_ENDPOINT,
     }
 
 
@@ -278,7 +288,9 @@ def set_handlers(app):
             "macaroon-authorization-required",
         ]:
             authentication.reset_auth_session(flask.session)
-            return flask.redirect(f"/login?next={flask.request.path}")
+            return flask.redirect(
+                flask.url_for("login.login_handler", next=flask.request.path)
+            )
 
         status_code = 502
         codes = [
@@ -305,17 +317,10 @@ def set_handlers(app):
 
     @app.errorhandler(PublisherMacaroonRefreshRequired)
     def handle_publisher_macaroon_refresh_required(error):
-        return refresh_redirect(flask.request.path)
+        return refresh_redirect()
 
     # Global tasks for all requests
     # ===
-    @app.before_request
-    def generate_nonce():
-        """
-        Generate a cryptographically secure random nonce for CSP
-        """
-        request.CSP_NONCE = secrets.token_urlsafe(16)
-
     @app.before_request
     def clear_trailing():
         """
@@ -346,34 +351,16 @@ def set_handlers(app):
         return list(directive_items)
 
     # Find all script elements in the response and add their hashes to the CSP.
-    # Also add nonce for use in inline script elements
-    def add_script_hashes_and_nonce_to_csp(response):
+    def add_script_hashes_to_csp(response):
         response.freeze()
         decoded_content = b"".join(response.response).decode(
             "utf-8", errors="replace"
         )
 
-        # Create a fresh copy of CSP for this request to
-        # prevent multiple nonces in the CSP headers
-        request_csp = copy.deepcopy(CSP)
-
-        # Handle cases where CSP_NONCE might not be set
-        csp_nonce = getattr(request, "CSP_NONCE", "")
-        csp_nonce_value = f"'nonce-{csp_nonce}'" if csp_nonce else ""
-
-        # Include CSP_NONCE in script-src along with other directives
-        script_src_values = CSP_SCRIPT_SRC + get_csp_directive(
+        CSP["script-src"] = CSP_SCRIPT_SRC + get_csp_directive(
             decoded_content, r'onclick\s*=\s*"(.*?)"'
         )
-
-        if csp_nonce_value:
-            request_csp["script-src-elem"] = CSP["script-src-elem"] + [
-                csp_nonce_value
-            ]
-            script_src_values.append(csp_nonce_value)
-
-        request_csp["script-src"] = script_src_values
-        return request_csp
+        return CSP
 
     @app.after_request
     def add_headers(response):
@@ -412,7 +399,7 @@ def set_handlers(app):
                             "stale-if-error=86400",
                         }
                     )
-        csp = add_script_hashes_and_nonce_to_csp(response)
+        csp = add_script_hashes_to_csp(response)
         response.headers["Content-Security-Policy"] = helpers.get_csp_as_str(
             csp
         )

@@ -49,5 +49,6 @@ SEARCH_API_URL = "https://www.googleapis.com/customsearch/v1"
 SEARCH_CUSTOM_ID = "009048213575199080868:i3zoqdwqk8o"
 
 APP_NAME = "snapcraft"
+ANALYTICS_ENDPOINT = os.getenv("ANALYTICS_ENDPOINT", "").strip()
 
 REPORT_SHEET_URL = os.getenv("REPORT_SHEET_URL", "").strip()
