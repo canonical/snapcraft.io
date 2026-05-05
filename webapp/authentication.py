@@ -19,7 +19,7 @@ PERMISSIONS = [
     "store_admin",
 ]
 
-
+# keys for session data that should be cleared on auth refresh
 SESSION_AUTH_KEYS = [
     "macaroons",
     "macaroon_root",
@@ -30,6 +30,7 @@ SESSION_AUTH_KEYS = [
     "csrf_token",
 ]
 
+# keys for session data that should NOT be cleared on auth refresh
 SESSION_INTEGRATION_KEYS = [
     "github_auth_secret",
 ]
