@@ -27,7 +27,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-    environment: ${{ github.event.inputs.environment != '' && github.event.inputs.environment || (github.ref == 'refs/heads/main' && 'Production' || 'Staging') }}
+    environment: ${{ inputs.environment != '' && inputs.environment || (github.ref == 'refs/heads/main' && 'Production' || 'Staging') }}
     outputs:
       charm_name: ${{ steps.setup-vars.outputs.charm_name }}
       channel: ${{ steps.setup-vars.outputs.channel }}
@@ -42,7 +42,7 @@ jobs:
           echo "channel=${{ vars.CHANNEL }}" >> $GITHUB_OUTPUT
           echo "juju_controller_name=${{ vars.JUJU_CONTROLLER_NAME }}" >> $GITHUB_OUTPUT
           echo "juju_model_name=${{ vars.JUJU_MODEL_NAME }}" >> $GITHUB_OUTPUT
-          echo "environment=${{ github.event.inputs.environment != '' && github.event.inputs.environment || (github.ref == 'refs/heads/main' && 'Production' || 'Staging') }}" >> $GITHUB_OUTPUT
+          echo "environment=${{ inputs.environment != '' && inputs.environment || (github.ref == 'refs/heads/main' && 'Production' || 'Staging') }}" >> $GITHUB_OUTPUT
 
   deploy:
     needs: setup
