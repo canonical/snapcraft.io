@@ -71,7 +71,7 @@ const ReleasesConfirmDetails = ({
 
   const updatePercentage = (percentage: number) => {
     setGlobalPercentage(percentage);
-    updateProgressiveRelease({ percentage, "current-percentage": null });
+    updateProgressiveRelease({ percentage, "current-percentage": null, paused: null });
   };
 
   return (

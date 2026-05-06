@@ -90,6 +90,7 @@ class ReleasesConfirm extends Component<ReleasesConfirmProps, ReleasesConfirmSta
       this.props.setProgressiveRelease({
         percentage: +this.state.percentage,
         "current-percentage": null,
+        paused: null,
       });
     }
 

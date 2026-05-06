@@ -11,7 +11,7 @@ import type {
   ReleasesReduxState,
 } from "../../types/releaseTypes";
 import type { AppDispatch } from "./store";
-import { updateReleasesData } from "./slices/releases";
+import { updateReleasesUI } from "./slices/releases";
 import { setCurrentTrack } from "./slices/currentTrack";
 import { initDefaultTrack } from "./slices/defaultTrack";
 import { initOptions } from "./slices/options";
@@ -31,7 +31,7 @@ interface StateProps {
 
 // Props from mapDispatchToProps
 interface DispatchProps {
-  updateReleasesData: (apiData: ReleasesAPIResponse) => void;
+  updateReleasesUI: (apiData: ReleasesAPIResponse) => void;
   setCurrentTrack: (track: ReleasesReduxState["currentTrack"]) => void;
   initDefaultTrack: (track: ReleasesReduxState["defaultTrack"]) => void;
   initOptions: (options: ReleasesReduxState["options"]) => void;
@@ -43,7 +43,7 @@ type ReleasesControllerProps = OwnProps & StateProps & DispatchProps;
 const ReleasesController: React.FC<ReleasesControllerProps> = ({
   snapName,
   apiData,
-  updateReleasesData,
+  updateReleasesUI,
   setCurrentTrack,
   initDefaultTrack,
   initOptions,
@@ -62,7 +62,7 @@ const ReleasesController: React.FC<ReleasesControllerProps> = ({
       },
       tracks: apiData.data.tracks
     });
-    updateReleasesData(apiData);
+    updateReleasesUI(apiData);
   }, []);
 
   const { visible } = notification;
@@ -121,7 +121,7 @@ const mapStateToProps = (state: ReleasesReduxState): StateProps => {
 
 const mapDispatchToProps = (dispatch: AppDispatch): DispatchProps => {
   return {
-    updateReleasesData: (apiData) => dispatch(updateReleasesData(apiData)),
+    updateReleasesUI: (apiData) => dispatch(updateReleasesUI(apiData)),
     setCurrentTrack: (track) => dispatch(setCurrentTrack(track)),
     initDefaultTrack: (track) => dispatch(initDefaultTrack(track)),
     initOptions: (options) => dispatch(initOptions(options))

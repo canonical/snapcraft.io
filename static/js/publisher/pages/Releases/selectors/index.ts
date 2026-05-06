@@ -443,21 +443,6 @@ export function getSeparatePendingReleases(state: ReleasesReduxState): SeparateP
         pendingReleaseItem.previousReleases.length > 0 &&
         pendingReleaseItem.previousReleases[0]
       ) {
-        // What are the differences between the previous progressive state
-        // and the new state.
-        const previousState = releaseCopy.revision.release
-          ? releaseCopy.revision.release.progressive
-          : ({} as Progressive);
-        const newState = releaseCopy.progressive;
-
-        const changes = [] as ProgressiveChanges;
-        if (newState.percentage !== previousState.percentage) {
-          changes.push({
-            key: "percentage",
-            value: newState.percentage,
-          });
-        }
-
         newReleasesToProgress[`${revId}-${channel}`] = releaseCopy;
       } else {
         newReleases[`${revId}-${channel}`] = releaseCopy;

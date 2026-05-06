@@ -2,7 +2,7 @@ import { UnknownAction } from "@reduxjs/toolkit";
 import reducer, {
   updateReleases,
   releaseRevisions,
-  updateReleasesData,
+  updateReleasesUI,
 } from "../releases";
 import type {
   ReleasesState,
@@ -145,7 +145,7 @@ describe("releases", () => {
 
       expect(fetchSnapReleaseStatus).toHaveBeenCalledWith(snapName);
       expect(dispatch).toHaveBeenCalledWith(hideNotification());
-      // updateReleasesData is a createAsyncThunk, so dispatching it passes a thunk function
+      // updateReleasesUI is a createAsyncThunk, so dispatching it passes a thunk function
       expect(dispatch).toHaveBeenCalledWith(expect.any(Function));
       expect(dispatch).toHaveBeenCalledWith(cancelPendingChanges());
       expect(dispatch).toHaveBeenCalledWith(closeHistory());
@@ -424,7 +424,7 @@ describe("releases", () => {
     });
   });
 
-  describe("updateReleasesData async thunk", () => {
+  describe("updateReleasesUI async thunk", () => {
     const mockApiData = {
       success: true,
       data: {
@@ -456,7 +456,7 @@ describe("releases", () => {
     it("should dispatch multiple actions on success", async () => {
       const dispatch = vi.fn() as unknown as AppDispatch;
 
-      await updateReleasesData(mockApiData)(dispatch, getState, undefined);
+      await updateReleasesUI(mockApiData)(dispatch, getState, undefined);
 
       expect(dispatch).toHaveBeenCalledWith(updateRevisions({}));
       expect(dispatch).toHaveBeenCalledWith(updateReleases([]));
@@ -472,7 +472,7 @@ describe("releases", () => {
       );
       const dispatch = vi.fn() as unknown as AppDispatch;
 
-      await updateReleasesData(mockApiData)(dispatch, getState, undefined);
+      await updateReleasesUI(mockApiData)(dispatch, getState, undefined);
 
       expect(dispatch).toHaveBeenCalledWith(
         showNotification({

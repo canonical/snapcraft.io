@@ -47,7 +47,7 @@ export type Series = "16" | (string & {}); // series is and will always be 16, b
 export type Progressive = {
   "current-percentage": number | null;
   percentage: number | null;
-  changes?: ProgressiveChanges;
+  paused: false | null; // required by the Store API but never used anywhere
 };
 
 export type Release = {
@@ -223,11 +223,16 @@ export type ReleasesAPIResponse = Prettify<{
  * All types are based on the examples and explanation in the docs:
  * https://dashboard.snapcraft.io/docs/reference/v1/snap.html#release-a-snap-build-to-a-channel
  */
+export type ProgressivePayload = {
+  percentage: number | null;
+  paused: false;
+};
+
 export type FetchReleasePayload = {
   id: number;
   revision: PendingReleaseItem["revision"];
   channels: PendingReleaseItem["channel"][];
-  progressive: PendingReleaseItem["progressive"] | null;
+  progressive: ProgressivePayload | null;
 };
 
 export type ReleaseChannel = {

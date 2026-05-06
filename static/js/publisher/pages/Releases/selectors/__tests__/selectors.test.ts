@@ -348,6 +348,7 @@ describe("getPendingChannelMap", () => {
               progressive: {
                 "current-percentage": null,
                 percentage: null,
+                paused: null,
               }
             },
           },
@@ -408,6 +409,7 @@ describe("getPendingChannelMap", () => {
         progressive: {
           "current-percentage": null,
           percentage: null,
+          paused: null,
         }
       };
       expect(getPendingChannelMap(stateWithWithOverrides)).toEqual({
@@ -991,12 +993,6 @@ describe("getProgressiveState", () => {
           progressive: {
             "current-percentage": null,
             percentage: null,
-            changes: [
-              {
-                key: "current-percentage",
-                value: 40,
-              }
-            ],
           },
         }
       }],
@@ -1025,11 +1021,6 @@ describe("getProgressiveState", () => {
     );
     expect(result).toHaveLength(2);
     expect(result[0]).toMatchObject({ revision: 2 });
-    expect(result[1]).toMatchObject(
-      {
-        changes: [{ key: "current-percentage", value: 40 }],
-      },
-    );
   });
 
   it("should return array of nulls if progressive release flag is disabled", () => {
@@ -1216,10 +1207,7 @@ describe("hasRelease", () => {
               progressive: {
                 "current-percentage": null,
                 percentage: null,
-                changes: [{
-                  key: "percentage",
-                  value: 100,
-                }]
+                paused: null,
               },
               previousReleases: [
                 createMockRevision({ revision: 2 }),

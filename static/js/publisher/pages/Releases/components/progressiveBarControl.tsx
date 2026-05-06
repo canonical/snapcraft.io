@@ -33,7 +33,7 @@ class ProgressiveBarControl extends React.Component<ProgressiveBarControlProps> 
     if (updateGlobalPercentage) {
       updateGlobalPercentage(percentage);
     }
-    updateProgressiveRelease?.({ percentage, "current-percentage": null });
+    updateProgressiveRelease?.({ percentage, "current-percentage": null, paused: null });
   }
 
   render() {

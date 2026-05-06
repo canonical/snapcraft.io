@@ -53,11 +53,11 @@ export function releaseRevision(
         });
       });
 
-      // Set key to null as we want to set the same key for a group
-      // of releases on release. In actions/releases.js the key is either
-      // updated, or the progressive object is removed completely
+      // this is the exact payload expected by the Store API BE
+      // do not add or remove any key
       progressive = {
         percentage: percentage,
+        paused: null,
       } as Progressive;
     }
 
@@ -182,7 +182,7 @@ value is object containing release object and channels to release to
     <channel>: {
       revision: { revision: <revisionId>, version, ... },
       channel: <channel>,
-      progressive: { changes, percentage, current-percentage },
+      progressive: { percentage, current-percentage },
       previousReleases: {
         <arch>: { revision: <revisionId>, version, ... }
       },
@@ -334,6 +334,7 @@ const pendingReleasesSlice = createSlice({
           if (channel.progressive) {
             channel.progressive.percentage = progressive.percentage;
             channel.progressive["current-percentage"] = progressive["current-percentage"];
+            channel.progressive.paused = progressive.paused;
           }
         });
       });

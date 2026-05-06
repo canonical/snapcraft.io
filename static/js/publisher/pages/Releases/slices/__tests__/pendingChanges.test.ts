@@ -187,7 +187,8 @@ describe("pendingChanges", () => {
       it("should add a pending release with the progressive state", () => {
         const progressive: Progressive = {
           "current-percentage": 0,
-          percentage: 10
+          percentage: 10,
+          paused: null,
         };
         const result = reducer(
           initialState,
@@ -337,7 +338,8 @@ describe("pendingChanges", () => {
   describe("on pendingChanges/setProgressiveRelease action", () => {
     const progressive: Progressive = {
       "current-percentage": 10,
-      percentage: 50
+      percentage: 50,
+      paused: null,
     };
 
     describe("when state is empty", () => {
@@ -404,7 +406,8 @@ describe("pendingChanges", () => {
       it("should not update existing progressive state", () => {
         const existingProgressive: Progressive = {
           "current-percentage": 10,
-          percentage: 20
+          percentage: 20,
+          paused: null,
         };
         const stateWithProgressiveRelease: PendingChangesState = {
           changeOrderIndex: 1,
@@ -436,7 +439,8 @@ describe("pendingChanges", () => {
   describe("on pendingChanges/updateProgressiveRelease action", () => {
     const newProgressive: Progressive = {
       "current-percentage": 10,
-      percentage: 50
+      percentage: 50,
+      paused: null,
     };
 
     describe("when state is empty", () => {
@@ -486,7 +490,8 @@ describe("pendingChanges", () => {
                   channel: "test/edge",
                   progressive: {
                     "current-percentage": null,
-                    percentage: 10
+                    percentage: 10,
+                    paused: null,
                   },
                 },
               },

@@ -36,6 +36,7 @@ import type {
   ReleasesState,
   RevisionsState,
   PendingChangesState,
+  ProgressivePayload,
 } from "../../../types/releaseTypes";
 import type { AppAsyncThunkConfig, AppDispatch, RootState } from "../store";
 import { getArrayOfChannelNames } from "../helpers";
@@ -44,12 +45,12 @@ import { getArrayOfChannelNames } from "../helpers";
 const RELEASES_SLICE_NAME = "releases";
 
 // returns a Redux async thunk callback that unpacks the API response into the state
-export const updateReleasesData = createAsyncThunk<
+export const updateReleasesUI = createAsyncThunk<
   void,
   ReleasesAPIResponse,
   AppAsyncThunkConfig
 >(
-  `${RELEASES_SLICE_NAME}/update`,
+  `${RELEASES_SLICE_NAME}/updateUI`,
   async (apiData, { dispatch }) => {
     const {
       release_history: releasesData,
@@ -161,13 +162,16 @@ function handleReleaseResponse(
 function mapToRelease(
   pendingRelease: PendingReleaseItem
 ): FetchReleasePayload {
-  let progressive = null;
+  let progressive: ProgressivePayload = {
+    percentage: null,
+    paused: false,
+  };
 
   if (
     pendingRelease?.progressive?.percentage &&
     pendingRelease?.progressive?.percentage < 100
   ) {
-    progressive = pendingRelease.progressive;
+    progressive.percentage = pendingRelease.progressive.percentage;
   }
 
   return {
@@ -213,7 +217,7 @@ export const releaseRevisions = createAsyncThunk<
   void,
   AppAsyncThunkConfig
 >(
-  `${RELEASES_SLICE_NAME}/update`,
+  `${RELEASES_SLICE_NAME}/post`,
   async (_, { getState, dispatch }) => {
     const { pendingChanges, revisions, options } = getState();
     const { snapName } = options;
@@ -221,7 +225,7 @@ export const releaseRevisions = createAsyncThunk<
     const releases = dedupeReleases(pendingChanges.pendingReleases);
     dispatch(hideNotification());
     // TODO: we're doing a lot of sequential network requests
-    // should we display a loading state in the UI
+    // should we display a loading state in the UI ?
 
     try {
       await fetchReleases(
@@ -235,7 +239,7 @@ export const releaseRevisions = createAsyncThunk<
         getArrayOfChannelNames(pendingCloses),
       )
       const jsonData = await fetchSnapReleaseStatus(snapName);
-      dispatch(updateReleasesData(jsonData));
+      dispatch(updateReleasesUI(jsonData));
       dispatch(cancelPendingChanges());
       dispatch(closeHistory());
     } catch (error: unknown) {
