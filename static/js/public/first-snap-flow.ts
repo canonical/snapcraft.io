@@ -28,8 +28,7 @@ function install(language: unknown, fsfFlow: string): void {
       ) as HTMLLinkElement;
       if (paginationBtn) {
         paginationBtn.classList.remove("is-disabled");
-        paginationBtn.href =
-          `/${fsfFlow}/${language}/${selectedOs}/package` as string;
+        paginationBtn.href = `/${encodeURIComponent(fsfFlow)}/${encodeURIComponent(String(language))}/${encodeURIComponent(selectedOs)}/package`;
       }
     }
   }
@@ -98,7 +97,7 @@ function install(language: unknown, fsfFlow: string): void {
       `#js-pagination-next`,
     ) as HTMLLinkElement;
     if (paginationBtn) {
-      const paginationBtnLink: string = `/${fsfFlow}/${language}/${type}/package`;
+      const paginationBtnLink: string = `/${encodeURIComponent(fsfFlow)}/${encodeURIComponent(String(language))}/${encodeURIComponent(type)}/package`;
       paginationBtn.classList.remove("is-disabled");
       paginationBtn.href = paginationBtnLink;
     }
@@ -193,7 +192,7 @@ function push(): void {
       ".js-continue",
     ) as HTMLLinkElement;
     if (continueBtn) {
-      continueBtn.href = `/${snapName}/releases`;
+      continueBtn.href = `/${encodeURIComponent(snapName)}/releases`;
       continueBtn.classList.add("p-button--positive");
       continueBtn.classList.remove("p-button");
       continueBtn.classList.remove("is-disabled");
@@ -204,7 +203,7 @@ function push(): void {
       "#js-pagination-next",
     ) as HTMLLinkElement;
     if (paginationBtn) {
-      paginationBtn.href = `/${snapName}/listing?from=first-snap`;
+      paginationBtn.href = `/${encodeURIComponent(snapName)}/listing?from=first-snap`;
       paginationBtn.classList.remove("is-disabled");
     }
   });
@@ -372,7 +371,7 @@ function initRegisterName(
         "#js-pagination-next",
       ) as HTMLLinkElement;
       if (paginationBtn) {
-        paginationBtn.href = `/${snapName}/listing?from=first-snap-unpublished`;
+        paginationBtn.href = `/${encodeURIComponent(snapName)}/listing?from=first-snap-unpublished`;
         paginationBtn.classList.remove("is-disabled");
       }
     };

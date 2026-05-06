@@ -4,8 +4,11 @@ import ModelNav from "./ModelNav";
 
 function ModelDetailsPageLayout() {
   const { pathname } = useLocation();
-  const isPolicies = pathname.endsWith("policies");
-  const isRemodel = pathname.endsWith("remodel");
+  const isPolicies =
+    pathname.endsWith("policies") || pathname.endsWith("policies/create");
+  const isRemodel =
+    pathname.endsWith("remodel") || pathname.endsWith("remodel/configure");
+  const isSerialLog = pathname.endsWith("serial-log");
 
   const getSectionName = () => {
     if (isPolicies) {
@@ -14,6 +17,10 @@ function ModelDetailsPageLayout() {
 
     if (isRemodel) {
       return "remodel";
+    }
+
+    if (isSerialLog) {
+      return "serial-log";
     }
 
     return "overview";

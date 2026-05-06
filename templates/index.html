@@ -164,12 +164,12 @@
 {{ vite_import('static/js/public/homepage.ts') }}
 {{ vite_import('static/js/public/featured-snaps.ts') }}
 {% if nps %}
-<script src="//app-sjg.marketo.com/js/forms2/js/forms2.min.js" defer nonce="{{ CSP_NONCE }}"></script>
+<script src="//app-sjg.marketo.com/js/forms2/js/forms2.min.js" defer></script>
 {% endif %}
 {% endblock %}
 
 {% block scripts %}
-<script nonce="{{ CSP_NONCE }}">
+<script>
   window.addEventListener("DOMContentLoaded", function () {
     try {
       snapcraft.public.homepage.initFSFLanguageSelect();
@@ -182,6 +182,10 @@
     } catch(e) {
       Sentry.captureException(e);
     }
+
+    try {
+      snapcraft.public.homepage.initHomeSearchTracking();
+    } catch(e) {}
 
     try {
       snapcraft.public.featuredSnaps.init({{ featured_categories|safe }});

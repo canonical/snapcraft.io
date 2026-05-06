@@ -1,5 +1,5 @@
 {% extends "_layout.html" %}
-{% from "store/_package_header.html" import package_header with context %}
+{% from "store/package_header/_package_header.html" import package_header with context %}
 
 {% block meta_copydoc %}{% endblock %}
 
@@ -20,7 +20,7 @@
 {% endblock %}
 
 {% block meta_schema %}
-  <script type="application/ld+json" nonce="{{ CSP_NONCE }}">
+  <script type="application/ld+json">
     {
       "@context": "https://schema.org",
       "@type": "SoftwareApplication",
@@ -131,7 +131,9 @@
           </div>
           <div class="p-show-more__fade">
             <div class="p-show-more__link-container">
-              <a href="/{{ package_name }}" class="p-show-more__link">Show more</a>
+              <a href="/{{ package_name }}" class="p-show-more__link">
+                See more information about {{ package_name }}&nbsp;&rsaquo;
+              </a>
             </div>
           </div>
         </div>
@@ -188,6 +190,7 @@
                   lowest_risk_available,
                   confinement) %}
             {% set snippet_id = "snap-install-stable" %}
+            {% set snippet_analytics_target = "snap_distro_install_copy_install_command" %}
             {% include "/partials/_code-snippet.html" %}
           </div>
         </div>

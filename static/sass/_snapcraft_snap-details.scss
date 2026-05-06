@@ -106,4 +106,49 @@
       opacity: 0.3;
     }
   }
+
+  .p-package-header {
+    container: pkgname / inline-size;
+
+    &__name {
+      // package name string length; 40 is the maximum length the store backend
+      // supports and this is just a default value, it should be overridden via inline styles on
+      // the element
+      --length: 40;
+
+      // font size/character width (1rem/1ch) ratio, a magic number
+      // measured in the browser
+      --fs-width-ratio: 1.77;
+
+      // we take the full width of the container (100cqw) and divide it by the number of
+      // characters in the package name (+2 to account for the parentheses): this is the horizontal
+      // space that each character will use on average; we multiply this by the font size/character
+      // width ratio to get the font size
+      --target-font-size: calc(
+        (100cqw / (2 + var(--length))) * var(--fs-width-ratio)
+      );
+
+      // we limit the actual font size value to the smallest and largest heading font sizes
+      --font-size: clamp(
+        var(--min-font-size),
+        var(--target-font-size),
+        var(--max-font-size)
+      );
+      --min-font-size: #{map-get($settings-text-h6-mobile, font-size)}rem;
+      --max-font-size: #{map-get($settings-text-h1-mobile, font-size)}rem;
+
+      @media (min-width: $breakpoint-heading-threshold) {
+        --min-font-size: #{map-get($settings-text-h6, font-size)}rem;
+        --max-font-size: #{map-get($settings-text-h1, font-size)}rem;
+      }
+
+      display: inline-block;
+      font-size: var(--font-size);
+      white-space: nowrap;
+
+      .p-tooltip__message {
+        font-weight: 400;
+      }
+    }
+  }
 }
