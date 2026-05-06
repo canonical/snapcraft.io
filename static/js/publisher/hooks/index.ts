@@ -17,6 +17,7 @@ import useSortTableData from "./useSortTableData";
 import useAccountKeys from "./useAccountKeys";
 import useRemodels from "./useRemodels";
 import useSerialLogs from "./useSerialLogs";
+import useEndpointAvailability from "./useEndpointAvailability";
 
 export {
   useValidationSets,
@@ -38,4 +39,5 @@ export {
   useAccountKeys,
   useRemodels,
   useSerialLogs,
+  useEndpointAvailability,
 };

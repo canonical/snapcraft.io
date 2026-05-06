@@ -1,14 +1,16 @@
 import { Link, useParams } from "react-router-dom";
 import { useAtomValue } from "jotai";
 
-import { useRemodels, useSerialLogs } from "../../hooks";
+import { useEndpointAvailability } from "../../hooks";
 import { brandIdState } from "../../state/brandStoreState";
 
 function ModelNav({ sectionName }: { sectionName: string }): React.JSX.Element {
   const { id, modelId } = useParams();
   const brandId = useAtomValue(brandIdState);
-  const { data: remodelsData } = useRemodels(brandId);
-  const { data: serialLogsData } = useSerialLogs(brandId, modelId);
+  const { isRemodelAvailable, isSerialLogAvailable } = useEndpointAvailability(
+    brandId,
+    modelId,
+  );
 
   return (
     <nav className="p-tabs">
@@ -33,7 +35,7 @@ function ModelNav({ sectionName }: { sectionName: string }): React.JSX.Element {
             Policies
           </Link>
         </li>
-        {remodelsData?.success && (
+        {isRemodelAvailable && (
           <li className="p-tabs__item">
             <Link
               to={`/admin/${id}/models/${modelId}/remodel`}
@@ -45,7 +47,7 @@ function ModelNav({ sectionName }: { sectionName: string }): React.JSX.Element {
             </Link>
           </li>
         )}
-        {serialLogsData?.success && (
+        {isSerialLogAvailable && (
           <li className="p-tabs__item">
             <Link
               to={`/admin/${id}/models/${modelId}/serial-log`}
