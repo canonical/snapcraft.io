@@ -107,3 +107,8 @@ config:
     report-sheet-url:
       description: "URL for the reported snaps spreadsheet on Google docs"
       type: string
+
+    analytics-endpoint:
+      description: "URL for the marketplace analytics service"
+      default: "https://marketplace-analytics.canonical.com/k8s-prod-marketplace-analytics-marketplace-analytics/analytics/events"
+      type: string
