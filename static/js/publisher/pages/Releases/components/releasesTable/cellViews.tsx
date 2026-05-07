@@ -2,7 +2,7 @@ import React, { Fragment } from "react";
 
 import RevisionLabel from "../revisionLabel";
 import ContextualMenu from "../contextualMenu";
-import { RISKS, RISKS_WITH_AVAILABLE } from "../../constants";
+import { RISKS } from "../../constants";
 
 import {
   isInDevmode,
@@ -12,9 +12,9 @@ import {
 import { useDragging, Handle } from "../dnd";
 
 import ReleaseMenuItem from "./releaseMenuItem";
-import { Revision, CPUArchitecture } from "../../../../types/releaseTypes";
-import { DraggedItem } from "./types";
-import { ProgressiveState } from "../../selectors";
+import type { Revision, CPUArchitecture } from "../../../../types/releaseTypes";
+import type { DraggedItem } from "./types";
+import type { ProgressiveState } from "../../selectors";
 
 // content of a cell when channel is closed
 export const CloseChannelInfo = () => (
@@ -286,7 +286,7 @@ export const RevisionInfo = ({
 };
 
 interface ReleasesTableCellViewProps {
-  item: DraggedItem;
+  item: DraggedItem | undefined;
   canDrag: boolean;
   className?: string;
   children?: React.ReactNode;
@@ -331,11 +331,11 @@ export const ReleasesTableCellView = (props: ReleasesTableCellViewProps) => {
         {arch}
       </div>
       <div
-        ref={drag}
+        ref={(node) => { if (drag) drag(node); }}
         className="p-release-data p-tooltip p-tooltip--btm-center"
       >
         {children}
-        {canDrag && (
+        {canDrag && item && (
           <>
             <ContextualMenu
               className="p-button is-small"

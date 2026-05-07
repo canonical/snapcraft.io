@@ -1,5 +1,3 @@
-import React from "react";
-
 interface ReleasesConfirmActionsProps {
   isCancelEnabled: boolean;
   cancelPendingReleases: () => void;

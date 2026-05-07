@@ -1,16 +1,15 @@
-import React from "react";
 import { connect } from "react-redux";
 
-import { promoteRevision } from "../../actions/pendingReleases";
+import { promoteRevision } from "../../slices/pendingChanges";
 import { getPendingChannelMap } from "../../selectors";
 import { canBeReleased, isInDevmode } from "../../helpers";
-import {
+import type {
   ReleasesReduxState,
-  DispatchFn,
   Revision,
   ChannelArchitectureRevisionsMap,
 } from "../../../../types/releaseTypes";
-import { DraggedItem } from "./types";
+import type { AppDispatch } from "../../store";
+import type { DraggedItem } from "./types";
 
 interface OwnProps {
   item: DraggedItem;
@@ -67,7 +66,7 @@ const mapStateToProps = (state: ReleasesReduxState): StateProps => {
   };
 };
 
-const mapDispatchToProps = (dispatch: DispatchFn): DispatchProps => {
+const mapDispatchToProps = (dispatch: AppDispatch): DispatchProps => {
   return {
     promoteRevision: (revision: Revision, targetChannel: string) =>
       dispatch(promoteRevision(revision, targetChannel)),

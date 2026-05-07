@@ -1,11 +1,10 @@
-import React from "react";
 import { connect } from "react-redux";
 
 import { getArchitectures } from "../../selectors";
 import { isSameVersion } from "../../helpers";
 import ReleasesTableRevisionCell from "./revisionCell";
 import ReleasesTableRow from "./row";
-import {
+import type {
   ReleasesReduxState,
   CPUArchitecture,
   ArchitectureRevisionsMap,
@@ -43,7 +42,7 @@ const ReleasesTableRevisionsRow = (props: ReleasesTableRevisionsRowProps) => {
             return (
               <ReleasesTableRevisionCell
                 key={`${currentTrack}/${risk}/${arch}`}
-                revision={revisions ? revisions[arch] : null}
+                revision={revisions && revisions[arch] ? revisions[arch] : null}
                 showVersion={showVersion}
                 arch={arch}
               />
