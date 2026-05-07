@@ -16,7 +16,7 @@ describe("architectures", () => {
   });
 
   describe("on architectures/updateArchitectures action", () => {
-    const expectedArchitectures = ["arm64", "amd64", "armhf"] as ArchitecturesState;
+    const expectedArchitectures = ["amd64", "arm64", "armhf"] as ArchitecturesState;
     let updateArchitecturesAction: ReturnType<typeof updateArchitectures>;
     const mockActionPayload = [...mockRevisions, ...mockRevisionsMultipleArchs];
 
@@ -24,7 +24,7 @@ describe("architectures", () => {
       updateArchitecturesAction = updateArchitectures(mockActionPayload);
     });
 
-    it("should add architectures to state", () => {
+    it("should add architectures ordered alphabetically to state", () => {
       const result = reducer([], updateArchitecturesAction);
       expect(result).toEqual(expectedArchitectures);
     });

@@ -583,11 +583,11 @@ describe("getArchitectures", () => {
     architectures: ["test64", "amd42", "abc64"],
   };
 
-  it("should return alphabetical list of all architectures", () => {
+  it("should return list of all architectures", () => {
     expect(getArchitectures(stateWithArchitectures)).toEqual([
-      "abc64",
-      "amd42",
       "test64",
+      "amd42",
+      "abc64",
     ]);
   });
 });

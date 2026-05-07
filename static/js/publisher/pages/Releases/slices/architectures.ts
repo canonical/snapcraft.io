@@ -7,12 +7,11 @@ const architecturesSlice = createSlice({
   reducers: {
     updateArchitectures: {
       prepare(revisions: Revision[]) {
-        let archs: string[] = [];
+        let archs: Set<string> = new Set();
         revisions.forEach((revision) => {
-          archs = archs.concat(revision.architectures);
+          revision.architectures.forEach((arch) => archs.add(arch));
         });
-        archs = archs.filter((item, i, ar) => ar.indexOf(item) === i);
-        return { payload: archs };
+        return { payload: [...archs].sort() };
       },
       // reducer receives the already-processed payload
       reducer(_state, action: PayloadAction<ArchitecturesState>) {

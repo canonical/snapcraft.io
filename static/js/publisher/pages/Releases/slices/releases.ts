@@ -162,16 +162,16 @@ function handleReleaseResponse(
 function mapToRelease(
   pendingRelease: PendingReleaseItem
 ): FetchReleasePayload {
-  let progressive: ProgressivePayload = {
-    percentage: null,
-    paused: false,
-  };
+  let progressive: ProgressivePayload | null = null;
 
   if (
     pendingRelease?.progressive?.percentage &&
     pendingRelease?.progressive?.percentage < 100
   ) {
-    progressive.percentage = pendingRelease.progressive.percentage;
+    progressive = {
+      percentage: pendingRelease.progressive.percentage,
+      paused: false,
+    };
   }
 
   return {
