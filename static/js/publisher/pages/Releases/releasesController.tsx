@@ -6,18 +6,15 @@ import ReleasesHeading from "./components/releasesHeading";
 import ReleasesConfirm from "./components/releasesConfirm";
 import Modal from "./components/modal";
 
-import {
-  initDefaultTrack,
-  setCurrentTrack,
-  updateReleasesData,
-  initOptions
-} from "./actions";
-
 import type {
   ReleasesAPIResponse,
   ReleasesReduxState,
 } from "../../types/releaseTypes";
-import type { DispatchFn } from "./store";
+import type { AppDispatch } from "./store";
+import { updateReleasesUI } from "./slices/releases";
+import { setCurrentTrack } from "./slices/currentTrack";
+import { initDefaultTrack } from "./slices/defaultTrack";
+import { initOptions } from "./slices/options";
 
 // Props coming from parent component
 interface OwnProps {
@@ -34,7 +31,7 @@ interface StateProps {
 
 // Props from mapDispatchToProps
 interface DispatchProps {
-  updateReleasesData: (apiData: ReleasesAPIResponse) => Promise<void>;
+  updateReleasesUI: (apiData: ReleasesAPIResponse) => void;
   setCurrentTrack: (track: ReleasesReduxState["currentTrack"]) => void;
   initDefaultTrack: (track: ReleasesReduxState["defaultTrack"]) => void;
   initOptions: (options: ReleasesReduxState["options"]) => void;
@@ -46,7 +43,7 @@ type ReleasesControllerProps = OwnProps & StateProps & DispatchProps;
 const ReleasesController: React.FC<ReleasesControllerProps> = ({
   snapName,
   apiData,
-  updateReleasesData,
+  updateReleasesUI,
   setCurrentTrack,
   initDefaultTrack,
   initOptions,
@@ -65,7 +62,7 @@ const ReleasesController: React.FC<ReleasesControllerProps> = ({
       },
       tracks: apiData.data.tracks
     });
-    updateReleasesData(apiData);
+    updateReleasesUI(apiData);
   }, []);
 
   const { visible } = notification;
@@ -122,9 +119,9 @@ const mapStateToProps = (state: ReleasesReduxState): StateProps => {
   };
 };
 
-const mapDispatchToProps = (dispatch: DispatchFn): DispatchProps => {
+const mapDispatchToProps = (dispatch: AppDispatch): DispatchProps => {
   return {
-    updateReleasesData: (apiData) => dispatch(updateReleasesData(apiData)),
+    updateReleasesUI: (apiData) => dispatch(updateReleasesUI(apiData)),
     setCurrentTrack: (track) => dispatch(setCurrentTrack(track)),
     initDefaultTrack: (track) => dispatch(initDefaultTrack(track)),
     initOptions: (options) => dispatch(initOptions(options))

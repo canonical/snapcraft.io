@@ -83,40 +83,24 @@ describe("createChannelTree", () => {
       expect(createChannelTree(channelList)).toEqual({
         latest: {
           name: "latest",
-          risks: {
-            stable: {
+          risks: [
+            {
               name: "stable",
-              branches: {
-                _base: {
-                  name: "_base",
-                },
-              },
+              branches: ["_base"],
             },
-            beta: {
+            {
               name: "beta",
-              branches: {
-                _base: {
-                  name: "_base",
-                },
-              },
+              branches: ["_base"],
             },
-            candidate: {
+            {
               name: "candidate",
-              branches: {
-                _base: {
-                  name: "_base",
-                },
-              },
+              branches: ["_base"],
             },
-            edge: {
+            {
               name: "edge",
-              branches: {
-                _base: {
-                  name: "_base",
-                },
-              },
+              branches: ["_base"],
             },
-          },
+          ],
         },
       });
     });
@@ -132,37 +116,25 @@ describe("createChannelTree", () => {
       expect(createChannelTree(channelList)).toEqual({
         latest: {
           name: "latest",
-          risks: {
-            stable: {
+          risks: [
+            {
               name: "stable",
-              branches: {
-                _base: {
-                  name: "_base",
-                },
-              },
+              branches: ["_base"],
             },
-            edge: {
+            {
               name: "edge",
-              branches: {
-                _base: {
-                  name: "_base",
-                },
-              },
+              branches: ["_base"],
             },
-          },
+          ],
         },
         test: {
           name: "test",
-          risks: {
-            candidate: {
+          risks: [
+            {
               name: "candidate",
-              branches: {
-                _base: {
-                  name: "_base",
-                },
-              },
+              branches: ["_base"],
             },
-          },
+          ],
         },
       });
     });
@@ -179,35 +151,20 @@ describe("createChannelTree", () => {
       expect(createChannelTree(channelList)).toEqual({
         latest: {
           name: "latest",
-          risks: {
-            stable: {
+          risks: [
+            {
               name: "stable",
-              branches: {
-                _base: {
-                  name: "_base",
-                },
-              },
+              branches: ["_base"],
             },
-            beta: {
+            {
               name: "beta",
-              branches: {
-                test: {
-                  name: "test",
-                },
-              },
+              branches: ["test"],
             },
-            edge: {
+            {
               name: "edge",
-              branches: {
-                hotfix: {
-                  name: "hotfix",
-                },
-                "1.0.1": {
-                  name: "1.0.1",
-                },
-              },
+              branches: ["1.0.1", "hotfix"],
             },
-          },
+          ],
         },
       });
     });
@@ -225,25 +182,12 @@ describe("createChannelTree", () => {
       expect(createChannelTree(channelList)).toEqual({
         latest: {
           name: "latest",
-          risks: {
-            stable: {
+          risks: [
+            {
               name: "stable",
-              branches: {
-                _base: {
-                  name: "_base",
-                },
-                test: {
-                  name: "test",
-                },
-                "1.0.1": {
-                  name: "1.0.1",
-                },
-                hotfix: {
-                  name: "hotfix",
-                },
-              },
+              branches: ["_base", "test", "1.0.1", "hotfix"],
             },
-          },
+          ],
         },
       });
     });
@@ -315,11 +259,7 @@ describe("sortChannels", () => {
           risks: [
             {
               name: "stable",
-              branches: [
-                {
-                  name: "_base",
-                },
-              ],
+              branches: ["_base"],
             },
           ],
         },
@@ -328,11 +268,7 @@ describe("sortChannels", () => {
           risks: [
             {
               name: "edge",
-              branches: [
-                {
-                  name: "_base",
-                },
-              ],
+              branches: ["_base"],
             },
           ],
         },
@@ -341,11 +277,7 @@ describe("sortChannels", () => {
           risks: [
             {
               name: "candidate",
-              branches: [
-                {
-                  name: "_base",
-                },
-              ],
+              branches: ["_base"],
             },
           ],
         },
@@ -354,11 +286,7 @@ describe("sortChannels", () => {
           risks: [
             {
               name: "beta",
-              branches: [
-                {
-                  name: "_base",
-                },
-              ],
+              branches: ["_base"],
             },
           ],
         },
@@ -376,11 +304,7 @@ describe("sortChannels", () => {
           risks: [
             {
               name: "stable",
-              branches: [
-                {
-                  name: "_base",
-                },
-              ],
+              branches: ["_base"],
             },
           ],
         },
@@ -389,11 +313,7 @@ describe("sortChannels", () => {
           risks: [
             {
               name: "edge",
-              branches: [
-                {
-                  name: "_base",
-                },
-              ],
+              branches: ["_base"],
             },
           ],
         },
@@ -402,19 +322,11 @@ describe("sortChannels", () => {
           risks: [
             {
               name: "candidate",
-              branches: [
-                {
-                  name: "_base",
-                },
-              ],
+              branches: ["_base"],
             },
             {
               name: "beta",
-              branches: [
-                {
-                  name: "_base",
-                },
-              ],
+              branches: ["_base"],
             },
           ],
         },
@@ -439,11 +351,7 @@ describe("sortChannels", () => {
             risks: [
               {
                 name: "stable",
-                branches: [
-                  {
-                    name: "_base",
-                  },
-                ],
+                branches: ["_base"],
               },
             ],
           },
@@ -452,11 +360,7 @@ describe("sortChannels", () => {
             risks: [
               {
                 name: "edge",
-                branches: [
-                  {
-                    name: "_base",
-                  },
-                ],
+                branches: ["_base"],
               },
             ],
           },
@@ -465,22 +369,11 @@ describe("sortChannels", () => {
             risks: [
               {
                 name: "candidate",
-                branches: [
-                  {
-                    name: "_base",
-                  },
-                ],
+                branches: ["_base"],
               },
               {
                 name: "beta",
-                branches: [
-                  {
-                    name: "hotfix",
-                  },
-                  {
-                    name: "1.0.1",
-                  },
-                ],
+                branches: ["hotfix", "1.0.1"],
               },
             ],
           },

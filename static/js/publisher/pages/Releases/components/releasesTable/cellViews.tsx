@@ -286,7 +286,7 @@ export const RevisionInfo = ({
 };
 
 interface ReleasesTableCellViewProps {
-  item: DraggedItem;
+  item: DraggedItem | undefined;
   canDrag: boolean;
   className?: string;
   children?: React.ReactNode;
@@ -331,11 +331,11 @@ export const ReleasesTableCellView = (props: ReleasesTableCellViewProps) => {
         {arch}
       </div>
       <div
-        ref={drag}
+        ref={(node) => { if (drag) drag(node); }}
         className="p-release-data p-tooltip p-tooltip--btm-center"
       >
         {children}
-        {canDrag && (
+        {canDrag && item && (
           <>
             <ContextualMenu
               className="p-button is-small"

@@ -1,11 +1,14 @@
 import { configureStore } from '@reduxjs/toolkit';
-import releasesReducers from "./reducers";
+import rootReducer from './slices';
 
 // redux toolkit includes thunk and devtools by default
 export const store = configureStore({
-  reducer: releasesReducers
+  reducer: rootReducer
 });
 
-// ReturnType<typeof store.getState> == ReleasesReduxState
-export type DispatchFn = typeof store.dispatch;
-
+export type RootState = ReturnType<typeof store.getState>;
+export type AppDispatch = typeof store.dispatch;
+export type AppAsyncThunkConfig = {
+  dispatch: AppDispatch;
+  state: RootState;
+}

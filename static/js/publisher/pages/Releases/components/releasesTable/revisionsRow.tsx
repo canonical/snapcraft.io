@@ -42,7 +42,7 @@ const ReleasesTableRevisionsRow = (props: ReleasesTableRevisionsRowProps) => {
             return (
               <ReleasesTableRevisionCell
                 key={`${currentTrack}/${risk}/${arch}`}
-                revision={revisions ? revisions[arch] : null}
+                revision={revisions && revisions[arch] ? revisions[arch] : null}
                 showVersion={showVersion}
                 arch={arch}
               />

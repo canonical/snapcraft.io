@@ -1,10 +1,10 @@
 import { connect } from "react-redux";
 
-import { hideNotification } from "../actions/globalNotification";
+import { hideNotification } from "../slices/notification";
 
 import Notification from "./notification";
 import type { ReleasesReduxState } from "../../../types/releaseTypes";
-import type { DispatchFn } from "../store";
+import type { AppDispatch } from "../store";
 
 interface StateProps {
   children?: string;
@@ -14,7 +14,7 @@ interface StateProps {
 }
 
 interface DispatchProps {
-  hideNotification: typeof hideNotification;
+  hideNotification: () => void;
 }
 
 const mapStateToProps = ({ notification }: ReleasesReduxState): StateProps => {
@@ -28,7 +28,7 @@ const mapStateToProps = ({ notification }: ReleasesReduxState): StateProps => {
   };
 };
 
-const mapDispatchToProps = (dispatch: DispatchFn): DispatchProps => ({
+const mapDispatchToProps = (dispatch: AppDispatch): DispatchProps => ({
   hideNotification: () => dispatch(hideNotification()),
 });
 

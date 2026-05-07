@@ -17,7 +17,6 @@ export const mockRevisions: Revision[] = [
     grade: "stable",
     progressive: {
       "current-percentage": null,
-      paused: null,
       percentage: null,
     },
     revision: 61,
@@ -42,7 +41,6 @@ export const mockRevisions: Revision[] = [
     grade: "stable",
     progressive: {
       "current-percentage": null,
-      paused: null,
       percentage: null,
     },
     revision: 58,
@@ -67,7 +65,6 @@ export const mockRevisions: Revision[] = [
     grade: "stable",
     progressive: {
       "current-percentage": 30,
-      paused: null,
       percentage: null,
     },
     revision: 54,
@@ -77,3 +74,72 @@ export const mockRevisions: Revision[] = [
     version: "4.0.1",
   },
 ];
+
+export const mockRevisionsMultipleArchs: Revision[] = [
+  {
+    architectures: ["amd64"],
+    attributes: {},
+    base: "coreXX",
+    build_url: "https://example.com/build",
+    channels: ["latest/edge"],
+    confinement: "strict",
+    created_at: "2025-05-01T06:45:23Z",
+    epoch: {
+      read: [0],
+      write: [0],
+    },
+    expiration: null,
+    grade: "stable",
+    revision: 62,
+    "sha3-384": "shastring",
+    size: 46874624,
+    status: "Published",
+    version: "4.0.1",
+  },
+  {
+    architectures: ["armhf"],
+    attributes: {},
+    base: "coreXX",
+    build_url: "https://example.com/build",
+    channels: ["latest/edge"],
+    confinement: "strict",
+    created_at: "2025-05-01T06:45:23Z",
+    epoch: {
+      read: [0],
+      write: [0],
+    },
+    expiration: null,
+    grade: "stable",
+    revision: 63,
+    "sha3-384": "shastring",
+    size: 46874624,
+    status: "Published",
+    version: "4.0.1",
+  },
+];
+
+export function createMockRevision(
+  partialRevision: Partial<Revision>,
+): Revision {
+  return {
+    architectures: ["amd64"],
+    attributes: {},
+    base: "",
+    build_url: null,
+    confinement: "strict",
+    created_at: "2025-05-01T06:45:23Z",
+    epoch: {
+      read: [0],
+      write: [0],
+    },
+    expiration: null,
+    grade: "stable",
+    revision: 63,
+    "sha3-384": "shastring",
+    size: 46874624,
+    status: "Published",
+    version: "4.0.1",
+    // add custom passed props
+    ...partialRevision,
+  } as Revision;
+}
