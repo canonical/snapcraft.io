@@ -46,7 +46,7 @@
     "@types/react-redux": "7.1.34",
     "@types/topojson-client": "3.1.5",
     "@vitejs/plugin-react-swc": "4.2.3",
-    "@vitest/eslint-plugin": "1.6.9",
+    "@vitest/eslint-plugin": "1.6.16",
     "autoprefixer": "10.4.24",
     "d3": "7.9.0",
     "d3-array": "3.2.4",
@@ -99,8 +99,8 @@
     "@types/redux-mock-store": "^1.5.0",
     "@typescript-eslint/eslint-plugin": "^8.58.0",
     "@typescript-eslint/parser": "^8.58.0",
-    "@vitest/coverage-v8": "4.1.3",
-    "@vitest/ui": "4.1.3",
+    "@vitest/coverage-v8": "4.1.5",
+    "@vitest/ui": "4.1.5",
     "concurrently": "9.2.1",
     "cypress": "15.10.0",
     "eslint": "9.39.2",
@@ -112,7 +112,7 @@
     "stylelint": "17.6.0",
     "stylelint-config-standard-scss": "17.0.0",
     "stylelint-order": "7.0.1",
-    "vitest": "4.1.3"
+    "vitest": "4.1.5"
   },
   "resolutions": {
     "vitest/**/glob": "13.0.1",
