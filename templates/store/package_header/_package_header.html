@@ -3,6 +3,7 @@ Context variables needed for `package_header`:
 
 Snap data:
   snap_title: Title of the snap
+  package_name: the name of the snap (the one you'd type to install it through the CLI)
   icon_url: URL of the icon
   categories: List of categories with slug/name
 
@@ -30,6 +31,7 @@ Other:
     </div>
     <div class="grid-col-6 grid-col-medium-3 grid-col-small-3">
       {{ package_header_data(package_title=snap_title,
+          package_name=package_name,
           icon_url=icon_url,
           developer=developer,
           categories=categories,

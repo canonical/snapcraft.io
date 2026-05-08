@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { ReleasesReduxState } from "../../../types/releaseTypes";
+import type { ReleasesReduxState } from "../../../types/releaseTypes";
 
 const notificationStyle = (element = "", modifier = ""): string => {
   element = element ? "__" + element : "";

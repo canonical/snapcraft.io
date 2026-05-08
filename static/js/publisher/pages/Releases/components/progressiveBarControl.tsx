@@ -1,9 +1,10 @@
 import React from "react";
 import { connect } from "react-redux";
 
-import { updateProgressiveReleasePercentage } from "../actions/pendingReleases";
-import type { PendingReleaseItem, DispatchFn } from "../../../types/releaseTypes";
+import { updateProgressiveRelease } from "../slices/pendingChanges";
+import type { PendingReleaseItem, Progressive } from "../../../types/releaseTypes";
 import type { ProgressiveType } from "./releasesConfirmDetails/types";
+import type { AppDispatch } from "../store";
 
 import progressiveTypes from "./releasesConfirmDetails/types";
 
@@ -14,7 +15,7 @@ interface ProgressiveBarControlProps {
   type?: ProgressiveType;
   globalPercentage?: number;
   updateGlobalPercentage?: (percentage: number) => void;
-  updateProgressiveReleasePercentage?: (percentage: number) => void;
+  updateProgressiveRelease?: (percentage: Progressive) => void;
   minPercentage?: number;
 }
 
@@ -26,13 +27,13 @@ class ProgressiveBarControl extends React.Component<ProgressiveBarControlProps> 
   }
 
   onChangeHandler(percentage: number) {
-    const { updateProgressiveReleasePercentage, updateGlobalPercentage } =
+    const { updateProgressiveRelease, updateGlobalPercentage } =
       this.props;
 
     if (updateGlobalPercentage) {
       updateGlobalPercentage(percentage);
     }
-    updateProgressiveReleasePercentage?.(percentage);
+    updateProgressiveRelease?.({ percentage, "current-percentage": null, paused: null });
   }
 
   render() {
@@ -111,10 +112,10 @@ class ProgressiveBarControl extends React.Component<ProgressiveBarControlProps> 
   }
 }
 
-const mapDispatchToProps = (dispatch: DispatchFn) => {
+const mapDispatchToProps = (dispatch: AppDispatch) => {
   return {
-    updateProgressiveReleasePercentage: (percentage: number) =>
-      dispatch(updateProgressiveReleasePercentage(percentage)),
+    updateProgressiveRelease: (percentage: Progressive) =>
+      dispatch(updateProgressiveRelease(percentage)),
   };
 };
 

@@ -1,9 +1,10 @@
-import React, { Component, ReactNode } from "react";
+import { Component, ReactNode } from "react";
 import { connect } from "react-redux";
 
-import { closeModal } from "../actions/modal";
-import { setDefaultTrack, clearDefaultTrack } from "../actions/defaultTrack";
-import type { ReleasesReduxState, DispatchFn } from "../../../types/releaseTypes";
+import { CLOSE_MODAL_ACTION_NAME, closeModal } from "../slices/modal";
+import { setDefaultTrack, clearDefaultTrack } from "../slices/defaultTrack";
+import type { ReleasesReduxState } from "../../../types/releaseTypes";
+import type { AppDispatch } from "../store";
 
 type ModalAction = {
   appearance: "positive" | "neutral" | "negative";
@@ -11,7 +12,9 @@ type ModalAction = {
     | {
         reduxAction: string;
       }
-    | { type: string };
+    | {
+        type: typeof CLOSE_MODAL_ACTION_NAME;
+      }
   label: string;
 };
 
@@ -19,7 +22,7 @@ interface ModalActionButtonProps {
   onClickAction: ModalAction["onClickAction"];
   appearance: ModalAction["appearance"];
   children: ReactNode;
-  dispatch: DispatchFn;
+  dispatch: AppDispatch;
   setDefaultTrack?: () => void;
   clearDefaultTrack?: () => void;
   [key: string]: unknown; // For dynamic redux action props
@@ -84,7 +87,7 @@ class ModalActionButton extends Component<ModalActionButtonProps, ModalActionBut
   }
 }
 
-const mapActionButtonDispatchToProps = (dispatch: DispatchFn) => ({
+const mapActionButtonDispatchToProps = (dispatch: AppDispatch) => ({
   dispatch,
   setDefaultTrack: () => dispatch(setDefaultTrack()),
   clearDefaultTrack: () => dispatch(clearDefaultTrack()),
@@ -144,7 +147,7 @@ const Modal = ({ title, content, actions = [], closeModal }: ModalProps) => {
 
 const mapStateToProps = (state: ReleasesReduxState) => state.modal || {};
 
-const mapModalDispatchToProps = (dispatch: DispatchFn) => ({
+const mapModalDispatchToProps = (dispatch: AppDispatch) => ({
   closeModal: () => dispatch(closeModal()),
 });
 

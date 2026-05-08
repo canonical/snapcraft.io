@@ -1,4 +1,3 @@
-import React from "react";
 import type { PendingReleaseItem } from "../../../../types/releaseTypes";
 
 interface CancelProgressiveRowProps {

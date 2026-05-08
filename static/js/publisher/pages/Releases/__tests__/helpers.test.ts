@@ -1,4 +1,3 @@
-import { Mock } from "vitest";
 import { mockRevisions } from "../../../test-utils";
 import {
   ArchitectureRevisionsMap,
@@ -13,7 +12,15 @@ import {
   getPackageMetadata,
 } from "../helpers";
 
-global.fetch = vi.fn();
+const mockFetch = vi.fn();
+
+beforeAll(() => {
+  vi.stubGlobal("fetch", mockFetch);
+});
+
+afterAll(() => {
+  vi.unstubAllGlobals();
+});
 
 const mockRevision = mockRevisions[0];
 
@@ -98,11 +105,11 @@ describe("isSameVersion", () => {
 
 describe("getTrackGuardrails", () => {
   beforeEach(() => {
-    (global.fetch as Mock).mockClear();
+    mockFetch.mockClear();
   });
 
   it("should return true when track-guardrails are present", async () => {
-    (global.fetch as Mock).mockResolvedValueOnce({
+    mockFetch.mockResolvedValueOnce({
       ok: true,
       json: () =>
         Promise.resolve({
@@ -117,7 +124,7 @@ describe("getTrackGuardrails", () => {
   });
 
   it("should return false when track-guardrails are not present", async () => {
-    (global.fetch as Mock).mockResolvedValueOnce({
+    mockFetch.mockResolvedValueOnce({
       ok: true,
       json: () =>
         Promise.resolve({

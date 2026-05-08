@@ -17,7 +17,6 @@ export const mockRevisionsMap: RevisionsMap = {
     grade: "stable",
     progressive: {
       "current-percentage": 30,
-      paused: null,
       percentage: null,
     },
     revision: 54,
@@ -42,7 +41,6 @@ export const mockRevisionsMap: RevisionsMap = {
     grade: "stable",
     progressive: {
       "current-percentage": null,
-      paused: null,
       percentage: null,
     },
     revision: 58,
@@ -67,7 +65,6 @@ export const mockRevisionsMap: RevisionsMap = {
     grade: "stable",
     progressive: {
       "current-percentage": null,
-      paused: null,
       percentage: null,
     },
     revision: 61,
