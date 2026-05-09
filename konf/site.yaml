@@ -21,11 +21,6 @@ env: &env
       key: marketo_client_secret
       name: snapcraft-io
 
-  - name: SEARCH_API_KEY
-    secretKeyRef:
-      key: google-custom-search-key
-      name: google-api
-
   - name: GITHUB_CLIENT_ID
     secretKeyRef:
       key: github-client-id
