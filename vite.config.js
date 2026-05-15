@@ -60,6 +60,20 @@ export default defineConfig({
         entryFileNames: `[name]--[hash].js`,
         chunkFileNames: `chunks/[name]--[hash].js`,
         assetFileNames: `assets/[name]--[hash][extname]`,
+        // try to produce the minimal amount of bundles, even if this is not good for first load performance
+        experimentalMinChunkSize: 5_000_000,
+        manualChunks(id) {
+          if (id.includes("node_modules/")) {
+            return "vendor";
+          }
+          if (id.includes("public/")) {
+            return "public";
+          }
+          if (id.includes("publisher/")) {
+            return "publisher";
+          }
+          return null;
+        },
       },
     },
   },
