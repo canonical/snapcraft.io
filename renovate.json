@@ -7,10 +7,6 @@
 
   "packageRules": [
     {
-      "matchUpdateTypes": ["major"],
-      "groupName": null
-    },
-    {
       "matchUpdateTypes": ["minor"],
       "groupName": "minor updates"
     },
