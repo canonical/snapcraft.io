@@ -3,7 +3,6 @@ import { getPendingChannelMap, getReleases } from "../selectors";
 import { triggerGAEvent } from "../analytics";
 import type {
   PendingChangesState,
-  PendingRelease,
   PendingReleaseItem,
   Progressive,
   Revision,
@@ -41,16 +40,10 @@ export function releaseRevision(
 
       // If there's already a "null" release in staging that is progressive
       // assign that value to subsequent progressive releases
-      Object.keys(pendingReleases).forEach((orderIndex) => {
-        const numericOrderIndex = Number(orderIndex);
-        const channels = pendingReleases[numericOrderIndex].channels;
-        Object.keys(channels).forEach((channel) => {
-          const release = channels[channel];
-
-          if (release.progressive && percentage === 100) {
-            percentage = release.progressive.percentage;
-          }
-        });
+      Object.values(pendingReleases).forEach((pendingReleaseItem) => {
+        if (pendingReleaseItem.progressive && percentage === 100) {
+          percentage = pendingReleaseItem.progressive.percentage;
+        }
       });
 
       // this is the exact payload expected by the Store API BE
@@ -145,12 +138,22 @@ export function closeChannel(channel: string) {
 
 function _getPendingReleaseByRevision(
   state: Draft<PendingChangesState>,
-  revision: number
-): Draft<[number, PendingRelease]> | null {
-  const entry = Object.entries(state.pendingReleases).find(
-    ([_orderKeyStr, pendingRelValue]) => pendingRelValue.revision === revision
-  );
-  if (entry) {
+  revision: number,
+  channel?: string
+): Draft<[number, PendingReleaseItem]> | null {
+  let entries = Object.entries(state.pendingReleases)
+    .filter(
+      ([_orderKeyStr, pendingRelItem]) => pendingRelItem.revision.revision === revision
+    );
+  
+  if (channel) {
+    entries.filter(
+      ([_orderKeyStr, pendingRelItem]) => pendingRelItem.channel === channel
+    );
+  }
+
+  if (entries.length > 0) {
+    const entry = entries[0];
     return [parseInt(entry[0]), entry[1]];
   }
   return null;
@@ -163,36 +166,17 @@ function _removePendingRelease(
 ) {
   const pendingReleaseEntry = _getPendingReleaseByRevision(state, revision.revision);
   if (pendingReleaseEntry) {
-    const [ orderKey, pendingRelease ] = pendingReleaseEntry;
-    if (pendingRelease.channels[channel]) {
-      delete pendingRelease.channels[channel];
-    }
-    if (Object.keys(pendingRelease.channels).length === 0) {
+    const [ orderKey, pendingReleaseItem ] = pendingReleaseEntry;
+    if (pendingReleaseItem.channel === channel) {
       delete state.pendingReleases[orderKey];
     }
   }
 }
 
 /*
-revisions to be released:
-key is the id of revision to release
-value is object containing release object and channels to release to
-{
-  <revisionId>: {
-    <channel>: {
-      revision: { revision: <revisionId>, version, ... },
-      channel: <channel>,
-      progressive: { percentage, current-percentage },
-      previousReleases: {
-        <arch>: { revision: <revisionId>, version, ... }
-      },
-      replaces: <revision>
-    }
-  }
-}
-we should prevent duplication of revison data.
-TODO: remove `revision` from here, use only data from `revisions` state
-TODO: remove `revision` from the PendingReleaseItem type
+TODO: We should prevent duplication of revison data.
+Remove `revision` from the PendingReleaseItem type,
+and use only data from `revisions` state
 */
 
 export type ReleaseRevisionPayload = {
@@ -230,10 +214,10 @@ const pendingReleasesSlice = createSlice({
 
       const channel = action.payload;
       Object.values(state.pendingReleases).forEach((pendingRelease) => {
-        if (pendingRelease.channels[channel]) {
+        if (pendingRelease.channel === channel) {
           _removePendingRelease(
             state,
-            pendingRelease.channels[channel].revision,
+            pendingRelease.revision,
             channel
           );
         }
@@ -262,81 +246,68 @@ const pendingReleasesSlice = createSlice({
       revision.architectures.forEach((arch) => {
         Object.values(state.pendingReleases).forEach((pendingRelease) => {
           if (
-            pendingRelease.revision !== revision.revision &&
-            pendingRelease.channels[channel] &&
-            pendingRelease.channels[channel].revision.architectures.includes(arch)
+            pendingRelease.revision.revision !== revision.revision &&
+            pendingRelease.revision.architectures.includes(arch)
           ) {
             _removePendingRelease(
               state,
-              pendingRelease.channels[channel].revision,
+              pendingRelease.revision,
               channel
             );
           }
         });
       });
 
-      const pendingReleaseEntry = _getPendingReleaseByRevision(state, revision.revision);
+      const pendingReleaseEntry = _getPendingReleaseByRevision(
+        state, revision.revision, channel);
+      let pendingReleaseItem: Draft<PendingReleaseItem>;
       let releaseOrder: number;
-      let pendingRelease: Draft<PendingRelease>;
       let newChangeOrderIndex = state.changeOrderIndex;
-      if (!pendingReleaseEntry) {
+      if (pendingReleaseEntry) {
+        [releaseOrder, pendingReleaseItem] = pendingReleaseEntry;
+        pendingReleaseItem.previousReleases = previousReleases ?? [];
+        pendingReleaseItem.progressive = progressive;
+      } else {
         releaseOrder = state.changeOrderIndex;
-        pendingRelease = {
-          revision: revision.revision,
-          channels: {}
+        pendingReleaseItem = {
+          revision: revision,
+          channel: channel,
+          previousReleases: previousReleases ?? [],
+          progressive: progressive,
         };
         newChangeOrderIndex = state.changeOrderIndex + 1;
-      } else {
-        [releaseOrder, pendingRelease] = pendingReleaseEntry;
       }
 
-      if (!pendingRelease.channels[channel]) {
-        pendingRelease.channels[channel] = {
-          revision,
-          channel,
-        } as PendingReleaseItem;
-      }
-      if (previousReleases) {
-        pendingRelease.channels[channel].previousReleases = previousReleases;
-      }
-      if (progressive && !pendingRelease.channels[channel].progressive) {
-        pendingRelease.channels[channel].progressive = progressive;
-      }
-
+      state.pendingReleases[releaseOrder] = pendingReleaseItem;
       state.changeOrderIndex = newChangeOrderIndex;
-      state.pendingReleases[releaseOrder] = pendingRelease;
     },
     removePendingRelease(state, action: PayloadAction<RemoveRevisionPayload>) {
       _removePendingRelease(state, action.payload.revision, action.payload.channel);
     },
     setProgressiveRelease(state, action: PayloadAction<Progressive>) {
       const progressive = action.payload;
-      Object.values(state.pendingReleases).forEach((pendingRelease) => {
-        Object.values(pendingRelease.channels).forEach((channel) => {
-          const hasPreviousReleases =
-            channel.previousReleases &&
-            Object.keys(channel.previousReleases).length > 0;
-          if (
-            hasPreviousReleases &&
-            !channel.progressive &&
-            progressive.percentage &&
-            progressive.percentage < 100
-          ) {
-            channel.progressive = { ...progressive };
-          }
-        });
+      Object.values(state.pendingReleases).forEach((pendingReleaseItem) => {
+        const hasPreviousReleases =
+          pendingReleaseItem.previousReleases &&
+          pendingReleaseItem.previousReleases.length > 0;
+        if (
+          hasPreviousReleases &&
+          !pendingReleaseItem.progressive &&
+          progressive.percentage &&
+          progressive.percentage < 100
+        ) {
+          pendingReleaseItem.progressive = { ...progressive };
+        }
       });
     },
     updateProgressiveRelease(state, action: PayloadAction<Progressive>) {
       const progressive = action.payload;
-      Object.values(state.pendingReleases).forEach((pendingRelease) => {
-        Object.values(pendingRelease.channels).forEach((channel) => {
-          if (channel.progressive) {
-            channel.progressive.percentage = progressive.percentage;
-            channel.progressive["current-percentage"] = progressive["current-percentage"];
-            channel.progressive.paused = progressive.paused;
-          }
-        });
+      Object.values(state.pendingReleases).forEach((pendingReleaseItem) => {
+        if (pendingReleaseItem.progressive) {
+          pendingReleaseItem.progressive.percentage = progressive.percentage;
+          pendingReleaseItem.progressive["current-percentage"] = progressive["current-percentage"];
+          pendingReleaseItem.progressive.paused = progressive.paused;
+        }
       });
     },
   }
