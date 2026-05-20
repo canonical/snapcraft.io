@@ -187,26 +187,19 @@ function dedupeReleases(
 ): FetchReleasePayload[] {
   const progressiveReleases: FetchReleasePayload[] = [];
   const regularReleases: FetchReleasePayload[] = [];
-  Object.keys(pendingReleases).forEach((orderIndex) => {
-    const numericOrderIndex = Number(orderIndex);
-    const revId = pendingReleases[numericOrderIndex].revision;
-    const channels = pendingReleases[numericOrderIndex].channels;
-    Object.keys(channels).forEach((channel) => {
-      const pendingRelease = channels[channel];
-      if (pendingRelease.progressive) {
-        // first move progressive releases out
-        progressiveReleases.push(mapToRelease(pendingRelease));
+  Object.values(pendingReleases).forEach((pendingReleaseItem) => {
+    if (pendingReleaseItem.progressive) {
+      progressiveReleases.push(mapToRelease(pendingReleaseItem));
+    } else {
+      const releaseIndex = regularReleases.findIndex(
+        (release) => release.revision.revision === pendingReleaseItem.revision.revision
+      );
+      if (releaseIndex === -1) {
+        regularReleases.push(mapToRelease(pendingReleaseItem));
       } else {
-        const releaseIndex = regularReleases.findIndex(
-          (release) => release.revision.revision === revId
-        );
-        if (releaseIndex === -1) {
-          regularReleases.push(mapToRelease(pendingRelease));
-        } else {
-          regularReleases[releaseIndex].channels.push(pendingRelease.channel);
-        }
+        regularReleases[releaseIndex].channels.push(pendingReleaseItem.channel);
       }
-    });
+    }
   });
   return [...progressiveReleases, ...regularReleases];
 }
@@ -228,6 +221,15 @@ export const releaseRevisions = createAsyncThunk<
     // should we display a loading state in the UI ?
 
     try {
+      // for (let index = 0; index < pendingChanges.changeOrderIndex; ++index) {
+      //   if (pendingChanges.pendingCloses[index]) {
+      //     // fetch close
+      //     const response = await fetchRelease()
+      //   } else {
+      //     // fetch release
+      //   }
+      // }
+
       await fetchReleases(
         (json, release) => handleReleaseResponse(dispatch, json, release, revisions),
         releases,
