@@ -1,0 +1,79 @@
+@mixin snapcraft-p-combobox {
+  .p-combobox {
+    margin: $spv--small $sph--large;
+    position: relative;
+
+    &__controls {
+      position: relative;
+    }
+
+    &__input {
+      cursor: pointer;
+      margin-bottom: 0;
+      padding-left: $spv--small; // align text to icons in sidenav
+      padding-right: 2 * $sph--large; // width of the toggle button, twice its horizontal padding
+      text-overflow: ellipsis;
+
+      // chromium browsers show a few buttons inside search inputs by default, hide them
+      &::-webkit-search-decoration,
+      &::-webkit-search-cancel-button,
+      &::-webkit-search-results-button,
+      &::-webkit-search-results-decoration {
+        -webkit-appearance: none; // stylelint-disable-line property-no-vendor-prefix
+      }
+    }
+
+    &__toggle {
+      &:hover {
+        background-color: transparent;
+        border-color: transparent;
+      }
+
+      bottom: 0;
+      margin-bottom: 0;
+      position: absolute;
+      right: 0;
+      top: 0;
+    }
+
+    &__options-panel {
+      background-color: $colors--theme--background-hover;
+      border: 1px solid $colors--theme--border-default;
+      left: 0;
+      list-style: none;
+      margin: 0;
+      max-height: 15rem;
+      overflow: auto;
+      padding: 0;
+      position: absolute;
+      top: 100%;
+      width: 100%;
+      z-index: 1;
+
+      &:not(.active) {
+        visibility: hidden;
+      }
+    }
+
+    &__option {
+      border-bottom: 1px solid $colors--theme--border-low-contrast;
+      color: $colors--theme--text-default;
+      display: block;
+      overflow: hidden;
+      padding: $spv--small $sph--small;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+
+      &:last-child {
+        border-bottom: 0;
+      }
+
+      &:hover,
+      &[aria-selected="true"] {
+        background-color: $colors--theme--background-default;
+        cursor: pointer;
+        text-decoration: none;
+      }
+    }
+  }
+}

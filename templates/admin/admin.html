@@ -2,11 +2,22 @@
 {% set show_header = False %}
 {% extends "_base-layout.html" %}
 {% block body_class %}{% endblock %}
+{% block banner %}{% endblock %}
 {% block content %}
+<div id="status-banner" class="p-strip is-shallow" style="position: fixed; bottom: 0; left: 0; right: 0; z-index: 1000;">
+  <div class="p-notification--caution u-fixed-width u-no-margin--bottom">
+    <div class="p-notification__content">
+      <h5 class="p-notification__title">Temporary performance degradation</h5>
+      <p class="p-notification__message">We are currently experiencing service degradation and working on resolving this. Thank you for your patience and understanding.</p>
+    </div>
+    <button class="p-notification__close" aria-controls="status-banner" onclick="document.getElementById('status-banner').remove()">Close</button>
+  </div>
+</div>
+
 <div id="root">
 </div>
 
-<script nonce="{{ CSP_NONCE }}">
+<script>
   window.CSRF_TOKEN = "{{ csrf_token() }}";
   window.SENTRY_DSN = "{{ SENTRY_DSN }}";
   window.API_URL = "{{ api_url }}";

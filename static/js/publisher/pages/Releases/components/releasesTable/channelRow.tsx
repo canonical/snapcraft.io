@@ -1,17 +1,17 @@
 import { connect } from "react-redux";
 
-import { Branch, getArchitectures, getPendingChannelMap } from "../../selectors";
+import { type Branch, getArchitectures, getPendingChannelMap } from "../../selectors";
 import { getChannelName } from "../../helpers";
 
 import ReleasesTableReleaseCell from "./releaseCell";
 import ReleasesTableRow from "./row";
-import {
+import type {
   ReleasesReduxState,
   CPUArchitecture,
   ChannelArchitectureRevisionsMap,
   Channel,
 } from "../../../../types/releaseTypes";
-import { DraggedItem } from "./types";
+import type { DraggedItem } from "./types";
 
 interface OwnProps {
   risk: string;
@@ -83,7 +83,7 @@ const ReleasesTableChannelRow = (props: ReleasesTableChannelRowProps) => {
 const mapStateToProps = (state: ReleasesReduxState): StateProps => {
   return {
     currentTrack: state.currentTrack,
-    pendingCloses: state.pendingCloses,
+    pendingCloses: Object.values(state.pendingChanges.pendingCloses),
     pendingChannelMap: getPendingChannelMap(state),
     archs: getArchitectures(state),
   };

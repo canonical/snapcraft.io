@@ -12,22 +12,24 @@ import {
   getBranches,
   getLaunchpadRevisions,
   getAllRevisions,
-  Branch,
+  type Branch,
 } from "../../selectors";
-import { selectAvailableRevisions, closeHistory } from "../../actions";
+import { selectAvailableRevisions } from "../../slices/availableRevisionsSelect";
+import { closeHistory } from "../../slices/history";
 
 import { getChannelName, getBuildId } from "../../helpers";
 import HistoryPanel from "../historyPanel";
 import ReleasesTableDroppableRow from "./droppableRow";
 import ReleasesTableRevisionsRow from "./revisionsRow";
-import {
+import type {
   ReleasesReduxState,
-  DispatchFn,
   Revision,
   CPUArchitecture,
   LaunchpadBuildRevision,
   ArchitectureRevisionsMap,
+  AvailableRevisionsSelect,
 } from "../../../../types/releaseTypes";
+import type { AppDispatch } from "../../store";
 
 const MAX_BRANCHES = 5;
 const MAX_BUILDS = 5;
@@ -44,8 +46,8 @@ interface StateProps {
 }
 
 interface DispatchProps {
-  selectAvailableRevisions: (...args: Parameters<typeof selectAvailableRevisions>) => void;
-  closeHistory: typeof closeHistory;
+  selectAvailableRevisions: (value: AvailableRevisionsSelect) => void;
+  closeHistory: () => void;
 }
 
 type ReleasesTableProps = StateProps & DispatchProps;
@@ -103,21 +105,25 @@ class ReleasesTable extends Component<ReleasesTableProps, ReleasesTableState> {
   }
 
   renderBuildRow(revisions: ArchitectureRevisionsMap) {
-    const rowKey = `${BUILD}-${getBuildId(Object.values(revisions)[0])}`;
+    const firstRevision = Object.values(revisions).shift();
+    if (!firstRevision) {
+      return null;
+    }
+    const rowKey = `${BUILD}-${getBuildId(firstRevision)}`;
 
     return (
       <ReleasesTableRevisionsRow
         key={rowKey}
         risk={BUILD}
         revisions={revisions}
-        buildRequestId={getBuildId(Object.values(revisions)[0])}
+        buildRequestId={getBuildId(firstRevision)}
       />
     );
   }
 
   renderHistoryPanel() {
     return (
-      <div className="p-releases-table__row">
+      <div key={'historyPanel'} className="p-releases-table__row">
         <HistoryPanel />
       </div>
     );
@@ -132,16 +138,6 @@ class ReleasesTable extends Component<ReleasesTableProps, ReleasesTableState> {
         {isHistoryOpen &&
           filters?.risk === AVAILABLE &&
           this.renderHistoryPanel()}
-      </>
-    );
-  }
-
-  renderAvailableRevisions() {
-    return (
-      <>
-        <h5>Promote from uploaded revisions</h5>
-
-        {this.renderAvailableRevisionsRow()}
       </>
     );
   }
@@ -366,7 +362,7 @@ const mapStateToProps = (state: ReleasesReduxState): StateProps => {
   };
 };
 
-const mapDispatchToProps = (dispatch: DispatchFn): DispatchProps => {
+const mapDispatchToProps = (dispatch: AppDispatch): DispatchProps => {
   return {
     selectAvailableRevisions: (value) =>
       dispatch(selectAvailableRevisions(value)),

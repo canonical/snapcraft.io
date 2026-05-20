@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 import { useDrag, useDrop } from "react-dnd";
+import type { ConnectDragPreview, ConnectDragSource } from "react-dnd";
+import { DraggedItem } from "./releasesTable/types";
 
 export const DND_ITEM_REVISIONS = "DND_ITEM_REVISIONS";
 
@@ -9,22 +11,24 @@ export const Handle = () => (
   </span>
 );
 
+type Collected = {
+  isDragging: boolean;
+};
+
 // it's a wrapper around react-dnd useDrag hook
 // with some added functionality and workaround for a bug
 export const useDragging = ({
   item,
   canDrag,
 }: {
-  item: any;
+  item: DraggedItem | undefined;
   canDrag: boolean;
-}) => {
-  // default canDrag to true, make sure it's boolean
-  if (typeof canDrag === "undefined") {
-    canDrag = true;
-  } else {
-    canDrag = !!canDrag;
-  }
-
+}): [
+  boolean,
+  boolean,
+  ConnectDragSource | null,
+  ConnectDragPreview | null,
+] => {
   const [isGrabbing, setIsGrabbing] = useState(false);
 
   // Calling useDrag end callback after history is closed (because promoting revisions closes history panel)
@@ -44,11 +48,11 @@ export const useDragging = ({
   });
 
   // @ts-ignore
-  const [{ isDragging }, drag, preview] = useDrag({
-    item: item,
-    type: item?.type,
-    canDrag: () => canDrag,
-    collect: (monitor) => ({
+  const [collected, drag, preview] = useDrag({
+    item: item ?? { type: "" },
+    type: item?.type ?? "",
+    canDrag: () => canDrag && !!item,
+    collect: (monitor): Collected => ({
       isDragging: !!monitor.isDragging(),
     }),
 
@@ -63,6 +67,12 @@ export const useDragging = ({
     },
   });
 
+  // early return because the item is not defined and thus can't be dragged
+  if (!item) {
+    return [false, false, null, null];
+  }
+
+  const isDragging = (collected as Collected).isDragging;
   return [isDragging, isGrabbing, drag, preview];
 };
 

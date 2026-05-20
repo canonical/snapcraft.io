@@ -7,7 +7,7 @@ import {
 } from "../constants";
 import { isInDevmode, getBuildId, isRevisionBuiltOnLauchpad } from "../helpers";
 import { sortAlphaNum, getChannelString } from "../../../../libs/channels";
-import {
+import type {
   ArchitectureRevisionsMap,
   AvailableRevisionsSelect,
   CPUArchitecture,
@@ -15,7 +15,6 @@ import {
   PendingReleaseItem,
   Progressive,
   ProgressiveChanges,
-  ProgressiveMutated,
   Release,
   ReleasesReduxState,
   Revision,
@@ -37,7 +36,7 @@ export function getFilteredReleaseHistory(state: ReleasesReduxState): ReleaseHis
   return (
     releases
       // only releases of revisions (ignore closing channels)
-      .filter((release) => release.revision)
+      .filter((release) => release.revision && revisions[release.revision])
       // only releases in given architecture
       .filter((release) => {
         return filters && filters.arch
@@ -77,9 +76,10 @@ export function getFilteredReleaseHistory(state: ReleasesReduxState): ReleaseHis
 // returns list of selected revisions, to know which ones to render selected
 export function getSelectedRevisions(state: ReleasesReduxState) {
   if (state.channelMap[AVAILABLE]) {
-    return Object.values(state.channelMap[AVAILABLE]).map(
-      (revision) => revision.revision
-    );
+    return Object
+      .values(state.channelMap[AVAILABLE])
+      .map((revision) => revision?.revision)
+      .filter((revision) => revision !== undefined);
   }
 
   return [];
@@ -107,29 +107,37 @@ export function getSelectedArchitectures(state: ReleasesReduxState) {
 // return true if there are any devmode revisions in the state
 export function hasDevmodeRevisions(state: ReleasesReduxState) {
   return Object.values(state.channelMap).some((archReleases) => {
-    return Object.values(archReleases).some(isInDevmode);
+    return Object
+      .values(archReleases)
+      .filter((revision) => revision !== undefined)
+      .some(isInDevmode);
   });
 }
 
 // get channel map data updated with any pending releases
 export function getPendingChannelMap(state: ReleasesReduxState) {
-  const { channelMap, pendingReleases } = state;
+  const { channelMap, pendingChanges } = state;
   const pendingChannelMap = structuredClone(channelMap);
+  const pendingReleases = pendingChanges.pendingReleases;
 
   // for each release
-  Object.keys(pendingReleases).forEach((releasedRevision) => {
-    Object.keys(pendingReleases[releasedRevision]).forEach((channel) => {
-      const revision = pendingReleases[releasedRevision][channel].revision;
+  Object.entries(pendingReleases)
+    // the first item of the entry is the number representing the order of the change
+    // ascending order to ensure that later changes overwrite the first ones
+    .sort((a, b) => parseInt(a[0]) - parseInt(b[0]))
+    .forEach(([_orderIndex, pendingRelease]) => {
+      Object.entries(pendingRelease.channels).forEach(([channel, channelItem]) => {
+        const revision = channelItem.revision;
 
-      if (!pendingChannelMap[channel]) {
-        pendingChannelMap[channel] = {} as ArchitectureRevisionsMap;
-      }
+        if (!pendingChannelMap[channel]) {
+          pendingChannelMap[channel] = {} as ArchitectureRevisionsMap;
+        }
 
-      revision.architectures.forEach((arch: CPUArchitecture) => {
-        pendingChannelMap[channel]![arch] = revision;
+        revision.architectures.forEach((arch: CPUArchitecture) => {
+          pendingChannelMap[channel]![arch] = revision;
+        });
       });
     });
-  });
 
   return pendingChannelMap;
 }
@@ -137,6 +145,10 @@ export function getPendingChannelMap(state: ReleasesReduxState) {
 // get all revisions ordered from newest (based on revsion id)
 export function getAllRevisions(state: ReleasesReduxState) {
   return Object.values(state.revisions).reverse();
+}
+
+export function getRevisionById(state: ReleasesReduxState, id: number) {
+  return getAllRevisions(state).find((rev) => rev.revision === id);
 }
 
 // get all revisions not released to any channel yet
@@ -191,7 +203,7 @@ export function getFilteredAvailableRevisionsForArch(
 // get list of architectures of uploaded revisions
 export function getArchitectures(state: ReleasesReduxState) {
   return state.architectures && state.architectures.length > 0
-    ? state.architectures.sort()
+    ? [...state.architectures]
     : [];
 }
 
@@ -263,9 +275,10 @@ export function hasPendingRelease(
 
   // check if there is a pending release in this cell
   return (
-    currentRevision &&
-    (!releasedRevision ||
-      releasedRevision.revision !== currentRevision.revision)
+    currentRevision 
+      ? (!releasedRevision ||
+        releasedRevision.revision !== currentRevision.revision)
+      : false
   );
 }
 
@@ -321,7 +334,8 @@ export function getProgressiveState(
     return [null, null];
   }
 
-  const { releases, pendingReleases, revisions } = state;
+  const { releases, pendingChanges, revisions } = state;
+  const { pendingReleases } = pendingChanges;
 
   let previousRevision: PreviousRevisionState | null = null;
   let pendingProgressiveStatus: Progressive | null = null;
@@ -330,13 +344,13 @@ export function getProgressiveState(
     (item) => channel === getChannelString(item) && arch === item.architecture
   );
 
-  const release = allReleases[0];
+  const release = allReleases.length > 0 ? allReleases[0] : null;
 
   if (release && release.revision) {
     // If the release is pending we don't want to look up the previous state, as it will be
     // for an outdated release
     // If the release is progressive, we do.
-    if (!isPending && release?.isProgressive) {
+    if (!isPending && release.isProgressive) {
       // Find the previous revision in the list of all releases
       // that is not the current release.
       previousRevision = allReleases.find(
@@ -347,18 +361,18 @@ export function getProgressiveState(
         previousRevision = revisions[previousRevision.revision];
       }
     } else if (isPending) {
-      previousRevision = revisions[allReleases[0]?.revision!];
+      previousRevision = revisions[release.revision];
     }
 
     let pendingMatch: PendingReleaseItem | undefined;
 
-    Object.keys(pendingReleases).forEach((revId) => {
+    Object.values(pendingReleases).forEach((pendingRelease) => {
       if (
-        pendingReleases[revId][channel] &&
-        pendingReleases[revId][channel].revision &&
-        pendingReleases[revId][channel].revision.architectures.includes(arch)
+        pendingRelease.channels[channel] &&
+        pendingRelease.channels[channel].revision &&
+        pendingRelease.channels[channel].revision.architectures.includes(arch)
       ) {
-        pendingMatch = pendingReleases[revId][channel];
+        pendingMatch = pendingRelease.channels[channel];
       }
     });
 
@@ -398,7 +412,6 @@ export function hasRelease(
 type PendingReleaseMap = { [key: string]: PendingReleaseItem };
 
 export type SeparatePendingReleases = Record<
-  | "progressiveUpdates"
   | "newReleases"
   | "newReleasesToProgress"
   | "cancelProgressive",
@@ -407,59 +420,30 @@ export type SeparatePendingReleases = Record<
 
 // Separate pendingRelease actions
 export function getSeparatePendingReleases(state: ReleasesReduxState): SeparatePendingReleases {
-  const { pendingReleases } = state;
+  const { pendingReleases } = state.pendingChanges;
   const isProgressiveEnabled = isProgressiveReleaseEnabled(state);
 
-  const progressiveUpdates: PendingReleaseMap = {};
   const newReleases: PendingReleaseMap = {};
   const newReleasesToProgress: PendingReleaseMap = {};
   const cancelProgressive: PendingReleaseMap = {};
 
-  Object.keys(pendingReleases).forEach((revId) => {
-    Object.keys(pendingReleases[revId]).forEach((channel) => {
-      const pendingRelease = pendingReleases[revId][channel];
-      const releaseCopy = structuredClone(pendingRelease);
+  Object.values(pendingReleases).forEach((pendingRelease) => {
+    const revId = pendingRelease.revision;
+    Object.entries(pendingRelease.channels).forEach(([channel, pendingReleaseItem]) => {
+      const releaseCopy = structuredClone(pendingReleaseItem);
 
-      if (isProgressiveEnabled && pendingRelease.replaces) {
-        const oldRelease = pendingRelease.replaces;
+      if (isProgressiveEnabled && pendingReleaseItem.replaces) {
+        const oldRelease = pendingReleaseItem.replaces;
         cancelProgressive[`${oldRelease.revision.revision}-${channel}`] =
           oldRelease;
       } else if (
         isProgressiveEnabled &&
-        pendingRelease.progressive &&
-        pendingRelease.previousReleases &&
-        pendingRelease.previousReleases.length > 0 &&
-        pendingRelease.previousReleases[0]
+        pendingReleaseItem.progressive &&
+        pendingReleaseItem.previousReleases &&
+        pendingReleaseItem.previousReleases.length > 0 &&
+        pendingReleaseItem.previousReleases[0]
       ) {
-        // What are the differences between the previous progressive state
-        // and the new state.
-        const previousState = releaseCopy.revision.release
-          ? releaseCopy.revision.release.progressive
-          : ({} as ProgressiveMutated);
-        const newState = releaseCopy.progressive;
-
-        const changes = [] as ProgressiveChanges;
-        if (newState.paused !== previousState.paused) {
-          changes.push({
-            key: "paused",
-            value: newState.paused,
-          });
-        }
-
-        if (newState.percentage !== previousState.percentage) {
-          changes.push({
-            key: "percentage",
-            value: newState.percentage,
-          });
-        }
-
-        if (previousState.key) {
-          // Add this to the copy of the pendingRelease state
-          releaseCopy.progressive.changes = changes;
-          progressiveUpdates[`${revId}-${channel}`] = releaseCopy;
-        } else {
-          newReleasesToProgress[`${revId}-${channel}`] = releaseCopy;
-        }
+        newReleasesToProgress[`${revId}-${channel}`] = releaseCopy;
       } else {
         newReleases[`${revId}-${channel}`] = releaseCopy;
       }
@@ -467,7 +451,6 @@ export function getSeparatePendingReleases(state: ReleasesReduxState): SeparateP
   });
 
   return {
-    progressiveUpdates,
     newReleases,
     newReleasesToProgress,
     cancelProgressive,
@@ -476,19 +459,17 @@ export function getSeparatePendingReleases(state: ReleasesReduxState): SeparateP
 
 // Get pending release for architecture
 export function getPendingRelease(
-  { pendingReleases }: ReleasesReduxState,
+  { pendingChanges }: ReleasesReduxState,
   channel: string,
   arch: CPUArchitecture
 ) {
-  // for each release
-  return Object.keys(pendingReleases).map((releasedRevision) => {
+  const pendingReleases = pendingChanges.pendingReleases;
+  return Object.values(pendingReleases).map((pendingRelease) => {
     if (
-      pendingReleases[releasedRevision][channel] &&
-      pendingReleases[releasedRevision][
-        channel
-      ].revision.architectures.includes(arch)
+      pendingRelease.channels[channel] &&
+      pendingRelease.channels[channel].revision.architectures.includes(arch)
     ) {
-      return pendingReleases[releasedRevision][channel];
+      return pendingRelease.channels[channel];
     }
 
     return null;

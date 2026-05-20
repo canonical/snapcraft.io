@@ -134,7 +134,7 @@
 {% endblock %}
 
 {% block scripts %}
-  <script nonce="{{ CSP_NONCE }}">
+  <script>
     window.addEventListener("DOMContentLoaded", function() {
       try {
         snapcraft.publisher.publicise.initSnapButtonsPicker();
