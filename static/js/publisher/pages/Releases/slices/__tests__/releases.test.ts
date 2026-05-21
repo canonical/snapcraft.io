@@ -184,14 +184,9 @@ describe("releases", () => {
         pendingCloses: {},
         pendingReleases: {
           0: {
-            revision: 1,
-            channels: {
-              "latest/stable": {
-                revision: pendingRevision,
-                channel: "latest/stable",
-                previousReleases: [],
-              } as unknown as PendingReleaseItem,
-            },
+            revision: pendingRevision,
+            channel: "latest/stable",
+            previousReleases: [],
           },
         },
       };
@@ -269,23 +264,18 @@ describe("releases", () => {
     describe("when there are duplicate pending releases", () => {
       const pendingRevision = makeRevision(1);
       const pendingChangesWithDuplicates: PendingChangesState = {
-        changeOrderIndex: 1,
+        changeOrderIndex: 2,
         pendingCloses: {},
         pendingReleases: {
           0: {
-            revision: 1,
-            channels: {
-              "latest/stable": {
-                revision: pendingRevision,
-                channel: "latest/stable",
-                previousReleases: [],
-              } as unknown as PendingReleaseItem,
-              "latest/edge": {
-                revision: pendingRevision,
-                channel: "latest/edge",
-                previousReleases: [],
-              } as unknown as PendingReleaseItem,
-            },
+            revision: pendingRevision,
+            channel: "latest/stable",
+            previousReleases: [],
+          },
+          1: {
+            revision: pendingRevision,
+            channel: "latest/edge",
+            previousReleases: [],
           },
         },
       };

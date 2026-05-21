@@ -15,6 +15,7 @@ import {
   getFilteredAvailableRevisionsForArch,
   getProgressiveState,
   hasPendingRelease,
+  isArchPendingClose,
   type Branch,
   type ProgressiveState,
 } from "../../selectors";
@@ -32,7 +33,6 @@ import type {
   ReleasesReduxState,
   CPUArchitecture,
   ChannelArchitectureRevisionsMap,
-  Channel,
   Revision,
   FailedRevision,
 } from "../../../../types/releaseTypes";
@@ -53,7 +53,7 @@ interface OwnProps {
 interface StateProps {
   channelMap: ChannelArchitectureRevisionsMap;
   filters: ReleasesReduxState["history"]["filters"];
-  pendingCloses: Channel["name"][];
+  isArchPendingClose: boolean;
   failedRevisions: FailedRevision[];
   pendingChannelMap: ChannelArchitectureRevisionsMap;
   getAvailableCount: (arch: CPUArchitecture) => number;
@@ -82,7 +82,7 @@ const ReleasesTableReleaseCell = (props: ReleasesTableReleaseCellProps) => {
     branch,
     channelMap,
     pendingChannelMap,
-    pendingCloses,
+    isArchPendingClose,
     filters,
     isOverParent,
     getAvailableCount,
@@ -128,9 +128,9 @@ const ReleasesTableReleaseCell = (props: ReleasesTableReleaseCellProps) => {
     };
   }
 
-  const isChannelPendingClose = pendingCloses.includes(channel);
+  const pendingClose = isArchPendingClose;
   const isPending =
-    pendingRelease || isChannelPendingClose || pendingProgressiveState;
+    pendingRelease || pendingClose || pendingProgressiveState;
   const isUnassigned = risk === AVAILABLE;
   const isActive =
     filters &&
@@ -138,7 +138,7 @@ const ReleasesTableReleaseCell = (props: ReleasesTableReleaseCellProps) => {
     filters.risk === risk &&
     filters.branch === branchName;
   const isHighlighted = isPending || (isUnassigned && currentRevision);
-  const canDrag = (currentRevision && !isChannelPendingClose && releasable) || false;
+  const canDrag = (currentRevision && !pendingClose && releasable) || false;
 
 
   function handleHistoryIconClick(
@@ -185,7 +185,7 @@ const ReleasesTableReleaseCell = (props: ReleasesTableReleaseCellProps) => {
 
   let cellInfoNode = null;
 
-  if (isChannelPendingClose) {
+  if (pendingClose) {
     cellInfoNode = <CloseChannelInfo />;
   } else if (currentRevision) {
     cellInfoNode = (
@@ -209,7 +209,7 @@ const ReleasesTableReleaseCell = (props: ReleasesTableReleaseCellProps) => {
     );
   }
 
-  const showHistoryIcon = currentRevision || isUnassigned;
+  const showHistoryIcon = currentRevision || isUnassigned || pendingClose;
 
   return (
     <ReleasesTableCellView
@@ -237,11 +237,13 @@ const ReleasesTableReleaseCell = (props: ReleasesTableReleaseCellProps) => {
   );
 };
 
-const mapStateToProps = (state: ReleasesReduxState): StateProps => {
+const mapStateToProps = (state: ReleasesReduxState, ownProps: OwnProps): StateProps => {
+  const branchName = ownProps.branch ? ownProps.branch.branch : null;
+  const channel = getChannelName(ownProps.track, ownProps.risk, branchName);
   return {
     channelMap: state.channelMap,
     filters: state.history.filters,
-    pendingCloses: Object.values(state.pendingChanges.pendingCloses),
+    isArchPendingClose: isArchPendingClose(state, channel, ownProps.arch),
     failedRevisions: state.failedRevisions,
     pendingChannelMap: getPendingChannelMap(state),
     getAvailableCount: (arch: CPUArchitecture) =>

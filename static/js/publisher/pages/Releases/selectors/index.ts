@@ -114,31 +114,70 @@ export function hasDevmodeRevisions(state: ReleasesReduxState) {
   });
 }
 
-// get channel map data updated with any pending releases
+// get channel map data updated with any pending releases and closes, applied in
+// change-order so later changes override earlier ones per cell (channel/arch).
+// A close clears the entire channel; a subsequent release re-populates only the
+// architectures carried by that revision.
 export function getPendingChannelMap(state: ReleasesReduxState) {
   const { channelMap, pendingChanges } = state;
   const pendingChannelMap = structuredClone(channelMap);
-  const pendingReleases = pendingChanges.pendingReleases;
+  const { pendingReleases, pendingCloses } = pendingChanges;
 
-  // for each release
-  Object.entries(pendingReleases)
-    // the first item of the entry is the number representing the order of the change
-    // ascending order to ensure that later changes overwrite the first ones
-    .sort((a, b) => parseInt(a[0]) - parseInt(b[0]))
-    .forEach(([_orderIndex, pendingRelease]) => {
-      const revision = pendingRelease.revision;
-      const channel = pendingRelease.channel;
+  type CloseChange = { orderIndex: number; type: "close"; channel: string };
+  type ReleaseChange = { orderIndex: number; type: "release"; pendingRelease: PendingReleaseItem };
 
+  const allChanges: Array<CloseChange | ReleaseChange> = [];
+
+  Object.entries(pendingCloses).forEach(([orderIndex, channel]) => {
+    allChanges.push({ orderIndex: parseInt(orderIndex), type: "close", channel });
+  });
+
+  Object.entries(pendingReleases).forEach(([orderIndex, pendingRelease]) => {
+    allChanges.push({ orderIndex: parseInt(orderIndex), type: "release", pendingRelease });
+  });
+
+  allChanges.sort((a, b) => a.orderIndex - b.orderIndex).forEach((change) => {
+    if (change.type === "close") {
+      delete pendingChannelMap[change.channel];
+    } else {
+      const { revision, channel } = change.pendingRelease;
       if (!pendingChannelMap[channel]) {
         pendingChannelMap[channel] = {} as ArchitectureRevisionsMap;
       }
-
       revision.architectures.forEach((arch: CPUArchitecture) => {
         pendingChannelMap[channel]![arch] = revision;
       });
-    });
+    }
+  });
 
   return pendingChannelMap;
+}
+
+// Returns true when a specific channel/arch cell is effectively "pending close":
+// the channel has a pending close with no later pending release for that arch.
+export function isArchPendingClose(
+  state: ReleasesReduxState,
+  channel: string,
+  arch: CPUArchitecture
+): boolean {
+  const { pendingReleases, pendingCloses } = state.pendingChanges;
+
+  const closeOrders = Object.entries(pendingCloses)
+    .filter(([_, ch]) => ch === channel)
+    .map(([orderIndex]) => parseInt(orderIndex));
+
+  if (closeOrders.length === 0) {
+    return false;
+  }
+
+  const latestCloseOrder = Math.max(...closeOrders);
+
+  return !Object.entries(pendingReleases).some(
+    ([orderIndex, release]) =>
+      parseInt(orderIndex) > latestCloseOrder &&
+      release.channel === channel &&
+      release.revision.architectures.includes(arch)
+  );
 }
 
 // get all revisions ordered from newest (based on revsion id)
@@ -440,7 +479,7 @@ export function getSeparatePendingReleases(state: ReleasesReduxState): SeparateP
 
   Object.values(pendingReleases).forEach((pendingReleaseItem) => {
     const releaseCopy = structuredClone(pendingReleaseItem);
-    const revId = pendingReleaseItem.revision;
+    const revId = pendingReleaseItem.revision.revision;
     const channel = pendingReleaseItem.channel;
 
     if (isProgressiveEnabled && pendingReleaseItem.replaces) {
