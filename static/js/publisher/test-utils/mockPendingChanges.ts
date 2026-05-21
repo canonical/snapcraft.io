@@ -1,6 +1,5 @@
 import type {
   PendingChangesState,
-  PendingRelease,
   PendingReleaseItem,
   Progressive,
   Revision,
@@ -44,46 +43,23 @@ export function createMockPendingCloses(
 }
 
 type PendingReleases = {
-  [order: number]: PendingRelease;
+  [order: number]: PendingReleaseItem;
 };
 
 export function createMockPendingReleases(
   partialPendingReleases: PartialPendingRelease[],
   startIndex = 0,
 ) {
-  // first sort the pending releases passed by revision
-  partialPendingReleases.sort((a, b) => a.revision - b.revision);
   const result: PendingReleases = {};
-  // there are no revisions with negative numbers, so the first iteration
-  // will always enter the if and increase the index back to its original value
-  let previousRevision = -1;
-  --startIndex;
 
-  for (const pendingRelease of partialPendingReleases) {
+  for (const partialPendingRelease of partialPendingReleases) {
     const channel =
-      pendingRelease.pendingReleaseItem.channel || "latest/stable";
-    if (pendingRelease.revision !== previousRevision) {
-      // if it's the same revision then the changes go into the same index
-      ++startIndex;
-    }
-    if (result[startIndex]) {
-      result[startIndex].channels = {
-        ...result[startIndex].channels,
-        [channel]: createMockPendingReleaseItem(
-          pendingRelease.pendingReleaseItem,
-        ),
-      };
-    } else {
-      result[startIndex] = {
-        revision: pendingRelease.revision,
-        channels: {
-          [channel]: createMockPendingReleaseItem(
-            pendingRelease.pendingReleaseItem,
-          ),
-        },
-      };
-    }
-    previousRevision = pendingRelease.revision;
+      partialPendingRelease.pendingReleaseItem.channel ?? partialPendingRelease.channel;
+    result[startIndex] = createMockPendingReleaseItem({
+      ...partialPendingRelease.pendingReleaseItem,
+      channel,
+    });
+    startIndex++;
   }
 
   return result;

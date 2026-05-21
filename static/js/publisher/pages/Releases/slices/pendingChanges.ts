@@ -147,7 +147,7 @@ function _getPendingReleaseByRevision(
     );
   
   if (channel) {
-    entries.filter(
+    entries = entries.filter(
       ([_orderKeyStr, pendingRelItem]) => pendingRelItem.channel === channel
     );
   }
@@ -204,24 +204,25 @@ const pendingReleasesSlice = createSlice({
     },
     addPendingClose(state, action: PayloadAction<string>) {
       const pendingCloses = state.pendingCloses;
+      const channel = action.payload;
       const alreadyExistingChannel = Object.entries(pendingCloses).find(
         ([_orderIndex, channel]) => channel === action.payload
       );
-      // channel is already in pendingCloses so we just return the state
-      if (alreadyExistingChannel) {
-        return;
-      }
 
-      const channel = action.payload;
-      Object.values(state.pendingReleases).forEach((pendingRelease) => {
-        if (pendingRelease.channel === channel) {
-          _removePendingRelease(
-            state,
-            pendingRelease.revision,
-            channel
-          );
-        }
-      });
+      if (alreadyExistingChannel) {
+        const index = parseInt(alreadyExistingChannel[0]);
+        delete state.pendingCloses[index];
+      } else {
+        Object.values(state.pendingReleases).forEach((pendingRelease) => {
+          if (pendingRelease.channel === channel) {
+            _removePendingRelease(
+              state,
+              pendingRelease.revision,
+              channel
+            );
+          }
+        });
+      }
 
       state.pendingCloses[state.changeOrderIndex] = channel;
       state.changeOrderIndex += 1;

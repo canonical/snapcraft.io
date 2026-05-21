@@ -43,7 +43,7 @@ const emptyPendingReleaseItem: PendingReleaseItem = {
 }
 
 const findPendingRelease = (state: PendingChangesState, revisionId: number) =>
-  Object.values(state.pendingReleases).find((pr) => pr.revision === revisionId);
+  Object.values(state.pendingReleases).find((pr) => pr.revision.revision === revisionId);
 
 describe("pendingChanges", () => {
   it("should return the initial state", () => {
@@ -76,8 +76,7 @@ describe("pendingChanges", () => {
       it("should add the revision to pending releases", () => {
         const result = reducer(initialState, addPendingRelease({ revision, channel }));
         const pr = findPendingRelease(result, 1);
-        expect(pr).toBeDefined();
-        expect(pr!.channels[channel]).toMatchObject({ revision, channel });
+        expect(pr).toMatchObject({ revision, channel });
       });
     });
 
@@ -87,14 +86,9 @@ describe("pendingChanges", () => {
         pendingCloses: {},
         pendingReleases: {
           0: {
-            revision: 1,
-            channels: {
-              "other/edge": {
-                ...emptyPendingReleaseItem,
-                revision: createMockRevision({ revision: 1, architectures: ["abc42", "test64"] }),
-                channel: "other/edge",
-              },
-            },
+            ...emptyPendingReleaseItem,
+            revision: createMockRevision({ revision: 1, architectures: ["abc42", "test64"] }),
+            channel: "other/edge",
           },
         },
       };
@@ -104,9 +98,10 @@ describe("pendingChanges", () => {
           stateWithSamePendingRevision,
           addPendingRelease({ revision, channel }),
         );
-        const pr = findPendingRelease(result, 1);
-        expect(pr!.channels["other/edge"]).toBeDefined();
-        expect(pr!.channels[channel]).toMatchObject({ revision, channel });
+        const pr = Object.values(result.pendingReleases).find(
+          (pr) => pr.revision.revision === 1 && pr.channel === channel
+        );
+        expect(pr).toMatchObject({ revision, channel });
       });
     });
 
@@ -120,35 +115,19 @@ describe("pendingChanges", () => {
         pendingCloses: {},
         pendingReleases: {
           0: {
-            revision: 2,
-            channels: {
-              "other/edge": {
-                ...emptyPendingReleaseItem,
-                revision: createMockRevision({ revision: 2, architectures: ["test64"] }),
-                channel: "other/edge",
-                
-              },
-            },
+            ...emptyPendingReleaseItem,
+            revision: createMockRevision({ revision: 2, architectures: ["test64"] }),
+            channel: "other/edge",
           },
           1: {
-            revision: 3,
-            channels: {
-              [channel]: {
-                ...emptyPendingReleaseItem,
-                revision: createMockRevision({ revision: 3, architectures: ["armf"] }),
-                channel,
-              },
-            },
+            ...emptyPendingReleaseItem,
+            revision: createMockRevision({ revision: 3, architectures: ["armf"] }),
+            channel,
           },
           2: {
-            revision: 4,
-            channels: {
-              [channel]: {
-                ...emptyPendingReleaseItem,
-                revision: conflictingRevision,
-                channel,
-              },
-            },
+            ...emptyPendingReleaseItem,
+            revision: conflictingRevision,
+            channel,
           },
         },
       };
@@ -157,9 +136,8 @@ describe("pendingChanges", () => {
         const result = reducer(stateWithConflict, addPendingRelease({ revision, channel }));
         const pendingRelease = findPendingRelease(result, 1);
         expect(pendingRelease).toBeDefined();
-        expect(pendingRelease!.revision).toEqual(1);
-        expect(Object.keys(pendingRelease!.channels)).toHaveLength(1);
-        expect(pendingRelease!.channels[channel].channel).toEqual(channel);
+        expect(pendingRelease!.revision).toMatchObject(revision);
+        expect(pendingRelease!.channel).toEqual(channel);
       });
 
       it("should remove the conflicting pending release for the same arch and channel", () => {
@@ -179,7 +157,7 @@ describe("pendingChanges", () => {
           addPendingRelease({ revision, channel, previousReleases }),
         );
         const pr = findPendingRelease(result, 1);
-        expect(pr!.channels[channel].previousReleases).toEqual(previousReleases);
+        expect(pr!.previousReleases).toEqual(previousReleases);
       });
     });
 
@@ -195,7 +173,28 @@ describe("pendingChanges", () => {
           addPendingRelease({ revision, channel, progressive }),
         );
         const pr = findPendingRelease(result, 1);
-        expect(pr!.channels[channel].progressive).toEqual(progressive);
+        expect(pr!.progressive).toEqual(progressive);
+      });
+    });
+
+    describe("when channel is pending close", () => {
+      it("should NOT cancel the pending close when releasing to the same channel", () => {
+        const revision = {
+          revision: 1,
+          architectures: ["test64"],
+        } as unknown as Revision;
+        const channel = "test/edge";
+        const stateWithPendingClose: PendingChangesState = {
+          changeOrderIndex: 1,
+          pendingCloses: { 0: channel },
+          pendingReleases: {},
+        };
+
+        const result = reducer(
+          stateWithPendingClose,
+          addPendingRelease({ revision, channel }),
+        );
+        expect(Object.values(result.pendingCloses)).toContain(channel);
       });
     });
   });
@@ -219,23 +218,18 @@ describe("pendingChanges", () => {
     describe("when revision has pending releases in multiple channels", () => {
       it("should remove only the given channel from pending releases", () => {
         const stateWithRevisionInMultipleChannels: PendingChangesState = {
-          changeOrderIndex: 1,
+          changeOrderIndex: 2,
           pendingCloses: {},
           pendingReleases: {
             0: {
-              revision: 1,
-              channels: {
-                [channel]: {
-                  ...emptyPendingReleaseItem,
-                  revision,
-                  channel
-                },
-                "latest/beta": {
-                  ...emptyPendingReleaseItem,
-                  revision,
-                  channel: "latest/beta"
-                },
-              },
+              ...emptyPendingReleaseItem,
+              revision,
+              channel,
+            },
+            1: {
+              ...emptyPendingReleaseItem,
+              revision,
+              channel: "latest/beta",
             },
           },
         };
@@ -244,10 +238,16 @@ describe("pendingChanges", () => {
           stateWithRevisionInMultipleChannels,
           removePendingRelease({ revision, channel }),
         );
-        const pr = findPendingRelease(result, 1);
-        expect(pr).toBeDefined();
-        expect(pr!.channels[channel]).toBeUndefined();
-        expect(pr!.channels["latest/beta"]).toBeDefined();
+        expect(
+          Object.values(result.pendingReleases).find(
+            (pr) => pr.revision.revision === 1 && pr.channel === channel
+          )
+        ).toBeUndefined();
+        expect(
+          Object.values(result.pendingReleases).find(
+            (pr) => pr.revision.revision === 1 && pr.channel === "latest/beta"
+          )
+        ).toBeDefined();
       });
     });
 
@@ -258,14 +258,9 @@ describe("pendingChanges", () => {
           pendingCloses: {},
           pendingReleases: {
             0: {
-              revision: 1,
-              channels: {
-                [channel]: {
-                  ...emptyPendingReleaseItem,
-                  revision,
-                  channel
-                }
-              },
+              ...emptyPendingReleaseItem,
+              revision,
+              channel,
             },
           },
         };
@@ -293,24 +288,14 @@ describe("pendingChanges", () => {
         pendingCloses: {},
         pendingReleases: {
           0: {
-            revision: 1,
-            channels: {
-              "latest/beta": {
-                ...emptyPendingReleaseItem,
-                revision: createMockRevision({ revision: 1 }),
-                channel: "latest/beta",
-              },
-            },
+            ...emptyPendingReleaseItem,
+            revision: createMockRevision({ revision: 1 }),
+            channel: "latest/beta",
           },
           1: {
-            revision: 2,
-            channels: {
-              "latest/stable": {
-                ...emptyPendingReleaseItem,
-                revision: createMockRevision({ revision: 2 }),
-                channel: "latest/stable",
-              },
-            },
+            ...emptyPendingReleaseItem,
+            revision: createMockRevision({ revision: 2 }),
+            channel: "latest/stable",
           },
         },
       };
@@ -356,21 +341,16 @@ describe("pendingChanges", () => {
           pendingCloses: {},
           pendingReleases: {
             0: {
-              revision: 1,
-              channels: {
-                "test/edge": {
-                  ...emptyPendingReleaseItem,
-                  revision: createMockRevision({ revision: 1, architectures: ["abc42"] }),
-                  channel: "test/edge",
-                },
-              },
+              ...emptyPendingReleaseItem,
+              revision: createMockRevision({ revision: 1, architectures: ["abc42"] }),
+              channel: "test/edge",
             },
           },
         };
 
         const result = reducer(stateWithPendingRevision, setProgressiveRelease(progressive));
         const pr = findPendingRelease(result, 1);
-        expect(pr!.channels["test/edge"].progressive).toBeUndefined();
+        expect(pr!.progressive).toBeUndefined();
       });
     });
 
@@ -380,17 +360,12 @@ describe("pendingChanges", () => {
         pendingCloses: {},
         pendingReleases: {
           0: {
-            revision: 1,
-            channels: {
-              "test/edge": {
-                ...emptyPendingReleaseItem,
-                revision: createMockRevision({ revision: 1, architectures: ["abc42", "test64"] }),
-                channel: "test/edge",
-                previousReleases: [
-                  createMockRevision({ revision: 0, architectures: ["abc42"] }),
-                ],
-              },
-            },
+            ...emptyPendingReleaseItem,
+            revision: createMockRevision({ revision: 1, architectures: ["abc42", "test64"] }),
+            channel: "test/edge",
+            previousReleases: [
+              createMockRevision({ revision: 0, architectures: ["abc42"] }),
+            ],
           },
         },
       };
@@ -398,7 +373,7 @@ describe("pendingChanges", () => {
       it("should add progressive state to the pending release", () => {
         const result = reducer(stateWithPreviousReleases, setProgressiveRelease(progressive));
         const pr = findPendingRelease(result, 1);
-        expect(pr!.channels["test/edge"].progressive).toEqual(progressive);
+        expect(pr!.progressive).toEqual(progressive);
       });
     });
 
@@ -414,22 +389,17 @@ describe("pendingChanges", () => {
           pendingCloses: {},
           pendingReleases: {
             0: {
-              revision: 1,
-              channels: {
-                "test/edge": {
-                  ...emptyPendingReleaseItem,
-                  revision: createMockRevision({ revision: 1, architectures: ["abc42", "test64"] }),
-                  channel: "test/edge",
-                  progressive: existingProgressive,
-                },
-              },
+              ...emptyPendingReleaseItem,
+              revision: createMockRevision({ revision: 1, architectures: ["abc42", "test64"] }),
+              channel: "test/edge",
+              progressive: existingProgressive,
             },
           },
         };
 
         const result = reducer(stateWithProgressiveRelease, setProgressiveRelease(progressive));
         const pr = findPendingRelease(result, 1);
-        expect(pr!.channels["test/edge"].progressive).toEqual(existingProgressive);
+        expect(pr!.progressive).toEqual(existingProgressive);
       });
     });
   });
@@ -457,21 +427,16 @@ describe("pendingChanges", () => {
           pendingCloses: {},
           pendingReleases: {
             0: {
-              revision: 1,
-              channels: {
-                "test/edge": {
-                  ...emptyPendingReleaseItem,
-                  revision: createMockRevision({ revision: 1 }),
-                  channel: "test/edge",
-                },
-              },
+              ...emptyPendingReleaseItem,
+              revision: createMockRevision({ revision: 1 }),
+              channel: "test/edge",
             },
           },
         };
 
         const result = reducer(stateWithoutProgressive, updateProgressiveRelease(newProgressive));
         const pr = findPendingRelease(result, 1);
-        expect(pr!.channels["test/edge"].progressive).toBeUndefined();
+        expect(pr!.progressive).toBeUndefined();
       });
     });
 
@@ -482,18 +447,13 @@ describe("pendingChanges", () => {
           pendingCloses: {},
           pendingReleases: {
             0: {
-              revision: 1,
-              channels: {
-                "test/edge": {
-                  ...emptyPendingReleaseItem,
-                  revision: createMockRevision({ revision: 1 }),
-                  channel: "test/edge",
-                  progressive: {
-                    "current-percentage": null,
-                    percentage: 10,
-                    paused: null,
-                  },
-                },
+              ...emptyPendingReleaseItem,
+              revision: createMockRevision({ revision: 1 }),
+              channel: "test/edge",
+              progressive: {
+                "current-percentage": null,
+                percentage: 10,
+                paused: null,
               },
             },
           },
@@ -502,8 +462,8 @@ describe("pendingChanges", () => {
         const result = reducer(stateWithProgressive, updateProgressiveRelease(newProgressive));
         const pr = findPendingRelease(result, 1);
         expect(pr).toBeDefined();
-        expect(pr!.channels["test/edge"].progressive!.percentage).toEqual(50);
-        expect(pr!.channels["test/edge"].progressive!["current-percentage"]).toEqual(10);
+        expect(pr!.progressive!.percentage).toEqual(50);
+        expect(pr!.progressive!["current-percentage"]).toEqual(10);
       });
     });
   });
@@ -715,7 +675,7 @@ describe("pendingChanges", () => {
       store.dispatch(addPendingRelease({ revision, channel: "test/edge" }));
       store.dispatch(closeChannel("test/edge"));
       const pr = findPendingRelease(store.getState().pendingChanges, 1);
-      expect(pr?.channels["test/edge"]).toBeUndefined();
+      expect(pr).toBeUndefined();
     });
 
     it("should close the history panel", () => {
