@@ -4,10 +4,10 @@
 
 {% block content %}
 <main id="root">
-  <section class="p-strip--dark">
-    <div class="row">
-      <div class="col-start-large-4 col-6">
-        <h1 class="p-heading--2">The app store for Linux</h1>
+  <section class="p-strip">
+    <div class="grid-row">
+      <div class="grid-col-start-large-3 grid-col-6">
+        <h1>The app store for Linux</h1>
         <form class="p-search-box" action="/store">
           <label class="u-off-screen" for="search">Search snap store</label>
           <input type="search" id="search" class="p-search-box__input" placeholder="Search snap store" name="q">
@@ -23,11 +23,21 @@
   </section>
 
   {% if recent_snaps %}
-    {% include "explore/_updated-snaps.html" %}
+    {% with
+      snaps_list = recent_snaps,
+      title = "Recently updated snaps",
+      has_summary = True
+    %}
+      {% include "explore/_snaps-list.html" %}
+    {% endwith %}
   {% endif %}
 
   {% if popular_snaps %}
-    {% with snaps_list = popular_snaps, title = "Most popular snaps" %}
+    {% with
+      snaps_list = popular_snaps,
+      title = "Most popular snaps",
+      has_rule = True
+    %}
       {% include "explore/_snaps-list.html" %}
     {% endwith %}
   {% endif %}
@@ -37,24 +47,35 @@
   {% endif %}
 
   {% if top_rated_snaps %}
-    {% with snaps_list = top_rated_snaps, title = "Top rated snaps" %}
+    {% with
+      snaps_list = top_rated_snaps,
+      title = "Top rated snaps",
+      has_rule = True
+    %}
       {% include "explore/_snaps-list.html" %}
     {% endwith %}
   {% endif %}
 
   {% if trending_snaps %}
-    {% include "explore/_trending-snaps.html" %}
+    {% with
+      snaps_list = trending_snaps,
+      title = "Trending snaps",
+      has_rule = True,
+      has_summary = True
+    %}
+      {% include "explore/_snaps-list.html" %}
+    {% endwith %}
   {% endif %}
 
-  <section class="p-strip u-no-padding--top">
-    <div class="u-fixed-width">
-      <div class="explore-highlight-block">
-        <div class="row">
-          <div class="col-6">
-            <h2>Learn how to snap in 30 minutes</h2>
-            <p class="p-heading--4">Find out how to build and publish snaps</p>
-            <a class="p-button--positive" href="/docs/get-started">Get started</a>
-          </div>
+  <hr class="p-rule is-fixed-width u-no-margin--bottom">
+  
+  <section class="p-strip is-deep">
+    <div class="grid-row">
+      <div class="grid-col-start-large-3 grid-col-9">
+        <h2>Learn how to snap in 30 minutes</h2>
+        <p>Find out how to build and publish snaps</p>
+        <div class="p-cta-block u-no-padding--bottom">
+          <a class="p-button--positive" href="/docs/get-started">Get started</a>
         </div>
       </div>
     </div>
