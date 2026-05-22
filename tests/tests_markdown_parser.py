@@ -188,16 +188,12 @@ class TestMarkdownParser(unittest.TestCase):
 
     def test_list_followed_by_fence_does_not_render_code_block(self):
         markdown = "- a\n```\ncode\n```"
-        expected = (
-            "<ul>\n<li>a</li>\n</ul>\n<p>```\ncode\n```</p>\n"
-        )
+        expected = "<ul>\n<li>a</li>\n</ul>\n<p>```\ncode\n```</p>\n"
         self.assertEqual(parse_markdown_description(markdown), expected)
 
     def test_intro_paragraph_before_list_stays_separate_from_heading(self):
         markdown = "intro\n- a\n# title"
-        expected = (
-            "<p>intro</p>\n<ul>\n<li>a</li>\n</ul>\n<p># title</p>\n"
-        )
+        expected = "<p>intro</p>\n<ul>\n<li>a</li>\n</ul>\n<p># title</p>\n"
         self.assertEqual(parse_markdown_description(markdown), expected)
 
     def test_parse_auto_email(self):
