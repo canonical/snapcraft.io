@@ -54,7 +54,8 @@ export function createMockPendingReleases(
 
   for (const partialPendingRelease of partialPendingReleases) {
     const channel =
-      partialPendingRelease.pendingReleaseItem.channel ?? partialPendingRelease.channel;
+      partialPendingRelease.pendingReleaseItem.channel ??
+      partialPendingRelease.channel;
     result[startIndex] = createMockPendingReleaseItem({
       ...partialPendingRelease.pendingReleaseItem,
       channel,
