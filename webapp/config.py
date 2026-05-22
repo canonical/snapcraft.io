@@ -16,7 +16,7 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 LOGIN_URL = os.getenv("LOGIN_URL", "https://login.ubuntu.com")
 BSI_URL = os.getenv("BSI_URL", "https://build.snapcraft.io")
 ENVIRONMENT = os.getenv("ENVIRONMENT", "devel")
-IS_DEVELOPMENT = ENVIRONMENT == "devel"
+IS_DEVELOPMENT = False and ENVIRONMENT == "devel"
 COMMIT_ID = os.getenv("COMMIT_ID", "commit_id")
 SENTRY_DSN = os.getenv("SENTRY_DSN", "").strip()
 SENTRY_CONFIG = {"release": COMMIT_ID, "environment": ENVIRONMENT}
@@ -26,6 +26,7 @@ DNS_VERIFICATION_SALT = os.getenv("DNS_VERIFICATION_SALT")
 VITE_MODE = "development" if IS_DEVELOPMENT else "production"
 VITE_PORT = os.getenv("VITE_PORT", 5173)
 VITE_OUTDIR = os.getenv("VITE_OUTDIR", "static/js/dist/vite")
+VITE_INLINE_JS = os.getenv("VITE_INLINE_JS", "true").lower() == "true"
 # VITE_REACT controls whether React hot module reload scripts are injected when
 # running in dev mode; the setting has no effect in prod mode
 VITE_REACT = True
