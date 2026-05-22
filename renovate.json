@@ -1,5 +1,18 @@
 {
   "extends": [
     "github>canonical/renovate-websites"
+  ],
+
+  "prConcurrentLimit": 3,
+
+  "packageRules": [
+    {
+      "matchUpdateTypes": ["minor"],
+      "groupName": "minor updates"
+    },
+    {
+      "matchUpdateTypes": ["patch"],
+      "groupName": "patch updates"
+    }
   ]
 }
