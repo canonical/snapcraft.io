@@ -45,6 +45,19 @@ class SnapcraftBlockParser(BlockParser):
         )
         return m.end()
 
+    def parse_method(self, m, state):
+        # mistune's list parser invokes parse_method for rules outside
+        # DEFAULT_RULES (atx_heading, block_quote, ...) render those as
+        # paragraph text instead of letting the inherited methods run.
+        if m.lastgroup not in self.DEFAULT_RULES:
+            end_pos = state.find_line_end()
+            state.append_token(
+                {"type": "paragraph", "text": state.get_text(end_pos)}
+            )
+            state.cursor = end_pos
+            return end_pos
+        return super().parse_method(m, state)
+
 
 class SnapcraftInlineParser(InlineParser):
     SPECIFICATION = {
@@ -57,6 +70,7 @@ class SnapcraftInlineParser(InlineParser):
     DEFAULT_RULES = (
         "escape",
         "auto_link",
+        "auto_email",
         "emphasis",
         "codespan",
         "linebreak",
