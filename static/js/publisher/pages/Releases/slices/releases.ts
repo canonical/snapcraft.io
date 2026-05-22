@@ -16,8 +16,8 @@ import { closeHistory } from "./history";
 import { releasesReady } from "./options";
 import {
   fetchSnapReleaseStatus,
-  fetchReleases,
-  fetchCloses,
+  fetchRelease,
+  fetchClose,
 } from "../api/releases";
 import {
   getReleaseDataFromChannelMap,
@@ -221,25 +221,39 @@ export const releaseRevisions = createAsyncThunk<
     // should we display a loading state in the UI ?
 
     try {
-      // for (let index = 0; index < pendingChanges.changeOrderIndex; ++index) {
-      //   if (pendingChanges.pendingCloses[index]) {
-      //     // fetch close
-      //     const response = await fetchRelease()
-      //   } else {
-      //     // fetch release
-      //   }
-      // }
+      const sentReleases = new Set<FetchReleasePayload>();
+      // the the requests in order
+      for (let index = 0; index < pendingChanges.changeOrderIndex; ++index) {
+        if (pendingChanges.pendingCloses[index]) {
+          // fetch close
+          const json = await fetchClose(
+            snapName,
+            [pendingChanges.pendingCloses[index]]
+          );
+          handleCloseResponse(dispatch, json, pendingCloses)
+        } else {
+          // fetch release
+          const release = releases.find(
+            (releasePayload) =>
+              releasePayload.id ===
+              pendingChanges.pendingReleases[index].revision.revision,
+          );
+          if (release && !sentReleases.has(release)) {
+            sentReleases.add(release);
+            const json = await fetchRelease(
+              snapName,
+              release.id,
+              release.channels,
+              release.progressive
+            );
+            handleReleaseResponse(dispatch, json, release, revisions);
+          } else if (!release) {
+            // this should never happen
+            console.warn("pending release mismatch");
+          }
+        }
+      }
 
-      await fetchReleases(
-        (json, release) => handleReleaseResponse(dispatch, json, release, revisions),
-        releases,
-        snapName,
-      );
-      await fetchCloses(
-        (json) => handleCloseResponse(dispatch, json, pendingCloses),
-        snapName,
-        getArrayOfChannelNames(pendingCloses),
-      )
       const jsonData = await fetchSnapReleaseStatus(snapName);
       dispatch(updateReleasesUI(jsonData));
       dispatch(cancelPendingChanges());
