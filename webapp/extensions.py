@@ -22,6 +22,7 @@ _IMPORT_SPECIFIER_PATTERN = re.compile(
     r'(?P<specifier>[^"\']+)'
     r'(?P<suffix>["\'])'
 )
+_IMPORT_META_URL_PATTERN = re.compile(r"\bimport\.meta\.url\b")
 
 
 def _csp_nonce_attr() -> str:
@@ -95,7 +96,15 @@ def _rewrite_module_specifiers(
 
         return match.group(0)
 
-    return _IMPORT_SPECIFIER_PATTERN.sub(replace_specifier, module_source)
+    rewritten_source = _IMPORT_SPECIFIER_PATTERN.sub(
+        replace_specifier, module_source
+    )
+    module_absolute_url = urljoin(
+        flask.request.url_root, module_url.lstrip("/")
+    )
+    return _IMPORT_META_URL_PATTERN.sub(
+        json.dumps(module_absolute_url), rewritten_source
+    )
 
 
 def _read_asset(url: str) -> str:
