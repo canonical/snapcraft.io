@@ -3,6 +3,7 @@ import json
 import posixpath
 import re
 from os import path
+from pathlib import Path
 from urllib.parse import urljoin
 
 import flask
@@ -113,41 +114,40 @@ def _read_asset(url: str) -> str:
         return asset.read()
 
 
-def _inline_script_import(entrypoint: str) -> Markup:
-    entry_url = vite.instance.get_asset_url(entrypoint)
-    chunk_urls = list(vite.instance.get_imported_chunks(entrypoint))
-    css_urls = vite.instance.get_imported_css(entrypoint)
+def _get_vite_script_module_urls() -> list[str]:
+    out_dir = Path(
+        flask.current_app.config.get("VITE_OUTDIR", "static/js/dist/vite")
+    )
+    module_urls = [
+        f"/{module_path.as_posix()}"
+        for module_path in out_dir.rglob("*.js")
+        if module_path.is_file()
+    ]
+    module_urls.sort()
+    return module_urls
 
-    module_urls = [entry_url] + chunk_urls
-    queue = [entry_url] + chunk_urls
-    seen_module_urls: set[str] = set()
-    modules: dict[str, str] = {}
 
-    while queue:
-        module_url = queue.pop(0)
+def _get_rewritten_inline_modules() -> dict[str, str]:
+    cached_modules = getattr(flask.g, "_vite_inline_rewritten_modules", None)
+    if cached_modules is not None:
+        return cached_modules
 
-        if module_url in seen_module_urls:
-            continue
-
-        seen_module_urls.add(module_url)
-        module_source = _read_asset(module_url)
-        modules[module_url] = module_source
-
-        for discovered_url in _extract_local_vite_imports(
-            module_source, module_url
-        ):
-            if discovered_url not in seen_module_urls:
-                queue.append(discovered_url)
-                module_urls.append(discovered_url)
-
+    module_urls = _get_vite_script_module_urls()
     known_module_urls = set(module_urls)
-    rewritten_modules: dict[str, str] = {}
-
-    for module_url in module_urls:
-        rewritten_modules[module_url] = _rewrite_module_specifiers(
-            modules[module_url], module_url, known_module_urls
+    rewritten_modules = {
+        module_url: _rewrite_module_specifiers(
+            _read_asset(module_url), module_url, known_module_urls
         )
+        for module_url in module_urls
+    }
 
+    flask.g._vite_inline_rewritten_modules = rewritten_modules
+    return rewritten_modules
+
+
+def _build_import_map_script(
+    rewritten_modules: dict[str, str], nonce_attr: str
+) -> str:
     import_map = {
         "imports": {
             urljoin(flask.request.url_root, module_url.lstrip("/")): (
@@ -157,14 +157,27 @@ def _inline_script_import(entrypoint: str) -> Markup:
             for module_url, module_code in rewritten_modules.items()
         }
     }
-
-    nonce_attr = _csp_nonce_attr()
     import_map_json = json.dumps(import_map, separators=(",", ":"))
-    import_map_script = (
+    return (
         f'<script type="importmap"{nonce_attr}>'
         f"{_escape_inline_script(import_map_json)}"
         "</script>"
     )
+
+
+def _inline_script_import(entrypoint: str) -> Markup:
+    entry_url = vite.instance.get_asset_url(entrypoint)
+    css_urls = vite.instance.get_imported_css(entrypoint)
+    rewritten_modules = _get_rewritten_inline_modules()
+
+    nonce_attr = _csp_nonce_attr()
+    import_map_script = ""
+    if not getattr(flask.g, "_vite_inline_import_map_emitted", False):
+        import_map_script = _build_import_map_script(
+            rewritten_modules, nonce_attr
+        )
+        flask.g._vite_inline_import_map_emitted = True
+
     entry_script = (
         f'<script type="module"{nonce_attr}>'
         f"{_escape_inline_script(rewritten_modules[entry_url])}"
