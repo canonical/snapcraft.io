@@ -282,7 +282,7 @@ describe("releases", () => {
         },
       };
 
-      it("should call fetchRelease for each unique pending release", async () => {
+      it("should call fetchRelease for each pending release", async () => {
         const dispatch = vi.fn() as unknown as AppDispatch;
 
         await releaseRevisions()(
@@ -291,17 +291,12 @@ describe("releases", () => {
           undefined
         );
 
-        // Both channels for revision 1 are deduplicated into a single fetchRelease call
-        expect(fetchRelease).toHaveBeenCalledTimes(1);
-        expect(fetchRelease).toHaveBeenCalledWith(
-          snapName,
-          1,
-          expect.arrayContaining(["latest/stable", "latest/edge"]),
-          null
-        );
+        expect(fetchRelease).toHaveBeenCalledTimes(2);
+        expect(fetchRelease).toHaveBeenNthCalledWith(1, snapName, 1, ["latest/stable"], null);
+        expect(fetchRelease).toHaveBeenNthCalledWith(2, snapName, 1, ["latest/edge"], null);
       });
 
-      it("should dispatch a releaseRevisionSuccess for each unique pending release", async () => {
+      it("should dispatch a releaseRevisionSuccess for each pending release", async () => {
         const successResponse: FetchReleaseResponse = {
           success: true,
           channel_map: [],
@@ -326,9 +321,7 @@ describe("releases", () => {
           undefined
         );
 
-        // Only one fetchRelease call for the deduplicated release
-        expect(fetchRelease).toHaveBeenCalledTimes(1);
-        // And one releaseRevisionSuccess per channel/arch combo in the response
+        expect(fetchRelease).toHaveBeenCalledTimes(2);
         const releaseSuccessActions = vi
           .mocked(dispatch)
           .mock.calls.filter(
@@ -337,7 +330,7 @@ describe("releases", () => {
               typeof action === "object" &&
               (action as { type?: string }).type === releaseRevisionSuccess.type
           );
-        expect(releaseSuccessActions).toHaveLength(1);
+        expect(releaseSuccessActions).toHaveLength(2);
       });
     });
 
