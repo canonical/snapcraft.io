@@ -193,15 +193,13 @@ export const releaseRevisions = createAsyncThunk<
     const { pendingChanges, revisions, options } = getState();
     const { snapName } = options;
     const pendingCloses = pendingChanges.pendingCloses;
-    const releases = Object.values(pendingChanges.pendingReleases)
-      .map((pendingReleaseItem) => mapToRelease(pendingReleaseItem));
     dispatch(hideNotification());
     // TODO: we're doing a lot of sequential network requests
     // should we display a loading state in the UI ?
 
     try {
-      const sentReleases = new Set<FetchReleasePayload>();
-      // send the requests in order
+      // send the requests in order — later changes can overwrite earlier ones,
+      // so each pending release must be sent individually without deduplication
       for (let index = 0; index < pendingChanges.changeOrderIndex; ++index) {
         const pendingClose = pendingCloses[index];
         if (pendingClose) {
@@ -214,24 +212,14 @@ export const releaseRevisions = createAsyncThunk<
           if (!pendingRelease) {
             continue;
           }
-          // fetch release
-          const release = releases.find(
-            (releasePayload) =>
-              releasePayload.id === pendingRelease.revision.revision,
+          const release = mapToRelease(pendingRelease);
+          const json = await fetchRelease(
+            snapName,
+            release.id,
+            release.channels,
+            release.progressive
           );
-          if (release && !sentReleases.has(release)) {
-            sentReleases.add(release);
-            const json = await fetchRelease(
-              snapName,
-              release.id,
-              release.channels,
-              release.progressive
-            );
-            handleReleaseResponse(dispatch, json, release, revisions);
-          } else if (!release) {
-            // this should never happen
-            console.warn("pending release mismatch");
-          }
+          handleReleaseResponse(dispatch, json, release, revisions);
         }
       }
 
