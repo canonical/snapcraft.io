@@ -422,7 +422,7 @@ export function getProgressiveState(
       arch,
     );
     // there should be just one filtered pending release
-    let pendingMatch = filterPendingReleases.length > 0
+    let pendingMatch = filteredPendingReleases.length > 0
       ? filteredPendingReleases[0]
       : undefined;
 
