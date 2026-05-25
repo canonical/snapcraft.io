@@ -182,28 +182,6 @@ function mapToRelease(
   };
 };
 
-function dedupeReleases(
-  pendingReleases: PendingChangesState["pendingReleases"]
-): FetchReleasePayload[] {
-  const progressiveReleases: FetchReleasePayload[] = [];
-  const regularReleases: FetchReleasePayload[] = [];
-  Object.values(pendingReleases).forEach((pendingReleaseItem) => {
-    if (pendingReleaseItem.progressive) {
-      progressiveReleases.push(mapToRelease(pendingReleaseItem));
-    } else {
-      const releaseIndex = regularReleases.findIndex(
-        (release) => release.revision.revision === pendingReleaseItem.revision.revision
-      );
-      if (releaseIndex === -1) {
-        regularReleases.push(mapToRelease(pendingReleaseItem));
-      } else {
-        regularReleases[releaseIndex].channels.push(pendingReleaseItem.channel);
-      }
-    }
-  });
-  return [...progressiveReleases, ...regularReleases];
-}
-
 // async thunk method to push all the pending changes to the Store backend
 export const releaseRevisions = createAsyncThunk<
   void,
@@ -215,28 +193,31 @@ export const releaseRevisions = createAsyncThunk<
     const { pendingChanges, revisions, options } = getState();
     const { snapName } = options;
     const pendingCloses = pendingChanges.pendingCloses;
-    const releases = dedupeReleases(pendingChanges.pendingReleases);
+    const releases = Object.values(pendingChanges.pendingReleases)
+      .map((pendingReleaseItem) => mapToRelease(pendingReleaseItem));
     dispatch(hideNotification());
     // TODO: we're doing a lot of sequential network requests
     // should we display a loading state in the UI ?
 
     try {
       const sentReleases = new Set<FetchReleasePayload>();
-      // the the requests in order
+      // send the requests in order
       for (let index = 0; index < pendingChanges.changeOrderIndex; ++index) {
-        if (pendingChanges.pendingCloses[index]) {
-          // fetch close
-          const json = await fetchClose(
-            snapName,
-            [pendingChanges.pendingCloses[index]]
-          );
-          handleCloseResponse(dispatch, json, pendingCloses)
+        const pendingClose = pendingCloses[index];
+        if (pendingClose) {
+          const json = await fetchClose(snapName, [pendingClose]);
+          handleCloseResponse(dispatch, json, pendingCloses);
         } else {
+          const pendingRelease = pendingChanges.pendingReleases[index];
+          // some changes could have been removed by the user and the index
+          // will be undefined
+          if (!pendingRelease) {
+            continue;
+          }
           // fetch release
           const release = releases.find(
             (releasePayload) =>
-              releasePayload.id ===
-              pendingChanges.pendingReleases[index].revision.revision,
+              releasePayload.id === pendingRelease.revision.revision,
           );
           if (release && !sentReleases.has(release)) {
             sentReleases.add(release);
