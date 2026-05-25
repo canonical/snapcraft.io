@@ -6,13 +6,78 @@ from datetime import datetime, timezone
 # Third party packages
 import flask
 
+from canonicalwebteam.exceptions import StoreApiResponseErrorList
+from canonicalwebteam.store_api.dashboard import Dashboard
 from canonicalwebteam.store_api.publishergw import PublisherGW
 
 from webapp import authentication
 from webapp.helpers import api_publisher_session
 
 publisher_gateway = PublisherGW(api_publisher_session)
+_dashboard = Dashboard(api_publisher_session)
 logger = logging.getLogger(__name__)
+
+# Per-<snap_name> endpoints that must stay reachable even when the snap has
+# no published revisions: webhooks, name registration/deletion, ownership probe.
+_UNRELEASED_GATE_SKIP_ENDPOINTS = frozenset(
+    {
+        "publisher_snaps.delete_package",
+        "publisher_snaps.get_package_metadata",
+        "publisher_snaps.get_is_user_snap",
+        "publisher_snaps.post_github_webhook",
+    }
+)
+
+
+def gate_unreleased_snap_pages():
+    """
+    Block per-<snap_name> publisher routes for snaps that have no published
+    revisions.
+    """
+    if not flask.request.view_args:
+        return None
+    snap_name = flask.request.view_args.get("snap_name")
+    if not snap_name:
+        return None
+    if flask.request.endpoint in _UNRELEASED_GATE_SKIP_ENDPOINTS:
+        return None
+    if not authentication.is_authenticated(flask.session):
+        return None
+
+    try:
+        history = _dashboard.snap_release_history(flask.session, snap_name, 1)
+    except StoreApiResponseErrorList:
+        return None
+
+    revisions = []
+    if isinstance(history, dict):
+        revisions = history.get("revisions") or []
+    elif isinstance(history, list):
+        revisions = history
+
+    if revisions:
+        return None
+
+    if flask.request.path.startswith("/api/"):
+        return (
+            flask.jsonify(
+                {
+                    "success": False,
+                    "errors": [
+                        {
+                            "code": "no-releases",
+                            "message": (
+                                "Publish a first revision before using "
+                                "this page."
+                            ),
+                        }
+                    ],
+                }
+            ),
+            403,
+        )
+
+    return flask.abort(404)
 
 
 def login_required(func):
