@@ -2,7 +2,6 @@ import { Component, ReactNode } from "react";
 import { connect } from "react-redux";
 
 import { CLOSE_MODAL_ACTION_NAME, closeModal } from "../slices/modal";
-import { setDefaultTrack, clearDefaultTrack } from "../slices/defaultTrack";
 import type { ReleasesReduxState } from "../../../types/releaseTypes";
 import type { AppDispatch } from "../store";
 
@@ -10,7 +9,7 @@ type ModalAction = {
   appearance: "positive" | "neutral" | "negative";
   onClickAction:
     | {
-        reduxAction: string;
+        reduxAction: () => void;
       }
     | {
         type: typeof CLOSE_MODAL_ACTION_NAME;
@@ -23,9 +22,6 @@ interface ModalActionButtonProps {
   appearance: ModalAction["appearance"];
   children: ReactNode;
   dispatch: AppDispatch;
-  setDefaultTrack?: () => void;
-  clearDefaultTrack?: () => void;
-  [key: string]: unknown; // For dynamic redux action props
 }
 
 interface ModalActionButtonState {
@@ -48,11 +44,7 @@ class ModalActionButton extends Component<ModalActionButtonProps, ModalActionBut
 
     if ("reduxAction" in onClickAction) {
       const { reduxAction } = onClickAction;
-      const reduxActionFn = this.props[reduxAction];
-      if (reduxActionFn && typeof reduxActionFn === "function") {
-        // If an action is passed, perform the specific action
-        (reduxActionFn as () => void)();
-      }
+      reduxAction();
     } else {
       // Otherwise dispatch the action object
       dispatch(onClickAction);
@@ -70,7 +62,6 @@ class ModalActionButton extends Component<ModalActionButtonProps, ModalActionBut
     const className = [
       `p-button--${appearance}`,
       "u-no-margin--bottom",
-      "u-float-right",
       ["positive", "negative"].indexOf(appearance) > -1 ? "is--dark" : "",
     ];
 
@@ -89,8 +80,6 @@ class ModalActionButton extends Component<ModalActionButtonProps, ModalActionBut
 
 const mapActionButtonDispatchToProps = (dispatch: AppDispatch) => ({
   dispatch,
-  setDefaultTrack: () => dispatch(setDefaultTrack()),
-  clearDefaultTrack: () => dispatch(clearDefaultTrack()),
 });
 
 const ModalActionButtonWrapped = connect(
@@ -131,15 +120,17 @@ const Modal = ({ title, content, actions = [], closeModal }: ModalProps) => {
           </button>
         </header>
         <p id="modal-description">{content}</p>
-        {actions.map((action, i) => (
-          <ModalActionButtonWrapped
-            key={`action-${i}`}
-            appearance={action.appearance}
-            onClickAction={action.onClickAction}
-          >
-            {action.label}
-          </ModalActionButtonWrapped>
-        ))}
+        <div className="u-align--right">
+          {actions.map((action, i) => (
+            <ModalActionButtonWrapped
+              key={`action-${i}`}
+              appearance={action.appearance}
+              onClickAction={action.onClickAction}
+            >
+              {action.label}
+            </ModalActionButtonWrapped>
+          ))}
+        </div>
       </div>
     </div>
   );

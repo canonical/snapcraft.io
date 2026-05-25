@@ -301,7 +301,7 @@ export type ModalState = Partial<{
   actions: {
     appearance: "positive" | "neutral" | "negative";
     onClickAction:
-      | { reduxAction: string }
+      | { reduxAction: () => void }
       | { type: typeof CLOSE_MODAL_ACTION_NAME };
     label: string;
   }[];
