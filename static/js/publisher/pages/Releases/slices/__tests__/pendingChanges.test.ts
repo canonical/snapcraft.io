@@ -10,10 +10,13 @@ import reducer, {
   promoteChannel,
   undoRelease,
   closeChannel,
+  closeRevision,
   incrementOrderIndex,
 } from "../pendingChanges";
 import historyReducer from "../history";
+import { closeModal, CLOSE_MODAL_ACTION_NAME } from "../modal";
 import type {
+  CPUArchitecture,
   PendingChangesState,
   PendingReleaseItem,
   Progressive,
@@ -41,6 +44,13 @@ const emptyPendingReleaseItem: PendingReleaseItem = {
   channel: "",
   previousReleases: [],
 }
+
+const makeStore = () => {
+  const store = configureStore({
+    reducer: { pendingChanges: reducer, history: historyReducer },
+  });
+  return store as typeof store & { dispatch: AppDispatch };
+};
 
 const findPendingRelease = (state: PendingChangesState, revisionId: number) =>
   Object.values(state.pendingReleases).find((pr) => pr.revision.revision === revisionId);
@@ -645,13 +655,6 @@ describe("pendingChanges", () => {
   // ─── closeChannel thunk ─────────────────────────────────────────────────────
 
   describe("closeChannel thunk", () => {
-    const makeStore = () => {
-      const store = configureStore({
-        reducer: { pendingChanges: reducer, history: historyReducer },
-      });
-      return store as typeof store & { dispatch: AppDispatch };
-    };
-
     it("should add channel to pending closes", () => {
       const store = makeStore();
       store.dispatch(closeChannel("test/edge"));
@@ -682,6 +685,168 @@ describe("pendingChanges", () => {
       const store = makeStore();
       store.dispatch(closeChannel("test/edge"));
       expect(store.getState().history.isOpen).toBe(false);
+    });
+  });
+
+  // ─── closeRevision thunk ────────────────────────────────────────────────────
+
+  describe("closeRevision thunk", () => {
+    const revision = {
+      revision: 1,
+      architectures: ["test64"],
+    } as unknown as Revision;
+    const channel = "test/edge";
+    const arch = "test64" as CPUArchitecture;
+
+    const closeRevisionAndGetDispatch = (channelMap = {}) => {
+      const dispatch = vi.fn() as unknown as AppDispatch;
+      const getState = () => ({} as RootState);
+      vi.mocked(getPendingChannelMap).mockReturnValue(channelMap as any);
+      closeRevision(revision, channel, arch)(dispatch, getState);
+      return dispatch;
+    };
+
+    const extractProceed = (dispatch: AppDispatch) =>
+      // the dispatch to open the modal contains the proceed function we want to test
+      (dispatch as ReturnType<typeof vi.fn>).mock.calls[0][0].payload.actions[0]
+        .onClickAction.reduxAction as () => void;
+
+    describe("dispatched modal", () => {
+      it("should dispatch openModal", () => {
+        const dispatch = closeRevisionAndGetDispatch();
+        expect(dispatch).toHaveBeenCalledTimes(1);
+        expect((dispatch as ReturnType<typeof vi.fn>).mock.calls[0][0]).toMatchObject({
+          type: "modal/openModal",
+        });
+      });
+
+      it("should set the modal title to 'Attention'", () => {
+        const dispatch = closeRevisionAndGetDispatch();
+        expect((dispatch as ReturnType<typeof vi.fn>).mock.calls[0][0].payload.title).toBe(
+          "Attention",
+        );
+      });
+
+      it("should include arch and channel in the modal content", () => {
+        const dispatch = closeRevisionAndGetDispatch();
+        const content: string =
+          (dispatch as ReturnType<typeof vi.fn>).mock.calls[0][0].payload.content;
+        expect(content).toContain(arch);
+        expect(content).toContain(channel);
+      });
+
+      it("should provide Continue and Cancel actions", () => {
+        const dispatch = closeRevisionAndGetDispatch();
+        const actions =
+          (dispatch as ReturnType<typeof vi.fn>).mock.calls[0][0].payload.actions;
+        expect(actions).toHaveLength(2);
+        expect(actions[0].label).toBe("Continue");
+        expect(actions[1].label).toBe("Cancel");
+      });
+
+      it("should wire the Cancel action to close the modal", () => {
+        const dispatch = closeRevisionAndGetDispatch();
+        const cancelAction =
+          (dispatch as ReturnType<typeof vi.fn>).mock.calls[0][0].payload.actions[1];
+        expect(cancelAction.onClickAction).toEqual({ type: CLOSE_MODAL_ACTION_NAME });
+      });
+    });
+
+    describe("when the Continue action is executed (proceed)", () => {
+      it("should dispatch closeChannel for the given channel", () => {
+        const dispatch = closeRevisionAndGetDispatch();
+        extractProceed(dispatch)();
+        const calls = (dispatch as ReturnType<typeof vi.fn>).mock.calls;
+        expect(calls.length).toBeGreaterThan(1);
+        const closeChannelThunk = calls[1][0] as unknown as ReturnType<typeof closeChannel>;
+        // check that closeChannel is called with the appropriate parameter
+        expect(typeof closeChannelThunk).toBe("function");
+        const store = makeStore();
+        store.dispatch(closeChannelThunk);
+        expect(Object.values(store.getState().pendingChanges.pendingCloses))
+          .toContain(channel);
+      });
+
+      it("should dispatch closeModal", () => {
+        const dispatch = closeRevisionAndGetDispatch();
+        extractProceed(dispatch)();
+        expect(dispatch).toHaveBeenCalledWith(closeModal());
+      });
+
+      describe("when there are other revisions in the channel", () => {
+        it("should re-release those revisions", () => {
+          const otherRevision = {
+            revision: 2,
+            architectures: ["abc42"],
+          } as unknown as Revision;
+          const dispatch = closeRevisionAndGetDispatch({
+            [channel]: { test64: revision, abc42: otherRevision },
+          });
+
+          vi.mocked(getReleases).mockReturnValue([]);
+
+          extractProceed(dispatch)();
+          const calls = (dispatch as ReturnType<typeof vi.fn>).mock.calls;
+          // openModal + closeChannel thunk + releaseRevision thunk + closeModal
+          expect(calls.length).toBe(4);
+          const releaseRevisionThunk = calls[2][0] as unknown as ReturnType<typeof releaseRevision>;
+          expect(typeof releaseRevisionThunk).toBe("function");
+          const store = makeStore();
+          store.dispatch(releaseRevisionThunk);
+          const pendingReleases = Object.values(store.getState().pendingChanges.pendingReleases);
+          expect(pendingReleases).toHaveLength(1);
+          expect(pendingReleases[0].channel).toBe("test/edge");
+          expect(pendingReleases[0].revision.revision).toBe(2);
+          expect(pendingReleases[0].revision.architectures).toContainEqual("abc42");
+        });
+
+        it("should not re-release the revision being closed", () => {
+          const otherRevision = {
+            revision: 2,
+            architectures: ["abc42"],
+          } as unknown as Revision;
+          const dispatch = closeRevisionAndGetDispatch({
+            [channel]: { test64: revision, abc42: otherRevision },
+          });
+
+          vi.mocked(getReleases).mockReturnValue([]);
+
+          extractProceed(dispatch)();
+          const calls = (dispatch as ReturnType<typeof vi.fn>).mock.calls;
+          // openModal + closeChannel thunk + releaseRevision thunk + closeModal
+          expect(calls.length).toBe(4);
+          const thunkCalls = calls.filter((args: any[]) => typeof args[0] === "function")
+            .map((args) => args[0]);
+          // closeChannel + releaseRevision
+          expect(thunkCalls).toHaveLength(2);
+          // check that the releaseRevision is otherRevision
+          const store = makeStore();
+          thunkCalls.forEach((thunk) => store.dispatch(thunk));
+          const pendingReleases = Object.values(store.getState().pendingChanges.pendingReleases);
+          expect(pendingReleases).not.toEqual(
+            expect.arrayContaining([
+              expect.objectContaining({ revision: expect.objectContaining({ revision: 1 }) })
+            ])
+          );
+        });
+      });
+
+      describe("when the revision is the only one in the channel", () => {
+        it("should not dispatch releaseRevision for any other revisions", () => {
+          const dispatch = closeRevisionAndGetDispatch({ [channel]: { test64: revision } });
+          extractProceed(dispatch)();
+          const calls = (dispatch as ReturnType<typeof vi.fn>).mock.calls;
+          // openModal + closeChannel thunk + closeModal
+          expect(calls.length).toBe(3);
+          const thunkCalls = calls.filter((args: any[]) => typeof args[0] === "function")
+            .map((args) => args[0]);
+          // check releaseRevision has never been called
+          const store = makeStore();
+          thunkCalls.forEach((thunk) => store.dispatch(thunk));
+          const pendingReleases = Object.values(store.getState().pendingChanges.pendingReleases);
+          expect(pendingReleases).toHaveLength(0);
+        });
+      });
     });
   });
 });
