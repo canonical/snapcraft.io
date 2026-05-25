@@ -164,7 +164,11 @@ function _removePendingRelease(
   revision: Draft<Revision>,
   channel: string
 ) {
-  const pendingReleaseEntry = _getPendingReleaseByRevision(state, revision.revision);
+  const pendingReleaseEntry = _getPendingReleaseByRevision(
+    state,
+    revision.revision,
+    channel
+  );
   if (pendingReleaseEntry) {
     const [ orderKey, pendingReleaseItem ] = pendingReleaseEntry;
     if (pendingReleaseItem.channel === channel) {
@@ -174,7 +178,7 @@ function _removePendingRelease(
 }
 
 /*
-TODO: We should prevent duplication of revison data.
+TODO: We should prevent duplication of revision data.
 Remove `revision` from the PendingReleaseItem type,
 and use only data from `revisions` state
 */
@@ -248,6 +252,7 @@ const pendingReleasesSlice = createSlice({
         Object.values(state.pendingReleases).forEach((pendingRelease) => {
           if (
             pendingRelease.revision.revision !== revision.revision &&
+            pendingRelease.channel === channel &&
             pendingRelease.revision.architectures.includes(arch)
           ) {
             _removePendingRelease(
