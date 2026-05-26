@@ -97,9 +97,10 @@ describe("SnapsManagementLayout when the snap has releases", () => {
   test("tabs are clickable links", () => {
     renderComponent();
     const tabs = screen.getByRole("navigation");
-    expect(
-      within(tabs).getByRole("link", { name: "Listing" }),
-    ).toHaveAttribute("href", `/${snapName}/listing`);
+    expect(within(tabs).getByRole("link", { name: "Listing" })).toHaveAttribute(
+      "href",
+      `/${snapName}/listing`,
+    );
   });
 });
 

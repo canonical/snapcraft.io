@@ -16,8 +16,8 @@ function SnapsManagementLayout(): React.JSX.Element {
       {noReleases ? (
         <div style={{ marginTop: "1.5rem" }}>
           <Notification severity="caution" title="No published revision yet">
-            Your snap name is registered, but it doesn’t have a first build
-            yet. Follow the{" "}
+            Your snap name is registered, but it doesn’t have a first build yet.{" "}
+            Follow the{" "}
             <a href="/docs/releasing-your-app" target="_blank" rel="noreferrer">
               releasing your app
             </a>{" "}

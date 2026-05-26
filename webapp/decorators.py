@@ -17,7 +17,7 @@ _dashboard = Dashboard(api_publisher_session)
 logger = logging.getLogger(__name__)
 
 # Per-<snap_name> endpoints that must stay reachable even when the snap has
-# no published revisions: webhooks, name registration/deletion, ownership probe.
+# no published revisions.
 _UNRELEASED_GATE_SKIP_ENDPOINTS = frozenset(
     {
         "publisher_snaps.delete_package",
