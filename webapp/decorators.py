@@ -6,7 +6,6 @@ from datetime import datetime, timezone
 # Third party packages
 import flask
 
-from canonicalwebteam.exceptions import StoreApiResponseErrorList
 from canonicalwebteam.store_api.dashboard import Dashboard
 from canonicalwebteam.store_api.publishergw import PublisherGW
 
@@ -31,9 +30,15 @@ _UNRELEASED_GATE_SKIP_ENDPOINTS = frozenset(
 
 def gate_unreleased_snap_pages():
     """
-    Block per-<snap_name> publisher routes for snaps that have no published
-    revisions.
+    Block state-changing per-<snap_name> publisher requests when the snap has
+    no published revisions. Read requests pass through so the page can render
+    with a warning banner, but saves are rejected to prevent the dashboard API
+    from returning opaque errors mid-flow.
     """
+
+    # Page itself needs to load
+    if flask.request.method in ("GET", "HEAD", "OPTIONS"):
+        return None
     if not flask.request.view_args:
         return None
     snap_name = flask.request.view_args.get("snap_name")
@@ -46,7 +51,10 @@ def gate_unreleased_snap_pages():
 
     try:
         history = _dashboard.snap_release_history(flask.session, snap_name, 1)
-    except StoreApiResponseErrorList:
+    except Exception:
+        # If we can't determine release state (dashboard down, network error,
+        # auth issue), don't block the request. Let the downstream handler
+        # produce its normal response.
         return None
 
     revisions = []
@@ -58,26 +66,23 @@ def gate_unreleased_snap_pages():
     if revisions:
         return None
 
-    if flask.request.path.startswith("/api/"):
-        return (
-            flask.jsonify(
-                {
-                    "success": False,
-                    "errors": [
-                        {
-                            "code": "no-releases",
-                            "message": (
-                                "Publish a first revision before using "
-                                "this page."
-                            ),
-                        }
-                    ],
-                }
-            ),
-            403,
-        )
-
-    return flask.abort(404)
+    return (
+        flask.jsonify(
+            {
+                "success": False,
+                "errors": [
+                    {
+                        "code": "no-releases",
+                        "message": (
+                            "Publish a first revision before saving "
+                            "changes to this snap."
+                        ),
+                    }
+                ],
+            }
+        ),
+        403,
+    )
 
 
 def login_required(func):

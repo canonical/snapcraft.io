@@ -228,6 +228,11 @@ publisher_snaps.add_url_rule(
     "/<snap_name>/releases/revision/<revision>",
     view_func=release_views.get_snap_revision_json,
 )
+publisher_snaps.add_url_rule(
+    "/api/<snap_name>/release-status",
+    view_func=release_views.get_release_status,
+    methods=["GET"],
+)
 
 # Metrics views
 publisher_snaps.add_url_rule(
