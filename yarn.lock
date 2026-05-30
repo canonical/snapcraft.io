@@ -7405,15 +7405,14 @@ react-fast-compare@^2.0.1:
   resolved "https://registry.yarnpkg.com/react-fast-compare/-/react-fast-compare-2.0.4.tgz#e84b4d455b0fec113e0402c329352715196f81f9"
   integrity sha512-suNP+J1VU1MWFKcyt7RtjiSWUjvidmQSlqu+eHslq+342xCbGTYmC0mEhPCOHxlW0CywylOC1u2DFAT+bv4dBw==
 
-react-floater@^0.9.5-4:
-  version "0.9.5-5"
-  resolved "https://registry.yarnpkg.com/react-floater/-/react-floater-0.9.5-5.tgz#864c0baf9e5d6bcd4274ff11ba91b519923d6a83"
-  integrity sha512-9EFcYn8YOfqBoy9mAX0nnaG0KVvlTqOUCGMZgdJmI0ddvmZfnutlAo9s2RI89Up5ZN/pYuae8OObwZ5TBV91AQ==
+react-floater@0.10.1, react-floater@^0.9.5-4:
+  version "0.10.1"
+  resolved "https://registry.yarnpkg.com/react-floater/-/react-floater-0.10.1.tgz#f6d159e971f98a29e90e653c4860b5348ed10c8e"
+  integrity sha512-eHcXqGOFiSsf2xabfQ82agMR2d8wy4lLNgtOdNfnWBdra//uvIeo7+2eRaKyR8gWGDBIzQh/ED94hPnQYB1L5g==
   dependencies:
     "@popperjs/core" "^2.11.8"
     deepmerge-ts "^7.1.5"
     is-lite "^2.0.0"
-    tree-changes-hook "^0.11.3"
 
 react-hook-form@7.75.0:
   version "7.75.0"
@@ -8696,7 +8695,7 @@ tr46@^5.1.0:
   dependencies:
     punycode "^2.3.1"
 
-tree-changes-hook@^0.11.2, tree-changes-hook@^0.11.3:
+tree-changes-hook@^0.11.2:
   version "0.11.3"
   resolved "https://registry.yarnpkg.com/tree-changes-hook/-/tree-changes-hook-0.11.3.tgz#686072da95b6bc004ebb039324f5cef14850048a"
   integrity sha512-cNHPuFc5Qbi2B74VqSqL/Ee/l4n0SFfzYKTnXYViJW1yCFZ0bl97QsgUIw9vdQtqpWDwo83mpNkGUvcjeQc0Xw==
