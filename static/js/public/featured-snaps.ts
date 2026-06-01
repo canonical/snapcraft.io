@@ -1,5 +1,6 @@
 import declareGlobal from "../libs/declare";
 import { trackFeaturedSnapClicked } from "../store/utils/featuredTracker";
+import { DEFAULT_ICON_URL } from "../config/constants";
 
 type PackageData = {
   apps: Array<string>;
@@ -89,7 +90,7 @@ function buildCard(
       "[data-js='snap-description']",
     ) as HTMLElement;
 
-    snapIcon.src = data.icon_url;
+    snapIcon.src = data.icon_url ? data.icon_url : DEFAULT_ICON_URL;
     snapIconLink.href = `/${data.package_name}`;
     snapTitleLink.href = `/${data.package_name}`;
     snapTitleLink.innerText = data.title;
