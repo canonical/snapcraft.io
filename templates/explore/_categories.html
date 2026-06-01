@@ -1,18 +1,19 @@
-<section class="p-strip is-shallow u-no-padding--top">
-  <div class="u-fixed-width">
-    <h2>Categories</h2>
-    <div class="p-strip is-shallow u-no-padding--bottom">
-      <div class="row">
-        {% for category in categories %}
-          <div class="col-3">
-            <p class="p-heading--4">
-              <a class="p-link--soft" href="/store?categories={{ category.slug }}">
-                {{ category.name }}
-              </a>
-            </p>
-          </div>
-        {% endfor %}
+<section class="p-section">
+  <div class="p-strip is-shallow u-no-padding--top">
+    <div class="u-fixed-width">
+      <hr class="p-rule">
+      <h2>Categories</h2>
+    </div>  
+  </div>
+  <div class="grid-row">
+    {% for category in categories %}
+      <div class="grid-col-2 grid-col-medium-2">
+        <p class="p-heading--5">
+          <a href="/store?categories={{ category.slug }}">
+            {{ category.name }}
+          </a>
+        </p>
       </div>
-    </div>
+    {% endfor %}
   </div>
 </section>
