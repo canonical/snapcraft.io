@@ -1,17 +1,22 @@
 import "@testing-library/jest-dom";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { QueryClient, QueryClientProvider } from "react-query";
 import { render, screen, within } from "@testing-library/react";
 import SnapsManagementLayout from "../";
 
+const queryClient = new QueryClient();
+
 const renderComponent = () => {
   return render(
-    <BrowserRouter>
-      <Routes>
-        <Route path=":snapId" element={<SnapsManagementLayout />}>
-          <Route path="*" element={null} />
-        </Route>
-      </Routes>
-    </BrowserRouter>,
+    <QueryClientProvider client={queryClient}>
+      <BrowserRouter>
+        <Routes>
+          <Route path=":snapId" element={<SnapsManagementLayout />}>
+            <Route path="*" element={null} />
+          </Route>
+        </Routes>
+      </BrowserRouter>
+    </QueryClientProvider>,
   );
 };
 
