@@ -1,24 +1,26 @@
-<section class="p-strip is-shallow u-no-padding--bottom">
-  <div class="u-fixed-width">
-    <h2>{{ title }}</h2>
+<section class="p-section">
+  <div class="p-strip is-shallow u-no-padding--top">
+    <div class="u-fixed-width">
+      {% if has_rule %}
+        <hr class="p-rule">
+      {% endif %}
+      <h2>{{ title }}</h2>
+    </div>
   </div>
-</section>
-<section class="p-strip is-shallow u-no-padding--bottom">
-  <div class="row">
+  <div class="grid-row">
     {% for snap in snaps_list %}
       {% if loop.index <= 8 %}
-        <div class="col-3">
-          <p class="p-heading--4" style="float: left; margin-right: 1rem">{{ loop.index }}</p>
-          <div class="p-media-object">
+        <div class="grid-col-2 grid-col-medium-2">
+          <div class="p-strip is-shallow u-no-padding--top">
             <a href="{{ snap.details.name }}">
-              <img src="{{ snap.details.icon }}" class="p-media-object__image" alt="{{ snap.details.title }}" width="48" height="48">
+              <img src="{{ snap.details.icon }}" alt="{{ snap.details.title }}" width="48" height="48">
             </a>
-            <div class="p-media-object__details" style="min-width: 0">
-              <h3 class="p-media-object__title u-truncate">
+            <div style="min-width: 0">
+              <h3 class="p-heading--5 u-no-margin--bottom u-truncate">
                 <a href="{{ snap.details.name }}">{{ snap.details.title }}</a>
               </h3>
               <p class="u-text--muted">
-                <em>{{ snap.details.publisher }}</em>
+                <small>{{ snap.details.publisher }}</small>
                 
                 {% if snap.details.developer_validation == VERIFIED_PUBLISHER %}
                   {% include "partials/_verified_developer.html" %}
@@ -28,6 +30,9 @@
                   {% include "partials/_star_developer.html" %}
                 {% endif %}
               </p>
+              {% if has_summary %}
+                <p class="u-no-margin--bottom u-line-clamp--2">{{ snap.details.summary }}</p>
+              {% endif %}
             </div>
           </div>
         </div>
