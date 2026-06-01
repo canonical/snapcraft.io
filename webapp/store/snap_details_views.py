@@ -227,8 +227,57 @@ def snap_details_views(store):
             "links": details["snap"].get("links"),
             "updates": updates,
             "revisions": revisions,
+            "turnstile_site_key": (
+                flask.current_app.config.get("TURNSTILE_SITE_KEY", "")
+                if flask.current_app.config.get("TURNSTILE_SECRET_KEY")
+                else ""
+            ),
         }
         return context
+
+    def verify_turnstile(turnstile_response, remote_ip):
+        turnstile_secret = flask.current_app.config.get(
+            "TURNSTILE_SECRET_KEY", ""
+        )
+        if not turnstile_secret:
+            return True
+
+        if not turnstile_response:
+            logger.warning("Turnstile token missing from report form")
+            return False
+
+        payload = {
+            "secret": turnstile_secret,
+            "response": turnstile_response,
+        }
+        if remote_ip:
+            payload["remoteip"] = remote_ip
+
+        try:
+            response = requests.post(
+                flask.current_app.config["TURNSTILE_VERIFY_URL"],
+                data=payload,
+                timeout=10,
+            )
+            if not response.ok:
+                logger.warning(
+                    "Turnstile verification returned %s",
+                    response.status_code,
+                )
+                return False
+            verification = response.json()
+        except (requests.RequestException, ValueError):
+            logger.exception("Turnstile verification failed")
+            return False
+
+        if not verification.get("success"):
+            logger.warning(
+                "Turnstile verification denied report: %s",
+                verification.get("error-codes", []),
+            )
+            return False
+
+        return True
 
     def snap_has_sboms(revisions, snap_id):
         if not revisions:
@@ -568,6 +617,13 @@ def snap_details_views(store):
         # silently reject to avoid spam
         if "confirm" in fields:
             return flask.jsonify({"ok": True}), 200
+
+        if not verify_turnstile(
+            fields.get("cf-turnstile-response", ""),
+            flask.request.remote_addr,
+        ):
+            return flask.jsonify({"error": "turnstile_failed"}), 400
+
         payload = {
             "snap_name": fields.get("snap_name", ""),
             "reason": fields.get("reason", ""),

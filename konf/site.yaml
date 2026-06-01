@@ -91,6 +91,15 @@ env: &env
       key: report-sheet-url
       name: snapcraft-io
 
+  - name: TURNSTILE_SITE_KEY
+    secretKeyRef:
+      key: turnstile-site-key
+      name: snapcraft-io
+  - name: TURNSTILE_SECRET_KEY
+    secretKeyRef:
+      key: turnstile-secret-key
+      name: snapcraft-io
+
 memoryLimit: 256Mi
 
 extraHosts:

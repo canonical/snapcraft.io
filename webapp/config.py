@@ -53,3 +53,9 @@ APP_NAME = "snapcraft"
 ANALYTICS_ENDPOINT = os.getenv("ANALYTICS_ENDPOINT", "").strip()
 
 REPORT_SHEET_URL = os.getenv("REPORT_SHEET_URL", "").strip()
+TURNSTILE_SITE_KEY = os.getenv("TURNSTILE_SITE_KEY", "").strip()
+TURNSTILE_SECRET_KEY = os.getenv("TURNSTILE_SECRET_KEY", "").strip()
+TURNSTILE_VERIFY_URL = os.getenv(
+    "TURNSTILE_VERIFY_URL",
+    "https://challenges.cloudflare.com/turnstile/v0/siteverify",
+).strip()
