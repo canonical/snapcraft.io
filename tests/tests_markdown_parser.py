@@ -202,3 +202,22 @@ class TestMarkdownParser(unittest.TestCase):
             '<p><a href="mailto:me@example.com">me@example.com</a></p>\n'
         )
         self.assertEqual(parse_markdown_description(markdown), expected)
+
+    def test_bold_text_with_square_brackets_does_not_crash(self):
+        markdown = "**[Recommended] Below**"
+        expected = "<p><strong>[Recommended] Below</strong></p>\n"
+        self.assertEqual(parse_markdown_description(markdown), expected)
+
+    def test_italic_text_with_square_brackets_does_not_crash(self):
+        markdown = "_[Recommended] Below_"
+        expected = "<p><em>[Recommended] Below</em></p>\n"
+        self.assertEqual(parse_markdown_description(markdown), expected)
+
+    def test_emphasis_with_markdown_link_keeps_url_autolink(self):
+        markdown = "**[toto](https://toto.space)**"
+        expected = (
+            "<p><strong>"
+            '[toto](<a href="https://toto.space">https://toto.space</a>)'
+            "</strong></p>\n"
+        )
+        self.assertEqual(parse_markdown_description(markdown), expected)
