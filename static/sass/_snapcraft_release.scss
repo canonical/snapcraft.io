@@ -562,6 +562,11 @@
         display: none;
       }
     }
+
+    &.is-over.is-highlighted {
+      background: $colors--theme--border-low-contrast;
+      border-color: $colors--theme--border-low-contrast;
+    }
   }
 
   .p-releases-table__arch {
