@@ -70,6 +70,7 @@ CSP = {
         "w.usabilla.com",
         "connect.facebook.net",
         "snap.licdn.com",
+        "challenges.cloudflare.com",
         # This is necessary for Google Tag Manager to function properly.
         "'unsafe-inline'",
     ],
@@ -95,6 +96,7 @@ CSP = {
         "*.snapcraftcontent.com",
         "marketplace-analytics.staging.canonical.com",
         "marketplace-analytics.canonical.com",
+        "challenges.cloudflare.com",
         "www.google.com",
     ],
     "frame-src": [
@@ -106,6 +108,7 @@ CSP = {
         "player.vimeo.com",
         "snapcraft.io",
         "www.facebook.com",
+        "challenges.cloudflare.com",
         "snap:",
     ],
     "style-src": [

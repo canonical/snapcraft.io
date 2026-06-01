@@ -50,6 +50,9 @@
 
         <label for="report-snap-email">Your email (optional)</label>
         <input id="report-snap-email" type="email" name="email" placeholder="email@example.com" />
+        {% if turnstile_site_key %}
+          <div class="cf-turnstile" data-sitekey="{{ turnstile_site_key }}"></div>
+        {% endif %}
         <div class="u-off-screen">
           <label for="report-snap-confirm" aria-hidden="true">I agree</label>
           <input id="report-snap-confirm" type="checkbox" name="confirm" aria-hidden="true" />
