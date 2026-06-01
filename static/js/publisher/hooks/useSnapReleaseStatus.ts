@@ -8,6 +8,7 @@ function useSnapReleaseStatus(snapName: string | undefined) {
       if (!response.ok) {
         throw new Error("Failed to fetch release status");
       }
+
       return response.json();
     },
     enabled: Boolean(snapName),
