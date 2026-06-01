@@ -1,5 +1,6 @@
 import flask
 
+from webapp.config import DEFAULT_ICON_URL
 from webapp.snapcraft import logic
 
 
@@ -47,7 +48,6 @@ def snapcraft_blueprint():
         status_code = 200
 
         icon_host = "https://dashboard.snapcraft.io/site_media/appmedia"
-        assets_host = "https://assets.ubuntu.com/v1"
 
         devices = [
             {
@@ -131,9 +131,7 @@ def snapcraft_blueprint():
             },
             {
                 "package_name": "pi-bluetooth",
-                "icon_url": "/".join(
-                    [assets_host, "be6eb412-snapcraft-missing-icon.svg"]
-                ),
+                "icon_url": DEFAULT_ICON_URL,
                 "title": "pi-bluetooth",
                 "developer_name": "Dave Jones (waveform)",
                 "developer_link": "/publisher/waveform",
@@ -205,9 +203,7 @@ def snapcraft_blueprint():
             },
             {
                 "package_name": "bow-webots",
-                "icon_url": "/".join(
-                    [assets_host, "be6eb412-snapcraft-missing-icon.svg"]
-                ),
+                "icon_url": DEFAULT_ICON_URL,
                 "title": "BOW Webots",
                 "developer_name": "Daniel Camilleri (bow-robotics)",
                 "developer_link": "/publisher/bow-robotics",
@@ -371,9 +367,7 @@ def snapcraft_blueprint():
             },
             {
                 "package_name": "pi-desktop",
-                "icon_url": "/".join(
-                    [assets_host, "be6eb412-snapcraft-missing-icon.svg"]
-                ),
+                "icon_url": DEFAULT_ICON_URL,
                 "title": "pi-desktop",
                 "developer_name": "Canonical",
                 "developer_link": "/publisher/canonical",
@@ -381,9 +375,7 @@ def snapcraft_blueprint():
             },
             {
                 "package_name": "pi",
-                "icon_url": "/".join(
-                    [assets_host, "be6eb412-snapcraft-missing-icon.svg"]
-                ),
+                "icon_url": DEFAULT_ICON_URL,
                 "title": "pi",
                 "developer_name": "Canonical",
                 "developer_link": "/publisher/canonical",
@@ -399,9 +391,7 @@ def snapcraft_blueprint():
             },
             {
                 "package_name": "pi3",
-                "icon_url": "/".join(
-                    [assets_host, "be6eb412-snapcraft-missing-icon.svg"]
-                ),
+                "icon_url": DEFAULT_ICON_URL,
                 "title": "pi3",
                 "developer_name": "Canonical",
                 "developer_link": "/publisher/canonical",
