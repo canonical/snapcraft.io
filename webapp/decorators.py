@@ -27,7 +27,7 @@ def login_required(func):
         date_str = date.strftime("%Y-%m-%dT%H:%M:%S")
 
         if not authentication.is_authenticated(flask.session):
-            authentication.empty_session(flask.session)
+            authentication.reset_auth_session(flask.session)
 
             logger.warning(
                 "User login failed",
