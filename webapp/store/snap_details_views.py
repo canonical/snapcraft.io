@@ -227,8 +227,10 @@ def snap_details_views(store):
             "links": details["snap"].get("links"),
             "updates": updates,
             "revisions": revisions,
-            "turnstile_site_key": flask.current_app.config.get(
-                "TURNSTILE_SITE_KEY", ""
+            "turnstile_site_key": (
+                flask.current_app.config.get("TURNSTILE_SITE_KEY", "")
+                if flask.current_app.config.get("TURNSTILE_SECRET_KEY")
+                else ""
             ),
         }
         return context
