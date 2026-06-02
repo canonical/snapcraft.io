@@ -50,7 +50,8 @@ const useSerialLogs = (
 
       return responseData;
     },
-    enabled: !!brandId,
+    enabled: Boolean(brandId && modelId),
+    retry: false,
   });
 };
 
