@@ -51,7 +51,7 @@
         <label for="report-snap-email">Your email (optional)</label>
         <input id="report-snap-email" type="email" name="email" placeholder="email@example.com" />
         {% if turnstile_site_key %}
-          <div class="cf-turnstile" data-sitekey="{{ turnstile_site_key }}"></div>
+          <div class="cf-turnstile js-report-snap-turnstile" data-sitekey="{{ turnstile_site_key }}"></div>
         {% endif %}
         <div class="u-off-screen">
           <label for="report-snap-confirm" aria-hidden="true">I agree</label>
@@ -61,7 +61,7 @@
         <div class="u-align--right">
           <button type="button" class="js-modal-close u-no-margin--bottom">Cancel</button>
           {# use --dark fake class for spinner icon to be rendered correctly... #}
-          <button type="submit" type="submit" class="--dark u-no-margin--bottom">Submit report</button>
+          <button type="submit" type="submit" class="--dark u-no-margin--bottom"{% if turnstile_site_key %} disabled{% endif %}>Submit report</button>
         </div>
       </form>
     </div>

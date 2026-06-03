@@ -1,7 +1,49 @@
 import { buttonEnabled, buttonLoading } from "../../libs/formHelpers";
 
+const TURNSTILE_SCRIPT_SRC =
+  "https://challenges.cloudflare.com/turnstile/v0/api.js";
+const SUBMIT_TEXT = "Submit report";
+
 const showEl = (el: HTMLElement) => el.classList.remove("u-hide");
 const hideEl = (el: HTMLElement) => el.classList.add("u-hide");
+
+let turnstileScriptPromise: Promise<void> | null = null;
+let turnstileSetupPromise: Promise<void> | null = null;
+let turnstileWidgetId: string | number | null = null;
+
+function loadTurnstileScript(): Promise<void> {
+  if (window.turnstile) {
+    return Promise.resolve();
+  }
+
+  if (!turnstileScriptPromise) {
+    turnstileScriptPromise = new Promise((resolve, reject) => {
+      const script = document.createElement("script");
+
+      script.src = TURNSTILE_SCRIPT_SRC;
+      script.async = true;
+      script.defer = true;
+      script.onload = () => resolve();
+      script.onerror = () =>
+        reject(new Error("Turnstile script failed to load"));
+
+      document.head.appendChild(script);
+    }).finally(() => {
+      turnstileScriptPromise = null;
+    });
+  }
+
+  return turnstileScriptPromise;
+}
+
+function disableSubmitButton(button: HTMLButtonElement): void {
+  buttonEnabled(button, SUBMIT_TEXT);
+  button.disabled = true;
+}
+
+function resetSubmitButton(button: HTMLButtonElement): void {
+  buttonEnabled(button, SUBMIT_TEXT);
+}
 
 function toggleModal(modal: HTMLElement, show?: boolean): void {
   if (typeof show === "undefined") {
@@ -16,11 +58,68 @@ function toggleModal(modal: HTMLElement, show?: boolean): void {
   }
 }
 
+function setupTurnstile(modal: HTMLElement): void {
+  const turnstile = modal.querySelector(
+    ".js-report-snap-turnstile",
+  ) as HTMLElement | null;
+  const submitButton = modal.querySelector(
+    "button[type=submit]",
+  ) as HTMLButtonElement | null;
+
+  if (!turnstile || !submitButton) {
+    return;
+  }
+
+  disableSubmitButton(submitButton);
+
+  if (turnstileWidgetId !== null && window.turnstile) {
+    window.turnstile.reset(turnstileWidgetId);
+    return;
+  }
+
+  if (turnstileSetupPromise) {
+    return;
+  }
+
+  turnstileSetupPromise = loadTurnstileScript()
+    .then(() => {
+      if (!window.turnstile) {
+        return;
+      }
+
+      const sitekey = turnstile.dataset.sitekey;
+      if (!sitekey) {
+        return;
+      }
+
+      turnstileWidgetId = window.turnstile.render(turnstile, {
+        sitekey,
+        callback: () => resetSubmitButton(submitButton),
+        "expired-callback": () => disableSubmitButton(submitButton),
+        "error-callback": () => disableSubmitButton(submitButton),
+      });
+    })
+    .catch(() => {
+      disableSubmitButton(submitButton);
+    })
+    .finally(() => {
+      turnstileSetupPromise = null;
+    });
+}
+
 function initForm(modal: HTMLElement): void {
-  buttonEnabled(
-    modal.querySelector("button[type=submit]") as HTMLButtonElement,
-    "Submit report",
+  const submitButton = modal.querySelector(
+    "button[type=submit]",
+  ) as HTMLButtonElement;
+  const hasTurnstile = Boolean(
+    modal.querySelector(".js-report-snap-turnstile"),
   );
+
+  if (hasTurnstile) {
+    setupTurnstile(modal);
+  } else {
+    resetSubmitButton(submitButton);
+  }
 
   showEl(modal.querySelector(".js-report-snap-form") as HTMLElement);
   hideEl(modal.querySelector(".js-report-snap-success") as HTMLElement);
