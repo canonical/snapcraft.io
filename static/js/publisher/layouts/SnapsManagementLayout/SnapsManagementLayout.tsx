@@ -18,10 +18,15 @@ function SnapsManagementLayout(): React.JSX.Element {
           <Notification severity="caution" title="No published revision yet">
             Your snap name is registered, but it doesn’t have a first build yet.{" "}
             Follow the{" "}
-            <a href="/docs/releasing-your-app" target="_blank" rel="noreferrer">
+            <a
+              href="https://documentation.ubuntu.com/snapcraft/stable/how-to/publishing/publish-a-snap/"
+              target="_blank"
+              rel="noreferrer"
+            >
               releasing your app
             </a>{" "}
-            guide to publish your first revision.
+            guide to publish your first revision and access the snap management
+            interface.
           </Notification>
         </div>
       ) : (
