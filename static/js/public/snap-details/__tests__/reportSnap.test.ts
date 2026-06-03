@@ -24,6 +24,7 @@ describe("report snap modal", () => {
 
   afterEach(() => {
     document.body.innerHTML = "";
+    document.body.classList.remove("vbox-open");
     vi.restoreAllMocks();
     delete window.turnstile;
   });

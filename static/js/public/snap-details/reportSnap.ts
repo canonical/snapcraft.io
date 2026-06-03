@@ -53,8 +53,10 @@ function toggleModal(modal: HTMLElement, show?: boolean): void {
   if (show) {
     initForm(modal);
     showEl(modal);
+    document.body.classList.add("vbox-open");
   } else {
     hideEl(modal);
+    document.body.classList.remove("vbox-open");
   }
 }
 
