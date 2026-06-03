@@ -20,7 +20,7 @@ Other:
   STAR_DEVELOPER: const (value of developer_validation)
 #}
 
-{%- from 'store/package_header/_package_header_data.html' import package_header_data, package_icon -%}
+{%- from 'store/package_header/_package_header_data.html' import package_header_data, package_icon with context -%}
 
 {%- macro package_header() -%}
   {%- set buttons_content = caller('buttons') -%}
