@@ -159,7 +159,7 @@ function RemodelTable({
               </Button>
               <Button
                 className="u-no-margin--bottom u-no-margin--right"
-                appearance="positive"
+                appearance="negative"
                 disabled={isDeleting}
                 onClick={() => {
                   void handleDeleteConfirm();
@@ -167,7 +167,10 @@ function RemodelTable({
               >
                 {isDeleting ? (
                   <>
-                    <Icon name="spinner" className="u-animation--spin" />
+                    <Icon
+                      name="spinner"
+                      className="u-animation--spin is-light"
+                    />
                     &nbsp;Deleting...
                   </>
                 ) : (

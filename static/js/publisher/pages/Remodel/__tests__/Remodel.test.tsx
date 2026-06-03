@@ -189,7 +189,9 @@ describe("Remodel", () => {
       );
     });
     expect(await screen.findByText("Remodel deleted")).toBeInTheDocument();
-    expect(invalidateQueriesSpy).toHaveBeenCalledWith({ queryKey: ["remodels"] });
+    expect(invalidateQueriesSpy).toHaveBeenCalledWith({
+      queryKey: ["remodels"],
+    });
   });
 
   it("shows error notification when delete fails", async () => {
