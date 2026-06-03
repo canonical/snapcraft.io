@@ -1,5 +1,6 @@
 import { useEffect, useState, useRef } from "react";
 import { useAtomValue, useSetAtom } from "jotai";
+import { useQueryClient } from "react-query";
 import {
   useParams,
   Link,
@@ -26,6 +27,8 @@ function Remodel(): React.JSX.Element {
   const [searchParams, setSearchParams] = useSearchParams();
   const location = useLocation();
   const brandId = useAtomValue(brandIdState);
+  const remodels = useAtomValue(remodelsListState);
+  const queryClient = useQueryClient();
   const [currentCursor, setCurrentCursor] = useState<string | null>(null);
   const [nextCursor, setNextCursor] = useState<string | null>(null);
   const cursorHistory = useRef<Array<string | null>>([]);
@@ -50,10 +53,63 @@ function Remodel(): React.JSX.Element {
   );
   const setRemodels = useSetAtom(remodelsListState);
   const [showNotification, setShowNotification] = useState(false);
+  const [notificationMessage, setNotificationMessage] = useState(
+    "New remodel configured",
+  );
   const [showErrorNotification, setShowErrorNotification] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [isDeleting, setIsDeleting] = useState(false);
   const brandStore = useAtomValue(brandStoreState(id));
   const navigate = useNavigate();
+
+  const handleDeleteRemodel = async (remodel: Remodel) => {
+    setIsDeleting(true);
+    const deletePayload = {
+      "from-model": remodel["from-model"],
+      "to-model": remodel["to-model"],
+      "from-serial": remodel["from-serial"],
+    };
+
+    try {
+      const response = await fetch(
+        `/api/store/${brandId}/models/remodel-allowlist`,
+        {
+          method: "DELETE",
+          body: JSON.stringify(deletePayload),
+          headers: {
+            "Content-Type": "application/json",
+            "X-CSRF-Token": window.CSRF_TOKEN,
+          },
+        },
+      );
+      const responseData = await response.json();
+
+      if (!response.ok || !responseData.success) {
+        throw new Error(responseData.message || "Unable to delete remodel");
+      }
+
+      setNotificationMessage("Remodel deleted");
+      setShowNotification(true);
+
+      await queryClient.invalidateQueries({ queryKey: ["remodels"] });
+
+      setTimeout(() => {
+        setShowNotification(false);
+      }, 5000);
+    } catch (error) {
+      setErrorMessage(
+        error instanceof Error ? error.message : "Unable to delete remodel",
+      );
+      setShowErrorNotification(true);
+      setTimeout(() => {
+        setShowErrorNotification(false);
+      }, 5000);
+
+      throw error;
+    } finally {
+      setIsDeleting(false);
+    }
+  };
 
   const handlePageForward = () => {
     cursorHistory.current.push(currentCursor);
@@ -123,6 +179,7 @@ function Remodel(): React.JSX.Element {
             <div className="u-flex-column u-flex-grow">
               {data && (
                 <RemodelTable
+                  remodels={remodels}
                   handlePageForward={handlePageForward}
                   handlePageBack={handlePageBack}
                   handlePageSizeChange={handlePageSizeChange}
@@ -131,6 +188,8 @@ function Remodel(): React.JSX.Element {
                     cursorHistory.current.length < 1 || currentCursor === null
                   }
                   pageSize={pageSize}
+                  isDeleting={isDeleting}
+                  onDeleteRemodel={handleDeleteRemodel}
                 />
               )}
             </div>
@@ -147,7 +206,7 @@ function Remodel(): React.JSX.Element {
                 setShowNotification(false);
               }}
             >
-              New remodel configured
+              {notificationMessage}
             </Notification>
           </div>
         )}
@@ -191,6 +250,7 @@ function Remodel(): React.JSX.Element {
           <ConfigureRemodelForm
             refetch={refetch}
             setShowNotification={setShowNotification}
+            setNotificationMessage={setNotificationMessage}
             setShowErrorNotification={setShowErrorNotification}
             setErrorMessage={setErrorMessage}
           />

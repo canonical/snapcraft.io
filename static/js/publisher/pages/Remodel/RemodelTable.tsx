@@ -1,32 +1,54 @@
-import { useAtomValue } from "jotai";
+import { useState } from "react";
 import {
+  Button,
+  Icon,
   MainTable,
+  Modal,
   TablePaginationControls,
 } from "@canonical/react-components";
 import { format } from "date-fns";
 
-import { remodelsListState } from "../../state/remodelsState";
-
 import type { Remodel } from "../../types/shared";
 
 type Props = {
+  remodels: Remodel[];
   handlePageForward: () => void;
   handlePageBack: () => void;
   handlePageSizeChange: (arg: number) => void;
   forwardDisabled: boolean;
   backDisabled: boolean;
   pageSize: number;
+  isDeleting: boolean;
+  onDeleteRemodel: (remodel: Remodel) => Promise<void>;
 };
 
 function RemodelTable({
+  remodels,
   handlePageForward,
   handlePageBack,
   handlePageSizeChange,
   forwardDisabled,
   backDisabled,
   pageSize,
+  isDeleting,
+  onDeleteRemodel,
 }: Props): React.JSX.Element {
-  const remodels = useAtomValue(remodelsListState);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [selectedRemodel, setSelectedRemodel] = useState<Remodel | null>(null);
+
+  const handleDeleteConfirm = async () => {
+    if (!selectedRemodel) {
+      return;
+    }
+
+    try {
+      await onDeleteRemodel(selectedRemodel);
+      setShowDeleteModal(false);
+      setSelectedRemodel(null);
+    } catch {
+      // Keep modal open so user can retry or cancel.
+    }
+  };
 
   const headers = [
     {
@@ -46,6 +68,7 @@ function RemodelTable({
       style: { width: "130px" },
     },
     { content: "Note", className: "u-truncate" },
+    { content: "Actions", className: "u-align--right" },
   ];
 
   const rows = remodels.map((remodel: Remodel) => {
@@ -62,6 +85,22 @@ function RemodelTable({
           className: "u-align--right",
         },
         { content: remodel["description"] },
+        {
+          content: (
+            <Button
+              className="u-no-margin--bottom u-no-margin--right"
+              dense
+              disabled={isDeleting}
+              onClick={() => {
+                setSelectedRemodel(remodel);
+                setShowDeleteModal(true);
+              }}
+            >
+              Delete
+            </Button>
+          ),
+          className: "u-align--right",
+        },
       ],
     };
   });
@@ -97,6 +136,54 @@ function RemodelTable({
         visibleCount={rows.length}
         className="table-pagination-controls"
       />
+      {showDeleteModal && selectedRemodel && (
+        <Modal
+          close={() => {
+            if (!isDeleting) {
+              setShowDeleteModal(false);
+              setSelectedRemodel(null);
+            }
+          }}
+          title="Delete remodel"
+          buttonRow={
+            <>
+              <Button
+                className="u-no-margin--bottom"
+                disabled={isDeleting}
+                onClick={() => {
+                  setShowDeleteModal(false);
+                  setSelectedRemodel(null);
+                }}
+              >
+                Cancel
+              </Button>
+              <Button
+                className="u-no-margin--bottom u-no-margin--right"
+                appearance="positive"
+                disabled={isDeleting}
+                onClick={() => {
+                  void handleDeleteConfirm();
+                }}
+              >
+                {isDeleting ? (
+                  <>
+                    <Icon name="spinner" className="u-animation--spin" />
+                    &nbsp;Deleting...
+                  </>
+                ) : (
+                  "Delete"
+                )}
+              </Button>
+            </>
+          }
+        >
+          <p>
+            Are you sure you want to delete this remodel?
+            <br />
+            This action cannot be undone.
+          </p>
+        </Modal>
+      )}
     </>
   );
 }
