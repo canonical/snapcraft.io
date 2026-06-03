@@ -52,7 +52,10 @@ describe("SnapsManagementLayout when the snap has no releases", () => {
   test("warning links to the releasing-your-app guide", () => {
     renderComponent();
     const link = screen.getByRole("link", { name: /releasing your app/i });
-    expect(link).toHaveAttribute("href", "/docs/releasing-your-app");
+    expect(link).toHaveAttribute(
+      "href",
+      "https://documentation.ubuntu.com/snapcraft/stable/how-to/publishing/publish-a-snap/",
+    );
   });
 
   test("hides the outlet content", () => {
