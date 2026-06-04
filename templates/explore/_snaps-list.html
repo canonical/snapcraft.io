@@ -12,12 +12,12 @@
       {% if loop.index <= 8 %}
         <div class="grid-col-2 grid-col-medium-2">
           <div class="p-strip is-shallow u-no-padding--top">
-            <a href="{{ snap.details.name }}">
+            <a href="/{{ snap.details.name }}">
               <img src="{{ snap.details.icon }}" alt="{{ snap.details.title }}" width="48" height="48">
             </a>
             <div style="min-width: 0">
               <h3 class="p-heading--5 u-no-margin--bottom u-truncate">
-                <a href="{{ snap.details.name }}">{{ snap.details.title }}</a>
+                <a href="/{{ snap.details.name }}">{{ snap.details.title }}</a>
               </h3>
               <p class="u-text--muted">
                 <small>{{ snap.details.publisher }}</small>
