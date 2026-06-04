@@ -12,7 +12,11 @@ from flask.json import jsonify
 from webapp import authentication
 from webapp.helpers import api_publisher_session, launchpad
 from webapp.api.exceptions import ApiError
-from webapp.decorators import exchange_required, login_required
+from webapp.decorators import (
+    exchange_required,
+    gate_unreleased_snap_pages,
+    login_required,
+)
 from webapp.endpoints.publisher import listing as listing_endpoint
 from webapp.endpoints import cves
 from webapp.publisher.snaps import (
@@ -54,6 +58,7 @@ publisher_snaps = flask.Blueprint(
     template_folder="/templates",
     static_folder="/static",
 )
+publisher_snaps.before_request(gate_unreleased_snap_pages)
 
 # Listing views
 publisher_snaps.add_url_rule(
@@ -222,6 +227,11 @@ publisher_snaps.add_url_rule(
 publisher_snaps.add_url_rule(
     "/<snap_name>/releases/revision/<revision>",
     view_func=release_views.get_snap_revision_json,
+)
+publisher_snaps.add_url_rule(
+    "/api/<snap_name>/release-status",
+    view_func=release_views.get_release_status,
+    methods=["GET"],
 )
 
 # Metrics views

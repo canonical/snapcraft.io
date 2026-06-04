@@ -18,6 +18,7 @@ import useAccountKeys from "./useAccountKeys";
 import useRemodels from "./useRemodels";
 import useSerialLogs from "./useSerialLogs";
 import useEndpointAvailability from "./useEndpointAvailability";
+import useSnapReleaseStatus from "./useSnapReleaseStatus";
 
 export {
   useValidationSets,
@@ -40,4 +41,5 @@ export {
   useRemodels,
   useSerialLogs,
   useEndpointAvailability,
+  useSnapReleaseStatus,
 };

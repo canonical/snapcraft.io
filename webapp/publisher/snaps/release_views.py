@@ -25,6 +25,24 @@ def get_releases(snap_name):
 
 
 @login_required
+def get_release_status(snap_name):
+    try:
+        history = dashboard.snap_release_history(flask.session, snap_name, 1)
+    except StoreApiResponseErrorList as api_response_error_list:
+        if api_response_error_list.status_code == 404:
+            return flask.abort(404, "No snap named {}".format(snap_name))
+        return flask.jsonify(api_response_error_list.errors), 400
+
+    revisions = []
+    if isinstance(history, dict):
+        revisions = history.get("revisions") or []
+    elif isinstance(history, list):
+        revisions = history
+
+    return flask.jsonify({"has_releases": bool(revisions)})
+
+
+@login_required
 def redirect_post_release(snap_name):
     return flask.redirect(
         flask.url_for(".post_release", snap_name=snap_name), 307

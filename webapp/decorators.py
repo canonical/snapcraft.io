@@ -6,13 +6,83 @@ from datetime import datetime, timezone
 # Third party packages
 import flask
 
+from canonicalwebteam.store_api.dashboard import Dashboard
 from canonicalwebteam.store_api.publishergw import PublisherGW
 
 from webapp import authentication
 from webapp.helpers import api_publisher_session
 
 publisher_gateway = PublisherGW(api_publisher_session)
+_dashboard = Dashboard(api_publisher_session)
 logger = logging.getLogger(__name__)
+
+# Per-<snap_name> endpoints that must stay reachable even when the snap has
+# no published revisions.
+_UNRELEASED_GATE_SKIP_ENDPOINTS = frozenset(
+    {
+        "publisher_snaps.delete_package",
+        "publisher_snaps.get_package_metadata",
+        "publisher_snaps.get_is_user_snap",
+        "publisher_snaps.post_github_webhook",
+    }
+)
+
+
+def gate_unreleased_snap_pages():
+    """
+    Block state-changing per-<snap_name> publisher requests when the snap has
+    no published revisions. Read requests pass through so the page can render
+    with a warning banner, but saves are rejected to prevent the dashboard API
+    from returning opaque errors mid-flow.
+    """
+
+    # Page itself needs to load
+    if flask.request.method in ("GET", "HEAD", "OPTIONS"):
+        return None
+    if not flask.request.view_args:
+        return None
+    snap_name = flask.request.view_args.get("snap_name")
+    if not snap_name:
+        return None
+    if flask.request.endpoint in _UNRELEASED_GATE_SKIP_ENDPOINTS:
+        return None
+    if not authentication.is_authenticated(flask.session):
+        return None
+
+    try:
+        history = _dashboard.snap_release_history(flask.session, snap_name, 1)
+    except Exception:
+        # If we can't determine release state (dashboard down, network error,
+        # auth issue), don't block the request. Let the downstream handler
+        # produce its normal response.
+        return None
+
+    revisions = []
+    if isinstance(history, dict):
+        revisions = history.get("revisions") or []
+    elif isinstance(history, list):
+        revisions = history
+
+    if revisions:
+        return None
+
+    return (
+        flask.jsonify(
+            {
+                "success": False,
+                "errors": [
+                    {
+                        "code": "no-releases",
+                        "message": (
+                            "Publish a first revision before saving "
+                            "changes to this snap."
+                        ),
+                    }
+                ],
+            }
+        ),
+        403,
+    )
 
 
 def login_required(func):
