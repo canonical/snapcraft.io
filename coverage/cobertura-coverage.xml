@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 <!DOCTYPE coverage SYSTEM "http://cobertura.sourceforge.net/xml/coverage-04.dtd">
-<coverage lines-valid="6966" lines-covered="3186" line-rate="0.4573" branches-valid="4633" branches-covered="1988" branch-rate="0.429" timestamp="1780526671702" complexity="0" version="0.1">
+<coverage lines-valid="6978" lines-covered="3194" line-rate="0.45770000000000005" branches-valid="4642" branches-covered="1995" branch-rate="0.42969999999999997" timestamp="1780612329871" complexity="0" version="0.1">
   <sources>
     <source>/home/runner/work/snapcraft.io/snapcraft.io</source>
   </sources>
@@ -4733,7 +4733,7 @@
         </class>
       </classes>
     </package>
-    <package name="js.publisher.hooks" line-rate="0.6629" branch-rate="0.5215">
+    <package name="js.publisher.hooks" line-rate="0.6592" branch-rate="0.5159">
       <classes>
         <class name="index.ts" filename="static/js/publisher/hooks/index.ts" line-rate="1" branch-rate="1">
           <methods>
@@ -5567,6 +5567,27 @@
             <line number="22" hits="1" branch="false"/>
           </lines>
         </class>
+        <class name="useSnapReleaseStatus.ts" filename="static/js/publisher/hooks/useSnapReleaseStatus.ts" line-rate="0.4" branch-rate="0">
+          <methods>
+            <method name="useSnapReleaseStatus" hits="25" signature="()V">
+              <lines>
+                <line number="3" hits="25"/>
+              </lines>
+            </method>
+            <method name="(anonymous_1)" hits="25" signature="()V">
+              <lines>
+                <line number="6" hits="25"/>
+              </lines>
+            </method>
+          </methods>
+          <lines>
+            <line number="4" hits="25" branch="false"/>
+            <line number="7" hits="25" branch="false"/>
+            <line number="8" hits="0" branch="true" condition-coverage="0% (0/2)"/>
+            <line number="9" hits="0" branch="false"/>
+            <line number="12" hits="0" branch="false"/>
+          </lines>
+        </class>
         <class name="useSnaps.ts" filename="static/js/publisher/hooks/useSnaps.ts" line-rate="0.8332999999999999" branch-rate="0.5">
           <methods>
             <method name="useSnaps" hits="21" signature="()V">
@@ -5789,84 +5810,96 @@
         </class>
       </classes>
     </package>
-    <package name="js.publisher.layouts.SnapsManagementLayout" line-rate="1" branch-rate="0.6">
+    <package name="js.publisher.layouts.SnapsManagementLayout" line-rate="0.9565" branch-rate="0.7646999999999999">
       <classes>
         <class name="Breadcrumbs.tsx" filename="static/js/publisher/layouts/SnapsManagementLayout/Breadcrumbs.tsx" line-rate="1" branch-rate="0.625">
           <methods>
-            <method name="Breadcrumbs" hits="25" signature="()V">
+            <method name="Breadcrumbs" hits="33" signature="()V">
               <lines>
-                <line number="5" hits="25"/>
+                <line number="5" hits="33"/>
               </lines>
             </method>
-            <method name="(anonymous_1)" hits="63" signature="()V">
+            <method name="(anonymous_1)" hits="79" signature="()V">
               <lines>
-                <line number="10" hits="63"/>
+                <line number="10" hits="79"/>
               </lines>
             </method>
-            <method name="(anonymous_2)" hits="59" signature="()V">
+            <method name="(anonymous_2)" hits="75" signature="()V">
               <lines>
-                <line number="11" hits="59"/>
+                <line number="11" hits="75"/>
               </lines>
             </method>
-            <method name="(anonymous_3)" hits="86" signature="()V">
+            <method name="(anonymous_3)" hits="102" signature="()V">
               <lines>
-                <line number="14" hits="86"/>
+                <line number="14" hits="102"/>
               </lines>
             </method>
-            <method name="(anonymous_4)" hits="59" signature="()V">
+            <method name="(anonymous_4)" hits="75" signature="()V">
               <lines>
-                <line number="25" hits="59"/>
+                <line number="25" hits="75"/>
               </lines>
             </method>
           </methods>
           <lines>
-            <line number="6" hits="25" branch="false"/>
-            <line number="8" hits="25" branch="true" condition-coverage="50% (1/2)"/>
-            <line number="9" hits="25" branch="false"/>
-            <line number="10" hits="63" branch="false"/>
-            <line number="12" hits="59" branch="true" condition-coverage="50% (1/2)"/>
-            <line number="14" hits="59" branch="false"/>
-            <line number="15" hits="86" branch="true" condition-coverage="50% (1/2)"/>
-            <line number="18" hits="59" branch="false"/>
-            <line number="21" hits="25" branch="false"/>
-            <line number="26" hits="59" branch="false"/>
+            <line number="6" hits="33" branch="false"/>
+            <line number="8" hits="33" branch="true" condition-coverage="50% (1/2)"/>
+            <line number="9" hits="33" branch="false"/>
+            <line number="10" hits="79" branch="false"/>
+            <line number="12" hits="75" branch="true" condition-coverage="50% (1/2)"/>
+            <line number="14" hits="75" branch="false"/>
+            <line number="15" hits="102" branch="true" condition-coverage="50% (1/2)"/>
+            <line number="18" hits="75" branch="false"/>
+            <line number="21" hits="33" branch="false"/>
+            <line number="26" hits="75" branch="false"/>
           </lines>
         </class>
         <class name="SnapsManagementLayout.tsx" filename="static/js/publisher/layouts/SnapsManagementLayout/SnapsManagementLayout.tsx" line-rate="1" branch-rate="1">
           <methods>
-            <method name="SnapsManagementLayout" hits="25" signature="()V">
+            <method name="SnapsManagementLayout" hits="33" signature="()V">
               <lines>
-                <line number="5" hits="25"/>
+                <line number="7" hits="33"/>
               </lines>
             </method>
           </methods>
           <lines>
-            <line number="6" hits="25" branch="false"/>
+            <line number="8" hits="33" branch="false"/>
+            <line number="9" hits="33" branch="false"/>
+            <line number="10" hits="33" branch="true" condition-coverage="100% (2/2)"/>
+            <line number="12" hits="33" branch="false"/>
           </lines>
         </class>
-        <class name="Tabs.tsx" filename="static/js/publisher/layouts/SnapsManagementLayout/Tabs.tsx" line-rate="1" branch-rate="0.5">
+        <class name="Tabs.tsx" filename="static/js/publisher/layouts/SnapsManagementLayout/Tabs.tsx" line-rate="0.875" branch-rate="0.8">
           <methods>
-            <method name="SnapsManagementLayout" hits="25" signature="()V">
+            <method name="SnapsManagementLayout" hits="33" signature="()V">
               <lines>
-                <line number="5" hits="25"/>
+                <line number="9" hits="33"/>
               </lines>
             </method>
-            <method name="(anonymous_1)" hits="25" signature="()V">
+            <method name="(anonymous_1)" hits="33" signature="()V">
               <lines>
-                <line number="7" hits="25"/>
+                <line number="11" hits="33"/>
               </lines>
             </method>
-            <method name="(anonymous_2)" hits="150" signature="()V">
+            <method name="(anonymous_2)" hits="198" signature="()V">
               <lines>
-                <line number="8" hits="150"/>
+                <line number="12" hits="198"/>
+              </lines>
+            </method>
+            <method name="(anonymous_3)" hits="0" signature="()V">
+              <lines>
+                <line number="18" hits="0"/>
               </lines>
             </method>
           </methods>
           <lines>
-            <line number="6" hits="25" branch="false"/>
-            <line number="7" hits="25" branch="true" condition-coverage="50% (1/2)"/>
-            <line number="8" hits="150" branch="false"/>
-            <line number="15" hits="25" branch="false"/>
+            <line number="10" hits="33" branch="false"/>
+            <line number="11" hits="33" branch="true" condition-coverage="50% (1/2)"/>
+            <line number="12" hits="33" branch="false"/>
+            <line number="13" hits="198" branch="true" condition-coverage="100% (2/2)"/>
+            <line number="14" hits="24" branch="false"/>
+            <line number="18" hits="0" branch="false"/>
+            <line number="22" hits="174" branch="false"/>
+            <line number="30" hits="33" branch="false"/>
           </lines>
         </class>
         <class name="index.ts" filename="static/js/publisher/layouts/SnapsManagementLayout/index.ts" line-rate="1" branch-rate="1">
@@ -5879,7 +5912,7 @@
           <methods>
           </methods>
           <lines>
-            <line number="8" hits="2" branch="false"/>
+            <line number="8" hits="3" branch="false"/>
           </lines>
         </class>
       </classes>
@@ -6499,15 +6532,15 @@
         </class>
         <class name="RepoNotConnected.tsx" filename="static/js/publisher/pages/Builds/RepoNotConnected.tsx" line-rate="1" branch-rate="1">
           <methods>
-            <method name="RepoNotConnected" hits="1" signature="()V">
+            <method name="RepoNotConnected" hits="2" signature="()V">
               <lines>
-                <line number="11" hits="1"/>
+                <line number="11" hits="2"/>
               </lines>
             </method>
           </methods>
           <lines>
-            <line number="16" hits="1" branch="false"/>
-            <line number="18" hits="1" branch="false"/>
+            <line number="16" hits="2" branch="false"/>
+            <line number="18" hits="2" branch="false"/>
           </lines>
         </class>
         <class name="RepoSelector.tsx" filename="static/js/publisher/pages/Builds/RepoSelector.tsx" line-rate="0.8088" branch-rate="0.7681">
@@ -7872,9 +7905,9 @@
         </class>
         <class name="MemberRoleCheckbox.tsx" filename="static/js/publisher/pages/Members/MemberRoleCheckbox.tsx" line-rate="1" branch-rate="1">
           <methods>
-            <method name="MemberRoleCheckbox" hits="65" signature="()V">
+            <method name="MemberRoleCheckbox" hits="73" signature="()V">
               <lines>
-                <line number="13" hits="65"/>
+                <line number="13" hits="73"/>
               </lines>
             </method>
             <method name="(anonymous_1)" hits="3" signature="()V">
@@ -7884,7 +7917,7 @@
             </method>
           </methods>
           <lines>
-            <line number="14" hits="65" branch="false"/>
+            <line number="14" hits="73" branch="false"/>
             <line number="18" hits="3" branch="false"/>
           </lines>
         </class>
@@ -8224,9 +8257,9 @@
         </class>
         <class name="MembersTable.tsx" filename="static/js/publisher/pages/Members/MembersTable.tsx" line-rate="0.2121" branch-rate="0">
           <methods>
-            <method name="MembersTable" hits="14" signature="()V">
+            <method name="MembersTable" hits="15" signature="()V">
               <lines>
-                <line number="15" hits="14"/>
+                <line number="15" hits="15"/>
               </lines>
             </method>
             <method name="(anonymous_1)" hits="0" signature="()V">
@@ -8279,21 +8312,21 @@
                 <line number="84" hits="11"/>
               </lines>
             </method>
-            <method name="(anonymous_11)" hits="14" signature="()V">
+            <method name="(anonymous_11)" hits="16" signature="()V">
               <lines>
-                <line number="148" hits="14"/>
+                <line number="148" hits="16"/>
               </lines>
             </method>
           </methods>
           <lines>
-            <line number="20" hits="14" branch="false"/>
-            <line number="22" hits="14" branch="false"/>
+            <line number="20" hits="15" branch="false"/>
+            <line number="22" hits="15" branch="false"/>
             <line number="23" hits="0" branch="true" condition-coverage="0% (0/2)"/>
             <line number="24" hits="0" branch="false"/>
             <line number="27" hits="0" branch="false"/>
             <line number="29" hits="0" branch="false"/>
             <line number="32" hits="0" branch="false"/>
-            <line number="35" hits="14" branch="false"/>
+            <line number="35" hits="15" branch="false"/>
             <line number="36" hits="0" branch="false"/>
             <line number="37" hits="0" branch="false"/>
             <line number="39" hits="0" branch="true" condition-coverage="0% (0/2)"/>
@@ -8315,10 +8348,10 @@
             <line number="75" hits="0" branch="false"/>
             <line number="78" hits="0" branch="false"/>
             <line number="81" hits="0" branch="false"/>
-            <line number="84" hits="14" branch="false"/>
+            <line number="84" hits="15" branch="false"/>
             <line number="85" hits="11" branch="false"/>
-            <line number="88" hits="14" branch="false"/>
-            <line number="149" hits="14" branch="false"/>
+            <line number="88" hits="15" branch="false"/>
+            <line number="149" hits="16" branch="false"/>
           </lines>
         </class>
         <class name="index.ts" filename="static/js/publisher/pages/Members/index.ts" line-rate="1" branch-rate="1">
