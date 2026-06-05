@@ -22,11 +22,22 @@
     </div>
   </section>
 
+  {% if featured_snaps %}
+    {% with
+      snaps_list = featured_snaps,
+      title = "Featured snaps",
+      has_summary = True
+    %}
+      {% include "explore/_snaps-list.html" %}
+    {% endwith %}
+  {% endif %}
+
   {% if recent_snaps %}
     {% with
       snaps_list = recent_snaps,
       title = "Recently updated snaps",
-      has_summary = True
+      has_summary = True,
+      has_rule = True
     %}
       {% include "explore/_snaps-list.html" %}
     {% endwith %}

@@ -10,6 +10,7 @@ RECENT_PATH = "webapp.store.views.snap_recommendations.get_recent"
 TREND_PATH = "webapp.store.views.snap_recommendations.get_trending"
 TOP_PATH = "webapp.store.views.snap_recommendations.get_top_rated"
 CATEGORIES_PATH = "webapp.store.views.device_gateway.get_categories"
+FEATURED_PATH = "webapp.store.views.device_gateway.get_featured_snaps"
 
 
 EMPTY_EXTRA_DETAILS_PAYLOAD = {"aliases": None, "package_name": "vault"}
@@ -488,7 +489,7 @@ class GetDetailsPageTest(TestCase):
     @responses.activate
     def test_explore_uses_redis_cache(self):
         """When Redis has cached explore data, the recommendation APIs
-        and device gateway should not be called and the view should
+        and category lookup should not be called and the view should
         return successfully using the cached values.
         """
         # seed redis
@@ -541,6 +542,32 @@ class GetDetailsPageTest(TestCase):
             }
         ]
         categories = [{"slug": "cat1", "name": "Cat 1"}]
+        featured = {
+            "_embedded": {
+                "clickindex:package": [
+                    {
+                        "developer_validation": True,
+                        "media": [],
+                        "publisher": "Featured Pub",
+                        "package_name": "featured-snap",
+                        "summary": "Featured snap",
+                        "title": "Featured Snap",
+                    }
+                ]
+            }
+        }
+        expected_featured = [
+            {
+                "details": {
+                    "developer_validation": True,
+                    "icon": "",
+                    "publisher": "Featured Pub",
+                    "name": "featured-snap",
+                    "summary": "Featured snap",
+                    "title": "Featured Snap",
+                }
+            }
+        ]
 
         redis_cache.set("explore:popular-snaps", popular, ttl=3600)
         redis_cache.set("explore:recent-snaps", recent, ttl=3600)
@@ -553,15 +580,28 @@ class GetDetailsPageTest(TestCase):
                 with patch(TREND_PATH) as mock_trending:
                     with patch(TOP_PATH) as mock_top_rated:
                         with patch(CATEGORIES_PATH) as mock_categories:
-                            response = self.client.get("/explore")
+                            with patch(
+                                FEATURED_PATH, return_value=featured
+                            ) as mock_featured:
+                                response = self.client.get("/explore")
 
-                            self.assert200(response)
+                                self.assert200(response)
+                                self.assert_context(
+                                    "featured_snaps", expected_featured
+                                )
 
-                            mock_popular.assert_not_called()
-                            mock_recent.assert_not_called()
-                            mock_trending.assert_not_called()
-                            mock_top_rated.assert_not_called()
-                            mock_categories.assert_not_called()
+                                mock_popular.assert_not_called()
+                                mock_recent.assert_not_called()
+                                mock_trending.assert_not_called()
+                                mock_top_rated.assert_not_called()
+                                mock_categories.assert_not_called()
+                                mock_featured.assert_called_once_with(
+                                    fields=(
+                                        "developer_validation,media,"
+                                        "package_name,publisher,summary,"
+                                        "title"
+                                    )
+                                )
 
     @responses.activate
     def test_explore_populates_cache_when_empty(self):
@@ -569,6 +609,32 @@ class GetDetailsPageTest(TestCase):
         should be called and their results stored in Redis for subsequent
         requests.
         """
+        featured = {
+            "_embedded": {
+                "clickindex:package": [
+                    {
+                        "developer_validation": None,
+                        "media": [],
+                        "publisher": "Featured Pub",
+                        "package_name": "featured-snap",
+                        "summary": "Featured snap",
+                        "title": "Featured Snap",
+                    }
+                ]
+            }
+        }
+        expected_featured = [
+            {
+                "details": {
+                    "developer_validation": None,
+                    "icon": "",
+                    "publisher": "Featured Pub",
+                    "name": "featured-snap",
+                    "summary": "Featured snap",
+                    "title": "Featured Snap",
+                }
+            }
+        ]
 
         with patch(
             POPULAR_PATH,
@@ -634,38 +700,45 @@ class GetDetailsPageTest(TestCase):
                             CATEGORIES_PATH,
                             return_value=[{"slug": "c1", "name": "C1"}],
                         ) as mock_categories:
-                            response = self.client.get("/explore")
+                            with patch(
+                                FEATURED_PATH, return_value=featured
+                            ) as mock_featured:
+                                response = self.client.get("/explore")
 
-                            self.assert200(response)
+                                self.assert200(response)
+                                self.assert_context(
+                                    "featured_snaps", expected_featured
+                                )
 
-                            # ensure the methods were called to populate cache
-                            self.assertTrue(mock_popular.called)
-                            self.assertTrue(mock_recent.called)
-                            self.assertTrue(mock_trending.called)
-                            self.assertTrue(mock_top_rated.called)
-                            self.assertTrue(mock_categories.called)
-                            # cached values should now exist
-                            pop_cached = redis_cache.get(
-                                "explore:popular-snaps"
-                            )
-                            recent_cached = redis_cache.get(
-                                "explore:recent-snaps"
-                            )
-                            trend_cached = redis_cache.get(
-                                "explore:trending-snaps"
-                            )
-                            top_cached = redis_cache.get(
-                                "explore:top-rated-snaps"
-                            )
-                            categories_cached = redis_cache.get(
-                                "explore:categories"
-                            )
+                                # cache-populating methods were called
+                                self.assertTrue(mock_popular.called)
+                                self.assertTrue(mock_recent.called)
+                                self.assertTrue(mock_trending.called)
+                                self.assertTrue(mock_top_rated.called)
+                                self.assertTrue(mock_categories.called)
+                                self.assertTrue(mock_featured.called)
+                                # cached values should now exist
+                                pop_cached = redis_cache.get(
+                                    "explore:popular-snaps"
+                                )
+                                recent_cached = redis_cache.get(
+                                    "explore:recent-snaps"
+                                )
+                                trend_cached = redis_cache.get(
+                                    "explore:trending-snaps"
+                                )
+                                top_cached = redis_cache.get(
+                                    "explore:top-rated-snaps"
+                                )
+                                categories_cached = redis_cache.get(
+                                    "explore:categories"
+                                )
 
-                            assert pop_cached is not None
-                            assert recent_cached is not None
-                            assert trend_cached is not None
-                            assert top_cached is not None
-                            assert categories_cached is not None
+                                assert pop_cached is not None
+                                assert recent_cached is not None
+                                assert trend_cached is not None
+                                assert top_cached is not None
+                                assert categories_cached is not None
 
 
 if __name__ == "__main__":

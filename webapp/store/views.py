@@ -189,6 +189,40 @@ def store_blueprint(store_query=None):
             key=lambda category: category["slug"],
         )
 
+        featured_snaps_fields = ",".join(
+            [
+                "developer_validation",
+                "media",
+                "package_name",
+                "publisher",
+                "summary",
+                "title",
+            ]
+        )
+
+        try:
+            featured_snaps = device_gateway.get_featured_snaps(
+                fields=featured_snaps_fields
+            )
+        except (StoreApiError, api_requests.exceptions.RequestException):
+            featured_snaps = {}
+
+        currently_featured_snaps = [
+            {
+                "details": {
+                    "developer_validation": snap["developer_validation"],
+                    "icon": helpers.get_icon(snap["media"]),
+                    "publisher": snap["publisher"],
+                    "name": snap["package_name"],
+                    "summary": snap["summary"],
+                    "title": snap["title"],
+                }
+            }
+            for snap in featured_snaps.get("_embedded", {}).get(
+                "clickindex:package", []
+            )
+        ]
+
         return flask.render_template(
             "explore/index.html",
             categories=categories,
@@ -196,6 +230,7 @@ def store_blueprint(store_query=None):
             recent_snaps=recent_snaps,
             trending_snaps=trending_snaps,
             top_rated_snaps=top_rated_snaps,
+            featured_snaps=currently_featured_snaps,
         )
 
     @store.route("/publisher/<regex('[a-z0-9-]*[a-z][a-z0-9-]*'):publisher>")
