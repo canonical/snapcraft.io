@@ -235,7 +235,7 @@ def snap_details_views(store):
         }
         return context
 
-    def verify_turnstile(turnstile_response, remote_ip):
+    def verify_turnstile(turnstile_response):
         turnstile_secret = flask.current_app.config.get(
             "TURNSTILE_SECRET_KEY", ""
         )
@@ -250,8 +250,6 @@ def snap_details_views(store):
             "secret": turnstile_secret,
             "response": turnstile_response,
         }
-        if remote_ip:
-            payload["remoteip"] = remote_ip
 
         try:
             response = requests.post(
@@ -618,10 +616,7 @@ def snap_details_views(store):
         if "confirm" in fields:
             return flask.jsonify({"ok": True}), 200
 
-        if not verify_turnstile(
-            fields.get("cf-turnstile-response", ""),
-            flask.request.remote_addr,
-        ):
+        if not verify_turnstile(fields.get("cf-turnstile-response", "")):
             return flask.jsonify({"error": "turnstile_failed"}), 400
 
         payload = {
