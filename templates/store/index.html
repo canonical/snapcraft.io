@@ -8,7 +8,7 @@
     <div class="grid-row">
       <div class="grid-col-start-large-3 grid-col-6">
         <h1>The app store for Linux</h1>
-        <form class="p-search-box" action="/store">
+        <form class="p-search-box" action="/search">
           <label class="u-off-screen" for="search">Search snap store</label>
           <input type="search" id="search" class="p-search-box__input" placeholder="Search snap store" name="q">
           <button type="reset" class="p-button p-search-box__reset">
@@ -28,7 +28,7 @@
       title = "Featured snaps",
       has_summary = True
     %}
-      {% include "explore/_snaps-list.html" %}
+      {% include "store/_snaps-list.html" %}
     {% endwith %}
   {% endif %}
 
@@ -39,7 +39,7 @@
       has_summary = True,
       has_rule = True
     %}
-      {% include "explore/_snaps-list.html" %}
+      {% include "store/_snaps-list.html" %}
     {% endwith %}
   {% endif %}
 
@@ -49,12 +49,12 @@
       title = "Most popular snaps",
       has_rule = True
     %}
-      {% include "explore/_snaps-list.html" %}
+      {% include "store/_snaps-list.html" %}
     {% endwith %}
   {% endif %}
 
   {% if categories %}
-    {% include "explore/_categories.html" %}
+    {% include "store/_categories.html" %}
   {% endif %}
 
   {% if top_rated_snaps %}
@@ -63,7 +63,7 @@
       title = "Top rated snaps",
       has_rule = True
     %}
-      {% include "explore/_snaps-list.html" %}
+      {% include "store/_snaps-list.html" %}
     {% endwith %}
   {% endif %}
 
@@ -74,7 +74,7 @@
       has_rule = True,
       has_summary = True
     %}
-      {% include "explore/_snaps-list.html" %}
+      {% include "store/_snaps-list.html" %}
     {% endwith %}
   {% endif %}
 
