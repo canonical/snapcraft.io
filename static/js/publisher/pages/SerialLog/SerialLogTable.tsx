@@ -37,7 +37,7 @@ function SerialLogTable({
     { content: "Model", className: "u-truncate" },
     { content: "Serial", className: "u-truncate" },
     {
-      content: "Created date",
+      content: "Created at",
       className: "u-align--right u-truncate",
     },
   ];
@@ -49,7 +49,10 @@ function SerialLogTable({
         { content: serialLog["model-name"] },
         { content: serialLog.serial },
         {
-          content: format(new Date(serialLog["created-at"]), "dd/MM/yyyy"),
+          content: format(
+            new Date(serialLog["created-at"]),
+            "dd/MM/yyyy HH:mm:ss",
+          ),
           className: "u-align--right",
         },
       ],
