@@ -1,4 +1,5 @@
 from math import floor
+from urllib.parse import urlencode
 
 import requests as api_requests
 import flask
@@ -120,12 +121,30 @@ def store_blueprint(store_query=None):
             status_code,
         )
 
-    @store.route("/store")
+    @store.route("/search")
     def store_view():
-        return flask.render_template("store/store.html")
+        return flask.render_template("store/search.html")
 
-    @store.route("/explore")
+    @store.route("/store")
     def explore_view():
+        allowlisted_redirect_params = (
+            "q",
+            "categories",
+            "page",
+            "architecture",
+        )
+        redirect_query_items = []
+
+        for key in allowlisted_redirect_params:
+            for value in flask.request.args.getlist(key):
+                redirect_query_items.append((key, value))
+
+        if redirect_query_items:
+            encoded_query = urlencode(redirect_query_items, doseq=True)
+            return flask.redirect(
+                f"{flask.url_for('.store_view')}?{encoded_query}"
+            )
+
         try:
             popular_snaps = redis_cache.get(
                 "explore:popular-snaps", expected_type=list
@@ -224,7 +243,7 @@ def store_blueprint(store_query=None):
         ]
 
         return flask.render_template(
-            "explore/index.html",
+            "store/index.html",
             categories=categories,
             popular_snaps=popular_snaps,
             recent_snaps=recent_snaps,

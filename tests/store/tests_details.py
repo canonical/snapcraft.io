@@ -583,7 +583,7 @@ class GetDetailsPageTest(TestCase):
                             with patch(
                                 FEATURED_PATH, return_value=featured
                             ) as mock_featured:
-                                response = self.client.get("/explore")
+                                response = self.client.get("/store")
 
                                 self.assert200(response)
                                 self.assert_context(
@@ -703,7 +703,7 @@ class GetDetailsPageTest(TestCase):
                             with patch(
                                 FEATURED_PATH, return_value=featured
                             ) as mock_featured:
-                                response = self.client.get("/explore")
+                                response = self.client.get("/store")
 
                                 self.assert200(response)
                                 self.assert_context(
