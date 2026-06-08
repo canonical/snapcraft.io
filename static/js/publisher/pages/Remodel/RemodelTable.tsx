@@ -112,6 +112,7 @@ function RemodelTable({
         emptyStateMsg="No remodels found"
         headers={headers}
         rows={rows}
+        responsive
       />
       <TablePaginationControls
         // Although we don't know the current page as we don't know
