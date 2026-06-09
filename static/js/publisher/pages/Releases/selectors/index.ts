@@ -470,8 +470,9 @@ export type SeparatePendingReleases = Record<
 
 // Separate pendingRelease actions
 export function getSeparatePendingReleases(state: ReleasesReduxState): SeparatePendingReleases {
-  const { pendingReleases } = state.pendingChanges;
+  const { pendingReleases, pendingCloses } = state.pendingChanges;
   const isProgressiveEnabled = isProgressiveReleaseEnabled(state);
+  const closedChannels = Object.values(pendingCloses);
 
   const newReleases: PendingReleaseMap = {};
   const newReleasesToProgress: PendingReleaseMap = {};
@@ -488,6 +489,7 @@ export function getSeparatePendingReleases(state: ReleasesReduxState): SeparateP
         oldRelease;
     } else if (
       isProgressiveEnabled &&
+      !closedChannels.includes(channel) &&
       pendingReleaseItem.progressive &&
       pendingReleaseItem.previousReleases &&
       pendingReleaseItem.previousReleases.length > 0 &&
