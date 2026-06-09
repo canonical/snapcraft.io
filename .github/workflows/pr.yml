@@ -43,6 +43,31 @@ jobs:
           dotrun &
           curl --head --fail --retry-delay 3 --retry 30 --retry-connrefused http://localhost:8004
 
+  run-workshop:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Install LXD + Workshop
+        run: |
+          sudo snap install lxd --channel 6/stable
+          sudo snap install workshop --classic
+
+      - name: Set up LXD + Workshop
+        run: |
+          sudo lxd init --auto
+          workshop launch
+
+      - name: Build assets
+        run: workshop run build
+
+      - name: Run workshop
+        run: |
+          workshop run prod &
+          curl --head --fail --retry-delay 3 --retry 30 --retry-connrefused http://localhost:8004
+
   run-cypress:
     runs-on: ubuntu-latest
     permissions:
