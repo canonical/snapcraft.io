@@ -58,7 +58,7 @@ jobs:
       - name: Set up LXD + Workshop
         run: |
           sudo lxd init --auto
-          workshop launch
+          workshop launch --verbose
 
       - name: Build assets
         run: workshop run build
