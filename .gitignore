@@ -61,6 +61,9 @@ env[23]/
 .dotrun.json
 .venv/
 
+# workshop snap files
+.workshop.lock
+
 # Project specific ignores
 static/js/modules
 static/js/dist

@@ -41,6 +41,22 @@ dotrun -p 5004:5004
 
 For more detailed local development instructions, see [HACKING.md](HACKING.md).
 
+
+### Experimental support for Workshop
+Another development tool you can use to run this project is [`Workshop`](https://ubuntu.com/workshop/docs/). Launch the Workshop by running
+
+```bash
+workshop launch # you only need to do this the first time
+```
+
+and start the server with
+
+```bash
+workshop run start
+```
+
+> Workshop depends on LXD, which is only available on Linux. If you're running macOS or Windows, you can use Workshop inside a [`Multipass`](https://canonical.com/multipass) VM.
+
 ## License
 
 The content of this project is licensed under the [Creative Commons Attribution-ShareAlike 4.0 International license](https://creativecommons.org/licenses/by-sa/4.0/), and the underlying code used to format and display that content is licensed under the [LGPLv3](https://opensource.org/licenses/lgpl-3.0) by [Canonical Ltd](https://canonical.com/).
