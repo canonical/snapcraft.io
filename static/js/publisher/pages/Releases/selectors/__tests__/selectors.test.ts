@@ -1343,34 +1343,36 @@ describe("hasRelease", () => {
         ),
       };
 
+      const pendingReleasesProgressive = {
+        revision: 1,
+        channel: "latest/stable",
+        pendingReleaseItem: {
+          revision: createMockRevision({ revision: 1, architectures: ["amd64"] }),
+          progressive: {
+            "current-percentage": null,
+            percentage: null,
+            paused: null,
+          },
+          previousReleases: [
+            createMockRevision({ revision: 2 }),
+          ],
+        }
+      };
+
       const stateWithPendingReleaseToProgress: ReleasesReduxState = {
         ...stateWithFlagEnabled,
         pendingChanges: createMockPendingChanges(
-          [{
-            revision: 1,
-            channel: "latest/stable",
-            pendingReleaseItem: {
-              revision: createMockRevision({ revision: 1, architectures: ["amd64"] }),
-              progressive: {
-                "current-percentage": null,
-                percentage: null,
-                paused: null,
-              },
-              previousReleases: [
-                createMockRevision({ revision: 2 }),
-              ],
-            }
-          }],
+          [pendingReleasesProgressive],
           [],
         ),
-        releases: [
-          createMockRelease({
-            architecture: "amd64",
-            track: "latest",
-            risk: "stable",
-            revision: 2,
-          }),
-        ],
+      };
+
+      const stateWithPendingReleaseToClosedChannel: ReleasesReduxState = {
+        ...stateWithFlagEnabled,
+        pendingChanges: createMockPendingChanges(
+          [pendingReleasesProgressive],
+          ["latest/stable"],
+        ),
       };
 
       const stateWithPendingReleaseToCancel: ReleasesReduxState = {
@@ -1412,6 +1414,21 @@ describe("hasRelease", () => {
               stateWithPendingRelease
                 .pendingChanges
                 .pendingReleases["0"],
+          },
+          newReleasesToProgress: {},
+          cancelProgressive: {},
+        });
+      });
+
+      it("should return only new release if channel is closed", () => {
+        expect(
+          getSeparatePendingReleases(stateWithPendingReleaseToClosedChannel)
+        ).toEqual({
+          newReleases: {
+            "1-latest/stable":
+              stateWithPendingReleaseToClosedChannel
+                .pendingChanges
+                .pendingReleases["1"],
           },
           newReleasesToProgress: {},
           cancelProgressive: {},
