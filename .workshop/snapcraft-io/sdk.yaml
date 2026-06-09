@@ -1,0 +1,9 @@
+# Sketch SDK provides local customization of this specific workshop.
+
+# To read more about the sketch SDK and its syntax, see:
+# https://canonical-workshop.readthedocs-hosted.com/en/latest/explanation/sdks/sdks/#sketch-sdk
+name: snapcraft-io
+plugs:
+  # consume other SDK services
+slots:
+  # expose SDK services to the host

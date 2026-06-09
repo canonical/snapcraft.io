@@ -28,6 +28,7 @@ user-agents==2.2.0
 dnspython==2.8.0
 werkzeug==3.1.8
 sentry-sdk==2.59.0
+setuptools<81.0
 
 # Development dependencies
 Flask-Testing==0.8.1
