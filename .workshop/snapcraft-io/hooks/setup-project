@@ -12,7 +12,7 @@ source /project/.venv/bin/activate
 # source env vars from .env and .env.local
 set -a
 source /project/.env
-source /project/.env.local
+[ -f /project/.env.local ] && source /project/.env.local
 set +a
 
 EOF
