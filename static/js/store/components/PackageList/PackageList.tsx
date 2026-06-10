@@ -98,7 +98,7 @@ function PackageList({
 
   return (
     <>
-      <Strip>
+      <Strip className="u-no-padding--top">
         <Row>
           <Col size={3}>
             <PackageFilter data={data} disabled={isFetching} />
