@@ -16,8 +16,8 @@ import { closeHistory } from "./history";
 import { releasesReady } from "./options";
 import {
   fetchSnapReleaseStatus,
-  fetchReleases,
-  fetchCloses,
+  fetchRelease,
+  fetchClose,
 } from "../api/releases";
 import {
   getReleaseDataFromChannelMap,
@@ -182,35 +182,6 @@ function mapToRelease(
   };
 };
 
-function dedupeReleases(
-  pendingReleases: PendingChangesState["pendingReleases"]
-): FetchReleasePayload[] {
-  const progressiveReleases: FetchReleasePayload[] = [];
-  const regularReleases: FetchReleasePayload[] = [];
-  Object.keys(pendingReleases).forEach((orderIndex) => {
-    const numericOrderIndex = Number(orderIndex);
-    const revId = pendingReleases[numericOrderIndex].revision;
-    const channels = pendingReleases[numericOrderIndex].channels;
-    Object.keys(channels).forEach((channel) => {
-      const pendingRelease = channels[channel];
-      if (pendingRelease.progressive) {
-        // first move progressive releases out
-        progressiveReleases.push(mapToRelease(pendingRelease));
-      } else {
-        const releaseIndex = regularReleases.findIndex(
-          (release) => release.revision.revision === revId
-        );
-        if (releaseIndex === -1) {
-          regularReleases.push(mapToRelease(pendingRelease));
-        } else {
-          regularReleases[releaseIndex].channels.push(pendingRelease.channel);
-        }
-      }
-    });
-  });
-  return [...progressiveReleases, ...regularReleases];
-}
-
 // async thunk method to push all the pending changes to the Store backend
 export const releaseRevisions = createAsyncThunk<
   void,
@@ -222,22 +193,36 @@ export const releaseRevisions = createAsyncThunk<
     const { pendingChanges, revisions, options } = getState();
     const { snapName } = options;
     const pendingCloses = pendingChanges.pendingCloses;
-    const releases = dedupeReleases(pendingChanges.pendingReleases);
     dispatch(hideNotification());
     // TODO: we're doing a lot of sequential network requests
     // should we display a loading state in the UI ?
 
     try {
-      await fetchReleases(
-        (json, release) => handleReleaseResponse(dispatch, json, release, revisions),
-        releases,
-        snapName,
-      );
-      await fetchCloses(
-        (json) => handleCloseResponse(dispatch, json, pendingCloses),
-        snapName,
-        getArrayOfChannelNames(pendingCloses),
-      )
+      // send the requests in order — later changes can overwrite earlier ones,
+      // so each pending release must be sent individually without deduplication
+      for (let index = 0; index < pendingChanges.changeOrderIndex; ++index) {
+        const pendingClose = pendingCloses[index];
+        if (pendingClose) {
+          const json = await fetchClose(snapName, [pendingClose]);
+          handleCloseResponse(dispatch, json, pendingCloses);
+        } else {
+          const pendingRelease = pendingChanges.pendingReleases[index];
+          // some changes could have been removed by the user and the index
+          // will be undefined
+          if (!pendingRelease) {
+            continue;
+          }
+          const release = mapToRelease(pendingRelease);
+          const json = await fetchRelease(
+            snapName,
+            release.id,
+            release.channels,
+            release.progressive
+          );
+          handleReleaseResponse(dispatch, json, release, revisions);
+        }
+      }
+
       const jsonData = await fetchSnapReleaseStatus(snapName);
       dispatch(updateReleasesUI(jsonData));
       dispatch(cancelPendingChanges());
