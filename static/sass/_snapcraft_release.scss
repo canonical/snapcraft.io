@@ -400,6 +400,11 @@
     .p-tooltip {
       display: block;
     }
+
+    &.opens-up {
+      top: auto;
+      bottom: 100%;
+    }
   }
 
   .is-grabbing,

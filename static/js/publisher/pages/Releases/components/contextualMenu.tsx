@@ -46,12 +46,48 @@ export default class ContextualMenu extends Component<ContextualMenuProps> {
     if (isClosed && dropdownEl) {
       dropdownEl.setAttribute("aria-hidden", "false");
 
+      requestAnimationFrame(() => {
+        this.positionDropdown(event.target as HTMLElement, dropdownEl);
+      });
+
       if (tooltipMessage) {
         tooltipMessage.classList.add("u-hide");
       }
     }
 
     event.stopPropagation();
+  }
+
+  positionDropdown(trigger: HTMLElement, menu: HTMLElement) {
+    // Reset direction first so previous state doesn't interfere
+    menu.classList.remove("opens-up");
+
+    const clippingParent = this.getClippingParent(trigger);
+    const triggerRect = trigger.getBoundingClientRect();
+    const menuRect = menu.getBoundingClientRect();
+
+    const boundaryBottom = clippingParent
+      ? clippingParent.getBoundingClientRect().bottom
+      : window.innerHeight;
+    const spaceBelow = boundaryBottom - triggerRect.bottom;
+
+    if (spaceBelow < menuRect.height) {
+      menu.classList.add("opens-up");
+    }
+  }
+
+  getClippingParent(el: HTMLElement): HTMLElement | null {
+    let parent = el.parentElement;
+
+    while (parent) {
+      const { overflow } = window.getComputedStyle(parent);
+      if (overflow === "hidden") {
+        return parent;
+      }
+      parent = parent.parentElement;
+    }
+
+    return null;
   }
 
   closeAllDropdowns() {
