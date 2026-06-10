@@ -25,14 +25,14 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>0/48</span>
+                <span class='fraction'>0/50</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/58</span>
+                <span class='fraction'>0/61</span>
             </div>
         
             
@@ -46,7 +46,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>0/48</span>
+                <span class='fraction'>0/50</span>
             </div>
         
             
@@ -334,7 +334,9 @@
 <a name='L269'></a><a href='#L269'>269</a>
 <a name='L270'></a><a href='#L270'>270</a>
 <a name='L271'></a><a href='#L271'>271</a>
-<a name='L272'></a><a href='#L272'>272</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L272'></a><a href='#L272'>272</a>
+<a name='L273'></a><a href='#L273'>273</a>
+<a name='L274'></a><a href='#L274'>274</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -573,6 +575,8 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -622,6 +626,7 @@ import {
   getFilteredAvailableRevisionsForArch,
   getProgressiveState,
   hasPendingRelease,
+  isArchPendingClose,
   type Branch,
   type ProgressiveState,
 } from "../../selectors";
@@ -639,7 +644,6 @@ import type {
   ReleasesReduxState,
   CPUArchitecture,
   ChannelArchitectureRevisionsMap,
-  Channel,
   Revision,
   FailedRevision,
 } from "../../../../types/releaseTypes";
@@ -660,7 +664,7 @@ interface OwnProps {
 interface StateProps {
   channelMap: ChannelArchitectureRevisionsMap;
   filters: ReleasesReduxState["history"]["filters"];
-  pendingCloses: Channel["name"][];
+  isArchPendingClose: boolean;
   failedRevisions: FailedRevision[];
   pendingChannelMap: ChannelArchitectureRevisionsMap;
   getAvailableCount: (arch: CPUArchitecture) =&gt; number;
@@ -689,7 +693,7 @@ const ReleasesTableReleaseCell = <span class="cstat-no" title="statement not cov
     branch,
     channelMap,
     pendingChannelMap,
-    pendingCloses,
+    isArchPendingClose,
     filters,
     isOverParent,
     getAvailableCount,
@@ -735,9 +739,9 @@ const ReleasesTableReleaseCell = <span class="cstat-no" title="statement not cov
     };
   }
 &nbsp;
-  const isChannelPendingClose = <span class="cstat-no" title="statement not covered" >pendingCloses.includes(channel);</span>
+  const pendingClose = <span class="cstat-no" title="statement not covered" >isArchPendingClose;</span>
   const isPending =
-<span class="cstat-no" title="statement not covered" >    pendingRelease || isChannelPendingClose || pendingProgressiveState;</span>
+<span class="cstat-no" title="statement not covered" >    pendingRelease || pendingClose || pendingProgressiveState;</span>
   const isUnassigned = <span class="cstat-no" title="statement not covered" >risk === AVAILABLE;</span>
   const isActive =
 <span class="cstat-no" title="statement not covered" >    filters &amp;&amp;</span>
@@ -745,7 +749,7 @@ const ReleasesTableReleaseCell = <span class="cstat-no" title="statement not cov
     filters.risk === risk &amp;&amp;
     filters.branch === branchName;
   const isHighlighted = <span class="cstat-no" title="statement not covered" >isPending || (isUnassigned &amp;&amp; currentRevision);</span>
-  const canDrag = (<span class="cstat-no" title="statement not covered" >currentRevision &amp;&amp; !isChannelPendingClose &amp;&amp; releasable) || false;</span>
+  const canDrag = (<span class="cstat-no" title="statement not covered" >currentRevision &amp;&amp; !pendingClose &amp;&amp; releasable) || false;</span>
 &nbsp;
 &nbsp;
   function <span class="fstat-no" title="function not covered" >handleHistoryIconClick(</span>
@@ -792,7 +796,7 @@ const ReleasesTableReleaseCell = <span class="cstat-no" title="statement not cov
 &nbsp;
   let cellInfoNode = <span class="cstat-no" title="statement not covered" >null;</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  if (isChannelPendingClose) {</span>
+<span class="cstat-no" title="statement not covered" >  if (pendingClose) {</span>
 <span class="cstat-no" title="statement not covered" >    cellInfoNode = &lt;CloseChannelInfo /&gt;;</span>
 <span class="cstat-no" title="statement not covered" >  } else if (currentRevision) {</span>
 <span class="cstat-no" title="statement not covered" >    cellInfoNode = (</span>
@@ -816,7 +820,7 @@ const ReleasesTableReleaseCell = <span class="cstat-no" title="statement not cov
     );
   }
 &nbsp;
-  const showHistoryIcon = <span class="cstat-no" title="statement not covered" >currentRevision || isUnassigned;</span>
+  const showHistoryIcon = <span class="cstat-no" title="statement not covered" >currentRevision || isUnassigned || pendingClose;</span>
 &nbsp;
 <span class="cstat-no" title="statement not covered" >  return (</span>
     &lt;ReleasesTableCellView
@@ -844,11 +848,13 @@ const ReleasesTableReleaseCell = <span class="cstat-no" title="statement not cov
   );
 };
 &nbsp;
-const mapStateToProps = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >(s</span>tate: ReleasesReduxState): StateProps =&gt; {</span>
+const mapStateToProps = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >(s</span>tate: ReleasesReduxState, ownProps: OwnProps): StateProps =&gt; {</span>
+  const branchName = <span class="cstat-no" title="statement not covered" >ownProps.branch ? ownProps.branch.branch : null;</span>
+  const <span class="cstat-no" title="statement not covered" >channel = getChannelName(ownProps.track, ownProps.risk, branchName);</span>
 <span class="cstat-no" title="statement not covered" >  return {</span>
     channelMap: state.channelMap,
     filters: state.history.filters,
-    pendingCloses: Object.values(state.pendingChanges.pendingCloses),
+    isArchPendingClose: isArchPendingClose(state, channel, ownProps.arch),
     failedRevisions: state.failedRevisions,
     pendingChannelMap: getPendingChannelMap(state),
     getAvailableCount: <span class="fstat-no" title="function not covered" >(<span class="cstat-no" title="statement not covered" >a</span>rch: CPUArchitecture) =&gt;</span>
@@ -883,7 +889,7 @@ export default connect(
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-06-09T22:33:53.330Z
+                at 2026-06-10T22:37:46.700Z
             </div>
         <script src="../../../../../../prettify.js"></script>
         <script>

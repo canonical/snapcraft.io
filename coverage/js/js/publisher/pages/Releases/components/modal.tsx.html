@@ -25,28 +25,28 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>0/30</span>
+                <span class='fraction'>0/26</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/19</span>
+                <span class='fraction'>0/15</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>0/11</span>
+                <span class='fraction'>0/9</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>0/27</span>
+                <span class='fraction'>0/23</span>
             </div>
         
             
@@ -208,20 +208,7 @@
 <a name='L143'></a><a href='#L143'>143</a>
 <a name='L144'></a><a href='#L144'>144</a>
 <a name='L145'></a><a href='#L145'>145</a>
-<a name='L146'></a><a href='#L146'>146</a>
-<a name='L147'></a><a href='#L147'>147</a>
-<a name='L148'></a><a href='#L148'>148</a>
-<a name='L149'></a><a href='#L149'>149</a>
-<a name='L150'></a><a href='#L150'>150</a>
-<a name='L151'></a><a href='#L151'>151</a>
-<a name='L152'></a><a href='#L152'>152</a>
-<a name='L153'></a><a href='#L153'>153</a>
-<a name='L154'></a><a href='#L154'>154</a>
-<a name='L155'></a><a href='#L155'>155</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L146'></a><a href='#L146'>146</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -268,10 +255,6 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -292,7 +275,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -308,8 +290,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -351,7 +331,9 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -375,7 +357,6 @@
 import { connect } from "react-redux";
 &nbsp;
 import { CLOSE_MODAL_ACTION_NAME, closeModal } from "../slices/modal";
-import { setDefaultTrack, clearDefaultTrack } from "../slices/defaultTrack";
 import type { ReleasesReduxState } from "../../../types/releaseTypes";
 import type { AppDispatch } from "../store";
 &nbsp;
@@ -383,7 +364,7 @@ type ModalAction = {
   appearance: "positive" | "neutral" | "negative";
   onClickAction:
     | {
-        reduxAction: string;
+        reduxAction: () =&gt; void;
       }
     | {
         type: typeof CLOSE_MODAL_ACTION_NAME;
@@ -396,9 +377,6 @@ interface ModalActionButtonProps {
   appearance: ModalAction["appearance"];
   children: ReactNode;
   dispatch: AppDispatch;
-  setDefaultTrack?: () =&gt; void;
-  clearDefaultTrack?: () =&gt; void;
-  [key: string]: unknown; // For dynamic redux action props
 }
 &nbsp;
 interface ModalActionButtonState {
@@ -421,11 +399,7 @@ class ModalActionButton extends Component&lt;ModalActionButtonProps, ModalAction
 &nbsp;
 <span class="cstat-no" title="statement not covered" >    if ("reduxAction" in onClickAction) {</span>
       const { reduxAction } = <span class="cstat-no" title="statement not covered" >onClickAction;</span>
-      const reduxActionFn = <span class="cstat-no" title="statement not covered" >this.props[reduxAction];</span>
-<span class="cstat-no" title="statement not covered" >      if (reduxActionFn &amp;&amp; typeof reduxActionFn === "function") {</span>
-        // If an action is passed, perform the specific action
-        (<span class="cstat-no" title="statement not covered" >reduxActionFn as () =&gt; void)();</span>
-      }
+<span class="cstat-no" title="statement not covered" >      reduxAction();</span>
     } else {
       // Otherwise dispatch the action object
 <span class="cstat-no" title="statement not covered" >      dispatch(onClickAction);</span>
@@ -443,7 +417,6 @@ class ModalActionButton extends Component&lt;ModalActionButtonProps, ModalAction
     const className = <span class="cstat-no" title="statement not covered" >[</span>
       `p-button--${appearance}`,
       "u-no-margin--bottom",
-      "u-float-right",
       ["positive", "negative"].indexOf(appearance) &gt; -1 ? "is--dark" : "",
     ];
 &nbsp;
@@ -462,8 +435,6 @@ class ModalActionButton extends Component&lt;ModalActionButtonProps, ModalAction
 &nbsp;
 const mapActionButtonDispatchToProps = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >(d</span>ispatch: AppDispatch) =&gt; (<span class="cstat-no" title="statement not covered" >{</span></span>
   dispatch,
-  setDefaultTrack: <span class="fstat-no" title="function not covered" >() =&gt; <span class="cstat-no" title="statement not covered" >d</span>ispatch(setDefaultTrack()),</span>
-  clearDefaultTrack: <span class="fstat-no" title="function not covered" >() =&gt; <span class="cstat-no" title="statement not covered" >d</span>ispatch(clearDefaultTrack()),</span>
 });
 &nbsp;
 const <span class="cstat-no" title="statement not covered" >ModalActionButtonWrapped = connect(</span>
@@ -504,15 +475,17 @@ const Modal = <span class="cstat-no" title="statement not covered" ><span class=
           &lt;/button&gt;
         &lt;/header&gt;
         &lt;p id="modal-description"&gt;{content}&lt;/p&gt;
-        {actions.map(<span class="fstat-no" title="function not covered" >(a</span>ction, i) =&gt; (
-<span class="cstat-no" title="statement not covered" >          &lt;ModalActionButtonWrapped</span>
-            key={`action-${i}`}
-            appearance={action.appearance}
-            onClickAction={action.onClickAction}
-          &gt;
-            {action.label}
-          &lt;/ModalActionButtonWrapped&gt;
-        ))}
+        &lt;div className="u-align--right"&gt;
+          {actions.map(<span class="fstat-no" title="function not covered" >(a</span>ction, i) =&gt; (
+<span class="cstat-no" title="statement not covered" >            &lt;ModalActionButtonWrapped</span>
+              key={`action-${i}`}
+              appearance={action.appearance}
+              onClickAction={action.onClickAction}
+            &gt;
+              {action.label}
+            &lt;/ModalActionButtonWrapped&gt;
+          ))}
+        &lt;/div&gt;
       &lt;/div&gt;
     &lt;/div&gt;
   );
@@ -532,7 +505,7 @@ export default connect(mapStateToProps, mapModalDispatchToProps)(Modal);
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-06-09T22:33:53.330Z
+                at 2026-06-10T22:37:46.700Z
             </div>
         <script src="../../../../../prettify.js"></script>
         <script>
