@@ -11,6 +11,7 @@ import {
 } from "../../helpers";
 import { useDragging, Handle } from "../dnd";
 
+import CloseMenuItem from "./closeMenuItem";
 import ReleaseMenuItem from "./releaseMenuItem";
 import type { Revision, CPUArchitecture } from "../../../../types/releaseTypes";
 import type { DraggedItem } from "./types";
@@ -339,7 +340,7 @@ export const ReleasesTableCellView = (props: ReleasesTableCellViewProps) => {
           <>
             <ContextualMenu
               className="p-button is-small"
-              label={cellType === "revision" ? "Release" : "Promote"}
+              label={cellType === "revision" ? "Release" : "Promote/close"}
             >
               <span className="p-contextual-menu__group">
                 <span className="p-contextual-menu__item">
@@ -356,6 +357,9 @@ export const ReleasesTableCellView = (props: ReleasesTableCellViewProps) => {
                   );
                 })}
               </span>
+              { cellType === "release" &&
+                <CloseMenuItem item={item} current={current} arch={arch} />
+              }
             </ContextualMenu>
             <Handle />
           </>

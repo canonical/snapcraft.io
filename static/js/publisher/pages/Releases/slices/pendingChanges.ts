@@ -7,9 +7,14 @@ import type {
   Progressive,
   Revision,
   Release,
+  CPUArchitecture,
 } from "../../../types/releaseTypes";
-import type { AppDispatch, RootState } from "../store";
+import { AppAsyncThunkConfig, type AppDispatch, type RootState } from "../store";
 import { closeHistory } from "./history";
+import { showNotification } from "./notification";
+import { CLOSE_MODAL_ACTION_NAME, closeModal, openModal } from "./modal";
+
+const PENDING_CHANGES_SLICE_NAME = "pendingChanges";
 
 export function releaseRevision(
   revision: Revision,
@@ -59,6 +64,59 @@ export function releaseRevision(
       channel,
       progressive,
       previousReleases,
+    }));
+  };
+}
+
+export function closeRevision(
+  revision: Revision,
+  channel: string,
+  arch: CPUArchitecture,
+) {
+  return (dispatch: AppDispatch, getState: () => RootState) => {
+    const pendingChannelMap = getPendingChannelMap(getState());
+    const toReleaseAgain: Set<Revision> = new Set();
+    if (pendingChannelMap[channel]) {
+      Object.entries(pendingChannelMap[channel]).forEach(
+        ([_arch, rev]) => {
+          if (rev && rev?.revision !== revision.revision) {
+            toReleaseAgain.add(rev);
+          }
+        }
+      );
+    }
+
+    const proceed = () => {
+      dispatch(closeChannel(channel));
+      for (const rev of toReleaseAgain) {
+        dispatch(releaseRevision(rev, channel, undefined));
+      }
+      dispatch(closeModal());
+    }
+
+    // display notification with accept or cancel
+    dispatch(openModal({
+      title: "Attention",
+      content: `By closing an architecture release from a channel you will be `
+        + `executing the following actions: close the channel and release to the `
+        + `closed channel all the revisions again except the one being closed, `
+        + `${arch} from ${channel}. Would you like to proceed?`,
+      actions: [
+        {
+          appearance: "positive",
+          onClickAction: {
+            reduxAction: proceed,
+          },
+          label: `Continue`,
+        },
+        {
+          appearance: "neutral",
+          onClickAction: {
+            type: CLOSE_MODAL_ACTION_NAME,
+          },
+          label: "Cancel",
+        },
+      ],
     }));
   };
 }
@@ -195,8 +253,8 @@ export type RemoveRevisionPayload = {
   channel: string;
 }
 
-const pendingReleasesSlice = createSlice({
-  name: "pendingReleases",
+const pendingChangesSlice = createSlice({
+  name: PENDING_CHANGES_SLICE_NAME,
   initialState: {
     changeOrderIndex: 0,
     pendingCloses: {},
@@ -316,11 +374,11 @@ const pendingReleasesSlice = createSlice({
         }
       });
     },
-  }
+  },
 });
 
 // don't export addPendingClose to force using the thunk CloseChannel
-const { addPendingClose } = pendingReleasesSlice.actions;
+const { addPendingClose } = pendingChangesSlice.actions;
 
 export const {
   incrementOrderIndex,
@@ -329,5 +387,5 @@ export const {
   removePendingRelease,
   setProgressiveRelease,
   updateProgressiveRelease,
-} = pendingReleasesSlice.actions;
-export default pendingReleasesSlice.reducer;
+} = pendingChangesSlice.actions;
+export default pendingChangesSlice.reducer;
