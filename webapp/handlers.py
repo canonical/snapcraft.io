@@ -60,7 +60,6 @@ CSP = {
     ],
     "script-src-elem": [
         "'self'",
-        "data:",
         "assets.ubuntu.com",
         "www.googletagmanager.com",
         "www.youtube.com",
@@ -124,7 +123,6 @@ CSP = {
 
 CSP_SCRIPT_SRC = [
     "'self'",
-    "data:",
     "blob:",
     "'unsafe-eval'",
     "'unsafe-hashes'",
