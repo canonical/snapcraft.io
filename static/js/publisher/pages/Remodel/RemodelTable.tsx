@@ -5,6 +5,7 @@ import {
   MainTable,
   Modal,
   TablePaginationControls,
+  Input,
 } from "@canonical/react-components";
 import { format } from "date-fns";
 
@@ -19,7 +20,17 @@ type Props = {
   backDisabled: boolean;
   pageSize: number;
   isDeleting: boolean;
+  isSavingEdit: boolean;
+  editedDescriptions: Record<string, string>;
   onDeleteRemodel: (remodel: Remodel) => Promise<void>;
+  onEditChange: (rowId: string, value: string) => void;
+  onEditSave: (remodel: Remodel) => Promise<void>;
+  onEditCancel: (rowId: string) => void;
+};
+
+const getRemodelRowId = (remodel: Remodel): string => {
+  const serial = remodel["from-serial"] ?? "all-serials";
+  return `${remodel["from-model"]}:${remodel["to-model"]}:${serial}`;
 };
 
 function RemodelTable({
@@ -31,10 +42,16 @@ function RemodelTable({
   backDisabled,
   pageSize,
   isDeleting,
+  isSavingEdit,
+  editedDescriptions,
   onDeleteRemodel,
+  onEditChange,
+  onEditSave,
+  onEditCancel,
 }: Props): React.JSX.Element {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [selectedRemodel, setSelectedRemodel] = useState<Remodel | null>(null);
+  const isBusy = isDeleting || isSavingEdit;
 
   const handleDeleteConfirm = async () => {
     if (!selectedRemodel) {
@@ -57,25 +74,35 @@ function RemodelTable({
       className: "u-truncate",
     },
     {
-      content: "Original model",
-      style: { width: "250px" },
+      content: "Serial",
       className: "u-truncate",
+      style: { width: "200px" },
     },
-    { content: "Serial", className: "u-truncate" },
     {
       content: "Created date",
       className: "u-align--right u-truncate",
       style: { width: "130px" },
     },
     { content: "Note", className: "u-truncate" },
-    { content: "Actions", className: "u-align--right" },
+    {
+      content: "Actions",
+      style: { width: "100px" },
+      className: "u-align--right",
+    },
   ];
 
   const rows = remodels.map((remodel: Remodel) => {
+    const rowId = getRemodelRowId(remodel);
+    const currentValue =
+      editedDescriptions[rowId] ?? remodel["description"] ?? "";
+    const originalValue = remodel["description"] ?? "";
+    const isDirty =
+      editedDescriptions[rowId] !== undefined &&
+      editedDescriptions[rowId] !== originalValue;
+
     return {
       columns: [
         { content: remodel["to-model"], className: "u-truncate" },
-        { content: remodel["from-model"], className: "u-truncate" },
         {
           content: remodel["from-serial"] || "All serial policies",
           className: "u-truncate",
@@ -84,22 +111,64 @@ function RemodelTable({
           content: format(new Date(remodel["created-at"]), "dd/MM/yyyy"),
           className: "u-align--right",
         },
-        { content: remodel["description"] },
         {
+          content: (
+            <>
+              <Input
+                type="text"
+                value={currentValue}
+                onChange={(event) => {
+                  onEditChange(rowId, event.target.value);
+                }}
+                disabled={isBusy}
+                className={!isDirty ? "u-no-margin--bottom" : ""}
+              />
+              {isDirty && (
+                <div className="u-align--right">
+                  <Button disabled={isBusy} onClick={() => onEditCancel(rowId)}>
+                    Revert
+                  </Button>
+                  <Button
+                    appearance="positive"
+                    disabled={isBusy}
+                    className="u-no-margin--right"
+                    onClick={() => {
+                      onEditSave(remodel);
+                    }}
+                  >
+                    Save
+                    {isSavingEdit && (
+                      <>
+                        &nbsp;
+                        <Icon
+                          name="spinner"
+                          light
+                          className="u-animation--spin"
+                        />
+                      </>
+                    )}
+                  </Button>
+                </div>
+              )}
+            </>
+          ),
+        },
+        {
+          className: "u-align--right",
           content: (
             <Button
               className="u-no-margin--bottom u-no-margin--right"
-              dense
-              disabled={isDeleting}
+              appearance="base"
+              disabled={isBusy}
               onClick={() => {
                 setSelectedRemodel(remodel);
                 setShowDeleteModal(true);
               }}
             >
-              Delete
+              <Icon name="delete" />
+              <span className="u-off-screen">Delete</span>
             </Button>
           ),
-          className: "u-align--right",
         },
       ],
     };
@@ -140,7 +209,7 @@ function RemodelTable({
       {showDeleteModal && selectedRemodel && (
         <Modal
           close={() => {
-            if (!isDeleting) {
+            if (!isBusy) {
               setShowDeleteModal(false);
               setSelectedRemodel(null);
             }
@@ -150,7 +219,7 @@ function RemodelTable({
             <>
               <Button
                 className="u-no-margin--bottom"
-                disabled={isDeleting}
+                disabled={isBusy}
                 onClick={() => {
                   setShowDeleteModal(false);
                   setSelectedRemodel(null);
@@ -161,7 +230,7 @@ function RemodelTable({
               <Button
                 className="u-no-margin--bottom u-no-margin--right"
                 appearance="negative"
-                disabled={isDeleting}
+                disabled={isBusy}
                 onClick={() => {
                   void handleDeleteConfirm();
                 }}
