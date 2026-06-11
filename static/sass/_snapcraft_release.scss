@@ -343,6 +343,10 @@
     font-size: 0.8rem;
     line-height: 0.8rem;
     position: absolute;
+
+    .is-dark & {
+      color: $color-light;
+    }
   }
 
   .p-releases-table__branches {
@@ -800,6 +804,10 @@
 
     color: $color-dark;
 
+    .is-dark & {
+      color: $color-light;
+    }
+
     &:hover {
       background: transparent;
       cursor: default;
@@ -814,6 +822,10 @@
     margin-bottom: $sp-x-small;
     margin-top: $sp-x-small;
     white-space: normal;
+
+    .is-dark & {
+      color: $color-light;
+    }
   }
 
   .p-tooltip__group {
