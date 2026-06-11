@@ -1,5 +1,5 @@
 python3 -m venv .venv
-source .venv/bin/activate
+. .venv/bin/activate
 
 python3 -m pip install -r requirements.txt
 yarn install
@@ -7,12 +7,12 @@ yarn install
 cat <<EOF >> ~/.profile
 
 # activate .venv when entering shell
-source /project/.venv/bin/activate
+. /project/.venv/bin/activate
 
 # source env vars from .env and .env.local
 set -a
-source /project/.env
-[ -f /project/.env.local ] && source /project/.env.local
+. /project/.env
+[ -f /project/.env.local ] && . /project/.env.local
 set +a
 
 EOF

@@ -1,4 +1,4 @@
-sudo apt update
-sudo apt install python3 python3-pip python3-venv
+sudo apt-get update
+apt-get install --no-install-recommends --yes python3 python3-pip python3-venv
 sudo snap install node --channel 24/stable --classic
 sudo npm install -g yarn
