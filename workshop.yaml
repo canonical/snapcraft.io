@@ -23,6 +23,6 @@ sdks:
 actions:
   start: yarn start
   build: yarn build
-  test: yarn test
-  prod: ENVIRONMENT=prod yarn serve
+  test: yarn build && yarn test
+  prod: yarn build && ENVIRONMENT=prod yarn serve
   yarn: yarn "$@"
