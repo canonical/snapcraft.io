@@ -33,7 +33,8 @@ export default class ContextualMenu extends Component<ContextualMenuProps> {
   }
 
   dropdownButtonClick(event: React.MouseEvent<HTMLButtonElement>) {
-    const dropdownEl = (event.target as HTMLButtonElement).nextSibling as HTMLElement | null;
+    const button = event.currentTarget as HTMLButtonElement;
+    const dropdownEl = button.nextElementSibling as HTMLElement | null;
     const isClosed = dropdownEl?.getAttribute("aria-hidden") === "true";
     const tooltipMessage = dropdownEl?.parentNode?.previousSibling as HTMLElement | null;
 
@@ -47,7 +48,7 @@ export default class ContextualMenu extends Component<ContextualMenuProps> {
       dropdownEl.setAttribute("aria-hidden", "false");
 
       requestAnimationFrame(() => {
-        this.positionDropdown(event.target as HTMLElement, dropdownEl);
+        this.positionDropdown(button, dropdownEl);
       });
 
       if (tooltipMessage) {
