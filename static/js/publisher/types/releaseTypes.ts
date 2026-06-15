@@ -301,7 +301,7 @@ export type ModalState = Partial<{
   actions: {
     appearance: "positive" | "neutral" | "negative";
     onClickAction:
-      | { reduxAction: string }
+      | { reduxAction: () => void }
       | { type: typeof CLOSE_MODAL_ACTION_NAME };
     label: string;
   }[];
@@ -313,7 +313,7 @@ export type PendingChangesState = {
     [order: number]: Channel["name"]; // TODO: are there any constraints on this?
   };
   pendingReleases: {
-    [order: number]: PendingRelease;
+    [order: number]: PendingReleaseItem;
   };
 };
 export type ReleasesState = Release[];
@@ -383,7 +383,7 @@ export type PendingReleaseItem = {
   channel: Channel["name"];
   previousReleases: Revision[];
   progressive?: Progressive;
-  replaces?: PendingReleaseItem;
+  replaces?: PendingReleaseItem; // TODO: remove because it is never set
 };
 
 /**

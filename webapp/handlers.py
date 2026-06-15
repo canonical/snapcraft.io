@@ -23,6 +23,7 @@ from webapp.config import (
     IS_DEVELOPMENT,
     VITE_PORT,
     ANALYTICS_ENDPOINT,
+    DEFAULT_ICON_URL,
 )
 
 from canonicalwebteam.exceptions import (
@@ -70,6 +71,7 @@ CSP = {
         "w.usabilla.com",
         "connect.facebook.net",
         "snap.licdn.com",
+        "challenges.cloudflare.com",
         # This is necessary for Google Tag Manager to function properly.
         "'unsafe-inline'",
     ],
@@ -95,6 +97,7 @@ CSP = {
         "*.snapcraftcontent.com",
         "marketplace-analytics.staging.canonical.com",
         "marketplace-analytics.canonical.com",
+        "challenges.cloudflare.com",
         "www.google.com",
     ],
     "frame-src": [
@@ -106,6 +109,7 @@ CSP = {
         "player.vimeo.com",
         "snapcraft.io",
         "www.facebook.com",
+        "challenges.cloudflare.com",
         "snap:",
     ],
     "style-src": [
@@ -204,6 +208,7 @@ def snapcraft_utility_processor():
         "format_link": template_utils.format_link,
         "DNS_VERIFICATION_SALT": DNS_VERIFICATION_SALT,
         "ANALYTICS_ENDPOINT": ANALYTICS_ENDPOINT,
+        "DEFAULT_ICON_URL": DEFAULT_ICON_URL,
     }
 
 
@@ -289,7 +294,7 @@ def set_handlers(app):
             "macaroon-permission-required",
             "macaroon-authorization-required",
         ]:
-            authentication.empty_session(flask.session)
+            authentication.reset_auth_session(flask.session)
             return flask.redirect(
                 flask.url_for("login.login_handler", next=flask.request.path)
             )

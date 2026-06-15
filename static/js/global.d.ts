@@ -30,6 +30,18 @@ declare interface Window {
   Sentry: Record<string, unknown>;
   COMMIT_ID: string;
   ENVIRONMENT: string;
+  turnstile?: {
+    render: (
+      container: HTMLElement,
+      options: {
+        sitekey: string;
+        callback: () => void;
+        "expired-callback": () => void;
+        "error-callback": () => void;
+      },
+    ) => string | number;
+    reset: (widgetId?: string | number) => void;
+  };
 }
 
 declare module "@canonical/cookie-policy";

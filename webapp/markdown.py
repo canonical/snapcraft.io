@@ -74,6 +74,9 @@ class SnapcraftInlineParser(InlineParser):
         "emphasis",
         "codespan",
         "linebreak",
+        # Keep rule enabled for mistune precedence compatibility;
+        # parse_link below turns markdown [text](url) syntax into literal text.
+        "link",
     )
 
     def __init__(self):
@@ -82,6 +85,17 @@ class SnapcraftInlineParser(InlineParser):
         # literal characters in the output
         if "softbreak" in self.rules:
             self.rules.remove("softbreak")
+
+    def parse_link(self, m, state):
+        # Keep markdown link syntax as literal text instead of creating links.
+        #
+        # Supported Mistune v3 customization point:
+        # - Inline parser methods can be overridden (see InlineParser API).
+        #   https://mistune.lepture.com/en/latest/api.html#mistune.InlineParser
+        # - Default link behavior lives in InlineParser.parse_link.
+        #   https://raw.githubusercontent.com/lepture/mistune/v3.2.1/src/mistune/inline_parser.py
+        state.append_token({"type": "text", "raw": m.group(0)})
+        return m.end()
 
 
 renderer = HTMLRenderer()

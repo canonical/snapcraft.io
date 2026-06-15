@@ -20,8 +20,8 @@ export const SearchInput = ({
   const onSubmit = (event: React.FormEvent<HTMLFormElement>): void => {
     event.preventDefault();
 
-    if (pathname !== "/store") {
-      navigate("/store");
+    if (pathname !== "/search") {
+      navigate("/search");
     }
 
     if (searchRef?.current && searchRef.current.value) {

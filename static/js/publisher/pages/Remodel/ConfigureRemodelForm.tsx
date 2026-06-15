@@ -18,6 +18,7 @@ import { setPageTitle } from "../../utils";
 
 type Props = {
   setShowNotification: Dispatch<SetStateAction<boolean>>;
+  setNotificationMessage: Dispatch<SetStateAction<string>>;
   setShowErrorNotification: Dispatch<SetStateAction<boolean>>;
   refetch: () => void;
   setErrorMessage: Dispatch<SetStateAction<string>>;
@@ -26,6 +27,7 @@ type Props = {
 function ConfigureRemodelForm({
   refetch,
   setShowNotification,
+  setNotificationMessage,
   setShowErrorNotification,
   setErrorMessage,
 }: Props): React.JSX.Element {
@@ -155,6 +157,7 @@ function ConfigureRemodelForm({
         setErrorMessage(errorMessage);
         setShowErrorNotification(true);
       } else {
+        setNotificationMessage("New remodel configured");
         setShowNotification(true);
         refetch();
       }

@@ -8,6 +8,7 @@ import { serialLogsListState } from "../../state/serialLogsState";
 import { brandIdState, brandStoreState } from "../../state/brandStoreState";
 import { setPageTitle } from "../../utils";
 
+import SerialLogDateSelectors from "./SerialLogDateSelectors";
 import SerialLogTable from "./SerialLogTable";
 
 import type { UseQueryResult } from "react-query";
@@ -27,7 +28,7 @@ function SerialLog(): React.JSX.Element {
   const endTime = searchParams.get("end-time");
   const pageSize = Number.isInteger(parsedPageSize) ? parsedPageSize : 25;
   const params = {
-    pageSize: pageSize,
+    pageSize,
     page: currentCursor,
     ...(startTime && endTime && { interval: { startTime, endTime } }),
   };
@@ -66,6 +67,11 @@ function SerialLog(): React.JSX.Element {
     });
   };
 
+  const handleDateRangeApply = () => {
+    setCurrentCursor(null);
+    cursorHistory.current = [];
+  };
+
   brandStore
     ? setPageTitle(`Serial logs in ${brandStore.name}`)
     : setPageTitle("Serial logs");
@@ -94,22 +100,26 @@ function SerialLog(): React.JSX.Element {
             <Icon name="spinner" className="u-animation--spin" />
             &nbsp;Fetching serial logs...
           </p>
-        ) : data && data.success === false ? (
-          <Notification severity="caution">
-            {data.message || "Unable to fetch serial logs"}
-          </Notification>
         ) : (
           <div className="u-flex-column u-flex-grow">
-            <SerialLogTable
-              handlePageForward={handlePageForward}
-              handlePageBack={handlePageBack}
-              handlePageSizeChange={handlePageSizeChange}
-              forwardDisabled={!nextCursor}
-              backDisabled={
-                cursorHistory.current.length < 1 || currentCursor === null
-              }
-              pageSize={pageSize}
-            />
+            {data && data.success === false && (
+              <Notification severity="caution">
+                {data.message || "Unable to fetch serial logs"}
+              </Notification>
+            )}
+            <SerialLogDateSelectors onApplyDateRange={handleDateRangeApply} />
+            {data && data.success !== false && (
+              <SerialLogTable
+                handlePageForward={handlePageForward}
+                handlePageBack={handlePageBack}
+                handlePageSizeChange={handlePageSizeChange}
+                forwardDisabled={!nextCursor}
+                backDisabled={
+                  cursorHistory.current.length < 1 || currentCursor === null
+                }
+                pageSize={pageSize}
+              />
+            )}
           </div>
         )}
       </div>

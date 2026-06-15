@@ -53,7 +53,7 @@ describe("SerialLogTable", () => {
     ).toBeInTheDocument();
 
     expect(
-      screen.getByRole("columnheader", { name: "Created date" }),
+      screen.getByRole("columnheader", { name: "Created at" }),
     ).toBeInTheDocument();
   });
 });

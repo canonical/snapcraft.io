@@ -1,7 +1,8 @@
 import { BrowserRouter } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { vi } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 
 import "@testing-library/jest-dom";
 
@@ -72,6 +73,29 @@ const useRemodelsPermissions = {
   isError: false,
 } as unknown as UseQueryResult<ApiResponse<RemodelResponse>, Error>;
 
+const useRemodelsWithData = {
+  data: {
+    data: {
+      allowlist: [
+        {
+          "created-at": "2026-03-27T14:34:23.666Z",
+          "created-by": "test-user",
+          "from-model": "from-model-a",
+          "from-serial": "serial-1",
+          "modified-at": null,
+          "modified-by": null,
+          "to-model": "to-model-a",
+          description: "test remodel",
+        },
+      ],
+      "next-cursor": null,
+    },
+    success: true,
+  },
+  isLoading: false,
+  isError: false,
+} as unknown as UseQueryResult<ApiResponse<RemodelResponse>, Error>;
+
 const mockUseModels = vi.mocked(useModels);
 mockUseModels.mockReturnValue({
   data: [],
@@ -128,5 +152,63 @@ describe("Remodel", () => {
     expect(
       screen.getByRole("link", { name: "Configure remodels" }),
     ).toBeInTheDocument();
+  });
+
+  it("deletes remodel and shows success notification", async () => {
+    const invalidateQueriesSpy = vi
+      .spyOn(queryClient, "invalidateQueries")
+      .mockResolvedValue(undefined);
+    const fetchMock = vi.fn(async () => ({
+      ok: true,
+      json: async () => ({ success: true }),
+    }));
+    vi.stubGlobal("fetch", fetchMock);
+
+    mockUseRemodels.mockReturnValue(useRemodelsWithData);
+    renderComponent();
+    const user = userEvent.setup();
+
+    await user.click(screen.getByRole("button", { name: "Delete" }));
+    await user.click(screen.getAllByRole("button", { name: "Delete" })[1]);
+
+    await waitFor(() => {
+      expect(fetchMock).toHaveBeenCalledWith(
+        expect.stringContaining("/models/remodel-allowlist"),
+        expect.objectContaining({
+          method: "DELETE",
+          body: JSON.stringify({
+            "from-model": "from-model-a",
+            "to-model": "to-model-a",
+            "from-serial": "serial-1",
+          }),
+          headers: {
+            "Content-Type": "application/json",
+            "X-CSRF-Token": undefined,
+          },
+        }),
+      );
+    });
+    expect(await screen.findByText("Remodel deleted")).toBeInTheDocument();
+    expect(invalidateQueriesSpy).toHaveBeenCalledWith({
+      queryKey: ["remodels"],
+    });
+  });
+
+  it("shows error notification when delete fails", async () => {
+    const errorMessage = "Unable to delete remodel from API";
+    const fetchMock = vi.fn(async () => ({
+      ok: true,
+      json: async () => ({ success: false, message: errorMessage }),
+    }));
+    vi.stubGlobal("fetch", fetchMock);
+
+    mockUseRemodels.mockReturnValue(useRemodelsWithData);
+    renderComponent();
+    const user = userEvent.setup();
+
+    await user.click(screen.getByRole("button", { name: "Delete" }));
+    await user.click(screen.getAllByRole("button", { name: "Delete" })[1]);
+
+    expect(await screen.findByText(errorMessage)).toBeInTheDocument();
   });
 });

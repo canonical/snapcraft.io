@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { Tooltip } from "@canonical/react-components";
 
 import type { ISnap } from "../../types";
+import { DEFAULT_ICON_URL } from "../../../config/constants";
 
 function SnapNameEntry({ snap }: { snap: ISnap }): React.JSX.Element {
   const { snapName, status, icon_url } = snap;
@@ -9,11 +10,7 @@ function SnapNameEntry({ snap }: { snap: ISnap }): React.JSX.Element {
     <Link to={`/${snapName}/listing`} className="p-heading-icon--small">
       <span className="p-heading-icon__header">
         <img
-          src={
-            icon_url
-              ? icon_url
-              : "https://assets.ubuntu.com/v1/be6eb412-snapcraft-missing-icon.svg"
-          }
+          src={icon_url ? icon_url : DEFAULT_ICON_URL}
           width="32"
           height="32"
           className="p-heading-icon__img"

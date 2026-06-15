@@ -4,8 +4,8 @@
 # Redirect tutorials
 tutorials(.*?): /docs/snap-tutorials
 
-# Redirect search results to new store page
-search(.*?): /store
+# The explore page was renamed, it is now the store page
+explore: /store
 
 # documentation.ubuntu.com/snapcraft redirects
 docs/snapcraft/?: https://documentation.ubuntu.com/snapcraft

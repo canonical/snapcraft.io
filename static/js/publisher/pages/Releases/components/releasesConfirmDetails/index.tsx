@@ -76,6 +76,7 @@ const ReleasesConfirmDetails = ({
 
   return (
     <div className="p-releases-confirm__details">
+      {showPendingCloses && <CloseChannelsRow channels={pendingCloses} />}
       {showProgressiveReleases && (
         <ReleaseRowGroup releases={progressiveReleases} />
       )}
@@ -116,7 +117,6 @@ const ReleasesConfirmDetails = ({
           </Col>
         </Row>
       )}
-      {showPendingCloses && <CloseChannelsRow channels={pendingCloses} />}
     </div>
   );
 };

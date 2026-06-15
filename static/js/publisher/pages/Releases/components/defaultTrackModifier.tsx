@@ -14,6 +14,7 @@ import type {
   ReleasesReduxState,
 } from "../../../types/releaseTypes";
 import type { AppDispatch } from "../store";
+import { clearDefaultTrack, setDefaultTrack } from "../slices/defaultTrack";
 
 interface StateProps {
   defaultTrack: string | null;
@@ -27,6 +28,8 @@ interface DispatchProps {
   openModal: (payload: ModalState) => void;
   showNotification: (payload: NotificationState) => void;
   hideNotification: () => void;
+  clearDefaultTrack: () => void;
+  setDefaultTrack: () => void;
 }
 
 type DefaultTrackModifierProps = StateProps & DispatchProps;
@@ -40,7 +43,7 @@ class DefaultTrackModifier extends Component<DefaultTrackModifierProps> {
   }
 
   clearDefaultTrackHandler() {
-    const { defaultTrack, openModal } = this.props;
+    const { clearDefaultTrack, defaultTrack, openModal } = this.props;
 
     openModal({
       title: "Clear default track",
@@ -49,7 +52,7 @@ class DefaultTrackModifier extends Component<DefaultTrackModifierProps> {
         {
           appearance: "positive",
           onClickAction: {
-            reduxAction: "clearDefaultTrack",
+            reduxAction: clearDefaultTrack,
           },
           label: `Clear ${defaultTrack} as default track`,
         },
@@ -65,7 +68,7 @@ class DefaultTrackModifier extends Component<DefaultTrackModifierProps> {
   }
 
   setDefaultTrackHandler() {
-    const { currentTrack, defaultTrack, openModal } = this.props;
+    const { currentTrack, defaultTrack, openModal, setDefaultTrack } = this.props;
 
     openModal({
       title: `Set default track to ${currentTrack}`,
@@ -74,7 +77,7 @@ class DefaultTrackModifier extends Component<DefaultTrackModifierProps> {
         {
           appearance: "positive",
           onClickAction: {
-            reduxAction: "setDefaultTrack",
+            reduxAction: setDefaultTrack,
           },
           label: `Set ${currentTrack} as default track`,
         },
@@ -166,6 +169,8 @@ const mapDispatchToProps = (dispatch: AppDispatch): DispatchProps => ({
   openModal: (payload) => dispatch(openModal(payload)),
   showNotification: (payload) => dispatch(showNotification(payload)),
   hideNotification: () => dispatch(hideNotification()),
+  clearDefaultTrack: () => dispatch(clearDefaultTrack()),
+  setDefaultTrack: () => dispatch(setDefaultTrack()),
 });
 
 export default connect(

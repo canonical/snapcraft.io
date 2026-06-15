@@ -7,6 +7,8 @@ import useSerialLogs from "../useSerialLogs";
 
 import type { ReactNode } from "react";
 
+let requestCount = 0;
+
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -37,12 +39,14 @@ const serialLogsResponse = {
 
 const handlers = [
   http.get("/api/store/test-brand-id/models/test-model/serial-log", () => {
+    requestCount += 1;
     return HttpResponse.json({
       data: serialLogsResponse,
       success: true,
     });
   }),
   http.get("/api/store/test-brand-id-fail/models/test-model/serial-log", () => {
+    requestCount += 1;
     return HttpResponse.json({
       message: "There was a problem fetching serial logs",
       success: false,
@@ -51,6 +55,7 @@ const handlers = [
   http.get(
     "/api/store/test-brand-id-error/models/test-model/serial-log",
     () => {
+      requestCount += 1;
       return HttpResponse.error();
     },
   ),
@@ -65,6 +70,7 @@ beforeAll(() => {
 afterEach(() => {
   server.resetHandlers();
   queryClient.clear();
+  requestCount = 0;
 });
 
 afterAll(() => {
@@ -283,5 +289,16 @@ describe("useSerialLogs", () => {
     });
 
     expect(result.current.data).toBeUndefined();
+    expect(requestCount).toBe(1);
+  });
+
+  test("does not request serial logs until both brandId and modelId exist", async () => {
+    renderHook(() => useSerialLogs("test-brand-id", undefined), {
+      wrapper: createWrapper(),
+    });
+
+    await waitFor(() => {
+      expect(requestCount).toBe(0);
+    });
   });
 });

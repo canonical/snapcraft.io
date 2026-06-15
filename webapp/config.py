@@ -52,4 +52,15 @@ SEARCH_CUSTOM_ID = "009048213575199080868:i3zoqdwqk8o"
 APP_NAME = "snapcraft"
 ANALYTICS_ENDPOINT = os.getenv("ANALYTICS_ENDPOINT", "").strip()
 
+# Fallback icon shown when a snap has no icon of its own
+DEFAULT_ICON_URL = (
+    "https://assets.ubuntu.com/v1/be6eb412-snapcraft-missing-icon.svg"
+)
+
 REPORT_SHEET_URL = os.getenv("REPORT_SHEET_URL", "").strip()
+TURNSTILE_SITE_KEY = os.getenv("TURNSTILE_SITE_KEY", "").strip()
+TURNSTILE_SECRET_KEY = os.getenv("TURNSTILE_SECRET_KEY", "").strip()
+TURNSTILE_VERIFY_URL = os.getenv(
+    "TURNSTILE_VERIFY_URL",
+    "https://challenges.cloudflare.com/turnstile/v0/siteverify",
+).strip()

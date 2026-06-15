@@ -43,7 +43,8 @@ const useRemodels = (
       const responseData = await response.json();
       return responseData;
     },
-    enabled: !!brandId,
+    enabled: Boolean(brandId),
+    retry: false,
   });
 };
 

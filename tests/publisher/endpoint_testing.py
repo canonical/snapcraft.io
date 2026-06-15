@@ -1,3 +1,5 @@
+from unittest.mock import patch
+
 import requests
 
 import pymacaroons
@@ -109,6 +111,16 @@ class BaseTestCases:
             super().setUp(
                 snap_name=snap_name, api_url=api_url, endpoint_url=endpoint_url
             )
+
+            # Stub the blueprint-level "has releases" gate so each test does
+            # not need to mock the extra dashboard call. Tests that exercise
+            # the gate directly can override this in their own setUp.
+            self._release_history_patcher = patch(
+                "webapp.decorators._dashboard.snap_release_history",
+                return_value={"revisions": [{"revision": 1}]},
+            )
+            self._release_history_patcher.start()
+            self.addCleanup(self._release_history_patcher.stop)
 
             self.method_endpoint = method_endpoint
             self.method_api = method_api

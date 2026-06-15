@@ -7,6 +7,8 @@ import useRemodels from "../useRemodels";
 
 import type { ReactNode } from "react";
 
+let requestCount = 0;
+
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -39,18 +41,21 @@ const remodelsResponse = {
 
 const handlers = [
   http.get("/api/store/test-brand-id/models/remodel-allowlist", () => {
+    requestCount += 1;
     return HttpResponse.json({
       data: remodelsResponse,
       success: true,
     });
   }),
   http.get("/api/store/test-brand-id-fail/models/remodel-allowlist", () => {
+    requestCount += 1;
     return HttpResponse.json({
       message: "There was a problem fetching remodels",
       success: false,
     });
   }),
   http.get("/api/store/test-brand-id-error/models/remodel-allowlist", () => {
+    requestCount += 1;
     return HttpResponse.error();
   }),
 ];
@@ -64,6 +69,7 @@ beforeAll(() => {
 afterEach(() => {
   server.resetHandlers();
   queryClient.clear();
+  requestCount = 0;
 });
 
 afterAll(() => {
@@ -256,5 +262,16 @@ describe("useRemodels", () => {
     });
 
     expect(result.current.data).toBeUndefined();
+    expect(requestCount).toBe(1);
+  });
+
+  test("does not request remodels until brandId exists", async () => {
+    renderHook(() => useRemodels(undefined), {
+      wrapper: createWrapper(),
+    });
+
+    await waitFor(() => {
+      expect(requestCount).toBe(0);
+    });
   });
 });
