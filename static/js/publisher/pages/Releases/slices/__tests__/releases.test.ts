@@ -28,8 +28,8 @@ import { updateArchitectures } from "../architectures";
 import { updateFailedRevisions } from "../failedRevisions";
 import { DEFAULT_ERROR_MESSAGE as ERROR_MESSAGE } from "../../constants";
 import {
-  fetchReleases,
-  fetchCloses,
+  fetchRelease,
+  fetchClose,
   fetchSnapReleaseStatus,
 } from "../../api/releases";
 import {
@@ -39,8 +39,8 @@ import {
 } from "../../releasesState";
 
 vi.mock("../../api/releases", () => ({
-  fetchReleases: vi.fn(),
-  fetchCloses: vi.fn(),
+  fetchRelease: vi.fn(),
+  fetchClose: vi.fn(),
   fetchSnapReleaseStatus: vi.fn(),
 }));
 
@@ -131,8 +131,17 @@ describe("releases", () => {
 
     beforeEach(() => {
       vi.clearAllMocks();
-      vi.mocked(fetchReleases).mockResolvedValue(undefined);
-      vi.mocked(fetchCloses).mockResolvedValue(undefined);
+      vi.mocked(fetchRelease).mockResolvedValue({
+        success: true,
+        channel_map: [],
+        channel_map_tree: {},
+        opened_channels: [],
+      });
+      vi.mocked(fetchClose).mockResolvedValue({
+        success: true,
+        channel_maps: makeArchitectureReleaseChannelMap(),
+        closed_channels: [],
+      });
       vi.mocked(fetchSnapReleaseStatus).mockResolvedValue(
         {} as ReleasesAPIResponse
       );
@@ -157,11 +166,7 @@ describe("releases", () => {
 
         await releaseRevisions()(dispatch, makeGetState(emptyPendingChanges), undefined);
 
-        expect(fetchReleases).toHaveBeenCalledWith(
-          expect.any(Function),
-          [],
-          snapName
-        );
+        expect(fetchRelease).not.toHaveBeenCalled();
       });
 
       it("should not dispatch any releaseRevisionSuccess", async () => {
@@ -184,14 +189,9 @@ describe("releases", () => {
         pendingCloses: {},
         pendingReleases: {
           0: {
-            revision: 1,
-            channels: {
-              "latest/stable": {
-                revision: pendingRevision,
-                channel: "latest/stable",
-                previousReleases: [],
-              } as unknown as PendingReleaseItem,
-            },
+            revision: pendingRevision,
+            channel: "latest/stable",
+            previousReleases: [],
           },
         },
       };
@@ -213,11 +213,7 @@ describe("releases", () => {
       };
 
       beforeEach(() => {
-        vi.mocked(fetchReleases).mockImplementation(async (onComplete, releases) => {
-          for (const release of releases) {
-            onComplete(successResponse, release);
-          }
-        });
+        vi.mocked(fetchRelease).mockResolvedValue(successResponse);
       });
 
       it("should call fetchRelease for each pending release", async () => {
@@ -229,10 +225,11 @@ describe("releases", () => {
           undefined
         );
 
-        expect(fetchReleases).toHaveBeenCalledWith(
-          expect.any(Function),
-          [expect.objectContaining({ id: 1 })],
-          snapName
+        expect(fetchRelease).toHaveBeenCalledWith(
+          snapName,
+          1,
+          ["latest/stable"],
+          null
         );
       });
 
@@ -251,7 +248,7 @@ describe("releases", () => {
       });
 
       it("should dispatch an error notification if a fetchRelease fails", async () => {
-        vi.mocked(fetchReleases).mockRejectedValue(new Error("API error"));
+        vi.mocked(fetchRelease).mockRejectedValue(new Error("API error"));
         const dispatch = vi.fn() as unknown as AppDispatch;
 
         await releaseRevisions()(dispatch, makeGetState(pendingChanges), undefined);
@@ -269,28 +266,23 @@ describe("releases", () => {
     describe("when there are duplicate pending releases", () => {
       const pendingRevision = makeRevision(1);
       const pendingChangesWithDuplicates: PendingChangesState = {
-        changeOrderIndex: 1,
+        changeOrderIndex: 2,
         pendingCloses: {},
         pendingReleases: {
           0: {
-            revision: 1,
-            channels: {
-              "latest/stable": {
-                revision: pendingRevision,
-                channel: "latest/stable",
-                previousReleases: [],
-              } as unknown as PendingReleaseItem,
-              "latest/edge": {
-                revision: pendingRevision,
-                channel: "latest/edge",
-                previousReleases: [],
-              } as unknown as PendingReleaseItem,
-            },
+            revision: pendingRevision,
+            channel: "latest/stable",
+            previousReleases: [],
+          },
+          1: {
+            revision: pendingRevision,
+            channel: "latest/edge",
+            previousReleases: [],
           },
         },
       };
 
-      it("should call fetchRelease for each unique pending release", async () => {
+      it("should call fetchRelease for each pending release", async () => {
         const dispatch = vi.fn() as unknown as AppDispatch;
 
         await releaseRevisions()(
@@ -299,20 +291,12 @@ describe("releases", () => {
           undefined
         );
 
-        // Both channels for revision 1 are deduplicated into a single fetchReleases call
-        expect(fetchReleases).toHaveBeenCalledWith(
-          expect.any(Function),
-          [
-            expect.objectContaining({
-              id: 1,
-              channels: expect.arrayContaining(["latest/stable", "latest/edge"]),
-            }),
-          ],
-          snapName
-        );
+        expect(fetchRelease).toHaveBeenCalledTimes(2);
+        expect(fetchRelease).toHaveBeenNthCalledWith(1, snapName, 1, ["latest/stable"], null);
+        expect(fetchRelease).toHaveBeenNthCalledWith(2, snapName, 1, ["latest/edge"], null);
       });
 
-      it("should dispatch a releaseRevisionSuccess for each unique pending release", async () => {
+      it("should dispatch a releaseRevisionSuccess for each pending release", async () => {
         const successResponse: FetchReleaseResponse = {
           success: true,
           channel_map: [],
@@ -328,11 +312,7 @@ describe("releases", () => {
           },
           opened_channels: [],
         };
-        vi.mocked(fetchReleases).mockImplementation(async (onComplete, releases) => {
-          for (const release of releases) {
-            onComplete(successResponse, release);
-          }
-        });
+        vi.mocked(fetchRelease).mockResolvedValue(successResponse);
         const dispatch = vi.fn() as unknown as AppDispatch;
 
         await releaseRevisions()(
@@ -341,9 +321,7 @@ describe("releases", () => {
           undefined
         );
 
-        // Only one fetchReleases call for the deduplicated release
-        expect(fetchReleases).toHaveBeenCalledTimes(1);
-        // And one releaseRevisionSuccess per channel/arch combo in the response
+        expect(fetchRelease).toHaveBeenCalledTimes(2);
         const releaseSuccessActions = vi
           .mocked(dispatch)
           .mock.calls.filter(
@@ -352,7 +330,7 @@ describe("releases", () => {
               typeof action === "object" &&
               (action as { type?: string }).type === releaseRevisionSuccess.type
           );
-        expect(releaseSuccessActions).toHaveLength(1);
+        expect(releaseSuccessActions).toHaveLength(2);
       });
     });
 
@@ -370,9 +348,7 @@ describe("releases", () => {
       };
 
       beforeEach(() => {
-        vi.mocked(fetchCloses).mockImplementation(async (onComplete) => {
-          onComplete(closeResponse);
-        });
+        vi.mocked(fetchClose).mockResolvedValue(closeResponse);
       });
 
       it("should call fetchClose for each pending close channel", async () => {
@@ -384,8 +360,7 @@ describe("releases", () => {
           undefined
         );
 
-        expect(fetchCloses).toHaveBeenCalledWith(
-          expect.any(Function),
+        expect(fetchClose).toHaveBeenCalledWith(
           snapName,
           ["latest/stable"]
         );
@@ -404,7 +379,7 @@ describe("releases", () => {
       });
 
       it("should dispatch an error notification if a fetchClose fails", async () => {
-        vi.mocked(fetchCloses).mockRejectedValue(new Error("Close error"));
+        vi.mocked(fetchClose).mockRejectedValue(new Error("Close error"));
         const dispatch = vi.fn() as unknown as AppDispatch;
 
         await releaseRevisions()(

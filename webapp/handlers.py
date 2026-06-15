@@ -294,7 +294,7 @@ def set_handlers(app):
             "macaroon-permission-required",
             "macaroon-authorization-required",
         ]:
-            authentication.empty_session(flask.session)
+            authentication.reset_auth_session(flask.session)
             return flask.redirect(
                 flask.url_for("login.login_handler", next=flask.request.path)
             )

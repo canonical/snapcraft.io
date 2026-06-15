@@ -13,7 +13,7 @@ const CloseChannelsRow = ({ channels }: CloseChannelsRowProps) => {
   }
   return (
     <div className="p-release-details-row is-closing">
-      <span>Close</span>
+      <span>Close&nbsp;</span>
       <span>
         {group
           .map((channel) => <b key={channel}>{channel}</b>)

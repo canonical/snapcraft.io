@@ -10,10 +10,10 @@ type Props = {
 
 function Banner({ searchRef, searchSummaryRef }: Props): React.JSX.Element {
   return (
-    <Strip type="dark">
+    <Strip>
       <Row>
-        <Col size={6} className="col-start-large-4">
-          <h1 className="p-heading--2">The app store for Linux</h1>
+        <Col size={9} className="col-start-large-4">
+          <h1>The app store for Linux</h1>
           <SearchInput
             searchRef={searchRef}
             searchSummaryRef={searchSummaryRef}

@@ -11,6 +11,7 @@ import {
   getSelectedRevisions,
   getSelectedArchitectures,
   getPendingChannelMap,
+  isArchPendingClose,
   hasDevmodeRevisions,
   hasPendingRelease,
   getFilteredAvailableRevisions,
@@ -339,18 +340,13 @@ describe("getPendingChannelMap", () => {
       changeOrderIndex: 1,
       pendingReleases: {
         0: {
-          revision: 2,
-          channels: {
-            "latest/stable": {
-              revision: createMockRevision({ revision: 2, architectures: ["test64"] }),
-              channel: "latest/stable",
-              previousReleases: [],
-              progressive: {
-                "current-percentage": null,
-                percentage: null,
-                paused: null,
-              }
-            },
+          revision: createMockRevision({ revision: 2, architectures: ["test64"] }),
+          channel: "latest/stable",
+          previousReleases: [],
+          progressive: {
+            "current-percentage": null,
+            percentage: null,
+            paused: null,
           },
         },
       },
@@ -385,13 +381,7 @@ describe("getPendingChannelMap", () => {
       expect(getPendingChannelMap(stateWithPendingReleases)).toEqual({
         ...stateWithPendingReleases.channelMap,
         "latest/stable": {
-          test64: {
-            ...stateWithPendingReleases
-              .pendingChanges
-              .pendingReleases["0"]
-              .channels["latest/stable"]
-              .revision,
-          },
+          test64: stateWithPendingReleases.pendingChanges.pendingReleases["0"].revision,
         },
       });
     });
@@ -401,30 +391,188 @@ describe("getPendingChannelMap", () => {
     it("should return channel map with pending revisions", () => {
       const stateWithWithOverrides = {
         ...stateWithPendingReleases,
-      };
-      stateWithWithOverrides.pendingChanges.pendingReleases["0"].channels["latest/stable"] = {
-        revision: createMockRevision({ revision: 2, architectures: ["test64"] }),
-        channel: "latest/stable",
-        previousReleases: [],
-        progressive: {
-          "current-percentage": null,
-          percentage: null,
-          paused: null,
-        }
+        pendingChanges: {
+          ...stateWithPendingReleases.pendingChanges,
+          pendingReleases: {
+            0: {
+              revision: createMockRevision({ revision: 2, architectures: ["test64"] }),
+              channel: "latest/stable",
+              previousReleases: [],
+              progressive: {
+                "current-percentage": null,
+                percentage: null,
+                paused: null,
+              },
+            },
+          },
+        },
       };
       expect(getPendingChannelMap(stateWithWithOverrides)).toEqual({
         ...stateWithWithOverrides.channelMap,
         "latest/stable": {
-          test64: {
-            ...stateWithWithOverrides
-              .pendingChanges
-              .pendingReleases["0"]
-              .channels["latest/stable"]
-              .revision,
-          },
+          test64: stateWithWithOverrides.pendingChanges.pendingReleases["0"].revision,
         },
       });
     });
+  });
+
+  describe("when there are pending closes", () => {
+    it("should clear the closed channel from the pending channel map", () => {
+      const stateWithPendingClose: ReleasesReduxState = {
+        ...initialState,
+        channelMap: {
+          "test/edge": { test64: createMockRevision({ revision: 1 }) },
+          "test/stable": { test64: createMockRevision({ revision: 2 }) },
+        },
+        pendingChanges: {
+          changeOrderIndex: 1,
+          pendingReleases: {},
+          pendingCloses: { 0: "test/edge" },
+        },
+      };
+
+      const result = getPendingChannelMap(stateWithPendingClose);
+      expect(result["test/edge"]).toBeUndefined();
+      expect(result["test/stable"]).toBeDefined();
+    });
+
+    it("should apply close and subsequent release in order — release wins per arch", () => {
+      const revision = createMockRevision({ revision: 3, architectures: ["test64"] });
+      const stateWithCloseAndRelease: ReleasesReduxState = {
+        ...initialState,
+        channelMap: {
+          "test/edge": { test64: createMockRevision({ revision: 1 }) },
+        },
+        pendingChanges: {
+          changeOrderIndex: 2,
+          pendingReleases: {
+            1: { revision, channel: "test/edge", previousReleases: [] },
+          },
+          pendingCloses: { 0: "test/edge" },
+        },
+      };
+
+      const result = getPendingChannelMap(stateWithCloseAndRelease);
+      expect(result["test/edge"]?.["test64"]).toEqual(revision);
+    });
+
+    it("should keep arch closed when close comes after a release for that arch", () => {
+      const revision = createMockRevision({ revision: 3, architectures: ["test64"] });
+      const stateWithReleaseAndClose: ReleasesReduxState = {
+        ...initialState,
+        channelMap: {
+          "test/edge": { test64: createMockRevision({ revision: 1 }) },
+        },
+        pendingChanges: {
+          changeOrderIndex: 2,
+          pendingReleases: {
+            0: { revision, channel: "test/edge", previousReleases: [] },
+          },
+          pendingCloses: { 1: "test/edge" },
+        },
+      };
+
+      const result = getPendingChannelMap(stateWithReleaseAndClose);
+      expect(result["test/edge"]).toBeUndefined();
+    });
+
+    it("should allow a release for one arch while keeping another arch closed", () => {
+      const amd64Revision = createMockRevision({ revision: 3, architectures: ["amd64"] });
+      const stateWithMixedArches: ReleasesReduxState = {
+        ...initialState,
+        channelMap: {
+          "test/edge": {
+            amd64: createMockRevision({ revision: 1, architectures: ["amd64"] }),
+            arm64: createMockRevision({ revision: 2, architectures: ["arm64"] }),
+          },
+        },
+        pendingChanges: {
+          changeOrderIndex: 2,
+          pendingReleases: {
+            1: { revision: amd64Revision, channel: "test/edge", previousReleases: [] },
+          },
+          pendingCloses: { 0: "test/edge" },
+        },
+      };
+
+      const result = getPendingChannelMap(stateWithMixedArches);
+      expect(result["test/edge"]?.["amd64"]).toEqual(amd64Revision);
+      expect(result["test/edge"]?.["arm64"]).toBeUndefined();
+    });
+  });
+});
+
+describe("isArchPendingClose", () => {
+  const initialState = getInitialState();
+
+  it("should return false when there are no pending closes", () => {
+    const state: ReleasesReduxState = {
+      ...initialState,
+      pendingChanges: {
+        changeOrderIndex: 0,
+        pendingReleases: {},
+        pendingCloses: {},
+      },
+    };
+    expect(isArchPendingClose(state, "test/edge", "amd64")).toBe(false);
+  });
+
+  it("should return true when the channel is pending close with no subsequent release for this arch", () => {
+    const state: ReleasesReduxState = {
+      ...initialState,
+      pendingChanges: {
+        changeOrderIndex: 1,
+        pendingReleases: {},
+        pendingCloses: { 0: "test/edge" },
+      },
+    };
+    expect(isArchPendingClose(state, "test/edge", "amd64")).toBe(true);
+  });
+
+  it("should return false when a release for this arch came after the close", () => {
+    const revision = createMockRevision({ revision: 1, architectures: ["amd64"] });
+    const state: ReleasesReduxState = {
+      ...initialState,
+      pendingChanges: {
+        changeOrderIndex: 2,
+        pendingReleases: {
+          1: { revision, channel: "test/edge", previousReleases: [] },
+        },
+        pendingCloses: { 0: "test/edge" },
+      },
+    };
+    expect(isArchPendingClose(state, "test/edge", "amd64")).toBe(false);
+  });
+
+  it("should return true for an arch that has no release after the close, even if another arch does", () => {
+    const amd64Revision = createMockRevision({ revision: 1, architectures: ["amd64"] });
+    const state: ReleasesReduxState = {
+      ...initialState,
+      pendingChanges: {
+        changeOrderIndex: 2,
+        pendingReleases: {
+          1: { revision: amd64Revision, channel: "test/edge", previousReleases: [] },
+        },
+        pendingCloses: { 0: "test/edge" },
+      },
+    };
+    expect(isArchPendingClose(state, "test/edge", "amd64")).toBe(false);
+    expect(isArchPendingClose(state, "test/edge", "arm64")).toBe(true);
+  });
+
+  it("should return true when a release came before the close", () => {
+    const revision = createMockRevision({ revision: 1, architectures: ["amd64"] });
+    const state: ReleasesReduxState = {
+      ...initialState,
+      pendingChanges: {
+        changeOrderIndex: 2,
+        pendingReleases: {
+          0: { revision, channel: "test/edge", previousReleases: [] },
+        },
+        pendingCloses: { 1: "test/edge" },
+      },
+    };
+    expect(isArchPendingClose(state, "test/edge", "amd64")).toBe(true);
   });
 });
 
@@ -1162,8 +1310,7 @@ describe("hasRelease", () => {
             "1-latest/stable":
               stateWithPendingReleaseToProgress
                 .pendingChanges
-                .pendingReleases["0"]
-                .channels["latest/stable"],
+                .pendingReleases["0"],
           },
           newReleasesToProgress: {},
           cancelProgressive: {},
@@ -1196,34 +1343,36 @@ describe("hasRelease", () => {
         ),
       };
 
+      const pendingReleasesProgressive = {
+        revision: 1,
+        channel: "latest/stable",
+        pendingReleaseItem: {
+          revision: createMockRevision({ revision: 1, architectures: ["amd64"] }),
+          progressive: {
+            "current-percentage": null,
+            percentage: null,
+            paused: null,
+          },
+          previousReleases: [
+            createMockRevision({ revision: 2 }),
+          ],
+        }
+      };
+
       const stateWithPendingReleaseToProgress: ReleasesReduxState = {
         ...stateWithFlagEnabled,
         pendingChanges: createMockPendingChanges(
-          [{
-            revision: 1,
-            channel: "latest/stable",
-            pendingReleaseItem: {
-              revision: createMockRevision({ revision: 1, architectures: ["amd64"] }),
-              progressive: {
-                "current-percentage": null,
-                percentage: null,
-                paused: null,
-              },
-              previousReleases: [
-                createMockRevision({ revision: 2 }),
-              ],
-            }
-          }],
+          [pendingReleasesProgressive],
           [],
         ),
-        releases: [
-          createMockRelease({
-            architecture: "amd64",
-            track: "latest",
-            risk: "stable",
-            revision: 2,
-          }),
-        ],
+      };
+
+      const stateWithPendingReleaseToClosedChannel: ReleasesReduxState = {
+        ...stateWithFlagEnabled,
+        pendingChanges: createMockPendingChanges(
+          [pendingReleasesProgressive],
+          ["latest/stable"],
+        ),
       };
 
       const stateWithPendingReleaseToCancel: ReleasesReduxState = {
@@ -1264,8 +1413,22 @@ describe("hasRelease", () => {
             "1-latest/stable":
               stateWithPendingRelease
                 .pendingChanges
-                .pendingReleases["0"]
-                .channels["latest/stable"],
+                .pendingReleases["0"],
+          },
+          newReleasesToProgress: {},
+          cancelProgressive: {},
+        });
+      });
+
+      it("should return only new release if channel is closed", () => {
+        expect(
+          getSeparatePendingReleases(stateWithPendingReleaseToClosedChannel)
+        ).toEqual({
+          newReleases: {
+            "1-latest/stable":
+              stateWithPendingReleaseToClosedChannel
+                .pendingChanges
+                .pendingReleases["1"],
           },
           newReleasesToProgress: {},
           cancelProgressive: {},
@@ -1281,8 +1444,7 @@ describe("hasRelease", () => {
             "1-latest/stable":
               stateWithPendingReleaseToProgress
                 .pendingChanges
-                .pendingReleases["0"]
-                .channels["latest/stable"],
+                .pendingReleases["0"],
           },
           cancelProgressive: {},
         });
@@ -1343,9 +1505,7 @@ describe("getPendingRelease", () => {
   it("should return the correct release", () => {
     const result = getPendingRelease(state, "latest/stable", "amd64");
 
-    expect(result).toEqual({
-      ...state.pendingChanges.pendingReleases["0"].channels["latest/stable"],
-    });
+    expect(result).toEqual(state.pendingChanges.pendingReleases["0"]);
   });
 
   it("should return null if no pendingRelease is found", () => {
