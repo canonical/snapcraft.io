@@ -1,7 +1,3 @@
-# Curated, ordered list of "popular" snaps shown on the Snapcrafters
-# publisher page. Only the package_name is used; title, summary and icon
-# are fetched live from the store API (see webapp/store/views.py), so
-# unlisted or removed snaps are dropped automatically.
 snaps:
   - { "package_name": "sublime-text" }
   - { "package_name": "obs-studio" }
