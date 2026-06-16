@@ -100,7 +100,7 @@ class PostDataReleasePage(BaseTestCases.EndpointLoggedIn):
 
     @responses.activate
     def test_return_error(self):
-        payload = {"error_list": [{"code": "code", "name": ["message"]}]}
+        payload = {"success": False, "errors": [{"name": ["message"]}]}
 
         responses.add(responses.POST, self.api_url, json=payload, status=400)
 
@@ -113,6 +113,4 @@ class PostDataReleasePage(BaseTestCases.EndpointLoggedIn):
             },
         )
 
-        expected_response = {"errors": [{"code": "code", "name": ["message"]}]}
-        assert response.status_code == 400
-        assert response.json == expected_response
+        assert response.json == payload
