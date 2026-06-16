@@ -1,66 +1,12 @@
+# Curated, ordered list of "popular" snaps shown on the Snapcrafters
+# publisher page. Only the package_name is used; title, summary and icon
+# are fetched live from the store API (see webapp/store/views.py), so
+# unlisted or removed snaps are dropped automatically.
 snaps:
-  [
-    {
-      "developer_validation": "verified",
-      "icon_url": "https://dashboard.snapcraft.io/site_media/appmedia/2018/03/sublime-text.png",
-      "origin": "snapcrafters",
-      "package_name": "sublime-text",
-      "publisher": "Snapcrafters",
-      "summary": "A sophisticated text editor for code, markup and prose.",
-      "title": "Sublime Text",
-    },
-    {
-      "developer_validation": "verified",
-      "icon_url": "https://dashboard.snapcraft.io/site_media/appmedia/2018/02/obs-studio.png",
-      "origin": "snapcrafters",
-      "package_name": "obs-studio",
-      "publisher": "Snapcrafters",
-      "summary": "Free and open source software for live streaming and screen recording",
-      "title": "OBS Studio",
-    },
-    {
-      "developer_validation": "verified",
-      "icon_url": "https://dashboard.snapcraft.io/site_media/appmedia/2023/10/com.discordapp.Discord_1.png",
-      "origin": "snapcrafters",
-      "package_name": "discord",
-      "publisher": "Snapcrafters",
-      "summary": "All-in-one voice and text chat for gamers",
-      "title": "Discord",
-    },
-    {
-      "developer_validation": "verified",
-      "icon_url": "https://dashboard.snapcraft.io/site_media/appmedia/2022/11/signal-logo.svg_8Yxi5gs.png",
-      "origin": "snapcrafters",
-      "package_name": "signal-desktop",
-      "publisher": "Snapcrafters",
-      "summary": "Private messaging from your desktop.",
-      "title": "Signal Desktop",
-    },
-    {
-      "developer_validation": "verified",
-      "icon_url": "https://dashboard.snapcraft.io/site_media/appmedia/2025/02/mattermost-desktop.png",
-      "origin": "snapcrafters",
-      "package_name": "mattermost-desktop",
-      "publisher": "Snapcrafters",
-      "summary": "Open source, private cloud Slack-alternative",
-      "title": "Mattermost Desktop",
-    },
-    {
-      "developer_validation": "verified",
-      "icon_url": "https://dashboard.snapcraft.io/site_media/appmedia/2022/02/studio.svg.png",
-      "origin": "snapcrafters",
-      "package_name": "android-studio",
-      "publisher": "Snapcrafters",
-      "summary": "The IDE for Android",
-      "title": "Android Studio",
-    },
-    {
-      "developer_validation": "verified",
-      "icon_url": "https://dashboard.snapcraft.io/site_media/appmedia/2018/04/electron.png",
-      "origin": "snapcrafters",
-      "package_name": "eclipse",
-      "publisher": "Snapcrafters",
-      "summary": "Extensible Tool Platform and Java IDE",
-      "title": "Eclipse",
-    },
-  ]
+  - { "package_name": "sublime-text" }
+  - { "package_name": "obs-studio" }
+  - { "package_name": "discord" }
+  - { "package_name": "signal-desktop" }
+  - { "package_name": "mattermost-desktop" }
+  - { "package_name": "android-studio" }
+  - { "package_name": "eclipse" }
