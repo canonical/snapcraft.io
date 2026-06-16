@@ -300,8 +300,8 @@ def store_blueprint(store_query=None):
                 snaps_by_name[snap["name"]] = item
                 context["snaps"].append(item)
 
-            # "Popular snaps" is a pre-selected but the snap data comes from the API,
-            # so unlisted or removed snaps are dropped automatically.
+            # "Popular snaps" is a pre-selected but the snap data comes
+            # from the API, so unlisted/removed snaps are dropped.
             popular_snaps = helpers.get_yaml(
                 publisher_content_path + publisher + "-snaps.yaml",
                 typ="safe",

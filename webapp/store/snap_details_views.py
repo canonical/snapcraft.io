@@ -148,8 +148,6 @@ def snap_details_views(store):
 
         if publisher_info:
             publisher_featured_snaps = publisher_info.get("featured_snaps")
-
-
             try:
                 publisher_results = device_gateway.find(
                     publisher=details["snap"]["publisher"]["username"],
