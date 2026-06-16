@@ -100,7 +100,7 @@ env: &env
       key: turnstile-secret-key
       name: snapcraft-io
 
-memoryLimit: 256Mi
+memoryLimit: 512Mi
 
 extraHosts:
   - domain: docs.snapcraft.io
@@ -129,7 +129,7 @@ production:
       app_name: snapcraft.io-discourse
       image: prod-comms.ps5.docker-registry.canonical.com/snapcraft.io
       replicas: 5
-      memoryLimit: 256Mi
+      memoryLimit: 512Mi
       env: *env
 
     - paths: [/blog]
@@ -137,7 +137,7 @@ production:
       app_name: snapcraft.io-blog
       image: prod-comms.ps5.docker-registry.canonical.com/snapcraft.io
       replicas: 3
-      memoryLimit: 256Mi
+      memoryLimit: 512Mi
       env: *env
 
 # Overrides for staging
