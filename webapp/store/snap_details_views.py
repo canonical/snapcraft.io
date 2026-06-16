@@ -148,13 +148,9 @@ def snap_details_views(store):
 
         if publisher_info:
             publisher_featured_snaps = publisher_info.get("featured_snaps")
-            try:
-                publisher_results = device_gateway.find(
-                    publisher=details["snap"]["publisher"]["username"],
-                    fields=["title", "summary", "media"],
-                ).get("results", [])
-            except StoreApiError:
-                publisher_results = []
+            publisher_results = logic.get_publisher_snaps(
+                device_gateway, details["snap"]["publisher"]["username"]
+            )
 
             # Featured snaps are shown separately and we don't want to
             # link to the snap that is currently being viewed.

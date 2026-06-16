@@ -2,6 +2,7 @@ import responses
 from urllib.parse import urlencode
 from flask_testing import TestCase
 from webapp.app import create_app
+from cache.cache_utility import redis_cache
 
 JETBRAINS_FIND_RESPONSE = {
     "results": [
@@ -124,6 +125,7 @@ SNAPCRAFTERS_FIND_RESPONSE = {
 
 class GetPublisherPageTest(TestCase):
     def setUp(self):
+        redis_cache.fallback.clear()
         self.api_url_publisher_items = "".join(
             [
                 "https://api.snapcraft.io/api/v1/",

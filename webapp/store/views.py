@@ -276,19 +276,9 @@ def store_blueprint(store_query=None):
                 flask.abort(404)
 
             context["snaps"] = []
-            snaps_results = []
-            try:
-                snaps_results = device_gateway.find(
-                    publisher=publisher,
-                    fields=[
-                        "title",
-                        "summary",
-                        "media",
-                        "publisher",
-                    ],
-                )["results"]
-            except StoreApiError:
-                pass  # proceed with an empty list
+            snaps_results = logic.get_publisher_snaps(
+                device_gateway, publisher
+            )
 
             # Map package_name to live snap data so pre-defined lists below
             # are hydrated.

@@ -6,6 +6,8 @@ from urllib.parse import parse_qs, urlparse
 import humanize
 from dateutil import parser
 from dateutil.relativedelta import relativedelta
+from canonicalwebteam.exceptions import StoreApiError
+from cache.cache_utility import redis_cache
 from webapp import helpers
 
 
@@ -13,6 +15,28 @@ def get_n_random_snaps(snaps, choice_number):
     if len(snaps) > choice_number:
         return random.sample(snaps, choice_number)
 
+    return snaps
+
+
+def get_publisher_snaps(device_gateway, publisher):
+    """Return a publisher's snaps from the store API, cached per publisher.
+
+    Uses the v2 "find" endpoint, which only returns currently-listed
+    snaps (unlisted/removed snaps are excluded). The result is cached so
+    we don't fetch the full publisher catalogue on every page view.
+    """
+    cache_key = f"publisher-snaps:{publisher}"
+    snaps = redis_cache.get(cache_key, expected_type=list)
+    if not snaps:
+        try:
+            snaps = device_gateway.find(
+                publisher=publisher,
+                fields=["title", "summary", "media", "publisher"],
+            ).get("results", [])
+        except StoreApiError:
+            snaps = []
+        if snaps:
+            redis_cache.set(cache_key, snaps, ttl=3600)
     return snaps
 
 

@@ -57,6 +57,7 @@ SNAP_PAYLOAD = {
 class GetDetailsPageTest(TestCase):
     def setUp(self):
         super().setUp()
+        redis_cache.fallback.clear()
         self.snap_name = "toto"
         self.snap_id = "id"
         self.revision = 1
