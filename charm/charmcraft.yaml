@@ -108,6 +108,18 @@ config:
       description: "URL for the reported snaps spreadsheet on Google docs"
       type: string
 
+    turnstile-verify-url:
+      type: string
+      default: "https://challenges.cloudflare.com/turnstile/v0/siteverify"
+      description: URL endpoint for Cloudflare Turnstile challenge; used in "report this snap" flow
+
+    turnstile:
+      type: secret
+      description: |
+        Secrets for the Cloudflare Turnstile challenge in the "report this snap" flow. Must contain following keys:
+          site-key: Unique site ID
+          secret-key: Secret for turnstile API calls
+
     analytics-endpoint:
       description: "URL for the marketplace analytics service"
       default: "https://marketplace-analytics.canonical.com/k8s-prod-marketplace-analytics-marketplace-analytics/analytics/events"
