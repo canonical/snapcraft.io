@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <title>Coverage for webapp/app.py: 99%</title>
+    <title>Coverage for webapp/app.py: 98%</title>
     <link rel="icon" sizes="32x32" href="favicon_32_cb_c827f16f.png">
     <link rel="stylesheet" href="style_cb_4667309f.css" type="text/css">
     <script src="coverage_html_cb_dd2e7eb5.js" defer></script>
@@ -12,7 +12,7 @@
     <div class="content">
         <h1>
             <span class="text">Coverage for </span><b>webapp<span class="sep">/</span>app.py</b>:
-            <span class="pc_cov">99%</span>
+            <span class="pc_cov">98%</span>
         </h1>
         <aside id="help_panel_wrapper">
             <input id="help_panel_state" type="checkbox">
@@ -54,8 +54,8 @@
             </div>
         </aside>
         <h2>
-            <span class="text">67 statements &nbsp;</span>
-            <button type="button" class="run button_toggle_run" value="run" data-shortcut="r" title="Toggle lines run">66<span class="text"> run</span></button>
+            <span class="text">66 statements &nbsp;</span>
+            <button type="button" class="run button_toggle_run" value="run" data-shortcut="r" title="Toggle lines run">65<span class="text"> run</span></button>
             <button type="button" class="mis show_mis button_toggle_mis" value="mis" data-shortcut="m" title="Toggle lines missing">1<span class="text"> missing</span></button>
             <button type="button" class="exc show_exc button_toggle_exc" value="exc" data-shortcut="x" title="Toggle lines excluded">0<span class="text"> excluded</span></button>
         </h2>
@@ -65,7 +65,7 @@
             <a id="nextFileLink" class="nav" href="z_c96025ea97d1120c_authentication_py.html">&#xbb; next</a>
             &nbsp; &nbsp; &nbsp;
             <a class="nav" href="https://coverage.readthedocs.io/en/7.14.1">coverage.py v7.14.1</a>,
-            created at 2026-06-16 22:41 +0000
+            created at 2026-06-17 22:37 +0000
         </p>
         <aside class="hidden">
             <button type="button" class="button_next_chunk" data-shortcut="j"></button>
@@ -95,7 +95,7 @@
     <p class="run"><span class="n"><a id="t13" href="#t13">13</a></span><span class="t"><span class="key">from</span> <span class="nam">canonicalwebteam</span><span class="op">.</span><span class="nam">flask_base</span><span class="op">.</span><span class="nam">app</span> <span class="key">import</span> <span class="nam">FlaskBase</span>&nbsp;</span><span class="r"></span></p>
     <p class="run"><span class="n"><a id="t14" href="#t14">14</a></span><span class="t"><span class="key">from</span> <span class="nam">webapp</span><span class="op">.</span><span class="nam">blog</span><span class="op">.</span><span class="nam">views</span> <span class="key">import</span> <span class="nam">init_blog</span>&nbsp;</span><span class="r"></span></p>
     <p class="run"><span class="n"><a id="t15" href="#t15">15</a></span><span class="t"><span class="key">from</span> <span class="nam">webapp</span><span class="op">.</span><span class="nam">docs</span><span class="op">.</span><span class="nam">views</span> <span class="key">import</span> <span class="nam">init_docs</span>&nbsp;</span><span class="r"></span></p>
-    <p class="run"><span class="n"><a id="t16" href="#t16">16</a></span><span class="t"><span class="key">from</span> <span class="nam">webapp</span><span class="op">.</span><span class="nam">extensions</span> <span class="key">import</span> <span class="nam">csrf</span><span class="op">,</span> <span class="nam">vite</span><span class="op">,</span> <span class="nam">vite_import</span>&nbsp;</span><span class="r"></span></p>
+    <p class="run"><span class="n"><a id="t16" href="#t16">16</a></span><span class="t"><span class="key">from</span> <span class="nam">webapp</span><span class="op">.</span><span class="nam">extensions</span> <span class="key">import</span> <span class="nam">csrf</span><span class="op">,</span> <span class="nam">vite</span>&nbsp;</span><span class="r"></span></p>
     <p class="run"><span class="n"><a id="t17" href="#t17">17</a></span><span class="t"><span class="key">from</span> <span class="nam">webapp</span><span class="op">.</span><span class="nam">handlers</span> <span class="key">import</span> <span class="nam">set_handlers</span>&nbsp;</span><span class="r"></span></p>
     <p class="run"><span class="n"><a id="t18" href="#t18">18</a></span><span class="t"><span class="key">from</span> <span class="nam">webapp</span><span class="op">.</span><span class="nam">login</span><span class="op">.</span><span class="nam">views</span> <span class="key">import</span> <span class="nam">login</span>&nbsp;</span><span class="r"></span></p>
     <p class="run"><span class="n"><a id="t19" href="#t19">19</a></span><span class="t"><span class="key">from</span> <span class="nam">webapp</span><span class="op">.</span><span class="nam">login</span><span class="op">.</span><span class="nam">oauth_views</span> <span class="key">import</span> <span class="nam">oauth</span>&nbsp;</span><span class="r"></span></p>
@@ -166,15 +166,14 @@
     <p class="pln"><span class="n"><a id="t84" href="#t84">84</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p class="run"><span class="n"><a id="t85" href="#t85">85</a></span><span class="t"><span class="key">def</span> <span class="nam">init_extensions</span><span class="op">(</span><span class="nam">app</span><span class="op">:</span> <span class="nam">FlaskBase</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
     <p class="run"><span class="n"><a id="t86" href="#t86">86</a></span><span class="t">    <span class="nam">vite</span><span class="op">.</span><span class="nam">init_app</span><span class="op">(</span><span class="nam">app</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
-    <p class="run"><span class="n"><a id="t87" href="#t87">87</a></span><span class="t">    <span class="nam">app</span><span class="op">.</span><span class="nam">template_global</span><span class="op">(</span><span class="str">"vite_import"</span><span class="op">)</span><span class="op">(</span><span class="nam">vite_import</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
-    <p class="pln"><span class="n"><a id="t88" href="#t88">88</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
-    <p class="run"><span class="n"><a id="t89" href="#t89">89</a></span><span class="t">    <span class="key">if</span> <span class="key">not</span> <span class="nam">app</span><span class="op">.</span><span class="nam">testing</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
-    <p class="mis show_mis"><span class="n"><a id="t90" href="#t90">90</a></span><span class="t">        <span class="nam">csrf</span><span class="op">.</span><span class="nam">init_app</span><span class="op">(</span><span class="nam">app</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
-    <p class="pln"><span class="n"><a id="t91" href="#t91">91</a></span><span class="t">    <span class="key">else</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
-    <p class="pln"><span class="n"><a id="t92" href="#t92">92</a></span><span class="t">        <span class="com"># add a helper for injecting a mock CSRF token</span>&nbsp;</span><span class="r"></span></p>
-    <p class="run"><span class="n"><a id="t93" href="#t93">93</a></span><span class="t">        <span class="op">@</span><span class="nam">app</span><span class="op">.</span><span class="nam">context_processor</span>&nbsp;</span><span class="r"></span></p>
-    <p class="run"><span class="n"><a id="t94" href="#t94">94</a></span><span class="t">        <span class="key">def</span> <span class="nam">inject_csrf_token</span><span class="op">(</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
-    <p class="run"><span class="n"><a id="t95" href="#t95">95</a></span><span class="t">            <span class="key">return</span> <span class="nam">dict</span><span class="op">(</span><span class="nam">csrf_token</span><span class="op">=</span><span class="key">lambda</span><span class="op">:</span> <span class="str">"mocked_csrf_token"</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t87" href="#t87">87</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p class="run"><span class="n"><a id="t88" href="#t88">88</a></span><span class="t">    <span class="key">if</span> <span class="key">not</span> <span class="nam">app</span><span class="op">.</span><span class="nam">testing</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p class="mis show_mis"><span class="n"><a id="t89" href="#t89">89</a></span><span class="t">        <span class="nam">csrf</span><span class="op">.</span><span class="nam">init_app</span><span class="op">(</span><span class="nam">app</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t90" href="#t90">90</a></span><span class="t">    <span class="key">else</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t91" href="#t91">91</a></span><span class="t">        <span class="com"># add a helper for injecting a mock CSRF token</span>&nbsp;</span><span class="r"></span></p>
+    <p class="run"><span class="n"><a id="t92" href="#t92">92</a></span><span class="t">        <span class="op">@</span><span class="nam">app</span><span class="op">.</span><span class="nam">context_processor</span>&nbsp;</span><span class="r"></span></p>
+    <p class="run"><span class="n"><a id="t93" href="#t93">93</a></span><span class="t">        <span class="key">def</span> <span class="nam">inject_csrf_token</span><span class="op">(</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p class="run"><span class="n"><a id="t94" href="#t94">94</a></span><span class="t">            <span class="key">return</span> <span class="nam">dict</span><span class="op">(</span><span class="nam">csrf_token</span><span class="op">=</span><span class="key">lambda</span><span class="op">:</span> <span class="str">"mocked_csrf_token"</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
 </main>
 <footer>
     <div class="content">
@@ -184,7 +183,7 @@
             <a class="nav" href="z_c96025ea97d1120c_authentication_py.html">&#xbb; next</a>
             &nbsp; &nbsp; &nbsp;
             <a class="nav" href="https://coverage.readthedocs.io/en/7.14.1">coverage.py v7.14.1</a>,
-            created at 2026-06-16 22:41 +0000
+            created at 2026-06-17 22:37 +0000
         </p>
     </div>
 </footer>
