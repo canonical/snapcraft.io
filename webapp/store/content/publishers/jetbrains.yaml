@@ -9,8 +9,6 @@ website: https://www.jetbrains.com/
 contact: https://www.jetbrains.com/company/contacts/
 developer_validation: verified
 
-# Curated featured snaps. Only package_name (selection), background
-# (card colour) and description (short blurb) are editorial
 featured_snaps:
   - package_name: intellij-idea
     background: "#000000"

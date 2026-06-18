@@ -310,15 +310,9 @@ def store_blueprint(store_query=None):
             # summary and icon come from the API. Only the editorial
             # fields (background, description) come from YAML. Snaps
             # missing from the API (unlisted/private/removed) are dropped.
-            context["featured_snaps"] = [
-                {
-                    **snaps_by_name[snap["package_name"]],
-                    "background": snap.get("background"),
-                    "description": snap.get("description"),
-                }
-                for snap in context.get("featured_snaps") or []
-                if snap["package_name"] in snaps_by_name
-            ]
+            context["featured_snaps"] = logic.hydrate_featured_snaps(
+                context.get("featured_snaps"), snaps_by_name
+            )
 
             featured_snaps = [
                 snap["package_name"] for snap in context["featured_snaps"]

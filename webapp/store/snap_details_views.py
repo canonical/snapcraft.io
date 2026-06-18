@@ -165,15 +165,9 @@ def snap_details_views(store):
             # come from the API; only the editorial fields (background,
             # description) come from YAML. Snaps missing from the API
             # (unlisted/private/removed) are dropped.
-            publisher_featured_snaps = [
-                {
-                    **snaps_by_name[snap["package_name"]],
-                    "background": snap.get("background"),
-                    "description": snap.get("description"),
-                }
-                for snap in publisher_info.get("featured_snaps") or []
-                if snap["package_name"] in snaps_by_name
-            ]
+            publisher_featured_snaps = logic.hydrate_featured_snaps(
+                publisher_info.get("featured_snaps"), snaps_by_name
+            )
 
             # The "More from publisher" list excludes featured snaps and
             # the snap currently being viewed.
