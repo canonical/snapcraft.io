@@ -407,7 +407,7 @@ def store_blueprint(store_query=None):
             if not stats:
                 stats = snap_recommendations.get_stats()
                 redis_cache.set("store:stats", stats, ttl=3600)
-        except api_requests.exceptions.RequestException:
+        except (ApiError, api_requests.exceptions.RequestException):
             return flask.jsonify({}), 503
         return flask.jsonify(stats)
 
