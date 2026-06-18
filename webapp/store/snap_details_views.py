@@ -161,10 +161,6 @@ def snap_details_views(store):
                     "icon_url": helpers.get_icon(item.get("media", [])),
                 }
 
-            # "Featured snaps" are curated in YAML, but title/summary/icon
-            # come from the API; only the editorial fields (background,
-            # description) come from YAML. Snaps missing from the API
-            # (unlisted/private/removed) are dropped.
             publisher_featured_snaps = logic.hydrate_featured_snaps(
                 publisher_info.get("featured_snaps"), snaps_by_name
             )
