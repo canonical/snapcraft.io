@@ -147,30 +147,45 @@ def snap_details_views(store):
         publisher_featured_snaps = None
 
         if publisher_info:
-            publisher_featured_snaps = publisher_info.get("featured_snaps")
             publisher_results = logic.get_publisher_snaps(
                 device_gateway, details["snap"]["publisher"]["username"]
             )
 
-            # Featured snaps are shown separately and we don't want to
-            # link to the snap that is currently being viewed.
-            excluded_names = {snap_name}
-            for snap in publisher_featured_snaps or []:
-                excluded_names.add(snap.get("package_name"))
-
-            available_snaps = []
+            snaps_by_name = {}
             for snap in publisher_results:
-                if snap["name"] in excluded_names:
-                    continue
                 item = snap["snap"]
-                available_snaps.append(
-                    {
-                        "package_name": snap["name"],
-                        "title": item.get("title"),
-                        "summary": item.get("summary"),
-                        "icon_url": helpers.get_icon(item.get("media", [])),
-                    }
-                )
+                snaps_by_name[snap["name"]] = {
+                    "package_name": snap["name"],
+                    "title": item.get("title"),
+                    "summary": item.get("summary"),
+                    "icon_url": helpers.get_icon(item.get("media", [])),
+                }
+
+            # "Featured snaps" are curated in YAML, but title/summary/icon
+            # come from the API; only the editorial fields (background,
+            # description) come from YAML. Snaps missing from the API
+            # (unlisted/private/removed) are dropped.
+            publisher_featured_snaps = [
+                {
+                    **snaps_by_name[snap["package_name"]],
+                    "background": snap.get("background"),
+                    "description": snap.get("description"),
+                }
+                for snap in publisher_info.get("featured_snaps") or []
+                if snap["package_name"] in snaps_by_name
+            ]
+
+            # The "More from publisher" list excludes featured snaps and
+            # the snap currently being viewed.
+            excluded_names = {snap_name}
+            for snap in publisher_featured_snaps:
+                excluded_names.add(snap["package_name"])
+
+            available_snaps = [
+                snap
+                for name, snap in snaps_by_name.items()
+                if name not in excluded_names
+            ]
 
             publisher_snaps = logic.get_n_random_snaps(available_snaps, 4)
 
