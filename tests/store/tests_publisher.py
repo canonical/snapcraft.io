@@ -256,6 +256,7 @@ class GetPublisherPageTest(TestCase):
         self.assert_template_used("store/publisher-details.html")
 
         body = response.get_data(as_text=True)
+        # make sure we render only the snaps listed in snapcrafters-snaps.yaml
         self.assertIn('href="/sublime-text"', body)
         self.assertIn('href="/discord"', body)
         self.assertNotIn('href="/eclipse"', body)
