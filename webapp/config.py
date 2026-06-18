@@ -26,7 +26,6 @@ DNS_VERIFICATION_SALT = os.getenv("DNS_VERIFICATION_SALT")
 VITE_MODE = "development" if IS_DEVELOPMENT else "production"
 VITE_PORT = os.getenv("VITE_PORT", 5173)
 VITE_OUTDIR = os.getenv("VITE_OUTDIR", "static/js/dist/vite")
-VITE_INLINE_JS = os.getenv("VITE_INLINE_JS", "true").lower() == "true"
 # VITE_REACT controls whether React hot module reload scripts are injected when
 # running in dev mode; the setting has no effect in prod mode
 VITE_REACT = True
