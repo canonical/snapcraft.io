@@ -183,6 +183,7 @@ class GetDetailsPageTest(TestCase):
         response = self.client.get("/" + snap_name)
         self.assertEqual(response.status_code, 200)
 
+        # check that publisher_snaps does not include the current snap (clion) or any of the featured snaps (intellij-idea)
         publisher_snaps = self.get_context_variable("publisher_snaps")
         names = {snap["package_name"] for snap in publisher_snaps}
         self.assertEqual(names, {"goland", "webstorm"})
