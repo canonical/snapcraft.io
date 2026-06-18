@@ -1,3 +1,4 @@
+import copy
 import responses
 from urllib.parse import urlencode
 from flask_testing import TestCase
@@ -56,6 +57,7 @@ SNAP_PAYLOAD = {
 class GetDetailsPageTest(TestCase):
     def setUp(self):
         super().setUp()
+        redis_cache.fallback.clear()
         self.snap_name = "toto"
         self.snap_id = "id"
         self.revision = 1
@@ -126,6 +128,70 @@ class GetDetailsPageTest(TestCase):
             return
         # If we reach this point it means the variable IS in context
         self.fail(f"Context variable exists: {name}")
+
+    @responses.activate
+    def test_more_from_publisher_uses_api(self):
+        snap_name = "clion"
+        payload = copy.deepcopy(SNAP_PAYLOAD)
+        payload["name"] = snap_name
+        payload["snap"]["title"] = "CLion"
+        payload["snap"]["publisher"] = {
+            "display-name": "JetBrains",
+            "username": "jetbrains",
+            "validation": "verified",
+        }
+
+        info_url = "".join(
+            [
+                "https://api.snapcraft.io/v2/snaps/info/",
+                snap_name,
+            ]
+        )
+        find_url = "https://api.snapcraft.io/v2/snaps/find"
+        metrics_url = "https://api.snapcraft.io/api/v1/snaps/metrics"
+        sbom_url = "".join(
+            [
+                "https://api.snapcraft.io/api/v1/sboms/download/",
+                f"sbom_snap_{self.snap_id}_{self.revision}.spdx2.3.json",
+            ]
+        )
+
+        def find_snap(name, title):
+            return {
+                "name": name,
+                "snap": {
+                    "title": title,
+                    "summary": title + " summary",
+                    "media": [],
+                },
+            }
+
+        find_response = {
+            "results": [
+                find_snap("clion", "CLion"),
+                find_snap("intellij-idea", "IntelliJ IDEA"),
+                find_snap("goland", "GoLand"),
+                find_snap("webstorm", "WebStorm"),
+            ]
+        }
+
+        responses.add(responses.GET, info_url, json=payload, status=200)
+        responses.add(responses.GET, find_url, json=find_response, status=200)
+        responses.add(responses.POST, metrics_url, json={}, status=200)
+        responses.add(responses.HEAD, sbom_url, json={}, status=200)
+
+        response = self.client.get("/" + snap_name)
+        self.assertEqual(response.status_code, 200)
+
+        # publisher_snaps excludes the current snap (clion) and the
+        # featured snaps (intellij-idea)
+        publisher_snaps = self.get_context_variable("publisher_snaps")
+        names = {snap["package_name"] for snap in publisher_snaps}
+        self.assertEqual(names, {"goland", "webstorm"})
+        goland = next(
+            s for s in publisher_snaps if s["package_name"] == "goland"
+        )
+        self.assertEqual(goland["title"], "GoLand")
 
     @responses.activate
     def test_has_sboms_success(self):
