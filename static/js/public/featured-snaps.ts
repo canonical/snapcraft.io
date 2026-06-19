@@ -183,39 +183,4 @@ async function init(featuredCategories: Array<string>): Promise<void> {
   await buildCards(featuredCategories[0].toLowerCase());
 }
 
-async function initStats(): Promise<void> {
-  const statsSection = document.querySelector(
-    "[data-js='stats-section']",
-  ) as HTMLElement | null;
-
-  try {
-    const response = await fetch("/store/stats");
-    if (!response.ok) {
-      if (statsSection) statsSection.hidden = true;
-      return;
-    }
-    const stats = await response.json();
-
-    const totalTracked = document.querySelector(
-      "[data-js='stats-total-tracked']",
-    );
-    const updatedToday = document.querySelector(
-      "[data-js='stats-updated-today']",
-    );
-    const newToday = document.querySelector("[data-js='stats-new-today']");
-
-    if (totalTracked && stats.total_tracked != null) {
-      totalTracked.textContent = stats.total_tracked.toLocaleString();
-    }
-    if (updatedToday && stats.updated_today != null) {
-      updatedToday.textContent = stats.updated_today.toLocaleString();
-    }
-    if (newToday && stats.new_today != null) {
-      newToday.textContent = stats.new_today.toLocaleString();
-    }
-  } catch (_) {
-    if (statsSection) statsSection.hidden = true;
-  }
-}
-
-declareGlobal("snapcraft.public.featuredSnaps", { init, initStats });
+declareGlobal("snapcraft.public.featuredSnaps", { init });
