@@ -206,7 +206,9 @@ async function initStats(): Promise<void> {
     if (newToday && stats.new_today != null) {
       newToday.textContent = stats.new_today.toLocaleString();
     }
-  } catch (_) {}
+  } catch (_) {
+    // Stats are non-critical; silently ignore fetch/parse errors
+  }
 }
 
 declareGlobal("snapcraft.public.featuredSnaps", { init, initStats });
