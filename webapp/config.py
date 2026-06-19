@@ -26,7 +26,6 @@ DNS_VERIFICATION_SALT = os.getenv("DNS_VERIFICATION_SALT")
 VITE_MODE = "development" if IS_DEVELOPMENT else "production"
 VITE_PORT = os.getenv("VITE_PORT", 5173)
 VITE_OUTDIR = os.getenv("VITE_OUTDIR", "static/js/dist/vite")
-VITE_INLINE_JS = os.getenv("VITE_INLINE_JS", "true").lower() == "true"
 # VITE_REACT controls whether React hot module reload scripts are injected when
 # running in dev mode; the setting has no effect in prod mode
 VITE_REACT = True
@@ -43,11 +42,6 @@ WEBAPP_EXTRA_HEADERS = {}
 SEND_FILE_MAX_AGE_DEFAULT = 10 * 365 * 24 * 60 * 60
 
 CONTENT_DIRECTORY = {"PUBLISHER_PAGES": "store/content/publishers/"}
-
-# Docs search
-SEARCH_API_KEY = os.getenv("SEARCH_API_KEY")
-SEARCH_API_URL = "https://www.googleapis.com/customsearch/v1"
-SEARCH_CUSTOM_ID = "009048213575199080868:i3zoqdwqk8o"
 
 APP_NAME = "snapcraft"
 ANALYTICS_ENDPOINT = os.getenv("ANALYTICS_ENDPOINT", "").strip()

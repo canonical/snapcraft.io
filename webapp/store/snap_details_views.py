@@ -143,23 +143,36 @@ def snap_details_views(store):
             typ="safe",
         )
 
-        publisher_snaps = helpers.get_yaml(
-            "{}{}-snaps.yaml".format(
-                flask.current_app.config["CONTENT_DIRECTORY"][
-                    "PUBLISHER_PAGES"
-                ],
-                details["snap"]["publisher"]["username"],
-            ),
-            typ="safe",
-        )
-
+        publisher_snaps = []
         publisher_featured_snaps = None
 
         if publisher_info:
             publisher_featured_snaps = publisher_info.get("featured_snaps")
-            publisher_snaps = logic.get_n_random_snaps(
-                publisher_snaps["snaps"], 4
+            publisher_results = logic.get_publisher_snaps(
+                device_gateway, details["snap"]["publisher"]["username"]
             )
+
+            # Featured snaps are shown separately and we don't want to
+            # link to the snap that is currently being viewed.
+            excluded_names = {snap_name}
+            for snap in publisher_featured_snaps or []:
+                excluded_names.add(snap.get("package_name"))
+
+            available_snaps = []
+            for snap in publisher_results:
+                if snap["name"] in excluded_names:
+                    continue
+                item = snap["snap"]
+                available_snaps.append(
+                    {
+                        "package_name": snap["name"],
+                        "title": item.get("title"),
+                        "summary": item.get("summary"),
+                        "icon_url": helpers.get_icon(item.get("media", [])),
+                    }
+                )
+
+            publisher_snaps = logic.get_n_random_snaps(available_snaps, 4)
 
         video = logic.get_video(details.get("snap", {}).get("media", []))
 

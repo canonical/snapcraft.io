@@ -275,35 +275,36 @@ def store_blueprint(store_query=None):
             if not context:
                 flask.abort(404)
 
-            popular_snaps = helpers.get_yaml(
-                publisher_content_path + publisher + "-snaps.yaml",
-                typ="safe",
-            )
-
-            context["popular_snaps"] = (
-                popular_snaps["snaps"] if popular_snaps else []
-            )
-
             context["snaps"] = []
-            snaps_results = []
-            try:
-                snaps_results = device_gateway.find(
-                    publisher=publisher,
-                    fields=[
-                        "title",
-                        "summary",
-                        "media",
-                        "publisher",
-                    ],
-                )["results"]
-            except StoreApiError:
-                pass  # proceed with an empty list
+            snaps_results = logic.get_publisher_snaps(
+                device_gateway, publisher
+            )
 
+            # Map package_name to live snap data so pre-defined lists below
+            # are hydrated.
+            snaps_by_name = {}
             for snap in snaps_results:
                 item = snap["snap"]
                 item["package_name"] = snap["name"]
                 item["icon_url"] = helpers.get_icon(item["media"])
+                snaps_by_name[snap["name"]] = item
                 context["snaps"].append(item)
+
+            # "Popular snaps" is a pre-selected but the snap data comes
+            # from the API, so unlisted/removed snaps are dropped.
+            popular_snaps = helpers.get_yaml(
+                publisher_content_path + publisher + "-snaps.yaml",
+                typ="safe",
+            )
+            context["popular_snaps"] = (
+                [
+                    snaps_by_name[snap["package_name"]]
+                    for snap in popular_snaps["snaps"]
+                    if snap["package_name"] in snaps_by_name
+                ]
+                if popular_snaps
+                else []
+            )
 
             featured_snaps = [
                 snap["package_name"] for snap in context["featured_snaps"]

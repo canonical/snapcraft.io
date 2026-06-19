@@ -2,6 +2,7 @@ import responses
 from urllib.parse import urlencode
 from flask_testing import TestCase
 from webapp.app import create_app
+from cache.cache_utility import redis_cache
 
 JETBRAINS_FIND_RESPONSE = {
     "results": [
@@ -85,8 +86,46 @@ LUKEWH_FIND_RESPONSE = {
 }
 
 
+def _snap_result(name, title):
+    return {
+        "name": name,
+        "snap": {
+            "media": [
+                {
+                    "height": 256,
+                    "type": "icon",
+                    "url": (
+                        "https://dashboard.snapcraft.io/site_media/"
+                        "appmedia/" + name + ".png"
+                    ),
+                    "width": 256,
+                }
+            ],
+            "publisher": {
+                "display-name": "Snapcrafters",
+                "id": "snapcrafters-id",
+                "username": "snapcrafters",
+                "validation": "starred",
+            },
+            "summary": title + " summary",
+            "title": title,
+        },
+        "snap-id": name + "-id",
+    }
+
+
+SNAPCRAFTERS_FIND_RESPONSE = {
+    "results": [
+        _snap_result("sublime-text", "Sublime Text"),
+        _snap_result("discord", "Discord"),
+        _snap_result("alacritty", "Alacritty"),
+    ]
+}
+
+
 class GetPublisherPageTest(TestCase):
     def setUp(self):
+        redis_cache.fallback.clear()
         self.api_url_publisher_items = "".join(
             [
                 "https://api.snapcraft.io/api/v1/",
@@ -203,3 +242,22 @@ class GetPublisherPageTest(TestCase):
         response = self.client.get("/publisher/jetbrains")
         self.assertEqual(response.status_code, 200)
         self.assert_template_used("store/publisher-details.html")
+
+    @responses.activate
+    def test_popular_snaps_hydrated_from_api(self):
+        responses.add(
+            responses.GET,
+            self.api_url_find("snapcrafters"),
+            json=SNAPCRAFTERS_FIND_RESPONSE,
+            status=200,
+        )
+        response = self.client.get("/publisher/snapcrafters")
+        self.assertEqual(response.status_code, 200)
+        self.assert_template_used("store/publisher-details.html")
+
+        body = response.get_data(as_text=True)
+        # make sure we render only the snaps listed in snapcrafters-snaps.yaml
+        self.assertIn('href="/sublime-text"', body)
+        self.assertIn('href="/discord"', body)
+        self.assertNotIn('href="/eclipse"', body)
+        self.assertNotIn('href="/alacritty"', body)
