@@ -184,9 +184,16 @@ async function init(featuredCategories: Array<string>): Promise<void> {
 }
 
 async function initStats(): Promise<void> {
+  const statsSection = document.querySelector(
+    "[data-js='stats-section']",
+  ) as HTMLElement | null;
+
   try {
     const response = await fetch("/store/stats");
-    if (!response.ok) return;
+    if (!response.ok) {
+      if (statsSection) statsSection.hidden = true;
+      return;
+    }
     const stats = await response.json();
 
     const totalTracked = document.querySelector(
@@ -207,7 +214,7 @@ async function initStats(): Promise<void> {
       newToday.textContent = stats.new_today.toLocaleString();
     }
   } catch (_) {
-    // Stats are non-critical; silently ignore fetch/parse errors
+    if (statsSection) statsSection.hidden = true;
   }
 }
 
