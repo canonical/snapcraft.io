@@ -194,10 +194,6 @@
     }
 
     try {
-      snapcraft.public.featuredSnaps.initStats();
-    } catch(e) {}
-
-    try {
       {% if nps %}
         snapcraft.public.homepage.nps();
       {% endif %}
