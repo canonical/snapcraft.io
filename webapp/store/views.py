@@ -401,6 +401,17 @@ def store_blueprint(store_query=None):
             status_code,
         )
 
+    @store.route("/store/stats")
+    def store_stats():
+        try:
+            stats = redis_cache.get("store:stats", expected_type=dict)
+            if not stats:
+                stats = snap_recommendations.get_stats()
+                redis_cache.set("store:stats", stats, ttl=3600)
+        except (ApiError, api_requests.exceptions.RequestException):
+            return flask.jsonify({}), 503
+        return flask.jsonify(stats)
+
     @store.route("/store/featured-snaps/<category>")
     def featured_snaps_in_category(category):
         snaps_results = []
