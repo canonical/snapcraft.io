@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 <!DOCTYPE coverage SYSTEM "http://cobertura.sourceforge.net/xml/coverage-04.dtd">
-<coverage lines-valid="7169" lines-covered="3370" line-rate="0.47" branches-valid="4755" branches-covered="2093" branch-rate="0.4401" timestamp="1781907707104" complexity="0" version="0.1">
+<coverage lines-valid="7169" lines-covered="3370" line-rate="0.47" branches-valid="4755" branches-covered="2093" branch-rate="0.4401" timestamp="1781994428973" complexity="0" version="0.1">
   <sources>
     <source>/home/runner/work/snapcraft.io/snapcraft.io</source>
   </sources>
@@ -6652,15 +6652,15 @@
         </class>
         <class name="RepoNotConnected.tsx" filename="static/js/publisher/pages/Builds/RepoNotConnected.tsx" line-rate="1" branch-rate="1">
           <methods>
-            <method name="RepoNotConnected" hits="2" signature="()V">
+            <method name="RepoNotConnected" hits="1" signature="()V">
               <lines>
-                <line number="11" hits="2"/>
+                <line number="11" hits="1"/>
               </lines>
             </method>
           </methods>
           <lines>
-            <line number="16" hits="2" branch="false"/>
-            <line number="18" hits="2" branch="false"/>
+            <line number="16" hits="1" branch="false"/>
+            <line number="18" hits="1" branch="false"/>
           </lines>
         </class>
         <class name="RepoSelector.tsx" filename="static/js/publisher/pages/Builds/RepoSelector.tsx" line-rate="0.8088" branch-rate="0.7681">
