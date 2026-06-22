@@ -138,6 +138,12 @@ if IS_DEVELOPMENT:
 
 
 def refresh_redirect():
+    if "macaroon_exchanged" in flask.session:
+        authentication.reset_auth_session(flask.session)
+        return flask.redirect(
+            flask.url_for("login.login_handler", next=flask.request.path)
+        )
+
     try:
         macaroon_discharge = authentication.get_refreshed_discharge(
             flask.session["macaroon_discharge"]

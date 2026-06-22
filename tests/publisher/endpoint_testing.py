@@ -2,7 +2,6 @@ from unittest.mock import patch
 
 import requests
 
-import pymacaroons
 import responses
 from flask_testing import TestCase
 from webapp.app import create_app
@@ -42,16 +41,12 @@ class BaseTestCases:
         def _log_in(self, client):
             """Emulates test client login in the store.
 
-            Fill current session with `openid`, `macaroon_root` and
-            `macaroon_discharge`.
+            Fill current session with `openid` and `macaroon_exchanged`.
 
             Return the expected `Authorization` header for further verification
             in API requests.
             """
-            # Basic root/discharge macaroons pair.
-            root = pymacaroons.Macaroon("test", "testing", "a_key")
-            root.add_third_party_caveat("3rd", "a_caveat-key", "a_ident")
-            discharge = pymacaroons.Macaroon("3rd", "a_ident", "a_caveat_key")
+            exchanged_macaroon = "test-exchanged-macaroon"
 
             with client.session_transaction() as s:
                 s["publisher"] = {
@@ -61,12 +56,9 @@ class BaseTestCases:
                     "email": "testing@testing.com",
                     "stores": [],
                 }
-                s["macaroon_root"] = root.serialize()
-                s["macaroon_discharge"] = discharge.serialize()
+                s["macaroon_exchanged"] = exchanged_macaroon
 
-            return get_authorization_header(
-                root.serialize(), discharge.serialize()
-            )
+            return get_authorization_header(exchanged_macaroon)
 
         def check_call_by_api_url(self, calls):
             found = False
@@ -246,13 +238,6 @@ class BaseTestCases:
                     headers={"WWW-Authenticate": "Macaroon needs_refresh=1"},
                 )
             )
-            responses.add(
-                responses.POST,
-                "https://login.ubuntu.com/api/v2/tokens/refresh",
-                json={"discharge_macaroon": "macaroon"},
-                status=200,
-            )
-
             if self.method_endpoint == "GET":
                 response = self.client.get(self.endpoint_url)
             else:
@@ -265,14 +250,8 @@ class BaseTestCases:
                         self.endpoint_url, json=self.json
                     )
 
-            called = responses.calls[len(responses.calls) - 1]
-            self.assertEqual(
-                "https://login.ubuntu.com/api/v2/tokens/refresh",
-                called.request.url,
-            )
-
             assert response.status_code == 302
-            assert response.location == self._get_location()
+            assert response.location == (f"/login?next={self.endpoint_url}")
 
     class EndpointLoggedInErrorHandling(EndpointLoggedIn):
         @responses.activate

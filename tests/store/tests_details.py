@@ -411,8 +411,7 @@ class GetDetailsPageTest(TestCase):
         with self.client.session_transaction() as s:
             # make test session 'authenticated'
             s["publisher"] = {"nickname": "toto", "fullname": "Totinio"}
-            s["macaroon_root"] = "test"
-            s["macaroon_discharge"] = "test"
+            s["macaroon_exchanged"] = "test"
             # mock test user snaps list
             s["user_snaps"] = {"toto": {"snap-id": "test"}}
 
