@@ -77,6 +77,9 @@ def after_login(resp):
     discharge_macaroon = resp.extensions["macaroon"].discharge
     flask.session["macaroon_discharge"] = discharge_macaroon
 
+    if not resp.nickname:
+        return flask.redirect(LOGIN_URL)
+
     # Exchange root + discharge for a single dashboard token.
     # Both keys are in the session here, so exchange_dashboard_macaroons
     # can read them directly. We then drop them to keep the cookie small.
@@ -85,9 +88,6 @@ def after_login(resp):
     )
     flask.session.pop("macaroon_root", None)
     flask.session.pop("macaroon_discharge", None)
-
-    if not resp.nickname:
-        return flask.redirect(LOGIN_URL)
 
     account = dashboard.get_account(flask.session)
     validation_sets = dashboard.get_validation_sets(flask.session)

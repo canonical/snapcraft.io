@@ -141,7 +141,10 @@ def refresh_redirect():
     if "macaroon_exchanged" in flask.session:
         authentication.reset_auth_session(flask.session)
         return flask.redirect(
-            flask.url_for("login.login_handler", next=flask.request.path)
+            flask.url_for(
+                "login.login_handler",
+                next=flask.request.full_path.rstrip("?"),
+            )
         )
 
     try:
