@@ -9,27 +9,10 @@ website: https://www.jetbrains.com/
 contact: https://www.jetbrains.com/company/contacts/
 developer_validation: verified
 
-featured_snaps: [
-    {
-        "developer_validation": "verified",
-        "icon_url": "https://dashboard.snapcraft.io/site_media/appmedia/2024/06/Avatar-5.png",
-        "origin": "jetbrains",
-        "package_name": "intellij-idea",
-        "publisher": "JetBrains",
-        "summary": "The Leading IDE for Professional Development in Java and Kotlin",
-        "description": "IntelliJ IDEA is the JetBrains IDE for pro development in Java and Kotlin. Built for your comfort, it unlocks productivity, ensures quality code, supports cutting-edge tech, and protects your privacy.",
-        "title": "IntelliJ IDEA",
-        "background": "#000000"
-    },
-    {
-        "developer_validation": "verified",
-        "icon_url": "https://dashboard.snapcraft.io/site_media/appmedia/2025/11/PyCharm_icon.png",
-        "origin": "jetbrains",
-        "package_name": "pycharm",
-        "publisher": "JetBrains",
-        "summary": "PyCharm is the only Python IDE you need",
-        "description": "Built for web, data, and AI/ML professionals, PyCharm helps you develop smarter and faster with an AI-enhanced IDE experience. It supports everything you need out of the box — from Python, Jupyter, and databases to PyTorch, TensorFlow, and modern web frameworks. From prototyping to deployment, PyCharm keeps you working efficiently and focused on your code.",
-        "title": "PyCharm",
-        "background": "#134732"
-    },
-]
+featured_snaps:
+  - package_name: intellij-idea
+    background: "#000000"
+    description: "IntelliJ IDEA is the JetBrains IDE for pro development in Java and Kotlin. Built for your comfort, it unlocks productivity, ensures quality code, supports cutting-edge tech, and protects your privacy."
+  - package_name: pycharm
+    background: "#134732"
+    description: "Built for web, data, and AI/ML professionals, PyCharm helps you develop smarter and faster with an AI-enhanced IDE experience. It supports everything you need out of the box — from Python, Jupyter, and databases to PyTorch, TensorFlow, and modern web frameworks. From prototyping to deployment, PyCharm keeps you working efficiently and focused on your code."

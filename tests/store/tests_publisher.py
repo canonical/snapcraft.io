@@ -244,6 +244,39 @@ class GetPublisherPageTest(TestCase):
         self.assert_template_used("store/publisher-details.html")
 
     @responses.activate
+    def test_featured_snaps_hydrated_from_api(self):
+        # jetbrains.yaml features "intellij-idea" and "pycharm". The API
+        # returns intellij-idea (listed) but not pycharm (unlisted/gone).
+        find_response = {
+            "results": [
+                _snap_result("intellij-idea", "IntelliJ IDEA"),
+                _snap_result("goland", "GoLand"),
+            ]
+        }
+        responses.add(
+            responses.GET,
+            self.api_url_find("jetbrains"),
+            json=find_response,
+            status=200,
+        )
+        response = self.client.get("/publisher/jetbrains")
+        self.assertEqual(response.status_code, 200)
+
+        featured = self.get_context_variable("featured_snaps")
+        names = [snap["package_name"] for snap in featured]
+        # pycharm is not in the API response, so it is dropped.
+        self.assertEqual(names, ["intellij-idea"])
+
+        snap = featured[0]
+        # title/summary/icon come from the API
+        self.assertEqual(snap["title"], "IntelliJ IDEA")
+        self.assertEqual(snap["summary"], "IntelliJ IDEA summary")
+        self.assertTrue(snap["icon_url"])
+        # background/description come from the YAML.
+        self.assertEqual(snap["background"], "#000000")
+        self.assertIn("IntelliJ IDEA", snap["description"])
+
+    @responses.activate
     def test_popular_snaps_hydrated_from_api(self):
         responses.add(
             responses.GET,

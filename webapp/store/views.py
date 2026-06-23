@@ -306,6 +306,10 @@ def store_blueprint(store_query=None):
                 else []
             )
 
+            context["featured_snaps"] = logic.hydrate_featured_snaps(
+                context.get("featured_snaps"), snaps_by_name
+            )
+
             featured_snaps = [
                 snap["package_name"] for snap in context["featured_snaps"]
             ]
