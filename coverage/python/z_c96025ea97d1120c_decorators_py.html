@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <title>Coverage for webapp/decorators.py: 90%</title>
+    <title>Coverage for webapp/decorators.py: 87%</title>
     <link rel="icon" sizes="32x32" href="favicon_32_cb_c827f16f.png">
     <link rel="stylesheet" href="style_cb_4667309f.css" type="text/css">
     <script src="coverage_html_cb_dd2e7eb5.js" defer></script>
@@ -12,7 +12,7 @@
     <div class="content">
         <h1>
             <span class="text">Coverage for </span><b>webapp<span class="sep">/</span>decorators.py</b>:
-            <span class="pc_cov">90%</span>
+            <span class="pc_cov">87%</span>
         </h1>
         <aside id="help_panel_wrapper">
             <input id="help_panel_state" type="checkbox">
@@ -54,9 +54,9 @@
             </div>
         </aside>
         <h2>
-            <span class="text">59 statements &nbsp;</span>
+            <span class="text">61 statements &nbsp;</span>
             <button type="button" class="run button_toggle_run" value="run" data-shortcut="r" title="Toggle lines run">53<span class="text"> run</span></button>
-            <button type="button" class="mis show_mis button_toggle_mis" value="mis" data-shortcut="m" title="Toggle lines missing">6<span class="text"> missing</span></button>
+            <button type="button" class="mis show_mis button_toggle_mis" value="mis" data-shortcut="m" title="Toggle lines missing">8<span class="text"> missing</span></button>
             <button type="button" class="exc show_exc button_toggle_exc" value="exc" data-shortcut="x" title="Toggle lines excluded">0<span class="text"> excluded</span></button>
         </h2>
         <p class="text">
@@ -64,8 +64,8 @@
             <a id="indexLink" class="nav" href="index.html">&Hat; index</a> &nbsp; &nbsp;
             <a id="nextFileLink" class="nav" href="z_16307f4b51ca96d1___init___py.html">&#xbb; next</a>
             &nbsp; &nbsp; &nbsp;
-            <a class="nav" href="https://coverage.readthedocs.io/en/7.14.2">coverage.py v7.14.2</a>,
-            created at 2026-06-22 22:37 +0000
+            <a class="nav" href="https://coverage.readthedocs.io/en/7.14.3">coverage.py v7.14.3</a>,
+            created at 2026-06-23 22:29 +0000
         </p>
         <aside class="hidden">
             <button type="button" class="button_next_chunk" data-shortcut="j"></button>
@@ -215,14 +215,19 @@
     <p class="run"><span class="n"><a id="t133" href="#t133">133</a></span><span class="t">    <span class="op">@</span><span class="nam">functools</span><span class="op">.</span><span class="nam">wraps</span><span class="op">(</span><span class="nam">func</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p class="run"><span class="n"><a id="t134" href="#t134">134</a></span><span class="t">    <span class="key">def</span> <span class="nam">is_exchanged</span><span class="op">(</span><span class="op">*</span><span class="nam">args</span><span class="op">,</span> <span class="op">**</span><span class="nam">kwargs</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
     <p class="run"><span class="n"><a id="t135" href="#t135">135</a></span><span class="t">        <span class="key">if</span> <span class="str">"exchanged_developer_token"</span> <span class="key">not</span> <span class="key">in</span> <span class="nam">flask</span><span class="op">.</span><span class="nam">session</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
-    <p class="mis show_mis"><span class="n"><a id="t136" href="#t136">136</a></span><span class="t">            <span class="nam">result</span> <span class="op">=</span> <span class="nam">publisher_gateway</span><span class="op">.</span><span class="nam">exchange_dashboard_macaroons</span><span class="op">(</span>&nbsp;</span><span class="r"></span></p>
-    <p class="mis mis2 show_mis"><span class="n"><a id="t137" href="#t137">137</a></span><span class="t">                <span class="nam">flask</span><span class="op">.</span><span class="nam">session</span>&nbsp;</span><span class="r"></span></p>
-    <p class="mis mis2 show_mis"><span class="n"><a id="t138" href="#t138">138</a></span><span class="t">            <span class="op">)</span>&nbsp;</span><span class="r"></span></p>
-    <p class="mis show_mis"><span class="n"><a id="t139" href="#t139">139</a></span><span class="t">            <span class="nam">flask</span><span class="op">.</span><span class="nam">session</span><span class="op">[</span><span class="str">"developer_token"</span><span class="op">]</span> <span class="op">=</span> <span class="nam">result</span>&nbsp;</span><span class="r"></span></p>
-    <p class="mis show_mis"><span class="n"><a id="t140" href="#t140">140</a></span><span class="t">            <span class="nam">flask</span><span class="op">.</span><span class="nam">session</span><span class="op">[</span><span class="str">"exchanged_developer_token"</span><span class="op">]</span> <span class="op">=</span> <span class="key">True</span>&nbsp;</span><span class="r"></span></p>
-    <p class="run"><span class="n"><a id="t141" href="#t141">141</a></span><span class="t">        <span class="key">return</span> <span class="nam">func</span><span class="op">(</span><span class="op">*</span><span class="nam">args</span><span class="op">,</span> <span class="op">**</span><span class="nam">kwargs</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
-    <p class="pln"><span class="n"><a id="t142" href="#t142">142</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
-    <p class="run"><span class="n"><a id="t143" href="#t143">143</a></span><span class="t">    <span class="key">return</span> <span class="nam">is_exchanged</span>&nbsp;</span><span class="r"></span></p>
+    <p class="mis show_mis"><span class="n"><a id="t136" href="#t136">136</a></span><span class="t">            <span class="key">if</span> <span class="str">"macaroon_exchanged"</span> <span class="key">in</span> <span class="nam">flask</span><span class="op">.</span><span class="nam">session</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p class="mis show_mis"><span class="n"><a id="t137" href="#t137">137</a></span><span class="t">                <span class="nam">flask</span><span class="op">.</span><span class="nam">session</span><span class="op">[</span><span class="str">"developer_token"</span><span class="op">]</span> <span class="op">=</span> <span class="nam">flask</span><span class="op">.</span><span class="nam">session</span><span class="op">[</span>&nbsp;</span><span class="r"></span></p>
+    <p class="mis mis2 show_mis"><span class="n"><a id="t138" href="#t138">138</a></span><span class="t">                    <span class="str">"macaroon_exchanged"</span>&nbsp;</span><span class="r"></span></p>
+    <p class="mis mis2 show_mis"><span class="n"><a id="t139" href="#t139">139</a></span><span class="t">                <span class="op">]</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t140" href="#t140">140</a></span><span class="t">            <span class="key">else</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p class="mis show_mis"><span class="n"><a id="t141" href="#t141">141</a></span><span class="t">                <span class="nam">result</span> <span class="op">=</span> <span class="nam">publisher_gateway</span><span class="op">.</span><span class="nam">exchange_dashboard_macaroons</span><span class="op">(</span>&nbsp;</span><span class="r"></span></p>
+    <p class="mis mis2 show_mis"><span class="n"><a id="t142" href="#t142">142</a></span><span class="t">                    <span class="nam">flask</span><span class="op">.</span><span class="nam">session</span>&nbsp;</span><span class="r"></span></p>
+    <p class="mis mis2 show_mis"><span class="n"><a id="t143" href="#t143">143</a></span><span class="t">                <span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p class="mis show_mis"><span class="n"><a id="t144" href="#t144">144</a></span><span class="t">                <span class="nam">flask</span><span class="op">.</span><span class="nam">session</span><span class="op">[</span><span class="str">"developer_token"</span><span class="op">]</span> <span class="op">=</span> <span class="nam">result</span>&nbsp;</span><span class="r"></span></p>
+    <p class="mis show_mis"><span class="n"><a id="t145" href="#t145">145</a></span><span class="t">            <span class="nam">flask</span><span class="op">.</span><span class="nam">session</span><span class="op">[</span><span class="str">"exchanged_developer_token"</span><span class="op">]</span> <span class="op">=</span> <span class="key">True</span>&nbsp;</span><span class="r"></span></p>
+    <p class="run"><span class="n"><a id="t146" href="#t146">146</a></span><span class="t">        <span class="key">return</span> <span class="nam">func</span><span class="op">(</span><span class="op">*</span><span class="nam">args</span><span class="op">,</span> <span class="op">**</span><span class="nam">kwargs</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t147" href="#t147">147</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
+    <p class="run"><span class="n"><a id="t148" href="#t148">148</a></span><span class="t">    <span class="key">return</span> <span class="nam">is_exchanged</span>&nbsp;</span><span class="r"></span></p>
 </main>
 <footer>
     <div class="content">
@@ -231,8 +236,8 @@
             <a class="nav" href="index.html">&Hat; index</a> &nbsp; &nbsp;
             <a class="nav" href="z_16307f4b51ca96d1___init___py.html">&#xbb; next</a>
             &nbsp; &nbsp; &nbsp;
-            <a class="nav" href="https://coverage.readthedocs.io/en/7.14.2">coverage.py v7.14.2</a>,
-            created at 2026-06-22 22:37 +0000
+            <a class="nav" href="https://coverage.readthedocs.io/en/7.14.3">coverage.py v7.14.3</a>,
+            created at 2026-06-23 22:29 +0000
         </p>
     </div>
 </footer>
