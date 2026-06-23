@@ -23,8 +23,7 @@ class LoginHandlerTest(TestCase):
     def test_redirect_user_logged_in(self):
         with self.client.session_transaction() as s:
             s["publisher"] = "openid"
-            s["macaroon_root"] = "macaroon_root"
-            s["macaroon_discharge"] = "macaroon_discharge"
+            s["macaroon_exchanged"] = "macaroon_exchanged"
 
         response = self.client.get(self.endpoint_url)
         assert response.status_code == 302
@@ -33,8 +32,7 @@ class LoginHandlerTest(TestCase):
     def test_redirect_user_logged_in_next_url(self):
         with self.client.session_transaction() as s:
             s["publisher"] = "openid"
-            s["macaroon_root"] = "macaroon_root"
-            s["macaroon_discharge"] = "macaroon_discharge"
+            s["macaroon_exchanged"] = "macaroon_exchanged"
 
         response = self.client.get(self.endpoint_url + "?next=/test")
         assert response.status_code == 302
@@ -119,6 +117,17 @@ class AfterLoginHandlerTest(TestCase):
     def prepare_mock_response(
         self, mock_get_account, email="test@test.com", groups=[]
     ):
+        root = Macaroon(location="store", identifier="root", key="root-key")
+        root.add_third_party_caveat(
+            "login.ubuntu.com", "caveat-key", "caveat-id"
+        )
+        self.root_macaroon = root.serialize()
+        discharge = Macaroon(
+            location="login.ubuntu.com",
+            identifier="caveat-id",
+            key="caveat-key",
+        ).serialize()
+
         self.mock_resp = MagicMock()
         self.mock_resp.nickname = "test"
         self.mock_resp.identity_url = "https://login.ubuntu.com/test"
@@ -126,7 +135,7 @@ class AfterLoginHandlerTest(TestCase):
         self.mock_resp.image = "test.png"
         self.mock_resp.email = email
         self.mock_resp.extensions = {
-            "macaroon": MagicMock(discharge="some-discharge"),
+            "macaroon": MagicMock(discharge=discharge),
             "lp": MagicMock(is_member=groups),
         }
 
@@ -143,6 +152,10 @@ class AfterLoginHandlerTest(TestCase):
     @patch(
         "webapp.login.views.dashboard.get_validation_sets", return_value=None
     )
+    @patch(
+        "webapp.login.views.publisher_gateway.exchange_dashboard_macaroons",
+        return_value="exchanged-macaroon",
+    )
     @patch("webapp.login.views.dashboard.get_account")
     def test_is_canonical_true_if_email_ends_with_canonical_on_staging(
         self,
@@ -155,6 +168,40 @@ class AfterLoginHandlerTest(TestCase):
             mock_get_account, email="test@canonical.com", groups=[]
         )
 
+        with self.client.session_transaction() as s:
+            s["macaroon_root"] = self.root_macaroon
+        self.client.get("/_test_after_login")
+
+        with self.client.session_transaction() as s:
+            publisher = s.get("publisher")
+            assert publisher is not None
+            assert publisher["is_canonical"] is True
+            assert s["macaroon_exchanged"] == "exchanged-macaroon"
+            assert "macaroon_root" not in s
+            assert "macaroon_discharge" not in s
+
+    @patch("webapp.login.views.ENVIRONMENT", "production")
+    @patch("webapp.login.views.dashboard.get_stores", return_value=[])
+    @patch("webapp.login.views.logic.get_stores", return_value=[])
+    @patch(
+        "webapp.login.views.dashboard.get_validation_sets", return_value=None
+    )
+    @patch(
+        "webapp.login.views.publisher_gateway.exchange_dashboard_macaroons",
+        return_value="exchanged-macaroon",
+    )
+    @patch("webapp.login.views.dashboard.get_account")
+    def test_is_canonical_true_if_member_of_team_on_production(
+        self,
+        mock_get_account,
+        *_,
+    ):
+        # on production, we treat publisher's account as "canonical"
+        # if they are a member of the canonical team
+        self.prepare_mock_response(mock_get_account, groups=["canonical"])
+
+        with self.client.session_transaction() as s:
+            s["macaroon_root"] = self.root_macaroon
         self.client.get("/_test_after_login")
 
         with self.client.session_transaction() as s:
@@ -168,28 +215,9 @@ class AfterLoginHandlerTest(TestCase):
     @patch(
         "webapp.login.views.dashboard.get_validation_sets", return_value=None
     )
-    @patch("webapp.login.views.dashboard.get_account")
-    def test_is_canonical_true_if_member_of_team_on_production(
-        self,
-        mock_get_account,
-        *_,
-    ):
-        # on production, we treat publisher's account as "canonical"
-        # if they are a member of the canonical team
-        self.prepare_mock_response(mock_get_account, groups=["canonical"])
-
-        self.client.get("/_test_after_login")
-
-        with self.client.session_transaction() as s:
-            publisher = s.get("publisher")
-            assert publisher is not None
-            assert publisher["is_canonical"] is True
-
-    @patch("webapp.login.views.ENVIRONMENT", "production")
-    @patch("webapp.login.views.dashboard.get_stores", return_value=[])
-    @patch("webapp.login.views.logic.get_stores", return_value=[])
     @patch(
-        "webapp.login.views.dashboard.get_validation_sets", return_value=None
+        "webapp.login.views.publisher_gateway.exchange_dashboard_macaroons",
+        return_value="exchanged-macaroon",
     )
     @patch("webapp.login.views.dashboard.get_account")
     def test_is_canonical_false_if_not_member_of_team_on_production(
@@ -203,9 +231,49 @@ class AfterLoginHandlerTest(TestCase):
             mock_get_account, email="test@canonical.com", groups=[]
         )
 
+        with self.client.session_transaction() as s:
+            s["macaroon_root"] = self.root_macaroon
         self.client.get("/_test_after_login")
 
         with self.client.session_transaction() as s:
             publisher = s.get("publisher")
             assert publisher is not None
             assert publisher["is_canonical"] is False
+
+    def test_after_login_exchanges_macaroons_and_clears_root_and_discharge(
+        self,
+    ):
+        self.prepare_mock_response(MagicMock(), groups=["canonical"])
+
+        with patch(
+            "webapp.login.views.dashboard.get_account",
+            return_value={
+                "username": "test",
+                "displayname": "Test",
+                "email": "test@test.com",
+                "stores": [],
+            },
+        ), patch(
+            "webapp.login.views.dashboard.get_validation_sets",
+            return_value=None,
+        ), patch(
+            "webapp.login.views.dashboard.get_stores", return_value=[]
+        ), patch(
+            "webapp.login.views.logic.get_stores", return_value=[]
+        ), patch(
+            "webapp.login.views.publisher_gateway"
+            ".exchange_dashboard_macaroons",
+            return_value="exchanged-macaroon",
+        ) as mock_exchange:
+            with self.client.session_transaction() as s:
+                s["macaroon_root"] = self.root_macaroon
+
+            response = self.client.get("/_test_after_login")
+
+            assert response.status_code == 302
+            with self.client.session_transaction() as s:
+                assert s["macaroon_exchanged"] == "exchanged-macaroon"
+                assert "macaroon_root" not in s
+                assert "macaroon_discharge" not in s
+
+            mock_exchange.assert_called_once()
