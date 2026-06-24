@@ -25,7 +25,6 @@ import type {
 import type { AppDispatch, RootState } from "../../store";
 import { getReleases, getPendingChannelMap } from "../../selectors";
 import { createMockRelease, createMockRevision } from "../../../../test-utils";
-import * as analytics from "../../analytics";
 
 
 vi.mock("../../selectors", () => ({
@@ -626,22 +625,6 @@ describe("pendingChanges", () => {
       architectures: ["test64"],
     } as unknown as Revision;
     const channel = "test/edge";
-
-    it("should trigger a GA event", () => {
-      const dispatch = vi.fn() as unknown as AppDispatch;
-      // simplification of the triggerGAEvent thunk return value to make testing easier
-      const mockGAEvent = { type: "analytics/triggerGAEvent" };
-      vi.spyOn(analytics, "triggerGAEvent")
-        .mockReturnValue(mockGAEvent as any);
-
-      undoRelease(revision, channel)(dispatch);
-
-      expect(analytics.triggerGAEvent).toHaveBeenCalledWith(
-        "click-cancel-promotion",
-        "test/edge/test64",
-      );
-      expect(dispatch).toHaveBeenCalledWith(mockGAEvent);
-    });
 
     it("should dispatch removePendingRelease with the given revision and channel", () => {
       const dispatch = vi.fn() as unknown as AppDispatch;

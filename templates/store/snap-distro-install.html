@@ -273,12 +273,6 @@
   <script>
     window.addEventListener("DOMContentLoaded", function() {
       try {
-        snapcraft.public.distroInstall.triggerEventWhenVisible("#snippet-snap-install-stable")
-      } catch(e) {
-        Sentry.captureException(e);
-      }
-
-      try {
         snapcraft.public.distroInstall.initExpandableArea(
           ".js-snap-description-text",
           ".js-snap-description-details"

@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import SnapEvents from "../../libs/events";
-import { triggerEvent } from "../../base/ga";
 
 interface SnapElement extends HTMLElement {
   dataset: {
@@ -209,16 +208,6 @@ class ChannelMap {
             this.openButton = null;
           } else {
             this.openChannelMap(target);
-
-            triggerEvent({
-              category:
-                this.openScreenName === "channel-map-install"
-                  ? "cta-0"
-                  : "cta-1",
-              from: window.location.href,
-              to: target.dataset.controls ?? "",
-              label: target.innerText,
-            });
           }
         },
 
@@ -251,12 +240,6 @@ class ChannelMap {
           if (isSnapElement(target)) {
             event.preventDefault();
             this.openDesktop(target);
-            triggerEvent({
-              category: "cta-1",
-              from: window.location.href,
-              to: `snap://${target.dataset.snap}`,
-              label: target.innerText,
-            });
           } else {
             console.error("Target is not a SnapElement");
           }
