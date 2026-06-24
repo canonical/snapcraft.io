@@ -41,11 +41,7 @@ function Store(): React.JSX.Element {
     if (lastTrackedKey.current === trackingKey) return;
     lastTrackedKey.current = trackingKey;
 
-    trackSearchResults(
-      searchTerm,
-      data?.total_items ?? 0,
-      parseInt(currentPage),
-    );
+    trackSearchResults(data?.total_items ?? 0, parseInt(currentPage));
   }, [searchTerm, status, currentPage, isFetching, data]);
 
   const searchRef = useRef<HTMLInputElement | null>(null);

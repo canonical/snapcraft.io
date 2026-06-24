@@ -17,25 +17,14 @@ export function trackSearchSubmitted(source: "home" | "store"): void {
   );
 }
 
-export function trackSearchResults(
-  query: string,
-  totalItems: number,
-  page: number,
-): void {
-  const searchId = getSearchId();
-
+export function trackSearchResults(totalItems: number, page: number): void {
   if (totalItems > 0) {
-    trackEvent("snap_store_search_results_loaded", {
-      search_id: searchId,
-      query,
+    trackEvent("store_search_results_loaded", {
       total_items: totalItems,
       page,
     });
   } else {
-    trackEvent("snap_store_search_no_results_v2", {
-      search_id: searchId,
-      query,
-    });
+    trackEvent("store_search_no_results");
   }
 }
 
