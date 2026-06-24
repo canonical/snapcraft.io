@@ -110,6 +110,10 @@ mockUseSortTableData.mockReturnValue({
 const mockUseRemodels = vi.mocked(useRemodels);
 
 describe("Remodel", () => {
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
   it("displays message if user has no remodels access", () => {
     mockUseRemodels.mockReturnValue(useRemodelsNoPermissions);
     renderComponent();
@@ -208,6 +212,87 @@ describe("Remodel", () => {
 
     await user.click(screen.getByRole("button", { name: "Delete" }));
     await user.click(screen.getAllByRole("button", { name: "Delete" })[1]);
+
+    expect(await screen.findByText(errorMessage)).toBeInTheDocument();
+  });
+
+  it("updates remodel and shows success notification", async () => {
+    const invalidateQueriesSpy = vi
+      .spyOn(queryClient, "invalidateQueries")
+      .mockResolvedValue(undefined);
+    const fetchMock = vi.fn(async (_url: string, options?: RequestInit) => {
+      if (options?.method === "PATCH") {
+        return {
+          ok: true,
+          json: async () => ({ success: true }),
+        };
+      }
+
+      return {
+        ok: true,
+        json: async () => ({ success: true }),
+      };
+    });
+    vi.stubGlobal("fetch", fetchMock);
+
+    mockUseRemodels.mockReturnValue(useRemodelsWithData);
+    renderComponent();
+    const user = userEvent.setup();
+
+    const input = screen.getByDisplayValue("test remodel");
+    await user.clear(input);
+    await user.type(input, "updated remodel");
+    await user.click(screen.getByRole("button", { name: "Save" }));
+
+    await waitFor(() => {
+      expect(fetchMock).toHaveBeenCalledWith(
+        expect.stringContaining("/models/remodel-allowlist"),
+        expect.objectContaining({
+          method: "PATCH",
+          body: JSON.stringify({
+            "from-model": "from-model-a",
+            "to-model": "to-model-a",
+            "from-serial": "serial-1",
+            description: "updated remodel",
+          }),
+          headers: {
+            "Content-Type": "application/json",
+            "X-CSRF-Token": undefined,
+          },
+        }),
+      );
+    });
+
+    expect(await screen.findByText("Remodel updated")).toBeInTheDocument();
+    expect(invalidateQueriesSpy).toHaveBeenCalledWith({
+      queryKey: ["remodels"],
+    });
+  });
+
+  it("shows error notification when update fails", async () => {
+    const errorMessage = "Unable to update remodel from API";
+    const fetchMock = vi.fn(async (_url: string, options?: RequestInit) => {
+      if (options?.method === "PATCH") {
+        return {
+          ok: true,
+          json: async () => ({ success: false, message: errorMessage }),
+        };
+      }
+
+      return {
+        ok: true,
+        json: async () => ({ success: true }),
+      };
+    });
+    vi.stubGlobal("fetch", fetchMock);
+
+    mockUseRemodels.mockReturnValue(useRemodelsWithData);
+    renderComponent();
+    const user = userEvent.setup();
+
+    const input = screen.getByDisplayValue("test remodel");
+    await user.type(input, " edited");
+    await user.click(screen.getByRole("button", { name: "Save" }));
 
     expect(await screen.findByText(errorMessage)).toBeInTheDocument();
   });
