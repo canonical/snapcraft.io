@@ -11,18 +11,9 @@ export function getSearchId(): string {
   return id;
 }
 
-export function trackSearchSubmitted(
-  source: "home" | "store",
-  query: string,
-): void {
-  const searchId = crypto.randomUUID();
-  sessionStorage.setItem(SEARCH_ID_KEY, searchId);
-
+export function trackSearchSubmitted(source: "home" | "store"): void {
   trackEvent(
-    source === "home"
-      ? "snap_home_search_submitted"
-      : "snap_store_search_submitted",
-    { search_id: searchId, query },
+    source === "home" ? "home_search_submitted" : "store_search_submitted",
   );
 }
 
