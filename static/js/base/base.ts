@@ -1,4 +1,3 @@
-import "./ga";
 import "./contactForm";
 import "./sentry";
 import { initAnalytics } from "@canonical/analytics-events";
@@ -12,6 +11,6 @@ declare global {
 if (window.ANALYTICS_ENDPOINT) {
   initAnalytics({
     appName: "snapcraft",
-    endpoint: window.ANALYTICS_ENDPOINT,
+    gtm: true,
   });
 }

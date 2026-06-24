@@ -954,10 +954,10 @@
     hashery "^1.5.0"
     keyv "^5.6.0"
 
-"@canonical/analytics-events@1.0.5":
-  version "1.0.5"
-  resolved "https://registry.yarnpkg.com/@canonical/analytics-events/-/analytics-events-1.0.5.tgz#88a18381a657196ea5f21b5932a41c5afce69999"
-  integrity sha512-GMFbPJ83FcN+ItLcc1czYp0HUA96uLfu+35B0NWEVCL/Wy/CRc0o8Ab1DgAyjBw16reIP+SkAg9k/NBwNj1Tjg==
+"@canonical/analytics-events@1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@canonical/analytics-events/-/analytics-events-1.1.0.tgz#8d8ca6ca3c9691332a0f9b1661735bdae60174ff"
+  integrity sha512-kQ7s8bILF/TqcS4h4Lgqw/fMwQgpQrEDMuMVjxxdgS2d5s8PiIwuNiGu/hqfChkSwErC/Xl6u2NilW63iDGSPA==
 
 "@canonical/cookie-policy@3.10.0":
   version "3.10.0"
