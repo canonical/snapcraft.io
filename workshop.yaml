@@ -1,0 +1,28 @@
+name: snapcraft-io
+base: ubuntu@24.04
+
+sdks:
+  - name: project-snapcraft-io
+    slots:
+      app:
+        interface: tunnel
+        endpoint: localhost:8004 # flask app
+      vite:
+        interface: tunnel
+        endpoint: localhost:5004 # vite dev server
+
+  - name: system
+    plugs:
+      app:
+        interface: tunnel
+        endpoint: localhost:8004 # flask app
+      vite:
+        interface: tunnel
+        endpoint: localhost:5004 # vite dev server
+
+actions:
+  start: yarn start
+  build: yarn build
+  test: yarn build && yarn test
+  prod: yarn build && ENVIRONMENT=prod yarn serve
+  yarn: yarn "$@"

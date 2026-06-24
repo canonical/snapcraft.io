@@ -43,6 +43,35 @@ jobs:
           dotrun &
           curl --head --fail --retry-delay 3 --retry 30 --retry-connrefused http://localhost:8004
 
+  run-workshop:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Install LXD
+        uses: canonical/setup-lxd@8c6a87bfb56aa48f3fb9b830baa18562d8bfd4ee # v1 tag
+        with:
+          bridges: "lxdbr0,workshopbr0"
+          channel: "latest/stable"
+
+      - name: Set up LXD
+        run: |
+          sudo lxd init --auto
+
+      - name: Set up Workshop
+        run: |
+          sudo snap install workshop --classic
+          workshop launch --verbose
+
+      - name: Run workshop
+        run: |
+          workshop run -- start &
+          sleep 10
+          curl --head --fail --retry-delay 3 --retry 30 --retry-connrefused http://localhost:8004 # check that Flask works
+          curl --head --fail --retry-delay 3 --retry 30 --retry-connrefused http://localhost:5004/@vite/client # check that Vite works
+
   run-cypress:
     runs-on: ubuntu-latest
     permissions:
