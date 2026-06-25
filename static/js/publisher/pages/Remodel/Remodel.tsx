@@ -22,6 +22,11 @@ import ConfigureRemodelForm from "./ConfigureRemodelForm";
 import type { UseQueryResult } from "react-query";
 import type { Remodel, RemodelResponse, ApiResponse } from "../../types/shared";
 
+const getRemodelRowId = (remodel: Remodel): string => {
+  const serial = remodel["from-serial"] ?? "all-serials";
+  return `${remodel["from-model"]}:${remodel["to-model"]}:${serial}`;
+};
+
 function Remodel(): React.JSX.Element {
   const { id, modelId } = useParams();
   const [searchParams, setSearchParams] = useSearchParams();
@@ -59,8 +64,27 @@ function Remodel(): React.JSX.Element {
   const [showErrorNotification, setShowErrorNotification] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [isDeleting, setIsDeleting] = useState(false);
+  const [isSavingEdit, setIsSavingEdit] = useState(false);
+  const [editedDescriptions, setEditedDescriptions] = useState<
+    Record<string, string>
+  >({});
   const brandStore = useAtomValue(brandStoreState(id));
   const navigate = useNavigate();
+
+  const handleEditChange = (rowId: string, value: string) => {
+    setEditedDescriptions((previous) => ({
+      ...previous,
+      [rowId]: value,
+    }));
+  };
+
+  const handleEditCancel = (rowId: string) => {
+    setEditedDescriptions((previous) => {
+      const updated = { ...previous };
+      delete updated[rowId];
+      return updated;
+    });
+  };
 
   const handleDeleteRemodel = async (remodel: Remodel) => {
     setIsDeleting(true);
@@ -108,6 +132,63 @@ function Remodel(): React.JSX.Element {
       throw error;
     } finally {
       setIsDeleting(false);
+    }
+  };
+
+  const handleUpdateRemodel = async (remodel: Remodel) => {
+    const rowId = getRemodelRowId(remodel);
+    const description = editedDescriptions[rowId] ?? remodel["description"];
+
+    setIsSavingEdit(true);
+
+    const patchPayload = {
+      "from-model": remodel["from-model"],
+      "to-model": remodel["to-model"],
+      "from-serial": remodel["from-serial"],
+      description,
+    };
+
+    try {
+      const response = await fetch(
+        `/api/store/${brandId}/models/remodel-allowlist`,
+        {
+          method: "PATCH",
+          body: JSON.stringify(patchPayload),
+          headers: {
+            "Content-Type": "application/json",
+            "X-CSRF-Token": window.CSRF_TOKEN,
+          },
+        },
+      );
+      const responseData = await response.json();
+
+      if (!response.ok || !responseData.success) {
+        throw new Error(responseData.message || "Unable to update remodel");
+      }
+
+      setNotificationMessage("Remodel updated");
+      setShowNotification(true);
+      setEditedDescriptions((previous) => {
+        const updated = { ...previous };
+        delete updated[rowId];
+        return updated;
+      });
+
+      await queryClient.invalidateQueries({ queryKey: ["remodels"] });
+
+      setTimeout(() => {
+        setShowNotification(false);
+      }, 5000);
+    } catch (error) {
+      setErrorMessage(
+        error instanceof Error ? error.message : "Unable to update remodel",
+      );
+      setShowErrorNotification(true);
+      setTimeout(() => {
+        setShowErrorNotification(false);
+      }, 5000);
+    } finally {
+      setIsSavingEdit(false);
     }
   };
 
@@ -189,7 +270,12 @@ function Remodel(): React.JSX.Element {
                   }
                   pageSize={pageSize}
                   isDeleting={isDeleting}
+                  isSavingEdit={isSavingEdit}
+                  editedDescriptions={editedDescriptions}
                   onDeleteRemodel={handleDeleteRemodel}
+                  onEditChange={handleEditChange}
+                  onEditSave={handleUpdateRemodel}
+                  onEditCancel={handleEditCancel}
                 />
               )}
             </div>
