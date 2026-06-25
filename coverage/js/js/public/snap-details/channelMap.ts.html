@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">61.51% </span>
+                <span class="strong">61.59% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>171/278</span>
+                <span class='fraction'>170/276</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">45.13% </span>
+                <span class="strong">45% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>65/144</span>
+                <span class='fraction'>63/140</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">61.37% </span>
+                <span class="strong">61.45% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>170/277</span>
+                <span class='fraction'>169/275</span>
             </div>
         
             
@@ -798,25 +798,7 @@
 <a name='L733'></a><a href='#L733'>733</a>
 <a name='L734'></a><a href='#L734'>734</a>
 <a name='L735'></a><a href='#L735'>735</a>
-<a name='L736'></a><a href='#L736'>736</a>
-<a name='L737'></a><a href='#L737'>737</a>
-<a name='L738'></a><a href='#L738'>738</a>
-<a name='L739'></a><a href='#L739'>739</a>
-<a name='L740'></a><a href='#L740'>740</a>
-<a name='L741'></a><a href='#L741'>741</a>
-<a name='L742'></a><a href='#L742'>742</a>
-<a name='L743'></a><a href='#L743'>743</a>
-<a name='L744'></a><a href='#L744'>744</a>
-<a name='L745'></a><a href='#L745'>745</a>
-<a name='L746'></a><a href='#L746'>746</a>
-<a name='L747'></a><a href='#L747'>747</a>
-<a name='L748'></a><a href='#L748'>748</a>
-<a name='L749'></a><a href='#L749'>749</a>
-<a name='L750'></a><a href='#L750'>750</a>
-<a name='L751'></a><a href='#L751'>751</a>
-<a name='L752'></a><a href='#L752'>752</a>
-<a name='L753'></a><a href='#L753'>753</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L736'></a><a href='#L736'>736</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1027,16 +1009,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">36x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">36x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1068,12 +1040,6 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1569,7 +1535,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">/* eslint-disable @typescript-eslint/ban-ts-comment */
 import SnapEvents from "../../libs/events";
-import { triggerEvent } from "../../base/ga";
 &nbsp;
 interface SnapElement extends HTMLElement {
   dataset: {
@@ -1778,16 +1743,6 @@ class ChannelMap {
 <span class="cstat-no" title="statement not covered" >            this.openButton = null;</span>
           } else {
             this.openChannelMap(target);
-&nbsp;
-            triggerEvent({
-              category:
-                this.openScreenName === "channel-map-install"
-                  ? <span class="branch-0 cbranch-no" title="branch not covered" >"cta-0"</span>
-                  : "cta-1",
-              from: window.location.href,
-              to: target.dataset.controls ?? <span class="branch-1 cbranch-no" title="branch not covered" >"",</span>
-              label: target.innerText,
-            });
           }
         },
 &nbsp;
@@ -1820,12 +1775,6 @@ class ChannelMap {
 <span class="cstat-no" title="statement not covered" >          if (isSnapElement(target)) {</span>
 <span class="cstat-no" title="statement not covered" >            event.preventDefault();</span>
 <span class="cstat-no" title="statement not covered" >            this.openDesktop(target);</span>
-<span class="cstat-no" title="statement not covered" >            triggerEvent({</span>
-              category: "cta-1",
-              from: window.location.href,
-              to: `snap://${target.dataset.snap}`,
-              label: target.innerText,
-            });
           } else {
 <span class="cstat-no" title="statement not covered" >            console.error("Target is not a SnapElement");</span>
           }
@@ -2326,7 +2275,7 @@ export default function channelMap(
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-06-24T22:29:46.834Z
+                at 2026-06-25T22:32:04.909Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>

@@ -25,28 +25,28 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>0/125</span>
+                <span class='fraction'>0/120</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/112</span>
+                <span class='fraction'>0/110</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>0/22</span>
+                <span class='fraction'>0/20</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>0/124</span>
+                <span class='fraction'>0/119</span>
             </div>
         
             
@@ -487,20 +487,7 @@
 <a name='L422'></a><a href='#L422'>422</a>
 <a name='L423'></a><a href='#L423'>423</a>
 <a name='L424'></a><a href='#L424'>424</a>
-<a name='L425'></a><a href='#L425'>425</a>
-<a name='L426'></a><a href='#L426'>426</a>
-<a name='L427'></a><a href='#L427'>427</a>
-<a name='L428'></a><a href='#L428'>428</a>
-<a name='L429'></a><a href='#L429'>429</a>
-<a name='L430'></a><a href='#L430'>430</a>
-<a name='L431'></a><a href='#L431'>431</a>
-<a name='L432'></a><a href='#L432'>432</a>
-<a name='L433'></a><a href='#L433'>433</a>
-<a name='L434'></a><a href='#L434'>434</a>
-<a name='L435'></a><a href='#L435'>435</a>
-<a name='L436'></a><a href='#L436'>436</a>
-<a name='L437'></a><a href='#L437'>437</a>
-<a name='L438'></a><a href='#L438'>438</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L425'></a><a href='#L425'>425</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -539,7 +526,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -601,7 +587,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -813,16 +798,8 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -836,7 +813,6 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -927,8 +903,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -965,7 +939,6 @@ import {
   getLatestRelease,
 } from "../../helpers";
 import ChannelMenu from "../channelMenu";
-import { triggerGAEvent } from "../../analytics";
 import type {
   ArchitectureRevisionsMap,
   ChannelArchitectureRevisionsMap,
@@ -1033,7 +1006,6 @@ interface DispatchProps {
   promoteRevision: (revision: Revision, targetChannel: string) =&gt; void;
   closeChannel: (channel: string) =&gt; void;
   toggleBranches: (channel: string) =&gt; void;
-  triggerGAEvent: (...eventProps: Parameters&lt;typeof triggerGAEvent&gt;) =&gt; void;
 }
 &nbsp;
 type ReleasesTableChannelHeadingProps = OwnProps &amp; StateProps &amp; DispatchProps;
@@ -1255,14 +1227,6 @@ const ReleasesTableChannelHeading = <span class="cstat-no" title="statement not 
     );
   };
 &nbsp;
-  const triggerGAEvent = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >(t</span>argetChannel: any, actionType: string) =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >    if (actionType === "close") {</span>
-<span class="cstat-no" title="statement not covered" >      props.triggerGAEvent("click-close-channel", targetChannel);</span>
-    } else {
-<span class="cstat-no" title="statement not covered" >      props.triggerGAEvent("click-promote", channel, targetChannel);</span>
-    }
-  };
-&nbsp;
 <span class="cstat-no" title="statement not covered" >  return (</span>
     &lt;div
       ref={drag}
@@ -1299,7 +1263,6 @@ const ReleasesTableChannelHeading = <span class="cstat-no" title="statement not 
               promoteToChannel={promoteRevisions}
               channel={channel}
               closeChannel={canBeClosed ? props.closeChannel : undefined}
-              gaEvent={triggerGAEvent}
             /&gt;
           )}
         &lt;/span&gt;
@@ -1365,8 +1328,6 @@ const mapDispatchToProps = <span class="cstat-no" title="statement not covered" 
 <span class="cstat-no" title="statement not covered" >      dispatch(promoteRevision(revision, targetChannel)),</span>
     closeChannel: <span class="fstat-no" title="function not covered" >(c</span>hannel: string) =&gt; <span class="cstat-no" title="statement not covered" >dispatch(closeChannel(channel)),</span>
     toggleBranches: <span class="fstat-no" title="function not covered" >(c</span>hannel: string) =&gt; <span class="cstat-no" title="statement not covered" >dispatch(toggleBranches(channel)),</span>
-    triggerGAEvent: <span class="fstat-no" title="function not covered" >(...e</span>ventProps: Parameters&lt;typeof triggerGAEvent&gt;) =&gt;
-<span class="cstat-no" title="statement not covered" >      dispatch(triggerGAEvent(...eventProps)),</span>
   };
 };
 &nbsp;
@@ -1381,7 +1342,7 @@ export default connect(
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-06-24T22:29:46.834Z
+                at 2026-06-25T22:32:04.909Z
             </div>
         <script src="../../../../../../prettify.js"></script>
         <script>

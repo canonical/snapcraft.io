@@ -25,28 +25,28 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>0/39</span>
+                <span class='fraction'>0/35</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/26</span>
+                <span class='fraction'>0/24</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>0/16</span>
+                <span class='fraction'>0/15</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>0/39</span>
+                <span class='fraction'>0/35</span>
             </div>
         
             
@@ -259,19 +259,7 @@
 <a name='L194'></a><a href='#L194'>194</a>
 <a name='L195'></a><a href='#L195'>195</a>
 <a name='L196'></a><a href='#L196'>196</a>
-<a name='L197'></a><a href='#L197'>197</a>
-<a name='L198'></a><a href='#L198'>198</a>
-<a name='L199'></a><a href='#L199'>199</a>
-<a name='L200'></a><a href='#L200'>200</a>
-<a name='L201'></a><a href='#L201'>201</a>
-<a name='L202'></a><a href='#L202'>202</a>
-<a name='L203'></a><a href='#L203'>203</a>
-<a name='L204'></a><a href='#L204'>204</a>
-<a name='L205'></a><a href='#L205'>205</a>
-<a name='L206'></a><a href='#L206'>206</a>
-<a name='L207'></a><a href='#L207'>207</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L197'></a><a href='#L197'>197</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -345,13 +333,10 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -378,9 +363,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -466,8 +448,6 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -489,7 +469,6 @@ import {
 } from "../slices/pendingChanges";
 import { releaseRevisions } from "../slices/releases";
 import { getSeparatePendingReleases, type SeparatePendingReleases } from "../selectors";
-import { triggerGAEvent } from "../analytics";
 import type { Progressive, ReleasesReduxState } from "../../../types/releaseTypes";
 import type { AppDispatch } from "../store";
 &nbsp;
@@ -504,7 +483,6 @@ interface StateProps {
 }
 &nbsp;
 interface DispatchProps {
-  triggerGAEvent: (...eventProps: Parameters&lt;typeof triggerGAEvent&gt;) =&gt; void;
   cancelPendingReleases: () =&gt; void;
   setProgressiveRelease: (percentage: Progressive) =&gt; void;
   releaseRevisions: () =&gt; Promise&lt;unknown&gt;;
@@ -549,7 +527,6 @@ class ReleasesConfirm extends Component&lt;ReleasesConfirmProps, ReleasesConfirm
   }
 &nbsp;
 <span class="fstat-no" title="function not covered" >  onRevertClick() {</span>
-<span class="cstat-no" title="statement not covered" >    this.props.triggerGAEvent("click-revert");</span>
 <span class="cstat-no" title="statement not covered" >    this.props.cancelPendingReleases();</span>
 <span class="cstat-no" title="statement not covered" >    this.setState({</span>
       showDetails: false,
@@ -557,8 +534,6 @@ class ReleasesConfirm extends Component&lt;ReleasesConfirmProps, ReleasesConfirm
   }
 &nbsp;
 <span class="fstat-no" title="function not covered" >  onApplyClick() {</span>
-<span class="cstat-no" title="statement not covered" >    this.props.triggerGAEvent("click-save");</span>
-&nbsp;
 <span class="cstat-no" title="statement not covered" >    this.setState({</span>
       isLoading: true,
     });
@@ -586,9 +561,6 @@ class ReleasesConfirm extends Component&lt;ReleasesConfirmProps, ReleasesConfirm
   }
 &nbsp;
 <span class="fstat-no" title="function not covered" >  toggleDetails() {</span>
-<span class="cstat-no" title="statement not covered" >    this.props.triggerGAEvent(</span>
-      `click-${this.state.showDetails ? "hide" : "show"}-details`,
-    );
 <span class="cstat-no" title="statement not covered" >    this.setState({</span>
       showDetails: !this.state.showDetails,
     });
@@ -675,8 +647,6 @@ const mapDispatchToProps = <span class="cstat-no" title="statement not covered" 
     cancelPendingReleases: <span class="fstat-no" title="function not covered" >() =&gt; <span class="cstat-no" title="statement not covered" >d</span>ispatch(cancelPendingChanges()),</span>
     setProgressiveRelease: <span class="fstat-no" title="function not covered" >(p</span>ercentage: Progressive) =&gt;
 <span class="cstat-no" title="statement not covered" >      dispatch(setProgressiveRelease(percentage)),</span>
-    triggerGAEvent: <span class="fstat-no" title="function not covered" >(...e</span>ventProps: Parameters&lt;typeof triggerGAEvent&gt;) =&gt;
-<span class="cstat-no" title="statement not covered" >      dispatch(triggerGAEvent(...eventProps)),</span>
   };
 };
 &nbsp;
@@ -688,7 +658,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(ReleasesConfirm);
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-06-24T22:29:46.834Z
+                at 2026-06-25T22:32:04.909Z
             </div>
         <script src="../../../../../prettify.js"></script>
         <script>
