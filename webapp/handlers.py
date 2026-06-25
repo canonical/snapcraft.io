@@ -23,6 +23,7 @@ from webapp.config import (
     IS_DEVELOPMENT,
     VITE_PORT,
     DEFAULT_ICON_URL,
+    STATUS_BANNER,
 )
 
 from canonicalwebteam.exceptions import (
@@ -214,6 +215,7 @@ def snapcraft_utility_processor():
         "format_link": template_utils.format_link,
         "DNS_VERIFICATION_SALT": DNS_VERIFICATION_SALT,
         "DEFAULT_ICON_URL": DEFAULT_ICON_URL,
+        "STATUS_BANNER": STATUS_BANNER,
     }
 
 

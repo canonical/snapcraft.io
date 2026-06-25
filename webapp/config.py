@@ -50,6 +50,8 @@ DEFAULT_ICON_URL = (
     "https://assets.ubuntu.com/v1/be6eb412-snapcraft-missing-icon.svg"
 )
 
+STATUS_BANNER = os.getenv("STATUS_BANNER", "").strip()
+
 REPORT_SHEET_URL = os.getenv("REPORT_SHEET_URL", "").strip()
 TURNSTILE_SITE_KEY = os.getenv("TURNSTILE_SITE_KEY", "").strip()
 TURNSTILE_SECRET_KEY = os.getenv("TURNSTILE_SECRET_KEY", "").strip()
