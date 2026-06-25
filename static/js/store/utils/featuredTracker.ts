@@ -5,7 +5,7 @@ export function trackFeaturedSnapClicked(
   position: number,
   source: "home" | "store",
 ): void {
-  trackEvent("snap_featured_snap_clicked", {
+  trackEvent("featured_snap_clicked", {
     snap_name: snapName,
     position,
     source,

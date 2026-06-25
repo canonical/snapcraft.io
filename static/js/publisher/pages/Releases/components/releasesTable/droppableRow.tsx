@@ -10,7 +10,6 @@ import {
   getLatestRelease,
 } from "../../helpers";
 import ReleasesTableChannelRow from "./channelRow";
-import { triggerGAEvent } from "../../analytics";
 import type {
   ReleasesReduxState,
   Revision,
@@ -31,7 +30,6 @@ interface StateProps {
 
 interface DispatchProps {
   promoteRevision: (revision: Revision, targetChannel: string) => void;
-  triggerGAEvent: (...eventProps: Parameters<typeof triggerGAEvent>) => void;
 }
 
 type ReleasesTableDroppableRowProps = OwnProps & StateProps & DispatchProps;
@@ -75,7 +73,6 @@ const ReleasesTableDroppableRow = (props: ReleasesTableDroppableRowProps) => {
     branch,
     promoteRevision,
     pendingChannelMap,
-    triggerGAEvent,
   } = props;
 
   const branchName = branch ? branch.branch : null;
@@ -89,22 +86,6 @@ const ReleasesTableDroppableRow = (props: ReleasesTableDroppableRowProps) => {
         (r) =>
           canBeReleased(r) && promoteRevision(r, channel),
       );
-
-      if (item.revisions.length > 1) {
-        triggerGAEvent(
-          "drop-channel",
-          `${currentTrack}/${item.risk}/${item.branch ? item.branch : null}`,
-          `${currentTrack}/${risk}/${branchName}`,
-        );
-      } else {
-        triggerGAEvent(
-          "drop-revision",
-          `${currentTrack}/${item.risk}/${item.branch ? item.branch : null}/${
-            item.architectures[0]
-          }`,
-          `${currentTrack}/${risk}/${branchName}/${item.architectures[0]}`,
-        );
-      }
     },
     canDrop: (item: DraggedItem) => {
       const draggedRevisions = item.revisions;
@@ -232,8 +213,6 @@ const mapDispatchToProps = (dispatch: AppDispatch): DispatchProps => {
   return {
     promoteRevision: (revision: Revision, targetChannel: string) =>
       dispatch(promoteRevision(revision, targetChannel)),
-    triggerGAEvent: (...eventProps: Parameters<typeof triggerGAEvent>) =>
-      dispatch(triggerGAEvent(...eventProps)),
   };
 };
 
