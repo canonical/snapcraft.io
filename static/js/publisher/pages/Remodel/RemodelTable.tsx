@@ -1,11 +1,11 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Button,
   Icon,
   MainTable,
-  Modal,
   TablePaginationControls,
   Input,
+  CheckboxInput,
 } from "@canonical/react-components";
 import { format } from "date-fns";
 
@@ -19,13 +19,13 @@ type Props = {
   forwardDisabled: boolean;
   backDisabled: boolean;
   pageSize: number;
-  isDeleting: boolean;
   isSavingEdit: boolean;
   editedDescriptions: Record<string, string>;
-  onDeleteRemodel: (remodel: Remodel) => Promise<void>;
   onEditChange: (rowId: string, value: string) => void;
   onEditSave: (remodel: Remodel) => Promise<void>;
   onEditCancel: (rowId: string) => void;
+  remodelsToDelete: Remodel[];
+  setRemodelsToDelete: (remodels: Remodel[]) => void;
 };
 
 const getRemodelRowId = (remodel: Remodel): string => {
@@ -41,33 +41,66 @@ function RemodelTable({
   forwardDisabled,
   backDisabled,
   pageSize,
-  isDeleting,
   isSavingEdit,
   editedDescriptions,
-  onDeleteRemodel,
   onEditChange,
   onEditSave,
   onEditCancel,
+  remodelsToDelete,
+  setRemodelsToDelete,
 }: Props): React.JSX.Element {
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [selectedRemodel, setSelectedRemodel] = useState<Remodel | null>(null);
-  const isBusy = isDeleting || isSavingEdit;
+  const [isChecked, setIsChecked] = useState(false);
+  const [isIndeterminate, setIsIndeterminate] = useState(false);
+  const isBusy = isSavingEdit;
 
-  const handleDeleteConfirm = async () => {
-    if (!selectedRemodel) {
-      return;
+  useEffect(() => {
+    if (remodelsToDelete.length) {
+      if (remodelsToDelete.length === remodels.length) {
+        setIsChecked(true);
+        setIsIndeterminate(false);
+      } else {
+        setIsChecked(false);
+        setIsIndeterminate(true);
+      }
+    } else {
+      setIsChecked(false);
+      setIsIndeterminate(false);
     }
+  }, [remodelsToDelete, remodels.length]);
 
-    try {
-      await onDeleteRemodel(selectedRemodel);
-      setShowDeleteModal(false);
-      setSelectedRemodel(null);
-    } catch {
-      // Keep modal open so user can retry or cancel.
-    }
+  const withCheckboxStyles = {
+    paddingBottom: 0,
+    width: "2rem",
   };
 
   const headers = [
+    {
+      style: withCheckboxStyles,
+      content: (
+        <div
+          style={{
+            position: "relative",
+            top: "-9px",
+          }}
+        >
+          <CheckboxInput
+            labelClassName="u-no-margin--bottom"
+            onChange={(e) => {
+              if (e.target.checked) {
+                setRemodelsToDelete(remodels);
+                setIsChecked(true);
+              } else {
+                setRemodelsToDelete([]);
+                setIsChecked(false);
+              }
+            }}
+            checked={isChecked}
+            indeterminate={isIndeterminate}
+            label=<span className="table-cell-checkbox__label">Name</span>
+          />
+        </div>
+      ),
+    },
     {
       content: "Target model",
       style: { width: "250px" },
@@ -84,11 +117,6 @@ function RemodelTable({
       style: { width: "130px" },
     },
     { content: "Note", className: "u-truncate" },
-    {
-      content: "Actions",
-      style: { width: "100px" },
-      className: "u-align--right",
-    },
   ];
 
   const rows = remodels.map((remodel: Remodel) => {
@@ -99,9 +127,34 @@ function RemodelTable({
     const isDirty =
       editedDescriptions[rowId] !== undefined &&
       editedDescriptions[rowId] !== originalValue;
+    const isRowChecked = remodelsToDelete.some(
+      (item) => getRemodelRowId(item) === rowId,
+    );
 
     return {
       columns: [
+        {
+          content: (
+            <CheckboxInput
+              labelClassName="u-no-margin--bottom u-no-padding--top"
+              onChange={(e) => {
+                if (e.target.checked) {
+                  setRemodelsToDelete([...remodelsToDelete, remodel]);
+                } else {
+                  setRemodelsToDelete(
+                    remodelsToDelete.filter(
+                      (item) => getRemodelRowId(item) !== rowId,
+                    ),
+                  );
+                }
+              }}
+              checked={isRowChecked}
+              label=<span className="table-cell-checkbox__label">
+                {remodel["to-model"]}
+              </span>
+            />
+          ),
+        },
         { content: remodel["to-model"], className: "u-truncate" },
         {
           content: remodel["from-serial"] || "All serial policies",
@@ -153,23 +206,6 @@ function RemodelTable({
             </>
           ),
         },
-        {
-          className: "u-align--right",
-          content: (
-            <Button
-              className="u-no-margin--bottom u-no-margin--right"
-              appearance="base"
-              disabled={isBusy}
-              onClick={() => {
-                setSelectedRemodel(remodel);
-                setShowDeleteModal(true);
-              }}
-            >
-              <Icon name="delete" />
-              <span className="u-off-screen">Delete</span>
-            </Button>
-          ),
-        },
       ],
     };
   });
@@ -206,57 +242,6 @@ function RemodelTable({
         visibleCount={rows.length}
         className="table-pagination-controls"
       />
-      {showDeleteModal && selectedRemodel && (
-        <Modal
-          close={() => {
-            if (!isBusy) {
-              setShowDeleteModal(false);
-              setSelectedRemodel(null);
-            }
-          }}
-          title="Delete remodel"
-          buttonRow={
-            <>
-              <Button
-                className="u-no-margin--bottom"
-                disabled={isBusy}
-                onClick={() => {
-                  setShowDeleteModal(false);
-                  setSelectedRemodel(null);
-                }}
-              >
-                Cancel
-              </Button>
-              <Button
-                className="u-no-margin--bottom u-no-margin--right"
-                appearance="negative"
-                disabled={isBusy}
-                onClick={() => {
-                  void handleDeleteConfirm();
-                }}
-              >
-                {isDeleting ? (
-                  <>
-                    <Icon
-                      name="spinner"
-                      className="u-animation--spin is-light"
-                    />
-                    &nbsp;Deleting...
-                  </>
-                ) : (
-                  "Delete"
-                )}
-              </Button>
-            </>
-          }
-        >
-          <p>
-            Are you sure you want to delete this remodel?
-            <br />
-            This action cannot be undone.
-          </p>
-        </Modal>
-      )}
     </>
   );
 }
