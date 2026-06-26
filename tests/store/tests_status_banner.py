@@ -59,4 +59,4 @@ class StatusBannerTest(TestCase):
             response = self.client.get("/publisher/test-publisher")
         self.assertEqual(response.status_code, 200)
         body = response.get_data(as_text=True)
-        self.assertNotIn("p-notification--caution", body)
+        self.assertNotIn('id="status-banner"', body)
