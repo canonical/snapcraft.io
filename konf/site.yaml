@@ -6,6 +6,9 @@ env: &env
   - name: SENTRY_DSN
     value: https://1e82fd54e08142c9978f623cb746b965@sentry.is.canonical.com//3
 
+  - name: STATUS_BANNER
+    value: "The Snap Store will undergo scheduled database maintenance on July 5, 2026 22:00 to July 6, 02:00 UTC. During this time, you will not be able to install or update snaps. No user action is required and services will automatically resume once maintenance is complete."
+
   - name: ENVIRONMENT
     configMapKeyRef:
       key: environment
