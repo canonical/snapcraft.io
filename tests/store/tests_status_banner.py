@@ -1,5 +1,6 @@
 import responses
 from unittest.mock import patch
+from flask import render_template
 from flask_testing import TestCase
 from webapp.app import create_app
 
@@ -60,3 +61,15 @@ class StatusBannerTest(TestCase):
         self.assertEqual(response.status_code, 200)
         body = response.get_data(as_text=True)
         self.assertNotIn('id="status-banner"', body)
+
+    def test_banner_shown_in_admin_layout(self):
+        message = "Admin maintenance notice."
+        with patch("webapp.handlers.STATUS_BANNER", message):
+            with self.app.test_request_context("/admin"):
+                body = render_template(
+                    "admin/admin.html",
+                    api_url="https://dashboard.snapcraft.io/",
+                )
+        self.assertIn('id="status-banner"', body)
+        self.assertIn(message, body)
+        self.assertIn("z-index: 201;", body)
