@@ -74,6 +74,8 @@
     {% endblock %}
 
     {% block banner %}
+    {% from "partials/_status-banner.html" import status_banner %}
+    {{ status_banner(STATUS_BANNER) }}
     {% endblock %}
 
     {% block content %}{% endblock %}
