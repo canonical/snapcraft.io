@@ -4,6 +4,7 @@ on:
     types:
       - closed
 permissions:
+  contents: read
   pull-requests: write
   packages: write
 

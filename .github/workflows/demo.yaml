@@ -6,10 +6,11 @@ on:
       - reopened
       - synchronize
 permissions:
+  contents: read
   pull-requests: write
   packages: write
 
-# Ensure only one demo runs at a time.
+# Ensure only one demo runs per PR at a time.
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true

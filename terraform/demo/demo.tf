@@ -16,13 +16,13 @@ resource "juju_application" "demo" {
     snapstore-dashboard-api-url = "https://dashboard.snapcraft.io/"
     analytics-endpoint = ""
     // secrets
-    discourse = data.juju_secret.snapcraft-discourse.secret_uri
-    dns-verification = data.juju_secret.snapcraft-dns-verification.secret_uri
-    github = data.juju_secret.snapcraft-github.secret_uri
-    lp = data.juju_secret.snapcraft-lp.secret_uri
-    marketo = data.juju_secret.snapcraft-marketo.secret_uri
-    youtube = data.juju_secret.snapcraft-youtube.secret_uri
-    turnstile = data.juju_secret.snapcraft-turnstile.secret_uri
+    discourse = "secret:${data.juju_secret.snapcraft_discourse.secret_id}"
+    dns-verification = "secret:${data.juju_secret.snapcraft_dns_verification.secret_id}"
+    github = "secret:${data.juju_secret.snapcraft_github.secret_id}"
+    lp = "secret:${data.juju_secret.snapcraft_lp.secret_id}"
+    marketo = "secret:${data.juju_secret.snapcraft_marketo.secret_id}"
+    youtube = "secret:${data.juju_secret.snapcraft_youtube.secret_id}"
+    turnstile = "secret:${data.juju_secret.snapcraft_turnstile.secret_id}"
   }
 }
 
