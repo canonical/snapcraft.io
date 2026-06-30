@@ -10,6 +10,7 @@ import { setPageTitle } from "../../utils";
 
 import SerialLogDateSelectors from "./SerialLogDateSelectors";
 import SerialLogTable from "./SerialLogTable";
+import { getPresetTimestampRange } from "./dateRange";
 
 import type { UseQueryResult } from "react-query";
 import type { SerialLogResponse, ApiResponse } from "../../types/shared";
@@ -27,10 +28,14 @@ function SerialLog(): React.JSX.Element {
   const startTime = searchParams.get("start-time");
   const endTime = searchParams.get("end-time");
   const pageSize = Number.isInteger(parsedPageSize) ? parsedPageSize : 25;
+  const interval =
+    startTime && endTime
+      ? { startTime, endTime }
+      : getPresetTimestampRange("last-30-days");
   const params = {
     pageSize,
     page: currentCursor,
-    ...(startTime && endTime && { interval: { startTime, endTime } }),
+    ...(interval && { interval }),
   };
 
   const {
