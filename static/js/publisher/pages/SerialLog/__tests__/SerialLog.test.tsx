@@ -2,7 +2,7 @@ import { BrowserRouter } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { vi } from "vitest";
 import { format, parseISO } from "date-fns";
-import { render, screen } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
 import "@testing-library/jest-dom";
@@ -157,7 +157,7 @@ describe("SerialLog", () => {
     expect(screen.getByTestId("serial-log-table")).toBeInTheDocument();
   });
 
-  it("passes default page size and date range to useSerialLogs when none is set", () => {
+  it("passes default page size without a date range to useSerialLogs when none is set", () => {
     mockuseSerialLogs.mockReturnValue(useSerialLogsPermissions);
 
     renderWithSearchParams();
@@ -166,10 +166,6 @@ describe("SerialLog", () => {
     expect(mockuseSerialLogs.mock.calls[0][2]).toEqual({
       pageSize: 25,
       page: null,
-      interval: {
-        startTime: "2026-05-04T00:00:00.000Z",
-        endTime: "2026-06-02T23:59:59.000Z",
-      },
     });
   });
 
@@ -241,6 +237,69 @@ describe("SerialLog", () => {
 
     expect(screen.getByLabelText("Start time")).toHaveValue("00:00:00");
     expect(screen.getByLabelText("End time")).toHaveValue("23:59:59");
+  });
+
+  it("detects an active preset date range from URL params", () => {
+    mockuseSerialLogs.mockReturnValue(useSerialLogsPermissions);
+
+    renderWithSearchParams({
+      "start-time": "2026-05-27T00:00:00.000Z",
+      "end-time": "2026-06-02T23:59:59.000Z",
+    });
+
+    const select = document.getElementById(
+      "date-range-preset",
+    ) as HTMLSelectElement;
+    expect(select).toHaveValue("last-7-days");
+    expect(
+      screen.getByText("Showing serial logs for the last 7 days"),
+    ).toBeInTheDocument();
+    expect(screen.queryByLabelText("Start date")).not.toBeInTheDocument();
+  });
+
+  it("applies a selected preset date range and clears pagination params", () => {
+    mockuseSerialLogs.mockReturnValue(useSerialLogsPermissions);
+
+    renderWithSearchParams({
+      filter: mockFilterQuery,
+      page: "cursor",
+      "page-size": "50",
+    });
+
+    const select = document.getElementById(
+      "date-range-preset",
+    ) as HTMLSelectElement;
+    fireEvent.change(select, { target: { value: "today" } });
+
+    expect(mockNavigate).toHaveBeenCalledWith({
+      pathname: mockPathname,
+      search:
+        `?filter=${mockFilterQuery}` +
+        "&start-time=2026-06-02T00:00:00.000Z" +
+        "&end-time=2026-06-02T23:59:59.000Z",
+    });
+  });
+
+  it("clears date range params when selecting the default last 30 days preset", () => {
+    mockuseSerialLogs.mockReturnValue(useSerialLogsPermissions);
+
+    renderWithSearchParams({
+      filter: mockFilterQuery,
+      page: "cursor",
+      "page-size": "50",
+      "start-time": "2026-05-01T00:00:00.000Z",
+      "end-time": "2026-05-10T23:59:59.000Z",
+    });
+
+    const select = document.getElementById(
+      "date-range-preset",
+    ) as HTMLSelectElement;
+    fireEvent.change(select, { target: { value: "last-30-days" } });
+
+    expect(mockNavigate).toHaveBeenCalledWith({
+      pathname: mockPathname,
+      search: `?filter=${mockFilterQuery}`,
+    });
   });
 
   it("shows a default date range of exactly 30 inclusive days", async () => {
