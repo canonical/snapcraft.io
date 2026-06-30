@@ -157,7 +157,7 @@ describe("SerialLog", () => {
     expect(screen.getByTestId("serial-log-table")).toBeInTheDocument();
   });
 
-  it("passes default page size 25 to useSerialLogs when none is set", () => {
+  it("passes default page size and date range to useSerialLogs when none is set", () => {
     mockuseSerialLogs.mockReturnValue(useSerialLogsPermissions);
 
     renderWithSearchParams();
@@ -166,6 +166,10 @@ describe("SerialLog", () => {
     expect(mockuseSerialLogs.mock.calls[0][2]).toEqual({
       pageSize: 25,
       page: null,
+      interval: {
+        startTime: "2026-05-04T00:00:00.000Z",
+        endTime: "2026-06-02T23:59:59.000Z",
+      },
     });
   });
 
@@ -367,5 +371,26 @@ describe("SerialLog", () => {
     expect(screen.queryByLabelText("Start date")).not.toBeInTheDocument();
     // URL params should not change
     expect(mockNavigate).not.toHaveBeenCalled();
+  });
+
+  it("removes date range query params when clicking Clear", async () => {
+    mockuseSerialLogs.mockReturnValue(useSerialLogsPermissions);
+
+    renderWithSearchParams({
+      filter: mockFilterQuery,
+      "start-time": "2026-05-01T00:00:00.000Z",
+      "end-time": "2026-05-10T23:59:59.000Z",
+      "page-size": "50",
+      page: "cursor",
+    });
+    vi.useRealTimers();
+    const user = userEvent.setup();
+
+    await user.click(screen.getByRole("button", { name: "Clear" }));
+
+    expect(mockNavigate).toHaveBeenCalledWith({
+      pathname: mockPathname,
+      search: `?filter=${mockFilterQuery}`,
+    });
   });
 });
