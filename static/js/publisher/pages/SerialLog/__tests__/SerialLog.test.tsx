@@ -296,12 +296,27 @@ describe("SerialLog", () => {
     ) as HTMLSelectElement;
     fireEvent.change(select, { target: { value: "today" } });
 
+    const today = new Date();
+    const expectedStart = new Date(
+      today.getFullYear(),
+      today.getMonth(),
+      today.getDate(),
+      0,
+      0,
+      0,
+    ).toISOString();
+    const expectedEnd = new Date(
+      today.getFullYear(),
+      today.getMonth(),
+      today.getDate(),
+      23,
+      59,
+      59,
+    ).toISOString();
+
     expect(mockNavigate).toHaveBeenCalledWith({
       pathname: mockPathname,
-      search:
-        `?filter=${mockFilterQuery}` +
-        "&start-time=2026-06-02T00:00:00.000Z" +
-        "&end-time=2026-06-02T23:59:59.000Z",
+      search: `?filter=${mockFilterQuery}&start-time=${expectedStart}&end-time=${expectedEnd}`,
     });
   });
 
