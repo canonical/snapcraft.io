@@ -1,11 +1,24 @@
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
-import { Button, Notification, Row, Col } from "@canonical/react-components";
+import {
+  Button,
+  Notification,
+  Row,
+  Col,
+  Select,
+} from "@canonical/react-components";
 import { differenceInCalendarDays, format, parseISO, subDays } from "date-fns";
 
 type Props = {
   onApplyDateRange: () => void;
 };
+
+type DatePreset =
+  | "today"
+  | "yesterday"
+  | "last-7-days"
+  | "last-30-days"
+  | "custom";
 
 const DEFAULT_START_TIME = "00:00:00";
 const DEFAULT_END_TIME = "23:59:59";
@@ -71,10 +84,108 @@ function buildAppliedSearchString(
   return `?${queryParts.join("&")}`;
 }
 
-function buildClearedSearchString(searchParams: URLSearchParams): string {
-  const queryParts = buildSearchString(searchParams);
+function getPresetDateRange(preset: DatePreset): {
+  startDate: string;
+  endDate: string;
+  startTime: string;
+  endTime: string;
+} | null {
+  const today = new Date();
 
-  return queryParts.length > 0 ? `?${queryParts.join("&")}` : "";
+  switch (preset) {
+    case "today":
+      return {
+        startDate: formatDateInputValue(today),
+        endDate: formatDateInputValue(today),
+        startTime: DEFAULT_START_TIME,
+        endTime: DEFAULT_END_TIME,
+      };
+    case "yesterday": {
+      const yesterday = subDays(today, 1);
+      return {
+        startDate: formatDateInputValue(yesterday),
+        endDate: formatDateInputValue(yesterday),
+        startTime: DEFAULT_START_TIME,
+        endTime: DEFAULT_END_TIME,
+      };
+    }
+    case "last-7-days":
+      return {
+        startDate: formatDateInputValue(subDays(today, 6)),
+        endDate: formatDateInputValue(today),
+        startTime: DEFAULT_START_TIME,
+        endTime: DEFAULT_END_TIME,
+      };
+    case "last-30-days":
+      return {
+        startDate: formatDateInputValue(subDays(today, 29)),
+        endDate: formatDateInputValue(today),
+        startTime: DEFAULT_START_TIME,
+        endTime: DEFAULT_END_TIME,
+      };
+    default:
+      return null;
+  }
+}
+
+function detectActivePreset(
+  startTime: string | null,
+  endTime: string | null,
+): DatePreset {
+  if (!startTime || !endTime) {
+    return "last-30-days";
+  }
+
+  const presets: DatePreset[] = [
+    "today",
+    "yesterday",
+    "last-7-days",
+    "last-30-days",
+  ];
+
+  for (const preset of presets) {
+    const range = getPresetDateRange(preset);
+    if (!range) continue;
+
+    const presetStart = parseISO(
+      `${range.startDate}T${range.startTime}`,
+    ).toISOString();
+    const presetEnd = parseISO(
+      `${range.endDate}T${range.endTime}`,
+    ).toISOString();
+
+    // Compare with a small tolerance for date matching
+    const startMatch =
+      Math.abs(
+        parseISO(startTime).getTime() - parseISO(presetStart).getTime(),
+      ) < 1000;
+    const endMatch =
+      Math.abs(parseISO(endTime).getTime() - parseISO(presetEnd).getTime()) <
+      1000;
+
+    if (startMatch && endMatch) {
+      return preset;
+    }
+  }
+
+  return "custom";
+}
+
+function getPresetLabel(preset: DatePreset): string {
+  switch (preset) {
+    case "today":
+      return "today";
+    case "yesterday":
+      return "yesterday";
+    case "last-7-days":
+      return "the last 7 days";
+    case "last-30-days":
+      return "the last 30 days";
+    case "custom":
+      return "a custom date range";
+    default:
+      return "the last 30 days";
+  }
 }
 
 function SerialLogDateSelectors({
@@ -85,9 +196,14 @@ function SerialLogDateSelectors({
   const [searchParams] = useSearchParams();
   const queryStartTime = searchParams.get("start-time");
   const queryEndTime = searchParams.get("end-time");
-  const shouldStartOpen = Boolean(queryStartTime && queryEndTime);
   const defaultDateRange = getDefaultDateRange();
-  const [isOpen, setIsOpen] = useState(shouldStartOpen);
+  const [selectedPreset, setSelectedPreset] = useState<DatePreset>(() =>
+    detectActivePreset(queryStartTime, queryEndTime),
+  );
+  const [isCustomPanelOpen, setIsCustomPanelOpen] = useState(() => {
+    const preset = detectActivePreset(queryStartTime, queryEndTime);
+    return preset === "custom";
+  });
   const [startDate, setStartDate] = useState(
     (queryStartTime ? formatDateInputValue(parseISO(queryStartTime)) : "") ||
       defaultDateRange.startDate,
@@ -106,12 +222,24 @@ function SerialLogDateSelectors({
   );
 
   useEffect(() => {
+    const detectedPreset = detectActivePreset(queryStartTime, queryEndTime);
+    setSelectedPreset(detectedPreset);
+    setIsCustomPanelOpen(detectedPreset === "custom");
+
     if (queryStartTime && queryEndTime) {
-      setIsOpen(true);
       setStartDate(formatDateInputValue(parseISO(queryStartTime)));
       setEndDate(formatDateInputValue(parseISO(queryEndTime)));
       setStartTimeValue(formatTimeInputValue(parseISO(queryStartTime)));
       setEndTimeValue(formatTimeInputValue(parseISO(queryEndTime)));
+    } else {
+      // Set default 30-day range if no dates in URL
+      const range = getPresetDateRange("last-30-days");
+      if (range) {
+        setStartDate(range.startDate);
+        setEndDate(range.endDate);
+        setStartTimeValue(range.startTime);
+        setEndTimeValue(range.endTime);
+      }
     }
   }, [queryStartTime, queryEndTime]);
 
@@ -129,9 +257,40 @@ function SerialLogDateSelectors({
   const showValidationError =
     hasBothDates && (!hasValidOrder || exceedsThirtyDays);
   const selectedDateRangeLabel =
-    hasBothDates && hasValidOrder
+    selectedPreset === "custom" && hasBothDates && hasValidOrder
       ? `Showing serial logs between ${formatReadableDate(startDate)} and ${formatReadableDate(endDate)}`
-      : "Showing serial logs between selected dates";
+      : `Showing serial logs for ${getPresetLabel(selectedPreset)}`;
+
+  const handlePresetChange = (preset: DatePreset): void => {
+    setSelectedPreset(preset);
+
+    if (preset === "custom") {
+      setIsCustomPanelOpen(true);
+      return;
+    }
+
+    const range = getPresetDateRange(preset);
+    if (!range) return;
+
+    const { startTime, endTime } = buildTimestampRange(
+      range.startDate,
+      range.startTime,
+      range.endDate,
+      range.endTime,
+    );
+
+    setStartDate(range.startDate);
+    setEndDate(range.endDate);
+    setStartTimeValue(range.startTime);
+    setEndTimeValue(range.endTime);
+    setIsCustomPanelOpen(false);
+
+    onApplyDateRange();
+    navigate({
+      pathname,
+      search: buildAppliedSearchString(searchParams, startTime, endTime),
+    });
+  };
 
   const handleApply = (): void => {
     if (!hasBothDates || !hasBothTimes || !hasValidOrder || exceedsThirtyDays) {
@@ -145,6 +304,9 @@ function SerialLogDateSelectors({
       endTimeValue,
     );
 
+    setSelectedPreset("custom");
+    setIsCustomPanelOpen(false);
+
     onApplyDateRange();
     navigate({
       pathname,
@@ -153,34 +315,61 @@ function SerialLogDateSelectors({
   };
 
   const handleClose = (): void => {
-    setIsOpen(false);
-    setStartDate(defaultDateRange.startDate);
-    setEndDate(defaultDateRange.endDate);
-    setStartTimeValue(DEFAULT_START_TIME);
-    setEndTimeValue(DEFAULT_END_TIME);
+    setIsCustomPanelOpen(false);
+  };
+
+  const handleClear = (): void => {
+    const range = getPresetDateRange("last-30-days");
+    if (!range) return;
+
+    const { startTime, endTime } = buildTimestampRange(
+      range.startDate,
+      range.startTime,
+      range.endDate,
+      range.endTime,
+    );
+
+    setSelectedPreset("last-30-days");
+    setStartDate(range.startDate);
+    setEndDate(range.endDate);
+    setStartTimeValue(range.startTime);
+    setEndTimeValue(range.endTime);
+    setIsCustomPanelOpen(false);
+
     onApplyDateRange();
     navigate({
       pathname,
-      search: buildClearedSearchString(searchParams),
+      search: buildAppliedSearchString(searchParams, startTime, endTime),
     });
   };
 
   return (
     <>
-      {!isOpen ? (
-        <Row>
-          <Col size={6} medium={3}>
-            <p>Showing serial logs for the past 30 days</p>
-          </Col>
-          <Col size={6} medium={3} className="u-align--right">
-            <Button onClick={() => setIsOpen(true)}>
-              Select custom date range
-            </Button>
-          </Col>
-        </Row>
-      ) : (
+      <Row>
+        <Col size={6} medium={3}>
+          <Select
+            id="date-range-preset"
+            name="date-range-preset"
+            label={selectedDateRangeLabel}
+            value={selectedPreset}
+            onChange={(event) =>
+              handlePresetChange(event.target.value as DatePreset)
+            }
+            options={[
+              { label: "Today", value: "today" },
+              { label: "Yesterday", value: "yesterday" },
+              { label: "Last 7 days", value: "last-7-days" },
+              { label: "Last 30 days", value: "last-30-days" },
+              { label: "Custom", value: "custom" },
+            ]}
+          />
+          {selectedPreset === "custom" && (
+            <Button onClick={() => setIsCustomPanelOpen(true)}>Edit</Button>
+          )}
+        </Col>
+      </Row>
+      {isCustomPanelOpen && (
         <div className="p-strip is-shallow u-no-padding--top">
-          <p>{selectedDateRangeLabel}</p>
           {showValidationError && (
             <Notification severity="caution">
               {exceedsThirtyDays
@@ -246,6 +435,7 @@ function SerialLogDateSelectors({
             >
               Apply date range
             </Button>
+            <Button onClick={handleClear}>Clear</Button>
             <Button onClick={handleClose}>Close</Button>
           </div>
         </div>

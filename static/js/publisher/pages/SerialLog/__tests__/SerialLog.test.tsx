@@ -134,10 +134,12 @@ describe("SerialLog", () => {
     renderComponent();
 
     expect(
-      screen.getByText("Showing serial logs for the past 30 days"),
+      screen.getByText("Showing serial logs for the last 30 days"),
     ).toBeInTheDocument();
     expect(
-      screen.getByRole("button", { name: "Select custom date range" }),
+      screen.getByRole("combobox", {
+        name: "Showing serial logs for the last 30 days",
+      }),
     ).toBeInTheDocument();
   });
 
@@ -173,11 +175,12 @@ describe("SerialLog", () => {
     renderWithSearchParams();
 
     expect(
-      screen.getByText("Showing serial logs for the past 30 days"),
+      screen.getByText("Showing serial logs for the last 30 days"),
     ).toBeInTheDocument();
-    expect(
-      screen.getByRole("button", { name: "Select custom date range" }),
-    ).toBeInTheDocument();
+    const select = document.getElementById(
+      "date-range-preset",
+    ) as HTMLSelectElement;
+    expect(select).toHaveValue("last-30-days");
     expect(screen.queryByLabelText("Start date")).not.toBeInTheDocument();
     expect(screen.queryByLabelText("End date")).not.toBeInTheDocument();
   });
@@ -193,6 +196,10 @@ describe("SerialLog", () => {
       "end-time": endTime,
     });
 
+    const select = document.getElementById(
+      "date-range-preset",
+    ) as HTMLSelectElement;
+    expect(select).toHaveValue("custom");
     expect(screen.getByLabelText("Start date")).toHaveAttribute("type", "date");
     expect(screen.getByLabelText("Start date")).toHaveValue(
       format(parseISO(startTime), "yyyy-MM-dd"),
@@ -223,9 +230,10 @@ describe("SerialLog", () => {
     vi.useRealTimers();
     const user = userEvent.setup();
 
-    await user.click(
-      screen.getByRole("button", { name: "Select custom date range" }),
-    );
+    const select = document.getElementById(
+      "date-range-preset",
+    ) as HTMLSelectElement;
+    await user.selectOptions(select, "custom");
 
     expect(screen.getByLabelText("Start time")).toHaveValue("00:00:00");
     expect(screen.getByLabelText("End time")).toHaveValue("23:59:59");
@@ -238,9 +246,10 @@ describe("SerialLog", () => {
     vi.useRealTimers();
     const user = userEvent.setup();
 
-    await user.click(
-      screen.getByRole("button", { name: "Select custom date range" }),
-    );
+    const select = document.getElementById(
+      "date-range-preset",
+    ) as HTMLSelectElement;
+    await user.selectOptions(select, "custom");
 
     expect(screen.getByLabelText("Start date")).toHaveValue("2026-05-04");
     expect(screen.getByLabelText("End date")).toHaveValue("2026-06-02");
@@ -253,9 +262,10 @@ describe("SerialLog", () => {
     vi.useRealTimers();
     const user = userEvent.setup();
 
-    await user.click(
-      screen.getByRole("button", { name: "Select custom date range" }),
-    );
+    const select = document.getElementById(
+      "date-range-preset",
+    ) as HTMLSelectElement;
+    await user.selectOptions(select, "custom");
     await user.clear(screen.getByLabelText("Start date"));
     await user.type(screen.getByLabelText("Start date"), "2026-05-01");
     await user.clear(screen.getByLabelText("End date"));
@@ -276,9 +286,10 @@ describe("SerialLog", () => {
     vi.useRealTimers();
     const user = userEvent.setup();
 
-    await user.click(
-      screen.getByRole("button", { name: "Select custom date range" }),
-    );
+    const select = document.getElementById(
+      "date-range-preset",
+    ) as HTMLSelectElement;
+    await user.selectOptions(select, "custom");
     await user.clear(screen.getByLabelText("Start date"));
     await user.type(screen.getByLabelText("Start date"), "2026-05-01");
     await user.clear(screen.getByLabelText("End date"));
@@ -300,9 +311,10 @@ describe("SerialLog", () => {
     vi.useRealTimers();
     const user = userEvent.setup();
 
-    await user.click(
-      screen.getByRole("button", { name: "Select custom date range" }),
-    );
+    const select = document.getElementById(
+      "date-range-preset",
+    ) as HTMLSelectElement;
+    await user.selectOptions(select, "custom");
     await user.clear(screen.getByLabelText("Start date"));
     await user.type(screen.getByLabelText("Start date"), "2026-05-02");
     await user.clear(screen.getByLabelText("End date"));
@@ -337,7 +349,7 @@ describe("SerialLog", () => {
     expect(mockNavigate).not.toHaveBeenCalled();
   });
 
-  it("removes date range query params when closing the panel", async () => {
+  it("closes the date panel without changing URL params when clicking Close", async () => {
     mockuseSerialLogs.mockReturnValue(useSerialLogsPermissions);
 
     renderWithSearchParams({
@@ -351,9 +363,9 @@ describe("SerialLog", () => {
 
     await user.click(screen.getByRole("button", { name: "Close" }));
 
-    expect(mockNavigate).toHaveBeenCalledWith({
-      pathname: mockPathname,
-      search: "",
-    });
+    // Panel should be closed
+    expect(screen.queryByLabelText("Start date")).not.toBeInTheDocument();
+    // URL params should not change
+    expect(mockNavigate).not.toHaveBeenCalled();
   });
 });
