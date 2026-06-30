@@ -298,7 +298,12 @@ function SerialLogDateSelectors({
         </Col>
         <Col size={2}>
           {selectedPreset === "custom" && (
-            <Button onClick={() => setIsCustomPanelOpen(true)}>Edit</Button>
+            <Button
+              onClick={() => setIsCustomPanelOpen(true)}
+              disabled={isCustomPanelOpen}
+            >
+              Edit
+            </Button>
           )}
         </Col>
       </Row>
