@@ -71,6 +71,10 @@ function renderWithSearchParams(searchParams: Record<string, string> = {}) {
   return renderComponent();
 }
 
+function getVisibleDateRangeSummary(text: string): HTMLElement {
+  return screen.getByText(text, { selector: ".p-form-help-text" });
+}
+
 const useSerialLogsNoPermissions = {
   data: {
     message: "There was a problem fetching serial logs",
@@ -88,6 +92,12 @@ const useSerialLogsPermissions = {
   isLoading: false,
   isError: false,
 } as unknown as UseQueryResult<ApiResponse<SerialLogResponse>, Error>;
+
+const useSerialLogsLoading = {
+  data: undefined,
+  isLoading: true,
+  isError: false,
+} as UseQueryResult<ApiResponse<SerialLogResponse>, Error>;
 
 const mockUseModels = vi.mocked(useModels);
 mockUseModels.mockReturnValue({
@@ -134,7 +144,22 @@ describe("SerialLog", () => {
     renderComponent();
 
     expect(
-      screen.getByText("Showing serial logs for the last 30 days"),
+      getVisibleDateRangeSummary("Showing serial logs for the last 30 days"),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("combobox", {
+        name: "Showing serial logs for the last 30 days",
+      }),
+    ).toBeInTheDocument();
+  });
+
+  it("keeps date selector controls visible while fetching serial logs", () => {
+    mockuseSerialLogs.mockReturnValue(useSerialLogsLoading);
+    renderComponent();
+
+    expect(screen.getByText("Fetching serial logs...")).toBeInTheDocument();
+    expect(
+      getVisibleDateRangeSummary("Showing serial logs for the last 30 days"),
     ).toBeInTheDocument();
     expect(
       screen.getByRole("combobox", {
@@ -175,7 +200,7 @@ describe("SerialLog", () => {
     renderWithSearchParams();
 
     expect(
-      screen.getByText("Showing serial logs for the last 30 days"),
+      getVisibleDateRangeSummary("Showing serial logs for the last 30 days"),
     ).toBeInTheDocument();
     const select = document.getElementById(
       "date-range-preset",
@@ -217,7 +242,7 @@ describe("SerialLog", () => {
       format(parseISO(endTime), "HH:mm:ss"),
     );
     expect(
-      screen.getByText(
+      getVisibleDateRangeSummary(
         "Showing serial logs between 1 May, 2026 and 10 May, 2026",
       ),
     ).toBeInTheDocument();
@@ -252,7 +277,7 @@ describe("SerialLog", () => {
     ) as HTMLSelectElement;
     expect(select).toHaveValue("last-7-days");
     expect(
-      screen.getByText("Showing serial logs for the last 7 days"),
+      getVisibleDateRangeSummary("Showing serial logs for the last 7 days"),
     ).toBeInTheDocument();
     expect(screen.queryByLabelText("Start date")).not.toBeInTheDocument();
   });
@@ -432,7 +457,7 @@ describe("SerialLog", () => {
     expect(mockNavigate).not.toHaveBeenCalled();
   });
 
-  it("removes date range query params when clicking Clear", async () => {
+  it("removes date range query params when clicking Reset", async () => {
     mockuseSerialLogs.mockReturnValue(useSerialLogsPermissions);
 
     renderWithSearchParams({
@@ -445,7 +470,7 @@ describe("SerialLog", () => {
     vi.useRealTimers();
     const user = userEvent.setup();
 
-    await user.click(screen.getByRole("button", { name: "Clear" }));
+    await user.click(screen.getByRole("button", { name: "Reset" }));
 
     expect(mockNavigate).toHaveBeenCalledWith({
       pathname: mockPathname,

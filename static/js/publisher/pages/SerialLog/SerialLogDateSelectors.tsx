@@ -151,7 +151,10 @@ function SerialLogDateSelectors({
   useEffect(() => {
     const detectedPreset = detectActivePreset(queryStartTime, queryEndTime);
     setSelectedPreset(detectedPreset);
-    setIsCustomPanelOpen(detectedPreset === "custom");
+
+    if (detectedPreset !== "custom") {
+      setIsCustomPanelOpen(false);
+    }
 
     if (queryStartTime && queryEndTime) {
       setStartDate(formatDateInputValue(parseISO(queryStartTime)));
@@ -253,7 +256,7 @@ function SerialLogDateSelectors({
     setIsCustomPanelOpen(false);
   };
 
-  const handleClear = (): void => {
+  const handleReset = (): void => {
     const range = getPresetDateRange("last-30-days");
     if (!range) return;
 
@@ -274,8 +277,9 @@ function SerialLogDateSelectors({
   return (
     <>
       <Row>
-        <Col size={6} medium={3}>
+        <Col size={4} medium={3}>
           <Select
+            labelClassName="u-off-screen"
             id="date-range-preset"
             name="date-range-preset"
             label={selectedDateRangeLabel}
@@ -291,11 +295,14 @@ function SerialLogDateSelectors({
               { label: "Custom", value: "custom" },
             ]}
           />
+        </Col>
+        <Col size={2}>
           {selectedPreset === "custom" && (
             <Button onClick={() => setIsCustomPanelOpen(true)}>Edit</Button>
           )}
         </Col>
       </Row>
+      <p className="p-form-help-text">{selectedDateRangeLabel}</p>
       {isCustomPanelOpen && (
         <div className="p-strip is-shallow u-no-padding--top">
           {showValidationError && (
@@ -363,7 +370,7 @@ function SerialLogDateSelectors({
             >
               Apply date range
             </Button>
-            <Button onClick={handleClear}>Clear</Button>
+            <Button onClick={handleReset}>Reset</Button>
             <Button onClick={handleClose}>Close</Button>
           </div>
         </div>
