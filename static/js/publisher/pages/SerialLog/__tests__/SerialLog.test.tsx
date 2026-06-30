@@ -267,9 +267,27 @@ describe("SerialLog", () => {
   it("detects an active preset date range from URL params", () => {
     mockuseSerialLogs.mockReturnValue(useSerialLogsPermissions);
 
+    const today = new Date();
+    const startTime = new Date(
+      today.getFullYear(),
+      today.getMonth(),
+      today.getDate() - 6,
+      0,
+      0,
+      0,
+    ).toISOString();
+    const endTime = new Date(
+      today.getFullYear(),
+      today.getMonth(),
+      today.getDate(),
+      23,
+      59,
+      59,
+    ).toISOString();
+
     renderWithSearchParams({
-      "start-time": "2026-05-27T00:00:00.000Z",
-      "end-time": "2026-06-02T23:59:59.000Z",
+      "start-time": startTime,
+      "end-time": endTime,
     });
 
     const select = document.getElementById(

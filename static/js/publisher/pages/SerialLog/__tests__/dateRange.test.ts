@@ -13,7 +13,7 @@ import {
 describe("dateRange", () => {
   beforeEach(() => {
     vi.useFakeTimers();
-    vi.setSystemTime(new Date("2026-06-02T14:34:23.666Z"));
+    vi.setSystemTime(new Date(2026, 5, 2, 14, 34, 23, 666));
   });
 
   afterEach(() => {
@@ -21,7 +21,7 @@ describe("dateRange", () => {
   });
 
   it("formats date and time input values", () => {
-    const date = new Date("2026-05-01T12:13:14.000Z");
+    const date = new Date(2026, 4, 1, 12, 13, 14);
 
     expect(formatDateInputValue(date)).toBe("2026-05-01");
     expect(formatTimeInputValue(date)).toBe("12:13:14");
@@ -67,15 +67,15 @@ describe("dateRange", () => {
     expect(
       buildTimestampRange("2026-05-01", "12:13:14", "2026-05-10", "20:21:22"),
     ).toEqual({
-      startTime: "2026-05-01T12:13:14.000Z",
-      endTime: "2026-05-10T20:21:22.000Z",
+      startTime: new Date(2026, 4, 1, 12, 13, 14).toISOString(),
+      endTime: new Date(2026, 4, 10, 20, 21, 22).toISOString(),
     });
   });
 
   it("returns timestamp ranges for supported presets", () => {
     expect(getPresetTimestampRange("last-7-days")).toEqual({
-      startTime: "2026-05-27T00:00:00.000Z",
-      endTime: "2026-06-02T23:59:59.000Z",
+      startTime: new Date(2026, 4, 27, 0, 0, 0).toISOString(),
+      endTime: new Date(2026, 5, 2, 23, 59, 59).toISOString(),
     });
     expect(getPresetTimestampRange("custom")).toBeNull();
   });
