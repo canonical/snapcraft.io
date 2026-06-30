@@ -199,13 +199,6 @@ function SerialLogDateSelectors({
     const range = getPresetDateRange(preset);
     if (!range) return;
 
-    const { startTime, endTime } = buildTimestampRange(
-      range.startDate,
-      range.startTime,
-      range.endDate,
-      range.endTime,
-    );
-
     setStartDate(range.startDate);
     setEndDate(range.endDate);
     setStartTimeValue(range.startTime);
@@ -213,6 +206,21 @@ function SerialLogDateSelectors({
     setIsCustomPanelOpen(false);
 
     onApplyDateRange();
+    if (preset === "last-30-days") {
+      navigate({
+        pathname,
+        search: buildClearedSearchString(searchParams),
+      });
+      return;
+    }
+
+    const { startTime, endTime } = buildTimestampRange(
+      range.startDate,
+      range.startTime,
+      range.endDate,
+      range.endTime,
+    );
+
     navigate({
       pathname,
       search: buildAppliedSearchString(searchParams, startTime, endTime),
