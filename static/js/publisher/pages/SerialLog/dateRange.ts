@@ -1,4 +1,4 @@
-import { format, parseISO, subDays } from "date-fns";
+import { addDays, format, parseISO, subDays } from "date-fns";
 
 export type DatePreset =
   | "today"
@@ -25,6 +25,10 @@ export function getDefaultDateRange(): { startDate: string; endDate: string } {
     startDate: formatDateInputValue(subDays(today, 29)),
     endDate: formatDateInputValue(today),
   };
+}
+
+export function getMaxEndDate(startDate: string): string {
+  return formatDateInputValue(addDays(parseISO(startDate), 29));
 }
 
 export function formatReadableDate(dateValue: string): string {

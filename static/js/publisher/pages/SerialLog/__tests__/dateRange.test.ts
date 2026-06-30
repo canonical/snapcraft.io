@@ -6,6 +6,7 @@ import {
   formatReadableDate,
   formatTimeInputValue,
   getDefaultDateRange,
+  getMaxEndDate,
   getPresetDateRange,
   getPresetTimestampRange,
 } from "../dateRange";
@@ -33,6 +34,10 @@ describe("dateRange", () => {
       startDate: "2026-05-04",
       endDate: "2026-06-02",
     });
+  });
+
+  it("returns the latest valid end date for an inclusive 30 day range", () => {
+    expect(getMaxEndDate("2026-05-01")).toBe("2026-05-30");
   });
 
   it("returns date ranges for supported presets", () => {

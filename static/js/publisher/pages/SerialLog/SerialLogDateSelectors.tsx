@@ -17,6 +17,7 @@ import {
   formatReadableDate,
   formatTimeInputValue,
   getDefaultDateRange,
+  getMaxEndDate,
   getPresetDateRange,
 } from "./dateRange";
 
@@ -184,6 +185,7 @@ function SerialLogDateSelectors({
   const exceedsThirtyDays =
     hasValidDateOrder &&
     differenceInCalendarDays(parseISO(endDate), parseISO(startDate)) > 29;
+  const maxEndDate = startDate ? getMaxEndDate(startDate) : undefined;
   const showValidationError =
     hasBothDates && (!hasValidOrder || exceedsThirtyDays);
   const selectedDateRangeLabel =
@@ -298,7 +300,12 @@ function SerialLogDateSelectors({
         </Col>
         <Col size={2}>
           {selectedPreset === "custom" && (
-            <Button onClick={() => setIsCustomPanelOpen(true)}>Edit</Button>
+            <Button
+              onClick={() => setIsCustomPanelOpen(true)}
+              disabled={isCustomPanelOpen}
+            >
+              Edit
+            </Button>
           )}
         </Col>
       </Row>
@@ -346,6 +353,7 @@ function SerialLogDateSelectors({
                   type="date"
                   value={endDate}
                   min={startDate}
+                  max={maxEndDate}
                   onChange={(event) => setEndDate(event.target.value)}
                 />
               </Col>

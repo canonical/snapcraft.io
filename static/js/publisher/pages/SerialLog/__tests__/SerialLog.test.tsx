@@ -374,6 +374,30 @@ describe("SerialLog", () => {
 
     expect(screen.getByLabelText("Start date")).toHaveValue("2026-05-04");
     expect(screen.getByLabelText("End date")).toHaveValue("2026-06-02");
+    expect(screen.getByLabelText("End date")).toHaveAttribute(
+      "max",
+      "2026-06-02",
+    );
+  });
+
+  it("limits the end date picker to 30 inclusive days from the start date", async () => {
+    mockuseSerialLogs.mockReturnValue(useSerialLogsPermissions);
+
+    renderWithSearchParams();
+    vi.useRealTimers();
+    const user = userEvent.setup();
+
+    const select = document.getElementById(
+      "date-range-preset",
+    ) as HTMLSelectElement;
+    await user.selectOptions(select, "custom");
+    await user.clear(screen.getByLabelText("Start date"));
+    await user.type(screen.getByLabelText("Start date"), "2026-05-01");
+
+    expect(screen.getByLabelText("End date")).toHaveAttribute(
+      "max",
+      "2026-05-30",
+    );
   });
 
   it("applies a valid custom date range", async () => {
