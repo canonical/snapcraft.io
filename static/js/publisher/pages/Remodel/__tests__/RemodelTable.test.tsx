@@ -42,24 +42,23 @@ const remodels: Remodel[] = [
 const firstRowId = "from-model-a:to-model-a:serial-1";
 const secondRowId = "from-model-b:to-model-b:serial-2";
 
-const renderComponent = (
-  onDeleteRemodel: (remodel: Remodel) => Promise<void> = vi.fn(async () => {}),
-  {
-    isDeleting = false,
-    isSavingEdit = false,
-    editedDescriptions = {},
-    onEditChange = vi.fn(),
-    onEditSave = vi.fn(async () => {}),
-    onEditCancel = vi.fn(),
-  }: {
-    isDeleting?: boolean;
-    isSavingEdit?: boolean;
-    editedDescriptions?: Record<string, string>;
-    onEditChange?: (rowId: string, value: string) => void;
-    onEditSave?: (remodel: Remodel) => Promise<void>;
-    onEditCancel?: (rowId: string) => void;
-  } = {},
-) => {
+const renderComponent = ({
+  isSavingEdit = false,
+  editedDescriptions = {},
+  onEditChange = vi.fn(),
+  onEditSave = vi.fn(async () => {}),
+  onEditCancel = vi.fn(),
+  remodelsToDelete = [],
+  setRemodelsToDelete = vi.fn(),
+}: {
+  isSavingEdit?: boolean;
+  editedDescriptions?: Record<string, string>;
+  onEditChange?: (rowId: string, value: string) => void;
+  onEditSave?: (remodel: Remodel) => Promise<void>;
+  onEditCancel?: (rowId: string) => void;
+  remodelsToDelete?: Remodel[];
+  setRemodelsToDelete?: (remodels: Remodel[]) => void;
+} = {}) => {
   return render(
     <BrowserRouter>
       <QueryClientProvider client={queryClient}>
@@ -71,13 +70,13 @@ const renderComponent = (
           forwardDisabled={false}
           backDisabled={true}
           pageSize={10}
-          isDeleting={isDeleting}
           isSavingEdit={isSavingEdit}
           editedDescriptions={editedDescriptions}
-          onDeleteRemodel={onDeleteRemodel}
           onEditChange={onEditChange}
           onEditSave={onEditSave}
           onEditCancel={onEditCancel}
+          remodelsToDelete={remodelsToDelete}
+          setRemodelsToDelete={setRemodelsToDelete}
         />
       </QueryClientProvider>
     </BrowserRouter>,
@@ -108,38 +107,6 @@ describe("RemodelTable", () => {
     expect(
       screen.getByRole("columnheader", { name: "Note" }),
     ).toBeInTheDocument();
-
-    expect(
-      screen.getByRole("columnheader", { name: "Actions" }),
-    ).toBeInTheDocument();
-  });
-
-  it("opens the delete modal and closes it when cancel is clicked", async () => {
-    renderComponent();
-    const user = userEvent.setup();
-
-    await user.click(screen.getAllByRole("button", { name: "Delete" })[0]);
-
-    expect(screen.getByText("Delete remodel")).toBeInTheDocument();
-    expect(
-      screen.getByText(/Are you sure you want to delete this remodel/),
-    ).toBeInTheDocument();
-
-    await user.click(screen.getByRole("button", { name: "Cancel" }));
-
-    expect(screen.queryByText("Delete remodel")).not.toBeInTheDocument();
-  });
-
-  it("calls onDeleteRemodel with the selected remodel", async () => {
-    const onDeleteRemodel = vi.fn(async () => {});
-    renderComponent(onDeleteRemodel);
-    const user = userEvent.setup();
-
-    await user.click(screen.getAllByRole("button", { name: "Delete" })[0]);
-    const deleteButtons = screen.getAllByRole("button", { name: "Delete" });
-    await user.click(deleteButtons[deleteButtons.length - 1]);
-
-    expect(onDeleteRemodel).toHaveBeenCalledWith(remodels[0]);
   });
 
   it("shows input fields for all descriptions", () => {
@@ -163,7 +130,7 @@ describe("RemodelTable", () => {
   });
 
   it("shows save/cancel buttons when value differs from original", () => {
-    renderComponent(undefined, {
+    renderComponent({
       editedDescriptions: { [firstRowId]: "modified description" },
     });
 
@@ -172,7 +139,7 @@ describe("RemodelTable", () => {
   });
 
   it("supports multiple rows with pending edits simultaneously", () => {
-    renderComponent(undefined, {
+    renderComponent({
       editedDescriptions: {
         [firstRowId]: "modified first",
         [secondRowId]: "modified second",
@@ -194,7 +161,7 @@ describe("RemodelTable", () => {
     const user = userEvent.setup();
     const onEditSave = vi.fn(async () => {});
 
-    renderComponent(undefined, {
+    renderComponent({
       editedDescriptions: { [firstRowId]: "modified description" },
       onEditSave,
     });
@@ -208,7 +175,7 @@ describe("RemodelTable", () => {
     const user = userEvent.setup();
     const onEditChange = vi.fn();
 
-    renderComponent(undefined, {
+    renderComponent({
       onEditChange,
     });
 
@@ -223,7 +190,7 @@ describe("RemodelTable", () => {
     const user = userEvent.setup();
     const onEditCancel = vi.fn();
 
-    renderComponent(undefined, {
+    renderComponent({
       editedDescriptions: { [firstRowId]: "modified description" },
       onEditCancel,
     });
@@ -233,21 +200,105 @@ describe("RemodelTable", () => {
     expect(onEditCancel).toHaveBeenCalledWith(firstRowId);
   });
 
-  it("delete buttons are always visible", () => {
+  it("renders checkboxes for each row", () => {
     renderComponent();
 
-    const deleteButtons = screen.getAllByRole("button", { name: "Delete" });
-    expect(deleteButtons).toHaveLength(2);
+    // Should have checkbox for each remodel row (2) plus header checkbox
+    const checkboxes = screen.getAllByRole("checkbox");
+    expect(checkboxes).toHaveLength(3);
   });
 
-  it("disables delete buttons when busy", () => {
-    renderComponent(undefined, {
-      isDeleting: true,
+  it("calls setRemodelsToDelete when individual checkbox is clicked", async () => {
+    const user = userEvent.setup();
+    const setRemodelsToDelete = vi.fn();
+
+    renderComponent({
+      setRemodelsToDelete,
     });
 
-    const deleteButtons = screen.getAllByRole("button", { name: "Delete" });
-    deleteButtons.forEach((button) => {
-      expect(button).toHaveAttribute("aria-disabled", "true");
+    const checkboxes = screen.getAllByRole("checkbox");
+    // First checkbox is the header, second is first row
+    await user.click(checkboxes[1]);
+
+    expect(setRemodelsToDelete).toHaveBeenCalledWith([remodels[0]]);
+  });
+
+  it("calls setRemodelsToDelete to remove item when checkbox is unchecked", async () => {
+    const user = userEvent.setup();
+    const setRemodelsToDelete = vi.fn();
+
+    renderComponent({
+      remodelsToDelete: [remodels[0]],
+      setRemodelsToDelete,
     });
+
+    const checkboxes = screen.getAllByRole("checkbox");
+    // First checkbox is the header, second is first row (which is checked)
+    await user.click(checkboxes[1]);
+
+    expect(setRemodelsToDelete).toHaveBeenCalledWith([]);
+  });
+
+  it("selects all remodels when header checkbox is clicked", async () => {
+    const user = userEvent.setup();
+    const setRemodelsToDelete = vi.fn();
+
+    renderComponent({
+      setRemodelsToDelete,
+    });
+
+    const checkboxes = screen.getAllByRole("checkbox");
+    // First checkbox is the header
+    await user.click(checkboxes[0]);
+
+    expect(setRemodelsToDelete).toHaveBeenCalledWith(remodels);
+  });
+
+  it("deselects all remodels when header checkbox is unchecked", async () => {
+    const user = userEvent.setup();
+    const setRemodelsToDelete = vi.fn();
+
+    renderComponent({
+      remodelsToDelete: remodels,
+      setRemodelsToDelete,
+    });
+
+    const checkboxes = screen.getAllByRole("checkbox");
+    // First checkbox is the header
+    await user.click(checkboxes[0]);
+
+    expect(setRemodelsToDelete).toHaveBeenCalledWith([]);
+  });
+
+  it("shows header checkbox as checked when all items selected", () => {
+    renderComponent({
+      remodelsToDelete: remodels,
+    });
+
+    const checkboxes = screen.getAllByRole("checkbox");
+    // Header checkbox should be checked
+    expect(checkboxes[0]).toBeChecked();
+  });
+
+  it("shows header checkbox as indeterminate when some items selected", () => {
+    renderComponent({
+      remodelsToDelete: [remodels[0]],
+    });
+
+    const checkboxes = screen.getAllByRole("checkbox");
+    // Header checkbox should be indeterminate
+    expect(checkboxes[0]).toHaveProperty("indeterminate", true);
+  });
+
+  it("shows individual row checkbox as checked when row is selected", () => {
+    renderComponent({
+      remodelsToDelete: [remodels[0]],
+    });
+
+    const checkboxes = screen.getAllByRole("checkbox");
+    // Second checkbox (first row) should be checked
+    expect(checkboxes[1]).toBeChecked();
+    // Third checkbox (second row) should not be checked
+    expect(checkboxes[2]).not.toBeChecked();
   });
 });
