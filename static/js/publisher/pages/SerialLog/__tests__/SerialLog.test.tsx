@@ -2,7 +2,7 @@ import { BrowserRouter } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { vi } from "vitest";
 import { format, parseISO } from "date-fns";
-import { render, screen } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
 import "@testing-library/jest-dom";
@@ -71,6 +71,10 @@ function renderWithSearchParams(searchParams: Record<string, string> = {}) {
   return renderComponent();
 }
 
+function getVisibleDateRangeSummary(text: string): HTMLElement {
+  return screen.getByText(text, { selector: ".p-form-help-text" });
+}
+
 const useSerialLogsNoPermissions = {
   data: {
     message: "There was a problem fetching serial logs",
@@ -88,6 +92,12 @@ const useSerialLogsPermissions = {
   isLoading: false,
   isError: false,
 } as unknown as UseQueryResult<ApiResponse<SerialLogResponse>, Error>;
+
+const useSerialLogsLoading = {
+  data: undefined,
+  isLoading: true,
+  isError: false,
+} as UseQueryResult<ApiResponse<SerialLogResponse>, Error>;
 
 const mockUseModels = vi.mocked(useModels);
 mockUseModels.mockReturnValue({
@@ -134,10 +144,27 @@ describe("SerialLog", () => {
     renderComponent();
 
     expect(
-      screen.getByText("Showing serial logs for the past 30 days"),
+      getVisibleDateRangeSummary("Showing serial logs for the last 30 days"),
     ).toBeInTheDocument();
     expect(
-      screen.getByRole("button", { name: "Select custom date range" }),
+      screen.getByRole("combobox", {
+        name: "Showing serial logs for the last 30 days",
+      }),
+    ).toBeInTheDocument();
+  });
+
+  it("keeps date selector controls visible while fetching serial logs", () => {
+    mockuseSerialLogs.mockReturnValue(useSerialLogsLoading);
+    renderComponent();
+
+    expect(screen.getByText("Fetching serial logs...")).toBeInTheDocument();
+    expect(
+      getVisibleDateRangeSummary("Showing serial logs for the last 30 days"),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("combobox", {
+        name: "Showing serial logs for the last 30 days",
+      }),
     ).toBeInTheDocument();
   });
 
@@ -155,7 +182,7 @@ describe("SerialLog", () => {
     expect(screen.getByTestId("serial-log-table")).toBeInTheDocument();
   });
 
-  it("passes default page size 25 to useSerialLogs when none is set", () => {
+  it("passes default page size without a date range to useSerialLogs when none is set", () => {
     mockuseSerialLogs.mockReturnValue(useSerialLogsPermissions);
 
     renderWithSearchParams();
@@ -173,11 +200,12 @@ describe("SerialLog", () => {
     renderWithSearchParams();
 
     expect(
-      screen.getByText("Showing serial logs for the past 30 days"),
+      getVisibleDateRangeSummary("Showing serial logs for the last 30 days"),
     ).toBeInTheDocument();
-    expect(
-      screen.getByRole("button", { name: "Select custom date range" }),
-    ).toBeInTheDocument();
+    const select = document.getElementById(
+      "date-range-preset",
+    ) as HTMLSelectElement;
+    expect(select).toHaveValue("last-30-days");
     expect(screen.queryByLabelText("Start date")).not.toBeInTheDocument();
     expect(screen.queryByLabelText("End date")).not.toBeInTheDocument();
   });
@@ -193,6 +221,10 @@ describe("SerialLog", () => {
       "end-time": endTime,
     });
 
+    const select = document.getElementById(
+      "date-range-preset",
+    ) as HTMLSelectElement;
+    expect(select).toHaveValue("custom");
     expect(screen.getByLabelText("Start date")).toHaveAttribute("type", "date");
     expect(screen.getByLabelText("Start date")).toHaveValue(
       format(parseISO(startTime), "yyyy-MM-dd"),
@@ -210,7 +242,7 @@ describe("SerialLog", () => {
       format(parseISO(endTime), "HH:mm:ss"),
     );
     expect(
-      screen.getByText(
+      getVisibleDateRangeSummary(
         "Showing serial logs between 1 May, 2026 and 10 May, 2026",
       ),
     ).toBeInTheDocument();
@@ -223,12 +255,109 @@ describe("SerialLog", () => {
     vi.useRealTimers();
     const user = userEvent.setup();
 
-    await user.click(
-      screen.getByRole("button", { name: "Select custom date range" }),
-    );
+    const select = document.getElementById(
+      "date-range-preset",
+    ) as HTMLSelectElement;
+    await user.selectOptions(select, "custom");
 
     expect(screen.getByLabelText("Start time")).toHaveValue("00:00:00");
     expect(screen.getByLabelText("End time")).toHaveValue("23:59:59");
+  });
+
+  it("detects an active preset date range from URL params", () => {
+    mockuseSerialLogs.mockReturnValue(useSerialLogsPermissions);
+
+    const today = new Date();
+    const startTime = new Date(
+      today.getFullYear(),
+      today.getMonth(),
+      today.getDate() - 6,
+      0,
+      0,
+      0,
+    ).toISOString();
+    const endTime = new Date(
+      today.getFullYear(),
+      today.getMonth(),
+      today.getDate(),
+      23,
+      59,
+      59,
+    ).toISOString();
+
+    renderWithSearchParams({
+      "start-time": startTime,
+      "end-time": endTime,
+    });
+
+    const select = document.getElementById(
+      "date-range-preset",
+    ) as HTMLSelectElement;
+    expect(select).toHaveValue("last-7-days");
+    expect(
+      getVisibleDateRangeSummary("Showing serial logs for the last 7 days"),
+    ).toBeInTheDocument();
+    expect(screen.queryByLabelText("Start date")).not.toBeInTheDocument();
+  });
+
+  it("applies a selected preset date range and clears pagination params", () => {
+    mockuseSerialLogs.mockReturnValue(useSerialLogsPermissions);
+
+    renderWithSearchParams({
+      filter: mockFilterQuery,
+      page: "cursor",
+      "page-size": "50",
+    });
+
+    const select = document.getElementById(
+      "date-range-preset",
+    ) as HTMLSelectElement;
+    fireEvent.change(select, { target: { value: "today" } });
+
+    const today = new Date();
+    const expectedStart = new Date(
+      today.getFullYear(),
+      today.getMonth(),
+      today.getDate(),
+      0,
+      0,
+      0,
+    ).toISOString();
+    const expectedEnd = new Date(
+      today.getFullYear(),
+      today.getMonth(),
+      today.getDate(),
+      23,
+      59,
+      59,
+    ).toISOString();
+
+    expect(mockNavigate).toHaveBeenCalledWith({
+      pathname: mockPathname,
+      search: `?filter=${mockFilterQuery}&start-time=${expectedStart}&end-time=${expectedEnd}`,
+    });
+  });
+
+  it("clears date range params when selecting the default last 30 days preset", () => {
+    mockuseSerialLogs.mockReturnValue(useSerialLogsPermissions);
+
+    renderWithSearchParams({
+      filter: mockFilterQuery,
+      page: "cursor",
+      "page-size": "50",
+      "start-time": "2026-05-01T00:00:00.000Z",
+      "end-time": "2026-05-10T23:59:59.000Z",
+    });
+
+    const select = document.getElementById(
+      "date-range-preset",
+    ) as HTMLSelectElement;
+    fireEvent.change(select, { target: { value: "last-30-days" } });
+
+    expect(mockNavigate).toHaveBeenCalledWith({
+      pathname: mockPathname,
+      search: `?filter=${mockFilterQuery}`,
+    });
   });
 
   it("shows a default date range of exactly 30 inclusive days", async () => {
@@ -238,9 +367,10 @@ describe("SerialLog", () => {
     vi.useRealTimers();
     const user = userEvent.setup();
 
-    await user.click(
-      screen.getByRole("button", { name: "Select custom date range" }),
-    );
+    const select = document.getElementById(
+      "date-range-preset",
+    ) as HTMLSelectElement;
+    await user.selectOptions(select, "custom");
 
     expect(screen.getByLabelText("Start date")).toHaveValue("2026-05-04");
     expect(screen.getByLabelText("End date")).toHaveValue("2026-06-02");
@@ -253,9 +383,10 @@ describe("SerialLog", () => {
     vi.useRealTimers();
     const user = userEvent.setup();
 
-    await user.click(
-      screen.getByRole("button", { name: "Select custom date range" }),
-    );
+    const select = document.getElementById(
+      "date-range-preset",
+    ) as HTMLSelectElement;
+    await user.selectOptions(select, "custom");
     await user.clear(screen.getByLabelText("Start date"));
     await user.type(screen.getByLabelText("Start date"), "2026-05-01");
     await user.clear(screen.getByLabelText("End date"));
@@ -276,9 +407,10 @@ describe("SerialLog", () => {
     vi.useRealTimers();
     const user = userEvent.setup();
 
-    await user.click(
-      screen.getByRole("button", { name: "Select custom date range" }),
-    );
+    const select = document.getElementById(
+      "date-range-preset",
+    ) as HTMLSelectElement;
+    await user.selectOptions(select, "custom");
     await user.clear(screen.getByLabelText("Start date"));
     await user.type(screen.getByLabelText("Start date"), "2026-05-01");
     await user.clear(screen.getByLabelText("End date"));
@@ -300,9 +432,10 @@ describe("SerialLog", () => {
     vi.useRealTimers();
     const user = userEvent.setup();
 
-    await user.click(
-      screen.getByRole("button", { name: "Select custom date range" }),
-    );
+    const select = document.getElementById(
+      "date-range-preset",
+    ) as HTMLSelectElement;
+    await user.selectOptions(select, "custom");
     await user.clear(screen.getByLabelText("Start date"));
     await user.type(screen.getByLabelText("Start date"), "2026-05-02");
     await user.clear(screen.getByLabelText("End date"));
@@ -337,7 +470,7 @@ describe("SerialLog", () => {
     expect(mockNavigate).not.toHaveBeenCalled();
   });
 
-  it("removes date range query params when closing the panel", async () => {
+  it("closes the date panel without changing URL params when clicking Close", async () => {
     mockuseSerialLogs.mockReturnValue(useSerialLogsPermissions);
 
     renderWithSearchParams({
@@ -351,9 +484,30 @@ describe("SerialLog", () => {
 
     await user.click(screen.getByRole("button", { name: "Close" }));
 
+    // Panel should be closed
+    expect(screen.queryByLabelText("Start date")).not.toBeInTheDocument();
+    // URL params should not change
+    expect(mockNavigate).not.toHaveBeenCalled();
+  });
+
+  it("removes date range query params when clicking Reset", async () => {
+    mockuseSerialLogs.mockReturnValue(useSerialLogsPermissions);
+
+    renderWithSearchParams({
+      filter: mockFilterQuery,
+      "start-time": "2026-05-01T00:00:00.000Z",
+      "end-time": "2026-05-10T23:59:59.000Z",
+      "page-size": "50",
+      page: "cursor",
+    });
+    vi.useRealTimers();
+    const user = userEvent.setup();
+
+    await user.click(screen.getByRole("button", { name: "Reset" }));
+
     expect(mockNavigate).toHaveBeenCalledWith({
       pathname: mockPathname,
-      search: "",
+      search: `?filter=${mockFilterQuery}`,
     });
   });
 });
