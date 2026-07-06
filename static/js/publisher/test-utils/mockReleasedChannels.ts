@@ -1,33 +1,100 @@
-import { ChannelArchitectureRevisionsMap } from "../types/releaseTypes";
+import {
+  ChannelArchitectureRevisionsMap,
+  Revision,
+} from "../types/releaseTypes";
+
+const amd64Revision23: Revision = {
+  architectures: ["amd64"],
+  attributes: {},
+  base: "core18",
+  build_url: null,
+  confinement: "strict",
+  created_at: "2022-06-01T08:59:35Z",
+  epoch: {
+    read: [0],
+    write: [0],
+  },
+  grade: "stable",
+  revision: 23,
+  "sha3-384":
+    "20c4e17fca36fddccb933b730454256e81714914f2f050996a63efe250e1aa44e5e4dc92959e9cd72cf7ef9ca918c5b6",
+  size: 4096,
+  status: "Published",
+  version: "1.0.1",
+  expiration: null,
+  progressive: {
+    "current-percentage": 100,
+    percentage: null,
+    paused: null,
+  },
+  channels: ["latest/candidate", "latest/beta", "latest/stable"],
+};
+
+const armhfRevision33: Revision = {
+  architectures: ["armhf"],
+  attributes: {
+    "build-request-id": "lp-79412770",
+    "build-request-timestamp": "2023-05-12T11:27:58Z",
+  },
+  base: "bare",
+  build_url:
+    "https://launchpad.net/~build.staging.snapcraft.io/+snap/1a34fa8a4dd2a8ec399c23b7bee98faf/+build/2105843",
+  confinement: "strict",
+  created_at: "2023-05-12T11:35:12Z",
+  epoch: {
+    read: [0],
+    write: [0],
+  },
+  grade: "stable",
+  revision: 33,
+  "sha3-384":
+    "39157150b8dd7ffe736fd27fe143296416d6e4193412cf5a671716f13d1000804e3524d859ae0694ae01dc0e49ae8bb9",
+  size: 4096,
+  status: "Published",
+  version: "3.0.0",
+  expiration: null,
+  progressive: {
+    "current-percentage": 0,
+    percentage: null,
+    paused: null,
+  },
+  channels: ["latest/edge", "latest/candidate", "latest/stable"],
+};
+
+const arm64Revision61: Revision = {
+  architectures: ["arm64"],
+  attributes: {
+    "build-request-id": "lp-95738871",
+    "build-request-timestamp": "2025-02-04T13:52:18Z",
+  },
+  base: "bare",
+  build_url:
+    "https://launchpad.net/~build.staging.snapcraft.io/+snap/1a34fa8a4dd2a8ec399c23b7bee98faf/+build/2719363",
+  confinement: "strict",
+  created_at: "2025-02-04T14:08:08Z",
+  epoch: {
+    read: [0],
+    write: [0],
+  },
+  grade: "stable",
+  revision: 61,
+  "sha3-384":
+    "40f7b56e7c1ce28af4b071930723455deae6943e2c8545e5e668a0443cff6094557711a58334fea1d43a3b0017ec6364",
+  size: 16384,
+  status: "Published",
+  version: "4.0.1",
+  expiration: null,
+  progressive: {
+    "current-percentage": 0,
+    percentage: 50,
+    paused: null,
+  },
+  channels: ["latest/edge", "latest/stable"],
+};
 
 export const mockReleasedChannels: ChannelArchitectureRevisionsMap = {
   "latest/candidate": {
-    amd64: {
-      architectures: ["amd64"],
-      attributes: {},
-      base: "core18",
-      build_url: null,
-      confinement: "strict",
-      created_at: "2022-06-01T08:59:35Z",
-      epoch: {
-        read: [0],
-        write: [0],
-      },
-      grade: "stable",
-      revision: 23,
-      "sha3-384":
-        "20c4e17fca36fddccb933b730454256e81714914f2f050996a63efe250e1aa44e5e4dc92959e9cd72cf7ef9ca918c5b6",
-      size: 4096,
-      status: "Published",
-      version: "1.0.1",
-      expiration: null,
-      progressive: {
-        "current-percentage": 100,
-        percentage: null,
-        paused: null,
-      },
-      channels: ["latest/candidate", "latest/beta", "latest/stable"],
-    },
+    amd64: amd64Revision23,
     arm64: {
       architectures: ["arm64"],
       attributes: {},
@@ -54,36 +121,7 @@ export const mockReleasedChannels: ChannelArchitectureRevisionsMap = {
       },
       channels: ["latest/beta", "latest/stable", "latest/candidate"],
     },
-    armhf: {
-      architectures: ["armhf"],
-      attributes: {
-        "build-request-id": "lp-79412770",
-        "build-request-timestamp": "2023-05-12T11:27:58Z",
-      },
-      base: "bare",
-      build_url:
-        "https://launchpad.net/~build.staging.snapcraft.io/+snap/1a34fa8a4dd2a8ec399c23b7bee98faf/+build/2105843",
-      confinement: "strict",
-      created_at: "2023-05-12T11:35:12Z",
-      epoch: {
-        read: [0],
-        write: [0],
-      },
-      grade: "stable",
-      revision: 33,
-      "sha3-384":
-        "39157150b8dd7ffe736fd27fe143296416d6e4193412cf5a671716f13d1000804e3524d859ae0694ae01dc0e49ae8bb9",
-      size: 4096,
-      status: "Published",
-      version: "3.0.0",
-      expiration: null,
-      progressive: {
-        "current-percentage": 0,
-        percentage: null,
-        paused: null,
-      },
-      channels: ["latest/edge", "latest/candidate", "latest/stable"],
-    },
+    armhf: armhfRevision33,
   },
   "latest/edge": {
     amd64: {
@@ -112,124 +150,12 @@ export const mockReleasedChannels: ChannelArchitectureRevisionsMap = {
       },
       channels: ["latest/edge"],
     },
-    arm64: {
-      architectures: ["arm64"],
-      attributes: {
-        "build-request-id": "lp-95738871",
-        "build-request-timestamp": "2025-02-04T13:52:18Z",
-      },
-      base: "bare",
-      build_url:
-        "https://launchpad.net/~build.staging.snapcraft.io/+snap/1a34fa8a4dd2a8ec399c23b7bee98faf/+build/2719363",
-      confinement: "strict",
-      created_at: "2025-02-04T14:08:08Z",
-      epoch: {
-        read: [0],
-        write: [0],
-      },
-      grade: "stable",
-      revision: 61,
-      "sha3-384":
-        "40f7b56e7c1ce28af4b071930723455deae6943e2c8545e5e668a0443cff6094557711a58334fea1d43a3b0017ec6364",
-      size: 16384,
-      status: "Published",
-      version: "4.0.1",
-      expiration: null,
-      progressive: {
-        "current-percentage": 0,
-        percentage: 50,
-        paused: null,
-      },
-      channels: ["latest/edge", "latest/stable"],
-    },
+    arm64: arm64Revision61,
   },
   "latest/stable": {
-    amd64: {
-      architectures: ["amd64"],
-      attributes: {},
-      base: "core18",
-      build_url: null,
-      confinement: "strict",
-      created_at: "2022-06-01T08:59:35Z",
-      epoch: {
-        read: [0],
-        write: [0],
-      },
-      grade: "stable",
-      revision: 23,
-      "sha3-384":
-        "20c4e17fca36fddccb933b730454256e81714914f2f050996a63efe250e1aa44e5e4dc92959e9cd72cf7ef9ca918c5b6",
-      size: 4096,
-      status: "Published",
-      version: "1.0.1",
-      expiration: null,
-      progressive: {
-        "current-percentage": 100,
-        percentage: null,
-        paused: null,
-      },
-      channels: ["latest/candidate", "latest/beta", "latest/stable"],
-    },
-    arm64: {
-      architectures: ["arm64"],
-      attributes: {
-        "build-request-id": "lp-95738871",
-        "build-request-timestamp": "2025-02-04T13:52:18Z",
-      },
-      base: "bare",
-      build_url:
-        "https://launchpad.net/~build.staging.snapcraft.io/+snap/1a34fa8a4dd2a8ec399c23b7bee98faf/+build/2719363",
-      confinement: "strict",
-      created_at: "2025-02-04T14:08:08Z",
-      epoch: {
-        read: [0],
-        write: [0],
-      },
-      grade: "stable",
-      revision: 61,
-      "sha3-384":
-        "40f7b56e7c1ce28af4b071930723455deae6943e2c8545e5e668a0443cff6094557711a58334fea1d43a3b0017ec6364",
-      size: 16384,
-      status: "Published",
-      version: "4.0.1",
-      expiration: null,
-      progressive: {
-        "current-percentage": 0,
-        percentage: 50,
-        paused: null,
-      },
-      channels: ["latest/edge", "latest/stable"],
-    },
-    armhf: {
-      architectures: ["armhf"],
-      attributes: {
-        "build-request-id": "lp-79412770",
-        "build-request-timestamp": "2023-05-12T11:27:58Z",
-      },
-      base: "bare",
-      build_url:
-        "https://launchpad.net/~build.staging.snapcraft.io/+snap/1a34fa8a4dd2a8ec399c23b7bee98faf/+build/2105843",
-      confinement: "strict",
-      created_at: "2023-05-12T11:35:12Z",
-      epoch: {
-        read: [0],
-        write: [0],
-      },
-      grade: "stable",
-      revision: 33,
-      "sha3-384":
-        "39157150b8dd7ffe736fd27fe143296416d6e4193412cf5a671716f13d1000804e3524d859ae0694ae01dc0e49ae8bb9",
-      size: 4096,
-      status: "Published",
-      version: "3.0.0",
-      expiration: null,
-      progressive: {
-        "current-percentage": 0,
-        percentage: null,
-        paused: null,
-      },
-      channels: ["latest/edge", "latest/candidate", "latest/stable"],
-    },
+    amd64: amd64Revision23,
+    arm64: arm64Revision61,
+    armhf: armhfRevision33,
     ppc64el: {
       architectures: ["ppc64el"],
       attributes: {
