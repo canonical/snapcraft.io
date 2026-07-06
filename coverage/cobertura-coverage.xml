@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 <!DOCTYPE coverage SYSTEM "http://cobertura.sourceforge.net/xml/coverage-04.dtd">
-<coverage lines-valid="7232" lines-covered="3472" line-rate="0.48" branches-valid="4791" branches-covered="2158" branch-rate="0.45039999999999997" timestamp="1783345583789" complexity="0" version="0.1">
+<coverage lines-valid="7232" lines-covered="3472" line-rate="0.48" branches-valid="4791" branches-covered="2158" branch-rate="0.45039999999999997" timestamp="1783376928452" complexity="0" version="0.1">
   <sources>
     <source>/home/runner/work/snapcraft.io/snapcraft.io</source>
   </sources>
@@ -7954,9 +7954,9 @@
         </class>
         <class name="MemberRoleCheckbox.tsx" filename="static/js/publisher/pages/Members/MemberRoleCheckbox.tsx" line-rate="1" branch-rate="1">
           <methods>
-            <method name="MemberRoleCheckbox" hits="65" signature="()V">
+            <method name="MemberRoleCheckbox" hits="73" signature="()V">
               <lines>
-                <line number="13" hits="65"/>
+                <line number="13" hits="73"/>
               </lines>
             </method>
             <method name="(anonymous_1)" hits="3" signature="()V">
@@ -7966,7 +7966,7 @@
             </method>
           </methods>
           <lines>
-            <line number="14" hits="65" branch="false"/>
+            <line number="14" hits="73" branch="false"/>
             <line number="18" hits="3" branch="false"/>
           </lines>
         </class>
@@ -8306,9 +8306,9 @@
         </class>
         <class name="MembersTable.tsx" filename="static/js/publisher/pages/Members/MembersTable.tsx" line-rate="0.2121" branch-rate="0">
           <methods>
-            <method name="MembersTable" hits="14" signature="()V">
+            <method name="MembersTable" hits="15" signature="()V">
               <lines>
-                <line number="15" hits="14"/>
+                <line number="15" hits="15"/>
               </lines>
             </method>
             <method name="(anonymous_1)" hits="0" signature="()V">
@@ -8361,21 +8361,21 @@
                 <line number="84" hits="11"/>
               </lines>
             </method>
-            <method name="(anonymous_11)" hits="14" signature="()V">
+            <method name="(anonymous_11)" hits="16" signature="()V">
               <lines>
-                <line number="148" hits="14"/>
+                <line number="148" hits="16"/>
               </lines>
             </method>
           </methods>
           <lines>
-            <line number="20" hits="14" branch="false"/>
-            <line number="22" hits="14" branch="false"/>
+            <line number="20" hits="15" branch="false"/>
+            <line number="22" hits="15" branch="false"/>
             <line number="23" hits="0" branch="true" condition-coverage="0% (0/2)"/>
             <line number="24" hits="0" branch="false"/>
             <line number="27" hits="0" branch="false"/>
             <line number="29" hits="0" branch="false"/>
             <line number="32" hits="0" branch="false"/>
-            <line number="35" hits="14" branch="false"/>
+            <line number="35" hits="15" branch="false"/>
             <line number="36" hits="0" branch="false"/>
             <line number="37" hits="0" branch="false"/>
             <line number="39" hits="0" branch="true" condition-coverage="0% (0/2)"/>
@@ -8397,10 +8397,10 @@
             <line number="75" hits="0" branch="false"/>
             <line number="78" hits="0" branch="false"/>
             <line number="81" hits="0" branch="false"/>
-            <line number="84" hits="14" branch="false"/>
+            <line number="84" hits="15" branch="false"/>
             <line number="85" hits="11" branch="false"/>
-            <line number="88" hits="14" branch="false"/>
-            <line number="149" hits="14" branch="false"/>
+            <line number="88" hits="15" branch="false"/>
+            <line number="149" hits="16" branch="false"/>
           </lines>
         </class>
         <class name="index.ts" filename="static/js/publisher/pages/Members/index.ts" line-rate="1" branch-rate="1">
