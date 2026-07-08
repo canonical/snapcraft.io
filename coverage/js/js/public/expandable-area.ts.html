@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>16/16</span>
+                <span class='fraction'>0/16</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">85.71% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>12/14</span>
+                <span class='fraction'>0/14</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>3/3</span>
+                <span class='fraction'>0/3</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>16/16</span>
+                <span class='fraction'>0/16</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line high'></div>
+    <div class='status-line low'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -103,69 +103,69 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">export default function initExpandableArea(
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">export default function <span class="fstat-no" title="function not covered" >initExpandableArea(</span>
   overflowSelector: string,
   heightMatchSelector: string,
 ): void {
-  const showMoreContainer = [].slice.call(
+  const showMoreContainer = <span class="cstat-no" title="statement not covered" >[].slice.call(</span>
     document.querySelectorAll("[data-js='js-show-more']"),
   ) as Array&lt;HTMLElement&gt;;
 &nbsp;
-  <span class="missing-if-branch" title="else path not taken" >E</span>if (showMoreContainer &amp;&amp; showMoreContainer.length &gt; 0) {
-    showMoreContainer.forEach((el) =&gt; {
-      const fadeEl = el.querySelector(".p-show-more__fade");
-      const linkEl = el.querySelector(".p-show-more__link");
+<span class="cstat-no" title="statement not covered" >  if (showMoreContainer &amp;&amp; showMoreContainer.length &gt; 0) {</span>
+<span class="cstat-no" title="statement not covered" >    showMoreContainer.forEach(<span class="fstat-no" title="function not covered" >(e</span>l) =&gt; {</span>
+      const fadeEl = <span class="cstat-no" title="statement not covered" >el.querySelector(".p-show-more__fade");</span>
+      const linkEl = <span class="cstat-no" title="statement not covered" >el.querySelector(".p-show-more__link");</span>
 &nbsp;
-      if (overflowSelector &amp;&amp; heightMatchSelector) {
-        const overflowEl = el.querySelector(overflowSelector) as HTMLElement;
-        const heightMatchEl = el.querySelector(
+<span class="cstat-no" title="statement not covered" >      if (overflowSelector &amp;&amp; heightMatchSelector) {</span>
+        const overflowEl = <span class="cstat-no" title="statement not covered" >el.querySelector(overflowSelector) as HTMLElement;</span>
+        const heightMatchEl = <span class="cstat-no" title="statement not covered" >el.querySelector(</span>
           heightMatchSelector,
         ) as HTMLElement;
 &nbsp;
-        <span class="missing-if-branch" title="else path not taken" >E</span>if (overflowEl.scrollHeight &lt;= heightMatchEl.scrollHeight) {
-          el.removeAttribute("data-js");
-          el.classList.remove("p-show-more");
+<span class="cstat-no" title="statement not covered" >        if (overflowEl.scrollHeight &lt;= heightMatchEl.scrollHeight) {</span>
+<span class="cstat-no" title="statement not covered" >          el.removeAttribute("data-js");</span>
+<span class="cstat-no" title="statement not covered" >          el.classList.remove("p-show-more");</span>
         }
       }
 &nbsp;
-      if (fadeEl &amp;&amp; linkEl) {
-        linkEl.addEventListener("click", function (event) {
-          event.preventDefault();
+<span class="cstat-no" title="statement not covered" >      if (fadeEl &amp;&amp; linkEl) {</span>
+<span class="cstat-no" title="statement not covered" >        linkEl.addEventListener("click", <span class="fstat-no" title="function not covered" >function (e</span>vent) {</span>
+<span class="cstat-no" title="statement not covered" >          event.preventDefault();</span>
 &nbsp;
-          fadeEl.classList.add("u-hide");
-          el.classList.remove("is-collapsed");
+<span class="cstat-no" title="statement not covered" >          fadeEl.classList.add("u-hide");</span>
+<span class="cstat-no" title="statement not covered" >          el.classList.remove("is-collapsed");</span>
         });
       }
     });
@@ -178,7 +178,7 @@
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-07-08T13:24:47.926Z
+                at 2026-07-08T22:22:59.562Z
             </div>
         <script src="../../prettify.js"></script>
         <script>

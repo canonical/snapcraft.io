@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>15/15</span>
+                <span class='fraction'>0/15</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">90% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>9/10</span>
+                <span class='fraction'>0/10</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>3/3</span>
+                <span class='fraction'>0/3</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>15/15</span>
+                <span class='fraction'>0/15</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line high'></div>
+    <div class='status-line low'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -97,65 +97,65 @@
 <a name='L32'></a><a href='#L32'>32</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import declareGlobal from "../libs/declare";
 &nbsp;
-function toggleModal(modal: HTMLElement) {
-  <span class="missing-if-branch" title="else path not taken" >E</span>if (modal &amp;&amp; modal.classList.contains("p-modal")) {
-    if (modal.style.display === "none") {
-      modal.style.display = "flex";
-      document.body.style.position = "fixed";
+function <span class="fstat-no" title="function not covered" >toggleModal(m</span>odal: HTMLElement) {
+<span class="cstat-no" title="statement not covered" >  if (modal &amp;&amp; modal.classList.contains("p-modal")) {</span>
+<span class="cstat-no" title="statement not covered" >    if (modal.style.display === "none") {</span>
+<span class="cstat-no" title="statement not covered" >      modal.style.display = "flex";</span>
+<span class="cstat-no" title="statement not covered" >      document.body.style.position = "fixed";</span>
     } else {
-      modal.style.display = "none";
-      document.body.style.position = "relative";
+<span class="cstat-no" title="statement not covered" >      modal.style.display = "none";</span>
+<span class="cstat-no" title="statement not covered" >      document.body.style.position = "relative";</span>
     }
   }
 }
 &nbsp;
-function init(): void {
-  document.addEventListener("click", (e) =&gt; {
-    const target = e.target as HTMLElement;
-    const modalId = target.getAttribute("aria-controls") as string;
-    const modal = document.getElementById(modalId) as HTMLElement;
+function <span class="fstat-no" title="function not covered" >init(): void {</span>
+<span class="cstat-no" title="statement not covered" >  document.addEventListener("click", <span class="fstat-no" title="function not covered" >(e</span>) =&gt; {</span>
+    const target = <span class="cstat-no" title="statement not covered" >e.target as HTMLElement;</span>
+    const modalId = <span class="cstat-no" title="statement not covered" >target.getAttribute("aria-controls") as string;</span>
+    const modal = <span class="cstat-no" title="statement not covered" >document.getElementById(modalId) as HTMLElement;</span>
 &nbsp;
-    if (Object.keys(target.dataset).includes("jsToggleModal")) {
-      toggleModal(modal);
+<span class="cstat-no" title="statement not covered" >    if (Object.keys(target.dataset).includes("jsToggleModal")) {</span>
+<span class="cstat-no" title="statement not covered" >      toggleModal(modal);</span>
     }
 &nbsp;
-    if (target.classList.contains("p-modal")) {
-      toggleModal(target);
+<span class="cstat-no" title="statement not covered" >    if (target.classList.contains("p-modal")) {</span>
+<span class="cstat-no" title="statement not covered" >      toggleModal(target);</span>
     }
   });
 }
 &nbsp;
-declareGlobal("snapcraft.public.modal", { init });
+<span class="cstat-no" title="statement not covered" >declareGlobal("snapcraft.public.modal", { init });</span>
 &nbsp;</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
@@ -163,7 +163,7 @@ declareGlobal("snapcraft.public.modal", { init });
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-07-08T13:24:47.926Z
+                at 2026-07-08T22:22:59.562Z
             </div>
         <script src="../../prettify.js"></script>
         <script>
