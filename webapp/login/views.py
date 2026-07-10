@@ -14,6 +14,7 @@ from webapp.api.exceptions import ApiResponseError
 from webapp.extensions import csrf
 from webapp.login.macaroon import MacaroonRequest, MacaroonResponse
 from webapp.publisher.snaps import logic
+from canonicalwebteam.exceptions import StoreApiResponseErrorList
 
 login = flask.Blueprint(
     "login", __name__, template_folder="/templates", static_folder="/static"
@@ -83,20 +84,35 @@ def after_login(resp):
     # Exchange root + discharge for a single dashboard token.
     # Both keys are in the session here, so exchange_dashboard_macaroons
     # can read them directly. We then drop them to keep the cookie small.
-    flask.session["macaroon_exchanged"] = (
-        publisher_gateway.exchange_dashboard_macaroons(flask.session)
-    )
+    try:
+        flask.session["macaroon_exchanged"] = (
+            publisher_gateway.exchange_dashboard_macaroons(flask.session)
+        )
+    except StoreApiResponseErrorList as api_error:
+        # A brand-new publisher who has never accepted the developer Terms &
+        # Conditions has no publisher account yet, so the macaroon exchange
+        # fails with "account-not-found". Rather than returning a 404, keep
+        # the dashboard (root + discharge) macaroons, establish a minimal
+        # authenticated session and guide the user to the agreement page.
+        # Accepting the agreement creates the account, after which the
+        # exchange succeeds on the next request. See issue #5788.
+        if any(
+            error.get("code") == "account-not-found"
+            for error in api_error.errors
+        ):
+            flask.session["publisher"] = {
+                "identity_url": resp.identity_url,
+                "nickname": resp.nickname,
+                "fullname": resp.fullname,
+                "image": resp.image,
+                "email": resp.email,
+            }
+            return flask.redirect(flask.url_for("account.get_agreement"))
+        raise
+
     flask.session.pop("macaroon_root", None)
     flask.session.pop("macaroon_discharge", None)
 
-    # Establish a minimal authenticated session from the OpenID response
-    # before querying the dashboard. New publishers who have not yet accepted
-    # the developer Terms & Conditions (or set a username) cause get_account
-    # to raise PublisherAgreementNotSigned / PublisherMissingUsername. Those
-    # are handled by redirecting to the relevant onboarding page, but the
-    # redirect only guides the user correctly if they are already
-    # authenticated. Without this, onboarding dead-ends in a redirect loop
-    # and the store returns a 404. See issue #5788.
     flask.session["publisher"] = {
         "identity_url": resp.identity_url,
         "nickname": resp.nickname,

@@ -3,7 +3,10 @@ import requests
 import responses
 from flask_testing import TestCase
 from pymacaroons import Macaroon
-from canonicalwebteam.exceptions import PublisherAgreementNotSigned
+from canonicalwebteam.exceptions import (
+    PublisherAgreementNotSigned,
+    StoreApiResponseErrorList,
+)
 from webapp.app import create_app
 
 from unittest.mock import patch, MagicMock
@@ -312,3 +315,79 @@ class AfterLoginHandlerTest(TestCase):
             assert publisher["nickname"] == self.mock_resp.nickname
             assert publisher["email"] == self.mock_resp.email
             assert s["macaroon_exchanged"] == "exchanged-macaroon"
+
+    @patch("webapp.login.views.dashboard.get_validation_sets")
+    @patch("webapp.login.views.dashboard.get_account")
+    @patch("webapp.login.views.publisher_gateway.exchange_dashboard_macaroons")
+    def test_after_login_account_not_found_redirects_to_agreement(
+        self,
+        mock_exchange,
+        _mock_get_account,
+        _mock_validation_sets,
+    ):
+        # Regression test for issue #5788: a brand-new publisher who has never
+        # accepted the developer Terms & Conditions has no publisher account
+        # yet, so the macaroon exchange fails with "account-not-found".
+        # Instead of returning a 404, the user must be redirected to the
+        # agreement page with an authenticated session and the dashboard
+        # macaroons preserved, so accepting the agreement can create the
+        # account.
+        self.prepare_mock_response(MagicMock(), groups=[])
+        mock_exchange.side_effect = StoreApiResponseErrorList(
+            "The api returned a list of errors",
+            404,
+            [
+                {
+                    "code": "account-not-found",
+                    "message": (
+                        "The account specified in the dashboard "
+                        "macaroons was not found"
+                    ),
+                }
+            ],
+        )
+
+        with self.client.session_transaction() as s:
+            s["macaroon_root"] = self.root_macaroon
+
+        response = self.client.get("/_test_after_login")
+
+        assert response.status_code == 302
+        assert response.location == "/account/agreement"
+
+        with self.client.session_transaction() as s:
+            publisher = s.get("publisher")
+            assert publisher is not None
+            assert publisher["nickname"] == self.mock_resp.nickname
+            # Dashboard macaroons must be preserved so the agreement POST is
+            # authorized and can onboard the account.
+            assert "macaroon_root" in s
+            assert "macaroon_discharge" in s
+            assert "macaroon_exchanged" not in s
+
+    @patch("webapp.login.views.dashboard.get_validation_sets")
+    @patch("webapp.login.views.dashboard.get_account")
+    @patch("webapp.login.views.publisher_gateway.exchange_dashboard_macaroons")
+    def test_after_login_reraises_other_exchange_errors(
+        self,
+        mock_exchange,
+        _mock_get_account,
+        _mock_validation_sets,
+    ):
+        # Exchange failures unrelated to onboarding must not be swallowed as
+        # an agreement redirect; they should surface as a server error.
+        self.prepare_mock_response(MagicMock(), groups=[])
+        mock_exchange.side_effect = StoreApiResponseErrorList(
+            "The api returned a list of errors",
+            500,
+            [{"code": "some-other-error", "message": "boom"}],
+        )
+
+        with self.client.session_transaction() as s:
+            s["macaroon_root"] = self.root_macaroon
+
+        response = self.client.get("/_test_after_login")
+
+        assert response.status_code != 302
+        with self.client.session_transaction() as s:
+            assert "publisher" not in s
