@@ -3,6 +3,7 @@ import requests
 import responses
 from flask_testing import TestCase
 from pymacaroons import Macaroon
+from canonicalwebteam.exceptions import PublisherAgreementNotSigned
 from webapp.app import create_app
 
 from unittest.mock import patch, MagicMock
@@ -277,3 +278,37 @@ class AfterLoginHandlerTest(TestCase):
                 assert "macaroon_discharge" not in s
 
             mock_exchange.assert_called_once()
+
+    @patch("webapp.login.views.dashboard.get_validation_sets")
+    @patch("webapp.login.views.dashboard.get_account")
+    @patch(
+        "webapp.login.views.publisher_gateway" ".exchange_dashboard_macaroons",
+        return_value="exchanged-macaroon",
+    )
+    def test_after_login_agreement_not_signed_keeps_user_authenticated(
+        self,
+        _mock_exchange,
+        mock_get_account,
+        _mock_validation_sets,
+    ):
+        # Regression test for issue #5788: a publisher who has not yet
+        # accepted the developer Terms & Conditions must still end up with an
+        # authenticated session and be guided to the agreement page, rather
+        # than dead-ending in a redirect loop / 404.
+        self.prepare_mock_response(MagicMock(), groups=[])
+        mock_get_account.side_effect = PublisherAgreementNotSigned
+
+        with self.client.session_transaction() as s:
+            s["macaroon_root"] = self.root_macaroon
+
+        response = self.client.get("/_test_after_login")
+
+        assert response.status_code == 302
+        assert response.location == "/account/agreement"
+
+        with self.client.session_transaction() as s:
+            publisher = s.get("publisher")
+            assert publisher is not None
+            assert publisher["nickname"] == self.mock_resp.nickname
+            assert publisher["email"] == self.mock_resp.email
+            assert s["macaroon_exchanged"] == "exchanged-macaroon"

@@ -89,6 +89,22 @@ def after_login(resp):
     flask.session.pop("macaroon_root", None)
     flask.session.pop("macaroon_discharge", None)
 
+    # Establish a minimal authenticated session from the OpenID response
+    # before querying the dashboard. New publishers who have not yet accepted
+    # the developer Terms & Conditions (or set a username) cause get_account
+    # to raise PublisherAgreementNotSigned / PublisherMissingUsername. Those
+    # are handled by redirecting to the relevant onboarding page, but the
+    # redirect only guides the user correctly if they are already
+    # authenticated. Without this, onboarding dead-ends in a redirect loop
+    # and the store returns a 404. See issue #5788.
+    flask.session["publisher"] = {
+        "identity_url": resp.identity_url,
+        "nickname": resp.nickname,
+        "fullname": resp.fullname,
+        "image": resp.image,
+        "email": resp.email,
+    }
+
     account = dashboard.get_account(flask.session)
     validation_sets = dashboard.get_validation_sets(flask.session)
 
@@ -123,14 +139,6 @@ def after_login(resp):
             validation_sets is not None
             and len(validation_sets["assertions"]) > 0
         )
-    else:
-        flask.session["publisher"] = {
-            "identity_url": resp.identity_url,
-            "nickname": resp.nickname,
-            "fullname": resp.fullname,
-            "image": resp.image,
-            "email": resp.email,
-        }
 
     response = flask.make_response(
         flask.redirect(
