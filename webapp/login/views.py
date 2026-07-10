@@ -14,6 +14,7 @@ from webapp.api.exceptions import ApiResponseError
 from webapp.extensions import csrf
 from webapp.login.macaroon import MacaroonRequest, MacaroonResponse
 from webapp.publisher.snaps import logic
+from canonicalwebteam.exceptions import StoreApiResponseErrorList
 
 login = flask.Blueprint(
     "login", __name__, template_folder="/templates", static_folder="/static"
@@ -83,11 +84,42 @@ def after_login(resp):
     # Exchange root + discharge for a single dashboard token.
     # Both keys are in the session here, so exchange_dashboard_macaroons
     # can read them directly. We then drop them to keep the cookie small.
-    flask.session["macaroon_exchanged"] = (
-        publisher_gateway.exchange_dashboard_macaroons(flask.session)
-    )
+    try:
+        flask.session["macaroon_exchanged"] = (
+            publisher_gateway.exchange_dashboard_macaroons(flask.session)
+        )
+    except StoreApiResponseErrorList as api_error:
+        # A brand-new publisher who has never accepted the developer Terms &
+        # Conditions has no publisher account yet, so the macaroon exchange
+        # fails with "account-not-found". Rather than returning a 404, keep
+        # the dashboard (root + discharge) macaroons, establish a minimal
+        # authenticated session and guide the user to the agreement page.
+        # Accepting the agreement creates the account, after which the
+        # exchange succeeds on the next request. See issue #5788.
+        if any(
+            error.get("code") == "account-not-found"
+            for error in api_error.errors
+        ):
+            flask.session["publisher"] = {
+                "identity_url": resp.identity_url,
+                "nickname": resp.nickname,
+                "fullname": resp.fullname,
+                "image": resp.image,
+                "email": resp.email,
+            }
+            return flask.redirect(flask.url_for("account.get_agreement"))
+        raise
+
     flask.session.pop("macaroon_root", None)
     flask.session.pop("macaroon_discharge", None)
+
+    flask.session["publisher"] = {
+        "identity_url": resp.identity_url,
+        "nickname": resp.nickname,
+        "fullname": resp.fullname,
+        "image": resp.image,
+        "email": resp.email,
+    }
 
     account = dashboard.get_account(flask.session)
     validation_sets = dashboard.get_validation_sets(flask.session)
@@ -123,14 +155,6 @@ def after_login(resp):
             validation_sets is not None
             and len(validation_sets["assertions"]) > 0
         )
-    else:
-        flask.session["publisher"] = {
-            "identity_url": resp.identity_url,
-            "nickname": resp.nickname,
-            "fullname": resp.fullname,
-            "image": resp.image,
-            "email": resp.email,
-        }
 
     response = flask.make_response(
         flask.redirect(
