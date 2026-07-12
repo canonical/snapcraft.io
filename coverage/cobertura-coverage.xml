@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 <!DOCTYPE coverage SYSTEM "http://cobertura.sourceforge.net/xml/coverage-04.dtd">
-<coverage lines-valid="7232" lines-covered="3472" line-rate="0.48" branches-valid="4791" branches-covered="2158" branch-rate="0.45039999999999997" timestamp="1783808262244" complexity="0" version="0.1">
+<coverage lines-valid="7232" lines-covered="3472" line-rate="0.48" branches-valid="4791" branches-covered="2158" branch-rate="0.45039999999999997" timestamp="1783894705443" complexity="0" version="0.1">
   <sources>
     <source>/home/runner/work/snapcraft.io/snapcraft.io</source>
   </sources>
@@ -4711,15 +4711,15 @@
         </class>
         <class name="TourStep.tsx" filename="static/js/publisher/components/Tour/TourStep.tsx" line-rate="1" branch-rate="0.75">
           <methods>
-            <method name="TourStep" hits="133" signature="()V">
+            <method name="TourStep" hits="131" signature="()V">
               <lines>
-                <line number="5" hits="133"/>
+                <line number="5" hits="131"/>
               </lines>
             </method>
           </methods>
           <lines>
-            <line number="15" hits="133" branch="false"/>
-            <line number="17" hits="133" branch="false"/>
+            <line number="15" hits="131" branch="false"/>
+            <line number="17" hits="131" branch="false"/>
           </lines>
         </class>
         <class name="index.ts" filename="static/js/publisher/components/Tour/index.ts" line-rate="1" branch-rate="1">
@@ -6581,15 +6581,15 @@
         </class>
         <class name="RepoNotConnected.tsx" filename="static/js/publisher/pages/Builds/RepoNotConnected.tsx" line-rate="1" branch-rate="1">
           <methods>
-            <method name="RepoNotConnected" hits="2" signature="()V">
+            <method name="RepoNotConnected" hits="1" signature="()V">
               <lines>
-                <line number="11" hits="2"/>
+                <line number="11" hits="1"/>
               </lines>
             </method>
           </methods>
           <lines>
-            <line number="16" hits="2" branch="false"/>
-            <line number="18" hits="2" branch="false"/>
+            <line number="16" hits="1" branch="false"/>
+            <line number="18" hits="1" branch="false"/>
           </lines>
         </class>
         <class name="RepoSelector.tsx" filename="static/js/publisher/pages/Builds/RepoSelector.tsx" line-rate="0.8088" branch-rate="0.7681">
