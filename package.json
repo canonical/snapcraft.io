@@ -89,7 +89,7 @@
     "typescript": "5.9.3",
     "uuid": "14.0.0",
     "vanilla-framework": "4.50.0",
-    "vite": "7.3.3"
+    "vite": "7.3.5"
   },
   "devDependencies": {
     "@babel/eslint-parser": "7.28.6",
@@ -116,7 +116,7 @@
   },
   "resolutions": {
     "vitest/**/glob": "13.0.6",
-    "vitest/vite": "7.3.3",
+    "vitest/vite": "7.3.5",
     "lodash": "4.18.1",
     "picomatch": ">=2.3.2",
     "brace-expansion": ">=2.0.2",
