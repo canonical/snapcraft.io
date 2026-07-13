@@ -8,11 +8,6 @@ import { snapDetailsPosts } from "./snap-details/blog-posts";
 import initExpandableArea from "./expandable-area";
 import initCopyCommand from "./snap-details/copyCommand";
 import declareGlobal from "../libs/declare";
-import { trackPageView } from "@canonical/analytics-events";
-
-if (window.ANALYTICS_ENDPOINT) {
-  trackPageView("snap_details_page");
-}
 
 initCopyCommand();
 

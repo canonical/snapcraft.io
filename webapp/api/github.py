@@ -246,6 +246,7 @@ class GitHub:
               edges {
                 node {
                   name
+                  nameWithOwner
                 }
                 }
                 pageInfo {
@@ -271,7 +272,16 @@ class GitHub:
             )
             repositories.extend(next_page)
 
-        return repositories
+        repos = [
+            (
+                {**repo, "owner": repo.get("nameWithOwner", "").split("/")[0]}
+                if "nameWithOwner" in repo and repo.get("nameWithOwner")
+                else {**repo, "owner": None}
+            )
+            for repo in repositories
+        ]
+
+        return repos
 
     def check_permissions_over_repo(self, owner, repo, permission="push"):
         """

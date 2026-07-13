@@ -143,23 +143,41 @@ def snap_details_views(store):
             typ="safe",
         )
 
-        publisher_snaps = helpers.get_yaml(
-            "{}{}-snaps.yaml".format(
-                flask.current_app.config["CONTENT_DIRECTORY"][
-                    "PUBLISHER_PAGES"
-                ],
-                details["snap"]["publisher"]["username"],
-            ),
-            typ="safe",
-        )
-
+        publisher_snaps = []
         publisher_featured_snaps = None
 
         if publisher_info:
-            publisher_featured_snaps = publisher_info.get("featured_snaps")
-            publisher_snaps = logic.get_n_random_snaps(
-                publisher_snaps["snaps"], 4
+            publisher_results = logic.get_publisher_snaps(
+                device_gateway, details["snap"]["publisher"]["username"]
             )
+
+            snaps_by_name = {}
+            for snap in publisher_results:
+                item = snap["snap"]
+                snaps_by_name[snap["name"]] = {
+                    "package_name": snap["name"],
+                    "title": item.get("title"),
+                    "summary": item.get("summary"),
+                    "icon_url": helpers.get_icon(item.get("media", [])),
+                }
+
+            publisher_featured_snaps = logic.hydrate_featured_snaps(
+                publisher_info.get("featured_snaps"), snaps_by_name
+            )
+
+            # The "More from publisher" list excludes featured snaps and
+            # the snap currently being viewed.
+            excluded_names = {snap_name}
+            for snap in publisher_featured_snaps:
+                excluded_names.add(snap["package_name"])
+
+            available_snaps = [
+                snap
+                for name, snap in snaps_by_name.items()
+                if name not in excluded_names
+            ]
+
+            publisher_snaps = logic.get_n_random_snaps(available_snaps, 4)
 
         video = logic.get_video(details.get("snap", {}).get("media", []))
 

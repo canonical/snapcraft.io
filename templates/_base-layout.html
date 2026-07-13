@@ -74,6 +74,8 @@
     {% endblock %}
 
     {% block banner %}
+    {% from "partials/_status-banner.html" import status_banner %}
+    {{ status_banner(STATUS_BANNER) }}
     {% endblock %}
 
     {% block content %}{% endblock %}
@@ -87,7 +89,6 @@
       window.COMMIT_ID = "{{ COMMIT_ID }}";
       window.ENVIRONMENT = "{{ ENVIRONMENT }}";
       window.SENTRY_DSN = "{{ SENTRY_DSN }}";
-      window.ANALYTICS_ENDPOINT = "{{ ANALYTICS_ENDPOINT }}";
     </script>
 
   <script type="application/ld+json">

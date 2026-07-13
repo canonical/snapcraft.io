@@ -26,7 +26,6 @@ import {
   getLatestRelease,
 } from "../../helpers";
 import ChannelMenu from "../channelMenu";
-import { triggerGAEvent } from "../../analytics";
 import type {
   ArchitectureRevisionsMap,
   ChannelArchitectureRevisionsMap,
@@ -94,7 +93,6 @@ interface DispatchProps {
   promoteRevision: (revision: Revision, targetChannel: string) => void;
   closeChannel: (channel: string) => void;
   toggleBranches: (channel: string) => void;
-  triggerGAEvent: (...eventProps: Parameters<typeof triggerGAEvent>) => void;
 }
 
 type ReleasesTableChannelHeadingProps = OwnProps & StateProps & DispatchProps;
@@ -316,14 +314,6 @@ const ReleasesTableChannelHeading = (props: ReleasesTableChannelHeadingProps) =>
     );
   };
 
-  const triggerGAEvent = (targetChannel: any, actionType: string) => {
-    if (actionType === "close") {
-      props.triggerGAEvent("click-close-channel", targetChannel);
-    } else {
-      props.triggerGAEvent("click-promote", channel, targetChannel);
-    }
-  };
-
   return (
     <div
       ref={drag}
@@ -360,7 +350,6 @@ const ReleasesTableChannelHeading = (props: ReleasesTableChannelHeadingProps) =>
               promoteToChannel={promoteRevisions}
               channel={channel}
               closeChannel={canBeClosed ? props.closeChannel : undefined}
-              gaEvent={triggerGAEvent}
             />
           )}
         </span>
@@ -426,8 +415,6 @@ const mapDispatchToProps = (dispatch: AppDispatch): DispatchProps => {
       dispatch(promoteRevision(revision, targetChannel)),
     closeChannel: (channel: string) => dispatch(closeChannel(channel)),
     toggleBranches: (channel: string) => dispatch(toggleBranches(channel)),
-    triggerGAEvent: (...eventProps: Parameters<typeof triggerGAEvent>) =>
-      dispatch(triggerGAEvent(...eventProps)),
   };
 };
 

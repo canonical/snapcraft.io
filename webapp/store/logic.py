@@ -6,6 +6,8 @@ from urllib.parse import parse_qs, urlparse
 import humanize
 from dateutil import parser
 from dateutil.relativedelta import relativedelta
+from canonicalwebteam.exceptions import StoreApiError
+from cache.cache_utility import redis_cache
 from webapp import helpers
 
 
@@ -14,6 +16,47 @@ def get_n_random_snaps(snaps, choice_number):
         return random.sample(snaps, choice_number)
 
     return snaps
+
+
+def get_publisher_snaps(device_gateway, publisher):
+    """Return a publisher's snaps from the store API, cached per publisher.
+
+    Uses the v2 "find" endpoint, which only returns currently-listed
+    snaps (unlisted/removed snaps are excluded). The result is cached so
+    we don't fetch the full publisher catalogue on every page view.
+    """
+    cache_key = f"publisher-snaps:{publisher}"
+    snaps = redis_cache.get(cache_key, expected_type=list)
+    if not snaps:
+        try:
+            snaps = device_gateway.find(
+                publisher=publisher,
+                fields=["title", "summary", "media", "publisher"],
+            ).get("results", [])
+        except StoreApiError:
+            snaps = []
+        if snaps:
+            redis_cache.set(cache_key, snaps, ttl=3600)
+    return snaps
+
+
+def hydrate_featured_snaps(featured_snaps, snaps_by_name):
+    """Hydrate curated featured snaps with live store API data.
+
+    'featured_snaps' is the editorial list from a publisher's YAML
+    (package_name, background, description). title/summary/icon come from
+    'snaps_by_name' (built from the API). Snaps missing from the API
+    (unlisted/private/removed) are dropped.
+    """
+    return [
+        {
+            **snaps_by_name[snap["package_name"]],
+            "background": snap.get("background"),
+            "description": snap.get("description"),
+        }
+        for snap in featured_snaps or []
+        if snap["package_name"] in snaps_by_name
+    ]
 
 
 def get_snap_banner_url(snap_result):
