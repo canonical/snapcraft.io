@@ -1,17 +1,10 @@
-import "./ga";
 import "./contactForm";
 import "./sentry";
 import { initAnalytics } from "@canonical/analytics-events";
 
-declare global {
-  interface Window {
-    ANALYTICS_ENDPOINT: string;
-  }
-}
-
-if (window.ANALYTICS_ENDPOINT) {
+if (window.ENVIRONMENT === "production") {
   initAnalytics({
     appName: "snapcraft",
-    endpoint: window.ANALYTICS_ENDPOINT,
+    gtm: true,
   });
 }
