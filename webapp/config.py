@@ -26,7 +26,6 @@ DNS_VERIFICATION_SALT = os.getenv("DNS_VERIFICATION_SALT")
 VITE_MODE = "development" if IS_DEVELOPMENT else "production"
 VITE_PORT = os.getenv("VITE_PORT", 5173)
 VITE_OUTDIR = os.getenv("VITE_OUTDIR", "static/js/dist/vite")
-VITE_INLINE_JS = os.getenv("VITE_INLINE_JS", "true").lower() == "true"
 # VITE_REACT controls whether React hot module reload scripts are injected when
 # running in dev mode; the setting has no effect in prod mode
 VITE_REACT = True
@@ -44,18 +43,14 @@ SEND_FILE_MAX_AGE_DEFAULT = 10 * 365 * 24 * 60 * 60
 
 CONTENT_DIRECTORY = {"PUBLISHER_PAGES": "store/content/publishers/"}
 
-# Docs search
-SEARCH_API_KEY = os.getenv("SEARCH_API_KEY")
-SEARCH_API_URL = "https://www.googleapis.com/customsearch/v1"
-SEARCH_CUSTOM_ID = "009048213575199080868:i3zoqdwqk8o"
-
 APP_NAME = "snapcraft"
-ANALYTICS_ENDPOINT = os.getenv("ANALYTICS_ENDPOINT", "").strip()
 
 # Fallback icon shown when a snap has no icon of its own
 DEFAULT_ICON_URL = (
     "https://assets.ubuntu.com/v1/be6eb412-snapcraft-missing-icon.svg"
 )
+
+STATUS_BANNER = os.getenv("STATUS_BANNER", "").strip()
 
 REPORT_SHEET_URL = os.getenv("REPORT_SHEET_URL", "").strip()
 TURNSTILE_SITE_KEY = os.getenv("TURNSTILE_SITE_KEY", "").strip()

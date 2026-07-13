@@ -954,10 +954,10 @@
     hashery "^1.5.0"
     keyv "^5.6.0"
 
-"@canonical/analytics-events@1.0.5":
-  version "1.0.5"
-  resolved "https://registry.yarnpkg.com/@canonical/analytics-events/-/analytics-events-1.0.5.tgz#88a18381a657196ea5f21b5932a41c5afce69999"
-  integrity sha512-GMFbPJ83FcN+ItLcc1czYp0HUA96uLfu+35B0NWEVCL/Wy/CRc0o8Ab1DgAyjBw16reIP+SkAg9k/NBwNj1Tjg==
+"@canonical/analytics-events@1.1.1":
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/@canonical/analytics-events/-/analytics-events-1.1.1.tgz#0e508481de3af994cbe7e0fef2be081df5b9efc1"
+  integrity sha512-nEvJkrvetwMzMfINqgYSXCBfBTAsnLuvzFRGHvhUuICFpXB6iVN2uTP0OlGoxj0qpsOIS8/dv15yCZQgz/CKFA==
 
 "@canonical/cookie-policy@3.10.0":
   version "3.10.0"
@@ -8604,9 +8604,9 @@ tldts@^7.0.5:
     tldts-core "^7.0.24"
 
 tmp@~0.2.4:
-  version "0.2.7"
-  resolved "https://registry.yarnpkg.com/tmp/-/tmp-0.2.7.tgz#26f4db11d1601ce8012dcb8a798ece1c06a99059"
-  integrity sha512-e0votIpp4Uo2AJYSzVHV6xCcawuiez3DzqDAbrTc3YxBkplN6e+dM13ZeIcZnDg/QpSuU2zfZ3rzwY8ukEnaXw==
+  version "0.2.5"
+  resolved "https://registry.yarnpkg.com/tmp/-/tmp-0.2.5.tgz#b06bcd23f0f3c8357b426891726d16015abfd8f8"
+  integrity sha512-voyz6MApa1rQGUxT3E+BK7/ROe8itEx7vD8/HEvt4xwXucvQ5G5oeEiHkmHZJuBO21RpOf+YYm9MOivj709jow==
 
 to-regex-range@^5.0.1:
   version "5.0.1"

@@ -37,6 +37,8 @@ class GitHubTest(VCRTestCase):
     def test_get_org_repositories(self):
         repos = self.client.get_org_repositories("canonical-web-and-design")
         [self.assertIn("name", repo) for repo in repos]
+        [self.assertIn("nameWithOwner", repo) for repo in repos]
+        [self.assertIn("owner", repo) for repo in repos]
 
         # Test Unauthorized exception when using bad credentials
         self.client.access_token = "bad-token"

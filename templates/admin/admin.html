@@ -2,7 +2,10 @@
 {% set show_header = False %}
 {% extends "_base-layout.html" %}
 {% block body_class %}{% endblock %}
-{% block banner %}{% endblock %}
+{% block banner %}
+{% from "partials/_status-banner.html" import status_banner %}
+{{ status_banner(STATUS_BANNER, floating=true) }}
+{% endblock %}
 {% block content %}
 <div id="root">
 </div>

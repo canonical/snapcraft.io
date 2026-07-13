@@ -21,11 +21,6 @@ env: &env
       key: marketo_client_secret
       name: snapcraft-io
 
-  - name: SEARCH_API_KEY
-    secretKeyRef:
-      key: google-custom-search-key
-      name: google-api
-
   - name: GITHUB_CLIENT_ID
     secretKeyRef:
       key: github-client-id
@@ -100,7 +95,7 @@ env: &env
       key: turnstile-secret-key
       name: snapcraft-io
 
-memoryLimit: 256Mi
+memoryLimit: 512Mi
 
 extraHosts:
   - domain: docs.snapcraft.io
@@ -109,9 +104,6 @@ extraHosts:
 # Overrides for production
 production:
   replicas: 5
-  env:
-    - name: ANALYTICS_ENDPOINT
-      value: https://marketplace-analytics.canonical.com/k8s-prod-marketplace-analytics-marketplace-analytics/analytics/events
 
   nginxConfigurationSnippet: |
     if ($host = 'docs.snapcraft.io' ) {
@@ -129,7 +121,7 @@ production:
       app_name: snapcraft.io-discourse
       image: prod-comms.ps5.docker-registry.canonical.com/snapcraft.io
       replicas: 5
-      memoryLimit: 256Mi
+      memoryLimit: 512Mi
       env: *env
 
     - paths: [/blog]
@@ -137,7 +129,7 @@ production:
       app_name: snapcraft.io-blog
       image: prod-comms.ps5.docker-registry.canonical.com/snapcraft.io
       replicas: 3
-      memoryLimit: 256Mi
+      memoryLimit: 512Mi
       env: *env
 
 # Overrides for staging
@@ -166,8 +158,3 @@ staging:
       replicas: 2
       memoryLimit: 256Mi
       env: *env
-
-demo:
-  env:
-    - name: ANALYTICS_ENDPOINT
-      value: https://marketplace-analytics.staging.canonical.com/k8s-stg-marketplace-marketplace-analytics-marketplace-analytics/analytics/events

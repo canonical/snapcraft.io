@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Button,
   Icon,
   MainTable,
-  Modal,
   TablePaginationControls,
+  Input,
+  CheckboxInput,
 } from "@canonical/react-components";
 import { format } from "date-fns";
 
@@ -18,8 +19,18 @@ type Props = {
   forwardDisabled: boolean;
   backDisabled: boolean;
   pageSize: number;
-  isDeleting: boolean;
-  onDeleteRemodel: (remodel: Remodel) => Promise<void>;
+  isSavingEdit: boolean;
+  editedDescriptions: Record<string, string>;
+  onEditChange: (rowId: string, value: string) => void;
+  onEditSave: (remodel: Remodel) => Promise<void>;
+  onEditCancel: (rowId: string) => void;
+  remodelsToDelete: Remodel[];
+  setRemodelsToDelete: (remodels: Remodel[]) => void;
+};
+
+const getRemodelRowId = (remodel: Remodel): string => {
+  const serial = remodel["from-serial"] ?? "all-serials";
+  return `${remodel["from-model"]}:${remodel["to-model"]}:${serial}`;
 };
 
 function RemodelTable({
@@ -30,52 +41,121 @@ function RemodelTable({
   forwardDisabled,
   backDisabled,
   pageSize,
-  isDeleting,
-  onDeleteRemodel,
+  isSavingEdit,
+  editedDescriptions,
+  onEditChange,
+  onEditSave,
+  onEditCancel,
+  remodelsToDelete,
+  setRemodelsToDelete,
 }: Props): React.JSX.Element {
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [selectedRemodel, setSelectedRemodel] = useState<Remodel | null>(null);
+  const [isChecked, setIsChecked] = useState(false);
+  const [isIndeterminate, setIsIndeterminate] = useState(false);
+  const isBusy = isSavingEdit;
 
-  const handleDeleteConfirm = async () => {
-    if (!selectedRemodel) {
-      return;
+  useEffect(() => {
+    if (remodelsToDelete.length) {
+      if (remodelsToDelete.length === remodels.length) {
+        setIsChecked(true);
+        setIsIndeterminate(false);
+      } else {
+        setIsChecked(false);
+        setIsIndeterminate(true);
+      }
+    } else {
+      setIsChecked(false);
+      setIsIndeterminate(false);
     }
+  }, [remodelsToDelete, remodels.length]);
 
-    try {
-      await onDeleteRemodel(selectedRemodel);
-      setShowDeleteModal(false);
-      setSelectedRemodel(null);
-    } catch {
-      // Keep modal open so user can retry or cancel.
-    }
+  const withCheckboxStyles = {
+    paddingBottom: 0,
+    width: "2rem",
   };
 
   const headers = [
+    {
+      style: withCheckboxStyles,
+      content: (
+        <div
+          style={{
+            position: "relative",
+            top: "-9px",
+          }}
+        >
+          <CheckboxInput
+            labelClassName="u-no-margin--bottom"
+            onChange={(e) => {
+              if (e.target.checked) {
+                setRemodelsToDelete(remodels);
+                setIsChecked(true);
+              } else {
+                setRemodelsToDelete([]);
+                setIsChecked(false);
+              }
+            }}
+            checked={isChecked}
+            indeterminate={isIndeterminate}
+            label=<span className="table-cell-checkbox__label">Name</span>
+          />
+        </div>
+      ),
+    },
     {
       content: "Target model",
       style: { width: "250px" },
       className: "u-truncate",
     },
     {
-      content: "Original model",
-      style: { width: "250px" },
+      content: "Serial",
       className: "u-truncate",
+      style: { width: "200px" },
     },
-    { content: "Serial", className: "u-truncate" },
     {
       content: "Created date",
       className: "u-align--right u-truncate",
       style: { width: "130px" },
     },
     { content: "Note", className: "u-truncate" },
-    { content: "Actions", className: "u-align--right" },
   ];
 
   const rows = remodels.map((remodel: Remodel) => {
+    const rowId = getRemodelRowId(remodel);
+    const currentValue =
+      editedDescriptions[rowId] ?? remodel["description"] ?? "";
+    const originalValue = remodel["description"] ?? "";
+    const isDirty =
+      editedDescriptions[rowId] !== undefined &&
+      editedDescriptions[rowId] !== originalValue;
+    const isRowChecked = remodelsToDelete.some(
+      (item) => getRemodelRowId(item) === rowId,
+    );
+
     return {
       columns: [
+        {
+          content: (
+            <CheckboxInput
+              labelClassName="u-no-margin--bottom u-no-padding--top"
+              onChange={(e) => {
+                if (e.target.checked) {
+                  setRemodelsToDelete([...remodelsToDelete, remodel]);
+                } else {
+                  setRemodelsToDelete(
+                    remodelsToDelete.filter(
+                      (item) => getRemodelRowId(item) !== rowId,
+                    ),
+                  );
+                }
+              }}
+              checked={isRowChecked}
+              label=<span className="table-cell-checkbox__label">
+                {remodel["to-model"]}
+              </span>
+            />
+          ),
+        },
         { content: remodel["to-model"], className: "u-truncate" },
-        { content: remodel["from-model"], className: "u-truncate" },
         {
           content: remodel["from-serial"] || "All serial policies",
           className: "u-truncate",
@@ -84,22 +164,47 @@ function RemodelTable({
           content: format(new Date(remodel["created-at"]), "dd/MM/yyyy"),
           className: "u-align--right",
         },
-        { content: remodel["description"] },
         {
           content: (
-            <Button
-              className="u-no-margin--bottom u-no-margin--right"
-              dense
-              disabled={isDeleting}
-              onClick={() => {
-                setSelectedRemodel(remodel);
-                setShowDeleteModal(true);
-              }}
-            >
-              Delete
-            </Button>
+            <>
+              <Input
+                type="text"
+                value={currentValue}
+                onChange={(event) => {
+                  onEditChange(rowId, event.target.value);
+                }}
+                disabled={isBusy}
+                className={!isDirty ? "u-no-margin--bottom" : ""}
+              />
+              {isDirty && (
+                <div className="u-align--right">
+                  <Button disabled={isBusy} onClick={() => onEditCancel(rowId)}>
+                    Revert
+                  </Button>
+                  <Button
+                    appearance="positive"
+                    disabled={isBusy}
+                    className="u-no-margin--right"
+                    onClick={() => {
+                      onEditSave(remodel);
+                    }}
+                  >
+                    Save
+                    {isSavingEdit && (
+                      <>
+                        &nbsp;
+                        <Icon
+                          name="spinner"
+                          light
+                          className="u-animation--spin"
+                        />
+                      </>
+                    )}
+                  </Button>
+                </div>
+              )}
+            </>
           ),
-          className: "u-align--right",
         },
       ],
     };
@@ -137,57 +242,6 @@ function RemodelTable({
         visibleCount={rows.length}
         className="table-pagination-controls"
       />
-      {showDeleteModal && selectedRemodel && (
-        <Modal
-          close={() => {
-            if (!isDeleting) {
-              setShowDeleteModal(false);
-              setSelectedRemodel(null);
-            }
-          }}
-          title="Delete remodel"
-          buttonRow={
-            <>
-              <Button
-                className="u-no-margin--bottom"
-                disabled={isDeleting}
-                onClick={() => {
-                  setShowDeleteModal(false);
-                  setSelectedRemodel(null);
-                }}
-              >
-                Cancel
-              </Button>
-              <Button
-                className="u-no-margin--bottom u-no-margin--right"
-                appearance="negative"
-                disabled={isDeleting}
-                onClick={() => {
-                  void handleDeleteConfirm();
-                }}
-              >
-                {isDeleting ? (
-                  <>
-                    <Icon
-                      name="spinner"
-                      className="u-animation--spin is-light"
-                    />
-                    &nbsp;Deleting...
-                  </>
-                ) : (
-                  "Delete"
-                )}
-              </Button>
-            </>
-          }
-        >
-          <p>
-            Are you sure you want to delete this remodel?
-            <br />
-            This action cannot be undone.
-          </p>
-        </Modal>
-      )}
     </>
   );
 }
