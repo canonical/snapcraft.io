@@ -124,3 +124,8 @@ config:
       description: "URL for the marketplace analytics service"
       default: "https://marketplace-analytics.canonical.com/k8s-prod-marketplace-analytics-marketplace-analytics/analytics/events"
       type: string
+
+    status-banner:
+      description: "Optional status message displayed as a banner across the site. Leave empty to show no banner."
+      default: ""
+      type: string

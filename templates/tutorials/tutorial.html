@@ -128,16 +128,7 @@
     var tutorialFeedbackResult = document.querySelector('.p-tutorial__feedback-result');
 
     [].forEach.call(tutorialFeedbackIcons, function (icon) {
-      icon.addEventListener('click', function (e) {
-        var feedbackValue = e.target.getAttribute('data-feedback-value');
-        dataLayer.push({
-          'event': 'GAEvent',
-          'eventCategory': 'feedback',
-          'eventAction': feedbackValue,
-          'eventLabel': feedbackValue,
-          'eventValue': undefined
-        });
-
+      icon.addEventListener('click', function () {
         tutorialFeedbackOptions.classList.add('u-hide');
         tutorialFeedbackResult.classList.remove('u-hide');
       });
@@ -190,33 +181,6 @@
         window.location.reload();
       }
     }
-  })();
-</script>
-
-<script>
-  (function () {
-    var polls = document.querySelectorAll('.poll');
-
-    [].forEach.call(polls, function (poll) {
-      var answers = poll.querySelectorAll('[type="radio"]');
-      var pollId = poll.getAttribute('data-poll-name');
-
-      [].forEach.call(answers, function (answer) {
-        answer.addEventListener('change', function (e) {
-          var answerLabel = document.querySelector('label[for="' + e.target.id + '"]');
-          var eventLabel = answerLabel.innerText;
-          var eventAction = document.getElementById(pollId).innerText;
-
-          dataLayer.push({
-            'event': 'GAEvent',
-            'eventCategory': 'survey',
-            'eventAction': eventAction,
-            'eventLabel': eventLabel,
-            'eventValue': undefined
-          });
-        });
-      });
-    });
   })();
 </script>
 

@@ -8,7 +8,7 @@ import {
   useLocation,
   useSearchParams,
 } from "react-router-dom";
-import { Notification, Icon, Row, Col } from "@canonical/react-components";
+import { Notification, Icon, Button, Modal } from "@canonical/react-components";
 
 import { useRemodels } from "../../hooks";
 import { remodelsListState } from "../../state/remodelsState";
@@ -21,6 +21,11 @@ import ConfigureRemodelForm from "./ConfigureRemodelForm";
 
 import type { UseQueryResult } from "react-query";
 import type { Remodel, RemodelResponse, ApiResponse } from "../../types/shared";
+
+const getRemodelRowId = (remodel: Remodel): string => {
+  const serial = remodel["from-serial"] ?? "all-serials";
+  return `${remodel["from-model"]}:${remodel["to-model"]}:${serial}`;
+};
 
 function Remodel(): React.JSX.Element {
   const { id, modelId } = useParams();
@@ -58,17 +63,39 @@ function Remodel(): React.JSX.Element {
   );
   const [showErrorNotification, setShowErrorNotification] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-  const [isDeleting, setIsDeleting] = useState(false);
+  const [isSavingEdit, setIsSavingEdit] = useState(false);
+  const [editedDescriptions, setEditedDescriptions] = useState<
+    Record<string, string>
+  >({});
+  const [remodelsToDelete, setRemodelsToDelete] = useState<Remodel[]>([]);
+  const [showBulkDeleteModal, setShowBulkDeleteModal] = useState(false);
+  const [isBulkDeleting, setIsBulkDeleting] = useState(false);
   const brandStore = useAtomValue(brandStoreState(id));
   const navigate = useNavigate();
 
-  const handleDeleteRemodel = async (remodel: Remodel) => {
-    setIsDeleting(true);
-    const deletePayload = {
+  const handleEditChange = (rowId: string, value: string) => {
+    setEditedDescriptions((previous) => ({
+      ...previous,
+      [rowId]: value,
+    }));
+  };
+
+  const handleEditCancel = (rowId: string) => {
+    setEditedDescriptions((previous) => {
+      const updated = { ...previous };
+      delete updated[rowId];
+      return updated;
+    });
+  };
+
+  const handleBulkDeleteRemodels = async () => {
+    setIsBulkDeleting(true);
+
+    const deletePayload = remodelsToDelete.map((remodel) => ({
       "from-model": remodel["from-model"],
       "to-model": remodel["to-model"],
       "from-serial": remodel["from-serial"],
-    };
+    }));
 
     try {
       const response = await fetch(
@@ -85,11 +112,14 @@ function Remodel(): React.JSX.Element {
       const responseData = await response.json();
 
       if (!response.ok || !responseData.success) {
-        throw new Error(responseData.message || "Unable to delete remodel");
+        throw new Error(responseData.message || "Unable to delete remodels");
       }
 
-      setNotificationMessage("Remodel deleted");
+      const count = remodelsToDelete.length;
+      setNotificationMessage(`${count} remodel${count > 1 ? "s" : ""} deleted`);
       setShowNotification(true);
+      setRemodelsToDelete([]);
+      setShowBulkDeleteModal(false);
 
       await queryClient.invalidateQueries({ queryKey: ["remodels"] });
 
@@ -98,16 +128,71 @@ function Remodel(): React.JSX.Element {
       }, 5000);
     } catch (error) {
       setErrorMessage(
-        error instanceof Error ? error.message : "Unable to delete remodel",
+        error instanceof Error ? error.message : "Unable to delete remodels",
       );
       setShowErrorNotification(true);
       setTimeout(() => {
         setShowErrorNotification(false);
       }, 5000);
-
-      throw error;
     } finally {
-      setIsDeleting(false);
+      setIsBulkDeleting(false);
+    }
+  };
+
+  const handleUpdateRemodel = async (remodel: Remodel) => {
+    const rowId = getRemodelRowId(remodel);
+    const description = editedDescriptions[rowId] ?? remodel["description"];
+
+    setIsSavingEdit(true);
+
+    const patchPayload = {
+      "from-model": remodel["from-model"],
+      "to-model": remodel["to-model"],
+      "from-serial": remodel["from-serial"],
+      description,
+    };
+
+    try {
+      const response = await fetch(
+        `/api/store/${brandId}/models/remodel-allowlist`,
+        {
+          method: "PATCH",
+          body: JSON.stringify(patchPayload),
+          headers: {
+            "Content-Type": "application/json",
+            "X-CSRF-Token": window.CSRF_TOKEN,
+          },
+        },
+      );
+      const responseData = await response.json();
+
+      if (!response.ok || !responseData.success) {
+        throw new Error(responseData.message || "Unable to update remodel");
+      }
+
+      setNotificationMessage("Remodel updated");
+      setShowNotification(true);
+      setEditedDescriptions((previous) => {
+        const updated = { ...previous };
+        delete updated[rowId];
+        return updated;
+      });
+
+      await queryClient.invalidateQueries({ queryKey: ["remodels"] });
+
+      setTimeout(() => {
+        setShowNotification(false);
+      }, 5000);
+    } catch (error) {
+      setErrorMessage(
+        error instanceof Error ? error.message : "Unable to update remodel",
+      );
+      setShowErrorNotification(true);
+      setTimeout(() => {
+        setShowErrorNotification(false);
+      }, 5000);
+    } finally {
+      setIsSavingEdit(false);
     }
   };
 
@@ -166,16 +251,35 @@ function Remodel(): React.JSX.Element {
           </Notification>
         ) : (
           <>
-            <Row>
-              <Col size={12} className="u-align--right">
-                <Link
-                  className={`p-button--positive ${isError && !data ? "is-disabled" : ""}`}
-                  to={`/admin/${id}/models/${modelId}/remodel/configure`}
-                >
-                  Configure remodels
-                </Link>
-              </Col>
-            </Row>
+            <div className="u-fixed-width u-align--right">
+              <Button
+                disabled={remodelsToDelete.length === 0 || isBulkDeleting}
+                onClick={() => setShowBulkDeleteModal(true)}
+                className={isBulkDeleting ? "has-icon" : ""}
+              >
+                {isBulkDeleting ? (
+                  <>
+                    <Icon
+                      name="spinner"
+                      className="u-animation--spin is-light"
+                    />
+                    &nbsp;Deleting...
+                  </>
+                ) : remodelsToDelete.length > 1 ? (
+                  `Delete ${remodelsToDelete.length} remodels`
+                ) : (
+                  "Delete remodel"
+                )}
+              </Button>
+
+              <Link
+                className={`p-button--positive ${isError && !data ? "is-disabled" : ""}`}
+                to={`/admin/${id}/models/${modelId}/remodel/configure`}
+              >
+                Configure remodels
+              </Link>
+            </div>
+
             <div className="u-flex-column u-flex-grow">
               {data && (
                 <RemodelTable
@@ -188,8 +292,13 @@ function Remodel(): React.JSX.Element {
                     cursorHistory.current.length < 1 || currentCursor === null
                   }
                   pageSize={pageSize}
-                  isDeleting={isDeleting}
-                  onDeleteRemodel={handleDeleteRemodel}
+                  isSavingEdit={isSavingEdit}
+                  editedDescriptions={editedDescriptions}
+                  onEditChange={handleEditChange}
+                  onEditSave={handleUpdateRemodel}
+                  onEditCancel={handleEditCancel}
+                  remodelsToDelete={remodelsToDelete}
+                  setRemodelsToDelete={setRemodelsToDelete}
                 />
               )}
             </div>
@@ -224,7 +333,77 @@ function Remodel(): React.JSX.Element {
           </div>
         )}
       </PortalEntrance>
-
+      <PortalEntrance name="modal">
+        {showBulkDeleteModal && (
+          <Modal
+            close={() => {
+              if (!isBulkDeleting) {
+                setShowBulkDeleteModal(false);
+              }
+            }}
+            title={
+              remodelsToDelete.length > 1
+                ? `Delete ${remodelsToDelete.length} remodels`
+                : "Delete remodel"
+            }
+            buttonRow={
+              <>
+                <Button
+                  className="u-no-margin--bottom"
+                  disabled={isBulkDeleting}
+                  onClick={() => setShowBulkDeleteModal(false)}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  className="u-no-margin--bottom u-no-margin--right"
+                  appearance="negative"
+                  disabled={isBulkDeleting}
+                  onClick={() => {
+                    handleBulkDeleteRemodels();
+                  }}
+                >
+                  {isBulkDeleting ? (
+                    <>
+                      <Icon
+                        name="spinner"
+                        className="u-animation--spin is-light"
+                      />
+                      &nbsp;Deleting...
+                    </>
+                  ) : (
+                    "Delete"
+                  )}
+                </Button>
+              </>
+            }
+          >
+            {remodelsToDelete.length > 1 && (
+              <ul>
+                {remodelsToDelete.map((remodel) => {
+                  const rowId = getRemodelRowId(remodel);
+                  return (
+                    <li key={rowId}>
+                      <strong>
+                        {remodel["from-model"]} → {remodel["to-model"]}
+                      </strong>
+                      {remodel["from-serial"] && (
+                        <> (Serial: {remodel["from-serial"]})</>
+                      )}
+                    </li>
+                  );
+                })}
+              </ul>
+            )}
+            <p>
+              Are you sure you want to delete{" "}
+              {remodelsToDelete.length > 1 ? "these remodels" : "this remodel"}?
+              <br />
+              This action cannot be undone.
+            </p>
+          </Modal>
+        )}
+      </PortalEntrance>
       <PortalEntrance name="aside">
         <div
           className={`l-aside__overlay ${

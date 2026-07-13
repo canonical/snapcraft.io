@@ -40,6 +40,25 @@ def get_publisher_snaps(device_gateway, publisher):
     return snaps
 
 
+def hydrate_featured_snaps(featured_snaps, snaps_by_name):
+    """Hydrate curated featured snaps with live store API data.
+
+    'featured_snaps' is the editorial list from a publisher's YAML
+    (package_name, background, description). title/summary/icon come from
+    'snaps_by_name' (built from the API). Snaps missing from the API
+    (unlisted/private/removed) are dropped.
+    """
+    return [
+        {
+            **snaps_by_name[snap["package_name"]],
+            "background": snap.get("background"),
+            "description": snap.get("description"),
+        }
+        for snap in featured_snaps or []
+        if snap["package_name"] in snaps_by_name
+    ]
+
+
 def get_snap_banner_url(snap_result):
     """Get snaps banner url from media object
 

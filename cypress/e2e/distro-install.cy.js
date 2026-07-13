@@ -41,15 +41,6 @@ describe("Test distro-install.js bundle on a distro install page (specifically /
     });
   });
 
-  it("sets 'window.snapcraft.public.distroInstall.triggerEventWhenVisible'", () => {
-    cy.window().then((window) => {
-      expect(
-        typeof window?.snapcraft?.public?.distroInstall
-          ?.triggerEventWhenVisible,
-      ).to.equal("function");
-    });
-  });
-
   it("sets 'window.snapcraft.public.distroInstall.videos'", () => {
     cy.window().then((window) => {
       expect(typeof window?.snapcraft?.public?.distroInstall?.videos).to.equal(

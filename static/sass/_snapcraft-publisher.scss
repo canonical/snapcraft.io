@@ -4,6 +4,11 @@
     min-height: 35vh;
   }
 
+  // Allow the graph tooltip to overflow the accordion panel boundaries
+  .snap-installs-metrics-accordion .p-accordion__panel {
+    overflow: visible;
+  }
+
   .snap-installs-placeholder {
     height: 100%;
     width: 100%;

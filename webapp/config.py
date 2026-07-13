@@ -44,12 +44,13 @@ SEND_FILE_MAX_AGE_DEFAULT = 10 * 365 * 24 * 60 * 60
 CONTENT_DIRECTORY = {"PUBLISHER_PAGES": "store/content/publishers/"}
 
 APP_NAME = "snapcraft"
-ANALYTICS_ENDPOINT = os.getenv("ANALYTICS_ENDPOINT", "").strip()
 
 # Fallback icon shown when a snap has no icon of its own
 DEFAULT_ICON_URL = (
     "https://assets.ubuntu.com/v1/be6eb412-snapcraft-missing-icon.svg"
 )
+
+STATUS_BANNER = os.getenv("STATUS_BANNER", "").strip()
 
 REPORT_SHEET_URL = os.getenv("REPORT_SHEET_URL", "").strip()
 TURNSTILE_SITE_KEY = os.getenv("TURNSTILE_SITE_KEY", "").strip()

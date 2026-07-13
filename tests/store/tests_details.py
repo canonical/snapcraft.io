@@ -193,6 +193,14 @@ class GetDetailsPageTest(TestCase):
         )
         self.assertEqual(goland["title"], "GoLand")
 
+        # Featured snaps are hydrated from the API. intellij-idea is in
+        # the API response so it stays, pycharm is not so it is dropped.
+        featured = self.get_context_variable("publisher_featured_snaps")
+        featured_names = [snap["package_name"] for snap in featured]
+        self.assertEqual(featured_names, ["intellij-idea"])
+        self.assertEqual(featured[0]["title"], "IntelliJ IDEA")
+        self.assertEqual(featured[0]["background"], "#000000")
+
     @responses.activate
     def test_has_sboms_success(self):
         payload = SNAP_PAYLOAD
@@ -411,8 +419,7 @@ class GetDetailsPageTest(TestCase):
         with self.client.session_transaction() as s:
             # make test session 'authenticated'
             s["publisher"] = {"nickname": "toto", "fullname": "Totinio"}
-            s["macaroon_root"] = "test"
-            s["macaroon_discharge"] = "test"
+            s["macaroon_exchanged"] = "test"
             # mock test user snaps list
             s["user_snaps"] = {"toto": {"snap-id": "test"}}
 

@@ -1,5 +1,4 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { triggerGAEvent } from "../analytics";
 import type {
   AppDispatch,
   RootState,
@@ -45,24 +44,8 @@ export function toggleHistory(filters: HistoryFilters | null) {
           filters.risk === history.filters.risk &&
           filters.branch === history.filters.branch))
     ) {
-      if (filters) {
-        dispatch(
-          triggerGAEvent(
-            `click-close-history`,
-            `${filters.track}/${filters.risk}/${filters.branch}/${filters.arch}`,
-          ),
-        );
-      }
       dispatch(closeHistory());
     } else {
-      if (filters) {
-        dispatch(
-          triggerGAEvent(
-            `click-open-history`,
-            `${filters.track}/${filters.risk}/${filters.branch}/${filters.arch}`,
-          ),
-        );
-      }
       dispatch(openHistory(filters));
     }
   };

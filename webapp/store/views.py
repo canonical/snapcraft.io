@@ -306,6 +306,10 @@ def store_blueprint(store_query=None):
                 else []
             )
 
+            context["featured_snaps"] = logic.hydrate_featured_snaps(
+                context.get("featured_snaps"), snaps_by_name
+            )
+
             featured_snaps = [
                 snap["package_name"] for snap in context["featured_snaps"]
             ]
@@ -400,6 +404,17 @@ def store_blueprint(store_query=None):
             flask.render_template("store/_category-partial.html", **context),
             status_code,
         )
+
+    @store.route("/store/stats")
+    def store_stats():
+        try:
+            stats = redis_cache.get("store:stats", expected_type=dict)
+            if not stats:
+                stats = snap_recommendations.get_stats()
+                redis_cache.set("store:stats", stats, ttl=3600)
+        except (ApiError, api_requests.exceptions.RequestException):
+            return flask.jsonify({}), 503
+        return flask.jsonify(stats)
 
     @store.route("/store/featured-snaps/<category>")
     def featured_snaps_in_category(category):
