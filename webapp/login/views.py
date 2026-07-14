@@ -75,51 +75,10 @@ def login_handler():
 
 @open_id.after_login
 def after_login(resp):
-    discharge_macaroon = resp.extensions["macaroon"].discharge
-    flask.session["macaroon_discharge"] = discharge_macaroon
+    flask.session["macaroon_discharge"] = resp.extensions["macaroon"].discharge
 
     if not resp.nickname:
         return flask.redirect(LOGIN_URL)
-
-    # Exchange root + discharge for a single dashboard token.
-    # Both keys are in the session here, so exchange_dashboard_macaroons
-    # can read them directly. We then drop them to keep the cookie small.
-    try:
-        flask.session["macaroon_exchanged"] = (
-            publisher_gateway.exchange_dashboard_macaroons(flask.session)
-        )
-    except StoreApiResponseErrorList as api_error:
-        # A brand-new publisher who has never accepted the developer Terms &
-        # Conditions has no publisher account yet, so the macaroon exchange
-        # fails with "account-not-found". Rather than returning a 404, keep
-        # the dashboard (root + discharge) macaroons, establish a minimal
-        # authenticated session and guide the user to the agreement page.
-        # Accepting the agreement creates the account, after which the
-        # exchange succeeds on the next request. See issue #5788.
-        if any(
-            error.get("code") == "account-not-found"
-            for error in api_error.errors
-        ):
-            flask.session["publisher"] = {
-                "identity_url": resp.identity_url,
-                "nickname": resp.nickname,
-                "fullname": resp.fullname,
-                "image": resp.image,
-                "email": resp.email,
-            }
-            return flask.redirect(flask.url_for("account.get_agreement"))
-        raise
-
-    flask.session.pop("macaroon_root", None)
-    flask.session.pop("macaroon_discharge", None)
-
-    flask.session["publisher"] = {
-        "identity_url": resp.identity_url,
-        "nickname": resp.nickname,
-        "fullname": resp.fullname,
-        "image": resp.image,
-        "email": resp.email,
-    }
 
     account = dashboard.get_account(flask.session)
     validation_sets = dashboard.get_validation_sets(flask.session)

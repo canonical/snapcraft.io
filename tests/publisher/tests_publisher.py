@@ -1,5 +1,6 @@
 from requests.exceptions import ConnectionError
 
+import pymacaroons
 import responses
 from flask_testing import TestCase
 from tests.publisher.endpoint_testing import BaseTestCases
@@ -60,12 +61,16 @@ class PublisherPage(TestCase):
     def _log_in(self, client):
         """Emulates test client login in the store.
 
-        Fill current session with `openid` and `macaroon_exchanged`.
+        Fill current session with `openid`, `macaroon_root` and
+        `macaroon_discharge`.
 
         Return the expected `Authorization` header for further verification in
         API requests.
         """
-        exchanged_macaroon = "test-exchanged-macaroon"
+        # Basic root/discharge macaroons pair.
+        root = pymacaroons.Macaroon("test", "testing", "a_key")
+        root.add_third_party_caveat("3rd", "a_caveat-key", "a_ident")
+        discharge = pymacaroons.Macaroon("3rd", "a_ident", "a_caveat_key")
 
         with client.session_transaction() as s:
             s["publisher"] = {
@@ -74,9 +79,12 @@ class PublisherPage(TestCase):
                 "fullname": "El Toto",
                 "email": "test@example.com",
             }
-            s["macaroon_exchanged"] = exchanged_macaroon
+            s["macaroon_root"] = root.serialize()
+            s["macaroon_discharge"] = discharge.serialize()
 
-        return get_authorization_header(exchanged_macaroon)
+        return get_authorization_header(
+            root.serialize(), discharge.serialize()
+        )
 
     def test_username_not_logged_in(self):
         response = self.client.get("/account/username")

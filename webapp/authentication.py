@@ -2,8 +2,6 @@ import os
 
 from urllib.parse import urlparse
 
-from canonicalwebteam.store_api import dashboard as store_api_dashboard
-from canonicalwebteam.store_api import publishergw as store_api_publishergw
 from pymacaroons import Macaroon
 from webapp.api import sso
 
@@ -24,7 +22,6 @@ PERMISSIONS = [
 # keys for session data that should be cleared on auth refresh
 SESSION_AUTH_KEYS = [
     "macaroons",
-    "macaroon_exchanged",
     "macaroon_root",
     "macaroon_discharge",
     "publisher",
@@ -41,42 +38,16 @@ SESSION_INTEGRATION_KEYS = [
 SESSION_DATA_KEYS = SESSION_AUTH_KEYS + SESSION_INTEGRATION_KEYS
 
 
-def get_authorization_header(macaroon):
+def get_authorization_header(root, discharge):
     """
-    Return the authorization header value for an exchanged macaroon.
+    Bind root and discharge macaroons and return the authorization header.
     """
-    return f"Macaroon {macaroon}"
 
+    bound = Macaroon.deserialize(root).prepare_for_request(
+        Macaroon.deserialize(discharge)
+    )
 
-def get_session_authorization_headers(session):
-    """
-    Return the correct authorization headers for the current session.
-    """
-    if "macaroon_exchanged" in session:
-        return {
-            "Authorization": get_authorization_header(
-                session["macaroon_exchanged"]
-            )
-        }
-
-    if "macaroon_root" in session and "macaroon_discharge" in session:
-        root = session["macaroon_root"]
-        discharge = session["macaroon_discharge"]
-
-        bound = Macaroon.deserialize(root).prepare_for_request(
-            Macaroon.deserialize(discharge)
-        )
-
-        return {
-            "Authorization": (
-                f"macaroon root={root}, discharge={bound.serialize()}"
-            )
-        }
-
-    if "macaroons" in session:
-        return {"Macaroons": session["macaroons"]}
-
-    return {"Macaroons": ""}
+    return "macaroon root={}, discharge={}".format(root, bound.serialize())
 
 
 def get_publishergw_authorization_header(developer_token):
@@ -89,14 +60,10 @@ def is_authenticated(session):
     Returns True if the user is authenticated
     """
     return (
-        ("publisher" in session and "macaroon_exchanged" in session)
-        or (
-            "publisher" in session
-            and "macaroon_discharge" in session
-            and "macaroon_root" in session
-        )
-        or ("publisher" in session and "macaroons" in session)
-    )
+        "publisher" in session
+        and "macaroon_discharge" in session
+        and "macaroon_root" in session
+    ) or ("publisher" in session and "macaroons" in session)
 
 
 def empty_session(session):
@@ -157,15 +124,3 @@ def is_macaroon_expired(headers):
     the header response.
     """
     return headers.get("WWW-Authenticate") == ("Macaroon needs_refresh=1")
-
-
-def _store_api_authorization_header(_self, session):
-    return get_session_authorization_headers(session)
-
-
-store_api_dashboard.Dashboard._get_authorization_header = (
-    _store_api_authorization_header
-)
-store_api_publishergw.dashboard_authorization_header = (
-    get_session_authorization_headers
-)

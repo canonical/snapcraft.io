@@ -5,8 +5,6 @@ from webapp.authentication import (
     SESSION_INTEGRATION_KEYS,
     SESSION_DATA_KEYS,
     empty_session,
-    get_authorization_header,
-    is_authenticated,
     reset_auth_session,
 )
 
@@ -40,30 +38,4 @@ class TestResetAuthSession(unittest.TestCase):
         self.assertEqual(
             set(SESSION_AUTH_KEYS).intersection(set(SESSION_INTEGRATION_KEYS)),
             set(),
-        )
-
-    def test_get_authorization_header_uses_single_exchanged_macaroon(self):
-        self.assertEqual(
-            get_authorization_header("test-macaroon"),
-            "Macaroon test-macaroon",
-        )
-
-    def test_is_authenticated_with_exchanged_macaroon(self):
-        self.assertTrue(
-            is_authenticated(
-                {
-                    "publisher": {"nickname": "test"},
-                    "macaroon_exchanged": "test-macaroon",
-                }
-            )
-        )
-
-    def test_is_authenticated_with_legacy_macaroons(self):
-        self.assertTrue(
-            is_authenticated(
-                {
-                    "publisher": {"nickname": "test"},
-                    "macaroons": "legacy-macaroon",
-                }
-            )
         )
