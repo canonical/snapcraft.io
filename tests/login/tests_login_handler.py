@@ -3,10 +3,6 @@ import requests
 import responses
 from flask_testing import TestCase
 from pymacaroons import Macaroon
-from canonicalwebteam.exceptions import (
-    PublisherAgreementNotSigned,
-    StoreApiResponseErrorList,
-)
 from webapp.app import create_app
 
 from unittest.mock import patch, MagicMock

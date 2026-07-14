@@ -14,7 +14,6 @@ from webapp.api.exceptions import ApiResponseError
 from webapp.extensions import csrf
 from webapp.login.macaroon import MacaroonRequest, MacaroonResponse
 from webapp.publisher.snaps import logic
-from canonicalwebteam.exceptions import StoreApiResponseErrorList
 
 login = flask.Blueprint(
     "login", __name__, template_folder="/templates", static_folder="/static"
