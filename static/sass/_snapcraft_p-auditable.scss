@@ -1,0 +1,49 @@
+@mixin snapcraft-p-auditable {
+  .p-auditable-badge {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: $sph--small;
+
+    &__error {
+      color: $color-negative;
+    }
+
+    &__note {
+      font-style: italic;
+    }
+  }
+
+  @keyframes p-auditable-skeleton-pulse {
+    0%,
+    100% {
+      opacity: 1;
+    }
+
+    50% {
+      opacity: 0.4;
+    }
+  }
+
+  .p-auditable-skeleton {
+    align-items: center;
+    display: inline-flex;
+    gap: $sph--small;
+
+    &__bar {
+      animation: p-auditable-skeleton-pulse 1.5s ease-in-out infinite;
+      border-radius: $border-radius;
+      height: $sp-medium;
+    }
+
+    &__bar--short {
+      background-color: $color-mid-light;
+      width: $sp-xxxxx-large;
+    }
+
+    &__bar--long {
+      background-color: $color-mid-x-light;
+      width: $sp-xxxxx-large * 2;
+    }
+  }
+}

@@ -15,6 +15,10 @@ load_plain_env_variables()
 SECRET_KEY = os.getenv("SECRET_KEY")
 LOGIN_URL = os.getenv("LOGIN_URL", "https://login.ubuntu.com")
 BSI_URL = os.getenv("BSI_URL", "https://build.snapcraft.io")
+# Max pages of Launchpad completed builds to scan when resolving snap
+# provenance (page size is 75). Bounds the work for snaps with a long build
+# history; revisions older than this many pages simply show no commit link.
+LP_MAX_BUILD_PAGES = int(os.getenv("LP_MAX_BUILD_PAGES", "5"))
 ENVIRONMENT = os.getenv("ENVIRONMENT", "devel")
 IS_DEVELOPMENT = ENVIRONMENT == "devel"
 COMMIT_ID = os.getenv("COMMIT_ID", "commit_id")
