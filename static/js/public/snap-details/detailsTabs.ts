@@ -10,17 +10,31 @@ export default function initDetailsTabs(): void {
     return;
   }
 
+  const activate = (controls: string | null): boolean => {
+    const target = Array.from(tabs).find(
+      (tab) => tab.getAttribute("aria-controls") === controls,
+    );
+    if (!target || !controls) {
+      return false;
+    }
+
+    tabs.forEach((tab) => tab.setAttribute("aria-selected", "false"));
+    target.setAttribute("aria-selected", "true");
+    panels.forEach((panel) => {
+      panel.classList.toggle("u-hide", panel.id !== controls);
+    });
+    return true;
+  };
+
   tabs.forEach((tab) => {
     tab.addEventListener("click", (event) => {
       event.preventDefault();
       const controls = tab.getAttribute("aria-controls");
-
-      tabs.forEach((t) => t.setAttribute("aria-selected", "false"));
-      tab.setAttribute("aria-selected", "true");
-
-      panels.forEach((panel) => {
-        panel.classList.toggle("u-hide", panel.id !== controls);
-      });
+      if (activate(controls)) {
+        window.history.replaceState(null, "", `#${controls}`);
+      }
     });
   });
+
+  activate(window.location.hash.replace(/^#/, ""));
 }
