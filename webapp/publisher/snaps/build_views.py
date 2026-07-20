@@ -231,10 +231,10 @@ def post_snap_builds(snap_name):
             "You do not have permissions to modify this Snap", "negative"
         )
         return flask.redirect(
-            flask.url_for(".get_snap_builds", snap_name=snap_name)
+            flask.url_for(".get_snap_builds_page", snap_name=snap_name)
         )
 
-    redirect_url = flask.url_for(".get_snap_builds", snap_name=snap_name)
+    redirect_url = flask.url_for(".get_snap_builds_page", snap_name=snap_name)
 
     # Get built snap in launchpad with this store name
     github = GitHub(flask.session.get("github_auth_secret"))
@@ -259,6 +259,19 @@ def post_snap_builds(snap_name):
     lp_snap = launchpad.get_snap_by_store_name(details["snap_name"])
     git_url = f"https://github.com/{owner}/{repo}"
 
+    # Root macaroon obtained from the store, to authorize builds to be
+    # uploaded to the store from Launchpad. This macaroon carries an SSO
+    # third-party caveat that only login.ubuntu.com can discharge, and that
+    # discharge is specific to *this* macaroon's caveat_id (it cannot be
+    # satisfied by reusing a discharge obtained for a different macaroon,
+    # e.g. the one from the user's original login). Without a matching
+    # discharge, Launchpad will accept the authorization call but can never
+    # actually use it to upload builds, and builds will be stuck as
+    # "Unscheduled" ("Won't release") forever with no visible error.
+    upload_macaroon = dashboard.get_package_upload_macaroon(
+        session=flask.session, snap_name=snap_name, channels=["edge"]
+    )["macaroon"]
+
     if not lp_snap:
         lp_snap_name = md5(git_url.encode("UTF-8")).hexdigest()
 
@@ -278,15 +291,72 @@ def post_snap_builds(snap_name):
             )
             return flask.redirect(redirect_url)
 
-        macaroon = dashboard.get_package_upload_macaroon(
-            session=flask.session, snap_name=snap_name, channels=["edge"]
-        )["macaroon"]
+        pending_action = "link"
 
-        launchpad.create_snap(snap_name, git_url, macaroon)
+    elif lp_snap["git_repository_url"] != git_url:
+        # In the future, create a new record, delete the old one
+        raise AttributeError(
+            f"Snap {snap_name} already has a build repository associated"
+        )
+    else:
+        pending_action = "repair"
+
+    # We can't complete the store authorization yet: we still need a
+    # discharge macaroon that specifically discharges `upload_macaroon`'s
+    # SSO caveat, which requires a redirect round-trip through
+    # login.ubuntu.com (see webapp/login/views.py:authorize_snap_build).
+    # Stash everything needed to finish the job once we're back, and kick
+    # off that round-trip.
+    flask.session["pending_snap_authorization"] = {
+        "action": pending_action,
+        "snap_name": snap_name,
+        "git_url": git_url,
+        "owner": owner,
+        "repo": repo,
+        "lp_snap_name": lp_snap["name"] if lp_snap else None,
+        "root_macaroon": upload_macaroon,
+        "redirect_url": redirect_url,
+    }
+
+    # This endpoint is called via `fetch()` from the React frontend, so we
+    # can't just return an HTTP redirect here: the browser needs to
+    # actually navigate away to complete the login.ubuntu.com round-trip,
+    # which a fetch() call can't do on the page's behalf. Signal the
+    # frontend to do that navigation itself.
+    return flask.jsonify(
+        {
+            "success": False,
+            "authorization_required": True,
+            "redirect_url": flask.url_for("login.authorize_snap_build"),
+        }
+    )
+
+
+def complete_pending_snap_authorization(pending, discharge_macaroon):
+    """
+    Finish linking/repairing a snap's Launchpad build authorization,
+    once a discharge macaroon for the pending upload macaroon's SSO
+    caveat has been obtained (see webapp/login/views.py).
+    """
+    snap_name = pending["snap_name"]
+    git_url = pending["git_url"]
+    redirect_url = pending["redirect_url"]
+
+    if pending["action"] == "link":
+        launchpad.create_snap(
+            snap_name,
+            git_url,
+            pending["root_macaroon"],
+            discharge_macaroon=discharge_macaroon,
+        )
 
         flask.flash(
             "The GitHub repository was linked successfully.", "positive"
         )
+
+        owner = pending["owner"]
+        repo = pending["repo"]
+        github = GitHub(flask.session.get("github_auth_secret"))
 
         # Create webhook in the repo, it should also trigger the first build
         github_hook_url = (
@@ -304,12 +374,23 @@ def post_snap_builds(snap_name):
                 "Please trigger a new build manually.",
                 "caution",
             )
-
-    elif lp_snap["git_repository_url"] != git_url:
-        # In the future, create a new record, delete the old one
-        raise AttributeError(
-            f"Snap {snap_name} already has a build repository associated"
+    else:
+        # The repo is already linked to this snap: re-run the store
+        # authorization handshake. This lets users self-repair snaps
+        # whose authorization silently failed (e.g. it was completed
+        # without a matching discharge macaroon), without having to
+        # unlink and relink the repository.
+        launchpad.complete_snap_authorization(
+            pending["lp_snap_name"],
+            pending["root_macaroon"],
+            discharge_macaroon=discharge_macaroon,
         )
+        flask.flash(
+            "The GitHub repository authorization was refreshed.",
+            "positive",
+        )
+
+    return flask.redirect(redirect_url)
 
     return flask.redirect(redirect_url)
 

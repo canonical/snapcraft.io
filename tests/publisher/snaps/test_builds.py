@@ -1,6 +1,7 @@
 import unittest
-from unittest.mock import patch
+from unittest.mock import patch, MagicMock
 
+from webapp.app import create_app
 from webapp.publisher.snaps.builds import map_build_and_upload_states
 from webapp.publisher.snaps.build_views import (
     extract_github_repository,
@@ -38,6 +39,15 @@ class TestBuildStateMapper(unittest.TestCase):
                 "in_progress",
             ),
             ("Currently building", "Uploaded", "in_progress"),
+            ("Gathering build output", "Unscheduled", "in_progress"),
+            ("Gathering build output", "Pending", "in_progress"),
+            ("Gathering build output", "Failed to upload", "in_progress"),
+            (
+                "Gathering build output",
+                "Failed to release to channels",
+                "in_progress",
+            ),
+            ("Gathering build output", "Uploaded", "in_progress"),
             ("Failed to build", "Unscheduled", "failed_to_build"),
             ("Failed to build", "Pending", "failed_to_build"),
             ("Failed to build", "Failed to upload", "failed_to_build"),
@@ -241,3 +251,194 @@ class TestExtractGithubRepository(unittest.TestCase):
             with self.subTest(url=url):
                 result = extract_github_repository(url)
                 self.assertIsNone(result)
+
+
+class TestPostSnapBuilds(unittest.TestCase):
+    """
+    Test that post_snap_builds correctly passes the discharge macaroon
+    through to Launchpad, and re-runs the store authorization handshake
+    when a repository is already linked, so builds don't silently get
+    stuck as "Won't release".
+    """
+
+    def setUp(self):
+        self.app = create_app(testing=True)
+        self.app.secret_key = "secret_key"
+        self.app.config["WTF_CSRF_METHODS"] = []
+        self.client = self.app.test_client()
+
+        self.snap_name = "test-snap"
+        self.endpoint_url = f"/api/{self.snap_name}/builds"
+
+        # Stub the blueprint-level "has releases" gate so tests don't hit
+        # the real dashboard API.
+        release_history_patcher = patch(
+            "webapp.decorators._dashboard.snap_release_history",
+            return_value={"revisions": [{"revision": 1}]},
+        )
+        release_history_patcher.start()
+        self.addCleanup(release_history_patcher.stop)
+
+        with self.client.session_transaction() as session:
+            session["publisher"] = {
+                "image": None,
+                "nickname": "Toto",
+                "fullname": "El Toto",
+                "email": "testing@testing.com",
+                "stores": [],
+            }
+            session["macaroon_exchanged"] = "test-exchanged-macaroon"
+            session["macaroon_discharge"] = "test-discharge-macaroon"
+            session["github_auth_secret"] = "test-github-token"
+
+    def _mock_dashboard(self, mock_dashboard):
+        mock_dashboard.get_snap_info.return_value = {
+            "snap_name": self.snap_name
+        }
+        mock_dashboard.get_account_snaps.return_value = {self.snap_name: {}}
+        mock_dashboard.get_package_upload_macaroon.return_value = {
+            "macaroon": "test-upload-macaroon"
+        }
+
+    def _mock_github(self, mock_github_class):
+        mock_github = MagicMock()
+        mock_github.check_permissions_over_repo.return_value = True
+        mock_github.get_hook_by_url.return_value = None
+        mock_github_class.return_value = mock_github
+        return mock_github
+
+    @patch("webapp.publisher.snaps.build_views.validate_repo")
+    @patch("webapp.publisher.snaps.build_views.GitHub")
+    @patch("webapp.publisher.snaps.build_views.launchpad")
+    @patch("webapp.publisher.snaps.build_views.dashboard")
+    def test_new_link_passes_discharge_macaroon_to_create_snap(
+        self,
+        mock_dashboard,
+        mock_launchpad,
+        mock_github_class,
+        mock_validate_repo,
+    ):
+        self._mock_dashboard(mock_dashboard)
+        self._mock_github(mock_github_class)
+        mock_validate_repo.return_value = {"success": True}
+
+        # No existing snap linked in Launchpad yet.
+        mock_launchpad.get_snap_by_store_name.return_value = None
+        mock_launchpad.get_snap.return_value = False
+
+        response = self.client.post(
+            self.endpoint_url,
+            data={"github_repository": "owner/repo"},
+        )
+
+        self.assertEqual(response.status_code, 302)
+        mock_launchpad.create_snap.assert_called_once_with(
+            self.snap_name,
+            "https://github.com/owner/repo",
+            "test-upload-macaroon",
+            discharge_macaroon="test-discharge-macaroon",
+        )
+        mock_launchpad.complete_snap_authorization.assert_not_called()
+
+    @patch("webapp.publisher.snaps.build_views.validate_repo")
+    @patch("webapp.publisher.snaps.build_views.GitHub")
+    @patch("webapp.publisher.snaps.build_views.launchpad")
+    @patch("webapp.publisher.snaps.build_views.dashboard")
+    def test_new_link_without_discharge_in_session(
+        self,
+        mock_dashboard,
+        mock_launchpad,
+        mock_github_class,
+        mock_validate_repo,
+    ):
+        """Backward compat: no discharge in session -> None is passed."""
+        self._mock_dashboard(mock_dashboard)
+        self._mock_github(mock_github_class)
+        mock_validate_repo.return_value = {"success": True}
+
+        mock_launchpad.get_snap_by_store_name.return_value = None
+        mock_launchpad.get_snap.return_value = False
+
+        with self.client.session_transaction() as session:
+            del session["macaroon_discharge"]
+
+        response = self.client.post(
+            self.endpoint_url,
+            data={"github_repository": "owner/repo"},
+        )
+
+        self.assertEqual(response.status_code, 302)
+        mock_launchpad.create_snap.assert_called_once_with(
+            self.snap_name,
+            "https://github.com/owner/repo",
+            "test-upload-macaroon",
+            discharge_macaroon=None,
+        )
+
+    @patch("webapp.publisher.snaps.build_views.validate_repo")
+    @patch("webapp.publisher.snaps.build_views.GitHub")
+    @patch("webapp.publisher.snaps.build_views.launchpad")
+    @patch("webapp.publisher.snaps.build_views.dashboard")
+    def test_existing_link_reauthorizes_instead_of_noop(
+        self,
+        mock_dashboard,
+        mock_launchpad,
+        mock_github_class,
+        mock_validate_repo,
+    ):
+        """
+        Reconnecting an already-linked repository must re-run the store
+        authorization handshake (previously a silent no-op), so users can
+        self-repair snaps stuck as "Won't release".
+        """
+        self._mock_dashboard(mock_dashboard)
+        self._mock_github(mock_github_class)
+        mock_validate_repo.return_value = {"success": True}
+
+        mock_launchpad.get_snap_by_store_name.return_value = {
+            "name": "lp-snap-name",
+            "git_repository_url": "https://github.com/owner/repo",
+        }
+
+        response = self.client.post(
+            self.endpoint_url,
+            data={"github_repository": "owner/repo"},
+        )
+
+        self.assertEqual(response.status_code, 302)
+        mock_launchpad.complete_snap_authorization.assert_called_once_with(
+            "lp-snap-name",
+            "test-upload-macaroon",
+            discharge_macaroon="test-discharge-macaroon",
+        )
+        mock_launchpad.create_snap.assert_not_called()
+
+    @patch("webapp.publisher.snaps.build_views.validate_repo")
+    @patch("webapp.publisher.snaps.build_views.GitHub")
+    @patch("webapp.publisher.snaps.build_views.launchpad")
+    @patch("webapp.publisher.snaps.build_views.dashboard")
+    def test_mismatched_repo_raises(
+        self,
+        mock_dashboard,
+        mock_launchpad,
+        mock_github_class,
+        mock_validate_repo,
+    ):
+        """A snap already linked to a different repo should still error."""
+        self._mock_dashboard(mock_dashboard)
+        self._mock_github(mock_github_class)
+        mock_validate_repo.return_value = {"success": True}
+
+        mock_launchpad.get_snap_by_store_name.return_value = {
+            "name": "lp-snap-name",
+            "git_repository_url": "https://github.com/owner/other-repo",
+        }
+
+        with self.assertRaises(AttributeError):
+            self.client.post(
+                self.endpoint_url,
+                data={"github_repository": "owner/repo"},
+            )
+
+        mock_launchpad.complete_snap_authorization.assert_not_called()
+        mock_launchpad.create_snap.assert_not_called()

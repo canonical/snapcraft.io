@@ -79,6 +79,69 @@ class TestPostBuild(TestEndpoints):
 
     @patch("webapp.endpoints.publisher.builds.launchpad")
     @patch("webapp.endpoints.publisher.builds.dashboard")
+    def test_post_build_reauthorizes_before_triggering(
+        self, mock_dashboard, mock_launchpad
+    ):
+        """Triggering a build must refresh the store authorization
+        with a fresh discharge macaroon first, so already-linked snaps
+        whose authorization went stale (e.g. completed without a
+        discharge macaroon) self-repair instead of staying stuck as
+        "Won't release" forever.
+        """
+        mock_dashboard.get_account_snaps.return_value = {
+            self.snap_name: {"snap_name": self.snap_name}
+        }
+        mock_dashboard.get_package_upload_macaroon.return_value = {
+            "macaroon": "test-upload-macaroon"
+        }
+        mock_launchpad.get_snap_by_store_name.return_value = {
+            "name": "lp-snap-name"
+        }
+        mock_launchpad.is_snap_building.return_value = False
+        mock_launchpad.build_snap.return_value = "build-12345"
+
+        with self.client.session_transaction() as session:
+            session["macaroon_discharge"] = "test-discharge-macaroon"
+
+        response = self.client.post(self.endpoint_url)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(response.get_json()["success"])
+
+        mock_launchpad.get_snap_by_store_name.assert_called_once_with(
+            self.snap_name
+        )
+        mock_dashboard.get_package_upload_macaroon.assert_called_once()
+        mock_launchpad.complete_snap_authorization.assert_called_once_with(
+            "lp-snap-name",
+            "test-upload-macaroon",
+            discharge_macaroon="test-discharge-macaroon",
+        )
+
+    @patch("webapp.endpoints.publisher.builds.launchpad")
+    @patch("webapp.endpoints.publisher.builds.dashboard")
+    def test_post_build_skips_reauthorization_when_snap_not_in_launchpad(
+        self, mock_dashboard, mock_launchpad
+    ):
+        """If the snap isn't linked in Launchpad yet, there's nothing
+        to reauthorize, so the reauthorization calls are skipped."""
+        mock_dashboard.get_account_snaps.return_value = {
+            self.snap_name: {"snap_name": self.snap_name}
+        }
+        mock_launchpad.get_snap_by_store_name.return_value = None
+        mock_launchpad.is_snap_building.return_value = False
+        mock_launchpad.build_snap.return_value = "build-12345"
+
+        response = self.client.post(self.endpoint_url)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(response.get_json()["success"])
+
+        mock_dashboard.get_package_upload_macaroon.assert_not_called()
+        mock_launchpad.complete_snap_authorization.assert_not_called()
+
+    @patch("webapp.endpoints.publisher.builds.launchpad")
+    @patch("webapp.endpoints.publisher.builds.dashboard")
     def test_post_build_cancels_existing_build(
         self, mock_dashboard, mock_launchpad
     ):
