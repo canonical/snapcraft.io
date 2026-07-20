@@ -69,7 +69,7 @@ class TestAuditableEndpoint(TestEndpoints):
             {"1721": {"amd64": VERIFIED_BUILD}}
         )
 
-        response = self.client.get("/api/mumble/auditable")
+        response = self.app.test_client().get("/api/mumble/auditable")
         data = response.get_json()
 
         self.assertEqual(response.status_code, 200)
@@ -81,6 +81,7 @@ class TestAuditableEndpoint(TestEndpoints):
         self.assertEqual(data["github_repository"], "snapcrafters/mumble")
         self.assertIn("commit/10c7c9e", data["commit_url"])
         self.assertEqual(data["build_id"], "216436")
+        self.assertEqual(response.cache_control.max_age, 3600)
 
     @patch("webapp.endpoints.snaps.device_gateway.get_item_details")
     @patch("webapp.endpoints.snaps.launchpad_provenance.build_provenance_map")
@@ -184,12 +185,13 @@ class TestAuditableEndpoint(TestEndpoints):
         )
         mock_map.side_effect = Exception("launchpad down")
 
-        response = self.client.get("/api/mumble/auditable")
+        response = self.app.test_client().get("/api/mumble/auditable")
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(
             response.get_json(), {"auditable": False, "status": "error"}
         )
+        self.assertEqual(response.cache_control.max_age, 0)
 
     @patch("webapp.endpoints.snaps.device_gateway.get_item_details")
     @patch("webapp.endpoints.snaps.launchpad_provenance.build_provenance_map")
@@ -238,13 +240,16 @@ class TestAuditableRevisionsEndpoint(TestEndpoints):
     def test_revisions_failure_reports_error(self, mock_map):
         mock_map.side_effect = Exception("launchpad down")
 
-        response = self.client.get("/api/mumble/auditable-revisions")
+        response = self.app.test_client().get(
+            "/api/mumble/auditable-revisions"
+        )
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(
             response.get_json(),
             {"github_repository": None, "revisions": {}, "error": True},
         )
+        self.assertEqual(response.cache_control.max_age, 0)
 
     @patch("webapp.endpoints.snaps.launchpad_provenance.build_provenance_map")
     def test_revisions_incomplete_sets_error_flag(self, mock_map):

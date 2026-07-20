@@ -205,7 +205,9 @@ def auditable(snap_name):
         res = {"auditable": False, "status": "error"}
 
     response = make_response(res, 200)
-    response.cache_control.max_age = "3600"
+    response.cache_control.max_age = (
+        0 if res.get("status") == "error" else 3600
+    )
     return response
 
 
@@ -243,7 +245,7 @@ def auditable_revisions(snap_name):
         res = {"github_repository": None, "revisions": {}, "error": True}
 
     response = make_response(res, 200)
-    response.cache_control.max_age = "3600"
+    response.cache_control.max_age = 0 if res.get("error") else 3600
     return response
 
 
