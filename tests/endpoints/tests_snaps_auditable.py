@@ -54,9 +54,10 @@ class TestAuditableEndpoint(TestEndpoints):
     def setUp(self):
         super().setUp()
         # Force cache miss so build_provenance_map is always exercised.
-        self.cache_patch = patch("webapp.endpoints.snaps.redis_cache").start()
+        cache_patcher = patch("webapp.endpoints.snaps.redis_cache")
+        self.cache_patch = cache_patcher.start()
         self.cache_patch.get.return_value = None
-        self.addCleanup(patch.stopall)
+        self.addCleanup(cache_patcher.stop)
 
     @patch("webapp.endpoints.snaps.device_gateway.get_item_details")
     @patch("webapp.endpoints.snaps.launchpad_provenance.build_provenance_map")
