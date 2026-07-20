@@ -20,7 +20,7 @@
   "author": "Canonical webteam",
   "license": "LGPL-3.0-or-later",
   "dependencies": {
-    "@babel/core": "7.29.0",
+    "@babel/core": "7.29.6",
     "@babel/plugin-transform-runtime": "7.29.0",
     "@babel/preset-env": "7.29.5",
     "@babel/preset-react": "7.28.5",
@@ -89,7 +89,7 @@
     "typescript": "5.9.3",
     "uuid": "14.0.0",
     "vanilla-framework": "4.50.0",
-    "vite": "7.3.3"
+    "vite": "7.3.5"
   },
   "devDependencies": {
     "@babel/eslint-parser": "7.28.6",

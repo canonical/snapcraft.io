@@ -66,8 +66,44 @@ function PublisherSettingsForm({ settings }: Props) {
     name: "blacklist_country_keys",
   });
 
+  const visibilityValue = useWatch({
+    control,
+    name: "visibility",
+  });
+
+  const territoryDistributionStatusValue = useWatch({
+    control,
+    name: "territory_distribution_status",
+  });
+
+  const countryKeysStatusValue = useWatch({
+    control,
+    name: "country_keys_status",
+  });
+
+  const selectedTerritoryDistributionStatus =
+    territoryDistributionStatusValue ??
+    settingsData.territory_distribution_status;
+  const selectedCountryKeysStatus =
+    countryKeysStatusValue ?? settingsData.country_keys_status;
+
+  const dirtyFieldKeys = Object.keys(dirtyFields).filter(
+    (key) => dirtyFields[key],
+  );
+  const onlyVisibilityChanged =
+    dirtyFieldKeys.length === 1 && dirtyFieldKeys[0] === "visibility";
+
   const onSubmit = (data: FieldValues) => {
-    if (getValues("update_metadata_on_release") && dirtyFields.visibility) {
+    const isDisablingMetadataUpdates =
+      dirtyFields.update_metadata_on_release &&
+      !data.update_metadata_on_release;
+
+    if (
+      (getValues("update_metadata_on_release") &&
+        dirtyFields.visibility &&
+        !onlyVisibilityChanged) ||
+      isDisablingMetadataUpdates
+    ) {
       setShowMetadataWarningModal(true);
       setFormData(data);
     } else {
@@ -209,7 +245,9 @@ function PublisherSettingsForm({ settings }: Props) {
                     className="p-radio__input"
                     value="public"
                     disabled={settingsData?.visibility_locked}
-                    defaultChecked={settingsData.visibility === "public"}
+                    checked={
+                      (visibilityValue ?? settingsData.visibility) === "public"
+                    }
                     {...register("visibility")}
                   />
                   <span className="p-radio__label">Public</span>
@@ -227,7 +265,10 @@ function PublisherSettingsForm({ settings }: Props) {
                     className="p-radio__input"
                     value="unlisted"
                     disabled={settingsData?.visibility_locked}
-                    defaultChecked={settingsData.visibility === "unlisted"}
+                    checked={
+                      (visibilityValue ?? settingsData.visibility) ===
+                      "unlisted"
+                    }
                     {...register("visibility")}
                   />
                   <span className="p-radio__label">Unlisted</span>
@@ -246,7 +287,9 @@ function PublisherSettingsForm({ settings }: Props) {
                     className="p-radio__input"
                     value="private"
                     disabled={settingsData?.visibility_locked}
-                    defaultChecked={settingsData.visibility === "private"}
+                    checked={
+                      (visibilityValue ?? settingsData.visibility) === "private"
+                    }
                     {...register("visibility")}
                   />
                   <span className="p-radio__label">Private</span>
@@ -284,9 +327,7 @@ function PublisherSettingsForm({ settings }: Props) {
                       type="radio"
                       className="p-radio__input"
                       value="all"
-                      defaultChecked={
-                        settingsData.territory_distribution_status === "all"
-                      }
+                      checked={selectedTerritoryDistributionStatus === "all"}
                       {...register("territory_distribution_status")}
                     />
                     <span className="p-radio__label">All territories</span>
@@ -301,9 +342,7 @@ function PublisherSettingsForm({ settings }: Props) {
                       type="radio"
                       className="p-radio__input"
                       value="custom"
-                      defaultChecked={
-                        settingsData.territory_distribution_status === "custom"
-                      }
+                      checked={selectedTerritoryDistributionStatus === "custom"}
                       {...register("territory_distribution_status")}
                     />
                     <span className="p-radio__label">Selected territories</span>
@@ -311,16 +350,14 @@ function PublisherSettingsForm({ settings }: Props) {
                 </li>
               </ul>
 
-              {getValues("territory_distribution_status") === "custom" && (
+              {selectedTerritoryDistributionStatus === "custom" && (
                 <>
                   <label className="p-radio">
                     <input
                       type="radio"
                       className="p-radio__input"
                       value="include"
-                      defaultChecked={
-                        settingsData.country_keys_status === "include"
-                      }
+                      checked={selectedCountryKeysStatus === "include"}
                       {...register("country_keys_status")}
                     />
                     <span className="p-radio__label">
@@ -336,7 +373,7 @@ function PublisherSettingsForm({ settings }: Props) {
                     setValue={setValue}
                     getValues={getValues}
                     control={control}
-                    disabled={getValues("country_keys_status") === "exclude"}
+                    disabled={selectedCountryKeysStatus === "exclude"}
                   />
 
                   <label className="p-radio">
@@ -344,9 +381,7 @@ function PublisherSettingsForm({ settings }: Props) {
                       type="radio"
                       className="p-radio__input"
                       value="exclude"
-                      defaultChecked={
-                        settingsData.country_keys_status === "exclude"
-                      }
+                      checked={selectedCountryKeysStatus === "exclude"}
                       {...register("country_keys_status")}
                     />
                     <span className="p-radio__label">
@@ -362,7 +397,7 @@ function PublisherSettingsForm({ settings }: Props) {
                     setValue={setValue}
                     getValues={getValues}
                     control={control}
-                    disabled={getValues("country_keys_status") === "include"}
+                    disabled={selectedCountryKeysStatus === "include"}
                   />
                 </>
               )}
