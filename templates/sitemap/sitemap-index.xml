@@ -10,7 +10,7 @@
     <loc>{{ base_url }}/blog/sitemap.xml</loc>
   </sitemap>
   <sitemap>
-    <loc>{{ base_url }}/docs/sitemap.xml</loc>
+    <loc>{{ base_url }}/docs/doc-sitemap.xml</loc>
   </sitemap>
   <sitemap>
     <loc>{{ base_url }}/tutorials/sitemap.xml</loc>
