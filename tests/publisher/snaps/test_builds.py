@@ -331,13 +331,31 @@ class TestPostSnapBuilds(unittest.TestCase):
             data={"github_repository": "owner/repo"},
         )
 
-        self.assertEqual(response.status_code, 302)
-        mock_launchpad.create_snap.assert_called_once_with(
-            self.snap_name,
-            "https://github.com/owner/repo",
-            "test-upload-macaroon",
-            discharge_macaroon="test-discharge-macaroon",
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(
+            response.get_json(),
+            {
+                "success": False,
+                "authorization_required": True,
+                "redirect_url": "/login/snap-build-authorization",
+            },
         )
+        with self.client.session_transaction() as session:
+            self.assertEqual(
+                session["pending_snap_authorization"],
+                {
+                    "action": "link",
+                    "snap_name": self.snap_name,
+                    "git_url": "https://github.com/owner/repo",
+                    "owner": "owner",
+                    "repo": "repo",
+                    "lp_snap_name": None,
+                    "root_macaroon": "test-upload-macaroon",
+                    "redirect_url": f"/{self.snap_name}/builds",
+                },
+            )
+
+        mock_launchpad.create_snap.assert_not_called()
         mock_launchpad.complete_snap_authorization.assert_not_called()
 
     @patch("webapp.publisher.snaps.build_views.validate_repo")
@@ -367,13 +385,33 @@ class TestPostSnapBuilds(unittest.TestCase):
             data={"github_repository": "owner/repo"},
         )
 
-        self.assertEqual(response.status_code, 302)
-        mock_launchpad.create_snap.assert_called_once_with(
-            self.snap_name,
-            "https://github.com/owner/repo",
-            "test-upload-macaroon",
-            discharge_macaroon=None,
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(
+            response.get_json(),
+            {
+                "success": False,
+                "authorization_required": True,
+                "redirect_url": "/login/snap-build-authorization",
+            },
         )
+        with self.client.session_transaction() as session:
+            self.assertEqual(
+                session["pending_snap_authorization"]["action"], "link"
+            )
+            self.assertEqual(
+                session["pending_snap_authorization"]["snap_name"],
+                self.snap_name,
+            )
+            self.assertEqual(
+                session["pending_snap_authorization"]["git_url"],
+                "https://github.com/owner/repo",
+            )
+            self.assertEqual(
+                session["pending_snap_authorization"]["root_macaroon"],
+                "test-upload-macaroon",
+            )
+
+        mock_launchpad.create_snap.assert_not_called()
 
     @patch("webapp.publisher.snaps.build_views.validate_repo")
     @patch("webapp.publisher.snaps.build_views.GitHub")
@@ -405,12 +443,31 @@ class TestPostSnapBuilds(unittest.TestCase):
             data={"github_repository": "owner/repo"},
         )
 
-        self.assertEqual(response.status_code, 302)
-        mock_launchpad.complete_snap_authorization.assert_called_once_with(
-            "lp-snap-name",
-            "test-upload-macaroon",
-            discharge_macaroon="test-discharge-macaroon",
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(
+            response.get_json(),
+            {
+                "success": False,
+                "authorization_required": True,
+                "redirect_url": "/login/snap-build-authorization",
+            },
         )
+        with self.client.session_transaction() as session:
+            self.assertEqual(
+                session["pending_snap_authorization"],
+                {
+                    "action": "repair",
+                    "snap_name": self.snap_name,
+                    "git_url": "https://github.com/owner/repo",
+                    "owner": "owner",
+                    "repo": "repo",
+                    "lp_snap_name": "lp-snap-name",
+                    "root_macaroon": "test-upload-macaroon",
+                    "redirect_url": f"/{self.snap_name}/builds",
+                },
+            )
+
+        mock_launchpad.complete_snap_authorization.assert_not_called()
         mock_launchpad.create_snap.assert_not_called()
 
     @patch("webapp.publisher.snaps.build_views.validate_repo")

@@ -118,9 +118,7 @@ def after_login(resp):
     pending = flask.session.pop("pending_snap_authorization", None)
     if pending:
         discharge_macaroon = resp.extensions["macaroon"].discharge
-        return complete_pending_snap_authorization(
-            pending, discharge_macaroon
-        )
+        return complete_pending_snap_authorization(pending, discharge_macaroon)
 
     discharge_macaroon = resp.extensions["macaroon"].discharge
     flask.session["macaroon_discharge"] = discharge_macaroon
