@@ -45,7 +45,7 @@ package-lock.json
 *.snap
 _site/
 *.*.map
-icons
+/static/icons
 
 # [env] Local environment settings
 .docker-project

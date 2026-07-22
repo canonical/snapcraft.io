@@ -19,7 +19,7 @@
     "serve": "./entrypoint 0.0.0.0:${PORT}",
     "start": "concurrently --raw 'yarn run watch' 'yarn run serve'",
     "watch": "vite",
-    "clean": "rm -rf node_modules icons yarn-error.log css static/js/dist static/js/modules static/css *.log *.sqlite _site/ build/ .jekyll-metadata .bundle cache.tmp",
+    "clean": "rm -rf node_modules static/icons yarn-error.log css static/js/dist static/js/modules static/css *.log *.sqlite _site/ build/ .jekyll-metadata .bundle cache.tmp",
     "percy": "node_modules/.bin/percy snapshot snapshots.yml"
   },
   "author": "Canonical webteam",

@@ -28,7 +28,7 @@ ADD tsconfig.json .
 ADD templates templates
 ADD vitePluginDetectInput.js .
 RUN yarn install
-RUN rm -rf icons && cp -r node_modules/@canonical/ds-assets/icons icons
+RUN rm -rf static/icons && cp -r node_modules/@canonical/ds-assets/icons static/icons
 RUN yarn run build
 
 # Build the production image
@@ -49,7 +49,7 @@ WORKDIR /srv
 ADD . .
 RUN rm -rf package.json yarn.lock .babelrc requirements.txt
 COPY --from=build /srv/static/js static/js
-COPY --from=build /srv/icons icons
+COPY --from=build /srv/static/icons static/icons
 
 # Setup commands to run server
 ENTRYPOINT ["./entrypoint"]

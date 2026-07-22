@@ -8,10 +8,8 @@ The web frontend for the snap store.
 # loaded properly and the FLASK_* prefix is stripped before they are parsed
 import webapp.config  # noqa: F401
 
-from pathlib import Path
-
 import sentry_sdk
-from flask import send_from_directory
+from flask import redirect, url_for
 
 from canonicalwebteam.flask_base.app import FlaskBase
 from webapp.blog.views import init_blog
@@ -56,11 +54,13 @@ def create_app(testing=False):
     app.name = "snapcraft"
     app.testing = testing
 
-    icons_path = Path(app.root_path).parent / "icons"
     app.add_url_rule(
-        "/icons/<path:filename>",
+        "/icons/<icon_name>.svg",
         "ds-icons",
-        lambda filename: send_from_directory(icons_path, filename),
+        lambda icon_name: redirect(
+            url_for("static", filename=f"icons/{icon_name}.svg"),
+            code=301,
+        ),
     )
 
     init_extensions(app)
