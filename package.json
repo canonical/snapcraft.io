@@ -1,5 +1,10 @@
 {
   "scripts": {
+    "link-ds-icons": "node scripts/link-ds-icons.mjs",
+    "postinstall": "yarn run link-ds-icons",
+    "prebuild": "yarn run link-ds-icons",
+    "prestart": "yarn run link-ds-icons",
+    "preserve": "yarn run link-ds-icons",
     "lint-js": "eslint static/js",
     "lint-a11y": "eslint -c eslint-a11y.config.js static/js",
     "lint-scss": "stylelint static/**/*.scss",
@@ -14,7 +19,7 @@
     "serve": "./entrypoint 0.0.0.0:${PORT}",
     "start": "concurrently --raw 'yarn run watch' 'yarn run serve'",
     "watch": "vite",
-    "clean": "rm -rf node_modules yarn-error.log css static/js/dist static/js/modules static/css *.log *.sqlite _site/ build/ .jekyll-metadata .bundle cache.tmp",
+    "clean": "rm -rf node_modules icons yarn-error.log css static/js/dist static/js/modules static/css *.log *.sqlite _site/ build/ .jekyll-metadata .bundle cache.tmp",
     "percy": "node_modules/.bin/percy snapshot snapshots.yml"
   },
   "author": "Canonical webteam",
