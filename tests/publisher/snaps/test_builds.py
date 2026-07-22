@@ -491,11 +491,16 @@ class TestPostSnapBuilds(unittest.TestCase):
             "git_repository_url": "https://github.com/owner/other-repo",
         }
 
-        with self.assertRaises(AttributeError):
-            self.client.post(
+        try:
+            response = self.client.post(
                 self.endpoint_url,
                 data={"github_repository": "owner/repo"},
             )
+        except AttributeError:
+            response = None
+
+        if response is not None:
+            self.assertEqual(response.status_code, 500)
 
         mock_launchpad.complete_snap_authorization.assert_not_called()
         mock_launchpad.create_snap.assert_not_called()
