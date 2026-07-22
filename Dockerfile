@@ -15,6 +15,7 @@ FROM node:24 AS yarn-dependencies
 WORKDIR /srv
 ADD package.json .
 ADD yarn.lock .
+ADD scripts/link-ds-icons.mjs scripts/link-ds-icons.mjs
 RUN --mount=type=cache,target=/usr/local/share/.cache/yarn yarn install --production
 
 # Build stage: Run "yarn run build"
@@ -27,6 +28,7 @@ ADD tsconfig.json .
 ADD templates templates
 ADD vitePluginDetectInput.js .
 RUN yarn install
+RUN rm -rf icons && cp -r node_modules/@canonical/ds-assets/icons icons
 RUN yarn run build
 
 # Build the production image
@@ -47,6 +49,7 @@ WORKDIR /srv
 ADD . .
 RUN rm -rf package.json yarn.lock .babelrc requirements.txt
 COPY --from=build /srv/static/js static/js
+COPY --from=build /srv/icons icons
 
 # Setup commands to run server
 ENTRYPOINT ["./entrypoint"]
