@@ -130,6 +130,51 @@ class GetDetailsPageTest(TestCase):
         self.fail(f"Context variable exists: {name}")
 
     @responses.activate
+    def test_icons_snap_details_page_uses_store_route(self):
+        snap_name = "icons"
+        payload = copy.deepcopy(SNAP_PAYLOAD)
+        payload["name"] = snap_name
+
+        info_url = "".join(
+            [
+                "https://api.snapcraft.io/v2/snaps/info/",
+                snap_name,
+            ]
+        )
+        details_url = "".join(
+            [
+                "https://api.snapcraft.io/api/v1/snaps/details/",
+                snap_name,
+                "?",
+                urlencode({"fields": ",".join(["aliases"])}),
+                "&channel=",
+            ]
+        )
+        metrics_url = "https://api.snapcraft.io/api/v1/snaps/metrics"
+        sbom_url = "".join(
+            [
+                "https://api.snapcraft.io/api/v1/sboms/download/",
+                f"sbom_snap_{self.snap_id}_{self.revision}.spdx2.3.json",
+            ]
+        )
+
+        responses.add(responses.GET, info_url, json=payload, status=200)
+        responses.add(
+            responses.GET,
+            details_url,
+            json=EMPTY_EXTRA_DETAILS_PAYLOAD,
+            status=200,
+        )
+        responses.add(responses.POST, metrics_url, json={}, status=200)
+        responses.add(responses.HEAD, sbom_url, json={}, status=200)
+
+        response = self.client.get("/" + snap_name)
+
+        self.assertEqual(response.status_code, 200)
+        self.assert_template_used("store/snap-details.html")
+        self.assertEqual(self.get_context_variable("package_name"), snap_name)
+
+    @responses.activate
     def test_more_from_publisher_uses_api(self):
         snap_name = "clion"
         payload = copy.deepcopy(SNAP_PAYLOAD)
