@@ -24,6 +24,9 @@ $breakpoint-medium: 619px;
 @import "vanilla-framework";
 @include vanilla;
 
+// imports pragma styles
+@import "@canonical/styles";
+
 // import cookie policy
 @import "@canonical/cookie-policy/build/css/cookie-policy";
 
@@ -567,4 +570,3 @@ html {
     fill: $colors--theme--background-default;
   }
 }
-
