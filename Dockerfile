@@ -3,7 +3,7 @@
 # Build stage: Install python dependencies
 # ===
 FROM ubuntu:jammy AS python-dependencies
-RUN apt-get update && apt-get install --no-install-recommends --yes python3-pip python3-setuptools
+RUN apt-get update && apt-get install --no-install-recommends --yes build-essential python3-dev python3-pip python3-setuptools
 ADD requirements.txt /tmp/requirements.txt
 RUN pip3 config set global.disable-pip-version-check true
 RUN --mount=type=cache,target=/root/.cache/pip pip3 install --user --requirement /tmp/requirements.txt
@@ -28,8 +28,8 @@ ADD tsconfig.json .
 ADD templates templates
 ADD vitePluginDetectInput.js .
 RUN yarn install
-RUN rm -rf static/icons && cp -r node_modules/@canonical/ds-assets/icons static/icons
 RUN yarn run build
+RUN rm -rf static/icons && cp -r node_modules/@canonical/ds-assets/icons static/icons
 
 # Build the production image
 # ===
