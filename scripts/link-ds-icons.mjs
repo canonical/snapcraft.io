@@ -21,6 +21,7 @@ const sourcePath = path.join(
   "icons",
 );
 const targetPath = path.join(repoRoot, "static", "icons");
+const targetParentPath = path.dirname(targetPath);
 
 async function pathExists(filePath) {
   try {
@@ -45,12 +46,13 @@ async function main() {
   }
 
   const sourceRealPath = await realpath(sourcePath);
-  await mkdir(path.dirname(targetPath), { recursive: true });
+  await mkdir(targetParentPath, { recursive: true });
 
   if (await pathExists(targetPath)) {
     const targetStat = await lstat(targetPath);
 
     if (!targetStat.isSymbolicLink()) {
+      // Local development expects a symlink; Docker materialises real files.
       console.error(
         "Cannot link DS icons: static/icons already exists and is not a " +
           "symlink.",
@@ -60,7 +62,7 @@ async function main() {
 
     const linkTarget = await readlink(targetPath);
     const linkRealPath = await realpath(
-      path.resolve(path.dirname(targetPath), linkTarget),
+      path.resolve(targetParentPath, linkTarget),
     ).catch(() => null);
 
     if (linkRealPath === sourceRealPath) {
@@ -71,11 +73,7 @@ async function main() {
     await unlink(targetPath);
   }
 
-  await symlink(
-    path.relative(path.dirname(targetPath), sourcePath),
-    targetPath,
-    "dir",
-  );
+  await symlink(path.relative(targetParentPath, sourcePath), targetPath, "dir");
   console.log(
     "Linked static/icons to node_modules/@canonical/ds-assets/icons.",
   );
