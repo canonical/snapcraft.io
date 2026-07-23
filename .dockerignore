@@ -22,3 +22,4 @@ run
 # Node is only needed for building, not running
 node_modules
 icons
+static/icons
