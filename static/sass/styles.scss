@@ -25,13 +25,8 @@ $breakpoint-medium: 619px;
 @include vanilla;
 
 // imports pragma styles
+@import "@canonical/styles/fonts";
 @import "@canonical/styles";
-
-// Needed so fonts are still applied after importing pragma styles
-:root {
-  --typography-font-family-default: $font-base-family
-    --typography-font-family-code: $font-monospace;
-}
 
 // import cookie policy
 @import "@canonical/cookie-policy/build/css/cookie-policy";
