@@ -35,7 +35,7 @@
     "@canonical/ds-assets": "0.32.0",
     "@canonical/global-nav": "3.8.0",
     "@canonical/react-components": "4.5.2",
-    "@canonical/react-ds-global": "^0.32.0",
+    "@canonical/react-ds-global": "0.32.0",
     "@canonical/store-components": "0.55.0",
     "@canonical/styles": "0.32.0",
     "@dnd-kit/core": "6.3.1",
