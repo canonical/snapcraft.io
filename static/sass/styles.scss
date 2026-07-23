@@ -26,6 +26,7 @@ $breakpoint-medium: 619px;
 
 // imports pragma styles
 @import "@canonical/styles";
+
 // Needed so fonts are still applied after importing pragma styles
 :root {
   --typography-font-family-default: $font-base-family
