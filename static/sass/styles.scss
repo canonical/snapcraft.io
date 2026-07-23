@@ -26,6 +26,7 @@ $breakpoint-medium: 619px;
 
 // imports pragma styles
 @import "@canonical/styles";
+@import url("@canonical/styles/fonts");
 
 // import cookie policy
 @import "@canonical/cookie-policy/build/css/cookie-policy";
