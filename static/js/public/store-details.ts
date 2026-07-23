@@ -7,9 +7,11 @@ import initEmbeddedCardModal from "./snap-details/embeddedCard";
 import { snapDetailsPosts } from "./snap-details/blog-posts";
 import initExpandableArea from "./expandable-area";
 import initCopyCommand from "./snap-details/copyCommand";
+import { applyDesktopStoreSupport } from "./snap-details/openDesktop";
 import declareGlobal from "../libs/declare";
 
 initCopyCommand();
+applyDesktopStoreSupport();
 
 declareGlobal("snapcraft.public.storeDetails", {
   map,

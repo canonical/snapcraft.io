@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import SnapEvents from "../../libs/events";
+import openDesktop, { applyDesktopStoreSupport } from "./openDesktop";
 
 interface SnapElement extends HTMLElement {
   dataset: {
@@ -376,22 +377,7 @@ class ChannelMap {
   }
 
   openDesktop(clickEl: HTMLElement) {
-    const name = clickEl.dataset.snap?.trim() || "";
-    let iframe = document.querySelector(
-      ".js-snap-open-frame",
-    ) as HTMLIFrameElement | null;
-
-    if (iframe && iframe.parentNode) {
-      iframe.parentNode.removeChild(iframe);
-    }
-
-    iframe = document.createElement("iframe");
-    iframe.className = "js-snap-open-frame";
-    iframe.style.position = "absolute";
-    iframe.style.top = "-9999px";
-    iframe.style.left = "-9999px";
-    iframe.src = `snap://${name}`;
-    document.body.appendChild(iframe);
+    openDesktop(clickEl as HTMLButtonElement);
   }
 
   selectScreen(screenEl: HTMLElement) {
@@ -499,6 +485,8 @@ class ChannelMap {
     ) as HTMLElement;
 
     holder.innerHTML = newDiv.innerHTML;
+
+    applyDesktopStoreSupport(holder);
   }
 
   writeTable(el: HTMLElement, data: string[][], tableType?: string): void {
