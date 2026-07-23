@@ -110,6 +110,14 @@ def post_build(snap_name):
             }
         )
 
+    # Note: store authorization is established/repaired once, when the
+    # GitHub repo is linked (or re-linked) via
+    # webapp/publisher/snaps/build_views.py:post_snap_builds, which
+    # completes a discharge round-trip through login.ubuntu.com for the
+    # store's upload macaroon. Launchpad persists that authorization on
+    # the snap itself, so it doesn't need to be redone here on every
+    # build trigger. If a snap's authorization needs repairing, disconnect
+    # and reconnect its repo to re-run that handshake.
     try:
         if launchpad.is_snap_building(snap_name):
             launchpad.cancel_snap_builds(snap_name)

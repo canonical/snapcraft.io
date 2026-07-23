@@ -9,11 +9,15 @@ from django_openid_auth.teams import TeamsRequest, TeamsResponse
 from flask_openid import OpenID
 
 from webapp import authentication
+from webapp.decorators import login_required
 from webapp.helpers import api_publisher_session, api_session
 from webapp.api.exceptions import ApiResponseError
 from webapp.extensions import csrf
 from webapp.login.macaroon import MacaroonRequest, MacaroonResponse
 from webapp.publisher.snaps import logic
+from webapp.publisher.snaps.build_views import (
+    complete_pending_snap_authorization,
+)
 from canonicalwebteam.exceptions import StoreApiResponseErrorList
 
 login = flask.Blueprint(
@@ -41,6 +45,38 @@ open_id = OpenID(
 dashboard = Dashboard(api_session)
 publisher_gateway = PublisherGW(api_publisher_session)
 device_gateway = DeviceGW("snap", api_session)
+
+
+@login.route("/login/snap-build-authorization", methods=["GET", "POST"])
+@csrf.exempt
+@open_id.loginhandler
+@login_required
+def authorize_snap_build():
+    """
+    Kick off a discharge round-trip for a snap's Launchpad build/upload
+    macaroon (see
+    webapp/publisher/snaps/build_views.py:post_snap_builds).
+
+    The macaroon returned by the store's package-upload-macaroon endpoint
+    carries an SSO third-party caveat that is unique to that macaroon; it
+    can only be discharged by redirecting the user through login.ubuntu.com
+    for *that specific* caveat_id. A discharge obtained anywhere else
+    (e.g. at the user's original login) cannot be reused here.
+    """
+    pending = flask.session.get("pending_snap_authorization")
+
+    if not pending:
+        flask.flash("Nothing to authorize.", "negative")
+        return flask.redirect("/")
+
+    macaroon_request = MacaroonRequest(
+        caveat_id=authentication.get_caveat_id(pending["root_macaroon"])
+    )
+
+    return open_id.try_login(
+        LOGIN_URL,
+        extensions=[macaroon_request],
+    )
 
 
 @login.route("/login", methods=["GET", "POST"])
@@ -75,6 +111,15 @@ def login_handler():
 
 @open_id.after_login
 def after_login(resp):
+    # This same OpenID round-trip is reused for two purposes: a normal
+    # user login, and (see authorize_snap_build above) discharging a
+    # snap's Launchpad upload macaroon. Handle the latter first and bail
+    # out early, since none of the account/session logic below applies.
+    pending = flask.session.pop("pending_snap_authorization", None)
+    if pending:
+        discharge_macaroon = resp.extensions["macaroon"].discharge
+        return complete_pending_snap_authorization(pending, discharge_macaroon)
+
     discharge_macaroon = resp.extensions["macaroon"].discharge
     flask.session["macaroon_discharge"] = discharge_macaroon
 
