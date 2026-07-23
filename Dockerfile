@@ -29,6 +29,7 @@ ADD templates templates
 ADD vitePluginDetectInput.js .
 RUN yarn install
 RUN yarn run build
+# The final image excludes node_modules, so copy icon files instead of the dev symlink.
 RUN rm -rf static/icons && cp -r node_modules/@canonical/ds-assets/icons static/icons
 
 # Build the production image
