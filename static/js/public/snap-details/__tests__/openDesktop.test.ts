@@ -73,9 +73,10 @@ describe("isDesktopStoreSupported", () => {
       setUserAgent(MAC_UA);
       expect(isDesktopStoreSupported()).toBe(true);
     } finally {
-      delete (navigator as any).userAgentData;
+      delete (navigator as { userAgentData?: unknown }).userAgentData;
     }
   });
+});
 
 describe("applyDesktopStoreSupport", () => {
   beforeEach(() => {
