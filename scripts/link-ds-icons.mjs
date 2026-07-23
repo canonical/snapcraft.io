@@ -21,7 +21,6 @@ const sourcePath = path.join(
   "icons",
 );
 const targetPath = path.join(repoRoot, "static", "icons");
-const legacyTargetPath = path.join(repoRoot, "icons");
 
 async function pathExists(filePath) {
   try {
@@ -47,21 +46,6 @@ async function main() {
 
   const sourceRealPath = await realpath(sourcePath);
   await mkdir(path.dirname(targetPath), { recursive: true });
-
-  if (await pathExists(legacyTargetPath)) {
-    const legacyTargetStat = await lstat(legacyTargetPath);
-
-    if (legacyTargetStat.isSymbolicLink()) {
-      const legacyLinkTarget = await readlink(legacyTargetPath);
-      const legacyLinkRealPath = await realpath(
-        path.resolve(path.dirname(legacyTargetPath), legacyLinkTarget),
-      ).catch(() => null);
-
-      if (legacyLinkRealPath === sourceRealPath) {
-        await unlink(legacyTargetPath);
-      }
-    }
-  }
 
   if (await pathExists(targetPath)) {
     const targetStat = await lstat(targetPath);
