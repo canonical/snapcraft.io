@@ -29,8 +29,8 @@ $breakpoint-medium: 619px;
 
 // Needed so fonts are still applied after importing pragma styles
 :root {
-  --typography-font-family-default: $font-base-family
-    --typography-font-family-code: $font-monospace;
+  --typography-font-family-default: #{$font-base-family};
+  --typography-font-family-code: #{$font-monospace};
 }
 
 // import cookie policy
