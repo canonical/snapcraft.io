@@ -1,3 +1,21 @@
+{% macro open_desktop_block(snap, target, shown_event, channel) %}
+  <div data-js="open-desktop-block" class="u-hide">
+    <p>Ubuntu 16.04 or later?</p>
+    <button
+      data-snap="{{ snap }}"
+      class="p-button p-view-store-button"
+      data-js="open-desktop"
+      data-analytics-click
+      data-analytics-target="{{ target }}"
+      data-shown-event="{{ shown_event }}"
+      data-analytics-channel="{{ channel }}">
+        View in Desktop store
+    </button>
+    <p class="p-form-help-text" data-js="open-desktop-help">Make sure <a href="/docs/installing-snapd">snap support</a> is enabled in your Desktop store.</p>
+    <div data-js="open-desktop-error"></div>
+  </div>
+{% endmacro %}
+
 <div id="js-channel-map" class="p-channel-map is-closed">
   <div id="channel-map-install" class="p-channel-map__tab">
     <div class="p-strip--light is-shallow">
@@ -13,20 +31,8 @@
           </div>
         {% endif %}
 
-        <p>Ubuntu 16.04 or later?</p>
-        <button
-          data-snap="{{ package_name }}
-            {% if lowest_risk_available != 'stable' %}
-              ?channel={{ default_track }}/{{ lowest_risk_available }}
-            {% endif %}"
-          class="p-view-store-button"
-          data-js="open-desktop"
-          data-analytics-click
-          data-analytics-target="details_view_in_desktop_store"
-          data-analytics-channel="{{ default_track }}/{{ lowest_risk_available }}">
-            View in Desktop store
-        </button>
-        <p class="p-form-help-text">Make sure <a href="/docs/installing-snapd">snap support</a> is enabled in your Desktop store.</p>
+        {% set desktop_snap = package_name if lowest_risk_available == 'stable' else package_name ~ '?channel=' ~ default_track ~ '/' ~ lowest_risk_available %}
+        {{ open_desktop_block(desktop_snap, 'details_view_in_desktop_store', 'open_desktop_shown', default_track ~ '/' ~ lowest_risk_available) }}
       </div>
       <div class="u-fixed-width">
         <hr />
@@ -170,9 +176,8 @@
         <p class="p-notification__message" data-js="warning"></p>
       </div>
     </div>
-    <p>Ubuntu 16.04 or later?</p>
-    <button data-snap="{{ package_name }}?channel=${channel}" class="p-view-store-button" data-js="open-desktop" data-analytics-click data-analytics-target="details_channel_view_in_desktop_store" data-analytics-channel="${channel}">View in Desktop store</button>
-    <p class="p-form-help-text">Make sure <a href="/docs/installing-snapd">snap support</a> is enabled in your Desktop store.</p>
+
+    {{ open_desktop_block(package_name ~ '?channel=${channel}', 'details_channel_view_in_desktop_store', 'open_desktop_channel_shown', '${channel}') }}
   </div>
   <div class="u-fixed-width">
     <hr />
