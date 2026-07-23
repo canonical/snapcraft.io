@@ -62,7 +62,20 @@ describe("isDesktopStoreSupported", () => {
     setUserAgent(ua);
     expect(isDesktopStoreSupported()).toBe(expected);
   });
-});
+
+  test("prefers userAgentData.platform when available", () => {
+    Object.defineProperty(navigator, "userAgentData", {
+      value: { platform: "Linux" },
+      configurable: true,
+    });
+
+    try {
+      setUserAgent(MAC_UA);
+      expect(isDesktopStoreSupported()).toBe(true);
+    } finally {
+      delete (navigator as any).userAgentData;
+    }
+  });
 
 describe("applyDesktopStoreSupport", () => {
   beforeEach(() => {
