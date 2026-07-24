@@ -54,6 +54,14 @@ def create_app(testing=False):
     app.name = "snapcraft"
     app.testing = testing
 
+    # This is required because Pragma icons are served from `/icons` at the
+    # root of the project, which is a problem for snapcraft.io as that is
+    # the URL pattern we use for snap names. To resolve this, we are
+    # redirecting any requests to `/icons/<ICON_NAME>.svg` to
+    # `/static/icons/<ICON_NAME>.svg`, which leaves the possibility for a
+    # snap called "icons" and its subsequent publisher pages.
+    #
+    # The script that handles this is `scripts/link-ds-icons.mjs`
     app.add_url_rule(
         "/icons/<icon_name>.svg",
         "ds-icons",
