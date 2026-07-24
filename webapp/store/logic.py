@@ -477,6 +477,25 @@ def get_lowest_available_risk(channel_map, track):
     return lowest_available_risk
 
 
+def get_default_architecture(architectures):
+    """Pick the default architecture from a list of architectures.
+
+    Prefer ``amd64`` when published, otherwise the first architecture
+    sorted. This is the single source of truth for the default-architecture
+    preference, shared by the provenance badge endpoint and the security tab.
+
+    :param architectures: Iterable of architecture names
+
+    :returns: The default architecture, or ``None`` if the list is empty
+    """
+    architectures = list(architectures)
+    if not architectures:
+        return None
+    if "amd64" in architectures:
+        return "amd64"
+    return sorted(architectures)[0]
+
+
 def extract_info_channel_map(channel_map, track, risk):
     """Get the confinement and version for a channel
 

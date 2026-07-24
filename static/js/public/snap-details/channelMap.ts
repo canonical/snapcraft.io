@@ -28,7 +28,7 @@ interface SlideInstallInstructionsElement extends HTMLElement {
   closest: (selector: string) => Element | null;
 }
 
-interface ChannelData {
+export interface ChannelData {
   track: string;
   confinement: string;
   "released-at": string;
@@ -38,7 +38,7 @@ interface ChannelData {
   revision: string;
 }
 
-type ChannelMapData = Record<string, Record<string, ChannelData[]>>;
+export type ChannelMapData = Record<string, Record<string, ChannelData[]>>;
 
 class ChannelMap {
   RISK_ORDER: string[];

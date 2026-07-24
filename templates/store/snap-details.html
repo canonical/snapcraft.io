@@ -124,6 +124,9 @@
               </button>
               {% endif %}
             </div>
+            {% if not is_preview %}
+            <div data-js="auditable-badge" data-snap-name="{{ package_name }}"></div>
+            {% endif %}
             {% if package_name in appliances %}
             <p class="u-no-margin--bottom">
               Available as an
@@ -172,8 +175,51 @@
         {% endif %}
       </div>
       <div class="grid-col u-text-wrap">
-        {% if summary or is_preview %}<h4 class="p-heading--2" data-live="summary">{{ summary }}</h4>{% endif %}
-        <div data-live="description">{{ description | safe }}</div>
+        {% set show_tabs = not is_preview and channel_map %}
+        {% if show_tabs %}
+        <div class="p-tabs">
+          <ul class="p-tabs__list" role="tablist" style="list-style: none;">
+            <li class="p-tabs__item" role="presentation">
+              <a href="#tab-description" class="p-tabs__link" role="tab" aria-selected="true" aria-controls="tab-description" id="tab-description-link" data-js="details-tab">Description</a>
+            </li>
+            <li class="p-tabs__item" role="presentation">
+              <a href="#tab-security" class="p-tabs__link" role="tab" aria-selected="false" aria-controls="tab-security" id="tab-security-link" data-js="details-tab">Security</a>
+            </li>
+          </ul>
+        </div>
+        {% endif %}
+
+        <div id="tab-description"{% if show_tabs %} role="tabpanel" aria-labelledby="tab-description-link" data-js="details-tabpanel"{% endif %}>
+          {% if summary or is_preview %}<h4 class="p-heading--2" data-live="summary">{{ summary }}</h4>{% endif %}
+          <div data-live="description">{{ description | safe }}</div>
+        </div>
+
+        {% if show_tabs %}
+        <div id="tab-security" role="tabpanel" aria-labelledby="tab-security-link" class="u-hide" data-js="details-tabpanel">
+          <div id="js-security-tab">
+            <div class="p-form__group u-sv2">
+              <label for="security-arch-select">Select architecture</label>
+              <select id="security-arch-select" data-js="security-arch-select"></select>
+            </div>
+            <div class="u-fixed-width" style="overflow-x: auto;">
+              <table aria-label="Security information">
+                <thead>
+                  <tr>
+                    <th>Revision</th>
+                    <th>Channel</th>
+                    <th>Version</th>
+                    <th class="u-hide--small">Published</th>
+                    <th>Build</th>
+                    <th>Commit</th>
+                  </tr>
+                </thead>
+                <tbody data-js="security-tab-table"></tbody>
+              </table>
+            </div>
+            <p class="p-text--small u-text-muted">The build and commit information is derived from build infrastructure records.</p>
+          </div>
+        </div>
+        {% endif %}
       </div>
     </div>
   </div>
@@ -383,6 +429,12 @@
       } catch(e) {
         Sentry.captureException(e);
       }
+
+      try {
+        snapcraft.public.storeDetails.initAuditableBadge();
+      } catch(e) {
+        Sentry.captureException(e);
+      }
       {% endif %}
 
       {% if countries %}
@@ -395,12 +447,27 @@
       {% endif %}
 
       {% if channel_map %}
+        var channelMap = {{ channel_map | tojson }};
         try {
-          snapcraft.public.storeDetails.channelMap('#js-channel-map', {{ package_name|tojson }}, {{ snap_id|tojson }}, {{ channel_map | tojson }}, "{{ default_track }}", {{ has_sboms|tojson }});
+          snapcraft.public.storeDetails.channelMap('#js-channel-map', {{ package_name|tojson }}, {{ snap_id|tojson }}, channelMap, "{{ default_track }}", {{ has_sboms|tojson }});
         } catch(e) {
           Sentry.captureException(e);
           document.querySelector('.js-open-channel-map').style.display = 'none';
         }
+
+        {% if not is_preview %}
+        try {
+          snapcraft.public.storeDetails.initDetailsTabs();
+        } catch(e) {
+          Sentry.captureException(e);
+        }
+
+        try {
+          snapcraft.public.storeDetails.initSecurityTab('#js-security-tab', {{ package_name|tojson }}, channelMap, {{ default_arch|tojson }});
+        } catch(e) {
+          Sentry.captureException(e);
+        }
+        {% endif %}
       {% endif %}
 
       {% if is_preview %}
