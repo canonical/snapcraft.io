@@ -3,7 +3,7 @@
 # Build stage: Install python dependencies
 # ===
 FROM ubuntu:jammy AS python-dependencies
-RUN apt-get update && apt-get install --no-install-recommends --yes python3-pip python3-setuptools
+RUN apt-get update && apt-get install --no-install-recommends --yes build-essential python3-dev python3-pip python3-setuptools
 ADD requirements.txt /tmp/requirements.txt
 RUN pip3 config set global.disable-pip-version-check true
 RUN --mount=type=cache,target=/root/.cache/pip pip3 install --user --requirement /tmp/requirements.txt
@@ -15,6 +15,7 @@ FROM node:24 AS yarn-dependencies
 WORKDIR /srv
 ADD package.json .
 ADD yarn.lock .
+ADD scripts/link-ds-icons.mjs scripts/link-ds-icons.mjs
 RUN --mount=type=cache,target=/usr/local/share/.cache/yarn yarn install --production
 
 # Build stage: Run "yarn run build"
@@ -28,6 +29,8 @@ ADD templates templates
 ADD vitePluginDetectInput.js .
 RUN yarn install
 RUN yarn run build
+# The final image excludes node_modules, so copy icon files instead of the dev symlink.
+RUN rm -rf static/icons && cp -r node_modules/@canonical/ds-assets/icons static/icons
 
 # Build the production image
 # ===
@@ -47,6 +50,7 @@ WORKDIR /srv
 ADD . .
 RUN rm -rf package.json yarn.lock .babelrc requirements.txt
 COPY --from=build /srv/static/js static/js
+COPY --from=build /srv/static/icons static/icons
 
 # Setup commands to run server
 ENTRYPOINT ["./entrypoint"]
