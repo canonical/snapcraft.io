@@ -79,6 +79,51 @@ class TestPostBuild(TestEndpoints):
 
     @patch("webapp.endpoints.publisher.builds.launchpad")
     @patch("webapp.endpoints.publisher.builds.dashboard")
+    def test_post_build_does_not_reauthorize_before_triggering(
+        self, mock_dashboard, mock_launchpad
+    ):
+        """Triggering a build should use existing Launchpad auth."""
+        mock_dashboard.get_account_snaps.return_value = {
+            self.snap_name: {"snap_name": self.snap_name}
+        }
+        mock_launchpad.is_snap_building.return_value = False
+        mock_launchpad.build_snap.return_value = "build-12345"
+
+        response = self.client.post(self.endpoint_url)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(response.get_json()["success"])
+
+        mock_dashboard.get_package_upload_macaroon.assert_not_called()
+        mock_launchpad.get_snap_by_store_name.assert_not_called()
+        mock_launchpad.complete_snap_authorization.assert_not_called()
+        mock_launchpad.is_snap_building.assert_called_once_with(self.snap_name)
+        mock_launchpad.build_snap.assert_called_once_with(self.snap_name)
+
+    @patch("webapp.endpoints.publisher.builds.launchpad")
+    @patch("webapp.endpoints.publisher.builds.dashboard")
+    def test_post_build_skips_reauthorization_when_snap_not_in_launchpad(
+        self, mock_dashboard, mock_launchpad
+    ):
+        """If the snap isn't linked in Launchpad yet, there's nothing
+        to reauthorize, so the reauthorization calls are skipped."""
+        mock_dashboard.get_account_snaps.return_value = {
+            self.snap_name: {"snap_name": self.snap_name}
+        }
+        mock_launchpad.get_snap_by_store_name.return_value = None
+        mock_launchpad.is_snap_building.return_value = False
+        mock_launchpad.build_snap.return_value = "build-12345"
+
+        response = self.client.post(self.endpoint_url)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(response.get_json()["success"])
+
+        mock_dashboard.get_package_upload_macaroon.assert_not_called()
+        mock_launchpad.complete_snap_authorization.assert_not_called()
+
+    @patch("webapp.endpoints.publisher.builds.launchpad")
+    @patch("webapp.endpoints.publisher.builds.dashboard")
     def test_post_build_cancels_existing_build(
         self, mock_dashboard, mock_launchpad
     ):
