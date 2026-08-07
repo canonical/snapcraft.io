@@ -64,8 +64,8 @@
             <a id="indexLink" class="nav" href="index.html">&Hat; index</a> &nbsp; &nbsp;
             <a id="nextFileLink" class="nav" href="z_8c18c9b80cf7b446_snaps_py.html">&#xbb; next</a>
             &nbsp; &nbsp; &nbsp;
-            <a class="nav" href="https://coverage.readthedocs.io/en/7.15.3">coverage.py v7.15.3</a>,
-            created at 2026-08-05 22:26 +0000
+            <a class="nav" href="https://coverage.readthedocs.io/en/7.15.4">coverage.py v7.15.4</a>,
+            created at 2026-08-07 00:04 +0000
         </p>
         <aside class="hidden">
             <button type="button" class="button_next_chunk" data-shortcut="j"></button>
@@ -90,18 +90,18 @@
     <p class="pln"><span class="n"><a id="t8" href="#t8">8</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p class="run"><span class="n"><a id="t9" href="#t9">9</a></span><span class="t"><span class="nam">dashboard</span> <span class="op">=</span> <span class="nam">Dashboard</span><span class="op">(</span><span class="nam">api_session</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t10" href="#t10">10</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
-    <p class="run"><span class="n"><a id="t11" href="#t11">11</a></span><span class="t"><span class="nam">snap_search</span> <span class="op">=</span> <span class="nam">flask</span><span class="op">.</span><span class="nam">Blueprint</span><span class="op">(</span><span class="str">"snap_search"</span><span class="op">,</span> <span class="nam">__name__</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p class="run"><span class="n"><a id="t11" href="#t11">11</a></span><span class="t"><span class="nam">snap_search</span> <span class="op">=</span> <span class="nam">flask</span><span class="op">.</span><span class="nam">Blueprint</span><span class="op">(</span><span class="str">&quot;snap_search&quot;</span><span class="op">,</span> <span class="nam">__name__</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t12" href="#t12">12</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t13" href="#t13">13</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
-    <p class="run"><span class="n"><a id="t14" href="#t14">14</a></span><span class="t"><span class="op">@</span><span class="nam">snap_search</span><span class="op">.</span><span class="nam">route</span><span class="op">(</span><span class="str">"/api/&lt;store_id>/snaps/search"</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p class="run"><span class="n"><a id="t14" href="#t14">14</a></span><span class="t"><span class="op">@</span><span class="nam">snap_search</span><span class="op">.</span><span class="nam">route</span><span class="op">(</span><span class="str">&quot;/api/&lt;store_id&gt;/snaps/search&quot;</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p class="run"><span class="n"><a id="t15" href="#t15">15</a></span><span class="t"><span class="op">@</span><span class="nam">login_required</span>&nbsp;</span><span class="r"></span></p>
     <p class="run"><span class="n"><a id="t16" href="#t16">16</a></span><span class="t"><span class="op">@</span><span class="nam">exchange_required</span>&nbsp;</span><span class="r"></span></p>
     <p class="run"><span class="n"><a id="t17" href="#t17">17</a></span><span class="t"><span class="key">def</span> <span class="nam">get_snaps_search</span><span class="op">(</span><span class="nam">store_id</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
     <p class="run"><span class="n"><a id="t18" href="#t18">18</a></span><span class="t">    <span class="nam">snaps</span> <span class="op">=</span> <span class="nam">dashboard</span><span class="op">.</span><span class="nam">get_store_snaps</span><span class="op">(</span>&nbsp;</span><span class="r"></span></p>
     <p class="run run2"><span class="n"><a id="t19" href="#t19">19</a></span><span class="t">        <span class="nam">flask</span><span class="op">.</span><span class="nam">session</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
     <p class="run run2"><span class="n"><a id="t20" href="#t20">20</a></span><span class="t">        <span class="nam">store_id</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
-    <p class="run run2"><span class="n"><a id="t21" href="#t21">21</a></span><span class="t">        <span class="nam">flask</span><span class="op">.</span><span class="nam">request</span><span class="op">.</span><span class="nam">args</span><span class="op">.</span><span class="nam">get</span><span class="op">(</span><span class="str">"q"</span><span class="op">)</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
-    <p class="run run2"><span class="n"><a id="t22" href="#t22">22</a></span><span class="t">        <span class="nam">flask</span><span class="op">.</span><span class="nam">request</span><span class="op">.</span><span class="nam">args</span><span class="op">.</span><span class="nam">get</span><span class="op">(</span><span class="str">"allowed_for_inclusion"</span><span class="op">)</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p class="run run2"><span class="n"><a id="t21" href="#t21">21</a></span><span class="t">        <span class="nam">flask</span><span class="op">.</span><span class="nam">request</span><span class="op">.</span><span class="nam">args</span><span class="op">.</span><span class="nam">get</span><span class="op">(</span><span class="str">&quot;q&quot;</span><span class="op">)</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p class="run run2"><span class="n"><a id="t22" href="#t22">22</a></span><span class="t">        <span class="nam">flask</span><span class="op">.</span><span class="nam">request</span><span class="op">.</span><span class="nam">args</span><span class="op">.</span><span class="nam">get</span><span class="op">(</span><span class="str">&quot;allowed_for_inclusion&quot;</span><span class="op">)</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
     <p class="run run2"><span class="n"><a id="t23" href="#t23">23</a></span><span class="t">    <span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t24" href="#t24">24</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p class="run"><span class="n"><a id="t25" href="#t25">25</a></span><span class="t">    <span class="key">return</span> <span class="nam">jsonify</span><span class="op">(</span><span class="nam">snaps</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
@@ -113,8 +113,8 @@
             <a class="nav" href="index.html">&Hat; index</a> &nbsp; &nbsp;
             <a class="nav" href="z_8c18c9b80cf7b446_snaps_py.html">&#xbb; next</a>
             &nbsp; &nbsp; &nbsp;
-            <a class="nav" href="https://coverage.readthedocs.io/en/7.15.3">coverage.py v7.15.3</a>,
-            created at 2026-08-05 22:26 +0000
+            <a class="nav" href="https://coverage.readthedocs.io/en/7.15.4">coverage.py v7.15.4</a>,
+            created at 2026-08-07 00:04 +0000
         </p>
     </div>
 </footer>
