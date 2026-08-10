@@ -197,9 +197,13 @@
         {% if show_tabs %}
         <div id="tab-security" role="tabpanel" aria-labelledby="tab-security-link" class="u-hide" data-js="details-tabpanel">
           <div id="js-security-tab">
-            <div class="p-form__group u-sv2">
-              <label for="security-arch-select">Select architecture</label>
-              <select id="security-arch-select" data-js="security-arch-select"></select>
+            <div class="p-form p-form--inline u-sv2">
+              <div class="p-form__group">
+                <label class="p-form__label" for="security-arch-select">Select architecture</label>
+                <div class="p-form__control">
+                  <select id="security-arch-select" class="p-security-tab__arch-select" data-js="security-arch-select"></select>
+                </div>
+              </div>
             </div>
             <div class="u-fixed-width" style="overflow-x: auto;">
               <table aria-label="Security information">

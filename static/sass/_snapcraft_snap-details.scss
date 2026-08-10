@@ -107,6 +107,14 @@
     }
   }
 
+  // Size the security tab's architecture dropdown to its widest option
+  // instead of filling the row, so it sits snugly next to its label.
+  .p-security-tab__arch-select {
+    margin-bottom: 0;
+    min-width: 0;
+    width: auto;
+  }
+
   .p-package-header {
     container: pkgname / inline-size;
 
