@@ -39,6 +39,30 @@ function Build(): React.JSX.Element {
     isFetching ||
     !data ||
     (build && build.id.toString() !== buildId);
+  const {
+    data: logData,
+    isLoading: isLogLoading,
+    isError: isLogError,
+  } = useQuery({
+    queryKey: ["build-logs", snapId, buildId],
+    queryFn: async () => {
+      const response = await fetch(`/api/${snapId}/builds/${buildId}/logs`);
+
+      if (!response.ok) {
+        throw new Error("There was a problem trying to fetch build logs");
+      }
+
+      const responseData = await response.json();
+
+      if (!responseData.success) {
+        throw new Error("There was a problem trying to fetch build logs");
+      }
+
+      return responseData.data;
+    },
+    enabled: !isDataLoading && Boolean(build?.logs),
+    refetchOnWindowFocus: false,
+  });
 
   setPageTitle(`Build ${buildId} for ${snapId}`);
 
@@ -102,7 +126,17 @@ function Build(): React.JSX.Element {
               </a>
             </Col>
           </Row>
-          <pre>{data.raw_logs}</pre>
+          {isLogLoading && <Loader text="Loading build log" />}
+          {isLogError && (
+            <div className="p-notification--negative">
+              <div className="p-notification__content">
+                <p className="p-notification__message">
+                  There was a problem trying to fetch build logs.
+                </p>
+              </div>
+            </div>
+          )}
+          {!isLogLoading && !isLogError && <pre>{logData?.raw_logs}</pre>}
         </Strip>
       )}
       <div id="footer"></div>

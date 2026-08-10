@@ -16,7 +16,6 @@ vi.mock("react-router-dom", async (importOriginal) => ({
 const queryClient = new QueryClient();
 
 const mockBuildData = {
-  raw_logs: "Test build logs",
   snap_build: {
     arch_tag: "arm64",
     datebuilt: "2025-02-04T14:07:31.406639+00:00",
@@ -30,6 +29,10 @@ const mockBuildData = {
   snap_id: "test-snap-id",
   snap_name: "Test snap name",
   snap_title: "Test snap title",
+};
+
+const mockLogData = {
+  raw_logs: "Test build logs",
 };
 
 vi.mock("react-query", async (importOriginal) => ({
@@ -47,14 +50,34 @@ function renderComponent() {
   );
 }
 
+function mockUseQueryResponses(
+  buildResponse: Record<string, unknown>,
+  logResponse: Record<string, unknown> = {
+    data: mockLogData,
+    isLoading: false,
+    isFetched: true,
+    isFetching: false,
+    isError: false,
+  },
+) {
+  // @ts-expect-error - Mocking useQuery response
+  useQuery.mockReturnValueOnce(buildResponse);
+  // @ts-expect-error - Mocking useQuery response
+  useQuery.mockReturnValueOnce(logResponse);
+}
+
 describe("Build", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
   test("shows loading state", () => {
-    // @ts-expect-error - Mocking useQuery response
-    useQuery.mockReturnValue({
+    mockUseQueryResponses({
       data: mockBuildData,
       isLoading: true,
       isFetched: false,
       isFetching: true,
+      isError: false,
     });
 
     renderComponent();
@@ -65,12 +88,12 @@ describe("Build", () => {
   });
 
   test("shows correct build ID in table", () => {
-    // @ts-expect-error - Mocking useQuery response
-    useQuery.mockReturnValue({
+    mockUseQueryResponses({
       data: mockBuildData,
       isLoading: false,
       isFetched: true,
       isFetching: false,
+      isError: false,
     });
 
     renderComponent();
@@ -81,12 +104,12 @@ describe("Build", () => {
   });
 
   test("shows correct architecture in table", () => {
-    // @ts-expect-error - Mocking useQuery response
-    useQuery.mockReturnValue({
+    mockUseQueryResponses({
       data: mockBuildData,
       isLoading: false,
       isFetched: true,
       isFetching: false,
+      isError: false,
     });
 
     renderComponent();
@@ -95,12 +118,12 @@ describe("Build", () => {
   });
 
   test("shows correct build duration in table", () => {
-    // @ts-expect-error - Mocking useQuery response
-    useQuery.mockReturnValue({
+    mockUseQueryResponses({
       data: mockBuildData,
       isLoading: false,
       isFetched: true,
       isFetching: false,
+      isError: false,
     });
 
     renderComponent();
@@ -111,12 +134,12 @@ describe("Build", () => {
   });
 
   test("shows correct result in table", () => {
-    // @ts-expect-error - Mocking useQuery response
-    useQuery.mockReturnValue({
+    mockUseQueryResponses({
       data: mockBuildData,
       isLoading: false,
       isFetched: true,
       isFetching: false,
+      isError: false,
     });
 
     renderComponent();
@@ -127,16 +150,64 @@ describe("Build", () => {
   });
 
   test("shows build log", () => {
-    // @ts-expect-error - Mocking useQuery response
-    useQuery.mockReturnValue({
+    mockUseQueryResponses({
       data: mockBuildData,
       isLoading: false,
       isFetched: true,
       isFetching: false,
+      isError: false,
     });
 
     renderComponent();
 
     expect(screen.getByText(/Test build logs/)).toBeInTheDocument();
+  });
+
+  test("shows build log loading state", () => {
+    mockUseQueryResponses(
+      {
+        data: mockBuildData,
+        isLoading: false,
+        isFetched: true,
+        isFetching: false,
+        isError: false,
+      },
+      {
+        data: undefined,
+        isLoading: true,
+        isFetched: false,
+        isFetching: true,
+        isError: false,
+      },
+    );
+
+    renderComponent();
+
+    expect(screen.getByText(/Loading build log/)).toBeInTheDocument();
+  });
+
+  test("shows build log error", () => {
+    mockUseQueryResponses(
+      {
+        data: mockBuildData,
+        isLoading: false,
+        isFetched: true,
+        isFetching: false,
+        isError: false,
+      },
+      {
+        data: undefined,
+        isLoading: false,
+        isFetched: true,
+        isFetching: false,
+        isError: true,
+      },
+    );
+
+    renderComponent();
+
+    expect(
+      screen.getByText(/There was a problem trying to fetch build logs/),
+    ).toBeInTheDocument();
   });
 });
