@@ -15,13 +15,13 @@ export function escapeHtml(value: unknown): string {
 }
 
 /**
- * Return an href-safe, HTML-escaped URL. Only http(s) and relative URLs are
- * allowed through; anything else collapses to "#" so publisher/recipe-controlled
- * URLs can't smuggle a script scheme into a link.
+ * Return a safe, HTML-escaped URL for use in an href. Only http(s) URLs are
+ * allowed. Anything else becomes "#" so a bad URL can't run a script.
  */
 export function safeUrl(value: unknown): string {
   const url = String(value ?? "").trim();
-  if (/^https?:\/\//i.test(url) || url.startsWith("/")) {
+  const parsed = URL.parse(url);
+  if (parsed && (parsed.protocol === "https:" || parsed.protocol === "http:")) {
     return escapeHtml(url);
   }
   return "#";
