@@ -117,7 +117,7 @@ class SecurityTab {
     banner.className = "p-notification--caution";
     banner.innerHTML = `
       <div class="p-notification__content">
-        <p class="p-notification__message">Couldn't load build provenance right now. Please try again later.</p>
+        <p class="p-notification__message">Couldn't load build information right now. Please try again later.</p>
       </div>
     `;
     this.containerEl.insertBefore(banner, this.containerEl.firstChild);

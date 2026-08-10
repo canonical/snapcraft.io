@@ -95,9 +95,15 @@ describe("auditable badge", () => {
       ).toBeInTheDocument();
     });
 
+    expect(document.body.textContent).toContain("rev171/arm64");
     expect(document.body.textContent).toContain(
-      "No public provenance for this revision",
+      "No build information for this revision",
     );
+    expect(
+      document.querySelector(
+        '[data-js="auditable-badge-not-provided"] .p-icon--error-grey',
+      ),
+    ).toBeInTheDocument();
     expect(trackEvent).toHaveBeenCalledWith("provenance_badge_shown", {
       state: "not-provided",
     });
@@ -121,8 +127,13 @@ describe("auditable badge", () => {
 
     expect(document.body.textContent).toContain("rev171/arm64");
     expect(document.body.textContent).toContain(
-      "Build provenance unavailable for this revision",
+      "No build information for this revision",
     );
+    expect(
+      document.querySelector(
+        '[data-js="auditable-badge-unavailable"] .p-icon--error-grey',
+      ),
+    ).toBeInTheDocument();
     expect(trackEvent).toHaveBeenCalledWith("provenance_badge_shown", {
       state: "unavailable",
     });
@@ -145,7 +156,7 @@ describe("auditable badge", () => {
 
     expect(document.body.textContent).toContain("rev171/arm64");
     expect(document.body.textContent).toContain(
-      "Couldn't load provenance right now",
+      "Couldn't load build information right now",
     );
     expect(trackEvent).toHaveBeenCalledWith("provenance_badge_shown", {
       state: "error",

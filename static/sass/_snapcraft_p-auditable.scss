@@ -8,10 +8,6 @@
     &__error {
       color: $color-negative;
     }
-
-    &__note {
-      font-style: italic;
-    }
   }
 
   @keyframes p-auditable-skeleton-pulse {

@@ -16,33 +16,42 @@ interface AuditableResponse {
   build_url?: string | null;
 }
 
+// "unavailable" (the revision has no Launchpad build) and "not-provided" (the
+// snap publishes no builds at all) are the same thing from a visitor's point of
+// view, so they share one message rather than splitting hairs.
+const NO_BUILD_INFO = {
+  icon: `<i class="p-icon--error-grey"></i>`,
+  html: "No build information for this revision",
+};
+
 const MESSAGES: Record<
   Exclude<BadgeState, "verified">,
-  { dataJs: string; html: string }
+  { dataJs: string; icon: string; html: string }
 > = {
   error: {
     dataJs: "auditable-badge-error",
-    html: `<span class="p-auditable-badge__error">Couldn't load provenance right now</span>`,
+    icon: "",
+    html: `<span class="p-auditable-badge__error">Couldn't load build information right now</span>`,
   },
   unavailable: {
     dataJs: "auditable-badge-unavailable",
-    html: "Build provenance unavailable for this revision",
+    ...NO_BUILD_INFO,
   },
   "not-provided": {
     dataJs: "auditable-badge-not-provided",
-    html: `<span class="p-auditable-badge__note">No public provenance for this revision</span>`,
+    ...NO_BUILD_INFO,
   },
 };
 
 const revArchPrefix = (data?: AuditableResponse): string =>
   data?.revision && data?.architecture
-    ? `<span class="u-text-muted">rev${escapeHtml(data.revision)}/${escapeHtml(data.architecture)}</span> `
+    ? `<span>rev${escapeHtml(data.revision)}/${escapeHtml(data.architecture)}</span>`
     : "";
 
 function renderLoading(el: HTMLElement): void {
   el.innerHTML = `
     <div class="p-auditable-skeleton" data-js="auditable-badge-loading"
-         role="status" aria-label="Loading build provenance">
+         role="status" aria-label="Loading build information">
       <span class="p-auditable-skeleton__bar p-auditable-skeleton__bar--short"></span>
       <span class="p-auditable-skeleton__bar p-auditable-skeleton__bar--long"></span>
     </div>
@@ -54,10 +63,10 @@ function renderMessage(
   state: Exclude<BadgeState, "verified">,
   data?: AuditableResponse,
 ): void {
-  const { dataJs, html } = MESSAGES[state];
+  const { dataJs, icon, html } = MESSAGES[state];
   el.innerHTML = `
-    <p class="u-text-muted u-no-margin--bottom" data-js="${dataJs}">
-      ${revArchPrefix(data)}${html}
+    <p class="p-auditable-badge u-text-muted u-no-margin--bottom" data-js="${dataJs}">
+      ${revArchPrefix(data)}${icon}<span>${html}</span>
     </p>
   `;
 }
