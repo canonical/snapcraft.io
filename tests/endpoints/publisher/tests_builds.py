@@ -45,6 +45,92 @@ class TestGetSnapBuildPage(TestEndpoints):
         self.assertIn(response.status_code, [302, 401, 403])
 
 
+class TestGetSnapBuild(TestEndpoints):
+    def setUp(self):
+        super().setUp()
+        self.snap_name = "test-snap"
+        self.build_id = "12345"
+        self.endpoint_url = f"/api/{self.snap_name}/builds/{self.build_id}"
+        self.snap_info = {
+            "snap_name": self.snap_name,
+            "title": "Test Snap",
+            "snap_id": "test-snap-id-123",
+        }
+
+    @patch("webapp.publisher.snaps.build_views.launchpad")
+    @patch("webapp.publisher.snaps.build_views.dashboard")
+    def test_get_snap_build_success(self, mock_dashboard, mock_launchpad):
+        mock_dashboard.get_snap_info.return_value = self.snap_info
+        mock_launchpad.get_snap_by_store_name.return_value = {
+            "store_name": self.snap_name,
+            "git_repository_url": "https://github.com/owner/repo",
+        }
+        mock_launchpad.get_snap_build.return_value = {
+            "self_link": (
+                "https://api.launchpad.net/devel/~owner/"
+                "+snap/test-snap/+build/12345"
+            ),
+            "arch_tag": "amd64",
+            "datebuilt": "2023-01-01T12:00:00Z",
+            "duration": "00:05:30",
+            "build_log_url": "https://launchpad.net/buildlog.txt",
+            "revision_id": "abcdef1234567890abcdef1234567890abcdef12",
+            "buildstate": "Successfully built",
+            "store_upload_status": "Uploaded",
+            "title": "Test build",
+        }
+        mock_launchpad.get_snap_build_log.return_value = "Build log"
+
+        response = self.client.get(self.endpoint_url)
+
+        self.assertEqual(response.status_code, 200)
+        response_data = response.get_json()
+        self.assertTrue(response_data["success"])
+        self.assertEqual(response_data["data"]["raw_logs"], "Build log")
+        snap_build = response_data["data"]["snap_build"]
+        self.assertEqual(snap_build["id"], self.build_id)
+        self.assertEqual(snap_build["github_repository"], "owner/repo")
+
+    @patch("webapp.publisher.snaps.build_views.launchpad")
+    @patch("webapp.publisher.snaps.build_views.dashboard")
+    def test_get_snap_build_returns_404_when_snap_not_in_launchpad(
+        self, mock_dashboard, mock_launchpad
+    ):
+        mock_dashboard.get_snap_info.return_value = self.snap_info
+        mock_launchpad.get_snap_by_store_name.return_value = None
+
+        response = self.client.get(self.endpoint_url)
+
+        self.assertEqual(response.status_code, 404)
+        response_data = response.get_json()
+        self.assertFalse(response_data["success"])
+        self.assertEqual(
+            response_data["error"]["type"], "SNAP_BUILD_NOT_FOUND"
+        )
+        mock_launchpad.get_snap_build.assert_not_called()
+
+    @patch("webapp.publisher.snaps.build_views.launchpad")
+    @patch("webapp.publisher.snaps.build_views.dashboard")
+    def test_get_snap_build_returns_404_when_build_not_found(
+        self, mock_dashboard, mock_launchpad
+    ):
+        mock_dashboard.get_snap_info.return_value = self.snap_info
+        mock_launchpad.get_snap_by_store_name.return_value = {
+            "store_name": self.snap_name,
+            "git_repository_url": "https://github.com/owner/repo",
+        }
+        mock_launchpad.get_snap_build.return_value = None
+
+        response = self.client.get(self.endpoint_url)
+
+        self.assertEqual(response.status_code, 404)
+        response_data = response.get_json()
+        self.assertFalse(response_data["success"])
+        self.assertEqual(
+            response_data["error"]["type"], "SNAP_BUILD_NOT_FOUND"
+        )
+
+
 class TestPostBuild(TestEndpoints):
     def setUp(self):
         super().setUp()

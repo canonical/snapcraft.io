@@ -1,6 +1,12 @@
 import { useParams } from "react-router-dom";
 import { useQuery } from "react-query";
-import { Strip, Row, Col, MainTable } from "@canonical/react-components";
+import {
+  Strip,
+  Row,
+  Col,
+  MainTable,
+  Notification,
+} from "@canonical/react-components";
 import { formatDistanceToNow } from "date-fns";
 
 import {
@@ -11,21 +17,42 @@ import {
 import { GitCommitLink } from "../../utils/formatGitCommit";
 import Loader from "../../components/Loader";
 
+const genericBuildError = "There was a problem trying to fetch build data";
+
+type BuildErrorResponse = {
+  error?: {
+    message?: string;
+  };
+  message?: string;
+};
+
+async function getBuildErrorMessage(response: Response): Promise<string> {
+  try {
+    const responseData = (await response.json()) as BuildErrorResponse;
+
+    return (
+      responseData.error?.message || responseData.message || genericBuildError
+    );
+  } catch {
+    return genericBuildError;
+  }
+}
+
 function Build(): React.JSX.Element {
   const { buildId, snapId } = useParams();
-  const { data, isFetched, isLoading, isFetching } = useQuery({
+  const { data, error, isFetched, isLoading, isFetching, status } = useQuery({
     queryKey: ["build", snapId, buildId],
     queryFn: async () => {
       const response = await fetch(`/api/${snapId}/builds/${buildId}`);
 
       if (!response.ok) {
-        throw new Error("There was a problem trying to fetch build data");
+        throw new Error(await getBuildErrorMessage(response));
       }
 
       const responseData = await response.json();
 
       if (!responseData.success) {
-        throw new Error("There was a problem trying to fetch build data");
+        throw new Error(responseData.error?.message || genericBuildError);
       }
 
       return responseData.data;
@@ -34,17 +61,29 @@ function Build(): React.JSX.Element {
   });
 
   const build = data?.snap_build;
+  const hasError = status === "error";
+  const errorMessage =
+    error instanceof Error ? error.message : genericBuildError;
   const isDataLoading =
-    isLoading ||
-    isFetching ||
-    !data ||
-    (build && build.id.toString() !== buildId);
+    !hasError &&
+    (isLoading ||
+      isFetching ||
+      !data ||
+      (build && build.id.toString() !== buildId));
 
   setPageTitle(`Build ${buildId} for ${snapId}`);
 
   return (
     <>
       {isDataLoading && <Loader text={`Loading ${snapId} build data`} />}
+
+      {hasError && (
+        <Strip shallow>
+          <Notification severity="negative" title="Build data unavailable">
+            {errorMessage}
+          </Notification>
+        </Strip>
+      )}
 
       {!isDataLoading && isFetched && data && (
         <Strip shallow>
