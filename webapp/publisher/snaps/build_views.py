@@ -168,6 +168,32 @@ def get_snap_build(snap_name, build_id):
 @login_required
 def get_snap_build_logs(snap_name, build_id):
     details = dashboard.get_snap_info(flask.session, snap_name)
+    lp_build = launchpad.get_snap_build(details["snap_name"], build_id)
+
+    if not lp_build:
+        return (
+            flask.jsonify(
+                {
+                    "error": {
+                        "message": "The requested build could not be found."
+                    },
+                    "success": False,
+                }
+            ),
+            404,
+        )
+
+    if not lp_build["build_log_url"]:
+        return (
+            flask.jsonify(
+                {
+                    "error": {"message": "The requested build has no log."},
+                    "success": False,
+                }
+            ),
+            404,
+        )
+
     raw_logs = launchpad.get_snap_build_log(details["snap_name"], build_id)
 
     return flask.jsonify({"data": {"raw_logs": raw_logs}, "success": True})

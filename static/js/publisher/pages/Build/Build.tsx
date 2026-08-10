@@ -1,6 +1,12 @@
 import { useParams } from "react-router-dom";
 import { useQuery } from "react-query";
-import { Strip, Row, Col, MainTable } from "@canonical/react-components";
+import {
+  Strip,
+  Row,
+  Col,
+  MainTable,
+  Notification,
+} from "@canonical/react-components";
 import { formatDistanceToNow } from "date-fns";
 
 import {
@@ -30,6 +36,7 @@ function Build(): React.JSX.Element {
 
       return responseData.data;
     },
+    enabled: Boolean(snapId && buildId),
     refetchOnWindowFocus: false,
   });
 
@@ -38,7 +45,8 @@ function Build(): React.JSX.Element {
     isLoading ||
     isFetching ||
     !data ||
-    (build && build.id.toString() !== buildId);
+    (build?.id && build.id.toString() !== buildId);
+  const hasBuild = Boolean(build?.id);
   const {
     data: logData,
     isLoading: isLogLoading,
@@ -60,7 +68,7 @@ function Build(): React.JSX.Element {
 
       return responseData.data;
     },
-    enabled: !isDataLoading && Boolean(build?.logs),
+    enabled: Boolean(snapId && buildId && !isDataLoading && build?.logs),
     refetchOnWindowFocus: false,
   });
 
@@ -70,7 +78,13 @@ function Build(): React.JSX.Element {
     <>
       {isDataLoading && <Loader text={`Loading ${snapId} build data`} />}
 
-      {!isDataLoading && isFetched && data && (
+      {!isDataLoading && isFetched && !hasBuild && (
+        <Notification severity="negative">
+          There was a problem trying to fetch build data.
+        </Notification>
+      )}
+
+      {!isDataLoading && isFetched && data && hasBuild && (
         <Strip shallow>
           <MainTable
             headers={[
@@ -128,13 +142,9 @@ function Build(): React.JSX.Element {
           </Row>
           {isLogLoading && <Loader text="Loading build log" />}
           {isLogError && (
-            <div className="p-notification--negative">
-              <div className="p-notification__content">
-                <p className="p-notification__message">
-                  There was a problem trying to fetch build logs.
-                </p>
-              </div>
-            </div>
+            <Notification severity="negative">
+              There was a problem trying to fetch build logs.
+            </Notification>
           )}
           {!isLogLoading && !isLogError && <pre>{logData?.raw_logs}</pre>}
         </Strip>

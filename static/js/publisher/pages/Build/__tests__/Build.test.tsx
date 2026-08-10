@@ -210,4 +210,23 @@ describe("Build", () => {
       screen.getByText(/There was a problem trying to fetch build logs/),
     ).toBeInTheDocument();
   });
+
+  test("shows build data error when build data is empty", () => {
+    mockUseQueryResponses({
+      data: {
+        ...mockBuildData,
+        snap_build: {},
+      },
+      isLoading: false,
+      isFetched: true,
+      isFetching: false,
+      isError: false,
+    });
+
+    renderComponent();
+
+    expect(
+      screen.getByText(/There was a problem trying to fetch build data/),
+    ).toBeInTheDocument();
+  });
 });

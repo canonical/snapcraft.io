@@ -102,6 +102,7 @@ class TestGetSnapBuild(TestEndpoints):
     @patch("webapp.publisher.snaps.build_views.dashboard")
     def test_get_snap_build_logs_success(self, mock_dashboard, mock_launchpad):
         mock_dashboard.get_snap_info.return_value = self._mock_snap_info()
+        mock_launchpad.get_snap_build.return_value = self._mock_build()
         mock_launchpad.get_snap_build_log.return_value = "Test build logs"
 
         response = self.client.get(f"{self.endpoint_url}/logs")
@@ -113,6 +114,54 @@ class TestGetSnapBuild(TestEndpoints):
         mock_launchpad.get_snap_build_log.assert_called_once_with(
             self.snap_name, self.build_id
         )
+
+    @patch("webapp.publisher.snaps.build_views.launchpad")
+    @patch("webapp.publisher.snaps.build_views.dashboard")
+    def test_get_snap_build_logs_build_not_found(
+        self, mock_dashboard, mock_launchpad
+    ):
+        mock_dashboard.get_snap_info.return_value = self._mock_snap_info()
+        mock_launchpad.get_snap_build.return_value = None
+
+        response = self.client.get(f"{self.endpoint_url}/logs")
+
+        self.assertEqual(response.status_code, 404)
+        response_data = response.get_json()
+        self.assertFalse(response_data["success"])
+        self.assertEqual(
+            response_data["error"]["message"],
+            "The requested build could not be found.",
+        )
+        mock_launchpad.get_snap_build_log.assert_not_called()
+
+    @patch("webapp.publisher.snaps.build_views.launchpad")
+    @patch("webapp.publisher.snaps.build_views.dashboard")
+    def test_get_snap_build_logs_missing_log_url(
+        self, mock_dashboard, mock_launchpad
+    ):
+        mock_build = self._mock_build()
+        mock_build["build_log_url"] = None
+        mock_dashboard.get_snap_info.return_value = self._mock_snap_info()
+        mock_launchpad.get_snap_build.return_value = mock_build
+
+        response = self.client.get(f"{self.endpoint_url}/logs")
+
+        self.assertEqual(response.status_code, 404)
+        response_data = response.get_json()
+        self.assertFalse(response_data["success"])
+        self.assertEqual(
+            response_data["error"]["message"],
+            "The requested build has no log.",
+        )
+        mock_launchpad.get_snap_build_log.assert_not_called()
+
+    def test_get_snap_build_logs_requires_login(self):
+        app = self.app
+        client = app.test_client()
+
+        response = client.get(f"{self.endpoint_url}/logs")
+
+        self.assertIn(response.status_code, [302, 401, 403])
 
 
 class TestPostBuild(TestEndpoints):
