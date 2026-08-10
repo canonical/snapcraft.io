@@ -139,23 +139,4 @@ describe("Build", () => {
 
     expect(screen.getByText(/Test build logs/)).toBeInTheDocument();
   });
-
-  test("shows error message when build data cannot be loaded", () => {
-    // @ts-expect-error - Mocking useQuery response
-    useQuery.mockReturnValue({
-      data: undefined,
-      error: new Error("The requested build could not be found."),
-      isLoading: false,
-      isFetched: true,
-      isFetching: false,
-      status: "error",
-    });
-
-    renderComponent();
-
-    expect(screen.getByText("Build data unavailable")).toBeInTheDocument();
-    expect(
-      screen.getByText("The requested build could not be found."),
-    ).toBeInTheDocument();
-  });
 });

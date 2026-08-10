@@ -135,68 +135,37 @@ def get_snap_build(snap_name, build_id):
         "snap_build": {},
     }
 
-    lp_snap = launchpad.get_snap_by_store_name(details["snap_name"])
-
-    if not lp_snap:
-        return (
-            flask.jsonify(
-                {
-                    "error": {
-                        "type": "SNAP_BUILD_NOT_FOUND",
-                        "message": "The requested build could not be found.",
-                    },
-                    "success": False,
-                }
-            ),
-            404,
-        )
-
     # Get build by snap name and build_id
-    try:
-        lp_build = launchpad.get_snap_build(details["snap_name"], build_id)
-    except HTTPError as e:
-        if e.response.status_code == 404:
-            lp_build = None
-        else:
-            raise e
+    lp_build = launchpad.get_snap_build(details["snap_name"], build_id)
 
-    if not lp_build:
-        return (
-            flask.jsonify(
-                {
-                    "error": {
-                        "type": "SNAP_BUILD_NOT_FOUND",
-                        "message": "The requested build could not be found.",
-                    },
-                    "success": False,
-                }
-            ),
-            404,
+    if lp_build:
+        # Get snap info to extract GitHub repository
+        lp_snap = launchpad.get_snap_by_store_name(details["snap_name"])
+        github_repository = None
+        if lp_snap:
+            github_repository = extract_github_repository(
+                lp_snap.get("git_repository_url")
+            )
+
+        status = map_build_and_upload_states(
+            lp_build["buildstate"], lp_build["store_upload_status"]
         )
+        context["snap_build"] = {
+            "id": lp_build["self_link"].split("/")[-1],
+            "arch_tag": lp_build["arch_tag"],
+            "datebuilt": lp_build["datebuilt"],
+            "duration": lp_build["duration"],
+            "logs": lp_build["build_log_url"],
+            "revision_id": lp_build["revision_id"],
+            "status": status,
+            "title": lp_build["title"],
+            "github_repository": github_repository,
+        }
 
-    github_repository = extract_github_repository(
-        lp_snap.get("git_repository_url")
-    )
-
-    status = map_build_and_upload_states(
-        lp_build["buildstate"], lp_build["store_upload_status"]
-    )
-    context["snap_build"] = {
-        "id": lp_build["self_link"].split("/")[-1],
-        "arch_tag": lp_build["arch_tag"],
-        "datebuilt": lp_build["datebuilt"],
-        "duration": lp_build["duration"],
-        "logs": lp_build["build_log_url"],
-        "revision_id": lp_build["revision_id"],
-        "status": status,
-        "title": lp_build["title"],
-        "github_repository": github_repository,
-    }
-
-    if context["snap_build"]["logs"]:
-        context["raw_logs"] = launchpad.get_snap_build_log(
-            details["snap_name"], build_id
-        )
+        if context["snap_build"]["logs"]:
+            context["raw_logs"] = launchpad.get_snap_build_log(
+                details["snap_name"], build_id
+            )
 
     return flask.jsonify({"data": context, "success": True})
 
