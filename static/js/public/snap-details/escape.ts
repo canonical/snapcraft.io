@@ -20,9 +20,13 @@ export function escapeHtml(value: unknown): string {
  */
 export function safeUrl(value: unknown): string {
   const url = String(value ?? "").trim();
-  const parsed = URL.parse(url);
-  if (parsed && (parsed.protocol === "https:" || parsed.protocol === "http:")) {
-    return escapeHtml(url);
+  try {
+    const { protocol } = new URL(url);
+    if (protocol === "https:" || protocol === "http:") {
+      return escapeHtml(url);
+    }
+  } catch {
+    // Relative or malformed URL, so fall through to "#".
   }
   return "#";
 }
