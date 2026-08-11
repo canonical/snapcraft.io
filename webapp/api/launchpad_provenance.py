@@ -15,11 +15,10 @@ GITHUB_URL_RE = re.compile(
 
 
 def extract_github_repository(git_repository_url):
-    """
-    Extract owner/repo from a GitHub repository URL.
+    """Extract owner/repo from a GitHub repository URL, or None.
 
-    Returns the "owner/repo" part of the URL, or None if it is not a
-    GitHub URL (e.g. a private or non-GitHub git repository).
+    Anchored at both ends: the badge attests against this, so a URL merely
+    containing "github.com/" must not match.
     """
     if not git_repository_url:
         return None
@@ -52,17 +51,9 @@ class LaunchpadProvenance:
     def get_recipes(self, store_name, max_recipes):
         """Find the public Launchpad recipes for a store name, best first.
 
-        No owner filter is applied, so any public recipe is covered. A store
-        name is free text on a recipe, so one name routinely matches dozens
-        of them (firefox matches 62) — mostly personal recipes that never
-        upload to the store. Taking the first match would pick one of those
-        and report no provenance for a snap that has plenty.
-
-        Candidates are ordered by how likely they are to have produced the
-        store's revisions: recipes that can upload to the store first, then
-        most recently modified. Returns ``(recipes, total)`` where ``total``
-        is how many matched before the ``max_recipes`` cap, so callers can
-        tell that some were left unscanned.
+        store_name is free text, so one name matches dozens of recipes
+        (firefox matches 62), mostly personal ones that never upload. Ranked
+        by upload capability, then recency; at most ``max_recipes``.
         """
         data = self._get(
             f"{self.api_url}+snaps",
@@ -84,21 +75,13 @@ class LaunchpadProvenance:
         )
         matches.sort(key=lambda e: not e.get("can_upload_to_store"))
 
-        return matches[:max_recipes], len(matches)
+        return matches[:max_recipes]
 
     def iter_builds(self, collection_link, max_pages):
-        """Collect completed build entries, following pagination up to
-        ``max_pages`` pages of the collection.
+        """Collect completed builds, up to ``max_pages`` pages.
 
-        Returns ``(entries, complete, failed)``.
-
-        ``complete`` is True only when pagination reached its natural end.
-        Stopping at ``max_pages`` leaves it False, so callers know a missing
-        revision may just be unscanned history rather than a real absence.
-
-        ``failed`` is True when a page request errored (e.g. a Launchpad
-        timeout). Whatever was gathered is still returned, but the result
-        should not be cached for long.
+        Returns ``(entries, failed)``; whatever was gathered is returned
+        even when a page request errored.
         """
         entries = []
         url = collection_link
@@ -108,18 +91,17 @@ class LaunchpadProvenance:
             try:
                 data = self._get(url)
             except Exception:
-                return entries, False, True
+                return entries, True
             entries.extend(data.get("entries", []))
             url = data.get("next_collection_link")
             pages += 1
 
-        return entries, not url, False
+        return entries, False
 
     def _merge_builds(self, builds, github_repository, revisions):
         """Fold one recipe's builds into the shared revision map.
 
-        Returns True if anything was added. Earlier (better-ranked) recipes
-        win on conflict, so the best candidate's provenance is the one kept.
+        Returns True if anything was added; earlier recipes win on conflict.
         """
         added = False
 
@@ -135,8 +117,7 @@ class LaunchpadProvenance:
                 continue
 
             revision_key = str(revision)
-            # Builds are ordered newest first; keep the first (latest) build
-            # seen for a given revision+arch so the result is deterministic.
+            # Newest first, so the first build seen for a revision+arch wins.
             arch_map = revisions.setdefault(revision_key, {})
             if arch in arch_map:
                 continue
@@ -153,9 +134,7 @@ class LaunchpadProvenance:
             self_link = build.get("self_link")
             if self_link:
                 build_id = self_link.rstrip("/").split("/")[-1]
-                # Turn the API self_link into the human-facing web URL, e.g.
-                # https://api.launchpad.net/devel/~x/+snap/y/+build/1 ->
-                # https://launchpad.net/~x/+snap/y/+build/1
+                # API self_link -> human-facing web URL.
                 build_url = self_link.replace(
                     "api.launchpad.net/devel/", "launchpad.net/"
                 )
@@ -165,8 +144,8 @@ class LaunchpadProvenance:
                 "commit_url": commit_url,
                 "build_id": build_id,
                 "build_url": build_url,
-                # Kept per entry: a merged map can span recipes with different
-                # sources, so the top-level repository can't speak for a row.
+                # Per entry: a merged map can span recipes with different
+                # sources.
                 "github_repository": github_repository,
             }
             added = True
@@ -192,39 +171,27 @@ class LaunchpadProvenance:
                 },
             }
 
-        Builds are merged across every candidate recipe, since one store name
-        can be spread over several legitimate recipes (different series or
-        maintainers) that each produced part of the revision history.
-
-        Only builds that were successfully uploaded to the store and carry a
-        git ``revision_id`` are included. Revision keys are strings so the map
-        survives JSON (cache) round-trips.
+        Builds are merged across candidate recipes, since one store name can
+        span several legitimate recipes each holding part of the history.
+        Only uploaded builds with a ``revision_id`` are included; revision
+        keys are strings so the map survives JSON round-trips.
         """
-        recipes, total = self.get_recipes(store_name, max_recipes)
+        recipes = self.get_recipes(store_name, max_recipes)
 
         result = {
             "github_repository": None,
             "git_repository_url": None,
             "revisions": {},
-            # Whether the whole build history was scanned. A truncated scan
-            # still holds valid data: the revisions it found are authoritative,
-            # only a miss is inconclusive.
-            "complete": True,
-            # Whether an upstream request failed, so callers can avoid caching
-            # a transient failure as a negative answer.
+            # Set when an upstream request failed, so callers can avoid
+            # caching a transient failure as a negative answer.
             "failed": False,
         }
 
         if not recipes:
             return result
 
-        # Recipes past the cap go unscanned, so a miss stays inconclusive.
-        if total > len(recipes):
-            result["complete"] = False
-
-        # Share the page budget across candidates rather than spending it all
-        # on the first: the revisions being resolved are recent ones, and each
-        # recipe's builds are newest first, so breadth beats depth here.
+        # Share the page budget across candidates: revisions being resolved
+        # are recent and builds are newest first, so breadth beats depth.
         pages_each = max(1, max_pages // len(recipes))
         revisions = result["revisions"]
         source = None
@@ -240,21 +207,20 @@ class LaunchpadProvenance:
             if fallback is None:
                 fallback = (git_repository_url, github_repository)
 
-            builds, complete, failed = self.iter_builds(
-                collection_link, pages_each
-            )
-            if not complete:
-                result["complete"] = False
-            if failed:
-                result["failed"] = True
+            builds, failed = self.iter_builds(collection_link, pages_each)
 
             if (
                 self._merge_builds(builds, github_repository, revisions)
                 and source is None
             ):
-                # Report the recipe that actually produced revisions, not
-                # whichever happened to sort first.
+                # The recipe that produced revisions, not the first sorted.
                 source = (git_repository_url, github_repository)
+
+            if failed:
+                # Launchpad is struggling, scanning the remaining candidates
+                # would just queue up more 12s timeouts on this request.
+                result["failed"] = True
+                break
 
         if source is None:
             source = fallback

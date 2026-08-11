@@ -34,7 +34,7 @@ class SecurityTab {
   archSelect: HTMLSelectElement | null;
   tbody: HTMLElement | null;
   provenance: AuditableRevisionsResponse | null;
-  provenanceRequest: Promise<void> | null;
+  provenanceRequested: boolean;
   arch: string;
 
   constructor(
@@ -52,7 +52,7 @@ class SecurityTab {
     this.channelMapData = channelMapData;
     this.containerEl = containerEl;
     this.provenance = null;
-    this.provenanceRequest = null;
+    this.provenanceRequested = false;
 
     this.archSelect = containerEl.querySelector<HTMLSelectElement>(
       '[data-js="security-arch-select"]',
@@ -76,10 +76,8 @@ class SecurityTab {
     this.initArchSelect(architectures);
     this.renderTable();
 
-    // Provenance is only fetched once the tab is opened: on a cache miss the
-    // fetch costs a full Launchpad scan, so it shouldn't run for page views
-    // that never reach the tab. A #tab-security link is already open by
-    // now, so load immediately.
+    // Fetched only once the tab is opened, since on a cache miss it costs a
+    // full Launchpad scan. A #tab-security link is already open by now.
     if (tab?.getAttribute("aria-selected") === "true") {
       this.loadProvenance();
     }
@@ -107,14 +105,11 @@ class SecurityTab {
 
   async loadProvenance(): Promise<void> {
     // The tab can be clicked repeatedly, only ever fetch once.
-    if (this.provenanceRequest) {
-      return this.provenanceRequest;
+    if (this.provenanceRequested) {
+      return;
     }
-    this.provenanceRequest = this.fetchProvenance();
-    return this.provenanceRequest;
-  }
+    this.provenanceRequested = true;
 
-  async fetchProvenance(): Promise<void> {
     try {
       const resp = await fetch(`/api/${this.packageName}/auditable-revisions`);
       this.provenance = await resp.json();

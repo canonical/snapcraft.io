@@ -34,14 +34,12 @@ def _details(channel_map, default_track="latest"):
 def _provenance(
     revisions,
     github_repository="snapcrafters/mumble",
-    complete=True,
     failed=False,
 ):
     return {
         "github_repository": github_repository,
         "git_repository_url": "https://github.com/snapcrafters/mumble",
         "revisions": revisions,
-        "complete": complete,
         "failed": failed,
     }
 
@@ -59,8 +57,7 @@ VERIFIED_BUILD = {
 
 
 class TestProvenanceMapCaching(TestEndpoints):
-    """The provenance map is fetched on every snap-details page view, so what
-    gets cached decides whether a Launchpad wobble becomes a retry storm."""
+    """What gets cached decides whether a Launchpad wobble becomes a storm."""
 
     def setUp(self):
         super().setUp()
@@ -78,18 +75,30 @@ class TestProvenanceMapCaching(TestEndpoints):
             _get_provenance_map("mumble")
         return self.cache_patch.set.call_args.kwargs["ttl"]
 
-    def test_complete_scan_is_cached_for_an_hour(self):
+    def test_successful_scan_is_cached_for_an_hour(self):
+        # Includes scans that stopped at their bounds: partial but valid.
         self.assertEqual(self._ttl_for(_provenance({})), 3600)
 
-    def test_truncated_scan_is_still_cached_for_an_hour(self):
-        # Truncated data is valid, just bounded. Refusing to cache it would
-        # send every page view back to Launchpad for a full rescan.
-        self.assertEqual(self._ttl_for(_provenance({}, complete=False)), 3600)
-
     def test_failed_scan_is_cached_briefly(self):
-        ttl = self._ttl_for(_provenance({}, complete=False, failed=True))
+        ttl = self._ttl_for(_provenance({}, failed=True))
         self.assertEqual(ttl, FAILED_PROVENANCE_TTL)
         self.assertLess(ttl, 3600)
+
+    @patch("webapp.endpoints.snaps.repository_is_public")
+    @patch("webapp.endpoints.snaps.launchpad_provenance.build_provenance_map")
+    def test_repository_is_checked_once_and_cached(
+        self, mock_map, mock_public
+    ):
+        # One call per map build, not one per page view.
+        mock_map.return_value = _provenance({})
+        mock_public.return_value = False
+
+        result = _get_provenance_map("mumble")
+
+        mock_public.assert_called_once_with("snapcrafters/mumble")
+        self.assertFalse(result["source_available"])
+        cached = self.cache_patch.set.call_args.args[1]
+        self.assertFalse(cached["source_available"])
 
 
 class TestAuditableEndpoint(TestEndpoints):
@@ -100,6 +109,12 @@ class TestAuditableEndpoint(TestEndpoints):
         self.cache_patch = cache_patcher.start()
         self.cache_patch.get.return_value = None
         self.addCleanup(cache_patcher.stop)
+        # Real HTTP; keep it off the network.
+        public_patcher = patch(
+            "webapp.endpoints.snaps.repository_is_public", return_value=True
+        )
+        self.public_patch = public_patcher.start()
+        self.addCleanup(public_patcher.stop)
 
     @patch("webapp.endpoints.snaps.device_gateway.get_item_details")
     @patch("webapp.endpoints.snaps.launchpad_provenance.build_provenance_map")
@@ -238,12 +253,11 @@ class TestAuditableEndpoint(TestEndpoints):
     @patch("webapp.endpoints.snaps.device_gateway.get_item_details")
     @patch("webapp.endpoints.snaps.launchpad_provenance.build_provenance_map")
     def test_failed_scan_reports_error(self, mock_map, mock_details):
-        # Launchpad couldn't be reached -> error (with rev/arch), because
-        # this is the one case where retrying might help.
+        # The one case where retrying might help.
         mock_details.return_value = _details(
             [_channel("amd64", "latest", "stable", 1721)]
         )
-        mock_map.return_value = _provenance({}, complete=False, failed=True)
+        mock_map.return_value = _provenance({}, failed=True)
 
         data = self.client.get("/api/mumble/auditable").get_json()
 
@@ -255,14 +269,11 @@ class TestAuditableEndpoint(TestEndpoints):
     @patch("webapp.endpoints.snaps.device_gateway.get_item_details")
     @patch("webapp.endpoints.snaps.launchpad_provenance.build_provenance_map")
     def test_bounded_scan_is_not_an_error(self, mock_map, mock_details):
-        # Snaps with many recipes or long histories always hit the scan
-        # bounds, so a miss there must not pin an error on them forever.
+        # Hitting the scan bounds must not pin an error on a snap forever.
         mock_details.return_value = _details(
             [_channel("amd64", "latest", "stable", 1721)]
         )
-        mock_map.return_value = _provenance(
-            {}, github_repository=None, complete=False, failed=False
-        )
+        mock_map.return_value = _provenance({}, github_repository=None)
 
         data = self.client.get("/api/mumble/auditable").get_json()
 
@@ -271,18 +282,34 @@ class TestAuditableEndpoint(TestEndpoints):
 
     @patch("webapp.endpoints.snaps.device_gateway.get_item_details")
     @patch("webapp.endpoints.snaps.launchpad_provenance.build_provenance_map")
+    def test_deleted_repository_is_not_verified(self, mock_map, mock_details):
+        # The commit link would 404, so offering it is worse than nothing.
+        mock_details.return_value = _details(
+            [_channel("amd64", "latest", "stable", 1721)]
+        )
+        mock_map.return_value = _provenance(
+            {"1721": {"amd64": VERIFIED_BUILD}}
+        )
+        self.public_patch.return_value = False
+
+        data = self.client.get("/api/mumble/auditable").get_json()
+
+        self.assertFalse(data["auditable"])
+        self.assertEqual(data["status"], "not-provided")
+        self.assertNotIn("commit_url", data)
+
+    @patch("webapp.endpoints.snaps.device_gateway.get_item_details")
+    @patch("webapp.endpoints.snaps.launchpad_provenance.build_provenance_map")
     def test_build_without_commit_url_is_not_an_error(
         self, mock_map, mock_details
     ):
-        # Launchpad-hosted source: the build is found, there is simply no
-        # GitHub commit to link. A settled answer, not a failed lookup.
+        # Build found, but no GitHub commit to link: settled, not a failure.
         mock_details.return_value = _details(
             [_channel("amd64", "latest", "stable", 1721)]
         )
         mock_map.return_value = _provenance(
             {"1721": {"amd64": {"commit_sha": "aaa", "commit_url": None}}},
             github_repository=None,
-            complete=False,
         )
 
         data = self.client.get("/api/mumble/auditable").get_json()
@@ -295,13 +322,12 @@ class TestAuditableEndpoint(TestEndpoints):
     def test_hit_in_truncated_scan_is_still_verified(
         self, mock_map, mock_details
     ):
-        # Truncation only makes a miss inconclusive. A revision that was
-        # found is authoritative no matter how many pages went unread.
+        # A found revision is authoritative however many pages went unread.
         mock_details.return_value = _details(
             [_channel("amd64", "latest", "stable", 1721)]
         )
         mock_map.return_value = _provenance(
-            {"1721": {"amd64": VERIFIED_BUILD}}, complete=False
+            {"1721": {"amd64": VERIFIED_BUILD}}
         )
 
         data = self.client.get("/api/mumble/auditable").get_json()
@@ -315,6 +341,10 @@ class TestAuditableRevisionsEndpoint(TestEndpoints):
         super().setUp()
         self.cache_patch = patch("webapp.endpoints.snaps.redis_cache").start()
         self.cache_patch.get.return_value = None
+        # Real HTTP; keep it off the network.
+        self.public_patch = patch(
+            "webapp.endpoints.snaps.repository_is_public", return_value=True
+        ).start()
         self.addCleanup(patch.stopall)
 
     @patch("webapp.endpoints.snaps.launchpad_provenance.build_provenance_map")
@@ -351,9 +381,21 @@ class TestAuditableRevisionsEndpoint(TestEndpoints):
         self.assertEqual(response.cache_control.max_age, 0)
 
     @patch("webapp.endpoints.snaps.launchpad_provenance.build_provenance_map")
+    def test_revisions_omitted_when_repository_is_gone(self, mock_map):
+        mock_map.return_value = _provenance(
+            {"1721": {"amd64": VERIFIED_BUILD}}
+        )
+        self.public_patch.return_value = False
+
+        data = self.client.get("/api/mumble/auditable-revisions").get_json()
+
+        self.assertEqual(data["revisions"], {})
+        self.assertFalse(data["error"])
+
+    @patch("webapp.endpoints.snaps.launchpad_provenance.build_provenance_map")
     def test_revisions_failed_scan_sets_error_flag(self, mock_map):
         mock_map.return_value = _provenance(
-            {"1721": {"amd64": VERIFIED_BUILD}}, complete=False, failed=True
+            {"1721": {"amd64": VERIFIED_BUILD}}, failed=True
         )
 
         data = self.client.get("/api/mumble/auditable-revisions").get_json()
@@ -364,14 +406,12 @@ class TestAuditableRevisionsEndpoint(TestEndpoints):
 
     @patch("webapp.endpoints.snaps.launchpad_provenance.build_provenance_map")
     def test_revisions_truncated_scan_is_not_an_error(self, mock_map):
-        # This endpoint is bounded by LP_MAX_BUILD_PAGES by design, so a
-        # truncated scan is its normal contract, not a failure.
+        # Bounded by LP_MAX_BUILD_PAGES by design, so not a failure.
         mock_map.return_value = _provenance(
-            {"1721": {"amd64": VERIFIED_BUILD}}, complete=False, failed=False
+            {"1721": {"amd64": VERIFIED_BUILD}}, failed=False
         )
 
-        # Anonymous client: logged-in responses are rewritten to `private`,
-        # which drops max-age.
+        # Logged-in responses are rewritten to `private`, dropping max-age.
         response = self.app.test_client().get(
             "/api/mumble/auditable-revisions"
         )

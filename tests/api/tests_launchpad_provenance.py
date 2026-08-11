@@ -129,7 +129,7 @@ class TestBuildProvenanceMap(TestCase):
             "mumble", max_pages=5, max_recipes=5
         )
 
-        self.assertTrue(result["complete"])
+        self.assertFalse(result["failed"])
         self.assertEqual(result["github_repository"], "snapcrafters/mumble")
         self.assertIn("1721", result["revisions"])
         self.assertIn("1798", result["revisions"])
@@ -174,15 +174,12 @@ class TestBuildProvenanceMap(TestCase):
             "mumble", max_pages=1, max_recipes=5
         )
 
-        # Only the first page is scanned. Stopping at the bound leaves more
-        # pages unread, so the scan is incomplete but not failed: the data it
-        # did gather is valid and worth caching.
-        self.assertFalse(result["complete"])
+        # Stopping at the bound is not a failure; the data gathered is valid.
         self.assertFalse(result["failed"])
         self.assertIn("1721", result["revisions"])
         self.assertNotIn("1798", result["revisions"])
 
-    def test_complete_when_pagination_ends_naturally(self):
+    def test_not_failed_when_pagination_ends_naturally(self):
         recipe = {
             "entries": [
                 {
@@ -204,12 +201,10 @@ class TestBuildProvenanceMap(TestCase):
             "mumble", max_pages=5, max_recipes=5
         )
 
-        self.assertTrue(result["complete"])
         self.assertFalse(result["failed"])
 
     def test_partial_result_when_a_page_fails(self):
-        # A Launchpad timeout on page 2 must not discard page 1's data, and
-        # must be flagged as failed rather than merely truncated.
+        # A timeout on page 2 must not discard page 1's data.
         recipe = {
             "entries": [
                 {
@@ -242,7 +237,6 @@ class TestBuildProvenanceMap(TestCase):
             "mumble", max_pages=5, max_recipes=5
         )
 
-        self.assertFalse(result["complete"])
         self.assertTrue(result["failed"])
         self.assertIn("1721", result["revisions"])
 
@@ -294,8 +288,7 @@ def _recipe(name, url, link, uploads=True, modified="2026-01-01T00:00:00Z"):
 
 
 class TestRecipeSelection(TestCase):
-    """One store name matches many public recipes (firefox matches 62), most
-    of them personal ones that never upload. Picking the first is a lottery."""
+    """One store name matches many recipes, so the first is a lottery."""
 
     def _client(self, entries, pages_by_link):
         session = MagicMock()
@@ -309,8 +302,7 @@ class TestRecipeSelection(TestCase):
         return LaunchpadProvenance(session=session)
 
     def test_scans_past_a_recipe_with_no_uploads(self):
-        # The shape seen on firefox: a personal recipe sorts first but has
-        # never uploaded, while the real one further down has the builds.
+        # The firefox shape: a personal recipe sorts above the real one.
         personal = _recipe("personal", None, "https://lp/personal")
         official = _recipe(
             "official",
@@ -338,8 +330,7 @@ class TestRecipeSelection(TestCase):
         self.assertEqual(result["github_repository"], "snapcrafters/mumble")
 
     def test_merges_revisions_across_recipes(self):
-        # Firefox's real recipes are split by series, each holding part of
-        # the revision history, so one recipe alone is not the whole answer.
+        # Real recipes are split by series, each holding part of the history.
         old = _recipe("old", "https://github.com/x/old", "https://lp/old")
         new = _recipe("new", "https://github.com/x/new", "https://lp/new")
         pages = {
@@ -403,7 +394,7 @@ class TestRecipeSelection(TestCase):
             result["revisions"]["1721"]["amd64"]["commit_sha"], "aaa"
         )
 
-    def test_uncapped_recipes_leave_the_scan_incomplete(self):
+    def test_max_recipes_bounds_the_scan(self):
         entries = [
             _recipe(f"r{i}", None, f"https://lp/r{i}") for i in range(4)
         ]
@@ -411,11 +402,42 @@ class TestRecipeSelection(TestCase):
             f"https://lp/r{i}": {"entries": [], "next_collection_link": None}
             for i in range(4)
         }
+        scanned = []
 
-        client = self._client(entries, pages)
+        session = MagicMock()
+
+        def get(url, params=None):
+            if url.endswith("+snaps"):
+                return _response({"entries": entries})
+            scanned.append(url)
+            return _response(pages[url])
+
+        session.get.side_effect = get
+        client = LaunchpadProvenance(session=session)
+        client.build_provenance_map("mumble", max_pages=5, max_recipes=2)
+
+        self.assertEqual(len(scanned), 2)
+
+    def test_a_failing_recipe_stops_the_scan(self):
+        # Each request costs up to 12s, so failures must not stack up.
+        entries = [
+            _recipe(f"r{i}", None, f"https://lp/r{i}") for i in range(4)
+        ]
+        attempts = []
+
+        session = MagicMock()
+
+        def get(url, params=None):
+            if url.endswith("+snaps"):
+                return _response({"entries": entries})
+            attempts.append(url)
+            raise Exception("read timed out")
+
+        session.get.side_effect = get
+        client = LaunchpadProvenance(session=session)
         result = client.build_provenance_map(
-            "mumble", max_pages=5, max_recipes=2
+            "mumble", max_pages=5, max_recipes=4
         )
 
-        # Two recipes went unscanned, so a miss here is inconclusive.
-        self.assertFalse(result["complete"])
+        self.assertTrue(result["failed"])
+        self.assertEqual(len(attempts), 1)

@@ -10,6 +10,7 @@ import webapp.helpers as helpers
 from webapp.decorators import login_required, exchange_required
 from webapp.store import logic
 from webapp.config import LP_MAX_BUILD_PAGES, LP_MAX_RECIPES
+from webapp.api.github import repository_is_public
 from webapp.api.launchpad_provenance import LaunchpadProvenance
 from webapp.endpoints.utils import get_auditable_map_cache_key
 from cache.cache_utility import redis_cache
@@ -24,8 +25,8 @@ launchpad_provenance = LaunchpadProvenance()
 # Fields needed to resolve the default install revision per architecture.
 AUDITABLE_FIELDS = ["revision", "version", "confinement", "download"]
 
-# How long a failed provenance scan is cached, to bound the retry rate
-# against Launchpad without pinning a transient failure for an hour.
+# Bounds the retry rate against Launchpad without pinning a transient
+# failure for a full hour.
 FAILED_PROVENANCE_TTL = 60
 
 FIELDS = [
@@ -105,9 +106,10 @@ def _get_provenance_map(snap_name):
     The map is expensive to build (paginated Launchpad calls), so it is cached
     for an hour and shared by both auditable endpoints.
 
-    Failures are cached briefly rather than not at all: every page view fetches
-    provenance, so skipping the cache on failure would send each one back to an
-    already-struggling Launchpad and keep it failing.
+    Failures are cached briefly rather than not at all: every page view
+    fetches provenance, so skipping the cache on failure would send each one
+    back to an already-struggling Launchpad. The repository check lives here
+    so its single GitHub call rides the same cache.
     """
     cache_key = get_auditable_map_cache_key(snap_name)
     cached = redis_cache.get(cache_key, expected_type=dict)
@@ -116,6 +118,9 @@ def _get_provenance_map(snap_name):
 
     provenance_map = launchpad_provenance.build_provenance_map(
         snap_name, LP_MAX_BUILD_PAGES, LP_MAX_RECIPES
+    )
+    provenance_map["source_available"] = repository_is_public(
+        provenance_map.get("github_repository")
     )
     ttl = FAILED_PROVENANCE_TTL if provenance_map.get("failed") else 3600
     redis_cache.set(cache_key, provenance_map, ttl=ttl)
@@ -159,9 +164,8 @@ def auditable(snap_name):
       matching build (e.g. uploaded manually).
     - ``not-provided``: no public provenance — no Launchpad recipe, or the
       recipe's repo is private / non-GitHub.
-    - ``error``: Launchpad couldn't be reached, so it is worth retrying. A
-      scan that merely hit its bounds is not an error — it is normal, and
-      resolves to one of the states above.
+    - ``error``: Launchpad couldn't be reached, so retrying may help. A scan
+      that merely hit its bounds is normal, not an error.
 
     Never raises to the user.
     """
@@ -190,7 +194,9 @@ def auditable(snap_name):
                 "architecture": architecture,
             }
 
-            if build and build.get("commit_url"):
+            source_available = provenance_map.get("source_available", True)
+
+            if build and build.get("commit_url") and source_available:
                 res = {
                     **base,
                     "auditable": True,
@@ -202,16 +208,13 @@ def auditable(snap_name):
                     "build_url": build.get("build_url"),
                 }
             elif build:
-                # The build was found, it just has no public GitHub commit to
-                # link (Launchpad-hosted or private source). That is a settled
-                # answer, so it must not be reported as a failed lookup.
+                # No commit to link (Launchpad-hosted or private source), or
+                # the repository has gone. Both are settled answers, not
+                # failed lookups.
                 res = {**base, "status": "not-provided"}
             elif provenance_map.get("failed"):
-                # Only a real upstream failure earns the error state: it is
-                # the only case where "try again later" is true. A scan that
-                # merely hit its bounds is normal for snaps with many recipes
-                # or long build histories, and would otherwise pin the error
-                # message on them permanently.
+                # Only a real failure earns the error state, since it is the
+                # only case where "try again later" is true.
                 res = {**base, "status": "error"}
             elif github_repository:
                 # Public recipe exists, but this revision has no build/commit.
@@ -242,11 +245,8 @@ def auditable_revisions(snap_name):
     Returns commit links for the snap's recent revisions (bounded by
     LP_MAX_BUILD_PAGES). Revisions without provenance are simply absent.
     ``error`` is true when Launchpad couldn't be reached, so the Security
-    tab can distinguish "no provenance" from "couldn't load right now".
-
-    A truncated scan is not an error here: this endpoint is bounded by
-    LP_MAX_BUILD_PAGES by design, so older revisions being absent is its
-    normal contract rather than a failure worth warning about.
+    tab can distinguish "no provenance" from "couldn't load right now". A
+    truncated scan is not an error: this endpoint is bounded by design.
     """
     res = {"github_repository": None, "revisions": {}, "error": False}
 
@@ -255,18 +255,19 @@ def auditable_revisions(snap_name):
         res["github_repository"] = provenance_map.get("github_repository")
         res["error"] = bool(provenance_map.get("failed"))
 
-        for revision, arch_map in provenance_map.get("revisions", {}).items():
-            # A store revision maps to a single architecture build; take its
-            # commit link for the per-revision table.
-            for build in arch_map.values():
-                if build.get("commit_url"):
-                    res["revisions"][revision] = {
-                        "commit_sha": build["commit_sha"],
-                        "commit_url": build["commit_url"],
-                        "build_id": build.get("build_id"),
-                        "build_url": build.get("build_url"),
-                    }
-                    break
+        # If the repository is gone, every commit link would 404.
+        if provenance_map.get("source_available", True):
+            for revision, arch_map in provenance_map["revisions"].items():
+                # One architecture build per store revision.
+                for build in arch_map.values():
+                    if build.get("commit_url"):
+                        res["revisions"][revision] = {
+                            "commit_sha": build["commit_sha"],
+                            "commit_url": build["commit_url"],
+                            "build_id": build.get("build_id"),
+                            "build_url": build.get("build_url"),
+                        }
+                        break
     except Exception:
         res = {"github_repository": None, "revisions": {}, "error": True}
 
