@@ -105,7 +105,9 @@ class TestGetSnapBuild(TestEndpoints):
         self, mock_dashboard, mock_launchpad, mock_api_publisher_session
     ):
         mock_response = MagicMock()
+        mock_response.status_code = 200
         mock_response.iter_content.return_value = ["Test ", "build logs"]
+        mock_response.raise_for_status.return_value = None
         mock_dashboard.get_snap_info.return_value = self._mock_snap_info()
         mock_launchpad.get_snap_build.return_value = self._mock_build()
         mock_api_publisher_session.get.return_value = mock_response
@@ -124,7 +126,37 @@ class TestGetSnapBuild(TestEndpoints):
         mock_response.iter_content.assert_called_once_with(
             chunk_size=8192, decode_unicode=True
         )
+        mock_response.raise_for_status.assert_called_once_with()
         mock_response.close.assert_called_once()
+        mock_launchpad.get_snap_build_log.assert_not_called()
+
+    @patch("webapp.publisher.snaps.build_views.api_publisher_session")
+    @patch("webapp.publisher.snaps.build_views.launchpad")
+    @patch("webapp.publisher.snaps.build_views.dashboard")
+    def test_get_snap_build_logs_returns_error_when_launchpad_fails(
+        self, mock_dashboard, mock_launchpad, mock_api_publisher_session
+    ):
+        mock_response = MagicMock()
+        mock_response.status_code = 404
+        mock_response.raise_for_status.side_effect = HTTPError(
+            response=mock_response
+        )
+        mock_dashboard.get_snap_info.return_value = self._mock_snap_info()
+        mock_launchpad.get_snap_build.return_value = self._mock_build()
+        mock_api_publisher_session.get.return_value = mock_response
+
+        response = self.client.get(f"{self.endpoint_url}/logs")
+
+        self.assertEqual(response.status_code, 502)
+        response_data = response.get_json()
+        self.assertFalse(response_data["success"])
+        self.assertEqual(
+            response_data["error"]["message"],
+            "The requested build log could not be fetched.",
+        )
+        mock_response.raise_for_status.assert_called_once_with()
+        mock_response.close.assert_called_once_with()
+        mock_response.iter_content.assert_not_called()
         mock_launchpad.get_snap_build_log.assert_not_called()
 
     @patch("webapp.publisher.snaps.build_views.launchpad")

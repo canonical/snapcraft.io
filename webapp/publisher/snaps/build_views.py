@@ -200,7 +200,22 @@ def get_snap_build_logs(snap_name, build_id):
         stream=True,
         timeout=(5, 30),
     )
-    response.raise_for_status()
+    try:
+        response.raise_for_status()
+    except HTTPError:
+        response.close()
+        return (
+            flask.jsonify(
+                {
+                    "error": {
+                        "message": "The requested build log could not be "
+                        "fetched."
+                    },
+                    "success": False,
+                }
+            ),
+            502,
+        )
 
     def generate_log_chunks():
         try:
