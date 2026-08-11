@@ -64,7 +64,7 @@
     "jotai": "2.20.0",
     "jotai-family": "1.0.2",
     "nanoid": "5.1.11",
-    "postcss": "8.5.15",
+    "postcss": "8.5.18",
     "postcss-cli": "11.0.1",
     "prettier": "3.8.3",
     "prop-types": "15.8.1",
