@@ -420,6 +420,10 @@ def snap_details_views(store):
 
         context["has_sboms"] = has_sboms
 
+        context["default_arch"] = logic.get_default_architecture(
+            context["channel_map"].keys()
+        )
+
         return (
             flask.render_template("store/snap-details.html", **context),
             status_code,
