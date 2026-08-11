@@ -9,7 +9,7 @@ import re
 import webapp.helpers as helpers
 from webapp.decorators import login_required, exchange_required
 from webapp.store import logic
-from webapp.config import LP_MAX_BUILD_PAGES
+from webapp.config import LP_MAX_BUILD_PAGES, LP_MAX_RECIPES
 from webapp.api.launchpad_provenance import LaunchpadProvenance
 from webapp.endpoints.utils import get_auditable_map_cache_key
 from cache.cache_utility import redis_cache
@@ -23,6 +23,10 @@ launchpad_provenance = LaunchpadProvenance()
 
 # Fields needed to resolve the default install revision per architecture.
 AUDITABLE_FIELDS = ["revision", "version", "confinement", "download"]
+
+# How long a failed provenance scan is cached, to bound the retry rate
+# against Launchpad without pinning a transient failure for an hour.
+FAILED_PROVENANCE_TTL = 60
 
 FIELDS = [
     "title",
@@ -100,6 +104,10 @@ def _get_provenance_map(snap_name):
 
     The map is expensive to build (paginated Launchpad calls), so it is cached
     for an hour and shared by both auditable endpoints.
+
+    Failures are cached briefly rather than not at all: every page view fetches
+    provenance, so skipping the cache on failure would send each one back to an
+    already-struggling Launchpad and keep it failing.
     """
     cache_key = get_auditable_map_cache_key(snap_name)
     cached = redis_cache.get(cache_key, expected_type=dict)
@@ -107,10 +115,10 @@ def _get_provenance_map(snap_name):
         return cached
 
     provenance_map = launchpad_provenance.build_provenance_map(
-        snap_name, LP_MAX_BUILD_PAGES
+        snap_name, LP_MAX_BUILD_PAGES, LP_MAX_RECIPES
     )
-    if provenance_map.get("complete"):
-        redis_cache.set(cache_key, provenance_map, ttl=3600)
+    ttl = FAILED_PROVENANCE_TTL if provenance_map.get("failed") else 3600
+    redis_cache.set(cache_key, provenance_map, ttl=ttl)
     return provenance_map
 
 
@@ -151,7 +159,9 @@ def auditable(snap_name):
       matching build (e.g. uploaded manually).
     - ``not-provided``: no public provenance — no Launchpad recipe, or the
       recipe's repo is private / non-GitHub.
-    - ``error``: couldn't load provenance right now (upstream/incomplete scan).
+    - ``error``: Launchpad couldn't be reached, so it is worth retrying. A
+      scan that merely hit its bounds is not an error — it is normal, and
+      resolves to one of the states above.
 
     Never raises to the user.
     """
@@ -169,7 +179,10 @@ def auditable(snap_name):
                 str(revision), {}
             )
             build = arch_map.get(architecture)
-            github_repository = provenance_map.get("github_repository")
+            # The map can span recipes, so prefer the row's own repository.
+            github_repository = (build or {}).get(
+                "github_repository"
+            ) or provenance_map.get("github_repository")
 
             base = {
                 "auditable": False,
@@ -188,8 +201,17 @@ def auditable(snap_name):
                     "build_id": build.get("build_id"),
                     "build_url": build.get("build_url"),
                 }
-            elif not provenance_map.get("complete"):
-                # Couldn't fully scan Launchpad
+            elif build:
+                # The build was found, it just has no public GitHub commit to
+                # link (Launchpad-hosted or private source). That is a settled
+                # answer, so it must not be reported as a failed lookup.
+                res = {**base, "status": "not-provided"}
+            elif provenance_map.get("failed"):
+                # Only a real upstream failure earns the error state: it is
+                # the only case where "try again later" is true. A scan that
+                # merely hit its bounds is normal for snaps with many recipes
+                # or long build histories, and would otherwise pin the error
+                # message on them permanently.
                 res = {**base, "status": "error"}
             elif github_repository:
                 # Public recipe exists, but this revision has no build/commit.
@@ -219,15 +241,19 @@ def auditable_revisions(snap_name):
 
     Returns commit links for the snap's recent revisions (bounded by
     LP_MAX_BUILD_PAGES). Revisions without provenance are simply absent.
-    ``error`` is true when Launchpad couldn't be fully scanned, so the Security
+    ``error`` is true when Launchpad couldn't be reached, so the Security
     tab can distinguish "no provenance" from "couldn't load right now".
+
+    A truncated scan is not an error here: this endpoint is bounded by
+    LP_MAX_BUILD_PAGES by design, so older revisions being absent is its
+    normal contract rather than a failure worth warning about.
     """
     res = {"github_repository": None, "revisions": {}, "error": False}
 
     try:
         provenance_map = _get_provenance_map(snap_name)
         res["github_repository"] = provenance_map.get("github_repository")
-        res["error"] = not provenance_map.get("complete")
+        res["error"] = bool(provenance_map.get("failed"))
 
         for revision, arch_map in provenance_map.get("revisions", {}).items():
             # A store revision maps to a single architecture build; take its

@@ -34,8 +34,10 @@ const REVISIONS = {
   },
 };
 
-function setupDom() {
+function setupDom({ tabOpen = false } = {}) {
   document.body.innerHTML = `
+    <a data-js="details-tab" aria-controls="tab-security"
+       aria-selected="${tabOpen}">Security</a>
     <div id="js-security-tab">
       <select data-js="security-arch-select"></select>
       <table><tbody data-js="security-tab-table"></tbody></table>
@@ -45,6 +47,9 @@ function setupDom() {
 
 const tbodyHtml = () =>
   document.querySelector('[data-js="security-tab-table"]')?.innerHTML ?? "";
+
+const openTab = () =>
+  document.querySelector<HTMLElement>('[data-js="details-tab"]')?.click();
 
 describe("security tab", () => {
   afterEach(() => {
@@ -79,6 +84,7 @@ describe("security tab", () => {
     ) as unknown as typeof fetch;
 
     initSecurityTab("#js-security-tab", SNAP, CHANNEL_MAP, "amd64");
+    openTab();
 
     // Table renders immediately with a loading spinner in the cells.
     expect(tbodyHtml()).toContain("p-icon--spinner");
@@ -102,11 +108,55 @@ describe("security tab", () => {
       .mockRejectedValue(new Error("network")) as unknown as typeof fetch;
 
     initSecurityTab("#js-security-tab", SNAP, CHANNEL_MAP, "amd64");
+    openTab();
 
     await waitFor(() => {
       expect(
         document.querySelector(".p-notification--caution"),
       ).toBeInTheDocument();
     });
+  });
+
+  it("does not fetch provenance until the tab is opened", async () => {
+    setupDom();
+    const fetchMock = vi.fn().mockResolvedValue({
+      json: () => Promise.resolve(REVISIONS),
+    });
+    window.fetch = fetchMock as unknown as typeof fetch;
+
+    initSecurityTab("#js-security-tab", SNAP, CHANNEL_MAP, "amd64");
+
+    expect(fetchMock).not.toHaveBeenCalled();
+
+    openTab();
+
+    await waitFor(() => expect(fetchMock).toHaveBeenCalledTimes(1));
+  });
+
+  it("fetches once however often the tab is clicked", async () => {
+    setupDom();
+    const fetchMock = vi.fn().mockResolvedValue({
+      json: () => Promise.resolve(REVISIONS),
+    });
+    window.fetch = fetchMock as unknown as typeof fetch;
+
+    initSecurityTab("#js-security-tab", SNAP, CHANNEL_MAP, "amd64");
+    openTab();
+    openTab();
+    openTab();
+
+    await waitFor(() => expect(fetchMock).toHaveBeenCalledTimes(1));
+  });
+
+  it("fetches on init when deep-linked straight to the tab", async () => {
+    setupDom({ tabOpen: true });
+    const fetchMock = vi.fn().mockResolvedValue({
+      json: () => Promise.resolve(REVISIONS),
+    });
+    window.fetch = fetchMock as unknown as typeof fetch;
+
+    initSecurityTab("#js-security-tab", SNAP, CHANNEL_MAP, "amd64");
+
+    await waitFor(() => expect(fetchMock).toHaveBeenCalledTimes(1));
   });
 });

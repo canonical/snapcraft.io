@@ -1,6 +1,10 @@
 from unittest.mock import patch
 
 from tests.endpoints.endpoint_testing import TestEndpoints
+from webapp.endpoints.snaps import (
+    FAILED_PROVENANCE_TTL,
+    _get_provenance_map,
+)
 
 
 def _channel(arch, track, risk, revision):
@@ -28,13 +32,17 @@ def _details(channel_map, default_track="latest"):
 
 
 def _provenance(
-    revisions, github_repository="snapcrafters/mumble", complete=True
+    revisions,
+    github_repository="snapcrafters/mumble",
+    complete=True,
+    failed=False,
 ):
     return {
         "github_repository": github_repository,
         "git_repository_url": "https://github.com/snapcrafters/mumble",
         "revisions": revisions,
         "complete": complete,
+        "failed": failed,
     }
 
 
@@ -48,6 +56,40 @@ VERIFIED_BUILD = {
         "https://launchpad.net/~build.snapcraft.io/+snap/x/+build/216436"
     ),
 }
+
+
+class TestProvenanceMapCaching(TestEndpoints):
+    """The provenance map is fetched on every snap-details page view, so what
+    gets cached decides whether a Launchpad wobble becomes a retry storm."""
+
+    def setUp(self):
+        super().setUp()
+        cache_patcher = patch("webapp.endpoints.snaps.redis_cache")
+        self.cache_patch = cache_patcher.start()
+        self.cache_patch.get.return_value = None
+        self.addCleanup(cache_patcher.stop)
+
+    def _ttl_for(self, provenance_map):
+        with patch(
+            "webapp.endpoints.snaps.launchpad_provenance."
+            "build_provenance_map",
+            return_value=provenance_map,
+        ):
+            _get_provenance_map("mumble")
+        return self.cache_patch.set.call_args.kwargs["ttl"]
+
+    def test_complete_scan_is_cached_for_an_hour(self):
+        self.assertEqual(self._ttl_for(_provenance({})), 3600)
+
+    def test_truncated_scan_is_still_cached_for_an_hour(self):
+        # Truncated data is valid, just bounded. Refusing to cache it would
+        # send every page view back to Launchpad for a full rescan.
+        self.assertEqual(self._ttl_for(_provenance({}, complete=False)), 3600)
+
+    def test_failed_scan_is_cached_briefly(self):
+        ttl = self._ttl_for(_provenance({}, complete=False, failed=True))
+        self.assertEqual(ttl, FAILED_PROVENANCE_TTL)
+        self.assertLess(ttl, 3600)
 
 
 class TestAuditableEndpoint(TestEndpoints):
@@ -195,13 +237,13 @@ class TestAuditableEndpoint(TestEndpoints):
 
     @patch("webapp.endpoints.snaps.device_gateway.get_item_details")
     @patch("webapp.endpoints.snaps.launchpad_provenance.build_provenance_map")
-    def test_incomplete_scan_reports_error(self, mock_map, mock_details):
-        # Revision not found because Launchpad couldn't be fully scanned ->
-        # error (with rev/arch), not a plain "no provenance".
+    def test_failed_scan_reports_error(self, mock_map, mock_details):
+        # Launchpad couldn't be reached -> error (with rev/arch), because
+        # this is the one case where retrying might help.
         mock_details.return_value = _details(
             [_channel("amd64", "latest", "stable", 1721)]
         )
-        mock_map.return_value = _provenance({}, complete=False)
+        mock_map.return_value = _provenance({}, complete=False, failed=True)
 
         data = self.client.get("/api/mumble/auditable").get_json()
 
@@ -209,6 +251,63 @@ class TestAuditableEndpoint(TestEndpoints):
         self.assertEqual(data["status"], "error")
         self.assertEqual(data["revision"], 1721)
         self.assertEqual(data["architecture"], "amd64")
+
+    @patch("webapp.endpoints.snaps.device_gateway.get_item_details")
+    @patch("webapp.endpoints.snaps.launchpad_provenance.build_provenance_map")
+    def test_bounded_scan_is_not_an_error(self, mock_map, mock_details):
+        # Snaps with many recipes or long histories always hit the scan
+        # bounds, so a miss there must not pin an error on them forever.
+        mock_details.return_value = _details(
+            [_channel("amd64", "latest", "stable", 1721)]
+        )
+        mock_map.return_value = _provenance(
+            {}, github_repository=None, complete=False, failed=False
+        )
+
+        data = self.client.get("/api/mumble/auditable").get_json()
+
+        self.assertFalse(data["auditable"])
+        self.assertEqual(data["status"], "not-provided")
+
+    @patch("webapp.endpoints.snaps.device_gateway.get_item_details")
+    @patch("webapp.endpoints.snaps.launchpad_provenance.build_provenance_map")
+    def test_build_without_commit_url_is_not_an_error(
+        self, mock_map, mock_details
+    ):
+        # Launchpad-hosted source: the build is found, there is simply no
+        # GitHub commit to link. A settled answer, not a failed lookup.
+        mock_details.return_value = _details(
+            [_channel("amd64", "latest", "stable", 1721)]
+        )
+        mock_map.return_value = _provenance(
+            {"1721": {"amd64": {"commit_sha": "aaa", "commit_url": None}}},
+            github_repository=None,
+            complete=False,
+        )
+
+        data = self.client.get("/api/mumble/auditable").get_json()
+
+        self.assertFalse(data["auditable"])
+        self.assertEqual(data["status"], "not-provided")
+
+    @patch("webapp.endpoints.snaps.device_gateway.get_item_details")
+    @patch("webapp.endpoints.snaps.launchpad_provenance.build_provenance_map")
+    def test_hit_in_truncated_scan_is_still_verified(
+        self, mock_map, mock_details
+    ):
+        # Truncation only makes a miss inconclusive. A revision that was
+        # found is authoritative no matter how many pages went unread.
+        mock_details.return_value = _details(
+            [_channel("amd64", "latest", "stable", 1721)]
+        )
+        mock_map.return_value = _provenance(
+            {"1721": {"amd64": VERIFIED_BUILD}}, complete=False
+        )
+
+        data = self.client.get("/api/mumble/auditable").get_json()
+
+        self.assertTrue(data["auditable"])
+        self.assertEqual(data["status"], "verified")
 
 
 class TestAuditableRevisionsEndpoint(TestEndpoints):
@@ -252,9 +351,9 @@ class TestAuditableRevisionsEndpoint(TestEndpoints):
         self.assertEqual(response.cache_control.max_age, 0)
 
     @patch("webapp.endpoints.snaps.launchpad_provenance.build_provenance_map")
-    def test_revisions_incomplete_sets_error_flag(self, mock_map):
+    def test_revisions_failed_scan_sets_error_flag(self, mock_map):
         mock_map.return_value = _provenance(
-            {"1721": {"amd64": VERIFIED_BUILD}}, complete=False
+            {"1721": {"amd64": VERIFIED_BUILD}}, complete=False, failed=True
         )
 
         data = self.client.get("/api/mumble/auditable-revisions").get_json()
@@ -262,3 +361,22 @@ class TestAuditableRevisionsEndpoint(TestEndpoints):
         self.assertTrue(data["error"])
         # Partial data is still returned.
         self.assertIn("1721", data["revisions"])
+
+    @patch("webapp.endpoints.snaps.launchpad_provenance.build_provenance_map")
+    def test_revisions_truncated_scan_is_not_an_error(self, mock_map):
+        # This endpoint is bounded by LP_MAX_BUILD_PAGES by design, so a
+        # truncated scan is its normal contract, not a failure.
+        mock_map.return_value = _provenance(
+            {"1721": {"amd64": VERIFIED_BUILD}}, complete=False, failed=False
+        )
+
+        # Anonymous client: logged-in responses are rewritten to `private`,
+        # which drops max-age.
+        response = self.app.test_client().get(
+            "/api/mumble/auditable-revisions"
+        )
+        data = response.get_json()
+
+        self.assertFalse(data["error"])
+        self.assertIn("1721", data["revisions"])
+        self.assertEqual(response.cache_control.max_age, 3600)

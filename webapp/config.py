@@ -18,6 +18,10 @@ BSI_URL = os.getenv("BSI_URL", "https://build.snapcraft.io")
 # Max pages of Launchpad completed builds to scan when resolving snap
 # provenance (page size is 75).
 LP_MAX_BUILD_PAGES = int(os.getenv("LP_MAX_BUILD_PAGES", "5"))
+# Max Launchpad recipes to scan per store name. One store name can match
+# dozens of public recipes (firefox has 62), most of them personal ones that
+# never upload, so the right recipe is rarely just the first.
+LP_MAX_RECIPES = int(os.getenv("LP_MAX_RECIPES", "5"))
 ENVIRONMENT = os.getenv("ENVIRONMENT", "devel")
 IS_DEVELOPMENT = ENVIRONMENT == "devel"
 COMMIT_ID = os.getenv("COMMIT_ID", "commit_id")
