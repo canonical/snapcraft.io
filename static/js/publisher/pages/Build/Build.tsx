@@ -60,13 +60,7 @@ function Build(): React.JSX.Element {
         throw new Error("There was a problem trying to fetch build logs");
       }
 
-      const responseData = await response.json();
-
-      if (!responseData.success) {
-        throw new Error("There was a problem trying to fetch build logs");
-      }
-
-      return responseData.data;
+      return { raw_logs: await response.text() };
     },
     enabled: Boolean(snapId && buildId && !isDataLoading && build?.logs),
     refetchOnWindowFocus: false,
