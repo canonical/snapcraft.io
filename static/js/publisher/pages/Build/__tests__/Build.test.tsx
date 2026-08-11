@@ -149,6 +149,23 @@ describe("Build", () => {
     ).toBeInTheDocument();
   });
 
+  test("links to raw build log", () => {
+    mockUseQueryResponses({
+      data: mockBuildData,
+      isLoading: false,
+      isFetched: true,
+      isFetching: false,
+      isError: false,
+    });
+
+    renderComponent();
+
+    expect(screen.getByRole("link", { name: "View raw" })).toHaveAttribute(
+      "href",
+      "https://launchpad.net",
+    );
+  });
+
   test("shows build log", () => {
     mockUseQueryResponses({
       data: mockBuildData,

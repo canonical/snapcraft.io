@@ -1,4 +1,4 @@
-from unittest.mock import patch
+from unittest.mock import MagicMock, patch
 from requests.exceptions import HTTPError
 from tests.endpoints.endpoint_testing import TestEndpoints
 
@@ -98,22 +98,34 @@ class TestGetSnapBuild(TestEndpoints):
         )
         mock_launchpad.get_snap_build_log.assert_not_called()
 
+    @patch("webapp.publisher.snaps.build_views.api_publisher_session")
     @patch("webapp.publisher.snaps.build_views.launchpad")
     @patch("webapp.publisher.snaps.build_views.dashboard")
-    def test_get_snap_build_logs_success(self, mock_dashboard, mock_launchpad):
+    def test_get_snap_build_logs_streams_from_launchpad(
+        self, mock_dashboard, mock_launchpad, mock_api_publisher_session
+    ):
+        mock_response = MagicMock()
+        mock_response.iter_content.return_value = ["Test ", "build logs"]
         mock_dashboard.get_snap_info.return_value = self._mock_snap_info()
         mock_launchpad.get_snap_build.return_value = self._mock_build()
-        mock_launchpad.get_snap_build_log.return_value = "Test build logs"
+        mock_api_publisher_session.get.return_value = mock_response
 
         response = self.client.get(f"{self.endpoint_url}/logs")
 
         self.assertEqual(response.status_code, 200)
-        response_data = response.get_json()
-        self.assertTrue(response_data["success"])
-        self.assertEqual(response_data["data"]["raw_logs"], "Test build logs")
-        mock_launchpad.get_snap_build_log.assert_called_once_with(
-            self.snap_name, self.build_id
+        self.assertEqual(response.content_type, "text/plain; charset=utf-8")
+        self.assertEqual(response.get_data(as_text=True), "Test build logs")
+        mock_api_publisher_session.get.assert_called_once_with(
+            "https://launchpad.net/buildlog.txt",
+            headers={"Accept": "text/plain"},
+            stream=True,
+            timeout=(5, 30),
         )
+        mock_response.iter_content.assert_called_once_with(
+            chunk_size=8192, decode_unicode=True
+        )
+        mock_response.close.assert_called_once()
+        mock_launchpad.get_snap_build_log.assert_not_called()
 
     @patch("webapp.publisher.snaps.build_views.launchpad")
     @patch("webapp.publisher.snaps.build_views.dashboard")

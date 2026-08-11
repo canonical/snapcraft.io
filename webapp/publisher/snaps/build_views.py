@@ -194,9 +194,28 @@ def get_snap_build_logs(snap_name, build_id):
             404,
         )
 
-    raw_logs = launchpad.get_snap_build_log(details["snap_name"], build_id)
+    response = api_publisher_session.get(
+        lp_build["build_log_url"],
+        headers={"Accept": "text/plain"},
+        stream=True,
+        timeout=(5, 30),
+    )
+    response.raise_for_status()
 
-    return flask.jsonify({"data": {"raw_logs": raw_logs}, "success": True})
+    def generate_log_chunks():
+        try:
+            for chunk in response.iter_content(
+                chunk_size=8192, decode_unicode=True
+            ):
+                if chunk:
+                    yield chunk
+        finally:
+            response.close()
+
+    return flask.Response(
+        flask.stream_with_context(generate_log_chunks()),
+        mimetype="text/plain",
+    )
 
 
 def validate_repo(github_token, snap_name, gh_owner, gh_repo):
