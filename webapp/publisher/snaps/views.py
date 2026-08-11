@@ -135,6 +135,11 @@ publisher_snaps.add_url_rule(
     methods=["GET"],
 )
 publisher_snaps.add_url_rule(
+    "/api/<snap_name>/builds/<build_id>/logs",
+    view_func=build_views.get_snap_build_logs,
+    methods=["GET"],
+)
+publisher_snaps.add_url_rule(
     "/api/<snap_name>/builds/validate-repo",
     view_func=get_validate_repo,
     methods=["GET"],
