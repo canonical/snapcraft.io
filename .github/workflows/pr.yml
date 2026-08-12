@@ -50,20 +50,7 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
-      - name: Install LXD
-        uses: canonical/setup-lxd@8c6a87bfb56aa48f3fb9b830baa18562d8bfd4ee # v1 tag
-        with:
-          bridges: "lxdbr0,workshopbr0"
-          channel: "latest/stable"
-
-      - name: Set up LXD
-        run: |
-          sudo lxd init --auto
-
-      - name: Set up Workshop
-        run: |
-          sudo snap install workshop --classic
-          workshop launch --verbose
+      - uses: canonical/launch-workshop@v1
 
       - name: Run workshop
         run: |
