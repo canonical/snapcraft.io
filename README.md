@@ -55,7 +55,7 @@ and start the server with
 workshop run start
 ```
 
-> Workshop depends on LXD, which is only available on Linux. If you're running macOS or Windows, you can use Workshop inside a [`Multipass`](https://canonical.com/multipass) VM.
+> Workshop depends on LXD, which is only available on Linux. If you're running macOS or Windows, you can use Workshop inside a [`Multipass`](https://canonical.com/multipass) VM. Beware: this setup is even more experimental and you might encounter strange issues. Configure Multipass to use the VirtualBox virtualization driver and allocate at least 4GB RAM and 10GB disk for the VM; after setting up the workshop in the VM, enable [port forwarding](https://canonical.com/multipass/docs/stable/how-to-guides/customise-multipass/set-up-the-driver/#use-virtualbox-to-set-up-port-forwarding-for-a-multipass-instance) for ports 8004 and 5004.
 
 ## License
 
