@@ -4,7 +4,7 @@ import { trackEvent } from "@canonical/analytics-events";
  * Attach click tracking to the provenance commit/build links within `root`.
  * Shared by the auditable badge and the security tab, which use the same
  * `*-commit-link` / `*-build-link` data-js suffixes and differ only in the
- * reported `location`.
+ * reported `provenance_location`.
  */
 export function bindProvenanceClicks(root: ParentNode, location: string): void {
   const params = { provenance_location: location };
