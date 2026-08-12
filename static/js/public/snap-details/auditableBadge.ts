@@ -113,7 +113,7 @@ async function loadBadge(el: HTMLElement, snapName: string): Promise<void> {
     renderMessage(el, state);
   }
 
-  trackEvent("provenance_badge_shown", { state });
+  trackEvent("provenance_badge_shown", { provenance_state: state });
 }
 
 export default function initAuditableBadge(

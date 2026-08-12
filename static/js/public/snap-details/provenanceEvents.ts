@@ -7,11 +7,13 @@ import { trackEvent } from "@canonical/analytics-events";
  * reported `location`.
  */
 export function bindProvenanceClicks(root: ParentNode, location: string): void {
+  const params = { provenance_location: location };
+
   root
     .querySelectorAll('[data-js$="commit-link"]')
     .forEach((link) =>
       link.addEventListener("click", () =>
-        trackEvent("provenance_commit_click", { location }),
+        trackEvent("provenance_commit_click", params),
       ),
     );
 
@@ -19,7 +21,7 @@ export function bindProvenanceClicks(root: ParentNode, location: string): void {
     .querySelectorAll('[data-js$="build-link"]')
     .forEach((link) =>
       link.addEventListener("click", () =>
-        trackEvent("provenance_build_click", { location }),
+        trackEvent("provenance_build_click", params),
       ),
     );
 }
