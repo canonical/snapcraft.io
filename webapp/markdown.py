@@ -118,7 +118,7 @@ class SnapcraftInlineParser(InlineParser):
             link["type"] = "link"
             link_label = link["children"][0]["raw"]
 
-            marker = m.group(0) # "[" for links, "![" for images
+            marker = m.group(0)  # "[" for links, "![" for images
             start_token = f"{marker}{link_label}]("
             state.append_token({"type": "text", "raw": start_token})
             link["children"][0]["raw"] = link["attrs"]["url"]
