@@ -221,3 +221,21 @@ class TestMarkdownParser(unittest.TestCase):
             "</strong></p>\n"
         )
         self.assertEqual(parse_markdown_description(markdown), expected)
+
+    def test_markdown_link_with_bold_label_does_not_crash(self):
+        markdown = "[**bold**](https://example.com)"
+        expected = (
+            "<p>"
+            '[<strong>bold</strong>](<a href="https://example.com">'
+            "https://example.com</a>)"
+            "</p>\n"
+        )
+        self.assertEqual(parse_markdown_description(markdown), expected)
+
+    def test_markdown_image_with_bold_alt_does_not_crash(self):
+        markdown = "![**image**](link.png)"
+        expected = (
+            '<p>![<strong>image</strong>](<a href="link.png">'
+            "link.png</a>)</p>\n"
+        )
+        self.assertEqual(parse_markdown_description(markdown), expected)

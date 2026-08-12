@@ -112,18 +112,28 @@ class SnapcraftInlineParser(InlineParser):
 
         pos = super().parse_link(m, state)
 
-        if state.tokens[-1]["type"] in {"link", "image"}:
-            link = state.tokens.pop()
+        if not state.tokens:
+            return pos
 
-            link["type"] = "link"
-            link_label = link["children"][0]["raw"]
+        link = state.tokens[-1]
+        if link.get("type") not in {"link", "image"}:
+            return pos
 
-            marker = m.group(0)  # "[" for links, "![" for images
-            start_token = f"{marker}{link_label}]("
-            state.append_token({"type": "text", "raw": start_token})
-            link["children"][0]["raw"] = link["attrs"]["url"]
+        link = state.tokens.pop()
+        url = link.get("attrs", {}).get("url")
+        if not url:
             state.append_token(link)
-            state.append_token({"type": "text", "raw": ")"})
+            return pos
+
+        label_children = link.get("children", [])
+        state.append_token({"type": "text", "raw": m.group(0)})
+        for child in label_children:
+            state.append_token(child)
+        state.append_token({"type": "text", "raw": "]("})
+        link["type"] = "link"
+        link["children"] = [{"type": "text", "raw": url}]
+        state.append_token(link)
+        state.append_token({"type": "text", "raw": ")"})
 
         return pos
 
