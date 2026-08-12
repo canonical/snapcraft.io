@@ -99,7 +99,9 @@ class SecurityTab {
     this.archSelect.addEventListener("change", (event) => {
       this.arch = (event.target as HTMLSelectElement).value;
       this.renderTable();
-      trackEvent("provenance_arch_switch", { arch: archBucket(this.arch) });
+      trackEvent("provenance_arch_switch", {
+        provenance_arch: archBucket(this.arch),
+      });
     });
   }
 

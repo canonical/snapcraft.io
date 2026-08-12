@@ -55,7 +55,7 @@ describe("auditable badge", () => {
 
     expect(document.body.textContent).toContain("rev1721/amd64");
     expect(trackEvent).toHaveBeenCalledWith("provenance_badge_shown", {
-      state: "verified",
+      provenance_state: "verified",
     });
   });
 
@@ -76,7 +76,7 @@ describe("auditable badge", () => {
     ).click();
 
     expect(trackEvent).toHaveBeenCalledWith("provenance_commit_click", {
-      location: "badge",
+      provenance_location: "badge",
     });
   });
 
@@ -105,7 +105,7 @@ describe("auditable badge", () => {
       ),
     ).toBeInTheDocument();
     expect(trackEvent).toHaveBeenCalledWith("provenance_badge_shown", {
-      state: "not-provided",
+      provenance_state: "not-provided",
     });
   });
 
@@ -135,7 +135,7 @@ describe("auditable badge", () => {
       ),
     ).toBeInTheDocument();
     expect(trackEvent).toHaveBeenCalledWith("provenance_badge_shown", {
-      state: "unavailable",
+      provenance_state: "unavailable",
     });
   });
 
@@ -159,7 +159,7 @@ describe("auditable badge", () => {
       "Couldn't load build information right now",
     );
     expect(trackEvent).toHaveBeenCalledWith("provenance_badge_shown", {
-      state: "error",
+      provenance_state: "error",
     });
   });
 
@@ -171,7 +171,7 @@ describe("auditable badge", () => {
 
     await waitFor(() => {
       expect(trackEvent).toHaveBeenCalledWith("provenance_badge_shown", {
-        state: "error",
+        provenance_state: "error",
       });
     });
   });
