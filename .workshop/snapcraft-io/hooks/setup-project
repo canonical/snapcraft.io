@@ -1,7 +1,5 @@
-python3 -m venv .venv
-. .venv/bin/activate
-
-python3 -m pip install -r requirements.txt
+uv venv --allow-existing
+uv pip install -r requirements.txt
 yarn install
 
 cat <<EOF >> ~/.profile

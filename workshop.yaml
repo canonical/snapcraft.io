@@ -2,6 +2,11 @@ name: snapcraft-io
 base: ubuntu@24.04
 
 sdks:
+  - name: uv
+    channel: latest/stable
+  - name: node
+    channel: 24/stable
+
   - name: project-snapcraft-io
     slots:
       app:
