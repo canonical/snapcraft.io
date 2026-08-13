@@ -60,6 +60,13 @@ class SnapcraftBlockParser(BlockParser):
 
 
 class SnapcraftInlineParser(InlineParser):
+    # Override some of InlineParser's functionality to defend against
+    # malicious markdown
+    #
+    # Supported Mistune v3 customization point:
+    # - Inline parser methods can be overridden (see InlineParser API).
+    #   https://mistune.lepture.com/en/latest/api.html#mistune.InlineParser
+
     SPECIFICATION = {
         **InlineParser.SPECIFICATION,
         # Only match a single backtick so triple-backtick fences stay literal
@@ -87,15 +94,48 @@ class SnapcraftInlineParser(InlineParser):
             self.rules.remove("softbreak")
 
     def parse_link(self, m, state):
-        # Keep markdown link syntax as literal text instead of creating links.
+        # Keep markdown link syntax as literal text instead of creating links;
+        # only create anchor tags for the URLs themselves.
         #
         # Supported Mistune v3 customization point:
         # - Inline parser methods can be overridden (see InlineParser API).
         #   https://mistune.lepture.com/en/latest/api.html#mistune.InlineParser
-        # - Default link behavior lives in InlineParser.parse_link.
-        #   https://raw.githubusercontent.com/lepture/mistune/v3.2.1/src/mistune/inline_parser.py
+        #
+        # What we do:
+        # - call the parent's parse_link -> it appends a link token to state
+        # - pop the link token and replace it with:
+        #      1. a raw token for the "[<label>](" part of the link
+        #      2. the link token, but using the actual URL for the label
+        #      3. another raw token for ")"
+        # This method is also used for parsing images, so we add some logic for
+        # that too.
+
+        pos = super().parse_link(m, state)
+
+        if not state.tokens:
+            return pos
+
+        link = state.tokens[-1]
+        if link.get("type") not in {"link", "image"}:
+            return pos
+
+        link = state.tokens.pop()
+        url = link.get("attrs", {}).get("url")
+        if not url:
+            state.append_token(link)
+            return pos
+
+        label_children = link.get("children", [])
         state.append_token({"type": "text", "raw": m.group(0)})
-        return m.end()
+        for child in label_children:
+            state.append_token(child)
+        state.append_token({"type": "text", "raw": "]("})
+        link["type"] = "link"
+        link["children"] = [{"type": "text", "raw": url}]
+        state.append_token(link)
+        state.append_token({"type": "text", "raw": ")"})
+
+        return pos
 
 
 renderer = HTMLRenderer()
