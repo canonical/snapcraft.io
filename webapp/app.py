@@ -61,7 +61,7 @@ def create_app(testing=False):
     # which leaves the possibility for a snap called "icons" and its
     # subsequent publisher pages.
     #
-    # The script that handles this is `scripts/link-ds-icons.mjs`
+    # DS icons are exposed through the tracked `static/icons` symlink.
     app.add_url_rule(
         "/icons/<icon_name>.svg",
         "ds-icons",

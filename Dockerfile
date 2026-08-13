@@ -15,7 +15,6 @@ FROM node:24 AS yarn-dependencies
 WORKDIR /srv
 ADD package.json .
 ADD yarn.lock .
-ADD scripts/link-ds-icons.mjs scripts/link-ds-icons.mjs
 RUN --mount=type=cache,target=/usr/local/share/.cache/yarn yarn install --production
 
 # Build stage: Run "yarn run build"
