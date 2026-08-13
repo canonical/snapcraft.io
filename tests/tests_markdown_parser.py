@@ -242,9 +242,7 @@ class TestMarkdownParser(unittest.TestCase):
 
     def test_markdown_xml_escape(self):
         markdown = '& < > "'
-        expected = (
-            "<p>&amp; &lt; &gt; &quot;</p>\n"
-        )
+        expected = "<p>&amp; &lt; &gt; &quot;</p>\n"
         self.assertEqual(parse_markdown_description(markdown), expected)
 
     def test_markdown_html_is_escaped(self):
