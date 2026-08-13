@@ -2,6 +2,7 @@
 import os
 import re
 from hashlib import md5
+from urllib.parse import urljoin
 
 # Packages
 import flask
@@ -10,6 +11,7 @@ from canonicalwebteam.store_api.dashboard import Dashboard
 from requests.exceptions import HTTPError
 
 # Local
+from webapp.api.exceptions import ApiConnectionError, ApiTimeoutError
 from webapp.helpers import api_publisher_session, launchpad
 from webapp.api.github import GitHub, InvalidYAML
 from webapp.decorators import login_required
@@ -44,6 +46,7 @@ def extract_github_repository(git_repository_url):
 
 
 BUILDS_PER_PAGE = 15
+BUILD_LOG_REQUEST_TIMEOUT = (30, 60)
 dashboard = Dashboard(api_publisher_session)
 
 
@@ -194,16 +197,37 @@ def get_snap_build_logs(snap_name, build_id):
             404,
         )
 
-    response = api_publisher_session.get(
-        lp_build["build_log_url"],
-        headers={"Accept": "text/plain"},
-        stream=True,
-        timeout=(5, 30),
-    )
+    log_url = lp_build["build_log_url"]
+    response = None
+
     try:
+        response = api_publisher_session.get(
+            log_url,
+            headers={"Accept": "text/plain"},
+            stream=True,
+            timeout=BUILD_LOG_REQUEST_TIMEOUT,
+            allow_redirects=False,
+        )
         response.raise_for_status()
-    except HTTPError:
-        response.close()
+
+        if response.is_redirect:
+            redirect_url = response.headers.get("Location")
+            response.close()
+
+            if not redirect_url:
+                raise HTTPError(response=response)
+
+            response = api_publisher_session.get(
+                urljoin(log_url, redirect_url),
+                headers={"Accept": "text/plain"},
+                stream=True,
+                timeout=BUILD_LOG_REQUEST_TIMEOUT,
+            )
+            response.raise_for_status()
+    except (ApiConnectionError, ApiTimeoutError, HTTPError):
+        if response:
+            response.close()
+
         return (
             flask.jsonify(
                 {
