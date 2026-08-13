@@ -1,24 +1,30 @@
 import "@testing-library/jest-dom";
 import { waitFor } from "@testing-library/dom";
 import { vi } from "vitest";
+import { trackEvent } from "@canonical/analytics-events";
 import initSecurityTab from "../securityTab";
 
 vi.mock("@canonical/analytics-events", () => ({ trackEvent: vi.fn() }));
 
 const SNAP = "mumble";
 
-const CHANNEL_MAP = {
-  amd64: {
-    latest: [
-      {
-        track: "latest",
-        risk: "stable",
-        version: "1.0",
-        revision: "1721",
-        "released-at": "1 Jan 2024",
-      },
-    ],
+const RELEASES = [
+  {
+    track: "latest",
+    risk: "stable",
+    version: "1.0",
+    revision: "1721",
+    "released-at": "1 Jan 2024",
   },
+];
+
+const CHANNEL_MAP = {
+  amd64: { latest: RELEASES },
+};
+
+const MULTI_ARCH_CHANNEL_MAP = {
+  amd64: { latest: RELEASES },
+  riscv64: { latest: RELEASES },
 };
 
 const REVISIONS = {
@@ -51,7 +57,17 @@ const tbodyHtml = () =>
 const openTab = () =>
   document.querySelector<HTMLElement>('[data-js="details-tab"]')?.click();
 
+const mockFetch = () => {
+  window.fetch = vi.fn().mockResolvedValue({
+    json: () => Promise.resolve(REVISIONS),
+  }) as unknown as typeof fetch;
+};
+
 describe("security tab", () => {
+  beforeEach(() => {
+    vi.mocked(trackEvent).mockClear();
+  });
+
   afterEach(() => {
     document.body.innerHTML = "";
     vi.restoreAllMocks();
@@ -158,5 +174,41 @@ describe("security tab", () => {
     initSecurityTab("#js-security-tab", SNAP, CHANNEL_MAP, "amd64");
 
     await waitFor(() => expect(fetchMock).toHaveBeenCalledTimes(1));
+  });
+
+  it("reports the tab opening on click", () => {
+    setupDom();
+    mockFetch();
+
+    initSecurityTab("#js-security-tab", SNAP, CHANNEL_MAP, "amd64");
+    openTab();
+
+    expect(trackEvent).toHaveBeenCalledWith("provenance_security_tab_open");
+  });
+
+  it("reports the tab opening when deep-linked straight to the tab", () => {
+    setupDom({ tabOpen: true });
+    mockFetch();
+
+    initSecurityTab("#js-security-tab", SNAP, CHANNEL_MAP, "amd64");
+
+    expect(trackEvent).toHaveBeenCalledWith("provenance_security_tab_open");
+  });
+
+  it("reports the architecture switch without bucketing the value", () => {
+    setupDom();
+    mockFetch();
+
+    initSecurityTab("#js-security-tab", SNAP, MULTI_ARCH_CHANNEL_MAP, "amd64");
+
+    const select = document.querySelector<HTMLSelectElement>(
+      '[data-js="security-arch-select"]',
+    ) as HTMLSelectElement;
+    select.value = "riscv64";
+    select.dispatchEvent(new Event("change"));
+
+    expect(trackEvent).toHaveBeenCalledWith("provenance_arch_switch", {
+      provenance_arch: "riscv64",
+    });
   });
 });
