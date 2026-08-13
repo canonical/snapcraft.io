@@ -12,6 +12,7 @@ class TestDsIcons(unittest.TestCase):
         response = self.client.get("/icons/close.svg")
 
         self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.location, None)
         self.assertIn("image/svg+xml", response.content_type)
         self.assertIn(b"<svg", response.data)
 
@@ -32,10 +33,10 @@ class TestDsIcons(unittest.TestCase):
 
         self.assertEqual(response.status_code, 404)
 
-    def test_non_svg_icon_path_does_not_redirect_to_static_icon(self):
+    def test_non_svg_icon_path_returns_404(self):
         response = self.client.get("/icons/close.png")
 
-        self.assertNotEqual(response.status_code, 301)
+        self.assertEqual(response.status_code, 404)
 
 
 if __name__ == "__main__":

@@ -62,13 +62,16 @@ def create_app(testing=False):
     # subsequent publisher pages.
     #
     # DS icons are exposed through the tracked `static/icons` symlink.
+    def serve_ds_icon(icon_name):
+        return send_from_directory(
+            f"{app.static_folder}/icons",
+            f"{icon_name}.svg",
+        )
+
     app.add_url_rule(
         "/icons/<icon_name>.svg",
         "ds-icons",
-        lambda icon_name: send_from_directory(
-            f"{app.static_folder}/icons",
-            f"{icon_name}.svg",
-        ),
+        serve_ds_icon,
     )
 
     init_extensions(app)
