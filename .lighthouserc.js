@@ -4,6 +4,9 @@ module.exports = {
       numberOfRuns: 1,
       url: [
         "http://127.0.0.1:8004/",
+        "http://127.0.0.1:8004/store",
+        "http://127.0.0.1:8004/search",
+        "http://127.0.0.1:8004/lxd",
       ],
       settings: {
         chromeFlags: "--no-sandbox --disable-dev-shm-usage",
