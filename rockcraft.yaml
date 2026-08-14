@@ -34,6 +34,8 @@ parts:
   flask-framework/install-app:
     after:
       - build-ui
+    stage:
+      - -flask/app/static/icons
     prime:
       - flask/app/.env
       - flask/app/app.py
