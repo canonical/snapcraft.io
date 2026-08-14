@@ -43,6 +43,7 @@ parts:
       - flask/app/webapp
       - flask/app/templates
       - flask/app/static
+      - -flask/app/static/icons
       - flask/app/deleted.yaml
       - flask/app/redirects.yaml
       - flask/app/security.md
