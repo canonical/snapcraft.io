@@ -37,7 +37,6 @@ parts:
       - flask/app/cache
       - flask/app/webapp
       - flask/app/templates
-      - flask/app/static
       - flask/app/deleted.yaml
       - flask/app/redirects.yaml
       - flask/app/security.md
