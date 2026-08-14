@@ -336,26 +336,27 @@ def store_blueprint(store_query=None):
         snaps_count = 0
         publisher_details = {"display-name": publisher, "username": publisher}
 
-        snaps_results = device_gateway.find(
-            publisher=publisher,
-            fields=[
-                "title",
-                "summary",
-                "media",
-                "publisher",
-            ],
-        )["results"]
+        publisher_snaps = (
+            device_gateway.get_publisher_items(publisher)
+            .get("_embedded", {})
+            .get("clickindex:package", [])
+        )
 
-        for snap in snaps_results:
-            item = snap["snap"]
-            item["package_name"] = snap["name"]
-            item["icon_url"] = helpers.get_icon(item["media"])
-            snaps.append(item)
+        for snap in publisher_snaps:
+            snap["icon_url"] = helpers.get_icon(snap["media"])
+            snaps.append(snap)
+        snaps.sort(key=lambda s: s["title"].lower())
 
         snaps_count = len(snaps)
 
         if snaps_count > 0:
-            publisher_details = snaps[0]["publisher"]
+            snap = snaps[0]
+            publisher_details = {
+                "display-name": snap["developer_name"],
+                "id": snap["developer_id"],
+                "username": snap["developer_id"],
+                "validation": snap["developer_validation"],
+            }
 
         context = {
             "snaps": snaps,
