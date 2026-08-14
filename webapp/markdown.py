@@ -81,6 +81,7 @@ class SnapcraftInlineParser(InlineParser):
         "emphasis",
         "codespan",
         "linebreak",
+        "inline_html",
         # Keep rule enabled for mistune precedence compatibility;
         # parse_link below turns markdown [text](url) syntax into literal text.
         "link",

@@ -239,3 +239,20 @@ class TestMarkdownParser(unittest.TestCase):
             "link.png</a>)</p>\n"
         )
         self.assertEqual(parse_markdown_description(markdown), expected)
+
+    def test_markdown_xml_escape(self):
+        markdown = '& < > "'
+        expected = "<p>&amp; &lt; &gt; &quot;</p>\n"
+        self.assertEqual(parse_markdown_description(markdown), expected)
+
+    def test_markdown_xml_doesnt_escape_twice(self):
+        markdown = "&amp; &lt; &gt; &quot;"
+        expected = "<p>&amp; &lt; &gt; &quot;</p>\n"
+        self.assertEqual(parse_markdown_description(markdown), expected)
+
+    def test_markdown_html_is_escaped(self):
+        markdown = '<script>alert("hi!")</script>'
+        expected = (
+            "<p>&lt;script&gt;alert(&quot;hi!&quot;)&lt;/script&gt;</p>\n"
+        )
+        self.assertEqual(parse_markdown_description(markdown), expected)
