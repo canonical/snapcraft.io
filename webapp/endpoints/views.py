@@ -35,6 +35,19 @@ def get_stores():
     return jsonify(res)
 
 
+@endpoints.route("/api/whoami")
+@login_required
+@exchange_required
+def get_macaroon_info():
+    macaroon_info = publisher_gateway.macaroon_info(
+        flask.session["developer_token"]
+    )
+
+    res = {"success": True, "data": macaroon_info}
+
+    return jsonify(res)
+
+
 @endpoints.route("/api/store/<store_id>")
 @login_required
 @exchange_required
