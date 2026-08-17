@@ -19,7 +19,7 @@
           width=width|int,
           height=height|int,
           hi_def=is_hidef,
-          loading="eager",
+          loading=screenshot_loading|default("lazy"),
           attrs={"data-original": screenshot.url}
         ) | safe
       }}

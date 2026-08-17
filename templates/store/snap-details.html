@@ -31,8 +31,8 @@
       {% else %}
       "applicationCategory": "other",
       {% endif %}
-      {% if screenhots and screenshots|length > 0 %}
-      "screenshot": "{{ screenshots[0] }}",
+      {% if screenshots and screenshots|length > 0 %}
+      "screenshot": {{ screenshots[0]["url"] | tojson }},
       {% endif %}
       "image": "{{ icon_url }}",
       "operatingSystem": "linux",
@@ -55,6 +55,7 @@
 {% endblock %}
 
 {% block content %}
+  <main id="main-content">
   {% if is_preview %}
     <div class="snapcraft-p-sticky sticky-shadow" style="z-index: 100;">
       <div class="grid-row">
@@ -390,6 +391,7 @@
     </div>
   {% endif %}
 
+  </main>
   {% include "store/snap-details/_templates.html" %}
 {% endblock %}
 

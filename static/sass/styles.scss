@@ -342,6 +342,16 @@ dl {
   width: 100%;
 }
 
+.store-search {
+  min-height: 100vh;
+}
+
+.l-footer--sticky .p-inline-list__item .p-link--inverted {
+  display: inline-block;
+  padding-bottom: 0.25rem;
+  padding-top: 0.25rem;
+}
+
 .article-row {
   &:not(:first-child) {
     border-top: 1px solid $color-mid-light;
@@ -569,4 +579,3 @@ html {
     fill: $colors--theme--background-default;
   }
 }
-

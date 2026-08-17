@@ -92,6 +92,7 @@ function buildCard(
 
     snapIcon.src = data.icon_url ? data.icon_url : DEFAULT_ICON_URL;
     snapIconLink.href = `/${data.package_name}`;
+    snapIconLink.setAttribute("aria-label", `View ${data.title}`);
     snapTitleLink.href = `/${data.package_name}`;
     snapTitleLink.innerText = data.title;
     snapPublisher.innerText = data.developer_name;
@@ -154,20 +155,12 @@ async function init(featuredCategories: Array<string>): Promise<void> {
       const previousTargetLink = document.querySelector(
         "[data-js='featured-category-switch'][aria-current='page']",
       );
-      const previousTargetTab = document.querySelector(
-        "[data-js='featured-category-switch'][aria-selected='true']",
-      );
 
       if (previousTargetLink) {
         previousTargetLink.removeAttribute("aria-current");
       }
 
-      if (previousTargetTab) {
-        previousTargetTab.removeAttribute("aria-selected");
-      }
-
       target.setAttribute("aria-current", "page");
-      target.setAttribute("aria-selected", "true");
 
       if (!category) {
         return;

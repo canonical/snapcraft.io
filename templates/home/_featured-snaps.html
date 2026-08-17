@@ -24,7 +24,7 @@
           <ul class="p-side-navigation__list">
             {% for category in featured_categories %}
               <li class="p-side-navigation__item">
-                <a href="#" class="p-side-navigation__link" data-js="featured-category-switch" data-category="{{ category }}" {% if loop.index == 1 %}aria-current="page"{% endif %}>{{ category }}</a>
+                <a href="/search?categories={{ category|lower }}" class="p-side-navigation__link" data-js="featured-category-switch" data-category="{{ category }}" {% if loop.index == 1 %}aria-current="page"{% endif %}>{{ category }}</a>
               </li>
             {% endfor %}
           </ul>
@@ -33,7 +33,7 @@
           <ul class="p-tabs__list is-light">
             {% for category in featured_categories %}
               <li class="p-tabs__item">
-                <a href="#" class="p-tabs__link" data-js="featured-category-switch" data-category="{{ category }}" {% if loop.index == 1 %}aria-selected="true"{% endif %}>{{ category }}</a>
+                <a href="/search?categories={{ category|lower }}" class="p-tabs__link" data-js="featured-category-switch" data-category="{{ category }}" {% if loop.index == 1 %}aria-current="page"{% endif %}>{{ category }}</a>
               </li>
             {% endfor %}
           </ul>
@@ -73,12 +73,12 @@
           <div class="p-strip is-shallow">
             <img src="" alt="" data-js="snap-icon" width="64" height="64" style="display: block;">
           </div>
-          <h3 class="p-heading--2" data-js="snap-title">
-            <a class="p-link--soft" href="" data-js="snap-title-link"></a>
-          </h3>
-            <p data-js="snap-publisher" class="p-muted-heading"></p>
-            <p data-js="snap-description"></p>
         </a>
+        <h3 class="p-heading--2" data-js="snap-title">
+          <a class="p-link--soft" href="" data-js="snap-title-link"></a>
+        </h3>
+        <p data-js="snap-publisher" class="p-muted-heading"></p>
+        <p data-js="snap-description"></p>
       </div>
     </template>
   </section>
@@ -122,4 +122,3 @@
   </div>
 </section>
 </div>
-

@@ -9,23 +9,19 @@
     <!-- Preconnect to establish early connections to important third-party origins -->
     <link rel="preconnect" href="https://www.google-analytics.com">
     <link rel="preconnect" href="https://assets.ubuntu.com">
-    <link rel="preconnect" href="https://munchkin.marketo.net">
-
-    <link rel="preload" href="https://assets.ubuntu.com/v1/9689339a-snapcraft-hero-background--light.png" as="image">
+    {% block resource_hints %}{% endblock %}
 
     <!-- Google Tag Manager -->
-    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-    })(window,document,'script','dataLayer','GTM-KCGXHQS');</script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      window.dataLayer.push({
+        "gtm.start": new Date().getTime(),
+        event: "gtm.js"
+      });
+    </script>
     <!-- End Google Tag Manager -->
 
     {{ vite_import('static/sass/styles.scss') }}
-
-    {{ vite_import('static/js/base/base.ts') }}
-    {% block scripts_includes %}{% endblock %}
-    <script src="https://assets.ubuntu.com/v1/703e23c9-lazysizes+noscript+native-loading.5.1.2.min.js" defer></script>
 
     <meta name="description" content="{% block meta_description %}Snaps are containerised software packages that are simple to create and install. They auto-update and are safe to run. And because they bundle their dependencies, they work on all major Linux systems without modification.{% endblock %}">
     <meta name="copydoc" content="{% block meta_copydoc %}{% endblock %}">
@@ -83,15 +79,44 @@
     {% block footer %}
     {% endblock %}
 
-    {% block scripts %}{% endblock %}
-
     <script>
       window.COMMIT_ID = "{{ COMMIT_ID }}";
       window.ENVIRONMENT = "{{ ENVIRONMENT }}";
       window.SENTRY_DSN = "{{ SENTRY_DSN }}";
     </script>
 
-  <script type="application/ld+json">
+    {{ vite_import('static/js/base/base.ts') }}
+    {% block scripts_includes %}{% endblock %}
+    {% block scripts %}{% endblock %}
+
+    <script>
+      (function(w, d, s, l, i) {
+        var loaded = false;
+
+        function loadTagManager() {
+          if (loaded) {
+            return;
+          }
+
+          loaded = true;
+          var firstScript = d.getElementsByTagName(s)[0];
+          var tagManager = d.createElement(s);
+          var dataLayer = l !== "dataLayer" ? "&l=" + l : "";
+          tagManager.async = true;
+          tagManager.src =
+            "https://www.googletagmanager.com/gtm.js?id=" + i + dataLayer;
+          firstScript.parentNode.insertBefore(tagManager, firstScript);
+        }
+
+        w.addEventListener("pointerdown", loadTagManager, { once: true });
+        w.addEventListener("keydown", loadTagManager, { once: true });
+        w.addEventListener("load", function() {
+          w.setTimeout(loadTagManager, 15000);
+        }, { once: true });
+      })(window, document, "script", "dataLayer", "GTM-KCGXHQS");
+    </script>
+
+    <script type="application/ld+json">
       {
         "@context": "http://schema.org/",
         "@id": "https://snapcraft.io/#organization",
