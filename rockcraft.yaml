@@ -31,19 +31,17 @@ parts:
       cp -r node_modules/@canonical/ds-assets/icons static/icons
       mkdir -p "$CRAFT_PART_INSTALL/flask/app"
       cp -r static "$CRAFT_PART_INSTALL/flask/app/"
+    prime:
+      - flask/app/static
   flask-framework/install-app:
     after:
       - build-ui
-    stage:
-      - -flask/app/static/icons
     prime:
       - flask/app/.env
       - flask/app/app.py
       - flask/app/cache
       - flask/app/webapp
       - flask/app/templates
-      - flask/app/static
-      - -flask/app/static/icons
       - flask/app/deleted.yaml
       - flask/app/redirects.yaml
       - flask/app/security.md
