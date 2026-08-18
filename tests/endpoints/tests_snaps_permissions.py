@@ -95,9 +95,7 @@ class TestSnapPermissionsEndpoint(TestEndpoints):
                         "architecture": "amd64",
                     },
                     "snap-yaml": (
-                        "confinement: strict\n"
-                        "plugs:\n"
-                        "  desktop: {}\n"
+                        "confinement: strict\n" "plugs:\n" "  desktop: {}\n"
                     ),
                 }
             ]
@@ -114,7 +112,9 @@ class TestSnapPermissionsEndpoint(TestEndpoints):
         )
 
     @patch("webapp.endpoints.snaps.device_gateway.get_item_details")
-    def test_returns_empty_interfaces_when_no_plugs(self, mock_get_item_details):
+    def test_returns_empty_interfaces_when_no_plugs(
+        self, mock_get_item_details
+    ):
         mock_get_item_details.return_value = {
             "channel-map": [
                 {
