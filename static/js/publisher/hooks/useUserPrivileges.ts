@@ -14,8 +14,10 @@ function useUserPrivileges() {
 
       const responseData: ApiResponse<UserPrivileges> = await response.json();
 
-      if (!responseData.success || !responseData.data) {
-        throw new Error(responseData.message);
+      if (!responseData.success || responseData.data == null) {
+        throw new Error(
+          responseData.message ?? "Unable to fetch user information",
+        );
       }
 
       return responseData.data;
