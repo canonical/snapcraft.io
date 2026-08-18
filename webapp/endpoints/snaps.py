@@ -1,3 +1,4 @@
+from canonicalwebteam.exceptions import StoreApiResourceNotFound, StoreApiResponseErrorList
 import flask
 from flask import make_response
 from flask.json import jsonify
@@ -292,35 +293,56 @@ def permissions(snap_name):
     If a query parameter is missing, this endpoint returns HTTP 400.
     If lookup or parsing fails, the response contains an ``errors`` list.
     """
-    channel = flask.request.args.get("channel")
-    if channel is None:
-        return make_response(
-            {"success": False, "errors": ['"channel" parameter is required']},
-            400,
-        )
+    missing_params = [
+        p for p in ("channel", "architecture") if not flask.request.args.get(p)
+    ]
 
-    architecture = flask.request.args.get("architecture")
-    if architecture is None:
+    if missing_params:
         return make_response(
             {
                 "success": False,
-                "errors": ['"architecture" parameter is required'],
+                "errors": [
+                    f'"{param}" parameter is required'
+                    for param in missing_params
+                ],
             },
             400,
         )
 
-    details = None
+    channel = flask.request.args.get("channel")
+    architecture = flask.request.args.get("architecture")
 
     try:
         details = device_gateway.get_item_details(
             snap_name, api_version=2, fields=["snap-yaml"]
         )
+    except StoreApiResourceNotFound:
+        return make_response(
+            {
+                "success": False,
+                "errors": [f'"{snap_name}" does not exist'],
+            },
+            404,
+        )
+    except StoreApiResponseErrorList as e:
+        return make_response(
+            {
+                "success": False,
+                "errors": [
+                    f"{error.get('message', 'An error occurred')}"
+                    for error in e.errors
+                ],
+            },
+            e.status_code,
+        )
 
-        def predicate(_channel):
-            name: str = _channel.get("channel", {}).get("name", "")
-            arch: str = _channel.get("channel", {}).get("architecture", "")
-            return name == channel and arch == architecture
+    def predicate(_channel):
+        channel_entry = _channel.get("channel", {})
+        name: str = channel_entry.get("name", "")
+        arch: str = channel_entry.get("architecture", "")
+        return name == channel and arch == architecture
 
+    try:
         channel_map = details.get("channel-map", [])
         match = next((c for c in channel_map if predicate(c)), None)
 
@@ -331,7 +353,6 @@ def permissions(snap_name):
             )
 
         raw_snap_yaml = match.get("snap-yaml")
-        print(raw_snap_yaml)
         snap_yaml = get_yaml_loader().load(raw_snap_yaml)
 
         res = {
@@ -354,12 +375,9 @@ def permissions(snap_name):
         }
     except Exception as e:
         res = {"success": True if details else False, "errors": [str(e)]}
-        pass
 
     response = make_response(res, 200)
-    response.cache_control.max_age = (
-        0 if res.get("status") == "error" else 3600
-    )
+    response.cache_control.max_age = 0 if not res.get("success") else 3600
     return response
 
 
