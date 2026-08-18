@@ -53,42 +53,43 @@ jobs:
       scss: ${{ steps.filter.outputs.scss }}
       lighthouse: ${{ steps.filter.outputs.lighthouse }}
     steps:
-    - uses: dorny/paths-filter@v4
-      id: filter
-      with:
-        filters: |
-          py:
-            - '**/*.py'
-            - 'requirements.txt'
-            - 'templates/**/*'
-          js:
-            - '**/*.js'
-            - '**/*.ts'
-            - '**/*.jsx'
-            - '**/*.tsx'
-            - 'package.json'
-            - 'yarn.lock'
-            - 'eslint.config.mjs'
-            - 'vitest.config.js'
-            - 'vite.config.js'
-            - 'tsconfig.json'
-            - 'babel.config.json'
-          scss:
-            - '**/*.scss'
-            - '.stylelintrc'
-            - 'package.json'
-            - 'yarn.lock'
-          lighthouse:
-            - '.github/workflows/pr.yml'
-            - '.lighthouserc.js'
-            - 'templates/**'
-            - 'static/js/**'
-            - 'static/sass/**'
-            - 'webapp/**'
-            - 'rockcraft.yaml'
-            - 'vite.config.js'
-            - 'package.json'
-            - 'yarn.lock'
+      - uses: dorny/paths-filter@v4
+        id: filter
+        with:
+          filters: |
+            py:
+              - '**/*.py'
+              - 'requirements.txt'
+              - 'templates/**/*'
+            js:
+              - '**/*.js'
+              - '**/*.ts'
+              - '**/*.jsx'
+              - '**/*.tsx'
+              - 'package.json'
+              - 'yarn.lock'
+              - 'eslint.config.mjs'
+              - 'vitest.config.js'
+              - 'vite.config.js'
+              - 'tsconfig.json'
+              - 'babel.config.json'
+            scss:
+              - '**/*.scss'
+              - '.stylelintrc'
+              - 'package.json'
+              - 'yarn.lock'
+            lighthouse:
+              - '.github/workflows/pr.yml'
+              - '.lighthouserc.js'
+              - 'templates/**'
+              - 'static/js/**'
+              - 'static/sass/**'
+              - 'webapp/**'
+              - 'rockcraft.yaml'
+              - 'vite.config.js'
+              - 'package.json'
+              - 'yarn.lock'
+              - 'requirements.txt'
 
   pack-rock:
     needs: changes

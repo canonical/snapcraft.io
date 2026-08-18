@@ -10,6 +10,9 @@ module.exports = {
       ],
       settings: {
         chromeFlags: "--no-sandbox --disable-dev-shm-usage",
+        extraHeaders: JSON.stringify({
+          Cookie: "_cookies_accepted=essential; _cookies_set_offline=true",
+        }),
       },
     },
     assert: {
@@ -17,19 +20,19 @@ module.exports = {
       assertions: {
         "categories:performance": [
           "warn",
-          {aggregationMethod: "median", minScore: 0.6},
+          { aggregationMethod: "median", minScore: 0.6 },
         ],
         "categories:accessibility": [
           "error",
-          {aggregationMethod: "median", minScore: 0.9},
+          { aggregationMethod: "median", minScore: 0.9 },
         ],
         "categories:best-practices": [
           "error",
-          {aggregationMethod: "median", minScore: 0.9},
+          { aggregationMethod: "median", minScore: 0.9 },
         ],
         "categories:seo": [
           "error",
-          {aggregationMethod: "median", minScore: 0.9},
+          { aggregationMethod: "median", minScore: 0.9 },
         ],
       },
     },
