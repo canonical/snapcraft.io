@@ -14,6 +14,7 @@ from webapp.api.github import repository_is_public
 from webapp.api.launchpad_provenance import LaunchpadProvenance
 from webapp.endpoints.utils import get_auditable_map_cache_key
 from cache.cache_utility import redis_cache
+from webapp.helpers import get_yaml_loader
 
 from canonicalwebteam.store_api.devicegw import DeviceGW
 from canonicalwebteam.store_api.dashboard import Dashboard
@@ -273,6 +274,77 @@ def auditable_revisions(snap_name):
 
     response = make_response(res, 200)
     response.cache_control.max_age = 0 if res.get("error") else 3600
+    return response
+
+
+@snaps.route('/api/<regex("' + snap_regex + '"):snap_name>/permissions')
+def permissions(snap_name):
+    channel = flask.request.args.get("channel")
+    if channel is None:
+        return make_response(
+            {"success": False, "errors": ['"channel" parameter is required']},
+            400,
+        )
+
+    architecture = flask.request.args.get("architecture")
+    if architecture is None:
+        return make_response(
+            {
+                "success": False,
+                "errors": ['"architecture" parameter is required'],
+            },
+            400,
+        )
+
+    details = None
+
+    try:
+        details = device_gateway.get_item_details(
+            snap_name, api_version=2, fields=["snap-yaml"]
+        )
+
+        def predicate(_channel):
+            name: str = _channel.get("channel", {}).get("name", "")
+            arch: str = _channel.get("channel", {}).get("architecture", "")
+            return name == channel and arch == architecture
+
+        channel_map = details.get("channel-map", [])
+        match = next(c for c in channel_map if predicate(c))
+
+        if match is None:
+            raise Exception(
+                f'channel "{channel}" does not exist for architecture "{architecture}"'
+            )
+
+        raw_snap_yaml = match.get("snap-yaml")
+        snap_yaml = get_yaml_loader().load(raw_snap_yaml)
+
+        res = {
+            "success": True,
+            "data": {
+                "confinement": snap_yaml["confinement"],
+                "interfaces": [
+                    {
+                        "name": name,
+                        "interface": plug["interface"],
+                        # "description": "TODO",
+                        # "raw_yaml": "TODO",
+                        # "categories": ["TODO"],
+                        # "auto_connect": False,
+                        # "details": ["TODO"]
+                    }
+                    for name, plug in snap_yaml["plugs"].items()
+                ],
+            },
+        }
+    except Exception as e:
+        res = {"success": True if details else False, "errors": [str(e)]}
+        pass
+
+    response = make_response(res, 200)
+    response.cache_control.max_age = (
+        0 if res.get("status") == "error" else 3600
+    )
     return response
 
 
