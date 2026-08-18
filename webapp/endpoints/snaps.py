@@ -322,12 +322,12 @@ def permissions(snap_name):
             return name == channel and arch == architecture
 
         channel_map = details.get("channel-map", [])
-        match = next(c for c in channel_map if predicate(c))
+        match = next((c for c in channel_map if predicate(c)), None)
 
         if match is None:
             raise Exception(
                 f'channel "{channel}" does not exist for architecture '
-                '"{architecture}"'
+                f'"{architecture}"'
             )
 
         raw_snap_yaml = match.get("snap-yaml")
