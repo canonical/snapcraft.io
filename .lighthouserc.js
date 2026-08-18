@@ -3,16 +3,13 @@ module.exports = {
     collect: {
       numberOfRuns: 3,
       url: [
-        "http://127.0.0.1:8004/",
-        "http://127.0.0.1:8004/store",
-        "http://127.0.0.1:8004/search",
-        "http://127.0.0.1:8004/lxd",
+        "http://127.0.0.1:8004/?cp=hide",
+        "http://127.0.0.1:8004/store?cp=hide",
+        "http://127.0.0.1:8004/search?cp=hide",
+        "http://127.0.0.1:8004/lxd?cp=hide",
       ],
       settings: {
         chromeFlags: "--no-sandbox --disable-dev-shm-usage",
-        extraHeaders: JSON.stringify({
-          Cookie: "_cookies_accepted=essential; _cookies_set_offline=true",
-        }),
       },
     },
     assert: {
