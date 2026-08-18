@@ -285,8 +285,9 @@ def permissions(snap_name):
     It gets the channel map, finds the matching channel and architecture, and
     parses the ``snap-yaml`` field.
 
-    The response contains ``confinement`` from ``snap.yaml``. It also contains
-    ``interfaces`` as ``[{"name": <plug name>, "interface": <interface name>}]``.
+    The response contains:
+    - ``confinement`` from ``snap-yaml``
+    - ``interfaces`` as ``[{"name": <plug name>, "interface": <interface>}]``
 
     If a query parameter is missing, this endpoint returns HTTP 400.
     If lookup or parsing fails, the response contains an ``errors`` list.
@@ -325,7 +326,8 @@ def permissions(snap_name):
 
         if match is None:
             raise Exception(
-                f'channel "{channel}" does not exist for architecture "{architecture}"'
+                f'channel "{channel}" does not exist for architecture '
+                '"{architecture}"'
             )
 
         raw_snap_yaml = match.get("snap-yaml")
