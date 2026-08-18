@@ -22,7 +22,9 @@ class TestSnapPermissionsEndpoint(TestEndpoints):
 
         self.assertEqual(response.status_code, 400)
         self.assertEqual(data["success"], False)
-        self.assertEqual(data["errors"], ['"architecture" parameter is required'])
+        self.assertEqual(
+            data["errors"], ['"architecture" parameter is required']
+        )
 
     @patch("webapp.endpoints.snaps.device_gateway.get_item_details")
     def test_returns_confinement_and_interfaces(self, mock_get_item_details):
