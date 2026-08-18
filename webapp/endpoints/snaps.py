@@ -331,6 +331,7 @@ def permissions(snap_name):
             )
 
         raw_snap_yaml = match.get("snap-yaml")
+        print(raw_snap_yaml)
         snap_yaml = get_yaml_loader().load(raw_snap_yaml)
 
         res = {
@@ -340,14 +341,14 @@ def permissions(snap_name):
                 "interfaces": [
                     {
                         "name": name,
-                        "interface": plug["interface"],
+                        "interface": plug.get("interface", name),
                         # "description": "TODO",
                         # "raw_yaml": "TODO",
                         # "categories": ["TODO"],
                         # "auto_connect": False,
                         # "details": ["TODO"]
                     }
-                    for name, plug in snap_yaml["plugs"].items()
+                    for name, plug in snap_yaml.get("plugs", {}).items()
                 ],
             },
         }
