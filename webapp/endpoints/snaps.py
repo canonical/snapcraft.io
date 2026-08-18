@@ -279,6 +279,18 @@ def auditable_revisions(snap_name):
 
 @snaps.route('/api/<regex("' + snap_regex + '"):snap_name>/permissions')
 def permissions(snap_name):
+    """Return the interfaces that a snap requests for one channel build.
+
+    This endpoint needs the ``channel`` and ``architecture`` query parameters.
+    It gets the channel map, finds the matching channel and architecture, and
+    parses the ``snap-yaml`` field.
+
+    The response contains ``confinement`` from ``snap.yaml``. It also contains
+    ``interfaces`` as ``[{"name": <plug name>, "interface": <interface name>}]``.
+
+    If a query parameter is missing, this endpoint returns HTTP 400.
+    If lookup or parsing fails, the response contains an ``errors`` list.
+    """
     channel = flask.request.args.get("channel")
     if channel is None:
         return make_response(
