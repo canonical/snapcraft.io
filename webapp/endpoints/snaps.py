@@ -1,4 +1,7 @@
-from canonicalwebteam.exceptions import StoreApiResourceNotFound, StoreApiResponseErrorList
+from canonicalwebteam.exceptions import (
+    StoreApiResourceNotFound,
+    StoreApiResponseErrorList,
+)
 import flask
 from flask import make_response
 from flask.json import jsonify
