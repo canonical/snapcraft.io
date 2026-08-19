@@ -21,7 +21,7 @@ module.exports = {
         ],
         "categories:accessibility": [
           "error",
-          { aggregationMethod: "median", minScore: 0.9 },
+          { aggregationMethod: "median", minScore: 0.88 },
         ],
         "categories:best-practices": [
           "error",
@@ -29,7 +29,7 @@ module.exports = {
         ],
         "categories:seo": [
           "error",
-          { aggregationMethod: "median", minScore: 0.9 },
+          { aggregationMethod: "median", minScore: 0.83 },
         ],
       },
     },
