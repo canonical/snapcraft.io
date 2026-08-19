@@ -10,7 +10,7 @@ import {
 } from "react-router-dom";
 import { Notification, Icon, Button, Modal } from "@canonical/react-components";
 
-import { useRemodels } from "../../hooks";
+import { useRemodels, useUserPrivileges } from "../../hooks";
 import { remodelsListState } from "../../state/remodelsState";
 import { brandIdState, brandStoreState } from "../../state/brandStoreState";
 import { setPageTitle, isClosedPanel } from "../../utils";
@@ -26,6 +26,12 @@ const getRemodelRowId = (remodel: Remodel): string => {
   const serial = remodel["from-serial"] ?? "all-serials";
   return `${remodel["from-model"]}:${remodel["to-model"]}:${serial}`;
 };
+
+const remodelManagementPermissions = [
+  "create-remodel-allowlist",
+  "delete-remodel-allowlist",
+  "update-remodel-allowlist",
+];
 
 function Remodel(): React.JSX.Element {
   const { id, modelId } = useParams();
@@ -56,6 +62,7 @@ function Remodel(): React.JSX.Element {
       page: currentCursor,
     },
   );
+  const { data: userPrivilegesData } = useUserPrivileges();
   const setRemodels = useSetAtom(remodelsListState);
   const [showNotification, setShowNotification] = useState(false);
   const [notificationMessage, setNotificationMessage] = useState(
@@ -72,6 +79,11 @@ function Remodel(): React.JSX.Element {
   const [isBulkDeleting, setIsBulkDeleting] = useState(false);
   const brandStore = useAtomValue(brandStoreState(id));
   const navigate = useNavigate();
+  const brandPermissions =
+    userPrivilegesData?.["brand-permissions"]?.[brandId] || [];
+  const canManageRemodelAllowlist = remodelManagementPermissions.every(
+    (permission) => brandPermissions.includes(permission),
+  );
 
   const handleEditChange = (rowId: string, value: string) => {
     setEditedDescriptions((previous) => ({
@@ -232,6 +244,13 @@ function Remodel(): React.JSX.Element {
     }
   }, [isLoading, isError, data, brandId, id]);
 
+  useEffect(() => {
+    if (!canManageRemodelAllowlist) {
+      setRemodelsToDelete([]);
+      setShowBulkDeleteModal(false);
+    }
+  }, [canManageRemodelAllowlist]);
+
   return (
     <>
       <div className="u-fixed-width u-flex-column u-flex-grow">
@@ -251,34 +270,36 @@ function Remodel(): React.JSX.Element {
           </Notification>
         ) : (
           <>
-            <div className="u-fixed-width u-align--right">
-              <Button
-                disabled={remodelsToDelete.length === 0 || isBulkDeleting}
-                onClick={() => setShowBulkDeleteModal(true)}
-                className={isBulkDeleting ? "has-icon" : ""}
-              >
-                {isBulkDeleting ? (
-                  <>
-                    <Icon
-                      name="spinner"
-                      className="u-animation--spin is-light"
-                    />
-                    &nbsp;Deleting...
-                  </>
-                ) : remodelsToDelete.length > 1 ? (
-                  `Delete ${remodelsToDelete.length} remodels`
-                ) : (
-                  "Delete remodel"
-                )}
-              </Button>
+            {canManageRemodelAllowlist && (
+              <div className="u-fixed-width u-align--right">
+                <Button
+                  disabled={remodelsToDelete.length === 0 || isBulkDeleting}
+                  onClick={() => setShowBulkDeleteModal(true)}
+                  className={isBulkDeleting ? "has-icon" : ""}
+                >
+                  {isBulkDeleting ? (
+                    <>
+                      <Icon
+                        name="spinner"
+                        className="u-animation--spin is-light"
+                      />
+                      &nbsp;Deleting...
+                    </>
+                  ) : remodelsToDelete.length > 1 ? (
+                    `Delete ${remodelsToDelete.length} remodels`
+                  ) : (
+                    "Delete remodel"
+                  )}
+                </Button>
 
-              <Link
-                className={`p-button--positive ${isError && !data ? "is-disabled" : ""}`}
-                to={`/admin/${id}/models/${modelId}/remodel/configure`}
-              >
-                Configure remodels
-              </Link>
-            </div>
+                <Link
+                  className={`p-button--positive ${isError && !data ? "is-disabled" : ""}`}
+                  to={`/admin/${id}/models/${modelId}/remodel/configure`}
+                >
+                  Configure remodels
+                </Link>
+              </div>
+            )}
 
             <div className="u-flex-column u-flex-grow">
               {data && (
@@ -299,6 +320,7 @@ function Remodel(): React.JSX.Element {
                   onEditCancel={handleEditCancel}
                   remodelsToDelete={remodelsToDelete}
                   setRemodelsToDelete={setRemodelsToDelete}
+                  canManageRemodelAllowlist={canManageRemodelAllowlist}
                 />
               )}
             </div>
@@ -404,37 +426,41 @@ function Remodel(): React.JSX.Element {
           </Modal>
         )}
       </PortalEntrance>
-      <PortalEntrance name="aside">
-        <div
-          className={`l-aside__overlay ${
-            isClosedPanel(location.pathname, "configure") ? "u-hide" : ""
-          }`}
-          onClick={() => {
-            navigate(`/admin/${id}/models/${modelId}/remodel`);
-          }}
-          onKeyDown={(e) => {
-            if (e.key === "Enter" || e.key === " ") {
+      {canManageRemodelAllowlist && (
+        <PortalEntrance name="aside">
+          <div
+            className={`l-aside__overlay ${
+              isClosedPanel(location.pathname, "configure") ? "u-hide" : ""
+            }`}
+            onClick={() => {
               navigate(`/admin/${id}/models/${modelId}/remodel`);
-            }
-          }}
-          role="button"
-          tabIndex={0}
-          aria-label="Return to remodels"
-        ></div>
-        <aside
-          className={`l-aside ${
-            isClosedPanel(location.pathname, "configure") ? "is-collapsed" : ""
-          }`}
-        >
-          <ConfigureRemodelForm
-            refetch={refetch}
-            setShowNotification={setShowNotification}
-            setNotificationMessage={setNotificationMessage}
-            setShowErrorNotification={setShowErrorNotification}
-            setErrorMessage={setErrorMessage}
-          />
-        </aside>
-      </PortalEntrance>
+            }}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                navigate(`/admin/${id}/models/${modelId}/remodel`);
+              }
+            }}
+            role="button"
+            tabIndex={0}
+            aria-label="Return to remodels"
+          ></div>
+          <aside
+            className={`l-aside ${
+              isClosedPanel(location.pathname, "configure")
+                ? "is-collapsed"
+                : ""
+            }`}
+          >
+            <ConfigureRemodelForm
+              refetch={refetch}
+              setShowNotification={setShowNotification}
+              setNotificationMessage={setNotificationMessage}
+              setShowErrorNotification={setShowErrorNotification}
+              setErrorMessage={setErrorMessage}
+            />
+          </aside>
+        </PortalEntrance>
+      )}
     </>
   );
 }

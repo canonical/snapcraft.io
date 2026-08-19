@@ -26,6 +26,7 @@ type Props = {
   onEditCancel: (rowId: string) => void;
   remodelsToDelete: Remodel[];
   setRemodelsToDelete: (remodels: Remodel[]) => void;
+  canManageRemodelAllowlist: boolean;
 };
 
 const getRemodelRowId = (remodel: Remodel): string => {
@@ -48,6 +49,7 @@ function RemodelTable({
   onEditCancel,
   remodelsToDelete,
   setRemodelsToDelete,
+  canManageRemodelAllowlist,
 }: Props): React.JSX.Element {
   const [isChecked, setIsChecked] = useState(false);
   const [isIndeterminate, setIsIndeterminate] = useState(false);
@@ -74,33 +76,37 @@ function RemodelTable({
   };
 
   const headers = [
-    {
-      style: withCheckboxStyles,
-      content: (
-        <div
-          style={{
-            position: "relative",
-            top: "-9px",
-          }}
-        >
-          <CheckboxInput
-            labelClassName="u-no-margin--bottom"
-            onChange={(e) => {
-              if (e.target.checked) {
-                setRemodelsToDelete(remodels);
-                setIsChecked(true);
-              } else {
-                setRemodelsToDelete([]);
-                setIsChecked(false);
-              }
-            }}
-            checked={isChecked}
-            indeterminate={isIndeterminate}
-            label=<span className="table-cell-checkbox__label">Name</span>
-          />
-        </div>
-      ),
-    },
+    ...(canManageRemodelAllowlist
+      ? [
+          {
+            style: withCheckboxStyles,
+            content: (
+              <div
+                style={{
+                  position: "relative",
+                  top: "-9px",
+                }}
+              >
+                <CheckboxInput
+                  labelClassName="u-no-margin--bottom"
+                  onChange={(e) => {
+                    if (e.target.checked) {
+                      setRemodelsToDelete(remodels);
+                      setIsChecked(true);
+                    } else {
+                      setRemodelsToDelete([]);
+                      setIsChecked(false);
+                    }
+                  }}
+                  checked={isChecked}
+                  indeterminate={isIndeterminate}
+                  label=<span className="table-cell-checkbox__label">Name</span>
+                />
+              </div>
+            ),
+          },
+        ]
+      : []),
     {
       content: "Target model",
       style: { width: "250px" },
@@ -133,28 +139,32 @@ function RemodelTable({
 
     return {
       columns: [
-        {
-          content: (
-            <CheckboxInput
-              labelClassName="u-no-margin--bottom u-no-padding--top"
-              onChange={(e) => {
-                if (e.target.checked) {
-                  setRemodelsToDelete([...remodelsToDelete, remodel]);
-                } else {
-                  setRemodelsToDelete(
-                    remodelsToDelete.filter(
-                      (item) => getRemodelRowId(item) !== rowId,
-                    ),
-                  );
-                }
-              }}
-              checked={isRowChecked}
-              label=<span className="table-cell-checkbox__label">
-                {remodel["to-model"]}
-              </span>
-            />
-          ),
-        },
+        ...(canManageRemodelAllowlist
+          ? [
+              {
+                content: (
+                  <CheckboxInput
+                    labelClassName="u-no-margin--bottom u-no-padding--top"
+                    onChange={(e) => {
+                      if (e.target.checked) {
+                        setRemodelsToDelete([...remodelsToDelete, remodel]);
+                      } else {
+                        setRemodelsToDelete(
+                          remodelsToDelete.filter(
+                            (item) => getRemodelRowId(item) !== rowId,
+                          ),
+                        );
+                      }
+                    }}
+                    checked={isRowChecked}
+                    label=<span className="table-cell-checkbox__label">
+                      {remodel["to-model"]}
+                    </span>
+                  />
+                ),
+              },
+            ]
+          : []),
         { content: remodel["to-model"], className: "u-truncate" },
         {
           content: remodel["from-serial"] || "All serial policies",
@@ -165,7 +175,7 @@ function RemodelTable({
           className: "u-align--right",
         },
         {
-          content: (
+          content: canManageRemodelAllowlist ? (
             <>
               <Input
                 type="text"
@@ -204,6 +214,8 @@ function RemodelTable({
                 </div>
               )}
             </>
+          ) : (
+            originalValue
           ),
         },
       ],

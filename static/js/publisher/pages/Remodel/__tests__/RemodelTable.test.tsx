@@ -50,6 +50,7 @@ const renderComponent = ({
   onEditCancel = vi.fn(),
   remodelsToDelete = [],
   setRemodelsToDelete = vi.fn(),
+  canManageRemodelAllowlist = true,
 }: {
   isSavingEdit?: boolean;
   editedDescriptions?: Record<string, string>;
@@ -58,6 +59,7 @@ const renderComponent = ({
   onEditCancel?: (rowId: string) => void;
   remodelsToDelete?: Remodel[];
   setRemodelsToDelete?: (remodels: Remodel[]) => void;
+  canManageRemodelAllowlist?: boolean;
 } = {}) => {
   return render(
     <BrowserRouter>
@@ -77,6 +79,7 @@ const renderComponent = ({
           onEditCancel={onEditCancel}
           remodelsToDelete={remodelsToDelete}
           setRemodelsToDelete={setRemodelsToDelete}
+          canManageRemodelAllowlist={canManageRemodelAllowlist}
         />
       </QueryClientProvider>
     </BrowserRouter>,
@@ -300,5 +303,29 @@ describe("RemodelTable", () => {
     expect(checkboxes[1]).toBeChecked();
     // Third checkbox (second row) should not be checked
     expect(checkboxes[2]).not.toBeChecked();
+  });
+
+  it("does not render checkboxes when remodel management is not allowed", () => {
+    renderComponent({ canManageRemodelAllowlist: false });
+
+    expect(screen.queryByRole("checkbox")).not.toBeInTheDocument();
+  });
+
+  it("renders note descriptions as text when remodel management is not allowed", () => {
+    renderComponent({
+      canManageRemodelAllowlist: false,
+      editedDescriptions: { [firstRowId]: "modified description" },
+    });
+
+    expect(screen.queryByRole("textbox")).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole("button", { name: "Save" }),
+    ).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole("button", { name: "Revert" }),
+    ).not.toBeInTheDocument();
+    expect(screen.getByText("test remodel")).toBeInTheDocument();
+    expect(screen.getByText("second remodel")).toBeInTheDocument();
+    expect(screen.queryByText("modified description")).not.toBeInTheDocument();
   });
 });
