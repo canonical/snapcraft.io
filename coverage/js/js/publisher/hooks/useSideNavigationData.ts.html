@@ -25,28 +25,28 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>0/21</span>
+                <span class='fraction'>0/25</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/10</span>
+                <span class='fraction'>0/12</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>0/6</span>
+                <span class='fraction'>0/7</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>0/21</span>
+                <span class='fraction'>0/25</span>
             </div>
         
             
@@ -124,7 +124,17 @@
 <a name='L59'></a><a href='#L59'>59</a>
 <a name='L60'></a><a href='#L60'>60</a>
 <a name='L61'></a><a href='#L61'>61</a>
-<a name='L62'></a><a href='#L62'>62</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L62'></a><a href='#L62'>62</a>
+<a name='L63'></a><a href='#L63'>63</a>
+<a name='L64'></a><a href='#L64'>64</a>
+<a name='L65'></a><a href='#L65'>65</a>
+<a name='L66'></a><a href='#L66'>66</a>
+<a name='L67'></a><a href='#L67'>67</a>
+<a name='L68'></a><a href='#L68'>68</a>
+<a name='L69'></a><a href='#L69'>69</a>
+<a name='L70'></a><a href='#L70'>70</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -156,12 +166,18 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -195,11 +211,13 @@ import {
   useBrandStores,
   usePublisher,
   useValidationSets,
+  useUserPrivileges,
 } from "./";
 import { brandIdState, brandStoresState } from "../state/brandStoreState";
 import { publisherState } from "../state/publisherState";
 import { validationSetsState } from "../state/validationSetsState";
 import { accountKeysState } from "../state/accountKeysState";
+import { userPrivilegesState } from "../state/userPrivilegesState";
 &nbsp;
 /**
  * Load all the data that is needed for side navigation, more specifically:
@@ -217,12 +235,14 @@ function <span class="fstat-no" title="function not covered" >useSideNavigationD
   const { data: brandStoresData <span class="cstat-no" title="statement not covered" >} = useBrandStores();</span>
   const { data: brandData <span class="cstat-no" title="statement not covered" >} = useBrand(storeId);</span>
   const { data: accountKeysData <span class="cstat-no" title="statement not covered" >} = useAccountKeys();</span>
+  const { data: userPrivilegesData <span class="cstat-no" title="statement not covered" >} = useUserPrivileges();</span>
 &nbsp;
   const <span class="cstat-no" title="statement not covered" >setBrandStores = useSetAtom(brandStoresState);</span>
   const <span class="cstat-no" title="statement not covered" >setPublisher = useSetAtom(publisherState);</span>
   const <span class="cstat-no" title="statement not covered" >setBrandId = useSetAtom(brandIdState);</span>
   const <span class="cstat-no" title="statement not covered" >setValidationSets = useSetAtom(validationSetsState);</span>
   const <span class="cstat-no" title="statement not covered" >setAccountKeys = useSetAtom(accountKeysState);</span>
+  const <span class="cstat-no" title="statement not covered" >setUserPrivileges = useSetAtom(userPrivilegesState);</span>
 &nbsp;
 <span class="cstat-no" title="statement not covered" >  useEffect(<span class="fstat-no" title="function not covered" >() =&gt; {</span></span>
 <span class="cstat-no" title="statement not covered" >    setBrandId(brandData?.["account-id"] || brandIdState.init);</span>
@@ -243,6 +263,10 @@ function <span class="fstat-no" title="function not covered" >useSideNavigationD
 <span class="cstat-no" title="statement not covered" >  useEffect(<span class="fstat-no" title="function not covered" >() =&gt; {</span></span>
 <span class="cstat-no" title="statement not covered" >    setAccountKeys(accountKeysData || accountKeysState.init);</span>
   }, [accountKeysData]);
+&nbsp;
+<span class="cstat-no" title="statement not covered" >  useEffect(<span class="fstat-no" title="function not covered" >() =&gt; {</span></span>
+<span class="cstat-no" title="statement not covered" >    setUserPrivileges(userPrivilegesData || userPrivilegesState.init);</span>
+  }, [userPrivilegesData]);
 }
 &nbsp;
 export default useSideNavigationData;
@@ -253,7 +277,7 @@ export default useSideNavigationData;
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-08-18T22:05:31.419Z
+                at 2026-08-19T22:10:11.640Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>
