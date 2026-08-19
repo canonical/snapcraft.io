@@ -7,13 +7,19 @@ import userEvent from "@testing-library/user-event";
 import "@testing-library/jest-dom";
 
 import Remodel from "../Remodel";
-import { useRemodels, useModels, useSortTableData } from "../../../hooks";
+import {
+  useRemodels,
+  useModels,
+  useSortTableData,
+  useUserPrivileges,
+} from "../../../hooks";
 
 import type { UseQueryResult } from "react-query";
 import type {
   ApiResponse,
   RemodelResponse,
   Model,
+  UserPrivileges,
 } from "../../../types/shared";
 
 const mockFilterQuery = "test-model";
@@ -34,6 +40,7 @@ vi.mock("../../../hooks", () => ({
   useRemodels: vi.fn(),
   useModels: vi.fn(),
   useSortTableData: vi.fn(),
+  useUserPrivileges: vi.fn(),
 }));
 
 const queryClient = new QueryClient({
@@ -151,8 +158,51 @@ mockUseSortTableData.mockReturnValue({
 });
 
 const mockUseRemodels = vi.mocked(useRemodels);
+const mockUseUserPrivileges = vi.mocked(useUserPrivileges);
+
+const remodelManagementPermissions = [
+  "create-remodel-allowlist",
+  "delete-remodel-allowlist",
+  "update-remodel-allowlist",
+];
+
+const useUserPrivilegesWithRemodelManagement = {
+  data: {
+    account: {
+      "display-name": "Test User",
+      email: "test@example.com",
+      id: "test-account-id",
+      username: "test-user",
+    },
+    "brand-permissions": {
+      "": remodelManagementPermissions,
+    },
+    permissions: [],
+  },
+} as unknown as UseQueryResult<UserPrivileges, Error>;
+
+const useUserPrivilegesWithoutRemodelManagement = {
+  data: {
+    account: {
+      "display-name": "Test User",
+      email: "test@example.com",
+      id: "test-account-id",
+      username: "test-user",
+    },
+    "brand-permissions": {
+      "": ["create-remodel-allowlist", "delete-remodel-allowlist"],
+    },
+    permissions: [],
+  },
+} as unknown as UseQueryResult<UserPrivileges, Error>;
 
 describe("Remodel", () => {
+  beforeEach(() => {
+    mockUseUserPrivileges.mockReturnValue(
+      useUserPrivilegesWithRemodelManagement,
+    );
+  });
+
   afterEach(() => {
     vi.restoreAllMocks();
   });
@@ -571,5 +621,46 @@ describe("Remodel", () => {
       });
       expect(deleteButton).toHaveAttribute("aria-disabled", "true");
     });
+  });
+
+  it("hides remodel management actions without all required permissions", async () => {
+    mockUseUserPrivileges.mockReturnValue(
+      useUserPrivilegesWithoutRemodelManagement,
+    );
+    mockUseRemodels.mockReturnValue(useRemodelsWithData);
+
+    renderComponent();
+
+    expect(
+      screen.queryByRole("button", { name: "Delete remodel" }),
+    ).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole("link", { name: "Configure remodels" }),
+    ).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole("heading", { name: "Configure a remodel" }),
+    ).not.toBeInTheDocument();
+    expect(screen.queryByRole("checkbox")).not.toBeInTheDocument();
+    expect(screen.queryByRole("textbox")).not.toBeInTheDocument();
+    expect(await screen.findByText("test remodel")).toBeInTheDocument();
+  });
+
+  it("hides remodel management actions while privileges are unavailable", async () => {
+    mockUseUserPrivileges.mockReturnValue({
+      data: undefined,
+    } as unknown as UseQueryResult<UserPrivileges, Error>);
+    mockUseRemodels.mockReturnValue(useRemodelsWithData);
+
+    renderComponent();
+
+    expect(
+      screen.queryByRole("button", { name: "Delete remodel" }),
+    ).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole("link", { name: "Configure remodels" }),
+    ).not.toBeInTheDocument();
+    expect(screen.queryByRole("checkbox")).not.toBeInTheDocument();
+    expect(screen.queryByRole("textbox")).not.toBeInTheDocument();
+    expect(await screen.findByText("test remodel")).toBeInTheDocument();
   });
 });
