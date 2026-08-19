@@ -146,6 +146,17 @@ export type Publisher = {
   } | null;
 } | null;
 
+export type UserPrivileges = {
+  account: {
+    "display-name": string;
+    email: string;
+    id: string;
+    username: string;
+  };
+  "brand-permissions": Record<string, string[]>;
+  permissions: string[];
+} | null;
+
 export type UsePoliciesResponse = {
   isLoading: boolean;
   isError: boolean;
