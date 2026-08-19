@@ -248,8 +248,12 @@ function Remodel(): React.JSX.Element {
     if (!canManageRemodelAllowlist) {
       setRemodelsToDelete([]);
       setShowBulkDeleteModal(false);
+
+      if (id && modelId && !isClosedPanel(location.pathname, "configure")) {
+        navigate(`/admin/${id}/models/${modelId}/remodel`, { replace: true });
+      }
     }
-  }, [canManageRemodelAllowlist]);
+  }, [canManageRemodelAllowlist, id, modelId, location.pathname, navigate]);
 
   return (
     <>
