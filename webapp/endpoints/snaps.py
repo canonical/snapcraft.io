@@ -283,7 +283,8 @@ def auditable_revisions(snap_name):
 
 @snaps.route('/api/<regex("' + snap_regex + '"):snap_name>/permissions')
 def permissions(snap_name):
-    """Return the interfaces that a snap requests for one channel build.
+    """Return the permissions that a snap requests for one specific channel
+    and architecture.
 
     This endpoint needs the ``channel`` and ``architecture`` query parameters.
     It gets the channel map, finds the matching channel and architecture, and
