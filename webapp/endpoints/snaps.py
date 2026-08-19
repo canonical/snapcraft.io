@@ -1,3 +1,7 @@
+from canonicalwebteam.exceptions import (
+    StoreApiResourceNotFound,
+    StoreApiResponseErrorList,
+)
 import flask
 from flask import make_response
 from flask.json import jsonify
@@ -14,6 +18,7 @@ from webapp.api.github import repository_is_public
 from webapp.api.launchpad_provenance import LaunchpadProvenance
 from webapp.endpoints.utils import get_auditable_map_cache_key
 from cache.cache_utility import redis_cache
+from webapp.helpers import get_yaml_loader
 
 from canonicalwebteam.store_api.devicegw import DeviceGW
 from canonicalwebteam.store_api.dashboard import Dashboard
@@ -273,6 +278,110 @@ def auditable_revisions(snap_name):
 
     response = make_response(res, 200)
     response.cache_control.max_age = 0 if res.get("error") else 3600
+    return response
+
+
+@snaps.route('/api/<regex("' + snap_regex + '"):snap_name>/permissions')
+def permissions(snap_name):
+    """Return the permissions that a snap requests for one specific channel
+    and architecture.
+
+    This endpoint needs the ``channel`` and ``architecture`` query parameters.
+    It gets the channel map, finds the matching channel and architecture, and
+    parses the ``snap-yaml`` field.
+
+    The response contains:
+    - ``confinement`` from ``snap-yaml``
+    - ``interfaces`` as ``[{"name": <plug name>, "interface": <interface>}]``
+
+    If a query parameter is missing, this endpoint returns HTTP 400.
+    If lookup or parsing fails, the response contains an ``errors`` list.
+    """
+    missing_params = [
+        p for p in ("channel", "architecture") if not flask.request.args.get(p)
+    ]
+
+    if missing_params:
+        return make_response(
+            {
+                "success": False,
+                "errors": [
+                    f'"{param}" parameter is required'
+                    for param in missing_params
+                ],
+            },
+            400,
+        )
+
+    channel = flask.request.args.get("channel")
+    architecture = flask.request.args.get("architecture")
+
+    try:
+        details = device_gateway.get_item_details(
+            snap_name, api_version=2, fields=["snap-yaml"]
+        )
+    except StoreApiResourceNotFound:
+        return make_response(
+            {
+                "success": False,
+                "errors": [f'"{snap_name}" does not exist'],
+            },
+            404,
+        )
+    except StoreApiResponseErrorList as e:
+        return make_response(
+            {
+                "success": False,
+                "errors": [
+                    f"{error.get('message', 'An error occurred')}"
+                    for error in e.errors
+                ],
+            },
+            e.status_code,
+        )
+
+    def predicate(_channel):
+        channel_entry = _channel.get("channel", {})
+        name: str = channel_entry.get("name", "")
+        arch: str = channel_entry.get("architecture", "")
+        return name == channel and arch == architecture
+
+    try:
+        channel_map = details.get("channel-map", [])
+        match = next((c for c in channel_map if predicate(c)), None)
+
+        if match is None:
+            raise Exception(
+                f'channel "{channel}" does not exist for architecture '
+                f'"{architecture}"'
+            )
+
+        raw_snap_yaml = match.get("snap-yaml")
+        snap_yaml = get_yaml_loader().load(raw_snap_yaml)
+
+        res = {
+            "success": True,
+            "data": {
+                "confinement": snap_yaml["confinement"],
+                "interfaces": [
+                    {
+                        "name": name,
+                        "interface": plug.get("interface", name),
+                        # "description": "TODO",
+                        # "raw_yaml": "TODO",
+                        # "categories": ["TODO"],
+                        # "auto_connect": False,
+                        # "details": ["TODO"]
+                    }
+                    for name, plug in snap_yaml.get("plugs", {}).items()
+                ],
+            },
+        }
+    except Exception as e:
+        res = {"success": True if details else False, "errors": [str(e)]}
+
+    response = make_response(res, 200)
+    response.cache_control.max_age = 0 if not res.get("success") else 3600
     return response
 
 
