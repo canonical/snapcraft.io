@@ -1,16 +1,20 @@
 import { Link, useParams } from "react-router-dom";
 import { useAtomValue } from "jotai";
 
-import { useEndpointAvailability } from "../../hooks";
 import { brandIdState } from "../../state/brandStoreState";
+import { userPrivilegesState } from "../../state/userPrivilegesState";
 
 function ModelNav({ sectionName }: { sectionName: string }): React.JSX.Element {
   const { id, modelId } = useParams();
   const brandId = useAtomValue(brandIdState);
-  const { isRemodelAvailable, isSerialLogAvailable } = useEndpointAvailability(
-    brandId,
-    modelId,
+  const userPrivileges = useAtomValue(userPrivilegesState);
+  const brandPermissions = brandId
+    ? userPrivileges?.["brand-permissions"]?.[brandId] || []
+    : [];
+  const isRemodelAvailable = brandPermissions.includes(
+    "read-remodel-allowlist",
   );
+  const isSerialLogAvailable = brandPermissions.includes("read-serial-log");
 
   return (
     <nav className="p-tabs">
