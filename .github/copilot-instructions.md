@@ -70,7 +70,7 @@ tests/                   # Python unittest tests
 
 ## CI/CD (.github/workflows/pr.yml)
 
-**Jobs**: run-image, run-dotrun, run-cypress (needs ENVIRONMENT=prod), lint-python/js/scss (path-filtered), test-python/js (path-filtered), check-inclusive-naming
+**Jobs**: run-image, run-dotrun, pack-rock (packs and starts the rock, then runs advisory Lighthouse checks for web changes), lint-python/js/scss (path-filtered), test-python/js (path-filtered), check-inclusive-naming
 
 **Requirements**: All dotrun jobs need `sudo chmod -R 777 .` before install. Python tests need `dotrun build` first.
 
