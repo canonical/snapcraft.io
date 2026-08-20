@@ -35,6 +35,27 @@ Package = TypedDict(
 )
 
 
+def extract_publisher(query: str):
+    """
+    Extracts a `publisher:<username>` term from a search query.
+
+    :param: query: The raw search query string.
+
+    :returns: a tuple of (publisher or None, remaining query text).
+    """
+    publisher = None
+    remaining_terms = []
+
+    for term in query.split():
+        prefix, _, value = term.partition(":")
+        if prefix.lower() == "publisher" and value:
+            publisher = value
+        else:
+            remaining_terms.append(term)
+
+    return publisher, " ".join(remaining_terms)
+
+
 def fetch_packages(fields: List[str], query_params) -> Packages:
     """
     Fetches packages from the store API based on the specified fields.
@@ -57,11 +78,21 @@ def fetch_packages(fields: List[str], query_params) -> Packages:
     if package_type == "all":
         package_type = None
 
+    # `publisher:<username>` terms scope results to that publisher via the
+    # store API's publisher filter instead of being matched as free text,
+    # which returns unrelated snaps. Publisher pages link to
+    # /search?q=publisher:<username>, so this keeps those links accurate.
+    # See https://github.com/canonical/snapcraft.io/issues/5757.
+    publisher, query = extract_publisher(query)
+
     args = {
         "category": category,
         "fields": fields,
         "query": query,
     }
+
+    if publisher:
+        args["publisher"] = publisher
 
     if package_type:
         args["type"] = package_type
