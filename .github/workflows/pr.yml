@@ -11,7 +11,7 @@ jobs:
     permissions:
       contents: read
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - name: Build image
         run: DOCKER_BUILDKIT=1 docker build --tag snapcraft-io .
       - name: Run image
@@ -24,7 +24,7 @@ jobs:
     permissions:
       contents: read
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
 
       - name: Install Dotrun
         run: |
@@ -49,7 +49,7 @@ jobs:
       contents: read
     steps:
       # START copy of the run-dotrun job
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
 
       - name: Install Dotrun
         run: |
@@ -114,7 +114,7 @@ jobs:
     permissions:
       contents: read
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
 
       - name: Setup LXD
         uses: canonical/setup-lxd@main
@@ -133,7 +133,7 @@ jobs:
       contents: read
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Install dotrun
         run: sudo pip3 install dotrun
@@ -157,7 +157,7 @@ jobs:
       contents: read
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Install SCSS dependencies
         run: yarn install --immutable
@@ -173,7 +173,7 @@ jobs:
       contents: read
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Install JS dependencies
         run: yarn install --immutable
@@ -190,7 +190,7 @@ jobs:
       contents: read
 
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
 
       - name: Install dotrun
         run: sudo pip3 install dotrun
@@ -210,7 +210,7 @@ jobs:
         run: dotrun test-python-job
 
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v6
+        uses: codecov/codecov-action@v7
         with:
           flags: python
 
@@ -221,7 +221,7 @@ jobs:
     permissions:
       contents: read
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
 
       - uses: actions/setup-node@v6
         with:
@@ -235,7 +235,7 @@ jobs:
           yarn test-js --coverage
 
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v6
+        uses: codecov/codecov-action@v7
         with:
           flags: javascript
 
@@ -247,7 +247,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Check inclusive naming
         uses: canonical/inclusive-naming@main

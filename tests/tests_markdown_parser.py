@@ -172,7 +172,7 @@ class TestMarkdownParser(unittest.TestCase):
         """Image link is converted into a simple link"""
         markdown = "![image](link.png)"
         result = parse_markdown_description(markdown)
-        expected_result = "<p>" + markdown + "</p>\n"
+        expected_result = '<p>![image](<a href="link.png">link.png</a>)</p>\n'
 
         self.assertEqual(result, expected_result)
 
@@ -219,5 +219,40 @@ class TestMarkdownParser(unittest.TestCase):
             "<p><strong>"
             '[toto](<a href="https://toto.space">https://toto.space</a>)'
             "</strong></p>\n"
+        )
+        self.assertEqual(parse_markdown_description(markdown), expected)
+
+    def test_markdown_link_with_bold_label_does_not_crash(self):
+        markdown = "[**bold**](https://example.com)"
+        expected = (
+            "<p>"
+            '[<strong>bold</strong>](<a href="https://example.com">'
+            "https://example.com</a>)"
+            "</p>\n"
+        )
+        self.assertEqual(parse_markdown_description(markdown), expected)
+
+    def test_markdown_image_with_bold_alt_does_not_crash(self):
+        markdown = "![**image**](link.png)"
+        expected = (
+            '<p>![<strong>image</strong>](<a href="link.png">'
+            "link.png</a>)</p>\n"
+        )
+        self.assertEqual(parse_markdown_description(markdown), expected)
+
+    def test_markdown_xml_escape(self):
+        markdown = '& < > "'
+        expected = "<p>&amp; &lt; &gt; &quot;</p>\n"
+        self.assertEqual(parse_markdown_description(markdown), expected)
+
+    def test_markdown_xml_doesnt_escape_twice(self):
+        markdown = "&amp; &lt; &gt; &quot;"
+        expected = "<p>&amp; &lt; &gt; &quot;</p>\n"
+        self.assertEqual(parse_markdown_description(markdown), expected)
+
+    def test_markdown_html_is_escaped(self):
+        markdown = '<script>alert("hi!")</script>'
+        expected = (
+            "<p>&lt;script&gt;alert(&quot;hi!&quot;)&lt;/script&gt;</p>\n"
         )
         self.assertEqual(parse_markdown_description(markdown), expected)

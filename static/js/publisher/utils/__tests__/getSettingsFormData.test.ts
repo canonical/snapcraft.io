@@ -64,4 +64,30 @@ describe("getSettingsFormData", () => {
     expect(formData.get("territories_custom_type")).toEqual("whitelist");
     expect(formData.get("blacklist_countries")).toEqual("");
   });
+
+  test("does not include update metadata on release for visibility-only changes", () => {
+    const formData = getSettingsFormData(
+      settingsData,
+      { visibility: true },
+      {
+        ...data,
+        update_metadata_on_release: true,
+        visibility: "unlisted",
+      },
+    );
+    const changes = JSON.parse(formData.get("changes") as string);
+
+    expect(changes).toEqual({ private: false, unlisted: true });
+  });
+
+  test("includes update metadata on release when it has changed", () => {
+    const formData = getSettingsFormData(
+      settingsData,
+      { update_metadata_on_release: true },
+      { ...data, update_metadata_on_release: true },
+    );
+    const changes = JSON.parse(formData.get("changes") as string);
+
+    expect(changes).toEqual({ update_metadata_on_release: "on" });
+  });
 });

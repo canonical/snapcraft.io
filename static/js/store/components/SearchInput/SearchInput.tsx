@@ -29,7 +29,7 @@ export const SearchInput = ({
       searchParams.set("q", searchRef.current.value);
       setSearchParams(searchParams);
 
-      trackSearchSubmitted("store", searchRef.current.value);
+      trackSearchSubmitted("store");
     }
     if (searchSummaryRef && searchSummaryRef.current) {
       searchSummaryRef.current.scrollIntoView({

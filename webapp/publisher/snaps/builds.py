@@ -22,6 +22,7 @@ class LaunchpadBuildState(Enum):
     CHROOTWAIT = "Chroot problem"
     SUPERSEDED = "Build for superseded Source"
     BUILDING = "Currently building"
+    GATHERING_OUTPUT = "Gathering build output"
     FAILED_UPLOAD = "Failed to upload"
     UPLOADING = "Uploading build"
     CANCELLING = "Cancelling build"
@@ -83,6 +84,9 @@ def map_build_and_upload_states(build_state, upload_state):
         return _map_upload_state(upload_state)
 
     elif build_state == LaunchpadBuildState.BUILDING:
+        return StoreFrontBuildState.IN_PROGRESS.value
+
+    elif build_state == LaunchpadBuildState.GATHERING_OUTPUT:
         return StoreFrontBuildState.IN_PROGRESS.value
 
     elif build_state == LaunchpadBuildState.UPLOADING:

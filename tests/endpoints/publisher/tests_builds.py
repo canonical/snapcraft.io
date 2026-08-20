@@ -1,6 +1,8 @@
-from unittest.mock import patch
+from unittest.mock import MagicMock, call, patch
 from requests.exceptions import HTTPError
 from tests.endpoints.endpoint_testing import TestEndpoints
+from webapp.api.exceptions import ApiConnectionError, ApiTimeoutError
+from webapp.publisher.snaps.build_views import BUILD_LOG_REQUEST_TIMEOUT
 
 
 class TestGetSnapBuildPage(TestEndpoints):
@@ -45,6 +47,287 @@ class TestGetSnapBuildPage(TestEndpoints):
         self.assertIn(response.status_code, [302, 401, 403])
 
 
+class TestGetSnapBuild(TestEndpoints):
+    def setUp(self):
+        super().setUp()
+        self.snap_name = "test-snap"
+        self.build_id = "12345"
+        self.endpoint_url = f"/api/{self.snap_name}/builds/{self.build_id}"
+
+    def _mock_snap_info(self):
+        return {
+            "snap_name": self.snap_name,
+            "title": "Test Snap",
+            "snap_id": "test-snap-id-123",
+        }
+
+    def _mock_build(self):
+        return {
+            "self_link": (
+                "https://api.launchpad.net/devel/~owner/"
+                "+snap/test-snap/+build/12345"
+            ),
+            "arch_tag": "amd64",
+            "datebuilt": "2023-01-01T12:00:00Z",
+            "duration": "00:05:30",
+            "build_log_url": "https://launchpad.net/buildlog.txt",
+            "revision_id": "abcdef1234567890abcdef1234567890abcdef12",
+            "buildstate": "Successfully built",
+            "store_upload_status": "Uploaded",
+            "title": "Test build",
+        }
+
+    @patch("webapp.publisher.snaps.build_views.launchpad")
+    @patch("webapp.publisher.snaps.build_views.dashboard")
+    def test_get_snap_build_success_does_not_fetch_raw_logs(
+        self, mock_dashboard, mock_launchpad
+    ):
+        mock_dashboard.get_snap_info.return_value = self._mock_snap_info()
+        mock_launchpad.get_snap_build.return_value = self._mock_build()
+        mock_launchpad.get_snap_by_store_name.return_value = {
+            "git_repository_url": "https://github.com/owner/repo"
+        }
+
+        response = self.client.get(self.endpoint_url)
+
+        self.assertEqual(response.status_code, 200)
+        response_data = response.get_json()
+        self.assertTrue(response_data["success"])
+        self.assertNotIn("raw_logs", response_data["data"])
+        self.assertEqual(
+            response_data["data"]["snap_build"]["github_repository"],
+            "owner/repo",
+        )
+        mock_launchpad.get_snap_build_log.assert_not_called()
+
+    @patch("webapp.publisher.snaps.build_views.api_publisher_session")
+    @patch("webapp.publisher.snaps.build_views.launchpad")
+    @patch("webapp.publisher.snaps.build_views.dashboard")
+    def test_get_snap_build_logs_streams_from_launchpad(
+        self, mock_dashboard, mock_launchpad, mock_api_publisher_session
+    ):
+        mock_response = MagicMock()
+        mock_response.status_code = 200
+        mock_response.is_redirect = False
+        mock_response.iter_content.return_value = ["Test ", "build logs"]
+        mock_response.raise_for_status.return_value = None
+        mock_dashboard.get_snap_info.return_value = self._mock_snap_info()
+        mock_launchpad.get_snap_build.return_value = self._mock_build()
+        mock_api_publisher_session.get.return_value = mock_response
+
+        response = self.client.get(f"{self.endpoint_url}/logs")
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.content_type, "text/plain; charset=utf-8")
+        self.assertEqual(response.get_data(as_text=True), "Test build logs")
+        mock_api_publisher_session.get.assert_called_once_with(
+            "https://launchpad.net/buildlog.txt",
+            headers={"Accept": "text/plain"},
+            stream=True,
+            timeout=BUILD_LOG_REQUEST_TIMEOUT,
+            allow_redirects=False,
+        )
+        mock_response.iter_content.assert_called_once_with(
+            chunk_size=8192, decode_unicode=True
+        )
+        mock_response.raise_for_status.assert_called_once_with()
+        mock_response.close.assert_called_once()
+        mock_launchpad.get_snap_build_log.assert_not_called()
+
+    @patch("webapp.publisher.snaps.build_views.api_publisher_session")
+    @patch("webapp.publisher.snaps.build_views.launchpad")
+    @patch("webapp.publisher.snaps.build_views.dashboard")
+    def test_get_snap_build_logs_streams_from_launchpadlibrarian(
+        self, mock_dashboard, mock_launchpad, mock_api_publisher_session
+    ):
+        mock_redirect_response = MagicMock()
+        mock_redirect_response.status_code = 303
+        mock_redirect_response.is_redirect = True
+        mock_redirect_response.headers = {
+            "Location": "https://launchpadlibrarian.net/buildlog.txt"
+        }
+        mock_redirect_response.raise_for_status.return_value = None
+        mock_log_response = MagicMock()
+        mock_log_response.status_code = 200
+        mock_log_response.is_redirect = False
+        mock_log_response.iter_content.return_value = ["Test build logs"]
+        mock_log_response.raise_for_status.return_value = None
+        mock_dashboard.get_snap_info.return_value = self._mock_snap_info()
+        mock_launchpad.get_snap_build.return_value = self._mock_build()
+        mock_api_publisher_session.get.side_effect = [
+            mock_redirect_response,
+            mock_log_response,
+        ]
+
+        response = self.client.get(f"{self.endpoint_url}/logs")
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.get_data(as_text=True), "Test build logs")
+        mock_api_publisher_session.get.assert_has_calls(
+            [
+                call(
+                    "https://launchpad.net/buildlog.txt",
+                    headers={"Accept": "text/plain"},
+                    stream=True,
+                    timeout=BUILD_LOG_REQUEST_TIMEOUT,
+                    allow_redirects=False,
+                ),
+                call(
+                    "https://launchpadlibrarian.net/buildlog.txt",
+                    headers={"Accept": "text/plain"},
+                    stream=True,
+                    timeout=BUILD_LOG_REQUEST_TIMEOUT,
+                ),
+            ]
+        )
+        mock_redirect_response.close.assert_called_once_with()
+        mock_log_response.close.assert_called_once_with()
+        mock_launchpad.get_snap_build_log.assert_not_called()
+
+    @patch("webapp.publisher.snaps.build_views.api_publisher_session")
+    @patch("webapp.publisher.snaps.build_views.launchpad")
+    @patch("webapp.publisher.snaps.build_views.dashboard")
+    def test_get_snap_build_logs_returns_error_when_launchpad_fails(
+        self, mock_dashboard, mock_launchpad, mock_api_publisher_session
+    ):
+        mock_response = MagicMock()
+        mock_response.status_code = 404
+        mock_response.is_redirect = False
+        mock_response.raise_for_status.side_effect = HTTPError(
+            response=mock_response
+        )
+        mock_dashboard.get_snap_info.return_value = self._mock_snap_info()
+        mock_launchpad.get_snap_build.return_value = self._mock_build()
+        mock_api_publisher_session.get.return_value = mock_response
+
+        response = self.client.get(f"{self.endpoint_url}/logs")
+
+        self.assertEqual(response.status_code, 502)
+        response_data = response.get_json()
+        self.assertFalse(response_data["success"])
+        self.assertEqual(
+            response_data["error"]["message"],
+            "The requested build log could not be fetched.",
+        )
+        mock_response.raise_for_status.assert_called_once_with()
+        mock_response.close.assert_called_once_with()
+        mock_response.iter_content.assert_not_called()
+        mock_api_publisher_session.get.assert_called_once_with(
+            "https://launchpad.net/buildlog.txt",
+            headers={"Accept": "text/plain"},
+            stream=True,
+            timeout=BUILD_LOG_REQUEST_TIMEOUT,
+            allow_redirects=False,
+        )
+        mock_launchpad.get_snap_build_log.assert_not_called()
+
+    @patch("webapp.publisher.snaps.build_views.api_publisher_session")
+    @patch("webapp.publisher.snaps.build_views.launchpad")
+    @patch("webapp.publisher.snaps.build_views.dashboard")
+    def test_get_snap_build_logs_returns_error_when_launchpad_times_out(
+        self, mock_dashboard, mock_launchpad, mock_api_publisher_session
+    ):
+        mock_dashboard.get_snap_info.return_value = self._mock_snap_info()
+        mock_launchpad.get_snap_build.return_value = self._mock_build()
+        mock_api_publisher_session.get.side_effect = ApiTimeoutError("timeout")
+
+        response = self.client.get(f"{self.endpoint_url}/logs")
+
+        self.assertEqual(response.status_code, 502)
+        response_data = response.get_json()
+        self.assertFalse(response_data["success"])
+        self.assertEqual(
+            response_data["error"]["message"],
+            "The requested build log could not be fetched.",
+        )
+        mock_api_publisher_session.get.assert_called_once_with(
+            "https://launchpad.net/buildlog.txt",
+            headers={"Accept": "text/plain"},
+            stream=True,
+            timeout=BUILD_LOG_REQUEST_TIMEOUT,
+            allow_redirects=False,
+        )
+        mock_launchpad.get_snap_build_log.assert_not_called()
+
+    @patch("webapp.publisher.snaps.build_views.api_publisher_session")
+    @patch("webapp.publisher.snaps.build_views.launchpad")
+    @patch("webapp.publisher.snaps.build_views.dashboard")
+    def test_get_snap_build_logs_returns_error_when_launchpad_unreachable(
+        self, mock_dashboard, mock_launchpad, mock_api_publisher_session
+    ):
+        mock_dashboard.get_snap_info.return_value = self._mock_snap_info()
+        mock_launchpad.get_snap_build.return_value = self._mock_build()
+        mock_api_publisher_session.get.side_effect = ApiConnectionError(
+            "connection error"
+        )
+
+        response = self.client.get(f"{self.endpoint_url}/logs")
+
+        self.assertEqual(response.status_code, 502)
+        response_data = response.get_json()
+        self.assertFalse(response_data["success"])
+        self.assertEqual(
+            response_data["error"]["message"],
+            "The requested build log could not be fetched.",
+        )
+        mock_api_publisher_session.get.assert_called_once_with(
+            "https://launchpad.net/buildlog.txt",
+            headers={"Accept": "text/plain"},
+            stream=True,
+            timeout=BUILD_LOG_REQUEST_TIMEOUT,
+            allow_redirects=False,
+        )
+        mock_launchpad.get_snap_build_log.assert_not_called()
+
+    @patch("webapp.publisher.snaps.build_views.launchpad")
+    @patch("webapp.publisher.snaps.build_views.dashboard")
+    def test_get_snap_build_logs_build_not_found(
+        self, mock_dashboard, mock_launchpad
+    ):
+        mock_dashboard.get_snap_info.return_value = self._mock_snap_info()
+        mock_launchpad.get_snap_build.return_value = None
+
+        response = self.client.get(f"{self.endpoint_url}/logs")
+
+        self.assertEqual(response.status_code, 404)
+        response_data = response.get_json()
+        self.assertFalse(response_data["success"])
+        self.assertEqual(
+            response_data["error"]["message"],
+            "The requested build could not be found.",
+        )
+        mock_launchpad.get_snap_build_log.assert_not_called()
+
+    @patch("webapp.publisher.snaps.build_views.launchpad")
+    @patch("webapp.publisher.snaps.build_views.dashboard")
+    def test_get_snap_build_logs_missing_log_url(
+        self, mock_dashboard, mock_launchpad
+    ):
+        mock_build = self._mock_build()
+        mock_build["build_log_url"] = None
+        mock_dashboard.get_snap_info.return_value = self._mock_snap_info()
+        mock_launchpad.get_snap_build.return_value = mock_build
+
+        response = self.client.get(f"{self.endpoint_url}/logs")
+
+        self.assertEqual(response.status_code, 404)
+        response_data = response.get_json()
+        self.assertFalse(response_data["success"])
+        self.assertEqual(
+            response_data["error"]["message"],
+            "The requested build has no log.",
+        )
+        mock_launchpad.get_snap_build_log.assert_not_called()
+
+    def test_get_snap_build_logs_requires_login(self):
+        app = self.app
+        client = app.test_client()
+
+        response = client.get(f"{self.endpoint_url}/logs")
+
+        self.assertIn(response.status_code, [302, 401, 403])
+
+
 class TestPostBuild(TestEndpoints):
     def setUp(self):
         super().setUp()
@@ -76,6 +359,51 @@ class TestPostBuild(TestEndpoints):
         mock_dashboard.get_account_snaps.assert_called_once()
         mock_launchpad.is_snap_building.assert_called_once_with(self.snap_name)
         mock_launchpad.build_snap.assert_called_once_with(self.snap_name)
+
+    @patch("webapp.endpoints.publisher.builds.launchpad")
+    @patch("webapp.endpoints.publisher.builds.dashboard")
+    def test_post_build_does_not_reauthorize_before_triggering(
+        self, mock_dashboard, mock_launchpad
+    ):
+        """Triggering a build should use existing Launchpad auth."""
+        mock_dashboard.get_account_snaps.return_value = {
+            self.snap_name: {"snap_name": self.snap_name}
+        }
+        mock_launchpad.is_snap_building.return_value = False
+        mock_launchpad.build_snap.return_value = "build-12345"
+
+        response = self.client.post(self.endpoint_url)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(response.get_json()["success"])
+
+        mock_dashboard.get_package_upload_macaroon.assert_not_called()
+        mock_launchpad.get_snap_by_store_name.assert_not_called()
+        mock_launchpad.complete_snap_authorization.assert_not_called()
+        mock_launchpad.is_snap_building.assert_called_once_with(self.snap_name)
+        mock_launchpad.build_snap.assert_called_once_with(self.snap_name)
+
+    @patch("webapp.endpoints.publisher.builds.launchpad")
+    @patch("webapp.endpoints.publisher.builds.dashboard")
+    def test_post_build_skips_reauthorization_when_snap_not_in_launchpad(
+        self, mock_dashboard, mock_launchpad
+    ):
+        """If the snap isn't linked in Launchpad yet, there's nothing
+        to reauthorize, so the reauthorization calls are skipped."""
+        mock_dashboard.get_account_snaps.return_value = {
+            self.snap_name: {"snap_name": self.snap_name}
+        }
+        mock_launchpad.get_snap_by_store_name.return_value = None
+        mock_launchpad.is_snap_building.return_value = False
+        mock_launchpad.build_snap.return_value = "build-12345"
+
+        response = self.client.post(self.endpoint_url)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(response.get_json()["success"])
+
+        mock_dashboard.get_package_upload_macaroon.assert_not_called()
+        mock_launchpad.complete_snap_authorization.assert_not_called()
 
     @patch("webapp.endpoints.publisher.builds.launchpad")
     @patch("webapp.endpoints.publisher.builds.dashboard")

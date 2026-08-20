@@ -12,7 +12,6 @@ import {
 } from "../slices/pendingChanges";
 import { releaseRevisions } from "../slices/releases";
 import { getSeparatePendingReleases, type SeparatePendingReleases } from "../selectors";
-import { triggerGAEvent } from "../analytics";
 import type { Progressive, ReleasesReduxState } from "../../../types/releaseTypes";
 import type { AppDispatch } from "../store";
 
@@ -27,7 +26,6 @@ interface StateProps {
 }
 
 interface DispatchProps {
-  triggerGAEvent: (...eventProps: Parameters<typeof triggerGAEvent>) => void;
   cancelPendingReleases: () => void;
   setProgressiveRelease: (percentage: Progressive) => void;
   releaseRevisions: () => Promise<unknown>;
@@ -72,7 +70,6 @@ class ReleasesConfirm extends Component<ReleasesConfirmProps, ReleasesConfirmSta
   }
 
   onRevertClick() {
-    this.props.triggerGAEvent("click-revert");
     this.props.cancelPendingReleases();
     this.setState({
       showDetails: false,
@@ -80,8 +77,6 @@ class ReleasesConfirm extends Component<ReleasesConfirmProps, ReleasesConfirmSta
   }
 
   onApplyClick() {
-    this.props.triggerGAEvent("click-save");
-
     this.setState({
       isLoading: true,
     });
@@ -109,9 +104,6 @@ class ReleasesConfirm extends Component<ReleasesConfirmProps, ReleasesConfirmSta
   }
 
   toggleDetails() {
-    this.props.triggerGAEvent(
-      `click-${this.state.showDetails ? "hide" : "show"}-details`,
-    );
     this.setState({
       showDetails: !this.state.showDetails,
     });
@@ -198,8 +190,6 @@ const mapDispatchToProps = (dispatch: AppDispatch): DispatchProps => {
     cancelPendingReleases: () => dispatch(cancelPendingChanges()),
     setProgressiveRelease: (percentage: Progressive) =>
       dispatch(setProgressiveRelease(percentage)),
-    triggerGAEvent: (...eventProps: Parameters<typeof triggerGAEvent>) =>
-      dispatch(triggerGAEvent(...eventProps)),
   };
 };
 

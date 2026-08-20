@@ -4,6 +4,8 @@ from canonicalwebteam.store_api.dashboard import Dashboard
 from canonicalwebteam.exceptions import StoreApiResponseErrorList
 
 # Local
+from cache.cache_utility import redis_cache
+from webapp.endpoints.utils import get_auditable_map_cache_key
 from webapp.helpers import api_publisher_session
 from webapp.decorators import login_required
 
@@ -88,6 +90,8 @@ def post_release(snap_name):
                 ),
                 400,
             )
+
+    redis_cache.delete(get_auditable_map_cache_key(snap_name))
 
     return flask.jsonify(response)
 

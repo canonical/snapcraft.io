@@ -1,6 +1,5 @@
 import { createSlice, Draft, PayloadAction } from "@reduxjs/toolkit";
 import { getPendingChannelMap, getReleases } from "../selectors";
-import { triggerGAEvent } from "../analytics";
 import type {
   PendingChangesState,
   PendingReleaseItem,
@@ -174,12 +173,6 @@ export function promoteChannel(channel: string, targetChannel: string) {
 
 export function undoRelease(revision: Revision, channel: string) {
   return (dispatch: AppDispatch) => {
-    dispatch(
-      triggerGAEvent(
-        "click-cancel-promotion",
-        `${channel}/${revision.architectures[0]}`,
-      ),
-    );
     return dispatch(removePendingRelease({
       revision,
       channel,

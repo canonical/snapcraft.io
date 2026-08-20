@@ -145,7 +145,6 @@ function PackageList({
                       const query = searchParams.get("q");
                       if (query) {
                         trackSearchResultClicked(
-                          query,
                           (parseInt(currentPage) - 1) * ITEMS_PER_PAGE +
                             index +
                             1,

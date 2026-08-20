@@ -13,6 +13,34 @@ import json
 
 GITHUB_WEBHOOK_SECRET = getenv("GITHUB_WEBHOOK_SECRET")
 
+REPOSITORY_CHECK_TIMEOUT = 5
+
+
+def repository_is_public(repository, session=None):
+    """Whether ``owner/repo`` can still be read on github.com.
+
+    A deleted, renamed or private repository leaves the recipe pointing at a
+    URL that 404s, so a provenance link built from it would invite the user
+    to verify a commit they cannot open. Uses HEAD against the web UI, not
+    the REST API, which caps anonymous callers at 60 requests/hour.
+
+    Fails open: only a definitive 404 counts as gone, so a GitHub wobble
+    cannot erase provenance we legitimately hold.
+    """
+    if not repository:
+        return True
+
+    try:
+        response = (session or api.requests.Session()).head(
+            f"https://github.com/{repository}",
+            timeout=REPOSITORY_CHECK_TIMEOUT,
+            allow_redirects=True,
+        )
+    except Exception:
+        return True
+
+    return response.status_code != 404
+
 
 class InvalidYAML(Exception):
     pass
@@ -246,6 +274,7 @@ class GitHub:
               edges {
                 node {
                   name
+                  nameWithOwner
                 }
                 }
                 pageInfo {
@@ -271,7 +300,16 @@ class GitHub:
             )
             repositories.extend(next_page)
 
-        return repositories
+        repos = [
+            (
+                {**repo, "owner": repo.get("nameWithOwner", "").split("/")[0]}
+                if "nameWithOwner" in repo and repo.get("nameWithOwner")
+                else {**repo, "owner": None}
+            )
+            for repo in repositories
+        ]
+
+        return repos
 
     def check_permissions_over_repo(self, owner, repo, permission="push"):
         """

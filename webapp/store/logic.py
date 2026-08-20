@@ -40,6 +40,25 @@ def get_publisher_snaps(device_gateway, publisher):
     return snaps
 
 
+def hydrate_featured_snaps(featured_snaps, snaps_by_name):
+    """Hydrate curated featured snaps with live store API data.
+
+    'featured_snaps' is the editorial list from a publisher's YAML
+    (package_name, background, description). title/summary/icon come from
+    'snaps_by_name' (built from the API). Snaps missing from the API
+    (unlisted/private/removed) are dropped.
+    """
+    return [
+        {
+            **snaps_by_name[snap["package_name"]],
+            "background": snap.get("background"),
+            "description": snap.get("description"),
+        }
+        for snap in featured_snaps or []
+        if snap["package_name"] in snaps_by_name
+    ]
+
+
 def get_snap_banner_url(snap_result):
     """Get snaps banner url from media object
 
@@ -456,6 +475,25 @@ def get_lowest_available_risk(channel_map, track):
                         lowest_available_risk = release["risk"]
 
     return lowest_available_risk
+
+
+def get_default_architecture(architectures):
+    """Pick the default architecture from a list of architectures.
+
+    Prefer ``amd64`` when published, otherwise the first architecture
+    sorted. This is the single source of truth for the default-architecture
+    preference, shared by the provenance badge endpoint and the security tab.
+
+    :param architectures: Iterable of architecture names
+
+    :returns: The default architecture, or ``None`` if the list is empty
+    """
+    architectures = list(architectures)
+    if not architectures:
+        return None
+    if "amd64" in architectures:
+        return "amd64"
+    return sorted(architectures)[0]
 
 
 def extract_info_channel_map(channel_map, track, risk):

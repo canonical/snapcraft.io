@@ -130,6 +130,51 @@ class GetDetailsPageTest(TestCase):
         self.fail(f"Context variable exists: {name}")
 
     @responses.activate
+    def test_icons_snap_details_page_uses_store_route(self):
+        snap_name = "icons"
+        payload = copy.deepcopy(SNAP_PAYLOAD)
+        payload["name"] = snap_name
+
+        info_url = "".join(
+            [
+                "https://api.snapcraft.io/v2/snaps/info/",
+                snap_name,
+            ]
+        )
+        details_url = "".join(
+            [
+                "https://api.snapcraft.io/api/v1/snaps/details/",
+                snap_name,
+                "?",
+                urlencode({"fields": ",".join(["aliases"])}),
+                "&channel=",
+            ]
+        )
+        metrics_url = "https://api.snapcraft.io/api/v1/snaps/metrics"
+        sbom_url = "".join(
+            [
+                "https://api.snapcraft.io/api/v1/sboms/download/",
+                f"sbom_snap_{self.snap_id}_{self.revision}.spdx2.3.json",
+            ]
+        )
+
+        responses.add(responses.GET, info_url, json=payload, status=200)
+        responses.add(
+            responses.GET,
+            details_url,
+            json=EMPTY_EXTRA_DETAILS_PAYLOAD,
+            status=200,
+        )
+        responses.add(responses.POST, metrics_url, json={}, status=200)
+        responses.add(responses.HEAD, sbom_url, json={}, status=200)
+
+        response = self.client.get("/" + snap_name)
+
+        self.assertEqual(response.status_code, 200)
+        self.assert_template_used("store/snap-details.html")
+        self.assertEqual(self.get_context_variable("package_name"), snap_name)
+
+    @responses.activate
     def test_more_from_publisher_uses_api(self):
         snap_name = "clion"
         payload = copy.deepcopy(SNAP_PAYLOAD)
@@ -192,6 +237,14 @@ class GetDetailsPageTest(TestCase):
             s for s in publisher_snaps if s["package_name"] == "goland"
         )
         self.assertEqual(goland["title"], "GoLand")
+
+        # Featured snaps are hydrated from the API. intellij-idea is in
+        # the API response so it stays, pycharm is not so it is dropped.
+        featured = self.get_context_variable("publisher_featured_snaps")
+        featured_names = [snap["package_name"] for snap in featured]
+        self.assertEqual(featured_names, ["intellij-idea"])
+        self.assertEqual(featured[0]["title"], "IntelliJ IDEA")
+        self.assertEqual(featured[0]["background"], "#000000")
 
     @responses.activate
     def test_has_sboms_success(self):
@@ -411,8 +464,7 @@ class GetDetailsPageTest(TestCase):
         with self.client.session_transaction() as s:
             # make test session 'authenticated'
             s["publisher"] = {"nickname": "toto", "fullname": "Totinio"}
-            s["macaroon_root"] = "test"
-            s["macaroon_discharge"] = "test"
+            s["macaroon_exchanged"] = "test"
             # mock test user snaps list
             s["user_snaps"] = {"toto": {"snap-id": "test"}}
 

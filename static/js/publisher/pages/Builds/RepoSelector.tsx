@@ -276,6 +276,17 @@ function RepoSelector({ githubData, setAutoTriggerBuild }: Props) {
       });
 
       if (response.ok) {
+        const data = await response.json().catch(() => null);
+
+        if (data && data.authorization_required && data.redirect_url) {
+          // The store authorization needs a discharge macaroon obtained
+          // via a login.ubuntu.com redirect round-trip; fetch() can't
+          // complete that on the page's behalf, so navigate there for
+          // real. We'll land back on this page once it's done.
+          window.location.href = data.redirect_url;
+          return;
+        }
+
         setAutoTriggerBuild(true);
         setRepoConnected(true);
       } else {

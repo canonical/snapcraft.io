@@ -22,8 +22,8 @@ from webapp.config import (
     DNS_VERIFICATION_SALT,
     IS_DEVELOPMENT,
     VITE_PORT,
-    ANALYTICS_ENDPOINT,
     DEFAULT_ICON_URL,
+    STATUS_BANNER,
 )
 
 from canonicalwebteam.exceptions import (
@@ -138,6 +138,15 @@ if IS_DEVELOPMENT:
 
 
 def refresh_redirect():
+    if "macaroon_exchanged" in flask.session:
+        authentication.reset_auth_session(flask.session)
+        return flask.redirect(
+            flask.url_for(
+                "login.login_handler",
+                next=flask.request.full_path.rstrip("?"),
+            )
+        )
+
     try:
         macaroon_discharge = authentication.get_refreshed_discharge(
             flask.session["macaroon_discharge"]
@@ -205,8 +214,8 @@ def snapcraft_utility_processor():
         "stores": stores,
         "format_link": template_utils.format_link,
         "DNS_VERIFICATION_SALT": DNS_VERIFICATION_SALT,
-        "ANALYTICS_ENDPOINT": ANALYTICS_ENDPOINT,
         "DEFAULT_ICON_URL": DEFAULT_ICON_URL,
+        "STATUS_BANNER": STATUS_BANNER,
     }
 
 

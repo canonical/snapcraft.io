@@ -9,7 +9,6 @@ interface ChannelMenuProps {
   tooltip?: JSX.Element;
   promoteToChannel: (channel: string) => void;
   closeChannel?: (channel: string) => void;
-  gaEvent: (channel: string, action: string) => void;
 }
 
 export default class ChannelMenu extends Component<ChannelMenuProps> {
@@ -22,8 +21,6 @@ export default class ChannelMenu extends Component<ChannelMenuProps> {
   }
 
   promoteToChannelClick(targetChannel: string, event: React.MouseEvent) {
-    this.props.gaEvent(targetChannel, "promote");
-
     this.props.promoteToChannel(targetChannel);
 
     if (this.menu) {
@@ -74,8 +71,6 @@ export default class ChannelMenu extends Component<ChannelMenuProps> {
   }
 
   closeChannelClick(channel: string, event: React.MouseEvent) {
-    this.props.gaEvent(channel, "close");
-
     this.props.closeChannel?.(channel);
 
     if (this.menu) {

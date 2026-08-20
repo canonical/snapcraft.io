@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import SnapEvents from "../../libs/events";
-import { triggerEvent } from "../../base/ga";
+import openDesktop, { applyDesktopStoreSupport } from "./openDesktop";
 
 interface SnapElement extends HTMLElement {
   dataset: {
@@ -29,7 +29,7 @@ interface SlideInstallInstructionsElement extends HTMLElement {
   closest: (selector: string) => Element | null;
 }
 
-interface ChannelData {
+export interface ChannelData {
   track: string;
   confinement: string;
   "released-at": string;
@@ -40,7 +40,7 @@ interface ChannelData {
   revision: string;
 }
 
-type ChannelMapData = Record<string, Record<string, ChannelData[]>>;
+export type ChannelMapData = Record<string, Record<string, ChannelData[]>>;
 
 class ChannelMap {
   RISK_ORDER: string[];
@@ -210,16 +210,6 @@ class ChannelMap {
             this.openButton = null;
           } else {
             this.openChannelMap(target);
-
-            triggerEvent({
-              category:
-                this.openScreenName === "channel-map-install"
-                  ? "cta-0"
-                  : "cta-1",
-              from: window.location.href,
-              to: target.dataset.controls ?? "",
-              label: target.innerText,
-            });
           }
         },
 
@@ -252,12 +242,6 @@ class ChannelMap {
           if (isSnapElement(target)) {
             event.preventDefault();
             this.openDesktop(target);
-            triggerEvent({
-              category: "cta-1",
-              from: window.location.href,
-              to: `snap://${target.dataset.snap}`,
-              label: target.innerText,
-            });
           } else {
             console.error("Target is not a SnapElement");
           }
@@ -394,22 +378,7 @@ class ChannelMap {
   }
 
   openDesktop(clickEl: HTMLElement) {
-    const name = clickEl.dataset.snap?.trim() || "";
-    let iframe = document.querySelector(
-      ".js-snap-open-frame",
-    ) as HTMLIFrameElement | null;
-
-    if (iframe && iframe.parentNode) {
-      iframe.parentNode.removeChild(iframe);
-    }
-
-    iframe = document.createElement("iframe");
-    iframe.className = "js-snap-open-frame";
-    iframe.style.position = "absolute";
-    iframe.style.top = "-9999px";
-    iframe.style.left = "-9999px";
-    iframe.src = `snap://${name}`;
-    document.body.appendChild(iframe);
+    openDesktop(clickEl as HTMLButtonElement);
   }
 
   selectScreen(screenEl: HTMLElement) {
@@ -517,6 +486,8 @@ class ChannelMap {
     ) as HTMLElement;
 
     holder.innerHTML = newDiv.innerHTML;
+
+    applyDesktopStoreSupport(holder);
   }
 
   writeTable(el: HTMLElement, data: string[][], tableType?: string): void {

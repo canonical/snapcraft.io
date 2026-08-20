@@ -27,6 +27,24 @@ class GetListingPage(BaseTestCases.EndpointLoggedInErrorHandling):
         )
 
     @responses.activate
+    def test_icons_listing_uses_publisher_route(self):
+        snap_name = "icons"
+        api_url = "https://dashboard.snapcraft.io/dev/api/snaps/info/{}"
+        api_url = api_url.format(snap_name)
+        payload = {
+            "snap_id": "id",
+            "snap_name": snap_name,
+            "links": {"website": []},
+        }
+
+        responses.add(responses.GET, api_url, json=payload, status=200)
+
+        response = self.client.get("/icons/listing")
+
+        self.assertEqual(response.status_code, 200)
+        self.assert_template_used("store/publisher.html")
+
+    @responses.activate
     def test_page_not_found(self):
         payload = {"error_list": []}
         responses.add(responses.GET, self.api_url, json=payload, status=404)

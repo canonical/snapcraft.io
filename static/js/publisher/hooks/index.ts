@@ -17,8 +17,8 @@ import useSortTableData from "./useSortTableData";
 import useAccountKeys from "./useAccountKeys";
 import useRemodels from "./useRemodels";
 import useSerialLogs from "./useSerialLogs";
-import useEndpointAvailability from "./useEndpointAvailability";
 import useSnapReleaseStatus from "./useSnapReleaseStatus";
+import useUserPrivileges from "./useUserPrivileges";
 
 export {
   useValidationSets,
@@ -40,6 +40,6 @@ export {
   useAccountKeys,
   useRemodels,
   useSerialLogs,
-  useEndpointAvailability,
   useSnapReleaseStatus,
+  useUserPrivileges,
 };

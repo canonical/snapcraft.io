@@ -1,6 +1,9 @@
 from os import getenv
+from unittest import TestCase
+from unittest.mock import MagicMock
+
 from vcr_unittest import VCRTestCase
-from webapp.api.github import GitHub
+from webapp.api.github import GitHub, repository_is_public
 from werkzeug.exceptions import Unauthorized
 
 
@@ -37,6 +40,8 @@ class GitHubTest(VCRTestCase):
     def test_get_org_repositories(self):
         repos = self.client.get_org_repositories("canonical-web-and-design")
         [self.assertIn("name", repo) for repo in repos]
+        [self.assertIn("nameWithOwner", repo) for repo in repos]
+        [self.assertIn("owner", repo) for repo in repos]
 
         # Test Unauthorized exception when using bad credentials
         self.client.access_token = "bad-token"
@@ -101,3 +106,43 @@ class GitHubTest(VCRTestCase):
             "build-staging-snapcraft-io", "test5"
         )
         self.assertEqual(None, case2.get("name"))
+
+
+class RepositoryIsPublicTest(TestCase):
+    """A recipe can outlive the repository it names."""
+
+    def _session(self, status_code=None, error=None):
+        session = MagicMock()
+        if error:
+            session.head.side_effect = error
+        else:
+            session.head.return_value = MagicMock(status_code=status_code)
+        return session
+
+    def test_public_repository(self):
+        self.assertTrue(
+            repository_is_public("snapcrafters/mumble", self._session(200))
+        )
+
+    def test_missing_repository(self):
+        self.assertFalse(repository_is_public("gone/repo", self._session(404)))
+
+    def test_no_repository(self):
+        session = self._session(200)
+        self.assertTrue(repository_is_public(None, session))
+        # Nothing to check, so nothing requested.
+        session.head.assert_not_called()
+
+    def test_fails_open_on_error(self):
+        # A timeout must never erase provenance we hold.
+        self.assertTrue(
+            repository_is_public(
+                "snapcrafters/mumble",
+                self._session(error=Exception("read timed out")),
+            )
+        )
+
+    def test_fails_open_on_rate_limit(self):
+        self.assertTrue(
+            repository_is_public("snapcrafters/mumble", self._session(429))
+        )

@@ -95,6 +95,7 @@ function SerialLog(): React.JSX.Element {
             Error: {error.message}
           </Notification>
         )}
+        <SerialLogDateSelectors onApplyDateRange={handleDateRangeApply} />
         {isLoading ? (
           <p>
             <Icon name="spinner" className="u-animation--spin" />
@@ -107,7 +108,6 @@ function SerialLog(): React.JSX.Element {
                 {data.message || "Unable to fetch serial logs"}
               </Notification>
             )}
-            <SerialLogDateSelectors onApplyDateRange={handleDateRangeApply} />
             {data && data.success !== false && (
               <SerialLogTable
                 handlePageForward={handlePageForward}

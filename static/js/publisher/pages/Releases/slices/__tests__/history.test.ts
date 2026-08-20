@@ -3,10 +3,6 @@ import reducer, { openHistory, closeHistory, toggleHistory } from "../history";
 import type { HistoryFilters, HistoryState } from "../../../../types/releaseTypes";
 import type { AppDispatch, RootState } from "../../store";
 
-vi.mock("../analytics", () => ({
-  triggerGAEvent: vi.fn().mockReturnValue({ type: "analytics/triggerGAEvent" }),
-}));
-
 describe("history", () => {
   it("should return the initial state", () => {
     expect(reducer(undefined, {} as UnknownAction)).toEqual({

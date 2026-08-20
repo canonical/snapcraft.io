@@ -15,6 +15,12 @@ load_plain_env_variables()
 SECRET_KEY = os.getenv("SECRET_KEY")
 LOGIN_URL = os.getenv("LOGIN_URL", "https://login.ubuntu.com")
 BSI_URL = os.getenv("BSI_URL", "https://build.snapcraft.io")
+# Max pages of Launchpad completed builds to scan when resolving snap
+# provenance (page size is 75).
+LP_MAX_BUILD_PAGES = int(os.getenv("LP_MAX_BUILD_PAGES", "5"))
+# Max Launchpad recipes to scan per store name: one name can match dozens
+# (firefox has 62), so the right one is rarely the first.
+LP_MAX_RECIPES = int(os.getenv("LP_MAX_RECIPES", "5"))
 ENVIRONMENT = os.getenv("ENVIRONMENT", "devel")
 IS_DEVELOPMENT = ENVIRONMENT == "devel"
 COMMIT_ID = os.getenv("COMMIT_ID", "commit_id")
@@ -44,12 +50,13 @@ SEND_FILE_MAX_AGE_DEFAULT = 10 * 365 * 24 * 60 * 60
 CONTENT_DIRECTORY = {"PUBLISHER_PAGES": "store/content/publishers/"}
 
 APP_NAME = "snapcraft"
-ANALYTICS_ENDPOINT = os.getenv("ANALYTICS_ENDPOINT", "").strip()
 
 # Fallback icon shown when a snap has no icon of its own
 DEFAULT_ICON_URL = (
     "https://assets.ubuntu.com/v1/be6eb412-snapcraft-missing-icon.svg"
 )
+
+STATUS_BANNER = os.getenv("STATUS_BANNER", "").strip()
 
 REPORT_SHEET_URL = os.getenv("REPORT_SHEET_URL", "").strip()
 TURNSTILE_SITE_KEY = os.getenv("TURNSTILE_SITE_KEY", "").strip()

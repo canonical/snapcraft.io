@@ -27,7 +27,7 @@ function PublishedSnapSection({
       {snaps.length > 0 && (
         <>
           <Accordion
-            className="accordion-bold-titles"
+            className="accordion-bold-titles snap-installs-metrics-accordion"
             sections={[
               {
                 key: "publisher-metrics",
