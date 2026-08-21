@@ -1,5 +1,6 @@
 import { useEffect, useRef } from "react";
 import { Row, Col, Button } from "@canonical/react-components";
+import { Button as PragmaButton } from "@canonical/react-ds-global";
 
 import debounce from "../../../libs/debounce";
 
@@ -126,9 +127,10 @@ function SaveAndPreview({
                   </span>
                 </Button>
               )}
-              <Button
-                appearance="default"
+              <PragmaButton
+                importance="secondary"
                 disabled={!isDirty}
+                className="u-no-margin--bottom"
                 type="reset"
                 data-js="save-and-preview-revert"
                 onClick={() => {
@@ -136,7 +138,7 @@ function SaveAndPreview({
                 }}
               >
                 Revert
-              </Button>
+              </PragmaButton>
               <Button
                 appearance="positive"
                 disabled={!isDirty || isSaving}
