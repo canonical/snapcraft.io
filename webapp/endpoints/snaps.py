@@ -366,15 +366,15 @@ def permissions(snap_name):
         interfaces = []
         for name, plug in snap_yaml.get("plugs", {}).items():
             interface = plug.get("interface", name)
-            details = SNAP_INTERFACE_DETAILS.get(interface, {})
+            interface_details = SNAP_INTERFACE_DETAILS.get(interface, {})
 
             interfaces.append(
                 {
                     "name": name,
                     "interface": interface,
-                    "description": details.get("description"),
-                    "categories": details.get("categories"),
-                    "auto_connect": details.get("auto_connect"),
+                    "description": interface_details.get("description"),
+                    "categories": interface_details.get("categories"),
+                    "auto_connect": interface_details.get("auto_connect"),
                     # "raw_yaml": "TODO",
                     # "details": ["TODO"]
                 }
