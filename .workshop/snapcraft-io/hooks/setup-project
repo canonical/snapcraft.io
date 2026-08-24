@@ -1,0 +1,16 @@
+uv venv --allow-existing
+uv pip install -r requirements.txt
+yarn install
+
+cat <<EOF >> ~/.profile
+
+# activate .venv when entering shell
+. /project/.venv/bin/activate
+
+# source env vars from .env and .env.local
+set -a
+. /project/.env
+[ -f /project/.env.local ] && . /project/.env.local
+set +a
+
+EOF
