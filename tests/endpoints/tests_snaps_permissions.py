@@ -45,6 +45,25 @@ class TestSnapPermissionsEndpoint(TestEndpoints):
             ],
         )
 
+    @patch.dict(
+        "webapp.endpoints.snaps.SNAP_INTERFACE_DETAILS",
+        {
+            "network": {
+                "description": "enables network access",
+                "categories": ["Network"],
+                "auto_connect": "yes",
+            },
+            "home": {
+                "description": "access non-hidden files in the home directory",
+                "categories": ["Storage", "Personal data"],
+                "auto_connect": (
+                    "yes on classic (traditional distributions), "
+                    "no otherwise"
+                ),
+            },
+        },
+        clear=True,
+    )
     @patch("webapp.endpoints.snaps.device_gateway.get_item_details")
     def test_returns_confinement_and_interfaces(self, mock_get_item_details):
         mock_get_item_details.return_value = {
@@ -77,14 +96,42 @@ class TestSnapPermissionsEndpoint(TestEndpoints):
         self.assertEqual(
             data["data"]["interfaces"],
             [
-                {"name": "network", "interface": "network"},
-                {"name": "home", "interface": "home"},
+                {
+                    "name": "network",
+                    "interface": "network",
+                    "description": "enables network access",
+                    "categories": ["Network"],
+                    "auto_connect": "yes",
+                },
+                {
+                    "name": "home",
+                    "interface": "home",
+                    "description": (
+                        "access non-hidden files in the home directory"
+                    ),
+                    "categories": ["Storage", "Personal data"],
+                    "auto_connect": (
+                        "yes on classic (traditional distributions), "
+                        "no otherwise"
+                    ),
+                },
             ],
         )
         mock_get_item_details.assert_called_once_with(
             "mumble", api_version=2, fields=["snap-yaml"]
         )
 
+    @patch.dict(
+        "webapp.endpoints.snaps.SNAP_INTERFACE_DETAILS",
+        {
+            "desktop": {
+                "description": "provides access to common desktop elements",
+                "categories": ["Desktop"],
+                "auto_connect": "yes",
+            }
+        },
+        clear=True,
+    )
     @patch("webapp.endpoints.snaps.device_gateway.get_item_details")
     def test_defaults_interface_name_when_missing(self, mock_get_item_details):
         mock_get_item_details.return_value = {
@@ -108,7 +155,61 @@ class TestSnapPermissionsEndpoint(TestEndpoints):
         self.assertTrue(data["success"])
         self.assertEqual(
             data["data"]["interfaces"],
-            [{"name": "desktop", "interface": "desktop"}],
+            [
+                {
+                    "name": "desktop",
+                    "interface": "desktop",
+                    "description": (
+                        "provides access to common desktop elements"
+                    ),
+                    "categories": ["Desktop"],
+                    "auto_connect": "yes",
+                }
+            ],
+        )
+
+    @patch.dict(
+        "webapp.endpoints.snaps.SNAP_INTERFACE_DETAILS",
+        {},
+        clear=True,
+    )
+    @patch("webapp.endpoints.snaps.device_gateway.get_item_details")
+    def test_returns_none_for_interface_details_when_not_in_docs_map(
+        self, mock_get_item_details
+    ):
+        mock_get_item_details.return_value = {
+            "channel-map": [
+                {
+                    "channel": {
+                        "name": "latest/stable",
+                        "architecture": "amd64",
+                    },
+                    "snap-yaml": (
+                        "confinement: strict\n"
+                        "plugs:\n"
+                        "  custom-plug:\n"
+                        "    interface: custom-interface\n"
+                    ),
+                }
+            ]
+        }
+
+        data = self.client.get(
+            self._url("channel=latest/stable&architecture=amd64")
+        ).get_json()
+
+        self.assertTrue(data["success"])
+        self.assertEqual(
+            data["data"]["interfaces"],
+            [
+                {
+                    "name": "custom-plug",
+                    "interface": "custom-interface",
+                    "description": None,
+                    "categories": None,
+                    "auto_connect": None,
+                }
+            ],
         )
 
     @patch("webapp.endpoints.snaps.device_gateway.get_item_details")
