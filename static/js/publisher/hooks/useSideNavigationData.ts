@@ -8,11 +8,13 @@ import {
   useBrandStores,
   usePublisher,
   useValidationSets,
+  useUserPrivileges,
 } from "./";
 import { brandIdState, brandStoresState } from "../state/brandStoreState";
 import { publisherState } from "../state/publisherState";
 import { validationSetsState } from "../state/validationSetsState";
 import { accountKeysState } from "../state/accountKeysState";
+import { userPrivilegesState } from "../state/userPrivilegesState";
 
 /**
  * Load all the data that is needed for side navigation, more specifically:
@@ -30,12 +32,14 @@ function useSideNavigationData() {
   const { data: brandStoresData } = useBrandStores();
   const { data: brandData } = useBrand(storeId);
   const { data: accountKeysData } = useAccountKeys();
+  const { data: userPrivilegesData } = useUserPrivileges();
 
   const setBrandStores = useSetAtom(brandStoresState);
   const setPublisher = useSetAtom(publisherState);
   const setBrandId = useSetAtom(brandIdState);
   const setValidationSets = useSetAtom(validationSetsState);
   const setAccountKeys = useSetAtom(accountKeysState);
+  const setUserPrivileges = useSetAtom(userPrivilegesState);
 
   useEffect(() => {
     setBrandId(brandData?.["account-id"] || brandIdState.init);
@@ -56,6 +60,10 @@ function useSideNavigationData() {
   useEffect(() => {
     setAccountKeys(accountKeysData || accountKeysState.init);
   }, [accountKeysData]);
+
+  useEffect(() => {
+    setUserPrivileges(userPrivilegesData || userPrivilegesState.init);
+  }, [userPrivilegesData]);
 }
 
 export default useSideNavigationData;

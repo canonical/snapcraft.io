@@ -9,6 +9,7 @@ The web frontend for the snap store.
 import webapp.config  # noqa: F401
 
 import sentry_sdk
+from flask import send_from_directory
 
 from canonicalwebteam.flask_base.app import FlaskBase
 from webapp.blog.views import init_blog
@@ -52,6 +53,26 @@ def create_app(testing=False):
     app.config.from_object("webapp.config")
     app.name = "snapcraft"
     app.testing = testing
+
+    # This is required because Pragma icons are served from `/icons` at the
+    # root of the project, which is a problem for snapcraft.io as that is
+    # the URL pattern we use for snap names. To resolve this, we are
+    # serving any requests to `/icons/<ICON_NAME>.svg` from static icons,
+    # which leaves the possibility for a snap called "icons" and its
+    # subsequent publisher pages.
+    #
+    # DS icons are exposed through the tracked `static/icons` symlink.
+    def serve_ds_icon(icon_name):
+        return send_from_directory(
+            f"{app.static_folder}/icons",
+            f"{icon_name}.svg",
+        )
+
+    app.add_url_rule(
+        "/icons/<icon_name>.svg",
+        "ds-icons",
+        serve_ds_icon,
+    )
 
     init_extensions(app)
     set_handlers(app)

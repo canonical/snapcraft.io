@@ -11,6 +11,13 @@ on:
         description: 'Environment (Production, Staging or Staging API)'
         required: true
         type: string
+    secrets:
+      VAULT_APPROLE_ROLE_ID:
+        required: true
+      VAULT_APPROLE_SECRET_ID:
+        required: true
+      CHARMHUB_TOKEN:
+        required: true
   workflow_dispatch:
     inputs:
       environment:

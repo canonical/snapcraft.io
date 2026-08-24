@@ -16,13 +16,6 @@ interface AuditableRevisionsResponse {
   error?: boolean;
 }
 
-const archBucket = (arch: string): string => {
-  if (arch === "amd64" || arch === "arm64") {
-    return arch;
-  }
-  return "other";
-};
-
 const SPINNER = '<i class="p-icon--spinner u-animation--spin">Loading</i>';
 const NOT_AVAILABLE =
   '<span class="u-text-muted" aria-label="Not available">&mdash;</span>';
@@ -68,10 +61,12 @@ class SecurityTab {
       '[data-js="details-tab"][aria-controls="tab-security"]',
     );
 
-    tab?.addEventListener("click", () => {
+    const openTab = () => {
       trackEvent("provenance_security_tab_open");
       this.loadProvenance();
-    });
+    };
+
+    tab?.addEventListener("click", openTab);
 
     this.initArchSelect(architectures);
     this.renderTable();
@@ -79,7 +74,7 @@ class SecurityTab {
     // Fetched only once the tab is opened, since on a cache miss it costs a
     // full Launchpad scan. A #tab-security link is already open by now.
     if (tab?.getAttribute("aria-selected") === "true") {
-      this.loadProvenance();
+      openTab();
     }
   }
 
@@ -99,9 +94,7 @@ class SecurityTab {
     this.archSelect.addEventListener("change", (event) => {
       this.arch = (event.target as HTMLSelectElement).value;
       this.renderTable();
-      trackEvent("provenance_arch_switch", {
-        provenance_arch: archBucket(this.arch),
-      });
+      trackEvent("provenance_arch_switch", { provenance_arch: this.arch });
     });
   }
 
