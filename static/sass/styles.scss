@@ -578,3 +578,9 @@ html {
     fill: $colors--theme--background-default;
   }
 }
+
+// The default Pragma tooltip doesn't have a `z-index` so gets
+// overlapped by other page elements
+.ds.tooltip {
+  z-index: 10;
+}

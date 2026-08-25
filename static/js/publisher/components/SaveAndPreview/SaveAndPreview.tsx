@@ -1,5 +1,6 @@
 import { useEffect, useRef } from "react";
-import { Row, Col, Button } from "@canonical/react-components";
+import { Row, Col } from "@canonical/react-components";
+import { Button, withTooltip } from "@canonical/react-ds-global";
 
 import debounce from "../../../libs/debounce";
 
@@ -11,6 +12,11 @@ type Props = {
   isValid: boolean;
   showPreview?: boolean;
 };
+
+const PreviewButtonWithTooltip = withTooltip(
+  Button,
+  <>Previews will only work in the same browser, locally</>,
+);
 
 function SaveAndPreview({
   snapName,
@@ -96,7 +102,7 @@ function SaveAndPreview({
   return (
     <>
       <div
-        className="snapcraft-p-sticky js-sticky-bar"
+        className="snapcraft-p-sticky"
         ref={stickyBar}
         style={{ margin: "0 -1.5rem", padding: "0 1.5rem" }}
       >
@@ -110,24 +116,24 @@ function SaveAndPreview({
           <Col size={5}>
             <div className="u-align--right">
               {showPreview && (
-                <Button
-                  type="submit"
-                  className="p-button--base p-tooltip--btm-center"
-                  aria-describedby="preview-tooltip"
-                  form="preview-form"
-                >
-                  Preview
-                  <span
-                    className="p-tooltip__message"
-                    role="tooltip"
-                    id="preview-tooltip"
+                // Must wrap to set the right margin because the `Button`
+                // within `PreviewButtonWithTooltip` is wrapped, and these
+                // styles go directly to the `Button` component, therefore
+                // the spacing doesn't take effect
+                <span style={{ marginRight: "1rem" }}>
+                  <PreviewButtonWithTooltip
+                    aria-describedby="preview-tooltip"
+                    type="submit"
+                    form="preview-form"
+                    importance="tertiary"
                   >
-                    Previews will only work in the same browser, locally
-                  </span>
-                </Button>
+                    Preview
+                  </PreviewButtonWithTooltip>
+                </span>
               )}
               <Button
-                appearance="default"
+                importance="secondary"
+                className="u-no-margin--bottom"
                 disabled={!isDirty}
                 type="reset"
                 data-js="save-and-preview-revert"
@@ -138,19 +144,17 @@ function SaveAndPreview({
                 Revert
               </Button>
               <Button
-                appearance="positive"
+                anticipation="constructive"
+                importance="primary"
+                className="u-no-margin--bottom"
                 disabled={!isDirty || isSaving}
                 type="submit"
-                style={{ minWidth: "68px" }}
+                // Needed so save loading button doesn't cause a jump
+                style={{ width: "68px" }}
+                loading={isSaving}
                 data-js="save-and-preview-save"
               >
-                {isSaving ? (
-                  <i className="p-icon--spinner is-light u-animation--spin">
-                    Saving
-                  </i>
-                ) : (
-                  "Save"
-                )}
+                {isSaving ? "Saving" : "Save"}
               </Button>
             </div>
           </Col>

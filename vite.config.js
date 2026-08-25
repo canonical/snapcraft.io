@@ -40,6 +40,7 @@ export default defineConfig({
     global: "globalThis", // in dev mode "randomstring" uses `global` rather than `globalThis`
   },
   resolve: {
+    dedupe: ["react", "react-dom"],
     alias: [
       // by default react-components exports a CJS module that can't be tree-shaken, we consume the ESM instead
       {
