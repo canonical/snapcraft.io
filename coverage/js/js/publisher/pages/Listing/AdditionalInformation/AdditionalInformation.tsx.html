@@ -25,7 +25,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>1/1</span>
+                <span class='fraction'>4/4</span>
             </div>
         
             
@@ -46,7 +46,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>1/1</span>
+                <span class='fraction'>4/4</span>
             </div>
         
             
@@ -169,7 +169,10 @@
 <a name='L104'></a><a href='#L104'>104</a>
 <a name='L105'></a><a href='#L105'>105</a>
 <a name='L106'></a><a href='#L106'>106</a>
-<a name='L107'></a><a href='#L107'>107</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L107'></a><a href='#L107'>107</a>
+<a name='L108'></a><a href='#L108'>108</a>
+<a name='L109'></a><a href='#L109'>109</a>
+<a name='L110'></a><a href='#L110'>110</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -194,10 +197,13 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">246x</span>
+<span class="cline-any cline-yes">246x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">246x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">166x</span>
+<span class="cline-any cline-yes">246x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -277,7 +283,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import {
   UseFormRegister,
-  UseFormGetValues,
   UseFormSetValue,
   UseFormWatch,
   FieldValues,
@@ -291,7 +296,6 @@ import type { ListingData } from "../../../types";
 type Props = {
   data: ListingData;
   register: UseFormRegister&lt;FieldValues&gt;;
-  getValues: UseFormGetValues&lt;FieldValues&gt;;
   setValue: UseFormSetValue&lt;FieldValues&gt;;
   watch: UseFormWatch&lt;FieldValues&gt;;
 };
@@ -299,10 +303,15 @@ type Props = {
 function AdditionalInformation({
   data,
   register,
-  getValues,
   setValue,
   watch,
 }: Props): React.JSX.Element {
+  const publicMetricsEnabled = watch("public_metrics_enabled") as boolean;
+  const publicMetricsTerritories = watch(
+    "public_metrics_territories",
+  ) as boolean;
+  const publicMetricsDistros = watch("public_metrics_distros") as boolean;
+&nbsp;
   return (
     &lt;&gt;
       &lt;h2 className="p-heading--4"&gt;Additional information&lt;/h2&gt;
@@ -326,7 +335,7 @@ function AdditionalInformation({
                 className="p-checkbox__input"
                 aria-labelledby="public-metrics-checkbox"
                 {...register("public_metrics_enabled")}
-                defaultChecked={getValues("public_metrics_enabled")}
+                checked={publicMetricsEnabled}
               /&gt;
               &lt;span className="p-checkbox__label" id="public-metrics-checkbox"&gt;
                 Display public popularity charts
@@ -340,9 +349,9 @@ function AdditionalInformation({
                   type="checkbox"
                   className="p-checkbox__input"
                   aria-labelledby="world-map-checkbox"
-                  disabled={!getValues("public_metrics_enabled")}
+                  disabled={!publicMetricsEnabled}
                   {...register("public_metrics_territories")}
-                  defaultChecked={getValues("public_metrics_territories")}
+                  checked={publicMetricsTerritories}
                 /&gt;
                 &lt;span className="p-checkbox__label" id="world-map-checkbox"&gt;
                   World map
@@ -358,9 +367,9 @@ function AdditionalInformation({
                   type="checkbox"
                   className="p-checkbox__input"
                   aria-labelledby="linux-distributions-checkbox"
-                  disabled={!getValues("public_metrics_enabled")}
+                  disabled={!publicMetricsEnabled}
                   {...register("public_metrics_distros")}
-                  defaultChecked={getValues("public_metrics_distros")}
+                  checked={publicMetricsDistros}
                 /&gt;
                 &lt;span
                   className="p-checkbox__label"
@@ -388,7 +397,7 @@ export default AdditionalInformation;
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-08-25T22:06:52.986Z
+                at 2026-08-26T23:03:56.531Z
             </div>
         <script src="../../../../../prettify.js"></script>
         <script>
