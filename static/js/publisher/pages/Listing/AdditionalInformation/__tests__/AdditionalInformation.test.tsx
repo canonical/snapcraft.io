@@ -9,7 +9,7 @@ import { FieldValues, useForm } from "react-hook-form";
 import { getDefaultListingData } from "../../../../utils";
 
 function TestAdditionalInformation() {
-  const { register, setValue, watch, getValues } = useForm<FieldValues>({
+  const { register, setValue, watch } = useForm<FieldValues>({
     defaultValues: getDefaultListingData(mockListingData),
   });
 
@@ -18,7 +18,6 @@ function TestAdditionalInformation() {
       <AdditionalInformation
         data={mockListingData}
         register={register}
-        getValues={getValues}
         setValue={setValue}
         watch={watch}
       />

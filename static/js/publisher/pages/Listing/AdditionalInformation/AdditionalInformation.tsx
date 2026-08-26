@@ -1,6 +1,5 @@
 import {
   UseFormRegister,
-  UseFormGetValues,
   UseFormSetValue,
   UseFormWatch,
   FieldValues,
@@ -14,7 +13,6 @@ import type { ListingData } from "../../../types";
 type Props = {
   data: ListingData;
   register: UseFormRegister<FieldValues>;
-  getValues: UseFormGetValues<FieldValues>;
   setValue: UseFormSetValue<FieldValues>;
   watch: UseFormWatch<FieldValues>;
 };
@@ -22,10 +20,15 @@ type Props = {
 function AdditionalInformation({
   data,
   register,
-  getValues,
   setValue,
   watch,
 }: Props): React.JSX.Element {
+  const publicMetricsEnabled = watch("public_metrics_enabled") as boolean;
+  const publicMetricsTerritories = watch(
+    "public_metrics_territories",
+  ) as boolean;
+  const publicMetricsDistros = watch("public_metrics_distros") as boolean;
+
   return (
     <>
       <h2 className="p-heading--4">Additional information</h2>
@@ -49,7 +52,7 @@ function AdditionalInformation({
                 className="p-checkbox__input"
                 aria-labelledby="public-metrics-checkbox"
                 {...register("public_metrics_enabled")}
-                defaultChecked={getValues("public_metrics_enabled")}
+                checked={publicMetricsEnabled}
               />
               <span className="p-checkbox__label" id="public-metrics-checkbox">
                 Display public popularity charts
@@ -63,9 +66,9 @@ function AdditionalInformation({
                   type="checkbox"
                   className="p-checkbox__input"
                   aria-labelledby="world-map-checkbox"
-                  disabled={!getValues("public_metrics_enabled")}
+                  disabled={!publicMetricsEnabled}
                   {...register("public_metrics_territories")}
-                  defaultChecked={getValues("public_metrics_territories")}
+                  checked={publicMetricsTerritories}
                 />
                 <span className="p-checkbox__label" id="world-map-checkbox">
                   World map
@@ -81,9 +84,9 @@ function AdditionalInformation({
                   type="checkbox"
                   className="p-checkbox__input"
                   aria-labelledby="linux-distributions-checkbox"
-                  disabled={!getValues("public_metrics_enabled")}
+                  disabled={!publicMetricsEnabled}
                   {...register("public_metrics_distros")}
-                  defaultChecked={getValues("public_metrics_distros")}
+                  checked={publicMetricsDistros}
                 />
                 <span
                   className="p-checkbox__label"

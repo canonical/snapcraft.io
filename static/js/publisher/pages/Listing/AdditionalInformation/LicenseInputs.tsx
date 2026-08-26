@@ -22,8 +22,8 @@ type Props = {
 };
 
 function LicenseInputs({ listingData, register, setValue, watch }: Props) {
-  const [licenseType, setLicenseType] = useState(listingData?.license_type);
   const [license, setLicense] = useState(listingData?.license);
+  const licenseType = watch("license_type") as string;
 
   const simpleLicenseId = nanoid();
   const customLicenseId = nanoid();
@@ -50,13 +50,10 @@ function LicenseInputs({ listingData, register, setValue, watch }: Props) {
                 <input
                   type="radio"
                   className="p-radio__input"
-                  name="license-type"
                   aria-labelledby={simpleLicenseId}
                   value="simple"
                   checked={licenseType === "simple"}
-                  onChange={() => {
-                    setLicenseType("simple");
-                  }}
+                  {...register("license_type")}
                 />
                 <span className="p-radio__label" id={simpleLicenseId}>
                   Simple
@@ -68,14 +65,14 @@ function LicenseInputs({ listingData, register, setValue, watch }: Props) {
                 <input
                   type="radio"
                   className="p-radio__input"
-                  name="license-type"
                   aria-labelledby={customLicenseId}
                   value="custom"
                   checked={licenseType === "custom"}
-                  onChange={() => {
-                    setLicenseType("custom");
-                    setValue("license", license);
-                  }}
+                  {...register("license_type", {
+                    onChange: () => {
+                      setValue("license", license);
+                    },
+                  })}
                 />
                 <span className="p-radio__label" id={customLicenseId}>
                   Custom SPDX expression

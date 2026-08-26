@@ -16,10 +16,14 @@ vi.mock("react-router-dom", async (importOriginal) => ({
   }),
 }));
 
-function renderComponent(updateMetadataOnRelease = false) {
+function renderComponent(
+  updateMetadataOnRelease = false,
+  listingDataOverrides = {},
+) {
   const data = {
     ...mockListingData,
     update_metadata_on_release: updateMetadataOnRelease,
+    ...listingDataOverrides,
   };
   const queryClient = new QueryClient();
 
@@ -66,6 +70,222 @@ describe("ListingForm", () => {
     expect(screen.getByRole("button", { name: "Start tour" })).toBeVisible();
   });
 
+  test("Save and Revert buttons reflect form dirty state", async () => {
+    const user = userEvent.setup();
+    await act(async () => {
+      renderComponent();
+    });
+
+    const titleInput = screen.getByRole("textbox", {
+      name: "Title: required",
+    });
+    const saveButton = screen.getByRole("button", { name: "Save" });
+    const revertButton = screen.getByRole("button", { name: "Revert" });
+
+    expect(saveButton).toHaveAttribute("aria-disabled", "true");
+    expect(revertButton).toHaveAttribute("aria-disabled", "true");
+
+    await user.type(titleInput, " edited");
+
+    await waitFor(() => {
+      expect(saveButton).not.toHaveAttribute("aria-disabled", "true");
+      expect(revertButton).not.toHaveAttribute("aria-disabled", "true");
+    });
+
+    await user.clear(titleInput);
+    await user.type(titleInput, "test-snap");
+
+    await waitFor(() => {
+      expect(saveButton).toHaveAttribute("aria-disabled", "true");
+      expect(revertButton).toHaveAttribute("aria-disabled", "true");
+    });
+
+    await user.type(titleInput, " edited");
+    await user.click(revertButton);
+
+    await waitFor(() => {
+      expect(titleInput).toHaveValue("test-snap");
+      expect(saveButton).toHaveAttribute("aria-disabled", "true");
+      expect(revertButton).toHaveAttribute("aria-disabled", "true");
+    });
+  });
+
+  test("Save and Revert buttons are enabled after changing additional information again", async () => {
+    const user = userEvent.setup();
+    await act(async () => {
+      renderComponent();
+    });
+
+    const metricsCheckbox = screen.getByRole("checkbox", {
+      name: "Display public popularity charts",
+    });
+    const saveButton = screen.getByRole("button", { name: "Save" });
+    const revertButton = screen.getByRole("button", { name: "Revert" });
+
+    await user.click(metricsCheckbox);
+
+    await waitFor(() => {
+      expect(saveButton).not.toHaveAttribute("aria-disabled", "true");
+      expect(revertButton).not.toHaveAttribute("aria-disabled", "true");
+    });
+
+    await user.click(revertButton);
+
+    await waitFor(() => {
+      expect(metricsCheckbox).not.toBeChecked();
+      expect(saveButton).toHaveAttribute("aria-disabled", "true");
+      expect(revertButton).toHaveAttribute("aria-disabled", "true");
+    });
+
+    await user.click(metricsCheckbox);
+
+    await waitFor(() => {
+      expect(metricsCheckbox).toBeChecked();
+      expect(saveButton).not.toHaveAttribute("aria-disabled", "true");
+      expect(revertButton).not.toHaveAttribute("aria-disabled", "true");
+    });
+  });
+
+  test("Save and Revert buttons are enabled after unchecking enabled public metrics again", async () => {
+    const user = userEvent.setup();
+    await act(async () => {
+      renderComponent(false, {
+        public_metrics_blacklist: [],
+        public_metrics_enabled: true,
+      });
+    });
+
+    const metricsCheckbox = screen.getByRole("checkbox", {
+      name: "Display public popularity charts",
+    });
+    const saveButton = screen.getByRole("button", { name: "Save" });
+    const revertButton = screen.getByRole("button", { name: "Revert" });
+
+    expect(metricsCheckbox).toBeChecked();
+
+    await user.click(metricsCheckbox);
+
+    await waitFor(() => {
+      expect(saveButton).not.toHaveAttribute("aria-disabled", "true");
+      expect(revertButton).not.toHaveAttribute("aria-disabled", "true");
+    });
+
+    await user.click(revertButton);
+
+    await waitFor(() => {
+      expect(metricsCheckbox).toBeChecked();
+      expect(saveButton).toHaveAttribute("aria-disabled", "true");
+      expect(revertButton).toHaveAttribute("aria-disabled", "true");
+    });
+
+    await user.click(metricsCheckbox);
+
+    await waitFor(() => {
+      expect(metricsCheckbox).not.toBeChecked();
+      expect(saveButton).not.toHaveAttribute("aria-disabled", "true");
+      expect(revertButton).not.toHaveAttribute("aria-disabled", "true");
+    });
+  });
+
+  test("Save and Revert buttons are enabled after changing nested metrics again", async () => {
+    const user = userEvent.setup();
+    await act(async () => {
+      renderComponent();
+    });
+
+    const metricsCheckbox = screen.getByRole("checkbox", {
+      name: "Display public popularity charts",
+    });
+    const worldMapCheckbox = screen.getByRole("checkbox", {
+      name: "World map",
+    });
+    const saveButton = screen.getByRole("button", { name: "Save" });
+    const revertButton = screen.getByRole("button", { name: "Revert" });
+
+    await user.click(metricsCheckbox);
+    await user.click(worldMapCheckbox);
+    await user.click(revertButton);
+
+    await waitFor(() => {
+      expect(metricsCheckbox).not.toBeChecked();
+      expect(saveButton).toHaveAttribute("aria-disabled", "true");
+      expect(revertButton).toHaveAttribute("aria-disabled", "true");
+    });
+
+    await user.click(metricsCheckbox);
+    await user.click(worldMapCheckbox);
+
+    await waitFor(() => {
+      expect(saveButton).not.toHaveAttribute("aria-disabled", "true");
+      expect(revertButton).not.toHaveAttribute("aria-disabled", "true");
+    });
+  });
+
+  test("Save and Revert buttons are enabled after changing license again", async () => {
+    const user = userEvent.setup();
+    await act(async () => {
+      renderComponent();
+    });
+
+    const saveButton = screen.getByRole("button", { name: "Save" });
+    const revertButton = screen.getByRole("button", { name: "Revert" });
+
+    await user.click(screen.getByRole("button", { name: "Remove license" }));
+
+    await waitFor(() => {
+      expect(saveButton).not.toHaveAttribute("aria-disabled", "true");
+      expect(revertButton).not.toHaveAttribute("aria-disabled", "true");
+    });
+
+    await user.click(revertButton);
+
+    await waitFor(() => {
+      expect(screen.getByText("testing-license")).toBeVisible();
+      expect(saveButton).toHaveAttribute("aria-disabled", "true");
+      expect(revertButton).toHaveAttribute("aria-disabled", "true");
+    });
+
+    await user.click(screen.getByRole("button", { name: "Remove license" }));
+
+    await waitFor(() => {
+      expect(saveButton).not.toHaveAttribute("aria-disabled", "true");
+      expect(revertButton).not.toHaveAttribute("aria-disabled", "true");
+    });
+  });
+
+  test("Save and Revert buttons are enabled after changing license type again", async () => {
+    const user = userEvent.setup();
+    await act(async () => {
+      renderComponent();
+    });
+
+    const saveButton = screen.getByRole("button", { name: "Save" });
+    const revertButton = screen.getByRole("button", { name: "Revert" });
+
+    await user.click(screen.getByLabelText("Custom SPDX expression"));
+
+    await waitFor(() => {
+      expect(saveButton).not.toHaveAttribute("aria-disabled", "true");
+      expect(revertButton).not.toHaveAttribute("aria-disabled", "true");
+    });
+
+    await user.click(revertButton);
+
+    await waitFor(() => {
+      expect(screen.getByLabelText("Simple")).toBeChecked();
+      expect(saveButton).toHaveAttribute("aria-disabled", "true");
+      expect(revertButton).toHaveAttribute("aria-disabled", "true");
+    });
+
+    await user.click(screen.getByLabelText("Custom SPDX expression"));
+
+    await waitFor(() => {
+      expect(screen.getByLabelText("Custom SPDX expression")).toBeChecked();
+      expect(saveButton).not.toHaveAttribute("aria-disabled", "true");
+      expect(revertButton).not.toHaveAttribute("aria-disabled", "true");
+    });
+  });
+
   test("Notification displayed when update_metadata_on_release", () => {
     renderComponent(true);
     expect(
@@ -89,6 +309,37 @@ describe("ListingForm", () => {
 
     await waitFor(() => {
       expect(screen.getByText("Changes applied successfully.")).toBeVisible();
+    });
+  });
+
+  test("Save and Revert buttons are disabled after successful save", async () => {
+    const user = userEvent.setup();
+    await act(async () => {
+      renderComponent(false);
+    });
+
+    const titleInput = screen.getByRole("textbox", {
+      name: "Title: required",
+    });
+    const saveButton = screen.getByRole("button", { name: "Save" });
+    const revertButton = screen.getByRole("button", { name: "Revert" });
+
+    await user.type(titleInput, " edited");
+
+    await waitFor(() => {
+      expect(saveButton).not.toHaveAttribute("aria-disabled", "true");
+      expect(revertButton).not.toHaveAttribute("aria-disabled", "true");
+    });
+
+    await user.click(saveButton);
+
+    await waitFor(() => {
+      expect(screen.getByText("Changes applied successfully.")).toBeVisible();
+    });
+
+    await waitFor(() => {
+      expect(saveButton).toHaveAttribute("aria-disabled", "true");
+      expect(revertButton).toHaveAttribute("aria-disabled", "true");
     });
   });
 

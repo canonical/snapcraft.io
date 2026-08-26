@@ -12,6 +12,7 @@ type Options = {
   getDefaultData: (arg: ListingData) => { [key: string]: unknown };
   refetch: () => void;
   reset: UseFormReset<FieldValues>;
+  onSaveSuccess?: (values: FieldValues) => void;
   setStatusNotification: Dispatch<SetStateAction<StatusNotification>>;
   setUpdateMetadataOnRelease: Dispatch<SetStateAction<boolean>>;
   shouldShowUpdateMetadataWarning: (arg: FieldValues) => boolean;
@@ -28,6 +29,7 @@ function useMutateListingData({
   dirtyFields,
   refetch,
   reset,
+  onSaveSuccess,
   setStatusNotification,
   setUpdateMetadataOnRelease,
   shouldShowUpdateMetadataWarning,
@@ -122,7 +124,7 @@ function useMutateListingData({
       }
       return (await response.json()) as MutationResponse;
     },
-    onSuccess: (data: MutationResponse) => {
+    onSuccess: (data: MutationResponse, values: FieldValues) => {
       const mainPanel = document.querySelector(".l-main") as HTMLElement;
       if (mainPanel) {
         mainPanel.scrollTo({ top: 0, left: 0, behavior: "smooth" });
@@ -134,6 +136,7 @@ function useMutateListingData({
           message: data.errors.map((value) => value.message),
         });
       } else {
+        onSaveSuccess?.(values);
         setStatusNotification({
           success: true,
           message: "Changes applied successfully.",
