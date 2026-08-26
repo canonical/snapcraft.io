@@ -16,6 +16,10 @@
       }
     }
 
+    .p-panel__content {
+      overflow: visible;
+    }
+
     .l-navigation-bar {
       z-index: 200;
 
@@ -26,10 +30,6 @@
 
     .l-navigation {
       background-color: #262626;
-
-      .p-panel__content {
-        overflow: visible;
-      }
     }
 
     .l-navigation__drawer {
