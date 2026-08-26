@@ -202,7 +202,7 @@ $color-social-icon-foreground: $color-light;
 @include snapcraft-p-table-pagination-controls;
 
 // Required for any clashes between Vanilla and Pragma
-@import "_pragma-migration-overrides";
+@import "pragma-migration-overrides";
 @include pragma-migration-overrides;
 
 dl {
