@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useForm, useFormState, FieldValues } from "react-hook-form";
 import { Strip, Notification } from "@canonical/react-components";
@@ -26,8 +26,89 @@ type Props = {
   refetch: () => void;
 };
 
+function isFile(value: unknown): value is File {
+  return typeof File !== "undefined" && value instanceof File;
+}
+
+function isEmptyFileList(value: unknown): value is FileList {
+  return (
+    typeof FileList !== "undefined" &&
+    value instanceof FileList &&
+    value.length === 0
+  );
+}
+
+function getComparableListingValues(values: FieldValues): FieldValues {
+  const comparableValues = { ...values };
+
+  if (!comparableValues.public_metrics_enabled) {
+    comparableValues.public_metrics_distros = false;
+    comparableValues.public_metrics_territories = false;
+  }
+
+  Object.entries(comparableValues).forEach(([key, value]) => {
+    if (isEmptyFileList(value)) {
+      delete comparableValues[key];
+    }
+  });
+
+  return comparableValues;
+}
+
+function areFieldValuesEqual(value: unknown, defaultValue: unknown): boolean {
+  if (Object.is(value, defaultValue)) {
+    return true;
+  }
+
+  if (isFile(value) && isFile(defaultValue)) {
+    return (
+      value.name === defaultValue.name &&
+      value.size === defaultValue.size &&
+      value.type === defaultValue.type &&
+      value.lastModified === defaultValue.lastModified
+    );
+  }
+
+  if (Array.isArray(value) && value.length === 1) {
+    return areFieldValuesEqual(value[0], defaultValue);
+  }
+
+  if (Array.isArray(defaultValue) && defaultValue.length === 1) {
+    return areFieldValuesEqual(value, defaultValue[0]);
+  }
+
+  if (Array.isArray(value) && Array.isArray(defaultValue)) {
+    return (
+      value.length === defaultValue.length &&
+      value.every((item, index) =>
+        areFieldValuesEqual(item, defaultValue[index]),
+      )
+    );
+  }
+
+  if (
+    value &&
+    defaultValue &&
+    typeof value === "object" &&
+    typeof defaultValue === "object"
+  ) {
+    const keys = new Set([...Object.keys(value), ...Object.keys(defaultValue)]);
+
+    return [...keys].every((key) =>
+      areFieldValuesEqual(
+        (value as Record<string, unknown>)[key],
+        (defaultValue as Record<string, unknown>)[key],
+      ),
+    );
+  }
+
+  return false;
+}
+
 function ListingForm({ data, refetch }: Props): React.JSX.Element {
   const { snapId } = useParams();
+  const defaultValues = useMemo(() => getDefaultListingData(data), [data]);
+  const [savedValues, setSavedValues] = useState<FieldValues>(defaultValues);
 
   const {
     register,
@@ -40,10 +121,15 @@ function ListingForm({ data, refetch }: Props): React.JSX.Element {
     handleSubmit,
     watch,
   } = useForm<FieldValues>({
-    defaultValues: getDefaultListingData(data),
+    defaultValues,
   });
 
   const { dirtyFields } = useFormState({ control });
+  const currentValues = watch();
+  const isDirty = !areFieldValuesEqual(
+    getComparableListingValues(currentValues),
+    getComparableListingValues(savedValues),
+  );
 
   const [notificationStrip, setNotificationStrip] =
     useState<StatusNotification>({});
@@ -64,6 +150,7 @@ function ListingForm({ data, refetch }: Props): React.JSX.Element {
     getDefaultData: getDefaultListingData,
     refetch,
     reset,
+    onSaveSuccess: setSavedValues,
     setStatusNotification: setNotificationStrip,
     setUpdateMetadataOnRelease,
     shouldShowUpdateMetadataWarning,
@@ -104,7 +191,7 @@ function ListingForm({ data, refetch }: Props): React.JSX.Element {
         <Tour steps={listingTourSteps} />
         <SaveAndPreview
           snapName={snapId || ""}
-          isDirty={formState.isDirty}
+          isDirty={isDirty}
           reset={reset}
           isSaving={isLoading}
           isValid={formState.isValid}
@@ -187,7 +274,6 @@ function ListingForm({ data, refetch }: Props): React.JSX.Element {
           <AdditionalInformation
             data={data}
             register={register}
-            getValues={getValues}
             setValue={setValue}
             watch={watch}
           />
