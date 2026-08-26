@@ -8,6 +8,34 @@ import "@testing-library/jest-dom";
 import Listing from "../Listing";
 import { mockListingData } from "../../../test-utils/mockListingData";
 
+vi.mock("@canonical/react-ds-global", () => {
+  const Button = ({
+    anticipation: _anticipation,
+    children,
+    disabled,
+    importance: _importance,
+    loading,
+    ...props
+  }: React.ButtonHTMLAttributes<HTMLButtonElement> & {
+    anticipation?: string;
+    importance?: string;
+    loading?: boolean;
+  }) => (
+    <button
+      aria-disabled={disabled || loading ? "true" : undefined}
+      disabled={disabled || loading}
+      {...props}
+    >
+      {children}
+    </button>
+  );
+
+  return {
+    Button,
+    withTooltip: (Component: React.ComponentType) => Component,
+  };
+});
+
 const testListingData = {
   message: "",
   success: true,

@@ -7,6 +7,12 @@ export default defineConfig({
     dir: "static/js", // base directory for tests
     globals: true, // inject global `vi` object in tests so we don't have to import it
     environment: "jsdom",
+    setupFiles: ["static/js/test/setup.ts"],
+    server: {
+      deps: {
+        inline: ["@canonical/react-ds-global"],
+      },
+    },
     silent: "passed-only", // silence logs for passed tests
     pool: "threads",
     testTimeout: 20000,

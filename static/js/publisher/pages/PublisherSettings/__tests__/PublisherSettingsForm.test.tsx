@@ -48,14 +48,8 @@ function renderComponent(settings = {}) {
 describe("PublisherSettingsForm", () => {
   test("'Revert' and 'Save' buttons disabled by default", () => {
     renderComponent();
-    expect(screen.getByRole("button", { name: "Revert" })).toHaveAttribute(
-      "aria-disabled",
-      "true",
-    );
-    expect(screen.getByRole("button", { name: "Save" })).toHaveAttribute(
-      "aria-disabled",
-      "true",
-    );
+    expect(screen.getByRole("button", { name: "Revert" })).toBeDisabled();
+    expect(screen.getByRole("button", { name: "Save" })).toBeDisabled();
   });
 
   test("sets visibility", () => {
