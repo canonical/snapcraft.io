@@ -652,7 +652,7 @@ class TestRecipeSelection(TestCase):
 
         self.assertEqual(len(scanned), 2)
 
-    def test_failing_recipes_do_not_stack_up(self):
+    def test_failure_does_not_short_circuit_other_recipes(self):
         entries = [
             _recipe(f"r{i}", None, f"https://lp/r{i}") for i in range(4)
         ]
