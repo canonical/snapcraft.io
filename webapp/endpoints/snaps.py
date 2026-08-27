@@ -257,7 +257,7 @@ def auditable(snap_name):
     '/api/<regex("' + snap_regex + '"):snap_name>/auditable-revisions'
 )
 def auditable_revisions(snap_name):
-    """Public endpoint backing the Security tab's per-revision commit links """
+    """Public endpoint backing the Security tab's per-revision commit links"""
     res = {
         "github_repository": None,
         "revisions": {},
