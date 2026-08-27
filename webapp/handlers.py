@@ -76,7 +76,7 @@ CSP = {
     ],
     "font-src": [
         "'self'",
-        "assets.ubuntu.com",
+        "https://assets.ubuntu.com",
     ],
     "script-src": [],
     "connect-src": [
@@ -134,6 +134,7 @@ if IS_DEVELOPMENT:
     CSP["connect-src"].append(f"localhost:{VITE_PORT}")
     CSP["connect-src"].append(f"ws://localhost:{VITE_PORT}")
     CSP["style-src"].append(f"localhost:{VITE_PORT}")
+    CSP["font-src"].append(f"localhost:{VITE_PORT}")
     CSP_SCRIPT_SRC.append(f"localhost:{VITE_PORT}")
 
 
