@@ -12,9 +12,9 @@ import {
   Col,
   Notification,
   Switch,
-  Icon,
   loadTheme,
 } from "@canonical/react-components";
+import { Button, Icon } from "@canonical/react-ds-global";
 
 import { validateImageDimensions } from "../../../utils";
 
@@ -228,9 +228,7 @@ function ImageUpload({
                     height: `${previewHeight}px`,
                   }}
                 >
-                  <Icon name="plus" light={isDark}>
-                    Add image
-                  </Icon>
+                  <Icon icon="plus">Add image</Icon>
                 </div>
               )}
               <input
@@ -256,9 +254,9 @@ function ImageUpload({
             </div>
 
             {showDeleteButton() && (
-              <button
+              <Button
                 type="button"
-                className={`p-button--base snap-remove-icon ${!darkThemeEnabled && "is-light"}`}
+                className="snap-remove-icon"
                 onClick={() => {
                   setImageIsValid(true);
                   setValue(imageUrlFieldKey, "", {
@@ -267,10 +265,11 @@ function ImageUpload({
                   setValue(imageFieldKey, new File([], ""));
                   setPreviewImageUrl("");
                 }}
+                importance={darkThemeEnabled ? "primary" : "tertiary"}
               >
-                <Icon name="delete" light={isDark} />
+                <Icon icon="delete" />
                 <span className="u-off-screen">Remove {type}</span>
-              </button>
+              </Button>
             )}
           </div>
 
@@ -301,9 +300,9 @@ function ImageUpload({
 
         {helpText && <div className="p-form-help-text">{helpText}</div>}
 
-        <button
+        <Button
           type="button"
-          className="p-button--link"
+          variant="link"
           onClick={() => {
             setShowImageRestrictions(!showImageRestrictions);
           }}
@@ -323,7 +322,7 @@ function ImageUpload({
               </>
             )}
           </small>
-        </button>
+        </Button>
         {showImageRestrictions && (
           <ul>
             <li>

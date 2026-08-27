@@ -7,7 +7,8 @@ import type {
   Control,
   FormState,
 } from "react-hook-form";
-import { Row, Col, Button, Icon } from "@canonical/react-components";
+import { Row, Col } from "@canonical/react-components";
+import { Button, Icon } from "@canonical/react-ds-global";
 
 import ImageUpload from "./ImageUpload";
 import Screenshots from "./Screenshots";
@@ -226,7 +227,7 @@ function ListingDetails({
           <Col size={2}>
             <Button
               type="button"
-              appearance="base"
+              importance="tertiary"
               onClick={() => {
                 setValue("secondary_category", "", {
                   shouldDirty: data.secondary_category !== "",
@@ -234,7 +235,7 @@ function ListingDetails({
                 setHasSecondCategory(false);
               }}
             >
-              <Icon name="delete" />
+              <Icon icon="delete" />
               <span className="u-off-screen">Remove secondary category</span>
             </Button>
           </Col>
@@ -246,7 +247,7 @@ function ListingDetails({
           <Col size={5} emptyLarge={3}>
             <Button
               type="button"
-              appearance="link"
+              variant="link"
               className="u-no-margin--bottom"
               onClick={() => {
                 setHasSecondCategory(true);
@@ -391,8 +392,8 @@ function ListingDetails({
             )}
           </div>
           <Button
-            appearance="link"
             type="button"
+            variant="link"
             onClick={() => {
               setShowSupportedMarkdownSyntax(!showSupportedMarkdownSyntax);
             }}
