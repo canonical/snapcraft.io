@@ -20,7 +20,7 @@ BSI_URL = os.getenv("BSI_URL", "https://build.snapcraft.io")
 LP_MAX_BUILD_PAGES = int(os.getenv("LP_MAX_BUILD_PAGES", "5"))
 # Max Launchpad recipes to scan per store name: one name can match dozens
 # (firefox has 62), so the right one is rarely the first.
-LP_MAX_RECIPES = int(os.getenv("LP_MAX_RECIPES", "5"))
+LP_MAX_RECIPES = int(os.getenv("LP_MAX_RECIPES", "20"))
 ENVIRONMENT = os.getenv("ENVIRONMENT", "devel")
 IS_DEVELOPMENT = ENVIRONMENT == "devel"
 COMMIT_ID = os.getenv("COMMIT_ID", "commit_id")

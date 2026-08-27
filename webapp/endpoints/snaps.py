@@ -10,6 +10,7 @@ import webapp.helpers as helpers
 from webapp.decorators import login_required, exchange_required
 from webapp.store import logic
 from webapp.config import LP_MAX_BUILD_PAGES, LP_MAX_RECIPES
+from webapp.api.exceptions import ApiError, ApiTimeoutError
 from webapp.api.github import repository_is_public
 from webapp.api.launchpad_provenance import LaunchpadProvenance
 from webapp.endpoints.utils import get_auditable_map_cache_key
@@ -100,6 +101,14 @@ def dns_verified_status(snap_name):
     return response
 
 
+def _request_failure_reason(exc):
+    if isinstance(exc, ApiTimeoutError):
+        return "store_timeout"
+    if isinstance(exc, ApiError):
+        return "store_error"
+    return "unexpected_error"
+
+
 def _get_provenance_map(snap_name):
     """Return the (cached) Launchpad provenance map for a snap.
 
@@ -141,7 +150,17 @@ def _resolve_default_install(details):
     default_track = details.get("default-track") or "latest"
     lowest_risk = logic.get_lowest_available_risk(channel_maps, default_track)
 
-    architecture = logic.get_default_architecture(channel_maps.keys())
+    published = [
+        arch
+        for arch, tracks in channel_maps.items()
+        if any(
+            release["risk"] == lowest_risk
+            for release in tracks.get(default_track, [])
+        )
+    ]
+    architecture = logic.get_default_architecture(
+        published or channel_maps.keys()
+    )
 
     releases = channel_maps.get(architecture, {}).get(default_track, [])
     for release in releases:
@@ -153,22 +172,7 @@ def _resolve_default_install(details):
 
 @snaps.route('/api/<regex("' + snap_regex + '"):snap_name>/auditable')
 def auditable(snap_name):
-    """Public endpoint backing the provenance badge under the Install button.
-
-    Returns the git commit the default install revision was built from on
-    Launchpad. The ``status`` field distinguishes every outcome so the badge
-    can react:
-
-    - ``verified``: built on Launchpad from a public commit (commit returned).
-    - ``unavailable``: a public GitHub recipe exists, but this revision has no
-      matching build (e.g. uploaded manually).
-    - ``not-provided``: no public provenance — no Launchpad recipe, or the
-      recipe's repo is private / non-GitHub.
-    - ``error``: Launchpad couldn't be reached, so retrying may help. A scan
-      that merely hit its bounds is normal, not an error.
-
-    Never raises to the user.
-    """
+    """Public endpoint backing the provenance badge under the Install button"""
     res = {"auditable": False, "status": "not-provided"}
 
     try:
@@ -187,6 +191,9 @@ def auditable(snap_name):
             github_repository = (build or {}).get(
                 "github_repository"
             ) or provenance_map.get("github_repository")
+            launchpad_repository = (build or {}).get(
+                "launchpad_repository"
+            ) or provenance_map.get("launchpad_repository")
 
             base = {
                 "auditable": False,
@@ -203,6 +210,7 @@ def auditable(snap_name):
                     "status": "verified",
                     "commit_sha": build["commit_sha"],
                     "github_repository": github_repository,
+                    "launchpad_repository": launchpad_repository,
                     "commit_url": build["commit_url"],
                     "build_id": build.get("build_id"),
                     "build_url": build.get("build_url"),
@@ -215,23 +223,32 @@ def auditable(snap_name):
             elif provenance_map.get("failed"):
                 # Only a real failure earns the error state, since it is the
                 # only case where "try again later" is true.
-                res = {**base, "status": "error"}
-            elif github_repository:
+                res = {
+                    **base,
+                    "status": "error",
+                    "reason": provenance_map.get("reason"),
+                }
+            elif github_repository or launchpad_repository:
                 # Public recipe exists, but this revision has no build/commit.
                 res = {
                     **base,
                     "status": "unavailable",
                     "github_repository": github_repository,
+                    "launchpad_repository": launchpad_repository,
                 }
             else:
-                # No public recipe (private or non-GitHub source).
+                # No public recipe.
                 res = {**base, "status": "not-provided"}
-    except Exception:
-        res = {"auditable": False, "status": "error"}
+    except Exception as exc:
+        res = {
+            "auditable": False,
+            "status": "error",
+            "reason": _request_failure_reason(exc),
+        }
 
     response = make_response(res, 200)
     response.cache_control.max_age = (
-        0 if res.get("status") == "error" else 3600
+        FAILED_PROVENANCE_TTL if res.get("status") == "error" else 3600
     )
     return response
 
@@ -240,20 +257,19 @@ def auditable(snap_name):
     '/api/<regex("' + snap_regex + '"):snap_name>/auditable-revisions'
 )
 def auditable_revisions(snap_name):
-    """Public endpoint backing the Security tab's per-revision commit links.
-
-    Returns commit links for the snap's recent revisions (bounded by
-    LP_MAX_BUILD_PAGES). Revisions without provenance are simply absent.
-    ``error`` is true when Launchpad couldn't be reached, so the Security
-    tab can distinguish "no provenance" from "couldn't load right now". A
-    truncated scan is not an error: this endpoint is bounded by design.
-    """
-    res = {"github_repository": None, "revisions": {}, "error": False}
+    """Public endpoint backing the Security tab's per-revision commit links"""
+    res = {
+        "github_repository": None,
+        "revisions": {},
+        "error": False,
+        "reason": None,
+    }
 
     try:
         provenance_map = _get_provenance_map(snap_name)
         res["github_repository"] = provenance_map.get("github_repository")
         res["error"] = bool(provenance_map.get("failed"))
+        res["reason"] = provenance_map.get("reason")
 
         # If the repository is gone, every commit link would 404.
         if provenance_map.get("source_available", True):
@@ -268,11 +284,18 @@ def auditable_revisions(snap_name):
                             "build_url": build.get("build_url"),
                         }
                         break
-    except Exception:
-        res = {"github_repository": None, "revisions": {}, "error": True}
+    except Exception as exc:
+        res = {
+            "github_repository": None,
+            "revisions": {},
+            "error": True,
+            "reason": _request_failure_reason(exc),
+        }
 
     response = make_response(res, 200)
-    response.cache_control.max_age = 0 if res.get("error") else 3600
+    response.cache_control.max_age = (
+        FAILED_PROVENANCE_TTL if res.get("error") else 3600
+    )
     return response
 
 
