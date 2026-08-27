@@ -256,7 +256,7 @@ class TestAuditableEndpoint(TestEndpoints):
                 "reason": "unexpected_error",
             },
         )
-        self.assertEqual(response.cache_control.max_age, 0)
+        self.assertEqual(response.cache_control.max_age, FAILED_PROVENANCE_TTL)
 
     @patch("webapp.endpoints.snaps.device_gateway.get_item_details")
     @patch("webapp.endpoints.snaps.launchpad_provenance.build_provenance_map")
@@ -465,7 +465,7 @@ class TestAuditableRevisionsEndpoint(TestEndpoints):
                 "reason": "unexpected_error",
             },
         )
-        self.assertEqual(response.cache_control.max_age, 0)
+        self.assertEqual(response.cache_control.max_age, FAILED_PROVENANCE_TTL)
 
     @patch("webapp.endpoints.snaps.launchpad_provenance.build_provenance_map")
     def test_revisions_omitted_when_repository_is_gone(self, mock_map):

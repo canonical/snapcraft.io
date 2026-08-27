@@ -156,11 +156,16 @@ class LaunchpadProvenance:
         return entries, None
 
     def _scan_recipe(self, recipe, max_pages):
-        return self.iter_builds(
-            recipe["completed_builds_collection_link"],
-            max_pages,
-            session=self._new_session(),
-        )
+        session = self._new_session()
+        try:
+            return self.iter_builds(
+                recipe["completed_builds_collection_link"],
+                max_pages,
+                session=session,
+            )
+        finally:
+            if session is not self.session:
+                session.close()
 
     def _merge_builds(self, builds, source, revisions):
         """Fold one recipe's builds into the shared revision map.
@@ -237,8 +242,6 @@ class LaunchpadProvenance:
         Only uploaded builds with a ``revision_id`` are included; revision
         keys are strings so the map survives JSON round-trips.
         """
-        recipes = self.get_recipes(store_name, max_recipes)
-
         result = {
             "github_repository": None,
             "launchpad_repository": None,
@@ -249,6 +252,13 @@ class LaunchpadProvenance:
             "failed": False,
             "reason": None,
         }
+
+        try:
+            recipes = self.get_recipes(store_name, max_recipes)
+        except Exception as exc:
+            result["failed"] = True
+            result["reason"] = failure_reason(exc)
+            return result
 
         if not recipes:
             return result

@@ -248,7 +248,7 @@ def auditable(snap_name):
 
     response = make_response(res, 200)
     response.cache_control.max_age = (
-        0 if res.get("status") == "error" else 3600
+        FAILED_PROVENANCE_TTL if res.get("status") == "error" else 3600
     )
     return response
 
@@ -257,14 +257,7 @@ def auditable(snap_name):
     '/api/<regex("' + snap_regex + '"):snap_name>/auditable-revisions'
 )
 def auditable_revisions(snap_name):
-    """Public endpoint backing the Security tab's per-revision commit links.
-
-    Returns commit links for the snap's recent revisions (bounded by
-    LP_MAX_BUILD_PAGES). Revisions without provenance are simply absent.
-    ``error`` is true when Launchpad couldn't be reached, so the Security
-    tab can distinguish "no provenance" from "couldn't load right now". A
-    truncated scan is not an error: this endpoint is bounded by design.
-    """
+    """Public endpoint backing the Security tab's per-revision commit links """
     res = {
         "github_repository": None,
         "revisions": {},
@@ -300,7 +293,9 @@ def auditable_revisions(snap_name):
         }
 
     response = make_response(res, 200)
-    response.cache_control.max_age = 0 if res.get("error") else 3600
+    response.cache_control.max_age = (
+        FAILED_PROVENANCE_TTL if res.get("error") else 3600
+    )
     return response
 
 

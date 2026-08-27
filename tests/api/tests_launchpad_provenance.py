@@ -150,11 +150,13 @@ class TestBuildProvenanceMap(TestCase):
         lookup and successive build pages for the collection link."""
         session = MagicMock()
         pages = iter(build_pages)
+        lock = Lock()
 
         def get(url, params=None):
             if url.endswith("+snaps"):
                 return _response(recipe)
-            return _response(next(pages))
+            with lock:
+                return _response(next(pages))
 
         session.get.side_effect = get
         return LaunchpadProvenance(session=session)
@@ -469,6 +471,31 @@ class TestBuildProvenanceMap(TestCase):
 
         self.assertFalse(result["failed"])
         self.assertIsNone(result["reason"])
+
+    def test_recipe_lookup_timeout_reports_launchpad_timeout(self):
+        session = MagicMock()
+        session.get.side_effect = ApiTimeoutError("took too long")
+        client = LaunchpadProvenance(session=session)
+
+        result = client.build_provenance_map(
+            "mumble", max_pages=5, max_recipes=5
+        )
+
+        self.assertTrue(result["failed"])
+        self.assertEqual(result["reason"], "launchpad_timeout")
+        self.assertEqual(result["revisions"], {})
+
+    def test_recipe_lookup_error_reports_launchpad_error(self):
+        session = MagicMock()
+        session.get.side_effect = Exception("boom")
+        client = LaunchpadProvenance(session=session)
+
+        result = client.build_provenance_map(
+            "mumble", max_pages=5, max_recipes=5
+        )
+
+        self.assertTrue(result["failed"])
+        self.assertEqual(result["reason"], "launchpad_error")
 
     def test_no_recipe_returns_empty(self):
         session = MagicMock()
