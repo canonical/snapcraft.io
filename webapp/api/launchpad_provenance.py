@@ -1,7 +1,11 @@
 import os
 import re
+from concurrent.futures import ThreadPoolExecutor
 
+from webapp.api.exceptions import ApiTimeoutError
 from webapp.api.requests import Session
+
+MAX_CONCURRENT_SCANS = 10
 
 LAUNCHPAD_API_URL = os.getenv(
     "LAUNCHPAD_API_URL", "https://api.launchpad.net/devel/"
@@ -12,6 +16,17 @@ GITHUB_URL_RE = re.compile(
     r"^(?:https?://)?(?:www\.)?github\.com/"
     r"(?P<repo>[^/]+/[^/]+?)(?:\.git)?/?$"
 )
+
+LAUNCHPAD_GIT_RE = re.compile(
+    r"^https?://api\.launchpad\.net/[^/]+/"
+    r"(?P<path>~[^/]+/(?:[^/]+/)*\+git/[^/]+?)/?$"
+)
+
+
+def failure_reason(exc):
+    if isinstance(exc, ApiTimeoutError):
+        return "launchpad_timeout"
+    return "launchpad_error"
 
 
 def extract_github_repository(git_repository_url):
@@ -29,6 +44,44 @@ def extract_github_repository(git_repository_url):
     return None
 
 
+def extract_launchpad_repository(git_repository_link):
+    """Extract the git.launchpad.net path from a Launchpad link"""
+    if not git_repository_link:
+        return None
+
+    match = LAUNCHPAD_GIT_RE.match(git_repository_link)
+    if match:
+        return match.groupdict()["path"]
+    return None
+
+
+def build_commit_url(source, commit_sha):
+    """Build a browsable commit URL for a recipe's source"""
+    if source.get("github_repository"):
+        return (
+            f"https://github.com/{source['github_repository']}"
+            f"/commit/{commit_sha}"
+        )
+    if source.get("launchpad_repository"):
+        return (
+            f"https://git.launchpad.net/{source['launchpad_repository']}"
+            f"/commit/?id={commit_sha}"
+        )
+    return None
+
+
+def recipe_source(recipe):
+    """Resolve where a recipe's source is hosted."""
+    git_repository_url = recipe.get("git_repository_url")
+    return {
+        "git_repository_url": git_repository_url,
+        "github_repository": extract_github_repository(git_repository_url),
+        "launchpad_repository": extract_launchpad_repository(
+            recipe.get("git_repository_link")
+        ),
+    }
+
+
 class LaunchpadProvenance:
     """Read-only, anonymous client for Launchpad build provenance.
 
@@ -40,13 +93,21 @@ class LaunchpadProvenance:
 
     def __init__(self, session=None, api_url=LAUNCHPAD_API_URL):
         self.api_url = api_url
+        self._owns_session = session is None
         self.session = session or Session()
         self.session.headers["Accept"] = "application/json"
 
-    def _get(self, url, params=None):
-        response = self.session.get(url, params=params)
+    def _get(self, url, params=None, session=None):
+        response = (session or self.session).get(url, params=params)
         response.raise_for_status()
         return response.json()
+
+    def _new_session(self):
+        if not self._owns_session:
+            return self.session
+        session = Session()
+        session.headers["Accept"] = "application/json"
+        return session
 
     def get_recipes(self, store_name, max_recipes):
         """Find the public Launchpad recipes for a store name, best first.
@@ -77,28 +138,31 @@ class LaunchpadProvenance:
 
         return matches[:max_recipes]
 
-    def iter_builds(self, collection_link, max_pages):
-        """Collect completed builds, up to ``max_pages`` pages.
-
-        Returns ``(entries, failed)``; whatever was gathered is returned
-        even when a page request errored.
-        """
+    def iter_builds(self, collection_link, max_pages, session=None):
+        """Collect completed builds"""
         entries = []
         url = collection_link
         pages = 0
 
         while url and pages < max_pages:
             try:
-                data = self._get(url)
-            except Exception:
-                return entries, True
+                data = self._get(url, session=session)
+            except Exception as exc:
+                return entries, failure_reason(exc)
             entries.extend(data.get("entries", []))
             url = data.get("next_collection_link")
             pages += 1
 
-        return entries, False
+        return entries, None
 
-    def _merge_builds(self, builds, github_repository, revisions):
+    def _scan_recipe(self, recipe, max_pages):
+        return self.iter_builds(
+            recipe["completed_builds_collection_link"],
+            max_pages,
+            session=self._new_session(),
+        )
+
+    def _merge_builds(self, builds, source, revisions):
         """Fold one recipe's builds into the shared revision map.
 
         Returns True if anything was added; earlier recipes win on conflict.
@@ -122,12 +186,7 @@ class LaunchpadProvenance:
             if arch in arch_map:
                 continue
 
-            commit_url = None
-            if github_repository:
-                commit_url = (
-                    f"https://github.com/{github_repository}"
-                    f"/commit/{commit_sha}"
-                )
+            commit_url = build_commit_url(source, commit_sha)
 
             build_id = None
             build_url = None
@@ -146,7 +205,8 @@ class LaunchpadProvenance:
                 "build_url": build_url,
                 # Per entry: a merged map can span recipes with different
                 # sources.
-                "github_repository": github_repository,
+                "github_repository": source.get("github_repository"),
+                "launchpad_repository": source.get("launchpad_repository"),
             }
             added = True
 
@@ -158,6 +218,7 @@ class LaunchpadProvenance:
         Shape:
             {
                 "github_repository": "owner/repo" | None,
+                "launchpad_repository": "~owner/proj/+git/name" | None,
                 "git_repository_url": "https://..." | None,
                 "revisions": {
                     "<store_revision>": {
@@ -180,52 +241,66 @@ class LaunchpadProvenance:
 
         result = {
             "github_repository": None,
+            "launchpad_repository": None,
             "git_repository_url": None,
             "revisions": {},
             # Set when an upstream request failed, so callers can avoid
             # caching a transient failure as a negative answer.
             "failed": False,
+            "reason": None,
         }
 
         if not recipes:
             return result
 
+        candidates = [
+            recipe
+            for recipe in recipes
+            if recipe.get("completed_builds_collection_link")
+        ]
+        if not candidates:
+            return result
+
         # Share the page budget across candidates: revisions being resolved
         # are recent and builds are newest first, so breadth beats depth.
-        pages_each = max(1, max_pages // len(recipes))
+        pages_each = max(1, max_pages // len(candidates))
+
+        # receopes are fetched in parallel
+        with ThreadPoolExecutor(
+            max_workers=min(MAX_CONCURRENT_SCANS, len(candidates))
+        ) as executor:
+            scans = list(
+                executor.map(
+                    lambda recipe: self._scan_recipe(recipe, pages_each),
+                    candidates,
+                )
+            )
+
         revisions = result["revisions"]
         source = None
         fallback = None
 
-        for recipe in recipes:
-            collection_link = recipe.get("completed_builds_collection_link")
-            if not collection_link:
-                continue
-
-            git_repository_url = recipe.get("git_repository_url")
-            github_repository = extract_github_repository(git_repository_url)
+        for recipe, (builds, reason) in zip(candidates, scans):
+            recipe_src = recipe_source(recipe)
             if fallback is None:
-                fallback = (git_repository_url, github_repository)
-
-            builds, failed = self.iter_builds(collection_link, pages_each)
+                fallback = recipe_src
 
             if (
-                self._merge_builds(builds, github_repository, revisions)
+                self._merge_builds(builds, recipe_src, revisions)
                 and source is None
             ):
                 # The recipe that produced revisions, not the first sorted.
-                source = (git_repository_url, github_repository)
+                source = recipe_src
 
-            if failed:
-                # Launchpad is struggling, scanning the remaining candidates
-                # would just queue up more 12s timeouts on this request.
+            if reason and not result["failed"]:
                 result["failed"] = True
-                break
+                result["reason"] = reason
 
         if source is None:
             source = fallback
         if source:
-            result["git_repository_url"] = source[0]
-            result["github_repository"] = source[1]
+            result["git_repository_url"] = source["git_repository_url"]
+            result["github_repository"] = source["github_repository"]
+            result["launchpad_repository"] = source["launchpad_repository"]
 
         return result

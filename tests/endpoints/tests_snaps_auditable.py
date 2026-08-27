@@ -1,6 +1,7 @@
 from unittest.mock import patch
 
 from tests.endpoints.endpoint_testing import TestEndpoints
+from webapp.api.exceptions import ApiTimeoutError
 from webapp.endpoints.snaps import (
     FAILED_PROVENANCE_TTL,
     _get_provenance_map,
@@ -35,12 +36,14 @@ def _provenance(
     revisions,
     github_repository="snapcrafters/mumble",
     failed=False,
+    reason=None,
 ):
     return {
         "github_repository": github_repository,
         "git_repository_url": "https://github.com/snapcrafters/mumble",
         "revisions": revisions,
         "failed": failed,
+        "reason": reason,
     }
 
 
@@ -246,7 +249,12 @@ class TestAuditableEndpoint(TestEndpoints):
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(
-            response.get_json(), {"auditable": False, "status": "error"}
+            response.get_json(),
+            {
+                "auditable": False,
+                "status": "error",
+                "reason": "unexpected_error",
+            },
         )
         self.assertEqual(response.cache_control.max_age, 0)
 
@@ -335,6 +343,80 @@ class TestAuditableEndpoint(TestEndpoints):
         self.assertTrue(data["auditable"])
         self.assertEqual(data["status"], "verified")
 
+    @patch("webapp.endpoints.snaps.device_gateway.get_item_details")
+    @patch("webapp.endpoints.snaps.launchpad_provenance.build_provenance_map")
+    def test_default_channel_arch_without_that_risk_is_skipped(
+        self, mock_map, mock_details
+    ):
+        mock_details.return_value = _details(
+            [
+                _channel("amd64", "latest", "edge", 900),
+                _channel("arm64", "latest", "stable", 1721),
+            ]
+        )
+        mock_map.return_value = _provenance(
+            {"1721": {"arm64": VERIFIED_BUILD}}
+        )
+
+        data = self.client.get("/api/mumble/auditable").get_json()
+
+        self.assertEqual(data["architecture"], "arm64")
+        self.assertEqual(data["revision"], 1721)
+        self.assertTrue(data["auditable"])
+
+    @patch("webapp.endpoints.snaps.device_gateway.get_item_details")
+    @patch("webapp.endpoints.snaps.launchpad_provenance.build_provenance_map")
+    def test_amd64_preferred_when_it_publishes_the_default_channel(
+        self, mock_map, mock_details
+    ):
+        mock_details.return_value = _details(
+            [
+                _channel("arm64", "latest", "stable", 1798),
+                _channel("amd64", "latest", "stable", 1721),
+            ]
+        )
+        mock_map.return_value = _provenance(
+            {"1721": {"amd64": VERIFIED_BUILD}}
+        )
+
+        data = self.client.get("/api/mumble/auditable").get_json()
+
+        self.assertEqual(data["architecture"], "amd64")
+        self.assertEqual(data["revision"], 1721)
+
+    @patch("webapp.endpoints.snaps.device_gateway.get_item_details")
+    @patch("webapp.endpoints.snaps.launchpad_provenance.build_provenance_map")
+    def test_error_carries_the_failure_reason(self, mock_map, mock_details):
+        mock_details.return_value = _details(
+            [_channel("amd64", "latest", "stable", 1721)]
+        )
+        mock_map.return_value = _provenance(
+            {}, failed=True, reason="launchpad_timeout"
+        )
+
+        data = self.client.get("/api/mumble/auditable").get_json()
+
+        self.assertEqual(data["status"], "error")
+        self.assertEqual(data["reason"], "launchpad_timeout")
+
+    @patch("webapp.endpoints.snaps.device_gateway.get_item_details")
+    def test_store_timeout_is_reported(self, mock_details):
+        mock_details.side_effect = ApiTimeoutError("took too long")
+
+        data = self.client.get("/api/mumble/auditable").get_json()
+
+        self.assertEqual(data["status"], "error")
+        self.assertEqual(data["reason"], "store_timeout")
+
+    @patch("webapp.endpoints.snaps.device_gateway.get_item_details")
+    def test_unexpected_errors_are_distinguishable(self, mock_details):
+        mock_details.side_effect = AttributeError("bug in our own code")
+
+        data = self.client.get("/api/mumble/auditable").get_json()
+
+        self.assertEqual(data["status"], "error")
+        self.assertEqual(data["reason"], "unexpected_error")
+
 
 class TestAuditableRevisionsEndpoint(TestEndpoints):
     def setUp(self):
@@ -376,7 +458,12 @@ class TestAuditableRevisionsEndpoint(TestEndpoints):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(
             response.get_json(),
-            {"github_repository": None, "revisions": {}, "error": True},
+            {
+                "github_repository": None,
+                "revisions": {},
+                "error": True,
+                "reason": "unexpected_error",
+            },
         )
         self.assertEqual(response.cache_control.max_age, 0)
 
