@@ -1,0 +1,12 @@
+// This file is here to handle any potential clashes
+// Please add an explanation above any overrides to describe
+// what issue they are fixing
+@mixin pragma-migration-overrides {
+  .ds {
+    // Vanilla adds an `opacity` of `0.33` to disabled buttons,
+    // which combined with Pragma styles, creates very low contrast
+    &.button:disabled {
+      opacity: 1;
+    }
+  }
+}
