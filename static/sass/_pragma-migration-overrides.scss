@@ -16,6 +16,7 @@
     &.button.snap-remove-icon {
       background-color: transparent;
     }
+
     // Pragma Card defaults can clash with Vanilla expectations in some contexts
     // (e.g. Joyride tour tooltip), so force a white background for DS cards.
     &.card {
