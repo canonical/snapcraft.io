@@ -53,7 +53,6 @@ function Tour({ steps }: Props): React.JSX.Element {
           right: "2rem",
           zIndex: 100,
         }}
-        icon="help"
       >
         <Icon icon="help" />
         <span className="u-off-screen">Start tour</span>
