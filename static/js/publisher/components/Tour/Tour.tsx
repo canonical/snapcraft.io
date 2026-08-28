@@ -1,6 +1,6 @@
 import { useState } from "react";
 import Joyride, { STATUS } from "react-joyride";
-import { Button, Icon } from "@canonical/react-components";
+import { Button, Icon } from "@canonical/react-ds-global";
 
 import TourStep from "./TourStep";
 
@@ -45,6 +45,7 @@ function Tour({ steps }: Props): React.JSX.Element {
     <>
       <Button
         type="button"
+        importance="secondary"
         onClick={handleClickStart}
         style={{
           position: "fixed",
@@ -52,8 +53,9 @@ function Tour({ steps }: Props): React.JSX.Element {
           right: "2rem",
           zIndex: 100,
         }}
+        icon="help"
       >
-        <Icon name="question" />
+        <Icon icon="help" />
         <span className="u-off-screen">Start tour</span>
       </Button>
       <Joyride
