@@ -31,8 +31,17 @@ vi.mock("@canonical/react-ds-global", () => {
     </button>
   );
 
+  const Icon = ({
+    children: _children,
+    icon: _icon,
+  }: {
+    children?: React.ReactNode;
+    icon: string;
+  }) => <span aria-hidden="true" />;
+
   return {
     Button,
+    Icon,
     withTooltip: (Component: React.ComponentType) => Component,
   };
 });

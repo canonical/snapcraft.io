@@ -5,7 +5,8 @@ import {
   UseFormGetValues,
   UseFormRegister,
 } from "react-hook-form";
-import { Row, Col, Button, Icon } from "@canonical/react-components";
+import { Row, Col } from "@canonical/react-components";
+import { Button, Icon } from "@canonical/react-ds-global";
 
 type Props = {
   register: UseFormRegister<FieldValues>;
@@ -37,7 +38,7 @@ function ContactFields({
           <Col size={5}>
             <Button
               type="button"
-              appearance="link"
+              variant="link"
               onClick={() => {
                 append({ url: "" });
               }}
@@ -68,12 +69,12 @@ function ContactFields({
           <Col size={2}>
             <Button
               type="button"
-              appearance="base"
+              importance="tertiary"
               onClick={() => {
                 remove(index);
               }}
             >
-              <Icon name="delete" />
+              <Icon icon="delete" />
               <span className="u-off-screen">Remove this link</span>
             </Button>
           </Col>
@@ -85,7 +86,7 @@ function ContactFields({
           <Col size={5} emptyLarge={3}>
             <Button
               type="button"
-              appearance="link"
+              variant="link"
               onClick={() => {
                 append({ url: "" });
               }}

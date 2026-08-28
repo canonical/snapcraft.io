@@ -8,5 +8,13 @@
     &.button:disabled {
       opacity: 1;
     }
+
+    // Pragma sets a background colour for tertiary buttons whereas
+    // Vanilla set the background to transparent. In this instance the button
+    // is set against a background with a slightly darker colour which it
+    // needs to inherit
+    &.button.snap-remove-icon {
+      background-color: transparent;
+    }
   }
 }
