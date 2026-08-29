@@ -24,6 +24,10 @@ from webapp.helpers import get_yaml_loader
 from canonicalwebteam.store_api.devicegw import DeviceGW
 from canonicalwebteam.store_api.dashboard import Dashboard
 
+from webapp.store.content.snap_interfaces_from_docs import (
+    SNAP_INTERFACE_DETAILS,
+)
+
 device_gateway = DeviceGW("snap", helpers.api_session)
 dashboard = Dashboard(helpers.api_session)
 launchpad_provenance = LaunchpadProvenance()
@@ -382,22 +386,28 @@ def permissions(snap_name):
         raw_snap_yaml = match.get("snap-yaml")
         snap_yaml = get_yaml_loader().load(raw_snap_yaml)
 
+        interfaces = []
+        for name, plug in snap_yaml.get("plugs", {}).items():
+            interface = plug.get("interface", name)
+            interface_details = SNAP_INTERFACE_DETAILS.get(interface, {})
+
+            interfaces.append(
+                {
+                    "name": name,
+                    "interface": interface,
+                    "description": interface_details.get("description"),
+                    "categories": interface_details.get("categories"),
+                    "auto_connect": interface_details.get("auto_connect"),
+                    # "raw_yaml": "TODO",
+                    # "details": ["TODO"]
+                }
+            )
+
         res = {
             "success": True,
             "data": {
                 "confinement": snap_yaml["confinement"],
-                "interfaces": [
-                    {
-                        "name": name,
-                        "interface": plug.get("interface", name),
-                        # "description": "TODO",
-                        # "raw_yaml": "TODO",
-                        # "categories": ["TODO"],
-                        # "auto_connect": False,
-                        # "details": ["TODO"]
-                    }
-                    for name, plug in snap_yaml.get("plugs", {}).items()
-                ],
+                "interfaces": interfaces,
             },
         }
     except Exception as e:
