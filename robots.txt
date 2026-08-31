@@ -55,6 +55,7 @@ Disallow: /*/metrics
 Disallow: /*/preview
 Disallow: /*/publicise
 Disallow: /*/release
+Disallow: /*/releases
 Disallow: /*/settings
 
 # Search, forms and machine endpoints
