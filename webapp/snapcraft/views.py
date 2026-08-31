@@ -447,7 +447,8 @@ def snapcraft_blueprint():
     @snapcraft.route("/create")
     def create_redirect():
         return flask.redirect(
-            "https://documentation.ubuntu.com/snapcraft/stable/tutorials/craft-a-snap/",
+            "https://documentation.ubuntu.com/snapcraft/stable"
+            "/tutorials/craft-a-snap/",
             code=301,
         )
 
