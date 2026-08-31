@@ -130,6 +130,7 @@ Disallow: /*/metrics
 Disallow: /*/preview
 Disallow: /*/publicise
 Disallow: /*/release
+Disallow: /*/releases
 Disallow: /*/settings
 
 # Block "Noise" (Forms, fragments, and endpoints that exhaust context windows)
