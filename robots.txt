@@ -1,9 +1,8 @@
 # ===========================================
 # snapcraft.io robots.txt
 # Strategy:
-#   - Block private/transactional/search paths for all.
-#   - Group major AI Retrieval & Crawling bots to optimize crawl budget.
-#   - Allow high-value store/docs paths; block noise.
+#   - Block private/transactional/search paths for all crawlers.
+#   - Keep every public page crawlable.
 #
 # Two snapcraft-specific quirks drive the rule shapes below:
 #   1. Snap detail pages live at the root (/<snap-name>), so rules are anchored
@@ -68,99 +67,6 @@ Disallow: /about/thank-you$
 Disallow: /api/
 Disallow: /*.json$
 Crawl-delay: 1
-
-# ===========================================
-# AI OPTIMIZED RULES
-# Includes: OpenAI (Browsing & Crawling), Perplexity, Anthropic, and Apple
-# ===========================================
-User-agent: GPTBot
-User-agent: ChatGPT-User
-User-agent: OAI-SearchBot
-User-agent: ClaudeBot
-User-agent: Claude-Web
-User-agent: anthropic-ai
-User-agent: Claude-SearchBot
-User-agent: Google-Extended
-User-agent: meta-externalagent
-User-agent: PerplexityBot
-User-agent: Perplexity-User
-User-agent: Applebot-Extended
-User-agent: cohere-ai
-User-agent: Bytespider
-
-# High-value Content Priority
-# Snap detail pages are not listed: they live at the root namespace, so there
-# is no prefix to allow. They are reachable via the sitemaps below.
-Allow: /about
-Allow: /about/listing$
-Allow: /about/release$
-Allow: /about/publicise$
-Allow: /build
-Allow: /blog
-Allow: /docs
-Allow: /iot
-Allow: /store
-Allow: /tutorials
-
-# Private / login-gated
-Disallow: /account$
-Disallow: /account/
-Disallow: /admin$
-Disallow: /admin/
-Disallow: /login$
-Disallow: /login/
-Disallow: /login-beta$
-Disallow: /logout$
-Disallow: /github/auth
-Disallow: /publisher/github/
-Disallow: /snaps$
-Disallow: /snaps/
-Disallow: /register-snap$
-Disallow: /register-snap/
-Disallow: /register-name-dispute$
-Disallow: /request-reserved-name$
-Disallow: /snap_info/
-Disallow: /packages/
-Disallow: /validation-sets$
-Disallow: /validation-sets/
-
-# Per-snap publisher dashboard (login-gated, sits under /<snap-name>/)
-Disallow: /*/builds
-Disallow: /*/collaboration
-Disallow: /*/create-track
-Disallow: /*/listing
-Disallow: /*/metrics
-Disallow: /*/preview
-Disallow: /*/publicise
-Disallow: /*/release
-Disallow: /*/releases
-Disallow: /*/settings
-
-# Block "Noise" (Forms, fragments, and endpoints that exhaust context windows)
-Disallow: /search$
-Disallow: /search?
-Disallow: /docs/search
-Disallow: /about/contact-us$
-Disallow: /about/thank-you$
-Disallow: /api/
-Disallow: /*.json$
-Disallow: /*/embedded
-Disallow: /*.svg$
-Disallow: /install/
-Disallow: /feeds/
-Disallow: /store/stats$
-Disallow: /store/featured-snaps/
-Disallow: /blog/feed
-Disallow: /blog/archives
-Disallow: /blog/latest-news
-Disallow: /blog/events-and-webinars
-Disallow: /blog/author/
-Disallow: /blog/group/
-Disallow: /blog/tag/
-Disallow: /blog/topic/
-
-# Performance
-Crawl-delay: 2
 
 # ===========================================
 # SITEMAPS
