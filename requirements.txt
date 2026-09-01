@@ -35,4 +35,5 @@ setuptools<81.0
 Flask-Testing==0.8.1
 freezegun==1.5.5
 black==26.3.1
+protego==0.6.2
 flake8==7.3.0
