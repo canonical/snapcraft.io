@@ -1,5 +1,5 @@
 """
-List of public pages that are used llms.txt and the marketing
+List of public pages that are used for llms.txt and the marketing
 sitemap so the two cannot drift apart.
 
 Only public and crawlable pages are added here. Anything behind login is
