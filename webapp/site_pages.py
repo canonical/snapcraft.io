@@ -6,21 +6,14 @@ Only public and crawlable pages are added here. Anything behind login is
 excluded. Those will be covered by /store/sitemap.xml.
 """
 
+from webapp.markdown_suffix import add_suffix
+
 BASE_URL = "https://snapcraft.io"
 
 PAGES = [
     {
         "section": "Main pages",
         "links": [
-            {
-                "path": "/",
-                "title": "Snapcraft",
-                "description": (
-                    "The Snap Store: browse and install snaps, and "
-                    "publish your own software to Linux users."
-                ),
-                "sitemap": False,
-            },
             {
                 "path": "/about",
                 "title": "About snaps",
@@ -96,10 +89,11 @@ PAGES = [
     },
     {
         "section": "Documentation",
-        "sitemap": False,
         "links": [
             {
                 "path": "/docs/",
+                "sitemap": False,
+                "markdown": False,
                 "title": "Snap documentation",
                 "description": (
                     "Reference and explanation for snaps and snapd: "
@@ -116,6 +110,8 @@ PAGES = [
             },
             {
                 "path": "/docs/snap-tutorials/",
+                "sitemap": False,
+                "markdown": False,
                 "title": "Snap tutorials",
                 "description": (
                     "Guided lessons that walk through building and "
@@ -138,6 +134,7 @@ PAGES = [
             },
             {
                 "path": "/store/sitemap.xml",
+                "markdown": False,
                 "title": "Snap sitemap",
                 "description": (
                     "Every snap page on the store. Large - for "
@@ -152,6 +149,7 @@ PAGES = [
 # Public pages that are not added to llms.txt.
 # Anything new must be listed above or excluded here on purpose.
 EXCLUDED_PAGES = {
+    "/": "landing page",
     "/_status/check": "health check",
     "/about/contact-us": "form",
     "/about/thank-you": "form confirmation",
@@ -194,20 +192,25 @@ def sitemap_pages():
         link
         for group in PAGES
         for link in group["links"]
-        if "path" in link
-        and group.get("sitemap", True)
-        and link.get("sitemap", True)
+        if "path" in link and link.get("sitemap", True)
     ]
+
+
+def _url(link):
+    if "url" in link:
+        return link["url"]
+
+    if link.get("markdown") is False:
+        return BASE_URL + link["path"]
+
+    return BASE_URL + add_suffix(link["path"])
 
 
 def _resolve(group):
     """Turn a group's paths into absolute URLs."""
     return {
         "section": group["section"],
-        "links": [
-            {**link, "url": link.get("url") or BASE_URL + link["path"]}
-            for link in group["links"]
-        ],
+        "links": [{**link, "url": _url(link)} for link in group["links"]],
     }
 
 

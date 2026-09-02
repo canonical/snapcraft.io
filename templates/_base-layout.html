@@ -50,6 +50,7 @@
 
     {% block extra_meta %}{% endblock %}
     <link rel="canonical" href="https://snapcraft.io{{ request.path }}" />
+    <link rel="alternate" type="text/markdown" href="https://snapcraft.io{{ request.path }}.md" />
 
     <link rel="icon" type="image/png" href="https://assets.ubuntu.com/v1/d4ca039f-favicon_16px.png" sizes="16x16" />
     <link rel="icon" type="image/png" href="https://assets.ubuntu.com/v1/841d0bcf-favicon_32px.png" sizes="32x32" />
@@ -78,7 +79,9 @@
     {{ status_banner(STATUS_BANNER) }}
     {% endblock %}
 
-    {% block content %}{% endblock %}
+    <main id="main-content">
+      {% block content %}{% endblock %}
+    </main>
 
     {% block footer %}
     {% endblock %}

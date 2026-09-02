@@ -3,7 +3,6 @@ import flask
 from webapp.config import DEFAULT_ICON_URL
 from webapp.packages.logic import get_store_categories
 from webapp.site_pages import BASE_URL, llms_sections, sitemap_pages
-from cache.cache_utility import redis_cache
 from webapp.snapcraft import logic
 
 
@@ -489,13 +488,9 @@ def snapcraft_blueprint():
 
     @snapcraft.route("/llms.txt")
     def llms_txt():
-        categories = redis_cache.get("llms:categories", expected_type=list)
-        if categories is None:
-            categories = get_store_categories()
-            redis_cache.set("llms:categories", categories, ttl=3600)
         content = flask.render_template(
             "llms.txt",
-            sections=llms_sections(categories),
+            sections=llms_sections(get_store_categories()),
         )
         response = flask.make_response(content)
         response.headers["Content-Type"] = "text/plain; charset=utf-8"
