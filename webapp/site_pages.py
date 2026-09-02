@@ -136,6 +136,15 @@ PAGES = [
                     "devices."
                 ),
             },
+            {
+                "path": "/store/sitemap.xml",
+                "title": "Snap sitemap",
+                "description": (
+                    "Every snap page on the store. Large - for "
+                    "exhaustive crawling rather than reading."
+                ),
+                "sitemap": False,
+            },
         ],
     },
 ]
