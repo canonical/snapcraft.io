@@ -1,6 +1,9 @@
 import flask
 
 from webapp.config import DEFAULT_ICON_URL
+from webapp.packages.logic import get_store_categories
+from webapp.site_pages import BASE_URL, llms_sections, sitemap_pages
+from cache.cache_utility import redis_cache
 from webapp.snapcraft import logic
 
 
@@ -462,7 +465,7 @@ def snapcraft_blueprint():
     def sitemap():
         xml_sitemap = flask.render_template(
             "sitemap/sitemap-index.xml",
-            base_url="https://snapcraft.io",
+            base_url=BASE_URL,
         )
         response = flask.make_response(xml_sitemap)
         response.headers["Content-Type"] = "application/xml"
@@ -471,24 +474,36 @@ def snapcraft_blueprint():
 
     @snapcraft.route("/sitemap-links.xml")
     def sitemap_links():
-        base_url = "https://snapcraft.io"
-        links = [
-            {"url": f"{base_url}/about"},
-            {"url": f"{base_url}/about/publish"},
-            {"url": f"{base_url}/about/listing"},
-            {"url": f"{base_url}/about/release"},
-            {"url": f"{base_url}/about/publicise"},
-            {"url": f"{base_url}/iot"},
-        ]
+        links = [{"url": BASE_URL + page["path"]} for page in sitemap_pages()]
 
         xml_sitemap = flask.render_template(
             "sitemap/sitemap.xml",
-            base_url="https://snapcraft.io",
+            base_url=BASE_URL,
             links=links,
         )
         response = flask.make_response(xml_sitemap)
         response.headers["Content-Type"] = "application/xml"
         response.headers["Cache-Control"] = "public, max-age=43200"
+
+        return response
+
+    @snapcraft.route("/llms.txt")
+    def llms_txt():
+        categories = redis_cache.get("llms:categories", expected_type=list)
+        if not categories:
+            categories = get_store_categories()
+            redis_cache.set("llms:categories", categories, ttl=3600)
+
+        content = flask.render_template(
+            "llms.txt",
+            sections=llms_sections(categories),
+        )
+        response = flask.make_response(content)
+        response.headers["Content-Type"] = "text/plain; charset=utf-8"
+        response.headers["Cache-Control"] = (
+            "public, max-age=43200, stale-while-revalidate=300, "
+            "stale-if-error=86400"
+        )
 
         return response
 

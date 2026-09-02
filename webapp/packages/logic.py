@@ -282,23 +282,21 @@ def get_store_categories() -> List[Dict[str, str]]:
     Fetches all store categories.
 
     :returns: A list of categories in the format:
-    [{"name": "Category", "slug": "category"}]
+    [{"name": "category", "display_name": "Category"}]
     """
     try:
-        all_categories = device_gateway.get_categories()
+        all_categories = device_gateway.get_categories().get("categories", [])
     except StoreApiError:
         all_categories = []
 
-    for cat in all_categories["categories"]:
-        cat["display_name"] = format_slug(cat["name"])
+    for category in all_categories:
+        category["display_name"] = format_slug(category["name"])
 
-    categories = list(
-        filter(
-            lambda cat: cat["name"] != "featured", all_categories["categories"]
-        )
-    )
-
-    return categories
+    return [
+        category
+        for category in all_categories
+        if category["name"] != "featured"
+    ]
 
 
 def get_snaps_account_info(account_info):
