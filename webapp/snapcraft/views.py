@@ -490,10 +490,9 @@ def snapcraft_blueprint():
     @snapcraft.route("/llms.txt")
     def llms_txt():
         categories = redis_cache.get("llms:categories", expected_type=list)
-        if not categories:
+        if categories is None:
             categories = get_store_categories()
             redis_cache.set("llms:categories", categories, ttl=3600)
-
         content = flask.render_template(
             "llms.txt",
             sections=llms_sections(categories),
