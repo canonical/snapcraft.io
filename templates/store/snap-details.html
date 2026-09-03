@@ -55,6 +55,7 @@
 {% endblock %}
 
 {% block content %}
+<main id="main-content">
   {% if is_preview %}
     <div class="snapcraft-p-sticky sticky-shadow" style="z-index: 100;">
       <div class="grid-row">
@@ -391,6 +392,7 @@
   {% endif %}
 
   {% include "store/snap-details/_templates.html" %}
+</main>
 {% endblock %}
 
 {% block scripts_includes %}

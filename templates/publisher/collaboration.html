@@ -5,6 +5,7 @@ Collaboration for {% if display_title %}{{ display_title }}{% else %}{{ snap_tit
 {% endblock %}
 
 {% block content %}
+<main id="main-content"></main>
 <script>
   window.SENTRY_DSN = "{{ SENTRY_DSN }}";
   window.CSRF_TOKEN = "{{ csrf_token() }}";

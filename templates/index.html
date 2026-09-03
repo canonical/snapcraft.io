@@ -5,7 +5,7 @@
 {% set featured_categories = ["Featured", "Development", "Games", "Server"] %}
 
 {% block content %}
-<div class="p-section is-paper">
+<main id="main-content" class="p-section is-paper">
   {% with featured_categories = featured_categories %}
     {% include "home/_featured-snaps.html" %}
   {% endwith %}
@@ -157,7 +157,7 @@
       </div>
     </div>
   </section>
-</div>
+</main>
 {% endblock %}
 
 {% block scripts_includes %}
