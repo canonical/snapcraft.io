@@ -40,7 +40,7 @@ class MarkdownSuffix:
 
 def cache_markdown(response):
     if response.mimetype == "text/markdown":
-        response.headers["Cache-Control"] = CACHE_CONTROL
+        response.headers["Cache-Control"] = "private, max-age=3600"
 
     return response
 
