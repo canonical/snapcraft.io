@@ -2,7 +2,7 @@
 Discover the public pages of the site from the routing table.
 
 llms.txt and the sitemap are both built from this. So a new
-page shows up in both without any maintanance. A page
+page shows up in both without any maintenance. A page
 is included when its route takes no URL parameters, it is not behind login,
 its view renders an HTML template rather than a redirect and that template
 does not ask robots to skip it.
