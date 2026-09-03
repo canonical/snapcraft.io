@@ -100,21 +100,29 @@ class TestLlmsTxt(unittest.TestCase):
         )
 
     def test_categories_are_listed_when_the_store_api_responds(self):
-        titles = [section["section"] for section in llms_sections(CATEGORIES)]
+        titles = [s["section"] for s in llms_sections(CATEGORIES)]
 
         self.assertIn("Store categories", titles)
 
     def test_llms_txt_still_renders_when_the_store_api_fails(self):
-        titles = [section["section"] for section in llms_sections([])]
+        titles = [s["section"] for s in llms_sections([])]
 
         self.assertNotIn("Store categories", titles)
-        self.assertIn("Main pages", titles)
 
     def test_sitemap_pages_are_a_subset_of_the_listed_pages(self):
-        paths = {normalise(page["path"]) for page in sitemap_pages()}
+        paths = {normalise(path) for path in sitemap_pages()}
 
         self.assertTrue(paths)
         self.assertTrue(paths <= normalised_listed_paths())
+
+    def test_category_pages_are_in_the_sitemap(self):
+        paths = sitemap_pages(CATEGORIES)
+
+        for category in CATEGORIES:
+            self.assertIn(
+                f"/store/categories/{category['name']}",
+                paths,
+            )
 
     def test_new_public_routes_are_listed_or_excluded(self):
         candidates = set()

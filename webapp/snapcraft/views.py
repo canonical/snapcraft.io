@@ -473,7 +473,10 @@ def snapcraft_blueprint():
 
     @snapcraft.route("/sitemap-links.xml")
     def sitemap_links():
-        links = [{"url": BASE_URL + page["path"]} for page in sitemap_pages()]
+        links = [
+            {"url": BASE_URL + path}
+            for path in sitemap_pages(get_store_categories())
+        ]
 
         xml_sitemap = flask.render_template(
             "sitemap/sitemap.xml",

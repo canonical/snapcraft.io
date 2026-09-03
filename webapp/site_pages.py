@@ -177,7 +177,6 @@ EXCLUDED_PAGES = {
 
 
 def listed_paths():
-    """Every snapcraft.io path llms.txt points at."""
     return {
         link["path"]
         for group in PAGES
@@ -186,14 +185,19 @@ def listed_paths():
     }
 
 
-def sitemap_pages():
-    """Internal pages that belong in /sitemap-links.xml."""
-    return [
-        link
+def category_path(category):
+    return f"/store/categories/{category['name']}"
+
+
+def sitemap_pages(categories=()):
+    curated = [
+        link["path"]
         for group in PAGES
         for link in group["links"]
         if "path" in link and link.get("sitemap", True)
     ]
+
+    return curated + [category_path(category) for category in categories]
 
 
 def _url(link):
@@ -207,7 +211,6 @@ def _url(link):
 
 
 def _resolve(group):
-    """Turn a group's paths into absolute URLs."""
     return {
         "section": group["section"],
         "links": [{**link, "url": _url(link)} for link in group["links"]],
@@ -219,7 +222,7 @@ def _category_section(categories):
         "section": "Store categories",
         "links": [
             {
-                "url": f"{BASE_URL}/store/categories/{category['name']}",
+                "url": BASE_URL + add_suffix(category_path(category)),
                 "title": category["display_name"],
             }
             for category in categories
@@ -228,9 +231,6 @@ def _category_section(categories):
 
 
 def llms_sections(categories):
-    """
-    Ordered sections for llms.txt
-    """
     sections = [
         _resolve(group) for group in PAGES if not group.get("optional")
     ]

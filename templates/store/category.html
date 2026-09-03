@@ -1,0 +1,20 @@
+{% extends "_layout.html" %}
+
+{% block meta_copydoc %}{% endblock %}
+
+{% block meta_title %}{{ category_name }} snaps | Snap Store{% endblock %}
+
+{% block meta_description %}Browse {{ category_name }} snaps in the Snap Store: Linux apps that install and run across every major distribution.{% endblock %}
+
+{% block content %}
+<section class="p-section">
+  <div class="u-fixed-width">
+    <h1 class="p-heading--2">{{ category_name }}</h1>
+    <p>Snaps in the {{ category_name }} category of the Snap Store.</p>
+  </div>
+  {% include "store/_category-partial.html" %}
+  <div class="u-fixed-width">
+    <a href="/store">Browse all categories&nbsp;&rsaquo;</a>
+  </div>
+</section>
+{% endblock %}
