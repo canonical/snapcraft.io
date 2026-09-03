@@ -1,0 +1,77 @@
+# ===========================================
+# snapcraft.io robots.txt
+# Strategy:
+#   - Block private/transactional/search paths for all crawlers.
+#   - Keep every public page crawlable.
+#
+# Two snapcraft-specific quirks drive the rule shapes below:
+#   1. Snap detail pages live at the root (/<snap-name>), so rules are anchored
+#      with $ or a trailing slash to avoid blocking snaps whose name starts
+#      with a reserved word (e.g. a snap called "account-manager").
+#   2. The publisher dashboard hangs off the same root namespace
+#      (/<snap-name>/listing, /metrics, ...), so those are blocked by pattern.
+#      The /about/* marketing pages collide with those patterns and are
+#      re-allowed explicitly - a longer match wins.
+# ===========================================
+
+# ===========================================
+# DEFAULT RULES - all crawlers
+# ===========================================
+User-Agent: *
+
+# Public marketing pages that collide with the dashboard patterns below
+Allow: /about/listing$
+Allow: /about/release$
+Allow: /about/publicise$
+
+# Private / login-gated
+Disallow: /account$
+Disallow: /account/
+Disallow: /admin$
+Disallow: /admin/
+Disallow: /login$
+Disallow: /login/
+Disallow: /login-beta$
+Disallow: /logout$
+Disallow: /github/auth
+Disallow: /publisher/github/
+Disallow: /snaps$
+Disallow: /snaps/
+Disallow: /register-snap$
+Disallow: /register-snap/
+Disallow: /register-name-dispute$
+Disallow: /request-reserved-name$
+Disallow: /snap_info/
+Disallow: /packages/
+Disallow: /validation-sets$
+Disallow: /validation-sets/
+
+# Per-snap publisher dashboard (login-gated, sits under /<snap-name>/)
+Disallow: /*/builds
+Disallow: /*/collaboration
+Disallow: /*/create-track
+Disallow: /*/listing
+Disallow: /*/metrics
+Disallow: /*/preview
+Disallow: /*/publicise
+Disallow: /*/release
+Disallow: /*/releases
+Disallow: /*/settings
+
+# Search, forms and machine endpoints
+Disallow: /search$
+Disallow: /search?
+Disallow: /docs/search
+Disallow: /about/contact-us$
+Disallow: /about/thank-you$
+Disallow: /api/
+Disallow: /*.json$
+Crawl-delay: 1
+
+# ===========================================
+# SITEMAPS
+# ===========================================
+Sitemap: https://snapcraft.io/sitemap.xml
+Sitemap: https://snapcraft.io/sitemap-links.xml
+Sitemap: https://snapcraft.io/store/sitemap.xml
+Sitemap: https://snapcraft.io/tutorials/sitemap.xml
