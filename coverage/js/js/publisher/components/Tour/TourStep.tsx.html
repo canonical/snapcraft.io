@@ -134,7 +134,13 @@
 <a name='L69'></a><a href='#L69'>69</a>
 <a name='L70'></a><a href='#L70'>70</a>
 <a name='L71'></a><a href='#L71'>71</a>
-<a name='L72'></a><a href='#L72'>72</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L72'></a><a href='#L72'>72</a>
+<a name='L73'></a><a href='#L73'>73</a>
+<a name='L74'></a><a href='#L74'>74</a>
+<a name='L75'></a><a href='#L75'>75</a>
+<a name='L76'></a><a href='#L76'>76</a>
+<a name='L77'></a><a href='#L77'>77</a>
+<a name='L78'></a><a href='#L78'>78</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -148,12 +154,12 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">131x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">131x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">132x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">132x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -205,7 +211,16 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { Card, Button, Icon } from "@canonical/react-components";
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">// Still need to use the `Icon` from `react-components`
+// until the `IconButton` component is ready in Pragma
+import { Icon } from "@canonical/react-components";
+import { Card, Button } from "@canonical/react-ds-global";
 &nbsp;
 import type { TooltipRenderProps } from "react-joyride";
 &nbsp;
@@ -223,38 +238,41 @@ function TourStep(props: TooltipRenderProps): React.JSX.Element {
 &nbsp;
   return (
     &lt;Card style={{ border: "none" }}&gt;
-      &lt;h4&gt;{step.title}&lt;/h4&gt;
-      {step.content}
-      &lt;div style={{ display: "flex", justifyContent: "space-between" }}&gt;
-        &lt;div&gt;
-          Done?{" "}
-          &lt;button
-            className="p-button--link u-no-margin--bottom"
-            {...closeProps}
-          &gt;
-            Skip tour
-          &lt;/button&gt;
-          .
-        &lt;/div&gt;
-        &lt;div&gt;
-          &lt;span&gt;
-            {index + 1} / {size}
-          &lt;/span&gt;
+      &lt;Card.Content&gt;
+        &lt;h4&gt;{step.title}&lt;/h4&gt;
+        {step.content}
+        &lt;div style={{ display: "flex", justifyContent: "space-between" }}&gt;
+          &lt;div&gt;
+            Done?{" "}
+            &lt;Button
+              variant="link"
+              className="u-no-margin--bottom"
+              {...closeProps}
+            &gt;
+              Skip tour
+            &lt;/Button&gt;
+            .
+          &lt;/div&gt;
+          &lt;div&gt;
+            &lt;span&gt;
+              {index + 1} / {size}
+            &lt;/span&gt;
 &nbsp;
-          &lt;Button
-            {...backProps}
-            disabled={index &lt; 1}
-            className="u-no-margin--bottom"
-            style={{ marginLeft: "1rem" }}
-          &gt;
-            &lt;Icon name="chevron-left" /&gt;
-            &lt;span className="u-off-screen"&gt;{backProps.title}&lt;/span&gt;
-          &lt;/Button&gt;
+            &lt;Button
+              {...backProps}
+              disabled={index &lt; 1}
+              className="u-no-margin--bottom"
+              style={{ marginLeft: "1rem" }}
+              importance="secondary"
+            &gt;
+              &lt;Icon name="chevron-left" /&gt;
+              &lt;span className="u-off-screen"&gt;{backProps.title}&lt;/span&gt;
+            &lt;/Button&gt;
 &nbsp;
-          {continuous &amp;&amp; (
-            &lt;&gt;
+            {continuous &amp;&amp; (
               &lt;Button
-                appearance="positive"
+                importance="primary"
+                anticipation="constructive"
                 {...primaryProps}
                 className="u-no-margin--bottom u-no-margin--right"
               &gt;
@@ -267,10 +285,10 @@ function TourStep(props: TooltipRenderProps): React.JSX.Element {
                   &lt;/&gt;
                 )}
               &lt;/Button&gt;
-            &lt;/&gt;
-          )}
+            )}
+          &lt;/div&gt;
         &lt;/div&gt;
-      &lt;/div&gt;
+      &lt;/Card.Content&gt;
     &lt;/Card&gt;
   );
 }
@@ -283,7 +301,7 @@ export default TourStep;
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-09-02T22:07:54.771Z
+                at 2026-09-03T22:08:00.228Z
             </div>
         <script src="../../../../prettify.js"></script>
         <script>
