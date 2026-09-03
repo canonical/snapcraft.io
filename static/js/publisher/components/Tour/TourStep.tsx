@@ -1,4 +1,7 @@
-import { Card, Button, Icon } from "@canonical/react-ds-global";
+// Still need to use the `Icon` from `react-components`
+// until the `IconButton` component is ready in Pragma
+import { Icon } from "@canonical/react-components";
+import { Card, Button } from "@canonical/react-ds-global";
 
 import type { TooltipRenderProps } from "react-joyride";
 
@@ -43,28 +46,26 @@ function TourStep(props: TooltipRenderProps): React.JSX.Element {
               style={{ marginLeft: "1rem" }}
               importance="secondary"
             >
-              <Icon icon="chevron-left" />
+              <Icon name="chevron-left" />
               <span className="u-off-screen">{backProps.title}</span>
             </Button>
 
             {continuous && (
-              <>
-                <Button
-                  importance="primary"
-                  anticipation="constructive"
-                  {...primaryProps}
-                  className="u-no-margin--bottom u-no-margin--right"
-                >
-                  {isLastStep ? (
-                    <>Finish tour</>
-                  ) : (
-                    <>
-                      <Icon icon="chevron-right" />
-                      <span className="u-off-screen">{primaryProps.title}</span>
-                    </>
-                  )}
-                </Button>
-              </>
+              <Button
+                importance="primary"
+                anticipation="constructive"
+                {...primaryProps}
+                className="u-no-margin--bottom u-no-margin--right"
+              >
+                {isLastStep ? (
+                  <>Finish tour</>
+                ) : (
+                  <>
+                    <Icon name="chevron-right" light />
+                    <span className="u-off-screen">{primaryProps.title}</span>
+                  </>
+                )}
+              </Button>
             )}
           </div>
         </div>

@@ -7,6 +7,12 @@
     // which combined with Pragma styles, creates very low contrast
     &.button:disabled {
       opacity: 1;
+
+      // Icons don't lighten in Pragma buttons if disabled as yet,
+      // but text is, so we need to target icons
+      [class*="p-icon"] {
+        opacity: 0.33;
+      }
     }
 
     // Pragma sets a background colour for tertiary buttons whereas
