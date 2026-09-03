@@ -11,15 +11,11 @@ class TestStripSuffix(unittest.TestCase):
     def test_nested_page(self):
         self.assertEqual(strip_suffix("/about/publish.md"), "/about/publish")
 
-    def test_index_maps_to_its_directory(self):
-        self.assertEqual(strip_suffix("/index.md"), "/")
-        self.assertEqual(strip_suffix("/docs/index.md"), "/docs/")
-
     def test_bare_suffix_is_the_homepage(self):
         self.assertEqual(strip_suffix("/.md"), "/")
 
     def test_add_suffix_round_trips(self):
-        for path in ["/about", "/about/publish", "/docs/", "/"]:
+        for path in ["/about", "/about/publish", "/store/categories/games"]:
             self.assertEqual(strip_suffix(add_suffix(path)), path)
 
 
@@ -37,7 +33,6 @@ class TestMarkdownSuffix(unittest.TestCase):
             "/about.md",
             "/about/publish.md",
             "/build.md",
-            "/index.md",
             "/inkscape.md",
         ]
 

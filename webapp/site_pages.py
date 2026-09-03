@@ -1,245 +1,333 @@
 """
-List of public pages that are used for llms.txt and the marketing
-sitemap so the two cannot drift apart.
+Discover the public pages of the site from the routing table.
 
-Only public and crawlable pages are added here. Anything behind login is
-excluded. Those will be covered by /store/sitemap.xml.
+llms.txt and the sitemap are both built from this. So a new
+page shows up in both without any maintanance. A page
+is included when its route takes no URL parameters, it is not behind login,
+its view renders an HTML template rather than a redirect and that template
+does not ask robots to skip it.
+
+Titles and descriptions come from the meta_title and meta_description.
+A page opts out by carrying a noindex robots tag, the same signal that
+keeps it out of search results.
 """
+
+import ast
+import html
+import inspect
+import re
+import textwrap
+from collections import defaultdict
+
+from jinja2 import nodes
 
 from webapp.markdown_suffix import add_suffix
 
 BASE_URL = "https://snapcraft.io"
 
-PAGES = [
-    {
-        "section": "Main pages",
-        "links": [
-            {
-                "path": "/about",
-                "title": "About snaps",
-                "description": (
-                    "What snaps are, how they are confined, and why they "
-                    "work across Linux distributions."
-                ),
-            },
-            {
-                "path": "/store",
-                "title": "Browse the store",
-                "description": (
-                    "Browse and search thousands of snaps by category, "
-                    "from desktop apps to server and IoT software."
-                ),
-                "sitemap": False,
-            },
-            {
-                "path": "/blog",
-                "title": "Snapcraft blog",
-                "description": (
-                    "News and technical articles about snaps, the Snap "
-                    "Store, and snap publishing."
-                ),
-                "sitemap": False,
-            },
-        ],
-    },
-    {
-        "section": "Publishing a snap",
-        "links": [
-            {
-                "path": "/about/publish",
-                "title": "Publish a snap",
-                "description": (
-                    "How to register a name, upload a snap, and publish "
-                    "it to the Snap Store."
-                ),
-            },
-            {
-                "path": "/about/listing",
-                "title": "Write a store listing",
-                "description": (
-                    "How to write the title, summary, description, and "
-                    "media that appear on a snap's store page."
-                ),
-            },
-            {
-                "path": "/about/release",
-                "title": "Release to channels",
-                "description": (
-                    "How channels, tracks, and risk levels work when "
-                    "releasing a snap to users."
-                ),
-            },
-            {
-                "path": "/about/publicise",
-                "title": "Publicise a snap",
-                "description": (
-                    "Install buttons, badges, and embeddable cards for "
-                    "promoting a published snap."
-                ),
-            },
-            {
-                "path": "/build",
-                "title": "Build snaps from GitHub",
-                "description": (
-                    "Connect a GitHub repository to build snaps "
-                    "automatically for every supported architecture."
-                ),
-            },
-        ],
-    },
+SITE_NAME = "Snapcraft"
+
+# Sections are keyed by the first segment of the path. A new page under
+# a known area files itself
+SECTION_LABELS = {
+    "": "Main pages",
+    "about": "Publishing a snap",
+    "account": "Publishing a snap",
+    "docs": "Documentation",
+    "tutorials": "Documentation",
+    "store": "Store",
+    "blog": "Blog",
+}
+
+OTHER_SECTION = "Other pages"
+
+SECTION_ORDER = [
+    "Main pages",
+    "Publishing a snap",
+    "Documentation",
+    "Store",
+    "Store categories",
+    "Blog",
+    OTHER_SECTION,
+    "Optional",
+]
+
+# Links that cannot be discovered: pages rendered by an imported view
+# whose template is chosen at runtime and resources hosted elsewhere.
+EXTRA_LINKS = [
     {
         "section": "Documentation",
-        "links": [
-            {
-                "path": "/docs/",
-                "sitemap": False,
-                "markdown": False,
-                "title": "Snap documentation",
-                "description": (
-                    "Reference and explanation for snaps and snapd: "
-                    "confinement, interfaces, channels, and the daemon."
-                ),
-            },
-            {
-                "url": "https://documentation.ubuntu.com/snapcraft/stable/",
-                "title": "Snapcraft documentation",
-                "description": (
-                    "The build tool: snapcraft.yaml reference, plugins, "
-                    "bases, and how-to guides for packaging software."
-                ),
-            },
-            {
-                "path": "/docs/snap-tutorials/",
-                "sitemap": False,
-                "markdown": False,
-                "title": "Snap tutorials",
-                "description": (
-                    "Guided lessons that walk through building and "
-                    "publishing a first snap."
-                ),
-            },
-        ],
+        "url": BASE_URL + "/docs/",
+        "title": "Snap documentation",
+        "description": (
+            "Reference and explanation for snaps and snapd: confinement, "
+            "interfaces, channels, and the daemon."
+        ),
     },
     {
         "section": "Optional",
-        "optional": True,
-        "links": [
-            {
-                "path": "/iot",
-                "title": "Snaps for IoT",
-                "description": (
-                    "Using snaps and Ubuntu Core on embedded and IoT "
-                    "devices."
-                ),
-            },
-            {
-                "path": "/store/sitemap.xml",
-                "markdown": False,
-                "title": "Snap sitemap",
-                "description": (
-                    "Every snap page on the store. Large - for "
-                    "exhaustive crawling rather than reading."
-                ),
-                "sitemap": False,
-            },
-        ],
+        "url": BASE_URL + "/store/sitemap.xml",
+        "title": "Snap sitemap",
+        "description": (
+            "Every snap page on the store. Large - for exhaustive "
+            "crawling rather than reading."
+        ),
+    },
+    {
+        "section": "Documentation",
+        "url": "https://documentation.ubuntu.com/snapcraft/stable/",
+        "title": "Snapcraft documentation",
+        "description": (
+            "The build tool: snapcraft.yaml reference, plugins, bases, "
+            "and how-to guides for packaging software."
+        ),
     },
 ]
 
-# Public pages that are not added to llms.txt.
-# Anything new must be listed above or excluded here on purpose.
-EXCLUDED_PAGES = {
-    "/": "landing page",
-    "/_status/check": "health check",
-    "/about/contact-us": "form",
-    "/about/thank-you": "form confirmation",
-    "/account/agreement": "part of the login flow",
-    "/account/register-snap": "part of the login flow",
-    "/blog/archives": "blog sub-listing",
-    "/blog/events-and-webinars": "blog sub-listing",
-    "/blog/feed": "feed",
-    "/blog/latest": "blog sub-listing",
-    "/blog/latest-news": "blog sub-listing",
-    "/community": "redirects to /",
-    "/create": "redirects to the Snapcraft docs",
-    "/discover": "redirects to /store",
-    "/docs/search": "search form",
-    "/explore": "redirects to /store",
-    "/feeds/updates": "feed",
-    "/fish": "shell completion helper",
-    "/login": "login flow",
-    "/login-beta": "login flow",
-    "/logout": "login flow",
-    "/search": "search form",
-    "/store/stats": "machine endpoint",
-    "/tutorials": "redirects into the docs",
-}
+ROBOTS_NOINDEX = re.compile(
+    r"""<meta[^>]+name=["']robots["'][^>]+noindex""", re.IGNORECASE
+)
 
 
-def listed_paths():
+def is_login_gated(view):
+    while view is not None:
+        code = getattr(view, "__code__", None)
+
+        if code is not None and code.co_name == "is_user_logged_in":
+            return True
+
+        view = getattr(view, "__wrapped__", None)
+
+    return False
+
+
+def _view_tree(view):
+    try:
+        source = textwrap.dedent(inspect.getsource(inspect.unwrap(view)))
+        return ast.parse(source)
+    except (OSError, TypeError, SyntaxError):
+        return None
+
+
+def _calls(tree):
+    for node in ast.walk(tree):
+        if not isinstance(node, ast.Call):
+            continue
+
+        if isinstance(node.func, ast.Attribute):
+            yield node.func.attr, node
+        elif isinstance(node.func, ast.Name):
+            yield node.func.id, node
+
+
+def _template_name(view):
+    tree = _view_tree(view)
+
+    if tree is None:
+        return None
+
+    for name, call in _calls(tree):
+        if name == "redirect":
+            return None
+
+        if name != "render_template" or not call.args:
+            continue
+
+        first = call.args[0]
+
+        if isinstance(first, ast.Constant) and isinstance(first.value, str):
+            return first.value if first.value.endswith(".html") else None
+
+    return None
+
+
+def _is_layout(name):
+    return name.rsplit("/", 1)[-1].startswith("_")
+
+
+def _extends(env, source):
+    for node in env.parse(source).find_all(nodes.Extends):
+        if isinstance(node.template, nodes.Const):
+            return node.template.value
+
+    return None
+
+
+def _source_chain(env, name):
+    chain = []
+
+    while name and not _is_layout(name):
+        try:
+            source = env.loader.get_source(env, name)[0]
+        except Exception:
+            break
+
+        chain.append(source)
+        name = _extends(env, source)
+
+    return chain
+
+
+def _static_block(env, source, block_name):
+    for block in env.parse(source).find_all(nodes.Block):
+        if block.name != block_name:
+            continue
+
+        return "".join(
+            node.data for node in block.find_all(nodes.TemplateData)
+        )
+
+    return None
+
+
+def _block(env, chain, block_name):
+    for source in chain:
+        text = _static_block(env, source, block_name)
+
+        if text and text.strip():
+            return _clean(text)
+
+    return None
+
+
+def _clean(text):
+    text = html.unescape(re.sub(r"\s+", " ", text)).strip()
+
+    return text.strip("|-–— ").strip()
+
+
+def _title(text):
+    parts = [part.strip() for part in text.split("|")]
+    parts = [part for part in parts if part and part != SITE_NAME]
+
+    return " | ".join(parts)
+
+
+def _section(path):
+    segments = [segment for segment in path.split("/") if segment]
+    prefix = segments[0] if len(segments) > 1 else ""
+
+    return SECTION_LABELS.get(prefix, OTHER_SECTION)
+
+
+def _page(env, rule, view):
+    template = _template_name(view)
+
+    if template is None:
+        return None
+
+    chain = _source_chain(env, template)
+
+    if not chain or any(ROBOTS_NOINDEX.search(source) for source in chain):
+        return None
+
+    title = _block(env, chain, "meta_title")
+
+    if not title:
+        return None
+
+    path = rule.rule.rstrip("/") or "/"
+
     return {
-        link["path"]
-        for group in PAGES
-        for link in group["links"]
-        if "path" in link
+        "path": path,
+        "template": template,
+        "title": _title(title),
+        "description": _block(env, chain, "meta_description"),
+        "section": _section(path),
     }
+
+
+def _deduplicate(pages):
+    """
+    Pages sharing a template or a title are the same page reached by
+    more than one route such as /store, /explore and /search. The
+    shortest path is the one kept.
+    """
+    kept = []
+    seen = set()
+
+    for page in sorted(
+        pages, key=lambda page: (len(page["path"]), page["path"])
+    ):
+        keys = {page.pop("template"), page["title"]}
+
+        if keys & seen:
+            continue
+
+        seen |= keys
+        kept.append(page)
+
+    return kept
+
+
+def discover_pages(app):
+    pages = {}
+
+    for rule in app.url_map.iter_rules():
+        if "<" in rule.rule or "GET" not in (rule.methods or set()):
+            continue
+
+        # The homepage is the site itself, which the H1 and the summary
+        # at the top of llms.txt already introduce.
+        if rule.rule == "/":
+            continue
+
+        view = app.view_functions.get(rule.endpoint)
+
+        if view is None or is_login_gated(view):
+            continue
+
+        page = _page(app.jinja_env, rule, view)
+
+        if page is not None:
+            pages.setdefault(page["path"], page)
+
+    return sorted(_deduplicate(pages.values()), key=lambda page: page["path"])
 
 
 def category_path(category):
     return f"/store/categories/{category['name']}"
 
 
-def sitemap_pages(categories=()):
-    curated = [
-        link["path"]
-        for group in PAGES
-        for link in group["links"]
-        if "path" in link and link.get("sitemap", True)
+def sitemap_paths(app, categories=()):
+    paths = [page["path"] for page in discover_pages(app)]
+
+    return paths + [category_path(category) for category in categories]
+
+
+def _link(page):
+    return {**page, "url": BASE_URL + add_suffix(page["path"])}
+
+
+def _category_links(categories):
+    return [
+        {
+            "url": BASE_URL + add_suffix(category_path(category)),
+            "title": category["display_name"],
+        }
+        for category in categories
     ]
 
-    return curated + [category_path(category) for category in categories]
 
+def llms_sections(pages, categories=()):
+    grouped = defaultdict(list)
 
-def _url(link):
-    if "url" in link:
-        return link["url"]
+    for page in pages:
+        grouped[page["section"]].append(_link(page))
 
-    if link.get("markdown") is False:
-        return BASE_URL + link["path"]
-
-    return BASE_URL + add_suffix(link["path"])
-
-
-def _resolve(group):
-    return {
-        "section": group["section"],
-        "links": [{**link, "url": _url(link)} for link in group["links"]],
-    }
-
-
-def _category_section(categories):
-    return {
-        "section": "Store categories",
-        "links": [
-            {
-                "url": BASE_URL + add_suffix(category_path(category)),
-                "title": category["display_name"],
-            }
-            for category in categories
-        ],
-    }
-
-
-def llms_sections(categories):
-    sections = [
-        _resolve(group) for group in PAGES if not group.get("optional")
-    ]
+    for link in EXTRA_LINKS:
+        grouped[link["section"]].append(link)
 
     if categories:
-        sections.append(_category_section(categories))
+        grouped["Store categories"] = _category_links(categories)
 
-    sections.extend(
-        _resolve(group) for group in PAGES if group.get("optional")
-    )
+    known = [name for name in SECTION_ORDER if name in grouped]
+    rest = sorted(name for name in grouped if name not in SECTION_ORDER)
 
-    return sections
+    return [{"section": name, "links": grouped[name]} for name in known + rest]
+
+
+def render_llms_txt(app, categories=()):
+    sections = llms_sections(discover_pages(app), categories)
+
+    return app.jinja_env.get_template("llms.txt").render(sections=sections)

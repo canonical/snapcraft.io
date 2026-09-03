@@ -6,12 +6,10 @@ the llms.txt spec asks for a .md suffix. Flask matches the URL before any
 request hook runs, so /about.md would 404 before we could rewrite it so
 the rewrite has to happen at the WSGI layer instead.
 
-QUERY_PARAM is internal so .md is the only public way to ask for
-Markdown.
+QUERY_PARAM is internal so .md is the only public way to ask for Markdown.
 """
 
 SUFFIX = ".md"
-INDEX = "/index"
 QUERY_PARAM = "_markdown"
 QUERY_VALUE = "1"
 
@@ -48,16 +46,8 @@ def cache_markdown(response):
 
 
 def add_suffix(path):
-    if path.endswith("/"):
-        path += "index"
-
     return path + SUFFIX
 
 
 def strip_suffix(path):
-    path = path[: -len(SUFFIX)]
-
-    if path.endswith(INDEX):
-        path = path[: -len(INDEX) + 1]
-
-    return path or "/"
+    return path[: -len(SUFFIX)] or "/"

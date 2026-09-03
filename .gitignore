@@ -67,6 +67,7 @@ env[23]/
 # Project specific ignores
 static/js/modules
 static/js/dist
+static/llms.txt
 cache.tmp/
 coverage/
 .webcache/

@@ -1,9 +1,23 @@
+import os
+
 import flask
 
 from webapp.config import DEFAULT_ICON_URL
 from webapp.packages.logic import get_store_categories
-from webapp.site_pages import BASE_URL, llms_sections, sitemap_pages
+from webapp.site_pages import BASE_URL, render_llms_txt, sitemap_paths
 from webapp.snapcraft import logic
+
+LLMS_TXT_FILE = "llms.txt"
+
+
+def llms_txt_body():
+    generated = os.path.join(flask.current_app.static_folder, LLMS_TXT_FILE)
+
+    if os.path.exists(generated):
+        with open(generated) as llms_txt_file:
+            return llms_txt_file.read()
+
+    return render_llms_txt(flask.current_app, get_store_categories())
 
 
 def snapcraft_blueprint():
@@ -475,7 +489,9 @@ def snapcraft_blueprint():
     def sitemap_links():
         links = [
             {"url": BASE_URL + path}
-            for path in sitemap_pages(get_store_categories())
+            for path in sitemap_paths(
+                flask.current_app, get_store_categories()
+            )
         ]
 
         xml_sitemap = flask.render_template(
@@ -491,10 +507,7 @@ def snapcraft_blueprint():
 
     @snapcraft.route("/llms.txt")
     def llms_txt():
-        content = flask.render_template(
-            "llms.txt",
-            sections=llms_sections(get_store_categories()),
-        )
+        content = llms_txt_body()
         response = flask.make_response(content)
         response.headers["Content-Type"] = "text/plain; charset=utf-8"
         response.headers["Cache-Control"] = (
