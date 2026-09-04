@@ -3,8 +3,7 @@
 Write static/llms.txt from the pages discovered in the routing table.
 
 Run as part of the build so the file is on disk before the app serves
-it. Store categories come from the store API and are skipped if it
-cannot be reached.
+it.
 """
 
 import os
@@ -16,18 +15,9 @@ sys.path.insert(0, ROOT)
 os.environ.setdefault("SECRET_KEY", "llms-txt-generation")
 
 from webapp.app import create_app
-from webapp.packages.logic import get_store_categories
 from webapp.site_pages import discover_pages, render_llms_txt
 
 OUTPUT = os.path.join(ROOT, "static", "llms.txt")
-
-
-def categories():
-    try:
-        return get_store_categories()
-    except Exception as error:
-        print(f"llms.txt: no store categories ({error})", file=sys.stderr)
-        return []
 
 
 def main():
@@ -43,7 +33,7 @@ def main():
         )
 
     with app.app_context():
-        content = render_llms_txt(app, categories())
+        content = render_llms_txt(app)
 
     with open(OUTPUT, "w") as llms_txt_file:
         llms_txt_file.write(content)

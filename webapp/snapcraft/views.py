@@ -17,7 +17,7 @@ def llms_txt_body():
         with open(generated) as llms_txt_file:
             return llms_txt_file.read()
 
-    return render_llms_txt(flask.current_app, get_store_categories())
+    return render_llms_txt(flask.current_app)
 
 
 def snapcraft_blueprint():

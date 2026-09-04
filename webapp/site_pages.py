@@ -52,6 +52,29 @@ SECTION_ORDER = [
     "Optional",
 ]
 
+# The store categories change rarely
+STORE_CATEGORIES = [
+    {"name": "art-and-design", "display_name": "Art and Design"},
+    {"name": "books-and-reference", "display_name": "Books and Reference"},
+    {"name": "development", "display_name": "Development"},
+    {"name": "devices-and-iot", "display_name": "Devices and IoT"},
+    {"name": "education", "display_name": "Education"},
+    {"name": "entertainment", "display_name": "Entertainment"},
+    {"name": "finance", "display_name": "Finance"},
+    {"name": "games", "display_name": "Games"},
+    {"name": "health-and-fitness", "display_name": "Health and Fitness"},
+    {"name": "music-and-audio", "display_name": "Music and Audio"},
+    {"name": "news-and-weather", "display_name": "News and Weather"},
+    {"name": "personalisation", "display_name": "Personalisation"},
+    {"name": "photo-and-video", "display_name": "Photo and Video"},
+    {"name": "productivity", "display_name": "Productivity"},
+    {"name": "science", "display_name": "Science"},
+    {"name": "security", "display_name": "Security"},
+    {"name": "server-and-cloud", "display_name": "Server and Cloud"},
+    {"name": "social", "display_name": "Social"},
+    {"name": "utilities", "display_name": "Utilities"},
+]
+
 # Links that cannot be discovered: pages rendered by an imported view
 # whose template is chosen at runtime and resources hosted elsewhere.
 EXTRA_LINKS = [
@@ -309,7 +332,7 @@ def _category_links(categories):
     ]
 
 
-def llms_sections(pages, categories=()):
+def llms_sections(pages, categories=STORE_CATEGORIES):
     grouped = defaultdict(list)
 
     for page in pages:
@@ -327,7 +350,7 @@ def llms_sections(pages, categories=()):
     return [{"section": name, "links": grouped[name]} for name in known + rest]
 
 
-def render_llms_txt(app, categories=()):
+def render_llms_txt(app, categories=STORE_CATEGORIES):
     sections = llms_sections(discover_pages(app), categories)
 
     return app.jinja_env.get_template("llms.txt").render(sections=sections)

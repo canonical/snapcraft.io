@@ -1,6 +1,5 @@
 import re
 import unittest
-from unittest.mock import patch
 
 from werkzeug.exceptions import MethodNotAllowed, NotFound
 from werkzeug.routing.exceptions import RequestRedirect
@@ -114,17 +113,6 @@ class TestSitePages(unittest.TestCase):
         self.assertIn("Publishing a snap", sections)
         self.assertNotIn("Other pages", sections)
 
-    def test_categories_are_listed_when_the_store_api_responds(self):
-        sections = llms_sections(self.pages, CATEGORIES)
-        titles = [group["section"] for group in sections]
-
-        self.assertIn("Store categories", titles)
-
-    def test_llms_txt_still_renders_when_the_store_api_fails(self):
-        titles = [group["section"] for group in llms_sections(self.pages, [])]
-
-        self.assertNotIn("Store categories", titles)
-
     def test_optional_comes_last_so_agents_can_skip_it(self):
         body = render_llms_txt(self.app)
         headings = [
@@ -168,11 +156,7 @@ class TestLlmsTxtRoute(unittest.TestCase):
         self.client = self.app.test_client()
 
     def render(self):
-        with patch(
-            "webapp.snapcraft.views.get_store_categories",
-            return_value=CATEGORIES,
-        ):
-            return self.client.get("/llms.txt")
+        return self.client.get("/llms.txt")
 
     def test_llms_txt_is_served_as_plain_text(self):
         response = self.render()
