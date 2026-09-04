@@ -1,5 +1,6 @@
 import re
 import unittest
+from unittest.mock import patch
 
 from werkzeug.exceptions import MethodNotAllowed, NotFound
 from werkzeug.routing.exceptions import RequestRedirect
@@ -9,6 +10,7 @@ from webapp.site_pages import (
     discover_pages,
     is_login_gated,
     llms_sections,
+    render_llms_full_txt,
     render_llms_txt,
     sitemap_paths,
 )
@@ -169,3 +171,54 @@ class TestLlmsTxtRoute(unittest.TestCase):
 
         self.assertIn("## Main pages", body)
         self.assertIn("https://snapcraft.io/about.md", body)
+
+
+class TestLlmsFullTxt(unittest.TestCase):
+    def setUp(self):
+        self.app = create_app(testing=True)
+
+    def render(self, pages, on_skip=None):
+        return render_llms_full_txt(self.app, pages, on_skip=on_skip)
+
+    def test_the_homepage_leads_and_pages_follow_in_full(self):
+        body = self.render([{"path": "/about"}])
+
+        self.assertIn("url: https://snapcraft.io/\n", body)
+        self.assertIn("url: https://snapcraft.io/about\n", body)
+        self.assertIn("Snaps are app packages", body)
+
+    def test_each_page_keeps_its_own_front_matter(self):
+        body = self.render([{"path": "/about"}])
+
+        self.assertEqual(body.count("title: "), 2)
+
+    def test_pages_that_do_not_render_are_skipped(self):
+        skipped = []
+        body = self.render(
+            [{"path": "/tutorials"}],
+            on_skip=lambda *args: skipped.append(args),
+        )
+
+        self.assertEqual(skipped, [("/tutorials", 302)])
+        self.assertNotIn("Redirecting", body)
+
+
+class TestLlmsFullTxtRoute(unittest.TestCase):
+    def setUp(self):
+        self.client = create_app(testing=True).test_client()
+
+    def test_it_is_served_as_plain_text(self):
+        with patch(
+            "webapp.snapcraft.views.generated_file",
+            return_value="# Snapcraft\n",
+        ):
+            response = self.client.get("/llms-full.txt")
+
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("text/plain", response.headers["Content-Type"])
+        self.assertIn("# Snapcraft", response.data.decode())
+
+    def test_llms_txt_points_at_it(self):
+        body = render_llms_txt(create_app(testing=True))
+
+        self.assertIn("https://snapcraft.io/llms-full.txt", body)

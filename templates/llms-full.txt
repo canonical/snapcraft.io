@@ -1,0 +1,6 @@
+# Snapcraft
+
+> Every page listed in llms.txt, in full. Each document keeps its own title, description and canonical URL in the block above it.
+{% for document in documents %}
+{{ document }}
+{% endfor %}

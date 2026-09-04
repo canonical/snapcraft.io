@@ -51,7 +51,8 @@ RUN rm -rf package.json yarn.lock .babelrc requirements.txt
 COPY --from=build /srv/static/js static/js
 COPY --from=build /srv/static/icons static/icons
 
-# Write static/llms.txt from the pages found in the routing table
+# Write static/llms.txt and static/llms-full.txt from the pages
+# found in the routing table
 RUN python3 scripts/generate_llms_txt.py
 
 # Setup commands to run server

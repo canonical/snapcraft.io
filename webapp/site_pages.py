@@ -89,6 +89,15 @@ EXTRA_LINKS = [
     },
     {
         "section": "Optional",
+        "url": BASE_URL + "/llms-full.txt",
+        "title": "Every page in one file",
+        "description": (
+            "The pages above concatenated as Markdown, for reading in "
+            "one request rather than following each link."
+        ),
+    },
+    {
+        "section": "Optional",
         "url": BASE_URL + "/store/sitemap.xml",
         "title": "Snap sitemap",
         "description": (
@@ -348,6 +357,33 @@ def llms_sections(pages, categories=STORE_CATEGORIES):
     rest = sorted(name for name in grouped if name not in SECTION_ORDER)
 
     return [{"section": name, "links": grouped[name]} for name in known + rest]
+
+
+def render_llms_full_txt(app, pages=None, on_skip=None):
+    """
+    The Markdown of every page in llms.txt.
+    """
+
+    if pages is None:
+        pages = discover_pages(app)
+
+    client = app.test_client()
+    documents = []
+
+    for path in ["/"] + [page["path"] for page in pages]:
+        response = client.get(add_suffix(path))
+
+        if response.status_code != 200:
+            if on_skip is not None:
+                on_skip(path, response.status_code)
+
+            continue
+
+        documents.append(response.get_data(as_text=True).strip())
+
+    template = app.jinja_env.get_template("llms-full.txt")
+
+    return template.render(documents=documents)
 
 
 def render_llms_txt(app, categories=STORE_CATEGORIES):

@@ -4,20 +4,36 @@ import flask
 
 from webapp.config import DEFAULT_ICON_URL
 from webapp.packages.logic import get_store_categories
-from webapp.site_pages import BASE_URL, render_llms_txt, sitemap_paths
+from webapp.site_pages import (
+    BASE_URL,
+    render_llms_full_txt,
+    render_llms_txt,
+    sitemap_paths,
+)
 from webapp.snapcraft import logic
 
 LLMS_TXT_FILE = "llms.txt"
+LLMS_FULL_TXT_FILE = "llms-full.txt"
+
+
+def generated_file(name):
+    path = os.path.join(flask.current_app.static_folder, name)
+
+    if not os.path.exists(path):
+        return None
+
+    with open(path) as generated:
+        return generated.read()
 
 
 def llms_txt_body():
-    generated = os.path.join(flask.current_app.static_folder, LLMS_TXT_FILE)
+    return generated_file(LLMS_TXT_FILE) or render_llms_txt(flask.current_app)
 
-    if os.path.exists(generated):
-        with open(generated) as llms_txt_file:
-            return llms_txt_file.read()
 
-    return render_llms_txt(flask.current_app)
+def llms_full_txt_body():
+    return generated_file(LLMS_FULL_TXT_FILE) or render_llms_full_txt(
+        flask.current_app
+    )
 
 
 def snapcraft_blueprint():
@@ -505,9 +521,7 @@ def snapcraft_blueprint():
 
         return response
 
-    @snapcraft.route("/llms.txt")
-    def llms_txt():
-        content = llms_txt_body()
+    def plain_text(content):
         response = flask.make_response(content)
         response.headers["Content-Type"] = "text/plain; charset=utf-8"
         response.headers["Cache-Control"] = (
@@ -516,5 +530,13 @@ def snapcraft_blueprint():
         )
 
         return response
+
+    @snapcraft.route("/llms.txt")
+    def llms_txt():
+        return plain_text(llms_txt_body())
+
+    @snapcraft.route("/llms-full.txt")
+    def llms_full_txt():
+        return plain_text(llms_full_txt_body())
 
     return snapcraft
