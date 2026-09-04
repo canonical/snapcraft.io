@@ -9,6 +9,28 @@ the rewrite has to happen at the WSGI layer instead.
 QUERY_PARAM is internal so .md is the only public way to ask for Markdown.
 """
 
+# Interactive chrome carries no meaning once the page is text.
+STRIP_ELEMENTS = [
+    "script",
+    "style",
+    "nav",
+    "noscript",
+    "form",
+    "select",
+    "svg",
+    "canvas",
+    "iframe",
+    "template",
+]
+
+STRIP_CLASSES = [
+    "u-hide",
+    "u-off-screen",
+    "p-tooltip__message",
+    "p-carousel__buttons",
+    "p-show-more__fade",
+]
+
 SUFFIX = ".md"
 INDEX = "index" + SUFFIX
 QUERY_PARAM = "_markdown"

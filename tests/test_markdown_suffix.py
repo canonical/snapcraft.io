@@ -2,9 +2,18 @@ import unittest
 
 import flask
 
+from canonicalwebteam.markdown_response.converter import (
+    convert_html_to_markdown,
+)
+
 from webapp.app import create_app
 from webapp.handlers import markdown_url
-from webapp.markdown_suffix import add_suffix, strip_suffix
+from webapp.markdown_suffix import (
+    STRIP_CLASSES,
+    STRIP_ELEMENTS,
+    add_suffix,
+    strip_suffix,
+)
 
 
 class TestStripSuffix(unittest.TestCase):
@@ -34,6 +43,47 @@ class TestStripSuffix(unittest.TestCase):
 
         for path in paths:
             self.assertEqual(strip_suffix(add_suffix(path)), path)
+
+
+class TestStrippedChrome(unittest.TestCase):
+    def markdown(self, html):
+        return convert_html_to_markdown(
+            f'<div id="main-content">{html}</div>',
+            strip_elements=STRIP_ELEMENTS,
+            strip_classes=STRIP_CLASSES,
+        )
+
+    def test_tooltips_are_dropped(self):
+        html = (
+            "<p>Kept</p>" '<span class="p-tooltip__message">Hover text</span>'
+        )
+
+        self.assertNotIn("Hover text", self.markdown(html))
+
+    def test_carousel_controls_are_dropped(self):
+        html = (
+            '<div class="p-carousel__buttons">'
+            "<button>Previous</button><button>Next</button></div>"
+        )
+
+        self.assertEqual(self.markdown(html).strip(), "")
+
+    def test_forms_and_widgets_are_dropped(self):
+        html = "<form><label>Show architecture</label><select></select></form>"
+
+        self.assertEqual(self.markdown(html).strip(), "")
+
+    def test_marked_elements_are_dropped(self):
+        html = "<p data-md-strip>Copy to clipboard</p><p>Kept</p>"
+
+        self.assertEqual(self.markdown(html).strip(), "Kept")
+
+    def test_content_survives(self):
+        html = "<h1>spotify</h1><p>latest/stable 1.2.95</p>"
+        markdown = self.markdown(html)
+
+        self.assertIn("# spotify", markdown)
+        self.assertIn("latest/stable 1.2.95", markdown)
 
 
 class TestMarkdownSuffix(unittest.TestCase):

@@ -86,6 +86,8 @@ def create_app(testing=False):
         app,
         query_param=markdown_suffix.QUERY_PARAM,
         query_value=markdown_suffix.QUERY_VALUE,
+        strip_elements=markdown_suffix.STRIP_ELEMENTS,
+        strip_classes=markdown_suffix.STRIP_CLASSES,
     )
 
     app.register_blueprint(snapcraft_blueprint())
