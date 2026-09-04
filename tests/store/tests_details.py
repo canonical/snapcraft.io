@@ -88,6 +88,7 @@ class GetDetailsPageTest(TestCase):
                                 "unlisted",
                                 "links",
                                 "revision",
+                                "sboms",
                             ]
                         )
                     }

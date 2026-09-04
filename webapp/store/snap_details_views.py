@@ -45,6 +45,7 @@ FIELDS = [
     "unlisted",
     "links",
     "revision",
+    "sboms",
 ]
 
 FIELDS_EXTRA_DETAILS = [

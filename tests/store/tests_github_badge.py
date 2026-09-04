@@ -87,6 +87,7 @@ class GetGitHubBadgeTest(TestCase):
                                 "unlisted",
                                 "links",
                                 "revision",
+                                "sboms",
                             ]
                         )
                     }
