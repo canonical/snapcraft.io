@@ -2,6 +2,7 @@
   <pre class="p-code-snippet__block--icon is-wrapped"><code {% if snippet_id %}id="snippet-{{ snippet_id }}"{% endif %}>{{ snippet_value }}</code></pre>
   {% if snippet_id %}
   <button
+    data-md-strip
     class="p-button--base is-dense has-icon u-no-margin--bottom"
     title="Copy to clipboard"
     data-js="copy-install-command"
