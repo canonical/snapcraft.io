@@ -10,6 +10,7 @@ QUERY_PARAM is internal so .md is the only public way to ask for Markdown.
 """
 
 SUFFIX = ".md"
+INDEX = "index" + SUFFIX
 QUERY_PARAM = "_markdown"
 QUERY_VALUE = "1"
 
@@ -45,9 +46,20 @@ def cache_markdown(response):
     return response
 
 
+def is_markdown_request(request):
+    return request.args.get(QUERY_PARAM) == QUERY_VALUE
+
+
 def add_suffix(path):
+    # The spec asks for index.md on URLs without a file name.
+    if path.endswith("/"):
+        return path + INDEX
+
     return path + SUFFIX
 
 
 def strip_suffix(path):
+    if path.endswith("/" + INDEX):
+        return path[: -len(INDEX)]
+
     return path[: -len(SUFFIX)] or "/"

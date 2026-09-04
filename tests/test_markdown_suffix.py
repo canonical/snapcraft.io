@@ -1,6 +1,9 @@
 import unittest
 
+import flask
+
 from webapp.app import create_app
+from webapp.handlers import markdown_url
 from webapp.markdown_suffix import add_suffix, strip_suffix
 
 
@@ -11,17 +14,32 @@ class TestStripSuffix(unittest.TestCase):
     def test_nested_page(self):
         self.assertEqual(strip_suffix("/about/publish.md"), "/about/publish")
 
-    def test_bare_suffix_is_the_homepage(self):
+    def test_index_is_the_homepage(self):
+        self.assertEqual(strip_suffix("/index.md"), "/")
+
+    def test_index_under_a_directory(self):
+        self.assertEqual(strip_suffix("/docs/index.md"), "/docs/")
+
+    def test_bare_suffix_is_still_the_homepage(self):
         self.assertEqual(strip_suffix("/.md"), "/")
 
+    def test_the_homepage_gets_index_md(self):
+        self.assertEqual(add_suffix("/"), "/index.md")
+
+    def test_a_directory_gets_index_md(self):
+        self.assertEqual(add_suffix("/docs/"), "/docs/index.md")
+
     def test_add_suffix_round_trips(self):
-        for path in ["/about", "/about/publish", "/store/categories/games"]:
+        paths = ["/", "/about", "/about/publish", "/store/categories/games"]
+
+        for path in paths:
             self.assertEqual(strip_suffix(add_suffix(path)), path)
 
 
 class TestMarkdownSuffix(unittest.TestCase):
     def setUp(self):
-        self.client = create_app(testing=True).test_client()
+        self.app = create_app(testing=True)
+        self.client = self.app.test_client()
 
     def markdown(self, path):
         response = self.client.get(path)
@@ -30,6 +48,8 @@ class TestMarkdownSuffix(unittest.TestCase):
 
     def test_suffix_serves_markdown(self):
         paths = [
+            "/index.md",
+            "/.md",
             "/about.md",
             "/about/publish.md",
             "/build.md",
@@ -53,10 +73,41 @@ class TestMarkdownSuffix(unittest.TestCase):
         self.assertEqual(status, 200)
         self.assertIn("text/html", content_type)
 
+    def test_pages_behind_login_have_no_markdown_version(self):
+        for path in ["/snaps.md", "/account/snaps.md", "/validation-sets.md"]:
+            status, _ = self.markdown(path)
+
+            self.assertEqual(status, 404, path)
+
+    def test_pages_behind_login_still_serve_html(self):
+        self.assertNotEqual(self.client.get("/snaps").status_code, 404)
+
+    def test_pages_behind_login_do_not_advertise_markdown(self):
+        with self.app.test_request_context("/snaps"):
+            self.assertIsNone(markdown_url(flask.request))
+
     def test_unknown_page_is_not_found(self):
         status, _ = self.markdown("/not-a-real-page-xyz.md")
 
         self.assertEqual(status, 404)
+
+    def test_the_markdown_link_follows_the_spec(self):
+        links = {
+            "/": "https://snapcraft.io/index.md",
+            "/about": "https://snapcraft.io/about.md",
+        }
+
+        for path, href in links.items():
+            body = self.client.get(path).data.decode()
+
+            self.assertIn(
+                f'<link rel="alternate" type="text/markdown" href="{href}"',
+                body,
+            )
+            self.assertIn(
+                '<link rel="describedby" href="https://snapcraft.io/llms.txt"',
+                body,
+            )
 
     def test_content_anchor_is_present_on_every_page(self):
         for path in ["/", "/about", "/build", "/iot"]:
