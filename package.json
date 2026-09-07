@@ -104,7 +104,7 @@
     "@typescript-eslint/parser": "^8.59.2",
     "@vitest/coverage-v8": "4.1.7",
     "@vitest/ui": "4.1.7",
-    "concurrently": "9.2.1",
+    "concurrently": "9.2.4",
     "cypress": "15.14.2",
     "eslint": "9.39.4",
     "eslint-config-prettier": "10.1.8",
