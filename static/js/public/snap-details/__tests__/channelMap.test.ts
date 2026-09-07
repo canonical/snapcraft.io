@@ -150,7 +150,6 @@ const channelMapData = {
   },
 };
 const defaultTrack = "latest";
-const hasSboms = false;
 
 describe("Channel map popup", () => {
   beforeEach(() => {
@@ -158,14 +157,7 @@ describe("Channel map popup", () => {
       ${OPEN_CHANNEL_MAP_BTN}
       ${CHANNEL_MAP_HTML}`;
 
-    channelMap(
-      selector,
-      packageName,
-      snapId,
-      channelMapData,
-      defaultTrack,
-      hasSboms,
-    );
+    channelMap(selector, packageName, snapId, channelMapData, defaultTrack);
 
     openChannelMap();
   });

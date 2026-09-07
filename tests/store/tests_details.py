@@ -105,13 +105,6 @@ class GetDetailsPageTest(TestCase):
                 urlencode({"fields": ",".join(["aliases"])}),
             ]
         )
-        self.api_url_sboms = "".join(
-            [
-                "https://api.snapcraft.io/api/v1/",
-                "sboms/download/",
-                f"sbom_snap_{self.snap_id}_{self.revision}.spdx2.3.json",
-            ]
-        )
 
     def create_app(self):
         app = create_app(testing=True)
@@ -152,12 +145,6 @@ class GetDetailsPageTest(TestCase):
             ]
         )
         metrics_url = "https://api.snapcraft.io/api/v1/snaps/metrics"
-        sbom_url = "".join(
-            [
-                "https://api.snapcraft.io/api/v1/sboms/download/",
-                f"sbom_snap_{self.snap_id}_{self.revision}.spdx2.3.json",
-            ]
-        )
 
         responses.add(responses.GET, info_url, json=payload, status=200)
         responses.add(
@@ -167,7 +154,6 @@ class GetDetailsPageTest(TestCase):
             status=200,
         )
         responses.add(responses.POST, metrics_url, json={}, status=200)
-        responses.add(responses.HEAD, sbom_url, json={}, status=200)
 
         response = self.client.get("/" + snap_name)
 
@@ -195,12 +181,6 @@ class GetDetailsPageTest(TestCase):
         )
         find_url = "https://api.snapcraft.io/v2/snaps/find"
         metrics_url = "https://api.snapcraft.io/api/v1/snaps/metrics"
-        sbom_url = "".join(
-            [
-                "https://api.snapcraft.io/api/v1/sboms/download/",
-                f"sbom_snap_{self.snap_id}_{self.revision}.spdx2.3.json",
-            ]
-        )
 
         def find_snap(name, title):
             return {
@@ -224,7 +204,6 @@ class GetDetailsPageTest(TestCase):
         responses.add(responses.GET, info_url, json=payload, status=200)
         responses.add(responses.GET, find_url, json=find_response, status=200)
         responses.add(responses.POST, metrics_url, json={}, status=200)
-        responses.add(responses.HEAD, sbom_url, json={}, status=200)
 
         response = self.client.get("/" + snap_name)
         self.assertEqual(response.status_code, 200)
@@ -246,58 +225,6 @@ class GetDetailsPageTest(TestCase):
         self.assertEqual(featured_names, ["intellij-idea"])
         self.assertEqual(featured[0]["title"], "IntelliJ IDEA")
         self.assertEqual(featured[0]["background"], "#000000")
-
-    @responses.activate
-    def test_has_sboms_success(self):
-        payload = SNAP_PAYLOAD
-
-        responses.add(
-            responses.Response(
-                method="GET", url=self.api_url, json=payload, status=200
-            )
-        )
-        responses.add(
-            responses.Response(
-                method="HEAD", url=self.api_url_sboms, json={}, status=200
-            )
-        )
-
-        metrics_url = "https://api.snapcraft.io/api/v1/snaps/metrics"
-        responses.add(
-            responses.Response(
-                method="POST", url=metrics_url, json={}, status=200
-            )
-        )
-
-        response = self.client.get(self.endpoint_url)
-
-        assert response.status_code == 200
-
-    @responses.activate
-    def test_has_sboms_error(self):
-        payload = SNAP_PAYLOAD
-
-        responses.add(
-            responses.Response(
-                method="GET", url=self.api_url, json=payload, status=200
-            )
-        )
-        responses.add(
-            responses.Response(
-                method="HEAD", url=self.api_url_sboms, json={}, status=404
-            )
-        )
-
-        metrics_url = "https://api.snapcraft.io/api/v1/snaps/metrics"
-        responses.add(
-            responses.Response(
-                method="POST", url=metrics_url, json={}, status=200
-            )
-        )
-
-        response = self.client.head(self.api_url_sboms)
-
-        assert response.status_code == 404
 
     @responses.activate
     def test_api_404(self):
@@ -343,11 +270,7 @@ class GetDetailsPageTest(TestCase):
                 status=404,
             )
         )
-        responses.add(
-            responses.Response(
-                method="HEAD", url=self.api_url_sboms, json={}, status=200
-            )
-        )
+
         metrics_url = "https://api.snapcraft.io/api/v1/snaps/metrics"
         responses.add(
             responses.Response(
@@ -449,11 +372,6 @@ class GetDetailsPageTest(TestCase):
                 status=200,
             )
         )
-        responses.add(
-            responses.Response(
-                method="HEAD", url=self.api_url_sboms, json={}, status=200
-            )
-        )
 
         metrics_url = "https://api.snapcraft.io/api/v1/snaps/metrics"
         responses.add(
@@ -491,11 +409,6 @@ class GetDetailsPageTest(TestCase):
                 status=200,
             )
         )
-        responses.add(
-            responses.Response(
-                method="HEAD", url=self.api_url_sboms, json={}, status=200
-            )
-        )
 
         metrics_url = "https://api.snapcraft.io/api/v1/snaps/metrics"
         responses.add(
@@ -524,11 +437,6 @@ class GetDetailsPageTest(TestCase):
                 url=self.api_url_details,
                 json=EMPTY_EXTRA_DETAILS_PAYLOAD,
                 status=200,
-            )
-        )
-        responses.add(
-            responses.Response(
-                method="HEAD", url=self.api_url_sboms, json={}, status=200
             )
         )
 
@@ -577,11 +485,7 @@ class GetDetailsPageTest(TestCase):
                 status=200,
             )
         )
-        responses.add(
-            responses.Response(
-                method="HEAD", url=self.api_url_sboms, json={}, status=200
-            )
-        )
+
         metrics_url = "https://api.snapcraft.io/api/v1/snaps/metrics"
         responses.add(
             responses.Response(
