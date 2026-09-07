@@ -46,33 +46,9 @@ SECTION_ORDER = [
     "Publishing a snap",
     "Documentation",
     "Store",
-    "Store categories",
     "Blog",
     OTHER_SECTION,
     "Optional",
-]
-
-# The store categories change rarely
-STORE_CATEGORIES = [
-    {"name": "art-and-design", "display_name": "Art and Design"},
-    {"name": "books-and-reference", "display_name": "Books and Reference"},
-    {"name": "development", "display_name": "Development"},
-    {"name": "devices-and-iot", "display_name": "Devices and IoT"},
-    {"name": "education", "display_name": "Education"},
-    {"name": "entertainment", "display_name": "Entertainment"},
-    {"name": "finance", "display_name": "Finance"},
-    {"name": "games", "display_name": "Games"},
-    {"name": "health-and-fitness", "display_name": "Health and Fitness"},
-    {"name": "music-and-audio", "display_name": "Music and Audio"},
-    {"name": "news-and-weather", "display_name": "News and Weather"},
-    {"name": "personalisation", "display_name": "Personalisation"},
-    {"name": "photo-and-video", "display_name": "Photo and Video"},
-    {"name": "productivity", "display_name": "Productivity"},
-    {"name": "science", "display_name": "Science"},
-    {"name": "security", "display_name": "Security"},
-    {"name": "server-and-cloud", "display_name": "Server and Cloud"},
-    {"name": "social", "display_name": "Social"},
-    {"name": "utilities", "display_name": "Utilities"},
 ]
 
 # Links that cannot be discovered: pages rendered by an imported view
@@ -317,31 +293,15 @@ def discover_pages(app):
     return sorted(_deduplicate(pages.values()), key=lambda page: page["path"])
 
 
-def category_path(category):
-    return f"/store/categories/{category['name']}"
-
-
-def sitemap_paths(app, categories=()):
-    paths = [page["path"] for page in discover_pages(app)]
-
-    return paths + [category_path(category) for category in categories]
+def sitemap_paths(app):
+    return [page["path"] for page in discover_pages(app)]
 
 
 def _link(page):
     return {**page, "url": BASE_URL + add_suffix(page["path"])}
 
 
-def _category_links(categories):
-    return [
-        {
-            "url": BASE_URL + add_suffix(category_path(category)),
-            "title": category["display_name"],
-        }
-        for category in categories
-    ]
-
-
-def llms_sections(pages, categories=STORE_CATEGORIES):
+def llms_sections(pages):
     grouped = defaultdict(list)
 
     for page in pages:
@@ -349,9 +309,6 @@ def llms_sections(pages, categories=STORE_CATEGORIES):
 
     for link in EXTRA_LINKS:
         grouped[link["section"]].append(link)
-
-    if categories:
-        grouped["Store categories"] = _category_links(categories)
 
     known = [name for name in SECTION_ORDER if name in grouped]
     rest = sorted(name for name in grouped if name not in SECTION_ORDER)
@@ -386,7 +343,7 @@ def render_llms_full_txt(app, pages=None, on_skip=None):
     return template.render(documents=documents)
 
 
-def render_llms_txt(app, categories=STORE_CATEGORIES):
-    sections = llms_sections(discover_pages(app), categories)
+def render_llms_txt(app):
+    sections = llms_sections(discover_pages(app))
 
     return app.jinja_env.get_template("llms.txt").render(sections=sections)

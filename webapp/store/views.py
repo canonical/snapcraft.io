@@ -16,7 +16,6 @@ from canonicalwebteam.store_api.devicegw import DeviceGW
 from canonicalwebteam.snap_recommendations import SnapRecommendations
 
 from webapp.api.exceptions import ApiError
-from webapp.packages.logic import format_slug
 from webapp.store.snap_details_views import snap_details_views
 from webapp.helpers import api_publisher_session, api_session
 from flask.json import jsonify
@@ -380,7 +379,7 @@ def store_blueprint(store_query=None):
 
         snaps_results = device_gateway.get_category_items(
             category=category, size=10, page=1
-        )["_embedded"]["clickindex:package"]
+        )["results"]
         for snap in snaps_results:
             snap["icon_url"] = helpers.get_icon(snap["media"])
 
@@ -396,14 +395,13 @@ def store_blueprint(store_query=None):
 
         context = {
             "category": category,
-            "category_name": format_slug(category),
             "has_featured": True,
             "snaps": snaps_results,
             "error_info": error_info,
         }
 
         return (
-            flask.render_template("store/category.html", **context),
+            flask.render_template("store/_category-partial.html", **context),
             status_code,
         )
 

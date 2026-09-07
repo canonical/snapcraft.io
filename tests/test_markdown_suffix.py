@@ -39,7 +39,7 @@ class TestStripSuffix(unittest.TestCase):
         self.assertEqual(add_suffix("/docs/"), "/docs/index.md")
 
     def test_add_suffix_round_trips(self):
-        paths = ["/", "/about", "/about/publish", "/store/categories/games"]
+        paths = ["/", "/about", "/about/publish", "/install/spotify/ubuntu"]
 
         for path in paths:
             self.assertEqual(strip_suffix(add_suffix(path)), path)

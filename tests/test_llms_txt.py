@@ -15,11 +15,6 @@ from webapp.site_pages import (
     sitemap_paths,
 )
 
-CATEGORIES = [
-    {"name": "games", "display_name": "Games"},
-    {"name": "development", "display_name": "Development"},
-]
-
 ROOT_CATCH_ALL = re.compile(r"/<[^>]+>")
 
 
@@ -141,15 +136,7 @@ class TestSitePages(unittest.TestCase):
         self.assertIn("https://snapcraft.io/about/publish.md", body)
 
     def test_the_sitemap_lists_the_same_pages(self):
-        paths = sitemap_paths(self.app, CATEGORIES)
-
-        self.assertLessEqual(self.paths, set(paths))
-
-        for category in CATEGORIES:
-            self.assertIn(
-                f"/store/categories/{category['name']}",
-                paths,
-            )
+        self.assertLessEqual(self.paths, set(sitemap_paths(self.app)))
 
 
 class TestLlmsTxtRoute(unittest.TestCase):

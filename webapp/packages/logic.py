@@ -11,8 +11,6 @@ from webapp.helpers import get_icon
 from webapp.helpers import api_session
 from cache.cache_utility import redis_cache
 
-STORE_CATEGORIES_KEY = "store:categories"
-
 device_gateway = DeviceGW("snap", api_session)
 
 Packages = TypedDict(
@@ -284,28 +282,21 @@ def get_store_categories() -> List[Dict[str, str]]:
     Fetches all store categories.
 
     :returns: A list of categories in the format:
-    [{"name": "category", "display_name": "Category"}]
+    [{"name": "Category", "slug": "category"}]
     """
-    cached = redis_cache.get(STORE_CATEGORIES_KEY, expected_type=list)
-    if cached:
-        return cached
-
     try:
-        all_categories = device_gateway.get_categories().get("categories", [])
+        all_categories = device_gateway.get_categories()
     except StoreApiError:
-        return []
+        all_categories = []
 
-    for category in all_categories:
-        category["display_name"] = format_slug(category["name"])
+    for cat in all_categories["categories"]:
+        cat["display_name"] = format_slug(cat["name"])
 
-    categories = [
-        category
-        for category in all_categories
-        if category["name"] != "featured"
-    ]
-
-    if categories:
-        redis_cache.set(STORE_CATEGORIES_KEY, categories, ttl=3600)
+    categories = list(
+        filter(
+            lambda cat: cat["name"] != "featured", all_categories["categories"]
+        )
+    )
 
     return categories
 

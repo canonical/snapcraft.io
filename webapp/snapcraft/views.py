@@ -3,7 +3,6 @@ import os
 import flask
 
 from webapp.config import DEFAULT_ICON_URL
-from webapp.packages.logic import get_store_categories
 from webapp.site_pages import (
     BASE_URL,
     render_llms_full_txt,
@@ -505,9 +504,7 @@ def snapcraft_blueprint():
     def sitemap_links():
         links = [
             {"url": BASE_URL + path}
-            for path in sitemap_paths(
-                flask.current_app, get_store_categories()
-            )
+            for path in sitemap_paths(flask.current_app)
         ]
 
         xml_sitemap = flask.render_template(
