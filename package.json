@@ -11,6 +11,7 @@
     "test-python": "yarn run lint-python && FLASK_DEBUG=0 python3 -m unittest discover tests",
     "test-python-job": "SECRET_KEY=insecure_secret_key coverage run  --source=. -m unittest discover tests",
     "build": "yarn run vite build",
+    "build-llms-txt": "python3 scripts/generate_llms_txt.py",
     "serve": "./entrypoint 0.0.0.0:${PORT}",
     "start": "concurrently --raw 'yarn run watch' 'yarn run serve'",
     "watch": "vite",

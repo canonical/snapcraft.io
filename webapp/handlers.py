@@ -12,6 +12,8 @@ import webapp.template_utils as template_utils
 from canonicalwebteam import image_template
 from webapp import authentication
 import webapp.helpers as helpers
+from webapp.markdown_suffix import add_suffix, is_markdown_request
+from webapp.site_pages import is_login_gated
 from webapp.config import (
     BSI_URL,
     LOGIN_URL,
@@ -191,6 +193,7 @@ def snapcraft_utility_processor():
         "ENVIRONMENT": ENVIRONMENT,
         "host_url": flask.request.host_url,
         "path": flask.request.path,
+        "markdown_path": markdown_url(flask.request),
         "page_slug": page_slug,
         "user_name": user_name,
         "VERIFIED_PUBLISHER": "verified",
@@ -217,6 +220,20 @@ def snapcraft_utility_processor():
         "DEFAULT_ICON_URL": DEFAULT_ICON_URL,
         "STATUS_BANNER": STATUS_BANNER,
     }
+
+
+def markdown_url(request):
+    """
+    The md version of the page or None when the page
+    is behind login and so has no public md version.
+    """
+
+    view = flask.current_app.view_functions.get(request.endpoint)
+
+    if view is None or is_login_gated(view):
+        return None
+
+    return add_suffix(request.path)
 
 
 def set_handlers(app):
@@ -335,6 +352,16 @@ def set_handlers(app):
 
     # Global tasks for all requests
     # ===
+    @app.before_request
+    def block_private_markdown():
+        """
+        Pages behind login have no md version
+        """
+
+        if is_markdown_request(flask.request):
+            if markdown_url(flask.request) is None:
+                flask.abort(404)
+
     @app.before_request
     def clear_trailing():
         """

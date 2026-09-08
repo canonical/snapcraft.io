@@ -1,9 +1,14 @@
 {% extends "_layout.html" %}
 
+{% block meta_title %}Build snaps from GitHub | Snapcraft{% endblock %}
+
+{% block meta_description %}Connect a GitHub repository to build snaps automatically for every supported architecture.{% endblock %}
+
 {% block meta_copydoc %}https://docs.google.com/document/d/1EvemWJDOpjL-8ieCSiStKViFx-fgwfTaENueOYlB5ps/edit{% endblock %}
 
 {% block content %}
-<section id="main-content" class="p-strip">
+<main id="main-content">
+<section class="p-strip">
   <div class="u-fixed-width">
     <h2 class="p-heading--2">
       Build snaps from GitHub repositories
@@ -132,4 +137,5 @@
 <div class="u-fixed-width u-hide--small" style="padding-top: 10px; padding-bottom: 192px;">
   <a href="/snaps" class="p-button--positive u-no-margin"> Get started now </a>
 </div>
+</main>
 {% endblock %}
