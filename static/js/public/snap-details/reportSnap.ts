@@ -3,6 +3,11 @@ import { buttonEnabled, buttonLoading } from "../../libs/formHelpers";
 const TURNSTILE_SCRIPT_SRC =
   "https://challenges.cloudflare.com/turnstile/v0/api.js";
 const SUBMIT_TEXT = "Submit report";
+const BUG_REASON = "Snap bug";
+const POLICY_REASONS = new Set([
+  "Copyright or trademark violation",
+  "Snap Store terms of service violation",
+]);
 
 const showEl = (el: HTMLElement) => el.classList.remove("u-hide");
 const hideEl = (el: HTMLElement) => el.classList.add("u-hide");
@@ -43,6 +48,53 @@ function disableSubmitButton(button: HTMLButtonElement): void {
 
 function resetSubmitButton(button: HTMLButtonElement): void {
   buttonEnabled(button, SUBMIT_TEXT);
+}
+
+function toggleConditionalSection(section: HTMLElement, open: boolean): void {
+  section.classList.toggle("is-open", open);
+  section.setAttribute("aria-hidden", String(!open));
+
+  section
+    .querySelectorAll<
+      HTMLInputElement | HTMLTextAreaElement | HTMLButtonElement
+    >("input, textarea, button")
+    .forEach((control) => {
+      control.disabled = !open;
+    });
+}
+
+function syncReasonSelection(modal: HTMLElement): void {
+  const reason = modal.querySelector(
+    "#report-snap-reason",
+  ) as HTMLSelectElement | null;
+  const policyFields = modal.querySelector(
+    ".js-report-snap-policy-fields",
+  ) as HTMLElement | null;
+  const bugHelp = modal.querySelector(
+    ".js-report-snap-bug-help",
+  ) as HTMLElement | null;
+
+  if (!reason || !policyFields || !bugHelp) {
+    return;
+  }
+
+  const isPolicyReason = POLICY_REASONS.has(reason.value);
+  const isBugReason = reason.value === BUG_REASON;
+
+  if (isPolicyReason) {
+    toggleConditionalSection(policyFields, true);
+    toggleConditionalSection(bugHelp, false);
+    setupTurnstile(modal);
+    return;
+  }
+
+  toggleConditionalSection(policyFields, false);
+
+  if (isBugReason) {
+    toggleConditionalSection(bugHelp, true);
+  } else {
+    toggleConditionalSection(bugHelp, false);
+  }
 }
 
 function toggleModal(modal: HTMLElement, show?: boolean): void {
@@ -113,19 +165,12 @@ function initForm(modal: HTMLElement): void {
   const submitButton = modal.querySelector(
     "button[type=submit]",
   ) as HTMLButtonElement;
-  const hasTurnstile = Boolean(
-    modal.querySelector(".js-report-snap-turnstile"),
-  );
 
-  if (hasTurnstile) {
-    setupTurnstile(modal);
-  } else {
-    resetSubmitButton(submitButton);
-  }
-
+  resetSubmitButton(submitButton);
   showEl(modal.querySelector(".js-report-snap-form") as HTMLElement);
   hideEl(modal.querySelector(".js-report-snap-success") as HTMLElement);
   hideEl(modal.querySelector(".js-report-snap-error") as HTMLElement);
+  syncReasonSelection(modal);
 }
 
 function showSuccess(modal: HTMLElement): void {
@@ -162,8 +207,20 @@ export default function initReportSnap(
     }
   });
 
+  reportForm
+    .querySelector("#report-snap-reason")
+    ?.addEventListener("change", () => syncReasonSelection(modal));
+
   reportForm.addEventListener("submit", async (e) => {
     e.preventDefault();
+
+    const reason = reportForm.querySelector(
+      "#report-snap-reason",
+    ) as HTMLSelectElement | null;
+    if (!reason || !POLICY_REASONS.has(reason.value)) {
+      return;
+    }
+
     buttonLoading(
       reportForm.querySelector("button[type=submit]") as HTMLButtonElement,
       "Submitting…",
