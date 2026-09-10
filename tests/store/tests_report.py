@@ -56,6 +56,19 @@ class ReportSnapTest(TestCase):
         assert response.status_code == 400
         assert response.get_json() == {"error": "turnstile_failed"}
 
+    def test_report_rejects_snap_bug_reason(self):
+        response = self.client.post(
+            "/report",
+            data={
+                "snap_name": "test-snap",
+                "reason": "Snap bug",
+                "comment": "The app does not start",
+            },
+        )
+
+        assert response.status_code == 400
+        assert response.get_json() == {"error": "invalid_report_reason"}
+
     @responses.activate
     def test_report_rejects_invalid_turnstile_token(self):
         self.app.config["TURNSTILE_SECRET_KEY"] = "test-secret"
