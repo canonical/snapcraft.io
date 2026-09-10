@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 <!DOCTYPE coverage SYSTEM "http://cobertura.sourceforge.net/xml/coverage-04.dtd">
-<coverage lines-valid="7484" lines-covered="3783" line-rate="0.5054" branches-valid="4982" branches-covered="2351" branch-rate="0.4718" timestamp="1788991634867" complexity="0" version="0.1">
+<coverage lines-valid="7484" lines-covered="3783" line-rate="0.5054" branches-valid="4982" branches-covered="2351" branch-rate="0.4718" timestamp="1789078007180" complexity="0" version="0.1">
   <sources>
     <source>/home/runner/work/snapcraft.io/snapcraft.io</source>
   </sources>
@@ -5197,15 +5197,15 @@
         </class>
         <class name="TourStep.tsx" filename="static/js/publisher/components/Tour/TourStep.tsx" line-rate="1" branch-rate="0.75">
           <methods>
-            <method name="TourStep" hits="131" signature="()V">
+            <method name="TourStep" hits="134" signature="()V">
               <lines>
-                <line number="8" hits="131"/>
+                <line number="8" hits="134"/>
               </lines>
             </method>
           </methods>
           <lines>
-            <line number="18" hits="131" branch="false"/>
-            <line number="20" hits="131" branch="false"/>
+            <line number="18" hits="134" branch="false"/>
+            <line number="20" hits="134" branch="false"/>
           </lines>
         </class>
         <class name="index.ts" filename="static/js/publisher/components/Tour/index.ts" line-rate="1" branch-rate="1">
