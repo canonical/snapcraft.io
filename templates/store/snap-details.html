@@ -89,7 +89,7 @@
       </div>
     {% endif %}
       {%- call(slot) package_header() -%}
-        {%- if slot == 'buttons' -%}
+        {%- if slot == 'additional_info' -%}
           <div class="p-cta-block u-no-padding--bottom">
             <button
               class="p-button{% if is_preview %} p-tooltip p-tooltip--btm-right{% endif %}"
