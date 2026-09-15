@@ -1,5 +1,6 @@
 import { Link, useParams } from "react-router-dom";
-import { Modal, Button, Icon } from "@canonical/react-components";
+import { Modal, Button } from "@canonical/react-components";
+import { Icon } from "@canonical/react-ds-global";
 
 import type { SigningKey } from "../../types/shared";
 import { Dispatch, SetStateAction } from "react";
@@ -23,7 +24,7 @@ function DeactivateSigningKeyModal({
     <Modal
       title={
         <>
-          <Icon name="warning" />
+          <Icon icon="warning" />
           {` Deactivate ${signingKey.name}`}
         </>
       }
@@ -79,7 +80,7 @@ function DeactivateSigningKeyModal({
     >
       {isDeleting ? (
         <p>
-          <Icon name="spinner" className="u-animation--spin" />
+          <Icon icon="spinner" className="u-animation--spin" />
           &nbsp;Deleting signing key...
         </p>
       ) : (

@@ -1,4 +1,9 @@
-import { Button, Icon } from "@canonical/react-components";
+import {
+  Button,
+  // Need to use the `Icon` from `react-components` because
+  // the spacing is dependent on the Pragma button
+  Icon as ReactComponentsIcon,
+} from "@canonical/react-components";
 
 import type { Dispatch, SetStateAction } from "react";
 
@@ -17,9 +22,9 @@ function VerifiedButton({ isDirty, setShowVerifyModal }: Props): JSX.Element {
       }}
       disabled={isDirty}
     >
-      <Icon name="success" />
+      <ReactComponentsIcon name="success" />
       <span>Ownership verified</span>
-      <Icon name="chevron-right" />
+      <ReactComponentsIcon name="chevron-right" />
     </Button>
   );
 }

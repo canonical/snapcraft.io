@@ -2,7 +2,8 @@ import { useState, useEffect, Dispatch, SetStateAction } from "react";
 import { useAtomValue, useAtom } from "jotai";
 import { useParams, Link, useNavigate, useLocation } from "react-router-dom";
 import { useMutation, useQueryClient } from "react-query";
-import { Button, Icon } from "@canonical/react-components";
+import { Button } from "@canonical/react-components";
+import { Icon } from "@canonical/react-ds-global";
 
 import { setPageTitle } from "../../utils";
 
@@ -114,7 +115,7 @@ function CreatePolicyForm({
             {isError && error instanceof Error && <p>Error: {error.message}</p>}
             {isSaving && (
               <p>
-                <Icon name="spinner" className="u-animation--spin" />
+                <Icon icon="spinner" className="u-animation--spin" />
                 &nbsp;Adding new policy...
               </p>
             )}

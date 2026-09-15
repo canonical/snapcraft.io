@@ -1,12 +1,12 @@
 import { useState, useEffect } from "react";
 import {
   Button,
-  Icon,
   MainTable,
   TablePaginationControls,
   Input,
   CheckboxInput,
 } from "@canonical/react-components";
+import { Icon } from "@canonical/react-ds-global";
 import { format } from "date-fns";
 
 import type { Remodel } from "../../types/shared";
@@ -204,8 +204,8 @@ function RemodelTable({
                       <>
                         &nbsp;
                         <Icon
-                          name="spinner"
-                          light
+                          icon="spinner"
+                          color="white"
                           className="u-animation--spin"
                         />
                       </>

@@ -7,7 +7,8 @@ import {
   useSearchParams,
   useLocation,
 } from "react-router-dom";
-import { Row, Col, Notification, Icon } from "@canonical/react-components";
+import { Row, Col, Notification } from "@canonical/react-components";
+import { Icon } from "@canonical/react-ds-global";
 import { UseQueryResult } from "react-query";
 
 import { useSigningKeys, useModels } from "../../hooks";
@@ -122,7 +123,7 @@ function SigningKeys(): React.JSX.Element {
         )}
         {isLoading ? (
           <p>
-            <Icon name="spinner" className="u-animation--spin" />
+            <Icon icon="spinner" className="u-animation--spin" />
             &nbsp;Fetching signing keys...
           </p>
         ) : (

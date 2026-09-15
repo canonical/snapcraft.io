@@ -2,7 +2,8 @@ import { Dispatch, SetStateAction, useState } from "react";
 import { useNavigate, useParams, useLocation, Link } from "react-router-dom";
 import { useAtomValue, useAtom, useSetAtom } from "jotai";
 import { useMutation, useQueryClient } from "react-query";
-import { Input, Button, Icon } from "@canonical/react-components";
+import { Input, Button } from "@canonical/react-components";
+import { Icon } from "@canonical/react-ds-global";
 import randomstring from "randomstring";
 
 import { checkModelNameExists, setPageTitle } from "../../utils";
@@ -136,7 +137,7 @@ function CreateModelForm({
             )}
             {isSaving && (
               <p>
-                <Icon name="spinner" className="u-animation--spin" />
+                <Icon icon="spinner" className="u-animation--spin" />
                 &nbsp;Creating new model...
               </p>
             )}
