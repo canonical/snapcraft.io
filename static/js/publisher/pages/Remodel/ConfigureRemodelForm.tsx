@@ -6,9 +6,9 @@ import {
   Button,
   Input,
   Select,
-  Icon,
   Notification,
 } from "@canonical/react-components";
+import { Icon } from "@canonical/react-ds-global";
 
 import { useModels } from "../../hooks";
 import { brandIdState } from "../../state/brandStoreState";
@@ -193,7 +193,7 @@ function ConfigureRemodelForm({
           {isSaving && (
             <div className="u-fixed-width">
               <p>
-                <Icon name="spinner" className="u-animation--spin" />
+                <Icon icon="spinner" className="u-animation--spin" />
                 &nbsp;Configuring remodel...
               </p>
             </div>

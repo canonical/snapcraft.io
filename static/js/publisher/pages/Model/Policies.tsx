@@ -7,7 +7,8 @@ import {
   useNavigate,
 } from "react-router-dom";
 import { useAtomValue, useSetAtom } from "jotai";
-import { Row, Col, Notification, Icon } from "@canonical/react-components";
+import { Row, Col, Notification } from "@canonical/react-components";
+import { Icon } from "@canonical/react-ds-global";
 
 import Filter from "../../components/Filter";
 import PoliciesTable from "./PoliciesTable";
@@ -102,7 +103,7 @@ function Policies(): React.JSX.Element {
           )}
           {isLoading ? (
             <p>
-              <Icon name="spinner" className="u-animation--spin" />
+              <Icon icon="spinner" className="u-animation--spin" />
               &nbsp;Fetching policies...
             </p>
           ) : (
