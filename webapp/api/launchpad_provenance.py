@@ -168,6 +168,8 @@ class LaunchpadProvenance:
                     for build in page_entries
                     if build.get("store_upload_status") == "Uploaded"
                     and build.get("store_upload_revision")
+                    and build.get("revision_id")
+                    and build.get("arch_tag")
                 )
                 if not missing:
                     break

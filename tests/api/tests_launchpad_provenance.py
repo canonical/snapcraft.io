@@ -365,6 +365,25 @@ class TestBuildProvenanceMap(TestCase):
         self.assertEqual(client.session.get.call_count, 3)
         self.assertIn("1721", result["revisions"])
 
+    def test_build_without_commit_does_not_satisfy_wanted(self):
+        incomplete = _build("amd64", 1721, "aaa")
+        incomplete["revision_id"] = None
+        page1 = {
+            "entries": [incomplete],
+            "next_collection_link": "https://lp/p2",
+        }
+        page2 = {
+            "entries": [_build("amd64", 1721, "aaa")],
+            "next_collection_link": None,
+        }
+        client = self._client(self._github_recipe(), [page1, page2])
+        result = client.build_provenance_map(
+            "mumble", max_pages=5, max_recipes=5, wanted={"1721"}
+        )
+
+        self.assertEqual(client.session.get.call_count, 3)
+        self.assertIn("1721", result["revisions"])
+
     def test_wanted_accepts_ints(self):
         page1 = {
             "entries": [_build("amd64", 1721, "aaa")],
