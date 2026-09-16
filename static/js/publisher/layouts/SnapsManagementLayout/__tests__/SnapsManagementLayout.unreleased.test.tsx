@@ -67,10 +67,7 @@ describe("SnapsManagementLayout when the snap has no releases", () => {
     renderComponent();
     const tabs = screen.getByRole("navigation");
     const listing = within(tabs).getByText("Listing");
-    expect(listing.closest("[aria-disabled]")).toHaveAttribute(
-      "aria-disabled",
-      "true",
-    );
+    expect(listing.closest("[data-disabled]")).toBeInTheDocument();
     // No active link should be present when disabled.
     expect(within(tabs).queryByRole("link")).not.toBeInTheDocument();
   });
