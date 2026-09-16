@@ -80,7 +80,7 @@ describe("auditable badge", () => {
     });
   });
 
-  it("shows the not-provided message when there is no public source", async () => {
+  it("hides the badge when the source is not provided", async () => {
     mockFetch({
       auditable: false,
       status: "not-provided",
@@ -90,26 +90,24 @@ describe("auditable badge", () => {
     initAuditableBadge();
 
     await waitFor(() => {
-      expect(
-        document.querySelector('[data-js="auditable-badge-not-provided"]'),
-      ).toBeInTheDocument();
+      expect(trackEvent).toHaveBeenCalledWith("provenance_badge_shown", {
+        provenance_state: "not-provided",
+      });
     });
 
-    expect(document.body.textContent).toContain("rev171/arm64");
-    expect(document.body.textContent).toContain(
+    expect(
+      document.querySelector('[data-js="auditable-badge-loading"]'),
+    ).toBeNull();
+    expect(
+      document.querySelector('[data-js="auditable-badge-not-provided"]'),
+    ).toBeNull();
+    expect(document.body.textContent).not.toContain(
       "No build information for this revision",
     );
-    expect(
-      document.querySelector(
-        '[data-js="auditable-badge-not-provided"] .p-icon--error-grey',
-      ),
-    ).toBeInTheDocument();
-    expect(trackEvent).toHaveBeenCalledWith("provenance_badge_shown", {
-      provenance_state: "not-provided",
-    });
+    expect(document.body.textContent).not.toContain("rev171/arm64");
   });
 
-  it("shows the unavailable message when the revision has no build", async () => {
+  it("hides the badge when the revision has no build information", async () => {
     mockFetch({
       auditable: false,
       status: "unavailable",
@@ -120,26 +118,24 @@ describe("auditable badge", () => {
     initAuditableBadge();
 
     await waitFor(() => {
-      expect(
-        document.querySelector('[data-js="auditable-badge-unavailable"]'),
-      ).toBeInTheDocument();
+      expect(trackEvent).toHaveBeenCalledWith("provenance_badge_shown", {
+        provenance_state: "unavailable",
+      });
     });
 
-    expect(document.body.textContent).toContain("rev171/arm64");
-    expect(document.body.textContent).toContain(
+    expect(
+      document.querySelector('[data-js="auditable-badge-loading"]'),
+    ).toBeNull();
+    expect(
+      document.querySelector('[data-js="auditable-badge-unavailable"]'),
+    ).toBeNull();
+    expect(document.body.textContent).not.toContain(
       "No build information for this revision",
     );
-    expect(
-      document.querySelector(
-        '[data-js="auditable-badge-unavailable"] .p-icon--error-grey',
-      ),
-    ).toBeInTheDocument();
-    expect(trackEvent).toHaveBeenCalledWith("provenance_badge_shown", {
-      provenance_state: "unavailable",
-    });
+    expect(document.body.textContent).not.toContain("rev171/arm64");
   });
 
-  it("shows an error message when the backend reports an error", async () => {
+  it("hides the badge when the backend reports an error", async () => {
     mockFetch({
       auditable: false,
       status: "error",
@@ -149,21 +145,24 @@ describe("auditable badge", () => {
     initAuditableBadge();
 
     await waitFor(() => {
-      expect(
-        document.querySelector('[data-js="auditable-badge-error"]'),
-      ).toBeInTheDocument();
+      expect(trackEvent).toHaveBeenCalledWith("provenance_badge_shown", {
+        provenance_state: "error",
+      });
     });
 
-    expect(document.body.textContent).toContain("rev171/arm64");
-    expect(document.body.textContent).toContain(
+    expect(
+      document.querySelector('[data-js="auditable-badge-loading"]'),
+    ).toBeNull();
+    expect(
+      document.querySelector('[data-js="auditable-badge-error"]'),
+    ).toBeNull();
+    expect(document.body.textContent).not.toContain(
       "Couldn't load build information right now",
     );
-    expect(trackEvent).toHaveBeenCalledWith("provenance_badge_shown", {
-      provenance_state: "error",
-    });
+    expect(document.body.textContent).not.toContain("rev171/arm64");
   });
 
-  it("reports an error state on fetch failure", async () => {
+  it("reports an error state on fetch failure without showing the badge", async () => {
     window.fetch = vi
       .fn()
       .mockRejectedValue(new Error("network")) as unknown as typeof fetch;
@@ -174,5 +173,15 @@ describe("auditable badge", () => {
         provenance_state: "error",
       });
     });
+
+    expect(
+      document.querySelector('[data-js="auditable-badge-loading"]'),
+    ).toBeNull();
+    expect(
+      document.querySelector('[data-js="auditable-badge-error"]'),
+    ).toBeNull();
+    expect(document.body.textContent).not.toContain(
+      "Couldn't load build information right now",
+    );
   });
 });

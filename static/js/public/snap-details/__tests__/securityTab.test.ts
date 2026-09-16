@@ -3,26 +3,29 @@ import { waitFor } from "@testing-library/dom";
 import { vi } from "vitest";
 import { trackEvent } from "@canonical/analytics-events";
 import initSecurityTab from "../securityTab";
+import type { ChannelData, ChannelMapData } from "../channelMap";
 
 vi.mock("@canonical/analytics-events", () => ({ trackEvent: vi.fn() }));
 
 const SNAP = "mumble";
 
-const RELEASES = [
+const RELEASES: ChannelData[] = [
   {
     track: "latest",
     risk: "stable",
     version: "1.0",
     revision: "1721",
+    confinement: "strict",
+    sboms: null,
     "released-at": "1 Jan 2024",
   },
 ];
 
-const CHANNEL_MAP = {
+const CHANNEL_MAP: ChannelMapData = {
   amd64: { latest: RELEASES },
 };
 
-const MULTI_ARCH_CHANNEL_MAP = {
+const MULTI_ARCH_CHANNEL_MAP: ChannelMapData = {
   amd64: { latest: RELEASES },
   riscv64: { latest: RELEASES },
 };
@@ -115,6 +118,28 @@ describe("security tab", () => {
     expect(
       document.querySelector('[data-js="security-commit-link"]')?.textContent,
     ).toContain("10c7c9e");
+  });
+
+  it("shows unavailable for revisions without provenance", async () => {
+    setupDom();
+    window.fetch = vi.fn().mockResolvedValue({
+      json: () =>
+        Promise.resolve({
+          github_repository: "snapcrafters/mumble",
+          error: false,
+          revisions: {},
+        }),
+    }) as unknown as typeof fetch;
+
+    initSecurityTab("#js-security-tab", SNAP, CHANNEL_MAP, "amd64");
+    openTab();
+
+    await waitFor(() => {
+      expect(tbodyHtml()).toContain(
+        '<span class="u-text-muted">Unavailable</span>',
+      );
+    });
+    expect(tbodyHtml()).not.toContain("&mdash;");
   });
 
   it("shows an error banner when provenance fails to load", async () => {

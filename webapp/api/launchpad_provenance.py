@@ -138,30 +138,52 @@ class LaunchpadProvenance:
 
         return matches[:max_recipes]
 
-    def iter_builds(self, collection_link, max_pages, session=None):
-        """Collect completed builds"""
+    def iter_builds(
+        self, collection_link, max_pages, session=None, wanted=None
+    ):
+        """Collect completed builds.
+
+        `wanted` is the set of store revisions the caller is after. Once a
+        page has covered all of them there is no point requesting the next
+        one: every extra request is time spent and a chance to fail.
+        """
         entries = []
         url = collection_link
         pages = 0
+        missing = {str(r) for r in wanted} if wanted else None
 
         while url and pages < max_pages:
             try:
                 data = self._get(url, session=session)
             except Exception as exc:
                 return entries, failure_reason(exc)
-            entries.extend(data.get("entries", []))
+            page_entries = data.get("entries", [])
+            entries.extend(page_entries)
             url = data.get("next_collection_link")
             pages += 1
 
+            if missing is not None:
+                missing.difference_update(
+                    str(build["store_upload_revision"])
+                    for build in page_entries
+                    if build.get("store_upload_status") == "Uploaded"
+                    and build.get("store_upload_revision")
+                    and build.get("revision_id")
+                    and build.get("arch_tag")
+                )
+                if not missing:
+                    break
+
         return entries, None
 
-    def _scan_recipe(self, recipe, max_pages):
+    def _scan_recipe(self, recipe, max_pages, wanted=None):
         session = self._new_session()
         try:
             return self.iter_builds(
                 recipe["completed_builds_collection_link"],
                 max_pages,
                 session=session,
+                wanted=wanted,
             )
         finally:
             if session is not self.session:
@@ -217,7 +239,9 @@ class LaunchpadProvenance:
 
         return added
 
-    def build_provenance_map(self, store_name, max_pages, max_recipes):
+    def build_provenance_map(
+        self, store_name, max_pages, max_recipes, wanted=None
+    ):
         """Return a provenance map joining store revisions to git commits.
 
         Shape:
@@ -281,7 +305,9 @@ class LaunchpadProvenance:
         ) as executor:
             scans = list(
                 executor.map(
-                    lambda recipe: self._scan_recipe(recipe, pages_each),
+                    lambda recipe: self._scan_recipe(
+                        recipe, pages_each, wanted
+                    ),
                     candidates,
                 )
             )
@@ -305,6 +331,16 @@ class LaunchpadProvenance:
             if reason and not result["failed"]:
                 result["failed"] = True
                 result["reason"] = reason
+
+        # A failed request is irrelevant if every wanted revision was found
+        # anyway, e.g. another recipe had them or they were on earlier pages.
+        if (
+            result["failed"]
+            and wanted
+            and all(str(revision) in revisions for revision in wanted)
+        ):
+            result["failed"] = False
+            result["reason"] = None
 
         if source is None:
             source = fallback

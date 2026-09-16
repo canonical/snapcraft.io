@@ -17,8 +17,7 @@ interface AuditableRevisionsResponse {
 }
 
 const SPINNER = '<i class="p-icon--spinner u-animation--spin">Loading</i>';
-const NOT_AVAILABLE =
-  '<span class="u-text-muted" aria-label="Not available">&mdash;</span>';
+const NOT_AVAILABLE = '<span class="u-text-muted">Unavailable</span>';
 
 class SecurityTab {
   packageName: string;
