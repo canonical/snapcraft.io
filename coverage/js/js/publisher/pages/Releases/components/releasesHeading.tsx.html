@@ -665,7 +665,19 @@
 <a name='L600'></a><a href='#L600'>600</a>
 <a name='L601'></a><a href='#L601'>601</a>
 <a name='L602'></a><a href='#L602'>602</a>
-<a name='L603'></a><a href='#L603'>603</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L603'></a><a href='#L603'>603</a>
+<a name='L604'></a><a href='#L604'>604</a>
+<a name='L605'></a><a href='#L605'>605</a>
+<a name='L606'></a><a href='#L606'>606</a>
+<a name='L607'></a><a href='#L607'>607</a>
+<a name='L608'></a><a href='#L608'>608</a>
+<a name='L609'></a><a href='#L609'>609</a>
+<a name='L610'></a><a href='#L610'>610</a>
+<a name='L611'></a><a href='#L611'>611</a>
+<a name='L612'></a><a href='#L612'>612</a>
+<a name='L613'></a><a href='#L613'>613</a>
+<a name='L614'></a><a href='#L614'>614</a>
+<a name='L615'></a><a href='#L615'>615</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -768,6 +780,10 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -802,16 +818,22 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -823,6 +845,8 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -1274,11 +1298,11 @@ import {
   Row,
   Col,
   Button,
-  Icon,
   Form,
   Notification,
   Accordion,
 } from "@canonical/react-components";
+import { Icon } from "@canonical/react-ds-global";
 &nbsp;
 import { setCurrentTrack } from "../slices/currentTrack";
 import { closeHistory } from "../slices/history";
@@ -1370,7 +1394,11 @@ function <span class="fstat-no" title="function not covered" >ReleasesHeading(p<
     message: string;
   } | null&gt;(null);
 &nbsp;
-  const { data, isLoading: guardrailsLoading, error <span class="cstat-no" title="statement not covered" >} = useQuery(</span>
+  const {
+    data,
+    isLoading: guardrailsLoading,
+    error,
+<span class="cstat-no" title="statement not covered" >  } = useQuery(</span>
     ["snapData", props.snapName],
 <span class="fstat-no" title="function not covered" >    async () =&gt; {</span>
       const response = <span class="cstat-no" title="statement not covered" >await getPackageMetadata(props.snapName);</span>
@@ -1403,17 +1431,23 @@ function <span class="fstat-no" title="function not covered" >ReleasesHeading(p<
 <span class="cstat-no" title="statement not covered" >    trackGuardrailsStatus = "add";</span>
   }
 &nbsp;
-  const handleTrackNameChange = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >(e</span>vent: React.ChangeEvent&lt;HTMLInputElement&gt;) =&gt; {</span>
+  const handleTrackNameChange = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >(</span></span>
+    event: React.ChangeEvent&lt;HTMLInputElement&gt;,
+  ) =&gt; {
 <span class="cstat-no" title="statement not covered" >    setTrackNameError("");</span>
     const { value } = <span class="cstat-no" title="statement not covered" >event.target;</span>
 <span class="cstat-no" title="statement not covered" >    setTrackName(value);</span>
   };
 &nbsp;
-  const handleVersionPatternChange = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >(e</span>vent: React.ChangeEvent&lt;HTMLInputElement&gt;) =&gt; {</span>
+  const handleVersionPatternChange = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >(</span></span>
+    event: React.ChangeEvent&lt;HTMLInputElement&gt;,
+  ) =&gt; {
 <span class="cstat-no" title="statement not covered" >    setVersionPattern(event.target.value);</span>
   };
 &nbsp;
-  const handlePhasingPercentageChange = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >(e</span>vent: React.ChangeEvent&lt;HTMLInputElement&gt;) =&gt; {</span>
+  const handlePhasingPercentageChange = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >(</span></span>
+    event: React.ChangeEvent&lt;HTMLInputElement&gt;,
+  ) =&gt; {
     const { value } = <span class="cstat-no" title="statement not covered" >event.target;</span>
 <span class="cstat-no" title="statement not covered" >    setPhasingPercentage(value);</span>
     const <span class="cstat-no" title="statement not covered" >error = validatePhasingPercentage(value);</span>
@@ -1424,7 +1458,9 @@ function <span class="fstat-no" title="function not covered" >ReleasesHeading(p<
 <span class="cstat-no" title="statement not covered" >    setNotification({ type, message });</span>
   };
 &nbsp;
-  const [successNotification, setSuccessNotification<span class="cstat-no" title="statement not covered" >] = useState&lt;string | null&gt;(null);</span>
+  const [successNotification, setSuccessNotification<span class="cstat-no" title="statement not covered" >] = useState&lt;string | null&gt;(</span>
+    null,
+  );
   const [trackNameError, setTrackNameError<span class="cstat-no" title="statement not covered" >] = useState("");</span>
 &nbsp;
   const handleAddTrack = <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >async () =&gt; {</span></span>
@@ -1517,7 +1553,7 @@ function <span class="fstat-no" title="function not covered" >ReleasesHeading(p<
                           {guardrailsLoading ? (
                             &lt;div&gt;
                               &lt;Icon
-                                name="spinner"
+                                icon="spinner"
                                 className="u-animation--spin"
                               /&gt;
                               &amp;nbsp;Loading...
@@ -1837,7 +1873,7 @@ function <span class="fstat-no" title="function not covered" >ReleasesHeading(p<
                 &gt;
                   {isLoading ? (
                     &lt;div&gt;
-                      &lt;Icon name="spinner" className="u-animation--spin" /&gt;
+                      &lt;Icon icon="spinner" className="u-animation--spin" /&gt;
                       &amp;nbsp;Loading...
                     &lt;/div&gt;
                   ) : (
@@ -1876,7 +1912,7 @@ export default connect(mapStateToProps, mapDispatchToProps)(ReleasesHeading);
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-09-15T22:08:14.421Z
+                at 2026-09-16T22:07:28.357Z
             </div>
         <script src="../../../../../prettify.js"></script>
         <script>

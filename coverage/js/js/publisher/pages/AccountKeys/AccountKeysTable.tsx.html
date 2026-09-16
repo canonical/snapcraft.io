@@ -25,14 +25,14 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>25/25</span>
+                <span class='fraction'>26/26</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">84% </span>
+                <span class="strong">85.18% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>42/50</span>
+                <span class='fraction'>46/54</span>
             </div>
         
             
@@ -46,7 +46,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>25/25</span>
+                <span class='fraction'>26/26</span>
             </div>
         
             
@@ -246,7 +246,21 @@
 <a name='L181'></a><a href='#L181'>181</a>
 <a name='L182'></a><a href='#L182'>182</a>
 <a name='L183'></a><a href='#L183'>183</a>
-<a name='L184'></a><a href='#L184'>184</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L184'></a><a href='#L184'>184</a>
+<a name='L185'></a><a href='#L185'>185</a>
+<a name='L186'></a><a href='#L186'>186</a>
+<a name='L187'></a><a href='#L187'>187</a>
+<a name='L188'></a><a href='#L188'>188</a>
+<a name='L189'></a><a href='#L189'>189</a>
+<a name='L190'></a><a href='#L190'>190</a>
+<a name='L191'></a><a href='#L191'>191</a>
+<a name='L192'></a><a href='#L192'>192</a>
+<a name='L193'></a><a href='#L193'>193</a>
+<a name='L194'></a><a href='#L194'>194</a>
+<a name='L195'></a><a href='#L195'>195</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -274,6 +288,8 @@
 <span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -292,6 +308,10 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -340,6 +360,8 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -429,13 +451,16 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import {
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">// Still need to use the `Icon` from `react-components`
+// until the `IconButton` component is ready in Pragma
+import {
   Button,
   Chip,
-  Icon,
+  Icon as ReactComponentsIcon,
   MainTable,
   TablePagination,
 } from "@canonical/react-components";
+import { Icon } from "@canonical/react-ds-global";
 import {
   MainTableHeader,
   MainTableRow,
@@ -456,13 +481,15 @@ function AccountKeyStatus(props: { accountKey: AccountKeyData }) {
   const isExpired = until &lt; new Date();
   const willExpireSoon = (until.getTime() - Date.now()) / MS_IN_A_DAY &lt;= 30; // expires in 30 days or less
 &nbsp;
-  const iconName = isExpired
-    ? "error"
+  const iconName = isExpired ? "error" : willExpireSoon ? "warning" : "success";
+  const iconColor = isExpired
+    ? "red"
     : willExpireSoon
-      ? "warning"
+      ? ""
       : hasUntil
-        ? <span class="branch-0 cbranch-no" title="branch not covered" >"success"</span>
-        : "success-grey";
+        ? <span class="branch-0 cbranch-no" title="branch not covered" >"green"</span>
+        : "";
+&nbsp;
   const statusText = isExpired
     ? "Expired"
     : willExpireSoon
@@ -476,7 +503,11 @@ function AccountKeyStatus(props: { accountKey: AccountKeyData }) {
 &nbsp;
   return (
     &lt;p className="u-no-padding u-whitespace-nowrap"&gt;
-      &lt;Icon name={iconName} style={{ marginRight: "0.5rem" }} /&gt;
+      &lt;Icon
+        icon={iconName}
+        color={iconColor}
+        style={{ marginRight: "0.5rem" }}
+      /&gt;
       &lt;span&gt;{statusText}&lt;/span&gt;
       &lt;br /&gt;
       &lt;span className="u-text-muted" style={{ marginLeft: "1.5rem" }}&gt;
@@ -507,7 +538,9 @@ function AccountKeyConstraints(props: { accountKey: AccountKeyData }) {
           isDense
           onClick={() =&gt; setExpanded(!expanded)}
         &gt;
-          &lt;Icon name={expanded ? "chevron-down" : "chevron-right"} /&gt;
+          &lt;ReactComponentsIcon
+            name={expanded ? "chevron-down" : "chevron-right"}
+          /&gt;
         &lt;/Button&gt;
         {c0 &amp;&amp; &lt;Chip isReadOnly value={c0.headers.type} /&gt;}
         {c1 &amp;&amp; &lt;Chip isReadOnly value={c1.headers.type} /&gt;}
@@ -619,7 +652,7 @@ export default AccountKeysTable;
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-09-15T22:08:14.421Z
+                at 2026-09-16T22:07:28.357Z
             </div>
         <script src="../../../../prettify.js"></script>
         <script>
