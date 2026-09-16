@@ -55,6 +55,7 @@
 {% endblock %}
 
 {% block content %}
+<main id="main-content">
   {% if is_preview %}
     <div class="snapcraft-p-sticky sticky-shadow" style="z-index: 100;">
       <div class="grid-row">
@@ -116,6 +117,7 @@
                 data-controls="channel-map-install"
                 aria-controls="channel-map-install"
                 data-analytics-click
+                data-md-strip
                 data-analytics-target="details_install_button">
                   Install
                   {% if is_preview %}
@@ -167,11 +169,13 @@
 
         {# EMBEDDABLE CARD SECTION - hidden in preview #}
         {% if not IS_BRAND_STORE %}
-          <h3 class="p-muted-heading">Share this snap</h3>
-          <p>Generate an embeddable card to be shared on external websites.</p>
-          <p><button class="p-button js-embedded-card-toggle" {% if is_preview %}disabled{% endif %}>Create embeddable card</button></p>
+          <div data-md-strip>
+            <h3 class="p-muted-heading">Share this snap</h3>
+            <p>Generate an embeddable card to be shared on external websites.</p>
+            <p><button class="p-button js-embedded-card-toggle" {% if is_preview %}disabled{% endif %}>Create embeddable card</button></p>
 
-          {% include "store/snap-details/_embedded_card_modal.html" %}
+            {% include "store/snap-details/_embedded_card_modal.html" %}
+          </div>
         {% endif %}
       </div>
       <div class="grid-col u-text-wrap">
@@ -233,7 +237,7 @@
   {% endif %}
 
   {% if countries or normalized_os %}
-    <div data-live="public_metrics_live">
+    <div data-live="public_metrics_live" data-md-strip>
       <div class="{% if has_publisher_page %}p-section{% else %}p-section--deep{% endif %}">
         <div class="u-fixed-width">
           <hr>
@@ -391,6 +395,7 @@
   {% endif %}
 
   {% include "store/snap-details/_templates.html" %}
+</main>
 {% endblock %}
 
 {% block scripts_includes %}

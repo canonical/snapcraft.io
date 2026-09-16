@@ -1,0 +1,9 @@
+# Snapcraft
+
+> Snapcraft is the home of the Snap Store, where thousands of snaps - containerised software packages that install and run across Linux distributions - are published and browsed. Publishers use snapcraft.io to register names, build, release, and manage their snaps.
+{% for group in sections %}
+## {{ group.section }}
+{% for link in group.links %}
+- [{{ link.title }}]({{ link.url }}){% if link.description %}: {{ link.description }}{% endif %}
+{%- endfor %}
+{% endfor %}
