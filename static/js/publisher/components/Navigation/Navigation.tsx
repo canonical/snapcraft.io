@@ -1,8 +1,10 @@
+// Still need to use the `Icon` from `react-components`
+// until the `IconButton` component is ready in Pragma
 import {
   AppNavigation,
   AppNavigationBar,
   Button,
-  Icon,
+  Icon as ReactComponentsIcon,
   Panel,
   Tooltip,
 } from "@canonical/react-components";
@@ -59,7 +61,10 @@ function Navigation(): React.JSX.Element {
                   setPinTabletNavigation(!pinTabletNavigation);
                 }}
               >
-                <Icon light name={pinTabletNavigation ? "close" : "pin"} />
+                <ReactComponentsIcon
+                  light
+                  name={pinTabletNavigation ? "close" : "pin"}
+                />
               </Button>
 
               {!collapseDesktopNavigation && (
@@ -73,7 +78,7 @@ function Navigation(): React.JSX.Element {
                       setCollapseDesktopNavigation(true);
                     }}
                   >
-                    <Icon name="toggle-side-nav" />
+                    <ReactComponentsIcon name="toggle-side-nav" />
                   </Button>
                 </Tooltip>
               )}
@@ -91,7 +96,7 @@ function Navigation(): React.JSX.Element {
                   setCollapseDesktopNavigation(false);
                 }}
               >
-                <Icon name="toggle-side-nav" />
+                <ReactComponentsIcon name="toggle-side-nav" />
               </Button>
             </Tooltip>
           )}

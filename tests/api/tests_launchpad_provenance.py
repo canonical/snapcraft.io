@@ -303,6 +303,156 @@ class TestBuildProvenanceMap(TestCase):
         self.assertTrue(result["failed"])
         self.assertIn("1721", result["revisions"])
 
+    def _github_recipe(self, link="https://lp/p1"):
+        return {
+            "entries": [
+                {
+                    "store_name": "mumble",
+                    "git_repository_url": (
+                        "https://github.com/snapcrafters/mumble"
+                    ),
+                    "completed_builds_collection_link": link,
+                }
+            ]
+        }
+
+    def test_stops_paginating_once_wanted_revisions_are_found(self):
+        page1 = {
+            "entries": [_build("amd64", 1721, "aaa")],
+            "next_collection_link": "https://lp/p2",
+        }
+        client = self._client(self._github_recipe(), [page1])
+        result = client.build_provenance_map(
+            "mumble", max_pages=5, max_recipes=5, wanted={"1721"}
+        )
+
+        self.assertFalse(result["failed"])
+        self.assertIn("1721", result["revisions"])
+        self.assertEqual(client.session.get.call_count, 2)
+
+    def test_keeps_paginating_while_a_wanted_revision_is_missing(self):
+        page1 = {
+            "entries": [_build("amd64", 1721, "aaa")],
+            "next_collection_link": "https://lp/p2",
+        }
+        page2 = {
+            "entries": [_build("arm64", 1798, "bbb")],
+            "next_collection_link": None,
+        }
+        client = self._client(self._github_recipe(), [page1, page2])
+        result = client.build_provenance_map(
+            "mumble", max_pages=5, max_recipes=5, wanted={"1721", "1798"}
+        )
+
+        self.assertIn("1721", result["revisions"])
+        self.assertIn("1798", result["revisions"])
+        self.assertEqual(client.session.get.call_count, 3)
+
+    def test_non_uploaded_builds_do_not_satisfy_wanted(self):
+        page1 = {
+            "entries": [_build("amd64", 1721, "aaa", status="Failed")],
+            "next_collection_link": "https://lp/p2",
+        }
+        page2 = {
+            "entries": [_build("amd64", 1721, "aaa")],
+            "next_collection_link": None,
+        }
+        client = self._client(self._github_recipe(), [page1, page2])
+        result = client.build_provenance_map(
+            "mumble", max_pages=5, max_recipes=5, wanted={"1721"}
+        )
+
+        self.assertEqual(client.session.get.call_count, 3)
+        self.assertIn("1721", result["revisions"])
+
+    def test_build_without_commit_does_not_satisfy_wanted(self):
+        incomplete = _build("amd64", 1721, "aaa")
+        incomplete["revision_id"] = None
+        page1 = {
+            "entries": [incomplete],
+            "next_collection_link": "https://lp/p2",
+        }
+        page2 = {
+            "entries": [_build("amd64", 1721, "aaa")],
+            "next_collection_link": None,
+        }
+        client = self._client(self._github_recipe(), [page1, page2])
+        result = client.build_provenance_map(
+            "mumble", max_pages=5, max_recipes=5, wanted={"1721"}
+        )
+
+        self.assertEqual(client.session.get.call_count, 3)
+        self.assertIn("1721", result["revisions"])
+
+    def test_wanted_accepts_ints(self):
+        page1 = {
+            "entries": [_build("amd64", 1721, "aaa")],
+            "next_collection_link": "https://lp/p2",
+        }
+        client = self._client(self._github_recipe(), [page1])
+        result = client.build_provenance_map(
+            "mumble", max_pages=5, max_recipes=5, wanted={1721}
+        )
+
+        self.assertEqual(client.session.get.call_count, 2)
+        self.assertIn("1721", result["revisions"])
+
+    def test_page_failure_is_not_an_error_when_wanted_is_complete(self):
+        page1 = {
+            "entries": [_build("amd64", 1721, "aaa")],
+            "next_collection_link": "https://lp/p2",
+        }
+        session = MagicMock()
+        calls = {"builds": 0}
+
+        def get(url, params=None):
+            if url.endswith("+snaps"):
+                return _response(self._github_recipe())
+            calls["builds"] += 1
+            if calls["builds"] == 1:
+                return _response(page1)
+            raise Exception("read timed out")
+
+        session.get.side_effect = get
+        client = LaunchpadProvenance(session=session)
+        result = client.build_provenance_map(
+            "mumble", max_pages=5, max_recipes=5, wanted={"1721", "1798"}
+        )
+        self.assertTrue(result["failed"])
+        self.assertEqual(result["reason"], "launchpad_error")
+
+        calls["builds"] = 0
+        result = client.build_provenance_map(
+            "mumble", max_pages=5, max_recipes=5, wanted={"1721"}
+        )
+        self.assertFalse(result["failed"])
+        self.assertIsNone(result["reason"])
+        self.assertIn("1721", result["revisions"])
+
+    def test_page_failure_is_still_an_error_without_wanted(self):
+        page1 = {
+            "entries": [_build("amd64", 1721, "aaa")],
+            "next_collection_link": "https://lp/p2",
+        }
+        session = MagicMock()
+        calls = {"builds": 0}
+
+        def get(url, params=None):
+            if url.endswith("+snaps"):
+                return _response(self._github_recipe())
+            calls["builds"] += 1
+            if calls["builds"] == 1:
+                return _response(page1)
+            raise Exception("read timed out")
+
+        session.get.side_effect = get
+        client = LaunchpadProvenance(session=session)
+        result = client.build_provenance_map(
+            "mumble", max_pages=5, max_recipes=5
+        )
+
+        self.assertTrue(result["failed"])
+
     def test_non_github_repo_yields_no_commit_url(self):
         recipe = {
             "entries": [
@@ -651,6 +801,37 @@ class TestRecipeSelection(TestCase):
         client.build_provenance_map("mumble", max_pages=5, max_recipes=2)
 
         self.assertEqual(len(scanned), 2)
+
+    def test_failed_recipe_is_not_an_error_if_others_cover_wanted(self):
+        good = _recipe("good", "https://github.com/a/b", "https://lp/good")
+        bad = _recipe("bad", None, "https://lp/bad")
+        session = MagicMock()
+
+        def get(url, params=None):
+            if url.endswith("+snaps"):
+                return _response({"entries": [good, bad]})
+            if url == "https://lp/good":
+                return _response(
+                    {
+                        "entries": [_build("amd64", 1721, "aaa")],
+                        "next_collection_link": None,
+                    }
+                )
+            raise Exception("read timed out")
+
+        session.get.side_effect = get
+        client = LaunchpadProvenance(session=session)
+
+        result = client.build_provenance_map(
+            "mumble", max_pages=5, max_recipes=5, wanted={"1721"}
+        )
+        self.assertFalse(result["failed"])
+        self.assertIn("1721", result["revisions"])
+
+        result = client.build_provenance_map(
+            "mumble", max_pages=5, max_recipes=5, wanted={"1721", "1798"}
+        )
+        self.assertTrue(result["failed"])
 
     def test_failure_does_not_short_circuit_other_recipes(self):
         entries = [

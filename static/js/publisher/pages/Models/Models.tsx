@@ -7,7 +7,8 @@ import {
   useNavigate,
   useSearchParams,
 } from "react-router-dom";
-import { Row, Col, Notification, Icon } from "@canonical/react-components";
+import { Row, Col, Notification } from "@canonical/react-components";
+import { Icon } from "@canonical/react-ds-global";
 import { UseQueryResult } from "react-query";
 
 import {
@@ -102,7 +103,7 @@ function Models(): React.JSX.Element {
           )}
           {modelsIsLoading ? (
             <p>
-              <Icon name="spinner" className="u-animation--spin" />
+              <Icon icon="spinner" className="u-animation--spin" />
               &nbsp;Fetching models...
             </p>
           ) : (

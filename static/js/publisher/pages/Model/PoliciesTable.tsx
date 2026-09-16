@@ -6,9 +6,9 @@ import {
   MainTable,
   Button,
   Modal,
-  Icon,
   TablePagination,
 } from "@canonical/react-components";
+import { Icon } from "@canonical/react-ds-global";
 
 import { sortByDateDescending } from "../../utils";
 import { usePolicies } from "../../hooks";
@@ -208,7 +208,7 @@ function PoliciesTable({
               >
                 {isLoading ? (
                   <>
-                    <Icon name="spinner" className="u-animation--spin" />
+                    <Icon icon="spinner" className="u-animation--spin" />
                     &nbsp;Deleting policy...
                   </>
                 ) : (

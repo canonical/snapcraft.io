@@ -68,6 +68,14 @@ class TestProvenanceMapCaching(TestEndpoints):
         self.cache_patch = cache_patcher.start()
         self.cache_patch.get.return_value = None
         self.addCleanup(cache_patcher.stop)
+        details_patcher = patch(
+            "webapp.endpoints.snaps.device_gateway.get_item_details",
+            return_value=_details(
+                [_channel("amd64", "latest", "stable", 1721)]
+            ),
+        )
+        details_patcher.start()
+        self.addCleanup(details_patcher.stop)
 
     def _ttl_for(self, provenance_map):
         with patch(
@@ -118,6 +126,27 @@ class TestAuditableEndpoint(TestEndpoints):
         )
         self.public_patch = public_patcher.start()
         self.addCleanup(public_patcher.stop)
+
+    @patch("webapp.endpoints.snaps.device_gateway.get_item_details")
+    @patch("webapp.endpoints.snaps.launchpad_provenance.build_provenance_map")
+    def test_scan_is_told_every_released_revision(
+        self, mock_map, mock_details
+    ):
+        mock_details.return_value = _details(
+            [
+                _channel("amd64", "latest", "stable", 1721),
+                _channel("amd64", "latest", "edge", 1800),
+                _channel("arm64", "latest", "stable", 1798),
+            ]
+        )
+        mock_map.return_value = _provenance({})
+
+        self.client.get("/api/mumble/auditable")
+
+        mock_details.assert_called_once()
+        self.assertEqual(
+            mock_map.call_args.kwargs["wanted"], {"1721", "1798", "1800"}
+        )
 
     @patch("webapp.endpoints.snaps.device_gateway.get_item_details")
     @patch("webapp.endpoints.snaps.launchpad_provenance.build_provenance_map")
@@ -427,7 +456,36 @@ class TestAuditableRevisionsEndpoint(TestEndpoints):
         self.public_patch = patch(
             "webapp.endpoints.snaps.repository_is_public", return_value=True
         ).start()
+        self.details_patch = patch(
+            "webapp.endpoints.snaps.device_gateway.get_item_details",
+            return_value=_details(
+                [
+                    _channel("amd64", "latest", "stable", 1721),
+                    _channel("arm64", "latest", "stable", 1798),
+                ]
+            ),
+        ).start()
         self.addCleanup(patch.stopall)
+
+    @patch("webapp.endpoints.snaps.launchpad_provenance.build_provenance_map")
+    def test_scan_is_told_which_revisions_are_released(self, mock_map):
+        mock_map.return_value = _provenance({})
+
+        self.client.get("/api/mumble/auditable-revisions")
+
+        self.assertEqual(mock_map.call_args.kwargs["wanted"], {"1721", "1798"})
+
+    @patch("webapp.endpoints.snaps.launchpad_provenance.build_provenance_map")
+    def test_details_are_not_fetched_on_cache_hit(self, mock_map):
+        self.cache_patch.get.return_value = _provenance(
+            {"1721": {"amd64": VERIFIED_BUILD}}
+        )
+
+        data = self.client.get("/api/mumble/auditable-revisions").get_json()
+
+        self.assertIn("1721", data["revisions"])
+        self.details_patch.assert_not_called()
+        mock_map.assert_not_called()
 
     @patch("webapp.endpoints.snaps.launchpad_provenance.build_provenance_map")
     def test_returns_flattened_revisions(self, mock_map):

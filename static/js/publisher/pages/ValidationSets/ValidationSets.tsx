@@ -1,13 +1,16 @@
 import { Link, useSearchParams } from "react-router-dom";
 import { format } from "date-fns";
+// Still need to use the `Icon` from `react-components`
+// until the `IconButton` component is ready in Pragma
 import {
   Row,
   Col,
   MainTable,
-  Icon,
+  Icon as ReactComponentsIcon,
   Notification,
   Button,
 } from "@canonical/react-components";
+import { Icon } from "@canonical/react-ds-global";
 
 import { useValidationSets } from "../../hooks";
 
@@ -64,10 +67,12 @@ function ValidationSets(): React.JSX.Element {
                 setSearchParams();
               }}
             >
-              <Icon name="close">Clear filter</Icon>
+              <ReactComponentsIcon name="close">
+                Clear filter
+              </ReactComponentsIcon>
             </Button>
             <Button type="submit" className="p-search-box__button">
-              <Icon name="search">Search</Icon>
+              <ReactComponentsIcon name="search">Search</ReactComponentsIcon>
             </Button>
           </div>
         </Col>
@@ -75,7 +80,7 @@ function ValidationSets(): React.JSX.Element {
 
       {status === "loading" && (
         <p>
-          <Icon name="spinner" className="u-animation--spin" />
+          <Icon icon="spinner" className="u-animation--spin" />
           &nbsp;&nbsp;Fetching validation sets
         </p>
       )}

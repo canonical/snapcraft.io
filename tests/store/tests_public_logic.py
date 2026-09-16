@@ -44,6 +44,7 @@ class StoreLogicTest(unittest.TestCase):
                         "risk": "risk",
                         "version": "version",
                         "revision": "revision",
+                        "sboms": None,
                     }
                 ]
             }
@@ -94,6 +95,7 @@ class StoreLogicTest(unittest.TestCase):
                         "risk": "risk",
                         "version": "version",
                         "revision": "revision",
+                        "sboms": None,
                     }
                 ],
                 "track1": [
@@ -105,6 +107,7 @@ class StoreLogicTest(unittest.TestCase):
                         "risk": "risk",
                         "version": "version",
                         "revision": "revision",
+                        "sboms": None,
                     }
                 ],
             }
@@ -156,6 +159,7 @@ class StoreLogicTest(unittest.TestCase):
                         "risk": "risk",
                         "version": "version",
                         "revision": "revision",
+                        "sboms": None,
                     }
                 ]
             },
@@ -169,9 +173,56 @@ class StoreLogicTest(unittest.TestCase):
                         "risk": "risk",
                         "version": "version",
                         "revision": "revision",
+                        "sboms": None,
                     }
                 ]
             },
+        }
+
+        self.assertEqual(result, expected_result)
+
+    def test_channel_map_with_sboms(self):
+        sboms = [
+            {
+                "format": "spdx2.3.json",
+                "url": "https://api.snapcraft.io/api/v1/sboms/download/"
+                "sbom_snap_SNAP_ID.spdx2.3.json",
+            }
+        ]
+        channel_maps_list = [
+            {
+                "channel": {
+                    "name": "channel",
+                    "architecture": "arch",
+                    "track": "track",
+                    "risk": "risk",
+                    "released-at": "2019-01-12T16:48:41.821037+00:00",
+                },
+                "created-at": "2019-01-12T16:48:41.821037+00:00",
+                "confinement": "confinement",
+                "download": {"size": "size"},
+                "version": "version",
+                "revision": "revision",
+                "sboms": sboms,
+            }
+        ]
+
+        result = logic.convert_channel_maps(channel_maps_list)
+        expected_result = {
+            "arch": {
+                "track": [
+                    {
+                        "channel": "channel",
+                        "released-at": "12 January 2019",
+                        "confinement": "confinement",
+                        "size": "size",
+                        "risk": "risk",
+                        "version": "version",
+                        "revision": "revision",
+                        "sboms": sboms,
+                    }
+                ]
+            }
         }
 
         self.assertEqual(result, expected_result)

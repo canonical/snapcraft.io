@@ -109,7 +109,20 @@ def _request_failure_reason(exc):
     return "unexpected_error"
 
 
-def _get_provenance_map(snap_name):
+def _released_revisions(details):
+    """Every revision currently released in any channel, as strings.
+
+    This is what the Security tab lists and always includes the badge's
+    revision, so a map covering it is complete for both endpoints.
+    """
+    return {
+        str(channel["revision"])
+        for channel in details.get("channel-map") or []
+        if channel.get("revision")
+    }
+
+
+def _get_provenance_map(snap_name, details=None):
     """Return the (cached) Launchpad provenance map for a snap.
 
     The map is expensive to build (paginated Launchpad calls), so it is cached
@@ -125,8 +138,16 @@ def _get_provenance_map(snap_name):
     if cached is not None:
         return cached
 
+    if details is None:
+        details = device_gateway.get_item_details(
+            snap_name, api_version=2, fields=AUDITABLE_FIELDS
+        )
+
     provenance_map = launchpad_provenance.build_provenance_map(
-        snap_name, LP_MAX_BUILD_PAGES, LP_MAX_RECIPES
+        snap_name,
+        LP_MAX_BUILD_PAGES,
+        LP_MAX_RECIPES,
+        wanted=_released_revisions(details),
     )
     provenance_map["source_available"] = repository_is_public(
         provenance_map.get("github_repository")
@@ -182,7 +203,7 @@ def auditable(snap_name):
         architecture, revision = _resolve_default_install(details)
 
         if architecture and revision:
-            provenance_map = _get_provenance_map(snap_name)
+            provenance_map = _get_provenance_map(snap_name, details)
             arch_map = provenance_map.get("revisions", {}).get(
                 str(revision), {}
             )

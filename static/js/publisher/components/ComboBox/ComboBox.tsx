@@ -1,6 +1,8 @@
 import { FC, useEffect, useReducer, useRef } from "react";
 import Downshift, { DownshiftState, StateChangeOptions } from "downshift";
-import { Icon } from "@canonical/react-components";
+// Still need to use the `Icon` from `react-components`
+// until the `IconButton` component is ready in Pragma
+import { Icon as ReactComponentsIcon } from "@canonical/react-components";
 
 export interface ComboBoxItem {
   value: string;
@@ -230,7 +232,7 @@ const ComboBox: FC<ComboBoxProps> = ({
                 className="p-combobox__toggle p-button--base has-icon"
                 tabIndex={-1}
               >
-                <Icon
+                <ReactComponentsIcon
                   name={comboBoxState.isOpen ? "chevron-up" : "chevron-down"}
                 />
               </button>

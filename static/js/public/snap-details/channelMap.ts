@@ -30,6 +30,7 @@ interface SlideInstallInstructionsElement extends HTMLElement {
 }
 
 export interface ChannelData {
+  sboms: Array<{ format: string; url: string }> | null;
   track: string;
   confinement: string;
   "released-at": string;
@@ -47,7 +48,6 @@ class ChannelMap {
   snapId: string;
   currentTab: string;
   defaultTrack: string;
-  hasSboms: boolean;
   selectorString: string;
   channelMapEl: HTMLElement;
   channelOverlayEl: HTMLElement;
@@ -65,7 +65,6 @@ class ChannelMap {
     snapId: string,
     channelMapData: ChannelMapData,
     defaultTrack: string,
-    hasSboms: boolean,
   ) {
     this.RISK_ORDER = ["stable", "candidate", "beta", "edge"];
     this.packageName = packageName;
@@ -73,7 +72,6 @@ class ChannelMap {
     this.currentTab = "overview";
 
     this.defaultTrack = defaultTrack;
-    this.hasSboms = hasSboms;
 
     this.selectorString = selectorString;
     this.channelMapEl = document.querySelector(
@@ -575,16 +573,23 @@ class ChannelMap {
         }
       });
 
+      const hasSboms = Object.keys(trackList).some((track) => {
+        return trackList[track].some((t) => t.sboms);
+      });
+
+      if (hasSboms) {
+        // Show "Security" tab only if SBOMs exist
+        const securityTab = document.querySelector("#channel-map-security-tab");
+        const securityTabParent = securityTab?.closest(".p-tabs__item");
+        securityTabParent?.classList.remove("u-hide");
+      }
+
       // If we're filtering, but that list ends up with the same number of tracks
       // we don't need to show the tabs (we'll show the same data twice)
-      if (numberOfTracks === trimmedNumberOfTracks && !this.hasSboms) {
+      if (numberOfTracks === trimmedNumberOfTracks && !hasSboms) {
         this.hideTabs();
       }
     }
-
-    const getSbomUrl = (revision: string): string => {
-      return `/download/sbom_snap_${this.snapId}_${revision}.spdx2.3.json`;
-    };
 
     // Create an array of columns
     Object.keys(trackList).forEach((track) => {
@@ -598,48 +603,19 @@ class ChannelMap {
           trackInfo["confinement"],
         ]);
 
-        if (this.hasSboms) {
-          securityRows.push([
-            trackName,
-            trackInfo["risk"],
-            trackInfo["version"],
-            trackInfo["revision"],
-          ]);
-        }
+        securityRows.push([
+          trackName,
+          trackInfo["risk"],
+          trackInfo["version"],
+          trackInfo["revision"],
+          trackInfo["sboms"]
+            ? `<a href="${trackInfo["sboms"]?.[0]?.url}" download>SPDX file&nbsp;<i class="p-icon--begin-downloading"></i></a>`
+            : "",
+        ]);
       });
     });
 
-    if (this.hasSboms && securityRows.length > 0) {
-      Promise.all(
-        securityRows.map(async (row) => {
-          const revision = row[3];
-          const sbomUrl = getSbomUrl(revision);
-          const downloadLink = `<a href="${sbomUrl}" download>SPDX file&nbsp;<i class="p-icon--begin-downloading"></i></a>`;
-          const res = await fetch(sbomUrl, { method: "HEAD" });
-
-          if (res.status === 200) {
-            row.push(downloadLink);
-          } else {
-            row.push("Not available");
-          }
-
-          return row;
-        }),
-      ).then(() => {
-        this.writeTable(
-          tbodySecurityEl,
-          this.sortRows(securityRows),
-          "security",
-        );
-
-        // Enable "Security" tab only when SBOM requests
-        // are complete to avoid a race condition causing
-        // the table to have not rendered
-        const securityTab = document.querySelector("#channel-map-security-tab");
-        securityTab?.classList.remove("is-disabled");
-        securityTab?.setAttribute("aria-disabled", "false");
-      });
-    }
+    this.writeTable(tbodySecurityEl, this.sortRows(securityRows), "security");
 
     this.writeTable(tbodyEl, this.sortRows(rows));
   }
@@ -710,14 +686,6 @@ export default function channelMap(
   snapId: string,
   channelMapData: ChannelMapData,
   defaultTrack: string,
-  hasSboms: boolean,
 ) {
-  return new ChannelMap(
-    el,
-    packageName,
-    snapId,
-    channelMapData,
-    defaultTrack,
-    hasSboms,
-  );
+  return new ChannelMap(el, packageName, snapId, channelMapData, defaultTrack);
 }
