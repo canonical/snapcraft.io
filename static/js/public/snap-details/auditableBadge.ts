@@ -16,38 +16,6 @@ interface AuditableResponse {
   build_url?: string | null;
 }
 
-// "unavailable" (the revision has no Launchpad build) and "not-provided" (the
-// snap publishes no builds at all) are the same thing from a visitor's point of
-// view, so they share one message rather than splitting hairs.
-const NO_BUILD_INFO = {
-  icon: `<i class="p-icon--error-grey"></i>`,
-  html: "No build information for this revision",
-};
-
-const MESSAGES: Record<
-  Exclude<BadgeState, "verified">,
-  { dataJs: string; icon: string; html: string }
-> = {
-  error: {
-    dataJs: "auditable-badge-error",
-    icon: "",
-    html: `<span class="p-auditable-badge__error">Couldn't load build information right now</span>`,
-  },
-  unavailable: {
-    dataJs: "auditable-badge-unavailable",
-    ...NO_BUILD_INFO,
-  },
-  "not-provided": {
-    dataJs: "auditable-badge-not-provided",
-    ...NO_BUILD_INFO,
-  },
-};
-
-const revArchPrefix = (data?: AuditableResponse): string =>
-  data?.revision && data?.architecture
-    ? `<span>rev${escapeHtml(data.revision)}/${escapeHtml(data.architecture)}</span>`
-    : "";
-
 function renderHidden(el: HTMLElement): void {
   el.innerHTML = "";
 }
