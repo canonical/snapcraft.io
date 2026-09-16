@@ -55,7 +55,6 @@ class ChannelMap {
   events: SnapEvents;
   INSTALL_TEMPLATE: string = "";
   CHANNEL_ROW_TEMPLATE: string | undefined;
-  CHANNEL_SECURITY_ROW_TEMPLATE: string | undefined;
   arch: string | undefined;
   openButton: HTMLElement | null | undefined;
   openScreenName: string | undefined;
@@ -147,9 +146,6 @@ class ChannelMap {
     const channelRowTemplateEl = document.querySelector(
       '[data-js="channel-map-row"]',
     );
-    const channelSecurityRowTemplateEl = document.querySelector(
-      '[data-js="channel-map-security-table-row"]',
-    );
 
     if (!installTemplateEl || !channelRowTemplateEl) {
       const buttonsVersions = document.querySelector(
@@ -163,8 +159,6 @@ class ChannelMap {
 
     this.INSTALL_TEMPLATE = installTemplateEl.innerHTML;
     this.CHANNEL_ROW_TEMPLATE = channelRowTemplateEl.innerHTML;
-    this.CHANNEL_SECURITY_ROW_TEMPLATE =
-      channelSecurityRowTemplateEl?.innerHTML;
 
     // get architectures from data
     const architectures = Object.keys(this.channelMapData);
@@ -487,7 +481,7 @@ class ChannelMap {
     applyDesktopStoreSupport(holder);
   }
 
-  writeTable(el: HTMLElement, data: string[][], tableType?: string): void {
+  writeTable(el: HTMLElement, data: string[][]): void {
     let cache: string | undefined;
     const tbody = data.map((row, i) => {
       const isSameTrack = cache && row[0] === cache;
@@ -503,16 +497,10 @@ class ChannelMap {
 
       let _row: string = "";
 
-      if (tableType && tableType === "security") {
-        if (this.CHANNEL_SECURITY_ROW_TEMPLATE) {
-          _row = this.CHANNEL_SECURITY_ROW_TEMPLATE;
-        }
-      } else {
-        if (this.CHANNEL_ROW_TEMPLATE) {
-          _row = this.CHANNEL_ROW_TEMPLATE.split("${rowClass}").join(
-            rowClass.join(" "),
-          );
-        }
+      if (this.CHANNEL_ROW_TEMPLATE) {
+        _row = this.CHANNEL_ROW_TEMPLATE.split("${rowClass}").join(
+          rowClass.join(" "),
+        );
       }
 
       row.forEach((val, index) => {
@@ -537,10 +525,6 @@ class ChannelMap {
       '[data-js="channel-map-table"]',
     ) as HTMLElement;
 
-    const tbodySecurityEl = this.channelMapEl.querySelector(
-      '[data-js="channel-map-security-table"]',
-    ) as HTMLElement;
-
     // If we're on the overview tab we only want to see latest/[all risks]
     // and [all tracks]/[highest risk], so filter out anything that isn't these
     const filtered = this.currentTab === "overview";
@@ -550,7 +534,6 @@ class ChannelMap {
     let trimmedNumberOfTracks = 0;
 
     const rows: Array<string[]> = [];
-    const securityRows: Array<string[]> = [];
 
     const trackList = filtered ? {} : archData;
 
@@ -573,20 +556,9 @@ class ChannelMap {
         }
       });
 
-      const hasSboms = Object.keys(trackList).some((track) => {
-        return trackList[track].some((t) => t.sboms);
-      });
-
-      if (hasSboms) {
-        // Show "Security" tab only if SBOMs exist
-        const securityTab = document.querySelector("#channel-map-security-tab");
-        const securityTabParent = securityTab?.closest(".p-tabs__item");
-        securityTabParent?.classList.remove("u-hide");
-      }
-
       // If we're filtering, but that list ends up with the same number of tracks
       // we don't need to show the tabs (we'll show the same data twice)
-      if (numberOfTracks === trimmedNumberOfTracks && !hasSboms) {
+      if (numberOfTracks === trimmedNumberOfTracks) {
         this.hideTabs();
       }
     }
@@ -602,20 +574,8 @@ class ChannelMap {
           trackInfo["released-at"],
           trackInfo["confinement"],
         ]);
-
-        securityRows.push([
-          trackName,
-          trackInfo["risk"],
-          trackInfo["version"],
-          trackInfo["revision"],
-          trackInfo["sboms"]
-            ? `<a href="${trackInfo["sboms"]?.[0]?.url}" download>SPDX file&nbsp;<i class="p-icon--begin-downloading"></i></a>`
-            : "",
-        ]);
       });
     });
-
-    this.writeTable(tbodySecurityEl, this.sortRows(securityRows), "security");
 
     this.writeTable(tbodyEl, this.sortRows(rows));
   }
@@ -652,25 +612,6 @@ class ChannelMap {
     this.currentTab = tab;
     selected.removeAttribute("aria-selected");
     clickEl.setAttribute("aria-selected", "true");
-
-    const versionTable = document.querySelector(
-      ".p-channel-map__version-table",
-    );
-    const securityTable = document.querySelector(
-      ".p-channel-map__security-table",
-    );
-
-    if (this.currentTab === "security") {
-      securityTable?.classList.remove("u-hide");
-      securityTable?.setAttribute("aria-hidden", "false");
-      versionTable?.classList.add("u-hide");
-      versionTable?.setAttribute("aria-hidden", "true");
-    } else {
-      versionTable?.classList.remove("u-hide");
-      versionTable?.setAttribute("aria-hidden", "false");
-      securityTable?.classList.add("u-hide");
-      securityTable?.setAttribute("aria-hidden", "true");
-    }
 
     if (this.arch && this.arch in this.channelMapData) {
       this.prepareTable(this.channelMapData[this.arch]);

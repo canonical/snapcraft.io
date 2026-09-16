@@ -185,6 +185,10 @@ class SecurityTab {
     const revision = row.revision;
     const channel = `${row.track}/${row.risk}`;
     const { build, commit } = this.buildCells(revision);
+    const sbomUrl = row.sboms?.[0]?.url;
+    const sbom = sbomUrl
+      ? `<a href="${safeUrl(sbomUrl)}" download>SPDX file&nbsp;<i class="p-icon--begin-downloading"></i></a>`
+      : "";
 
     return `
       <tr>
@@ -194,6 +198,7 @@ class SecurityTab {
         <td class="u-hide--small">${escapeHtml(row["released-at"] || "")}</td>
         <td>${build}</td>
         <td>${commit}</td>
+        <td>${sbom}</td>
       </tr>
     `;
   }
