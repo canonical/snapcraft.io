@@ -48,27 +48,8 @@ const revArchPrefix = (data?: AuditableResponse): string =>
     ? `<span>rev${escapeHtml(data.revision)}/${escapeHtml(data.architecture)}</span>`
     : "";
 
-function renderLoading(el: HTMLElement): void {
-  el.innerHTML = `
-    <div class="p-auditable-skeleton" data-js="auditable-badge-loading"
-         role="status" aria-label="Loading build information">
-      <span class="p-auditable-skeleton__bar p-auditable-skeleton__bar--short"></span>
-      <span class="p-auditable-skeleton__bar p-auditable-skeleton__bar--long"></span>
-    </div>
-  `;
-}
-
-function renderMessage(
-  el: HTMLElement,
-  state: Exclude<BadgeState, "verified">,
-  data?: AuditableResponse,
-): void {
-  const { dataJs, icon, html } = MESSAGES[state];
-  el.innerHTML = `
-    <p class="p-auditable-badge u-text-muted u-no-margin--bottom" data-js="${dataJs}">
-      ${revArchPrefix(data)}${icon}<span>${html}</span>
-    </p>
-  `;
+function renderHidden(el: HTMLElement): void {
+  el.innerHTML = "";
 }
 
 function renderVerified(el: HTMLElement, data: AuditableResponse): void {
@@ -96,8 +77,6 @@ function renderVerified(el: HTMLElement, data: AuditableResponse): void {
 async function loadBadge(el: HTMLElement, snapName: string): Promise<void> {
   let state: BadgeState;
 
-  renderLoading(el);
-
   try {
     const resp = await fetch(`/api/${snapName}/auditable`);
     const data: AuditableResponse = await resp.json();
@@ -106,11 +85,11 @@ async function loadBadge(el: HTMLElement, snapName: string): Promise<void> {
     if (state === "verified") {
       renderVerified(el, data);
     } else {
-      renderMessage(el, state, data);
+      renderHidden(el);
     }
   } catch {
     state = "error";
-    renderMessage(el, state);
+    renderHidden(el);
   }
 
   trackEvent("provenance_badge_shown", { provenance_state: state });
