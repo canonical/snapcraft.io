@@ -2,7 +2,7 @@ import { useState } from "react";
 import Joyride, { STATUS } from "react-joyride";
 // Still need to use the `Icon` from `react-components`
 // until the `IconButton` component is ready in Pragma
-import { Icon } from "@canonical/react-components";
+import { Icon as ReactComponentsIcon } from "@canonical/react-components";
 import { Button } from "@canonical/react-ds-global";
 
 import TourStep from "./TourStep";
@@ -57,7 +57,7 @@ function Tour({ steps }: Props): React.JSX.Element {
           zIndex: 100,
         }}
       >
-        <Icon name="question" />
+        <ReactComponentsIcon name="question" />
         <span className="u-off-screen">Start tour</span>
       </Button>
       <Joyride

@@ -1,10 +1,13 @@
+// Still need to use the `Icon` from `react-components`
+// until the `IconButton` component is ready in Pragma
 import {
   Button,
   Chip,
-  Icon,
+  Icon as ReactComponentsIcon,
   MainTable,
   TablePagination,
 } from "@canonical/react-components";
+import { Icon } from "@canonical/react-ds-global";
 import {
   MainTableHeader,
   MainTableRow,
@@ -25,13 +28,15 @@ function AccountKeyStatus(props: { accountKey: AccountKeyData }) {
   const isExpired = until < new Date();
   const willExpireSoon = (until.getTime() - Date.now()) / MS_IN_A_DAY <= 30; // expires in 30 days or less
 
-  const iconName = isExpired
-    ? "error"
+  const iconName = isExpired ? "error" : willExpireSoon ? "warning" : "success";
+  const iconColor = isExpired
+    ? "red"
     : willExpireSoon
-      ? "warning"
+      ? ""
       : hasUntil
-        ? "success"
-        : "success-grey";
+        ? "green"
+        : "";
+
   const statusText = isExpired
     ? "Expired"
     : willExpireSoon
@@ -45,7 +50,11 @@ function AccountKeyStatus(props: { accountKey: AccountKeyData }) {
 
   return (
     <p className="u-no-padding u-whitespace-nowrap">
-      <Icon name={iconName} style={{ marginRight: "0.5rem" }} />
+      <Icon
+        icon={iconName}
+        color={iconColor}
+        style={{ marginRight: "0.5rem" }}
+      />
       <span>{statusText}</span>
       <br />
       <span className="u-text-muted" style={{ marginLeft: "1.5rem" }}>
@@ -76,7 +85,9 @@ function AccountKeyConstraints(props: { accountKey: AccountKeyData }) {
           isDense
           onClick={() => setExpanded(!expanded)}
         >
-          <Icon name={expanded ? "chevron-down" : "chevron-right"} />
+          <ReactComponentsIcon
+            name={expanded ? "chevron-down" : "chevron-right"}
+          />
         </Button>
         {c0 && <Chip isReadOnly value={c0.headers.type} />}
         {c1 && <Chip isReadOnly value={c1.headers.type} />}

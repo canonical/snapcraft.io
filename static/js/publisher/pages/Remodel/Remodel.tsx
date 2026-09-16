@@ -8,7 +8,8 @@ import {
   useLocation,
   useSearchParams,
 } from "react-router-dom";
-import { Notification, Icon, Button, Modal } from "@canonical/react-components";
+import { Notification, Button, Modal } from "@canonical/react-components";
+import { Icon } from "@canonical/react-ds-global";
 
 import { useRemodels, useUserPrivileges } from "../../hooks";
 import { remodelsListState } from "../../state/remodelsState";
@@ -265,7 +266,7 @@ function Remodel(): React.JSX.Element {
         )}
         {isLoading ? (
           <p>
-            <Icon name="spinner" className="u-animation--spin" />
+            <Icon icon="spinner" className="u-animation--spin" />
             &nbsp;Fetching remodels...
           </p>
         ) : data && data.success === false ? (
@@ -284,7 +285,7 @@ function Remodel(): React.JSX.Element {
                   {isBulkDeleting ? (
                     <>
                       <Icon
-                        name="spinner"
+                        icon="spinner"
                         className="u-animation--spin is-light"
                       />
                       &nbsp;Deleting...
@@ -392,7 +393,7 @@ function Remodel(): React.JSX.Element {
                   {isBulkDeleting ? (
                     <>
                       <Icon
-                        name="spinner"
+                        icon="spinner"
                         className="u-animation--spin is-light"
                       />
                       &nbsp;Deleting...
