@@ -1,6 +1,6 @@
 name: snapcraft-io
 base: bare
-build-base: ubuntu@22.04
+build-base: ubuntu@24.04
 version: "0.1"
 summary: Rocked snapcraft.io
 description: |
