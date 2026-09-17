@@ -1046,6 +1046,13 @@
   resolved "https://registry.yarnpkg.com/@canonical/cookie-policy/-/cookie-policy-3.10.0.tgz#bc17a6900b3014c2f262948d5a8b3a52acba9926"
   integrity sha512-sAVw8fdD2RgwSI2YImvlOfn79FRFbbqd0TaD3UHYXfL58qVRAXFxqqymbp4qISN4agi8UuZ2+kqq9zOcW7ZbTA==
 
+"@canonical/design-tokens@0.10.0":
+  version "0.10.0"
+  resolved "https://registry.yarnpkg.com/@canonical/design-tokens/-/design-tokens-0.10.0.tgz#6b6ab650a90ddc10a9efa705835b4b36a46f2ec5"
+  integrity sha512-Z+yDzIukpfgyIHLINHCk07KVqX7+NlIafo+WJrOBH+8GL8mPx+mT06ZnaHW0tzXzmCpqyiDZSG0tFOH71UXrEQ==
+  dependencies:
+    "@canonical/terrazzo-lsp" "^0.10.0"
+
 "@canonical/design-tokens@0.8.1":
   version "0.8.1"
   resolved "https://registry.yarnpkg.com/@canonical/design-tokens/-/design-tokens-0.8.1.tgz#50dff89e7415c776994b7af107021aafe96a6cc6"
@@ -1053,7 +1060,12 @@
   dependencies:
     "@canonical/terrazzo-lsp" "^0.8.1"
 
-"@canonical/ds-assets@0.34.0", "@canonical/ds-assets@^0.34.0":
+"@canonical/ds-assets@0.38.0":
+  version "0.38.0"
+  resolved "https://registry.yarnpkg.com/@canonical/ds-assets/-/ds-assets-0.38.0.tgz#64999fd62467f64a8b34a31998f0e7b7c3f9a275"
+  integrity sha512-xNezkbtvfKj/FASWhdhacmW4vECno8qHx3meQstz/BR+V4ki3UB0VcHew7Q3saTV+l3PcltDR7WLy25/EKwcIQ==
+
+"@canonical/ds-assets@^0.34.0":
   version "0.34.0"
   resolved "https://registry.yarnpkg.com/@canonical/ds-assets/-/ds-assets-0.34.0.tgz#1eeaf2be4a9997db6903366bd55b0a318ea8b1e4"
   integrity sha512-aZ+pxiWs87xCsPllgcpznXaVCBQjXv2zyJqdkkznmp2E8FaRy9+XE/AflQ3aTJGe4zLqufnR1oBBcUN4pImSjg==
@@ -1181,14 +1193,6 @@
   resolved "https://registry.yarnpkg.com/@canonical/styles-debug/-/styles-debug-0.34.0.tgz#0dee3d9d4dd2991094e09a01ae7501f1c1c9bc13"
   integrity sha512-uCTon1IaJgAw3KXYpDBeyQlto4vnk+cfyAcLgEUnE4jINYeURgaA1ICqXT6xtUORldmDxBphsFJum9EC34txmA==
 
-"@canonical/styles-typography@^0.32.0":
-  version "0.32.0"
-  resolved "https://registry.yarnpkg.com/@canonical/styles-typography/-/styles-typography-0.32.0.tgz#352e7d94b34b55e88d15242e7552aa8f967bd75a"
-  integrity sha512-RmYjzxH8YcStvpOQVHPWUckp2HRlCDKrDIbOsfMF+9LPnri/E4kWm+Wi6btohfL39ZvTCVQjdCyOAkiamxcBkA==
-  dependencies:
-    "@canonical/design-tokens" "0.8.1"
-    opentype.js "^1.3.4"
-
 "@canonical/styles-typography@^0.34.0":
   version "0.34.0"
   resolved "https://registry.yarnpkg.com/@canonical/styles-typography/-/styles-typography-0.34.0.tgz#70cc594c789fca5817dc2eaf53617f7fd1873e01"
@@ -1197,14 +1201,28 @@
     "@canonical/design-tokens" "0.8.1"
     opentype.js "^1.3.4"
 
-"@canonical/styles@0.32.0":
-  version "0.32.0"
-  resolved "https://registry.yarnpkg.com/@canonical/styles/-/styles-0.32.0.tgz#d276ba5015568981ee909733af8001f3ef05a753"
-  integrity sha512-PoLHFxMwZOXhHRHkPu1lVAx5OQez+psB6GLTkcsv7Rvh7cSJbwlB86QIerSiOZS0+vh5s8e1x8fp7xSSMZTEKw==
+"@canonical/styles-typography@^0.38.0":
+  version "0.38.0"
+  resolved "https://registry.yarnpkg.com/@canonical/styles-typography/-/styles-typography-0.38.0.tgz#b4ac1a5945c4ac445a08279539d4783f34818ee3"
+  integrity sha512-zm8KaWCM1DlbeEPelu2pctkzorZ91ucFG0glwcVqnYH7s4bua/sg22/2k5WPgMrRDVj7Jfzm8PSQ2NHbTDlHqg==
   dependencies:
-    "@canonical/design-tokens" "0.8.1"
-    "@canonical/styles-typography" "^0.32.0"
-    normalize.css "^8.0.1"
+    "@canonical/design-tokens" "0.10.0"
+    opentype.js "^1.3.4"
+
+"@canonical/styles-vanilla-adapter@0.38.0":
+  version "0.38.0"
+  resolved "https://registry.yarnpkg.com/@canonical/styles-vanilla-adapter/-/styles-vanilla-adapter-0.38.0.tgz#58ea0138a3ea0daa8d1f09a839db76d8e46cc3c7"
+  integrity sha512-RRxgs+CGMBiMrLUqqeKe9OC4oijCLAiUCm8uSi3JCSf4aBieDO1qwos4L00lUxHdGjupYOvhaJsQcDgK1T5Lyg==
+  dependencies:
+    "@canonical/styles" "^0.38.0"
+
+"@canonical/styles@0.38.0", "@canonical/styles@^0.38.0":
+  version "0.38.0"
+  resolved "https://registry.yarnpkg.com/@canonical/styles/-/styles-0.38.0.tgz#9cee4f3f64ddf85b14c4a6330db8a348997b572f"
+  integrity sha512-ZIiJbaiDRvS6g9Idokqeb3A7RlepOOjzfv/HX5o3+957noATEW8rkJYW3jUtqgBOE99+9stOCLWEjCPwNIJQdg==
+  dependencies:
+    "@canonical/design-tokens" "0.10.0"
+    "@canonical/styles-typography" "^0.38.0"
 
 "@canonical/styles@^0.34.0":
   version "0.34.0"
@@ -1215,6 +1233,16 @@
     "@canonical/styles-typography" "^0.34.0"
     normalize.css "^8.0.1"
 
+"@canonical/terrazzo-lsp@^0.10.0":
+  version "0.10.0"
+  resolved "https://registry.yarnpkg.com/@canonical/terrazzo-lsp/-/terrazzo-lsp-0.10.0.tgz#2c11f6156260f0e75f62b5010f32126bb1fd6d60"
+  integrity sha512-tT7HqfhoLcW6IjdF52gzYlv+LgKgCofQ832cfsdTIR0Z2Yk3PItzZQyJIPJ558Z13HIeU/1I0rkktMm1Vql+cw==
+  dependencies:
+    "@canonical/token-types" "^0.10.0"
+    "@lezer/common" "^1.5.1"
+    "@lezer/css" "^1.3.6"
+    colorjs.io "^0.7.0"
+
 "@canonical/terrazzo-lsp@^0.8.1":
   version "0.8.1"
   resolved "https://registry.yarnpkg.com/@canonical/terrazzo-lsp/-/terrazzo-lsp-0.8.1.tgz#42d324e7fcf41cb7e45e1017cb2a2f68e2562f50"
@@ -1224,6 +1252,11 @@
     "@lezer/common" "^1.5.1"
     "@lezer/css" "^1.3.4"
     colorjs.io "^0.7.0"
+
+"@canonical/token-types@^0.10.0":
+  version "0.10.0"
+  resolved "https://registry.yarnpkg.com/@canonical/token-types/-/token-types-0.10.0.tgz#fec99e8b27217cada2e25018a4c79948694f703b"
+  integrity sha512-Rrz70fhFmBbGVKplKCw9OGMN4nok4B06YTCeP+SkSXXu0nAjFlpWUUWtsROAPsvGe//+KAu8jQKNiDjt90iCMw==
 
 "@canonical/token-types@^0.8.1":
   version "0.8.1"
@@ -1862,6 +1895,15 @@
   version "1.3.4"
   resolved "https://registry.yarnpkg.com/@lezer/css/-/css-1.3.4.tgz#ba05a03d5ca114ad523aa3c0e93aff8d1e26ed70"
   integrity sha512-N+tn9tej2hPvyKgHEApMOQfHczDJCwxrRFS3SPn9QjYN+uwHvEDnCgKRrb3mxDYxRS8sKMM8fhC3+lc04Abz5Q==
+  dependencies:
+    "@lezer/common" "^1.2.0"
+    "@lezer/highlight" "^1.0.0"
+    "@lezer/lr" "^1.3.0"
+
+"@lezer/css@^1.3.6":
+  version "1.3.6"
+  resolved "https://registry.yarnpkg.com/@lezer/css/-/css-1.3.6.tgz#2cdae5b532beaa5cf1e7dccb918d8b190b6c6d14"
+  integrity sha512-YJE78Wcg+zX8f10hiHWQ4Az48Qr/c13eId0VtRQYLBpxHDmDeSrXIlkbl+fJGW42rWC/uoUco9mhBZeVWP/A1g==
   dependencies:
     "@lezer/common" "^1.2.0"
     "@lezer/highlight" "^1.0.0"

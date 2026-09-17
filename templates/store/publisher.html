@@ -1,5 +1,7 @@
 {% set show_header = False %}
 {% extends "_base-layout.html" %}
+{% block html_class %}app comfortable light{% endblock %}
+{% block extra_styles %}{{ vite_import('static/sass/pragma.css') }}{% endblock %}
 {% block body_class %}{% endblock %}
 {% block banner %}
 {% from "partials/_status-banner.html" import status_banner %}

@@ -234,9 +234,9 @@ function ListingDetails({
                 });
                 setHasSecondCategory(false);
               }}
+              aria-label="Remove secondary category"
             >
               <Icon icon="delete" />
-              <span className="u-off-screen">Remove secondary category</span>
             </Button>
           </Col>
         </Row>

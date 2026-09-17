@@ -227,8 +227,9 @@ function ImageUpload({
                     width: `${previewWidth}px`,
                     height: `${previewHeight}px`,
                   }}
+                  aria-label="Add image"
                 >
-                  <Icon icon="plus">Add image</Icon>
+                  <Icon icon="plus" />
                 </div>
               )}
               <input
@@ -266,9 +267,10 @@ function ImageUpload({
                   setPreviewImageUrl("");
                 }}
                 importance={darkThemeEnabled ? "primary" : "tertiary"}
+                aria-label={`Remove ${type}`}
+                style={{ backgroundColor: "transparent" }}
               >
                 <Icon icon="delete" />
-                <span className="u-off-screen">Remove {type}</span>
               </Button>
             )}
           </div>
@@ -300,29 +302,31 @@ function ImageUpload({
 
         {helpText && <div className="p-form-help-text">{helpText}</div>}
 
-        <Button
-          type="button"
-          variant="link"
-          onClick={() => {
-            setShowImageRestrictions(!showImageRestrictions);
-          }}
-        >
-          <small>
-            {showImageRestrictions && (
-              <>
-                Hide image restrictions{" "}
-                <span className="u-off-screen">for {type}</span>
-              </>
-            )}
+        <p>
+          <Button
+            type="button"
+            variant="link"
+            onClick={() => {
+              setShowImageRestrictions(!showImageRestrictions);
+            }}
+          >
+            <small>
+              {showImageRestrictions && (
+                <>
+                  Hide image restrictions{" "}
+                  <span className="u-off-screen">for {type}</span>
+                </>
+              )}
 
-            {!showImageRestrictions && (
-              <>
-                Show image restrictions{" "}
-                <span className="u-off-screen">for {type}</span>
-              </>
-            )}
-          </small>
-        </Button>
+              {!showImageRestrictions && (
+                <>
+                  Show image restrictions{" "}
+                  <span className="u-off-screen">for {type}</span>
+                </>
+              )}
+            </small>
+          </Button>
+        </p>
         {showImageRestrictions && (
           <ul>
             <li>
