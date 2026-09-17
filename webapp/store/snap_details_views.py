@@ -380,7 +380,7 @@ def snap_details_views(store):
                 "countries": (
                     country_devices.country_data if country_devices else None
                 ),
-                "normalized_os": os_metrics.os if os_metrics else None,
+                "os_tree": os_metrics.os_tree if os_metrics else None,
                 # Context info
                 "is_linux": (
                     "Linux" in flask.request.headers.get("User-Agent", "")

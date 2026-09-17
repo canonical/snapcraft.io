@@ -57,37 +57,58 @@ def _calculate_color(thisCountry, max_users):
     return colors[color_index]
 
 
+OS_NAMES = {
+    "solus": "Solus",
+    "raspbian": "Raspbian",
+    "kali": "Kali Linux",
+    "galliumos": "GalliumOS",
+    "opensuse-leap": "openSUSE Leap",
+    "fedora": "Fedora",
+    "ubuntu-core": "Ubuntu Core",
+    "linuxmint": "Linux Mint",
+    "parrot": "Parrot OS",
+    "centos": "CentOS",
+    "ubuntu": "Ubuntu",
+    "arch": "Arch Linux",
+    "debian": "Debian",
+    "elementary": "elementary OS",
+    "neon": "KDE Neon",
+    "manjaro": "Manjaro",
+    "zorin": "Zorin OS",
+    "pop": "Pop!_OS",
+}
+
+
+def _split_os_name(os_name):
+    """Split a ``distro/version`` series name
+
+    :returns: (slug, version) with version ``None`` when unversioned
+    """
+    slug, version = os_name.rsplit("/", 1)
+    return slug, version if version != "-" else None
+
+
 def _capitalize_os_name(os_name):
     """Capitalize OS name
 
     :returns: Capitalized OS name (if part of the list)
     """
-    capitalized_oses = {
-        "solus": "Solus",
-        "raspbian": "Raspbian",
-        "kali": "Kali Linux",
-        "galliumos": "GalliumOS",
-        "opensuse-leap": "openSUSE Leap",
-        "fedora": "Fedora",
-        "ubuntu-core": "Ubuntu Core",
-        "linuxmint": "Linux Mint",
-        "parrot": "Parrot OS",
-        "centos": "CentOS",
-        "ubuntu": "Ubuntu",
-        "arch": "Arch Linux",
-        "debian": "Debian",
-        "elementary": "elementary OS",
-        "neon": "KDE Neon",
-        "manjaro": "Manjaro",
-        "zorin": "Zorin OS",
-    }
+    slug, version = _split_os_name(os_name)
+    name = OS_NAMES.get(slug, slug)
 
-    name, version = os_name.rsplit("/", 1)
+    return f"{name} {version}" if version else name
 
-    if version != "-":
-        return " ".join([capitalized_oses.get(name, name), version])
-    else:
-        return capitalized_oses.get(name, name)
+
+def _rank(items):
+    """Competition-rank items already sorted by value, descending
+
+    Tied values share a rank: 1, 2, 2, 4.
+    """
+    previous = None
+    for position, item in enumerate(items, start=1):
+        if item["value"] != previous:
+            rank, previous = position, item["value"]
+        item["rank"] = rank
 
 
 class Metric(object):
@@ -292,25 +313,59 @@ class OsMetric(Metric):
     :var series: The series dictionary from the metric
     :var buckets: The buckets dictionary from the metric
     :var status: The status of the metric
-    :var os: Dictionary with informations per os"""
+    :var os_tree: Distros with their versions, ordered and ranked by usage
+    """
 
     def __init__(self, name, series, buckets, status):
         super().__init__(name, series, buckets, status)
 
-        self.os = self._build_os_info()
+        self.os_tree = self._build_os_tree()
 
-    def _build_os_info(self):
-        """Build information for OS distro graph
+    def _build_os_tree(self):
+        """Build a distro -> version hierarchy for the distro chart
 
-        :returns: A list with the sorted distros
+        The metric is a normalised index (most-used entry = 1.0), not a
+        share of users, so a distro's ``value`` is its best version and
+        ranks are computed across the snap for versions and across
+        distros for distros.
+
+        :returns: A list of distros, most used first, each with its
+            versions as ``children``
         """
-        oses = []
+        distros = {}
 
-        for distro in self.series:
-            if distro["values"][0]:
-                name = _capitalize_os_name(distro["name"])
-                oses.append({"name": name, "value": distro["values"][-1]})
+        for entry in self.series:
+            value = entry["values"][-1]
+            if not value:
+                continue
 
-        oses.sort(key=lambda x: x["value"], reverse=True)
+            slug, version = _split_os_name(entry["name"])
+            if slug not in distros:
+                distros[slug] = {
+                    "name": OS_NAMES.get(slug, slug),
+                    "slug": slug,
+                    "children": [],
+                }
+            distros[slug]["children"].append(
+                {
+                    "name": version or distros[slug]["name"],
+                    "value": float(value),
+                }
+            )
 
-        return oses
+        tree = list(distros.values())
+        for distro in tree:
+            distro["children"].sort(key=lambda v: v["value"], reverse=True)
+            distro["value"] = distro["children"][0]["value"]
+        tree.sort(key=lambda d: d["value"], reverse=True)
+
+        _rank(tree)
+        _rank(
+            sorted(
+                (v for d in tree for v in d["children"]),
+                key=lambda v: v["value"],
+                reverse=True,
+            )
+        )
+
+        return tree
