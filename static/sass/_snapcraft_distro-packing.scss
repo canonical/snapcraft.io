@@ -1,0 +1,61 @@
+@mixin snapcraft-distro-packing {
+  .snapcraft-distro-packing {
+    position: relative;
+
+    &__svg {
+      display: block;
+      overflow: visible;
+    }
+
+    circle {
+      stroke: $color-x-light;
+      stroke-width: 2px;
+    }
+
+    &__version {
+      cursor: default;
+
+      circle {
+        transition: fill-opacity 0.1s;
+      }
+
+      &:hover circle {
+        fill-opacity: 0.85;
+      }
+    }
+
+    &__label {
+      fill: $color-dark;
+      font-size: 0.875rem;
+      pointer-events: none;
+    }
+
+    &__label--outside {
+      font-size: 0.8125rem;
+    }
+
+    &__value {
+      fill: $color-x-light;
+      pointer-events: none;
+    }
+
+    &__legend {
+      margin-top: $sp-medium;
+
+      // items are appended without whitespace between them, so they need
+      // to be inline-block to wrap as a unit
+      .p-inline-list__item {
+        display: inline-block;
+        white-space: nowrap;
+      }
+    }
+
+    &__swatch {
+      @include snapcraft-chart-swatch($sp-small);
+    }
+
+    &__tooltip {
+      @include snapcraft-chart-tooltip;
+    }
+  }
+}
