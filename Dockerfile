@@ -28,8 +28,9 @@ ADD templates templates
 ADD vitePluginDetectInput.js .
 RUN yarn install
 RUN yarn run build
-# The final image excludes node_modules, so copy icon files instead of the dev symlink.
+# The final image excludes node_modules, so copy icon/font files instead of the dev symlinks.
 RUN rm -rf static/icons && cp -r node_modules/@canonical/ds-assets/icons static/icons
+RUN rm -rf static/fonts && cp -r node_modules/@canonical/ds-assets/fonts static/fonts
 
 # Build the production image
 # ===
@@ -50,6 +51,7 @@ ADD . .
 RUN rm -rf package.json yarn.lock .babelrc requirements.txt
 COPY --from=build /srv/static/js static/js
 COPY --from=build /srv/static/icons static/icons
+COPY --from=build /srv/static/fonts static/fonts
 
 # Write static/llms.txt and static/llms-full.txt from the pages
 # found in the routing table

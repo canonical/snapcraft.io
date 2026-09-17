@@ -1,7 +1,4 @@
-// Still need to use the `Icon` from `react-components`
-// until the `IconButton` component is ready in Pragma
-import { Icon as ReactComponentsIcon } from "@canonical/react-components";
-import { Card, Button } from "@canonical/react-ds-global";
+import { Card, Button, Icon } from "@canonical/react-ds-global";
 
 import type { TooltipRenderProps } from "react-joyride";
 
@@ -18,18 +15,14 @@ function TourStep(props: TooltipRenderProps): React.JSX.Element {
   } = props;
 
   return (
-    <Card style={{ border: "none" }}>
+    <Card style={{ border: "none", backgroundColor: "#fff" }}>
       <Card.Content>
         <h4>{step.title}</h4>
         {step.content}
         <div style={{ display: "flex", justifyContent: "space-between" }}>
           <div>
             Done?{" "}
-            <Button
-              variant="link"
-              className="u-no-margin--bottom"
-              {...closeProps}
-            >
+            <Button variant="link" {...closeProps}>
               Skip tour
             </Button>
             .
@@ -45,9 +38,9 @@ function TourStep(props: TooltipRenderProps): React.JSX.Element {
               className="u-no-margin--bottom"
               style={{ marginLeft: "1rem" }}
               importance="secondary"
+              aria-label={backProps.title}
             >
-              <ReactComponentsIcon name="chevron-left" />
-              <span className="u-off-screen">{backProps.title}</span>
+              <Icon icon="chevron-left" />
             </Button>
 
             {continuous && (
@@ -56,14 +49,13 @@ function TourStep(props: TooltipRenderProps): React.JSX.Element {
                 anticipation="constructive"
                 {...primaryProps}
                 className="u-no-margin--bottom u-no-margin--right"
+                aria-label={isLastStep ? undefined : primaryProps.title}
+                style={{ marginLeft: "1rem" }}
               >
                 {isLastStep ? (
                   <>Finish tour</>
                 ) : (
-                  <>
-                    <ReactComponentsIcon name="chevron-right" light />
-                    <span className="u-off-screen">{primaryProps.title}</span>
-                  </>
+                  <Icon icon="chevron-right" color="#fff" />
                 )}
               </Button>
             )}

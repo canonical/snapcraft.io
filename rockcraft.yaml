@@ -33,9 +33,11 @@ parts:
       # write static/llms.txt from the staged Python dependencies
       export PYTHONPATH="$(ls -d "$CRAFT_STAGE"/lib/python3*/site-packages)"
       yarn run build-llms-txt
-      # The final image excludes node_modules, so copy icon files instead of the dev symlink.
+      # The final image excludes node_modules, so copy icon/font files instead of the dev symlinks.
       rm -rf static/icons
       cp -r node_modules/@canonical/ds-assets/icons static/icons
+      rm -rf static/fonts
+      cp -r node_modules/@canonical/ds-assets/fonts static/fonts
       mkdir -p "$CRAFT_PART_INSTALL/flask/app"
       cp -r static "$CRAFT_PART_INSTALL/flask/app/"
     prime:

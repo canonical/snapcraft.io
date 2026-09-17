@@ -1,12 +1,11 @@
 import { useState, useEffect } from "react";
 import {
-  Button,
   MainTable,
   TablePaginationControls,
   Input,
   CheckboxInput,
 } from "@canonical/react-components";
-import { Icon } from "@canonical/react-ds-global";
+import { Button } from "@canonical/react-ds-global";
 import { format } from "date-fns";
 
 import type { Remodel } from "../../types/shared";
@@ -188,28 +187,24 @@ function RemodelTable({
               />
               {isDirty && (
                 <div className="u-align--right">
-                  <Button disabled={isBusy} onClick={() => onEditCancel(rowId)}>
+                  <Button
+                    importance="secondary"
+                    disabled={isBusy}
+                    onClick={() => onEditCancel(rowId)}
+                  >
                     Revert
                   </Button>
                   <Button
-                    appearance="positive"
+                    importance="primary"
+                    anticipation="constructive"
                     disabled={isBusy}
-                    className="u-no-margin--right"
                     onClick={() => {
                       onEditSave(remodel);
                     }}
+                    loading={isSavingEdit}
+                    style={{ marginLeft: "1rem" }}
                   >
-                    Save
-                    {isSavingEdit && (
-                      <>
-                        &nbsp;
-                        <Icon
-                          icon="spinner"
-                          color="white"
-                          className="u-animation--spin"
-                        />
-                      </>
-                    )}
+                    {isSavingEdit ? "Saving" : "Save"}
                   </Button>
                 </div>
               )}
