@@ -26,12 +26,6 @@ $font-monospace: '"Ubuntu Sans Mono", "Ubuntu Mono", ui-monospace, "SF Mono", Me
     format("woff2-variations");
 }
 
-// Tooltip doesn't have a `z-index` by default
-// causing it to get hidden behind certain elements
-.ds.tooltip {
-  z-index: 10;
-}
-
 @layer vanilla {
   // colour definitions
   $ubuntu-orange: #e95420;
@@ -598,11 +592,4 @@ $font-monospace: '"Ubuntu Sans Mono", "Ubuntu Mono", ui-monospace, "SF Mono", Me
       fill: $colors--theme--background-default;
     }
   }
-}
-
-// Unlayered CSS from some @canonical/react-components side-effect imports
-// (e.g. ColumnSelector.scss's own `.p-icon--{name}` rule) beats our layered
-// Vanilla styles regardless of specificity, so pin this outside @layer too.
-.p-side-navigation--icons .p-side-navigation__icon {
-  position: absolute;
 }
