@@ -12,14 +12,12 @@ import sentry_sdk
 from flask import send_from_directory
 
 from canonicalwebteam.flask_base.app import FlaskBase
-from canonicalwebteam.markdown_response import MarkdownResponse
 from webapp.blog.views import init_blog
 from webapp.docs.views import init_docs
 from webapp.extensions import csrf, vite
 from webapp.handlers import set_handlers
 from webapp.login.views import login
-from webapp import markdown_suffix
-from webapp.markdown_suffix import MarkdownSuffix
+from webapp.llms import store_llm
 from webapp.login.oauth_views import oauth
 from webapp.publisher.snaps.views import publisher_snaps
 from webapp.publisher.github.views import publisher_github
@@ -80,15 +78,8 @@ def create_app(testing=False):
     init_extensions(app)
     set_handlers(app)
 
-    # Serve any page as Markdown at /page.md
-    MarkdownSuffix(app)
-    MarkdownResponse(
-        app,
-        query_param=markdown_suffix.QUERY_PARAM,
-        query_value=markdown_suffix.QUERY_VALUE,
-        strip_elements=markdown_suffix.STRIP_ELEMENTS,
-        strip_classes=markdown_suffix.STRIP_CLASSES,
-    )
+    # Serve any page as Markdown at /page.md and llms.txt
+    store_llm.init_app(app)
 
     app.register_blueprint(snapcraft_blueprint())
     app.register_blueprint(store_packages)

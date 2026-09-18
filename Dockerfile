@@ -53,7 +53,7 @@ COPY --from=build /srv/static/icons static/icons
 
 # Write static/llms.txt and static/llms-full.txt from the pages
 # found in the routing table
-RUN python3 scripts/generate_llms_txt.py
+RUN python3 -m canonicalwebteam.store_llm generate webapp.app:create_app
 
 # Setup commands to run server
 ENTRYPOINT ["./entrypoint"]
