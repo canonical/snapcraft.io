@@ -1,38 +1,8 @@
-import os
-
 import flask
 
 from webapp.config import DEFAULT_ICON_URL
-from webapp.site_pages import (
-    BASE_URL,
-    render_llms_full_txt,
-    render_llms_txt,
-    sitemap_paths,
-)
+from webapp.llms import BASE_URL, store_llm
 from webapp.snapcraft import logic
-
-LLMS_TXT_FILE = "llms.txt"
-LLMS_FULL_TXT_FILE = "llms-full.txt"
-
-
-def generated_file(name):
-    path = os.path.join(flask.current_app.static_folder, name)
-
-    if not os.path.exists(path):
-        return None
-
-    with open(path) as generated:
-        return generated.read()
-
-
-def llms_txt_body():
-    return generated_file(LLMS_TXT_FILE) or render_llms_txt(flask.current_app)
-
-
-def llms_full_txt_body():
-    return generated_file(LLMS_FULL_TXT_FILE) or render_llms_full_txt(
-        flask.current_app
-    )
 
 
 def snapcraft_blueprint():
@@ -503,8 +473,7 @@ def snapcraft_blueprint():
     @snapcraft.route("/sitemap-links.xml")
     def sitemap_links():
         links = [
-            {"url": BASE_URL + path}
-            for path in sitemap_paths(flask.current_app)
+            {"url": BASE_URL + path} for path in store_llm.sitemap_paths()
         ]
 
         xml_sitemap = flask.render_template(
@@ -517,23 +486,5 @@ def snapcraft_blueprint():
         response.headers["Cache-Control"] = "public, max-age=43200"
 
         return response
-
-    def plain_text(content):
-        response = flask.make_response(content)
-        response.headers["Content-Type"] = "text/plain; charset=utf-8"
-        response.headers["Cache-Control"] = (
-            "public, max-age=43200, stale-while-revalidate=300, "
-            "stale-if-error=86400"
-        )
-
-        return response
-
-    @snapcraft.route("/llms.txt")
-    def llms_txt():
-        return plain_text(llms_txt_body())
-
-    @snapcraft.route("/llms-full.txt")
-    def llms_full_txt():
-        return plain_text(llms_full_txt_body())
 
     return snapcraft
