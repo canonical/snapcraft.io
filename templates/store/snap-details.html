@@ -237,82 +237,33 @@
     {% include "store/snap-details/_distro-instructions-for-snap-support.html" %}
   {% endif %}
 
-  {% if countries or normalized_os %}
+  {% if countries or os_tree %}
     <div data-live="public_metrics_live" data-md-strip>
       <div class="{% if has_publisher_page %}p-section{% else %}p-section--deep{% endif %}">
         <div class="u-fixed-width">
           <hr>
           <h2>Where people are using {{ snap_title }}</h2>
         </div>
-        <div class="grid-row {% if normalized_os %}u-equal-height{% endif %}">
-          {% if countries %}
-            <div class="{% if normalized_os %}grid-col-4{% else %}grid-col-6{% endif %} grid-col-start-large-3 js-snap-map-holder" data-live="installed_base_by_country_percent" data-analytics-view data-analytics-hover data-analytics-target="details_map_installed_base_by_country_percent" >
-              <div id="js-snap-map" class="snapcraft-territories"></div>
-            </div>
-          {% endif %}
-          {% if normalized_os %}
-            <div class="{% if countries %}grid-col-2{% else %}grid-col-4 grid-col-start-large-5{% endif %}">
-              <div class="js-sschart-holder" data-live="weekly_installed_base_by_operating_system_normalized">
-                <h3 class="p-muted-heading">Users by distribution (log)</h3>
-                {% set list_limit = 15 %}{# keep the limit in sync with height of the map #}
-                {% if normalized_os|length > list_limit + 1 %}
-                <div class="snapcraft-distro-chart">
-                  <div class="snapcraft-distro-chart__names">
-                    {% for distro in normalized_os[:list_limit] %}
-                    <div class="snapcraft-distro-chart__name" title="{{ distro.name }}">{{ distro.name }}</div>
-                    {% endfor %}
-                  </div>
-                  <div class="snapcraft-distro-chart__bars">
-                    {% for distro in normalized_os[:list_limit] %}
-                      <div
-                        class="snapcraft-distro-chart__bar"
-                        style="width: {{ distro.value * 100 }}%;"
-                      ></div>
-                    {% endfor %}
-                  </div>
-                  <div class="p-show-more is-collapsed" data-js="js-show-more">
-                    <div>{# single wrapper expected by show more JS/CSS #}
-                      <div class="snapcraft-distro-chart__names">
-                        {% for distro in normalized_os[list_limit:] %}
-                        <div class="snapcraft-distro-chart__name" title="{{ distro.name }}">{{ distro.name }}</div>
-                        {% endfor %}
-                      </div>
-                      <div class="snapcraft-distro-chart__bars">
-                        {% for distro in normalized_os[list_limit:] %}
-                          <div
-                            class="snapcraft-distro-chart__bar"
-                            style="width: {{ distro.value * 100 }}%;"
-                          ></div>
-                        {% endfor %}
-                      </div>
-                    </div>
-                    <div class="p-show-more__fade">
-                      <div class="p-show-more__link-container">
-                        <button class="p-button--link p-show-more__link is-small u-no-padding" aria-expanded="false" data-analytics-click data-analytics-target="details_map_show_more_distributions">Show more</button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                {% else %}
-                <div class="snapcraft-distro-chart">
-                  <div class="snapcraft-distro-chart__names">
-                    {% for distro in normalized_os %}
-                    <div class="snapcraft-distro-chart__name" title="{{ distro.name }}">
-                      {{ distro.name }}</div>
-                    {% endfor %}
-                  </div>
-                  <div class="snapcraft-distro-chart__bars">
-                    {% for distro in normalized_os %}
-                    <div class="snapcraft-distro-chart__bar"
-                      style="width: {{ distro.value * 100 }}%;"></div>
-                    {% endfor %}
-                  </div>
-                </div>
-                {% endif %}
-              </div>
-            </div>
-          {% endif %}
+        {% if countries %}
+        <div class="grid-row {% if os_tree %}u-sv3{% endif %}">
+          <div class="grid-col-6 grid-col-start-large-3 js-snap-map-holder" data-live="installed_base_by_country_percent" data-analytics-view data-analytics-hover data-analytics-target="details_map_installed_base_by_country_percent" >
+            <div id="js-snap-map" class="snapcraft-territories"></div>
+          </div>
         </div>
+        {% endif %}
+        {% if os_tree %}
+        <div class="grid-row">
+          <div class="grid-col-6 grid-col-start-large-3 js-snap-distro-holder" data-live="weekly_installed_base_by_operating_system_normalized">
+            <h3 class="p-muted-heading">Across {{ os_tree|length }} distribution{% if os_tree|length != 1 %}s{% endif %}</h3>
+            <p class="p-text--small u-text--muted">Relative usage across the ecosystem compared to user base (log10 scale)</p>
+            <div id="js-snap-distro-chart" class="snapcraft-distro-packing"></div>
+            <p class="p-text--small u-text--muted u-sv1">
+              Circle sizes show how widely each distribution and version is used compared with the others, on a logarithmic scale.
+              Hover a circle to see where it ranks. The store does not publish exact user numbers or percentages for operating systems.
+            </p>
+          </div>
+        </div>
+        {% endif %}
       </div>
     </div>
   {% endif %}
@@ -453,6 +404,15 @@
         } catch(e) {
           Sentry.captureException(e);
           document.querySelector('.js-snap-map-holder').style.display = 'none';
+        }
+      {% endif %}
+
+      {% if os_tree %}
+        try {
+          snapcraft.public.storeDetails.distroChart('#js-snap-distro-chart', {{ os_tree | tojson }});
+        } catch(e) {
+          Sentry.captureException(e);
+          document.querySelector('.js-snap-distro-holder').style.display = 'none';
         }
       {% endif %}
 

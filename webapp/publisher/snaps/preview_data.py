@@ -1,3 +1,6 @@
+from webapp.metrics.metrics import OsMetric
+
+
 def get_countries():
     return {
         "533": {
@@ -1497,25 +1500,28 @@ def get_countries():
     }
 
 
-def get_normalised_oses():
-    return [
-        {"name": "ubuntu 18.04", "value": 1.0},
-        {"name": "ubuntu 16.04", "value": 0.9},
-        {"name": "ubuntu 18.10", "value": 0.875},
-        {"name": "ubuntu 17.10", "value": 0.725},
-        {"name": "fedora 29", "value": 0.675},
-        {"name": "linuxmint 18.3", "value": 0.65},
-        {"name": "linuxmint 19", "value": 0.65},
-        {"name": "elementary 5.0", "value": 0.65},
-        {"name": "linuxmint 19.1", "value": 0.625},
-        {"name": "debian 9", "value": 0.625},
-        {"name": "neon 18.04", "value": 0.625},
-        {"name": "zorin 12", "value": 0.625},
-        {"name": "elementary 0.4.1", "value": 0.6},
-        {"name": "fedora 28", "value": 0.6},
-        {"name": "ubuntu 14.04", "value": 0.575},
-        {"name": "manjaro", "value": 0.575},
-        {"name": "linuxmint 18.2", "value": 0.55},
-        {"name": "ubuntu 19.04", "value": 0.55},
-        {"name": "ubuntu 17.04", "value": 0.55},
+def get_os_tree():
+    """Preview fixture in the raw metric shape, built with the real builder
+    so the preview and the store page can't drift apart"""
+    series = [
+        {"name": "ubuntu/18.04", "values": [1.0]},
+        {"name": "ubuntu/16.04", "values": [0.9]},
+        {"name": "ubuntu/18.10", "values": [0.875]},
+        {"name": "ubuntu/17.10", "values": [0.725]},
+        {"name": "fedora/29", "values": [0.675]},
+        {"name": "linuxmint/18.3", "values": [0.65]},
+        {"name": "linuxmint/19", "values": [0.65]},
+        {"name": "elementary/5.0", "values": [0.65]},
+        {"name": "linuxmint/19.1", "values": [0.625]},
+        {"name": "debian/9", "values": [0.625]},
+        {"name": "neon/18.04", "values": [0.625]},
+        {"name": "zorin/12", "values": [0.625]},
+        {"name": "elementary/0.4.1", "values": [0.6]},
+        {"name": "fedora/28", "values": [0.6]},
+        {"name": "ubuntu/14.04", "values": [0.575]},
+        {"name": "manjaro/-", "values": [0.575]},
+        {"name": "linuxmint/18.2", "values": [0.55]},
+        {"name": "ubuntu/19.04", "values": [0.55]},
+        {"name": "ubuntu/17.04", "values": [0.55]},
     ]
+    return OsMetric(None, series, None, None).os_tree

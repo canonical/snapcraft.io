@@ -1,4 +1,5 @@
 import map from "./snap-details/map";
+import distroChart from "./snap-details/distroChart";
 import screenshots from "./snap-details/screenshots";
 import channelMap from "./snap-details/channelMap";
 import videos from "./snap-details/videos";
@@ -18,6 +19,7 @@ applyDesktopStoreSupport();
 
 declareGlobal("snapcraft.public.storeDetails", {
   map,
+  distroChart,
   screenshots,
   channelMap,
   snapDetailsPosts,

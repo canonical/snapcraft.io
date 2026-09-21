@@ -94,6 +94,6 @@ def post_preview(snap_name):
 
     # maps
     context["countries"] = preview_data.get_countries()
-    context["normalized_os"] = preview_data.get_normalised_oses()
+    context["os_tree"] = preview_data.get_os_tree()
 
     return flask.render_template("store/snap-details.html", **context)

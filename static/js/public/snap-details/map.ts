@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import { select, pointer, Selection, BaseType } from "d3-selection";
+import { select, Selection, BaseType } from "d3-selection";
 import { json } from "d3-fetch";
 import { geoNaturalEarth1, geoPath } from "d3-geo";
 import { feature, mesh } from "topojson-client";
@@ -8,6 +8,8 @@ import { GeoJsonProperties } from "geojson";
 import { Topology, Objects } from "topojson-specification";
 
 import type { TerritoriesMetricsData } from "../../publisher/types/shared";
+import chartTooltip from "./chartTooltip";
+import debounce from "../../libs/debounce";
 
 export default function renderMap(
   el: string,
@@ -47,13 +49,7 @@ export default function renderMap(
 
     const svg = mapEl.append("svg").attr("width", width).attr("height", height);
 
-    const tooltip = mapEl
-      .append("div")
-      .attr("class", "snapcraft-territories__tooltip u-no-margin");
-
-    const tooltipMsg = tooltip
-      .append("div")
-      .attr("class", "p-tooltip__message");
+    const tooltip = chartTooltip(mapEl, "snapcraft-territories__tooltip");
 
     // @ts-expect-error
     const countries = feature(world, world.objects.countries).features;
@@ -114,14 +110,10 @@ export default function renderMap(
         return d.properties.name;
       })
       .on("mousemove", (event) => {
-        const pos = pointer(event, event.currentTarget);
         const countrySnapData = snapData[event.currentTarget.id];
 
         if (countrySnapData) {
-          tooltip
-            .style("top", pos[1] + "px")
-            .style("left", pos[0] + "px")
-            .style("display", "block");
+          tooltip.move(event);
 
           const content = [
             '<span class="u-no-margin--top">',
@@ -131,7 +123,7 @@ export default function renderMap(
             content.push(`<br />${countrySnapData["number_of_users"]} active`);
           }
           content.push("</span>");
-          tooltipMsg.html(
+          tooltip.show(
             `<span
                class="snapcraft-territories__swatch"
                style="background-color: rgb(${countrySnapData.color_rgb[0]}, ${
@@ -141,9 +133,7 @@ export default function renderMap(
           );
         }
       })
-      .on("mouseout", function () {
-        tooltip.style("display", "none");
-      });
+      .on("mouseout", tooltip.hide);
 
     g.append("path")
       .datum(
@@ -159,13 +149,9 @@ export default function renderMap(
   function ready(world: Topology<Objects<GeoJsonProperties>>) {
     render(mapEl, snapData, world);
 
-    let resizeTimeout: string | number | NodeJS.Timeout | undefined;
-
-    window.addEventListener("resize", () => {
-      clearTimeout(resizeTimeout);
-      resizeTimeout = setTimeout(function () {
-        render(mapEl, snapData, world);
-      }, 100);
-    });
+    window.addEventListener(
+      "resize",
+      debounce(() => render(mapEl, snapData, world), 100),
+    );
   }
 }

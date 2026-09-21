@@ -45,6 +45,7 @@ $color-social-icon-foreground: $color-light;
 // Needs some TLC with the new code styling
 @import "patterns_annotated_code";
 @include p-annotated-code;
+@import "snapcraft_chart-tooltip";
 @import "map";
 @include snap-details-map;
 
@@ -80,8 +81,8 @@ $color-social-icon-foreground: $color-light;
 @include snapcraft-p-auditable;
 @import "snapcraft_p-notifications";
 @include snapcraft-p-notification;
-@import "snapcraft_distro-chart";
-@include snapcraft-distro-chart;
+@import "snapcraft_distro-packing";
+@include snapcraft-distro-packing;
 @import "snapcraft_p-verified";
 @include snapcraft-p-verified;
 @import "utilities_crop";
