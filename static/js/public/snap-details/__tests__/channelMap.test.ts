@@ -293,39 +293,21 @@ describe("Channel map popup", () => {
       setupChannelMap(channelMapDataWithSboms);
     });
 
-    test("security tab shows SBOM download links", async () => {
-      const user = userEvent.setup();
-      const securityTab = document.querySelector<HTMLElement>(
-        "#channel-map-security-tab",
-      )!;
-
-      await user.click(securityTab);
-
-      const securityTable = document.querySelector(
-        ".p-channel-map__security-table",
-      )!;
+    test("does not render a separate security tab", () => {
       const versionTable = document.querySelector(
         ".p-channel-map__version-table",
       )!;
-      const securityTableBody = document.querySelector(
-        '[data-js="channel-map-security-table"]',
+      const versionTableBody = document.querySelector(
+        '[data-js="channel-map-table"]',
       )!;
-      const sbomDownloadLink = securityTableBody.querySelector("a")!;
-      const sbomRow = sbomDownloadLink.closest("tr")!;
 
-      expect(securityTable).not.toHaveClass("u-hide");
-      expect(securityTable).toHaveAttribute("aria-hidden", "false");
-      expect(versionTable).toHaveClass("u-hide");
-      expect(versionTable).toHaveAttribute("aria-hidden", "true");
-      expect(sbomRow).toHaveTextContent("latest/stable");
-      expect(sbomRow).toHaveTextContent("1.0-amd64");
-      expect(sbomRow).toHaveTextContent("1");
-      expect(sbomDownloadLink).toHaveTextContent("SPDX file");
-      expect(sbomDownloadLink).toHaveAttribute(
-        "href",
-        "https://example.com/test.spdx.json",
-      );
-      expect(sbomDownloadLink).toHaveAttribute("download");
+      expect(document.querySelector("#channel-map-security-tab")).toBeNull();
+      expect(
+        document.querySelector(".p-channel-map__security-table"),
+      ).toBeNull();
+      expect(versionTable).toHaveAttribute("aria-hidden", "false");
+      expect(versionTableBody).toHaveTextContent("latest/stable");
+      expect(versionTableBody).toHaveTextContent("1.0-amd64");
     });
   });
 });
