@@ -127,3 +127,8 @@ config:
       description: "Optional status message displayed as a banner across the site. Leave empty to show no banner."
       default: ""
       type: string
+
+resources:
+  flask-app-image:
+    type: oci-image
+    description: OCI image for the Flask application
