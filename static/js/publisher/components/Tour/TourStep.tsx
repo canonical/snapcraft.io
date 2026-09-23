@@ -15,7 +15,12 @@ function TourStep(props: TooltipRenderProps): React.JSX.Element {
   } = props;
 
   return (
-    <Card style={{ border: "none", backgroundColor: "#fff" }}>
+    <Card
+      style={{
+        border: "none",
+        backgroundColor: "var(--color-background-layer3)",
+      }}
+    >
       <Card.Content>
         <h4>{step.title}</h4>
         {step.content}

@@ -198,7 +198,7 @@ function PoliciesTable({
               <Button
                 className="u-no-margin--bottom u-no-margin--right"
                 importance="primary"
-                anticipation="constructive"
+                anticipation="destructive"
                 disabled={isLoading}
                 onClick={() => {
                   deletePolicy(selectedPolicy);
