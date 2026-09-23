@@ -2,13 +2,8 @@ import { SetStateAction, useState, Dispatch } from "react";
 import { useAtomValue, useAtom } from "jotai";
 import { useParams } from "react-router-dom";
 import { format } from "date-fns";
-import {
-  MainTable,
-  Button,
-  Modal,
-  TablePagination,
-} from "@canonical/react-components";
-import { Icon } from "@canonical/react-ds-global";
+import { MainTable, Modal, TablePagination } from "@canonical/react-components";
+import { Button } from "@canonical/react-ds-global";
 
 import { sortByDateDescending } from "../../utils";
 import { usePolicies } from "../../hooks";
@@ -143,6 +138,7 @@ function PoliciesTable({
           content: (
             <Button
               className="u-no-margin--bottom"
+              importance="secondary"
               onClick={() => {
                 setSelectedPolicy(policy.revision);
                 setShowModal(true);
@@ -190,6 +186,7 @@ function PoliciesTable({
             <>
               <Button
                 className="u-no-margin--bottom"
+                importance="secondary"
                 disabled={isLoading}
                 onClick={() => {
                   setSelectedPolicy(undefined);
@@ -200,20 +197,18 @@ function PoliciesTable({
               </Button>
               <Button
                 className="u-no-margin--bottom u-no-margin--right"
-                appearance="positive"
+                importance="primary"
+                anticipation="destructive"
                 disabled={isLoading}
                 onClick={() => {
                   deletePolicy(selectedPolicy);
                 }}
+                loading={isLoading}
+                style={{
+                  marginLeft: "1rem",
+                }}
               >
-                {isLoading ? (
-                  <>
-                    <Icon icon="spinner" className="u-animation--spin" />
-                    &nbsp;Deleting policy...
-                  </>
-                ) : (
-                  "Delete policy"
-                )}
+                {isLoading ? "Deleting policy" : "Delete policy"}
               </Button>
             </>
           }

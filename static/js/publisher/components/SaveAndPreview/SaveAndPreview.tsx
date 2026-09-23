@@ -150,7 +150,7 @@ function SaveAndPreview({
                 disabled={!isDirty || isSaving}
                 type="submit"
                 // Needed so save loading button doesn't cause a jump
-                style={{ width: "68px" }}
+                style={{ marginLeft: "1rem" }}
                 loading={isSaving}
                 data-js="save-and-preview-save"
               >

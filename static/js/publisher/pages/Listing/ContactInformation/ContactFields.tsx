@@ -36,15 +36,17 @@ function ContactFields({
             <label htmlFor={fieldName}>{labelName}:</label>
           </Col>
           <Col size={5}>
-            <Button
-              type="button"
-              variant="link"
-              onClick={() => {
-                append({ url: "" });
-              }}
-            >
-              +&nbsp;Add link
-            </Button>
+            <p>
+              <Button
+                type="button"
+                variant="link"
+                onClick={() => {
+                  append({ url: "" });
+                }}
+              >
+                +&nbsp;Add link
+              </Button>
+            </p>
           </Col>
         </Row>
       )}
@@ -73,9 +75,9 @@ function ContactFields({
               onClick={() => {
                 remove(index);
               }}
+              aria-label="Remove this link"
             >
               <Icon icon="delete" />
-              <span className="u-off-screen">Remove this link</span>
             </Button>
           </Col>
         </Row>
@@ -84,15 +86,17 @@ function ContactFields({
       {fields.length > 0 && (
         <Row>
           <Col size={5} emptyLarge={3}>
-            <Button
-              type="button"
-              variant="link"
-              onClick={() => {
-                append({ url: "" });
-              }}
-            >
-              +&nbsp;Add link
-            </Button>
+            <p>
+              <Button
+                type="button"
+                variant="link"
+                onClick={() => {
+                  append({ url: "" });
+                }}
+              >
+                +&nbsp;Add link
+              </Button>
+            </p>
           </Col>
         </Row>
       )}
