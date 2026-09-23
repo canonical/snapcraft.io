@@ -437,7 +437,11 @@
 <a name='L372'></a><a href='#L372'>372</a>
 <a name='L373'></a><a href='#L373'>373</a>
 <a name='L374'></a><a href='#L374'>374</a>
-<a name='L375'></a><a href='#L375'>375</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L375'></a><a href='#L375'>375</a>
+<a name='L376'></a><a href='#L376'>376</a>
+<a name='L377'></a><a href='#L377'>377</a>
+<a name='L378'></a><a href='#L378'>378</a>
+<a name='L379'></a><a href='#L379'>379</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -684,6 +688,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -722,10 +727,12 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -744,6 +751,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1041,7 +1049,7 @@ function ImageUpload({
                     height: `${previewHeight}px`,
                   }}
                 &gt;
-                  &lt;Icon icon="plus"&gt;Add image&lt;/Icon&gt;
+                  &lt;Icon icon="plus" /&gt;
                 &lt;/div&gt;
               )}
               &lt;input
@@ -1052,6 +1060,7 @@ function ImageUpload({
                 }}
                 type="file"
                 accept={fileTypes}
+                aria-label="Add image"
                 {...register(imageFieldKey, {
                   onChange: <span class="fstat-no" title="function not covered" >(</span>
                     e: SyntheticEvent&lt;HTMLInputElement&gt; &amp; {
@@ -1079,9 +1088,10 @@ function ImageUpload({
                   setPreviewImageUrl("");
                 }}
                 importance={darkThemeEnabled ? <span class="branch-0 cbranch-no" title="branch not covered" >"primary" : "</span>tertiary"}
+                aria-label={`Remove ${type}`}
+                style={{ backgroundColor: "transparent" }}
               &gt;
                 &lt;Icon icon="delete" /&gt;
-                &lt;span className="u-off-screen"&gt;Remove {type}&lt;/span&gt;
               &lt;/Button&gt;
             )}
           &lt;/div&gt;
@@ -1113,29 +1123,31 @@ function ImageUpload({
 &nbsp;
         {helpText &amp;&amp; &lt;div className="p-form-help-text"&gt;{helpText}&lt;/div&gt;}
 &nbsp;
-        &lt;Button
-          type="button"
-          variant="link"
-          onClick={<span class="fstat-no" title="function not covered" >() =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >            setShowImageRestrictions(!showImageRestrictions);</span>
-          }}
-        &gt;
-          &lt;small&gt;
-            {showImageRestrictions &amp;&amp; (
-<span class="branch-1 cbranch-no" title="branch not covered" >              &lt;&gt;</span>
-                Hide image restrictions{" "}
-                &lt;span className="u-off-screen"&gt;for {type}&lt;/span&gt;
-              &lt;/&gt;
-            )}
+        &lt;p&gt;
+          &lt;Button
+            type="button"
+            variant="link"
+            onClick={<span class="fstat-no" title="function not covered" >() =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >              setShowImageRestrictions(!showImageRestrictions);</span>
+            }}
+          &gt;
+            &lt;small&gt;
+              {showImageRestrictions &amp;&amp; (
+<span class="branch-1 cbranch-no" title="branch not covered" >                &lt;&gt;</span>
+                  Hide image restrictions{" "}
+                  &lt;span className="u-off-screen"&gt;for {type}&lt;/span&gt;
+                &lt;/&gt;
+              )}
 &nbsp;
-            {!showImageRestrictions &amp;&amp; (
-              &lt;&gt;
-                Show image restrictions{" "}
-                &lt;span className="u-off-screen"&gt;for {type}&lt;/span&gt;
-              &lt;/&gt;
-            )}
-          &lt;/small&gt;
-        &lt;/Button&gt;
+              {!showImageRestrictions &amp;&amp; (
+                &lt;&gt;
+                  Show image restrictions{" "}
+                  &lt;span className="u-off-screen"&gt;for {type}&lt;/span&gt;
+                &lt;/&gt;
+              )}
+            &lt;/small&gt;
+          &lt;/Button&gt;
+        &lt;/p&gt;
         {showImageRestrictions &amp;&amp; (
 <span class="branch-1 cbranch-no" title="branch not covered" >          &lt;ul&gt;</span>
             &lt;li&gt;
@@ -1192,7 +1204,7 @@ export default ImageUpload;
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-09-22T22:07:27.552Z
+                at 2026-09-23T22:08:26.681Z
             </div>
         <script src="../../../../../prettify.js"></script>
         <script>

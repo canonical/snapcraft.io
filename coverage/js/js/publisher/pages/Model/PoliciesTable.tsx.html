@@ -290,17 +290,7 @@
 <a name='L225'></a><a href='#L225'>225</a>
 <a name='L226'></a><a href='#L226'>226</a>
 <a name='L227'></a><a href='#L227'>227</a>
-<a name='L228'></a><a href='#L228'>228</a>
-<a name='L229'></a><a href='#L229'>229</a>
-<a name='L230'></a><a href='#L230'>230</a>
-<a name='L231'></a><a href='#L231'>231</a>
-<a name='L232'></a><a href='#L232'>232</a>
-<a name='L233'></a><a href='#L233'>233</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L228'></a><a href='#L228'>228</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -441,6 +431,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -489,21 +480,20 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -531,13 +521,8 @@
 import { useAtomValue, useAtom } from "jotai";
 import { useParams } from "react-router-dom";
 import { format } from "date-fns";
-import {
-  MainTable,
-  Button,
-  Modal,
-  TablePagination,
-} from "@canonical/react-components";
-import { Icon } from "@canonical/react-ds-global";
+import { MainTable, Modal, TablePagination } from "@canonical/react-components";
+import { Button } from "@canonical/react-ds-global";
 &nbsp;
 import { sortByDateDescending } from "../../utils";
 import { usePolicies } from "../../hooks";
@@ -672,6 +657,7 @@ function PoliciesTable({
           content: (
             &lt;Button
               className="u-no-margin--bottom"
+              importance="secondary"
               onClick={<span class="fstat-no" title="function not covered" >() =&gt; {</span>
 <span class="cstat-no" title="statement not covered" >                setSelectedPolicy(policy.revision);</span>
 <span class="cstat-no" title="statement not covered" >                setShowModal(true);</span>
@@ -719,6 +705,7 @@ function PoliciesTable({
             &lt;&gt;
               &lt;Button
                 className="u-no-margin--bottom"
+                importance="secondary"
                 disabled={isLoading}
                 onClick={<span class="fstat-no" title="function not covered" >() =&gt; {</span>
 <span class="cstat-no" title="statement not covered" >                  setSelectedPolicy(undefined);</span>
@@ -729,20 +716,18 @@ function PoliciesTable({
               &lt;/Button&gt;
               &lt;Button
                 className="u-no-margin--bottom u-no-margin--right"
-                appearance="positive"
+                importance="primary"
+                anticipation="destructive"
                 disabled={isLoading}
                 onClick={<span class="fstat-no" title="function not covered" >() =&gt; {</span>
 <span class="cstat-no" title="statement not covered" >                  deletePolicy(selectedPolicy);</span>
                 }}
+                loading={isLoading}
+                style={{
+                  marginLeft: "1rem",
+                }}
               &gt;
-                {isLoading ? (
-                  &lt;&gt;
-                    &lt;Icon icon="spinner" className="u-animation--spin" /&gt;
-                    &amp;nbsp;Deleting policy...
-                  &lt;/&gt;
-                ) : (
-                  "Delete policy"
-                )}
+                {isLoading ? "Deleting policy" : "Delete policy"}
               &lt;/Button&gt;
             &lt;/&gt;
           }
@@ -766,7 +751,7 @@ export default PoliciesTable;
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-09-22T22:07:27.552Z
+                at 2026-09-23T22:08:26.681Z
             </div>
         <script src="../../../../prettify.js"></script>
         <script>
