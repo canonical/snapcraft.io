@@ -606,3 +606,10 @@ $font-monospace: '"Ubuntu Sans Mono", "Ubuntu Mono", ui-monospace, "SF Mono", Me
 .p-side-navigation--icons .p-side-navigation__icon {
   position: absolute;
 }
+
+// A vendor component bundle's own `html { font-family: ... }` reset shares
+// our `vanilla` layer and loads after ours, so it wins on equal specificity;
+// reassert our font stack unlayered so it always wins instead.
+html {
+  font-family: unquote($font-base-family);
+}

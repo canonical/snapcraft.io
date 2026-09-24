@@ -1,9 +1,33 @@
 import react from "@vitejs/plugin-react-swc";
 import { defineConfig, loadEnv } from "vite";
 import autoprefixer from "autoprefixer";
+import postcss from "postcss";
 import vitePluginDetectInput from "./vitePluginDetectInput";
 
 const env = loadEnv("all", process.cwd());
+
+// @canonical/react-components and @canonical/store-components ship their own
+// Vanilla-derived .scss as JS side effects, so it never passes through our
+// styles.scss `@layer vanilla` wrap and builds unlayered - which then beats
+// every layered style regardless of specificity. Re-layer it here instead.
+const vendorComponentStylesPattern =
+  /node_modules\/@canonical\/(react|store)-components\//;
+
+const wrapVendorStylesInVanillaLayer = () => ({
+  postcssPlugin: "wrap-vendor-styles-in-vanilla-layer",
+  Once(root) {
+    const file = root.source?.input?.file || "";
+    if (!vendorComponentStylesPattern.test(file)) {
+      return;
+    }
+    const nodes = root.nodes.slice();
+    root.removeAll();
+    const layer = postcss.atRule({ name: "layer", params: "vanilla" });
+    layer.append(nodes);
+    root.append(layer);
+  },
+});
+wrapVendorStylesInVanillaLayer.postcss = true;
 
 export default defineConfig({
   plugins: [
@@ -32,7 +56,7 @@ export default defineConfig({
       },
     },
     postcss: {
-      plugins: [autoprefixer()],
+      plugins: [wrapVendorStylesInVanillaLayer(), autoprefixer()],
       map: false,
     },
   },
