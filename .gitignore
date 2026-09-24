@@ -81,3 +81,8 @@ cypress/screenshots/
 # Charming artifacts
 *.charm
 *.rock
+
+# sbomber artifacts
+pkgs/
+reports/
+.statefile.yaml
