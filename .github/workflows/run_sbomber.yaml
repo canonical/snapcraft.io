@@ -1,0 +1,22 @@
+name: Run sbomber action
+
+on:
+  workflow_dispatch:
+
+jobs:
+  run-sbomber:
+    runs-on:
+      [self-hosted, self-hosted-linux-amd64-jammy-private-endpoint-medium]
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Run sbomber composite action (SHA-pinned)
+        uses: canonical/sbomber/.github/actions/run@2b11503a3d840abadc50a9c14a7f0cc56e8b8096
+        with:
+          manifest: ${{ github.workspace }}/sbomber.yaml
+          artifact-name: sbomber-${{ github.run_id }}
+          sbomber-ref: 2b11503a3d840abadc50a9c14a7f0cc56e8b8096
