@@ -1,0 +1,21 @@
+@mixin snapcraft-p-pending-list {
+  .p-snapcraft-pending-list__item {
+    .p-snapcraft-pending-list__link {
+      display: none;
+    }
+
+    .p-snapcraft-pending-list__muted {
+      color: $color-mid;
+    }
+
+    .p-snapcraft-pending-list__icon {
+      display: inline-block;
+    }
+
+    &:hover {
+      .p-snapcraft-pending-list__link {
+        display: block;
+      }
+    }
+  }
+}
