@@ -13,7 +13,7 @@ artifacts:
     name: snapcraft-io
     charm_resource: flask-app-image
     charm: snapcraft-io
-    channel: stable
+    channel: latest/stable
     version: "" # autodetect
     ssdlc_params:
       name: snapcraft-io
@@ -23,7 +23,7 @@ artifacts:
   - type: charm
     name: snapcraft-io
     charm: snapcraft-io
-    channel: stable
+    channel: latest/stable
     version: "" # autodetect
     ssdlc_params:
       name: snapcraft-io
