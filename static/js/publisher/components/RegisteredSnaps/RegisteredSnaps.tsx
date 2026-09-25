@@ -31,9 +31,27 @@ function RegisteredSnaps({
     setUnregisterSnapModal(null);
   };
 
+  const PENDING_STATUS_LABELS: Record<string, string> = {
+    DisputePending: "Name dispute in progress",
+    ReviewPending: "Review pending",
+  };
+
+  const getStatusColumnValue = (snapStatus: string) => {
+    const label = PENDING_STATUS_LABELS[snapStatus];
+
+    if (label) {
+      return <span className="p-snapcraft-pending-list__muted">({label})</span>;
+    }
+
+    return (
+      <Link to="/docs/releasing-your-app" target="_blank">
+        Publish to this name
+      </Link>
+    );
+  };
+
   const getData = () => {
     return snaps.map((snap) => {
-      const isDisputePending = snap.status === "DisputePending";
       const isUsersSnap = snap.publisher.username === currentUser;
 
       return {
@@ -43,12 +61,12 @@ function RegisteredSnaps({
             content: (
               <>
                 {snap.snapName}
-                {isDisputePending && (
+                {PENDING_STATUS_LABELS[snap.status] && (
                   <>
                     &nbsp;
                     <i
-                      className="p-icon--warning p-snapcraft-dispute-list__icon"
-                      aria-label="Name dispute in progress"
+                      className="p-icon--warning p-snapcraft-pending-list__icon"
+                      aria-label={PENDING_STATUS_LABELS[snap.status]}
                     ></i>
                   </>
                 )}
@@ -87,19 +105,11 @@ function RegisteredSnaps({
             ),
           },
           {
-            content: isDisputePending ? (
-              <span className="p-snapcraft-dispute-list__muted">
-                (Name dispute in progress)
-              </span>
-            ) : (
-              <Link to="/docs/releasing-your-app" target="_blank">
-                Publish to this name
-              </Link>
-            ),
+            content: getStatusColumnValue(snap.status),
             className: "u-align--right",
           },
         ],
-        className: "p-snapcraft-dispute-list__item",
+        className: "p-snapcraft-pending-list__item",
       };
     });
   };

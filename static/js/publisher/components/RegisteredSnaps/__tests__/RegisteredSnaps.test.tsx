@@ -97,8 +97,34 @@ describe("RegisteredSnaps", () => {
         status: "DisputePending",
       },
     ]);
-    expect(screen.getByLabelText("Name dispute in progress")).not.toBeNull();
-    expect(screen.getByText("(Name dispute in progress)")).not.toBeNull();
+
+    expect(screen.getByText("(Name dispute in progress)")).toBeInTheDocument();
+    expect(
+      screen.getByLabelText("Name dispute in progress"),
+    ).toBeInTheDocument();
+  });
+
+  test("should show review pending label", () => {
+    renderComponent([
+      {
+        ...BASE_SNAP_DATA,
+        status: "ReviewPending",
+      },
+    ]);
+    expect(screen.getByText("(Review pending)")).toBeInTheDocument();
+    expect(screen.getByLabelText("Review pending")).toBeInTheDocument();
+  });
+
+  test("should show link to publish docs", () => {
+    renderComponent([
+      {
+        ...BASE_SNAP_DATA,
+        status: "Approved",
+      },
+    ]);
+    expect(
+      screen.getByRole("link", { name: "Publish to this name" }),
+    ).toBeInTheDocument();
   });
 
   test("should show the snap name correctly", () => {
