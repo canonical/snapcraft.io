@@ -4,6 +4,13 @@
 
 {% set featured_categories = ["Featured", "Development", "Games", "Server"] %}
 
+{% block resource_hints %}
+  <link rel="preload" href="https://assets.ubuntu.com/v1/9689339a-snapcraft-hero-background--light.png" as="image">
+  {% if nps %}
+    <link rel="preconnect" href="https://munchkin.marketo.net">
+  {% endif %}
+{% endblock %}
+
 {% block content %}
 <main id="main-content" class="p-section is-paper">
   {% with featured_categories = featured_categories %}
