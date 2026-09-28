@@ -15,7 +15,9 @@
   <div class="swiper-container">
     <div class="swiper-wrapper">
       {% for screenshot in screenshots %}
-        {% include "partials/_snap-screenshot.html" %}
+        {% with screenshot_loading = "eager" if loop.first else "lazy" %}
+          {% include "partials/_snap-screenshot.html" %}
+        {% endwith %}
       {% endfor %}
     </div>
   </div>
@@ -25,4 +27,3 @@
   </div>
 </div>
 {%- endif -%}
-
