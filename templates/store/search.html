@@ -24,7 +24,11 @@
 {% endblock %}
 
 {% block content %}
-<main id="root"></main>
+<main id="main-content" class="store-search">
+  <div id="root"></div>
+</main>
+{% endblock %}
 
-{{ vite_import('static/js/store/index.tsx') }}
+{% block scripts_includes %}
+  {{ vite_import('static/js/store/index.tsx') }}
 {% endblock %}

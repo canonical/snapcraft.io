@@ -345,6 +345,10 @@ $font-monospace: '"Ubuntu Sans Mono", "Ubuntu Mono", ui-monospace, "SF Mono", Me
     max-width: 100% !important;
   }
 
+  .store-search {
+    min-height: 100vh;
+  }
+
   .p-list-indented {
     margin-left: 1.25rem;
   }
