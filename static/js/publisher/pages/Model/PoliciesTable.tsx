@@ -1,9 +1,9 @@
-import { SetStateAction, useState, Dispatch } from "react";
+import { SetStateAction, useEffect, useRef, useState, Dispatch } from "react";
 import { useAtomValue, useAtom } from "jotai";
 import { useParams } from "react-router-dom";
 import { format } from "date-fns";
-import { MainTable, Modal, TablePagination } from "@canonical/react-components";
-import { Button } from "@canonical/react-ds-global";
+import { MainTable, TablePagination } from "@canonical/react-components";
+import { Button, Modal } from "@canonical/react-ds-global";
 
 import { sortByDateDescending } from "../../utils";
 import { usePolicies } from "../../hooks";
@@ -30,7 +30,14 @@ function PoliciesTable({
   const [showModal, setShowModal] = useState<boolean>(false);
   const [selectedPolicy, setSelectedPolicy] = useState<number | undefined>();
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const dialogRef = useRef<HTMLDialogElement>(null);
   const { refetch } = usePolicies(id, modelId) as UsePoliciesResponse;
+
+  useEffect(() => {
+    if (showModal) {
+      dialogRef.current?.showModal();
+    }
+  }, [showModal]);
 
   const deletePolicy = async (policyRevision: number | undefined) => {
     if (policyRevision === undefined) {
@@ -178,46 +185,47 @@ function PoliciesTable({
       </TablePagination>
       {showModal && (
         <Modal
-          close={() => {
+          ref={dialogRef}
+          onClose={() => {
             setShowModal(false);
           }}
-          title="Delete policy"
-          buttonRow={
-            <>
-              <Button
-                className="u-no-margin--bottom"
-                importance="secondary"
-                disabled={isLoading}
-                onClick={() => {
-                  setSelectedPolicy(undefined);
-                  setShowModal(false);
-                }}
-              >
-                Cancel
-              </Button>
-              <Button
-                className="u-no-margin--bottom u-no-margin--right"
-                importance="primary"
-                anticipation="destructive"
-                disabled={isLoading}
-                onClick={() => {
-                  deletePolicy(selectedPolicy);
-                }}
-                loading={isLoading}
-                style={{
-                  marginLeft: "1rem",
-                }}
-              >
-                {isLoading ? "Deleting policy" : "Delete policy"}
-              </Button>
-            </>
-          }
         >
-          <p>
-            Are you sure you want to delete this policy?
-            <br />
-            This action cannot be undone.
-          </p>
+          <Modal.Header>Delete policy</Modal.Header>
+          <Modal.Content>
+            <p>
+              Are you sure you want to delete this policy?
+              <br />
+              This action cannot be undone.
+            </p>
+          </Modal.Content>
+          <Modal.Footer>
+            <Button
+              className="u-no-margin--bottom"
+              importance="secondary"
+              disabled={isLoading}
+              onClick={() => {
+                setSelectedPolicy(undefined);
+                setShowModal(false);
+              }}
+            >
+              Cancel
+            </Button>
+            <Button
+              className="u-no-margin--bottom u-no-margin--right"
+              importance="primary"
+              anticipation="destructive"
+              disabled={isLoading}
+              onClick={() => {
+                deletePolicy(selectedPolicy);
+              }}
+              loading={isLoading}
+              style={{
+                marginLeft: "1rem",
+              }}
+            >
+              {isLoading ? "Deleting policy" : "Delete policy"}
+            </Button>
+          </Modal.Footer>
         </Modal>
       )}
     </>

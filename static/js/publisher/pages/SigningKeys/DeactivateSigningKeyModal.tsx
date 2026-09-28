@@ -1,9 +1,8 @@
 import { Link, useParams } from "react-router-dom";
-import { Modal, Button } from "@canonical/react-components";
-import { Icon } from "@canonical/react-ds-global";
+import { Button, Icon, Modal } from "@canonical/react-ds-global";
 
 import type { SigningKey } from "../../types/shared";
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useEffect, useRef } from "react";
 
 type Props = {
   setModalOpen: Dispatch<SetStateAction<boolean>>;
@@ -19,73 +18,93 @@ function DeactivateSigningKeyModal({
   signingKey,
 }: Props): React.JSX.Element {
   const { id } = useParams();
+  const dialogRef = useRef<HTMLDialogElement>(null);
+
+  useEffect(() => {
+    dialogRef.current?.showModal();
+  }, []);
 
   return signingKey.models && signingKey.models.length > 0 ? (
     <Modal
-      title={
-        <>
-          <Icon icon="warning" />
-          {` Deactivate ${signingKey.name}`}
-        </>
-      }
-      close={() => {
+      ref={dialogRef}
+      onClose={() => {
         setModalOpen(false);
       }}
     >
-      <h3>{signingKey.name} is used in :</h3>
-      <ul>
-        {signingKey.models &&
-          signingKey.models.length > 0 &&
-          signingKey.models.map((model) => (
-            <li key={model}>
-              <Link to={`/admin/${id}/models/${model}/policies`}>{model}</Link>
-            </li>
-          ))}
-      </ul>
-      <p>
-        You need to update each policy with a new key first to be able to delete
-        this one.
-      </p>
+      <Modal.Header>
+        <Icon icon="warning" />
+        {` Deactivate ${signingKey.name}`}
+      </Modal.Header>
+      <Modal.Content>
+        <h3>{signingKey.name} is used in :</h3>
+        <ul>
+          {signingKey.models &&
+            signingKey.models.length > 0 &&
+            signingKey.models.map((model) => (
+              <li key={model}>
+                <Link to={`/admin/${id}/models/${model}/policies`}>
+                  {model}
+                </Link>
+              </li>
+            ))}
+        </ul>
+        <p>
+          You need to update each policy with a new key first to be able to
+          delete this one.
+        </p>
+      </Modal.Content>
     </Modal>
   ) : (
     <Modal
-      close={() => {
+      ref={dialogRef}
+      onClose={() => {
         setModalOpen(false);
       }}
-      title="Confirm disable"
-      buttonRow={
-        <>
-          <Button
-            dense
-            className="u-no-margin--bottom"
-            onClick={() => {
-              setModalOpen(false);
-            }}
-          >
-            Cancel
-          </Button>
+    >
+      <Modal.Header>Confirm disable</Modal.Header>
+      <Modal.Content>
+        {isDeleting ? (
+          <p>
+            <Icon icon="spinner" className="u-animation--spin" />
+            &nbsp;Deleting signing key...
+          </p>
+        ) : (
+          <p>{`Warning: This will permanently disable the signing key ${signingKey.name}.`}</p>
+        )}
+      </Modal.Content>
+      <Modal.Footer>
+        <Button
+          className="u-no-margin--bottom"
+          importance="secondary"
+          onClick={() => {
+            setModalOpen(false);
+          }}
+        >
+          Cancel
+        </Button>
 
+        {isDeleting ? (
           <Button
-            dense
-            className="p-button--negative u-no-margin--bottom u-no-margin--right"
+            className="u-no-margin--bottom u-no-margin--right"
+            importance="primary"
+            anticipation="destructive"
+            loading
+          >
+            Disabling
+          </Button>
+        ) : (
+          <Button
+            className="u-no-margin--bottom u-no-margin--right"
+            importance="primary"
+            anticipation="destructive"
             onClick={() => {
               handleDisable(signingKey);
             }}
-            disabled={isDeleting}
           >
             Disable
           </Button>
-        </>
-      }
-    >
-      {isDeleting ? (
-        <p>
-          <Icon icon="spinner" className="u-animation--spin" />
-          &nbsp;Deleting signing key...
-        </p>
-      ) : (
-        <p>{`Warning: This will permanently disable the signing key ${signingKey.name}.`}</p>
-      )}
+        )}
+      </Modal.Footer>
     </Modal>
   );
 }

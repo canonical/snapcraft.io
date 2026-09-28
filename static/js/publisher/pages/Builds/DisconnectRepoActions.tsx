@@ -1,7 +1,7 @@
 import { Dispatch, SetStateAction, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useSetAtom } from "jotai";
-import { Button } from "@canonical/react-components";
+import { Button } from "@canonical/react-ds-global";
 
 import { buildRepoConnectedState } from "../../state/buildsState";
 
@@ -43,6 +43,7 @@ function DisconnectRepoActions({
   return (
     <>
       <Button
+        importance="secondary"
         className="u-no-margin--bottom"
         onClick={() => {
           setDisconnectModalOpen(false);
@@ -50,14 +51,32 @@ function DisconnectRepoActions({
       >
         Cancel
       </Button>
-      <Button
-        appearance="positive"
-        className="u-no-margin--bottom u-no-margin--right"
-        disabled={disconnecting}
-        onClick={handleRepoDisconnect}
-      >
-        Confirm
-      </Button>
+      {disconnecting ? (
+        <Button
+          importance="primary"
+          anticipation="destructive"
+          className="u-no-margin--bottom u-no-margin--right"
+          loading
+          // Needed to prevent jump as this
+          // button is wider than the original
+          // button by default
+          style={{ width: "100px" }}
+        >
+          Disconnecting
+        </Button>
+      ) : (
+        <Button
+          importance="primary"
+          anticipation="destructive"
+          className="u-no-margin--bottom u-no-margin--right"
+          onClick={handleRepoDisconnect}
+          // Needed to ensure its the same
+          // as the loading button
+          style={{ width: "100px" }}
+        >
+          Confirm
+        </Button>
+      )}
     </>
   );
 }

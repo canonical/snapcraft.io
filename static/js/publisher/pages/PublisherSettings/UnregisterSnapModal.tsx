@@ -1,5 +1,5 @@
-import { Dispatch, SetStateAction, useState } from "react";
-import { Button, Modal } from "@canonical/react-components";
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
+import { Button, Modal } from "@canonical/react-ds-global";
 
 type UnregisterSnapModalProps = {
   snapName: string;
@@ -16,6 +16,11 @@ export function UnregisterSnapModal({
 }: UnregisterSnapModalProps) {
   const [unregisterPackageInProgress, setUnregisterPackageInProgress] =
     useState(false);
+  const dialogRef = useRef<HTMLDialogElement>(null);
+
+  useEffect(() => {
+    dialogRef.current?.showModal();
+  }, []);
 
   const unregisterPackage = async () => {
     try {
@@ -40,57 +45,47 @@ export function UnregisterSnapModal({
   };
 
   return (
-    <>
-      <Modal
-        close={() => {
-          setUnregisterModalOpen(false);
-        }}
-        title={
-          <span className="u-has-icon">
-            <i className="p-icon--warning modal-header-icon"></i>
-            Unregister "{snapName}"
-          </span>
-        }
-        buttonRow={
-          <>
-            <Button
-              className="u-no-margin--bottom"
-              onClick={() => {
-                setUnregisterModalOpen(false);
-              }}
-            >
-              Cancel
-            </Button>
-            <Button
-              appearance="negative"
-              className={`u-no-margin--bottom ${
-                unregisterPackageInProgress ? "has-icon is-dark" : ""
-              }`}
-              onClick={() => {
-                setUnregisterPackageInProgress(true);
-                unregisterPackage();
-              }}
-              disabled={unregisterPackageInProgress}
-            >
-              {unregisterPackageInProgress ? (
-                <>
-                  <i className="p-icon--spinner u-animation--spin is-light"></i>
-                  <span>Unregistering...</span>
-                </>
-              ) : (
-                "Unregister"
-              )}
-            </Button>
-          </>
-        }
-      >
+    <Modal
+      ref={dialogRef}
+      onClose={() => {
+        setUnregisterModalOpen(false);
+      }}
+    >
+      <Modal.Header>
+        <span className="u-has-icon">
+          <i className="p-icon--warning modal-header-icon"></i>
+          Unregister "{snapName}"
+        </span>
+      </Modal.Header>
+      <Modal.Content>
         <p>
           Are you sure you want to unregister "{snapName}"?
           <br />
           This name will be removed from your registered names and become
           available to others. This action is permanent and cannot be undone.
         </p>
-      </Modal>
-    </>
+      </Modal.Content>
+      <Modal.Footer>
+        <Button
+          importance="secondary"
+          onClick={() => {
+            setUnregisterModalOpen(false);
+          }}
+        >
+          Cancel
+        </Button>
+        <Button
+          importance="primary"
+          anticipation="destructive"
+          loading={unregisterPackageInProgress}
+          onClick={() => {
+            setUnregisterPackageInProgress(true);
+            unregisterPackage();
+          }}
+        >
+          {unregisterPackageInProgress ? "Unregistering..." : "Unregister"}
+        </Button>
+      </Modal.Footer>
+    </Modal>
   );
 }

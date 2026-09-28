@@ -59,7 +59,7 @@ describe("InvitesTable", () => {
 
     await user.click(screen.getByRole("button", { name: "Reopen" }));
     expect(
-      screen.getByRole("heading", { name: "Reopen invite" }),
+      screen.getByRole("dialog", { name: "Reopen invite" }),
     ).toBeInTheDocument();
   });
 });

@@ -1,14 +1,8 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useParams, Link } from "react-router-dom";
 import { useAtomValue } from "jotai";
-import {
-  Row,
-  Col,
-  Button,
-  Notification,
-  Modal,
-  Accordion,
-} from "@canonical/react-components";
+import { Row, Col, Notification, Accordion } from "@canonical/react-components";
+import { Button, Modal } from "@canonical/react-ds-global";
 
 import { useSnaps, useMembers } from "../../hooks";
 
@@ -64,6 +58,7 @@ function Snaps() {
   const [showRemoveSnapsConfirmation, setShowRemoveSnapsConfirmation] =
     useState(false);
   const [globalStore, setGlobalStore] = useState<Store>();
+  const removeSnapsDialogRef = useRef<HTMLDialogElement>(null);
 
   const getStoreName = (storeId: string) => {
     const store = brandStoresList.find((item) => item.id === storeId);
@@ -300,6 +295,12 @@ function Snaps() {
   }, [brandStoresList, id]);
 
   useEffect(() => {
+    if (showRemoveSnapsConfirmation) {
+      removeSnapsDialogRef.current?.showModal();
+    }
+  }, [showRemoveSnapsConfirmation]);
+
+  useEffect(() => {
     if (currentStore) {
       const roles = currentStore.roles;
 
@@ -384,30 +385,40 @@ function Snaps() {
                 <div className="accordion-actions">
                   {!isOnlyViewer() && (
                     <div className="accordion-actions__row u-align--right">
-                      <Button
-                        disabled={snapsToRemove.length < 1 || removeSnapSaving}
-                        onClick={() => {
-                          setShowRemoveSnapsConfirmation(true);
-                        }}
-                        className={
-                          removeSnapSaving ? "has-icon is-dense" : "is-dense"
-                        }
-                      >
-                        {removeSnapSaving ? (
-                          <>
-                            <i className="p-icon--spinner u-animation--spin"></i>
-                            <span>Saving...</span>
-                          </>
-                        ) : snapsToRemove.length > 1 ? (
-                          "Exclude snaps"
-                        ) : (
-                          "Exclude snap"
-                        )}
-                      </Button>
+                      {removeSnapSaving ? (
+                        <Button
+                          importance="secondary"
+                          onClick={() => {
+                            setShowRemoveSnapsConfirmation(true);
+                          }}
+                          loading
+                        >
+                          {removeSnapSaving ? (
+                            <>Saving...</>
+                          ) : snapsToRemove.length > 1 ? (
+                            "Exclude snaps"
+                          ) : (
+                            "Exclude snap"
+                          )}
+                        </Button>
+                      ) : (
+                        <Button
+                          disabled={snapsToRemove.length < 1}
+                          importance="secondary"
+                          onClick={() => {
+                            setShowRemoveSnapsConfirmation(true);
+                          }}
+                        >
+                          {snapsToRemove.length > 1
+                            ? "Exclude snaps"
+                            : "Exclude snap"}
+                        </Button>
+                      )}
                       <Button
                         onClick={() => setSidePanelOpen(true)}
-                        appearance="positive"
-                        className="u-no-margin--right is-dense"
+                        importance="primary"
+                        anticipation="constructive"
+                        style={{ marginLeft: "1rem" }}
                       >
                         Include snap
                       </Button>
@@ -521,6 +532,8 @@ function Snaps() {
             <div className="p-panel__footer u-align--right">
               <div className="u-fixed-width">
                 <Button
+                  importance="secondary"
+                  style={{ marginBottom: "1rem" }}
                   onClick={() => {
                     setSidePanelOpen(false);
                     setSelectedSnaps([]);
@@ -529,28 +542,29 @@ function Snaps() {
                   Cancel
                 </Button>
 
-                <Button
-                  appearance="positive"
-                  disabled={selectedSnaps.length < 1 || isSaving}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    addSnaps();
-                  }}
-                  className={`u-no-margin--right ${
-                    isSaving ? "has-icon is-dark" : ""
-                  }`}
-                >
-                  {isSaving ? (
-                    <>
-                      <i className="p-icon--spinner is-light u-animation--spin"></i>
-                      <span>Saving...</span>
-                    </>
-                  ) : selectedSnaps.length <= 1 ? (
-                    "Add snap"
-                  ) : (
-                    "Add snaps"
-                  )}
-                </Button>
+                {isSaving ? (
+                  <Button
+                    importance="primary"
+                    anticipation="constructive"
+                    style={{ marginLeft: "1rem", marginBottom: "1rem" }}
+                    loading
+                  >
+                    Saving...
+                  </Button>
+                ) : (
+                  <Button
+                    importance="primary"
+                    anticipation="constructive"
+                    style={{ marginLeft: "1rem", marginBottom: "1rem" }}
+                    disabled={selectedSnaps.length < 1}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      addSnaps();
+                    }}
+                  >
+                    {selectedSnaps.length <= 1 ? "Add snap" : "Add snaps"}
+                  </Button>
+                )}
               </div>
             </div>
           </div>
@@ -592,48 +606,53 @@ function Snaps() {
       <PortalEntrance name="modal">
         {showRemoveSnapsConfirmation && (
           <Modal
-            close={() => {
+            ref={removeSnapsDialogRef}
+            onClose={() => {
               setShowRemoveSnapsConfirmation(false);
             }}
-            title={`Exclude ${
-              snapsToRemove.length > 1 ? "snaps" : snapsToRemove[0].name
-            }`}
-            buttonRow={
-              <>
-                <Button
-                  className="u-no-margin--bottom"
-                  onClick={() => {
-                    setShowRemoveSnapsConfirmation(false);
-                  }}
-                >
-                  Cancel
-                </Button>
-                <Button
-                  className="u-no-margin--bottom u-no-margin--right"
-                  appearance="positive"
-                  onClick={() => {
-                    setShowRemoveSnapsConfirmation(false);
-                    removeSnaps();
-                  }}
-                >
-                  Exclude snap{snapsToRemove.length > 1 ? "s" : ""}
-                </Button>
-              </>
-            }
           >
-            {snapsToRemove.length > 1 && (
-              <ul>
-                {snapsToRemove.map((snapToRemove: Snap) => (
-                  <li key={snapToRemove.id}>
-                    <strong>{snapToRemove.name}</strong>
-                  </li>
-                ))}
-              </ul>
-            )}
-            <p>
-              {snapsToRemove.length > 1 ? "These snaps" : "This snap"} can still
-              be included again in this store.
-            </p>
+            <Modal.Header>
+              {`Exclude ${
+                snapsToRemove.length > 1 ? "snaps" : snapsToRemove[0].name
+              }`}
+            </Modal.Header>
+            <Modal.Content>
+              {snapsToRemove.length > 1 && (
+                <ul>
+                  {snapsToRemove.map((snapToRemove: Snap) => (
+                    <li key={snapToRemove.id}>
+                      <strong>{snapToRemove.name}</strong>
+                    </li>
+                  ))}
+                </ul>
+              )}
+              <p>
+                {snapsToRemove.length > 1 ? "These snaps" : "This snap"} can
+                still be included again in this store.
+              </p>
+            </Modal.Content>
+            <Modal.Footer>
+              <Button
+                className="u-no-margin--bottom"
+                importance="secondary"
+                onClick={() => {
+                  setShowRemoveSnapsConfirmation(false);
+                }}
+              >
+                Cancel
+              </Button>
+              <Button
+                className="u-no-margin--bottom"
+                importance="primary"
+                anticipation="constructive"
+                onClick={() => {
+                  setShowRemoveSnapsConfirmation(false);
+                  removeSnaps();
+                }}
+              >
+                Exclude snap{snapsToRemove.length > 1 ? "s" : ""}
+              </Button>
+            </Modal.Footer>
           </Modal>
         )}
       </PortalEntrance>

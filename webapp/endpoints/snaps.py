@@ -58,9 +58,12 @@ snap_regex = "[a-z0-9-]*[a-z][a-z0-9-]*"
 
 
 def _get_snap_link_fields(snap_name):
-    details = device_gateway.get_item_details(
-        snap_name, api_version=2, fields=FIELDS
-    )
+    try:
+        details = device_gateway.get_item_details(
+            snap_name, api_version=2, fields=FIELDS
+        )
+    except Exception:
+        return None
     return {
         "links": details["snap"].get("links", {}),
     }
@@ -70,6 +73,11 @@ def _get_snap_link_fields(snap_name):
 def dns_verified_status(snap_name):
     res = {"primary_domain": False, "token": None}
     context = _get_snap_link_fields(snap_name)
+
+    if context is None:
+        response = make_response(res, 200)
+        response.cache_control.max_age = FAILED_PROVENANCE_TTL
+        return response
 
     primary_domain = None
 

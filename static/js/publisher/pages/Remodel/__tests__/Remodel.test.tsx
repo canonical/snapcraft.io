@@ -386,7 +386,7 @@ describe("Remodel", () => {
 
     // Modal should be visible
     expect(
-      screen.getByRole("heading", { name: "Delete remodel" }),
+      screen.getByRole("dialog", { name: "Delete remodel" }),
     ).toBeInTheDocument();
     expect(
       screen.getByText(/Are you sure you want to delete this remodel\?/),
@@ -433,7 +433,7 @@ describe("Remodel", () => {
 
     // Modal should show list of remodels
     expect(
-      screen.getByRole("heading", { name: "Delete 2 remodels" }),
+      screen.getByRole("dialog", { name: "Delete 2 remodels" }),
     ).toBeInTheDocument();
     expect(screen.getByText("from-model-a → to-model-a")).toBeInTheDocument();
     expect(screen.getByText("(Serial: serial-1)")).toBeInTheDocument();
@@ -576,7 +576,7 @@ describe("Remodel", () => {
       });
       // The last button should be the modal button
       const modalButton = modalDeleteButtons[modalDeleteButtons.length - 1];
-      expect(modalButton).toHaveAttribute("aria-disabled", "true");
+      expect(modalButton).toBeDisabled();
     });
 
     // Resolve the promise to complete the test
