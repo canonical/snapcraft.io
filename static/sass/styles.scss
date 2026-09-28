@@ -132,8 +132,8 @@ $font-monospace: '"Ubuntu Sans Mono", "Ubuntu Mono", ui-monospace, "SF Mono", Me
   @include vf-p-modal-snapcraft;
   @import "snapcraft_packages";
   @include snapcraft-packages;
-  @import "snapcraft_dispute-list";
-  @include snapcraft-p-dispute-list;
+  @import "snapcraft_pending-list";
+  @include snapcraft-p-pending-list;
   @import "snapcraft_embedded_card_modal";
   @include snapcraft-embedded-card-modal;
   @import "snapcraft_p-file-input";
