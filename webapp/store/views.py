@@ -1,3 +1,5 @@
+from concurrent.futures import ThreadPoolExecutor
+import logging
 from math import floor
 from urllib.parse import urlencode
 
@@ -26,11 +28,49 @@ from webapp.store.logic import (
 from cache.cache_utility import redis_cache
 
 session = requests.Session()
+recommendations_session = requests.RecommendationsSession()
 
 dashboard = Dashboard(api_session)
 publisher_gateway = PublisherGW("snap", api_publisher_session)
 device_gateway = DeviceGW("snap", api_session)
-snap_recommendations = SnapRecommendations(session)
+snap_recommendations = SnapRecommendations(recommendations_session)
+logger = logging.getLogger(__name__)
+
+
+def _get_cached_recommendation(cache_key, fetch):
+    try:
+        recommendations = redis_cache.get(cache_key, expected_type=list)
+        if not recommendations:
+            recommendations = fetch()
+            redis_cache.set(cache_key, recommendations, ttl=3600)
+        return recommendations
+    except (ApiError, api_requests.exceptions.RequestException):
+        logger.warning(
+            "Unable to load recommendations for %s",
+            cache_key,
+            exc_info=True,
+        )
+        return []
+
+
+def _get_cached_categories():
+    try:
+        categories = redis_cache.get("explore:categories", expected_type=list)
+        if not categories:
+            categories = device_gateway.get_categories()
+            redis_cache.set("explore:categories", categories, ttl=3600)
+        return categories
+    except (StoreApiError, ApiError, api_requests.exceptions.RequestException):
+        logger.warning("Unable to load store categories", exc_info=True)
+        return []
+
+
+def _get_featured_snaps(fields):
+    try:
+        return device_gateway.get_featured_snaps(fields=fields)
+    except (StoreApiError, ApiError, api_requests.exceptions.RequestException):
+        logger.warning("Unable to load featured snaps", exc_info=True)
+        return {}
 
 
 def store_blueprint(store_query=None):
@@ -145,69 +185,12 @@ def store_blueprint(store_query=None):
                 f"{flask.url_for('.store_view')}?{encoded_query}"
             )
 
-        try:
-            popular_snaps = redis_cache.get(
-                "explore:popular-snaps", expected_type=list
-            )
-            if not popular_snaps:
-                popular_snaps = snap_recommendations.get_popular()
-                redis_cache.set(
-                    "explore:popular-snaps", popular_snaps, ttl=3600
-                )
-        except api_requests.exceptions.RequestException:
-            popular_snaps = []
-
-        try:
-            recent_snaps = redis_cache.get(
-                "explore:recent-snaps", expected_type=list
-            )
-            if not recent_snaps:
-                recent_snaps = snap_recommendations.get_recent()
-                redis_cache.set("explore:recent-snaps", recent_snaps, ttl=3600)
-        except api_requests.exceptions.RequestException:
-            recent_snaps = []
-
-        try:
-            trending_snaps = redis_cache.get(
-                "explore:trending-snaps", expected_type=list
-            )
-            if not trending_snaps:
-                trending_snaps = snap_recommendations.get_trending()
-                redis_cache.set(
-                    "explore:trending-snaps", trending_snaps, ttl=3600
-                )
-        except api_requests.exceptions.RequestException:
-            trending_snaps = []
-
-        try:
-            top_rated_snaps = redis_cache.get(
-                "explore:top-rated-snaps", expected_type=list
-            )
-            if not top_rated_snaps:
-                top_rated_snaps = snap_recommendations.get_top_rated()
-                redis_cache.set(
-                    "explore:top-rated-snaps", top_rated_snaps, ttl=3600
-                )
-        except api_requests.exceptions.RequestException:
-            top_rated_snaps = []
-
-        try:
-            categories_results = redis_cache.get(
-                "explore:categories", expected_type=list
-            )
-            if not categories_results:
-                categories_results = device_gateway.get_categories()
-                redis_cache.set(
-                    "explore:categories", categories_results, ttl=3600
-                )
-        except StoreApiError:
-            categories_results = []
-
-        categories = sorted(
-            get_categories(categories_results),
-            key=lambda category: category["slug"],
-        )
-
+        recommendation_fetchers = {
+            "popular": snap_recommendations.get_popular,
+            "recent": snap_recommendations.get_recent,
+            "trending": snap_recommendations.get_trending,
+            "top-rated": snap_recommendations.get_top_rated,
+        }
         featured_snaps_fields = ",".join(
             [
                 "developer_validation",
@@ -218,13 +201,37 @@ def store_blueprint(store_query=None):
                 "title",
             ]
         )
-
-        try:
-            featured_snaps = device_gateway.get_featured_snaps(
-                fields=featured_snaps_fields
+        with ThreadPoolExecutor(
+            max_workers=len(recommendation_fetchers) + 2
+        ) as executor:
+            recommendation_futures = {
+                name: executor.submit(
+                    _get_cached_recommendation,
+                    f"explore:{name}-snaps",
+                    fetch,
+                )
+                for name, fetch in recommendation_fetchers.items()
+            }
+            categories_future = executor.submit(_get_cached_categories)
+            featured_snaps_future = executor.submit(
+                _get_featured_snaps, featured_snaps_fields
             )
-        except (StoreApiError, api_requests.exceptions.RequestException):
-            featured_snaps = {}
+            recommendations = {
+                name: future.result()
+                for name, future in recommendation_futures.items()
+            }
+            categories_results = categories_future.result()
+            featured_snaps = featured_snaps_future.result()
+
+        popular_snaps = recommendations["popular"]
+        recent_snaps = recommendations["recent"]
+        trending_snaps = recommendations["trending"]
+        top_rated_snaps = recommendations["top-rated"]
+
+        categories = sorted(
+            get_categories(categories_results),
+            key=lambda category: category["slug"],
+        )
 
         currently_featured_snaps = [
             {
