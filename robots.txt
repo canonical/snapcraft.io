@@ -59,8 +59,6 @@ Disallow: /*/releases
 Disallow: /*/settings
 
 # Search, forms and machine endpoints
-Disallow: /search$
-Disallow: /search?
 Disallow: /docs/search
 Disallow: /about/contact-us$
 Disallow: /about/thank-you$

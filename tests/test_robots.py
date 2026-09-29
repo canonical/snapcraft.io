@@ -118,6 +118,8 @@ class TestRobots(unittest.TestCase):
             "/about/release",
             "/about/publicise",
             "/store",
+            "/search",
+            "/search?q=firefox",
             "/store/categories/games",
             "/blog/",
             "/docs/",
