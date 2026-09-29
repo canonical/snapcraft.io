@@ -285,7 +285,7 @@ from the upstream project.{%- endif -%}</span>
 
       link.addEventListener("click", (e) => {
         e.preventDefault();
-        const href = e.target.href;
+        const href = link.getAttribute("title") || e.target.href;
         openExternalLinkButton.href = href;
         openExternalLinkButton.addEventListener("click", handleOpenExternalLink);
         setLinkDisplayText(href);
