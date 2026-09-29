@@ -413,7 +413,7 @@ def store_blueprint(store_query=None):
                 stats = snap_recommendations.get_stats()
                 redis_cache.set("store:stats", stats, ttl=3600)
         except (ApiError, api_requests.exceptions.RequestException):
-            return flask.jsonify({}), 503
+            return "", 204
         return flask.jsonify(stats)
 
     @store.route("/store/featured-snaps/<category>")

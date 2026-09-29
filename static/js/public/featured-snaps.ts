@@ -193,6 +193,10 @@ async function initStats(): Promise<void> {
 
   try {
     const response = await fetch("/store/stats");
+    if (response.status === 204) {
+      if (statsSection) statsSection.hidden = true;
+      return;
+    }
     if (!response.ok) {
       if (statsSection) statsSection.hidden = true;
       return;
