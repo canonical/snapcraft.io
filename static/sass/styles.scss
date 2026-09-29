@@ -243,6 +243,10 @@ $font-monospace: '"Ubuntu Sans Mono", "Ubuntu Mono", ui-monospace, "SF Mono", Me
     text-overflow: ellipsis;
   }
 
+  .store-search-root {
+    min-height: calc(100vh - 4rem);
+  }
+
   .p-modal__dialog {
     @media only screen and (min-width: $breakpoint-small) {
       min-width: 400px;
