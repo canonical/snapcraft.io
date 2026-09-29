@@ -118,7 +118,11 @@
         w.addEventListener("pointerdown", loadTagManager, { once: true });
         w.addEventListener("keydown", loadTagManager, { once: true });
         w.addEventListener("load", function() {
-          w.setTimeout(loadTagManager, 15000);
+          if ("requestIdleCallback" in w) {
+            w.requestIdleCallback(loadTagManager, { timeout: 3000 });
+          } else {
+            w.setTimeout(loadTagManager, 0);
+          }
         }, { once: true });
       })(window, document, "script", "dataLayer", "GTM-KCGXHQS");
     </script>
