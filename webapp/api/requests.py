@@ -46,6 +46,11 @@ class Session(BaseSession, RequestsSession):
     pass
 
 
+class RecommendationsSession(BaseSession, RequestsSession):
+    def request(self, method, url, timeout=1, **kwargs):
+        return super().request(method, url, timeout, **kwargs)
+
+
 class PublisherSession(BaseSession, RequestsSession):
     def request(self, method, url, timeout=None, **kwargs):
         return super().request(method, url, timeout, **kwargs)
