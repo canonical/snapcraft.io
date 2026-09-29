@@ -30,10 +30,10 @@
           </ul>
         </div>
         <div class="p-tabs u-hide--large">
-          <ul class="p-tabs__list is-light">
+          <ul class="p-tabs__list is-light" role="tablist">
             {% for category in featured_categories %}
-              <li class="p-tabs__item">
-                <a href="#" class="p-tabs__link" data-js="featured-category-switch" data-category="{{ category|lower }}" {% if loop.index == 1 %}aria-selected="true"{% endif %}>{{ category }}</a>
+              <li class="p-tabs__item" role="presentation">
+                <a href="#" class="p-tabs__link" role="tab" data-js="featured-category-switch" data-category="{{ category|lower }}" aria-selected="{{ 'true' if loop.index == 1 else 'false' }}">{{ category }}</a>
               </li>
             {% endfor %}
           </ul>
@@ -48,7 +48,7 @@
                 <div class="col-3 col-medium-2 featured-snap-card" data-js="featured-snap-card" data-snap-name="{{ snap.package_name }}" data-position="{{ loop.index }}">
                   <hr class="p-rule u-hide--medium u-hide--large">
                   <div class="p-block">
-                    <a href="/{{ snap.package_name }}">
+                    <a href="/{{ snap.package_name }}" aria-label="View {{ snap.title }} details">
                       <div class="p-strip is-shallow">
                         <img src="{{ snap.icon_url or DEFAULT_ICON_URL }}" alt="" width="64" height="64" style="display: block;">
                       </div>
