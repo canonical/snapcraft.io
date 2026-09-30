@@ -22,6 +22,7 @@ from canonicalwebteam.exceptions import StoreApiError
 from canonicalwebteam.store_api.devicegw import DeviceGW
 from pybadges import badge
 from webapp.api.exceptions import ApiError
+from webapp.api.requests import Session
 
 device_gateway = DeviceGW("snap", helpers.api_session)
 
@@ -60,11 +61,12 @@ def _get_cached_extra_details(snap_name):
     if details:
         return details
 
-    details = device_gateway.get_snap_details(
-        snap_name,
-        channel="",
-        fields=FIELDS_EXTRA_DETAILS,
-    )
+    with Session() as session:
+        details = DeviceGW("snap", session).get_snap_details(
+            snap_name,
+            channel="",
+            fields=FIELDS_EXTRA_DETAILS,
+        )
     redis_cache.set(cache_key, details, ttl=300)
     return details
 
@@ -75,7 +77,8 @@ def _get_cached_metrics(snap_id, end, query):
     if response:
         return response
 
-    response = device_gateway.get_public_metrics(query)
+    with Session() as session:
+        response = DeviceGW("snap", session).get_public_metrics(query)
     redis_cache.set(cache_key, response, ttl=300)
     return response
 
