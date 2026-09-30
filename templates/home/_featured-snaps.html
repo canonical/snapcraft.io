@@ -33,7 +33,7 @@
           <ul class="p-tabs__list is-light" role="tablist">
             {% for category in featured_categories %}
               <li class="p-tabs__item" role="presentation">
-                <a href="#" class="p-tabs__link" role="tab" data-js="featured-category-switch" data-category="{{ category|lower }}" aria-selected="{{ 'true' if loop.index == 1 else 'false' }}">{{ category }}</a>
+                <a href="#" class="p-tabs__link" role="tab" id="featured-snaps-tab-{{ loop.index }}" aria-controls="featured-snaps-panel-{{ loop.index }}" data-js="featured-category-switch" data-category="{{ category|lower }}" aria-selected="{{ 'true' if loop.index == 1 else 'false' }}">{{ category }}</a>
               </li>
             {% endfor %}
           </ul>
@@ -42,7 +42,7 @@
       <div class="col">
         {% for category in featured_categories %}
           {% set key = category|lower %}
-          <div data-js="featured-category-panel" data-category="{{ key }}" {% if not loop.first %}hidden{% endif %}>
+          <div id="featured-snaps-panel-{{ loop.index }}" role="tabpanel" aria-labelledby="featured-snaps-tab-{{ loop.index }}" data-js="featured-category-panel" data-category="{{ key }}" {% if not loop.first %}hidden{% endif %}>
             <div class="row">
               {% for snap in featured_snaps[key] %}
                 <div class="col-3 col-medium-2 featured-snap-card" data-js="featured-snap-card" data-snap-name="{{ snap.package_name }}" data-position="{{ loop.index }}">

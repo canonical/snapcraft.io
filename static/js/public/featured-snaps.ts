@@ -25,6 +25,8 @@ function init(): void {
           : "aria-current";
         if (el.dataset.category?.toLowerCase() === category) {
           el.setAttribute(attr, attr === "aria-selected" ? "true" : "page");
+        } else if (attr === "aria-selected") {
+          el.setAttribute(attr, "false");
         } else {
           el.removeAttribute(attr);
         }

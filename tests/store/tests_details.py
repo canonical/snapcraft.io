@@ -6,12 +6,12 @@ from webapp.app import create_app
 from unittest.mock import patch
 from cache.cache_utility import redis_cache
 
-POPULAR_PATH = "webapp.store.views.snap_recommendations.get_popular"
-RECENT_PATH = "webapp.store.views.snap_recommendations.get_recent"
-TREND_PATH = "webapp.store.views.snap_recommendations.get_trending"
-TOP_PATH = "webapp.store.views.snap_recommendations.get_top_rated"
-CATEGORIES_PATH = "webapp.store.views.device_gateway.get_categories"
-FEATURED_PATH = "webapp.store.views.device_gateway.get_featured_snaps"
+POPULAR_PATH = "webapp.store.views.SnapRecommendations.get_popular"
+RECENT_PATH = "webapp.store.views.SnapRecommendations.get_recent"
+TREND_PATH = "webapp.store.views.SnapRecommendations.get_trending"
+TOP_PATH = "webapp.store.views.SnapRecommendations.get_top_rated"
+CATEGORIES_PATH = "webapp.store.views.DeviceGW.get_categories"
+FEATURED_PATH = "webapp.store.views.DeviceGW.get_featured_snaps"
 
 
 EMPTY_EXTRA_DETAILS_PAYLOAD = {"aliases": None, "package_name": "vault"}

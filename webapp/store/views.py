@@ -1,6 +1,7 @@
 from concurrent.futures import ThreadPoolExecutor
 import logging
 from math import floor
+from operator import methodcaller
 from urllib.parse import urlencode
 
 import requests as api_requests
@@ -41,7 +42,8 @@ def _get_cached_recommendation(cache_key, fetch):
     try:
         recommendations = redis_cache.get(cache_key, expected_type=list)
         if not recommendations:
-            recommendations = fetch()
+            with requests.RecommendationsSession() as session:
+                recommendations = fetch(SnapRecommendations(session))
             redis_cache.set(cache_key, recommendations, ttl=3600)
         return recommendations
     except (ApiError, api_requests.exceptions.RequestException):
@@ -57,7 +59,8 @@ def _get_cached_categories():
     try:
         categories = redis_cache.get("explore:categories", expected_type=list)
         if not categories:
-            categories = device_gateway.get_categories()
+            with requests.Session() as session:
+                categories = DeviceGW("snap", session).get_categories()
             redis_cache.set("explore:categories", categories, ttl=3600)
         return categories
     except (StoreApiError, ApiError, api_requests.exceptions.RequestException):
@@ -67,7 +70,9 @@ def _get_cached_categories():
 
 def _get_featured_snaps(fields):
     try:
-        return device_gateway.get_featured_snaps(fields=fields)
+        with requests.Session() as session:
+            device_gateway = DeviceGW("snap", session)
+            return device_gateway.get_featured_snaps(fields=fields)
     except (StoreApiError, ApiError, api_requests.exceptions.RequestException):
         logger.warning("Unable to load featured snaps", exc_info=True)
         return {}
@@ -186,10 +191,10 @@ def store_blueprint(store_query=None):
             )
 
         recommendation_fetchers = {
-            "popular": snap_recommendations.get_popular,
-            "recent": snap_recommendations.get_recent,
-            "trending": snap_recommendations.get_trending,
-            "top-rated": snap_recommendations.get_top_rated,
+            "popular": methodcaller("get_popular"),
+            "recent": methodcaller("get_recent"),
+            "trending": methodcaller("get_trending"),
+            "top-rated": methodcaller("get_top_rated"),
         }
         featured_snaps_fields = ",".join(
             [
