@@ -1,13 +1,13 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import {
   Accordion,
-  ConfirmationModal,
   MainTable,
   Notification,
   Row,
   Tooltip,
 } from "@canonical/react-components";
+import { Button, Modal } from "@canonical/react-ds-global";
 import { ITEMS_PER_PAGE } from "../../constants";
 
 import type { ISnap } from "../../types";
@@ -26,10 +26,17 @@ function RegisteredSnaps({
   );
   const [isError, setIsError] = useState<boolean>(false);
   const [unregisterLoading, setUnregisterLoading] = useState<boolean>(false);
+  const dialogRef = useRef<HTMLDialogElement>(null);
 
   const closeModal = (): void => {
     setUnregisterSnapModal(null);
   };
+
+  useEffect(() => {
+    if (unregisterSnapModal) {
+      dialogRef.current?.showModal();
+    }
+  }, [unregisterSnapModal]);
 
   const PENDING_STATUS_LABELS: Record<string, string> = {
     DisputePending: "Name dispute in progress",
@@ -141,28 +148,43 @@ function RegisteredSnaps({
   return (
     <>
       {unregisterSnapModal && (
-        <ConfirmationModal
-          title={
+        <Modal ref={dialogRef} onClose={closeModal}>
+          <Modal.Header>
             <div className="p-snap-list__confirmation-modal">
               <i className="p-icon--warning p-snap-list__confirmation-modal-icon"></i>
               Unregister “<span>{unregisterSnapModal}</span>”
             </div>
-          }
-          confirmButtonLabel="Unregister"
-          onConfirm={() => {
-            void unregisterPackage();
-          }}
-          close={closeModal}
-          confirmButtonLoading={unregisterLoading}
-        >
-          <p>
-            Are you sure you want to unregister “
-            <span>{unregisterSnapModal}</span>”?
-            <br />
-            This name will be removed from your registered names and become
-            available to others. This action is permanent and cannot be undone.
-          </p>
-        </ConfirmationModal>
+          </Modal.Header>
+          <Modal.Content>
+            <p>
+              Are you sure you want to unregister “
+              <span>{unregisterSnapModal}</span>”?
+              <br />
+              This name will be removed from your registered names and become
+              available to others. This action is permanent and cannot be
+              undone.
+            </p>
+          </Modal.Content>
+          <Modal.Footer>
+            <Button
+              importance="secondary"
+              onClick={closeModal}
+              disabled={unregisterLoading}
+            >
+              Cancel
+            </Button>
+            <Button
+              importance="primary"
+              anticipation="destructive"
+              loading={unregisterLoading}
+              onClick={() => {
+                void unregisterPackage();
+              }}
+            >
+              Unregister
+            </Button>
+          </Modal.Footer>
+        </Modal>
       )}
 
       {isError && (
