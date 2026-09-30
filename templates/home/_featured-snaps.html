@@ -33,13 +33,13 @@
           <ul class="p-tabs__list is-light" role="tablist">
             {% for category in featured_categories %}
               <li class="p-tabs__item" role="presentation">
-                <a href="#" class="p-tabs__link" role="tab" data-js="featured-category-switch" data-category="{{ category }}" aria-selected="{{ 'true' if loop.index == 1 else 'false' }}">{{ category }}</a>
+                <a href="#" class="p-tabs__link" role="tab" id="featured-snaps-tab-{{ loop.index }}" aria-controls="featured-snaps-panel" data-js="featured-category-switch" data-category="{{ category }}" aria-selected="{{ 'true' if loop.index == 1 else 'false' }}">{{ category }}</a>
               </li>
             {% endfor %}
           </ul>
         </div>
       </div>
-      <div class="col">
+      <div class="col" id="featured-snaps-panel" role="tabpanel" aria-labelledby="featured-snaps-tab-1">
         <div class="row">
           {% for i in range(0, 3) %}
             <div class="col-3 col-medium-2 featured-snap-card" data-js="featured-snap-card">
