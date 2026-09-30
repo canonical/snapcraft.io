@@ -21,22 +21,25 @@ function RegisteredSnaps({
   currentUser: string;
   refetchSnaps: () => void;
 }): React.JSX.Element {
-  const [unregisterSnapModal, setUnregisterSnapModal] = useState<string | null>(
-    null,
-  );
-  const [isError, setIsError] = useState<boolean>(false);
+  const DEFAULT_ERROR_MESSAGE = "Something went wrong. Please try again later.";
+
+  const [snapToUnregister, setSnapToUnregister] = useState<string | null>(null);
+  const [error, setError] = useState({
+    status: false,
+    message: "",
+  });
   const [unregisterLoading, setUnregisterLoading] = useState<boolean>(false);
   const dialogRef = useRef<HTMLDialogElement>(null);
 
   const closeModal = (): void => {
-    setUnregisterSnapModal(null);
+    setSnapToUnregister(null);
   };
 
   useEffect(() => {
-    if (unregisterSnapModal) {
+    if (snapToUnregister) {
       dialogRef.current?.showModal();
     }
-  }, [unregisterSnapModal]);
+  }, [snapToUnregister]);
 
   const PENDING_STATUS_LABELS: Record<string, string> = {
     DisputePending: "Name dispute in progress",
@@ -91,7 +94,7 @@ function RegisteredSnaps({
               <button
                 className="p-button--base u-no-margin--bottom is-dense"
                 onClick={() => {
-                  setUnregisterSnapModal(snap.snapName);
+                  setSnapToUnregister(snap.snapName);
                 }}
               >
                 Unregister
@@ -123,22 +126,27 @@ function RegisteredSnaps({
 
   const unregisterPackage = async () => {
     setUnregisterLoading(true);
-    setIsError(false);
+    setError({ status: false, message: "" });
     try {
-      const response = await fetch(`/packages/${unregisterSnapModal}`, {
+      const response = await fetch(`/packages/${snapToUnregister}`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
           "X-CSRFToken": window.CSRF_TOKEN,
         },
       });
+
       if (response.ok) {
         void refetchSnaps();
       } else {
-        setIsError(true);
+        const resData = await response.json();
+        setError({
+          status: true,
+          message: resData?.error || DEFAULT_ERROR_MESSAGE,
+        });
       }
     } catch (_) {
-      setIsError(true);
+      setError({ status: true, message: DEFAULT_ERROR_MESSAGE });
     } finally {
       setUnregisterLoading(false);
       closeModal();
@@ -147,18 +155,18 @@ function RegisteredSnaps({
 
   return (
     <>
-      {unregisterSnapModal && (
+      {snapToUnregister && (
         <Modal ref={dialogRef} onClose={closeModal}>
           <Modal.Header>
             <div className="p-snap-list__confirmation-modal">
               <i className="p-icon--warning p-snap-list__confirmation-modal-icon"></i>
-              Unregister “<span>{unregisterSnapModal}</span>”
+              Unregister "<span>{snapToUnregister}</span>"
             </div>
           </Modal.Header>
           <Modal.Content>
             <p>
               Are you sure you want to unregister “
-              <span>{unregisterSnapModal}</span>”?
+              <span>{snapToUnregister}</span>”?
               <br />
               This name will be removed from your registered names and become
               available to others. This action is permanent and cannot be
@@ -181,16 +189,16 @@ function RegisteredSnaps({
                 void unregisterPackage();
               }}
             >
-              Unregister
+              Unregister snap
             </Button>
           </Modal.Footer>
         </Modal>
       )}
 
-      {isError && (
+      {error.status && (
         <div className="u-fixed-width">
           <Notification severity="negative" title="Error:">
-            Something went wrong. Please try again later.
+            {error.message}
           </Notification>
         </div>
       )}
