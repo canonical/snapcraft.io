@@ -32,7 +32,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/4</span>
+                <span class='fraction'>0/6</span>
             </div>
         
             
@@ -128,7 +128,26 @@
 <a name='L63'></a><a href='#L63'>63</a>
 <a name='L64'></a><a href='#L64'>64</a>
 <a name='L65'></a><a href='#L65'>65</a>
-<a name='L66'></a><a href='#L66'>66</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L66'></a><a href='#L66'>66</a>
+<a name='L67'></a><a href='#L67'>67</a>
+<a name='L68'></a><a href='#L68'>68</a>
+<a name='L69'></a><a href='#L69'>69</a>
+<a name='L70'></a><a href='#L70'>70</a>
+<a name='L71'></a><a href='#L71'>71</a>
+<a name='L72'></a><a href='#L72'>72</a>
+<a name='L73'></a><a href='#L73'>73</a>
+<a name='L74'></a><a href='#L74'>74</a>
+<a name='L75'></a><a href='#L75'>75</a>
+<a name='L76'></a><a href='#L76'>76</a>
+<a name='L77'></a><a href='#L77'>77</a>
+<a name='L78'></a><a href='#L78'>78</a>
+<a name='L79'></a><a href='#L79'>79</a>
+<a name='L80'></a><a href='#L80'>80</a>
+<a name='L81'></a><a href='#L81'>81</a>
+<a name='L82'></a><a href='#L82'>82</a>
+<a name='L83'></a><a href='#L83'>83</a>
+<a name='L84'></a><a href='#L84'>84</a>
+<a name='L85'></a><a href='#L85'>85</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -175,7 +194,26 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -196,7 +234,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { Dispatch, SetStateAction, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useSetAtom } from "jotai";
-import { Button } from "@canonical/react-components";
+import { Button } from "@canonical/react-ds-global";
 &nbsp;
 import { buildRepoConnectedState } from "../../state/buildsState";
 &nbsp;
@@ -238,6 +276,7 @@ function <span class="fstat-no" title="function not covered" >DisconnectRepoActi
 <span class="cstat-no" title="statement not covered" >  return (</span>
     &lt;&gt;
       &lt;Button
+        importance="secondary"
         className="u-no-margin--bottom"
         onClick={<span class="fstat-no" title="function not covered" >() =&gt; {</span>
 <span class="cstat-no" title="statement not covered" >          setDisconnectModalOpen(false);</span>
@@ -245,14 +284,32 @@ function <span class="fstat-no" title="function not covered" >DisconnectRepoActi
       &gt;
         Cancel
       &lt;/Button&gt;
-      &lt;Button
-        appearance="positive"
-        className="u-no-margin--bottom u-no-margin--right"
-        disabled={disconnecting}
-        onClick={handleRepoDisconnect}
-      &gt;
-        Confirm
-      &lt;/Button&gt;
+      {disconnecting ? (
+        &lt;Button
+          importance="primary"
+          anticipation="destructive"
+          className="u-no-margin--bottom u-no-margin--right"
+          loading
+          // Needed to prevent jump as this
+          // button is wider than the original
+          // button by default
+          style={{ width: "100px" }}
+        &gt;
+          Disconnecting
+        &lt;/Button&gt;
+      ) : (
+        &lt;Button
+          importance="primary"
+          anticipation="destructive"
+          className="u-no-margin--bottom u-no-margin--right"
+          onClick={handleRepoDisconnect}
+          // Needed to ensure its the same
+          // as the loading button
+          style={{ width: "100px" }}
+        &gt;
+          Confirm
+        &lt;/Button&gt;
+      )}
     &lt;/&gt;
   );
 }
@@ -265,7 +322,7 @@ export default DisconnectRepoActions;
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-09-29T22:08:56.200Z
+                at 2026-09-30T22:08:27.710Z
             </div>
         <script src="../../../../prettify.js"></script>
         <script>
