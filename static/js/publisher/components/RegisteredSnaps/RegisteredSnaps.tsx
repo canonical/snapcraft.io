@@ -16,10 +16,12 @@ function RegisteredSnaps({
   snaps,
   currentUser,
   refetchSnaps,
+  onUnregisterSuccess,
 }: {
   snaps: ISnap[];
   currentUser: string;
   refetchSnaps: () => void;
+  onUnregisterSuccess?: (snapName: string) => void;
 }): React.JSX.Element {
   const DEFAULT_ERROR_MESSAGE = "Something went wrong. Please try again later.";
 
@@ -125,6 +127,7 @@ function RegisteredSnaps({
   };
 
   const unregisterPackage = async () => {
+    const unregisteredSnapName = snapToUnregister;
     setUnregisterLoading(true);
     setError({ status: false, message: "" });
     try {
@@ -137,6 +140,9 @@ function RegisteredSnaps({
       });
 
       if (response.ok) {
+        if (unregisteredSnapName) {
+          onUnregisterSuccess?.(unregisteredSnapName);
+        }
         void refetchSnaps();
       } else {
         const resData = await response.json();
