@@ -92,6 +92,7 @@ function buildCard(
 
     snapIcon.src = data.icon_url ? data.icon_url : DEFAULT_ICON_URL;
     snapIconLink.href = `/${data.package_name}`;
+    snapIconLink.setAttribute("aria-label", `View ${data.title} details`);
     snapTitleLink.href = `/${data.package_name}`;
     snapTitleLink.innerText = data.title;
     snapPublisher.innerText = data.developer_name;
@@ -144,6 +145,9 @@ async function init(featuredCategories: Array<string>): Promise<void> {
   const viewCategoryLink = document.querySelector(
     "[data-js='view-category-link']",
   ) as HTMLLinkElement;
+  const featuredSnapsPanel = document.querySelector(
+    "#featured-snaps-panel",
+  ) as HTMLElement | null;
 
   featuredCategorySwitches.forEach((featuredCategorySwitch) => {
     featuredCategorySwitch.addEventListener("click", async (e: Event) => {
@@ -151,26 +155,30 @@ async function init(featuredCategories: Array<string>): Promise<void> {
 
       const target = e.target as HTMLLinkElement;
       const category = target.dataset.category?.toLowerCase();
+      if (!category) {
+        return;
+      }
+
       const previousTargetLink = document.querySelector(
         "[data-js='featured-category-switch'][aria-current='page']",
-      );
-      const previousTargetTab = document.querySelector(
-        "[data-js='featured-category-switch'][aria-selected='true']",
       );
 
       if (previousTargetLink) {
         previousTargetLink.removeAttribute("aria-current");
       }
 
-      if (previousTargetTab) {
-        previousTargetTab.removeAttribute("aria-selected");
-      }
-
       target.setAttribute("aria-current", "page");
-      target.setAttribute("aria-selected", "true");
-
-      if (!category) {
-        return;
+      const tabs = document.querySelectorAll<HTMLAnchorElement>(
+        "[data-js='featured-category-switch'][role='tab']",
+      );
+      const selectedTab = Array.from(tabs).find(
+        (tab) => tab.dataset.category?.toLowerCase() === category,
+      );
+      tabs.forEach((tab) => {
+        tab.setAttribute("aria-selected", String(tab === selectedTab));
+      });
+      if (selectedTab && featuredSnapsPanel) {
+        featuredSnapsPanel.setAttribute("aria-labelledby", selectedTab.id);
       }
 
       await buildCards(category);
@@ -190,6 +198,10 @@ async function initStats(): Promise<void> {
 
   try {
     const response = await fetch("/store/stats");
+    if (response.status === 204) {
+      if (statsSection) statsSection.hidden = true;
+      return;
+    }
     if (!response.ok) {
       if (statsSection) statsSection.hidden = true;
       return;

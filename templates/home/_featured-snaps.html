@@ -30,16 +30,16 @@
           </ul>
         </div>
         <div class="p-tabs u-hide--large">
-          <ul class="p-tabs__list is-light">
+          <ul class="p-tabs__list is-light" role="tablist">
             {% for category in featured_categories %}
-              <li class="p-tabs__item">
-                <a href="#" class="p-tabs__link" data-js="featured-category-switch" data-category="{{ category }}" {% if loop.index == 1 %}aria-selected="true"{% endif %}>{{ category }}</a>
+              <li class="p-tabs__item" role="presentation">
+                <a href="#" class="p-tabs__link" role="tab" id="featured-snaps-tab-{{ loop.index }}" aria-controls="featured-snaps-panel" data-js="featured-category-switch" data-category="{{ category }}" aria-selected="{{ 'true' if loop.index == 1 else 'false' }}">{{ category }}</a>
               </li>
             {% endfor %}
           </ul>
         </div>
       </div>
-      <div class="col">
+      <div class="col" id="featured-snaps-panel" role="tabpanel" aria-labelledby="featured-snaps-tab-1">
         <div class="row">
           {% for i in range(0, 3) %}
             <div class="col-3 col-medium-2 featured-snap-card" data-js="featured-snap-card">
@@ -69,16 +69,16 @@
     <template style="display: none;" id="featured-snap-card" >
       <hr class="p-rule u-hide--medium u-hide--large">
       <div class="p-block">
-        <a href="" data-js="snap-icon-link">
+        <a href="" data-js="snap-icon-link" aria-label="View snap details">
           <div class="p-strip is-shallow">
             <img src="" alt="" data-js="snap-icon" width="64" height="64" style="display: block;">
           </div>
-          <h3 class="p-heading--2" data-js="snap-title">
-            <a class="p-link--soft" href="" data-js="snap-title-link"></a>
-          </h3>
-            <p data-js="snap-publisher" class="p-muted-heading"></p>
-            <p data-js="snap-description"></p>
         </a>
+        <h3 class="p-heading--2" data-js="snap-title">
+          <a class="p-link--soft" href="" data-js="snap-title-link"></a>
+        </h3>
+        <p data-js="snap-publisher" class="p-muted-heading"></p>
+        <p data-js="snap-description"></p>
       </div>
     </template>
   </section>
@@ -122,4 +122,3 @@
   </div>
 </section>
 </div>
-

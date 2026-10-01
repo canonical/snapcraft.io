@@ -1,3 +1,4 @@
+from concurrent.futures import ThreadPoolExecutor
 import flask
 from flask import Response
 import requests
@@ -20,6 +21,8 @@ from canonicalwebteam.flask_base.decorators import (
 from canonicalwebteam.exceptions import StoreApiError
 from canonicalwebteam.store_api.devicegw import DeviceGW
 from pybadges import badge
+from webapp.api.exceptions import ApiError
+from webapp.api.requests import Session
 
 device_gateway = DeviceGW("snap", helpers.api_session)
 
@@ -52,14 +55,58 @@ FIELDS_EXTRA_DETAILS = [
 ]
 
 
+def _get_cached_extra_details(snap_name):
+    cache_key = f"snap-extra-details:{snap_name}"
+    details = redis_cache.get(cache_key, expected_type=dict)
+    if details:
+        return details
+
+    with Session() as session:
+        details = DeviceGW("snap", session).get_snap_details(
+            snap_name,
+            channel="",
+            fields=FIELDS_EXTRA_DETAILS,
+        )
+    redis_cache.set(cache_key, details, ttl=300)
+    return details
+
+
+def _get_cached_metrics(snap_id, end, query):
+    cache_key = f"snap-public-metrics:{snap_id}:{end.isoformat()}"
+    response = redis_cache.get(cache_key, expected_type=list)
+    if response:
+        return response
+
+    with Session() as session:
+        response = DeviceGW("snap", session).get_public_metrics(query)
+    redis_cache.set(cache_key, response, ttl=300)
+    return response
+
+
 def snap_details_views(store):
     snap_regex = "[a-z0-9-]*[a-z][a-z0-9-]*"
     snap_regex_upercase = "[A-Za-z0-9-]*[A-Za-z][A-Za-z0-9-]*"
 
-    def _get_context_snap_details(snap_name, supported_architectures=None):
-        details = device_gateway.get_item_details(
-            snap_name, fields=FIELDS, api_version=2
-        )
+    def _get_context_snap_details(
+        snap_name,
+        supported_architectures=None,
+        use_cache=False,
+    ):
+        details = None
+        details_cache_key = f"snap-details:{snap_name}"
+        if use_cache:
+            details = redis_cache.get(
+                details_cache_key,
+                expected_type=dict,
+            )
+
+        if details is None:
+            details = device_gateway.get_item_details(
+                snap_name, fields=FIELDS, api_version=2
+            )
+            if use_cache:
+                redis_cache.set(details_cache_key, details, ttl=300)
+
         # 404 for any snap under quarantine
         if details["snap"]["publisher"]["username"] == "snap-quarantine":
             flask.abort(404, "No snap named {}".format(snap_name))
@@ -308,26 +355,7 @@ def snap_details_views(store):
         error_info = {}
         status_code = 200
 
-        context = _get_context_snap_details(snap_name)
-        try:
-            # the empty string channel makes the store API not filter by
-            # the default channel 'latest/stable', which gives errors for
-            # snaps that don't use that channel
-            extra_details = device_gateway.get_snap_details(
-                snap_name, channel="", fields=FIELDS_EXTRA_DETAILS
-            )
-        except Exception:
-            logger.exception("Details endpoint returned an error")
-            extra_details = None
-
-        if extra_details and extra_details["aliases"]:
-            context["aliases"] = [
-                [
-                    f"{extra_details['package_name']}.{alias_obj['target']}",
-                    alias_obj["name"],
-                ]
-                for alias_obj in extra_details["aliases"]
-            ]
+        context = _get_context_snap_details(snap_name, use_cache=True)
 
         country_metric_name = "weekly_installed_base_by_country_percent"
         os_metric_name = "weekly_installed_base_by_operating_system_normalized"
@@ -349,9 +377,40 @@ def snap_details_views(store):
             ),
         ]
 
-        metrics_response = device_gateway.get_public_metrics(
-            metrics_query_json
-        )
+        with ThreadPoolExecutor(max_workers=2) as executor:
+            # The empty channel avoids filtering to latest/stable, which
+            # fails for snaps that do not publish that channel.
+            extra_details_future = executor.submit(
+                _get_cached_extra_details,
+                snap_name,
+            )
+            metrics_future = executor.submit(
+                _get_cached_metrics,
+                context["snap_id"],
+                end,
+                metrics_query_json,
+            )
+
+            try:
+                extra_details = extra_details_future.result()
+            except (StoreApiError, ApiError, requests.RequestException):
+                logger.exception("Details endpoint returned an error")
+                extra_details = None
+
+            try:
+                metrics_response = metrics_future.result()
+            except (StoreApiError, ApiError, requests.RequestException):
+                logger.exception("Metrics endpoint returned an error")
+                metrics_response = None
+
+        if extra_details and extra_details["aliases"]:
+            context["aliases"] = [
+                [
+                    f"{extra_details['package_name']}.{alias_obj['target']}",
+                    alias_obj["name"],
+                ]
+                for alias_obj in extra_details["aliases"]
+            ]
 
         os_metrics = None
         country_devices = None
