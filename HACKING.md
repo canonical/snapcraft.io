@@ -58,6 +58,13 @@ LP_API_TOKEN=<Your Launchpad API token>
 LP_API_TOKEN_SECRET=<Your Launchpad API secret>
 ```
 
+### Generate Un-Editable (convert fonts to lines and paths) SVG for badges
+
+1. Place the new badge under `static/images/badges_editable/<language_tag>/snap-store-<color>.svg`. Do not directly place under `badges`; running this script will overwrite a file already present.
+1. Install Inkscape CLI via `sudo apt install inkscape` or `sudo snap install inkscape`.
+2. Install scour via `pip install scour` or `sudo apt install python3-scour` to minify generated badges.
+3. Run `python scripts/generate-minified-badges.py` to convert.
+
 ## Using Sentry error tracker
 
 For development purposes, visit https://sentry.io/signup/, signup and setup a project. By then you will have a sentry DSN string like:
