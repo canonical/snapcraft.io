@@ -17,7 +17,7 @@ const LANGUAGES = {
   pt: { title: "Português", text: "Disponível na Snap Store" },
   ro: { title: "Română", text: "Instalează din Snap Store" },
   ru: { title: "русский язык", text: "Загрузите из Snap Store" },
-  tw: { title: "中文（台灣)", text: "安裝軟體敬請移駕 Snap Store" },
+  tw: { title: "中文（台灣) ", text: "安裝軟體敬請移駕 Snap Store" },
   uk: { title: "Українська", text: "Завантажте з Snap Store" },
 };
 
@@ -81,7 +81,7 @@ function PubliciseButtons(): React.JSX.Element {
           <p>
             <img
               src={darkBadgeSource}
-              alt="Get it from the Snap Store"
+              alt={LANGUAGES[selectedLanguage].text}
               width="182"
               height="56"
             />
@@ -116,7 +116,7 @@ function PubliciseButtons(): React.JSX.Element {
           <p>
             <img
               src={lightBadgeSource}
-              alt="Get it from the Snap Store"
+              alt={LANGUAGES[selectedLanguage].text}
               width="182"
               height="56"
             />
