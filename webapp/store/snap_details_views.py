@@ -51,6 +51,11 @@ FIELDS_EXTRA_DETAILS = [
     "aliases",
 ]
 
+REPORT_REASONS = {
+    "Copyright or trademark violation",
+    "Snap Store terms of service violation",
+}
+
 
 def snap_details_views(store):
     snap_regex = "[a-z0-9-]*[a-z][a-z0-9-]*"
@@ -611,6 +616,9 @@ def snap_details_views(store):
 
         if not verify_turnstile(fields.get("cf-turnstile-response", "")):
             return flask.jsonify({"error": "turnstile_failed"}), 400
+
+        if fields.get("reason", "") not in REPORT_REASONS:
+            return flask.jsonify({"error": "invalid_report_reason"}), 400
 
         payload = {
             "snap_name": fields.get("snap_name", ""),
