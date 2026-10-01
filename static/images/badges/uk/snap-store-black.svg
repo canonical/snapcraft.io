@@ -35,7 +35,7 @@
             font-weight: 500;
         }
     </style>
-    <title>[RO]-snap-store-black</title>
+    <title>[RU]-snap-store-black</title>
     <desc>Created with Sketch.</desc>
     <g>
         <g id="Black-badge">
@@ -46,7 +46,7 @@
 				L0.2,0.2z" />
                 <polygon id="head" class="st2" points="29.9,6.8 19.4,6.8 32.9,12.9" />
             </g>
-            <text transform="matrix(1 0 0 1 50 17)" class="st3 st4 st5">Instalează din</text>
+            <text transform="matrix(1 0 0 1 50 17)" class="st3 st4 st5">Завантажте з</text>
             <text transform="matrix(1 0 0 1 50 41)" class="st3 st4 st6">Snap Store</text>
         </g>
     </g>

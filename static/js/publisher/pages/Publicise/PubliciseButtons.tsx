@@ -5,10 +5,11 @@ import { Row, Col, Select } from "@canonical/react-components";
 const LANGUAGES = {
   ar: { title: "العربية", text: "احصل عليه من Snap Store" },
   bg: { title: "български", text: "Инсталирайте го от Snap Store" },
-  bn: { title: "বাংলা", text: "থেকে ইনস্টল করুন" },
+  bn: { title: "বাংলা", text: "Snap Store থেকে ইনস্টল করুন" },
   de: { title: "Deutsch", text: "Installieren vom Snap Store" },
   en: { title: "English", text: "Get it from the Snap Store" },
   es: { title: "Español", text: "Instalar desde Snap Store" },
+  fa: { title: "فارسی", text: "دریافت از Snap Store" },
   fr: { title: "Français", text: "Installer à partir du Snap Store" },
   it: { title: "Italiano", text: "Scarica dallo Snap Store" },
   jp: { title: "日本語", text: "Snap Store から入手ください" },
@@ -16,7 +17,8 @@ const LANGUAGES = {
   pt: { title: "Português", text: "Disponível na Snap Store" },
   ro: { title: "Română", text: "Instalează din Snap Store" },
   ru: { title: "русский язык", text: "Загрузите из Snap Store" },
-  tw: { title: "中文（台灣）", text: "安裝軟體敬請移駕 Snap Store" },
+  tw: { title: "中文（台灣)", text: "安裝軟體敬請移駕 Snap Store" },
+  uk: { title: "Українська", text: "Завантажте з Snap Store" },
 };
 
 type LanguageKey = keyof typeof LANGUAGES;
@@ -28,13 +30,17 @@ function PubliciseButtons(): React.JSX.Element {
   const darkBadgeSource = `https://snapcraft.io/${selectedLanguage}/dark/install.svg`;
   const lightBadgeSource = `https://snapcraft.io/${selectedLanguage}/light/install.svg`;
 
-  const htmlSnippetBlack = `<a href="https://snapcraft.io/${snapId}">
-    <img alt="${LANGUAGES[selectedLanguage].text}" src=${darkBadgeSource} />
-  </a>`;
+  const htmlSnippetBlack = [
+    `<a href="https://snapcraft.io/${snapId}">`,
+    `   <img alt="${LANGUAGES[selectedLanguage].text}" src=${darkBadgeSource} />`,
+    `</a>`,
+  ].join("\n");
 
-  const htmlSnippetWhite = `<a href="https://snapcraft.io/${snapId}">
-    <img alt="${LANGUAGES[selectedLanguage].text}" src=${lightBadgeSource} />
-  </a>`;
+  const htmlSnippetWhite = [
+    `<a href="https://snapcraft.io/${snapId}">`,
+    `   <img alt="${LANGUAGES[selectedLanguage].text}" src=${lightBadgeSource} />`,
+    `</a>`,
+  ].join("\n");
 
   const markdownSnippetBlack = `[![${LANGUAGES[selectedLanguage].text}](${darkBadgeSource})](https://snapcraft.io/${snapId})`;
 
@@ -62,7 +68,7 @@ function PubliciseButtons(): React.JSX.Element {
           />
           <p>
             You can help translate these buttons{" "}
-            <a href="https://github.com/snapcore/snap-store-badges">
+            <a href="https://github.com/canonical/snapcraft.io">
               in this repository
             </a>
             .
