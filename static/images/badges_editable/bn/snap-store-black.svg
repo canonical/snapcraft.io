@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px"
+    y="0px" viewBox="0 0 182 56" style="enable-background:new 0 0 182 56;" xml:space="preserve">
+    <style type="text/css">
+        .st0 {
+            fill-rule: evenodd;
+            clip-rule: evenodd;
+            fill: #252525;
+            stroke: #CDCDCD;
+        }
+
+        .st1 {
+            fill: #82BEA0;
+        }
+
+        .st2 {
+            fill: #FA6441;
+        }
+
+        .st3 {
+            fill: #FFFFFF;
+        }
+
+        .st4 {
+            font-family: 'PingFangSC-Regular-GBpc-EUC-H';
+        }
+
+        .st5 {
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .st6 {
+            font-family: 'Ubuntu';
+        }
+
+        .st7 {
+            font-size: 24px;
+            font-weight: 500;
+        }
+    </style>
+    <g id="g16">
+        <path id="Rectangle-path" d="M2 0h178c1.1 0 2 .9 2 2v52c0 1.1-.9 2-2 2H2c-1.1 0-2-.9-2-2V2C0 .9.9 0 2 0z"
+            class="st0" />
+        <g id="logo" transform="translate(8 11)">
+            <path id="body"
+                d="M19 17.8V7.3l7.2 3.2-7.2 7.3zM5.2 31.6L14.1 15l3.9 3.9L5.2 31.6zM.2.2l18.2 6.6v11.6L.2.2z"
+                class="st1" />
+            <polygon id="head" points="29.9,6.8 19.4,6.8 32.9,12.9" class="st2" />
+        </g><text id="text12" class="st3 st4 st5" transform="translate(50 44)">থেকে ইনস্টল করুন</text><text id="text14"
+            class="st3 st6 st7" transform="translate(50 27)">Snap Store</text>
+    </g>
+</svg>
