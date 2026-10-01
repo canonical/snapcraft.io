@@ -1,6 +1,7 @@
 import { BrowserRouter } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "react-query";
-import { fireEvent, render, screen } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import type { Mock } from "vitest";
 
 import { ISnap } from "../../../types";
 import RegisteredSnaps from "../RegisteredSnaps";
@@ -45,18 +46,29 @@ const BASE_SNAP_DATA = {
 
 const queryClient = new QueryClient();
 
-const renderComponent = (snaps: ISnap[]) => {
+const renderComponent = (
+  snaps: ISnap[],
+  refetchSnaps: () => void = vi.fn(),
+) => {
   return render(
     <BrowserRouter>
       <QueryClientProvider client={queryClient}>
         <RegisteredSnaps
           currentUser="test-user"
           snaps={snaps}
-          refetchSnaps={vi.fn()}
+          refetchSnaps={refetchSnaps}
         />
       </QueryClientProvider>
     </BrowserRouter>,
   );
+};
+
+const OWN_SNAP_DATA = {
+  ...BASE_SNAP_DATA,
+  publisher: {
+    ...BASE_SNAP_DATA.publisher,
+    username: "test-user",
+  },
 };
 
 const generateSnaps = () => {
@@ -145,17 +157,100 @@ describe("RegisteredSnaps", () => {
   });
 
   test("should call the refresh function when a snap name is unregistered", () => {
-    renderComponent([
-      {
-        ...BASE_SNAP_DATA,
-        publisher: {
-          ...BASE_SNAP_DATA.publisher,
-          username: "test-user",
-        },
-      },
-    ]);
+    renderComponent([OWN_SNAP_DATA]);
 
     const unregisterButton = screen.getByRole("button", { name: "Unregister" });
     expect(unregisterButton).not.toBeDisabled();
+  });
+
+  test("should call refetchSnaps and not show an error when unregistering succeeds", async () => {
+    const fetchMock = vi.fn(() =>
+      Promise.resolve({
+        ok: true,
+      }),
+    ) as Mock;
+    vi.stubGlobal("fetch", fetchMock);
+    const refetchSnaps = vi.fn();
+
+    renderComponent([OWN_SNAP_DATA], refetchSnaps);
+
+    fireEvent.click(screen.getByRole("button", { name: "Unregister" }));
+    const confirmButton = screen.getByRole("button", {
+      name: "Unregister snap",
+    });
+    fireEvent.click(confirmButton);
+
+    await waitFor(() => expect(refetchSnaps).toHaveBeenCalled());
+    expect(screen.queryByText(/Something went wrong/)).not.toBeInTheDocument();
+
+    vi.unstubAllGlobals();
+  });
+
+  test("should show the API error message when unregistering fails", async () => {
+    const fetchMock = vi.fn(() =>
+      Promise.resolve({
+        ok: false,
+        json: () =>
+          Promise.resolve({ error: "Snap could not be unregistered" }),
+      }),
+    ) as Mock;
+    vi.stubGlobal("fetch", fetchMock);
+
+    renderComponent([OWN_SNAP_DATA]);
+
+    fireEvent.click(screen.getByRole("button", { name: "Unregister" }));
+    const confirmButton = screen.getByRole("button", {
+      name: "Unregister snap",
+    });
+    fireEvent.click(confirmButton);
+
+    expect(
+      await screen.findByText("Snap could not be unregistered"),
+    ).toBeInTheDocument();
+
+    vi.unstubAllGlobals();
+  });
+
+  test("should show the default error message when the API response has no error message", async () => {
+    const fetchMock = vi.fn(() =>
+      Promise.resolve({
+        ok: false,
+        json: () => Promise.resolve({}),
+      }),
+    ) as Mock;
+    vi.stubGlobal("fetch", fetchMock);
+
+    renderComponent([OWN_SNAP_DATA]);
+
+    fireEvent.click(screen.getByRole("button", { name: "Unregister" }));
+    const confirmButton = screen.getByRole("button", {
+      name: "Unregister snap",
+    });
+    fireEvent.click(confirmButton);
+
+    expect(
+      await screen.findByText("Something went wrong. Please try again later."),
+    ).toBeInTheDocument();
+
+    vi.unstubAllGlobals();
+  });
+
+  test("should show the default error message when the fetch call throws", async () => {
+    const fetchMock = vi.fn(() => Promise.reject(new Error("Network error")));
+    vi.stubGlobal("fetch", fetchMock);
+
+    renderComponent([OWN_SNAP_DATA]);
+
+    fireEvent.click(screen.getByRole("button", { name: "Unregister" }));
+    const confirmButton = screen.getByRole("button", {
+      name: "Unregister snap",
+    });
+    fireEvent.click(confirmButton);
+
+    expect(
+      await screen.findByText("Something went wrong. Please try again later."),
+    ).toBeInTheDocument();
+
+    vi.unstubAllGlobals();
   });
 });
