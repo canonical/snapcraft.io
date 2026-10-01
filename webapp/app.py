@@ -12,6 +12,7 @@ import sentry_sdk
 from flask import send_from_directory
 
 from canonicalwebteam.flask_base.app import FlaskBase
+from sentry_sdk.integrations.flask import FlaskIntegration
 from webapp.blog.views import init_blog
 from webapp.docs.views import init_docs
 from webapp.extensions import csrf, vite
@@ -41,7 +42,11 @@ from webapp.config import SENTRY_DSN
 
 
 def create_app(testing=False):
-    sentry_sdk.init(dsn=SENTRY_DSN)
+    sentry_sdk.init(
+        dsn=SENTRY_DSN,
+        integrations=[FlaskIntegration()],
+        send_default_pii=False,
+    )
 
     app = FlaskBase(
         __name__,
