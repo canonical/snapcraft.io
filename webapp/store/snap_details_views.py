@@ -17,7 +17,7 @@ from cache.cache_utility import redis_cache
 from canonicalwebteam.flask_base.decorators import (
     exclude_xframe_options_header,
 )
-from canonicalwebteam.exceptions import StoreApiError
+from canonicalwebteam.exceptions import StoreApiError, StoreApiResourceNotFound
 from canonicalwebteam.store_api.devicegw import DeviceGW
 from pybadges import badge
 
@@ -316,6 +316,10 @@ def snap_details_views(store):
             extra_details = device_gateway.get_snap_details(
                 snap_name, channel="", fields=FIELDS_EXTRA_DETAILS
             )
+        except StoreApiResourceNotFound:
+            # not all snaps are served by the details endpoint, for
+            # example gated snaps, and the page renders without aliases
+            extra_details = None
         except Exception:
             logger.exception("Details endpoint returned an error")
             extra_details = None
