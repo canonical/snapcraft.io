@@ -1,4 +1,5 @@
 import os
+from cachelib import FileSystemCache
 from canonicalwebteam.flask_base.env import load_plain_env_variables
 
 
@@ -39,6 +40,22 @@ VITE_REACT = True
 if ENVIRONMENT != "devel":
     SESSION_COOKIE_SAMESITE = "None"
     SESSION_COOKIE_SECURE = True
+
+# Session data (incl. auth macaroons) is stored server-side so the client
+# cookie only ever holds a small signed session ID. Redis in staging/prod
+# reuses the same connection details as cache.cache_utility.redis_cache; a
+# local disk cache is used in devel/tests to avoid requiring a live Redis.
+if IS_DEVELOPMENT:
+    SESSION_TYPE = "cachelib"
+    SESSION_CACHELIB = FileSystemCache(cache_dir="/tmp/snapcraft_session")
+else:
+    SESSION_TYPE = "redis"
+SESSION_PERMANENT = False
+SESSION_USE_SIGNER = True
+SESSION_KEY_PREFIX = "snapcraft_session:"
+REDIS_DB_HOSTNAME = os.getenv("REDIS_DB_HOSTNAME", "localhost")
+REDIS_DB_PORT = int(os.getenv("REDIS_DB_PORT", "6379"))
+REDIS_DB_PASSWORD = os.getenv("REDIS_DB_PASSWORD", None)
 
 WEBAPP_CONFIG = {"LAYOUT": "_layout.html", "STORE_NAME": "Snap store"}
 
