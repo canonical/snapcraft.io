@@ -8,13 +8,15 @@ The web frontend for the snap store.
 # loaded properly and the FLASK_* prefix is stripped before they are parsed
 import webapp.config  # noqa: F401
 
+import redis
 import sentry_sdk
 from flask import send_from_directory
 
 from canonicalwebteam.flask_base.app import FlaskBase
 from webapp.blog.views import init_blog
+from webapp.config import ConfigurationError
 from webapp.docs.views import init_docs
-from webapp.extensions import csrf, vite
+from webapp.extensions import csrf, server_session, vite
 from webapp.handlers import set_handlers
 from webapp.login.views import login
 from webapp.llms import store_llm
@@ -109,6 +111,7 @@ def create_app(testing=False):
 
 def init_extensions(app: FlaskBase):
     vite.init_app(app)
+    _configure_server_side_sessions(app)
 
     if not app.testing:
         csrf.init_app(app)
@@ -117,3 +120,29 @@ def init_extensions(app: FlaskBase):
         @app.context_processor
         def inject_csrf_token():
             return dict(csrf_token=lambda: "mocked_csrf_token")
+
+
+def _configure_server_side_sessions(app: FlaskBase):
+    if app.config.get("SESSION_TYPE") == "redis":
+        try:
+            client = redis.Redis(
+                host=app.config["REDIS_DB_HOSTNAME"],
+                port=app.config["REDIS_DB_PORT"],
+                password=app.config["REDIS_DB_PASSWORD"],
+                socket_connect_timeout=2,
+                socket_timeout=2,
+            )
+            client.ping()
+            app.config["SESSION_REDIS"] = client
+        except redis.RedisError as redis_error:
+            # Unlike cache.cache_utility.redis_cache (which can fall back to
+            # an in-memory cache), sessions can't silently fall back to local
+            # disk here: staging/production run multiple replicas behind a
+            # load balancer, so a session written to one replica's disk is
+            # invisible to the others, causing intermittent auth failures.
+            # Fail startup loudly instead so the outage is noticed.
+            raise ConfigurationError(
+                "Redis is required for sessions outside devel/testing"
+            ) from redis_error
+
+    server_session.init_app(app)
