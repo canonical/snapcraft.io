@@ -8,13 +8,16 @@ The web frontend for the snap store.
 # loaded properly and the FLASK_* prefix is stripped before they are parsed
 import webapp.config  # noqa: F401
 
+import redis
 import sentry_sdk
+from cachelib import FileSystemCache
 from flask import send_from_directory
 
 from canonicalwebteam.flask_base.app import FlaskBase
 from webapp.blog.views import init_blog
+from webapp.config import SESSION_CACHE_DIR
 from webapp.docs.views import init_docs
-from webapp.extensions import csrf, vite
+from webapp.extensions import csrf, server_session, vite
 from webapp.handlers import set_handlers
 from webapp.login.views import login
 from webapp.llms import store_llm
@@ -109,6 +112,7 @@ def create_app(testing=False):
 
 def init_extensions(app: FlaskBase):
     vite.init_app(app)
+    _configure_server_side_sessions(app)
 
     if not app.testing:
         csrf.init_app(app)
@@ -117,3 +121,34 @@ def init_extensions(app: FlaskBase):
         @app.context_processor
         def inject_csrf_token():
             return dict(csrf_token=lambda: "mocked_csrf_token")
+
+
+def _configure_server_side_sessions(app: FlaskBase):
+    if app.config.get("SESSION_TYPE") == "redis":
+        try:
+            client = redis.Redis(
+                host=app.config["REDIS_DB_HOSTNAME"],
+                port=app.config["REDIS_DB_PORT"],
+                password=app.config["REDIS_DB_PASSWORD"],
+                socket_connect_timeout=2,
+                socket_timeout=2,
+            )
+            client.ping()
+            app.config["SESSION_REDIS"] = client
+        except redis.RedisError as redis_error:
+            # Report so the outage is noticed, but don't crash the app over
+            # it: on a multi-replica deployment this means sessions written
+            # to one replica's local disk are invisible to the others,
+            # causing intermittent auth failures, which is an acceptable
+            # trade-off against the whole app failing to boot.
+            sentry_sdk.capture_exception(redis_error)
+            app.logger.error(
+                "Redis unavailable (%s); falling back to local sessions",
+                redis_error,
+            )
+            app.config["SESSION_TYPE"] = "cachelib"
+            app.config["SESSION_CACHELIB"] = FileSystemCache(
+                cache_dir=SESSION_CACHE_DIR
+            )
+
+    server_session.init_app(app)

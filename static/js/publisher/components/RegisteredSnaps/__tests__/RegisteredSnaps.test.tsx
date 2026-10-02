@@ -186,6 +186,41 @@ describe("RegisteredSnaps", () => {
     vi.unstubAllGlobals();
   });
 
+  test("should show a success notification when unregistering succeeds", async () => {
+    const fetchMock = vi.fn(() =>
+      Promise.resolve({
+        ok: true,
+      }),
+    ) as Mock;
+    vi.stubGlobal("fetch", fetchMock);
+    const onUnregisterSuccess = vi.fn();
+
+    render(
+      <BrowserRouter>
+        <QueryClientProvider client={queryClient}>
+          <RegisteredSnaps
+            currentUser="test-user"
+            snaps={[OWN_SNAP_DATA]}
+            refetchSnaps={vi.fn()}
+            onUnregisterSuccess={onUnregisterSuccess}
+          />
+        </QueryClientProvider>
+      </BrowserRouter>,
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "Unregister" }));
+    const confirmButton = screen.getByRole("button", {
+      name: "Unregister snap",
+    });
+    fireEvent.click(confirmButton);
+
+    await waitFor(() =>
+      expect(onUnregisterSuccess).toHaveBeenCalledWith(OWN_SNAP_DATA.snapName),
+    );
+
+    vi.unstubAllGlobals();
+  });
+
   test("should show the API error message when unregistering fails", async () => {
     const fetchMock = vi.fn(() =>
       Promise.resolve({

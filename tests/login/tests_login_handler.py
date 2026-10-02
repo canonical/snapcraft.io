@@ -181,8 +181,8 @@ class AfterLoginHandlerTest(TestCase):
             assert publisher is not None
             assert publisher["is_canonical"] is True
             assert s["macaroon_exchanged"] == "exchanged-macaroon"
-            assert "macaroon_root" not in s
-            assert "macaroon_discharge" not in s
+            assert "macaroon_root" in s
+            assert "macaroon_discharge" in s
 
     @patch("webapp.login.views.ENVIRONMENT", "production")
     @patch("webapp.login.views.dashboard.get_stores", return_value=[])
@@ -244,7 +244,7 @@ class AfterLoginHandlerTest(TestCase):
             assert publisher is not None
             assert publisher["is_canonical"] is False
 
-    def test_after_login_exchanges_macaroons_and_clears_root_and_discharge(
+    def test_after_login_exchanges_macaroons_and_keeps_root_and_discharge(
         self,
     ):
         self.prepare_mock_response(MagicMock(), groups=["canonical"])
@@ -277,8 +277,8 @@ class AfterLoginHandlerTest(TestCase):
             assert response.status_code == 302
             with self.client.session_transaction() as s:
                 assert s["macaroon_exchanged"] == "exchanged-macaroon"
-                assert "macaroon_root" not in s
-                assert "macaroon_discharge" not in s
+                assert "macaroon_root" in s
+                assert "macaroon_discharge" in s
 
             mock_exchange.assert_called_once()
 
