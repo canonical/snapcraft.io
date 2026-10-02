@@ -4,8 +4,8 @@ import requests
 
 import responses
 from flask_testing import TestCase
+from pymacaroons import Macaroon
 from webapp.app import create_app
-from webapp.authentication import get_authorization_header
 
 # Make sure tests fail on stray responses.
 responses.mock.assert_all_requests_are_fired = True
@@ -41,12 +41,25 @@ class BaseTestCases:
         def _log_in(self, client):
             """Emulates test client login in the store.
 
-            Fill current session with `openid` and `macaroon_exchanged`.
+            Fill current session with `openid`, bound root+discharge
+            macaroons (used for SCA-routed Dashboard calls) and a
+            `macaroon_exchanged` token (used for api.charmhub.io
+            PublisherGW calls).
 
             Return the expected `Authorization` header for further verification
             in API requests.
             """
-            exchanged_macaroon = "test-exchanged-macaroon"
+            root = Macaroon(
+                location="store", identifier="root", key="root-key"
+            )
+            root.add_third_party_caveat(
+                "login.ubuntu.com", "caveat-key", "caveat-id"
+            )
+            discharge = Macaroon(
+                location="login.ubuntu.com",
+                identifier="caveat-id",
+                key="caveat-key",
+            )
 
             with client.session_transaction() as s:
                 s["publisher"] = {
@@ -56,9 +69,15 @@ class BaseTestCases:
                     "email": "testing@testing.com",
                     "stores": [],
                 }
-                s["macaroon_exchanged"] = exchanged_macaroon
+                s["macaroon_root"] = root.serialize()
+                s["macaroon_discharge"] = discharge.serialize()
+                s["macaroon_exchanged"] = "test-exchanged-macaroon"
 
-            return get_authorization_header(exchanged_macaroon)
+            bound = root.prepare_for_request(discharge)
+            return (
+                f"macaroon root={root.serialize()}, "
+                f"discharge={bound.serialize()}"
+            )
 
         def check_call_by_api_url(self, calls):
             found = False
@@ -238,6 +257,13 @@ class BaseTestCases:
                     headers={"WWW-Authenticate": "Macaroon needs_refresh=1"},
                 )
             )
+            responses.add(
+                responses.POST,
+                "https://login.ubuntu.com/api/v2/tokens/refresh",
+                json={"discharge_macaroon": "macaroon"},
+                status=200,
+            )
+
             if self.method_endpoint == "GET":
                 response = self.client.get(self.endpoint_url)
             else:
@@ -250,8 +276,14 @@ class BaseTestCases:
                         self.endpoint_url, json=self.json
                     )
 
+            called = responses.calls[len(responses.calls) - 1]
+            self.assertEqual(
+                "https://login.ubuntu.com/api/v2/tokens/refresh",
+                called.request.url,
+            )
+
             assert response.status_code == 302
-            assert response.location == (f"/login?next={self.endpoint_url}")
+            assert response.location == self._get_location()
 
     class EndpointLoggedInErrorHandling(EndpointLoggedIn):
         @responses.activate

@@ -126,9 +126,9 @@ def after_login(resp):
     if not resp.nickname:
         return flask.redirect(LOGIN_URL)
 
-    # Exchange root + discharge for a single dashboard token.
-    # Both keys are in the session here, so exchange_dashboard_macaroons
-    # can read them directly. We then drop them to keep the cookie small.
+    # Exchange root + discharge for a single publisher-gateway token, used
+    # for api.charmhub.io calls. root/discharge are kept (session is stored
+    # server-side, not in the cookie) since SCA calls still need them.
     try:
         flask.session["macaroon_exchanged"] = (
             publisher_gateway.exchange_dashboard_macaroons(flask.session)
@@ -154,9 +154,6 @@ def after_login(resp):
             }
             return flask.redirect(flask.url_for("account.get_agreement"))
         raise
-
-    flask.session.pop("macaroon_root", None)
-    flask.session.pop("macaroon_discharge", None)
 
     flask.session["publisher"] = {
         "identity_url": resp.identity_url,

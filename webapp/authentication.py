@@ -50,15 +50,20 @@ def get_authorization_header(macaroon):
 
 def get_session_authorization_headers(session):
     """
-    Return the correct authorization headers for the current session.
-    """
-    if "macaroon_exchanged" in session:
-        return {
-            "Authorization": get_authorization_header(
-                session["macaroon_exchanged"]
-            )
-        }
+    Return the SCA (dashboard.snapcraft.io) authorization header for the
+    current session. Used only by Dashboard/PublisherGW calls that route
+    through SCA, which requires the bound root+discharge macaroon pair or
+    legacy macaroons; the single exchanged macaroon is not valid for it, so
+    it's checked last, as a fallback for sessions that never had root and
+    discharge in the first place.
 
+    This is NOT used for api.charmhub.io calls authenticated with the
+    exchanged developer token (e.g. register_package_name,
+    get_package_metadata) - those read session["developer_token"] directly
+    via PublisherGW's own _get_authorization_header/
+    _get_dev_token_authorization_header, a separate code path untouched by
+    this function.
+    """
     if "macaroon_root" in session and "macaroon_discharge" in session:
         root = session["macaroon_root"]
         discharge = session["macaroon_discharge"]
@@ -75,6 +80,13 @@ def get_session_authorization_headers(session):
 
     if "macaroons" in session:
         return {"Macaroons": session["macaroons"]}
+
+    if "macaroon_exchanged" in session:
+        return {
+            "Authorization": get_authorization_header(
+                session["macaroon_exchanged"]
+            )
+        }
 
     return {"Macaroons": ""}
 
@@ -163,6 +175,9 @@ def _store_api_authorization_header(_self, session):
     return get_session_authorization_headers(session)
 
 
+# Both patched functions below are SCA-only (see get_session_authorization_
+# headers' docstring) - they don't affect PublisherGW calls authenticated
+# with session["developer_token"] directly, e.g. register_package_name.
 store_api_dashboard.Dashboard._get_authorization_header = (
     _store_api_authorization_header
 )
