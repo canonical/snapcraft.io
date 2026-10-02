@@ -278,9 +278,48 @@ class GetDetailsPageTest(TestCase):
             )
         )
 
-        response = self.client.get(self.endpoint_url)
+        with patch(
+            "webapp.store.snap_details_views.logger.exception"
+        ) as mock_exception:
+            response = self.client.get(self.endpoint_url)
 
-        assert response.status_code == 200
+            assert response.status_code == 200
+            mock_exception.assert_not_called()
+
+    @responses.activate
+    def test_extra_details_unexpected_error_is_logged(self):
+        payload = SNAP_PAYLOAD
+
+        responses.add(
+            responses.Response(
+                method="GET", url=self.api_url, json=payload, status=200
+            )
+        )
+        responses.add(
+            responses.Response(
+                method="GET",
+                url=self.api_url_details,
+                json={"error_list": [{"code": "internal-error"}]},
+                status=500,
+            )
+        )
+
+        metrics_url = "https://api.snapcraft.io/api/v1/snaps/metrics"
+        responses.add(
+            responses.Response(
+                method="POST", url=metrics_url, json={}, status=200
+            )
+        )
+
+        with patch(
+            "webapp.store.snap_details_views.logger.exception"
+        ) as mock_exception:
+            response = self.client.get(self.endpoint_url)
+
+            assert response.status_code == 200
+            mock_exception.assert_called_once_with(
+                "Details endpoint returned an error"
+            )
 
     @responses.activate
     def test_api_500(self):
