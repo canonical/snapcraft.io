@@ -10,11 +10,12 @@ import webapp.config  # noqa: F401
 
 import redis
 import sentry_sdk
+from cachelib import FileSystemCache
 from flask import send_from_directory
 
 from canonicalwebteam.flask_base.app import FlaskBase
 from webapp.blog.views import init_blog
-from webapp.config import ConfigurationError
+from webapp.config import SESSION_CACHE_DIR
 from webapp.docs.views import init_docs
 from webapp.extensions import csrf, server_session, vite
 from webapp.handlers import set_handlers
@@ -135,14 +136,19 @@ def _configure_server_side_sessions(app: FlaskBase):
             client.ping()
             app.config["SESSION_REDIS"] = client
         except redis.RedisError as redis_error:
-            # Unlike cache.cache_utility.redis_cache (which can fall back to
-            # an in-memory cache), sessions can't silently fall back to local
-            # disk here: staging/production run multiple replicas behind a
-            # load balancer, so a session written to one replica's disk is
-            # invisible to the others, causing intermittent auth failures.
-            # Fail startup loudly instead so the outage is noticed.
-            raise ConfigurationError(
-                "Redis is required for sessions outside devel/testing"
-            ) from redis_error
+            # Report so the outage is noticed, but don't crash the app over
+            # it: on a multi-replica deployment this means sessions written
+            # to one replica's local disk are invisible to the others,
+            # causing intermittent auth failures, which is an acceptable
+            # trade-off against the whole app failing to boot.
+            sentry_sdk.capture_exception(redis_error)
+            app.logger.error(
+                "Redis unavailable (%s); falling back to local sessions",
+                redis_error,
+            )
+            app.config["SESSION_TYPE"] = "cachelib"
+            app.config["SESSION_CACHELIB"] = FileSystemCache(
+                cache_dir=SESSION_CACHE_DIR
+            )
 
     server_session.init_app(app)
