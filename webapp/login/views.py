@@ -155,7 +155,11 @@ def after_login(resp):
             return flask.redirect(flask.url_for("account.get_agreement"))
         raise
 
-    flask.session.pop("macaroon_root", None)
+    # Keep root+discharge for SCA-routed calls (e.g. snap unregister) that
+    # don't accept the exchanged token, but move them out of the session
+    # into cookies scoped to those routes (see set_sca_auth_cookies) so the
+    # cookie sent on every other request stays small.
+    macaroon_root = flask.session.pop("macaroon_root", None)
     flask.session.pop("macaroon_discharge", None)
 
     flask.session["publisher"] = {
@@ -207,6 +211,9 @@ def after_login(resp):
             302,
         ),
     )
+    authentication.set_sca_auth_cookies(
+        response, macaroon_root, discharge_macaroon
+    )
     return response
 
 
@@ -219,4 +226,6 @@ def login_beta():
 def logout():
     authentication.empty_session(flask.session)
 
-    return flask.redirect("/")
+    response = flask.make_response(flask.redirect("/"))
+    authentication.clear_sca_auth_cookies(response)
+    return response

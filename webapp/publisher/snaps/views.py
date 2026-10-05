@@ -438,6 +438,16 @@ def delete_package(package_name):
 
     if response.status_code == 200:
         return ("", 200)
+
+    if response.status_code == 401:
+        # Sessions from before the SCA auth cookies existed have no way to
+        # recover the macaroons needed here; send the user to log in again
+        # instead of surfacing a confusing raw error.
+        auth_response = jsonify({"reauth_required": True})
+        authentication.reset_auth_session(flask.session)
+        authentication.clear_sca_auth_cookies(auth_response)
+        return auth_response, 401
+
     return (
         jsonify({"error": response.json()["error-list"][0]["message"]}),
         response.status_code,

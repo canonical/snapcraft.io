@@ -16,10 +16,12 @@ function RegisteredSnaps({
   snaps,
   currentUser,
   refetchSnaps,
+  onUnregisterSuccess,
 }: {
   snaps: ISnap[];
   currentUser: string;
   refetchSnaps: () => void;
+  onUnregisterSuccess?: (snapName: string) => void;
 }): React.JSX.Element {
   const DEFAULT_ERROR_MESSAGE = "Something went wrong. Please try again later.";
 
@@ -125,6 +127,7 @@ function RegisteredSnaps({
   };
 
   const unregisterPackage = async () => {
+    const unregisteredSnapName = snapToUnregister;
     setUnregisterLoading(true);
     setError({ status: false, message: "" });
     try {
@@ -137,9 +140,19 @@ function RegisteredSnaps({
       });
 
       if (response.ok) {
+        if (unregisteredSnapName) {
+          onUnregisterSuccess?.(unregisteredSnapName);
+        }
         void refetchSnaps();
       } else {
         const resData = await response.json();
+        if (response.status === 401 && resData?.reauth_required) {
+          // Session predates this fix and can't be recovered client-side.
+          window.location.href = `/login?next=${encodeURIComponent(
+            window.location.pathname,
+          )}`;
+          return;
+        }
         setError({
           status: true,
           message: resData?.error || DEFAULT_ERROR_MESSAGE,

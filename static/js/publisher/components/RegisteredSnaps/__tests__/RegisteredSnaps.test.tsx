@@ -49,6 +49,7 @@ const queryClient = new QueryClient();
 const renderComponent = (
   snaps: ISnap[],
   refetchSnaps: () => void = vi.fn(),
+  onUnregisterSuccess?: (snapName: string) => void,
 ) => {
   return render(
     <BrowserRouter>
@@ -57,6 +58,7 @@ const renderComponent = (
           currentUser="test-user"
           snaps={snaps}
           refetchSnaps={refetchSnaps}
+          onUnregisterSuccess={onUnregisterSuccess}
         />
       </QueryClientProvider>
     </BrowserRouter>,
@@ -186,6 +188,30 @@ describe("RegisteredSnaps", () => {
     vi.unstubAllGlobals();
   });
 
+  test("should show a success notification when unregistering succeeds", async () => {
+    const fetchMock = vi.fn(() =>
+      Promise.resolve({
+        ok: true,
+      }),
+    ) as Mock;
+    vi.stubGlobal("fetch", fetchMock);
+    const onUnregisterSuccess = vi.fn();
+
+    renderComponent([OWN_SNAP_DATA], vi.fn(), onUnregisterSuccess);
+
+    fireEvent.click(screen.getByRole("button", { name: "Unregister" }));
+    const confirmButton = screen.getByRole("button", {
+      name: "Unregister snap",
+    });
+    fireEvent.click(confirmButton);
+
+    await waitFor(() =>
+      expect(onUnregisterSuccess).toHaveBeenCalledWith(OWN_SNAP_DATA.snapName),
+    );
+
+    vi.unstubAllGlobals();
+  });
+
   test("should show the API error message when unregistering fails", async () => {
     const fetchMock = vi.fn(() =>
       Promise.resolve({
@@ -207,6 +233,35 @@ describe("RegisteredSnaps", () => {
     expect(
       await screen.findByText("Snap could not be unregistered"),
     ).toBeInTheDocument();
+
+    vi.unstubAllGlobals();
+  });
+
+  test("should redirect to login when the API signals reauth is required", async () => {
+    const fetchMock = vi.fn(() =>
+      Promise.resolve({
+        ok: false,
+        status: 401,
+        json: () => Promise.resolve({ reauth_required: true }),
+      }),
+    ) as Mock;
+    vi.stubGlobal("fetch", fetchMock);
+    Object.defineProperty(window, "location", {
+      value: { href: "", pathname: "/account" },
+      writable: true,
+    });
+
+    renderComponent([OWN_SNAP_DATA]);
+
+    fireEvent.click(screen.getByRole("button", { name: "Unregister" }));
+    const confirmButton = screen.getByRole("button", {
+      name: "Unregister snap",
+    });
+    fireEvent.click(confirmButton);
+
+    await waitFor(() =>
+      expect(window.location.href).toBe("/login?next=%2Faccount"),
+    );
 
     vi.unstubAllGlobals();
   });

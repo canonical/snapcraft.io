@@ -24,4 +24,10 @@ class LogoutRedirects(BaseTestCases.BaseAppTesting):
 
         self.assertEqual("/", response.location)
 
-        self.assertIn("session=;", response.headers.get("Set-Cookie"))
+        # Logout also clears the SCA auth cookies (see
+        # authentication.clear_sca_auth_cookies), so there are multiple
+        # Set-Cookie headers; check all of them rather than just the first.
+        cookie_headers = response.headers.get_all("Set-Cookie")
+        self.assertTrue(
+            any("session=;" in header for header in cookie_headers)
+        )

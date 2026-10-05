@@ -3,10 +3,12 @@ import flask
 from flask.json import jsonify
 
 from canonicalwebteam.store_api.dashboard import Dashboard
+from canonicalwebteam.store_api.publishergw import PublisherGW
 from canonicalwebteam.exceptions import StoreApiResponseErrorList
 
 # Local
 import webapp.api.marketo as marketo_api
+from webapp import authentication
 from webapp.helpers import api_publisher_session
 from webapp import helpers
 from webapp.decorators import login_required
@@ -17,6 +19,7 @@ account = flask.Blueprint(
 
 marketo = marketo_api.Marketo()
 dashboard = Dashboard(api_publisher_session)
+publisher_gateway = PublisherGW("snap", api_publisher_session)
 
 
 @account.route("/")
@@ -65,11 +68,36 @@ def get_agreement():
 @account.route("/agreement", methods=["POST"])
 def post_agreement():
     agreed = flask.request.form.get("i_agree")
-    if agreed == "on":
-        dashboard.post_agreement(flask.session, True)
-        return flask.redirect(flask.url_for(".get_account"))
-    else:
+    if agreed != "on":
         return flask.redirect(flask.url_for(".get_agreement"))
+
+    dashboard.post_agreement(flask.session, True)
+
+    response = flask.make_response(
+        flask.redirect(flask.url_for(".get_account"))
+    )
+
+    # Accepting the agreement is what finally lets the exchange succeed for
+    # publishers who hit the account-not-found path at login (see
+    # webapp/login/views.py:after_login); migrate root+discharge out of the
+    # session now, the same as a normal login, instead of leaving the large
+    # macaroons in the session cookie indefinitely.
+    macaroon_root = flask.session.pop("macaroon_root", None)
+    macaroon_discharge = flask.session.pop("macaroon_discharge", None)
+    if macaroon_root and macaroon_discharge:
+        flask.session["macaroon_exchanged"] = (
+            publisher_gateway.exchange_dashboard_macaroons(
+                {
+                    "macaroon_root": macaroon_root,
+                    "macaroon_discharge": macaroon_discharge,
+                }
+            )
+        )
+        authentication.set_sca_auth_cookies(
+            response, macaroon_root, macaroon_discharge
+        )
+
+    return response
 
 
 @account.route("/username")

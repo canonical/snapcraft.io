@@ -141,12 +141,16 @@ if IS_DEVELOPMENT:
 def refresh_redirect():
     if "macaroon_exchanged" in flask.session:
         authentication.reset_auth_session(flask.session)
-        return flask.redirect(
-            flask.url_for(
-                "login.login_handler",
-                next=flask.request.full_path.rstrip("?"),
+        response = flask.make_response(
+            flask.redirect(
+                flask.url_for(
+                    "login.login_handler",
+                    next=flask.request.full_path.rstrip("?"),
+                )
             )
         )
+        authentication.clear_sca_auth_cookies(response)
+        return response
 
     try:
         macaroon_discharge = authentication.get_refreshed_discharge(
@@ -303,9 +307,15 @@ def set_handlers(app):
             "macaroon-authorization-required",
         ]:
             authentication.reset_auth_session(flask.session)
-            return flask.redirect(
-                flask.url_for("login.login_handler", next=flask.request.path)
+            response = flask.make_response(
+                flask.redirect(
+                    flask.url_for(
+                        "login.login_handler", next=flask.request.path
+                    )
+                )
             )
+            authentication.clear_sca_auth_cookies(response)
+            return response
 
         status_code = 502
         codes = [

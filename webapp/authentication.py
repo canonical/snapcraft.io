@@ -2,12 +2,22 @@ import os
 
 from urllib.parse import urlparse
 
+import flask
 from canonicalwebteam.store_api import dashboard as store_api_dashboard
 from canonicalwebteam.store_api import publishergw as store_api_publishergw
 from pymacaroons import Macaroon
 from webapp.api import sso
 
 LOGIN_URL = os.getenv("LOGIN_URL", "https://login.ubuntu.com")
+
+# The bound root+discharge macaroon pair is only needed by the handful of
+# legacy SCA (dashboard.snapcraft.io) endpoints that don't accept the
+# smaller exchanged token (e.g. unregistering a snap name). Keeping it in
+# cookies scoped to those routes, rather than in the session, means the
+# cookie sent on every other request stays small.
+SCA_AUTH_COOKIE_PATH = "/packages"
+SCA_ROOT_COOKIE = "sca_macaroon_root"
+SCA_DISCHARGE_COOKIE = "sca_macaroon_discharge"
 
 PERMISSIONS = [
     "edit_account",
@@ -50,19 +60,22 @@ def get_authorization_header(macaroon):
 
 def get_session_authorization_headers(session):
     """
-    Return the correct authorization headers for the current session.
+    Return the SCA (dashboard.snapcraft.io) authorization header for the
+    current session. SCA's legacy endpoints (e.g. snap unregister) only
+    accept the bound root+discharge macaroon pair, so that's checked first,
+    reading it from cookies (see set_sca_auth_cookies) and falling back to
+    the session for compatibility with the login handshake and old tests.
+    The single exchanged macaroon is NOT valid for these calls, so it's
+    only used as a last resort.
     """
-    if "macaroon_exchanged" in session:
-        return {
-            "Authorization": get_authorization_header(
-                session["macaroon_exchanged"]
-            )
-        }
+    root = flask.request.cookies.get(SCA_ROOT_COOKIE) or session.get(
+        "macaroon_root"
+    )
+    discharge = flask.request.cookies.get(SCA_DISCHARGE_COOKIE) or session.get(
+        "macaroon_discharge"
+    )
 
-    if "macaroon_root" in session and "macaroon_discharge" in session:
-        root = session["macaroon_root"]
-        discharge = session["macaroon_discharge"]
-
+    if root and discharge:
         bound = Macaroon.deserialize(root).prepare_for_request(
             Macaroon.deserialize(discharge)
         )
@@ -70,6 +83,13 @@ def get_session_authorization_headers(session):
         return {
             "Authorization": (
                 f"macaroon root={root}, discharge={bound.serialize()}"
+            )
+        }
+
+    if "macaroon_exchanged" in session:
+        return {
+            "Authorization": get_authorization_header(
+                session["macaroon_exchanged"]
             )
         }
 
@@ -81,6 +101,30 @@ def get_session_authorization_headers(session):
 
 def get_publishergw_authorization_header(developer_token):
     return {"Authorization ": f"Macaroon {developer_token}"}
+
+
+def set_sca_auth_cookies(response, root, discharge):
+    """
+    Persist the bound root+discharge macaroon pair in cookies scoped to
+    SCA_AUTH_COOKIE_PATH, instead of the session, so most requests don't
+    carry them.
+    """
+    cookie_kwargs = {
+        "path": SCA_AUTH_COOKIE_PATH,
+        "httponly": True,
+        "secure": flask.current_app.config.get("SESSION_COOKIE_SECURE", False),
+        "samesite": flask.current_app.config.get("SESSION_COOKIE_SAMESITE"),
+    }
+    response.set_cookie(SCA_ROOT_COOKIE, root, **cookie_kwargs)
+    response.set_cookie(SCA_DISCHARGE_COOKIE, discharge, **cookie_kwargs)
+
+
+def clear_sca_auth_cookies(response):
+    """
+    Remove the SCA auth cookies, used on logout and forced re-authentication.
+    """
+    response.delete_cookie(SCA_ROOT_COOKIE, path=SCA_AUTH_COOKIE_PATH)
+    response.delete_cookie(SCA_DISCHARGE_COOKIE, path=SCA_AUTH_COOKIE_PATH)
 
 
 def is_authenticated(session):

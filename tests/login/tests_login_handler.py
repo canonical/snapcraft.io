@@ -101,6 +101,27 @@ class LoginHandlerTest(TestCase):
 
         assert response.status_code == 502
 
+    def test_logout_clears_sca_auth_cookies(self):
+        self.client.set_cookie(
+            "sca_macaroon_root", "test-root", path="/packages"
+        )
+        self.client.set_cookie(
+            "sca_macaroon_discharge", "test-discharge", path="/packages"
+        )
+
+        response = self.client.get("/logout")
+
+        assert response.status_code == 302
+        cookie_headers = response.headers.get_all("Set-Cookie")
+        assert any(
+            header.startswith("sca_macaroon_root=")
+            for header in cookie_headers
+        )
+        assert any(
+            header.startswith("sca_macaroon_discharge=")
+            for header in cookie_headers
+        )
+
 
 class AfterLoginHandlerTest(TestCase):
     def create_app(self):
@@ -281,6 +302,20 @@ class AfterLoginHandlerTest(TestCase):
                 assert "macaroon_discharge" not in s
 
             mock_exchange.assert_called_once()
+
+            # root+discharge are moved to cookies scoped to /packages,
+            # rather than discarded, since SCA-routed calls (e.g. snap
+            # unregister) still need them.
+            cookie_headers = response.headers.get_all("Set-Cookie")
+            assert any(
+                "sca_macaroon_root=" in header and "Path=/packages" in header
+                for header in cookie_headers
+            )
+            assert any(
+                "sca_macaroon_discharge=" in header
+                and "Path=/packages" in header
+                for header in cookie_headers
+            )
 
     @patch("webapp.login.views.dashboard.get_validation_sets")
     @patch("webapp.login.views.dashboard.get_account")

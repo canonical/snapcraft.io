@@ -108,9 +108,15 @@ def login_required(func):
                 },
             )
 
-            return flask.redirect(
-                flask.url_for("login.login_handler", next=flask.request.path)
+            response = flask.make_response(
+                flask.redirect(
+                    flask.url_for(
+                        "login.login_handler", next=flask.request.path
+                    )
+                )
             )
+            authentication.clear_sca_auth_cookies(response)
+            return response
 
         publisher = flask.session.get("publisher")
         user = publisher["email"]

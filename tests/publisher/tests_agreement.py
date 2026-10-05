@@ -1,5 +1,8 @@
 import responses
+from pymacaroons import Macaroon
+
 from tests.publisher.endpoint_testing import BaseTestCases
+from webapp.authentication import SCA_DISCHARGE_COOKIE, SCA_ROOT_COOKIE
 
 
 class GetAgreementPage(BaseTestCases.BaseAppTesting):
@@ -57,3 +60,70 @@ class PostAgreementPage(BaseTestCases.EndpointLoggedIn):
 
         self.assertEqual(302, response.status_code)
         self.assertEqual("/account/agreement", response.location)
+
+
+class PostAgreementMigratesOnboardingMacaroons(BaseTestCases.BaseAppTesting):
+    def setUp(self):
+        super().setUp(
+            snap_name=None,
+            api_url="https://dashboard.snapcraft.io/dev/api/agreement/",
+            endpoint_url="/account/agreement",
+        )
+
+    @responses.activate
+    def test_root_and_discharge_are_moved_to_cookies(self):
+        # Regression test: a publisher who hit the account-not-found path
+        # at login keeps root+discharge in the session (see
+        # webapp/login/views.py:after_login) until the agreement is
+        # accepted; that must migrate them to the scoped cookies rather
+        # than leaving them in the session cookie forever.
+        root = Macaroon(location="store", identifier="root", key="root-key")
+        root.add_third_party_caveat(
+            "login.ubuntu.com", "caveat-key", "caveat-id"
+        )
+        discharge = Macaroon(
+            location="login.ubuntu.com",
+            identifier="caveat-id",
+            key="caveat-key",
+        )
+
+        with self.client.session_transaction() as s:
+            s["publisher"] = {
+                "identity_url": "https://login.ubuntu.com/test",
+                "nickname": "test",
+                "fullname": "Test",
+                "image": None,
+                "email": "test@test.com",
+            }
+            s["macaroon_root"] = root.serialize()
+            s["macaroon_discharge"] = discharge.serialize()
+
+        responses.add(responses.POST, self.api_url, json={}, status=200)
+        responses.add(
+            responses.POST,
+            "https://api.charmhub.io/v1/tokens/dashboard/exchange",
+            json={"macaroon": "exchanged-macaroon"},
+            status=200,
+        )
+
+        response = self.client.post(self.endpoint_url, data={"i_agree": "on"})
+
+        self.assertEqual(302, response.status_code)
+        with self.client.session_transaction() as s:
+            self.assertEqual(s["macaroon_exchanged"], "exchanged-macaroon")
+            self.assertNotIn("macaroon_root", s)
+            self.assertNotIn("macaroon_discharge", s)
+
+        cookie_headers = response.headers.get_all("Set-Cookie")
+        self.assertTrue(
+            any(
+                header.startswith(f"{SCA_ROOT_COOKIE}=")
+                for header in cookie_headers
+            )
+        )
+        self.assertTrue(
+            any(
+                header.startswith(f"{SCA_DISCHARGE_COOKIE}=")
+                for header in cookie_headers
+            )
+        )
