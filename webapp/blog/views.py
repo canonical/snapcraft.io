@@ -139,7 +139,7 @@ def init_blog(app, url_prefix):
             except RequestException:
                 break
 
-            if response.status_code == 400:
+            if response.status_code != 200:
                 break
 
             try:
