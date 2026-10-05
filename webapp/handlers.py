@@ -400,7 +400,9 @@ def set_handlers(app):
 
         response.headers["X-Hostname"] = socket.gethostname()
 
-        if response.status_code == 200:
+        if flask.request.endpoint == "status_check":
+            response.headers["Cache-Control"] = "no-store"
+        elif response.status_code == 200:
             if flask.session:
                 response.headers["Cache-Control"] = "private"
             else:
