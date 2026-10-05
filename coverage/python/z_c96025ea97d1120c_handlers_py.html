@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <title>Coverage for webapp/handlers.py: 90%</title>
+    <title>Coverage for webapp/handlers.py: 89%</title>
     <link rel="icon" sizes="32x32" href="favicon_32_cb_c827f16f.png">
     <link rel="stylesheet" href="style_cb_4667309f.css" type="text/css">
     <script src="coverage_html_cb_15cffcd0.js" defer></script>
@@ -12,7 +12,7 @@
     <div class="content">
         <h1>
             <span class="text">Coverage for </span><b>webapp<span class="sep">/</span>handlers.py</b>:
-            <span class="pc_cov">90%</span>
+            <span class="pc_cov">89%</span>
         </h1>
         <aside id="help_panel_wrapper">
             <input id="help_panel_state" type="checkbox">
@@ -54,9 +54,9 @@
             </div>
         </aside>
         <h2>
-            <span class="text">149 statements &nbsp;</span>
-            <button type="button" class="run button_toggle_run" value="run" data-shortcut="r" title="Toggle lines run">134<span class="text"> run</span></button>
-            <button type="button" class="mis show_mis button_toggle_mis" value="mis" data-shortcut="m" title="Toggle lines missing">15<span class="text"> missing</span></button>
+            <span class="text">151 statements &nbsp;</span>
+            <button type="button" class="run button_toggle_run" value="run" data-shortcut="r" title="Toggle lines run">135<span class="text"> run</span></button>
+            <button type="button" class="mis show_mis button_toggle_mis" value="mis" data-shortcut="m" title="Toggle lines missing">16<span class="text"> missing</span></button>
             <button type="button" class="exc show_exc button_toggle_exc" value="exc" data-shortcut="x" title="Toggle lines excluded">0<span class="text"> excluded</span></button>
         </h2>
         <p class="text">
@@ -65,7 +65,7 @@
             <a id="nextFileLink" class="nav" href="z_c96025ea97d1120c_helpers_py.html">&#xbb; next</a>
             &nbsp; &nbsp; &nbsp;
             <a class="nav" href="https://coverage.readthedocs.io/en/7.16.2">coverage.py v7.16.2</a>,
-            created at 2026-10-04 22:11 +0000
+            created at 2026-10-05 22:11 +0000
         </p>
         <aside class="hidden">
             <button type="button" class="button_next_chunk" data-shortcut="j"></button>
@@ -482,32 +482,34 @@
     <p class="pln"><span class="n"><a id="t400" href="#t400">400</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
     <p class="run"><span class="n"><a id="t401" href="#t401">401</a></span><span class="t">        <span class="nam">response</span><span class="op">.</span><span class="nam">headers</span><span class="op">[</span><span class="str">&quot;X-Hostname&quot;</span><span class="op">]</span> <span class="op">=</span> <span class="nam">socket</span><span class="op">.</span><span class="nam">gethostname</span><span class="op">(</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
     <p class="pln"><span class="n"><a id="t402" href="#t402">402</a></span><span class="t">&nbsp;</span><span class="r"></span></p>
-    <p class="run"><span class="n"><a id="t403" href="#t403">403</a></span><span class="t">        <span class="key">if</span> <span class="nam">response</span><span class="op">.</span><span class="nam">status_code</span> <span class="op">==</span> <span class="num">200</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
-    <p class="run"><span class="n"><a id="t404" href="#t404">404</a></span><span class="t">            <span class="key">if</span> <span class="nam">flask</span><span class="op">.</span><span class="nam">session</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
-    <p class="run"><span class="n"><a id="t405" href="#t405">405</a></span><span class="t">                <span class="nam">response</span><span class="op">.</span><span class="nam">headers</span><span class="op">[</span><span class="str">&quot;Cache-Control&quot;</span><span class="op">]</span> <span class="op">=</span> <span class="str">&quot;private&quot;</span>&nbsp;</span><span class="r"></span></p>
-    <p class="pln"><span class="n"><a id="t406" href="#t406">406</a></span><span class="t">            <span class="key">else</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
-    <p class="pln"><span class="n"><a id="t407" href="#t407">407</a></span><span class="t">                <span class="com"># Only add caching headers to successful responses</span>&nbsp;</span><span class="r"></span></p>
-    <p class="run"><span class="n"><a id="t408" href="#t408">408</a></span><span class="t">                <span class="key">if</span> <span class="key">not</span> <span class="nam">response</span><span class="op">.</span><span class="nam">headers</span><span class="op">.</span><span class="nam">get</span><span class="op">(</span><span class="str">&quot;Cache-Control&quot;</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
-    <p class="run"><span class="n"><a id="t409" href="#t409">409</a></span><span class="t">                    <span class="nam">response</span><span class="op">.</span><span class="nam">headers</span><span class="op">[</span><span class="str">&quot;Cache-Control&quot;</span><span class="op">]</span> <span class="op">=</span> <span class="str">&quot;, &quot;</span><span class="op">.</span><span class="nam">join</span><span class="op">(</span>&nbsp;</span><span class="r"></span></p>
-    <p class="run run2"><span class="n"><a id="t410" href="#t410">410</a></span><span class="t">                        <span class="op">{</span>&nbsp;</span><span class="r"></span></p>
-    <p class="run run2"><span class="n"><a id="t411" href="#t411">411</a></span><span class="t">                            <span class="str">&quot;public&quot;</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
-    <p class="run run2"><span class="n"><a id="t412" href="#t412">412</a></span><span class="t">                            <span class="str">&quot;max-age=61&quot;</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
-    <p class="run run2"><span class="n"><a id="t413" href="#t413">413</a></span><span class="t">                            <span class="str">&quot;stale-while-revalidate=300&quot;</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
-    <p class="run run2"><span class="n"><a id="t414" href="#t414">414</a></span><span class="t">                            <span class="str">&quot;stale-if-error=86400&quot;</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
-    <p class="run run2"><span class="n"><a id="t415" href="#t415">415</a></span><span class="t">                        <span class="op">}</span>&nbsp;</span><span class="r"></span></p>
-    <p class="run run2"><span class="n"><a id="t416" href="#t416">416</a></span><span class="t">                    <span class="op">)</span>&nbsp;</span><span class="r"></span></p>
-    <p class="run"><span class="n"><a id="t417" href="#t417">417</a></span><span class="t">        <span class="nam">csp</span> <span class="op">=</span> <span class="nam">add_script_hashes_to_csp</span><span class="op">(</span><span class="nam">response</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
-    <p class="run"><span class="n"><a id="t418" href="#t418">418</a></span><span class="t">        <span class="nam">response</span><span class="op">.</span><span class="nam">headers</span><span class="op">[</span><span class="str">&quot;Content-Security-Policy&quot;</span><span class="op">]</span> <span class="op">=</span> <span class="nam">helpers</span><span class="op">.</span><span class="nam">get_csp_as_str</span><span class="op">(</span>&nbsp;</span><span class="r"></span></p>
-    <p class="run run2"><span class="n"><a id="t419" href="#t419">419</a></span><span class="t">            <span class="nam">csp</span>&nbsp;</span><span class="r"></span></p>
-    <p class="run run2"><span class="n"><a id="t420" href="#t420">420</a></span><span class="t">        <span class="op">)</span>&nbsp;</span><span class="r"></span></p>
-    <p class="run"><span class="n"><a id="t421" href="#t421">421</a></span><span class="t">        <span class="nam">response</span><span class="op">.</span><span class="nam">headers</span><span class="op">[</span><span class="str">&quot;Referrer-Policy&quot;</span><span class="op">]</span> <span class="op">=</span> <span class="str">&quot;strict-origin-when-cross-origin&quot;</span>&nbsp;</span><span class="r"></span></p>
-    <p class="run"><span class="n"><a id="t422" href="#t422">422</a></span><span class="t">        <span class="nam">response</span><span class="op">.</span><span class="nam">headers</span><span class="op">[</span><span class="str">&quot;Cross-Origin-Embedder-Policy&quot;</span><span class="op">]</span> <span class="op">=</span> <span class="str">&quot;unsafe-none&quot;</span>&nbsp;</span><span class="r"></span></p>
-    <p class="run"><span class="n"><a id="t423" href="#t423">423</a></span><span class="t">        <span class="nam">response</span><span class="op">.</span><span class="nam">headers</span><span class="op">[</span><span class="str">&quot;Cross-Origin-Opener-Policy&quot;</span><span class="op">]</span> <span class="op">=</span> <span class="op">(</span>&nbsp;</span><span class="r"></span></p>
-    <p class="run run2"><span class="n"><a id="t424" href="#t424">424</a></span><span class="t">            <span class="str">&quot;same-origin-allow-popups&quot;</span>&nbsp;</span><span class="r"></span></p>
-    <p class="run run2"><span class="n"><a id="t425" href="#t425">425</a></span><span class="t">        <span class="op">)</span>&nbsp;</span><span class="r"></span></p>
-    <p class="run"><span class="n"><a id="t426" href="#t426">426</a></span><span class="t">        <span class="nam">response</span><span class="op">.</span><span class="nam">headers</span><span class="op">[</span><span class="str">&quot;Cross-Origin-Resource-Policy&quot;</span><span class="op">]</span> <span class="op">=</span> <span class="str">&quot;cross-origin&quot;</span>&nbsp;</span><span class="r"></span></p>
-    <p class="run"><span class="n"><a id="t427" href="#t427">427</a></span><span class="t">        <span class="nam">response</span><span class="op">.</span><span class="nam">headers</span><span class="op">[</span><span class="str">&quot;X-Permitted-Cross-Domain-Policies&quot;</span><span class="op">]</span> <span class="op">=</span> <span class="str">&quot;none&quot;</span>&nbsp;</span><span class="r"></span></p>
-    <p class="run"><span class="n"><a id="t428" href="#t428">428</a></span><span class="t">        <span class="key">return</span> <span class="nam">response</span>&nbsp;</span><span class="r"></span></p>
+    <p class="run"><span class="n"><a id="t403" href="#t403">403</a></span><span class="t">        <span class="key">if</span> <span class="nam">flask</span><span class="op">.</span><span class="nam">request</span><span class="op">.</span><span class="nam">endpoint</span> <span class="op">==</span> <span class="str">&quot;status_check&quot;</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p class="mis show_mis"><span class="n"><a id="t404" href="#t404">404</a></span><span class="t">            <span class="nam">response</span><span class="op">.</span><span class="nam">headers</span><span class="op">[</span><span class="str">&quot;Cache-Control&quot;</span><span class="op">]</span> <span class="op">=</span> <span class="str">&quot;no-store&quot;</span>&nbsp;</span><span class="r"></span></p>
+    <p class="run"><span class="n"><a id="t405" href="#t405">405</a></span><span class="t">        <span class="key">elif</span> <span class="nam">response</span><span class="op">.</span><span class="nam">status_code</span> <span class="op">==</span> <span class="num">200</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p class="run"><span class="n"><a id="t406" href="#t406">406</a></span><span class="t">            <span class="key">if</span> <span class="nam">flask</span><span class="op">.</span><span class="nam">session</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p class="run"><span class="n"><a id="t407" href="#t407">407</a></span><span class="t">                <span class="nam">response</span><span class="op">.</span><span class="nam">headers</span><span class="op">[</span><span class="str">&quot;Cache-Control&quot;</span><span class="op">]</span> <span class="op">=</span> <span class="str">&quot;private&quot;</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t408" href="#t408">408</a></span><span class="t">            <span class="key">else</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p class="pln"><span class="n"><a id="t409" href="#t409">409</a></span><span class="t">                <span class="com"># Only add caching headers to successful responses</span>&nbsp;</span><span class="r"></span></p>
+    <p class="run"><span class="n"><a id="t410" href="#t410">410</a></span><span class="t">                <span class="key">if</span> <span class="key">not</span> <span class="nam">response</span><span class="op">.</span><span class="nam">headers</span><span class="op">.</span><span class="nam">get</span><span class="op">(</span><span class="str">&quot;Cache-Control&quot;</span><span class="op">)</span><span class="op">:</span>&nbsp;</span><span class="r"></span></p>
+    <p class="run"><span class="n"><a id="t411" href="#t411">411</a></span><span class="t">                    <span class="nam">response</span><span class="op">.</span><span class="nam">headers</span><span class="op">[</span><span class="str">&quot;Cache-Control&quot;</span><span class="op">]</span> <span class="op">=</span> <span class="str">&quot;, &quot;</span><span class="op">.</span><span class="nam">join</span><span class="op">(</span>&nbsp;</span><span class="r"></span></p>
+    <p class="run run2"><span class="n"><a id="t412" href="#t412">412</a></span><span class="t">                        <span class="op">{</span>&nbsp;</span><span class="r"></span></p>
+    <p class="run run2"><span class="n"><a id="t413" href="#t413">413</a></span><span class="t">                            <span class="str">&quot;public&quot;</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p class="run run2"><span class="n"><a id="t414" href="#t414">414</a></span><span class="t">                            <span class="str">&quot;max-age=61&quot;</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p class="run run2"><span class="n"><a id="t415" href="#t415">415</a></span><span class="t">                            <span class="str">&quot;stale-while-revalidate=300&quot;</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p class="run run2"><span class="n"><a id="t416" href="#t416">416</a></span><span class="t">                            <span class="str">&quot;stale-if-error=86400&quot;</span><span class="op">,</span>&nbsp;</span><span class="r"></span></p>
+    <p class="run run2"><span class="n"><a id="t417" href="#t417">417</a></span><span class="t">                        <span class="op">}</span>&nbsp;</span><span class="r"></span></p>
+    <p class="run run2"><span class="n"><a id="t418" href="#t418">418</a></span><span class="t">                    <span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p class="run"><span class="n"><a id="t419" href="#t419">419</a></span><span class="t">        <span class="nam">csp</span> <span class="op">=</span> <span class="nam">add_script_hashes_to_csp</span><span class="op">(</span><span class="nam">response</span><span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p class="run"><span class="n"><a id="t420" href="#t420">420</a></span><span class="t">        <span class="nam">response</span><span class="op">.</span><span class="nam">headers</span><span class="op">[</span><span class="str">&quot;Content-Security-Policy&quot;</span><span class="op">]</span> <span class="op">=</span> <span class="nam">helpers</span><span class="op">.</span><span class="nam">get_csp_as_str</span><span class="op">(</span>&nbsp;</span><span class="r"></span></p>
+    <p class="run run2"><span class="n"><a id="t421" href="#t421">421</a></span><span class="t">            <span class="nam">csp</span>&nbsp;</span><span class="r"></span></p>
+    <p class="run run2"><span class="n"><a id="t422" href="#t422">422</a></span><span class="t">        <span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p class="run"><span class="n"><a id="t423" href="#t423">423</a></span><span class="t">        <span class="nam">response</span><span class="op">.</span><span class="nam">headers</span><span class="op">[</span><span class="str">&quot;Referrer-Policy&quot;</span><span class="op">]</span> <span class="op">=</span> <span class="str">&quot;strict-origin-when-cross-origin&quot;</span>&nbsp;</span><span class="r"></span></p>
+    <p class="run"><span class="n"><a id="t424" href="#t424">424</a></span><span class="t">        <span class="nam">response</span><span class="op">.</span><span class="nam">headers</span><span class="op">[</span><span class="str">&quot;Cross-Origin-Embedder-Policy&quot;</span><span class="op">]</span> <span class="op">=</span> <span class="str">&quot;unsafe-none&quot;</span>&nbsp;</span><span class="r"></span></p>
+    <p class="run"><span class="n"><a id="t425" href="#t425">425</a></span><span class="t">        <span class="nam">response</span><span class="op">.</span><span class="nam">headers</span><span class="op">[</span><span class="str">&quot;Cross-Origin-Opener-Policy&quot;</span><span class="op">]</span> <span class="op">=</span> <span class="op">(</span>&nbsp;</span><span class="r"></span></p>
+    <p class="run run2"><span class="n"><a id="t426" href="#t426">426</a></span><span class="t">            <span class="str">&quot;same-origin-allow-popups&quot;</span>&nbsp;</span><span class="r"></span></p>
+    <p class="run run2"><span class="n"><a id="t427" href="#t427">427</a></span><span class="t">        <span class="op">)</span>&nbsp;</span><span class="r"></span></p>
+    <p class="run"><span class="n"><a id="t428" href="#t428">428</a></span><span class="t">        <span class="nam">response</span><span class="op">.</span><span class="nam">headers</span><span class="op">[</span><span class="str">&quot;Cross-Origin-Resource-Policy&quot;</span><span class="op">]</span> <span class="op">=</span> <span class="str">&quot;cross-origin&quot;</span>&nbsp;</span><span class="r"></span></p>
+    <p class="run"><span class="n"><a id="t429" href="#t429">429</a></span><span class="t">        <span class="nam">response</span><span class="op">.</span><span class="nam">headers</span><span class="op">[</span><span class="str">&quot;X-Permitted-Cross-Domain-Policies&quot;</span><span class="op">]</span> <span class="op">=</span> <span class="str">&quot;none&quot;</span>&nbsp;</span><span class="r"></span></p>
+    <p class="run"><span class="n"><a id="t430" href="#t430">430</a></span><span class="t">        <span class="key">return</span> <span class="nam">response</span>&nbsp;</span><span class="r"></span></p>
 </main>
 <footer>
     <div class="content">
@@ -517,7 +519,7 @@
             <a class="nav" href="z_c96025ea97d1120c_helpers_py.html">&#xbb; next</a>
             &nbsp; &nbsp; &nbsp;
             <a class="nav" href="https://coverage.readthedocs.io/en/7.16.2">coverage.py v7.16.2</a>,
-            created at 2026-10-04 22:11 +0000
+            created at 2026-10-05 22:11 +0000
         </p>
     </div>
 </footer>
