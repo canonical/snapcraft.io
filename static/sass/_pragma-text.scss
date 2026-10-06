@@ -1,0 +1,7 @@
+@mixin pragma-text($level) {
+  font-family: var(--typography-text-#{$level}-font-family);
+  font-size: var(--typography-text-#{$level}-font-size);
+  font-weight: var(--typography-text-#{$level}-font-weight);
+  letter-spacing: var(--typography-text-#{$level}-letter-spacing);
+  line-height: var(--typography-text-#{$level}-line-height);
+}

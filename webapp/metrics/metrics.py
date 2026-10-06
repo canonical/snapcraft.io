@@ -58,6 +58,31 @@ def _calculate_color(thisCountry, max_users):
     return COUNTRY_COLORS[color_index]
 
 
+def get_usage_context(countries, oses):
+    """Build the template context for the "where people are using" section
+
+    :param countries: Country data, as in CountryDevices.country_data
+    :param oses: Distros sorted by value, as in OsMetric.os
+
+    :returns: Countries with users, and distros split into Ubuntu and others
+    """
+    ubuntu_os = []
+    other_os = []
+    for distro in oses or []:
+        if distro["name"].lower().startswith("ubuntu"):
+            ubuntu_os.append(distro)
+        else:
+            other_os.append(distro)
+
+    return {
+        "countries_with_users": sum(
+            1 for c in (countries or {}).values() if c["percentage_of_users"]
+        ),
+        "ubuntu_os": ubuntu_os,
+        "other_os": other_os,
+    }
+
+
 def _capitalize_os_name(os_name):
     """Capitalize OS name
 

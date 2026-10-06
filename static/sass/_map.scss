@@ -68,19 +68,14 @@
     &__scale {
       display: flex;
       grid-column: 1 / -1;
-
-      .snapcraft-territories-legend__box {
-        flex: 1 1 var(--dimension-300);
-      }
     }
 
-    // pragma tertiary text
+    &__scale &__box {
+      flex: 1 1 var(--dimension-300);
+    }
+
     &__label {
-      font-family: var(--typography-text-tertiary-font-family);
-      font-size: var(--typography-text-tertiary-font-size);
-      font-weight: var(--typography-text-tertiary-font-weight);
-      letter-spacing: var(--typography-text-tertiary-letter-spacing);
-      line-height: var(--typography-text-tertiary-line-height);
+      @include pragma-text(tertiary);
     }
 
     &__min,

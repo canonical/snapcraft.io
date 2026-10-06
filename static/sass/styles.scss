@@ -69,6 +69,7 @@ $font-monospace: '"Ubuntu Sans Mono", "Ubuntu Mono", ui-monospace, "SF Mono", Me
   // Needs some TLC with the new code styling
   @import "patterns_annotated_code";
   @include p-annotated-code;
+  @import "pragma-text";
   @import "map";
   @include snap-details-map;
 
