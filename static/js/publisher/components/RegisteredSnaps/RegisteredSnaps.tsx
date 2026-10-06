@@ -136,7 +136,14 @@ function RegisteredSnaps({
         },
       });
 
-      if (response.ok) {
+      if (response.status === 202) {
+        const resData = await response.json();
+        if (resData.authorization_required && resData.redirect_url) {
+          window.location.href = resData.redirect_url;
+        } else {
+          setError({ status: true, message: DEFAULT_ERROR_MESSAGE });
+        }
+      } else if (response.ok) {
         void refetchSnaps();
       } else {
         const resData = await response.json();

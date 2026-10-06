@@ -1,4 +1,7 @@
 # Packages
+import secrets
+import time
+
 import flask
 from canonicalwebteam.store_api.dashboard import Dashboard
 from canonicalwebteam.store_api.publishergw import PublisherGW
@@ -13,7 +16,6 @@ from webapp import authentication
 from webapp.helpers import api_publisher_session, launchpad
 from webapp.api.exceptions import ApiError
 from webapp.decorators import (
-    exchange_required,
     gate_unreleased_snap_pages,
     login_required,
 )
@@ -430,10 +432,51 @@ publisher_snaps.add_url_rule(
 
 @publisher_snaps.route("/packages/<package_name>", methods=["DELETE"])
 @login_required
-@exchange_required
 def delete_package(package_name):
+    if not (
+        "macaroon_root" in flask.session
+        and "macaroon_discharge" in flask.session
+    ):
+        pending = flask.session.get("pending_snap_unregister")
+        if pending and pending["expires_at"] > time.time():
+            return (
+                jsonify(
+                    {
+                        "error": (
+                            "Finish the pending unregister "
+                            "authorization first."
+                        )
+                    }
+                ),
+                409,
+            )
+
+        authorization_id = secrets.token_urlsafe(16)
+        flask.session["pending_snap_unregister"] = {
+            "authorization_id": authorization_id,
+            "snap_name": package_name,
+            "identity_url": flask.session["publisher"]["identity_url"],
+            "expires_at": time.time() + 300,
+        }
+        return (
+            jsonify(
+                {
+                    "authorization_required": True,
+                    "redirect_url": flask.url_for(
+                        "login.authorize_snap_unregister",
+                        authorization_id=authorization_id,
+                    ),
+                }
+            ),
+            202,
+        )
+
     response = publisher_gateway.unregister_package_name(
-        flask.session, package_name
+        {
+            "macaroon_root": flask.session["macaroon_root"],
+            "macaroon_discharge": flask.session["macaroon_discharge"],
+        },
+        package_name,
     )
 
     if response.status_code == 200:

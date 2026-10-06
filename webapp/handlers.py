@@ -1,4 +1,5 @@
 import socket
+import time
 from urllib.parse import unquote, urlparse, urlunparse
 
 import base64
@@ -336,6 +337,12 @@ def set_handlers(app):
 
     # Global tasks for all requests
     # ===
+    @app.before_request
+    def clear_expired_unregister_authorization():
+        pending = flask.session.get("pending_snap_unregister")
+        if pending and pending["expires_at"] <= time.time():
+            flask.session.pop("pending_snap_unregister", None)
+
     @app.before_request
     def clear_trailing():
         """

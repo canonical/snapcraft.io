@@ -31,7 +31,18 @@ export function UnregisterSnapModal({
         },
       });
 
-      if (!response.ok) {
+      if (response.status === 202) {
+        const responseData = await response.json();
+        if (responseData.authorization_required && responseData.redirect_url) {
+          window.location.href = responseData.redirect_url;
+        } else {
+          setUnregisterModalOpen(false);
+          setUnregisterError(true);
+          setUnregisterErrorMessage(
+            "Something went wrong. Please try again later.",
+          );
+        }
+      } else if (!response.ok) {
         const responseData = await response.json();
         setUnregisterModalOpen(false);
         setUnregisterError(true);

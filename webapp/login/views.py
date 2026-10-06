@@ -1,4 +1,5 @@
 import os
+import time
 
 import flask
 from canonicalwebteam.store_api.dashboard import Dashboard
@@ -43,8 +44,88 @@ open_id = OpenID(
 )
 
 dashboard = Dashboard(api_session)
-publisher_gateway = PublisherGW(api_publisher_session)
+publisher_gateway = PublisherGW("snap", api_publisher_session)
 device_gateway = DeviceGW("snap", api_session)
+
+
+def _valid_pending_unregister(pending, authorization_id):
+    publisher = flask.session.get("publisher", {})
+    return (
+        pending
+        and authentication.is_authenticated(flask.session)
+        and pending["authorization_id"] == authorization_id
+        and pending["expires_at"] > time.time()
+        and pending["identity_url"] == publisher.get("identity_url")
+    )
+
+
+@login.route(
+    "/login/unregister-snap/<authorization_id>", methods=["GET", "POST"]
+)
+@csrf.exempt
+@login_required
+@open_id.loginhandler
+def authorize_snap_unregister(authorization_id):
+    pending = flask.session.get("pending_snap_unregister")
+    openid_error = flask.session.pop("openid_error", None)
+    if (
+        not _valid_pending_unregister(pending, authorization_id)
+        or openid_error
+        or "root_macaroon" in pending
+    ):
+        flask.session.pop("pending_snap_unregister", None)
+        flask.flash(
+            "Unregister authorization expired, failed or was cancelled. "
+            "Please try again.",
+            "negative",
+        )
+        return flask.redirect("/snaps")
+
+    try:
+        root = authentication.request_macaroon()
+    except ApiResponseError as api_error:
+        flask.session.pop("pending_snap_unregister", None)
+        return flask.abort(502, str(api_error))
+
+    pending["root_macaroon"] = root
+    flask.session.modified = True
+    return open_id.try_login(
+        LOGIN_URL,
+        extensions=[
+            MacaroonRequest(caveat_id=authentication.get_caveat_id(root))
+        ],
+    )
+
+
+def complete_snap_unregister(resp, authorization_id):
+    pending = flask.session.pop("pending_snap_unregister", None)
+    if (
+        not _valid_pending_unregister(pending, authorization_id)
+        or resp.identity_url != pending["identity_url"]
+        or "root_macaroon" not in pending
+        or "macaroon" not in resp.extensions
+    ):
+        flask.flash(
+            "Unregister authorization is invalid or expired. "
+            "Please try again using the same account.",
+            "negative",
+        )
+        return flask.redirect("/snaps")
+
+    response = publisher_gateway.unregister_package_name(
+        {
+            "macaroon_root": pending["root_macaroon"],
+            "macaroon_discharge": resp.extensions["macaroon"].discharge,
+        },
+        pending["snap_name"],
+    )
+    if response.status_code == 200:
+        flask.flash(
+            f'{pending["snap_name"]} has been unregistered.', "positive"
+        )
+    else:
+        flask.flash(response.json()["error-list"][0]["message"], "negative")
+    return flask.redirect("/snaps")
 
 
 @login.route("/login/snap-build-authorization", methods=["GET", "POST"])
@@ -111,6 +192,11 @@ def login_handler():
 
 @open_id.after_login
 def after_login(resp):
+    if flask.request.endpoint == "login.authorize_snap_unregister":
+        return complete_snap_unregister(
+            resp, flask.request.view_args["authorization_id"]
+        )
+
     # This same OpenID round-trip is reused for two purposes: a normal
     # user login, and (see authorize_snap_build above) discharging a
     # snap's Launchpad upload macaroon. Handle the latter first and bail
