@@ -1,6 +1,9 @@
 {% extends "_layout.html" %}
 {% from "store/package_header/_package_header.html" import package_header with context %}
 
+{% block html_class %}site comfortable light{% endblock %}
+{% block extra_styles %}{{ vite_import('static/sass/pragma.css') }}{% endblock %}
+
 {% block meta_copydoc %}{% endblock %}
 
 {% block meta_title %}Install {{ snap_title }} on Linux | Snap Store{% endblock %}
@@ -243,11 +246,32 @@
         <div class="u-fixed-width">
           <hr>
           <h2>Where people are using {{ snap_title }}</h2>
+          {% if countries %}
+            {% set countries_with_users = countries.values() | selectattr("percentage_of_users") | list | length %}
+            {% if countries_with_users %}
+              <h3>{{ snap_title }} is used in {{ countries_with_users }} {% if countries_with_users == 1 %}country or territory{% else %}countries and territories{% endif %}...</h3>
+            {% endif %}
+          {% endif %}
         </div>
         <div class="grid-row {% if normalized_os %}u-equal-height{% endif %}">
           {% if countries %}
-            <div class="{% if normalized_os %}grid-col-4{% else %}grid-col-6{% endif %} grid-col-start-large-3 js-snap-map-holder" data-live="installed_base_by_country_percent" data-analytics-view data-analytics-hover data-analytics-target="details_map_installed_base_by_country_percent" >
+            <div class="{% if normalized_os %}grid-col-4{% else %}grid-col-6{% endif %} js-snap-map-holder" data-live="installed_base_by_country_percent" data-analytics-view data-analytics-hover data-analytics-target="details_map_installed_base_by_country_percent" >
               <div id="js-snap-map" class="snapcraft-territories"></div>
+              <div class="snapcraft-territories-legend">
+                <div class="snapcraft-territories-legend__item">
+                  <span class="snapcraft-territories-legend__box" style="background-color: rgb({{ NO_USERS_COLOR | join(', ') }});"></span>
+                  <span class="u-text--muted snapcraft-territories-legend__label">N/A</span>
+                </div>
+                <div class="snapcraft-territories-legend__range">
+                  <span class="snapcraft-territories-legend__scale">
+                    {% for color in COUNTRY_COLORS %}
+                      <span class="snapcraft-territories-legend__box" style="background-color: rgb({{ color | join(', ') }});"></span>
+                    {% endfor %}
+                  </span>
+                  <span class="u-text--muted snapcraft-territories-legend__label snapcraft-territories-legend__min">Fewer users</span>
+                  <span class="u-text--muted snapcraft-territories-legend__label snapcraft-territories-legend__max">More users</span>
+                </div>
+              </div>
             </div>
           {% endif %}
           {% if normalized_os %}

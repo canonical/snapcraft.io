@@ -1,6 +1,23 @@
 import pycountry
 from operator import itemgetter
 
+COUNTRY_COLORS = [
+    [222, 235, 247],
+    [210, 227, 243],
+    [198, 219, 239],
+    [178, 210, 232],
+    [158, 202, 225],
+    [133, 188, 220],
+    [107, 174, 214],
+    [66, 146, 198],
+    [50, 130, 190],
+    [33, 113, 181],
+    [8, 81, 156],
+    [8, 65, 132],
+    [8, 48, 107],
+]
+NO_USERS_COLOR = [218, 218, 218]
+
 
 def _calculate_colors(countries, max_users):
     """Calculate the displayed colors for a list of countries depending on the
@@ -28,33 +45,17 @@ def _calculate_color(thisCountry, max_users):
 
     :returns: The calculated rgb for the country
     """
-    colors = [
-        [222, 235, 247],
-        [210, 227, 243],
-        [198, 219, 239],
-        [178, 210, 232],
-        [158, 202, 225],
-        [133, 188, 220],
-        [107, 174, 214],
-        [66, 146, 198],
-        [50, 130, 190],
-        [33, 113, 181],
-        [8, 81, 156],
-        [8, 65, 132],
-        [8, 48, 107],
-    ]
-
-    buckets = max_users / len(colors)
+    buckets = max_users / len(COUNTRY_COLORS)
 
     if thisCountry == 0.0:
-        return [218, 218, 218]
+        return NO_USERS_COLOR
 
     color_index = int(thisCountry / buckets) - 1
 
     if color_index == -1:
         color_index = 0
 
-    return colors[color_index]
+    return COUNTRY_COLORS[color_index]
 
 
 def _capitalize_os_name(os_name):
@@ -256,7 +257,7 @@ class CountryDevices(Metric):
             country_info = self.users_by_country.get(country.alpha_2)
             number_of_users = 0
             percentage_of_users = 0
-            color_rgb = [218, 218, 218]
+            color_rgb = NO_USERS_COLOR
             if country_info is not None:
                 if self.private:
                     number_of_users = country_info["number_of_users"] or 0

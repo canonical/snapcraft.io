@@ -1,3 +1,6 @@
 /* Second entry per @canonical/styles-vanilla-adapter step 4: pragma's CSS for
    pages that render react-ds-global components, loaded after styles.scss. */
 @import url("@canonical/styles-vanilla-adapter/adapter.css");
+/* Typography tokens (e.g. --typography-text-tertiary-*) aren't part of the
+   adapter's token set yet. */
+@import url("@canonical/styles-typography/tokens.css");
