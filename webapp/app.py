@@ -11,6 +11,11 @@ import webapp.config  # noqa: F401
 import sentry_sdk
 from flask import send_from_directory
 
+try:
+    from gevent import GreenletExit
+except ImportError:
+    GreenletExit = None
+
 from canonicalwebteam.flask_base.app import FlaskBase
 from webapp.blog.views import init_blog
 from webapp.docs.views import init_docs
@@ -41,7 +46,15 @@ from webapp.config import SENTRY_DSN
 
 
 def create_app(testing=False):
-    sentry_sdk.init(dsn=SENTRY_DSN)
+    ignore_errors = []
+    if GreenletExit is not None:
+        # GreenletExit is raised by gevent when a gunicorn worker is
+        # stopped or recycled (e.g. during a deploy) while a request
+        # is in flight. It is expected shutdown behaviour, not an app
+        # error, so we do not report it to Sentry.
+        ignore_errors.append(GreenletExit)
+
+    sentry_sdk.init(dsn=SENTRY_DSN, ignore_errors=ignore_errors)
 
     app = FlaskBase(
         __name__,
