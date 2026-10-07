@@ -287,15 +287,17 @@ class DeletePackageTest(TestCase):
             self.assertNotIn("pending_snap_unregister", session)
 
     @responses.activate
-    def test_legacy_session_still_unregisters_directly(self):
+    def test_retained_credentials_still_require_fresh_authorization(self):
         with self.client.session_transaction() as session:
+            session.pop("macaroon_exchanged")
             session["macaroon_root"] = self.root
             session["macaroon_discharge"] = self.discharge
-        responses.add(responses.DELETE, self.api_url, json={}, status=200)
-        response = self.client.delete("/packages/test-snap")
-        self.assertEqual(response.status_code, 200)
-        self.assertTrue(
-            responses.calls[0]
-            .request.headers["Authorization"]
-            .startswith("macaroon root=")
-        )
+        self.initiate()
+        self.assertEqual(len(responses.calls), 0)
+        with self.client.session_transaction() as session:
+            self.assertEqual(
+                session["pending_snap_unregister"]["snap_name"], "test-snap"
+            )
+            self.assertNotIn(
+                "root_macaroon", session["pending_snap_unregister"]
+            )
