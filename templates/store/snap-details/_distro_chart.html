@@ -20,9 +20,9 @@
   </div>
 {% endmacro %}
 
-{% macro distro_chart(distros, max_value, variant, list_limit=7) %}
+{% macro distro_chart(distros, max_value, variant, list_limit=5) %}
   <div class="snapcraft-distro-chart snapcraft-distro-chart--{{ variant }}">
-    {% if distros|length > list_limit + 1 %}
+    {% if distros|length > list_limit %}
       {{ distro_rows(distros[:list_limit], max_value) }}
       <div class="p-show-more is-collapsed" data-js="js-show-more">
         <div>

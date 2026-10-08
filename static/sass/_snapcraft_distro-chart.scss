@@ -20,6 +20,14 @@
   $bars-width: calc(100% - 9rem);
 
   .snapcraft-distro-chart {
+    margin-bottom: var(--dimension-300);
+
+    .p-show-more__fade {
+      left: 0;
+      position: absolute;
+      top: 100%;
+    }
+
     &__heading {
       margin-bottom: var(--dimension-050);
     }
