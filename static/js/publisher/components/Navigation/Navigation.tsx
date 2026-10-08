@@ -1,13 +1,9 @@
-// Still need to use the `Icon` from `react-components`
-// until the `IconButton` component is ready in Pragma
 import {
   AppNavigation,
   AppNavigationBar,
-  Button,
-  Icon as ReactComponentsIcon,
   Panel,
-  Tooltip,
 } from "@canonical/react-components";
+import { withTooltip, Icon, Button } from "@canonical/react-ds-global";
 
 import { useState } from "react";
 import useLocalStorage from "../../hooks/useLocalStorage";
@@ -24,6 +20,15 @@ function Navigation(): React.JSX.Element {
   // don't persist mobile navigation state between refreshes
   const [collapseMobileNavigation, setCollapseMobileNavigation] =
     useState<boolean>(true);
+
+  const CollapseNavigationWithTooltip = withTooltip(
+    Button,
+    "Collapse main navigation",
+  );
+  const ExpandNavigationWithTooltip = withTooltip(
+    Button,
+    "Expand main navigation",
+  );
 
   return (
     <>
@@ -54,51 +59,41 @@ function Navigation(): React.JSX.Element {
           controls={
             <>
               <Button
-                hasIcon
-                appearance="base"
+                importance="tertiary"
                 className="u-no-margin u-hide--small u-hide--large"
                 onClick={() => {
                   setPinTabletNavigation(!pinTabletNavigation);
                 }}
               >
-                <ReactComponentsIcon
-                  light
-                  name={pinTabletNavigation ? "close" : "pin"}
-                />
+                <Icon icon={pinTabletNavigation ? "close" : "pin"} />
               </Button>
 
               {!collapseDesktopNavigation && (
-                <Tooltip message="Collapse main navigation" position="right">
-                  <Button
-                    hasIcon
-                    appearance="base"
-                    className="u-hide--small u-hide--medium u-no-margin l-navigation__collapse-toggle"
-                    aria-label="Collapse main navigation"
-                    onClick={() => {
-                      setCollapseDesktopNavigation(true);
-                    }}
-                  >
-                    <ReactComponentsIcon name="toggle-side-nav" />
-                  </Button>
-                </Tooltip>
+                <CollapseNavigationWithTooltip
+                  importance="tertiary"
+                  className="u-hide--small u-hide--medium u-no-margin-bottom"
+                  aria-label="Collapse main navigation"
+                  onClick={() => {
+                    setCollapseDesktopNavigation(true);
+                  }}
+                >
+                  <Icon icon="collapse-side-nav" />
+                </CollapseNavigationWithTooltip>
               )}
             </>
           }
         >
           {collapseDesktopNavigation && (
-            <Tooltip message="Expand main navigation" position="right">
-              <Button
-                hasIcon
-                appearance="base"
-                className="u-hide--small u-hide--medium u-no-margin l-navigation__collapse-toggle"
-                aria-label="Expand main navigation"
-                onClick={() => {
-                  setCollapseDesktopNavigation(false);
-                }}
-              >
-                <ReactComponentsIcon name="toggle-side-nav" />
-              </Button>
-            </Tooltip>
+            <ExpandNavigationWithTooltip
+              importance="tertiary"
+              className="u-hide--small u-hide--medium u-no-margin-bottom"
+              aria-label="Expand main navigation"
+              onClick={() => {
+                setCollapseDesktopNavigation(false);
+              }}
+            >
+              <Icon icon="expand-side-nav" />
+            </ExpandNavigationWithTooltip>
           )}
 
           <PrimaryNav />
