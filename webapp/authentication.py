@@ -31,6 +31,7 @@ SESSION_AUTH_KEYS = [
     "developer_token",
     "exchanged_developer_token",
     "csrf_token",
+    "pending_snap_unregister",
 ]
 
 # keys for session data that should NOT be cleared on auth refresh

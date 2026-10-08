@@ -5,9 +5,8 @@ import {
   MainTable,
   Notification,
   Row,
-  Tooltip,
 } from "@canonical/react-components";
-import { Button, Modal } from "@canonical/react-ds-global";
+import { Button, Modal, withTooltip } from "@canonical/react-ds-global";
 import { ITEMS_PER_PAGE } from "../../constants";
 
 import type { ISnap } from "../../types";
@@ -60,6 +59,11 @@ function RegisteredSnaps({
     );
   };
 
+  const UnregisterButtonWithTooltip = withTooltip(
+    Button,
+    "Snaps can only be unregistered by their owner.",
+  );
+
   const getData = () => {
     return snaps.map((snap) => {
       const isUsersSnap = snap.publisher.username === currentUser;
@@ -91,27 +95,18 @@ function RegisteredSnaps({
           },
           {
             content: isUsersSnap ? (
-              <button
-                className="p-button--base u-no-margin--bottom is-dense"
+              <Button
+                importance="secondary"
                 onClick={() => {
                   setSnapToUnregister(snap.snapName);
                 }}
               >
                 Unregister
-              </button>
+              </Button>
             ) : (
-              <>
-                <Tooltip
-                  message={"Snaps can only be unregistered by their owner."}
-                >
-                  <button
-                    className="u-no-margin--bottom u-no-margin--right is-dense"
-                    disabled
-                  >
-                    Unregister
-                  </button>
-                </Tooltip>
-              </>
+              <UnregisterButtonWithTooltip importance="secondary" disabled>
+                Unregister
+              </UnregisterButtonWithTooltip>
             ),
           },
           {
@@ -136,7 +131,14 @@ function RegisteredSnaps({
         },
       });
 
-      if (response.ok) {
+      if (response.status === 202) {
+        const resData = await response.json();
+        if (resData.authorization_required && resData.redirect_url) {
+          window.location.href = resData.redirect_url;
+        } else {
+          setError({ status: true, message: DEFAULT_ERROR_MESSAGE });
+        }
+      } else if (response.ok) {
         void refetchSnaps();
       } else {
         const resData = await response.json();

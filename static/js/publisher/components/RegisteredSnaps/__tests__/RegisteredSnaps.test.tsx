@@ -211,6 +211,58 @@ describe("RegisteredSnaps", () => {
     vi.unstubAllGlobals();
   });
 
+  test("should navigate to SSO authorization without refetching snaps", async () => {
+    const location = { href: "" };
+    vi.stubGlobal("location", location);
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(() =>
+        Promise.resolve({
+          status: 202,
+          ok: true,
+          json: () =>
+            Promise.resolve({
+              authorization_required: true,
+              redirect_url: "/login/unregister-snap/test-action",
+            }),
+        }),
+      ),
+    );
+    const refetchSnaps = vi.fn();
+    renderComponent([OWN_SNAP_DATA], refetchSnaps);
+    fireEvent.click(screen.getByRole("button", { name: "Unregister" }));
+    fireEvent.click(screen.getByRole("button", { name: "Unregister snap" }));
+
+    await waitFor(() => {
+      expect(location.href).toBe("/login/unregister-snap/test-action");
+    });
+    expect(refetchSnaps).not.toHaveBeenCalled();
+    vi.unstubAllGlobals();
+  });
+
+  test("should show an error for an incomplete authorization response", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(() =>
+        Promise.resolve({
+          status: 202,
+          ok: true,
+          json: () => Promise.resolve({ authorization_required: true }),
+        }),
+      ),
+    );
+    const refetchSnaps = vi.fn();
+    renderComponent([OWN_SNAP_DATA], refetchSnaps);
+    fireEvent.click(screen.getByRole("button", { name: "Unregister" }));
+    fireEvent.click(screen.getByRole("button", { name: "Unregister snap" }));
+
+    expect(
+      await screen.findByText("Something went wrong. Please try again later."),
+    ).toBeInTheDocument();
+    expect(refetchSnaps).not.toHaveBeenCalled();
+    vi.unstubAllGlobals();
+  });
+
   test("should show the default error message when the API response has no error message", async () => {
     const fetchMock = vi.fn(() =>
       Promise.resolve({

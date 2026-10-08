@@ -29,7 +29,7 @@ $font-monospace: '"Ubuntu Sans Mono", "Ubuntu Mono", ui-monospace, "SF Mono", Me
 // Tooltip doesn't have a `z-index` by default
 // causing it to get hidden behind certain elements
 .ds.tooltip {
-  z-index: 10;
+  z-index: 300;
 }
 
 @layer vanilla {

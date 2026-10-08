@@ -12,6 +12,7 @@
 </div>
 <script>
   window.CSRF_TOKEN = "{{ csrf_token() }}";
+  window.PUBLISHER_FLASH_MESSAGES = {{ get_flashed_messages(with_categories=true)|tojson }};
 </script>
 {{ vite_import('static/js/publisher/index.tsx') }}
 {% endblock %}

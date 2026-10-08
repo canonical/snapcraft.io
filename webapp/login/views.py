@@ -18,6 +18,10 @@ from webapp.publisher.snaps import logic
 from webapp.publisher.snaps.build_views import (
     complete_pending_snap_authorization,
 )
+from webapp.publisher.snaps.unregister import (
+    complete_pending_snap_unregister,
+    is_pending_snap_unregister_valid,
+)
 from canonicalwebteam.exceptions import StoreApiResponseErrorList
 
 login = flask.Blueprint(
@@ -43,8 +47,57 @@ open_id = OpenID(
 )
 
 dashboard = Dashboard(api_session)
-publisher_gateway = PublisherGW(api_publisher_session)
+publisher_gateway = PublisherGW("snap", api_publisher_session)
 device_gateway = DeviceGW("snap", api_session)
+
+
+@login.route(
+    "/login/unregister-snap/<authorization_id>", methods=["GET", "POST"]
+)
+@csrf.exempt
+@login_required
+@open_id.loginhandler
+def authorize_snap_unregister(authorization_id):
+    """
+    Obtain a fresh SSO discharge for a confirmed snap-name unregister.
+
+    Normal login exchanges and discards root/discharge macaroons to keep
+    the session cookie small, but snap unregister still uses SCA's legacy
+    authentication and cannot use the exchanged token. This round-trip
+    obtains the required credentials only for the pending action, without
+    replacing the user's login session. Completion validates the action,
+    account and five-minute expiry before unregistering and discarding the
+    temporary credentials.
+    """
+    pending = flask.session.get("pending_snap_unregister")
+    openid_error = flask.session.pop("openid_error", None)
+    if (
+        not is_pending_snap_unregister_valid(pending, authorization_id)
+        or openid_error
+        or "root_macaroon" in pending
+    ):
+        flask.session.pop("pending_snap_unregister", None)
+        flask.flash(
+            "Unregister authorization expired, failed or was cancelled. "
+            "Please try again.",
+            "negative",
+        )
+        return flask.redirect("/snaps")
+
+    try:
+        root = authentication.request_macaroon()
+    except ApiResponseError as api_error:
+        flask.session.pop("pending_snap_unregister", None)
+        return flask.abort(502, str(api_error))
+
+    pending["root_macaroon"] = root
+    flask.session.modified = True
+    return open_id.try_login(
+        LOGIN_URL,
+        extensions=[
+            MacaroonRequest(caveat_id=authentication.get_caveat_id(root))
+        ],
+    )
 
 
 @login.route("/login/snap-build-authorization", methods=["GET", "POST"])
@@ -111,10 +164,17 @@ def login_handler():
 
 @open_id.after_login
 def after_login(resp):
-    # This same OpenID round-trip is reused for two purposes: a normal
-    # user login, and (see authorize_snap_build above) discharging a
-    # snap's Launchpad upload macaroon. Handle the latter first and bail
-    # out early, since none of the account/session logic below applies.
+    # Unregister uses SSO to discharge temporary credentials, not to log in.
+    # Complete the confirmed action before normal login handling can replace
+    # the existing publisher session.
+    if flask.request.endpoint == "login.authorize_snap_unregister":
+        return complete_pending_snap_unregister(
+            resp, flask.request.view_args["authorization_id"]
+        )
+
+    # Other callbacks either log in or discharge a snap's Launchpad upload
+    # macaroon (see authorize_snap_build). Handle build authorization first,
+    # since none of the account/session logic below applies to it.
     pending = flask.session.pop("pending_snap_authorization", None)
     if pending:
         discharge_macaroon = resp.extensions["macaroon"].discharge
