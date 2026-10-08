@@ -71,6 +71,10 @@ function PubliciseButtons(): React.JSX.Element {
             <a href="https://github.com/canonical/snapcraft.io">
               in this repository
             </a>
+            . For instructions,{" "}
+            <a href="https://github.com/canonical/snapcraft.io/blob/main/HACKING.md#adding-new-publicise-svg-badges">
+              click here
+            </a>
             .
           </p>
         </Col>
