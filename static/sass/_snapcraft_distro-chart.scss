@@ -22,10 +22,15 @@
   .snapcraft-distro-chart {
     margin-bottom: var(--dimension-300);
 
-    .p-show-more__fade {
+    .p-show-more__fade,
+    .p-show-more__less {
       left: 0;
       position: absolute;
       top: 100%;
+    }
+
+    .p-show-more__less [aria-expanded="true"] {
+      background-color: transparent;
     }
 
     &__heading {
