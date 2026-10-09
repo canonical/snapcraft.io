@@ -45,8 +45,6 @@ const SerialLog = importComponent(() => import("./pages/SerialLog"));
 
 Sentry.init({
   dsn: window.SENTRY_DSN,
-  integrations: [Sentry.browserTracingIntegration()],
-  tracesSampleRate: 1.0,
 });
 
 const rootEl = document.getElementById("root")! as HTMLElement;
