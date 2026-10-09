@@ -10,7 +10,10 @@ export default defineConfig({
     setupFiles: ["static/js/test/setup.ts"],
     server: {
       deps: {
-        inline: ["@canonical/react-ds-global"],
+        inline: [
+          "@canonical/react-ds-global",
+          "@canonical/react-ds-global-form",
+        ],
       },
     },
     silent: "passed-only", // silence logs for passed tests
