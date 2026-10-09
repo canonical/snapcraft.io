@@ -9,6 +9,7 @@ The web frontend for the snap store.
 import webapp.config  # noqa: F401
 
 import sentry_sdk
+from sentry_sdk.integrations.logging import ignore_logger
 from flask import send_from_directory
 
 try:
@@ -53,6 +54,8 @@ def create_app(testing=False):
         # is in flight. It is expected shutdown behaviour, not an app
         # error, so we do not report it to Sentry.
         ignore_errors.append(GreenletExit)
+
+    ignore_logger("canonicalwebteam.store_api.base")
 
     sentry_sdk.init(
         dsn=SENTRY_DSN,
