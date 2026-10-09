@@ -2460,14 +2460,6 @@
   resolved "https://registry.yarnpkg.com/@sentry/core/-/core-10.52.0.tgz#13842ef35db9909d64770d84656704cb929de445"
   integrity sha512-VA/kAqLhkMnRWY2RXdBLyTemR9D4m7MVRy/gyapoq9yvllVPx9WXbvKgnMP2LQp7mFgT/oLFvw58aQKaYTGn3A==
 
-"@sentry/react@10.52.0":
-  version "10.52.0"
-  resolved "https://registry.yarnpkg.com/@sentry/react/-/react-10.52.0.tgz#890b15610ef0364398532279a8641391ee1a90e7"
-  integrity sha512-2m72QCsja2cJJHD0ALxRnVt0qMEC2FV4LSi6AAiEdEG4lTb6mgcxavx5pJrW90jE+6dMGPbUz4q8c9vi4jh1qQ==
-  dependencies:
-    "@sentry/browser" "10.52.0"
-    "@sentry/core" "10.52.0"
-
 "@sinclair/typebox@^0.27.8":
   version "0.27.10"
   resolved "https://registry.yarnpkg.com/@sinclair/typebox/-/typebox-0.27.10.tgz#beefe675f1853f73676aecc915b2bd2ac98c4fc6"

@@ -1,4 +1,3 @@
-import * as Sentry from "@sentry/react";
 import { Provider as JotaiProvider } from "jotai";
 import { createRoot } from "react-dom/client";
 import { QueryClient, QueryClientProvider } from "react-query";
@@ -42,10 +41,6 @@ const ValidationSets = importComponent(() => import("./pages/ValidationSets"));
 const AccountKeys = importComponent(() => import("./pages/AccountKeys"));
 const Remodel = importComponent(() => import("./pages/Remodel"));
 const SerialLog = importComponent(() => import("./pages/SerialLog"));
-
-Sentry.init({
-  dsn: window.SENTRY_DSN,
-});
 
 const rootEl = document.getElementById("root")! as HTMLElement;
 const root = createRoot(rootEl);
