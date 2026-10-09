@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">82.75% </span>
+                <span class="strong">82.95% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>72/87</span>
+                <span class='fraction'>73/88</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">82.75% </span>
+                <span class="strong">82.95% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>72/87</span>
+                <span class='fraction'>73/88</span>
             </div>
         
             
@@ -664,7 +664,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">53x</span>
 <span class="cline-any cline-yes">53x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -850,6 +849,11 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">53x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1173,10 +1177,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1220,14 +1220,13 @@
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { useState, useEffect } from "react";
 import { FieldValues, useForm, useWatch } from "react-hook-form";
 import {
-  Button,
   Form,
   Strip,
   Row,
   Col,
   Notification,
-  Tooltip,
 } from "@canonical/react-components";
+import { Button, withTooltip } from "@canonical/react-ds-global";
 &nbsp;
 import SaveAndPreview from "../../components/SaveAndPreview";
 import SearchAutocomplete from "../../components/SearchAutocomplete";
@@ -1421,6 +1420,11 @@ function PublisherSettingsForm({ settings }: Props) {
         console.error("Error:", error);
       });
   }, [settingsData?.snap_name]);
+&nbsp;
+  const UnregisterButtonWithTooltip = withTooltip(
+    Button,
+    "Snaps can only be unregistered by their owner.",
+  );
 &nbsp;
   return (
     &lt;&gt;
@@ -1737,22 +1741,18 @@ function PublisherSettingsForm({ settings }: Props) {
             &lt;Col size={8}&gt;
               &lt;div className="p-form__control" aria-labelledby="status-label"&gt;
                 {settingsData?.status === "unpublished" ? (
-<span class="branch-0 cbranch-no" title="branch not covered" >                  &lt;div&gt;</span>
-                    &lt;span className="u-margin--right"&gt;Registered&lt;/span&gt;
+<span class="branch-0 cbranch-no" title="branch not covered" >                  &lt;div style={{ display: "flex", gap: "1rem" }}&gt;</span>
+                    &lt;span&gt;Registered&lt;/span&gt;
                     {!isUsersSnap ? (
-                      &lt;Tooltip
-                        message={
-                          &lt;&gt;Snaps can only be unregistered by their owner.&lt;/&gt;
-                        }
-                        position="top-center"
+                      &lt;UnregisterButtonWithTooltip
+                        importance="secondary"
+                        disabled
                       &gt;
-                        &lt;Button inline={true} disabled&gt;
-                          Unregister
-                        &lt;/Button&gt;
-                      &lt;/Tooltip&gt;
+                        Unregister
+                      &lt;/UnregisterButtonWithTooltip&gt;
                     ) : (
                       &lt;Button
-                        inline={true}
+                        importance="secondary"
                         onClick={<span class="fstat-no" title="function not covered" >(e</span>vent) =&gt; {
 <span class="cstat-no" title="statement not covered" >                          event.preventDefault();</span>
 <span class="cstat-no" title="statement not covered" >                          setUnregisterModalOpen(true);</span>
@@ -1801,7 +1801,7 @@ export default PublisherSettingsForm;
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-10-07T22:07:49.792Z
+                at 2026-10-09T22:08:06.476Z
             </div>
         <script src="../../../../prettify.js"></script>
         <script>
