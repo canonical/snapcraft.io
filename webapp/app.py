@@ -42,7 +42,7 @@ from webapp.endpoints.validation_sets import validation_sets
 from webapp.endpoints.invites import invites
 from webapp.endpoints.settings import settings
 from webapp.feeds.feeds import feeds
-from webapp.config import SENTRY_DSN
+from webapp.config import SENTRY_CONFIG, SENTRY_DSN
 
 
 def create_app(testing=False):
@@ -54,7 +54,11 @@ def create_app(testing=False):
         # error, so we do not report it to Sentry.
         ignore_errors.append(GreenletExit)
 
-    sentry_sdk.init(dsn=SENTRY_DSN, ignore_errors=ignore_errors)
+    sentry_sdk.init(
+        dsn=SENTRY_DSN,
+        ignore_errors=ignore_errors,
+        **SENTRY_CONFIG,
+    )
 
     app = FlaskBase(
         __name__,
