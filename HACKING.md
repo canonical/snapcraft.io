@@ -58,13 +58,6 @@ LP_API_TOKEN=<Your Launchpad API token>
 LP_API_TOKEN_SECRET=<Your Launchpad API secret>
 ```
 
-### Generate Un-Editable (convert fonts to lines and paths) SVG for badges
-
-1. Place the new badge under `static/images/badges_editable/<language_tag>/snap-store-<color>.svg`. Do not directly place under `badges`; running this script will overwrite a file already present.
-1. Install Inkscape CLI via `sudo apt install inkscape` or `sudo snap install inkscape`.
-2. Install scour via `pip install scour` or `sudo apt install python3-scour` to minify generated badges.
-3. Run `python scripts/generate-minified-badges.py` to convert.
-
 ## Using Sentry error tracker
 
 For development purposes, visit https://sentry.io/signup/, signup and setup a project. By then you will have a sentry DSN string like:
@@ -89,6 +82,16 @@ Install [`dotrun`](https://github.com/canonical/dotrun), then run
 dotrun test
 ```
 
+## Adding new Publicise SVG Badges
+
+1. Take a look under `static/images/badges_editable/`; and pick another language to use as a template. For example, `en` (English), for LTR; `ar` (Arabic), for RTL; etc. **If you find none of the existing languages suitable for your template, you may modify the `x` and `y` coordinates for text to your liking, however the changes & positioning should be consistent with other badges, no modifications or appendages to the logo is allowed**
+2. Place the new badge under `static/images/badges_editable/<language_tag>/snap-store-<color>.svg`. Do not directly place under `badges`; running this script will overwrite a file already present.
+3. Install Inkscape CLI via `sudo apt install inkscape` or `sudo snap install inkscape`. (*Ubuntu environment is assumed, feel free to use your distro specific installation methods*)
+4. Install scour via `pip install scour` or `sudo apt install python3-scour` to minify generated badges.
+5. Run `python scripts/generate-minified-badges.py` to convert. (*Use `python3` if your distro does not automatically alias it*)
+6. Make equivalent changes under `static/js/publisher/pages/Publicise/PubliciseButtons.tsx`, specifically inside `LANGUAGES` object
+7. **Important** Test your changes to ensure they work. If using `dotrun`, change the values of `darkBadgeSource` & `lightBadgeSource` in the above file, to point to `http://localhost:8004` (or whichever port is set via `.env`), for the badges to render.
+
 ## Update the list of licenses
 
 The licenses that we use are based on the [SPDX Specification](https://spdx.github.io/license-list-data/). In order to have all the products supporting the same set of licenses, the list needs to be synchronised between snapcraft.io, snapd and the snap store.
@@ -99,7 +102,6 @@ In case you need to update the license list:
 - Make sure the function `get_licenses()` in the [./webapp/helpers.py](./webapp/helpers.py) is still working
 
 We are supporting some custom licenses (like the Proprietary license). On update of the list, make sure that they have not been included since. This will avoid having duplicate licenses.
-
 
 ## Fetching CVE Data
 When the app is run locally, a GitHub personal access token is required to fetch the CVE data. Make sure you have access to the [canonicalwebteam.snap-cves](https://github.com/canonical/canonicalwebteam.snap-cves) repository. After creating a GitHub classic personal access token, follow the steps described in [GitHub's documentation](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens#personal-access-tokens-classic).
