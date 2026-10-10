@@ -11,6 +11,7 @@ from webapp import helpers
 from webapp.helpers import api_session
 from webapp.decorators import login_required
 from webapp.markdown import parse_markdown_description
+from webapp.metrics import metrics
 from webapp.publisher.snaps import preview_data
 from webapp.store.logic import (
     filter_screenshots,
@@ -95,5 +96,10 @@ def post_preview(snap_name):
     # maps
     context["countries"] = preview_data.get_countries()
     context["normalized_os"] = preview_data.get_normalised_oses()
+    context.update(
+        metrics.get_usage_context(
+            context["countries"], context["normalized_os"]
+        )
+    )
 
     return flask.render_template("store/snap-details.html", **context)

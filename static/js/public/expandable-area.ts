@@ -10,6 +10,7 @@ export default function initExpandableArea(
     showMoreContainer.forEach((el) => {
       const fadeEl = el.querySelector(".p-show-more__fade");
       const linkEl = el.querySelector(".p-show-more__link");
+      const lessEl = el.querySelector(".p-show-more__less");
 
       if (overflowSelector && heightMatchSelector) {
         const overflowEl = el.querySelector(overflowSelector) as HTMLElement;
@@ -29,7 +30,20 @@ export default function initExpandableArea(
 
           fadeEl.classList.add("u-hide");
           el.classList.remove("is-collapsed");
+          lessEl?.classList.remove("u-hide");
         });
+      }
+
+      if (fadeEl && lessEl) {
+        lessEl
+          .querySelector("button")
+          ?.addEventListener("click", function (event) {
+            event.preventDefault();
+
+            lessEl.classList.add("u-hide");
+            el.classList.add("is-collapsed");
+            fadeEl.classList.remove("u-hide");
+          });
       }
     });
   }

@@ -13,6 +13,7 @@ import webapp.template_utils as template_utils
 from canonicalwebteam import image_template
 from webapp import authentication
 import webapp.helpers as helpers
+import webapp.metrics.metrics as metrics
 from webapp.config import (
     BSI_URL,
     LOGIN_URL,
@@ -218,6 +219,8 @@ def snapcraft_utility_processor():
         "DNS_VERIFICATION_SALT": DNS_VERIFICATION_SALT,
         "DEFAULT_ICON_URL": DEFAULT_ICON_URL,
         "STATUS_BANNER": STATUS_BANNER,
+        "COUNTRY_COLORS": metrics.COUNTRY_COLORS,
+        "NO_USERS_COLOR": metrics.NO_USERS_COLOR,
     }
 
 

@@ -1,0 +1,48 @@
+{% macro distro_rows(distros, max_value) %}
+  {% for distro in distros %}
+  <div class="snapcraft-distro-chart__row">
+    <div class="snapcraft-distro-chart__name" title="{{ distro.name }}">{{ distro.name }}</div>
+    <div class="snapcraft-distro-chart__track">
+      <div
+        class="snapcraft-distro-chart__bar"
+        style="width: {{ ((distro.value / max_value * 100) | round(2)) if max_value else 0 }}%;"
+      ></div>
+    </div>
+  </div>
+  {% endfor %}
+{% endmacro %}
+
+{% macro distro_axis() %}
+  <div class="snapcraft-distro-chart__axis u-text--muted" aria-hidden="true">
+    {% for tick in [0, 25, 50, 75, 100] %}
+    <span class="snapcraft-distro-chart__tick" style="left: {{ tick }}%;">{{ tick }}%</span>
+    {% endfor %}
+  </div>
+{% endmacro %}
+
+{% macro distro_chart(distros, max_value, variant, list_limit=5) %}
+  <div class="snapcraft-distro-chart snapcraft-distro-chart--{{ variant }}">
+    {% if distros|length > list_limit %}
+      {{ distro_rows(distros[:list_limit], max_value) }}
+      <div class="p-show-more is-collapsed" data-js="js-show-more">
+        <div>
+          {{ distro_rows(distros[list_limit:], max_value) }}
+        </div>
+        {{ distro_axis() }}
+        <div class="p-show-more__fade">
+          <div class="p-show-more__link-container">
+            <button class="p-button--link p-show-more__link is-small u-no-padding" aria-expanded="false" data-analytics-click data-analytics-target="details_map_show_more_distributions">Show more</button>
+          </div>
+        </div>
+        <div class="p-show-more__less u-hide">
+          <div class="p-show-more__link-container">
+            <button class="p-button--link p-show-more__link is-small u-no-padding" aria-expanded="true" data-analytics-click data-analytics-target="details_map_show_less_distributions">Show less</button>
+          </div>
+        </div>
+      </div>
+    {% else %}
+      {{ distro_rows(distros, max_value) }}
+      {{ distro_axis() }}
+    {% endif %}
+  </div>
+{% endmacro %}

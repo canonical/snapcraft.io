@@ -43,4 +43,57 @@
       width: $sp-medium;
     }
   }
+
+  .snapcraft-territories-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: $sp-small var(--dimension-100);
+    justify-content: center;
+    margin-top: $sp-small;
+
+    &__item {
+      align-items: center;
+      display: flex;
+      flex-direction: column;
+      gap: $sp-x-small;
+    }
+
+    &__range {
+      column-gap: $sp-small;
+      display: grid;
+      grid-template-columns: auto auto;
+      row-gap: $sp-x-small;
+    }
+
+    &__scale {
+      display: flex;
+      grid-column: 1 / -1;
+    }
+
+    &__scale &__box {
+      flex: 1 1 var(--dimension-300);
+    }
+
+    &__label {
+      @include pragma-text(tertiary);
+    }
+
+    &__min,
+    &__max {
+      white-space: nowrap;
+    }
+
+    &__min {
+      justify-self: start;
+    }
+
+    &__max {
+      justify-self: end;
+    }
+
+    &__box {
+      height: var(--dimension-300);
+      width: var(--dimension-300);
+    }
+  }
 }
