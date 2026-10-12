@@ -1,3 +1,4 @@
 /* Second entry per @canonical/styles-vanilla-adapter step 4: pragma's CSS for
    pages that render react-ds-global components, loaded after styles.scss. */
 @import url("@canonical/styles-vanilla-adapter/adapter.css");
+@import url("@canonical/react-ds-global-form/dist/esm/index.css");
