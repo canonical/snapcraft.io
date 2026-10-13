@@ -1,9 +1,17 @@
-import { Dispatch, useState, SetStateAction } from "react";
+import {
+  ChangeEvent,
+  Dispatch,
+  useEffect,
+  useRef,
+  useState,
+  SetStateAction,
+} from "react";
 import { useNavigate, useParams, useLocation, Link } from "react-router-dom";
 import { useAtomValue, useAtom, useSetAtom } from "jotai";
 import { useMutation, useQueryClient } from "react-query";
-import { Input, Button } from "@canonical/react-components";
-import { Icon } from "@canonical/react-ds-global";
+import { Icon, Button } from "@canonical/react-ds-global";
+import { Field, Form } from "@canonical/react-ds-global-form";
+import { useForm, type FieldValues } from "react-hook-form";
 
 import { checkSigningKeyExists, setPageTitle } from "../../utils";
 
@@ -37,6 +45,22 @@ function CreateSigningKeyForm({
   const setSigningKeysList = useSetAtom(signingKeysListState);
   const [isSaving, setIsSaving] = useState(false);
   const queryClient = useQueryClient();
+  const methods = useForm<FieldValues>({
+    values: newSigningKey,
+    mode: "onChange",
+  });
+  const { trigger, clearErrors } = methods;
+  // Field memoizes registration options, so validation needs the latest list
+  const signingKeysListRef = useRef(signingKeysList);
+  signingKeysListRef.current = signingKeysList;
+
+  useEffect(() => {
+    if (newSigningKey.name) {
+      void trigger("name");
+    } else {
+      clearErrors("name");
+    }
+  }, [newSigningKey.name, signingKeysList, trigger, clearErrors]);
 
   const handleError = () => {
     setSigningKeysList((oldSigningKeysList: Array<SigningKey>) => {
@@ -109,74 +133,71 @@ function CreateSigningKeyForm({
   }
 
   return (
-    <form
-      onSubmit={(event) => {
-        event.preventDefault();
-        mutation.mutate({ name: newSigningKey.name });
-      }}
-      style={{ height: "100%" }}
-    >
-      <div className="p-panel is-flex-column">
-        <div className="p-panel__header">
-          <h4 className="p-panel__title p-muted-heading">Create signing key</h4>
-        </div>
-        <div className="p-panel__content">
-          <div className="u-fixed-width" style={{ marginBottom: "30px" }}>
+    <div className="p-panel">
+      <div className="p-panel__header">
+        <h4 className="p-panel__title p-muted-heading">Create signing key</h4>
+      </div>
+      <div className="p-panel__content">
+        <div className="u-fixed-width">
+          <Form
+            methods={methods}
+            onSubmit={() => {
+              mutation.mutate({ name: newSigningKey.name });
+            }}
+          >
             {isSaving && (
               <p>
                 <Icon icon="spinner" className="u-animation--spin" />
                 &nbsp;Adding new signing key...
               </p>
             )}
-            <Input
-              type="text"
+            <Field
+              inputType="text"
+              name="name"
               id="signing-key-name-field"
               placeholder="e.g. display-name-123"
               label="Signing key name"
-              help="Name should contain lowercase alphanumeric characters and hyphens only"
-              value={newSigningKey.name}
-              onChange={(e) => {
-                const value = e.target.value;
-                setNewSigningKey({ ...newSigningKey, name: value });
+              description="Name should contain lowercase alphanumeric characters and hyphens only"
+              registerProps={{
+                onChange: (event: ChangeEvent<HTMLInputElement>) => {
+                  setNewSigningKey({ name: event.target.value });
+                },
+                validate: (name: string) =>
+                  !checkSigningKeyExists(name, signingKeysListRef.current) ||
+                  `Signing key ${name} already exists`,
               }}
-              error={
-                checkSigningKeyExists(newSigningKey.name, signingKeysList)
-                  ? `Signing key ${newSigningKey.name} already exists`
-                  : null
-              }
-              required
             />
-          </div>
-          <div className="u-fixed-width">
             <p>* Mandatory field</p>
-            <hr />
-            <div className="u-align--right">
-              <Link
-                className="p-button u-no-margin--bottom"
-                to={`/admin/${id}/signing-keys`}
-                onClick={() => {
-                  setNewSigningKey({ name: "" });
-                  setErrorMessage("");
-                }}
-              >
-                Cancel
-              </Link>
-              <Button
-                type="submit"
-                appearance="positive"
-                className="u-no-margin--bottom u-no-margin--right"
-                disabled={
-                  !newSigningKey.name ||
-                  checkSigningKeyExists(newSigningKey.name, signingKeysList)
-                }
-              >
-                Add signing key
-              </Button>
+            <div>
+              <hr className="pragma-hr" />
+              <div className="u-align--right">
+                <Link
+                  to={`/admin/${id}/signing-keys`}
+                  onClick={() => {
+                    setNewSigningKey({ name: "" });
+                    setErrorMessage("");
+                  }}
+                >
+                  Cancel
+                </Link>
+                <Button
+                  type="submit"
+                  importance="primary"
+                  anticipation="constructive"
+                  disabled={
+                    !newSigningKey.name ||
+                    checkSigningKeyExists(newSigningKey.name, signingKeysList)
+                  }
+                  style={{ marginLeft: "1rem" }}
+                >
+                  Add signing key
+                </Button>
+              </div>
             </div>
-          </div>
+          </Form>
         </div>
       </div>
-    </form>
+    </div>
   );
 }
 
