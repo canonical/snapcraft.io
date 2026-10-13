@@ -115,6 +115,21 @@
     width: auto;
   }
 
+  .p-report-snap-modal__section {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 250ms ease-out;
+
+    &.is-open {
+      grid-template-rows: 1fr;
+    }
+  }
+
+  .p-report-snap-modal__section-inner {
+    min-height: 0;
+    overflow: hidden;
+  }
+
   .p-package-header {
     container: pkgname / inline-size;
 
