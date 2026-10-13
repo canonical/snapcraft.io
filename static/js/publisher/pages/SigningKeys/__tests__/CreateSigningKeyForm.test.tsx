@@ -35,7 +35,7 @@ describe("CreateSigningKeyForm", () => {
     renderComponent();
     expect(
       screen.getByRole("button", { name: "Add signing key" }),
-    ).toHaveAttribute("aria-disabled", "true");
+    ).toBeDisabled();
   });
 
   it("enables 'Add signing key' button if there is a new signing key name", async () => {
