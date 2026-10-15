@@ -17,7 +17,8 @@ const LANGUAGES = {
   pt: { title: "Português", text: "Disponível na Snap Store" },
   ro: { title: "Română", text: "Instalează din Snap Store" },
   ru: { title: "русский язык", text: "Загрузите из Snap Store" },
-  tw: { title: "中文（台灣) ", text: "安裝軟體敬請移駕 Snap Store" },
+  sk: { title: "Slovenčina", text: "Stiahnuť na Snap Store" },
+  tw: { title: "中文（台灣）", text: "安裝軟體敬請移駕 Snap Store" },
   uk: { title: "Українська", text: "Завантажте з Snap Store" },
 };
 
@@ -151,24 +152,9 @@ function PubliciseButtons(): React.JSX.Element {
       </Row>
       <hr />
       <Row>
-        <Col size={2}>
-          <p>Download all:</p>
-        </Col>
-        <Col size={10}>
-          <a
-            className="p-button"
-            href="https://github.com/snapcore/snap-store-badges/archive/v1.4.2.zip"
-          >
-            zip
-          </a>
-          <a
-            className="p-button"
-            href="https://github.com/snapcore/snap-store-badges/archive/v1.4.2.tar.gz"
-          >
-            tar.gz
-          </a>
-          <a href="https://raw.githubusercontent.com/snapcore/snap-store-badges/master/LICENSE.md">
-            View image licence
+        <Col size={12}>
+          <a href="https://raw.githubusercontent.com/canonical/snapcraft.io/main/LICENSE.md">
+            View licence
           </a>
         </Col>
       </Row>
