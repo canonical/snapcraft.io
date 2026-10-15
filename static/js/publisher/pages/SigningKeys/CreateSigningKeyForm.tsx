@@ -1,11 +1,4 @@
-import {
-  ChangeEvent,
-  Dispatch,
-  useEffect,
-  useRef,
-  useState,
-  SetStateAction,
-} from "react";
+import { ChangeEvent, Dispatch, useState, SetStateAction } from "react";
 import { useNavigate, useParams, useLocation } from "react-router-dom";
 import { useAtomValue, useAtom, useSetAtom } from "jotai";
 import { useMutation, useQueryClient } from "react-query";
@@ -15,6 +8,8 @@ import { useForm, type FieldValues } from "react-hook-form";
 
 import { checkSigningKeyExists, setPageTitle } from "../../utils";
 import RouterLinkButton from "../../components/RouterLinkButton";
+import useLatestRef from "../../hooks/useLatestRef";
+import useRevalidateField from "../../hooks/useRevalidateField";
 
 import {
   signingKeysListState,
@@ -51,17 +46,11 @@ function CreateSigningKeyForm({
     mode: "onChange",
   });
   const { trigger, clearErrors } = methods;
-  // Field memoizes registration options, so validation needs the latest list
-  const signingKeysListRef = useRef(signingKeysList);
-  signingKeysListRef.current = signingKeysList;
+  const signingKeysListRef = useLatestRef(signingKeysList);
 
-  useEffect(() => {
-    if (newSigningKey.name) {
-      void trigger("name");
-    } else {
-      clearErrors("name");
-    }
-  }, [newSigningKey.name, signingKeysList, trigger, clearErrors]);
+  useRevalidateField(trigger, clearErrors, "name", newSigningKey.name, [
+    signingKeysList,
+  ]);
 
   const handleError = () => {
     setSigningKeysList((oldSigningKeysList: Array<SigningKey>) => {

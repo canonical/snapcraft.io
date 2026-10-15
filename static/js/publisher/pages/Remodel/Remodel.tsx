@@ -3,14 +3,14 @@ import { useAtomValue, useSetAtom } from "jotai";
 import { useQueryClient } from "react-query";
 import {
   useParams,
-  Link,
   useNavigate,
   useLocation,
   useSearchParams,
 } from "react-router-dom";
-import { Button, Notification } from "@canonical/react-components";
-import { Button as ModalButton, Icon, Modal } from "@canonical/react-ds-global";
+import { Notification } from "@canonical/react-components";
+import { Button, Icon, Modal } from "@canonical/react-ds-global";
 
+import RouterLinkButton from "../../components/RouterLinkButton";
 import { useRemodels, useUserPrivileges } from "../../hooks";
 import { remodelsListState } from "../../state/remodelsState";
 import { brandIdState, brandStoreState } from "../../state/brandStoreState";
@@ -285,31 +285,26 @@ function Remodel(): React.JSX.Element {
             {canManageRemodelAllowlist && (
               <div className="u-fixed-width u-align--right">
                 <Button
+                  importance="secondary"
                   disabled={remodelsToDelete.length === 0 || isBulkDeleting}
                   onClick={() => setShowBulkDeleteModal(true)}
-                  className={isBulkDeleting ? "has-icon" : ""}
+                  loading={isBulkDeleting}
                 >
-                  {isBulkDeleting ? (
-                    <>
-                      <Icon
-                        icon="spinner"
-                        className="u-animation--spin is-light"
-                      />
-                      &nbsp;Deleting...
-                    </>
-                  ) : remodelsToDelete.length > 1 ? (
-                    `Delete ${remodelsToDelete.length} remodels`
-                  ) : (
-                    "Delete remodel"
-                  )}
+                  {isBulkDeleting
+                    ? "Deleting..."
+                    : remodelsToDelete.length > 1
+                      ? `Delete ${remodelsToDelete.length} remodels`
+                      : "Delete remodel"}
                 </Button>
 
-                <Link
-                  className={`p-button--positive ${isError && !data ? "is-disabled" : ""}`}
+                <RouterLinkButton
+                  importance="primary"
+                  anticipation="constructive"
+                  style={{ marginLeft: "1rem" }}
                   to={`/admin/${id}/models/${modelId}/remodel/configure`}
                 >
                   Configure remodels
-                </Link>
+                </RouterLinkButton>
               </div>
             )}
 
@@ -414,15 +409,15 @@ function Remodel(): React.JSX.Element {
               </p>
             </Modal.Content>
             <Modal.Footer>
-              <ModalButton
+              <Button
                 className="u-no-margin--bottom"
                 importance="secondary"
                 disabled={isBulkDeleting}
                 onClick={() => setShowBulkDeleteModal(false)}
               >
                 Cancel
-              </ModalButton>
-              <ModalButton
+              </Button>
+              <Button
                 className="u-no-margin--bottom u-no-margin--right"
                 importance="primary"
                 anticipation="destructive"
@@ -433,7 +428,7 @@ function Remodel(): React.JSX.Element {
                 }}
               >
                 {isBulkDeleting ? "Deleting..." : "Delete"}
-              </ModalButton>
+              </Button>
             </Modal.Footer>
           </Modal>
         )}
