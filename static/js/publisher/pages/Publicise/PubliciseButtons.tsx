@@ -150,6 +150,14 @@ function PubliciseButtons(): React.JSX.Element {
           </div>
         </Col>
       </Row>
+      <hr />
+      <Row>
+        <Col size={12}>
+          <a href="https://raw.githubusercontent.com/canonical/snapcraft.io/main/LICENSE.md">
+            View licence
+          </a>
+        </Col>
+      </Row>
     </>
   );
 }
