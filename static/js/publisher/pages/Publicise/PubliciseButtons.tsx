@@ -17,6 +17,7 @@ const LANGUAGES = {
   pt: { title: "Português", text: "Disponível na Snap Store" },
   ro: { title: "Română", text: "Instalează din Snap Store" },
   ru: { title: "русский язык", text: "Загрузите из Snap Store" },
+  sk: { title: "Slovenčina", text: "Stiahnuť na Snap Store" },
   tw: { title: "中文（台灣）", text: "安裝軟體敬請移駕 Snap Store" },
   uk: { title: "Українська", text: "Завантажте з Snap Store" },
 };
