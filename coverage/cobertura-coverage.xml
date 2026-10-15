@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 <!DOCTYPE coverage SYSTEM "http://cobertura.sourceforge.net/xml/coverage-04.dtd">
-<coverage lines-valid="7536" lines-covered="3822" line-rate="0.5071" branches-valid="4997" branches-covered="2359" branch-rate="0.47200000000000003" timestamp="1792015997685" complexity="0" version="0.1">
+<coverage lines-valid="7536" lines-covered="3822" line-rate="0.5071" branches-valid="4997" branches-covered="2359" branch-rate="0.47200000000000003" timestamp="1792102069896" complexity="0" version="0.1">
   <sources>
     <source>/home/runner/work/snapcraft.io/snapcraft.io</source>
   </sources>
@@ -7126,15 +7126,15 @@
         </class>
         <class name="RepoNotConnected.tsx" filename="static/js/publisher/pages/Builds/RepoNotConnected.tsx" line-rate="1" branch-rate="1">
           <methods>
-            <method name="RepoNotConnected" hits="1" signature="()V">
+            <method name="RepoNotConnected" hits="2" signature="()V">
               <lines>
-                <line number="11" hits="1"/>
+                <line number="11" hits="2"/>
               </lines>
             </method>
           </methods>
           <lines>
-            <line number="16" hits="1" branch="false"/>
-            <line number="18" hits="1" branch="false"/>
+            <line number="16" hits="2" branch="false"/>
+            <line number="18" hits="2" branch="false"/>
           </lines>
         </class>
         <class name="RepoSelector.tsx" filename="static/js/publisher/pages/Builds/RepoSelector.tsx" line-rate="0.7857" branch-rate="0.7162000000000001">
@@ -11025,33 +11025,33 @@
           <methods>
             <method name="PubliciseButtons" hits="4" signature="()V">
               <lines>
-                <line number="26" hits="4"/>
+                <line number="27" hits="4"/>
               </lines>
             </method>
-            <method name="(anonymous_1)" hits="64" signature="()V">
+            <method name="(anonymous_1)" hits="68" signature="()V">
               <lines>
-                <line number="58" hits="64"/>
+                <line number="59" hits="68"/>
               </lines>
             </method>
             <method name="(anonymous_2)" hits="0" signature="()V">
               <lines>
-                <line number="64" hits="0"/>
+                <line number="65" hits="0"/>
               </lines>
             </method>
           </methods>
           <lines>
             <line number="5" hits="1" branch="false"/>
-            <line number="27" hits="4" branch="false"/>
             <line number="28" hits="4" branch="false"/>
-            <line number="30" hits="4" branch="false"/>
+            <line number="29" hits="4" branch="false"/>
             <line number="31" hits="4" branch="false"/>
-            <line number="33" hits="4" branch="false"/>
-            <line number="39" hits="4" branch="false"/>
-            <line number="45" hits="4" branch="false"/>
-            <line number="47" hits="4" branch="false"/>
-            <line number="49" hits="4" branch="false"/>
-            <line number="59" hits="64" branch="false"/>
-            <line number="65" hits="0" branch="false"/>
+            <line number="32" hits="4" branch="false"/>
+            <line number="34" hits="4" branch="false"/>
+            <line number="40" hits="4" branch="false"/>
+            <line number="46" hits="4" branch="false"/>
+            <line number="48" hits="4" branch="false"/>
+            <line number="50" hits="4" branch="false"/>
+            <line number="60" hits="68" branch="false"/>
+            <line number="66" hits="0" branch="false"/>
           </lines>
         </class>
         <class name="PubliciseCards.tsx" filename="static/js/publisher/pages/Publicise/PubliciseCards.tsx" line-rate="0.6333" branch-rate="0.4">
