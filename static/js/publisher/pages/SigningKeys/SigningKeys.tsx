@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { useAtomValue, useSetAtom } from "jotai";
 import {
-  Link,
   useParams,
   useNavigate,
   useSearchParams,
@@ -22,6 +21,7 @@ import { brandIdState, brandStoreState } from "../../state/brandStoreState";
 import Filter from "../../components/Filter";
 import SigningKeysTable from "./SigningKeysTable";
 import CreateSigningKeyForm from "./CreateSigningKeyForm";
+import RouterLinkButton from "../../components/RouterLinkButton";
 import {
   isClosedPanel,
   setPageTitle,
@@ -107,12 +107,13 @@ function SigningKeys(): React.JSX.Element {
           />
         </Col>
         <Col size={6} className="u-align--right">
-          <Link
-            className="p-button--positive"
+          <RouterLinkButton
+            importance="primary"
+            anticipation="constructive"
             to={`/admin/${id}/signing-keys/create`}
           >
             Create new signing key
-          </Link>
+          </RouterLinkButton>
         </Col>
       </Row>
       <div className="u-fixed-width u-flex-column u-flex-grow">

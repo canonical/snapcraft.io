@@ -32,6 +32,17 @@ $font-monospace: '"Ubuntu Sans Mono", "Ubuntu Mono", ui-monospace, "SF Mono", Me
   z-index: 300;
 }
 
+// `hr` styles are stripped if used inside a Pragma component
+.pragma-hr {
+  background-color: rgba(0, 0, 0, 0.2);
+  border: 0;
+  height: 1px;
+  margin-bottom: calc(0.5rem - 1px);
+  margin-top: 0;
+  position: relative;
+  width: 100%;
+}
+
 @layer vanilla {
   // colour definitions
   $ubuntu-orange: #e95420;
