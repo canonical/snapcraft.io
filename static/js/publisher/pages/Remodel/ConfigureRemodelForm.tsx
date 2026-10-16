@@ -1,16 +1,15 @@
 import { useMemo, useState, Dispatch, SetStateAction } from "react";
-import { useParams, Link, useLocation, useNavigate } from "react-router-dom";
+import { useParams, useLocation, useNavigate } from "react-router-dom";
 import { useMutation, useQueryClient } from "react-query";
 import { useAtomValue } from "jotai";
-import {
-  Button,
-  Input,
-  Select,
-  Notification,
-} from "@canonical/react-components";
-import { Icon } from "@canonical/react-ds-global";
+import { Button, Icon } from "@canonical/react-ds-global";
+import { Field, Form } from "@canonical/react-ds-global-form";
+import { useForm, type FieldValues } from "react-hook-form";
 
+import RouterLinkButton from "../../components/RouterLinkButton";
 import { useModels } from "../../hooks";
+import useLatestRef from "../../hooks/useLatestRef";
+import useRevalidateField from "../../hooks/useRevalidateField";
 import { brandIdState } from "../../state/brandStoreState";
 import { remodelsListState } from "../../state/remodelsState";
 
@@ -24,6 +23,9 @@ type Props = {
   setErrorMessage: Dispatch<SetStateAction<string>>;
 };
 
+const CONFLICT_MESSAGE =
+  "There is an existing remodel with this configuration. Choose another target model or a different device to target.";
+
 function ConfigureRemodelForm({
   refetch,
   setShowNotification,
@@ -35,18 +37,32 @@ function ConfigureRemodelForm({
   const location = useLocation();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const [targetModel, setTargetModel] = useState("");
-  const [serial, setSerial] = useState("");
-  const [description, setDescription] = useState("");
   const [isSaving, setIsSaving] = useState(false);
-  const [selectAllSerials, setSelectAllSerials] = useState(false);
+  const methods = useForm<FieldValues>({
+    defaultValues: {
+      targetModel: "",
+      serial: "",
+      description: "",
+      serials: "single",
+    },
+    mode: "onChange",
+  });
+  const targetModel = methods.watch("targetModel");
+  const serial = methods.watch("serial") || "";
+  const description = methods.watch("description");
+  const selectAllSerials = methods.watch("serials") === "all";
+
+  const resetFields = () => {
+    // Keep the mounted Choices field registered and preserve its selected mode.
+    methods.resetField("targetModel");
+    methods.resetField("serial");
+    methods.resetField("description");
+  };
 
   const handleError = () => {
     setShowErrorNotification(true);
     navigate(`/admin/${id}/models/${modelId}/remodel`);
-    setTargetModel("");
-    setSerial("");
-    setDescription("");
+    resetFields();
     setIsSaving(false);
     setTimeout(() => {
       setShowErrorNotification(false);
@@ -71,6 +87,12 @@ function ConfigureRemodelForm({
 
     return models.filter((m) => m.name !== modelId && m.name !== "undefined");
   }, [models, isLoading, error, modelId]);
+  const isTargetModelDisabled = targetModels.length === 0;
+  // Field memoizes input props; remount updated options without losing selection.
+  const targetModelFieldKey = JSON.stringify([
+    isTargetModelDisabled,
+    ...targetModels.map((model) => model.name),
+  ]);
 
   const isDisabled = () => {
     if (targetModel && serial) {
@@ -110,6 +132,13 @@ function ConfigureRemodelForm({
 
     return false;
   };
+  const conflict = hasConflict();
+  const conflictRef = useLatestRef(conflict);
+  const { trigger, clearErrors } = methods;
+
+  useRevalidateField(trigger, clearErrors, "targetModel", targetModel, [
+    conflict,
+  ]);
 
   const mutation = useMutation({
     mutationFn: () => {
@@ -162,9 +191,7 @@ function ConfigureRemodelForm({
         refetch();
       }
 
-      setTargetModel("");
-      setSerial("");
-      setDescription("");
+      resetFields();
 
       queryClient.invalidateQueries({ queryKey: ["remodels"] });
       setIsSaving(false);
@@ -176,30 +203,28 @@ function ConfigureRemodelForm({
   });
 
   return (
-    <form
-      onSubmit={(event) => {
-        event.preventDefault();
-        mutation.mutate();
-      }}
-      style={{ height: "100%" }}
-    >
-      <div className="p-panel is-flex-column">
-        <div className="p-panel__header">
-          <h4 className="p-panel__title p-muted-heading">
-            Configure a remodel
-          </h4>
-        </div>
-        <div className="p-panel__content">
-          {isSaving && (
-            <div className="u-fixed-width">
+    <div className="p-panel">
+      <div className="p-panel__header">
+        <h4 className="p-panel__title p-muted-heading">Configure a remodel</h4>
+      </div>
+      <div className="p-panel__content">
+        <div className="u-fixed-width">
+          <Form
+            methods={methods}
+            onSubmit={() => {
+              mutation.mutate();
+            }}
+          >
+            {isSaving && (
               <p>
                 <Icon icon="spinner" className="u-animation--spin" />
                 &nbsp;Configuring remodel...
               </p>
-            </div>
-          )}
-          <div className="u-fixed-width" style={{ marginBottom: "30px" }}>
-            <Select
+            )}
+            <Field
+              key={targetModelFieldKey}
+              inputType="select"
+              name="targetModel"
               id="target-model"
               label="Select a target model"
               options={[{ label: "Select a model", value: "" }].concat(
@@ -208,91 +233,63 @@ function ConfigureRemodelForm({
                   value: m.name,
                 })),
               )}
-              value={targetModel}
-              required
-              disabled={!models || models.length < 1}
-              onChange={(e) => {
-                setTargetModel(e.target.value);
+              disabled={isTargetModelDisabled}
+              unregisterOnUnmount={false}
+              registerProps={{
+                validate: () => !conflictRef.current || CONFLICT_MESSAGE,
               }}
             />
-            <p className="u-no-margin--bottom">* Input devices to target</p>
-            <div style={{ display: "flex", gap: "2rem" }}>
-              <Input
-                type="radio"
-                label="Enter serial"
-                name="serials"
-                checked={!selectAllSerials}
-                onChange={(e) => {
-                  setSelectAllSerials(!e.target.checked);
-                }}
-              />
-              <Input
-                type="radio"
-                label="All serials"
-                name="serials"
-                checked={selectAllSerials}
-                onChange={(e) => {
-                  setSelectAllSerials(e.target.checked);
-                  setSerial("");
-                }}
-              />
-            </div>
+            <Field
+              inputType="choices"
+              name="serials"
+              label="Input devices to target"
+              options={[
+                { label: "Enter serial", value: "single" },
+                { label: "All serials", value: "all" },
+              ]}
+            />
             {!selectAllSerials && (
-              <Input
+              <Field
+                inputType="text"
+                name="serial"
                 id="input-devices"
-                label="Input devices to target"
-                labelClassName="u-hide"
+                label="Serial number"
                 placeholder="Enter serial number"
-                type="text"
-                onChange={(e) => {
-                  setSerial(e.target.value);
-                }}
-                value={serial}
-                required
               />
             )}
-            <Input
+            <Field
+              inputType="text"
+              name="description"
               id="note"
               label="Note (Max 140 characters)"
               placeholder="Add a note (optional)"
-              type="text"
               maxLength={140}
-              onChange={(e) => {
-                setDescription(e.target.value);
-              }}
-              value={description}
+              isOptional
             />
-          </div>
-          {hasConflict() && (
-            <div className="u-fixed-width">
-              <Notification severity="negative" title="Remodel conflict">
-                There is an existing remodel with this configuration. Choose
-                another target model or a different device to target.
-              </Notification>
+            <div>
+              <hr className="pragma-hr" />
+              <div className="u-align--right">
+                <RouterLinkButton
+                  importance="secondary"
+                  to={`/admin/${id}/models/${modelId}/remodel`}
+                >
+                  Cancel
+                </RouterLinkButton>
+                <Button
+                  type="submit"
+                  importance="primary"
+                  anticipation="constructive"
+                  style={{ marginLeft: "1rem" }}
+                  disabled={isDisabled() || conflict}
+                >
+                  Confirm
+                </Button>
+              </div>
             </div>
-          )}
-          <div className="u-fixed-width">
-            <hr />
-            <div className="u-align--right">
-              <Link
-                className="p-button u-no-margin--bottom"
-                to={`/admin/${id}/models/${modelId}/remodel`}
-              >
-                Cancel
-              </Link>
-              <Button
-                type="submit"
-                appearance="positive"
-                className="u-no-margin--bottom u-no-margin--right"
-                disabled={isDisabled() || hasConflict()}
-              >
-                Confirm
-              </Button>
-            </div>
-          </div>
+          </Form>
         </div>
       </div>
-    </form>
+    </div>
   );
 }
 
