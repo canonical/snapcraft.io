@@ -1,11 +1,19 @@
-import { useState, useEffect, Dispatch, SetStateAction } from "react";
+import {
+  useState,
+  useEffect,
+  ChangeEvent,
+  Dispatch,
+  SetStateAction,
+} from "react";
 import { useAtomValue, useAtom } from "jotai";
 import { useParams, Link, useNavigate, useLocation } from "react-router-dom";
 import { useMutation, useQueryClient } from "react-query";
-import { Button } from "@canonical/react-components";
-import { Icon } from "@canonical/react-ds-global";
+import { Button, Icon } from "@canonical/react-ds-global";
+import { Field, Form } from "@canonical/react-ds-global-form";
+import { useForm, type FieldValues } from "react-hook-form";
 
 import { setPageTitle } from "../../utils";
+import RouterLinkButton from "../../components/RouterLinkButton";
 
 import { useSigningKeys } from "../../hooks";
 import {
@@ -35,6 +43,14 @@ function CreatePolicyForm({
   const brandStore = useAtomValue(brandStoreState(id));
   const [isSaving, setIsSaving] = useState(false);
   const queryClient = useQueryClient();
+  const methods = useForm<FieldValues>({
+    values: { "signing-key": newSigningKey.name },
+    mode: "onChange",
+  });
+  // Field memoizes input props; refresh options without losing selection.
+  const signingKeyFieldKey = JSON.stringify(
+    signingKeys.map((signingKey) => [signingKey.name, signingKey["sha3-384"]]),
+  );
 
   const handleError = () => {
     setShowErrorNotification(true);
@@ -98,19 +114,18 @@ function CreatePolicyForm({
   }, [isLoading, error, data]);
 
   return (
-    <form
-      onSubmit={(event) => {
-        event.preventDefault();
-        mutation.mutate(newSigningKey.name);
-      }}
-      style={{ height: "100%" }}
-    >
-      <div className="p-panel is-flex-column">
-        <div className="p-panel__header">
-          <h4 className="p-panel__title p-muted-heading">Create new policy</h4>
-        </div>
-        <div className="p-panel__content">
-          <div className="u-fixed-width" style={{ marginBottom: "30px" }}>
+    <div className="p-panel">
+      <div className="p-panel__header">
+        <h4 className="p-panel__title p-muted-heading">Create new policy</h4>
+      </div>
+      <div className="p-panel__content">
+        <div className="u-fixed-width">
+          <Form
+            methods={methods}
+            onSubmit={() => {
+              mutation.mutate(newSigningKey.name);
+            }}
+          >
             {isLoading && <p>Fetching signing keys...</p>}
             {isError && error instanceof Error && <p>Error: {error.message}</p>}
             {isSaving && (
@@ -120,32 +135,30 @@ function CreatePolicyForm({
               </p>
             )}
 
-            <label htmlFor="signing-key">Signing key</label>
-            <select
+            <Field
+              key={signingKeyFieldKey}
+              inputType="select"
               name="signing-key"
               id="signing-key"
-              required
+              label="Signing key"
               disabled={signingKeys.length < 1}
-              value={newSigningKey.name}
-              onChange={(event) => {
-                setNewSigningKey({
-                  name: event.target.value,
-                });
+              unregisterOnUnmount={false}
+              options={[
+                { label: "Select a signing key", value: "" },
+                ...signingKeys.map((signingKey) => ({
+                  label: signingKey.name,
+                  value: signingKey["sha3-384"],
+                })),
+              ]}
+              registerProps={{
+                onChange: (event: ChangeEvent<HTMLSelectElement>) => {
+                  setNewSigningKey({ name: event.target.value });
+                },
               }}
-            >
-              <option value="">Select a signing key</option>
-              {signingKeys.map((signingKey) => (
-                <option
-                  key={signingKey.fingerprint}
-                  value={signingKey["sha3-384"]}
-                >
-                  {signingKey.name}
-                </option>
-              ))}
-            </select>
+            />
 
             {signingKeys.length < 1 && (
-              <p className="p-form-help-text">
+              <p className="ds field-description p">
                 No signing keys available, please{" "}
                 <Link to={`/admin/${id}/models/signing-keys/create`}>
                   create one
@@ -153,33 +166,34 @@ function CreatePolicyForm({
                 first.
               </p>
             )}
-          </div>
-          <div className="u-fixed-width">
-            <hr />
-            <div className="u-align--right">
-              <Link
-                className="p-button u-no-margin--bottom"
-                to={`/admin/${id}/models/${modelId}/policies`}
-                onClick={() => {
-                  setNewSigningKey({ name: "" });
-                  setShowErrorNotification(false);
-                }}
-              >
-                Cancel
-              </Link>
-              <Button
-                type="submit"
-                appearance="positive"
-                className="u-no-margin--bottom u-no-margin--right"
-                disabled={!newSigningKey.name}
-              >
-                Add policy
-              </Button>
+            <div>
+              <hr className="pragma-hr" />
+              <div className="u-align--right">
+                <RouterLinkButton
+                  importance="secondary"
+                  to={`/admin/${id}/models/${modelId}/policies`}
+                  onClick={() => {
+                    setNewSigningKey({ name: "" });
+                    setShowErrorNotification(false);
+                  }}
+                >
+                  Cancel
+                </RouterLinkButton>
+                <Button
+                  type="submit"
+                  importance="primary"
+                  anticipation="constructive"
+                  style={{ marginLeft: "1rem" }}
+                  disabled={!newSigningKey.name}
+                >
+                  Add policy
+                </Button>
+              </div>
             </div>
-          </div>
+          </Form>
         </div>
       </div>
-    </form>
+    </div>
   );
 }
 
