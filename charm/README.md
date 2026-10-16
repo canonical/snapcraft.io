@@ -13,7 +13,7 @@ rockcraft pack
 rockcraft.skopeo --insecure-policy copy --dest-tls-verify=false oci-archive:snapcraft-io*.rock docker://localhost:32000/snapcraft-io:1
 ```
 
-This will pack the application into a [rock](https://documentation.ubuntu.com/rockcraft/en/latest/explanation/rocks/) (OCI image) and upload it to the local registry.
+This will pack the application into a [rock](https://ubuntu.com/containers/rockcraft/docs/latest/explanation/rocks/) (OCI image) and upload it to the local registry.
 
 You can deploy the charm locally with:
 
