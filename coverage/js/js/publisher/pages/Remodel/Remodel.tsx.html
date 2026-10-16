@@ -30,9 +30,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">70.9% </span>
+                <span class="strong">73.07% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>78/110</span>
+                <span class='fraction'>76/104</span>
             </div>
         
             
@@ -538,12 +538,7 @@
 <a name='L473'></a><a href='#L473'>473</a>
 <a name='L474'></a><a href='#L474'>474</a>
 <a name='L475'></a><a href='#L475'>475</a>
-<a name='L476'></a><a href='#L476'>476</a>
-<a name='L477'></a><a href='#L477'>477</a>
-<a name='L478'></a><a href='#L478'>478</a>
-<a name='L479'></a><a href='#L479'>479</a>
-<a name='L480'></a><a href='#L480'>480</a>
-<a name='L481'></a><a href='#L481'>481</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L476'></a><a href='#L476'>476</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -831,13 +826,8 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">8x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1028,14 +1018,14 @@ import { useAtomValue, useSetAtom } from "jotai";
 import { useQueryClient } from "react-query";
 import {
   useParams,
-  Link,
   useNavigate,
   useLocation,
   useSearchParams,
 } from "react-router-dom";
-import { Button, Notification } from "@canonical/react-components";
-import { Button as ModalButton, Icon, Modal } from "@canonical/react-ds-global";
+import { Notification } from "@canonical/react-components";
+import { Button, Icon, Modal } from "@canonical/react-ds-global";
 &nbsp;
+import RouterLinkButton from "../../components/RouterLinkButton";
 import { useRemodels, useUserPrivileges } from "../../hooks";
 import { remodelsListState } from "../../state/remodelsState";
 import { brandIdState, brandStoreState } from "../../state/brandStoreState";
@@ -1282,7 +1272,7 @@ function Remodel(): React.JSX.Element {
       setRemodelsToDelete([]);
       setShowBulkDeleteModal(false);
 &nbsp;
-      <span class="missing-if-branch" title="if path not taken" >I</span>if (id &amp;&amp; <span class="branch-1 cbranch-no" title="branch not covered" >modelId &amp;&amp; <span class="branch-2 cbranch-no" title="branch not covered" >!</span>isClosedPanel(location.pathname, "configure")) {</span>
+      <span class="missing-if-branch" title="if path not taken" >I</span>if (id &amp;&amp; modelId &amp;&amp; !isClosedPanel(location.pathname, "configure")) {
 <span class="cstat-no" title="statement not covered" >        navigate(`/admin/${id}/models/${modelId}/remodel`, { replace: true });</span>
       }
     }
@@ -1310,31 +1300,26 @@ function Remodel(): React.JSX.Element {
             {canManageRemodelAllowlist &amp;&amp; (
               &lt;div className="u-fixed-width u-align--right"&gt;
                 &lt;Button
+                  importance="secondary"
                   disabled={remodelsToDelete.length === 0 || isBulkDeleting}
                   onClick={() =&gt; setShowBulkDeleteModal(true)}
-                  className={isBulkDeleting ? "has-icon" : ""}
+                  loading={isBulkDeleting}
                 &gt;
-                  {isBulkDeleting ? (
-                    &lt;&gt;
-                      &lt;Icon
-                        icon="spinner"
-                        className="u-animation--spin is-light"
-                      /&gt;
-                      &amp;nbsp;Deleting...
-                    &lt;/&gt;
-                  ) : remodelsToDelete.length &gt; 1 ? (
-                    `Delete ${remodelsToDelete.length} remodels`
-                  ) : (
-                    "Delete remodel"
-                  )}
+                  {isBulkDeleting
+                    ? "Deleting..."
+                    : remodelsToDelete.length &gt; 1
+                      ? `Delete ${remodelsToDelete.length} remodels`
+                      : "Delete remodel"}
                 &lt;/Button&gt;
 &nbsp;
-                &lt;Link
-                  className={`p-button--positive ${isError &amp;&amp; <span class="branch-1 cbranch-no" title="branch not covered" >!data ? <span class="branch-0 cbranch-no" title="branch not covered" >"</span>is-disabled" : "</span>"}`}
+                &lt;RouterLinkButton
+                  importance="primary"
+                  anticipation="constructive"
+                  style={{ marginLeft: "1rem" }}
                   to={`/admin/${id}/models/${modelId}/remodel/configure`}
                 &gt;
                   Configure remodels
-                &lt;/Link&gt;
+                &lt;/RouterLinkButton&gt;
               &lt;/div&gt;
             )}
 &nbsp;
@@ -1439,15 +1424,15 @@ function Remodel(): React.JSX.Element {
               &lt;/p&gt;
             &lt;/Modal.Content&gt;
             &lt;Modal.Footer&gt;
-              &lt;ModalButton
+              &lt;Button
                 className="u-no-margin--bottom"
                 importance="secondary"
                 disabled={isBulkDeleting}
                 onClick={() =&gt; setShowBulkDeleteModal(false)}
               &gt;
                 Cancel
-              &lt;/ModalButton&gt;
-              &lt;ModalButton
+              &lt;/Button&gt;
+              &lt;Button
                 className="u-no-margin--bottom u-no-margin--right"
                 importance="primary"
                 anticipation="destructive"
@@ -1458,7 +1443,7 @@ function Remodel(): React.JSX.Element {
                 }}
               &gt;
                 {isBulkDeleting ? "Deleting..." : "Delete"}
-              &lt;/ModalButton&gt;
+              &lt;/Button&gt;
             &lt;/Modal.Footer&gt;
           &lt;/Modal&gt;
         )}
@@ -1510,7 +1495,7 @@ export default Remodel;
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-10-15T22:07:49.985Z
+                at 2026-10-16T22:07:18.194Z
             </div>
         <script src="../../../../prettify.js"></script>
         <script>

@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">42.37% </span>
+                <span class="strong">38.18% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>25/59</span>
+                <span class='fraction'>21/55</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">75% </span>
+                <span class="strong">70% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>9/12</span>
+                <span class='fraction'>7/10</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">23.52% </span>
+                <span class="strong">18.75% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>4/17</span>
+                <span class='fraction'>3/16</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">43.1% </span>
+                <span class="strong">38.88% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>25/58</span>
+                <span class='fraction'>21/54</span>
             </div>
         
             
@@ -258,23 +258,7 @@
 <a name='L193'></a><a href='#L193'>193</a>
 <a name='L194'></a><a href='#L194'>194</a>
 <a name='L195'></a><a href='#L195'>195</a>
-<a name='L196'></a><a href='#L196'>196</a>
-<a name='L197'></a><a href='#L197'>197</a>
-<a name='L198'></a><a href='#L198'>198</a>
-<a name='L199'></a><a href='#L199'>199</a>
-<a name='L200'></a><a href='#L200'>200</a>
-<a name='L201'></a><a href='#L201'>201</a>
-<a name='L202'></a><a href='#L202'>202</a>
-<a name='L203'></a><a href='#L203'>203</a>
-<a name='L204'></a><a href='#L204'>204</a>
-<a name='L205'></a><a href='#L205'>205</a>
-<a name='L206'></a><a href='#L206'>206</a>
-<a name='L207'></a><a href='#L207'>207</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L196'></a><a href='#L196'>196</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -322,15 +306,9 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">55x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">55x</span>
 <span class="cline-any cline-yes">55x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">55x</span>
-<span class="cline-any cline-yes">27x</span>
-<span class="cline-any cline-yes">21x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">6x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -475,14 +453,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import {
-  ChangeEvent,
-  Dispatch,
-  useEffect,
-  useRef,
-  useState,
-  SetStateAction,
-} from "react";
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { ChangeEvent, Dispatch, useState, SetStateAction } from "react";
 import { useNavigate, useParams, useLocation } from "react-router-dom";
 import { useAtomValue, useAtom, useSetAtom } from "jotai";
 import { useMutation, useQueryClient } from "react-query";
@@ -492,6 +463,8 @@ import { useForm, type FieldValues } from "react-hook-form";
 &nbsp;
 import { checkSigningKeyExists, setPageTitle } from "../../utils";
 import RouterLinkButton from "../../components/RouterLinkButton";
+import useLatestRef from "../../hooks/useLatestRef";
+import useRevalidateField from "../../hooks/useRevalidateField";
 &nbsp;
 import {
   signingKeysListState,
@@ -528,17 +501,11 @@ function CreateSigningKeyForm({
     mode: "onChange",
   });
   const { trigger, clearErrors } = methods;
-  // Field memoizes registration options, so validation needs the latest list
-  const signingKeysListRef = useRef(signingKeysList);
-  signingKeysListRef.current = signingKeysList;
+  const signingKeysListRef = useLatestRef(signingKeysList);
 &nbsp;
-  useEffect(() =&gt; {
-    if (newSigningKey.name) {
-      void trigger("name");
-    } else {
-      clearErrors("name");
-    }
-  }, [newSigningKey.name, signingKeysList, trigger, clearErrors]);
+  useRevalidateField(trigger, clearErrors, "name", newSigningKey.name, [
+    signingKeysList,
+  ]);
 &nbsp;
   const handleError = <span class="fstat-no" title="function not covered" >() =&gt; {</span>
 <span class="cstat-no" title="statement not covered" >    setSigningKeysList(<span class="fstat-no" title="function not covered" >(o</span>ldSigningKeysList: Array&lt;SigningKey&gt;) =&gt; {</span>
@@ -688,7 +655,7 @@ export default CreateSigningKeyForm;
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-10-15T22:07:49.985Z
+                at 2026-10-16T22:07:18.194Z
             </div>
         <script src="../../../../prettify.js"></script>
         <script>
