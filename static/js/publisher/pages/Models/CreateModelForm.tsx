@@ -1,12 +1,16 @@
-import { Dispatch, SetStateAction, useState } from "react";
-import { useNavigate, useParams, useLocation, Link } from "react-router-dom";
+import { ChangeEvent, Dispatch, SetStateAction, useState } from "react";
+import { useNavigate, useParams, useLocation } from "react-router-dom";
 import { useAtomValue, useAtom, useSetAtom } from "jotai";
 import { useMutation, useQueryClient } from "react-query";
-import { Input, Button } from "@canonical/react-components";
-import { Icon } from "@canonical/react-ds-global";
+import { Button, Icon } from "@canonical/react-ds-global";
+import { Field, Form } from "@canonical/react-ds-global-form";
+import { useForm, type FieldValues } from "react-hook-form";
 import randomstring from "randomstring";
 
 import { checkModelNameExists, setPageTitle } from "../../utils";
+import RouterLinkButton from "../../components/RouterLinkButton";
+import useLatestRef from "../../hooks/useLatestRef";
+import useRevalidateField from "../../hooks/useRevalidateField";
 
 import {
   modelsListState,
@@ -44,6 +48,17 @@ function CreateModelForm({
   const [isSaving, setIsSaving] = useState(false);
 
   const queryClient = useQueryClient();
+  const methods = useForm<FieldValues>({
+    values: { name: newModelName, apiKey },
+    mode: "onChange",
+    // Updating the API key must not clear an existing duplicate-name error.
+    resetOptions: { keepErrors: true },
+  });
+  const { trigger, clearErrors } = methods;
+  const modelsListRef = useLatestRef(modelsList);
+
+  useRevalidateField(trigger, clearErrors, "name", newModelName, [modelsList]);
+  useRevalidateField(trigger, clearErrors, "apiKey", apiKey, []);
 
   const handleError = () => {
     setShowErrorNotification(true);
@@ -115,103 +130,110 @@ function CreateModelForm({
   }
 
   return (
-    <form
-      onSubmit={(event) => {
-        event.preventDefault();
-        mutation.mutate({ name: newModelName, apiKey });
-      }}
-      style={{ height: "100%" }}
-    >
-      <div className="p-panel is-flex-column">
-        <div className="p-panel__header">
-          <h4 className="p-panel__title">Create new model</h4>
-        </div>
-        <div className="p-panel__content">
-          <div className="u-fixed-width" style={{ marginBottom: "30px" }}>
-            {currentStore && (
-              <p>
-                Brand
-                <br />
-                <strong>{currentStore.name}</strong>
-              </p>
-            )}
+    <div className="p-panel">
+      <div className="p-panel__header">
+        <h4 className="p-panel__title p-muted-heading">Create new model</h4>
+      </div>
+      <div className="p-panel__content">
+        <div className="u-fixed-width">
+          {currentStore && (
+            <p>
+              Brand
+              <br />
+              <strong>{currentStore.name}</strong>
+            </p>
+          )}
+          <Form
+            methods={methods}
+            onSubmit={() => {
+              mutation.mutate({ name: newModelName, apiKey });
+            }}
+          >
             {isSaving && (
               <p>
                 <Icon icon="spinner" className="u-animation--spin" />
                 &nbsp;Creating new model...
               </p>
             )}
-            <Input
-              type="text"
+            <Field
+              inputType="text"
+              name="name"
               id="model-name-field"
               placeholder="e.g. display-name-123"
               label="Name"
-              help="Name should contain lowercase alphanumeric characters and hyphens only"
-              value={newModelName}
-              onChange={(e) => {
-                setNewModelName(e.target.value);
+              description="Name should contain lowercase alphanumeric characters and hyphens only"
+              registerProps={{
+                onChange: (event: ChangeEvent<HTMLInputElement>) => {
+                  setNewModelName(event.target.value);
+                },
+                validate: (name: string) =>
+                  !checkModelNameExists(name, modelsListRef.current) ||
+                  `Model ${name} already exists`,
               }}
-              error={
-                checkModelNameExists(newModelName, modelsList)
-                  ? `Model ${newModelName} already exists`
-                  : null
-              }
-              required
             />
-            <Input
-              type="text"
+            <Field
+              inputType="text"
+              name="apiKey"
               id="api-key-field"
               label="API key"
-              value={apiKey}
-              required
               maxLength={API_KEY_LENGTH}
-              onChange={(e) => {
-                setApiKey(e.target.value);
+              registerProps={{
+                onChange: (event: ChangeEvent<HTMLInputElement>) => {
+                  setApiKey(event.target.value);
+                },
               }}
-              help={`API key should be exactly ${API_KEY_LENGTH} alphanumeric characters long (${apiKey.length}/${API_KEY_LENGTH})`}
+              description={`API key should be exactly ${API_KEY_LENGTH} alphanumeric characters long (${apiKey.length}/${API_KEY_LENGTH})`}
             />
-            <Button
-              type="button"
-              className="u-no-margin--bottom"
-              onClick={() => {
-                setApiKey(randomstring.generate({ length: API_KEY_LENGTH }));
-              }}
-            >
-              Generate key
-            </Button>
-          </div>
-          <div className="u-fixed-width">
-            <hr />
-            <p>* Mandatory field</p>
-            <div className="u-align--right">
-              <Link
-                className="p-button u-no-margin--bottom"
-                to={`/admin/${id}/models`}
+            <div>
+              {/* 
+                Needs to be in a `div` otherwise the button
+                is full-width, due to the `Form` component
+                `display` property being `grid`
+               */}
+              <Button
+                type="button"
+                importance="secondary"
                 onClick={() => {
-                  setNewModelName("");
-                  setApiKey("");
-                  setShowErrorNotification(false);
+                  setApiKey(randomstring.generate({ length: API_KEY_LENGTH }));
                 }}
               >
-                Cancel
-              </Link>
-              <Button
-                type="submit"
-                appearance="positive"
-                className="u-no-margin--bottom u-no-margin--right"
-                disabled={
-                  !newModelName ||
-                  apiKey.length !== API_KEY_LENGTH ||
-                  checkModelNameExists(newModelName, modelsList)
-                }
-              >
-                Add model
+                Generate key
               </Button>
             </div>
-          </div>
+            <p className="ds field-description p">* Mandatory field</p>
+            <div>
+              <hr className="pragma-hr" />
+              <div className="u-align--right">
+                <RouterLinkButton
+                  importance="secondary"
+                  to={`/admin/${id}/models`}
+                  onClick={() => {
+                    setNewModelName("");
+                    setApiKey("");
+                    setShowErrorNotification(false);
+                  }}
+                >
+                  Cancel
+                </RouterLinkButton>
+                <Button
+                  type="submit"
+                  importance="primary"
+                  anticipation="constructive"
+                  style={{ marginLeft: "1rem" }}
+                  disabled={
+                    !newModelName ||
+                    apiKey.length !== API_KEY_LENGTH ||
+                    checkModelNameExists(newModelName, modelsList)
+                  }
+                >
+                  Add model
+                </Button>
+              </div>
+            </div>
+          </Form>
         </div>
       </div>
-    </form>
+    </div>
   );
 }
 
