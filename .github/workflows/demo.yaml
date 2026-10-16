@@ -1,0 +1,40 @@
+name: PR demo
+
+on:
+  pull_request:
+    types:
+      - opened
+      - reopened
+      - synchronize
+      - closed
+
+permissions:
+  contents: read
+  packages: write
+  pull-requests: write
+
+jobs:
+  deploy:
+    if: >-
+      github.event.action != 'closed' &&
+      github.event.pull_request.head.repo.full_name == github.repository &&
+      vars.DEMOS_ENABLED == 'true'
+    uses: canonical/webteam-devops/.github/workflows/demo-deploy.yaml@feat/pr-demo-workflows
+    with:
+      pr-number: ${{ github.event.pull_request.number }}
+      commit-sha: ${{ github.event.pull_request.head.sha }}
+      api-url: ${{ vars.DEMOS_API_URL }}
+    secrets:
+      demos-hmac-key: ${{ secrets.DEMOS_HMAC_KEY }}
+
+  cleanup:
+    if: >-
+      github.event.action == 'closed' &&
+      github.event.pull_request.head.repo.full_name == github.repository &&
+      vars.DEMOS_ENABLED == 'true'
+    uses: canonical/webteam-devops/.github/workflows/demo-cleanup.yaml@feat/pr-demo-workflows
+    with:
+      pr-number: ${{ github.event.pull_request.number }}
+      api-url: ${{ vars.DEMOS_API_URL }}
+    secrets:
+      demos-hmac-key: ${{ secrets.DEMOS_HMAC_KEY }}
