@@ -125,7 +125,7 @@
   "resolutions": {
     "react-hook-form": "7.75.0",
     "vitest/**/glob": "13.0.6",
-    "vitest/vite": "7.3.3",
+    "vitest/vite": "7.3.5",
     "lodash": "4.18.1",
     "picomatch": ">=2.3.2",
     "brace-expansion": ">=2.0.2",
