@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { useAtomValue, useSetAtom } from "jotai";
 import {
-  Link,
   useParams,
   useLocation,
   useNavigate,
@@ -28,6 +27,7 @@ import { isClosedPanel, setPageTitle, getPolicies } from "../../utils";
 
 import type { Model as ModelType } from "../../types/shared";
 import { PortalEntrance } from "../Portals/Portals";
+import RouterLinkButton from "../../components/RouterLinkButton";
 
 function Models(): React.JSX.Element {
   const { id } = useParams();
@@ -86,12 +86,13 @@ function Models(): React.JSX.Element {
           />
         </Col>
         <Col size={6} className="u-align--right">
-          <Link
-            className="p-button--positive"
+          <RouterLinkButton
+            importance="primary"
+            anticipation="constructive"
             to={`/admin/${id}/models/create`}
           >
             Create new model
-          </Link>
+          </RouterLinkButton>
         </Col>
       </Row>
       <div className="u-fixed-width u-flex-column u-flex-grow">
