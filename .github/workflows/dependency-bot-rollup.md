@@ -43,10 +43,12 @@ safe-outputs:
 Create a single rollup branch and pull request from all currently open dependency bot pull requests.
 
 1. Determine the repository default branch.
-2. List open pull requests where `author.login` is either `dependabot[bot]` or `renovate[bot]`.
-3. Filter to PRs that only update NPM/PyPI dependency files in this repository (`package.json`, `yarn.lock`, `requirements.txt`).
+2. Use the available authenticated GitHub tooling to request `GET /repos/${{ github.repository }}/pulls?state=open&per_page=100`. Follow every REST `Link` header's `rel="next"` URL until no next page remains, keeping requests scoped to `${{ github.repository }}`. Collect all open PRs before filtering REST `user.login` exactly for `dependabot[bot]` or `renovate[bot]`, and capture each matched PR's number and `head.sha`.
+   - Do not use `gh pr list --json author` for this filter: its `author.login` represents these bots as `app/dependabot` and `app/renovate`, not the REST bot logins.
+3. For each bot PR, request `GET /repos/${{ github.repository }}/pulls/<number>/files?per_page=100` and follow all pagination before determining eligibility. Use `GET /repos/${{ github.repository }}/pulls/<number>` to verify that `head.sha` still matches the captured SHA and the file list length matches `changed_files`; otherwise stop with an error. Retain only PRs that exclusively update NPM/PyPI dependency files in this repository (`package.json`, `yarn.lock`, `requirements.txt`, including these basenames in subdirectories). Check both `filename` and `previous_filename` for renames; exclude PRs with any other paths or no changed files. If the API's file-list limit prevents complete inspection, stop with an error rather than treating the PR as eligible or the result as empty.
+   - Report the total open PR count, bot-matched count before file filtering, and eligible PR count after file filtering. Report every excluded bot PR number and its reason, including disallowed paths.
 4. Sort by pull request number ascending.
-5. If there are no matching pull requests after filtering, call `noop` with a short reason.
+5. Only after discovery and file inspection have completed successfully for every page, if there are no matching pull requests after filtering, call `noop` with the counts and a short reason.
 6. Create a branch from the default branch named `chore/dependency-bot-rollup/<YYYY-MM-DD>-${{ github.run_id }}`.
 7. For each dependency bot pull request:
    - locate its prefetched local ref at `refs/remotes/origin/pull/<number>/head`; do not fetch over the network,
@@ -56,6 +58,8 @@ Create a single rollup branch and pull request from all currently open dependenc
    - stop processing immediately after calling `noop`.
 8. Verify that the final dependency files preserve the selected updates. If any selected update is missing or cannot be verified, call `noop` with the affected PR numbers and stop without creating a rollup PR.
 9. If the rollup branch ends with no net file changes versus default branch, call `noop`.
+
+For any API/tool failure during discovery or file inspection (including authentication, permissions, rate limits, pagination, or malformed/incomplete responses), report the failed operation and error and stop as a failure. Never substitute an empty list, skip a failed page or PR, or call `noop` for these failures.
 
 ## Rerun behavior
 
@@ -103,4 +107,3 @@ Create exactly one PR using `create-pull-request`.
 
 - Use `create-pull-request` for the final PR. It is configured to close older open rollup PRs from this workflow before creating the new one.
 - Use `noop` when there are no bot PRs, no net changes, or merges are blocked by unresolvable conflicts.
-
