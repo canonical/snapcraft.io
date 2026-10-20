@@ -27,9 +27,6 @@ safe-outputs:
     patch-format: bundle
     if-no-changes: warn
     allowed-files:
-      - ".github/workflows/**/*.yml"
-      - ".github/workflows/**/*.yaml"
-      - ".github/dependabot.yml"
       - "package.json"
       - "**/package.json"
       - "yarn.lock"
@@ -46,16 +43,17 @@ Create a single rollup branch and pull request from all currently open dependenc
 
 1. Determine the repository default branch.
 2. List open pull requests where `author.login` is either `dependabot[bot]` or `renovate[bot]`.
-3. Sort by pull request number ascending.
-4. If there are no matching pull requests, call `noop` with a short reason.
-5. Create a branch from the default branch named `chore/dependency-bot-rollup/<YYYY-MM-DD>-${{ github.run_id }}`.
-6. For each dependency bot pull request:
+3. Filter to PRs that only update NPM/PyPI dependency files in this repository (`package.json`, `yarn.lock`, `requirements.txt`).
+4. Sort by pull request number ascending.
+5. If there are no matching pull requests after filtering, call `noop` with a short reason.
+6. Create a branch from the default branch named `chore/dependency-bot-rollup/<YYYY-MM-DD>-${{ github.run_id }}`.
+7. For each dependency bot pull request:
    - fetch the PR head branch,
    - merge it into the rollup branch with a merge commit,
    - if there are conflicts, resolve them by preferring the incoming dependency-bot side for conflicted files,
    - complete the merge commit.
-7. If a conflict cannot be resolved cleanly after attempting the strategy above, call `noop` with a short reason that includes the blocked PR number.
-8. If the rollup branch ends with no net file changes versus default branch, call `noop`.
+8. If a conflict cannot be resolved cleanly after attempting the strategy above, call `noop` with a short reason that includes the blocked PR number.
+9. If the rollup branch ends with no net file changes versus default branch, call `noop`.
 
 ## Rerun behavior
 
@@ -77,7 +75,7 @@ Build a grouped summary of dependency updates from the merged bot PRs.
   - new version,
   - source bot PR number.
 - Infer ecosystem from changed files when needed.
-- Group output by ecosystem (for example: PyPI, NPM, GitHub Actions, Go modules, Cargo, Docker).
+- Group output by ecosystem (NPM and PyPI).
 - If exact versions cannot be extracted for an item, use `unknown` for missing values.
 
 Use this list format under `## Done`:
