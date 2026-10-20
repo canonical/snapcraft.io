@@ -14,6 +14,7 @@ concurrency:
   cancel-in-progress: false
 checkout:
   fetch-depth: 0
+  fetch: ["refs/pulls/open/*"]
 tools:
   github:
     mode: gh-proxy
@@ -48,11 +49,12 @@ Create a single rollup branch and pull request from all currently open dependenc
 5. If there are no matching pull requests after filtering, call `noop` with a short reason.
 6. Create a branch from the default branch named `chore/dependency-bot-rollup/<YYYY-MM-DD>-${{ github.run_id }}`.
 7. For each dependency bot pull request:
-   - fetch the PR head branch,
+   - locate its prefetched local ref at `refs/remotes/origin/pull/<number>/head`; do not fetch over the network,
+   - verify that the local ref exists and matches the head SHA used when filtering the PR; otherwise call `noop` with the PR number and reason,
    - merge it into the rollup branch with a merge commit,
-   - if there are conflicts, resolve them by preferring the incoming dependency-bot side for conflicted files,
-   - complete the merge commit.
-8. If a conflict cannot be resolved cleanly after attempting the strategy above, call `noop` with a short reason that includes the blocked PR number.
+   - if there are conflicts, abort the merge and call `noop` with the blocked PR number; do not resolve conflicts by choosing either side and do not create a partial rollup,
+   - stop processing immediately after calling `noop`.
+8. Verify that the final dependency files preserve the selected updates. If any selected update is missing or cannot be verified, call `noop` with the affected PR numbers and stop without creating a rollup PR.
 9. If the rollup branch ends with no net file changes versus default branch, call `noop`.
 
 ## Rerun behavior
@@ -67,7 +69,7 @@ Do not reuse or update an existing open rollup PR in place.
 
 ## Dependency update summary requirements
 
-Build a grouped summary of dependency updates from the merged bot PRs.
+Build a grouped summary from the final dependency diff against the default branch, using the merged bot PRs for attribution. Do not report an update unless it is present in the final files.
 
 - Include, for each update:
   - package name,
@@ -101,3 +103,4 @@ Create exactly one PR using `create-pull-request`.
 
 - Use `create-pull-request` for the final PR. It is configured to close older open rollup PRs from this workflow before creating the new one.
 - Use `noop` when there are no bot PRs, no net changes, or merges are blocked by unresolvable conflicts.
+
