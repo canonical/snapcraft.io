@@ -59,7 +59,7 @@ Create a single rollup branch and pull request from all currently open dependenc
 8. Verify that the final dependency files preserve the selected updates. If any selected update is missing or cannot be verified, call `noop` with the affected PR numbers and stop without creating a rollup PR.
 9. If the rollup branch ends with no net file changes versus default branch, call `noop`.
 
-For any API/tool failure during discovery or file inspection (including authentication, permissions, rate limits, pagination, or malformed/incomplete responses), report the failed operation and error and stop as a failure. Never substitute an empty list, skip a failed page or PR, or call `noop` for these failures.
+For any API/tool or consistency-check failure during discovery or file inspection (including authentication, permissions, rate limits, pagination, stale SHAs, or malformed/incomplete responses), call `report_incomplete` with the failed operation and error and stop. Never substitute an empty list, skip a failed page or PR, or call `noop` for these failures.
 
 ## Rerun behavior
 
