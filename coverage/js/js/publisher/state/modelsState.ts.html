@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">61.11% </span>
+                <span class="strong">88.88% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>11/18</span>
+                <span class='fraction'>16/18</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">7.14% </span>
+                <span class="strong">78.57% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>1/14</span>
+                <span class='fraction'>11/14</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">40% </span>
+                <span class="strong">80% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>2/5</span>
+                <span class='fraction'>4/5</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">61.11% </span>
+                <span class="strong">88.88% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>11/18</span>
+                <span class='fraction'>16/18</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line medium'></div>
+    <div class='status-line high'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -128,21 +128,21 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">28x</span>
+<span class="cline-any cline-yes">27x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -156,21 +156,21 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">28x</span>
+<span class="cline-any cline-yes">28x</span>
+<span class="cline-any cline-yes">28x</span>
+<span class="cline-any cline-yes">28x</span>
+<span class="cline-any cline-yes">12x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">12x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">28x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -186,21 +186,21 @@ import { policiesListState } from "./policiesState";
 import { Model } from "../types/shared";
 &nbsp;
 function getFilteredModels(models: Array&lt;Model&gt;, filterQuery?: string | null) {
-  <span class="missing-if-branch" title="else path not taken" >E</span>if (!filterQuery) {
+  if (!filterQuery) {
     return models;
   }
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  return models.filter(<span class="fstat-no" title="function not covered" >(m</span>odel: Model) =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >    if (</span>
+  return models.filter((model: Model) =&gt; {
+    <span class="missing-if-branch" title="if path not taken" >I</span>if (
       (model.name &amp;&amp; model.name.includes(filterQuery)) ||
       (model["api-key"] &amp;&amp; model["api-key"].includes(filterQuery)) ||
       (model["created-at"] &amp;&amp; model["created-at"].includes(filterQuery)) ||
-      (model["modified-at"] &amp;&amp; model["modified-at"].includes(filterQuery))
+      (model["modified-at"] &amp;&amp; <span class="branch-7 cbranch-no" title="branch not covered" >model["modified-at"].includes(filterQuery))</span>
     ) {
 <span class="cstat-no" title="statement not covered" >      return true;</span>
     }
 &nbsp;
-<span class="cstat-no" title="statement not covered" >    return false;</span>
+    return false;
   });
 }
 &nbsp;
@@ -217,14 +217,14 @@ const filteredModelsListState = atom&lt;Array&lt;Model&gt;&gt;((get) =&gt; {
   const filter = get(modelsListFilterState);
   const models = get(modelsListState);
   const policies = get(policiesListState);
-  const modelsWithPolicies = models.map(<span class="fstat-no" title="function not covered" >(m</span>odel) =&gt; {
-    const policy = <span class="cstat-no" title="statement not covered" >policies.find(</span>
+  const modelsWithPolicies = models.map((model) =&gt; {
+    const policy = policies.find(
 <span class="fstat-no" title="function not covered" >      (p</span>olicy) =&gt; <span class="cstat-no" title="statement not covered" >policy["model-name"] === model.name,</span>
     );
 &nbsp;
-<span class="cstat-no" title="statement not covered" >    return {</span>
+    return {
       ...model,
-      "policy-revision": policy ? policy.revision : undefined,
+      "policy-revision": policy ? <span class="branch-0 cbranch-no" title="branch not covered" >policy.revision : u</span>ndefined,
     };
   });
 &nbsp;
@@ -244,7 +244,7 @@ export {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-10-18T22:06:59.123Z
+                at 2026-10-21T22:07:45.878Z
             </div>
         <script src="../../../prettify.js"></script>
         <script>
