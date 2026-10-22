@@ -4,13 +4,12 @@ import { useAtomValue, useSetAtom } from "jotai";
 import { useMutation } from "react-query";
 import { format } from "date-fns";
 import randomstring from "randomstring";
-import {
-  Row,
-  Col,
-  Button,
-  Input,
-  Notification,
-} from "@canonical/react-components";
+import { Row, Col, Notification } from "@canonical/react-components";
+import { Button } from "@canonical/react-ds-global";
+import { Field, Form } from "@canonical/react-ds-global-form";
+import { useForm } from "react-hook-form";
+import type { ChangeEvent } from "react";
+import type { FieldValues } from "react-hook-form";
 
 import { modelsListState } from "../../state/modelsState";
 import { brandIdState, brandStoreState } from "../../state/brandStoreState";
@@ -25,6 +24,9 @@ function Model() {
   const [apiKey, setApiKey] = useState("");
   const [showSuccessNotification, setShowSuccessNotificaton] = useState(false);
   const [showErrorNotification, setShowErrorNotificaton] = useState(false);
+  const methods = useForm<FieldValues>({
+    values: { apiKey },
+  });
   const setModelsList = useSetAtom(modelsListState);
   const brandStore = useAtomValue(brandStoreState(id));
 
@@ -119,18 +121,21 @@ function Model() {
         <div className="u-fixed-width u-align--right">
           <Button
             type="button"
+            importance="secondary"
             onClick={() => {
               setApiKey("");
             }}
             disabled={!apiKey}
+            style={{ marginRight: "1rem" }}
           >
             Revert
           </Button>
           <Button
             type="submit"
-            appearance="positive"
-            className="u-no-margin--right"
+            importance="primary"
+            anticipation="constructive"
             disabled={!apiKey}
+            loading={mutation.isLoading}
             form="save-model-form"
           >
             Save
@@ -139,14 +144,7 @@ function Model() {
       )}
 
       {currentModel && (
-        <form
-          className="p-form p-form--stacked"
-          id="save-model-form"
-          onSubmit={(event) => {
-            event.preventDefault();
-            mutation.mutate(apiKey);
-          }}
-        >
+        <>
           <Row>
             <Col size={3}>
               <p>Name</p>
@@ -174,28 +172,38 @@ function Model() {
               <p>API key</p>
             </Col>
             <Col size={6}>
-              <Input
-                type="text"
-                id="api-key-field"
-                label="API key"
-                labelClassName="u-off-screen"
-                value={apiKey}
-                className="read-only-dark u-no-margin--bottom"
-                readOnly={currentModel["api-key"] !== null}
-                onChange={(e) => {
-                  if (currentModel["api-key"] !== null) {
-                    return;
-                  }
-
-                  setApiKey(e.target.value);
+              <Form
+                id="save-model-form"
+                methods={methods}
+                onSubmit={() => {
+                  mutation.mutate(apiKey);
                 }}
-              />
+              >
+                <Field
+                  inputType="text"
+                  name="apiKey"
+                  id="api-key-field"
+                  label="API key"
+                  className="update-model-input"
+                  readOnly={currentModel["api-key"] !== null}
+                  registerProps={{
+                    onChange: (event: ChangeEvent<HTMLInputElement>) => {
+                      if (currentModel["api-key"] !== null) {
+                        return;
+                      }
+
+                      setApiKey(event.target.value);
+                    },
+                  }}
+                />
+              </Form>
             </Col>
             {!currentModel["api-key"] && (
               <Col size={3} className="u-align--right">
                 <Button
                   type="button"
-                  className="u-no-margin--bottom"
+                  importance="secondary"
+                  style={{ marginBottom: 0 }}
                   onClick={() => {
                     setApiKey(
                       randomstring.generate({
@@ -268,7 +276,7 @@ function Model() {
               </Row>
             </>
           )}
-        </form>
+        </>
       )}
 
       <PortalEntrance name="notification">
