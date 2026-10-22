@@ -15,11 +15,32 @@ concurrency:
 checkout:
   fetch-depth: 0
   fetch: ["refs/pulls/open/*"]
+runtimes:
+  node:
+    version: "24"
+network:
+  allowed:
+    - defaults
+    - registry.npmjs.org
+    - registry.yarnpkg.com
+steps:
+  - name: Install repository-compatible Yarn Classic
+    run: npm install --global --ignore-scripts yarn@1.22.22
 tools:
   github:
     mode: gh-proxy
     toolsets: [default]
 safe-outputs:
+  steps:
+    - name: Block PR side effects for incomplete rollups
+      if: contains(needs.agent.outputs.output_types, 'create_pull_request')
+      env:
+        AGENT_OUTPUT: ${{ steps.setup-agent-output-env.outputs.GH_AW_AGENT_OUTPUT }}
+      run: |
+        if ! jq -e '(.items | type == "array") and all(.items[]; .type != "report_incomplete")' "$AGENT_OUTPUT"; then
+          echo "::error::Rollup incomplete or output invalid; refusing PR creation and supersession"
+          exit 1
+        fi
   create-pull-request:
     draft: false
     close-older-pull-requests: true
@@ -53,11 +74,22 @@ Create a single rollup branch and pull request from all currently open dependenc
 7. For each dependency bot pull request:
    - locate its prefetched local ref at `refs/remotes/origin/pull/<number>/head`; do not fetch over the network,
    - verify that the local ref exists and matches the head SHA used when filtering the PR; otherwise call `noop` with the PR number and reason,
-   - merge it into the rollup branch with a merge commit,
-   - if there are conflicts, abort the merge and call `noop` with the blocked PR number; do not resolve conflicts by choosing either side and do not create a partial rollup,
+   - record the selected manifest changes and lockfile entry changes against the PR's merge base (including selector, version, resolved URL and integrity for lockfile-only updates); retain these expectations and the original lockfile blobs outside the checkout until final verification,
+   - merge it into the rollup branch with `git merge --no-ff --no-edit`,
+   - if the merge exits nonzero, inspect the actual unmerged paths with `git diff --name-only --diff-filter=U -z` and confirm `MERGE_HEAD` exists. No unmerged paths or no active merge means a Git/tool error, not a tolerable conflict: call `report_incomplete` with diagnostics and stop,
+   - only a regular, tracked Yarn Classic v1 `yarn.lock` with a verified owning `package.json` (or Yarn workspace root) is a recognized generated dependency lockfile, including eligible nested packages. Do not generalize to `*.lock` or `*.lock.yml`: the compiled workflow is not a dependency lockfile. `package.json` and `requirements.txt` are never disposable lockfiles. Unsupported formats, symlinks, missing owners, renames/deletions or ambiguous workspace ownership are blocked,
+   - if ANY unmerged path is not such a lockfile, abort the entire merge and call `noop` with the blocked PR number and paths. This includes mixed manifest/lockfile conflicts; never choose either side for a manifest or publish a partial rollup,
+   - for lockfile-only conflicts, save index stages 1/2/3 outside the checkout before resolving. Record every affected lockfile and its owner in a regeneration set that persists across ALL merges. Use the stage-2 blob as a **temporary** working-tree placeholder, stage only those paths, verify `git ls-files -u` is empty, and immediately commit the active merge with `git commit --no-edit`. Do not reset/abort/recreate the merge: it must retain both parents, including the verified bot PR head. Temporary contents are not a final resolution,
    - stop processing immediately after calling `noop`.
-8. Verify that the final dependency files preserve the selected updates. If any selected update is missing or cannot be verified, call `noop` with the affected PR numbers and stop without creating a rollup PR.
-9. If the rollup branch ends with no net file changes versus default branch, call `noop`.
+8. After **all** selected PRs have merged, regenerate and verify lockfiles before building any summary or requesting any PR:
+   - Add the owning lockfile for every changed Yarn dependency input (`dependencies`, `devDependencies`, `optionalDependencies`, `resolutions`, and workspace manifests) to the regeneration set, even when its merge was clean. Regenerate each workspace root once, not individual workspace members; independent nested packages run in their own directories. If ownership or a required lockfile cannot be established, call `noop` and stop.
+   - Build a valid v1 seed for each affected lockfile from the saved blobs and final cleanly merged entries, retaining unrelated entries and incorporating ALL selected lockfile entry updates, including lockfile-only bot updates. Do not simply delete the lockfile, keep the temporary side, or run a blanket upgrade. If two selected updates require incompatible resolutions for the same selector, or the seed cannot preserve an update, call `noop` with the affected PRs and stop.
+   - Use Node 24 and Yarn **1.22.22** (the repository uses Classic v1 locks, not Berry; `--immutable` is not a regeneration command). In each owning package/workspace directory run `yarn install --ignore-scripts --non-interactive` against the final manifests and seeded lockfile. Do not run project/dependency lifecycle scripts, change manifests/configuration, bypass integrity/engine checks, or add registries/network permissions. Retain existing resolutions to avoid unrelated dependency churn.
+   - Check each command's exit status explicitly. On ANY tool/seed-generation/install failure, call `report_incomplete` with the package directory, command, exit status and useful stderr, then stop immediately. NEVER convert regeneration failure to `noop`, retry by discarding updates, or emit `create-pull-request`. A shell tool's nonzero exit alone does not fail the agent: `report_incomplete` activates the compiled runtime's `core.setFailed` failure handling even if the agent exits zero. The safe-output preflight independently rejects incomplete output before PR creation can close an older rollup.
+   - Verify all selected updates against the recorded expectations and final files, including manifests, resolutions and exact resolved lockfile entries for lockfile-only updates (not just merge ancestry). A later compatible update may supersede an earlier version only if it demonstrably includes that update; otherwise missing, incompatible or unverifiable selected updates require `noop` with the affected PRs and no PR.
+   - Verify no `git ls-files -u` entries, no active `MERGE_HEAD`, no conflict-marker lines in dependency files, no unexpected file changes, and that every selected head is an ancestor of HEAD. Stage only successfully regenerated lockfiles and commit them if changed. Verify the final committed diff, a clean index/worktree (excluding ignored install artifacts), and that all changed dependency inputs have consistent lockfiles before proceeding.
+9. Verify that the final dependency files preserve the selected updates. If any selected update is missing or cannot be verified, call `noop` with the affected PR numbers and stop without creating a rollup PR.
+10. If the rollup branch ends with no net file changes versus default branch, call `noop`.
 
 For any API/tool or consistency-check failure during discovery or file inspection (including authentication, permissions, rate limits, pagination, stale SHAs, or malformed/incomplete responses), call `report_incomplete` with the failed operation and error and stop. Never substitute an empty list, skip a failed page or PR, or call `noop` for these failures.
 
@@ -107,3 +139,4 @@ Create exactly one PR using `create-pull-request`.
 
 - Use `create-pull-request` for the final PR. It is configured to close older open rollup PRs from this workflow before creating the new one.
 - Use `noop` when there are no bot PRs, no net changes, or merges are blocked by unresolvable conflicts.
+- Only generated Yarn lockfile conflicts may be deferred, and only until successful final regeneration and update verification. Use `report_incomplete`, never `noop`, for regeneration failures; do not request a PR or supersede an existing rollup on any incomplete run.
