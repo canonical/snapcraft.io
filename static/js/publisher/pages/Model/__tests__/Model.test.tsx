@@ -1,6 +1,6 @@
 import { BrowserRouter } from "react-router-dom";
 import { QueryClient, QueryClientProvider, useQuery } from "react-query";
-import { render, screen } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import "@testing-library/jest-dom";
 
@@ -68,6 +68,16 @@ vi.mock("react-query", async (importOriginal) => ({
 }));
 
 describe("Model", () => {
+  it("keeps the API key input accessible by its label", () => {
+    // @ts-expect-error - Mocking useQuery without providing types for the mock data
+    useQuery.mockReturnValue(defaultResponse);
+    renderComponent();
+
+    expect(
+      screen.getByRole("textbox", { name: "API key" }),
+    ).toHaveAccessibleName("API key");
+  });
+
   it("doesn't render 'Save' and 'Revert' buttons if API key already exists", async () => {
     // @ts-expect-error - Mocking useQuery without providing types for the mock data
     useQuery.mockReturnValue(defaultResponse);
@@ -110,15 +120,9 @@ describe("Model", () => {
     useQuery.mockReturnValue({ data: [{ ...defaultModel, "api-key": null }] });
     renderComponent();
     expect(screen.getByRole("button", { name: "Save" })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Save" })).toHaveAttribute(
-      "aria-disabled",
-      "true",
-    );
+    expect(screen.getByRole("button", { name: "Save" })).toBeDisabled();
     expect(screen.getByRole("button", { name: "Revert" })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Revert" })).toHaveAttribute(
-      "aria-disabled",
-      "true",
-    );
+    expect(screen.getByRole("button", { name: "Revert" })).toBeDisabled();
   });
 
   it("enables the 'Save' and 'Revert' buttons when the API key has been modified", async () => {
@@ -127,12 +131,19 @@ describe("Model", () => {
     renderComponent();
     const user = userEvent.setup();
     await user.click(screen.getByRole("button", { name: "Generate key" }));
-    expect(screen.getByRole("button", { name: "Save" })).not.toHaveAttribute(
-      "aria-disabled",
-    );
-    expect(screen.getByRole("button", { name: "Revert" })).not.toHaveAttribute(
-      "aria-disabled",
-    );
+    expect(screen.getByRole("button", { name: "Save" })).toBeEnabled();
+    expect(screen.getByRole("button", { name: "Revert" })).toBeEnabled();
+  });
+
+  it("clears the generated API key when clicking 'Revert'", async () => {
+    // @ts-expect-error - Mocking useQuery without providing types for the mock data
+    useQuery.mockReturnValue({ data: [{ ...defaultModel, "api-key": null }] });
+    renderComponent();
+    const user = userEvent.setup();
+    await user.click(screen.getByRole("button", { name: "Generate key" }));
+    await user.click(screen.getByRole("button", { name: "Revert" }));
+    expect(screen.getByLabelText("API key")).toHaveValue("");
+    expect(screen.getByRole("button", { name: "Save" })).toBeDisabled();
   });
 
   it("generates a new API key when clicking the 'Generate key' button", async () => {
@@ -146,5 +157,69 @@ describe("Model", () => {
     expect(apiKeyFieldValue).not.toEqual(
       "K2NjWGA4iKhLmGDDQUJhJyhzS35CBLJClyNu8dAS0TWrTF3aSD",
     );
+  });
+
+  it("submits the generated API key when clicking 'Save'", async () => {
+    // @ts-expect-error - Mocking useQuery without providing types for the mock data
+    useQuery.mockReturnValue({
+      data: [{ ...defaultModel, "api-key": null }],
+      refetch: vi.fn(),
+    });
+    const fetchMock = vi.fn().mockResolvedValue({ ok: true });
+    vi.stubGlobal("fetch", fetchMock);
+    renderComponent();
+    const user = userEvent.setup();
+    await user.click(screen.getByRole("button", { name: "Generate key" }));
+    const apiKeyField: HTMLInputElement = screen.getByLabelText("API key");
+    const apiKey = apiKeyField.value;
+
+    await user.click(screen.getByRole("button", { name: "Save" }));
+
+    await waitFor(() => {
+      expect(fetchMock).toHaveBeenCalledWith(
+        expect.stringContaining("/models/model-1"),
+        expect.objectContaining({ method: "PATCH" }),
+      );
+    });
+    const formData = fetchMock.mock.calls[0][1].body as FormData;
+    expect(formData.get("api_key")).toBe(apiKey);
+    vi.unstubAllGlobals();
+  });
+
+  it("shows the Save button as loading while saving the API key", async () => {
+    // @ts-expect-error - Mocking useQuery without providing types for the mock data
+    useQuery.mockReturnValue({
+      data: [{ ...defaultModel, "api-key": null }],
+      refetch: vi.fn(),
+    });
+    let resolveSave!: (response: { ok: boolean }) => void;
+    const saveResponse = new Promise<{ ok: boolean }>((resolve) => {
+      resolveSave = resolve;
+    });
+    vi.stubGlobal("fetch", vi.fn().mockReturnValue(saveResponse));
+
+    try {
+      renderComponent();
+      const user = userEvent.setup();
+      await user.click(screen.getByRole("button", { name: "Generate key" }));
+      const saveButton = screen.getByRole("button", { name: "Save" });
+      expect(saveButton).not.toHaveAttribute("aria-busy");
+
+      await user.click(saveButton);
+
+      await waitFor(() => {
+        expect(saveButton).toHaveAttribute("aria-busy", "true");
+        expect(saveButton).toBeDisabled();
+      });
+
+      resolveSave({ ok: true });
+
+      await waitFor(() => {
+        expect(saveButton).not.toHaveAttribute("aria-busy");
+        expect(saveButton).toBeEnabled();
+      });
+    } finally {
+      vi.unstubAllGlobals();
+    }
   });
 });
