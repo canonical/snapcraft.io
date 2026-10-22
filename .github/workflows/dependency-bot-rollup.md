@@ -20,9 +20,32 @@ runtimes:
     version: "24"
 network:
   allowed:
-    - defaults
     - registry.npmjs.org
     - registry.yarnpkg.com
+  blocked:
+    - api.npms.io
+    - bun.sh
+    - cdn.jsdelivr.net
+    - deb.nodesource.com
+    - deno.land
+    - esm.sh
+    - get.pnpm.io
+    - googleapis.deno.dev
+    - googlechromelabs.github.io
+    - jsr.io
+    - nodejs.org
+    - npm.pkg.github.com
+    - npmjs.com
+    - npmjs.org
+    - registry.bower.io
+    - registry.npmjs.com
+    - repo.yarnpkg.com
+    - skimdb.npmjs.com
+    - storage.googleapis.com
+    - telemetry.vercel.com
+    - www.npmjs.com
+    - www.npmjs.org
+    - yarnpkg.com
 steps:
   - name: Install repository-compatible Yarn Classic
     run: npm install --global --ignore-scripts yarn@1.22.22
