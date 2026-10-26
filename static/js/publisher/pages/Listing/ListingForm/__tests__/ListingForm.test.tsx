@@ -31,8 +31,28 @@ vi.mock("@canonical/react-ds-global", () => {
     </button>
   );
 
+  const Card = ({
+    children,
+    ...props
+  }: React.HTMLAttributes<HTMLDivElement>) => <div {...props}>{children}</div>;
+
+  Card.Content = ({
+    children,
+    ...props
+  }: React.HTMLAttributes<HTMLDivElement>) => <div {...props}>{children}</div>;
+
+  const Icon = ({
+    children: _children,
+    icon: _icon,
+  }: {
+    children?: React.ReactNode;
+    icon: string;
+  }) => <span aria-hidden="true" />;
+
   return {
     Button,
+    Card,
+    Icon,
     withTooltip: (Component: React.ComponentType) => Component,
   };
 });

@@ -1,4 +1,4 @@
-import { Tooltip } from "@canonical/react-components";
+import { withTooltip, Icon } from "@canonical/react-ds-global";
 
 type TrackInfoProps = {
   versionPattern: string | null;
@@ -15,20 +15,20 @@ export default function TrackInfo({
     ? `Releases will be done progressively on the track and ${automaticPhasingPercentage}% will be incremented automatically.`
     : "";
 
+  const TrackInfoTooltip = withTooltip(
+    Icon,
+    `The version pattern and the automatic phasing percentage are additional
+properties available as options when creating a new track.
+${progressiveReleases}`,
+  );
+
   return (
     <p>
       {versionPattern && `Version pattern: ${versionPattern}`}
       {versionPattern && automaticPhasingPercentage && " / "}
       {automaticPhasingPercentage &&
         `Auto. phasing %: ${automaticPhasingPercentage}`}{" "}
-      <Tooltip
-        autoAdjust
-        message={`The version pattern and the automatic phasing percentage are additional
-properties available as options when creating a new track.
-${progressiveReleases}`}
-      >
-        <i className="p-icon--information" />
-      </Tooltip>
+      <TrackInfoTooltip icon="information" />
     </p>
   );
 }

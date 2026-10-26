@@ -1,5 +1,6 @@
-import { Component, ReactNode } from "react";
+import { Component, createRef, ReactNode } from "react";
 import { connect } from "react-redux";
+import { Button, Modal as DSModal } from "@canonical/react-ds-global";
 
 import { CLOSE_MODAL_ACTION_NAME, closeModal } from "../slices/modal";
 import type { ReleasesReduxState } from "../../../types/releaseTypes";
@@ -13,7 +14,7 @@ type ModalAction = {
       }
     | {
         type: typeof CLOSE_MODAL_ACTION_NAME;
-      }
+      };
   label: string;
 };
 
@@ -28,7 +29,22 @@ interface ModalActionButtonState {
   loading: boolean;
 }
 
-class ModalActionButton extends Component<ModalActionButtonProps, ModalActionButtonState> {
+const appearanceToProps: Record<
+  ModalAction["appearance"],
+  {
+    importance: "primary" | "secondary";
+    anticipation?: "constructive" | "destructive";
+  }
+> = {
+  positive: { importance: "primary", anticipation: "constructive" },
+  negative: { importance: "primary", anticipation: "destructive" },
+  neutral: { importance: "secondary" },
+};
+
+class ModalActionButton extends Component<
+  ModalActionButtonProps,
+  ModalActionButtonState
+> {
   constructor(props: ModalActionButtonProps) {
     super(props);
 
@@ -59,21 +75,15 @@ class ModalActionButton extends Component<ModalActionButtonProps, ModalActionBut
     const { appearance, children } = this.props;
     const { loading } = this.state;
 
-    const className = [
-      `p-button--${appearance}`,
-      "u-no-margin--bottom",
-      ["positive", "negative"].indexOf(appearance) > -1 ? "is--dark" : "",
-    ];
-
     return (
-      <button
-        className={className.join(" ")}
+      <Button
+        className="u-no-margin--bottom"
         onClick={this.onClickHandler}
-        disabled={loading}
+        loading={loading}
+        {...appearanceToProps[appearance]}
       >
-        {loading && "Loading..."}
-        {!loading && children}
-      </button>
+        {children}
+      </Button>
     );
   }
 }
@@ -94,33 +104,25 @@ interface ModalProps {
   closeModal: () => void;
 }
 
-const Modal = ({ title, content, actions = [], closeModal }: ModalProps) => {
-  if (!title && !content) {
-    return null;
+class Modal extends Component<ModalProps> {
+  dialogRef = createRef<HTMLDialogElement>();
+
+  componentDidMount() {
+    this.dialogRef.current?.showModal();
   }
 
-  return (
-    <div className="p-modal">
-      <div
-        className="p-modal__dialog"
-        role="dialog"
-        aria-labelledby="modal-title"
-        aria-describedby="modal-description"
-      >
-        <header className="p-modal__header">
-          <h2 className="p-modal__title" id="modal-title">
-            {title}
-          </h2>
-          <button
-            className="p-modal__close"
-            aria-label="Close modal"
-            onClick={closeModal}
-          >
-            Close
-          </button>
-        </header>
-        <p id="modal-description">{content}</p>
-        <div className="u-align--right">
+  render() {
+    const { title, content, actions = [], closeModal } = this.props;
+
+    if (!title && !content) {
+      return null;
+    }
+
+    return (
+      <DSModal ref={this.dialogRef} onClose={closeModal}>
+        <DSModal.Header>{title}</DSModal.Header>
+        <DSModal.Content>{content}</DSModal.Content>
+        <DSModal.Footer>
           {actions.map((action, i) => (
             <ModalActionButtonWrapped
               key={`action-${i}`}
@@ -130,11 +132,11 @@ const Modal = ({ title, content, actions = [], closeModal }: ModalProps) => {
               {action.label}
             </ModalActionButtonWrapped>
           ))}
-        </div>
-      </div>
-    </div>
-  );
-};
+        </DSModal.Footer>
+      </DSModal>
+    );
+  }
+}
 
 const mapStateToProps = (state: ReleasesReduxState) => state.modal || {};
 

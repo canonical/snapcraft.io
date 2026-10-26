@@ -73,6 +73,7 @@ class GetEmbeddedCardTest(TestCase):
                                 "unlisted",
                                 "links",
                                 "revision",
+                                "sboms",
                             ]
                         )
                     }

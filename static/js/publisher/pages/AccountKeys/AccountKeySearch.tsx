@@ -1,4 +1,9 @@
-import { Button, Icon } from "@canonical/react-components";
+// Still need to use the `Icon` from `react-components`
+// until the `IconButton` component is ready in Pragma
+import {
+  Button,
+  Icon as ReactComponentsIcon,
+} from "@canonical/react-components";
 
 function AccountKeysSearch(props: {
   value?: string;
@@ -29,10 +34,10 @@ function AccountKeysSearch(props: {
           props.onChange("");
         }}
       >
-        <Icon name="close">Clear filter</Icon>
+        <ReactComponentsIcon name="close">Clear filter</ReactComponentsIcon>
       </Button>
       <Button type="submit" className="p-search-box__button">
-        <Icon name="search">Search</Icon>
+        <ReactComponentsIcon name="search">Search</ReactComponentsIcon>
       </Button>
     </div>
   );

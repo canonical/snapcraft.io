@@ -3,12 +3,16 @@ import { useAtomValue } from "jotai";
 import {
   Row,
   Col,
-  Icon,
+  // Still need to use the `Icon` from `react-components`
+  // until links styled as buttons are available in Pragma
+  // as the icon spacing is wrong otherwise
+  Icon as ReactComponentsIcon,
   CheckboxInput,
   Button,
   Notification,
   ThemeSwitcher,
 } from "@canonical/react-components";
+import { Icon } from "@canonical/react-ds-global";
 
 import { publisherState } from "../../state/publisherState";
 import { setPageTitle } from "../../utils";
@@ -90,7 +94,7 @@ function AccountDetails(): React.JSX.Element {
 
       {!publisher ? (
         <div className="u-fixed-width">
-          <Icon name="spinner" className="u-animation--spin" />
+          <Icon icon="spinner" className="u-animation--spin" />
           &nbsp;Loading...
         </div>
       ) : (
@@ -101,7 +105,7 @@ function AccountDetails(): React.JSX.Element {
             </Col>
             <Col size={6} className="u-align--right">
               <a className="p-button has-icon" href="https://login.ubuntu.com">
-                <Icon name="edit" />
+                <ReactComponentsIcon name="edit" />
                 <span>Edit details</span>
               </a>
             </Col>
@@ -255,7 +259,7 @@ function AccountDetails(): React.JSX.Element {
                 >
                   {isSaving && (
                     <Icon
-                      name="spinner"
+                      icon="spinner"
                       className="u-animation--spin is-light"
                     />
                   )}

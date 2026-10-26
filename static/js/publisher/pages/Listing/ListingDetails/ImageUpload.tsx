@@ -12,9 +12,9 @@ import {
   Col,
   Notification,
   Switch,
-  Icon,
   loadTheme,
 } from "@canonical/react-components";
+import { Button, Icon } from "@canonical/react-ds-global";
 
 import { validateImageDimensions } from "../../../utils";
 
@@ -228,9 +228,7 @@ function ImageUpload({
                     height: `${previewHeight}px`,
                   }}
                 >
-                  <Icon name="plus" light={isDark}>
-                    Add image
-                  </Icon>
+                  <Icon icon="plus" />
                 </div>
               )}
               <input
@@ -241,6 +239,7 @@ function ImageUpload({
                 }}
                 type="file"
                 accept={fileTypes}
+                aria-label="Add image"
                 {...register(imageFieldKey, {
                   onChange: (
                     e: SyntheticEvent<HTMLInputElement> & {
@@ -256,9 +255,9 @@ function ImageUpload({
             </div>
 
             {showDeleteButton() && (
-              <button
+              <Button
                 type="button"
-                className={`p-button--base snap-remove-icon ${!darkThemeEnabled && "is-light"}`}
+                className="snap-remove-icon"
                 onClick={() => {
                   setImageIsValid(true);
                   setValue(imageUrlFieldKey, "", {
@@ -267,10 +266,12 @@ function ImageUpload({
                   setValue(imageFieldKey, new File([], ""));
                   setPreviewImageUrl("");
                 }}
+                importance={darkThemeEnabled ? "primary" : "tertiary"}
+                aria-label={`Remove ${type}`}
+                style={{ backgroundColor: "transparent" }}
               >
-                <Icon name="delete" light={isDark} />
-                <span className="u-off-screen">Remove {type}</span>
-              </button>
+                <Icon icon="delete" />
+              </Button>
             )}
           </div>
 
@@ -301,29 +302,31 @@ function ImageUpload({
 
         {helpText && <div className="p-form-help-text">{helpText}</div>}
 
-        <button
-          type="button"
-          className="p-button--link"
-          onClick={() => {
-            setShowImageRestrictions(!showImageRestrictions);
-          }}
-        >
-          <small>
-            {showImageRestrictions && (
-              <>
-                Hide image restrictions{" "}
-                <span className="u-off-screen">for {type}</span>
-              </>
-            )}
+        <p>
+          <Button
+            type="button"
+            variant="link"
+            onClick={() => {
+              setShowImageRestrictions(!showImageRestrictions);
+            }}
+          >
+            <small>
+              {showImageRestrictions && (
+                <>
+                  Hide image restrictions{" "}
+                  <span className="u-off-screen">for {type}</span>
+                </>
+              )}
 
-            {!showImageRestrictions && (
-              <>
-                Show image restrictions{" "}
-                <span className="u-off-screen">for {type}</span>
-              </>
-            )}
-          </small>
-        </button>
+              {!showImageRestrictions && (
+                <>
+                  Show image restrictions{" "}
+                  <span className="u-off-screen">for {type}</span>
+                </>
+              )}
+            </small>
+          </Button>
+        </p>
         {showImageRestrictions && (
           <ul>
             <li>

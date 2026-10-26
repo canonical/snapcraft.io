@@ -9,8 +9,8 @@ import {
   Row,
   Col,
   Notification,
-  Icon,
 } from "@canonical/react-components";
+import { Icon } from "@canonical/react-ds-global";
 
 import { brandStoresState } from "../../state/brandStoreState";
 
@@ -48,7 +48,7 @@ function RequestReservedName(): React.JSX.Element {
 
       {stores.length === 0 && (
         <>
-          <Icon name="spinner" className="u-animation--spin" />
+          <Icon icon="spinner" className="u-animation--spin" />
           &nbsp;Loading data...
         </>
       )}
@@ -137,7 +137,11 @@ function RequestReservedName(): React.JSX.Element {
             >
               {isSubmitting ? (
                 <>
-                  <Icon name="spinner" className="u-animation--spin" light />
+                  <Icon
+                    icon="spinner"
+                    className="u-animation--spin"
+                    color="white"
+                  />
                   &nbsp;Requesting
                 </>
               ) : (

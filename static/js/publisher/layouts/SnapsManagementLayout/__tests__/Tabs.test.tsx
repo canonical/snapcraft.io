@@ -47,8 +47,8 @@ describe("SnapsManagementLayout -> Tab navigation", () => {
 
     renderComponent();
     expect(screen.getByRole("link", { name: "Listing" })).toHaveAttribute(
-      "aria-selected",
-      "true",
+      "aria-current",
+      "page",
     );
   });
 
@@ -65,8 +65,8 @@ describe("SnapsManagementLayout -> Tab navigation", () => {
 
     renderComponent();
     expect(screen.getByRole("link", { name: "Builds" })).toHaveAttribute(
-      "aria-selected",
-      "true",
+      "aria-current",
+      "page",
     );
   });
 
@@ -77,8 +77,8 @@ describe("SnapsManagementLayout -> Tab navigation", () => {
 
     const tabs = screen.getByRole("navigation");
     expect(within(tabs).getByRole("link", { name: "Builds" })).toHaveAttribute(
-      "aria-selected",
-      "true",
+      "aria-current",
+      "page",
     );
   });
 
@@ -95,8 +95,8 @@ describe("SnapsManagementLayout -> Tab navigation", () => {
 
     renderComponent();
     expect(screen.getByRole("link", { name: "Releases" })).toHaveAttribute(
-      "aria-selected",
-      "true",
+      "aria-current",
+      "page",
     );
   });
 
@@ -113,8 +113,8 @@ describe("SnapsManagementLayout -> Tab navigation", () => {
 
     renderComponent();
     expect(screen.getByRole("link", { name: "Metrics" })).toHaveAttribute(
-      "aria-selected",
-      "true",
+      "aria-current",
+      "page",
     );
   });
 
@@ -133,8 +133,8 @@ describe("SnapsManagementLayout -> Tab navigation", () => {
 
     renderComponent();
     expect(screen.getByRole("link", { name: "Publicise" })).toHaveAttribute(
-      "aria-selected",
-      "true",
+      "aria-current",
+      "page",
     );
   });
 
@@ -143,8 +143,8 @@ describe("SnapsManagementLayout -> Tab navigation", () => {
 
     renderComponent();
     expect(screen.getByRole("link", { name: "Publicise" })).toHaveAttribute(
-      "aria-selected",
-      "true",
+      "aria-current",
+      "page",
     );
   });
 
@@ -153,8 +153,8 @@ describe("SnapsManagementLayout -> Tab navigation", () => {
 
     renderComponent();
     expect(screen.getByRole("link", { name: "Publicise" })).toHaveAttribute(
-      "aria-selected",
-      "true",
+      "aria-current",
+      "page",
     );
   });
 
@@ -171,8 +171,8 @@ describe("SnapsManagementLayout -> Tab navigation", () => {
 
     renderComponent();
     expect(screen.getByRole("link", { name: "Settings" })).toHaveAttribute(
-      "aria-selected",
-      "true",
+      "aria-current",
+      "page",
     );
   });
 });

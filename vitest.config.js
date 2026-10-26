@@ -2,7 +2,14 @@ import { coverageConfigDefaults, defineConfig } from "vitest/config";
 
 export default defineConfig({
   css: false,
-  plugins: [],
+  resolve: {
+    alias: [
+      {
+        find: /^@canonical\/react-ds-global-form$/,
+        replacement: "@canonical/react-ds-global-form/dist/esm/index.js",
+      },
+    ],
+  },
   test: {
     dir: "static/js", // base directory for tests
     globals: true, // inject global `vi` object in tests so we don't have to import it
@@ -10,7 +17,10 @@ export default defineConfig({
     setupFiles: ["static/js/test/setup.ts"],
     server: {
       deps: {
-        inline: ["@canonical/react-ds-global"],
+        inline: [
+          "@canonical/react-ds-global",
+          "@canonical/react-ds-global-form",
+        ],
       },
     },
     silent: "passed-only", // silence logs for passed tests

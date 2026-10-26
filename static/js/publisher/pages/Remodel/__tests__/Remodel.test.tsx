@@ -1,4 +1,4 @@
-import { BrowserRouter } from "react-router-dom";
+import { MemoryRouter, Route, Routes } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { vi } from "vitest";
 import { render, screen, waitFor } from "@testing-library/react";
@@ -54,11 +54,18 @@ const queryClient = new QueryClient({
 
 function renderComponent() {
   return render(
-    <BrowserRouter>
+    <MemoryRouter
+      initialEntries={["/admin/test-store/models/current-model/remodel"]}
+    >
       <QueryClientProvider client={queryClient}>
-        <Remodel />
+        <Routes>
+          <Route
+            path="/admin/:id/models/:modelId/remodel/*"
+            element={<Remodel />}
+          />
+        </Routes>
       </QueryClientProvider>
-    </BrowserRouter>,
+    </MemoryRouter>,
   );
 }
 
@@ -246,9 +253,19 @@ describe("Remodel", () => {
   it("displays 'Configure' button if user has remodels access", () => {
     mockUseRemodels.mockReturnValue(useRemodelsPermissions);
     renderComponent();
-    expect(
-      screen.getByRole("link", { name: "Configure remodels" }),
-    ).toBeInTheDocument();
+    const configureLink = screen.getByRole("link", {
+      name: "Configure remodels",
+    });
+    expect(configureLink).toHaveClass(
+      "ds",
+      "button",
+      "primary",
+      "constructive",
+    );
+    expect(configureLink).toHaveAttribute(
+      "href",
+      "/admin/test-store/models/current-model/remodel/configure",
+    );
   });
 
   it("updates remodel and shows success notification", async () => {
@@ -338,7 +355,8 @@ describe("Remodel", () => {
 
     const deleteButton = screen.getByRole("button", { name: "Delete remodel" });
     expect(deleteButton).toBeInTheDocument();
-    expect(deleteButton).toHaveAttribute("aria-disabled", "true");
+    expect(deleteButton).toHaveClass("ds", "button", "secondary");
+    expect(deleteButton).toBeDisabled();
   });
 
   it("enables bulk delete button with correct text for single item", async () => {
@@ -352,7 +370,7 @@ describe("Remodel", () => {
 
     const deleteButton = screen.getByRole("button", { name: "Delete remodel" });
     expect(deleteButton).toBeInTheDocument();
-    expect(deleteButton).not.toHaveAttribute("aria-disabled", "true");
+    expect(deleteButton).toBeEnabled();
   });
 
   it("enables bulk delete button with correct text for multiple items", async () => {
@@ -369,7 +387,7 @@ describe("Remodel", () => {
       name: "Delete 2 remodels",
     });
     expect(deleteButton).toBeInTheDocument();
-    expect(deleteButton).not.toHaveAttribute("aria-disabled", "true");
+    expect(deleteButton).toBeEnabled();
   });
 
   it("opens bulk delete modal when bulk delete button is clicked", async () => {
@@ -386,7 +404,7 @@ describe("Remodel", () => {
 
     // Modal should be visible
     expect(
-      screen.getByRole("heading", { name: "Delete remodel" }),
+      screen.getByRole("dialog", { name: "Delete remodel" }),
     ).toBeInTheDocument();
     expect(
       screen.getByText(/Are you sure you want to delete this remodel\?/),
@@ -433,7 +451,7 @@ describe("Remodel", () => {
 
     // Modal should show list of remodels
     expect(
-      screen.getByRole("heading", { name: "Delete 2 remodels" }),
+      screen.getByRole("dialog", { name: "Delete 2 remodels" }),
     ).toBeInTheDocument();
     expect(screen.getByText("from-model-a → to-model-a")).toBeInTheDocument();
     expect(screen.getByText("(Serial: serial-1)")).toBeInTheDocument();
@@ -576,7 +594,7 @@ describe("Remodel", () => {
       });
       // The last button should be the modal button
       const modalButton = modalDeleteButtons[modalDeleteButtons.length - 1];
-      expect(modalButton).toHaveAttribute("aria-disabled", "true");
+      expect(modalButton).toBeDisabled();
     });
 
     // Resolve the promise to complete the test
@@ -619,7 +637,7 @@ describe("Remodel", () => {
       const deleteButton = screen.getByRole("button", {
         name: "Delete remodel",
       });
-      expect(deleteButton).toHaveAttribute("aria-disabled", "true");
+      expect(deleteButton).toBeDisabled();
     });
   });
 

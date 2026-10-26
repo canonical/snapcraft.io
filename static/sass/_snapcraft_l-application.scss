@@ -95,14 +95,6 @@
         // for this element when the nav has the "is-collapsed" class
         width: $application-layout--side-nav-width-collapsed !important;
 
-        .l-navigation__collapse-toggle {
-          width: $application-layout--side-nav-width-collapsed;
-        }
-
-        .p-icon--toggle-side-nav {
-          transform: rotate(180deg);
-        }
-
         .hide-collapsed {
           display: none;
         }

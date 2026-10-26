@@ -1,13 +1,13 @@
 import { useState, useEffect } from "react";
 import { useAtomValue, useSetAtom } from "jotai";
 import {
-  Link,
   useParams,
   useNavigate,
   useSearchParams,
   useLocation,
 } from "react-router-dom";
-import { Row, Col, Notification, Icon } from "@canonical/react-components";
+import { Row, Col, Notification } from "@canonical/react-components";
+import { Icon } from "@canonical/react-ds-global";
 import { UseQueryResult } from "react-query";
 
 import { useSigningKeys, useModels } from "../../hooks";
@@ -21,6 +21,7 @@ import { brandIdState, brandStoreState } from "../../state/brandStoreState";
 import Filter from "../../components/Filter";
 import SigningKeysTable from "./SigningKeysTable";
 import CreateSigningKeyForm from "./CreateSigningKeyForm";
+import RouterLinkButton from "../../components/RouterLinkButton";
 import {
   isClosedPanel,
   setPageTitle,
@@ -106,12 +107,13 @@ function SigningKeys(): React.JSX.Element {
           />
         </Col>
         <Col size={6} className="u-align--right">
-          <Link
-            className="p-button--positive"
+          <RouterLinkButton
+            importance="primary"
+            anticipation="constructive"
             to={`/admin/${id}/signing-keys/create`}
           >
             Create new signing key
-          </Link>
+          </RouterLinkButton>
         </Col>
       </Row>
       <div className="u-fixed-width u-flex-column u-flex-grow">
@@ -122,7 +124,7 @@ function SigningKeys(): React.JSX.Element {
         )}
         {isLoading ? (
           <p>
-            <Icon name="spinner" className="u-animation--spin" />
+            <Icon icon="spinner" className="u-animation--spin" />
             &nbsp;Fetching signing keys...
           </p>
         ) : (

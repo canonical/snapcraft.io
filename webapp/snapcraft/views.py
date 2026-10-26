@@ -1,6 +1,7 @@
 import flask
 
 from webapp.config import DEFAULT_ICON_URL
+from webapp.llms import BASE_URL, store_llm
 from webapp.snapcraft import logic
 
 
@@ -446,7 +447,11 @@ def snapcraft_blueprint():
 
     @snapcraft.route("/create")
     def create_redirect():
-        return flask.redirect("https://docs.snapcraft.io/build-snaps")
+        return flask.redirect(
+            "https://documentation.ubuntu.com/snapcraft/stable"
+            "/tutorials/craft-a-snap/",
+            code=301,
+        )
 
     @snapcraft.route("/build")
     def build():
@@ -458,7 +463,7 @@ def snapcraft_blueprint():
     def sitemap():
         xml_sitemap = flask.render_template(
             "sitemap/sitemap-index.xml",
-            base_url="https://snapcraft.io",
+            base_url=BASE_URL,
         )
         response = flask.make_response(xml_sitemap)
         response.headers["Content-Type"] = "application/xml"
@@ -467,19 +472,13 @@ def snapcraft_blueprint():
 
     @snapcraft.route("/sitemap-links.xml")
     def sitemap_links():
-        base_url = "https://snapcraft.io"
         links = [
-            {"url": f"{base_url}/about"},
-            {"url": f"{base_url}/about/publish"},
-            {"url": f"{base_url}/about/listing"},
-            {"url": f"{base_url}/about/release"},
-            {"url": f"{base_url}/about/publicise"},
-            {"url": f"{base_url}/iot"},
+            {"url": BASE_URL + path} for path in store_llm.sitemap_paths()
         ]
 
         xml_sitemap = flask.render_template(
             "sitemap/sitemap.xml",
-            base_url="https://snapcraft.io",
+            base_url=BASE_URL,
             links=links,
         )
         response = flask.make_response(xml_sitemap)

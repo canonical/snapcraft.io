@@ -1,7 +1,9 @@
 # Packages
+import secrets
+import time
+
 import flask
 from canonicalwebteam.store_api.dashboard import Dashboard
-from canonicalwebteam.store_api.publishergw import PublisherGW
 from canonicalwebteam.exceptions import (
     StoreApiError,
     StoreApiResponseErrorList,
@@ -13,7 +15,6 @@ from webapp import authentication
 from webapp.helpers import api_publisher_session, launchpad
 from webapp.api.exceptions import ApiError
 from webapp.decorators import (
-    exchange_required,
     gate_unreleased_snap_pages,
     login_required,
 )
@@ -49,7 +50,6 @@ from webapp.endpoints import releases, builds
 from webapp.publisher.snaps.builds import map_snap_build_status
 
 dashboard = Dashboard(api_publisher_session)
-publisher_gateway = PublisherGW("snap", api_publisher_session)
 
 
 publisher_snaps = flask.Blueprint(
@@ -430,17 +430,38 @@ publisher_snaps.add_url_rule(
 
 @publisher_snaps.route("/packages/<package_name>", methods=["DELETE"])
 @login_required
-@exchange_required
 def delete_package(package_name):
-    response = publisher_gateway.unregister_package_name(
-        flask.session, package_name
-    )
+    pending = flask.session.get("pending_snap_unregister")
+    if pending and pending["expires_at"] > time.time():
+        return (
+            jsonify(
+                {
+                    "error": (
+                        "Finish the pending unregister authorization first."
+                    )
+                }
+            ),
+            409,
+        )
 
-    if response.status_code == 200:
-        return ("", 200)
+    authorization_id = secrets.token_urlsafe(16)
+    flask.session["pending_snap_unregister"] = {
+        "authorization_id": authorization_id,
+        "snap_name": package_name,
+        "identity_url": flask.session["publisher"]["identity_url"],
+        "expires_at": time.time() + 300,
+    }
     return (
-        jsonify({"error": response.json()["error-list"][0]["message"]}),
-        response.status_code,
+        jsonify(
+            {
+                "authorization_required": True,
+                "redirect_url": flask.url_for(
+                    "login.authorize_snap_unregister",
+                    authorization_id=authorization_id,
+                ),
+            }
+        ),
+        202,
     )
 
 

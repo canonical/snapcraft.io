@@ -1,13 +1,13 @@
 import { useState, useEffect } from "react";
 import { useAtomValue, useSetAtom } from "jotai";
 import {
-  Link,
   useParams,
   useLocation,
   useNavigate,
   useSearchParams,
 } from "react-router-dom";
-import { Row, Col, Notification, Icon } from "@canonical/react-components";
+import { Row, Col, Notification } from "@canonical/react-components";
+import { Icon } from "@canonical/react-ds-global";
 import { UseQueryResult } from "react-query";
 
 import {
@@ -27,6 +27,7 @@ import { isClosedPanel, setPageTitle, getPolicies } from "../../utils";
 
 import type { Model as ModelType } from "../../types/shared";
 import { PortalEntrance } from "../Portals/Portals";
+import RouterLinkButton from "../../components/RouterLinkButton";
 
 function Models(): React.JSX.Element {
   const { id } = useParams();
@@ -85,12 +86,13 @@ function Models(): React.JSX.Element {
           />
         </Col>
         <Col size={6} className="u-align--right">
-          <Link
-            className="p-button--positive"
+          <RouterLinkButton
+            importance="primary"
+            anticipation="constructive"
             to={`/admin/${id}/models/create`}
           >
             Create new model
-          </Link>
+          </RouterLinkButton>
         </Col>
       </Row>
       <div className="u-fixed-width u-flex-column u-flex-grow">
@@ -102,7 +104,7 @@ function Models(): React.JSX.Element {
           )}
           {modelsIsLoading ? (
             <p>
-              <Icon name="spinner" className="u-animation--spin" />
+              <Icon icon="spinner" className="u-animation--spin" />
               &nbsp;Fetching models...
             </p>
           ) : (

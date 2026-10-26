@@ -1,7 +1,8 @@
 import { useEffect, useState, useRef } from "react";
 import { useAtomValue, useSetAtom } from "jotai";
 import { useParams, useSearchParams } from "react-router-dom";
-import { Notification, Icon } from "@canonical/react-components";
+import { Notification } from "@canonical/react-components";
+import { Icon } from "@canonical/react-ds-global";
 
 import { useSerialLogs } from "../../hooks";
 import { serialLogsListState } from "../../state/serialLogsState";
@@ -98,7 +99,7 @@ function SerialLog(): React.JSX.Element {
         <SerialLogDateSelectors onApplyDateRange={handleDateRangeApply} />
         {isLoading ? (
           <p>
-            <Icon name="spinner" className="u-animation--spin" />
+            <Icon icon="spinner" className="u-animation--spin" />
             &nbsp;Fetching serial logs...
           </p>
         ) : (

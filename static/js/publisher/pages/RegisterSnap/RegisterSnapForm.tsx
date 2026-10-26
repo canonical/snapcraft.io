@@ -5,10 +5,10 @@ import {
   Select,
   Input,
   Button,
-  Icon,
   Row,
   Col,
 } from "@canonical/react-components";
+import { Icon } from "@canonical/react-ds-global";
 
 import type { RegistrationResponse } from "./local-types";
 
@@ -192,7 +192,11 @@ function RegisterSnapForm({
         >
           {isSending ? (
             <>
-              <Icon name="spinner" className="u-animation--spin" light />
+              <Icon
+                icon="spinner"
+                className="u-animation--spin"
+                color="white"
+              />
               &nbsp;Registering
             </>
           ) : (

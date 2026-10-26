@@ -1,14 +1,13 @@
 import { useState, useEffect } from "react";
 import { FieldValues, useForm, useWatch } from "react-hook-form";
 import {
-  Button,
   Form,
   Strip,
   Row,
   Col,
   Notification,
-  Tooltip,
 } from "@canonical/react-components";
+import { Button, withTooltip } from "@canonical/react-ds-global";
 
 import SaveAndPreview from "../../components/SaveAndPreview";
 import SearchAutocomplete from "../../components/SearchAutocomplete";
@@ -202,6 +201,11 @@ function PublisherSettingsForm({ settings }: Props) {
         console.error("Error:", error);
       });
   }, [settingsData?.snap_name]);
+
+  const UnregisterButtonWithTooltip = withTooltip(
+    Button,
+    "Snaps can only be unregistered by their owner.",
+  );
 
   return (
     <>
@@ -518,22 +522,18 @@ function PublisherSettingsForm({ settings }: Props) {
             <Col size={8}>
               <div className="p-form__control" aria-labelledby="status-label">
                 {settingsData?.status === "unpublished" ? (
-                  <div>
-                    <span className="u-margin--right">Registered</span>
+                  <div style={{ display: "flex", gap: "1rem" }}>
+                    <span>Registered</span>
                     {!isUsersSnap ? (
-                      <Tooltip
-                        message={
-                          <>Snaps can only be unregistered by their owner.</>
-                        }
-                        position="top-center"
+                      <UnregisterButtonWithTooltip
+                        importance="secondary"
+                        disabled
                       >
-                        <Button inline={true} disabled>
-                          Unregister
-                        </Button>
-                      </Tooltip>
+                        Unregister
+                      </UnregisterButtonWithTooltip>
                     ) : (
                       <Button
-                        inline={true}
+                        importance="secondary"
                         onClick={(event) => {
                           event.preventDefault();
                           setUnregisterModalOpen(true);

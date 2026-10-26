@@ -105,12 +105,4 @@
     display: flex;
     justify-content: center;
   }
-
-  .snap-remove-icon:hover {
-    background-color: $color-mid-dark;
-
-    &.is-light {
-      background-color: $colors--theme--background-inputs;
-    }
-  }
 }

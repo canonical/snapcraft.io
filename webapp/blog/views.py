@@ -134,14 +134,18 @@ def init_blog(app, url_prefix):
                 f"&tags_exclude=3184%2C3265%2C3408"
             )
 
-            response = session.get(url)
-            if response.status_code == 400:
+            try:
+                response = session.get(url)
+            except RequestException:
+                break
+
+            if response.status_code != 200:
                 break
 
             try:
                 blog_response = response.json()
             except Exception:
-                continue
+                break
 
             for post in blog_response:
                 try:

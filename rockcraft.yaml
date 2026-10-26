@@ -1,6 +1,6 @@
 name: snapcraft-io
 base: bare
-build-base: ubuntu@22.04
+build-base: ubuntu@24.04
 version: "0.1"
 summary: Rocked snapcraft.io
 description: |
@@ -17,8 +17,12 @@ parts:
     plugin: nil
     source: .
     source-type: local
+    after:
+      - flask-framework/dependencies
     build-snaps:
       - node/22/stable
+    build-packages:
+      - python3
     override-build: |
       set -eux
       # install dependencies
@@ -26,9 +30,14 @@ parts:
       yarn install --immutable
       # build the UI
       yarn run build
-      # The final image excludes node_modules, so copy icon files instead of the dev symlink.
+      # write static/llms.txt from the staged Python dependencies
+      export PYTHONPATH="$(ls -d "$CRAFT_STAGE"/lib/python3*/site-packages)"
+      yarn run build-llms-txt
+      # The final image excludes node_modules, so copy icon/font files instead of the dev symlinks.
       rm -rf static/icons
       cp -r node_modules/@canonical/ds-assets/icons static/icons
+      rm -rf static/fonts
+      cp -r node_modules/@canonical/ds-assets/fonts static/fonts
       mkdir -p "$CRAFT_PART_INSTALL/flask/app"
       cp -r static "$CRAFT_PART_INSTALL/flask/app/"
     prime:

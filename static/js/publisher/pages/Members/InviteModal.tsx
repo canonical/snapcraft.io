@@ -1,5 +1,5 @@
-import { Dispatch, SetStateAction } from "react";
-import { Modal, Button } from "@canonical/react-components";
+import { Dispatch, SetStateAction, useEffect, useRef } from "react";
+import { Button, Modal } from "@canonical/react-ds-global";
 import type { InviteActionData } from "../../types/shared";
 
 type Props = {
@@ -17,6 +17,14 @@ function InviteModal({
   updateInvite,
   inviteModalIsSaving,
 }: Props): React.JSX.Element | null {
+  const dialogRef = useRef<HTMLDialogElement>(null);
+
+  useEffect(() => {
+    if (inviteModalOpen && inviteActionData) {
+      dialogRef.current?.showModal();
+    }
+  }, [inviteModalOpen, inviteActionData]);
+
   if (!inviteModalOpen || !inviteActionData) {
     return null;
   }
@@ -29,63 +37,50 @@ function InviteModal({
 
   const closeHandler = () => setInviteModalOpen(false);
 
-  if (!inviteModalOpen) {
-    return null;
-  }
-
   return (
-    <Modal
-      title={`${ACTIONS[inviteActionData.action]} invite`}
-      close={closeHandler}
-      buttonRow={
-        <>
-          <Button className="u-no-margin--bottom" onClick={closeHandler}>
-            Cancel
-          </Button>
+    <Modal ref={dialogRef} onClose={closeHandler}>
+      <Modal.Header>{`${ACTIONS[inviteActionData.action]} invite`}</Modal.Header>
+      <Modal.Content>
+        {inviteActionData.action === "resend" && (
+          <p>
+            Resending your invite will send a reminder email to{" "}
+            <strong>{inviteActionData.email}</strong>. Do you still want to do
+            it?
+          </p>
+        )}
 
-          <Button
-            appearance="positive"
-            className={`u-no-margin--bottom ${
-              inviteModalIsSaving ? "has-icon is-dark" : ""
-            }`}
-            onClick={() => {
-              updateInvite(inviteActionData);
-            }}
-            disabled={inviteModalIsSaving}
-          >
-            {inviteModalIsSaving ? (
-              <>
-                <i className="p-icon--spinner u-animation--spin is-light"></i>
-                <span>Saving...</span>
-              </>
-            ) : (
-              `${ACTIONS[inviteActionData.action]} invite`
-            )}
-          </Button>
-        </>
-      }
-    >
-      {inviteActionData.action === "resend" && (
-        <p>
-          Resending your invite will send a reminder email to{" "}
-          <strong>{inviteActionData.email}</strong>. Do you still want to do it?
-        </p>
-      )}
+        {inviteActionData.action === "revoke" && (
+          <p>
+            Revoking your invite will prevent{" "}
+            <strong>{inviteActionData.email}</strong> from accepting your
+            invite. Do you still want to do it?
+          </p>
+        )}
 
-      {inviteActionData.action === "revoke" && (
-        <p>
-          Revoking your invite will prevent{" "}
-          <strong>{inviteActionData.email}</strong> from accepting your invite.
-          Do you still want to do it?
-        </p>
-      )}
+        {inviteActionData.action === "open" && (
+          <p>
+            Reopening your invite will send a new invite to{" "}
+            <strong>{inviteActionData.email}</strong>. Do you still want to do
+            it?
+          </p>
+        )}
+      </Modal.Content>
+      <Modal.Footer>
+        <Button importance="secondary" onClick={closeHandler}>
+          Cancel
+        </Button>
 
-      {inviteActionData.action === "open" && (
-        <p>
-          Reopening your invite will send a new invite to{" "}
-          <strong>{inviteActionData.email}</strong>. Do you still want to do it?
-        </p>
-      )}
+        <Button
+          importance="primary"
+          anticipation="constructive"
+          loading={inviteModalIsSaving}
+          onClick={() => {
+            updateInvite(inviteActionData);
+          }}
+        >
+          {`${ACTIONS[inviteActionData.action]} invite`}
+        </Button>
+      </Modal.Footer>
     </Modal>
   );
 }

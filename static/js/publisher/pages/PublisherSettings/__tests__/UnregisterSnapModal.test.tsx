@@ -49,8 +49,9 @@ describe("UnregisterSnapModal", () => {
     render(<UnregisterSnapModal {...defaultProps} />);
     const unregisterButton = screen.getByText("Unregister");
     await user.click(unregisterButton);
-    expect(unregisterButton).toHaveAttribute("aria-disabled", "true");
-    expect(screen.getByText("Unregistering...")).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: "Unregistering..." }),
+    ).toBeDisabled();
   });
 
   test("calls fetch with correct parameters and redirects on success", async () => {
@@ -92,6 +93,27 @@ describe("UnregisterSnapModal", () => {
         "Some error occurred",
       );
     });
+  });
+
+  test("navigates to authorization instead of treating 202 as success", async () => {
+    const user = userEvent.setup();
+    (global.fetch as Mock).mockImplementationOnce(() =>
+      Promise.resolve({
+        status: 202,
+        ok: true,
+        json: () =>
+          Promise.resolve({
+            authorization_required: true,
+            redirect_url: "/login/unregister-snap/test-action",
+          }),
+      }),
+    );
+    render(<UnregisterSnapModal {...defaultProps} />);
+    await user.click(screen.getByText("Unregister"));
+    await waitFor(() => {
+      expect(window.location.href).toBe("/login/unregister-snap/test-action");
+    });
+    expect(mockSetUnregisterError).not.toHaveBeenCalled();
   });
 
   test("logs error to console if fetch throws", async () => {

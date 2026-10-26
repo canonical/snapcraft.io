@@ -73,6 +73,7 @@ class GetDistroPageTest(TestCase):
                                 "unlisted",
                                 "links",
                                 "revision",
+                                "sboms",
                             ]
                         )
                     }

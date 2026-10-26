@@ -57,10 +57,15 @@ class TestGateUnreleasedSnapPages(TestEndpoints):
         # delete_package must remain reachable so users can unregister names
         # that have never had a release.
         self._expect_release_history(mock_dashboard, revisions=[])
+        with self.client.session_transaction() as session:
+            session["publisher"][
+                "identity_url"
+            ] = "https://login.ubuntu.com/test-user"
+            session.modified = True
 
         response = self.client.delete(f"/packages/{self.snap_name}")
 
-        self.assertNotEqual(403, response.status_code)
+        self.assertEqual(202, response.status_code)
         mock_dashboard.snap_release_history.assert_not_called()
 
     @patch("webapp.decorators._dashboard")

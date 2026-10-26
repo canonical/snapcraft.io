@@ -1,4 +1,4 @@
-import { useState, useEffect, Dispatch, SetStateAction } from "react";
+import { useState, useEffect, useRef, Dispatch, SetStateAction } from "react";
 import { useQuery } from "react-query";
 import { useAtomValue } from "jotai";
 import { useParams, Link } from "react-router-dom";
@@ -6,11 +6,11 @@ import { formatDistanceToNow } from "date-fns";
 import {
   Strip,
   Button,
-  Modal,
   Row,
   Col,
   MainTable,
 } from "@canonical/react-components";
+import { Modal } from "@canonical/react-ds-global";
 
 import DisconnectRepoActions from "./DisconnectRepoActions";
 
@@ -30,6 +30,8 @@ function RepoConnected({
   const [disconnectModalOpen, setDisconnectModalOpen] =
     useState<boolean>(false);
   const [triggeringBuild, setTriggeringBuild] = useState<boolean>(false);
+  const dialogRef = useRef<HTMLDialogElement>(null);
+
   const { isLoading, isFetched, data, refetch } = useQuery({
     queryKey: ["repo", snapId],
     queryFn: async () => {
@@ -68,6 +70,12 @@ function RepoConnected({
       refetch();
     }, 30000);
   }, []);
+
+  useEffect(() => {
+    if (disconnectModalOpen) {
+      dialogRef.current?.showModal();
+    }
+  }, [disconnectModalOpen]);
 
   return (
     <>
@@ -203,34 +211,38 @@ function RepoConnected({
       )}
       {disconnectModalOpen && (
         <Modal
-          close={() => {
+          ref={dialogRef}
+          onClose={() => {
             setDisconnectModalOpen(false);
           }}
-          title="Disconnecting your repository"
-          buttonRow={
+        >
+          <Modal.Header>Disconnecting your repository</Modal.Header>
+          <Modal.Content>
+            <p>
+              By disconnecting this repository from your snap, the following
+              will occur:
+            </p>
+            <ul>
+              <li>
+                Previous builds for this snap will disappear from the Builds
+                page
+              </li>
+              <li>
+                You will be able to continue to release your previous revisions
+                on the Releases tab
+              </li>
+            </ul>
+            <p>
+              Do you wish to{" "}
+              <strong>continue disconnecting your repository?</strong>
+            </p>
+          </Modal.Content>
+          <Modal.Footer>
             <DisconnectRepoActions
               setDisconnectModalOpen={setDisconnectModalOpen}
               githubData={githubData}
             />
-          }
-        >
-          <p>
-            By disconnecting this repository from your snap, the following will
-            occur:
-          </p>
-          <ul>
-            <li>
-              Previous builds for this snap will disappear from the Builds page
-            </li>
-            <li>
-              You will be able to continue to release your previous revisions on
-              the Releases tab
-            </li>
-          </ul>
-          <p>
-            Do you wish to{" "}
-            <strong>continue disconnecting your repository?</strong>
-          </p>
+          </Modal.Footer>
         </Modal>
       )}
     </>

@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" class="{% block html_class %}{% endblock %}">
   <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -22,6 +22,7 @@
     <!-- End Google Tag Manager -->
 
     {{ vite_import('static/sass/styles.scss') }}
+    {% block extra_styles %}{% endblock %}
 
     {{ vite_import('static/js/base/base.ts') }}
     {% block scripts_includes %}{% endblock %}
@@ -50,6 +51,10 @@
 
     {% block extra_meta %}{% endblock %}
     <link rel="canonical" href="https://snapcraft.io{{ request.path }}" />
+    {% if markdown_path %}
+      <link rel="alternate" type="text/markdown" href="https://snapcraft.io{{ markdown_path }}" />
+      <link rel="describedby" href="https://snapcraft.io/llms.txt" />
+    {% endif %}
 
     <link rel="icon" type="image/png" href="https://assets.ubuntu.com/v1/d4ca039f-favicon_16px.png" sizes="16x16" />
     <link rel="icon" type="image/png" href="https://assets.ubuntu.com/v1/841d0bcf-favicon_32px.png" sizes="32x32" />

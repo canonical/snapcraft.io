@@ -211,6 +211,11 @@ def convert_channel_maps(channel_map):
         if track not in channel_map_restruct[arch]:
             channel_map_restruct[arch][track] = []
 
+        sboms = None
+
+        if "sboms" in channel:
+            sboms = channel["sboms"]
+
         info = {
             "released-at": convert_date(channel["channel"].get("released-at")),
             "version": channel.get("version"),
@@ -219,6 +224,7 @@ def convert_channel_maps(channel_map):
             "confinement": channel.get("confinement"),
             "size": channel["download"].get("size"),
             "revision": channel["revision"],
+            "sboms": sboms,
         }
 
         channel_map_restruct[arch][track].append(info)

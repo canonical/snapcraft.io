@@ -1,3 +1,5 @@
+import time
+
 import responses
 from tests.publisher.endpoint_testing import BaseTestCases
 from webapp.authentication import SESSION_DATA_KEYS
@@ -17,6 +19,13 @@ class LogoutRedirects(BaseTestCases.BaseAppTesting):
         with self.client.session_transaction() as session:
             for key in SESSION_DATA_KEYS:
                 session[key] = "MOCK VALUE"
+            session["pending_snap_unregister"] = {
+                "authorization_id": "test-action",
+                "snap_name": "test-snap",
+                "identity_url": "https://login.ubuntu.com/test-user",
+                "expires_at": time.time() + 300,
+                "root_macaroon": "MOCK VALUE",
+            }
 
         response = self.client.get(self.endpoint_url)
 

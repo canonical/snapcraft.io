@@ -1,11 +1,6 @@
 import { useParams, useSearchParams, Link } from "react-router-dom";
-import {
-  Icon,
-  Notification,
-  MainTable,
-  Row,
-  Col,
-} from "@canonical/react-components";
+import { Notification, MainTable, Row, Col } from "@canonical/react-components";
+import { Icon } from "@canonical/react-ds-global";
 
 import { useValidationSet } from "../../hooks";
 
@@ -79,7 +74,7 @@ function ValidationSet(): React.JSX.Element {
 
       {status === "loading" && (
         <p>
-          <Icon name="spinner" className="u-animation--spin" />
+          <Icon icon="spinner" className="u-animation--spin" />
           &nbsp;&nbsp;Fetching validation set snaps
         </p>
       )}

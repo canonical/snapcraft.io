@@ -3,13 +3,14 @@ import { useAtomValue, useSetAtom } from "jotai";
 import { useQueryClient } from "react-query";
 import {
   useParams,
-  Link,
   useNavigate,
   useLocation,
   useSearchParams,
 } from "react-router-dom";
-import { Notification, Icon, Button, Modal } from "@canonical/react-components";
+import { Notification } from "@canonical/react-components";
+import { Button, Icon, Modal } from "@canonical/react-ds-global";
 
+import RouterLinkButton from "../../components/RouterLinkButton";
 import { useRemodels, useUserPrivileges } from "../../hooks";
 import { remodelsListState } from "../../state/remodelsState";
 import { brandIdState, brandStoreState } from "../../state/brandStoreState";
@@ -77,6 +78,7 @@ function Remodel(): React.JSX.Element {
   const [remodelsToDelete, setRemodelsToDelete] = useState<Remodel[]>([]);
   const [showBulkDeleteModal, setShowBulkDeleteModal] = useState(false);
   const [isBulkDeleting, setIsBulkDeleting] = useState(false);
+  const bulkDeleteDialogRef = useRef<HTMLDialogElement>(null);
   const brandStore = useAtomValue(brandStoreState(id));
   const navigate = useNavigate();
   const brandPermissions =
@@ -245,6 +247,12 @@ function Remodel(): React.JSX.Element {
   }, [isLoading, isError, data, brandId, id]);
 
   useEffect(() => {
+    if (showBulkDeleteModal) {
+      bulkDeleteDialogRef.current?.showModal();
+    }
+  }, [showBulkDeleteModal]);
+
+  useEffect(() => {
     if (!canManageRemodelAllowlist) {
       setRemodelsToDelete([]);
       setShowBulkDeleteModal(false);
@@ -265,7 +273,7 @@ function Remodel(): React.JSX.Element {
         )}
         {isLoading ? (
           <p>
-            <Icon name="spinner" className="u-animation--spin" />
+            <Icon icon="spinner" className="u-animation--spin" />
             &nbsp;Fetching remodels...
           </p>
         ) : data && data.success === false ? (
@@ -277,31 +285,26 @@ function Remodel(): React.JSX.Element {
             {canManageRemodelAllowlist && (
               <div className="u-fixed-width u-align--right">
                 <Button
+                  importance="secondary"
                   disabled={remodelsToDelete.length === 0 || isBulkDeleting}
                   onClick={() => setShowBulkDeleteModal(true)}
-                  className={isBulkDeleting ? "has-icon" : ""}
+                  loading={isBulkDeleting}
                 >
-                  {isBulkDeleting ? (
-                    <>
-                      <Icon
-                        name="spinner"
-                        className="u-animation--spin is-light"
-                      />
-                      &nbsp;Deleting...
-                    </>
-                  ) : remodelsToDelete.length > 1 ? (
-                    `Delete ${remodelsToDelete.length} remodels`
-                  ) : (
-                    "Delete remodel"
-                  )}
+                  {isBulkDeleting
+                    ? "Deleting..."
+                    : remodelsToDelete.length > 1
+                      ? `Delete ${remodelsToDelete.length} remodels`
+                      : "Delete remodel"}
                 </Button>
 
-                <Link
-                  className={`p-button--positive ${isError && !data ? "is-disabled" : ""}`}
+                <RouterLinkButton
+                  importance="primary"
+                  anticipation="constructive"
+                  style={{ marginLeft: "1rem" }}
                   to={`/admin/${id}/models/${modelId}/remodel/configure`}
                 >
                   Configure remodels
-                </Link>
+                </RouterLinkButton>
               </div>
             )}
 
@@ -362,71 +365,71 @@ function Remodel(): React.JSX.Element {
       <PortalEntrance name="modal">
         {showBulkDeleteModal && (
           <Modal
-            close={() => {
-              if (!isBulkDeleting) {
-                setShowBulkDeleteModal(false);
+            ref={bulkDeleteDialogRef}
+            onClose={() => {
+              setShowBulkDeleteModal(false);
+            }}
+            onCancel={(event) => {
+              if (isBulkDeleting) {
+                event.preventDefault();
               }
             }}
-            title={
-              remodelsToDelete.length > 1
-                ? `Delete ${remodelsToDelete.length} remodels`
-                : "Delete remodel"
-            }
-            buttonRow={
-              <>
-                <Button
-                  className="u-no-margin--bottom"
-                  disabled={isBulkDeleting}
-                  onClick={() => setShowBulkDeleteModal(false)}
-                >
-                  Cancel
-                </Button>
-                <Button
-                  className="u-no-margin--bottom u-no-margin--right"
-                  appearance="negative"
-                  disabled={isBulkDeleting}
-                  onClick={() => {
-                    handleBulkDeleteRemodels();
-                  }}
-                >
-                  {isBulkDeleting ? (
-                    <>
-                      <Icon
-                        name="spinner"
-                        className="u-animation--spin is-light"
-                      />
-                      &nbsp;Deleting...
-                    </>
-                  ) : (
-                    "Delete"
-                  )}
-                </Button>
-              </>
-            }
           >
-            {remodelsToDelete.length > 1 && (
-              <ul>
-                {remodelsToDelete.map((remodel) => {
-                  const rowId = getRemodelRowId(remodel);
-                  return (
-                    <li key={rowId}>
-                      <strong>
-                        {remodel["from-model"]} → {remodel["to-model"]}
-                      </strong>
-                      {remodel["from-serial"] && (
-                        <> (Serial: {remodel["from-serial"]})</>
-                      )}
-                    </li>
-                  );
-                })}
-              </ul>
-            )}
-            <p>
-              Are you sure you want to delete{" "}
-              {remodelsToDelete.length > 1 ? "these remodels" : "this remodel"}?
-              <br />
-              This action cannot be undone.
-            </p>
+            <Modal.Header undismissible={isBulkDeleting}>
+              {remodelsToDelete.length > 1
+                ? `Delete ${remodelsToDelete.length} remodels`
+                : "Delete remodel"}
+            </Modal.Header>
+            <Modal.Content>
+              {remodelsToDelete.length > 1 && (
+                <ul>
+                  {remodelsToDelete.map((remodel) => {
+                    const rowId = getRemodelRowId(remodel);
+                    return (
+                      <li key={rowId}>
+                        <strong>
+                          {remodel["from-model"]} → {remodel["to-model"]}
+                        </strong>
+                        {remodel["from-serial"] && (
+                          <> (Serial: {remodel["from-serial"]})</>
+                        )}
+                      </li>
+                    );
+                  })}
+                </ul>
+              )}
+              <p>
+                Are you sure you want to delete{" "}
+                {remodelsToDelete.length > 1
+                  ? "these remodels"
+                  : "this remodel"}
+                ?
+                <br />
+                This action cannot be undone.
+              </p>
+            </Modal.Content>
+            <Modal.Footer>
+              <Button
+                className="u-no-margin--bottom"
+                importance="secondary"
+                disabled={isBulkDeleting}
+                onClick={() => setShowBulkDeleteModal(false)}
+              >
+                Cancel
+              </Button>
+              <Button
+                className="u-no-margin--bottom u-no-margin--right"
+                importance="primary"
+                anticipation="destructive"
+                disabled={isBulkDeleting}
+                loading={isBulkDeleting}
+                onClick={() => {
+                  handleBulkDeleteRemodels();
+                }}
+              >
+                {isBulkDeleting ? "Deleting..." : "Delete"}
+              </Button>
+            </Modal.Footer>
           </Modal>
         )}
       </PortalEntrance>

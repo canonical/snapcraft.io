@@ -5,11 +5,11 @@ import {
   Row,
   Col,
   Button,
-  Icon,
   Form,
   Notification,
   Accordion,
 } from "@canonical/react-components";
+import { Icon } from "@canonical/react-ds-global";
 
 import { setCurrentTrack } from "../slices/currentTrack";
 import { closeHistory } from "../slices/history";
@@ -101,7 +101,11 @@ function ReleasesHeading(props: ReleasesHeadingProps) {
     message: string;
   } | null>(null);
 
-  const { data, isLoading: guardrailsLoading, error } = useQuery(
+  const {
+    data,
+    isLoading: guardrailsLoading,
+    error,
+  } = useQuery(
     ["snapData", props.snapName],
     async () => {
       const response = await getPackageMetadata(props.snapName);
@@ -134,17 +138,23 @@ function ReleasesHeading(props: ReleasesHeadingProps) {
     trackGuardrailsStatus = "add";
   }
 
-  const handleTrackNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleTrackNameChange = (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
     setTrackNameError("");
     const { value } = event.target;
     setTrackName(value);
   };
 
-  const handleVersionPatternChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleVersionPatternChange = (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
     setVersionPattern(event.target.value);
   };
 
-  const handlePhasingPercentageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handlePhasingPercentageChange = (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
     const { value } = event.target;
     setPhasingPercentage(value);
     const error = validatePhasingPercentage(value);
@@ -155,7 +165,9 @@ function ReleasesHeading(props: ReleasesHeadingProps) {
     setNotification({ type, message });
   };
 
-  const [successNotification, setSuccessNotification] = useState<string | null>(null);
+  const [successNotification, setSuccessNotification] = useState<string | null>(
+    null,
+  );
   const [trackNameError, setTrackNameError] = useState("");
 
   const handleAddTrack = async () => {
@@ -248,7 +260,7 @@ function ReleasesHeading(props: ReleasesHeadingProps) {
                           {guardrailsLoading ? (
                             <div>
                               <Icon
-                                name="spinner"
+                                icon="spinner"
                                 className="u-animation--spin"
                               />
                               &nbsp;Loading...
@@ -568,7 +580,7 @@ function ReleasesHeading(props: ReleasesHeadingProps) {
                 >
                   {isLoading ? (
                     <div>
-                      <Icon name="spinner" className="u-animation--spin" />
+                      <Icon icon="spinner" className="u-animation--spin" />
                       &nbsp;Loading...
                     </div>
                   ) : (

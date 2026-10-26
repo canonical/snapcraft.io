@@ -1,13 +1,13 @@
 import { useState, useEffect } from "react";
 import {
-  Link,
   useParams,
   useSearchParams,
   useLocation,
   useNavigate,
 } from "react-router-dom";
 import { useAtomValue, useSetAtom } from "jotai";
-import { Row, Col, Notification, Icon } from "@canonical/react-components";
+import { Row, Col, Notification } from "@canonical/react-components";
+import { Icon } from "@canonical/react-ds-global";
 
 import Filter from "../../components/Filter";
 import PoliciesTable from "./PoliciesTable";
@@ -25,6 +25,7 @@ import {
 import { brandStoreState } from "../../state/brandStoreState";
 import { isClosedPanel, setPageTitle } from "../../utils";
 import { PortalEntrance } from "../Portals/Portals";
+import RouterLinkButton from "../../components/RouterLinkButton";
 
 function Policies(): React.JSX.Element {
   const { id, modelId } = useParams();
@@ -85,12 +86,13 @@ function Policies(): React.JSX.Element {
           />
         </Col>
         <Col size={6} className="u-align--right">
-          <Link
-            className="p-button--positive"
+          <RouterLinkButton
+            importance="primary"
+            anticipation="constructive"
             to={`/admin/${id}/models/${modelId}/policies/create`}
           >
             Create policy
-          </Link>
+          </RouterLinkButton>
         </Col>
       </Row>
       <div className="u-fixed-width u-flex-column u-flex-grow">
@@ -102,7 +104,7 @@ function Policies(): React.JSX.Element {
           )}
           {isLoading ? (
             <p>
-              <Icon name="spinner" className="u-animation--spin" />
+              <Icon icon="spinner" className="u-animation--spin" />
               &nbsp;Fetching policies...
             </p>
           ) : (

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px"
+   y="0px" viewBox="0 0 182 56" style="enable-background:new 0 0 182 56;" xml:space="preserve">
+   <style type="text/css">
+      .st0 {
+         fill-rule: evenodd;
+         clip-rule: evenodd;
+         fill: #252525;
+         stroke: #CDCDCD;
+      }
+
+      .st1 {
+         fill: #82BEA0;
+      }
+
+      .st2 {
+         fill: #FA6441;
+      }
+
+      .st3 {
+         fill: #FFFFFF;
+      }
+
+      .st4 {
+         font-family: 'Ubuntu';
+      }
+
+      .st5 {
+         font-size: 12px;
+         font-weight: 500;
+      }
+
+      .st6 {
+         font-size: 24px;
+         font-weight: 500;
+      }
+   </style>
+   <title id="title88">[AR]-snap-store-black</title>
+   <desc id="desc90">Created with Sketch.</desc>
+   <g id="g101">
+      <g id="Black-badge">
+         <path d="M2,0h178c1.1,0,2,0.9,2,2v52c0,1.1-0.9,2-2,2H2c-1.1,0-2-0.9-2-2V2C0,0.9,0.9,0,2,0z" class="st0"
+            id="Rectangle-path" />
+         <g transform="translate(137.53656,11)" id="logo">
+            <path d="M 19.46344,17.8 V 7.3 l 7.2,3.2 z m -13.8,13.8 8.9,-16.6 3.9,3.9 z m -5,-31.4 18.2,6.6 v 11.6 z"
+               class="st1" id="body" />
+            <polygon transform="translate(0.46344)" points="19.4,6.8 32.9,12.9 29.9,6.8 " class="st2" id="head" />
+         </g>
+         <text y="17" x="60" id="text96" class="st3 st4 st5">احصل عليه من</text>
+         <text y="41" x="14" id="text98" class="st3 st4 st6">Snap Store</text>
+      </g>
+   </g>
+</svg>

@@ -17,12 +17,11 @@ from cache.cache_utility import redis_cache
 from canonicalwebteam.flask_base.decorators import (
     exclude_xframe_options_header,
 )
-from canonicalwebteam.exceptions import StoreApiError
+from canonicalwebteam.exceptions import StoreApiError, StoreApiResourceNotFound
 from canonicalwebteam.store_api.devicegw import DeviceGW
 from pybadges import badge
 
 device_gateway = DeviceGW("snap", helpers.api_session)
-device_gateway_sbom = DeviceGW("sbom", helpers.api_session)
 
 logger = logging.getLogger(__name__)
 
@@ -45,6 +44,7 @@ FIELDS = [
     "unlisted",
     "links",
     "revision",
+    "sboms",
 ]
 
 FIELDS_EXTRA_DETAILS = [
@@ -300,31 +300,6 @@ def snap_details_views(store):
 
         return True
 
-    def snap_has_sboms(revisions, snap_id):
-        if not revisions:
-            return False
-
-        sbom_path = f"download/sbom_snap_{snap_id}_{revisions[0]}.spdx2.3.json"
-        endpoint = device_gateway_sbom.get_endpoint_url(sbom_path)
-
-        res = requests.head(endpoint)
-
-        # backend returns 302 instead of 200 for a successful request
-        # adding the check for 200 in case this is changed without us knowing
-        if res.status_code == 200 or res.status_code == 302:
-            return True
-
-        return False
-
-    @store.route("/download/sbom_snap_<snap_id>_<revision>.spdx2.3.json")
-    def get_sbom(snap_id, revision):
-        sbom_path = f"download/sbom_snap_{snap_id}_{revision}.spdx2.3.json"
-        endpoint = device_gateway_sbom.get_endpoint_url(sbom_path)
-
-        res = requests.get(endpoint)
-
-        return flask.jsonify(res.json())
-
     @store.route('/<regex("' + snap_regex + '"):snap_name>')
     def snap_details(snap_name):
         """
@@ -346,6 +321,10 @@ def snap_details_views(store):
             extra_details = device_gateway.get_snap_details(
                 snap_name, channel="", fields=FIELDS_EXTRA_DETAILS
             )
+        except StoreApiResourceNotFound:
+            # not all snaps are served by the details endpoint, for
+            # example gated snaps, and the page renders without aliases
+            extra_details = None
         except Exception:
             logger.exception("Details endpoint returned an error")
             extra_details = None
@@ -405,8 +384,6 @@ def snap_details_views(store):
                 private=False,
             )
 
-        has_sboms = snap_has_sboms(context["revisions"], context["snap_id"])
-
         context.update(
             {
                 "countries": (
@@ -422,8 +399,6 @@ def snap_details_views(store):
                 "error_info": error_info,
             }
         )
-
-        context["has_sboms"] = has_sboms
 
         context["default_arch"] = logic.get_default_architecture(
             context["channel_map"].keys()

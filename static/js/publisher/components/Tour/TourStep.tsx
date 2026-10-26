@@ -1,4 +1,4 @@
-import { Card, Button, Icon } from "@canonical/react-components";
+import { Card, Button, Icon } from "@canonical/react-ds-global";
 
 import type { TooltipRenderProps } from "react-joyride";
 
@@ -15,55 +15,58 @@ function TourStep(props: TooltipRenderProps): React.JSX.Element {
   } = props;
 
   return (
-    <Card style={{ border: "none" }}>
-      <h4>{step.title}</h4>
-      {step.content}
-      <div style={{ display: "flex", justifyContent: "space-between" }}>
-        <div>
-          Done?{" "}
-          <button
-            className="p-button--link u-no-margin--bottom"
-            {...closeProps}
-          >
-            Skip tour
-          </button>
-          .
-        </div>
-        <div>
-          <span>
-            {index + 1} / {size}
-          </span>
+    <Card
+      style={{
+        border: "none",
+        backgroundColor: "var(--color-background-layer3)",
+      }}
+    >
+      <Card.Content>
+        <h4>{step.title}</h4>
+        {step.content}
+        <div style={{ display: "flex", justifyContent: "space-between" }}>
+          <div>
+            Done?{" "}
+            <Button variant="link" {...closeProps}>
+              Skip tour
+            </Button>
+            .
+          </div>
+          <div>
+            <span>
+              {index + 1} / {size}
+            </span>
 
-          <Button
-            {...backProps}
-            disabled={index < 1}
-            className="u-no-margin--bottom"
-            style={{ marginLeft: "1rem" }}
-          >
-            <Icon name="chevron-left" />
-            <span className="u-off-screen">{backProps.title}</span>
-          </Button>
+            <Button
+              {...backProps}
+              disabled={index < 1}
+              className="u-no-margin--bottom"
+              style={{ marginLeft: "1rem" }}
+              importance="secondary"
+              aria-label={backProps.title}
+            >
+              <Icon icon="chevron-left" />
+            </Button>
 
-          {continuous && (
-            <>
+            {continuous && (
               <Button
-                appearance="positive"
+                importance="primary"
+                anticipation="constructive"
                 {...primaryProps}
                 className="u-no-margin--bottom u-no-margin--right"
+                aria-label={isLastStep ? undefined : primaryProps.title}
+                style={{ marginLeft: "1rem" }}
               >
                 {isLastStep ? (
                   <>Finish tour</>
                 ) : (
-                  <>
-                    <Icon name="chevron-right" light />
-                    <span className="u-off-screen">{primaryProps.title}</span>
-                  </>
+                  <Icon icon="chevron-right" color="#fff" />
                 )}
               </Button>
-            </>
-          )}
+            )}
+          </div>
         </div>
-      </div>
+      </Card.Content>
     </Card>
   );
 }

@@ -1,6 +1,5 @@
-import { fireEvent, render, screen } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import TrackInfo from "../TrackInfo";
-import { Tooltip } from "@canonical/react-components";
 import "@testing-library/jest-dom";
 
 describe("TrackInfo", () => {
@@ -32,21 +31,8 @@ describe("TrackInfo", () => {
 
   it("should display the tooltip", () => {
     render(<TrackInfo versionPattern="v1.*" automaticPhasingPercentage="88" />);
-    const tooltipIcon = document.querySelector(".p-icon--information");
-    expect(tooltipIcon).toBeInTheDocument();
 
-    render(
-      <Tooltip
-        autoAdjust
-        message={`The version pattern and the automatic phasing percentage are additional
-properties available as options when creating a new track.
-Releases will be done progressively on the track and 88% will be incremented automatically.`}
-        children={undefined}
-      />,
-    );
-
-    fireEvent.click(tooltipIcon!);
-
+    // Tooltip message is always portaled into the DOM, just hidden until hover/focus.
     expect(
       screen.getByText(
         /The version pattern and the automatic phasing percentage are additional/,

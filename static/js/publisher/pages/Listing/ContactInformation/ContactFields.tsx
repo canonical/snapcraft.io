@@ -5,7 +5,8 @@ import {
   UseFormGetValues,
   UseFormRegister,
 } from "react-hook-form";
-import { Row, Col, Button, Icon } from "@canonical/react-components";
+import { Row, Col } from "@canonical/react-components";
+import { Button, Icon } from "@canonical/react-ds-global";
 
 type Props = {
   register: UseFormRegister<FieldValues>;
@@ -35,15 +36,17 @@ function ContactFields({
             <label htmlFor={fieldName}>{labelName}:</label>
           </Col>
           <Col size={5}>
-            <Button
-              type="button"
-              appearance="link"
-              onClick={() => {
-                append({ url: "" });
-              }}
-            >
-              +&nbsp;Add link
-            </Button>
+            <p>
+              <Button
+                type="button"
+                variant="link"
+                onClick={() => {
+                  append({ url: "" });
+                }}
+              >
+                +&nbsp;Add link
+              </Button>
+            </p>
           </Col>
         </Row>
       )}
@@ -68,13 +71,13 @@ function ContactFields({
           <Col size={2}>
             <Button
               type="button"
-              appearance="base"
+              importance="tertiary"
               onClick={() => {
                 remove(index);
               }}
+              aria-label="Remove this link"
             >
-              <Icon name="delete" />
-              <span className="u-off-screen">Remove this link</span>
+              <Icon icon="delete" />
             </Button>
           </Col>
         </Row>
@@ -83,15 +86,17 @@ function ContactFields({
       {fields.length > 0 && (
         <Row>
           <Col size={5} emptyLarge={3}>
-            <Button
-              type="button"
-              appearance="link"
-              onClick={() => {
-                append({ url: "" });
-              }}
-            >
-              +&nbsp;Add link
-            </Button>
+            <p>
+              <Button
+                type="button"
+                variant="link"
+                onClick={() => {
+                  append({ url: "" });
+                }}
+              >
+                +&nbsp;Add link
+              </Button>
+            </p>
           </Col>
         </Row>
       )}
