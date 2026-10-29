@@ -93,7 +93,7 @@ function Build(): React.JSX.Element {
               {
                 columns: [
                   { content: buildId },
-                  { content: build.arch_tag },
+                  { content: build.target_architectures.join(", ") },
                   {
                     content: (
                       <GitCommitLink
