@@ -1,7 +1,4 @@
-export default function initExpandableArea(
-  overflowSelector: string,
-  heightMatchSelector: string,
-): void {
+export default function initExpandableArea(): void {
   const showMoreContainer = [].slice.call(
     document.querySelectorAll("[data-js='js-show-more']"),
   ) as Array<HTMLElement>;
@@ -10,18 +7,6 @@ export default function initExpandableArea(
     showMoreContainer.forEach((el) => {
       const fadeEl = el.querySelector(".p-show-more__fade");
       const linkEl = el.querySelector(".p-show-more__link");
-
-      if (overflowSelector && heightMatchSelector) {
-        const overflowEl = el.querySelector(overflowSelector) as HTMLElement;
-        const heightMatchEl = el.querySelector(
-          heightMatchSelector,
-        ) as HTMLElement;
-
-        if (overflowEl.scrollHeight <= heightMatchEl.scrollHeight) {
-          el.removeAttribute("data-js");
-          el.classList.remove("p-show-more");
-        }
-      }
 
       if (fadeEl && linkEl) {
         linkEl.addEventListener("click", function (event) {

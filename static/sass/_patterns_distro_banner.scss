@@ -38,6 +38,18 @@
     margin-bottom: 2rem;
   }
 
+  // the columns stack below the large breakpoint, so the snap details are
+  // collapsed behind "show more" there
+  @media (max-width: $breakpoint-large - 1) {
+.distro-banner__show-more {
+  position: relative;
+}
+
+.distro-banner__show-more.is-collapsed > :first-child {
+  display: none;
+}
+  }
+
   .distro-banner__logo {
     float: right;
     width: 7rem;
