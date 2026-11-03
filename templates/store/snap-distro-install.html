@@ -115,28 +115,25 @@
             {% include "store/snap-details/_screenshots.html" %}
           </div>
         {% endif %}
-        <div class="p-show-more is-shallow is-collapsed" data-js="js-show-more">
+        <div class="distro-banner__show-more is-collapsed" data-js="js-show-more">
           <div class="row">
             <div class="col-8">
-              <div class="js-snap-description-text">
-                {% if summary %}<h4 data-live="summary">{{ summary }}</h4>{% endif %}
-                <div data-live="description">{{ description | safe }}</div>
-              </div>
+              {% if summary %}<h4 data-live="summary">{{ summary }}</h4>{% endif %}
+              <div data-live="description">{{ description | safe }}</div>
             </div>
             <div class="col-4">
-              <div class=" js-snap-description-details">
-                {% include "store/snap-details/_details.html" %}
-              </div>
+              {% include "store/snap-details/_details.html" %}
             </div>
           </div>
-          <div class="p-show-more__fade">
-            <div class="p-show-more__link-container">
-              <a href="/{{ package_name }}" class="p-show-more__link">
-                See more information about {{ package_name }}&nbsp;&rsaquo;
-              </a>
-            </div>
+          <div class="p-show-more__fade u-hide--large">
+            <button class="p-button--link p-show-more__link u-no-padding">Show more</button>
           </div>
         </div>
+        <p>
+          <a href="/{{ package_name }}">
+            See more information about {{ package_name }}&nbsp;&rsaquo;
+          </a>
+        </p>
       </div>
 
       <div id="install" class="p-card--highlighted">
@@ -273,10 +270,7 @@
   <script>
     window.addEventListener("DOMContentLoaded", function() {
       try {
-        snapcraft.public.distroInstall.initExpandableArea(
-          ".js-snap-description-text",
-          ".js-snap-description-details"
-        );
+        snapcraft.public.distroInstall.initExpandableArea();
       } catch(e) {
         Sentry.captureException(e);
       }
