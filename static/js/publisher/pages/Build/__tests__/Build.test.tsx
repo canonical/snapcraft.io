@@ -17,7 +17,8 @@ const queryClient = new QueryClient();
 
 const mockBuildData = {
   snap_build: {
-    arch_tag: "arm64",
+    arch_tag: "amd64",
+    target_architectures: ["arm64"],
     datebuilt: "2025-02-04T14:07:31.406639+00:00",
     duration: "0:14:47.375900",
     id: "test-build-id",
@@ -103,9 +104,18 @@ describe("Build", () => {
     ).toBeInTheDocument();
   });
 
-  test("shows correct architecture in table", () => {
+  test.each([
+    { targets: ["arm64"], expected: "arm64" },
+    { targets: ["arm64", "armhf"], expected: "arm64, armhf" },
+  ])("shows target architectures: $expected", ({ targets, expected }) => {
     mockUseQueryResponses({
-      data: mockBuildData,
+      data: {
+        ...mockBuildData,
+        snap_build: {
+          ...mockBuildData.snap_build,
+          target_architectures: targets,
+        },
+      },
       isLoading: false,
       isFetched: true,
       isFetching: false,
@@ -114,7 +124,12 @@ describe("Build", () => {
 
     renderComponent();
 
-    expect(screen.getByRole("gridcell", { name: "arm64" })).toBeInTheDocument();
+    expect(
+      screen.getByRole("gridcell", { name: expected }),
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByRole("gridcell", { name: "amd64" }),
+    ).not.toBeInTheDocument();
   });
 
   test("shows correct build duration in table", () => {

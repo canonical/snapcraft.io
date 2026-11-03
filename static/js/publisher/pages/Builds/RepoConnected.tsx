@@ -164,7 +164,7 @@ function RepoConnected({
             rows={data.snap_builds.map(
               (build: {
                 id: string;
-                arch_tag: string;
+                target_architectures: string[];
                 duration: string;
                 status: string;
                 datebuilt: string;
@@ -180,7 +180,7 @@ function RepoConnected({
                         </Link>
                       ),
                     },
-                    { content: build.arch_tag },
+                    { content: build.target_architectures.join(", ") },
                     {
                       content: (
                         <GitCommitLink

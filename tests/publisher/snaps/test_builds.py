@@ -133,6 +133,46 @@ class TestBuildStateMapper(unittest.TestCase):
 
 class TestGetBuilds(unittest.TestCase):
     @patch("webapp.publisher.snaps.build_views.launchpad")
+    def test_target_architectures_and_builder_queue_time(self, mock_launchpad):
+        build = {
+            "self_link": "https://api.launchpad.net/devel/+build/123",
+            "arch_tag": "amd64",
+            "datebuilt": None,
+            "duration": None,
+            "build_log_url": None,
+            "revision_id": None,
+            "buildstate": "Needs building",
+            "store_upload_status": "Unscheduled",
+            "title": "Test build",
+        }
+        mock_launchpad.get_builders_status.return_value = {
+            "amd64": {"estimated_duration": 120}
+        }
+        cases = [
+            ({}, ["amd64"]),
+            ({"target_architectures": None}, ["amd64"]),
+            ({"target_architectures": []}, ["amd64"]),
+            ({"target_architectures": ["amd64"]}, ["amd64"]),
+            ({"target_architectures": ["arm64"]}, ["arm64"]),
+            (
+                {"target_architectures": ["arm64", "armhf"]},
+                ["arm64", "armhf"],
+            ),
+        ]
+        for fields, expected in cases:
+            with self.subTest(fields=fields):
+                mock_launchpad.get_snap_builds.return_value = [
+                    {**build, **fields}
+                ]
+
+                result = get_builds({"store_name": "test-snap"}, slice(0, 10))
+
+                snap_build = result["snap_builds"][0]
+                self.assertEqual(snap_build["target_architectures"], expected)
+                self.assertEqual(snap_build["arch_tag"], "amd64")
+                self.assertEqual(snap_build["queue_time"], 120)
+
+    @patch("webapp.publisher.snaps.build_views.launchpad")
     def test_get_builds_includes_github_repository(self, mock_launchpad):
         """Test that get_builds includes GitHub repository information"""
         # Mock Launchpad snap data with GitHub repository URL
