@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 <!DOCTYPE coverage SYSTEM "http://cobertura.sourceforge.net/xml/coverage-04.dtd">
-<coverage lines-valid="7543" lines-covered="3941" line-rate="0.5224" branches-valid="4988" branches-covered="2398" branch-rate="0.4807" timestamp="1793743526821" complexity="0" version="0.1">
+<coverage lines-valid="7543" lines-covered="3941" line-rate="0.5224" branches-valid="4988" branches-covered="2398" branch-rate="0.4807" timestamp="1793829946080" complexity="0" version="0.1">
   <sources>
     <source>/home/runner/work/snapcraft.io/snapcraft.io</source>
   </sources>
@@ -8609,9 +8609,9 @@
         </class>
         <class name="MemberRoleCheckbox.tsx" filename="static/js/publisher/pages/Members/MemberRoleCheckbox.tsx" line-rate="1" branch-rate="1">
           <methods>
-            <method name="MemberRoleCheckbox" hits="65" signature="()V">
+            <method name="MemberRoleCheckbox" hits="73" signature="()V">
               <lines>
-                <line number="13" hits="65"/>
+                <line number="13" hits="73"/>
               </lines>
             </method>
             <method name="(anonymous_1)" hits="3" signature="()V">
@@ -8621,7 +8621,7 @@
             </method>
           </methods>
           <lines>
-            <line number="14" hits="65" branch="false"/>
+            <line number="14" hits="73" branch="false"/>
             <line number="18" hits="3" branch="false"/>
           </lines>
         </class>
@@ -8961,9 +8961,9 @@
         </class>
         <class name="MembersTable.tsx" filename="static/js/publisher/pages/Members/MembersTable.tsx" line-rate="0.2121" branch-rate="0">
           <methods>
-            <method name="MembersTable" hits="15" signature="()V">
+            <method name="MembersTable" hits="16" signature="()V">
               <lines>
-                <line number="15" hits="15"/>
+                <line number="15" hits="16"/>
               </lines>
             </method>
             <method name="(anonymous_1)" hits="0" signature="()V">
@@ -9016,21 +9016,21 @@
                 <line number="84" hits="12"/>
               </lines>
             </method>
-            <method name="(anonymous_11)" hits="14" signature="()V">
+            <method name="(anonymous_11)" hits="16" signature="()V">
               <lines>
-                <line number="148" hits="14"/>
+                <line number="148" hits="16"/>
               </lines>
             </method>
           </methods>
           <lines>
-            <line number="20" hits="15" branch="false"/>
-            <line number="22" hits="15" branch="false"/>
+            <line number="20" hits="16" branch="false"/>
+            <line number="22" hits="16" branch="false"/>
             <line number="23" hits="0" branch="true" condition-coverage="0% (0/2)"/>
             <line number="24" hits="0" branch="false"/>
             <line number="27" hits="0" branch="false"/>
             <line number="29" hits="0" branch="false"/>
             <line number="32" hits="0" branch="false"/>
-            <line number="35" hits="15" branch="false"/>
+            <line number="35" hits="16" branch="false"/>
             <line number="36" hits="0" branch="false"/>
             <line number="37" hits="0" branch="false"/>
             <line number="39" hits="0" branch="true" condition-coverage="0% (0/2)"/>
@@ -9052,10 +9052,10 @@
             <line number="75" hits="0" branch="false"/>
             <line number="78" hits="0" branch="false"/>
             <line number="81" hits="0" branch="false"/>
-            <line number="84" hits="15" branch="false"/>
+            <line number="84" hits="16" branch="false"/>
             <line number="85" hits="12" branch="false"/>
-            <line number="88" hits="15" branch="false"/>
-            <line number="149" hits="14" branch="false"/>
+            <line number="88" hits="16" branch="false"/>
+            <line number="149" hits="16" branch="false"/>
           </lines>
         </class>
         <class name="index.ts" filename="static/js/publisher/pages/Members/index.ts" line-rate="1" branch-rate="1">
@@ -10716,9 +10716,9 @@
                 <line number="115" hits="3"/>
               </lines>
             </method>
-            <method name="(anonymous_12)" hits="1" signature="()V">
+            <method name="(anonymous_12)" hits="2" signature="()V">
               <lines>
-                <line number="120" hits="1"/>
+                <line number="120" hits="2"/>
               </lines>
             </method>
             <method name="(anonymous_13)" hits="4" signature="()V">
@@ -10804,7 +10804,7 @@
             <line number="118" hits="3" branch="false"/>
             <line number="119" hits="3" branch="false"/>
             <line number="120" hits="3" branch="false"/>
-            <line number="121" hits="1" branch="false"/>
+            <line number="121" hits="2" branch="false"/>
             <line number="126" hits="1160" branch="true" condition-coverage="100% (2/2)"/>
             <line number="127" hits="1151" branch="true" condition-coverage="100% (2/2)"/>
             <line number="132" hits="1160" branch="false"/>
