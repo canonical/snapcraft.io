@@ -67,11 +67,32 @@ describe("RequestReservedName", () => {
     expect(screen.getByLabelText("Snap name")).toHaveValue(testSnapName);
   });
 
+  test("store and snap name fields are read-only", () => {
+    renderComponent();
+    expect(screen.getByLabelText("Store")).toHaveAttribute("readonly");
+    expect(screen.getByLabelText("Snap name")).toHaveAttribute("readonly");
+  });
+
+  test("comment field has a description", () => {
+    renderComponent();
+    expect(screen.getByLabelText("Comment")).toHaveAccessibleDescription(
+      "Why you have rights to claim this name",
+    );
+  });
+
+  test("links back to the register snap page", () => {
+    renderComponent();
+    expect(screen.getByRole("link", { name: "Register snap" })).toHaveAttribute(
+      "href",
+      "/register-snap",
+    );
+  });
+
   test("CTA button is disabled by default", () => {
     renderComponent();
     expect(
       screen.getByRole("button", { name: "Yes, I am sure" }),
-    ).toHaveAttribute("aria-disabled", "true");
+    ).toBeDisabled();
   });
 
   test("CTA button is enabled if comment is present", async () => {
@@ -83,7 +104,66 @@ describe("RequestReservedName", () => {
 
     expect(
       screen.getByRole("button", { name: "Yes, I am sure" }),
-    ).not.toHaveAttribute("aria-disabled");
+    ).toBeEnabled();
+  });
+
+  test("submits the snap name and comment with the CSRF token", async () => {
+    const user = userEvent.setup();
+    let requestBody: unknown;
+    let csrfToken: string | null = null;
+
+    server.use(
+      http.post("/api/register-name-dispute", async ({ request }) => {
+        requestBody = await request.json();
+        csrfToken = request.headers.get("X-CSRFToken");
+        return HttpResponse.json({ success: true });
+      }),
+    );
+
+    renderComponent();
+
+    await user.type(screen.getByLabelText("Comment"), "This is a test comment");
+    await user.click(screen.getByRole("button", { name: "Yes, I am sure" }));
+
+    await waitFor(() => {
+      expect(requestBody).toEqual({
+        "snap-name": testSnapName,
+        "claim-comment": "This is a test comment",
+      });
+    });
+    expect(csrfToken).toBe("test-csrf-token");
+  });
+
+  test("CTA button shows a loading state while submitting", async () => {
+    const user = userEvent.setup();
+    let resolveRequest!: () => void;
+    const requestReceived = new Promise<void>((resolve) => {
+      resolveRequest = resolve;
+    });
+
+    server.use(
+      http.post("/api/register-name-dispute", async () => {
+        await requestReceived;
+        return HttpResponse.json({ success: true });
+      }),
+    );
+
+    renderComponent();
+
+    await user.type(screen.getByLabelText("Comment"), "This is a test comment");
+    await user.click(screen.getByRole("button", { name: "Yes, I am sure" }));
+
+    const button = await screen.findByRole("button", { name: "Requesting" });
+    expect(button).toHaveAttribute("aria-busy", "true");
+    expect(button).toBeDisabled();
+
+    resolveRequest();
+
+    await waitFor(() => {
+      expect(
+        screen.getByRole("button", { name: "Yes, I am sure" }),
+      ).not.toHaveAttribute("aria-busy");
+    });
   });
 
   test("shows notification if form submitted successfully", async () => {
