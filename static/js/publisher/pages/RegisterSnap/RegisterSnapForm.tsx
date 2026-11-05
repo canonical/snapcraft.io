@@ -1,14 +1,11 @@
-import { useState, Dispatch, SetStateAction, FormEvent } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import {
-  Form,
-  Select,
-  Input,
-  Button,
-  Row,
-  Col,
-} from "@canonical/react-components";
-import { Icon } from "@canonical/react-ds-global";
+import { useState, Dispatch, SetStateAction, ChangeEvent } from "react";
+import { useNavigate } from "react-router-dom";
+import { Row, Col } from "@canonical/react-components";
+import { Button } from "@canonical/react-ds-global";
+import { Field, Form } from "@canonical/react-ds-global-form";
+import { useForm, type FieldValues } from "react-hook-form";
+
+import RouterLinkButton from "../../components/RouterLinkButton";
 
 import type { RegistrationResponse } from "./local-types";
 
@@ -31,22 +28,31 @@ function RegisterSnapForm({
   selectedStore,
   setSelectedStore,
 }: Props): React.JSX.Element {
-  const [snapName, setSnapName] = useState<string>();
-  const [privacy, setPrivacy] = useState<string>("private");
   const [showSnapNameConstraints, setShowSnapNameConstraints] =
     useState<boolean>(false);
 
+  const methods = useForm<FieldValues>({
+    defaultValues: {
+      store: selectedStore,
+      snapName: "",
+      privacy: "private",
+    },
+  });
+  const snapName: string | undefined = methods.watch("snapName");
+
   const navigate = useNavigate();
 
-  const handleSubmit = async (e: FormEvent) => {
-    e.preventDefault();
-
+  const handleSubmit = async () => {
     setIsSending(true);
 
     const formData = new FormData();
     formData.set("csrf_token", window.CSRF_TOKEN);
     formData.set("snap_name", snapName || "");
     formData.set("store", selectedStore);
+    formData.set(
+      "is_private",
+      selectedStore === "ubuntu" ? "private" : methods.getValues("privacy"),
+    );
 
     const response = await fetch("/api/register-snap", {
       method: "POST",
@@ -90,47 +96,57 @@ function RegisterSnapForm({
     return false;
   };
 
+  const isGlobalStore = selectedStore === "ubuntu";
+
   return (
-    <Form onSubmit={handleSubmit}>
-      <Row>
-        <Col size={8}>
-          <Select
+    <Row>
+      <Col size={8}>
+        <Form methods={methods} onSubmit={handleSubmit}>
+          <Field
+            inputType="select"
+            name="store"
+            id="store"
             label="Store"
             options={availableStores.map((store) => ({
               label: store.name,
               value: store.id,
             }))}
-            onChange={(e) => {
-              setSelectedStore(e.target.value);
+            registerProps={{
+              onChange: (event: ChangeEvent<HTMLSelectElement>) => {
+                setSelectedStore(event.target.value);
 
-              if (e.target.value === "ubuntu") {
-                setPrivacy("private");
-              }
+                if (event.target.value === "ubuntu") {
+                  methods.setValue("privacy", "private");
+                }
+              },
             }}
-            required
           />
-          <Input
-            type="text"
+          <Field
+            inputType="text"
+            name="snapName"
+            id="snap-name"
             label="Snap name"
-            defaultValue={snapName}
-            onChange={(e) => {
-              setSnapName(e.target.value);
-            }}
-            required
           />
 
-          <Button
-            type="button"
-            appearance="link"
-            onClick={() => {
-              setShowSnapNameConstraints(!showSnapNameConstraints);
-            }}
-          >
-            <small>
-              {showSnapNameConstraints ? <>Hide</> : <>Show</>} snap name
-              constraints
-            </small>
-          </Button>
+          <div>
+            {/*
+              Needs to be in a `div` otherwise the button
+              is full-width, due to the `Form` component
+              `display` property being `grid`
+            */}
+            <Button
+              type="button"
+              variant="link"
+              onClick={() => {
+                setShowSnapNameConstraints(!showSnapNameConstraints);
+              }}
+            >
+              <small>
+                {showSnapNameConstraints ? <>Hide</> : <>Show</>} snap name
+                constraints
+              </small>
+            </Button>
+          </div>
 
           {showSnapNameConstraints && (
             <ul>
@@ -151,63 +167,48 @@ function RegisterSnapForm({
             </ul>
           )}
 
-          <p>
-            <label htmlFor="public">Snap privacy</label>
-          </p>
+          <Field
+            // Field memoizes input props; remount to refresh `disabled`.
+            key={isGlobalStore ? "locked" : "unlocked"}
+            inputType="choices"
+            name="privacy"
+            label="Snap privacy"
+            description="This can be changed at any time after the initial upload"
+            options={[
+              { label: "Public", value: "public" },
+              {
+                label:
+                  "Private (Private snaps are hidden in stores and only accessible by the publisher and collaborators)",
+                value: "private",
+              },
+            ]}
+            disabled={isGlobalStore}
+            unregisterOnUnmount={false}
+            isOptional
+          />
 
-          <p className="p-form-help-text">
-            This can be changed at any time after the initial upload
-          </p>
-          <Input
-            type="radio"
-            label="Public"
-            name="public"
-            disabled={selectedStore === "ubuntu"}
-            value="public"
-            checked={privacy === "public"}
-            onChange={(e) => {
-              setPrivacy(e.target.value);
-            }}
-          />
-          <Input
-            type="radio"
-            label="Private"
-            name="public"
-            help="Snap is hidden in stores and only accessible by the publisher and collaborators"
-            disabled={selectedStore === "ubuntu"}
-            value="private"
-            checked={privacy === "private" || selectedStore === "ubuntu"}
-            onChange={(e) => {
-              setPrivacy(e.target.value);
-            }}
-          />
-        </Col>
-      </Row>
-      <hr />
-      <div className="u-align--right">
-        <Button
-          type="submit"
-          appearance="positive"
-          disabled={isSending || !isValid()}
-        >
-          {isSending ? (
-            <>
-              <Icon
-                icon="spinner"
-                className="u-animation--spin"
-                color="white"
-              />
-              &nbsp;Registering
-            </>
-          ) : (
-            <>Register</>
-          )}
-        </Button>
-        <Link className="p-button" to="/snaps">
-          Cancel
-        </Link>
-      </div>
-    </Form>
+          <p className="ds field-description p">* Mandatory field</p>
+          <div>
+            <hr className="pragma-hr" />
+            <div className="u-align--right">
+              <RouterLinkButton importance="secondary" to="/snaps">
+                Cancel
+              </RouterLinkButton>
+              <Button
+                type="submit"
+                importance="primary"
+                anticipation="constructive"
+                style={{ marginLeft: "1rem" }}
+                disabled={isSending || !isValid()}
+                loading={isSending}
+              >
+                {isSending ? "Registering" : "Register"}
+              </Button>
+            </div>
+          </div>
+        </Form>
+      </Col>
+    </Row>
   );
 }
 
