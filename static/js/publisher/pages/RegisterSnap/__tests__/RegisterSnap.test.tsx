@@ -73,8 +73,8 @@ describe("RegisterSnap", () => {
     renderComponent();
 
     await waitFor(() => {
-      expect(screen.getByLabelText("Public")).toBeDisabled();
-      expect(screen.getByLabelText("Private")).toBeDisabled();
+      expect(screen.getByRole("radio", { name: /public/i })).toBeDisabled();
+      expect(screen.getByRole("radio", { name: /private/i })).toBeDisabled();
     });
   });
 
@@ -88,7 +88,7 @@ describe("RegisterSnap", () => {
     renderComponent();
 
     await waitFor(() => {
-      expect(screen.getByLabelText("Private")).toBeChecked();
+      expect(screen.getByRole("radio", { name: /private/i })).toBeChecked();
     });
   });
 
@@ -102,10 +102,7 @@ describe("RegisterSnap", () => {
     renderComponent();
 
     await waitFor(() => {
-      expect(screen.getByRole("button", { name: "Register" })).toHaveAttribute(
-        "aria-disabled",
-        "true",
-      );
+      expect(screen.getByRole("button", { name: "Register" })).toBeDisabled();
     });
   });
 
@@ -120,12 +117,9 @@ describe("RegisterSnap", () => {
 
     renderComponent();
 
-    await waitFor(() => {
-      user.type(screen.getByLabelText("Snap name"), "test");
-      expect(
-        screen.getByRole("button", { name: "Register" }),
-      ).not.toHaveAttribute("aria-disabled");
-    });
+    await user.type(await screen.findByLabelText("Snap name"), "test");
+
+    expect(screen.getByRole("button", { name: "Register" })).toBeEnabled();
   });
 
   test("enables public and private fields if not global store", async () => {
@@ -139,10 +133,12 @@ describe("RegisterSnap", () => {
 
     renderComponent();
 
-    await waitFor(() => {
-      user.selectOptions(screen.getByLabelText("Store"), "Test store");
-      expect(screen.getByLabelText("Public")).not.toBeDisabled();
-      expect(screen.getByLabelText("Private")).not.toBeDisabled();
-    });
+    await user.selectOptions(
+      await screen.findByLabelText("Store"),
+      "Test store",
+    );
+
+    expect(screen.getByRole("radio", { name: /public/i })).toBeEnabled();
+    expect(screen.getByRole("radio", { name: /private/i })).toBeEnabled();
   });
 });
