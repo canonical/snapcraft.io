@@ -147,7 +147,7 @@ jobs:
           yarn install --immutable
 
       - name: Run TICS analysis with github-action
-        uses: tiobe/tics-github-action@v3
+        uses: tiobe/tics-github-action@v4
         with:
           mode: qserver
           project: snapcraft.io
