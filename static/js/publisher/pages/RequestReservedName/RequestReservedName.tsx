@@ -1,17 +1,14 @@
 import { useState } from "react";
-import { Link, useSearchParams } from "react-router-dom";
+import type { ChangeEvent } from "react";
+import { useSearchParams } from "react-router-dom";
 import { useAtomValue } from "jotai";
-import {
-  Form,
-  Button,
-  Input,
-  Textarea,
-  Row,
-  Col,
-  Notification,
-} from "@canonical/react-components";
-import { Icon } from "@canonical/react-ds-global";
+import { Notification, Row, Col } from "@canonical/react-components";
+import { Button, Icon } from "@canonical/react-ds-global";
+import { Field, Form } from "@canonical/react-ds-global-form";
+import { useForm } from "react-hook-form";
+import type { FieldValues } from "react-hook-form";
 
+import RouterLinkButton from "../../components/RouterLinkButton";
 import { brandStoresState } from "../../state/brandStoreState";
 
 function RequestReservedName(): React.JSX.Element {
@@ -29,6 +26,14 @@ function RequestReservedName(): React.JSX.Element {
     name: "Global",
     id: "ubuntu",
   };
+
+  const methods = useForm<FieldValues>({
+    values: {
+      store: selectedStore.name,
+      snapName: snapName || "",
+      comment: claimComment ?? "",
+    },
+  });
 
   return (
     <>
@@ -54,102 +59,90 @@ function RequestReservedName(): React.JSX.Element {
       )}
 
       {stores.length > 0 && (
-        <Form
-          onSubmit={async (e) => {
-            e.preventDefault();
+        <Row>
+          <Col size={8}>
+            <Form
+              methods={methods}
+              onSubmit={async () => {
+                setIsSubmitting(true);
 
-            setIsSubmitting(true);
+                const response = await fetch("/api/register-name-dispute", {
+                  method: "POST",
+                  headers: {
+                    "X-CSRFToken": window.CSRF_TOKEN,
+                  },
+                  body: JSON.stringify({
+                    "snap-name": snapName,
+                    "claim-comment": claimComment,
+                  }),
+                });
 
-            const response = await fetch("/api/register-name-dispute", {
-              method: "POST",
-              headers: {
-                "X-CSRFToken": window.CSRF_TOKEN,
-              },
-              body: JSON.stringify({
-                "snap-name": snapName,
-                "claim-comment": claimComment,
-              }),
-            });
+                if (!response.ok) {
+                  setIsSubmitting(false);
+                  throw new Error("Unable to request reserved name");
+                }
 
-            if (!response.ok) {
-              setIsSubmitting(false);
-              throw new Error("Unable to request reserved name");
-            }
+                const responseData = await response.json();
 
-            const responseData = await response.json();
+                if (!responseData.success) {
+                  setErrorNotification(responseData.message);
+                } else {
+                  setShowSuccessNotification(true);
+                }
 
-            if (!responseData.success) {
-              setErrorNotification(responseData.message);
-            } else {
-              setShowSuccessNotification(true);
-            }
-
-            setIsSubmitting(false);
-          }}
-        >
-          <Row>
-            <Col size={2}>
-              <label htmlFor="store">Store</label>
-            </Col>
-            <Col size={6}>
-              <Input
-                type="text"
-                readOnly
+                setIsSubmitting(false);
+              }}
+            >
+              <Field
+                inputType="text"
+                name="store"
                 id="store"
-                value={selectedStore.name}
+                label="Store"
+                readOnly
+                isOptional
               />
-            </Col>
-          </Row>
-
-          <Row>
-            <Col size={2}>
-              <label htmlFor="snap">Snap name</label>
-            </Col>
-            <Col size={6}>
-              <Input type="text" id="snap" readOnly value={snapName || ""} />
-            </Col>
-          </Row>
-
-          <Row>
-            <Col size={2}>
-              <label htmlFor="comment">Comment</label>
-            </Col>
-            <Col size={6}>
-              <Textarea
+              <Field
+                inputType="text"
+                name="snapName"
+                id="snap"
+                label="Snap name"
+                readOnly
+                isOptional
+              />
+              <Field
+                inputType="textarea"
+                name="comment"
                 id="comment"
-                help="Why you have rights to claim this name"
-                value={claimComment}
-                onChange={(e) => {
-                  setClaimComment(e.target.value);
+                label="Comment"
+                description="Why you have rights to claim this name"
+                registerProps={{
+                  onChange: (event: ChangeEvent<HTMLTextAreaElement>) => {
+                    setClaimComment(event.target.value);
+                  },
                 }}
               />
-            </Col>
-          </Row>
-          <hr />
-          <div className="u-align--right">
-            <Link to="/register-snap" className="p-button">
-              Register snap
-            </Link>
-            <Button
-              type="submit"
-              appearance="positive"
-              disabled={!claimComment || isSubmitting}
-            >
-              {isSubmitting ? (
-                <>
-                  <Icon
-                    icon="spinner"
-                    className="u-animation--spin"
-                    color="white"
-                  />
-                  &nbsp;Requesting
-                </>
-              ) : (
-                <>Yes, I am sure</>
-              )}
-            </Button>
-          </div>
-        </Form>
+              <p className="ds field-description p">* Mandatory field</p>
+              <div>
+                <hr className="pragma-hr" />
+                <div className="u-align--right">
+                  <RouterLinkButton importance="secondary" to="/register-snap">
+                    Register snap
+                  </RouterLinkButton>
+                  <Button
+                    type="submit"
+                    importance="primary"
+                    anticipation="constructive"
+                    style={{ marginLeft: "1rem" }}
+                    disabled={!claimComment || isSubmitting}
+                    loading={isSubmitting}
+                  >
+                    {isSubmitting ? "Requesting" : "Yes, I am sure"}
+                  </Button>
+                </div>
+              </div>
+            </Form>
+          </Col>
+        </Row>
       )}
     </>
   );
