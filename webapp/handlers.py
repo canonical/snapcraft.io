@@ -299,10 +299,21 @@ def set_handlers(app):
                     render_template("404.html", message="Entity not found"),
                     404,
                 )
-        if len(error.errors) == 1 and error.errors[0]["code"] in [
-            "macaroon-permission-required",
-            "macaroon-authorization-required",
-        ]:
+        # An expired exchange window cannot be recovered by retrying the
+        # same credentials. Request a fresh login, including for publishers
+        # whose root/discharge credentials were retained during onboarding.
+        if len(error.errors) == 1 and (
+            error.errors[0]["code"]
+            in [
+                "macaroon-permission-required",
+                "macaroon-authorization-required",
+            ]
+            or (
+                error.status_code == 401
+                and error.errors[0]["code"] == "unauthorized"
+                and error.errors[0].get("message") == "Exchange window expired"
+            )
+        ):
             authentication.reset_auth_session(flask.session)
             return flask.redirect(
                 flask.url_for("login.login_handler", next=flask.request.path)
