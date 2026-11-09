@@ -79,6 +79,38 @@ class TestGetSnapBuild(TestEndpoints):
 
     @patch("webapp.publisher.snaps.build_views.launchpad")
     @patch("webapp.publisher.snaps.build_views.dashboard")
+    def test_get_snap_build_target_architectures(
+        self, mock_dashboard, mock_launchpad
+    ):
+        mock_dashboard.get_snap_info.return_value = self._mock_snap_info()
+        mock_launchpad.get_snap_by_store_name.return_value = None
+        cases = [
+            ({}, ["amd64"]),
+            ({"target_architectures": None}, ["amd64"]),
+            ({"target_architectures": []}, ["amd64"]),
+            ({"target_architectures": ["amd64"]}, ["amd64"]),
+            ({"target_architectures": ["arm64"]}, ["arm64"]),
+            (
+                {"target_architectures": ["arm64", "armhf"]},
+                ["arm64", "armhf"],
+            ),
+        ]
+        for fields, expected in cases:
+            with self.subTest(fields=fields):
+                mock_launchpad.get_snap_build.return_value = {
+                    **self._mock_build(),
+                    **fields,
+                }
+
+                response = self.client.get(self.endpoint_url)
+
+                self.assertEqual(response.status_code, 200)
+                build = response.get_json()["data"]["snap_build"]
+                self.assertEqual(build["target_architectures"], expected)
+                self.assertEqual(build["arch_tag"], "amd64")
+
+    @patch("webapp.publisher.snaps.build_views.launchpad")
+    @patch("webapp.publisher.snaps.build_views.dashboard")
     def test_get_snap_build_success_does_not_fetch_raw_logs(
         self, mock_dashboard, mock_launchpad
     ):
