@@ -27,7 +27,7 @@ responses==0.26.0
 ruamel.yaml==0.19.1
 vcrpy-unittest==0.1.7
 user-agents==2.2.0
-dnspython==2.9.0
+dnspython==2.8.0
 werkzeug==3.1.9
 sentry-sdk==2.60.0
 setuptools<81.0
