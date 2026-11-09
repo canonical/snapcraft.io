@@ -67,7 +67,7 @@ describe("RegisterNameDispute", () => {
     renderComponent();
     expect(
       screen.getByRole("button", { name: "Submit name claim" }),
-    ).toHaveAttribute("aria-disabled", "true");
+    ).toBeDisabled();
   });
 
   test("'adding comment enables 'Submit name claim' button", async () => {
@@ -76,6 +76,6 @@ describe("RegisterNameDispute", () => {
     await user.type(screen.getByLabelText("Comment"), "Test comment");
     expect(
       screen.getByRole("button", { name: "Submit name claim" }),
-    ).not.toHaveAttribute("aria-disabled");
+    ).toBeEnabled();
   });
 });

@@ -611,6 +611,16 @@ $font-monospace: '"Ubuntu Sans Mono", "Ubuntu Mono", ui-monospace, "SF Mono", Me
   }
 }
 
+// Keep the label accessible while overriding the form's Vanilla boundary reset.
+.update-model-input .field-label {
+  clip-path: inset(50%);
+  height: 1px;
+  overflow: hidden;
+  position: absolute;
+  white-space: nowrap;
+  width: 1px;
+}
+
 // Unlayered CSS from some @canonical/react-components side-effect imports
 // (e.g. ColumnSelector.scss's own `.p-icon--{name}` rule) beats our layered
 // Vanilla styles regardless of specificity, so pin this outside @layer too.

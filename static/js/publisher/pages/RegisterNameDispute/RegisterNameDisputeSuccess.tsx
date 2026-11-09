@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import RouterLinkButton from "../../components/RouterLinkButton";
 
 type Props = {
   snapName: string | null;
@@ -17,9 +17,13 @@ function RegisterNameDisputeSuccess({ snapName }: Props): React.JSX.Element {
         contact you once we confirm the information provided
       </p>
       <hr />
-      <Link className="p-button--positive" to="/snaps">
+      <RouterLinkButton
+        importance="primary"
+        anticipation="constructive"
+        to="/snaps"
+      >
         Return to my snaps
-      </Link>
+      </RouterLinkButton>
     </>
   );
 }
