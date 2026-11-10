@@ -4,9 +4,6 @@
 import os
 import logging
 
-# canonicalwebteam.flask-base requires SECRET_KEY to be set, this must be done before importing the app
-os.environ["SECRET_KEY"] = os.environ["FLASK_SECRET_KEY"]
-
 # disable talisker logger, as it is not used in this application and clutters logs
 logging.getLogger("talisker.context").disabled = True
 
