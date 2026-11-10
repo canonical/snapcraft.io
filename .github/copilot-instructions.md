@@ -74,6 +74,12 @@ tests/                   # Python unittest tests
 
 **Requirements**: All dotrun jobs need `sudo chmod -R 777 .` before install. Python tests need `dotrun build` first.
 
+## Dependency automation
+
+Dependabot is the only dependency update bot. `.github/dependabot.yml` covers npm/Yarn, pip (root and charm), GitHub Actions, and Docker. Version updates have a seven-day cooldown. Routine minor and patch updates share one manual-review group per ecosystem. Major updates remain individual and manual, except that `@types/node` major updates remain ignored.
+
+`.github/workflows/dependabot-auto-merge.yml` uses `workflow_run` after `PR checks` succeeds. It merges only the tested, signed Dependabot commit in the reserved `security-updates` group containing patch/minor advisory fixes. It reads the signed commit metadata directly and uses a SHA-bound squash merge, not GitHub's auto-merge setting. Never use that group name for ordinary version updates, infer security status from SemVer or labels, or execute PR code in this privileged workflow. Do not consume artifacts or caches from the CI run. Security updates bypass cooldown. GitHub settings must enforce required CI and reviews. If another requirement blocks the merge, rerun the merge workflow after that requirement passes. Merges with `GITHUB_TOKEN` do not trigger the push-based deployment workflows. See `HACKING.md` → **Dependency updates** for the policy, required repository settings, and manual deployment steps.
+
 ## Known Issues & Workarounds
 
 1. **Cypress download fails in restricted networks**: OK to ignore - build/test works without it

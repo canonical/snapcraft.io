@@ -82,6 +82,27 @@ Install [`dotrun`](https://github.com/canonical/dotrun), then run
 dotrun test
 ```
 
+## Dependency updates
+
+[Dependabot](.github/dependabot.yml) manages npm/Yarn, pip (root and charm), GitHub Actions, and Dockerfile dependencies.
+
+- Routine minor and patch updates share one pull request per ecosystem for manual review and merge.
+- The [merge workflow](.github/workflows/dependabot-auto-merge.yml) merges eligible security patch/minor updates after `PR checks` succeeds for the current commit.
+- Major updates require manual review and merge. The `@types/node` major-update exclusion still applies.
+
+Dependabot checks version updates every weekday with a seven-day release-age cooldown. Security updates bypass cooldown. Dependabot can also bypass cooldown when publication dates are unavailable.
+
+**Required GitHub settings:**
+
+- Enable the dependency graph, Dependabot alerts, and Dependabot security updates under **Settings → Code security**.
+- Enable squash merging under **Settings → General → Pull Requests**. The workflow does not need **Allow auto-merge**.
+- Require continuous integration checks through default-branch protection. The workflow watches `PR checks`, but GitHub must enforce all required checks.
+- Keep required approval rules. The workflow does not approve pull requests or bypass branch protection.
+
+The workflow must exist on the default branch. If reviews or other required checks block the merge, rerun the merge workflow after those requirements pass. It does not queue a merge or support merge queues.
+
+**Deployment:** Merges with `GITHUB_TOKEN` do not trigger `push` workflows. Run **Pack and Deploy** manually for **Production** and **Staging API** after these merges. Automatic deployment needs a separate GitHub App token integration.
+
 ## Adding new Publicise SVG Badges
 
 1. Take a look under `static/images/badges_editable/`; and pick another language to use as a template. For example, `en` (English), for LTR; `ar` (Arabic), for RTL; etc. **If you find none of the existing languages suitable for your template, you may modify the `x` and `y` coordinates for text to your liking, however the changes & positioning should be consistent with other badges, no modifications or appendages to the logo is allowed**
