@@ -51,6 +51,11 @@ reported as blocked, not executed. A blocked or partial report is not a pass.
   PR text. GitHub context is read-only; comments and evidence use safe outputs.
   The compiler may check out workflow metadata in framework jobs; no application
   source is checked out for execution by the QA agent.
+- Missing-tool, incomplete-run, failure, and threat-detection reporting must not
+  create repository issues. Diagnostics stay in Actions; the intended visible
+  write is the PR report. Threat detection remains enabled and fails closed.
+- OTLP export is explicitly disabled, including inherited endpoint/header values,
+  so QA traces are not sent to an optional organization-configured collector.
 - The browser is unauthenticated and may navigate only to the validated demo and
   production. It must not log in, change server-side state, submit contact forms,
   follow external redirects/downloads, or bypass network restrictions. These
@@ -84,7 +89,8 @@ gh aw compile auto-qa --strict
 The path-filtered **Auto QA workflow tests** CI workflow runs these fixtures without
 installing application dependencies. Fixtures cover ready/missing/stale/spoofed
 and failed demos, superseded deployments, closed/unlabeled/fork PRs, API errors,
-missing patches/QA text, and changed heads. They do not execute the AI prompt or
+missing patches/QA text, changed heads, disabled diagnostic issue creation, and
+telemetry isolation in the compiled workflow. They do not execute the AI prompt or
 verify live browser results.
 
 For the first live smoke test, label a low-risk UI PR with a ready demo. Verify the

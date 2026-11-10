@@ -457,3 +457,31 @@ test("keeps activation and output contracts scoped", () => {
   assert.match(source, /Inspect the actual screenshot images/);
   assert.match(source, /Blocked\n   \(stale evidence\)/);
 });
+
+test("does not create repository issues through diagnostic handlers", () => {
+  const lock = readFileSync(
+    join(__dirname, "../workflows/auto-qa.lock.yml"),
+    "utf8",
+  );
+  assert.match(source, /report-missing-tool:\n    create-issue: false/);
+  assert.match(source, /report-incomplete:\n    create-issue: false/);
+  assert.match(
+    source,
+    /threat-detection:\n    report-as-issue: false\n    continue-on-error: false/,
+  );
+  assert.match(lock, /GH_AW_MISSING_TOOL_CREATE_ISSUE: "false"/);
+  assert.match(lock, /GH_AW_REPORT_INCOMPLETE_CREATE_ISSUE: "false"/);
+  assert.match(lock, /GH_AW_DETECTION_CONTINUE_ON_ERROR: "false"/);
+});
+
+test("does not inherit telemetry endpoints or telemetry credentials", () => {
+  const lock = readFileSync(
+    join(__dirname, "../workflows/auto-qa.lock.yml"),
+    "utf8",
+  );
+  assert.match(lock, /OTEL_SDK_DISABLED: "true"/);
+  assert.match(lock, /GH_AW_OTLP_ENDPOINTS: "\[\]"/);
+  assert.match(lock, /OTEL_EXPORTER_OTLP_ENDPOINT: ""/);
+  assert.match(lock, /OTEL_EXPORTER_OTLP_HEADERS: ""/);
+  assert.doesNotMatch(lock, /secrets\.GH_AW_DEFAULT_OTLP/);
+});

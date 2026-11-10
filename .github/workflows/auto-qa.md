@@ -19,6 +19,13 @@ permissions:
   copilot-requests: write
 checkout: false
 strict: true
+# Keep this QA workflow's evidence in GitHub; do not inherit an OTLP destination.
+env:
+  OTEL_SDK_DISABLED: "true"
+  OTEL_TRACES_EXPORTER: "none"
+  OTEL_EXPORTER_OTLP_ENDPOINT: ""
+  OTEL_EXPORTER_OTLP_HEADERS: ""
+  GH_AW_OTLP_ENDPOINTS: "[]"
 timeout-minutes: 30
 concurrency:
   group: auto-qa-${{ github.event.pull_request.number }}
@@ -136,6 +143,13 @@ tools:
   edit: false
 safe-outputs:
   report-failure-as-issue: false
+  report-missing-tool:
+    create-issue: false
+  report-incomplete:
+    create-issue: false
+  threat-detection:
+    report-as-issue: false
+    continue-on-error: false
   add-comment:
     target: triggering
     max: 1
