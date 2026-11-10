@@ -1,15 +1,10 @@
 import React, { useState } from "react";
 import { useQuery } from "react-query";
 import { connect } from "react-redux";
-import {
-  Row,
-  Col,
-  Button,
-  Form,
-  Notification,
-  Accordion,
-} from "@canonical/react-components";
-import { Icon } from "@canonical/react-ds-global";
+import { Row, Col, Notification } from "@canonical/react-components";
+import { Accordion, Button, Icon } from "@canonical/react-ds-global";
+import { Field, Form } from "@canonical/react-ds-global-form";
+import { useForm, type FieldValues } from "react-hook-form";
 
 import { setCurrentTrack } from "../slices/currentTrack";
 import { closeHistory } from "../slices/history";
@@ -71,8 +66,7 @@ function ReleasesHeading(props: ReleasesHeadingProps) {
     setTrackName("");
     setVersionPattern("");
     setPhasingPercentage("");
-    setPhasingPercentageError("");
-    setTrackNameError("");
+    methods.clearErrors();
     setAddTrackSidePanelOpen(false);
   };
 
@@ -92,7 +86,13 @@ function ReleasesHeading(props: ReleasesHeadingProps) {
   const [trackName, setTrackName] = useState("");
   const [versionPattern, setVersionPattern] = useState("");
   const [phasingPercentage, setPhasingPercentage] = useState("");
-  const [phasingPercentageError, setPhasingPercentageError] = useState("");
+  const phasingPercentageError = validatePhasingPercentage(phasingPercentage);
+
+  const methods = useForm<FieldValues>({
+    values: { trackName, versionPattern, phasingPercentage },
+    mode: "onChange",
+    resetOptions: { keepErrors: true },
+  });
 
   const isTrackNameFilled = trackName.trim().length > 0;
   const [isLoading, setIsLoading] = useState(false);
@@ -141,7 +141,7 @@ function ReleasesHeading(props: ReleasesHeadingProps) {
   const handleTrackNameChange = (
     event: React.ChangeEvent<HTMLInputElement>,
   ) => {
-    setTrackNameError("");
+    methods.clearErrors("trackName");
     const { value } = event.target;
     setTrackName(value);
   };
@@ -155,10 +155,7 @@ function ReleasesHeading(props: ReleasesHeadingProps) {
   const handlePhasingPercentageChange = (
     event: React.ChangeEvent<HTMLInputElement>,
   ) => {
-    const { value } = event.target;
-    setPhasingPercentage(value);
-    const error = validatePhasingPercentage(value);
-    setPhasingPercentageError(error);
+    setPhasingPercentage(event.target.value);
   };
 
   const showNotification = (type: string, message: string) => {
@@ -168,7 +165,6 @@ function ReleasesHeading(props: ReleasesHeadingProps) {
   const [successNotification, setSuccessNotification] = useState<string | null>(
     null,
   );
-  const [trackNameError, setTrackNameError] = useState("");
 
   const handleAddTrack = async () => {
     try {
@@ -204,7 +200,10 @@ function ReleasesHeading(props: ReleasesHeadingProps) {
             errorMessage = error.message;
           }
         }
-        setTrackNameError(errorMessage);
+        methods.setError("trackName", {
+          type: "server",
+          message: errorMessage,
+        });
       }
     } catch (error) {
       const e = error as Error;
@@ -269,7 +268,9 @@ function ReleasesHeading(props: ReleasesHeadingProps) {
                             <div className="track-button">
                               {trackGuardrailsStatus === "request" && (
                                 <Button
-                                  className="p-button has-icon new-track-button"
+                                  importance="tertiary"
+                                  icon="plus"
+                                  className="new-track-button"
                                   onClick={() => {
                                     openRequestTrackSidePanel();
                                     if (isOpen) {
@@ -277,13 +278,14 @@ function ReleasesHeading(props: ReleasesHeadingProps) {
                                     }
                                   }}
                                 >
-                                  <i className="p-icon--plus"></i>
-                                  <span>Request track</span>
+                                  Request track
                                 </Button>
                               )}
                               {trackGuardrailsStatus === "add" && (
                                 <Button
-                                  className="p-button has-icon new-track-button"
+                                  importance="tertiary"
+                                  icon="plus"
+                                  className="new-track-button"
                                   onClick={() => {
                                     openAddTrackSidePanel();
                                     if (isOpen) {
@@ -291,8 +293,7 @@ function ReleasesHeading(props: ReleasesHeadingProps) {
                                     }
                                   }}
                                 >
-                                  <i className="p-icon--plus"></i>
-                                  <span>Add track</span>
+                                  Add track
                                 </Button>
                               )}
                             </div>
@@ -390,13 +391,15 @@ function ReleasesHeading(props: ReleasesHeadingProps) {
             <div className="p-panel__footer u-align--right">
               <div className="u-fixed-width">
                 <Button
-                  className="u-no-margin--bottom"
+                  importance="secondary"
                   onClick={closeRequestTrackSidePanel}
                 >
                   Cancel
                 </Button>
                 <Button
-                  className="u-no-margin--bottom p-button--positive"
+                  importance="primary"
+                  anticipation="constructive"
+                  style={{ marginLeft: "1rem" }}
                   onClick={() =>
                     window.open(
                       'https://forum.snapcraft.io/new-topic?title=Create+new+track+for+"snap+name"&category=store-requests',
@@ -427,125 +430,63 @@ function ReleasesHeading(props: ReleasesHeadingProps) {
             <h4 className="p-panel__title p-heading--4">ADD TRACK</h4>
           </div>
           <div className="p-panel__content" style={{ padding: "0 1.5rem" }}>
-            <Form>
-              <div>
-                <div
-                  className={`p-form__group p-form-validation ${trackNameError ? " is-error" : ""}`}
-                >
-                  <label htmlFor="trackName" className="p-form__label">
-                    <strong>* Track name</strong>
-                  </label>
-                  <div className="p-form__control">
-                    <input
-                      type="text"
-                      id="trackName"
-                      className="p-form-validation__input"
-                      required={true}
-                      placeholder="display-name123"
-                      aria-invalid="true"
-                      aria-describedby="trackName"
-                      name="trackName"
-                      value={trackName}
-                      onChange={handleTrackNameChange}
-                    />
-                    <p
-                      className="p-form-validation__message"
-                      id="trackNameErrorMessage"
-                    >
-                      {trackNameError}
-                    </p>
-                  </div>
-                </div>
-              </div>
-              <p className="p-form-help-text" id="trackNameHelpMessage">
-                Name should follow the track creation guardrails (TCG).
-              </p>
+            <Form methods={methods} onSubmit={() => {}}>
+              <Field
+                inputType="text"
+                name="trackName"
+                id="trackName"
+                label="Track name"
+                placeholder="display-name123"
+                description="Name should follow the track creation guardrails (TCG)."
+                registerProps={{ onChange: handleTrackNameChange }}
+              />
 
               {/* Optional Properties */}
-              <Accordion
-                className="add-track-accordion"
-                sections={[
-                  {
-                    key: "optional properties",
-                    title: "Optional Properties",
-                    content: (
-                      <div>
-                        <div>
-                          <label htmlFor="versionPattern">
-                            <strong>Version pattern</strong>
-                          </label>
-                          <input
-                            type="text"
-                            id="versionPattern"
-                            name="versionPattern"
-                            placeholder="?.v.*"
-                            value={versionPattern}
-                            onChange={handleVersionPatternChange}
-                          />
-                        </div>
-                        <p
-                          className="p-form-help-text"
-                          id="versionPatternHelpMessage"
-                        >
-                          Version pattern should follow glob pattern
-                        </p>
-
-                        <div
-                          className={`p-form__group p-form-validation ${phasingPercentageError ? " is-error" : ""}`}
-                        >
-                          <label
-                            htmlFor="phasingPercentage"
-                            className="p-form__label"
-                          >
-                            <strong>Automatic phasing percentage</strong>
-                          </label>
-                          <div className="p-form__control">
-                            <input
-                              type="text"
-                              id="phasingPercentage"
-                              className="p-form-validation__input"
-                              placeholder="10.15"
-                              aria-invalid="true"
-                              aria-describedby="phasingPercentageErrorMessage"
-                              name="phasingPercentage"
-                              value={phasingPercentage}
-                              onChange={handlePhasingPercentageChange}
-                            />
-                            <p
-                              className="p-form-validation__message"
-                              id="phasingPercentageErrorMessage"
-                            >
-                              {phasingPercentageError}
-                            </p>
-                          </div>
-                        </div>
-                        <p
-                          className="p-form-help-text"
-                          id="phasingPercentageHelpMessage"
-                        >
-                          The percentage is a value from 0 to 100
-                        </p>
-                      </div>
-                    ),
-                  },
-                ]}
-              />
+              <Accordion className="add-track-accordion">
+                <Accordion.Item heading="Optional Properties">
+                  <Field
+                    inputType="text"
+                    name="versionPattern"
+                    id="versionPattern"
+                    label="Version pattern"
+                    placeholder="?.v.*"
+                    description="Version pattern should follow glob pattern"
+                    isOptional
+                    registerProps={{
+                      onChange: handleVersionPatternChange,
+                    }}
+                  />
+                  <Field
+                    inputType="text"
+                    name="phasingPercentage"
+                    id="phasingPercentage"
+                    label="Automatic phasing percentage"
+                    placeholder="10.15"
+                    description="The percentage is a value from 0 to 100"
+                    isOptional
+                    registerProps={{
+                      onChange: handlePhasingPercentageChange,
+                      validate: (value: string) =>
+                        validatePhasingPercentage(value) || true,
+                    }}
+                  />
+                </Accordion.Item>
+              </Accordion>
+              <p>
+                TCG were provided by the team when the first track was requested
+                through the Snapcraft forum.
+              </p>
+              <p>
+                <a href="https://snapcraft.io/docs/channels">
+                  Learn about tracks
+                </a>{" "}
+                or{" "}
+                <a href="https://forum.snapcraft.io/c/store-requests/19">
+                  contact us
+                </a>{" "}
+                for help.
+              </p>
             </Form>
-            <p>* Mandatory field</p>
-            <p>
-              TCG were provided by the team when the first track was requested
-              through the Snapcraft forum.
-            </p>
-            <p>
-              <a href="https://snapcraft.io/docs/channels">
-                Learn about tracks
-              </a>{" "}
-              or{" "}
-              <a href="https://forum.snapcraft.io/c/store-requests/19">
-                contact us
-              </a>{" "}
-              for help.
-            </p>
             {notification && (
               <Notification
                 severity={
@@ -560,7 +501,7 @@ function ReleasesHeading(props: ReleasesHeadingProps) {
             <div className="p-panel__footer u-align--right">
               <div className="u-fixed-width">
                 <Button
-                  className="u-no-margin--bottom"
+                  importance="secondary"
                   onClick={() => {
                     closeAddTrackSidePanel();
                     setNotification(null);
@@ -569,7 +510,10 @@ function ReleasesHeading(props: ReleasesHeadingProps) {
                   Cancel
                 </Button>
                 <Button
-                  className="u-no-margin--bottom p-button--positive"
+                  importance="primary"
+                  anticipation="constructive"
+                  style={{ marginLeft: "1rem" }}
+                  loading={isLoading}
                   onClick={() => {
                     handleAddTrack();
                     setNotification(null);
@@ -578,14 +522,7 @@ function ReleasesHeading(props: ReleasesHeadingProps) {
                     !isTrackNameFilled || !!phasingPercentageError || isLoading
                   }
                 >
-                  {isLoading ? (
-                    <div>
-                      <Icon icon="spinner" className="u-animation--spin" />
-                      &nbsp;Loading...
-                    </div>
-                  ) : (
-                    <div>Add track</div>
-                  )}
+                  {isLoading ? "Loading..." : "Add track"}
                 </Button>
               </div>
             </div>
