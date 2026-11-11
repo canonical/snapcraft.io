@@ -87,7 +87,8 @@ dotrun test
 For an open same-repository PR, wait for the **PR demo: ready** comment and a
 successful demo workflow run, then add the **auto-qa** label. The agent follows
 usable QA instructions, compares the demo with production using Playwright, and
-posts a report with screenshot artifacts. Remove and re-add the label to rerun after changes. See the
+posts an advisory report with available screenshot evidence. To rerun after
+changes, remove and re-add the label once the new demo is ready. See the
 [Auto QA guide](.github/aw/auto-qa.md) for setup, safeguards, and validation.
 
 ## Adding new Publicise SVG Badges
