@@ -22,11 +22,12 @@ jobs:
     timeout-minutes: 5
     permissions:
       actions: read
-      contents: write
+      contents: read
       pull-requests: read
     steps:
       # Never check out PR code or consume artifacts or caches from the CI run.
-      - name: Check the tested commit and merge eligible security updates
+      - name: Check the tested commit and security update policy
+        id: policy
         uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
         with:
           script: |
@@ -153,13 +154,27 @@ jobs:
               return skip('The pull request changed after the initial checks.');
             }
 
-            // A direct, SHA-bound merge needs no Allow auto-merge setting.
-            // GitHub must still enforce required checks, reviews and branch rules.
-            const { data: result } = await github.rest.pulls.merge({
-              ...pull, sha: headSha, merge_method: 'squash',
-            });
-            if (!result.merged) {
-              core.setFailed(`GitHub did not merge the pull request: ${result.message}`);
-            } else {
-              core.info(`Merged security pull request #${pr.number} after PR checks passed.`);
-            }
+            core.setOutput('pull_number', pr.number);
+            core.setOutput('head_sha', headSha);
+            core.setOutput('eligible', 'true');
+
+      # Only this step receives the bot token. Its merge triggers normal push workflows.
+      - name: Merge the tested security update with the bot token
+        if: steps.policy.outputs.eligible == 'true'
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.DEPENDABOT_MERGE_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+          PR_NUMBER: ${{ steps.policy.outputs.pull_number }}
+          HEAD_SHA: ${{ steps.policy.outputs.head_sha }}
+        run: |
+          if [ -z "$GH_TOKEN" ]; then
+            echo "::error::Set the DEPENDABOT_MERGE_TOKEN Actions secret before merging security updates."
+            exit 1
+          fi
+          # GitHub must enforce required checks and reviews for the bot account.
+          # Bind the merge to the tested SHA, even if the head changes between steps.
+          gh api --method PUT "repos/$GH_REPO/pulls/$PR_NUMBER/merge" \
+            -f sha="$HEAD_SHA" \
+            -f merge_method=squash > merge-result.json
+          jq -e '.merged == true' merge-result.json
