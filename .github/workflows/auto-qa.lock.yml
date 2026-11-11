@@ -1,5 +1,5 @@
-# gh-aw-metadata: {"schema_version":"v4","frontmatter_hash":"fab3278122c637654ec57793f3e99bac3f902412468709a1021b127a18320e6f","body_hash":"19cc6c2b7902b02add932c5c81737893ffd3498011792bc7c1ead91997285635","compiler_version":"v1.2.2","strict":true,"agent_id":"copilot","engine_versions":{"copilot":"1.0.103"}}
-# gh-aw-manifest: {"version":1,"secrets":["GH_AW_GITHUB_MCP_SERVER_TOKEN","GH_AW_GITHUB_TOKEN","GITHUB_TOKEN"],"actions":[{"repo":"actions/checkout","sha":"3d3c42e5aac5ba805825da76410c181273ba90b1","version":"v7.0.1"},{"repo":"actions/download-artifact","sha":"9000827ccba6bdab643e8b6fd33ac0654aef8333","version":"v8.0.2"},{"repo":"actions/github-script","sha":"3a2844b7e9c422d3c10d287c895573f7108da1b3","version":"v9.0.0"},{"repo":"actions/setup-node","sha":"949feb2413d6458794dcd2491c4babbbce0c15c1","version":"v7.1.0"},{"repo":"actions/upload-artifact","sha":"cf430e030ddbb5b0abf93d22962f4752f3646cd9","version":"v7.0.2"},{"repo":"github/gh-aw-actions/setup","sha":"53d0749e19424a918acd82b4d140264ce48f2f14","version":"53d0749e19424a918acd82b4d140264ce48f2f14"}],"containers":[{"image":"ghcr.io/github/gh-aw-firewall/agent:0.29.11","digest":"sha256:8774a73c351395b41d2ad0af4ddb4689007c67de3cd08bd9f43bb8a0e300690e","pinned_image":"ghcr.io/github/gh-aw-firewall/agent:0.29.11@sha256:8774a73c351395b41d2ad0af4ddb4689007c67de3cd08bd9f43bb8a0e300690e"},{"image":"ghcr.io/github/gh-aw-firewall/api-proxy:0.29.11","digest":"sha256:88d2d0e315a504d93fd4fb8847fd0f6b7f4469f41a6fc6047b3dc9654c56ab2c","pinned_image":"ghcr.io/github/gh-aw-firewall/api-proxy:0.29.11@sha256:88d2d0e315a504d93fd4fb8847fd0f6b7f4469f41a6fc6047b3dc9654c56ab2c"},{"image":"ghcr.io/github/gh-aw-firewall/cli-proxy:0.29.11","digest":"sha256:97782bc0d8ff7f80f19ae2fdc5e1668517aa732a6fa077e64b8d3919238496d2","pinned_image":"ghcr.io/github/gh-aw-firewall/cli-proxy:0.29.11@sha256:97782bc0d8ff7f80f19ae2fdc5e1668517aa732a6fa077e64b8d3919238496d2"},{"image":"ghcr.io/github/gh-aw-firewall/squid:0.29.11","digest":"sha256:861739ecf924dd2db5e5fb652db2ad82aaafd1615623297ddabc8f41a36b2847","pinned_image":"ghcr.io/github/gh-aw-firewall/squid:0.29.11@sha256:861739ecf924dd2db5e5fb652db2ad82aaafd1615623297ddabc8f41a36b2847"},{"image":"ghcr.io/github/gh-aw-mcpg:v0.5.6","digest":"sha256:342cd624e1f179d91be2de7a146fc4f387092e62e6c8a47506d7932e113d2311","pinned_image":"ghcr.io/github/gh-aw-mcpg:v0.5.6@sha256:342cd624e1f179d91be2de7a146fc4f387092e62e6c8a47506d7932e113d2311"},{"image":"ghcr.io/github/gh-aw-node","digest":"sha256:8735428c2d4e602f90781ba0c571c400e8ff93c7ee1508a75d71f87e34e415cc","pinned_image":"ghcr.io/github/gh-aw-node@sha256:8735428c2d4e602f90781ba0c571c400e8ff93c7ee1508a75d71f87e34e415cc"},{"image":"ghcr.io/github/github-mcp-server:v2.1.0","digest":"sha256:f6056fc10bfffcc8c81a6417a2e9ca12808647e8dd6049642a4feaadee0e0f8a","pinned_image":"ghcr.io/github/github-mcp-server:v2.1.0@sha256:f6056fc10bfffcc8c81a6417a2e9ca12808647e8dd6049642a4feaadee0e0f8a"}],"has_pull_request":true,"mcp_servers":[{"name":"safeoutputs","tools":["add_comment","noop","report_incomplete","report_missing_data","report_missing_tool","upload_artifact"]}],"threat_detection":{"mode":"enabled"},"admission":false,"agent_metadata":{}}
+# gh-aw-metadata: {"schema_version":"v4","frontmatter_hash":"22a93501f4a4681984b1f2eabdaec34bd4494d6bdce79f747641f502f5a5817d","body_hash":"1f21644656c340350b5bb8722c78e96e0ada6a923ed1906315ffe806501a9444","compiler_version":"v1.2.2","strict":true,"agent_id":"copilot","engine_versions":{"copilot":"1.0.103"}}
+# gh-aw-manifest: {"version":1,"secrets":["GH_AW_DEFAULT_OTLP_ENDPOINT","GH_AW_DEFAULT_OTLP_HEADERS","GH_AW_GITHUB_MCP_SERVER_TOKEN","GH_AW_GITHUB_TOKEN","GITHUB_TOKEN"],"actions":[{"repo":"actions/checkout","sha":"3d3c42e5aac5ba805825da76410c181273ba90b1","version":"v7.0.1"},{"repo":"actions/download-artifact","sha":"9000827ccba6bdab643e8b6fd33ac0654aef8333","version":"v8.0.2"},{"repo":"actions/github-script","sha":"3a2844b7e9c422d3c10d287c895573f7108da1b3","version":"v9.0.0"},{"repo":"actions/setup-node","sha":"949feb2413d6458794dcd2491c4babbbce0c15c1","version":"v7.1.0"},{"repo":"actions/upload-artifact","sha":"cf430e030ddbb5b0abf93d22962f4752f3646cd9","version":"v7.0.2"},{"repo":"github/gh-aw-actions/setup","sha":"53d0749e19424a918acd82b4d140264ce48f2f14","version":"53d0749e19424a918acd82b4d140264ce48f2f14"}],"containers":[{"image":"ghcr.io/github/gh-aw-firewall/agent:0.29.11","digest":"sha256:8774a73c351395b41d2ad0af4ddb4689007c67de3cd08bd9f43bb8a0e300690e","pinned_image":"ghcr.io/github/gh-aw-firewall/agent:0.29.11@sha256:8774a73c351395b41d2ad0af4ddb4689007c67de3cd08bd9f43bb8a0e300690e"},{"image":"ghcr.io/github/gh-aw-firewall/api-proxy:0.29.11","digest":"sha256:88d2d0e315a504d93fd4fb8847fd0f6b7f4469f41a6fc6047b3dc9654c56ab2c","pinned_image":"ghcr.io/github/gh-aw-firewall/api-proxy:0.29.11@sha256:88d2d0e315a504d93fd4fb8847fd0f6b7f4469f41a6fc6047b3dc9654c56ab2c"},{"image":"ghcr.io/github/gh-aw-firewall/cli-proxy:0.29.11","digest":"sha256:97782bc0d8ff7f80f19ae2fdc5e1668517aa732a6fa077e64b8d3919238496d2","pinned_image":"ghcr.io/github/gh-aw-firewall/cli-proxy:0.29.11@sha256:97782bc0d8ff7f80f19ae2fdc5e1668517aa732a6fa077e64b8d3919238496d2"},{"image":"ghcr.io/github/gh-aw-firewall/squid:0.29.11","digest":"sha256:861739ecf924dd2db5e5fb652db2ad82aaafd1615623297ddabc8f41a36b2847","pinned_image":"ghcr.io/github/gh-aw-firewall/squid:0.29.11@sha256:861739ecf924dd2db5e5fb652db2ad82aaafd1615623297ddabc8f41a36b2847"},{"image":"ghcr.io/github/gh-aw-mcpg:v0.5.6","digest":"sha256:342cd624e1f179d91be2de7a146fc4f387092e62e6c8a47506d7932e113d2311","pinned_image":"ghcr.io/github/gh-aw-mcpg:v0.5.6@sha256:342cd624e1f179d91be2de7a146fc4f387092e62e6c8a47506d7932e113d2311"},{"image":"ghcr.io/github/gh-aw-node","digest":"sha256:8735428c2d4e602f90781ba0c571c400e8ff93c7ee1508a75d71f87e34e415cc","pinned_image":"ghcr.io/github/gh-aw-node@sha256:8735428c2d4e602f90781ba0c571c400e8ff93c7ee1508a75d71f87e34e415cc"},{"image":"ghcr.io/github/github-mcp-server:v2.1.0","digest":"sha256:f6056fc10bfffcc8c81a6417a2e9ca12808647e8dd6049642a4feaadee0e0f8a","pinned_image":"ghcr.io/github/github-mcp-server:v2.1.0@sha256:f6056fc10bfffcc8c81a6417a2e9ca12808647e8dd6049642a4feaadee0e0f8a"}],"has_pull_request":true,"mcp_servers":[{"name":"safeoutputs","tools":["add_comment","noop","report_incomplete","report_missing_data","report_missing_tool","upload_artifact"]}],"threat_detection":{"mode":"enabled"},"admission":false,"agent_metadata":{}}
 # This file was automatically generated by gh-aw (v1.2.2). DO NOT EDIT. To debug this workflow, load the skill at https://github.com/github/gh-aw/blob/main/debug.md
 #
 #    ___                   _   _
@@ -27,14 +27,9 @@
 #
 # Intent: Help reviewers verify changed experiences and identify unexpected regressions with reproducible browser evidence.
 #
-# Frontmatter env variables:
-#   - GH_AW_OTLP_ENDPOINTS: (main workflow)
-#   - OTEL_EXPORTER_OTLP_ENDPOINT: (main workflow)
-#   - OTEL_EXPORTER_OTLP_HEADERS: (main workflow)
-#   - OTEL_SDK_DISABLED: (main workflow)
-#   - OTEL_TRACES_EXPORTER: (main workflow)
-#
 # Secrets used:
+#   - GH_AW_DEFAULT_OTLP_ENDPOINT
+#   - GH_AW_DEFAULT_OTLP_HEADERS
 #   - GH_AW_GITHUB_MCP_SERVER_TOKEN
 #   - GH_AW_GITHUB_TOKEN
 #   - GITHUB_TOKEN
@@ -78,16 +73,14 @@ concurrency:
 run-name: "Auto QA"
 
 env:
-  GH_AW_OTLP_ENDPOINTS: "[]"
-  OTEL_EXPORTER_OTLP_ENDPOINT: ""
-  OTEL_EXPORTER_OTLP_HEADERS: ""
-  OTEL_SDK_DISABLED: "true"
-  OTEL_TRACES_EXPORTER: none
+  OTEL_EXPORTER_OTLP_ENDPOINT: ${{ secrets.GH_AW_DEFAULT_OTLP_ENDPOINT || vars.GH_AW_DEFAULT_OTLP_ENDPOINT }}
   OTEL_EXPORTER_OTLP_PROTOCOL: ${{ vars.OTEL_EXPORTER_OTLP_PROTOCOL }}
   OTEL_SERVICE_NAME: gh-aw.auto-qa
   OTEL_RESOURCE_ATTRIBUTES: 'gh-aw.workflow.name=Auto%20QA,gh-aw.repository=${{ github.repository }},gh-aw.run.id=${{ github.run_id }},github.run_id=${{ github.run_id }},gh-aw.engine.id=copilot'
+  OTEL_EXPORTER_OTLP_HEADERS: ${{ secrets.GH_AW_DEFAULT_OTLP_HEADERS }}
   GH_AW_OTLP_LOGS_ENABLED: ${{ vars.GH_AW_OTLP_LOGS_ENABLED }}
   GH_AW_OTLP_LOGS_MAX_BYTES: ${{ vars.GH_AW_OTLP_LOGS_MAX_BYTES }}
+  GH_AW_OTLP_ENDPOINTS: '[{"url":"${{ secrets.GH_AW_DEFAULT_OTLP_ENDPOINT || vars.GH_AW_DEFAULT_OTLP_ENDPOINT }}","headers":"${{ secrets.GH_AW_DEFAULT_OTLP_HEADERS }}"}]'
   GH_AW_OTLP_IF_MISSING: ignore
 
 jobs:
@@ -371,9 +364,7 @@ jobs:
           OTEL_EXPORTER_OTLP_HEADERS: ""
           OTEL_EXPORTER_OTLP_PROTOCOL: ""
           OTEL_RESOURCE_ATTRIBUTES: ""
-          OTEL_SDK_DISABLED: ""
           OTEL_SERVICE_NAME: ""
-          OTEL_TRACES_EXPORTER: ""
       - name: Interpolate variables and render templates
         uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
         with:
@@ -413,9 +404,7 @@ jobs:
           OTEL_EXPORTER_OTLP_HEADERS: ""
           OTEL_EXPORTER_OTLP_PROTOCOL: ""
           OTEL_RESOURCE_ATTRIBUTES: ""
-          OTEL_SDK_DISABLED: ""
           OTEL_SERVICE_NAME: ""
-          OTEL_TRACES_EXPORTER: ""
       - name: Substitute placeholders
         uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
         with:
@@ -467,9 +456,7 @@ jobs:
           OTEL_EXPORTER_OTLP_HEADERS: ""
           OTEL_EXPORTER_OTLP_PROTOCOL: ""
           OTEL_RESOURCE_ATTRIBUTES: ""
-          OTEL_SDK_DISABLED: ""
           OTEL_SERVICE_NAME: ""
-          OTEL_TRACES_EXPORTER: ""
       - name: Validate prompt placeholders
         run: |
           bash "${RUNNER_TEMP}/gh-aw/actions/validate_prompt_placeholders.sh"
@@ -483,9 +470,7 @@ jobs:
           OTEL_EXPORTER_OTLP_HEADERS: ""
           OTEL_EXPORTER_OTLP_PROTOCOL: ""
           OTEL_RESOURCE_ATTRIBUTES: ""
-          OTEL_SDK_DISABLED: ""
           OTEL_SERVICE_NAME: ""
-          OTEL_TRACES_EXPORTER: ""
       - name: Print prompt
         run: |
           bash "${RUNNER_TEMP}/gh-aw/actions/print_prompt_summary.sh"
@@ -499,9 +484,7 @@ jobs:
           OTEL_EXPORTER_OTLP_HEADERS: ""
           OTEL_EXPORTER_OTLP_PROTOCOL: ""
           OTEL_RESOURCE_ATTRIBUTES: ""
-          OTEL_SDK_DISABLED: ""
           OTEL_SERVICE_NAME: ""
-          OTEL_TRACES_EXPORTER: ""
       - name: Inventory installed skills
         if: success() || failure()
         uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
@@ -552,8 +535,10 @@ jobs:
 
   agent:
     name: agent
-    needs: activation
-    if: needs.activation.outputs.daily_ai_credits_exceeded != 'true'
+    needs:
+      - activation
+      - qa_preflight
+    if: (needs.activation.outputs.daily_ai_credits_exceeded != 'true') && (needs.qa_preflight.outputs.status == 'ready')
     runs-on: ubuntu-latest
     # Permissions for the agent job (workflow permissions default to none).
     permissions:
@@ -656,10 +641,12 @@ jobs:
         with:
           name: activation
           path: /tmp/gh-aw
-      - name: Prepare and validate QA context
+      - env:
+          QA_CONTEXT: ${{ needs.qa_preflight.outputs.context }}
+        name: Prepare browser QA files
         uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
         with:
-          script: "const fs = require('node:fs');\nconst directory = '/tmp/gh-aw/agent/auto-qa';\nconst workspace = process.env.GITHUB_WORKSPACE;\nif (!workspace) throw new Error('GitHub workspace is required for evidence capture.');\nconst evidenceDirectory = `${workspace}/auto-qa-evidence`;\nfs.mkdirSync(directory, { recursive: true });\nfs.mkdirSync(evidenceDirectory, { recursive: true });\nconst { owner, repo } = context.repo;\nconst number = context.payload.pull_request.number;\nconst expectedSha = context.payload.pull_request.head.sha;\nconst repository = `${owner}/${repo}`;\nconst result = {\n  status: 'blocked', number, repository, head_sha: expectedSha,\n  baseline_url: 'https://snapcraft.io',\n  evidence_directory: evidenceDirectory,\n  captured_at: new Date().toISOString(),\n};\ntry {\n  const { data: pr } = await github.rest.pulls.get({\n    owner, repo, pull_number: number,\n  });\n  result.pr = { title: pr.title, body: pr.body, url: pr.html_url };\n  if (pr.state !== 'open' || !pr.labels.some(l => l.name === 'auto-qa')) {\n    result.status = 'noop';\n    result.reason = 'PR closed or auto-qa label removed.';\n  } else {\n    if (pr.head.repo?.full_name !== repository || pr.head.sha !== expectedSha) {\n      throw new Error('PR head changed since labeling or is from a fork. Re-add auto-qa after the current demo is ready.');\n    }\n    const comments = await github.paginate(github.rest.issues.listComments, {\n      owner, repo, issue_number: number, per_page: 100,\n    });\n    const marker = `<!-- demos-controller:${repository}:${number} -->`;\n    const comment = comments.filter(c =>\n      c.user?.login === 'github-actions[bot]' && c.user.type === 'Bot' &&\n      c.body?.startsWith(marker + '\\n')\n    ).sort((a, b) => b.id - a.id)[0];\n    if (!comment || !/^## PR demo: ready\\s*$/m.test(comment.body)) {\n      throw new Error('No trusted, ready PR demo comment. Wait for PR demo: ready, then re-add auto-qa.');\n    }\n    const demo = comment.body.match(/^\\*\\*Demo:\\*\\* (https:\\/\\/\\S+)\\s*$/m)?.[1];\n    const expectedOrigin = `https://snapcraft-io-pr-${number}.marketplace.demos.canonical.com`;\n    if (!demo || (demo !== expectedOrigin && demo !== expectedOrigin + '/')) {\n      throw new Error('Demo URL does not match the expected HTTPS origin for this PR.');\n    }\n    const runMatch = comment.body.match(/\\[Workflow run\\]\\(https:\\/\\/github\\.com\\/([^/]+\\/[^/]+)\\/actions\\/runs\\/(\\d+)\\)/);\n    if (!runMatch || runMatch[1] !== repository) {\n      throw new Error('Demo comment has no workflow run in this repository.');\n    }\n    const { data: run } = await github.rest.actions.getWorkflowRun({\n      owner, repo, run_id: Number(runMatch[2]),\n    });\n    if (run.path !== '.github/workflows/demo.yaml' || run.event !== 'pull_request' ||\n        run.head_repository?.full_name !== repository || run.head_sha !== expectedSha ||\n        run.status !== 'completed' || run.conclusion !== 'success' ||\n        !run.pull_requests.some(p => p.number === number)) {\n      throw new Error('Demo deployment is stale, incomplete, failed, or not associated with this PR head.');\n    }\n    const { data: recent } = await github.rest.actions.listWorkflowRuns({\n      owner, repo, workflow_id: 'demo.yaml', head_sha: expectedSha,\n      event: 'pull_request', per_page: 1,\n    });\n    const latest = recent.workflow_runs[0];\n    if (latest?.id !== run.id || latest.run_attempt !== run.run_attempt ||\n        latest.status !== 'completed' || latest.conclusion !== 'success') {\n      throw new Error('A newer demo deployment or rerun exists. Wait for it to finish, then re-add auto-qa.');\n    }\n    const files = await github.paginate(github.rest.pulls.listFiles, {\n      owner, repo, pull_number: number, per_page: 100,\n    });\n    if (files.length !== pr.changed_files) {\n      throw new Error('Changed-file context is incomplete; refusing to guess regression coverage.');\n    }\n    const { data: current } = await github.rest.pulls.get({ owner, repo, pull_number: number });\n    if (current.head.sha !== expectedSha) {\n      throw new Error('PR head changed during context preparation. Re-add auto-qa after redeployment.');\n    }\n    result.files = files.map(f => ({\n      filename: f.filename, previous_filename: f.previous_filename,\n      status: f.status, patch: f.patch,\n    }));\n    result.demo_url = expectedOrigin;\n    result.deployment = {\n      run_id: run.id, run_attempt: run.run_attempt, url: run.html_url,\n      comment_id: comment.id, comment_updated_at: comment.updated_at,\n    };\n    result.status = 'ready';\n  }\n} catch (error) {\n  result.reason = error.message;\n  core.warning('QA context is blocked; the agent will report the reason without browsing.');\n}\nfs.writeFileSync(`${directory}/context.json`, JSON.stringify(result));"
+          script: "const fs = require('node:fs');\nconst result = JSON.parse(process.env.QA_CONTEXT);\nif (result.status !== 'ready') throw new Error('QA context is not ready.');\nconst directory = '/tmp/gh-aw/agent/auto-qa';\nconst workspace = process.env.GITHUB_WORKSPACE;\nif (!workspace) throw new Error('GitHub workspace is required for evidence capture.');\nresult.evidence_directory = `${workspace}/auto-qa-evidence`;\nfs.mkdirSync(directory, { recursive: true });\nfs.mkdirSync(result.evidence_directory, { recursive: true });\nfs.writeFileSync(`${directory}/context.json`, JSON.stringify(result));"
 
       - name: Install GitHub Copilot CLI
         run: bash "${RUNNER_TEMP}/gh-aw/actions/install_copilot_cli.sh" 1.0.103 --checksums-sha256 26cd3e4b32cde498e4961fb4d48e7b85d7859fc69af1a645a19201fdd577bdb2 --prefer-toolcache --cooldown-days 3
@@ -1430,6 +1417,7 @@ jobs:
       - activation
       - agent
       - detection
+      - qa_preflight
       - safe_outputs
     if: >
       always() && (needs.agent.result != 'skipped' || needs.activation.result == 'failure' || needs.activation.outputs.lockdown_check_failed == 'true' ||
@@ -1447,9 +1435,9 @@ jobs:
       cancel-in-progress: false
       queue: max
     env:
-      GH_AW_JOB_DISPLAY_NAMES: "{\"activation\":\"activation\",\"agent\":\"agent\",\"conclusion\":\"conclusion\",\"detection\":\"detection\",\"pre_activation\":\"pre_activation\",\"safe_outputs\":\"safe_outputs\"}"
-      GH_AW_JOB_RESULTS: "{\"activation\":{\"result\":\"${{ needs.activation.result }}\"},\"agent\":{\"result\":\"${{ needs.agent.result }}\"},\"detection\":{\"result\":\"${{ needs.detection.result }}\"},\"safe_outputs\":{\"result\":\"${{ needs.safe_outputs.result }}\"}}"
-      GH_AW_JOB_TIMING_ELIGIBLE: "{\"activation\":true,\"agent\":true,\"conclusion\":true,\"detection\":true,\"pre_activation\":true,\"safe_outputs\":true}"
+      GH_AW_JOB_DISPLAY_NAMES: "{\"activation\":\"activation\",\"agent\":\"agent\",\"conclusion\":\"conclusion\",\"detection\":\"detection\",\"pre_activation\":\"pre_activation\",\"qa_preflight\":\"qa_preflight\",\"safe_outputs\":\"safe_outputs\"}"
+      GH_AW_JOB_RESULTS: "{\"activation\":{\"result\":\"${{ needs.activation.result }}\"},\"agent\":{\"result\":\"${{ needs.agent.result }}\"},\"detection\":{\"result\":\"${{ needs.detection.result }}\"},\"qa_preflight\":{\"result\":\"${{ needs.qa_preflight.result }}\"},\"safe_outputs\":{\"result\":\"${{ needs.safe_outputs.result }}\"}}"
+      GH_AW_JOB_TIMING_ELIGIBLE: "{\"activation\":true,\"agent\":true,\"conclusion\":true,\"detection\":true,\"pre_activation\":true,\"qa_preflight\":true,\"safe_outputs\":true}"
       GH_AW_RUNTIME_FEATURES: ${{ vars.GH_AW_RUNTIME_FEATURES }}
     outputs:
       incomplete_count: ${{ steps.report_incomplete.outputs.incomplete_count }}
@@ -2026,6 +2014,10 @@ jobs:
         id: redact_detection_logs
         if: always() && steps.detection_guard.outputs.run_detection == 'true'
         uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
+        env:
+          GH_AW_SECRET_NAMES: 'GH_AW_DEFAULT_OTLP_ENDPOINT,GH_AW_DEFAULT_OTLP_HEADERS'
+          SECRET_GH_AW_DEFAULT_OTLP_ENDPOINT: ${{ secrets.GH_AW_DEFAULT_OTLP_ENDPOINT }}
+          SECRET_GH_AW_DEFAULT_OTLP_HEADERS: ${{ secrets.GH_AW_DEFAULT_OTLP_HEADERS }}
         with:
           script: |
             const path = require('path');
@@ -2058,6 +2050,10 @@ jobs:
         id: redact_detection_artifacts
         if: always() && steps.detection_guard.outputs.run_detection == 'true'
         uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
+        env:
+          GH_AW_SECRET_NAMES: 'GH_AW_DEFAULT_OTLP_ENDPOINT,GH_AW_DEFAULT_OTLP_HEADERS'
+          SECRET_GH_AW_DEFAULT_OTLP_ENDPOINT: ${{ secrets.GH_AW_DEFAULT_OTLP_ENDPOINT }}
+          SECRET_GH_AW_DEFAULT_OTLP_HEADERS: ${{ secrets.GH_AW_DEFAULT_OTLP_HEADERS }}
         with:
           script: |
             const path = require('path');
@@ -2156,6 +2152,141 @@ jobs:
             setupGlobals(core, github, context, exec, io, getOctokit);
             const { main } = require(path.join(actionsDir, 'check_membership.cjs'));
             await main();
+
+  qa_preflight:
+    name: qa_preflight
+    needs: activation
+    runs-on: ubuntu-latest
+    # Permissions for the qa_preflight job (workflow permissions default to none).
+    permissions:
+      actions: read # Read workflow runs and artifacts for workflow context.
+      contents: read
+      issues: read # Read issues and comments for workflow context.
+      pull-requests: read # Read pull requests and review comments for workflow context.
+    outputs:
+      context: "${{ steps.context.outputs.context }}"
+      status: "${{ steps.context.outputs.status }}"
+    steps:
+      - name: Configure GH_HOST for enterprise compatibility
+        id: ghes-host-config
+        shell: bash
+        run: | # zizmor: ignore[github-env] - GITHUB_SERVER_URL is set by GitHub Actions, not user input.
+          # Derive GH_HOST from GITHUB_SERVER_URL so the gh CLI targets the correct
+          # GitHub instance (GHES/GHEC). On github.com this is a harmless no-op.
+          GH_HOST="${GITHUB_SERVER_URL#https://}"
+          GH_HOST="${GH_HOST#http://}"
+          echo "GH_HOST=${GH_HOST}" >> "$GITHUB_ENV"
+      - name: Prepare and validate QA context
+        id: context
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
+        with:
+          script: |
+            const fs = require('node:fs');
+            const directory = '/tmp/gh-aw/agent/auto-qa';
+            const workspace = process.env.GITHUB_WORKSPACE;
+            if (!workspace) throw new Error('GitHub workspace is required for evidence capture.');
+            const evidenceDirectory = `${workspace}/auto-qa-evidence`;
+            fs.mkdirSync(directory, { recursive: true });
+            fs.mkdirSync(evidenceDirectory, { recursive: true });
+            const { owner, repo } = context.repo;
+            const number = context.payload.pull_request.number;
+            const expectedSha = context.payload.pull_request.head.sha;
+            const repository = `${owner}/${repo}`;
+            const result = {
+              status: 'blocked', number, repository, head_sha: expectedSha,
+              baseline_url: 'https://snapcraft.io',
+              evidence_directory: evidenceDirectory,
+              captured_at: new Date().toISOString(),
+            };
+            try {
+              const { data: pr } = await github.rest.pulls.get({
+                owner, repo, pull_number: number,
+              });
+              result.pr = { title: pr.title, body: pr.body, url: pr.html_url };
+              if (pr.state !== 'open' || !pr.labels.some(l => l.name === 'auto-qa')) {
+                result.status = 'noop';
+                result.reason = 'PR closed or auto-qa label removed.';
+              } else {
+                if (pr.head.repo?.full_name !== repository || pr.head.sha !== expectedSha) {
+                  throw new Error('PR head changed since labeling or is from a fork. Re-add auto-qa after the current demo is ready.');
+                }
+                const comments = await github.paginate(github.rest.issues.listComments, {
+                  owner, repo, issue_number: number, per_page: 100,
+                });
+                const marker = `<!-- demos-controller:${repository}:${number} -->`;
+                const comment = comments.filter(c =>
+                  c.user?.login === 'github-actions[bot]' && c.user.type === 'Bot' &&
+                  c.body?.startsWith(marker + '\n')
+                ).sort((a, b) => b.id - a.id)[0];
+                if (!comment || !/^## PR demo: ready\s*$/m.test(comment.body)) {
+                  throw new Error('No trusted, ready PR demo comment. Wait for PR demo: ready, then re-add auto-qa.');
+                }
+                const demo = comment.body.match(/^\*\*Demo:\*\* (https:\/\/\S+)\s*$/m)?.[1];
+                const expectedOrigin = `https://snapcraft-io-pr-${number}.marketplace.demos.canonical.com`;
+                if (!demo || (demo !== expectedOrigin && demo !== expectedOrigin + '/')) {
+                  throw new Error('Demo URL does not match the expected HTTPS origin for this PR.');
+                }
+                const runMatch = comment.body.match(/\[Workflow run\]\(https:\/\/github\.com\/([^/]+\/[^/]+)\/actions\/runs\/(\d+)\)/);
+                if (!runMatch || runMatch[1] !== repository) {
+                  throw new Error('Demo comment has no workflow run in this repository.');
+                }
+                const { data: run } = await github.rest.actions.getWorkflowRun({
+                  owner, repo, run_id: Number(runMatch[2]),
+                });
+                if (run.path !== '.github/workflows/demo.yaml' || run.event !== 'pull_request' ||
+                    run.head_repository?.full_name !== repository || run.head_sha !== expectedSha ||
+                    run.status !== 'completed' || run.conclusion !== 'success' ||
+                    !run.pull_requests.some(p => p.number === number)) {
+                  throw new Error('Demo deployment is stale, incomplete, failed, or not associated with this PR head.');
+                }
+                const { data: recent } = await github.rest.actions.listWorkflowRuns({
+                  owner, repo, workflow_id: 'demo.yaml', head_sha: expectedSha,
+                  event: 'pull_request', per_page: 1,
+                });
+                const latest = recent.workflow_runs[0];
+                if (latest?.id !== run.id || latest.run_attempt !== run.run_attempt ||
+                    latest.status !== 'completed' || latest.conclusion !== 'success') {
+                  throw new Error('A newer demo deployment or rerun exists. Wait for it to finish, then re-add auto-qa.');
+                }
+                const files = await github.paginate(github.rest.pulls.listFiles, {
+                  owner, repo, pull_number: number, per_page: 100,
+                });
+                if (files.length !== pr.changed_files) {
+                  throw new Error('Changed-file context is incomplete; refusing to guess regression coverage.');
+                }
+                const { data: current } = await github.rest.pulls.get({ owner, repo, pull_number: number });
+                if (current.head.sha !== expectedSha) {
+                  throw new Error('PR head changed during context preparation. Re-add auto-qa after redeployment.');
+                }
+                result.files = files.map(f => ({
+                  filename: f.filename, previous_filename: f.previous_filename,
+                  status: f.status, patch: f.patch,
+                }));
+                result.demo_url = expectedOrigin;
+                result.deployment = {
+                  run_id: run.id, run_attempt: run.run_attempt, url: run.html_url,
+                  comment_id: comment.id, comment_updated_at: comment.updated_at,
+                };
+                result.status = 'ready';
+              }
+            } catch (error) {
+              result.reason = error.message;
+              core.warning('QA context is blocked; inference will be skipped. See the run summary.');
+            }
+            // Bound both GitHub job outputs and the receiving process env value.
+            let serialized = JSON.stringify(result);
+            if (Buffer.byteLength(serialized, 'utf8') > 60000) {
+              result.status = 'blocked';
+              result.reason = 'QA context exceeds the safe job-output size limit.';
+              serialized = '';
+            }
+            core.setOutput('status', result.status);
+            if (result.status === 'ready') core.setOutput('context', serialized);
+            await core.summary.addHeading(`Auto QA preflight: ${result.status}`)
+              .addRaw(result.status === 'ready' ? 'Validated context; browser QA may start.' :
+                'Inference skipped. Inspect the preflight log for the reason; fix it and re-add auto-qa.')
+              .write();
+            if (result.reason) core.info(result.reason);
 
   safe_outputs:
     name: safe_outputs

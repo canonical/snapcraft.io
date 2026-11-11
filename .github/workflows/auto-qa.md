@@ -19,13 +19,6 @@ permissions:
   copilot-requests: write
 checkout: false
 strict: true
-# Keep this QA workflow's evidence in GitHub; do not inherit an OTLP destination.
-env:
-  OTEL_SDK_DISABLED: "true"
-  OTEL_TRACES_EXPORTER: "none"
-  OTEL_EXPORTER_OTLP_ENDPOINT: ""
-  OTEL_EXPORTER_OTLP_HEADERS: ""
-  GH_AW_OTLP_ENDPOINTS: "[]"
 timeout-minutes: 30
 # Workflow-local caps; do not inherit the much larger organization defaults.
 max-ai-credits: 50
@@ -36,110 +29,161 @@ concurrency:
 network:
   allowed:
     - snapcraft.io
-    # gh-aw accepts static domains only; the preflight and prompt restrict
-    # navigation to this PR's exact origin within the demo service.
+    # The firewall allows the demo service domain (including other PR demos).
+    # Preflight validates this PR's exact URL; the prompt forbids navigating
+    # to any other demo. The firewall alone does not enforce that PR boundary.
     - marketplace.demos.canonical.com
     - assets.ubuntu.com
     - fonts.googleapis.com
     - fonts.gstatic.com
     - dashboard.snapcraftcontent.com
+jobs:
+  agent:
+    needs: [qa_preflight]
+    if: needs.qa_preflight.outputs.status == 'ready'
+  qa_preflight:
+    needs: [activation]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      issues: read
+      pull-requests: read
+      actions: read
+    outputs:
+      status: ${{ steps.context.outputs.status }}
+      context: ${{ steps.context.outputs.context }}
+    steps:
+      # Read the PR, controller demo comment, deployment and diff through GitHub.
+      # Reject stale/untrusted demos before starting inference. Return validated
+      # context only when ready; explain blocked/noop results in the run summary.
+      # Never check out or execute PR code.
+      - name: Prepare and validate QA context
+        id: context
+        uses: actions/github-script@v9
+        with:
+          script: |
+            const fs = require('node:fs');
+            const directory = '/tmp/gh-aw/agent/auto-qa';
+            const workspace = process.env.GITHUB_WORKSPACE;
+            if (!workspace) throw new Error('GitHub workspace is required for evidence capture.');
+            const evidenceDirectory = `${workspace}/auto-qa-evidence`;
+            fs.mkdirSync(directory, { recursive: true });
+            fs.mkdirSync(evidenceDirectory, { recursive: true });
+            const { owner, repo } = context.repo;
+            const number = context.payload.pull_request.number;
+            const expectedSha = context.payload.pull_request.head.sha;
+            const repository = `${owner}/${repo}`;
+            const result = {
+              status: 'blocked', number, repository, head_sha: expectedSha,
+              baseline_url: 'https://snapcraft.io',
+              evidence_directory: evidenceDirectory,
+              captured_at: new Date().toISOString(),
+            };
+            try {
+              const { data: pr } = await github.rest.pulls.get({
+                owner, repo, pull_number: number,
+              });
+              result.pr = { title: pr.title, body: pr.body, url: pr.html_url };
+              if (pr.state !== 'open' || !pr.labels.some(l => l.name === 'auto-qa')) {
+                result.status = 'noop';
+                result.reason = 'PR closed or auto-qa label removed.';
+              } else {
+                if (pr.head.repo?.full_name !== repository || pr.head.sha !== expectedSha) {
+                  throw new Error('PR head changed since labeling or is from a fork. Re-add auto-qa after the current demo is ready.');
+                }
+                const comments = await github.paginate(github.rest.issues.listComments, {
+                  owner, repo, issue_number: number, per_page: 100,
+                });
+                const marker = `<!-- demos-controller:${repository}:${number} -->`;
+                const comment = comments.filter(c =>
+                  c.user?.login === 'github-actions[bot]' && c.user.type === 'Bot' &&
+                  c.body?.startsWith(marker + '\n')
+                ).sort((a, b) => b.id - a.id)[0];
+                if (!comment || !/^## PR demo: ready\s*$/m.test(comment.body)) {
+                  throw new Error('No trusted, ready PR demo comment. Wait for PR demo: ready, then re-add auto-qa.');
+                }
+                const demo = comment.body.match(/^\*\*Demo:\*\* (https:\/\/\S+)\s*$/m)?.[1];
+                const expectedOrigin = `https://snapcraft-io-pr-${number}.marketplace.demos.canonical.com`;
+                if (!demo || (demo !== expectedOrigin && demo !== expectedOrigin + '/')) {
+                  throw new Error('Demo URL does not match the expected HTTPS origin for this PR.');
+                }
+                const runMatch = comment.body.match(/\[Workflow run\]\(https:\/\/github\.com\/([^/]+\/[^/]+)\/actions\/runs\/(\d+)\)/);
+                if (!runMatch || runMatch[1] !== repository) {
+                  throw new Error('Demo comment has no workflow run in this repository.');
+                }
+                const { data: run } = await github.rest.actions.getWorkflowRun({
+                  owner, repo, run_id: Number(runMatch[2]),
+                });
+                if (run.path !== '.github/workflows/demo.yaml' || run.event !== 'pull_request' ||
+                    run.head_repository?.full_name !== repository || run.head_sha !== expectedSha ||
+                    run.status !== 'completed' || run.conclusion !== 'success' ||
+                    !run.pull_requests.some(p => p.number === number)) {
+                  throw new Error('Demo deployment is stale, incomplete, failed, or not associated with this PR head.');
+                }
+                const { data: recent } = await github.rest.actions.listWorkflowRuns({
+                  owner, repo, workflow_id: 'demo.yaml', head_sha: expectedSha,
+                  event: 'pull_request', per_page: 1,
+                });
+                const latest = recent.workflow_runs[0];
+                if (latest?.id !== run.id || latest.run_attempt !== run.run_attempt ||
+                    latest.status !== 'completed' || latest.conclusion !== 'success') {
+                  throw new Error('A newer demo deployment or rerun exists. Wait for it to finish, then re-add auto-qa.');
+                }
+                const files = await github.paginate(github.rest.pulls.listFiles, {
+                  owner, repo, pull_number: number, per_page: 100,
+                });
+                if (files.length !== pr.changed_files) {
+                  throw new Error('Changed-file context is incomplete; refusing to guess regression coverage.');
+                }
+                const { data: current } = await github.rest.pulls.get({ owner, repo, pull_number: number });
+                if (current.head.sha !== expectedSha) {
+                  throw new Error('PR head changed during context preparation. Re-add auto-qa after redeployment.');
+                }
+                result.files = files.map(f => ({
+                  filename: f.filename, previous_filename: f.previous_filename,
+                  status: f.status, patch: f.patch,
+                }));
+                result.demo_url = expectedOrigin;
+                result.deployment = {
+                  run_id: run.id, run_attempt: run.run_attempt, url: run.html_url,
+                  comment_id: comment.id, comment_updated_at: comment.updated_at,
+                };
+                result.status = 'ready';
+              }
+            } catch (error) {
+              result.reason = error.message;
+              core.warning('QA context is blocked; inference will be skipped. See the run summary.');
+            }
+            // Bound both GitHub job outputs and the receiving process env value.
+            let serialized = JSON.stringify(result);
+            if (Buffer.byteLength(serialized, 'utf8') > 60000) {
+              result.status = 'blocked';
+              result.reason = 'QA context exceeds the safe job-output size limit.';
+              serialized = '';
+            }
+            core.setOutput('status', result.status);
+            if (result.status === 'ready') core.setOutput('context', serialized);
+            await core.summary.addHeading(`Auto QA preflight: ${result.status}`)
+              .addRaw(result.status === 'ready' ? 'Validated context; browser QA may start.' :
+                'Inference skipped. Inspect the preflight log for the reason; fix it and re-add auto-qa.')
+              .write();
+            if (result.reason) core.info(result.reason);
 steps:
-  - name: Prepare and validate QA context
+  - name: Prepare browser QA files
     uses: actions/github-script@v9
+    env:
+      QA_CONTEXT: ${{ needs.qa_preflight.outputs.context }}
     with:
       script: |
         const fs = require('node:fs');
+        const result = JSON.parse(process.env.QA_CONTEXT);
+        if (result.status !== 'ready') throw new Error('QA context is not ready.');
         const directory = '/tmp/gh-aw/agent/auto-qa';
         const workspace = process.env.GITHUB_WORKSPACE;
         if (!workspace) throw new Error('GitHub workspace is required for evidence capture.');
-        const evidenceDirectory = `${workspace}/auto-qa-evidence`;
+        result.evidence_directory = `${workspace}/auto-qa-evidence`;
         fs.mkdirSync(directory, { recursive: true });
-        fs.mkdirSync(evidenceDirectory, { recursive: true });
-        const { owner, repo } = context.repo;
-        const number = context.payload.pull_request.number;
-        const expectedSha = context.payload.pull_request.head.sha;
-        const repository = `${owner}/${repo}`;
-        const result = {
-          status: 'blocked', number, repository, head_sha: expectedSha,
-          baseline_url: 'https://snapcraft.io',
-          evidence_directory: evidenceDirectory,
-          captured_at: new Date().toISOString(),
-        };
-        try {
-          const { data: pr } = await github.rest.pulls.get({
-            owner, repo, pull_number: number,
-          });
-          result.pr = { title: pr.title, body: pr.body, url: pr.html_url };
-          if (pr.state !== 'open' || !pr.labels.some(l => l.name === 'auto-qa')) {
-            result.status = 'noop';
-            result.reason = 'PR closed or auto-qa label removed.';
-          } else {
-            if (pr.head.repo?.full_name !== repository || pr.head.sha !== expectedSha) {
-              throw new Error('PR head changed since labeling or is from a fork. Re-add auto-qa after the current demo is ready.');
-            }
-            const comments = await github.paginate(github.rest.issues.listComments, {
-              owner, repo, issue_number: number, per_page: 100,
-            });
-            const marker = `<!-- demos-controller:${repository}:${number} -->`;
-            const comment = comments.filter(c =>
-              c.user?.login === 'github-actions[bot]' && c.user.type === 'Bot' &&
-              c.body?.startsWith(marker + '\n')
-            ).sort((a, b) => b.id - a.id)[0];
-            if (!comment || !/^## PR demo: ready\s*$/m.test(comment.body)) {
-              throw new Error('No trusted, ready PR demo comment. Wait for PR demo: ready, then re-add auto-qa.');
-            }
-            const demo = comment.body.match(/^\*\*Demo:\*\* (https:\/\/\S+)\s*$/m)?.[1];
-            const expectedOrigin = `https://snapcraft-io-pr-${number}.marketplace.demos.canonical.com`;
-            if (!demo || (demo !== expectedOrigin && demo !== expectedOrigin + '/')) {
-              throw new Error('Demo URL does not match the expected HTTPS origin for this PR.');
-            }
-            const runMatch = comment.body.match(/\[Workflow run\]\(https:\/\/github\.com\/([^/]+\/[^/]+)\/actions\/runs\/(\d+)\)/);
-            if (!runMatch || runMatch[1] !== repository) {
-              throw new Error('Demo comment has no workflow run in this repository.');
-            }
-            const { data: run } = await github.rest.actions.getWorkflowRun({
-              owner, repo, run_id: Number(runMatch[2]),
-            });
-            if (run.path !== '.github/workflows/demo.yaml' || run.event !== 'pull_request' ||
-                run.head_repository?.full_name !== repository || run.head_sha !== expectedSha ||
-                run.status !== 'completed' || run.conclusion !== 'success' ||
-                !run.pull_requests.some(p => p.number === number)) {
-              throw new Error('Demo deployment is stale, incomplete, failed, or not associated with this PR head.');
-            }
-            const { data: recent } = await github.rest.actions.listWorkflowRuns({
-              owner, repo, workflow_id: 'demo.yaml', head_sha: expectedSha,
-              event: 'pull_request', per_page: 1,
-            });
-            const latest = recent.workflow_runs[0];
-            if (latest?.id !== run.id || latest.run_attempt !== run.run_attempt ||
-                latest.status !== 'completed' || latest.conclusion !== 'success') {
-              throw new Error('A newer demo deployment or rerun exists. Wait for it to finish, then re-add auto-qa.');
-            }
-            const files = await github.paginate(github.rest.pulls.listFiles, {
-              owner, repo, pull_number: number, per_page: 100,
-            });
-            if (files.length !== pr.changed_files) {
-              throw new Error('Changed-file context is incomplete; refusing to guess regression coverage.');
-            }
-            const { data: current } = await github.rest.pulls.get({ owner, repo, pull_number: number });
-            if (current.head.sha !== expectedSha) {
-              throw new Error('PR head changed during context preparation. Re-add auto-qa after redeployment.');
-            }
-            result.files = files.map(f => ({
-              filename: f.filename, previous_filename: f.previous_filename,
-              status: f.status, patch: f.patch,
-            }));
-            result.demo_url = expectedOrigin;
-            result.deployment = {
-              run_id: run.id, run_attempt: run.run_attempt, url: run.html_url,
-              comment_id: comment.id, comment_updated_at: comment.updated_at,
-            };
-            result.status = 'ready';
-          }
-        } catch (error) {
-          result.reason = error.message;
-          core.warning('QA context is blocked; the agent will report the reason without browsing.');
-        }
+        fs.mkdirSync(result.evidence_directory, { recursive: true });
         fs.writeFileSync(`${directory}/context.json`, JSON.stringify(result));
 tools:
   github:
@@ -293,15 +337,44 @@ found. Use this structure:
 
 ## Auto QA — Pass / Regressions found / Partial / Blocked
 
-- **Revision:** captured head SHA; validated demo and deployment run links.
-- **Baseline:** live https://snapcraft.io, capture time, **not an exact main-commit
-  baseline**. State if production may lag main or data/configuration differs.
 - **Scope:** QA instructions followed, or regression-only because none were usable.
+
+Keep the report introduction to Scope only. Record the captured head SHA, demo
+and deployment links, production capture time and baseline limitations under
+Coverage gaps and evidence instead. Production is live https://snapcraft.io,
+**not an exact main-commit baseline**; disclose deployment/data/config differences.
 
 ### Tested routes and steps
 
-| Route / state | Viewport | Actions actually performed | Expected vs actual | Result | Screenshot pair |
-| --- | --- | --- | --- | --- | --- |
+Use a separate subsection for each tested route/state, not one summary table:
+
+#### Route / state (replace with the actual route and UI state)
+
+Viewport: desktop (1440x900) or mobile (390x844).
+
+Actions performed:
+
+1. Describe each action actually performed.
+2. State the expected behavior and what was observed.
+
+Result: choose **🟢 Pass**, **🔵 Needs a closer look/unsure**, or **🔴 Failed**.
+Unexecuted checks and uninspected comparisons cannot pass; explain limitations.
+
+Only for a failed check, include a collapsible comparison for each tested viewport:
+
+<details>
+<summary>Desktop (1440x900) or mobile (390x844)</summary>
+
+| Expected (production)                   | Actual (demo)                     |
+| --------------------------------------- | --------------------------------- |
+| Production screenshot/link and filename | Demo screenshot/link and filename |
+
+</details>
+
+Use image links only when they resolve to published screenshots; an artifact ZIP
+URL is not an embeddable image. If publication is pending or an image is missing,
+use the actual filename and disclose that limitation rather than inventing a URL.
+For passing/uncertain checks, list screenshot filenames inline without a table.
 
 ### Findings
 

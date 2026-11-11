@@ -7,7 +7,7 @@ const { test } = require("node:test");
 
 const workflowPath = join(__dirname, "../workflows/auto-qa.md");
 const source = readFileSync(workflowPath, "utf8");
-const script = source.split("      script: |\n")[1]?.split("\ntools:\n")[0];
+const script = source.split("          script: |\n")[1]?.split("\nsteps:\n")[0];
 assert.ok(script, "The workflow must contain the context preflight");
 const AsyncFunction = Object.getPrototypeOf(async function () {}).constructor;
 const prepare = new AsyncFunction(
@@ -16,7 +16,7 @@ const prepare = new AsyncFunction(
   "core",
   "require",
   "process",
-  script.replace(/^        /gm, ""),
+  script.replace(/^            /gm, ""),
 );
 
 function fixtures() {
@@ -68,6 +68,8 @@ function fixtures() {
 
 async function runPreflight(data, workspace = "/runner/work/snapcraft.io") {
   let result;
+  let reason;
+  const outputs = {};
   let reads = 0;
   const calls = [];
   const createdDirectories = [];
@@ -125,14 +127,34 @@ async function runPreflight(data, workspace = "/runner/work/snapcraft.io") {
       repo: { owner: "canonical", repo: "snapcraft.io" },
       payload: { pull_request: { number: 42, head: { sha: "a".repeat(40) } } },
     },
-    { warning() {} },
+    {
+      warning() {},
+      info(message) {
+        reason = message;
+      },
+      setOutput(name, value) {
+        outputs[name] = value;
+      },
+      summary: {
+        addHeading() {
+          return this;
+        },
+        addRaw() {
+          return this;
+        },
+        async write() {},
+      },
+    },
     (module) => {
       assert.equal(module, "node:fs");
       return fs;
     },
     { env: { GITHUB_WORKSPACE: workspace, RUNNER_TEMP: "/runner/temp" } },
   );
-  return { result, calls, createdDirectories };
+  result = outputs.context
+    ? JSON.parse(outputs.context)
+    : { status: outputs.status, reason };
+  return { result, calls, createdDirectories, outputs };
 }
 
 for (const body of [
@@ -371,8 +393,10 @@ for (const [name, change] of [
   test(`blocks without a browsable URL: ${name}`, async () => {
     const data = fixtures();
     change(data);
-    const { result } = await runPreflight(data);
+    const { result, outputs } = await runPreflight(data);
     assert.equal(result.status, "blocked");
+    assert.equal(outputs.status, "blocked");
+    assert.equal(outputs.context, undefined);
     assert.ok(result.reason);
     assert.equal(result.demo_url, undefined);
   });
@@ -395,8 +419,10 @@ for (const [name, change] of [
   test(`no-ops before fetching demo context: ${name}`, async () => {
     const data = fixtures();
     change(data);
-    const { result, calls } = await runPreflight(data);
+    const { result, calls, outputs } = await runPreflight(data);
     assert.equal(result.status, "noop");
+    assert.equal(outputs.status, "noop");
+    assert.equal(outputs.context, undefined);
     assert.deepEqual(
       calls.map((c) => c.name),
       ["pr"],
@@ -440,6 +466,100 @@ test("preserves missing patches as a coverage limitation, not executable context
   assert.equal(result.status, "ready");
   assert.equal(result.files[0].patch, undefined);
   assert.equal(result.pr.body, data.pr.body);
+});
+
+test("blocks oversized context instead of starting inference with truncated outputs", async () => {
+  const data = fixtures();
+  data.files[0].patch = "x".repeat(200000);
+  const { result, outputs } = await runPreflight(data);
+  assert.equal(result.status, "blocked");
+  assert.match(result.reason, /job-output size limit/);
+  assert.equal(outputs.context, undefined);
+});
+
+test("gates the compiled agent job on ready preflight, preserving daily credit checks", () => {
+  const lock = readFileSync(
+    join(__dirname, "../workflows/auto-qa.lock.yml"),
+    "utf8",
+  );
+  const agent = lock.split("\n  agent:\n")[1].split("\n  detection:\n")[0];
+  assert.match(agent, /needs:\n      - activation\n      - qa_preflight/);
+  assert.match(
+    agent,
+    /if: .*daily_ai_credits_exceeded != 'true'.*needs.qa_preflight.outputs.status == 'ready'/,
+  );
+  assert.match(lock, /  qa_preflight:\n/);
+  assert.match(lock, /status: "\$\{\{ steps.context.outputs.status \}\}"/);
+  assert.match(
+    agent,
+    /QA_CONTEXT: \$\{\{ needs.qa_preflight.outputs.context \}\}/,
+  );
+  assert.ok(
+    agent.indexOf("Prepare browser QA files") <
+      agent.indexOf("Execute GitHub Copilot CLI"),
+  );
+});
+
+test("materializes ready context as data in the agent's own workspace", async () => {
+  const materialize = source
+    .split("\nsteps:\n")[1]
+    .split("      script: |\n")[1]
+    .split("\ntools:\n")[0];
+  const writeContext = new AsyncFunction(
+    "require",
+    "process",
+    materialize.replace(/^        /gm, ""),
+  );
+  const { outputs } = await runPreflight(fixtures());
+  const files = new Map();
+  const directories = [];
+  const fs = {
+    mkdirSync(path) {
+      directories.push(path);
+    },
+    writeFileSync(path, value) {
+      files.set(path, JSON.parse(value));
+    },
+  };
+  const env = {
+    QA_CONTEXT: outputs.context,
+    GITHUB_WORKSPACE: "/agent/workspace",
+  };
+  await writeContext(() => fs, { env });
+  const context = files.get("/tmp/gh-aw/agent/auto-qa/context.json");
+  assert.equal(context.status, "ready");
+  assert.equal(context.evidence_directory, "/agent/workspace/auto-qa-evidence");
+  assert.ok(directories.includes(context.evidence_directory));
+  assert.deepEqual(context.files, fixtures().files);
+  for (const status of ["blocked", "noop"]) {
+    await assert.rejects(
+      writeContext(() => fs, {
+        env: { ...env, QA_CONTEXT: JSON.stringify({ status }) },
+      }),
+      /not ready/,
+    );
+  }
+  await assert.rejects(
+    writeContext(() => fs, { env: { ...env, QA_CONTEXT: "" } }),
+    SyntaxError,
+  );
+});
+
+test("formats route reports as sections with failure-only screenshot comparisons", () => {
+  const report = source.split("Use `add_comment` exactly once")[1];
+  assert.doesNotMatch(report, /\*\*(Revision|Baseline):\*\*/);
+  assert.match(report, /\*\*Scope:\*\*/);
+  assert.match(report, /#### Route \/ state/);
+  for (const status of [
+    "🟢 Pass",
+    "🔵 Needs a closer look/unsure",
+    "🔴 Failed",
+  ])
+    assert.ok(report.includes(status));
+  assert.match(report, /Only for a failed check/);
+  assert.match(report, /<details>/);
+  assert.match(report, /Expected \(production\).*Actual \(demo\)/);
+  assert.doesNotMatch(report, /\| Route \/ state \| Viewport/);
 });
 
 test("keeps activation and output contracts scoped", () => {
@@ -561,14 +681,7 @@ test("launches the credential-bearing CLI proxy with its manifest digest", () =>
   assert.equal(lock.match(/CLI_PROXY_IMAGE: '([^']+)'/)[1], proxy.pinned_image);
 });
 
-test("does not inherit telemetry endpoints or telemetry credentials", () => {
-  const lock = readFileSync(
-    join(__dirname, "../workflows/auto-qa.lock.yml"),
-    "utf8",
-  );
-  assert.match(lock, /OTEL_SDK_DISABLED: "true"/);
-  assert.match(lock, /GH_AW_OTLP_ENDPOINTS: "\[\]"/);
-  assert.match(lock, /OTEL_EXPORTER_OTLP_ENDPOINT: ""/);
-  assert.match(lock, /OTEL_EXPORTER_OTLP_HEADERS: ""/);
-  assert.doesNotMatch(lock, /secrets\.GH_AW_DEFAULT_OTLP/);
+test("leaves telemetry configuration to the gh-aw defaults", () => {
+  const frontmatter = source.split("\n---\n")[0];
+  assert.doesNotMatch(frontmatter, /(?:OTEL_|GH_AW_OTLP_)/);
 });

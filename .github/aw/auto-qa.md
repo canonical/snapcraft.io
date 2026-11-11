@@ -22,8 +22,12 @@ merge PRs and should not be a required branch-protection check.
 2. Wait for the controller's `github-actions[bot]` comment to say **PR demo: ready**
    and for its linked **PR demo** workflow to complete successfully at the PR head.
 3. Add **auto-qa**. New commits, opening a PR and posting comments do not trigger it.
-4. Read the advisory report: actual routes/actions, comparisons, findings, skipped
-   coverage and screenshot filenames. Partial or Blocked is not a pass.
+4. Check the **Auto QA preflight** run summary first. Blocked/noop results skip
+   the agent job entirely, with the reason in the preflight log and no PR comment.
+   Fix the blocker and re-add the label to retry. Ready results start browser QA.
+   Read its advisory report: per-route action lists and traffic-light results,
+   collapsible expected/actual screenshots for failures, findings and coverage
+   gaps. Partial or Blocked is not a pass.
 5. Open that run's artifacts and download **auto-qa-evidence**. Evidence retention
    is 14 days unless overridden by repository gh-aw settings.
 
@@ -39,8 +43,13 @@ configuration or deployment timing from the PR's exact base commit.
 
 ## Evidence pipeline
 
-The trusted preflight creates `GITHUB_WORKSPACE/auto-qa-evidence` and provides its
-absolute path in `context.json`. Copilot already has access to that workspace.
+The deterministic `qa_preflight` job validates context before inference, passing
+ready context through a job output (never a public artifact). Context over
+60,000 UTF-8 bytes is blocked rather than risking GitHub's output limit or the
+receiving process's per-environment-variable limit.
+The agent job runs only for `ready`; its trusted setup creates
+`GITHUB_WORKSPACE/auto-qa-evidence` and writes the local `context.json`, adjusting
+the evidence path to that runner's workspace. Copilot already has access there.
 The agent captures PNGs directly there and never needs directory-creation, copy
 commands, extra directory permissions or access to the runner's temporary area.
 Context, credentials, cookies and browser profiles must not be stored there.
@@ -83,16 +92,16 @@ Uninspected images must not be marked as passing visual comparisons.
   to complete those reads produces Blocked (freshness unverified). This final
   check is an agent instruction, not an atomic server-side reporting transaction.
 - Diagnostic handlers must not create repository issues. Threat detection is
-  enabled and fails closed. Optional OTLP export and inherited collector
-  endpoints/headers are explicitly disabled.
+  enabled and fails closed. Telemetry uses the gh-aw defaults, including any
+  configured organization-level collector settings.
 
 ## Cost controls
 
-| Guardrail | AI credits |
-| --- | ---: |
-| QA agent, per run | 50 |
-| Threat detector, per run | 5 |
-| Rolling 24-hour activation guard, per triggering user for this workflow | 150 |
+| Guardrail                                                               | AI credits |
+| ----------------------------------------------------------------------- | ---------: |
+| QA agent, per run                                                       |         50 |
+| Threat detector, per run                                                |          5 |
+| Rolling 24-hour activation guard, per triggering user for this workflow |        150 |
 
 Main/detector limits are separate: up to 55 credits combined per run. These local
 values replace the larger organization defaults. The daily activation check is
@@ -120,7 +129,7 @@ installing application dependencies. Fixtures cover ready/missing/stale/spoofed
 and failed demos, superseded deployments, closed/unlabeled/fork PRs, API errors,
 changed heads, complete context, pre-created workspace evidence, relative PNG
 policy, missing workspace, local credit caps, direct proxy digest pinning,
-diagnostic issue suppression and telemetry isolation. They do not execute the
+diagnostic issue suppression and default telemetry configuration. They do not execute the
 AI prompt or prove hosted browser behavior.
 
 ## Verified pre-merge screenshot smoke test
@@ -155,7 +164,10 @@ Copilot's directory boundary: runner-temp is outside its permitted directories.
 The fix pre-creates evidence in the already-permitted workspace; no access check
 or metadata validation was bypassed. Temporary smoke workflows/tests are removed
 from the final PR. Final cleanup leaves the tested production source/lock
-unchanged; artifacts and reports identify the actual tested revision.
+unchanged at that cleanup revision; artifacts and reports identify the actual
+tested revision. Subsequent review changes add the pre-inference job gate and
+section-based report format; those changes have local fixture/compiler coverage,
+not a new hosted smoke run.
 
 The pre-merge harness deliberately loaded the exact pinned source rather than
 its normal trusted PR base. Therefore the production trusted-base loader remains
