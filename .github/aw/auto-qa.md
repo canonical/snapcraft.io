@@ -72,13 +72,15 @@ reported as blocked, not executed. A blocked or partial report is not a pass.
   and paired 1440x900 / 390x844 screenshots. It is not exhaustive E2E testing or a
   numerical pixel-diff gate. A pass requires actual browser execution and image
   inspection; unsupported checks must stay visible as gaps.
-- Screenshots are written directly to `evidence_directory` from the trusted
-  context, under the runner's safe-output upload staging directory. The uploader
-  accepts `path: "auto-qa-evidence"` and allows only staging-relative
-  `auto-qa-evidence/*.png` files. Context, cookies and browser profiles must not be
-  saved there. No file-copy permission or additional source root is needed.
+- The trusted preflight creates `GITHUB_WORKSPACE/auto-qa-evidence` and provides
+  its absolute path as `evidence_directory`. That workspace is already permitted
+  by Copilot and the safe-output uploader; the agent needs no `mkdir`, copy
+  command or extra directory permission. Screenshots are saved directly there.
+  The uploader accepts `path: "auto-qa-evidence"`, stages the workspace directory
+  automatically, and publishes only staging-relative `auto-qa-evidence/*.png`
+  files. Context, cookies and browser profiles must not be saved there.
 - The agent uses one standalone Playwright CLI command per shell call; shell
-  functions, loops, pipes and copy helpers are not supported. Denied commands
+  functions, loops, pipes, directory-creation and copy helpers are not supported. Denied commands
   must be disclosed, not retried with alternate shell constructions. Typing into
   search, opening results and mobile-menu interactions must actually happen to
   count as tested; uninspected screenshots are not passing visual comparisons.
@@ -86,6 +88,33 @@ reported as blocked, not executed. A blocked or partial report is not a pass.
   not confirmed artifact publication. Reports use the returned temporary artifact
   reference for publisher resolution and stay Partial while evidence is pending
   or unverified. Check the actual run artifacts, not just its green status.
+
+## Cost controls
+
+The workflow declares explicit local AI-credit limits rather than inheriting the
+larger organization defaults:
+
+| Guardrail | AI credits |
+| --- | ---: |
+| QA agent, per run | 50 |
+| Threat detector, per run | 5 |
+| Rolling 24-hour activation guard, per triggering user for this workflow | 150 |
+
+The main/detector limits are separate (up to 55 credits combined per run). The
+daily check is a per-user workflow guardrail, not an organization-wide financial
+budget, shared repository allocation, or reservation of all concurrent spend.
+GitHub Actions compute is accounted for separately. Organization billing still
+uses the Actions token; no personal token or new inference provider is configured.
+
+Model selection remains unchanged pending a supported cheaper-model choice.
+DeepSeek and GLM were not advertised in this repository's captured Copilot model
+inventory, and neither appears in the compiler's embedded pricing catalog. Do
+not guess a model ID, invent pricing, or silently route to another provider.
+GPT-6 Luna and Claude Haiku 5.5 were advertised with lower token prices than
+Sonnet 5.5, but equivalent browser/visual-QA quality has not been validated.
+Verify current organization availability and screenshot/tool support before
+pinning an alternative. No further live run is needed merely to check the source
+configuration and no new provider credentials are authorized by this document.
 
 ## Development and validation
 
@@ -141,8 +170,9 @@ images could not be independently inspected after the run.
 roots. Copy attempts were denied by the restricted shell, and a later filter-only
 request matched no staged files. No `auto-qa-evidence` artifact exists for that
 run; the published comment's artifact-availability wording must not be relied on.
-The local staging/prompt regressions address those failures, but have not had a
-second live test. One smoke activation was used; another needs explicit approval.
+The subsequent local staging/prompt changes were exercised in the retries below.
+Each hosted attempt has a separate explicit user authorization; none authorizes
+an automatic retry loop.
 
 The harness also tightened the CLI proxy image to its existing manifest digest.
 The v1.0.1 compiler emitted a tag-only `CLI_PROXY_IMAGE` in the normal lock, whose
@@ -154,3 +184,34 @@ repository workflows are unchanged. Strict compilation, Actionlint, ShellCheck
 and fixtures validate the local candidate, not its hosted behavior. The successful
 smoke startup used the older runtime plus the harness's one-off proxy pin; it
 does not validate this regenerated runtime.
+
+## Renamed-harness retry
+
+The second hosted attempt at `b54ef4479bdbc0a053b44de2324c6992a371582e`
+[failed during activation](https://github.com/canonical/snapcraft.io/actions/runs/42975116262):
+v1.2.2 requires the executing workflow filename to end in `.lock.yml`, but the
+temporary harness ended in `.yml`. A local component fixture reproduced the exact
+failure with the pinned metadata loader and accepted the renamed file; no
+metadata validation was bypassed.
+
+After the user authorized another retry, revision
+`9c489cc84281739b5c7028bf6d98475781756a83` had a
+[successful demo deployment](https://github.com/canonical/snapcraft.io/actions/runs/42976172174)
+and [successful smoke startup](https://github.com/canonical/snapcraft.io/actions/runs/42977037854).
+Copilot, Playwright, threat detection and the PR-comment publisher ran. The
+[published report was still Partial](https://github.com/canonical/snapcraft.io/pull/5974#issuecomment-6789533479):
+only the desktop homepage was observed, the evidence-directory `mkdir` was denied,
+and no screenshot artifact was requested or published. The agent also omitted
+its final freshness reads, so that report is not freshness-verified evidence.
+The green Actions result is not an end-to-end pass.
+
+The local follow-up creates evidence under the already-permitted GitHub workspace
+in the trusted preflight, rather than asking Copilot to create a directory in
+runner-temp outside its allowed directories. The uploader's actual pinned resolver
+was exercised locally with filesystem fixtures: workspace screenshots auto-stage
+and pass the relative PNG allowlist, while files outside approved roots remain
+rejected. No upload/network call occurred in that fixture. Directory-creation
+permission is removed from the authored shell allowlist. The prompt requires
+independent QA steps to continue when evidence is blocked, and requires Blocked
+status if final freshness cannot be checked. These follow-ups are not yet pushed
+or live-tested.

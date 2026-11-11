@@ -66,10 +66,11 @@ function fixtures() {
   };
 }
 
-async function runPreflight(data, runnerTemp = "/runner/temp") {
+async function runPreflight(data, workspace = "/runner/work/snapcraft.io") {
   let result;
   let reads = 0;
   const calls = [];
+  const createdDirectories = [];
   const methods = Object.fromEntries(
     ["pr", "comments", "files", "run", "latest"].map((name) => [
       name,
@@ -105,8 +106,13 @@ async function runPreflight(data, runnerTemp = "/runner/temp") {
   };
   const fs = {
     mkdirSync: (path, options) => {
-      assert.equal(path, "/tmp/gh-aw/agent/auto-qa");
+      assert.ok(
+        ["/tmp/gh-aw/agent/auto-qa", `${workspace}/auto-qa-evidence`].includes(
+          path,
+        ),
+      );
       assert.deepEqual(options, { recursive: true });
+      createdDirectories.push(path);
     },
     writeFileSync: (path, value) => {
       assert.equal(path, "/tmp/gh-aw/agent/auto-qa/context.json");
@@ -124,9 +130,9 @@ async function runPreflight(data, runnerTemp = "/runner/temp") {
       assert.equal(module, "node:fs");
       return fs;
     },
-    { env: { RUNNER_TEMP: runnerTemp } },
+    { env: { GITHUB_WORKSPACE: workspace, RUNNER_TEMP: "/runner/temp" } },
   );
-  return { result, calls };
+  return { result, calls, createdDirectories };
 }
 
 for (const body of [
@@ -457,17 +463,18 @@ test("keeps activation and output contracts scoped", () => {
   assert.match(source, /Blocked\n   \(stale evidence\)/);
 });
 
-for (const [runnerTemp, expectedRoot] of [
-  ["/runner/temp", "/runner/temp"],
-  ["/home/runner/work/_temp", "/home/runner/work/_temp"],
-  [undefined, "/tmp"],
+for (const workspace of [
+  "/runner/work/snapcraft.io",
+  "/home/runner/work/snapcraft.io/snapcraft.io",
+  "/home/runner/work/another-repo/another-repo",
 ]) {
-  test(`stages screenshot evidence under runner temp ${runnerTemp}`, async () => {
-    const { result } = await runPreflight(fixtures(), runnerTemp ?? "");
-    assert.equal(
-      result.evidence_directory,
-      `${expectedRoot}/gh-aw/safeoutputs/upload-artifacts/auto-qa-evidence`,
+  test(`prepares screenshot evidence inside the allowed workspace ${workspace}`, async () => {
+    const { result, createdDirectories } = await runPreflight(
+      fixtures(),
+      workspace,
     );
+    assert.equal(result.evidence_directory, `${workspace}/auto-qa-evidence`);
+    assert.ok(createdDirectories.includes(result.evidence_directory));
     const relativeFile = "auto-qa-evidence/search-desktop-demo.png";
     const allowed = /^auto-qa-evidence\/[^/]*\.png$/;
     assert.ok(allowed.test(relativeFile));
@@ -483,14 +490,25 @@ for (const [runnerTemp, expectedRoot] of [
   });
 }
 
+test("fails closed if the trusted GitHub workspace is unavailable", async () => {
+  await assert.rejects(
+    runPreflight(fixtures(), ""),
+    /GitHub workspace is required/,
+  );
+});
+
 test("keeps upload paths staged and reports pending or uninspected evidence honestly", () => {
   assert.ok(source.includes('path: "auto-qa-evidence"'));
-  assert.ok(source.includes("Capture directly there"));
+  assert.match(source, /Capture\s+directly there/);
   assert.ok(source.includes("one standalone CLI command"));
   assert.ok(source.includes("do not retry alternate shell"));
   assert.ok(source.includes("pending/unverified"));
   assert.ok(source.includes("Not inspected"));
   assert.ok(source.includes("#aw_..."));
+  assert.ok(source.includes("do not run `mkdir`"));
+  assert.match(source, /  bash: \[cat\]/);
+  assert.ok(source.includes("failure alone is not a reason to skip"));
+  assert.ok(source.includes("Blocked (freshness unverified)"));
   assert.ok(!source.includes("/tmp/gh-aw/agent/auto-qa/evidence"));
 });
 
@@ -503,11 +521,28 @@ test("does not create repository issues through diagnostic handlers", () => {
   assert.match(source, /report-incomplete:\n    create-issue: false/);
   assert.match(
     source,
-    /threat-detection:\n    report-as-issue: false\n    continue-on-error: false/,
+    /threat-detection:\n    max-ai-credits: 5\n    report-as-issue: false\n    continue-on-error: false/,
   );
   assert.match(lock, /GH_AW_MISSING_TOOL_CREATE_ISSUE: "false"/);
   assert.match(lock, /GH_AW_REPORT_INCOMPLETE_CREATE_ISSUE: "false"/);
   assert.match(lock, /GH_AW_DETECTION_CONTINUE_ON_ERROR: "false"/);
+});
+
+test("enforces workflow-local QA, detector and daily credit caps", () => {
+  const lock = readFileSync(
+    join(__dirname, "../workflows/auto-qa.lock.yml"),
+    "utf8",
+  );
+  assert.match(source, /^max-ai-credits: 50$/m);
+  assert.match(source, /^max-daily-ai-credits: 150$/m);
+  assert.match(lock, /GH_AW_INFO_MAX_AI_CREDITS: "50"/);
+  assert.match(lock, /GH_AW_MAX_DAILY_AI_CREDITS: "150"/);
+  assert.match(lock, /GH_AW_MAX_AI_CREDITS="50"/);
+  assert.match(lock, /GH_AW_MAX_AI_CREDITS="5"/);
+  assert.doesNotMatch(
+    lock,
+    /vars\.GH_AW_DEFAULT_(?:MAX_AI_CREDITS|MAX_DAILY_AI_CREDITS|DETECTION_MAX_AI_CREDITS)/,
+  );
 });
 
 test("launches the credential-bearing CLI proxy with its manifest digest", () => {
