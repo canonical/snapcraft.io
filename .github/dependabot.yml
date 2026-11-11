@@ -4,7 +4,8 @@
 # - `security-updates` contains fixes for security advisories.
 #   Uses `applies-to: security-updates` to limit the group to advisory fixes.
 #   After `PR checks` succeeds, the workflow checks the signed Dependabot
-#   commit and each update type. It merges only the commit that passed CI.
+#   commit and each update type. The bot approves that commit before the merge.
+#   The workflow merges only the commit that passed CI.
 #   GitHub still enforces required checks, approvals, and branch rules.
 # These are custom group names, not built-in Dependabot labels.
 #

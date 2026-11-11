@@ -172,6 +172,11 @@ jobs:
             echo "::error::Set the DEPENDABOT_MERGE_TOKEN Actions secret before merging security updates."
             exit 1
           fi
+          # Approve the tested commit. If approval fails, do not attempt the merge.
+          gh api --method POST "repos/$GH_REPO/pulls/$PR_NUMBER/reviews" \
+            -f commit_id="$HEAD_SHA" \
+            -f event=APPROVE \
+            -f body="The tested commit passed CI and the security update policy checks." > /dev/null
           # GitHub must enforce required checks and reviews for the bot account.
           # Bind the merge to the tested SHA, even if the head changes between steps.
           gh api --method PUT "repos/$GH_REPO/pulls/$PR_NUMBER/merge" \
