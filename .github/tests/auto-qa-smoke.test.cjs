@@ -1,4 +1,4 @@
-// Temporary pre-merge contract. Remove alongside auto-qa-smoke.yml.
+// Temporary pre-merge contract. Remove alongside auto-qa-smoke.lock.yml.
 const assert = require("node:assert/strict");
 const { createHash } = require("node:crypto");
 const { readFileSync } = require("node:fs");
@@ -7,7 +7,8 @@ const { test } = require("node:test");
 const read = (file) =>
   readFileSync(join(__dirname, "../workflows", file), "utf8");
 const normal = read("auto-qa.lock.yml");
-const harness = read("auto-qa-smoke.yml");
+const harnessFile = "auto-qa-smoke.lock.yml";
+const harness = read(harnessFile);
 const hash = (text) => createHash("sha256").update(text).digest("hex");
 const changes = [
   [
@@ -51,6 +52,14 @@ test("the entire smoke harness has only the six explicit envelope changes", () =
   }
   assert.equal(harness, expected);
 });
+test("the executing smoke filename satisfies v1.2.2 metadata identity validation", () => {
+  // Exact identity shape required by the pinned setup's markdown_metadata.cjs.
+  const identity = /^([^/]+)\/([^/]+)\/(.+\.lock\.yml)@(.+)$/;
+  const ref = `canonical/snapcraft.io/.github/workflows/${harnessFile}@refs/pull/5974/merge`;
+  assert.equal(identity.exec(ref)?.[3], `.github/workflows/${harnessFile}`);
+  assert.ok(!identity.test(ref.replace(".lock.yml@", ".yml@")));
+});
+
 test("agent, detector and safe outputs are byte-preserved", () => {
   const from = (text, start, end) => text.split(start)[1].split(end)[0];
   assert.equal(

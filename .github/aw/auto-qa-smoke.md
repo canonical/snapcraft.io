@@ -1,6 +1,6 @@
 # Temporary second pre-merge Auto QA smoke test
 
-Remove this guide, `../workflows/auto-qa-smoke.yml`, and
+Remove this guide, `../workflows/auto-qa-smoke.lock.yml`, and
 `../tests/auto-qa-smoke.test.cjs` from the final PR before requesting review or
 merging. This harness deliberately does not test the trusted-base prompt loader.
 
@@ -23,6 +23,9 @@ credentials and their destinations, network/firewall, prompt, deployment preflig
 Playwright version, generated container/action pins, diagnostic issue suppression,
 telemetry isolation, fail-closed detection, and safe outputs are unchanged.
 Agent, detection, and safe-output job bodies are byte-identical to the normal lock.
+The executing filename must end in `.lock.yml`: v1.2.2 validates that suffix when
+loading compiler metadata. Renaming a normal Actions `.yml` harness is necessary;
+spoofing the executing identity or disabling metadata validation is not.
 The CLI proxy already uses a direct digest in the v1.2.2 normal lock; no additional
 runtime substitution is needed. The conclusion queue remains shared with Auto QA.
 
@@ -56,5 +59,22 @@ do not broaden a one-run authorization into repeated attempts.
 ```bash
 dotrun exec node --test .github/tests/auto-qa.test.cjs .github/tests/auto-qa-smoke.test.cjs
 # Use gh-aw v1.2.2, not the older globally installed extension.
-gh aw lint --shellcheck .github/workflows/auto-qa-smoke.yml
+gh aw lint --shellcheck .github/workflows/auto-qa-smoke.lock.yml
 ```
+
+## Second hosted attempt
+
+The [new demo](https://github.com/canonical/snapcraft.io/actions/runs/42974205709)
+succeeded at `b54ef4479bdbc0a053b44de2324c6992a371582e`. The
+[smoke attempt](https://github.com/canonical/snapcraft.io/actions/runs/42975116262)
+failed before the checksum checkout or agent startup: v1.2.2's compiler metadata
+loader rejected the executing `auto-qa-smoke.yml` filename because it accepts
+only `.lock.yml` identities. The actual workflow ID and immutable SHA were present;
+this was not missing credentials or an application/demo failure.
+
+The local candidate renames the harness to `auto-qa-smoke.lock.yml` without
+changing its bytes, records the filename contract in the fixtures, and retains
+all metadata validation. The smoke label was removed after the failure. The user
+subsequently requested **fix and retry**, authorizing one fresh deployment and
+one retry of the renamed harness with the same scope, time and spend bounds.
+No automatic relabel/retry loop is authorized.
