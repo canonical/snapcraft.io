@@ -15,6 +15,7 @@ const prepare = new AsyncFunction(
   "context",
   "core",
   "require",
+  "process",
   script.replace(/^        /gm, ""),
 );
 
@@ -65,7 +66,7 @@ function fixtures() {
   };
 }
 
-async function runPreflight(data) {
+async function runPreflight(data, runnerTemp = "/runner/temp") {
   let result;
   let reads = 0;
   const calls = [];
@@ -123,6 +124,7 @@ async function runPreflight(data) {
       assert.equal(module, "node:fs");
       return fs;
     },
+    { env: { RUNNER_TEMP: runnerTemp } },
   );
   return { result, calls };
 }
@@ -448,14 +450,48 @@ test("keeps activation and output contracts scoped", () => {
   assert.doesNotMatch(frontmatter, /(?:contents|issues|pull-requests): write/);
   assert.match(frontmatter, /add-comment:\n    target: triggering\n    max: 1/);
   assert.match(frontmatter, /required-labels: \[auto-qa\]/);
-  assert.match(
-    frontmatter,
-    /allowed-paths: \["\/tmp\/gh-aw\/agent\/auto-qa\/evidence\/\*\*"\]/,
-  );
+  assert.match(frontmatter, /allowed-paths: \["auto-qa-evidence\/\*\.png"\]/);
   assert.match(frontmatter, /report-failure-as-issue: false/);
   assert.match(source, /regression testing only/);
   assert.match(source, /Inspect the actual screenshot images/);
   assert.match(source, /Blocked\n   \(stale evidence\)/);
+});
+
+for (const [runnerTemp, expectedRoot] of [
+  ["/runner/temp", "/runner/temp"],
+  ["/home/runner/work/_temp", "/home/runner/work/_temp"],
+  [undefined, "/tmp"],
+]) {
+  test(`stages screenshot evidence under runner temp ${runnerTemp}`, async () => {
+    const { result } = await runPreflight(fixtures(), runnerTemp ?? "");
+    assert.equal(
+      result.evidence_directory,
+      `${expectedRoot}/gh-aw/safeoutputs/upload-artifacts/auto-qa-evidence`,
+    );
+    const relativeFile = "auto-qa-evidence/search-desktop-demo.png";
+    const allowed = /^auto-qa-evidence\/[^/]*\.png$/;
+    assert.ok(allowed.test(relativeFile));
+    for (const rejected of [
+      "context.json",
+      "auto-qa-evidence/context.json",
+      "auto-qa-evidence/nested/cookies.png",
+      "other-evidence/search-desktop-demo.png",
+      `${result.evidence_directory}/search-desktop-demo.png`,
+    ]) {
+      assert.ok(!allowed.test(rejected));
+    }
+  });
+}
+
+test("keeps upload paths staged and reports pending or uninspected evidence honestly", () => {
+  assert.ok(source.includes('path: "auto-qa-evidence"'));
+  assert.ok(source.includes("Capture directly there"));
+  assert.ok(source.includes("one standalone CLI command"));
+  assert.ok(source.includes("do not retry alternate shell"));
+  assert.ok(source.includes("pending/unverified"));
+  assert.ok(source.includes("Not inspected"));
+  assert.ok(source.includes("#aw_..."));
+  assert.ok(!source.includes("/tmp/gh-aw/agent/auto-qa/evidence"));
 });
 
 test("does not create repository issues through diagnostic handlers", () => {
@@ -472,6 +508,22 @@ test("does not create repository issues through diagnostic handlers", () => {
   assert.match(lock, /GH_AW_MISSING_TOOL_CREATE_ISSUE: "false"/);
   assert.match(lock, /GH_AW_REPORT_INCOMPLETE_CREATE_ISSUE: "false"/);
   assert.match(lock, /GH_AW_DETECTION_CONTINUE_ON_ERROR: "false"/);
+});
+
+test("launches the credential-bearing CLI proxy with its manifest digest", () => {
+  const lock = readFileSync(
+    join(__dirname, "../workflows/auto-qa.lock.yml"),
+    "utf8",
+  );
+  const manifest = JSON.parse(
+    lock.split("# gh-aw-manifest: ")[1].split("\n")[0],
+  );
+  const proxy = manifest.containers.find(({ image }) =>
+    image.startsWith("ghcr.io/github/gh-aw-mcpg:"),
+  );
+  assert.ok(proxy);
+  assert.match(proxy.pinned_image, /@sha256:[a-f0-9]{64}$/);
+  assert.equal(lock.match(/CLI_PROXY_IMAGE: '([^']+)'/)[1], proxy.pinned_image);
 });
 
 test("does not inherit telemetry endpoints or telemetry credentials", () => {
