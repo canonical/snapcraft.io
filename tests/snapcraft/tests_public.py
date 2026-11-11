@@ -19,3 +19,7 @@ class StorePage(TestCase):
 
         assert response.status_code == 200
         self.assert_template_used("index.html")
+        self.assertIn(
+            b'<h1 style="color: red;">The app store for Linux</h1>',
+            response.data,
+        )
