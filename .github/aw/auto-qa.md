@@ -13,9 +13,10 @@ Auto QA checks a PR's demo in a browser and posts a report with screenshots.
    the reason appears there; no PR comment is posted. Otherwise, read the browser
    QA report on the PR. **Partial** and **Blocked** do not mean the checks passed.
 5. Expand each viewport's `<details>` section to see production and demo
-   screenshots side by side in a table, including passing and uncertain checks. PNGs are uploaded individually,
-   without a ZIP, and kept for 14 days unless repository settings override this.
-   Images stop being available when their artifacts expire.
+   screenshots side by side in a table, including passing and uncertain checks.
+   PNGs are published on the one shared **`assets/auto-qa`** branch, never one
+   branch per PR/run, and embedded using raw image URLs—not artifact downloads.
+   Screenshots persist until explicitly removed; Actions retention does not apply.
 
 To retry, remove and re-add the label once the latest commit's demo is ready.
 New commits and comments do not trigger QA. A new `auto-qa` label event cancels
@@ -41,12 +42,22 @@ QA already in progress.
   networking, component updates, and network-time queries. This aims to reduce
   unrelated Chromium requests to Google; it does not allowlist those services or
   filter firewall warnings/logs. Suppression still needs hosted verification.
-- Each screenshot upload declares its image ID explicitly; an acknowledgement
-  containing only `output_id` is normal, not a reason to omit the image. Single
-  files are staged under their basenames, so the PNG allowlist uses the expected
-  desktop/mobile and production/demo filename suffixes, not the source directory.
-  An upload request does not prove publication: the publisher resolves the
-  declared IDs after upload, and missing/failed uploads must be disclosed.
+- The agent stages PNGs with `upload_asset` and embeds the returned raw URLs.
+  After threat detection passes, a separate trusted `upload_assets` job receives
+  `contents: write` to publish them to `assets/auto-qa`. The agent and comment jobs
+  do not receive `contents: write`. Before commenting, a separate check fetches
+  each raw URL without credentials and verifies its PNG content type and hash.
+  Missing, private, HTML or mismatched images block comments; reports with no
+  screenshots still work.
+- A trusted check before publication requires every declared asset to be present,
+  under the validated screenshot source directory, with a desktop/mobile and
+  production/demo filename, matching hash, PNG signature and exact shared-branch
+  URL. A missing or invalid file fails the whole publisher before any push.
+- Uploads are capped at 20 PNGs per run, 10 MiB each. Content-hashed filenames
+  deduplicate identical images and preserve earlier reports across reruns and PRs.
+  No PAT, native-attachment credential, external host, or changes to main are
+  needed. The branch and its Git history are persistent; deleting files later
+  will not erase old commits. Only public, unauthenticated screenshots belong here.
 
 ## Cost limits
 
@@ -71,11 +82,10 @@ gh aw compile auto-qa --strict --action-mode action \
   --actionlint --shellcheck
 ```
 
-The **Auto QA workflow tests** CI job tests the preflight, report/image-reference
-contracts, and the exact pinned screenshot publisher against flattened staging
-files. GitHub uploads and inactive queue-claim hooks are stubbed; the real file
-selector, allowlist, archive options and temporary-ID handling run without network
-writes.
+The **Auto QA workflow tests** CI job tests preflight/report contracts, job
+permissions/dependencies, and the exact pinned asset staging handler and publisher.
+Path guards, extension/size limits, hashing, deduplication and file writes are
+real; Git pushes and the surrounding Actions/output-ledger APIs are stubbed.
 The external action is checked out read-only at the workflow's pinned revision;
 its setup action is not executed. These tests do not test the AI's browser behavior
 or prove GitHub renders the published image URLs.
@@ -96,8 +106,8 @@ but have not had another hosted smoke test. Loading the workflow from the truste
 PR base remains untested until the workflow is on main.
 
 A [later run](https://github.com/canonical/snapcraft.io/actions/runs/43182069125)
-captured four PNGs but failed to publish all four because single-file staging
-flattened their paths while the allowlist required the source directory. Its
-upload calls also omitted declared image IDs, and the report followed the old
-failure-only table rule. The basename allowlist, explicit upload IDs and all-result
-comparison tables now have local regression coverage, not a new hosted test.
+exposed single-file artifact staging and image-ID mistakes. Fixing those produced
+[correct tables but non-rendering artifact image links](https://github.com/canonical/snapcraft.io/pull/5975#issuecomment-6819401364).
+The shared-branch asset publisher replaces that artifact approach; its staging,
+publishing and permission gates have local regression coverage. Hosted rendering
+must be verified separately.

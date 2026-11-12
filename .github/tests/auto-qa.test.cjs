@@ -7,7 +7,10 @@ const { test } = require("node:test");
 
 const workflowPath = join(__dirname, "../workflows/auto-qa.md");
 const source = readFileSync(workflowPath, "utf8");
-const script = source.split("          script: |\n")[1]?.split("\nsteps:\n")[0];
+const script = source
+  .split("      - name: Prepare and validate QA context\n")[1]
+  ?.split("          script: |\n")[1]
+  ?.split("\nsteps:\n")[0];
 assert.ok(script, "The workflow must contain the context preflight");
 const AsyncFunction = Object.getPrototypeOf(async function () {}).constructor;
 const prepare = new AsyncFunction(
@@ -646,13 +649,11 @@ test("keeps activation and output contracts scoped", () => {
   assert.doesNotMatch(frontmatter, /(?:contents|issues|pull-requests): write/);
   assert.match(frontmatter, /add-comment:\n    target: triggering\n    max: 1/);
   assert.match(frontmatter, /required-labels: \[auto-qa\]/);
-  for (const suffix of [
-    "desktop-prod",
-    "desktop-demo",
-    "mobile-prod",
-    "mobile-demo",
-  ])
-    assert.ok(frontmatter.includes(`- "*-${suffix}.png"`));
+  assert.match(
+    frontmatter,
+    /upload-asset:\n    branch: assets\/auto-qa\n    allowed-exts: \[\.png\]/,
+  );
+  assert.doesNotMatch(frontmatter, /upload-artifact:/);
   assert.match(frontmatter, /report-failure-as-issue: false/);
   assert.match(source, /regression testing only/);
   assert.match(source, /Inspect the actual screenshot images/);
@@ -671,19 +672,8 @@ for (const workspace of [
     );
     assert.equal(result.evidence_directory, `${workspace}/auto-qa-evidence`);
     assert.ok(createdDirectories.includes(result.evidence_directory));
-    const stagedFile = "search-desktop-demo.png";
-    const allowed = /^[^/]*-(desktop|mobile)-(demo|prod)\.png$/;
-    assert.ok(allowed.test(stagedFile));
-    for (const rejected of [
-      "context.json",
-      "cookies.png",
-      "profile-desktop-demo.zip",
-      "auto-qa-evidence/search-desktop-demo.png",
-      "other-evidence/search-desktop-demo.png",
-      `${result.evidence_directory}/search-desktop-demo.png`,
-    ]) {
-      assert.ok(!allowed.test(rejected));
-    }
+    assert.match(source, /absolute screenshot path/);
+    assert.match(source, /under `evidence_directory`/);
   });
 }
 
@@ -695,14 +685,12 @@ test("fails closed if the trusted GitHub workspace is unavailable", async () => 
 });
 
 test("keeps upload paths staged and reports pending or uninspected evidence honestly", () => {
-  assert.ok(
-    source.includes('path: "auto-qa-evidence/search-desktop-prod.png"'),
-  );
-  assert.ok(!source.includes('path: "auto-qa-evidence"'));
+  assert.match(source, /literal \*\*absolute screenshot path\*\*/);
+  assert.match(source, /only.*`path` argument/is);
   assert.match(source, /Capture\s+directly there/);
   assert.ok(source.includes("one standalone CLI command"));
   assert.ok(source.includes("do not retry alternate shell"));
-  assert.ok(source.includes("pending/unverified"));
+  assert.ok(source.includes("If staging"));
   assert.ok(source.includes("Not inspected"));
   assert.ok(source.includes("#aw_..."));
   assert.ok(source.includes("do not run `mkdir`"));
@@ -712,66 +700,71 @@ test("keeps upload paths staged and reports pending or uninspected evidence hone
   assert.ok(!source.includes("/tmp/gh-aw/agent/auto-qa/evidence"));
 });
 
-test("publishes individual PNGs without ZIPs and embeds both images inside details", () => {
-  const frontmatter = source.split("\n---\n")[0];
-  assert.match(frontmatter, /max-uploads: 20\n    skip-archive: true/);
+test("embeds returned raw asset URLs rather than artifact links or temporary IDs", () => {
   assert.match(source, /one call per file/);
   assert.match(source, /Never upload the directory or bundle screenshots/);
-  assert.match(
-    source,
-    /Declare a unique `temporary_id` in every upload request/,
-  );
-  assert.match(source, /only `output_id`/);
-  assert.match(source, /do not use `output_id` as an image destination/);
+  assert.match(source, /exact URL returned in its\n`result`/);
+  assert.match(source, /Never construct a hash\/URL yourself/);
+  assert.match(source, /do not supply a branch/);
   const details = source.match(/^<details>\n([\s\S]*?)^<\/details>$/m)?.[1];
   assert.ok(details, "The report template must contain a details block");
-  assert.match(
-    details,
-    /\| !\[Production screenshot\]\(#aw_prod1\) \| !\[Demo screenshot\]\(#aw_demo1\) \|/,
-  );
+  assert.match(details, /!\[Production screenshot\]\(PRODUCTION_IMAGE_URL\)/);
+  assert.match(details, /!\[Demo screenshot\]\(DEMO_IMAGE_URL\)/);
   assert.match(
     source,
-    /IDs declared on that viewport's production\/demo uploads/,
+    /every image destination is an exact URL returned by `upload_asset`/,
   );
-  assert.match(
-    source,
-    /If an upload request failed or an image is missing, keep the table/,
-  );
-  const uploads = [...source.matchAll(/```json\n(\{.*\})\n```/g)].map((match) =>
-    JSON.parse(match[1]),
-  );
-  assert.equal(uploads.length, 2);
-  assert.equal(new Set(uploads.map((upload) => upload.temporary_id)).size, 2);
-  const imageIds = [
-    ...details.matchAll(/!\[[^\]]+\]\((#aw_[A-Za-z0-9_]+)\)/g),
-  ].map((match) => match[1]);
-  assert.deepEqual(
-    imageIds,
-    uploads.map((upload) => upload.temporary_id),
-  );
-  for (const upload of uploads) {
-    assert.match(upload.temporary_id, /^#aw_[A-Za-z0-9_]{3,12}$/);
-    assert.match(upload.path, /^auto-qa-evidence\/[^/]+\.png$/);
-  }
   const lock = readFileSync(
     join(__dirname, "../workflows/auto-qa.lock.yml"),
     "utf8",
   );
-  // Check both the agent-facing config and the trusted publisher config.
   const configs = [
     ...lock.matchAll(/GH_AW_SAFE_OUTPUTS_(?:HANDLER_)?CONFIG: "(.*)"/g),
   ].map((match) => JSON.parse(JSON.parse(`"${match[1]}"`)));
   assert.equal(configs.length, 2);
   for (const config of configs) {
-    assert.equal(config.upload_artifact["skip-archive"], true);
-    assert.equal(config.upload_artifact["max-uploads"], 20);
-    assert.deepEqual(config.upload_artifact["allowed-paths"], [
-      "*-desktop-prod.png",
-      "*-desktop-demo.png",
-      "*-mobile-prod.png",
-      "*-mobile-demo.png",
-    ]);
+    assert.deepEqual(config.upload_asset, {
+      "allowed-exts": [".png"],
+      branch: "assets/auto-qa",
+      max: 20,
+      "max-size": 10240,
+    });
+    assert.equal(config.upload_artifact, undefined);
   }
+});
+
+test("isolates branch writes from the agent and gates publication and comments", () => {
+  const lock = readFileSync(
+    join(__dirname, "../workflows/auto-qa.lock.yml"),
+    "utf8",
+  );
+  const agent = lock.split("\n  agent:\n")[1].split("\n  conclusion:\n")[0];
+  assert.doesNotMatch(agent, /contents: write/);
+  const assets = lock.split("\n  upload_assets:\n")[1];
+  assert.match(assets, /contents: write/);
+  assert.match(assets, /needs:[\s\S]*?- detection/);
+  assert.match(assets, /needs.detection.outputs.detection_success == 'true'/);
+  assert.match(assets, /GH_AW_ASSETS_BRANCH: "assets\/auto-qa"/);
+  assert.match(assets, /GH_AW_ASSETS_ALLOWED_EXTS: "\.png"/);
+  assert.match(assets, /Validate every screenshot before publication/);
+  assert.ok(
+    assets.indexOf("Validate every screenshot before publication") <
+      assets.indexOf("name: Push assets"),
+  );
+  const comment = lock
+    .split("\n  safe_outputs:\n")[1]
+    .split("\n  upload_assets:\n")[0];
+  assert.match(comment, /needs:[\s\S]*?- upload_assets/);
+  assert.match(comment, /needs.upload_assets.result == 'success'/);
+  assert.match(comment, /needs.upload_assets.result == 'skipped'/);
+  assert.doesNotMatch(comment, /contents: write/);
+  assert.match(comment, /Verify published screenshots are publicly embeddable/);
+  assert.match(comment, /github-token: no-authentication/);
+  assert.match(comment, /credentials: 'omit'/);
+  assert.ok(
+    comment.indexOf("Verify published screenshots are publicly embeddable") <
+      comment.indexOf("name: Process Safe Outputs"),
+  );
 });
 
 test("does not create repository issues through diagnostic handlers", () => {
