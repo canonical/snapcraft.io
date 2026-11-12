@@ -531,6 +531,19 @@ test("materializes ready context as data in the agent's own workspace", async ()
   assert.equal(context.evidence_directory, "/agent/workspace/auto-qa-evidence");
   assert.ok(directories.includes(context.evidence_directory));
   assert.deepEqual(context.files, fixtures().files);
+  assert.deepEqual(files.get("/tmp/gh-aw/agent/auto-qa/playwright.json"), {
+    browser: {
+      browserName: "chromium",
+      launchOptions: {
+        args: [
+          "--disable-background-networking",
+          "--disable-component-update",
+          "--disable-features=NetworkTimeServiceQuerying",
+        ],
+      },
+    },
+  });
+  assert.equal(files.size, 2);
   for (const status of ["blocked", "noop"]) {
     await assert.rejects(
       writeContext(() => fs, {
@@ -543,6 +556,28 @@ test("materializes ready context as data in the agent's own workspace", async ()
     writeContext(() => fs, { env: { ...env, QA_CONTEXT: "" } }),
     SyntaxError,
   );
+});
+
+test("requires the trusted browser config for both sessions without relaxing the firewall", () => {
+  assert.match(
+    source,
+    /Every `open` command for either session, including after a restart,\n   must include `--config=\/tmp\/gh-aw\/agent\/auto-qa\/playwright\.json`/,
+  );
+  assert.match(source, /Do not edit or replace the config/);
+  assert.match(source, /hide\/delete firewall log entries if requests remain/);
+  const frontmatter = source.split("\n---\n")[0];
+  assert.doesNotMatch(
+    frontmatter,
+    /clients2\.google\.com|update\.googleapis\.com/,
+  );
+  assert.match(frontmatter, /  edit: false/);
+  const lock = readFileSync(
+    join(__dirname, "../workflows/auto-qa.lock.yml"),
+    "utf8",
+  );
+  assert.match(lock, /--disable-features=NetworkTimeServiceQuerying/);
+  assert.match(lock, /playwright\.json/);
+  assert.match(lock, /name: Print firewall logs/);
 });
 
 test("formats route reports as sections with failure-only screenshot comparisons", () => {

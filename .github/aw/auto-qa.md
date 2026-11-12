@@ -35,6 +35,10 @@ for that PR, and new reports collapse older ones.
   check again before reporting; changed or unverifiable context blocks the result.
 - Network restrictions and threat detection provide safeguards, but browser
   restrictions also depend on the agent following instructions.
+- Both browser sessions use a trusted Playwright config to disable background
+  networking, component updates, and network-time queries. This aims to reduce
+  unrelated Chromium requests to Google; it does not allowlist those services or
+  filter firewall warnings/logs. Suppression still needs hosted verification.
 - An upload request does not prove screenshots were published. The publisher
   resolves each image reference after upload; missing or failed uploads must be
   disclosed rather than presented as available evidence.
