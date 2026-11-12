@@ -1,5 +1,5 @@
 import { useQuery } from "react-query";
-import { v4 as uuidv4 } from "uuid";
+import { nanoid } from "nanoid";
 
 import type { UseQueryResult } from "react-query";
 import type { Packages, Package } from "../types";
@@ -14,7 +14,7 @@ function usePackages(queryString: string): UseQueryResult<Packages, Error> {
       const packagesWithId = data.packages.map((item: Package) => {
         return {
           ...item,
-          id: uuidv4(),
+          id: nanoid(),
         };
       });
 
