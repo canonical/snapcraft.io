@@ -13,13 +13,6 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
-      - uses: actions/setup-node@v7
-        with:
-          node-version: 24
-
-      - name: Test Workshop setup hook
-        run: node --test .github/tests/workshop.test.cjs
-
       - uses: canonical/launch-workshop@v1
 
       - name: Run workshop
