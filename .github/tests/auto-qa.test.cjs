@@ -580,7 +580,7 @@ test("requires the trusted browser config for both sessions without relaxing the
   assert.match(lock, /name: Print firewall logs/);
 });
 
-test("formats route reports as sections with failure-only screenshot comparisons", () => {
+test("formats every route and viewport with an embedded screenshot comparison", () => {
   const report = source.split("Use `add_comment` exactly once")[1];
   assert.doesNotMatch(report, /\*\*(Revision|Baseline):\*\*/);
   assert.match(report, /\*\*Scope:\*\*/);
@@ -591,7 +591,10 @@ test("formats route reports as sections with failure-only screenshot comparisons
     "🔴 Failed",
   ])
     assert.ok(report.includes(status));
-  assert.match(report, /Only for a failed check/);
+  assert.match(report, /including passing and uncertain checks/);
+  assert.match(report, /Desktop and mobile\s+must have separate/);
+  assert.doesNotMatch(report, /Only for a failed check|inline without a table/);
+  assert.match(report, /Never replace the comparison with a filename-only/);
   assert.match(report, /<details>/);
   assert.match(report, /Expected \(production\).*Actual \(demo\)/);
   assert.doesNotMatch(report, /\| Route \/ state \| Viewport/);
@@ -643,7 +646,13 @@ test("keeps activation and output contracts scoped", () => {
   assert.doesNotMatch(frontmatter, /(?:contents|issues|pull-requests): write/);
   assert.match(frontmatter, /add-comment:\n    target: triggering\n    max: 1/);
   assert.match(frontmatter, /required-labels: \[auto-qa\]/);
-  assert.match(frontmatter, /allowed-paths: \["auto-qa-evidence\/\*\.png"\]/);
+  for (const suffix of [
+    "desktop-prod",
+    "desktop-demo",
+    "mobile-prod",
+    "mobile-demo",
+  ])
+    assert.ok(frontmatter.includes(`- "*-${suffix}.png"`));
   assert.match(frontmatter, /report-failure-as-issue: false/);
   assert.match(source, /regression testing only/);
   assert.match(source, /Inspect the actual screenshot images/);
@@ -662,13 +671,14 @@ for (const workspace of [
     );
     assert.equal(result.evidence_directory, `${workspace}/auto-qa-evidence`);
     assert.ok(createdDirectories.includes(result.evidence_directory));
-    const relativeFile = "auto-qa-evidence/search-desktop-demo.png";
-    const allowed = /^auto-qa-evidence\/[^/]*\.png$/;
-    assert.ok(allowed.test(relativeFile));
+    const stagedFile = "search-desktop-demo.png";
+    const allowed = /^[^/]*-(desktop|mobile)-(demo|prod)\.png$/;
+    assert.ok(allowed.test(stagedFile));
     for (const rejected of [
       "context.json",
-      "auto-qa-evidence/context.json",
-      "auto-qa-evidence/nested/cookies.png",
+      "cookies.png",
+      "profile-desktop-demo.zip",
+      "auto-qa-evidence/search-desktop-demo.png",
       "other-evidence/search-desktop-demo.png",
       `${result.evidence_directory}/search-desktop-demo.png`,
     ]) {
@@ -707,17 +717,42 @@ test("publishes individual PNGs without ZIPs and embeds both images inside detai
   assert.match(frontmatter, /max-uploads: 20\n    skip-archive: true/);
   assert.match(source, /one call per file/);
   assert.match(source, /Never upload the directory or bundle screenshots/);
-  assert.match(source, /never invent IDs or URLs/);
-  const details = source.split("<details>")[1].split("</details>")[0];
+  assert.match(
+    source,
+    /Declare a unique `temporary_id` in every upload request/,
+  );
+  assert.match(source, /only `output_id`/);
+  assert.match(source, /do not use `output_id` as an image destination/);
+  const details = source.match(/^<details>\n([\s\S]*?)^<\/details>$/m)?.[1];
+  assert.ok(details, "The report template must contain a details block");
   assert.match(
     details,
     /\| !\[Production screenshot\]\(#aw_prod1\) \| !\[Demo screenshot\]\(#aw_demo1\) \|/,
   );
   assert.match(
     source,
-    /IDs returned for that viewport's production\/demo PNGs/,
+    /IDs declared on that viewport's production\/demo uploads/,
   );
-  assert.match(source, /If an upload request failed or an image is missing/);
+  assert.match(
+    source,
+    /If an upload request failed or an image is missing, keep the table/,
+  );
+  const uploads = [...source.matchAll(/```json\n(\{.*\})\n```/g)].map((match) =>
+    JSON.parse(match[1]),
+  );
+  assert.equal(uploads.length, 2);
+  assert.equal(new Set(uploads.map((upload) => upload.temporary_id)).size, 2);
+  const imageIds = [
+    ...details.matchAll(/!\[[^\]]+\]\((#aw_[A-Za-z0-9_]+)\)/g),
+  ].map((match) => match[1]);
+  assert.deepEqual(
+    imageIds,
+    uploads.map((upload) => upload.temporary_id),
+  );
+  for (const upload of uploads) {
+    assert.match(upload.temporary_id, /^#aw_[A-Za-z0-9_]{3,12}$/);
+    assert.match(upload.path, /^auto-qa-evidence\/[^/]+\.png$/);
+  }
   const lock = readFileSync(
     join(__dirname, "../workflows/auto-qa.lock.yml"),
     "utf8",
@@ -731,7 +766,10 @@ test("publishes individual PNGs without ZIPs and embeds both images inside detai
     assert.equal(config.upload_artifact["skip-archive"], true);
     assert.equal(config.upload_artifact["max-uploads"], 20);
     assert.deepEqual(config.upload_artifact["allowed-paths"], [
-      "auto-qa-evidence/*.png",
+      "*-desktop-prod.png",
+      "*-desktop-demo.png",
+      "*-mobile-prod.png",
+      "*-mobile-demo.png",
     ]);
   }
 });

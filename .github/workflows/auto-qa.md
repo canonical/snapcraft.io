@@ -225,8 +225,12 @@ safe-outputs:
     hide-older-comments: true
     issues: false
   upload-artifact:
-    # The uploader matches paths relative to its staging directory, not /tmp.
-    allowed-paths: ["auto-qa-evidence/*.png"]
+    # Single-file requests are staged under their basename, without the source dir.
+    allowed-paths:
+      - "*-desktop-prod.png"
+      - "*-desktop-demo.png"
+      - "*-mobile-prod.png"
+      - "*-mobile-demo.png"
     # One PNG per upload; prioritize failed comparisons within the tool's cap.
     max-uploads: 20
     skip-archive: true
@@ -345,20 +349,41 @@ Disclose any screenshot pairs omitted because of this limit.
 The safe-output uploader stages each file from `GITHUB_WORKSPACE`. Do not pass an
 absolute path, glob, shell variable, or filters in the upload request.
 Only upload browser screenshots, never context files, raw PR text, cookies,
-tokens, or browser profiles. The configured allowlist matches staging-relative
-`auto-qa-evidence/*.png` files only.
+tokens, or browser profiles. The MCP tool stages each single file under its
+**basename** and rewrites the recorded path, for example `search-desktop-prod.png`.
+The allowlist therefore matches screenshot basenames ending in
+`-desktop-prod.png`, `-desktop-demo.png`, `-mobile-prod.png`, or `-mobile-demo.png`,
+not the source directory. Use these suffixes for every captured screenshot.
 
-For each successful upload request, keep its returned temporary artifact ID and
-use it as a Markdown image destination, for example
-`![Production search, desktop](#aw_prod1)`. Use a different returned ID for every
-image; never invent IDs or URLs. The publisher replaces these references with the
-direct image URLs after uploading. A queued request is not confirmed publication;
-if publication is still unresolved, describe it as **pending/unverified** and
-choose **Partial** rather than Pass. If an upload request fails, name the affected
-file and choose **Partial** or **Blocked**;
-do not claim an available image or improvise another source root. Link to this
-Actions run for diagnostics. Map each screenshot pair to its route/state in the
-comment; mark uninspected pairs **Not inspected**, never Pass.
+**Declare a unique `temporary_id` in every upload request**, before referencing
+that image in the report. Choose `#aw_` followed by 3–12 ASCII letters, digits or
+underscores. For example, call `upload_artifact` with these arguments:
+
+```json
+{"path":"auto-qa-evidence/search-desktop-prod.png","temporary_id":"#aw_prod1"}
+```
+
+```json
+{"path":"auto-qa-evidence/search-desktop-demo.png","temporary_id":"#aw_demo1"}
+```
+
+Then use those exact declared IDs as image destinations in the table:
+`![Production screenshot](#aw_prod1)` and `![Demo screenshot](#aw_demo1)`.
+Use different IDs for every file and viewport. The tool may acknowledge a queued
+request with **only `output_id`** (`so_...`); this is normal. Do not wait for a
+returned image ID or URL, and do not use `output_id` as an image destination.
+The publisher resolves the IDs declared on the uploads to image URLs before
+posting the comment. Never reference an ID without a matching upload declaration,
+or invent a published URL.
+
+A queued request is not confirmed publication: do not claim it was verified.
+However, do not omit images or choose Partial solely because the acknowledgement
+has no image ID/URL. Include the declared references so publication can resolve
+them. If an upload request fails, name the affected file and choose **Partial** or
+**Blocked**; do not claim an available image or improvise another source root.
+If publication remains unresolved, disclose it as **pending/unverified**.
+Link to this Actions run for diagnostics. Map each screenshot pair to its
+route/state in the comment; mark uninspected pairs **Not inspected**, never Pass.
 
 Use `add_comment` exactly once on the triggering PR, even if no regressions were
 found. Use this structure:
@@ -388,7 +413,9 @@ Actions performed:
 Result: choose **🟢 Pass**, **🔵 Needs a closer look/unsure**, or **🔴 Failed**.
 Unexecuted checks and uninspected comparisons cannot pass; explain limitations.
 
-Only for a failed check, include a collapsible comparison for each tested viewport:
+For **every tested route/state**, including passing and uncertain checks, include
+a separate collapsible comparison for **each tested viewport**. Desktop and mobile
+must have separate `<details>` sections, each containing this two-column table:
 
 <details>
 <summary>Desktop (1440x900) or mobile (390x844)</summary>
@@ -400,11 +427,13 @@ Only for a failed check, include a collapsible comparison for each tested viewpo
 </details>
 
 Embed actual images in the table cells with `![alt text](#aw_...)`, replacing the
-example IDs with the IDs returned for that viewport's production/demo PNGs.
+example IDs with the IDs declared on that viewport's production/demo uploads.
 Do not substitute download links, ZIP URLs, or filenames for available images.
-If an upload request failed or an image is missing, put its actual filename and
-the limitation in that cell instead of inventing an image reference.
-For passing/uncertain checks, list screenshot filenames inline without a table.
+If an upload request failed or an image is missing, keep the table and put its
+actual filename and the limitation in that cell instead of inventing an image
+reference. Never replace the comparison with a filename-only screenshot list.
+Before `add_comment`, check that every tested viewport has a `<details>` table
+and every image reference has a matching `upload_artifact.temporary_id` declaration.
 
 ### Findings
 

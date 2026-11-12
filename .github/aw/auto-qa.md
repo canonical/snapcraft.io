@@ -12,8 +12,8 @@ Auto QA checks a PR's demo in a browser and posts a report with screenshots.
 4. Check the **Auto QA preflight** run summary. If checks block or skip the run,
    the reason appears there; no PR comment is posted. Otherwise, read the browser
    QA report on the PR. **Partial** and **Blocked** do not mean the checks passed.
-5. Expand the viewport's `<details>` section for a failed check to see production
-   and demo screenshots side by side in the report. PNGs are uploaded individually,
+5. Expand each viewport's `<details>` section to see production and demo
+   screenshots side by side in a table, including passing and uncertain checks. PNGs are uploaded individually,
    without a ZIP, and kept for 14 days unless repository settings override this.
    Images stop being available when their artifacts expire.
 
@@ -41,9 +41,12 @@ QA already in progress.
   networking, component updates, and network-time queries. This aims to reduce
   unrelated Chromium requests to Google; it does not allowlist those services or
   filter firewall warnings/logs. Suppression still needs hosted verification.
-- An upload request does not prove screenshots were published. The publisher
-  resolves each image reference after upload; missing or failed uploads must be
-  disclosed rather than presented as available evidence.
+- Each screenshot upload declares its image ID explicitly; an acknowledgement
+  containing only `output_id` is normal, not a reason to omit the image. Single
+  files are staged under their basenames, so the PNG allowlist uses the expected
+  desktop/mobile and production/demo filename suffixes, not the source directory.
+  An upload request does not prove publication: the publisher resolves the
+  declared IDs after upload, and missing/failed uploads must be disclosed.
 
 ## Cost limits
 
@@ -68,8 +71,22 @@ gh aw compile auto-qa --strict --action-mode action \
   --actionlint --shellcheck
 ```
 
-The **Auto QA workflow tests** CI job tests the preflight checks and workflow
-configuration. It does not test the AI's browser behavior.
+The **Auto QA workflow tests** CI job tests the preflight, report/image-reference
+contracts, and the exact pinned screenshot publisher against flattened staging
+files. GitHub uploads and inactive queue-claim hooks are stubbed; the real file
+selector, allowlist, archive options and temporary-ID handling run without network
+writes.
+The external action is checked out read-only at the workflow's pinned revision;
+its setup action is not executed. These tests do not test the AI's browser behavior
+or prove GitHub renders the published image URLs.
+
+To run the publisher tests locally, provide the pinned action's `setup/js`
+directory at a path available inside dotrun:
+
+```bash
+dotrun exec env GH_AW_TEST_ACTIONS_DIR=.gh-aw-test-runtime/setup/js \
+  node --test .github/tests/auto-qa.test.cjs .github/tests/auto-qa-upload.test.cjs
+```
 
 A [hosted smoke test](https://github.com/canonical/snapcraft.io/actions/runs/42981379820)
 verified screenshot capture and publication. Website QA was still Partial: the
@@ -77,3 +94,10 @@ demo returned a 502 on `/firefox`, and some browser and freshness checks were
 incomplete. Later preflight and report-format changes have local test coverage
 but have not had another hosted smoke test. Loading the workflow from the trusted
 PR base remains untested until the workflow is on main.
+
+A [later run](https://github.com/canonical/snapcraft.io/actions/runs/43182069125)
+captured four PNGs but failed to publish all four because single-file staging
+flattened their paths while the allowlist required the source directory. Its
+upload calls also omitted declared image IDs, and the report followed the old
+failure-only table rule. The basename allowlist, explicit upload IDs and all-result
+comparison tables now have local regression coverage, not a new hosted test.
