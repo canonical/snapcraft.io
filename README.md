@@ -39,6 +39,17 @@ Once the server has started, you can visit `http://127.0.0.1:8004` in your brows
 dotrun -p 5004:5004
 ```
 
+`requirements.txt` contains production Python dependencies. Before running Python
+linting or tests, also install the development dependencies:
+
+```bash
+dotrun exec pip3 install -r requirements-dev.txt
+```
+
+Workshop installs these automatically. Docker and Rockcraft use only
+`requirements.txt`, so development tools are not installed as direct production
+dependencies.
+
 For more detailed local development instructions, see [HACKING.md](HACKING.md).
 
 

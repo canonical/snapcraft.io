@@ -11,6 +11,7 @@ README.md
 HACKING.md
 BRANDSTORES.md
 tests
+requirements-dev.txt
 
 # The run script isn't needed
 run

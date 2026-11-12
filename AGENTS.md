@@ -16,7 +16,8 @@ dotrun                                          # Run the app on http://127.0.0.
 dotrun exec yarn build                          # REQUIRED before app/Python tests
 dotrun test                                     # Full suite
 
-# Tests
+# Tests (install Python test/lint tools once after dotrun install)
+dotrun exec pip3 install -r requirements-dev.txt
 dotrun exec yarn test-js                        # vitest (JS/TS)
 dotrun exec yarn test-js path/to/file.test.tsx  # single JS test file
 dotrun exec yarn test-python                    # lint-python + Python unittest suite
@@ -47,6 +48,14 @@ dotrun exec yarn lint-scss                      # stylelint
 **Templates → JS wiring (Vite).** Jinja templates in `templates/` reference bundles via the `vite_import("...")` function (from `canonicalwebteam.flask-vite`). `vitePluginDetectInput.js` scans `templates/**/*.html` for these calls and auto-registers them as Vite entry points — so adding a new JS island means adding a `vite_import()` to a template, not editing `vite.config.js`. Configured via `VITE_*` env vars. Dev server runs on `VITE_PORT` (5004 locally).
 
 **Tests** mirror the backend layout under `tests/` (Python unittest). Frontend tests live in `__tests__/` / `.test.tsx` files colocated in `static/js/`, run by Vitest with Testing Library + MSW for API mocking.
+
+## Python requirements
+
+- `requirements.txt` contains runtime dependencies and is used by production
+  Docker and Rockcraft builds.
+- `requirements-dev.txt` includes runtime requirements plus Python test/lint
+  tools. Install it with `dotrun exec pip3 install -r requirements-dev.txt`
+  before running Python tests or linting. Workshop installs it automatically.
 
 ## Conventions
 

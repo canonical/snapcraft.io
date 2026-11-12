@@ -75,7 +75,7 @@ jobs:
           filters: |
             py:
               - '**/*.py'
-              - 'requirements.txt'
+              - 'requirements*.txt'
               - 'templates/**/*'
             js:
               - '**/*.js'
@@ -170,6 +170,7 @@ jobs:
         run: |
           sudo chmod -R 777 .
           dotrun install
+          dotrun exec pip3 install -r requirements-dev.txt
 
       - name: Build assets
         run: dotrun build
@@ -227,6 +228,7 @@ jobs:
         run: |
           sudo chmod -R 777 .
           dotrun install
+          dotrun exec pip3 install -r requirements-dev.txt
 
       - name: Install dependencies
         run: sudo pip3 install coverage

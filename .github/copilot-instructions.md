@@ -20,7 +20,7 @@ snapcraft.io is the web frontend for the Snap Store. Flask backend (Python 3.10+
 **ALWAYS run in this exact order:**
 
 ```bash
-pip3 install -r requirements.txt
+pip3 install -r requirements-dev.txt        # Includes runtime requirements.txt
 yarn install --immutable                   # Cypress download may fail in restricted networks - OK to ignore
 yarn run build                             # REQUIRED before running app or Python tests
 ```
@@ -28,6 +28,11 @@ yarn run build                             # REQUIRED before running app or Pyth
 **CRITICAL**: `yarn run build` MUST run before Flask app or Python tests. Creates `static/js/dist/vite/` assets required by templates.
 
 ## Linting & Testing
+
+`requirements.txt` is runtime-only. Before Python linting or tests in Dotrun,
+run `dotrun exec pip3 install -r requirements-dev.txt`. Workshop installs the
+development requirements automatically; Docker and Rockcraft use only the
+runtime requirements.
 
 ```bash
 yarn run lint-python  # flake8 + black
