@@ -597,6 +597,38 @@ test("formats route reports as sections with failure-only screenshot comparisons
   assert.doesNotMatch(report, /\| Route \/ state \| Viewport/);
 });
 
+test("isolates unrelated label events while cancelling older QA runs for the same PR", () => {
+  const frontmatter = source.split("\n---\n")[0];
+  const group = frontmatter.match(/^  group: (.+)$/m)?.[1];
+  assert.ok(group, "The workflow must declare a concurrency group");
+  assert.match(frontmatter, /  cancel-in-progress: true/);
+  // Evaluate the checked-in group's simple expressions with event fixtures.
+  // These property reads, ==, && and || have the same semantics in these cases.
+  const groupFor = (number, label, runId) =>
+    group.replace(/\$\{\{\s*(.*?)\s*\}\}/g, (_match, expression) =>
+      new Function("github", `return (${expression});`)({
+        event: { pull_request: { number }, label: { name: label } },
+        run_id: runId,
+      }),
+    );
+  const qa = groupFor(5975, "auto-qa", 43176958898);
+  assert.equal(qa, groupFor(5975, "auto-qa", 43176981060));
+  assert.notEqual(qa, groupFor(5976, "auto-qa", 43176981060));
+  for (const label of ["Don't merge", "bug", "qa"]) {
+    const unrelated = groupFor(5975, label, 43176981060);
+    assert.notEqual(unrelated, qa);
+    assert.notEqual(unrelated, groupFor(5975, label, 43176981061));
+  }
+  const lock = readFileSync(
+    join(__dirname, "../workflows/auto-qa.lock.yml"),
+    "utf8",
+  );
+  assert.equal(lock.match(/^  group: (.+)$/m)?.[1], group);
+  assert.match(lock, /concurrency:\n  cancel-in-progress: true\n/);
+  // Unrelated labels must still skip; isolation is not permission to run QA.
+  assert.ok(lock.includes("github.event.label.name == 'auto-qa'"));
+});
+
 test("keeps activation and output contracts scoped", () => {
   const frontmatter = source.split("\n---\n")[0];
   assert.match(frontmatter, /pull_request:\n    types: \[labeled\]/);

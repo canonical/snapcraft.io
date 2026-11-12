@@ -18,8 +18,10 @@ Auto QA checks a PR's demo in a browser and posts a report with screenshots.
    Images stop being available when their artifacts expire.
 
 To retry, remove and re-add the label once the latest commit's demo is ready.
-New commits and comments do not trigger QA. A new run cancels any previous run
-for that PR, and new reports collapse older ones.
+New commits and comments do not trigger QA. A new `auto-qa` label event cancels
+any previous QA run for that PR, and new reports collapse older ones. Other label
+additions produce skipped runs in separate concurrency groups; they do not cancel
+QA already in progress.
 
 ## Limits and safety
 

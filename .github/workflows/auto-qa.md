@@ -24,7 +24,9 @@ timeout-minutes: 30
 max-ai-credits: 50
 max-daily-ai-credits: 150
 concurrency:
-  group: auto-qa-${{ github.event.pull_request.number }}
+  # Label filtering runs in jobs, after workflow-level concurrency is applied.
+  # Give unrelated label events a unique group so they cannot cancel real QA.
+  group: auto-qa-${{ github.event.pull_request.number }}-${{ github.event.label.name == 'auto-qa' && 'qa' || github.run_id }}
   cancel-in-progress: true
 network:
   allowed:
