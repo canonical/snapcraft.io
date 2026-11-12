@@ -618,7 +618,10 @@ test("fails closed if the trusted GitHub workspace is unavailable", async () => 
 });
 
 test("keeps upload paths staged and reports pending or uninspected evidence honestly", () => {
-  assert.ok(source.includes('path: "auto-qa-evidence"'));
+  assert.ok(
+    source.includes('path: "auto-qa-evidence/search-desktop-prod.png"'),
+  );
+  assert.ok(!source.includes('path: "auto-qa-evidence"'));
   assert.match(source, /Capture\s+directly there/);
   assert.ok(source.includes("one standalone CLI command"));
   assert.ok(source.includes("do not retry alternate shell"));
@@ -630,6 +633,40 @@ test("keeps upload paths staged and reports pending or uninspected evidence hone
   assert.ok(source.includes("failure alone is not a reason to skip"));
   assert.ok(source.includes("Blocked (freshness unverified)"));
   assert.ok(!source.includes("/tmp/gh-aw/agent/auto-qa/evidence"));
+});
+
+test("publishes individual PNGs without ZIPs and embeds both images inside details", () => {
+  const frontmatter = source.split("\n---\n")[0];
+  assert.match(frontmatter, /max-uploads: 20\n    skip-archive: true/);
+  assert.match(source, /one call per file/);
+  assert.match(source, /Never upload the directory or bundle screenshots/);
+  assert.match(source, /never invent IDs or URLs/);
+  const details = source.split("<details>")[1].split("</details>")[0];
+  assert.match(
+    details,
+    /\| !\[Production screenshot\]\(#aw_prod1\) \| !\[Demo screenshot\]\(#aw_demo1\) \|/,
+  );
+  assert.match(
+    source,
+    /IDs returned for that viewport's production\/demo PNGs/,
+  );
+  assert.match(source, /If an upload request failed or an image is missing/);
+  const lock = readFileSync(
+    join(__dirname, "../workflows/auto-qa.lock.yml"),
+    "utf8",
+  );
+  // Check both the agent-facing config and the trusted publisher config.
+  const configs = [
+    ...lock.matchAll(/GH_AW_SAFE_OUTPUTS_(?:HANDLER_)?CONFIG: "(.*)"/g),
+  ].map((match) => JSON.parse(JSON.parse(`"${match[1]}"`)));
+  assert.equal(configs.length, 2);
+  for (const config of configs) {
+    assert.equal(config.upload_artifact["skip-archive"], true);
+    assert.equal(config.upload_artifact["max-uploads"], 20);
+    assert.deepEqual(config.upload_artifact["allowed-paths"], [
+      "auto-qa-evidence/*.png",
+    ]);
+  }
 });
 
 test("does not create repository issues through diagnostic handlers", () => {

@@ -82,15 +82,6 @@ Install [`dotrun`](https://github.com/canonical/dotrun), then run
 dotrun test
 ```
 
-### Automated PR browser QA
-
-For an open same-repository PR, wait for the **PR demo: ready** comment and a
-successful demo workflow run, then add the **auto-qa** label. The agent follows
-usable QA instructions, compares the demo with production using Playwright, and
-posts an advisory report with available screenshot evidence. To rerun after
-changes, remove and re-add the label once the new demo is ready. See the
-[Auto QA guide](.github/aw/auto-qa.md) for setup, safeguards, and validation.
-
 ## Adding new Publicise SVG Badges
 
 1. Take a look under `static/images/badges_editable/`; and pick another language to use as a template. For example, `en` (English), for LTR; `ar` (Arabic), for RTL; etc. **If you find none of the existing languages suitable for your template, you may modify the `x` and `y` coordinates for text to your liking, however the changes & positioning should be consistent with other badges, no modifications or appendages to the logo is allowed**
