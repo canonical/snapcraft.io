@@ -16,19 +16,19 @@ const hook = resolve(
   "../../.workshop/snapcraft-io/hooks/setup-project",
 );
 
-function runSetup(t, failures = {}, script = hook) {
+function runSetup(t, failures = {}) {
   const directory = mkdtempSync(join(tmpdir(), "snapcraft-workshop-"));
   t.after(() => rmSync(directory, { recursive: true, force: true }));
   const bin = join(directory, "bin");
   mkdirSync(bin);
-  for (const command of ["uv", "yarn", "apt-get"]) {
+  for (const command of ["uv", "yarn"]) {
     writeFileSync(
       join(bin, command),
-      `#!/bin/sh\nprintf '%s\\n' "${command} $*" >> "$HOME/commands"\nexit "\${FAIL_${command.toUpperCase().replaceAll("-", "_")}:-0}"\n`,
+      `#!/bin/sh\nprintf '%s\\n' "${command} $*" >> "$HOME/commands"\nexit "\${FAIL_${command.toUpperCase()}:-0}"\n`,
       { mode: 0o755 },
     );
   }
-  const result = spawnSync("bash", [script], {
+  const result = spawnSync("bash", [hook], {
     cwd: directory,
     env: {
       ...process.env,
@@ -46,19 +46,6 @@ function runSetup(t, failures = {}, script = hook) {
     profile: () => readFileSync(join(directory, ".profile"), "utf8"),
   };
 }
-
-test("Workshop installs the system dependencies needed by Cypress", (t) => {
-  const baseHook = resolve(
-    __dirname,
-    "../../.workshop/snapcraft-io/hooks/setup-base",
-  );
-  const { result, commands } = runSetup(t, {}, baseHook);
-  assert.equal(result.status, 0, result.stderr);
-  assert.deepEqual(commands, [
-    "apt-get update",
-    "apt-get install -y --no-install-recommends libasound2t64 libgbm1 libgtk-3-0t64 libnotify4 libnss3 libxss1 libxtst6 xauth xvfb",
-  ]);
-});
 
 test("Workshop installs locked dependencies and configures the development shell", (t) => {
   const { result, commands, profile } = runSetup(t);

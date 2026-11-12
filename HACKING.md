@@ -121,7 +121,7 @@ workshop run -- yarn lint-scss
 workshop run -- yarn lint-python
 ```
 
-For end-to-end tests, start `workshop run -- prod` in one terminal and run `workshop run -- yarn test-e2e` in another. Workshop installs the system libraries and virtual display required by Cypress; native environments need the [Cypress Linux prerequisites](https://docs.cypress.io/app/get-started/install-cypress#Linux-Prerequisites). These tests use live Store APIs, so upstream timeouts can cause failures.
+For end-to-end tests, start `workshop run -- prod` in one terminal and run `workshop run -- yarn test-e2e` in another. Cypress requires a separately provisioned environment with its [Linux prerequisites](https://docs.cypress.io/app/get-started/install-cypress#Linux-Prerequisites); Workshop does not install these system dependencies. These tests use live Store APIs, so upstream timeouts can cause failures.
 
 JavaScript tests run in UTC for consistent date/time assertions across local machines and CI. The worker pool is capped at four to avoid oversubscribing large Workshop hosts.
 
