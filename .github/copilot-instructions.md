@@ -105,6 +105,8 @@ Dependabot is the only dependency update bot. `.github/dependabot.yml` covers np
 
 **Add Flask endpoint**: Add route in `webapp/*/views.py`, add tests in `tests/*/`, create template if needed, `yarn build` if using JS, test with SECRET_KEY set
 
+**Local OpenSpec workflow**: When using OpenSpec, follow `openspec/README.md` and the `human-authored` schema in `openspec/config.yaml`. The engineer supplies `human-spec.md` and `testing-plan.md`; agents copy them unchanged and compile capability deltas plus `implementation-plan.md`. Do not invent missing decisions or generate substitute inputs. Apply tracks the plan's verified checkboxes; human QA requires engineer confirmation. Validate this setup with `openspec schema validate human-authored` and `node --test openspec/schemas/human-authored/schema.test.mjs` (OpenSpec must be on `PATH`, or set `OPENSPEC_BIN` for the tests).
+
 ## Key Files
 
 `.env` (dev defaults), `workshop.yaml` and `.workshop/` (development), `rockcraft.yaml` (production image), `entrypoint` (WSGI), `package.json` (yarn scripts), `requirements.txt` (Python deps), `vite.config.js` (build config), `vitest.config.js` (JS tests), `tsconfig.json`, `eslint.config.mjs`, `.stylelintrc`, `README.md` (quick start), `HACKING.md` (detailed setup), `CONTRIBUTING.md` (contribution guidelines)
