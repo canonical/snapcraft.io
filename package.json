@@ -21,11 +21,6 @@
   "author": "Canonical webteam",
   "license": "LGPL-3.0-or-later",
   "dependencies": {
-    "@babel/core": "7.29.6",
-    "@babel/plugin-transform-runtime": "7.29.0",
-    "@babel/preset-env": "7.29.5",
-    "@babel/preset-react": "7.28.5",
-    "@babel/preset-typescript": "7.28.5",
     "@canonical/analytics-events": "1.1.2",
     "@canonical/cookie-policy": "3.10.0",
     "@canonical/ds-assets": "0.44.1",
@@ -94,7 +89,6 @@
     "vite": "7.3.5"
   },
   "devDependencies": {
-    "@babel/eslint-parser": "7.28.6",
     "@percy/cli": "1.31.13",
     "@types/d3": "7.4.3",
     "@typescript-eslint/eslint-plugin": "^8.59.2",
