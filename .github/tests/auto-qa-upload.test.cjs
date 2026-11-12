@@ -173,12 +173,31 @@ function publisherFixture() {
     uploadedAssetPaths: new Set(),
     scopedKey: (value) => value,
     currentClaimHandle: () => null,
-    appendSafeOutputCounted: (item) => items.push(item),
+    appendSafeOutputCounted: (item) =>
+      items.push({ ...item, output_id: `so_asset_${items.length}` }),
     getErrorMessage: (error) => error.message,
     ERR_CONFIG: "ERR_CONFIG",
     ERR_VALIDATION: "ERR_VALIDATION",
     ERR_SYSTEM: "ERR_SYSTEM",
   });
+  // Match the hosted collector: declarations omit runtime-generated metadata.
+  function writeDeclarations(filename) {
+    fs.writeFileSync(
+      filename,
+      JSON.stringify({
+        items: items.map(({ type, path, output_id }) => ({
+          type,
+          path,
+          output_id,
+        })),
+      }),
+    );
+    if (items.length)
+      fs.writeFileSync(
+        path.join(path.dirname(filename), "safeoutputs.jsonl"),
+        items.map((item) => JSON.stringify(item)).join("\n") + "\n",
+      );
+  }
   return {
     root,
     workspace,
@@ -194,9 +213,8 @@ function publisherFixture() {
       fs.mkdirSync(path.join(validationRoot, "declarations"), {
         recursive: true,
       });
-      fs.writeFileSync(
+      writeDeclarations(
         path.join(validationRoot, "declarations", "agent_output.json"),
-        JSON.stringify({ items }),
       );
       await validateScreenshots(
         (id) => {
@@ -222,12 +240,12 @@ function publisherFixture() {
         "Network access must be mocked",
       );
       const declarations = path.join(root, "public-declarations.json");
-      fs.writeFileSync(declarations, JSON.stringify({ items }));
+      writeDeclarations(declarations);
       await verifyPublicScreenshots(
         (id) => {
           if (id === "node:timers/promises")
             return { setTimeout: async () => {} };
-          assert.ok(["node:fs", "node:crypto"].includes(id));
+          assert.ok(["node:fs", "node:path", "node:crypto"].includes(id));
           return require(id);
         },
         { env: { QA_DECLARATIONS: declarations } },
@@ -373,6 +391,18 @@ test("validation preserves screenshot filename restrictions and checks PNG bytes
       { url: "https://evil.example/ignored.png" },
       /Screenshot URL/,
     ],
+    [
+      "home-desktop-demo.png",
+      png,
+      { sha: "0".repeat(64) },
+      /content or PNG signature/,
+    ],
+    [
+      "home-desktop-demo.png",
+      png,
+      { output_id: undefined },
+      /exactly one ledger entry/,
+    ],
   ]) {
     const fixture = publisherFixture();
     try {
@@ -385,6 +415,44 @@ test("validation preserves screenshot filename restrictions and checks PNG bytes
     } finally {
       fixture.cleanup();
     }
+  }
+});
+
+test("validation and public checks reject blank ledger output IDs", async () => {
+  for (const output_id of ["", " \t\n"]) {
+    const fixture = publisherFixture();
+    try {
+      const source = path.join(fixture.workspace, "home-desktop-demo.png");
+      fs.writeFileSync(source, png);
+      fixture.stage({ path: source });
+      fixture.items[0].output_id = output_id;
+      await assert.rejects(fixture.validate(), /exactly one ledger entry/);
+      await assert.rejects(
+        fixture.verify(async () => assert.fail("Must not fetch a blank-ID asset")),
+        /exactly one ledger entry/,
+      );
+      assert.equal(fixture.commands.length, 0);
+    } finally {
+      fixture.cleanup();
+    }
+  }
+});
+
+test("validation and public checks reject ambiguous ledger output IDs", async () => {
+  const fixture = publisherFixture();
+  try {
+    const source = path.join(fixture.workspace, "home-desktop-demo.png");
+    fs.writeFileSync(source, png);
+    fixture.stage({ path: source });
+    fixture.items.push({ ...fixture.items[0] });
+    await assert.rejects(fixture.validate(), /exactly one ledger entry/);
+    await assert.rejects(
+      fixture.verify(async () => assert.fail("Must not fetch an ambiguous asset")),
+      /exactly one ledger entry/,
+    );
+    assert.equal(fixture.commands.length, 0);
+  } finally {
+    fixture.cleanup();
   }
 });
 
@@ -420,6 +488,15 @@ test("public verification requires anonymously readable matching PNG bytes befor
       );
       assert.equal(requests, 3);
     }
+  } finally {
+    fixture.cleanup();
+  }
+});
+
+test("reports without screenshots need no ledger or public fetch", async () => {
+  const fixture = publisherFixture();
+  try {
+    await fixture.verify(async () => assert.fail("Must not fetch any images"));
   } finally {
     fixture.cleanup();
   }

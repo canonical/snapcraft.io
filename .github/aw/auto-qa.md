@@ -52,7 +52,10 @@ QA already in progress.
 - A trusted check before publication requires every declared asset to be present,
   under the validated screenshot source directory, with a desktop/mobile and
   production/demo filename, matching hash, PNG signature and exact shared-branch
-  URL. A missing or invalid file fails the whole publisher before any push.
+  URL. The normalized `agent_output.json` contains only paths and output IDs;
+  validation matches each declaration to exactly one `safeoutputs.jsonl` entry
+  for runtime-generated hashes and URLs. Public verification uses the same match.
+  A missing or invalid file or ledger entry fails the check before any push/comment.
 - Uploads are capped at 20 PNGs per run, 10 MiB each. Content-hashed filenames
   deduplicate identical images and preserve earlier reports across reruns and PRs.
   No PAT, native-attachment credential, external host, or changes to main are

@@ -75,8 +75,17 @@ jobs:
             const output = JSON.parse(fs.readFileSync(path.join(root, 'declarations', 'agent_output.json'), 'utf8'));
             const assets = output.items.filter(item => item.type === 'upload_asset');
             if (assets.length < 1 || assets.length > 20) throw new Error('Expected 1–20 screenshot assets.');
+            // The normalized output retains only tool arguments and output IDs.
+            // Runtime-generated hashes and URLs live in the safe-output ledger.
+            const ledger = fs.readFileSync(path.join(root, 'declarations', 'safeoutputs.jsonl'), 'utf8')
+              .split('\n').filter(line => line.trim()).map(line => JSON.parse(line));
             const seen = new Set();
-            for (const asset of assets) {
+            for (const declaration of assets) {
+              const matches = ledger.filter(item => item.type === 'upload_asset' &&
+                typeof declaration.output_id === 'string' && declaration.output_id.trim() &&
+                item.output_id === declaration.output_id && item.path === declaration.path);
+              if (matches.length !== 1) throw new Error('Screenshot declaration must match exactly one ledger entry.');
+              const asset = matches[0];
               if (typeof asset.path !== 'string' || path.dirname(asset.path) !== qa.evidence_directory ||
                   !/^[a-zA-Z0-9_-]+-(desktop|mobile)-(prod|demo)\.png$/.test(path.basename(asset.path))) {
                 throw new Error('Only named screenshots from the trusted evidence directory may be published.');
@@ -116,11 +125,20 @@ jobs:
           script: |
             const fs = require('node:fs');
             const crypto = require('node:crypto');
+            const path = require('node:path');
             const { setTimeout: delay } = require('node:timers/promises');
             const output = JSON.parse(fs.readFileSync(process.env.QA_DECLARATIONS, 'utf8'));
             const assets = output.items.filter(item => item.type === 'upload_asset');
             if (assets.length > 20) throw new Error('Too many screenshot assets.');
-            for (const asset of assets) {
+            const ledger = assets.length ? fs.readFileSync(path.join(
+              path.dirname(process.env.QA_DECLARATIONS), 'safeoutputs.jsonl'), 'utf8')
+              .split('\n').filter(line => line.trim()).map(line => JSON.parse(line)) : [];
+            for (const declaration of assets) {
+              const matches = ledger.filter(item => item.type === 'upload_asset' &&
+                typeof declaration.output_id === 'string' && declaration.output_id.trim() &&
+                item.output_id === declaration.output_id && item.path === declaration.path);
+              if (matches.length !== 1) throw new Error('Screenshot declaration must match exactly one ledger entry.');
+              const asset = matches[0];
               if (!/^[a-f0-9]{64}$/.test(asset.sha)) throw new Error('Invalid screenshot hash.');
               const expectedUrl = `https://github.com/${context.repo.owner}/${context.repo.repo}/blob/assets/auto-qa/${asset.sha}.png?raw=true`;
               if (asset.url !== expectedUrl) throw new Error('Invalid screenshot URL.');
