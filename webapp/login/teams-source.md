@@ -55,10 +55,8 @@ In particular:
   extension responses or calls `after_login`. This module must never be used
   to treat an unverified browser message as a successful assertion.
 
-`tests/login/test_teams.py` exercises the extension API.
-`tests/login/test_openid_login.py` exercises the real Flask-OpenID callback,
-stateless python3-openid consumer, extension parsing and application login.
-Its simulated provider verifies HMAC signatures at the HTTP boundary; it does
-not replace `Consumer.complete`, `SuccessResponse.getSignedNS`, or
-`OpenIDResponse`. These tests do not substitute for QA against staging Ubuntu
-SSO with appropriately authorized and unauthorized test accounts.
+`tests/login/test_teams.py` keeps focused coverage for request serialization,
+namespace lookup and rejection of unsigned or partially signed membership.
+It uses OpenID's real `getSignedNS` implementation on already verified
+assertions; signature verification remains the consumer's responsibility.
+Existing login tests and staging Ubuntu SSO QA cover the integration.
