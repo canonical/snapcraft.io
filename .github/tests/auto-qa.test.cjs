@@ -59,6 +59,34 @@ function fixtures() {
       html_url: "https://github.com/canonical/snapcraft.io/actions/runs/99",
     },
     latest: 99,
+    trees: {
+      [sha]: {
+        truncated: false,
+        tree: [
+          {
+            path: "templates/store/search.html",
+            type: "blob",
+            mode: "100644",
+            sha: "1".repeat(40),
+          },
+        ],
+      },
+      ["b".repeat(40)]: {
+        truncated: false,
+        tree: [
+          {
+            path: "templates/store/search.html",
+            type: "blob",
+            mode: "100644",
+            sha: "2".repeat(40),
+          },
+        ],
+      },
+    },
+    headLatest: null,
+    jobs: [
+      { name: "deploy / Deploy", status: "completed", conclusion: "skipped" },
+    ],
     files: [
       {
         filename: "templates/store/search.html",
@@ -77,26 +105,35 @@ async function runPreflight(data, workspace = "/runner/work/snapcraft.io") {
   const calls = [];
   const createdDirectories = [];
   const methods = Object.fromEntries(
-    ["pr", "comments", "files", "run", "latest"].map((name) => [
-      name,
-      async (options) => {
-        calls.push({ name, options });
-        if (data.fail === name) throw new Error("GitHub API unavailable");
-        if (name === "pr") {
-          reads += 1;
-          return { data: reads > 1 && data.current ? data.current : data.pr };
-        }
-        if (name === "latest")
-          return {
-            data: {
-              workflow_runs: [
-                { ...data.run, id: data.latest, ...data.latestOverrides },
-              ],
-            },
-          };
-        return { data: data[name] };
-      },
-    ]),
+    ["pr", "comments", "files", "run", "latest", "commit", "tree", "jobs"].map(
+      (name) => [
+        name,
+        async (options) => {
+          calls.push({ name, options });
+          if (data.fail === name) throw new Error("GitHub API unavailable");
+          if (name === "pr") {
+            reads += 1;
+            return { data: reads > 1 && data.current ? data.current : data.pr };
+          }
+          if (name === "commit")
+            return { data: { tree: { sha: options.commit_sha } } };
+          if (name === "tree") return { data: data.trees[options.tree_sha] };
+          if (name === "latest" && options.head_sha !== data.run.head_sha)
+            return {
+              data: { workflow_runs: data.headLatest ? [data.headLatest] : [] },
+            };
+          if (name === "latest")
+            return {
+              data: {
+                workflow_runs: [
+                  { ...data.run, id: data.latest, ...data.latestOverrides },
+                ],
+              },
+            };
+          return { data: data[name] };
+        },
+      ],
+    ),
   );
   const github = {
     rest: {
@@ -105,7 +142,9 @@ async function runPreflight(data, workspace = "/runner/work/snapcraft.io") {
       actions: {
         getWorkflowRun: methods.run,
         listWorkflowRuns: methods.latest,
+        listJobsForWorkflowRun: methods.jobs,
       },
+      git: { getCommit: methods.commit, getTree: methods.tree },
     },
     paginate: async (method, options) => (await method(options)).data,
   };
@@ -190,6 +229,170 @@ for (const body of [
     }
   });
 }
+
+function olderDemoFixture() {
+  const data = fixtures();
+  data.run.head_sha = "b".repeat(40);
+  data.trees[data.run.head_sha] = structuredClone(data.trees[data.pr.head.sha]);
+  for (const [sha, hash] of [
+    [data.run.head_sha, "3"],
+    [data.pr.head.sha, "4"],
+  ]) {
+    data.trees[sha].tree.push(
+      { path: ".github", type: "tree", mode: "040000", sha: hash.repeat(40) },
+      {
+        path: ".github/workflows/auto-qa.md",
+        type: "blob",
+        mode: "100644",
+        sha: hash.repeat(40),
+      },
+    );
+  }
+  return data;
+}
+
+for (const headLatest of [
+  null,
+  { id: 100, run_attempt: 1, status: "completed", conclusion: "failure" },
+]) {
+  test(`reuses an older demo with identical application trees: ${JSON.stringify(headLatest)}`, async () => {
+    const data = olderDemoFixture();
+    data.headLatest = headLatest;
+    const { result, calls } = await runPreflight(data);
+    assert.equal(result.status, "ready");
+    assert.equal(result.head_sha, data.pr.head.sha);
+    assert.equal(result.deployment.head_sha, data.run.head_sha);
+    assert.equal(result.deployment.reused_demo, true);
+    assert.deepEqual(result.deployment.qa_only_changes, [
+      ".github/workflows/auto-qa.md",
+    ]);
+    assert.deepEqual(
+      result.deployment.current_head_run,
+      headLatest && {
+        run_id: headLatest.id,
+        run_attempt: headLatest.run_attempt,
+        status: headLatest.status,
+        conclusion: headLatest.conclusion,
+      },
+    );
+    assert.equal(
+      calls.find((c) => c.name === "latest").options.head_sha,
+      data.run.head_sha,
+    );
+    assert.equal(calls.filter((c) => c.name === "tree").length, 2);
+  });
+}
+
+for (const [name, change] of [
+  [
+    "truncated tree",
+    (d) => {
+      d.trees[d.run.head_sha].truncated = true;
+    },
+  ],
+  [
+    "missing tree",
+    (d) => {
+      delete d.trees[d.run.head_sha].tree;
+    },
+  ],
+  [
+    "application edit",
+    (d) => {
+      d.trees[d.pr.head.sha].tree[0].sha = "5".repeat(40);
+    },
+  ],
+  [
+    "application removal",
+    (d) => {
+      d.trees[d.pr.head.sha].tree.shift();
+    },
+  ],
+  [
+    "renamed application file",
+    (d) => {
+      d.trees[d.pr.head.sha].tree[0].path = ".github/tests/auto-qa.test.cjs";
+    },
+  ],
+  ...[
+    "rockcraft.yaml",
+    "package.json",
+    "yarn.lock",
+    ".github/workflows/demo.yaml",
+    ".github/workflows/auto-qa.md/other",
+    "templates/new.html",
+  ].map((filename) => [
+    `non-allowlisted addition ${filename}`,
+    (d) => {
+      d.trees[d.pr.head.sha].tree.push({
+        path: filename,
+        type: "blob",
+        mode: "100644",
+        sha: "5".repeat(40),
+      });
+    },
+  ]),
+  [
+    "QA symlink",
+    (d) => {
+      d.trees[d.pr.head.sha].tree[2].mode = "120000";
+    },
+  ],
+  [
+    "QA submodule",
+    (d) => {
+      d.trees[d.pr.head.sha].tree[2].type = "commit";
+    },
+  ],
+  [
+    "running head deployment",
+    (d) => {
+      d.headLatest = { id: 100, status: "in_progress" };
+    },
+  ],
+  [
+    "successful head deployment",
+    (d) => {
+      d.headLatest = { id: 100, status: "completed", conclusion: "success" };
+    },
+  ],
+  [
+    "failed but attempted deployment",
+    (d) => {
+      d.headLatest = { id: 100, status: "completed", conclusion: "failure" };
+      d.jobs[0].conclusion = "failure";
+    },
+  ],
+  [
+    "missing deployment jobs",
+    (d) => {
+      d.headLatest = { id: 100, status: "completed", conclusion: "failure" };
+      d.jobs = [];
+    },
+  ],
+  ...["commit", "tree", "jobs"].map((name) => [
+    `${name} API failure`,
+    (d) => {
+      d.fail = name;
+      d.headLatest = { id: 100, status: "completed", conclusion: "failure" };
+    },
+  ]),
+]) {
+  test(`blocks unsafe older-demo reuse: ${name}`, async () => {
+    const data = olderDemoFixture();
+    change(data);
+    const { result } = await runPreflight(data);
+    assert.equal(result.status, "blocked");
+    assert.equal(result.demo_url, undefined);
+  });
+}
+
+test("the prompt discloses reused demos and rechecks both deployment identities", () => {
+  assert.ok(source.includes("Disclose both SHAs"));
+  assert.ok(source.includes("deployment.head_sha"));
+  assert.ok(source.includes("deployment.current_head_run"));
+  assert.ok(source.includes("Do not switch to a different deployed revision"));
+});
 
 for (const [name, change] of [
   [

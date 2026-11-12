@@ -7,7 +7,9 @@ Auto QA checks a PR's demo in a browser and posts a report with screenshots.
 
 1. Add clear `## How to QA` steps to the PR description.
 2. Wait for the controller's `github-actions[bot]` comment to say **PR demo: ready**
-   and for the linked **PR demo** workflow to succeed for the latest commit.
+   and for the linked **PR demo** workflow to succeed. Normally it must deploy the
+   latest commit. An older demo is accepted only when exact Git-tree comparison
+   proves all changes are confined to the QA-workflow allowlist below.
 3. Add the **auto-qa** label.
 4. Check the **Auto QA preflight** run summary. If checks block or skip the run,
    the reason appears there; no PR comment is posted. Otherwise, read the browser
@@ -34,8 +36,22 @@ QA already in progress.
 - Only the validated demo and production site may be browsed. PR content and
   pages are untrusted; the agent must not run PR code or commands from them.
 - Comparisons use live production, which may differ from the PR's base commit.
-- The workflow checks the demo and PR commit before starting. The agent must
-  check again before reporting; changed or unverifiable context blocks the result.
+- The workflow checks the demo and PR commit before starting. An older successful
+  deployment is reusable only when its exact Git tree and the current head differ
+  in these regular-file paths alone:
+  - `.github/workflows/auto-qa.md`
+  - `.github/workflows/auto-qa.lock.yml`
+  - `.github/workflows/auto-qa-tests.yml`
+  - `.github/tests/auto-qa.test.cjs`
+  - `.github/tests/auto-qa-upload.test.cjs`
+  - `.github/aw/auto-qa.md`
+  Rebased histories are supported; merge-base diffs are not used as equivalence
+  evidence. Truncated/unavailable trees, application/build-input changes,
+  symlinks/submodules in allowed paths, and pending/successful newer deployments
+  block reuse. A failed/cancelled newer build is allowed only if its deployment
+  jobs were all skipped. Both SHAs and the allowlisted changes must be disclosed.
+  The agent must check the selected deployment and current-head run again before
+  reporting; changed or unverifiable context blocks the result.
 - Network restrictions and threat detection provide safeguards, but browser
   restrictions also depend on the agent following instructions.
 - Both browser sessions use a trusted Playwright config to disable background
