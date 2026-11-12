@@ -5,9 +5,13 @@ import { useMutation, useQueryClient } from "react-query";
 import { Button, Icon } from "@canonical/react-ds-global";
 import { Field, Form } from "@canonical/react-ds-global-form";
 import { useForm, type FieldValues } from "react-hook-form";
-import randomstring from "randomstring";
 
-import { checkModelNameExists, setPageTitle } from "../../utils";
+import {
+  checkModelNameExists,
+  generateModelApiKey,
+  MODEL_API_KEY_LENGTH,
+  setPageTitle,
+} from "../../utils";
 import RouterLinkButton from "../../components/RouterLinkButton";
 import useLatestRef from "../../hooks/useLatestRef";
 import useRevalidateField from "../../hooks/useRevalidateField";
@@ -33,7 +37,6 @@ function CreateModelForm({
   setShowNotification,
   setShowErrorNotification,
 }: Props): React.JSX.Element {
-  const API_KEY_LENGTH = 50;
   const navigate = useNavigate();
   const location = useLocation();
   const { id } = useParams();
@@ -176,13 +179,13 @@ function CreateModelForm({
               name="apiKey"
               id="api-key-field"
               label="API key"
-              maxLength={API_KEY_LENGTH}
+              maxLength={MODEL_API_KEY_LENGTH}
               registerProps={{
                 onChange: (event: ChangeEvent<HTMLInputElement>) => {
                   setApiKey(event.target.value);
                 },
               }}
-              description={`API key should be exactly ${API_KEY_LENGTH} alphanumeric characters long (${apiKey.length}/${API_KEY_LENGTH})`}
+              description={`API key should be exactly ${MODEL_API_KEY_LENGTH} alphanumeric characters long (${apiKey.length}/${MODEL_API_KEY_LENGTH})`}
             />
             <div>
               {/* 
@@ -194,7 +197,7 @@ function CreateModelForm({
                 type="button"
                 importance="secondary"
                 onClick={() => {
-                  setApiKey(randomstring.generate({ length: API_KEY_LENGTH }));
+                  setApiKey(generateModelApiKey());
                 }}
               >
                 Generate key
@@ -222,7 +225,7 @@ function CreateModelForm({
                   style={{ marginLeft: "1rem" }}
                   disabled={
                     !newModelName ||
-                    apiKey.length !== API_KEY_LENGTH ||
+                    apiKey.length !== MODEL_API_KEY_LENGTH ||
                     checkModelNameExists(newModelName, modelsList)
                   }
                 >

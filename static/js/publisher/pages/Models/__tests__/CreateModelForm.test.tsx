@@ -255,6 +255,11 @@ describe("CreateModelForm", () => {
     expect(submitButton()).toBeEnabled();
     expect(fetch).not.toHaveBeenCalled();
 
+    await user.click(screen.getByRole("button", { name: "Generate key" }));
+    expect(keyInput().value).toMatch(/^[a-zA-Z0-9]{50}$/);
+    expect(keyInput()).toHaveAccessibleDescription(keyDescription(50));
+    expect(fetch).not.toHaveBeenCalled();
+
     await user.click(keyInput());
     await user.keyboard("{End}{Backspace}");
     expect(keyInput()).toHaveAccessibleDescription(keyDescription(49));
@@ -278,6 +283,8 @@ describe("CreateModelForm", () => {
     await user.type(nameInput(), "new-model");
     await user.click(screen.getByRole("button", { name: "Generate key" }));
     const generatedKey = keyInput().value;
+    expect(generatedKey).toHaveLength(50);
+    expect(generatedKey).toMatch(/^[a-zA-Z0-9]{50}$/);
     await user.click(submitButton());
 
     await waitFor(() => expect(fetch).toHaveBeenCalledTimes(1));

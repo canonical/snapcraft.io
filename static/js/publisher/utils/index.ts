@@ -18,6 +18,9 @@ import getPolicies from "./getPolicies";
 import filterAvailableStores from "./filterAvailableStores";
 import formatBuildStatus from "./formatBuildStatus";
 import formatDurationString from "./formatDurationString";
+import generateModelApiKey from "./generateModelApiKey";
+
+export { MODEL_API_KEY_LENGTH } from "./generateModelApiKey";
 
 export {
   getSettingsData,
@@ -40,4 +43,5 @@ export {
   filterAvailableStores,
   formatBuildStatus,
   formatDurationString,
+  generateModelApiKey,
 };

@@ -144,6 +144,7 @@ describe("Model", () => {
     await user.click(screen.getByRole("button", { name: "Revert" }));
     expect(screen.getByLabelText("API key")).toHaveValue("");
     expect(screen.getByRole("button", { name: "Save" })).toBeDisabled();
+    expect(screen.getByRole("button", { name: "Revert" })).toBeDisabled();
   });
 
   it("generates a new API key when clicking the 'Generate key' button", async () => {
@@ -151,12 +152,31 @@ describe("Model", () => {
     useQuery.mockReturnValue({ data: [{ ...defaultModel, "api-key": null }] });
     renderComponent();
     const user = userEvent.setup();
-    await user.click(screen.getByRole("button", { name: "Generate key" }));
-    const apiKeyField: HTMLInputElement = screen.getByLabelText("API key");
-    const apiKeyFieldValue = apiKeyField.value;
-    expect(apiKeyFieldValue).not.toEqual(
-      "K2NjWGA4iKhLmGDDQUJhJyhzS35CBLJClyNu8dAS0TWrTF3aSD",
-    );
+    const generateButton = screen.getByRole("button", { name: "Generate key" });
+    expect(generateButton).toHaveAttribute("type", "button");
+    const fetchMock = vi.spyOn(globalThis, "fetch");
+
+    try {
+      await user.click(generateButton);
+      const apiKeyField = screen.getByRole<HTMLInputElement>("textbox", {
+        name: "API key",
+      });
+      expect(apiKeyField.value).toHaveLength(50);
+      expect(apiKeyField.value).toMatch(/^[a-zA-Z0-9]{50}$/);
+      expect(apiKeyField).not.toHaveAttribute("readonly");
+      expect(fetchMock).not.toHaveBeenCalled();
+
+      await user.click(generateButton);
+      expect(apiKeyField.value).toMatch(/^[a-zA-Z0-9]{50}$/);
+      expect(fetchMock).not.toHaveBeenCalled();
+
+      await user.clear(apiKeyField);
+      await user.type(apiKeyField, "A".repeat(50));
+      expect(apiKeyField).toHaveValue("A".repeat(50));
+      expect(screen.getByRole("button", { name: "Save" })).toBeEnabled();
+    } finally {
+      fetchMock.mockRestore();
+    }
   });
 
   it("submits the generated API key when clicking 'Save'", async () => {
@@ -172,6 +192,8 @@ describe("Model", () => {
     await user.click(screen.getByRole("button", { name: "Generate key" }));
     const apiKeyField: HTMLInputElement = screen.getByLabelText("API key");
     const apiKey = apiKeyField.value;
+    expect(apiKey).toHaveLength(50);
+    expect(apiKey).toMatch(/^[a-zA-Z0-9]{50}$/);
 
     await user.click(screen.getByRole("button", { name: "Save" }));
 

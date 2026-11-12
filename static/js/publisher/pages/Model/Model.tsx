@@ -3,7 +3,6 @@ import { useParams } from "react-router-dom";
 import { useAtomValue, useSetAtom } from "jotai";
 import { useMutation } from "react-query";
 import { format } from "date-fns";
-import randomstring from "randomstring";
 import { Row, Col, Notification } from "@canonical/react-components";
 import { Button } from "@canonical/react-ds-global";
 import { Field, Form } from "@canonical/react-ds-global-form";
@@ -14,7 +13,7 @@ import type { FieldValues } from "react-hook-form";
 import { modelsListState } from "../../state/modelsState";
 import { brandIdState, brandStoreState } from "../../state/brandStoreState";
 import { useModels } from "../../hooks";
-import { setPageTitle } from "../../utils";
+import { generateModelApiKey, setPageTitle } from "../../utils";
 import type { Model as ModelType } from "../../types/shared";
 import { PortalEntrance } from "../Portals/Portals";
 
@@ -205,11 +204,7 @@ function Model() {
                   importance="secondary"
                   style={{ marginBottom: 0 }}
                   onClick={() => {
-                    setApiKey(
-                      randomstring.generate({
-                        length: 50,
-                      }),
-                    );
+                    setApiKey(generateModelApiKey());
                   }}
                 >
                   Generate key
