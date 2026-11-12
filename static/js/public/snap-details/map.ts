@@ -14,7 +14,7 @@ export default function renderMap(
 ) {
   const mapEl = select(el);
 
-  return fetch("/static/js/world-110m.v1.json")
+  fetch("/static/js/world-110m.v1.json")
     .then((response) => {
       if (!response.ok) {
         throw new Error(`${response.status} ${response.statusText}`);
