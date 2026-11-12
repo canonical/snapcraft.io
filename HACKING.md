@@ -14,25 +14,6 @@ The setup hook installs Python dependencies into `.venv`, installs JavaScript de
 
 To run an arbitrary command in the environment, use `workshop exec -- <command>`, or enter `workshop shell` for an interactive shell.
 
-### Native setup (without Workshop)
-
-CI runs checks directly with Python 3.12 and Node.js 24. If you need a native environment, install those plus Yarn, then run:
-
-```bash
-python3 -m venv .venv
-. .venv/bin/activate
-pip install -r requirements.txt
-yarn install --immutable
-set -a
-. ./.env
-if [ -f .env.local ]; then . ./.env.local; fi
-set +a
-yarn build
-yarn start
-```
-
-Load the environment and activate the virtual environment in each new shell before running commands. `yarn build` is required before starting Flask without Vite or running Python tests; do not commit generated `static/js/dist/` assets.
-
 ## Use staging APIs
 
 To use staging APIs locally you can add the following lines to an `.env.local` file:
@@ -120,12 +101,6 @@ workshop run -- yarn lint-js
 workshop run -- yarn lint-scss
 workshop run -- yarn lint-python
 ```
-
-For end-to-end tests, start `workshop run -- prod` in one terminal and run `workshop run -- yarn test-e2e` in another. The `prod` action builds assets and serves with `ENVIRONMENT=production` and `FLASK_DEBUG=0`, without Vite or the Flask reloader. Cypress requires a separately provisioned environment with its [Linux prerequisites](https://docs.cypress.io/app/get-started/install-cypress#Linux-Prerequisites); Workshop does not install these system dependencies. These tests use live Store APIs, so upstream timeouts can cause failures.
-
-JavaScript tests run in UTC for consistent date/time assertions across local machines and CI. The worker pool is capped at four to avoid oversubscribing large Workshop hosts.
-
-In a native environment, use the same Yarn commands without the `workshop run --` wrapper after loading the environment as above.
 
 ## Adding new Publicise SVG Badges
 
