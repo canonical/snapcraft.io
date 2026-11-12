@@ -47,8 +47,6 @@ _site/
 *.*.map
 
 # [env] Local environment settings
-.docker-project
-.*.hash
 .envrc
 .env.local
 env/
@@ -59,8 +57,7 @@ env[23]/
 # pragma.css is a hand-authored source entry point, not Sass output
 !static/sass/pragma.css
 
-# dotrun snap files
-.dotrun.json
+# Python virtual environment
 .venv/
 
 # workshop snap files

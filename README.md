@@ -26,36 +26,29 @@ If you have found a bug elsewhere in the snap world:
 
 ## Local development
 
-The simplest way to run the site locally is using [`dotrun`](https://github.com/canonical/dotrun):
+Use [Workshop](https://ubuntu.com/workshop/docs/) to run the site locally. It provides Python and Node.js, installs the project dependencies, and forwards the Flask and Vite ports.
 
 ```bash
-dotrun
+workshop launch # first-time setup
+workshop run -- start
 ```
 
-Once the server has started, you can visit `http://127.0.0.1:8004` in your browser. You stop the server using `<ctrl>+c`.
+Visit `http://127.0.0.1:8004` once the server has started. Vite runs on port 5004 with live reloading. Stop the server with `Ctrl+C`.
 
-> If you're running dotrun on macOS or Windows, you will have to use a different command to launch dotrun with an additional argument in order to get JavaScript code working:
-```bash
-dotrun -p 5004:5004
-```
-
-For more detailed local development instructions, see [HACKING.md](HACKING.md).
-
-
-### Experimental support for Workshop
-Another development tool you can use to run this project is [`Workshop`](https://ubuntu.com/workshop/docs/). Launch the Workshop by running
+For an existing workshop, use `workshop start` if it is stopped, or `workshop refresh` to update dependencies after pulling changes. Put local credentials and configuration overrides in `.env.local`; Workshop loads it after `.env`.
 
 ```bash
-workshop launch # you only need to do this the first time
+workshop run -- build             # build frontend assets
+workshop run -- test              # build, lint, and run Python/JS tests
+workshop run -- yarn test-js      # run a single yarn script
+workshop run -- prod              # build and serve without the Vite dev server
 ```
 
-and start the server with
+The `prod` action serves built assets with `ENVIRONMENT=production` and `FLASK_DEBUG=0`, disabling Flask debug mode and the reloader.
 
-```bash
-workshop run start
-```
+> Workshop depends on LXD, which is only available on Linux. On macOS or Windows, run Workshop inside a [Multipass](https://canonical.com/multipass) VM. Configure Multipass to use the VirtualBox virtualization driver and allocate at least 4GB RAM and 10GB disk; after setting up the workshop in the VM, enable [port forwarding](https://canonical.com/multipass/docs/stable/how-to-guides/customise-multipass/set-up-the-driver/#use-virtualbox-to-set-up-port-forwarding-for-a-multipass-instance) for ports 8004 and 5004.
 
-> Workshop depends on LXD, which is only available on Linux. If you're running macOS or Windows, you can use Workshop inside a [`Multipass`](https://canonical.com/multipass) VM. Beware: this setup is even more experimental and you might encounter strange issues. Configure Multipass to use the VirtualBox virtualization driver and allocate at least 4GB RAM and 10GB disk for the VM; after setting up the workshop in the VM, enable [port forwarding](https://canonical.com/multipass/docs/stable/how-to-guides/customise-multipass/set-up-the-driver/#use-virtualbox-to-set-up-port-forwarding-for-a-multipass-instance) for ports 8004 and 5004.
+For detailed development, testing, and native setup instructions, see [HACKING.md](HACKING.md).
 
 ## License
 

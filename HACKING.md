@@ -1,6 +1,19 @@
 
 # Working on snapcraft.io
 
+## Development environment
+
+Use [Workshop](https://ubuntu.com/workshop/docs/) for the supported development environment:
+
+```bash
+workshop launch
+workshop run -- start
+```
+
+The setup hook installs Python dependencies into `.venv`, installs JavaScript dependencies from `yarn.lock`, and loads `.env` followed by optional `.env.local` overrides. Flask is available on port 8004 and Vite on port 5004. Use `workshop refresh` after dependency changes.
+
+To run an arbitrary command in the environment, use `workshop exec -- <command>`, or enter `workshop shell` for an interactive shell.
+
 ## Use staging APIs
 
 To use staging APIs locally you can add the following lines to an `.env.local` file:
@@ -76,10 +89,17 @@ The application will be reporting errors to your `sentry.io` project from now on
 
 ## Testing
 
-Install [`dotrun`](https://github.com/canonical/dotrun), then run
+After launching Workshop, run:
 
-``` bash
-dotrun test
+```bash
+workshop run -- test                      # build + all unit tests and linting
+workshop run -- yarn test-js              # JavaScript tests
+workshop run -- yarn test-js path/to/file.test.tsx
+workshop run -- build                     # required before Python tests
+workshop run -- yarn test-python          # Python lint + unit tests
+workshop run -- yarn lint-js
+workshop run -- yarn lint-scss
+workshop run -- yarn lint-python
 ```
 
 ## Adding new Publicise SVG Badges
@@ -90,7 +110,7 @@ dotrun test
 4. Install scour via `pip install scour` or `sudo apt install python3-scour` to minify generated badges.
 5. Run `python scripts/generate-minified-badges.py` to convert. (*Use `python3` if your distro does not automatically alias it*)
 6. Make equivalent changes under `static/js/publisher/pages/Publicise/PubliciseButtons.tsx`, specifically inside `LANGUAGES` object
-7. **Important** Test your changes to ensure they work. If using `dotrun`, change the values of `darkBadgeSource` & `lightBadgeSource` in the above file, to point to `http://localhost:8004` (or whichever port is set via `.env`), for the badges to render.
+7. **Important** Test your changes to ensure they work. When testing locally, change the values of `darkBadgeSource` & `lightBadgeSource` in the above file, to point to `http://localhost:8004` (or whichever port is set via `.env`), for the badges to render.
 
 ## Update the list of licenses
 
