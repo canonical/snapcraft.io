@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { select, pointer, Selection, BaseType } from "d3-selection";
-import { json } from "d3-fetch";
 import { geoNaturalEarth1, geoPath } from "d3-geo";
 import { feature, mesh } from "topojson-client";
 
@@ -15,8 +14,16 @@ export default function renderMap(
 ) {
   const mapEl = select(el);
 
-  json("/static/js/world-110m.v1.json")
-    // @ts-expect-error
+  fetch("/static/js/world-110m.v1.json")
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(`${response.status} ${response.statusText}`);
+      }
+      if (response.status === 204 || response.status === 205) {
+        return;
+      }
+      return response.json();
+    })
     .then(ready)
     .catch((error) => {
       throw new Error(error);
