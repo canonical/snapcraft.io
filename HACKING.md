@@ -1,6 +1,38 @@
 
 # Working on snapcraft.io
 
+## Development environment
+
+Use [Workshop](https://ubuntu.com/workshop/docs/) for the supported development environment:
+
+```bash
+workshop launch
+workshop run -- start
+```
+
+The setup hook installs Python dependencies into `.venv`, installs JavaScript dependencies from `yarn.lock`, and loads `.env` followed by optional `.env.local` overrides. Flask is available on port 8004 and Vite on port 5004. Use `workshop refresh` after dependency changes.
+
+To run an arbitrary command in the environment, use `workshop exec -- <command>`, or enter `workshop shell` for an interactive shell.
+
+### Native setup (without Workshop)
+
+CI runs checks directly with Python 3.12 and Node.js 24. If you need a native environment, install those plus Yarn, then run:
+
+```bash
+python3 -m venv .venv
+. .venv/bin/activate
+pip install -r requirements.txt
+yarn install --immutable
+set -a
+. ./.env
+if [ -f .env.local ]; then . ./.env.local; fi
+set +a
+yarn build
+yarn start
+```
+
+Load the environment and activate the virtual environment in each new shell before running commands. `yarn build` is required before starting Flask without Vite or running Python tests; do not commit generated `static/js/dist/` assets.
+
 ## Use staging APIs
 
 To use staging APIs locally you can add the following lines to an `.env.local` file:
@@ -76,11 +108,24 @@ The application will be reporting errors to your `sentry.io` project from now on
 
 ## Testing
 
-Install [`dotrun`](https://github.com/canonical/dotrun), then run
+After launching Workshop, run:
 
-``` bash
-dotrun test
+```bash
+workshop run -- test                      # build + all unit tests and linting
+workshop run -- yarn test-js              # JavaScript tests
+workshop run -- yarn test-js path/to/file.test.tsx
+workshop run -- build                     # required before Python tests
+workshop run -- yarn test-python          # Python lint + unit tests
+workshop run -- yarn lint-js
+workshop run -- yarn lint-scss
+workshop run -- yarn lint-python
 ```
+
+For end-to-end tests, start `workshop run -- prod` in one terminal and run `workshop run -- yarn test-e2e` in another. Workshop installs the system libraries and virtual display required by Cypress; native environments need the [Cypress Linux prerequisites](https://docs.cypress.io/app/get-started/install-cypress#Linux-Prerequisites). These tests use live Store APIs, so upstream timeouts can cause failures.
+
+JavaScript tests run in UTC for consistent date/time assertions across local machines and CI. The worker pool is capped at four to avoid oversubscribing large Workshop hosts.
+
+In a native environment, use the same Yarn commands without the `workshop run --` wrapper after loading the environment as above.
 
 ## Adding new Publicise SVG Badges
 
@@ -90,7 +135,7 @@ dotrun test
 4. Install scour via `pip install scour` or `sudo apt install python3-scour` to minify generated badges.
 5. Run `python scripts/generate-minified-badges.py` to convert. (*Use `python3` if your distro does not automatically alias it*)
 6. Make equivalent changes under `static/js/publisher/pages/Publicise/PubliciseButtons.tsx`, specifically inside `LANGUAGES` object
-7. **Important** Test your changes to ensure they work. If using `dotrun`, change the values of `darkBadgeSource` & `lightBadgeSource` in the above file, to point to `http://localhost:8004` (or whichever port is set via `.env`), for the badges to render.
+7. **Important** Test your changes to ensure they work. When testing locally, change the values of `darkBadgeSource` & `lightBadgeSource` in the above file, to point to `http://localhost:8004` (or whichever port is set via `.env`), for the badges to render.
 
 ## Update the list of licenses
 

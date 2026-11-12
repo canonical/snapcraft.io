@@ -25,6 +25,8 @@ export default defineConfig({
     },
     silent: "passed-only", // silence logs for passed tests
     pool: "threads",
+    // Workshop can expose every host CPU; avoid spawning excessive workers.
+    maxWorkers: 4,
     testTimeout: 20000,
     coverage: {
       enabled: true,

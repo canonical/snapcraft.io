@@ -8,25 +8,26 @@ snapcraft.io is the web frontend for the Snap Store: a stateless Flask (Python 3
 
 ## Running commands
 
-Everything runs through **`dotrun`**, which provides the containerized dev environment. Run the app with bare `dotrun`; run any yarn script with `dotrun exec yarn <script>`. Do **not** invoke `yarn` (or `python3`) directly.
+Use **Workshop** for the managed development environment. Launch once with `workshop launch`, then use named actions or the Yarn action to run scripts. Use `workshop start` for a stopped workshop and `workshop refresh` after dependency changes.
 
 ```bash
-dotrun                                          # Run the app on http://127.0.0.1:8004 (recommended)
-                                                #   on macOS/Windows use `dotrun -p 5004:5004` so JS works
-dotrun exec yarn build                          # REQUIRED before app/Python tests
-dotrun test                                     # Full suite
+workshop run -- start                       # Flask on 8004, Vite on 5004
+workshop run -- build                       # REQUIRED before Python tests
+workshop run -- test                        # Build + full unit/lint suite
 
 # Tests
-dotrun exec yarn test-js                        # vitest (JS/TS)
-dotrun exec yarn test-js path/to/file.test.tsx  # single JS test file
-dotrun exec yarn test-python                    # lint-python + Python unittest suite
-dotrun exec yarn test-e2e                       # Cypress (needs ENVIRONMENT=prod)
+workshop run -- yarn test-js
+workshop run -- yarn test-js path/to/file.test.tsx
+workshop run -- yarn test-python
+workshop run -- yarn test-e2e                # Start workshop run -- prod first
 
 # Lint
-dotrun exec yarn lint-python                    # flake8 + black (line length 79)
-dotrun exec yarn lint-js                        # eslint
-dotrun exec yarn lint-scss                      # stylelint
+workshop run -- yarn lint-python
+workshop run -- yarn lint-js
+workshop run -- yarn lint-scss
 ```
+
+CI runs Yarn/Python directly with Python 3.12 and Node.js 24. For native setup (virtual environment, dependencies, and environment variables), see HACKING.md.
 
 ## Architecture
 
@@ -51,7 +52,7 @@ dotrun exec yarn lint-scss                      # stylelint
 ## Conventions
 
 - **Use existing Vanilla Framework / `@canonical/react-components` / `@canonical/store-components` components** before building custom UI; keep to Vanilla's design tokens and spacing.
-- Black enforces **79-char** lines on Python; rebuild assets (`dotrun exec yarn build`) after any frontend or template change before testing the Flask app.
+- Black enforces **79-char** lines on Python; rebuild assets (`workshop run -- build`) after any frontend or template change before testing the Flask app.
 - Never edit or commit `static/js/dist/` (generated).
 
 ## Local dev requiring credentials
@@ -62,7 +63,7 @@ Staging APIs, GitHub/Launchpad automated builds, Sentry, and CVE data fetching a
 
 The frontend uses a CSS framework called Vanilla to build components. Examples of these components can be found at https://vanillaframework.io/docs/examples
 
-The tool used to run projects in development is called `dotrun` and is a Python package. There is information on how to use it here: https://pypi.org/project/dotrun/
+The managed development environment is provided by [Workshop](https://ubuntu.com/workshop/docs/), configured in `workshop.yaml` and `.workshop/`.
 
 ## Workflow
 
@@ -74,6 +75,6 @@ This is the workflow that should be followed:
 
 Once the feature is implemented:
 
-1. Run all the tests with `dotrun test-all`
-2. Run linting with `dotrun lint-all`
-3. Run all e2e tests `dotrun exec yarn test-e2e`
+1. Build and run all unit tests and linting with `workshop run -- test`
+2. Start the production-mode app with `workshop run -- prod`
+3. Run all e2e tests in another terminal with `workshop run -- yarn test-e2e`

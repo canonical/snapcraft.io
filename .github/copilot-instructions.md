@@ -20,7 +20,8 @@ snapcraft.io is the web frontend for the Snap Store. Flask backend (Python 3.10+
 **ALWAYS run in this exact order:**
 
 ```bash
-pip3 install -r requirements.txt
+python3 -m venv .venv && . .venv/bin/activate
+pip install -r requirements.txt
 yarn install --immutable                   # Cypress download may fail in restricted networks - OK to ignore
 yarn run build                             # REQUIRED before running app or Python tests
 ```
@@ -43,8 +44,9 @@ yarn run test         # Combined: lint-python + test-python + test-js + lint-scs
 ## Running the App
 
 ```bash
-dotrun                                              # Port 8004 (recommended)
-yarn run build && SECRET_KEY=test_key yarn run serve  # Direct execution
+workshop launch                     # First-time managed setup
+workshop run -- start               # Flask on 8004, Vite on 5004
+# For native execution, load .env and .env.local as described in HACKING.md.
 ```
 
 ## Project Structure
@@ -66,18 +68,18 @@ tests/                   # Python unittest tests
 .github/workflows/       # pr.yml (PR checks), coverage.yml
 ```
 
-**Key configs**: vite.config.js (build: `static/js/dist/vite/`, dev server: 5173/5004, auto-detects entry points from templates), .env (defaults: PORT=8004, FLASK_DEBUG=true), Dockerfile (multi-stage build)
+**Key configs**: vite.config.js (build: `static/js/dist/vite/`, dev server: 5173/5004, auto-detects entry points from templates), .env (defaults: PORT=8004, FLASK_DEBUG=true), workshop.yaml (development), rockcraft.yaml (production image)
 
 ## CI/CD (.github/workflows/pr.yml)
 
-**Jobs**: run-image, run-dotrun, pack-rock (packs and starts the rock, then runs advisory Lighthouse checks for web changes), lint-python/js/scss (path-filtered), test-python/js (path-filtered), check-inclusive-naming
+**Jobs**: run-workshop (checks Flask and Vite), pack-rock (packs and starts the rock, then runs advisory Lighthouse checks for web changes), lint-python/js/scss (path-filtered), test-python/js (path-filtered), check-inclusive-naming
 
-**Requirements**: All dotrun jobs need `sudo chmod -R 777 .` before install. Python tests need `dotrun build` first.
+**Requirements**: Native checks use Python 3.12 and Node.js 24; JavaScript tests run in UTC. Python tests need `yarn build` first and `FLASK_DEBUG=0`; coverage is exported as XML for Codecov. Workshop setup installs dependencies and forwards ports 8004/5004.
 
 ## Known Issues & Workarounds
 
 1. **Cypress download fails in restricted networks**: OK to ignore - build/test works without it
-2. **CI needs `sudo chmod -R 777 .`**: Required before `dotrun install` (Docker volume permissions)
+2. **Workshop dependency updates**: Use `workshop refresh` after changes to requirements.txt, package.json, or yarn.lock
 3. **Assets required for Python tests**: Always `yarn build` before Python tests or Flask server
 4. **vite.config.js uses grep**: Linux-specific template scanning (works in CI)
 5. **Deprecation warnings in tests**: `datetime.utcnow()`, Werkzeug warnings are known - ignore
@@ -95,7 +97,7 @@ tests/                   # Python unittest tests
 
 ## Key Files
 
-`.env` (dev defaults), `Dockerfile` (multi-stage), `entrypoint` (WSGI), `package.json` (yarn scripts), `requirements.txt` (Python deps), `vite.config.js` (build config), `vitest.config.js` (JS tests), `tsconfig.json`, `eslint.config.mjs`, `.stylelintrc`, `README.md` (quick start), `HACKING.md` (detailed setup), `CONTRIBUTING.md` (contribution guidelines)
+`.env` (dev defaults), `workshop.yaml` and `.workshop/` (development), `rockcraft.yaml` (production image), `entrypoint` (WSGI), `package.json` (yarn scripts), `requirements.txt` (Python deps), `vite.config.js` (build config), `vitest.config.js` (JS tests), `tsconfig.json`, `eslint.config.mjs`, `.stylelintrc`, `README.md` (quick start), `HACKING.md` (detailed setup), `CONTRIBUTING.md` (contribution guidelines)
 
 ## Critical Rules
 
@@ -121,7 +123,7 @@ When creating or updating pull requests, follow these requirements:
 **QA Steps Format**:
 ```markdown
 ## How to QA
-1. Start the app: `dotrun`
+1. Start the app: `workshop run -- start` (run `workshop launch` first for a new environment)
 2. Navigate to: [specific URL or path]
 3. [Specific action to take]
 4. Verify: [Expected outcome]

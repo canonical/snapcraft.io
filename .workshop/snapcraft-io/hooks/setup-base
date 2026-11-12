@@ -1,0 +1,14 @@
+set -eu
+
+# Runtime libraries and virtual display needed by Cypress's bundled browser.
+apt-get update
+DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+  libasound2t64 \
+  libgbm1 \
+  libgtk-3-0t64 \
+  libnotify4 \
+  libnss3 \
+  libxss1 \
+  libxtst6 \
+  xauth \
+  xvfb
