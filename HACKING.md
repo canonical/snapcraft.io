@@ -10,7 +10,7 @@ workshop launch
 workshop run -- start
 ```
 
-The setup hook installs Python dependencies into `.venv`, installs JavaScript dependencies from `yarn.lock`, and loads `.env` followed by optional `.env.local` overrides. Flask is available on port 8004 and Vite on port 5004. Use `workshop refresh` after dependency changes.
+The setup hook installs Python runtime and test/lint dependencies from `requirements-dev.txt` into `.venv`, installs JavaScript dependencies from `yarn.lock`, and loads `.env` followed by optional `.env.local` overrides. Flask is available on port 8004 and Vite on port 5004. Use `workshop refresh` after dependency changes.
 
 To run an arbitrary command in the environment, use `workshop exec -- <command>`, or enter `workshop shell` for an interactive shell.
 

@@ -37,6 +37,11 @@ Visit `http://127.0.0.1:8004` once the server has started. Vite runs on port 500
 
 For an existing workshop, use `workshop start` if it is stopped, or `workshop refresh` to update dependencies after pulling changes. Put local credentials and configuration overrides in `.env.local`; Workshop loads it after `.env`.
 
+`requirements.txt` contains production Python dependencies. Workshop installs
+`requirements-dev.txt`, which includes runtime dependencies plus Python test/lint
+tools. Rockcraft uses only `requirements.txt`, so those development tools are not
+installed as direct production dependencies.
+
 ```bash
 workshop run -- build             # build frontend assets
 workshop run -- test              # build, lint, and run Python/JS tests

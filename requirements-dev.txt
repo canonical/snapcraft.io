@@ -1,0 +1,11 @@
+# Runtime dependencies are also needed for development and tests.
+-r requirements.txt
+
+# Development and test dependencies
+Flask-Testing==0.8.1
+freezegun==1.5.5
+black==26.3.1
+protego==0.6.2
+flake8==7.3.0
+responses==0.22.0
+vcrpy-unittest==0.1.7
