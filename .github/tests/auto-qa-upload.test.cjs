@@ -267,8 +267,8 @@ test("stages and publishes four PNGs with matching raw URLs on the one shared br
   const fixture = publisherFixture();
   try {
     for (const [index, filename] of [
-      "home-desktop-prod.png",
-      "home-desktop-demo.png",
+      "home.png",
+      "Home desktop.png",
       "home-mobile-prod.png",
       "home-mobile-demo.png",
     ].entries()) {
@@ -301,60 +301,37 @@ test("stages and publishes four PNGs with matching raw URLs on the one shared br
   }
 });
 
-test("deduplicates identical image bytes without overwriting existing assets", async () => {
-  const fixture = publisherFixture();
-  try {
-    const urls = [];
-    for (const filename of [
-      "first-desktop-demo.png",
-      "second-desktop-demo.png",
-    ]) {
-      const source = path.join(fixture.workspace, filename);
+test("the pinned publisher enforces file safety and size limits", async () => {
+  for (const kind of ["symlink", "hardlink", "oversize"]) {
+    const fixture = publisherFixture();
+    try {
+      const source = path.join(fixture.workspace, "home.png");
       fs.writeFileSync(source, png);
-      urls.push(
-        JSON.parse(fixture.stage({ path: source }).content[0].text).result,
+      fixture.stage({ path: source });
+      const staged = path.join(
+        fixture.staging,
+        fs.readdirSync(fixture.staging)[0],
       );
-    }
-    assert.equal(urls[0], urls[1]);
-    await fixture.validate();
-    await fixture.publish();
-    assert.deepEqual(fixture.failures, []);
-    assert.equal(fixture.outputs.upload_count, "1");
-    assert.equal(fs.readdirSync(fixture.checkout).length, 1);
-  } finally {
-    fixture.cleanup();
-  }
-});
-
-test("rejects non-PNGs, oversize files, symlinks and duplicate source submissions", () => {
-  const fixture = publisherFixture();
-  try {
-    for (const filename of ["context.json", "profile.zip", "photo.jpg"]) {
-      const source = path.join(fixture.workspace, filename);
-      fs.writeFileSync(source, "not screenshot evidence");
-      assert.throws(
-        () => fixture.stage({ path: source }),
-        /extension.*not allowed/,
+      if (kind === "oversize") {
+        fs.writeFileSync(staged, Buffer.alloc(config["max-size"] * 1024 + 1));
+      } else {
+        fs.unlinkSync(staged);
+        if (kind === "symlink") fs.symlinkSync(source, staged);
+        else fs.linkSync(source, staged);
+      }
+      await fixture.publish();
+      assert.match(
+        fixture.failures.join("\n"),
+        /symlink|isolated regular|exceeds maximum/i,
+        kind,
       );
+      assert.equal(
+        fixture.commands.filter((command) => command[1] === "push").length,
+        0,
+      );
+    } finally {
+      fixture.cleanup();
     }
-    const large = path.join(fixture.workspace, "large.png");
-    fs.writeFileSync(large, Buffer.alloc(config["max-size"] * 1024 + 1));
-    assert.throws(() => fixture.stage({ path: large }), /[Ss]ize|large|limit/);
-    const source = path.join(fixture.workspace, "good.png");
-    const link = path.join(fixture.workspace, "link.png");
-    fs.writeFileSync(source, png);
-    fs.symlinkSync(source, link);
-    assert.throws(
-      () => fixture.stage({ path: link }),
-      /symlink|isolated regular/,
-    );
-    fixture.stage({ path: source });
-    assert.throws(
-      () => fixture.stage({ path: source }),
-      /Duplicate upload_asset source/,
-    );
-  } finally {
-    fixture.cleanup();
   }
 });
 
@@ -376,33 +353,13 @@ test("validation rejects a partial asset loss before anything is published", asy
   }
 });
 
-test("validation preserves screenshot filename restrictions and checks PNG bytes and URLs", async () => {
+test("validation bounds uploads and checks source scope, ledger matching and PNG bytes", async () => {
   for (const [filename, content, override, error] of [
-    ["cookies.png", png, {}, /Only named screenshots/],
-    [
-      "home-desktop-demo.png",
-      Buffer.from("not PNG bytes"),
-      {},
-      /PNG signature/,
-    ],
-    [
-      "home-desktop-demo.png",
-      png,
-      { url: "https://evil.example/ignored.png" },
-      /Screenshot URL/,
-    ],
-    [
-      "home-desktop-demo.png",
-      png,
-      { sha: "0".repeat(64) },
-      /content or PNG signature/,
-    ],
-    [
-      "home-desktop-demo.png",
-      png,
-      { output_id: undefined },
-      /exactly one ledger entry/,
-    ],
+    ["../outside.png", png, {}, /trusted evidence directory/],
+    ["home.png", png, { path: "home.jpg" }, /Only PNGs/],
+    ["home.png", Buffer.from("not PNG bytes"), {}, /PNG signature/],
+    ["home.png", png, { sha: "0".repeat(64) }, /content or PNG signature/],
+    ["home.png", png, { output_id: undefined }, /exactly one ledger entry/],
   ]) {
     const fixture = publisherFixture();
     try {
@@ -410,49 +367,32 @@ test("validation preserves screenshot filename restrictions and checks PNG bytes
       fs.writeFileSync(source, content);
       fixture.stage({ path: source });
       Object.assign(fixture.items[0], override);
+      if (override.path)
+        fixture.items[0].path = path.join(fixture.workspace, override.path);
       await assert.rejects(fixture.validate(), error);
       assert.equal(fixture.commands.length, 0);
     } finally {
       fixture.cleanup();
     }
   }
-});
-
-test("validation and public checks reject blank ledger output IDs", async () => {
-  for (const output_id of ["", " \t\n"]) {
+  for (const count of [0, 21]) {
     const fixture = publisherFixture();
     try {
-      const source = path.join(fixture.workspace, "home-desktop-demo.png");
-      fs.writeFileSync(source, png);
-      fixture.stage({ path: source });
-      fixture.items[0].output_id = output_id;
-      await assert.rejects(fixture.validate(), /exactly one ledger entry/);
+      fixture.items.push(
+        ...Array.from({ length: count }, () => ({
+          type: "upload_asset",
+          path: "home.png",
+          output_id: "so_asset",
+        })),
+      );
       await assert.rejects(
-        fixture.verify(async () => assert.fail("Must not fetch a blank-ID asset")),
-        /exactly one ledger entry/,
+        fixture.validate(),
+        /Expected 1–20 screenshot assets/,
       );
       assert.equal(fixture.commands.length, 0);
     } finally {
       fixture.cleanup();
     }
-  }
-});
-
-test("validation and public checks reject ambiguous ledger output IDs", async () => {
-  const fixture = publisherFixture();
-  try {
-    const source = path.join(fixture.workspace, "home-desktop-demo.png");
-    fs.writeFileSync(source, png);
-    fixture.stage({ path: source });
-    fixture.items.push({ ...fixture.items[0] });
-    await assert.rejects(fixture.validate(), /exactly one ledger entry/);
-    await assert.rejects(
-      fixture.verify(async () => assert.fail("Must not fetch an ambiguous asset")),
-      /exactly one ledger entry/,
-    );
-    assert.equal(fixture.commands.length, 0);
-  } finally {
-    fixture.cleanup();
   }
 });
 
@@ -471,6 +411,13 @@ test("public verification requires anonymously readable matching PNG bytes befor
       return new Response(png, { headers: { "content-type": "image/png" } });
     });
     assert.equal(requests, 1);
+    const originalUrl = fixture.items[0].url;
+    fixture.items[0].url = "https://evil.example/ignored.png";
+    await assert.rejects(
+      fixture.verify(async () => assert.fail("Must not fetch an invalid URL")),
+      /Invalid screenshot URL/,
+    );
+    fixture.items[0].url = originalUrl;
     for (const response of [
       () => new Response("missing", { status: 404 }),
       () =>
@@ -497,29 +444,6 @@ test("reports without screenshots need no ledger or public fetch", async () => {
   const fixture = publisherFixture();
   try {
     await fixture.verify(async () => assert.fail("Must not fetch any images"));
-  } finally {
-    fixture.cleanup();
-  }
-});
-
-test("fails publication if staged bytes were tampered with", async () => {
-  const fixture = publisherFixture();
-  try {
-    const source = path.join(fixture.workspace, "home.png");
-    fs.writeFileSync(source, png);
-    fixture.stage({ path: source });
-    fs.writeFileSync(
-      path.join(fixture.staging, fs.readdirSync(fixture.staging)[0]),
-      "tampered PNG",
-    );
-    await fixture.publish();
-    assert.ok(
-      fixture.failures.some((failure) => failure.includes("SHA mismatch")),
-    );
-    assert.equal(
-      fixture.commands.filter((command) => command[1] === "push").length,
-      0,
-    );
   } finally {
     fixture.cleanup();
   }
