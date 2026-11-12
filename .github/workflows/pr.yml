@@ -57,7 +57,6 @@ jobs:
               - 'vitest.config.js'
               - 'vite.config.js'
               - 'tsconfig.json'
-              - 'babel.config.json'
             scss:
               - '.github/workflows/pr.yml'
               - '**/*.scss'
