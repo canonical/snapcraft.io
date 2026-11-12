@@ -21,7 +21,7 @@ snapcraft.io is the web frontend for the Snap Store. Flask backend (Python 3.10+
 
 ```bash
 python3 -m venv .venv && . .venv/bin/activate
-pip install -r requirements.txt
+pip install -r requirements-dev.txt        # Includes runtime requirements.txt
 yarn install --immutable                   # Cypress download may fail in restricted networks - OK to ignore
 yarn run build                             # REQUIRED before running app or Python tests
 ```
@@ -29,6 +29,10 @@ yarn run build                             # REQUIRED before running app or Pyth
 **CRITICAL**: `yarn run build` MUST run before Flask app or Python tests. Creates `static/js/dist/vite/` assets required by templates.
 
 ## Linting & Testing
+
+`requirements.txt` contains production runtime dependencies. Workshop and native
+CI checks install `requirements-dev.txt`, which includes runtime requirements
+plus Python test/lint tools. Rockcraft uses only the runtime requirements.
 
 ```bash
 yarn run lint-python  # flake8 + black
@@ -79,7 +83,7 @@ tests/                   # Python unittest tests
 ## Known Issues & Workarounds
 
 1. **Cypress download fails in restricted networks**: OK to ignore - build/test works without it
-2. **Workshop dependency updates**: Use `workshop refresh` after changes to requirements.txt, package.json, or yarn.lock
+2. **Workshop dependency updates**: Use `workshop refresh` after changes to requirements.txt, requirements-dev.txt, package.json, or yarn.lock
 3. **Assets required for Python tests**: Always `yarn build` before Python tests or Flask server
 4. **vite.config.js uses grep**: Linux-specific template scanning (works in CI)
 5. **Deprecation warnings in tests**: `datetime.utcnow()`, Werkzeug warnings are known - ignore

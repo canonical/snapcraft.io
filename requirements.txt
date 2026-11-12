@@ -2,7 +2,6 @@
 canonicalwebteam.flask-base==3.1.2
 canonicalwebteam.flask-vite==0.6.0
 canonicalwebteam.store-llm==0.1.0
-canonicalwebteam.candid==0.9.0
 canonicalwebteam.discourse==7.2.0
 canonicalwebteam.blog==7.1.0
 canonicalwebteam.search==2.1.2
@@ -23,18 +22,9 @@ pycountry==24.6.1
 pymacaroons==0.13.0
 python-dateutil==2.9.0.post0
 requests==2.33.1
-responses==0.22.0
 ruamel.yaml==0.18.5
-vcrpy-unittest==0.1.7
 user-agents==2.2.0
 dnspython==2.8.0
 werkzeug==3.1.8
 sentry-sdk==2.59.0
 setuptools<81.0
-
-# Development dependencies
-Flask-Testing==0.8.1
-freezegun==1.5.5
-black==26.3.1
-protego==0.6.2
-flake8==7.3.0
