@@ -26,7 +26,6 @@ function renderPackages(queryString = "?q=k8s&page=2") {
 beforeEach(() => {
   queryClient = new QueryClient({
     defaultOptions: { queries: { retry: false, cacheTime: 0 } },
-    logger: { log: console.log, warn: console.warn, error: vi.fn() },
   });
   fetchMock.mockReset();
   fetchMock.mockImplementation(async () => {
