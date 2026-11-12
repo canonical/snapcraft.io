@@ -44,6 +44,8 @@ workshop run -- yarn test-js      # run a single yarn script
 workshop run -- prod              # build and serve without the Vite dev server
 ```
 
+The `prod` action serves built assets with `ENVIRONMENT=production` and `FLASK_DEBUG=0`, disabling Flask debug mode and the reloader.
+
 > Workshop depends on LXD, which is only available on Linux. On macOS or Windows, run Workshop inside a [Multipass](https://canonical.com/multipass) VM. Configure Multipass to use the VirtualBox virtualization driver and allocate at least 4GB RAM and 10GB disk; after setting up the workshop in the VM, enable [port forwarding](https://canonical.com/multipass/docs/stable/how-to-guides/customise-multipass/set-up-the-driver/#use-virtualbox-to-set-up-port-forwarding-for-a-multipass-instance) for ports 8004 and 5004.
 
 For detailed development, testing, and native setup instructions, see [HACKING.md](HACKING.md).

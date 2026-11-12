@@ -29,5 +29,5 @@ actions:
   start: yarn start
   build: yarn build
   test: yarn build && yarn test
-  prod: yarn build && ENVIRONMENT=prod yarn serve
+  prod: yarn build && ENVIRONMENT=production FLASK_DEBUG=0 yarn serve
   yarn: yarn "$@"
