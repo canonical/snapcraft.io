@@ -1,10 +1,97 @@
-# Set update schedule for GitHub Actions
+# Groups apply separately to each package ecosystem:
+# - `minor-and-patch-updates` combines routine minor and patch updates in one
+#   pull request (PR). Maintainers review and merge this PR manually.
+# - `security-updates` contains fixes for security advisories.
+#   Uses `applies-to: security-updates` to limit the group to advisory fixes.
+#   After `PR checks` succeeds, the workflow checks the signed Dependabot
+#   commit and each update type. The bot approves that commit before the merge.
+#   The workflow merges only the commit that passed CI.
+#   GitHub still enforces required checks, approvals, and branch rules.
+# These are custom group names, not built-in Dependabot labels.
+#
+# Major updates are handled in separate PRs and require manual review and merge.
+#
+# The auto-merge workflow (see .github/workflows/dependabot-auto-merge.yml) uses
+# the group name to determine whether to auto-merge.
+# Dependabot records the group name in its commit metadata.
+# The auto-merge workflow reads the group name directly from the signed commit.
+# IMPORTANT: Only use the `security-updates` group for security updates.
+# If you rename this group, change the workflow checks for the group name too.
 
 version: 2
 updates:
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "daily"
+    # Cooldown applies to version updates only, never security updates.
+    cooldown:
+      default-days: 7
+    # Unlike Renovate's repository-wide limit, this limit is per ecosystem.
+    open-pull-requests-limit: 3
+    versioning-strategy: "increase"
+    ignore:
+      # Preserve helpers:disableTypesNodeMajor from the Renovate preset.
+      - dependency-name: "@types/node"
+        update-types: ["version-update:semver-major"]
+    groups:
+      minor-and-patch-updates:
+        applies-to: "version-updates"
+        patterns: ["*"]
+        update-types: ["minor", "patch"]
+      security-updates:
+        applies-to: "security-updates"
+        patterns: ["*"]
+        update-types: ["minor", "patch"]
+
+  - package-ecosystem: "pip"
+    directories:
+      - "/"
+      - "/charm"
+    schedule:
+      interval: "daily"
+    cooldown:
+      default-days: 7
+    open-pull-requests-limit: 3
+    versioning-strategy: "increase"
+    groups:
+      minor-and-patch-updates:
+        applies-to: "version-updates"
+        patterns: ["*"]
+        update-types: ["minor", "patch"]
+      security-updates:
+        applies-to: "security-updates"
+        patterns: ["*"]
+        update-types: ["minor", "patch"]
 
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
-      # Check for updates to GitHub Actions every weekday
       interval: "daily"
+    cooldown:
+      default-days: 7
+    open-pull-requests-limit: 3
+    groups:
+      minor-and-patch-updates:
+        applies-to: "version-updates"
+        patterns: ["*"]
+        update-types: ["minor", "patch"]
+      security-updates:
+        applies-to: "security-updates"
+        patterns: ["*"]
+        update-types: ["minor", "patch"]
+
+  # TODO: remove this when docker support is removed
+  # Retain Dockerfile coverage previously provided by Renovate auto-discovery.
+  - package-ecosystem: "docker"
+    directory: "/"
+    schedule:
+      interval: "daily"
+    cooldown:
+      default-days: 7
+    open-pull-requests-limit: 3
+    groups:
+      minor-and-patch-updates:
+        applies-to: "version-updates"
+        patterns: ["*"]
+        update-types: ["minor", "patch"]

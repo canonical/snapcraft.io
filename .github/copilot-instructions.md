@@ -76,6 +76,12 @@ tests/                   # Python unittest tests
 
 **Requirements**: Native checks use Python 3.12 and Node.js 24; JavaScript tests run in UTC. Python tests need `yarn build` first and `FLASK_DEBUG=0`; coverage is exported as XML for Codecov. Workshop setup installs dependencies and forwards ports 8004/5004.
 
+## Dependency automation
+
+Dependabot is the only dependency update bot. `.github/dependabot.yml` covers npm/Yarn, pip (root and charm), GitHub Actions, and Docker. Version updates have a seven-day cooldown. Routine minor and patch updates share one manual-review group per ecosystem. Major updates remain individual and manual, except that `@types/node` major updates remain ignored.
+
+`.github/workflows/dependabot-auto-merge.yml` uses `workflow_run` after `PR checks` succeeds. It merges only the tested, signed Dependabot commit in the reserved `security-updates` group containing patch/minor advisory fixes. It reads the signed commit metadata directly and uses a SHA-bound squash merge, not GitHub's auto-merge setting. Never use that group name for ordinary version updates, infer security status from SemVer or labels, or execute PR code in this privileged workflow. Do not consume artifacts or caches from the CI run. Security updates bypass cooldown. GitHub settings must enforce required CI and reviews. If another requirement blocks the merge, rerun the merge workflow after that requirement passes. Eligibility checks use read-only `GITHUB_TOKEN` access. Only the final merge step receives the bot account's PAT from the `DEPENDABOT_MERGE_TOKEN` Actions secret. It approves the tested commit before the merge request and stops if approval fails. The PAT needs Contents and Pull requests write permissions. Enable dismissal of stale approvals when new commits are pushed. The bot's approval does not replace additional required approvals or a CODEOWNER approval unless the bot qualifies. A missing secret fails that step without a fallback token. The bot must not have admin or branch-protection bypass rights. Its merge triggers the existing deployment workflows through a push after the merge into `main`. Do not dispatch deployments from the merge workflow. See `HACKING.md` → **Dependency updates** for the policy, required repository settings, and token setup.
+
 ## Known Issues & Workarounds
 
 1. **Cypress download fails in restricted networks**: OK to ignore - build/test works without it

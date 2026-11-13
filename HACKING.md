@@ -102,6 +102,25 @@ workshop run -- yarn lint-scss
 workshop run -- yarn lint-python
 ```
 
+## Dependency updates
+
+[Dependabot](.github/dependabot.yml) manages npm/Yarn, pip (root and charm), GitHub Actions, and Dockerfile dependencies.
+
+- Routine minor and patch updates share one pull request per ecosystem for manual review and merge.
+- The [merge workflow](.github/workflows/dependabot-auto-merge.yml) approves and merges eligible security patch/minor updates after `PR checks` succeeds for the current commit. It depends on a `DEPENDABOT_MERGE_TOKEN` secret that is used to authorize the merge commit. If the merge step in the workflow fails, generate a new fine-grained personal access token from the `webteam-app` account with `Contents: read-write` and `Pull requests: read-write` permissions on this repo.
+- Major updates require manual review and merge. The `@types/node` major-update exclusion still applies.
+
+Dependabot checks version updates every weekday with a seven-day release-age cooldown. Security updates bypass cooldown. Dependabot can also bypass cooldown when publication dates are unavailable.
+
+**Required GitHub settings:**
+
+- Enable the dependency graph, Dependabot alerts, and Dependabot security updates under **Settings → Code security**.
+- Enable squash merging under **Settings → General → Pull Requests**. The workflow does not need **Allow auto-merge**.
+- Require continuous integration checks through default-branch protection. The workflow watches `PR checks`, but GitHub must enforce all required checks.
+- Keep required approval rules. The bot submits one approval for the tested commit but does not bypass branch protection. Additional approvals or CODEOWNER approval can still be required.
+
+The workflow must exist on the default branch. If reviews or other required checks block the merge, rerun the merge workflow after those requirements pass. It does not queue a merge or support merge queues.
+
 ## Adding new Publicise SVG Badges
 
 1. Take a look under `static/images/badges_editable/`; and pick another language to use as a template. For example, `en` (English), for LTR; `ar` (Arabic), for RTL; etc. **If you find none of the existing languages suitable for your template, you may modify the `x` and `y` coordinates for text to your liking, however the changes & positioning should be consistent with other badges, no modifications or appendages to the logo is allowed**
