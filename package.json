@@ -71,7 +71,7 @@
     "downshift": "9.4.0",
     "jotai": "2.20.0",
     "jotai-family": "1.0.2",
-    "nanoid": "5.1.16",
+    "nanoid": "6.0.2",
     "postcss": "8.5.23",
     "postcss-cli": "11.0.1",
     "prettier": "3.8.3",
