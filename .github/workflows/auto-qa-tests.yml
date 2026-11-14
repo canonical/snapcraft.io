@@ -1,0 +1,41 @@
+name: Auto QA workflow tests
+
+on:
+  pull_request:
+    paths:
+      - .github/workflows/auto-qa.md
+      - .github/workflows/auto-qa.lock.yml
+      - .github/workflows/auto-qa-tests.yml
+      - .github/tests/auto-qa*.test.cjs
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/auto-qa.md
+      - .github/workflows/auto-qa.lock.yml
+      - .github/workflows/auto-qa-tests.yml
+      - .github/tests/auto-qa*.test.cjs
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: "24"
+      # Read the same pinned publisher used by Auto QA; do not run its setup action.
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: github/gh-aw-actions
+          ref: 53d0749e19424a918acd82b4d140264ce48f2f14
+          path: .gh-aw-test-runtime
+          persist-credentials: false
+      - name: Test QA context, report contracts and pinned screenshot publisher
+        env:
+          GH_AW_TEST_ACTIONS_DIR: .gh-aw-test-runtime/setup/js
+        run: node --test .github/tests/auto-qa.test.cjs .github/tests/auto-qa-upload.test.cjs
