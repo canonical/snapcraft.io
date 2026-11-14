@@ -19,7 +19,7 @@ feedgen==1.0.0
 humanize==4.9.0
 mistune==3.3.3
 pybadges==3.0.1
-pycountry==24.6.1
+pycountry==26.2.16
 pymacaroons==0.13.0
 python-dateutil==2.9.0.post0
 requests==2.33.1
