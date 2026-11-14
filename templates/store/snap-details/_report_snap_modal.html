@@ -2,7 +2,7 @@
   <div class="p-modal__dialog" role="dialog" aria-labelledby="modal-title" aria-describedby="modal-description">
     <div class="js-report-snap-form">
       <header class="p-modal__header">
-        <h2 class="p-modal__title" id="modal-title">Report {{snap_title}} for a Snap Store violation</h2>
+        <h2 class="p-modal__title" id="modal-title">Report or get help with {{snap_title}}</h2>
         <button class="p-modal__close js-modal-close" aria-label="Close dialog">Close</button>
       </header>
 
@@ -10,58 +10,87 @@
       <form id="report-snap-form" action="/report" method="POST">
         <input name="csrf_token" type="hidden" value="{{csrf_token()}}" />
         <input type="hidden" name="snap_name" value="{{package_name}}" />
-        <div class="p-notification--negative">
-          <div class="p-notification__content">
-            <h5 class="p-notification__title">
-              Reports submitted through this form go to the Snap team, not the Snap Developer.
-            </h5>
-            {% if links and links["contact"] %}
-              <p class="p-notification__message">
-                The Snap developer has provided the following <b>contact information</b>:</p>
-              <ul>
-                {% if links["contact"] %}
-                  {% for link in links["contact"] %}
-                    <li><a href="{{link}}" target="_blank" rel="noopener">{{ format_link(link) }}</a></li>
-                  {% endfor %}
-                {% endif %}
-              </ul>
-            {% endif %}
-            {% if links and links["issues"] %}
-              <p class="p-notification__message">
-                The Snap developer has provided the following links for <b>reporting issues</b>:</p>
-              <ul>
-                {% if links["issues"] %}
-                  {% for link in links["issues"] %}
-                    <li><a href="{{link}}" target="_blank" rel="noopener">{{ format_link(link) }}</a></li>
-                  {% endfor %}
-                {% endif %}
-              </ul>
-            {% endif %}
-          </div>
-        </div>
         <label for="report-snap-reason">Choose a reason for reporting this snap</label>
         <select id="report-snap-reason" name="reason" required>
           <option value="" selected>Select an option</option>
           <option value="Copyright or trademark violation">Copyright or trademark violation</option>
           <option value="Snap Store terms of service violation">Snap Store terms of service violation</option>
+          <option value="Snap bug">This snap is not working / I found a bug</option>
         </select>
-        <label for="report-snap-comment">Please provide more detailed reason to your report</label>
-        <textarea id="report-snap-comment" type="text" name="comment" placeholder="Comment..." rows="5" maxlength="1000" required></textarea>
 
-        <label for="report-snap-email">Your email (optional)</label>
-        <input id="report-snap-email" type="email" name="email" placeholder="email@example.com" />
-        {% if turnstile_site_key %}
-          <div class="cf-turnstile js-report-snap-turnstile" data-sitekey="{{ turnstile_site_key }}"></div>
-        {% endif %}
-        <div class="u-off-screen">
-          <label for="report-snap-confirm" aria-hidden="true">I agree</label>
-          <input id="report-snap-confirm" type="checkbox" name="confirm" aria-hidden="true" />
+        <div class="js-report-snap-policy-fields p-report-snap-modal__section" aria-hidden="true">
+          <div class="p-report-snap-modal__section-inner">
+            <div class="p-notification--caution">
+              <div class="p-notification__content">
+                <h5 class="p-notification__title">
+                  Reports submitted through this form go to the Snap team, not the Snap Developer.
+                </h5>
+                <p class="p-notification__message">
+                  Use this form only for legal, policy, or abuse issues with this Snap Store listing.
+                </p>
+              </div>
+            </div>
+
+            <label for="report-snap-comment">Please provide more detailed reason to your report</label>
+            <textarea id="report-snap-comment" type="text" name="comment" placeholder="Comment..." rows="5" maxlength="1000" required></textarea>
+
+            <label for="report-snap-email">Your email (optional)</label>
+            <input id="report-snap-email" type="email" name="email" placeholder="email@example.com" />
+            {% if turnstile_site_key %}
+              <div class="cf-turnstile js-report-snap-turnstile" data-sitekey="{{ turnstile_site_key }}"></div>
+            {% endif %}
+            <div class="u-off-screen">
+              <label for="report-snap-confirm" aria-hidden="true">I agree</label>
+              <input id="report-snap-confirm" type="checkbox" name="confirm" aria-hidden="true" />
+            </div>
+            <p>In submitting this form, I confirm that I have read and agree to <a href="https://ubuntu.com/legal/data-privacy/contact">Canonical’s Privacy Notice</a> and <a href="https://ubuntu.com/legal/data-privacy">Privacy Policy</a>.</p>
+            <div class="u-align--right">
+              <button type="button" class="js-modal-close u-no-margin--bottom">Cancel</button>
+              {# use --dark fake class for spinner icon to be rendered correctly... #}
+              <button type="submit" class="--dark u-no-margin--bottom"{% if turnstile_site_key %} disabled{% endif %}>Submit report</button>
+            </div>
+          </div>
         </div>
-        <p>In submitting this form, I confirm that I have read and agree to <a href="https://ubuntu.com/legal/data-privacy/contact">Canonical’s Privacy Notice</a> and <a href="https://ubuntu.com/legal/data-privacy">Privacy Policy</a>.</p>
-        <div class="u-align--right">
-          <button type="button" class="js-modal-close u-no-margin--bottom">Cancel</button>
-          {# use --dark fake class for spinner icon to be rendered correctly... #}
-          <button type="submit" type="submit" class="--dark u-no-margin--bottom"{% if turnstile_site_key %} disabled{% endif %}>Submit report</button>
+
+        <div class="js-report-snap-bug-help p-report-snap-modal__section" aria-hidden="true">
+          <div class="p-report-snap-modal__section-inner">
+            <div class="p-notification--information">
+              <div class="p-notification__content">
+                <h5 class="p-notification__title">
+                  Contact the publisher for bugs or support.
+                </h5>
+                <p class="p-notification__message">
+                  Snap Store violation reports are only for legal, policy, or abuse issues. For help with this snap, use the publisher contact links below.
+                </p>
+              </div>
+            </div>
+
+            {% if links and links["issues"] %}
+              <p>The Snap developer has provided the following links for <b>reporting issues</b>:</p>
+              <ul>
+                {% for link in links["issues"] %}
+                  <li><a href="{{link}}" target="_blank" rel="noopener">{{ format_link(link) }}</a></li>
+                {% endfor %}
+              </ul>
+            {% endif %}
+
+            {% if links and links["contact"] %}
+              <p>The Snap developer has provided the following <b>contact information</b>:</p>
+              <ul>
+                {% for link in links["contact"] %}
+                  <li><a href="{{link}}" target="_blank" rel="noopener">{{ format_link(link) }}</a></li>
+                {% endfor %}
+              </ul>
+            {% endif %}
+
+            {% if not links or (not links["issues"] and not links["contact"]) %}
+              <p>No issue tracker or contact link has been provided for this snap.</p>
+            {% endif %}
+
+            <div class="u-align--right">
+              <button type="button" class="p-button--positive js-modal-close u-no-margin--bottom">Close</button>
+            </div>
+          </div>
         </div>
       </form>
     </div>
