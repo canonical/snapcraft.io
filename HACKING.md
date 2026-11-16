@@ -130,7 +130,7 @@ The workflow must exist on the default branch. If reviews or other required chec
     - Install scour via `pip install scour` or `sudo apt install python3-scour` or via `uv` to minify generated badges.
 4. Run `python scripts/generate-minified-badges.py` to convert. (*Use `python3` if your distro does not automatically alias it*)
 5. Make equivalent changes under `static/js/publisher/pages/Publicise/PubliciseButtons.tsx`, specifically inside `LANGUAGES` object
-6. **Important** Test your changes to ensure they work. When testing locally, change the values of `darkBadgeSource` & `lightBadgeSource` in the above file, to point to `http://localhost:8004` (or whichever port is set via `.env`), for the badges to render.
+6. **Important** Test your changes to ensure they work. When testing locally, change the value of `baseUrl` in the above file to point to `http://localhost:8004` (or whichever port is set via `.env`), for the badges to render.
 
 ## Update the list of licenses
 
