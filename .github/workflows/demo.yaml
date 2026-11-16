@@ -19,22 +19,22 @@ jobs:
       github.event.action != 'closed' &&
       github.event.pull_request.head.repo.full_name == github.repository &&
       vars.DEMOS_ENABLED == 'true'
-    uses: canonical/webteam-devops/.github/workflows/demo-deploy.yaml@main
+    uses: canonical/webteam-devops/.github/workflows/demo-deploy.yaml@5827cdf23746726d4dea2a7e80f0e57aba239aeb
     with:
       pr-number: ${{ github.event.pull_request.number }}
       commit-sha: ${{ github.event.pull_request.head.sha }}
       api-url: ${{ vars.DEMOS_API_URL }}
     secrets:
-      demos-hmac-key: ${{ secrets.DEMOS_HMAC_KEY }}
+      demos-api-token: ${{ secrets.DEMOS_API_TOKEN }}
 
   cleanup:
     if: >-
       github.event.action == 'closed' &&
       github.event.pull_request.head.repo.full_name == github.repository &&
       vars.DEMOS_ENABLED == 'true'
-    uses: canonical/webteam-devops/.github/workflows/demo-cleanup.yaml@main
+    uses: canonical/webteam-devops/.github/workflows/demo-cleanup.yaml@5827cdf23746726d4dea2a7e80f0e57aba239aeb
     with:
       pr-number: ${{ github.event.pull_request.number }}
       api-url: ${{ vars.DEMOS_API_URL }}
     secrets:
-      demos-hmac-key: ${{ secrets.DEMOS_HMAC_KEY }}
+      demos-api-token: ${{ secrets.DEMOS_API_TOKEN }}
