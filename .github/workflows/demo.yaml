@@ -25,7 +25,7 @@ jobs:
       commit-sha: ${{ github.event.pull_request.head.sha }}
       api-url: ${{ vars.DEMOS_API_URL }}
     secrets:
-      demos-hmac-key: ${{ secrets.DEMOS_HMAC_KEY }}
+      demos-api-token: ${{ secrets.DEMOS_API_TOKEN }}
 
   cleanup:
     if: >-
@@ -37,4 +37,4 @@ jobs:
       pr-number: ${{ github.event.pull_request.number }}
       api-url: ${{ vars.DEMOS_API_URL }}
     secrets:
-      demos-hmac-key: ${{ secrets.DEMOS_HMAC_KEY }}
+      demos-api-token: ${{ secrets.DEMOS_API_TOKEN }}
