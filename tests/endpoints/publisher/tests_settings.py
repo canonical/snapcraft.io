@@ -183,10 +183,14 @@ class TestGetSettingsData(TestEndpoints):
 
 
 class TestPostSettingsData(TestEndpoints):
+    @patch(
+        "webapp.decorators._dashboard.snap_release_history",
+        return_value={"revisions": [{"revision": 1}]},
+    )
     @patch("webapp.publisher.snaps.logic.filter_changes_data")
     @patch("canonicalwebteam.store_api.dashboard.Dashboard.snap_metadata")
     def test_post_settings_data_success(
-        self, mock_snap_metadata, mock_filter_changes
+        self, mock_snap_metadata, mock_filter_changes, mock_release_history
     ):
         # Mock the filtered data
         mock_filter_changes.return_value = {"title": "Updated Title"}

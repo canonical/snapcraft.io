@@ -194,6 +194,15 @@ class TestGetListingData(TestEndpoints):
 
 
 class TestPostListingData(TestEndpoints):
+    def setUp(self):
+        super().setUp()
+        history_patcher = patch(
+            "webapp.decorators._dashboard.snap_release_history",
+            return_value={"revisions": [{"revision": 1}]},
+        )
+        history_patcher.start()
+        self.addCleanup(history_patcher.stop)
+
     @patch("webapp.endpoints.publisher.listing.dashboard")
     @patch("webapp.endpoints.publisher.listing.logic.filter_changes_data")
     def test_post_listing_data_success_no_changes(

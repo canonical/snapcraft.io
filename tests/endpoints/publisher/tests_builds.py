@@ -331,6 +331,12 @@ class TestGetSnapBuild(TestEndpoints):
 class TestPostBuild(TestEndpoints):
     def setUp(self):
         super().setUp()
+        history_patcher = patch(
+            "webapp.decorators._dashboard.snap_release_history",
+            return_value={"revisions": [{"revision": 1}]},
+        )
+        history_patcher.start()
+        self.addCleanup(history_patcher.stop)
         self.snap_name = "test-snap"
         self.endpoint_url = f"/api/{self.snap_name}/builds/trigger-build"
 

@@ -1,6 +1,7 @@
 import requests
 
 import responses
+from flask import redirect
 from flask_testing import TestCase
 from pymacaroons import Macaroon
 from canonicalwebteam.exceptions import (
@@ -43,7 +44,9 @@ class LoginHandlerTest(TestCase):
         self.assertEqual("/test", response.location)
 
     @responses.activate
-    def test_login_handler_redirect(self):
+    @patch("webapp.login.views.open_id.try_login")
+    def test_login_handler_redirect(self, mock_try_login):
+        mock_try_login.return_value = redirect("https://login.ubuntu.com/")
         m = Macaroon()
         m.add_third_party_caveat("login.ubuntu.com", "key", "id")
 
@@ -62,6 +65,10 @@ class LoginHandlerTest(TestCase):
 
         assert len(responses.calls) == 1
         assert response.status_code == 302
+        mock_try_login.assert_called_once()
+        self.assertEqual(
+            mock_try_login.call_args.args[0], "https://login.ubuntu.com"
+        )
 
     @responses.activate
     def test_login_api_500(self):

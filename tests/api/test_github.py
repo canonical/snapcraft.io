@@ -13,7 +13,10 @@ class GitHubTest(VCRTestCase):
         This removes the authorization header
         from VCR so we don't record auth parameters
         """
-        return {"filter_headers": ["Authorization"]}
+        return {
+            "filter_headers": ["Authorization"],
+            "record_mode": "none",
+        }
 
     def setUp(self):
         self.client = GitHub(getenv("TESTS_GITHUB_USER_TOKEN", "secret"))

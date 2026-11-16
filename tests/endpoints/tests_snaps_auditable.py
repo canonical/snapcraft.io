@@ -82,6 +82,8 @@ class TestProvenanceMapCaching(TestEndpoints):
             "webapp.endpoints.snaps.launchpad_provenance."
             "build_provenance_map",
             return_value=provenance_map,
+        ), patch(
+            "webapp.endpoints.snaps.repository_is_public", return_value=True
         ):
             _get_provenance_map("mumble")
         return self.cache_patch.set.call_args.kwargs["ttl"]
