@@ -5,7 +5,6 @@ from canonicalwebteam.store_api.dashboard import Dashboard
 from canonicalwebteam.store_api.publishergw import PublisherGW
 from canonicalwebteam.store_api.devicegw import DeviceGW
 
-from django_openid_auth.teams import TeamsRequest, TeamsResponse
 from flask_openid import OpenID
 
 from webapp import authentication
@@ -14,6 +13,7 @@ from webapp.helpers import api_publisher_session, api_session
 from webapp.api.exceptions import ApiResponseError
 from webapp.extensions import csrf
 from webapp.login.macaroon import MacaroonRequest, MacaroonResponse
+from webapp.login.teams import TeamsRequest, TeamsResponse
 from webapp.publisher.snaps import logic
 from webapp.publisher.snaps.build_views import (
     complete_pending_snap_authorization,
