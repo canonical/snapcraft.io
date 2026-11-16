@@ -61,7 +61,8 @@ export default defineConfig({
     },
   },
   define: {
-    global: "globalThis", // in dev mode "randomstring" uses `global` rather than `globalThis`
+    // Retained dependencies can reference Node-style global in browser/dev bundles.
+    global: "globalThis",
   },
   resolve: {
     // Keep /static/fonts as a symlink URL in dev instead of leaking its node_modules realpath
