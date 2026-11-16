@@ -102,6 +102,22 @@ workshop run -- yarn lint-scss
 workshop run -- yarn lint-python
 ```
 
+### Refreshing GitHub API cassettes
+
+GitHub API tests replay committed VCR cassettes and never record by default.
+To deliberately regenerate them locally with a valid test account token:
+
+```bash
+export TESTS_GITHUB_USER_TOKEN="your-test-account-token"
+workshop exec --env VCR_RECORD_MODE=all --env TESTS_GITHUB_USER_TOKEN \
+  --env FLASK_DEBUG=0 --env SECRET_KEY=test_key \
+  -- python3 -m unittest tests.api.test_github.GitHubTest
+```
+
+Review cassette changes before committing; authorization headers are filtered.
+CI always disables recording, even when `VCR_RECORD_MODE` is set. CI test jobs
+also use `scripts/run-offline.sh` to isolate networking while allowing loopback.
+
 ## Dependency updates
 
 [Dependabot](.github/dependabot.yml) manages npm/Yarn, pip (root and charm), GitHub Actions, and Dockerfile dependencies.

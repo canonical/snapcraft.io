@@ -1,6 +1,6 @@
 from os import getenv
 from unittest import TestCase
-from unittest.mock import MagicMock
+from unittest.mock import MagicMock, patch
 
 from vcr_unittest import VCRTestCase
 from webapp.api.github import GitHub, repository_is_public
@@ -15,7 +15,9 @@ class GitHubTest(VCRTestCase):
         """
         return {
             "filter_headers": ["Authorization"],
-            "record_mode": "none",
+            "record_mode": (
+                "none" if getenv("CI") else getenv("VCR_RECORD_MODE", "none")
+            ),
         }
 
     def setUp(self):
@@ -109,6 +111,25 @@ class GitHubTest(VCRTestCase):
             "build-staging-snapcraft-io", "test5"
         )
         self.assertEqual(None, case2.get("name"))
+
+
+class GitHubVCRConfigTest(TestCase):
+    def get_kwargs(self, env):
+        with patch.dict("os.environ", env, clear=True):
+            return GitHubTest()._get_vcr_kwargs()
+
+    def test_recording_is_disabled_by_default(self):
+        kwargs = self.get_kwargs({})
+        self.assertEqual(kwargs["record_mode"], "none")
+        self.assertEqual(kwargs["filter_headers"], ["Authorization"])
+
+    def test_local_recording_requires_opt_in(self):
+        kwargs = self.get_kwargs({"VCR_RECORD_MODE": "all"})
+        self.assertEqual(kwargs["record_mode"], "all")
+
+    def test_ci_disables_recording_even_with_opt_in(self):
+        kwargs = self.get_kwargs({"CI": "true", "VCR_RECORD_MODE": "all"})
+        self.assertEqual(kwargs["record_mode"], "none")
 
 
 class RepositoryIsPublicTest(TestCase):

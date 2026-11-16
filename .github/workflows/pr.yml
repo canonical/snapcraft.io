@@ -38,6 +38,8 @@ jobs:
           filters: |
             py:
               - '.github/workflows/pr.yml'
+              - '.github/workflows/coverage.yml'
+              - 'scripts/run-offline.sh'
               - 'package.json'
               - 'yarn.lock'
               - 'vite.config.js'
@@ -47,6 +49,8 @@ jobs:
               - 'templates/**/*'
             js:
               - '.github/workflows/pr.yml'
+              - '.github/workflows/coverage.yml'
+              - 'scripts/run-offline.sh'
               - '**/*.js'
               - '**/*.ts'
               - '**/*.jsx'
@@ -226,13 +230,7 @@ jobs:
 
       - name: Run python tests with coverage (offline)
         run: |
-          sudo --preserve-env unshare --net -- bash -c '
-            set -euo pipefail
-            ip link set lo up
-            user="$1"
-            shift
-            exec sudo --preserve-env --user="$user" -- "$@"
-          ' bash "$(id -un)" env "PATH=$PATH" yarn test-python-job
+          scripts/run-offline.sh yarn test-python-job
           coverage xml
 
       - name: Upload coverage to Codecov
@@ -258,13 +256,7 @@ jobs:
 
       - name: Run JS tests with coverage (offline)
         run: |
-          sudo --preserve-env unshare --net -- bash -c '
-            set -euo pipefail
-            ip link set lo up
-            user="$1"
-            shift
-            exec sudo --preserve-env --user="$user" -- "$@"
-          ' bash "$(id -un)" env "PATH=$PATH" yarn test-js --coverage
+          scripts/run-offline.sh yarn test-js --coverage
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v7
