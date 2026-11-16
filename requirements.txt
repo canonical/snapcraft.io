@@ -38,3 +38,4 @@ freezegun==1.5.5
 black==26.10.1
 protego==0.6.2
 flake8==7.3.0
+scour==0.38.2

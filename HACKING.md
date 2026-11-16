@@ -125,11 +125,12 @@ The workflow must exist on the default branch. If reviews or other required chec
 
 1. Take a look under `static/images/badges_editable/`; and pick another language to use as a template. For example, `en` (English), for LTR; `ar` (Arabic), for RTL; etc. **If you find none of the existing languages suitable for your template, you may modify the `x` and `y` coordinates for text to your liking, however the changes & positioning should be consistent with other badges, no modifications or appendages to the logo is allowed**
 2. Place the new badge under `static/images/badges_editable/<language_tag>/snap-store-<color>.svg`. Do not directly place under `badges`; running this script will overwrite a file already present.
-3. Install Inkscape CLI via `sudo apt install inkscape` or `sudo snap install inkscape`. (*Ubuntu environment is assumed, feel free to use your distro specific installation methods*)
-4. Install scour via `pip install scour` or `sudo apt install python3-scour` to minify generated badges.
-5. Run `python scripts/generate-minified-badges.py` to convert. (*Use `python3` if your distro does not automatically alias it*)
-6. Make equivalent changes under `static/js/publisher/pages/Publicise/PubliciseButtons.tsx`, specifically inside `LANGUAGES` object
-7. **Important** Test your changes to ensure they work. When testing locally, change the values of `darkBadgeSource` & `lightBadgeSource` in the above file, to point to `http://localhost:8004` (or whichever port is set via `.env`), for the badges to render.
+3. Install required dependencies (You may skip this step, if you are inside a Workshop env),
+    - Install Inkscape CLI via `sudo apt install inkscape` or `sudo snap install inkscape`. (*Ubuntu environment is assumed, feel free to use your distro specific installation methods*)
+    - Install scour via `pip install scour` or `sudo apt install python3-scour` or via `uv` to minify generated badges.
+4. Run `python scripts/generate-minified-badges.py` to convert. (*Use `python3` if your distro does not automatically alias it*)
+5. Make equivalent changes under `static/js/publisher/pages/Publicise/PubliciseButtons.tsx`, specifically inside `LANGUAGES` object
+6. **Important** Test your changes to ensure they work. When testing locally, change the value of `baseUrl` in the above file to point to `http://localhost:8004` (or whichever port is set via `.env`), for the badges to render.
 
 ## Update the list of licenses
 

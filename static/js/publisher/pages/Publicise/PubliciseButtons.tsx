@@ -28,24 +28,26 @@ function PubliciseButtons(): React.JSX.Element {
   const { snapId } = useParams();
   const [selectedLanguage, setSelectedLanguage] = useState<LanguageKey>("en");
 
-  const darkBadgeSource = `https://snapcraft.io/${selectedLanguage}/dark/install.svg`;
-  const lightBadgeSource = `https://snapcraft.io/${selectedLanguage}/light/install.svg`;
+  const baseUrl = "https://snapcraft.io";
+
+  const darkBadgeSource = `${baseUrl}/${selectedLanguage}/dark/install.svg`;
+  const lightBadgeSource = `${baseUrl}/${selectedLanguage}/light/install.svg`;
 
   const htmlSnippetBlack = [
-    `<a href="https://snapcraft.io/${snapId}">`,
+    `<a href="${baseUrl}/${snapId}">`,
     `   <img alt="${LANGUAGES[selectedLanguage].text}" src=${darkBadgeSource} />`,
     `</a>`,
   ].join("\n");
 
   const htmlSnippetWhite = [
-    `<a href="https://snapcraft.io/${snapId}">`,
+    `<a href="${baseUrl}/${snapId}">`,
     `   <img alt="${LANGUAGES[selectedLanguage].text}" src=${lightBadgeSource} />`,
     `</a>`,
   ].join("\n");
 
-  const markdownSnippetBlack = `[![${LANGUAGES[selectedLanguage].text}](${darkBadgeSource})](https://snapcraft.io/${snapId})`;
+  const markdownSnippetBlack = `[![${LANGUAGES[selectedLanguage].text}](${darkBadgeSource})](${baseUrl}/${snapId})`;
 
-  const markdownSnippetWhite = `[![${LANGUAGES[selectedLanguage].text}](${lightBadgeSource})](https://snapcraft.io/${snapId})`;
+  const markdownSnippetWhite = `[![${LANGUAGES[selectedLanguage].text}](${lightBadgeSource})](${baseUrl}/${snapId})`;
 
   return (
     <>
