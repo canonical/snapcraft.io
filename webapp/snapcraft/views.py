@@ -4,6 +4,8 @@ from webapp.config import DEFAULT_ICON_URL
 from webapp.llms import BASE_URL, store_llm
 from webapp.snapcraft import logic
 
+FEATURED_CATEGORIES = ["Featured", "Development", "Games", "Server"]
+
 
 def snapcraft_blueprint():
     snapcraft = flask.Blueprint("snapcraft", __name__)
@@ -13,9 +15,14 @@ def snapcraft_blueprint():
         nps = flask.request.args.get("nps")
 
         livestream = logic.get_livestreams()
+        featured_snaps = logic.get_featured_snaps(FEATURED_CATEGORIES)
 
         return flask.render_template(
-            "index.html", nps=nps, livestream=livestream
+            "index.html",
+            nps=nps,
+            livestream=livestream,
+            featured_categories=FEATURED_CATEGORIES,
+            featured_snaps=featured_snaps,
         )
 
     @snapcraft.route("/account.json")

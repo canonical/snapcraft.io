@@ -1,8 +1,14 @@
+from unittest.mock import patch
 from urllib.parse import parse_qs, urlparse
 
 from flask_testing import TestCase
 
+from cache.cache_utility import redis_cache
 from webapp.app import create_app
+
+RECOMMENDATIONS_PATH = "webapp.store.views.snap_recommendations"
+CATEGORIES_PATH = "webapp.store.views.device_gateway.get_categories"
+FEATURED_PATH = "webapp.store.views.device_gateway.get_featured_snaps"
 
 
 class StoreRedirectsTest(TestCase):
@@ -64,6 +70,16 @@ class StoreRedirectsTest(TestCase):
         )
 
     def test_store_does_not_redirect_when_q_is_absent(self):
-        response = self.client.get("/store?foo=1", follow_redirects=False)
+        redis_cache.fallback.clear()
+
+        with patch(RECOMMENDATIONS_PATH) as recommendations, patch(
+            CATEGORIES_PATH, return_value={"categories": []}
+        ), patch(FEATURED_PATH, return_value={}):
+            recommendations.get_popular.return_value = []
+            recommendations.get_recent.return_value = []
+            recommendations.get_trending.return_value = []
+            recommendations.get_top_rated.return_value = []
+
+            response = self.client.get("/store?foo=1", follow_redirects=False)
 
         self.assertEqual(response.status_code, 200)
