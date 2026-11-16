@@ -1,6 +1,19 @@
 
 # Working on snapcraft.io
 
+## Development environment
+
+Use [Workshop](https://ubuntu.com/workshop/docs/) for the supported development environment:
+
+```bash
+workshop launch
+workshop run -- start
+```
+
+The setup hook installs Python dependencies into `.venv`, installs JavaScript dependencies from `yarn.lock`, and loads `.env` followed by optional `.env.local` overrides. Flask is available on port 8004 and Vite on port 5004. Use `workshop refresh` after dependency changes.
+
+To run an arbitrary command in the environment, use `workshop exec -- <command>`, or enter `workshop shell` for an interactive shell.
+
 ## Use staging APIs
 
 To use staging APIs locally you can add the following lines to an `.env.local` file:
@@ -76,11 +89,50 @@ The application will be reporting errors to your `sentry.io` project from now on
 
 ## Testing
 
-Install [`dotrun`](https://github.com/canonical/dotrun), then run
+After launching Workshop, run:
 
-``` bash
-dotrun test
+```bash
+workshop run -- test                      # build + all unit tests and linting
+workshop run -- yarn test-js              # JavaScript tests
+workshop run -- yarn test-js path/to/file.test.tsx
+workshop run -- build                     # required before Python tests
+workshop run -- yarn test-python          # Python lint + unit tests
+workshop run -- yarn lint-js
+workshop run -- yarn lint-scss
+workshop run -- yarn lint-python
 ```
+
+### Automated browser QA
+
+[Auto QA](.github/workflows/auto-qa.md) checks a PR's demo against live production and posts a report with desktop and mobile screenshots.
+
+1. Add clear `## How to QA` steps to the PR description.
+2. Wait for the controller's `github-actions[bot]` comment to say **PR demo: ready** and for the linked **PR demo** workflow to succeed. The deployed commit must match the latest PR commit.
+3. Add the **auto-qa** label to the PR.
+4. Check the **Auto QA preflight** run summary for any blocking or skipped checks and retry instructions. Otherwise, read the QA report on the PR and expand each viewport's details to compare screenshots. **Partial** and **Blocked** results do not mean the checks passed.
+
+To retry, remove and re-add the label once the latest commit's demo is ready. New commits and comments do not trigger QA; re-adding the label cancels any previous QA run for that PR.
+
+The browser is not logged in and cannot perform form submissions or other unsafe actions. Coverage is limited and comparisons use live production, not the PR's base commit, so this does not replace manual QA or tests. Screenshots are published persistently on the shared `assets/auto-qa` branch: only public, unauthenticated content belongs there.
+
+## Dependency updates
+
+[Dependabot](.github/dependabot.yml) manages npm/Yarn, pip (root and charm), GitHub Actions, and Dockerfile dependencies.
+
+- Routine minor and patch updates share one pull request per ecosystem for manual review and merge.
+- The [merge workflow](.github/workflows/dependabot-auto-merge.yml) approves and merges eligible security patch/minor updates after `PR checks` succeeds for the current commit. It depends on a `DEPENDABOT_MERGE_TOKEN` secret that is used to authorize the merge commit. If the merge step in the workflow fails, generate a new fine-grained personal access token from the `webteam-app` account with `Contents: read-write` and `Pull requests: read-write` permissions on this repo.
+- Major updates require manual review and merge. The `@types/node` major-update exclusion still applies.
+
+Dependabot checks version updates every weekday with a seven-day release-age cooldown. Security updates bypass cooldown. Dependabot can also bypass cooldown when publication dates are unavailable.
+
+**Required GitHub settings:**
+
+- Enable the dependency graph, Dependabot alerts, and Dependabot security updates under **Settings → Code security**.
+- Enable squash merging under **Settings → General → Pull Requests**. The workflow does not need **Allow auto-merge**.
+- Require continuous integration checks through default-branch protection. The workflow watches `PR checks`, but GitHub must enforce all required checks.
+- Keep required approval rules. The bot submits one approval for the tested commit but does not bypass branch protection. Additional approvals or CODEOWNER approval can still be required.
+
+The workflow must exist on the default branch. If reviews or other required checks block the merge, rerun the merge workflow after those requirements pass. It does not queue a merge or support merge queues.
 
 ## Adding new Publicise SVG Badges
 
@@ -90,7 +142,7 @@ dotrun test
 4. Install scour via `pip install scour` or `sudo apt install python3-scour` to minify generated badges.
 5. Run `python scripts/generate-minified-badges.py` to convert. (*Use `python3` if your distro does not automatically alias it*)
 6. Make equivalent changes under `static/js/publisher/pages/Publicise/PubliciseButtons.tsx`, specifically inside `LANGUAGES` object
-7. **Important** Test your changes to ensure they work. If using `dotrun`, change the values of `darkBadgeSource` & `lightBadgeSource` in the above file, to point to `http://localhost:8004` (or whichever port is set via `.env`), for the badges to render.
+7. **Important** Test your changes to ensure they work. When testing locally, change the values of `darkBadgeSource` & `lightBadgeSource` in the above file, to point to `http://localhost:8004` (or whichever port is set via `.env`), for the badges to render.
 
 ## Update the list of licenses
 
