@@ -447,7 +447,15 @@ Call `add_comment` exactly once on the triggering PR. Use:
 
 For each route/state, list actions actually performed, expected/observed behavior,
 and **🟢 Pass**, **🔵 Needs a closer look/unsure**, or **🔴 Failed**.
-Include separate desktop/mobile comparisons for each tested viewport, including
+For new features, include a screenshot of the newly introduced feature, using this template:
+<details>
+<summary>feature/page name</summary>
+
+![feature screenshot](FEATURE_IMAGE_URL)
+
+</details>
+
+For regression tests, include separate desktop/mobile comparisons for each tested viewport, including
 passing and uncertain checks, using this template:
 
 <details>
@@ -459,9 +467,7 @@ passing and uncertain checks, using this template:
 
 </details>
 
-Replace image placeholders with exact returned URLs. For missing evidence, put
-the filename and limitation in that cell; mark unavailable baselines N/A.
-Keep interaction-only checks separate from inspected visual comparisons.
+Replace image placeholders with exact returned URLs.
 
 ### Findings
 
@@ -470,12 +476,3 @@ expected/actual behavior and paired evidence. List intended differences and
 pre-existing/environment-only issues separately. If none, say **No unexpected
 regressions found within this tested scope**.
 
-### Coverage gaps and evidence
-
-Record the head SHA, demo/deployment links, this Actions run, production capture
-times, skipped/unexecuted steps and reasons, missing context/evidence and manual
-follow-up. Live production is not an exact main-commit baseline.
-**Pass** requires successful execution and comparable image inspection for the
-declared scope with no unexplained failures. Use **Partial** for incomplete
-assessment, **Blocked** when QA cannot proceed or freshness fails, or
-**Regressions found** with any gaps disclosed. This is advisory, not merge approval.
