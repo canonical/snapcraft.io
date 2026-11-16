@@ -19,7 +19,7 @@ jobs:
       github.event.action != 'closed' &&
       github.event.pull_request.head.repo.full_name == github.repository &&
       vars.DEMOS_ENABLED == 'true'
-    uses: canonical/webteam-devops/.github/workflows/demo-deploy.yaml@5827cdf23746726d4dea2a7e80f0e57aba239aeb
+    uses: canonical/webteam-devops/.github/workflows/demo-deploy.yaml@main
     with:
       pr-number: ${{ github.event.pull_request.number }}
       commit-sha: ${{ github.event.pull_request.head.sha }}
@@ -32,7 +32,7 @@ jobs:
       github.event.action == 'closed' &&
       github.event.pull_request.head.repo.full_name == github.repository &&
       vars.DEMOS_ENABLED == 'true'
-    uses: canonical/webteam-devops/.github/workflows/demo-cleanup.yaml@5827cdf23746726d4dea2a7e80f0e57aba239aeb
+    uses: canonical/webteam-devops/.github/workflows/demo-cleanup.yaml@main
     with:
       pr-number: ${{ github.event.pull_request.number }}
       api-url: ${{ vars.DEMOS_API_URL }}
