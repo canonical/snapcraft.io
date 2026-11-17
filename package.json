@@ -48,7 +48,7 @@
     "@types/react-dom": "19.2.3",
     "@types/topojson-client": "3.1.5",
     "@vitejs/plugin-react-swc": "4.3.1",
-    "@vitest/eslint-plugin": "1.6.17",
+    "@vitest/eslint-plugin": "1.6.28",
     "autoprefixer": "10.5.0",
     "d3-array": "3.2.4",
     "d3-axis": "3.0.0",
@@ -76,7 +76,7 @@
     "react-joyride": "3.0.0-7",
     "react-query": "3.39.3",
     "react-redux": "9.2.0",
-    "react-router-dom": "7.15.1",
+    "react-router-dom": "7.18.5",
     "redux": "5.0.1",
     "redux-thunk": "3.1.0",
     "sass-embedded": "1.99.0",
@@ -88,14 +88,14 @@
     "vite": "7.3.7"
   },
   "devDependencies": {
-    "@percy/cli": "1.31.13",
+    "@percy/cli": "1.32.6",
     "@types/d3": "7.4.3",
-    "@typescript-eslint/eslint-plugin": "^8.59.2",
-    "@typescript-eslint/parser": "^8.59.2",
-    "@vitest/coverage-v8": "4.1.11",
-    "@vitest/ui": "4.1.11",
-    "concurrently": "9.2.4",
-    "cypress": "15.14.2",
+    "@typescript-eslint/eslint-plugin": "^8.73.0",
+    "@typescript-eslint/parser": "^8.73.0",
+    "@vitest/coverage-v8": "4.1.12",
+    "@vitest/ui": "4.1.12",
+    "concurrently": "9.2.5",
+    "cypress": "15.21.2",
     "eslint": "9.39.4",
     "eslint-config-prettier": "10.1.8",
     "eslint-plugin-jsx-a11y": "^6.9.0",
@@ -105,7 +105,7 @@
     "stylelint": "17.11.0",
     "stylelint-config-standard-scss": "17.0.0",
     "stylelint-order": "7.0.1",
-    "vitest": "4.1.11"
+    "vitest": "4.1.12"
   },
   "resolutions": {
     "react-hook-form": "7.75.0",
@@ -113,7 +113,8 @@
     "vitest/vite": "7.3.7",
     "lodash": "4.18.1",
     "picomatch": ">=2.3.2",
-    "brace-expansion": ">=2.0.2",
+    "brace-expansion": "5.0.13",
+    "cypress": "15.21.2",
     "@tootallnate/once": "3.0.1",
     "react": "19.2.6",
     "react-dom": "19.2.6"
