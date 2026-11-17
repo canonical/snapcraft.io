@@ -2,9 +2,12 @@ import copy
 import responses
 from urllib.parse import urlencode
 from flask_testing import TestCase
+from concurrent.futures import ThreadPoolExecutor
+from datetime import datetime
 from webapp.app import create_app
 from unittest.mock import patch
 from cache.cache_utility import redis_cache
+from webapp.api.exceptions import ApiTimeoutError
 
 POPULAR_PATH = "webapp.store.views.SnapRecommendations.get_popular"
 RECENT_PATH = "webapp.store.views.SnapRecommendations.get_recent"
@@ -548,6 +551,146 @@ class GetDetailsPageTest(TestCase):
             ],
         )
 
+    @patch("webapp.store.concurrency.ThreadPoolExecutor")
+    def test_explore_cached_empty_lists_do_not_create_threads(self, executor):
+        for name in ("popular", "recent", "trending", "top-rated"):
+            redis_cache.set(f"explore:{name}-snaps", [], ttl=3600)
+        redis_cache.set("explore:categories", [], ttl=3600)
+
+        with patch(
+            "webapp.store.views.requests.RecommendationsSession"
+        ) as recommendations_session, patch(
+            CATEGORIES_PATH
+        ) as categories, patch(
+            FEATURED_PATH, return_value={}
+        ) as featured:
+            response = self.client.get("/store")
+
+        self.assert200(response)
+        self.assert_context("popular_snaps", [])
+        recommendations_session.assert_not_called()
+        categories.assert_not_called()
+        featured.assert_called_once()
+        executor.assert_not_called()
+
+    @patch(
+        "webapp.store.concurrency.ThreadPoolExecutor",
+        wraps=ThreadPoolExecutor,
+    )
+    def test_explore_only_schedules_cache_misses(self, executor):
+        for name in ("recent", "trending", "top-rated"):
+            redis_cache.set(f"explore:{name}-snaps", [], ttl=3600)
+        redis_cache.set("explore:categories", [], ttl=3600)
+
+        with patch(POPULAR_PATH, return_value=[]) as popular, patch(
+            CATEGORIES_PATH
+        ) as categories, patch(FEATURED_PATH, return_value={}):
+            response = self.client.get("/store")
+
+        self.assert200(response)
+        popular.assert_called_once()
+        categories.assert_not_called()
+        # Only the missing popular list and uncached featured snaps overlap.
+        executor.assert_called_once_with(max_workers=2)
+        self.assertEqual(
+            redis_cache.get("explore:popular-snaps", expected_type=list), []
+        )
+
+    def _prime_details_cache(self):
+        end = datetime(2026, 1, 1)
+        redis_cache.set("snap-details:toto", copy.deepcopy(SNAP_PAYLOAD))
+        redis_cache.set("snap-extra-details:toto", EMPTY_EXTRA_DETAILS_PAYLOAD)
+        metrics_key = f"snap-public-metrics:id:{end.isoformat()}"
+        redis_cache.set(metrics_key, [])
+        return end, metrics_key
+
+    @patch("webapp.store.concurrency.ThreadPoolExecutor")
+    def test_cached_details_do_not_create_threads(self, executor):
+        end, _ = self._prime_details_cache()
+        with patch(
+            "webapp.store.snap_details_views.metrics_helper."
+            "get_last_metrics_processed_date",
+            return_value=end,
+        ), patch("webapp.store.snap_details_views.Session") as session:
+            response = self.client.get(self.endpoint_url)
+
+        self.assert200(response)
+        self.assert_context("countries", None)
+        session.assert_not_called()
+        executor.assert_not_called()
+
+    @patch("webapp.store.concurrency.ThreadPoolExecutor")
+    def test_single_details_cache_miss_runs_inline(self, executor):
+        gateway = "webapp.store.snap_details_views.DeviceGW"
+        for missing in ("aliases", "metrics"):
+            with self.subTest(missing=missing):
+                end, metrics_key = self._prime_details_cache()
+                redis_cache.delete(
+                    "snap-extra-details:toto"
+                    if missing == "aliases"
+                    else metrics_key
+                )
+                with patch(
+                    "webapp.store.snap_details_views.metrics_helper."
+                    "get_last_metrics_processed_date",
+                    return_value=end,
+                ), patch(
+                    f"{gateway}.get_snap_details",
+                    return_value=EMPTY_EXTRA_DETAILS_PAYLOAD,
+                ) as extra, patch(
+                    f"{gateway}.get_public_metrics", return_value=[]
+                ) as metrics:
+                    response = self.client.get(self.endpoint_url)
+
+                self.assert200(response)
+                self.assertEqual(extra.call_count, missing == "aliases")
+                self.assertEqual(metrics.call_count, missing == "metrics")
+        executor.assert_not_called()
+
+    @patch(
+        "webapp.store.concurrency.ThreadPoolExecutor",
+        wraps=ThreadPoolExecutor,
+    )
+    def test_details_cache_misses_overlap(self, executor):
+        end, metrics_key = self._prime_details_cache()
+        redis_cache.delete("snap-extra-details:toto")
+        redis_cache.delete(metrics_key)
+        with patch(
+            "webapp.store.snap_details_views.metrics_helper."
+            "get_last_metrics_processed_date",
+            return_value=end,
+        ), patch(
+            "webapp.store.snap_details_views.DeviceGW.get_snap_details",
+            return_value=EMPTY_EXTRA_DETAILS_PAYLOAD,
+        ) as extra, patch(
+            "webapp.store.snap_details_views.DeviceGW.get_public_metrics",
+            return_value=[],
+        ) as metrics:
+            response = self.client.get(self.endpoint_url)
+
+        self.assert200(response)
+        extra.assert_called_once()
+        metrics.assert_called_once()
+        executor.assert_called_once_with(max_workers=2)
+
+    @patch("webapp.store.concurrency.ThreadPoolExecutor")
+    def test_single_metrics_failure_still_renders_details(self, executor):
+        end, metrics_key = self._prime_details_cache()
+        redis_cache.delete(metrics_key)
+        with patch(
+            "webapp.store.snap_details_views.metrics_helper."
+            "get_last_metrics_processed_date",
+            return_value=end,
+        ), patch(
+            "webapp.store.snap_details_views.DeviceGW.get_public_metrics",
+            side_effect=ApiTimeoutError("timeout"),
+        ):
+            response = self.client.get(self.endpoint_url)
+
+        self.assert200(response)
+        self.assert_context("countries", None)
+        executor.assert_not_called()
+
     @responses.activate
     def test_explore_uses_redis_cache(self):
         """When Redis has cached explore data, the recommendation APIs
@@ -666,7 +809,11 @@ class GetDetailsPageTest(TestCase):
                                 )
 
     @responses.activate
-    def test_explore_populates_cache_when_empty(self):
+    @patch(
+        "webapp.store.concurrency.ThreadPoolExecutor",
+        wraps=ThreadPoolExecutor,
+    )
+    def test_explore_populates_cache_when_empty(self, executor):
         """When Redis cache is empty, the recommendation/device methods
         should be called and their results stored in Redis for subsequent
         requests.
@@ -772,6 +919,7 @@ class GetDetailsPageTest(TestCase):
                                     "featured_snaps", expected_featured
                                 )
 
+                                executor.assert_called_once_with(max_workers=6)
                                 # cache-populating methods were called
                                 self.assertTrue(mock_popular.called)
                                 self.assertTrue(mock_recent.called)
