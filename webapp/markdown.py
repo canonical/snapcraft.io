@@ -45,6 +45,10 @@ class SnapcraftBlockParser(BlockParser):
         )
         return m.end()
 
+    def _parse_indent_code_fast(self, state):
+        # Mistune's fast path strips four-space indentation before our parser.
+        return None
+
     def parse_method(self, m, state):
         # mistune's list parser invokes parse_method for rules outside
         # DEFAULT_RULES (atx_heading, block_quote, ...) render those as
@@ -83,8 +87,9 @@ class SnapcraftInlineParser(InlineParser):
         "linebreak",
         "inline_html",
         # Keep rule enabled for mistune precedence compatibility;
-        # parse_link below turns markdown [text](url) syntax into literal text.
+        # parse_link_close below turns markdown [text](url) into literal text.
         "link",
+        "link_close",
     )
 
     def __init__(self):
@@ -94,30 +99,12 @@ class SnapcraftInlineParser(InlineParser):
         if "softbreak" in self.rules:
             self.rules.remove("softbreak")
 
-    def parse_link(self, m, state):
-        # Keep markdown link syntax as literal text instead of creating links;
-        # only create anchor tags for the URLs themselves.
-        #
-        # Supported Mistune v3 customization point:
-        # - Inline parser methods can be overridden (see InlineParser API).
-        #   https://mistune.lepture.com/en/latest/api.html#mistune.InlineParser
-        #
-        # What we do:
-        # - call the parent's parse_link -> it appends a link token to state
-        # - pop the link token and replace it with:
-        #      1. a raw token for the "[<label>](" part of the link
-        #      2. the link token, but using the actual URL for the label
-        #      3. another raw token for ")"
-        # This method is also used for parsing images, so we add some logic for
-        # that too.
-
-        pos = super().parse_link(m, state)
-
-        if not state.tokens:
-            return pos
-
-        link = state.tokens[-1]
-        if link.get("type") not in {"link", "image"}:
+    def parse_link_close(self, m, state):
+        pos = super().parse_link_close(m, state)
+        if not state.tokens or state.tokens[-1].get("type") not in {
+            "link",
+            "image",
+        }:
             return pos
 
         link = state.tokens.pop()
@@ -127,7 +114,8 @@ class SnapcraftInlineParser(InlineParser):
             return pos
 
         label_children = link.get("children", [])
-        state.append_token({"type": "text", "raw": m.group(0)})
+        opening = "![" if link["type"] == "image" else "["
+        state.append_token({"type": "text", "raw": opening})
         for child in label_children:
             state.append_token(child)
         state.append_token({"type": "text", "raw": "]("})
