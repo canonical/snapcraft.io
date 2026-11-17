@@ -1,8 +1,15 @@
 import unittest
+from unittest.mock import MagicMock, patch
 
 import datetime
 from freezegun import freeze_time
+from canonicalwebteam.exceptions import StoreApiError
+from requests.exceptions import RequestException
 import webapp.store.logic as logic
+
+
+def factory(gateway):
+    return lambda: (gateway, MagicMock())
 
 
 class StoreLogicTest(unittest.TestCase):
@@ -602,3 +609,115 @@ class StoreLogicTest(unittest.TestCase):
             with freeze_time("2024-01-02"):
                 result = logic.is_snap_old(date_str)
                 self.assertTrue(result, f"Failed for date format: {date_str}")
+
+
+class TestFeaturedSnapsByCategory(unittest.TestCase):
+    def _gateway(self, side_effect):
+        gateway = MagicMock()
+        gateway.get_category_items.side_effect = side_effect
+        return gateway
+
+    @staticmethod
+    def _response(name):
+        return {
+            "_embedded": {
+                "clickindex:package": [
+                    {
+                        "package_name": name,
+                        "media": [
+                            {"type": "icon", "url": f"https://x/{name}.png"}
+                        ],
+                    }
+                ]
+            }
+        }
+
+    @patch("webapp.store.logic.redis_cache")
+    def test_fetches_each_category_and_adds_icon(self, cache):
+        cache.get.return_value = None
+        gateway = self._gateway(
+            lambda category, size, page: self._response(category)
+        )
+
+        result = logic.get_featured_snaps_by_category(
+            factory(gateway), ["Featured", "Games"]
+        )
+
+        self.assertEqual(list(result), ["featured", "games"])
+        self.assertEqual(result["games"][0]["icon_url"], "https://x/games.png")
+        gateway.get_category_items.assert_any_call(
+            category="games", size=3, page=1
+        )
+        self.assertEqual(cache.set.call_count, 2)
+
+    @patch("webapp.store.logic.redis_cache")
+    def test_uses_cache(self, cache):
+        cache.get.return_value = [{"package_name": "cached"}]
+        gateway = self._gateway(None)
+
+        result = logic.get_featured_snaps_by_category(
+            factory(gateway), ["Featured"]
+        )
+
+        self.assertEqual(result["featured"][0]["package_name"], "cached")
+        gateway.get_category_items.assert_not_called()
+
+    @patch("webapp.store.logic.redis_cache")
+    def test_failure_gives_empty_list_and_caches_briefly(self, cache):
+        cache.get.return_value = None
+        gateway = self._gateway(StoreApiError("boom"))
+
+        result = logic.get_featured_snaps_by_category(
+            factory(gateway), ["Featured"]
+        )
+
+        self.assertEqual(result, {"featured": []})
+        cache.set.assert_called_once_with(
+            "homepage-featured-snaps:featured",
+            [],
+            ttl=logic.FEATURED_SNAPS_FAILURE_TTL,
+        )
+
+    @patch("webapp.store.logic.redis_cache")
+    def test_successful_results_use_long_ttl(self, cache):
+        cache.get.return_value = None
+        gateway = self._gateway(
+            lambda category, size, page: self._response(category)
+        )
+
+        logic.get_featured_snaps_by_category(factory(gateway), ["Featured"])
+
+        cache.set.assert_called_once()
+        self.assertEqual(cache.set.call_args.kwargs["ttl"], 3600)
+
+    @patch("webapp.store.logic.redis_cache")
+    def test_request_exception_is_handled(self, cache):
+        cache.get.return_value = None
+        gateway = self._gateway(RequestException("down"))
+
+        result = logic.get_featured_snaps_by_category(
+            factory(gateway), ["Games"]
+        )
+
+        self.assertEqual(result, {"games": []})
+
+    @patch("webapp.store.logic.redis_cache")
+    def test_partial_cache_hit_only_fetches_misses(self, cache):
+        cached = [{"package_name": "cached"}]
+        cache.get.side_effect = lambda key, expected_type: (
+            cached if key.endswith(":featured") else None
+        )
+        gateway = self._gateway(
+            lambda category, size, page: self._response(category)
+        )
+
+        result = logic.get_featured_snaps_by_category(
+            factory(gateway), ["Featured", "Games"]
+        )
+
+        self.assertEqual(list(result), ["featured", "games"])
+        self.assertEqual(result["featured"], cached)
+        self.assertEqual(result["games"][0]["package_name"], "games")
+        gateway.get_category_items.assert_called_once_with(
+            category="games", size=3, page=1
+        )

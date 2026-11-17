@@ -416,19 +416,6 @@ def store_blueprint(store_query=None):
             return flask.jsonify({}), 503
         return flask.jsonify(stats)
 
-    @store.route("/store/featured-snaps/<category>")
-    def featured_snaps_in_category(category):
-        snaps_results = []
-
-        snaps_results = device_gateway.get_category_items(
-            category=category, size=3, page=1
-        )["_embedded"]["clickindex:package"]
-
-        for snap in snaps_results:
-            snap["icon_url"] = helpers.get_icon(snap["media"])
-
-        return flask.jsonify(snaps_results)
-
     @store.route("/store/sitemap.xml")
     def sitemap():
         sitemap = redis_cache.get("sitemap:xml", expected_type=str)

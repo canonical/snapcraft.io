@@ -1,12 +1,15 @@
 import datetime
 import random
 import re
+from concurrent.futures import ThreadPoolExecutor
 from urllib.parse import parse_qs, urlparse
 
 import humanize
 from dateutil import parser
 from dateutil.relativedelta import relativedelta
 from canonicalwebteam.exceptions import StoreApiError
+from requests.exceptions import RequestException
+from webapp.api.exceptions import ApiError
 from cache.cache_utility import redis_cache
 from webapp import helpers
 
@@ -16,6 +19,84 @@ def get_n_random_snaps(snaps, choice_number):
         return random.sample(snaps, choice_number)
 
     return snaps
+
+
+def get_category_snaps(device_gateway, category, size=3):
+    """Return the first `size` snaps of a category with their icon URL."""
+    snaps = device_gateway.get_category_items(
+        category=category, size=size, page=1
+    )["_embedded"]["clickindex:package"]
+
+    for snap in snaps:
+        snap["icon_url"] = helpers.get_icon(snap["media"])
+
+    return snaps
+
+
+FEATURED_SNAPS_TTL = 3600
+FEATURED_SNAPS_FAILURE_TTL = 60
+FEATURED_SNAPS_MAX_WORKERS = 4
+
+
+def get_featured_snaps_by_category(gateway_factory, categories):
+    """Return {lowercase category: snaps} for the homepage, cached.
+
+    `gateway_factory` returns a new (DeviceGW, session) pair per fetch,
+    since sessions aren't thread-safe. Cache misses are fetched in
+    parallel. A failed fetch yields an empty list so the homepage still
+    renders; failures are cached for a short TTL so an upstream outage
+    isn't hammered on every page view, while successful results are
+    cached for longer.
+    """
+    keys = [category.lower() for category in categories]
+    cache_keys = {key: f"homepage-featured-snaps:{key}" for key in keys}
+
+    result = {}
+    missing = []
+    for key in keys:
+        snaps = redis_cache.get(cache_keys[key], expected_type=list)
+        if snaps is None:
+            missing.append(key)
+        else:
+            result[key] = snaps
+
+    if not missing:
+        return result
+
+    def fetch(key):
+        try:
+            device_gateway, session = gateway_factory()
+        except Exception:
+            return None
+        try:
+            return get_category_snaps(device_gateway, key)
+        except (
+            StoreApiError,
+            ApiError,
+            RequestException,
+            KeyError,
+            ValueError,
+        ):
+            return None
+        finally:
+            session.close()
+
+    with ThreadPoolExecutor(
+        max_workers=min(FEATURED_SNAPS_MAX_WORKERS, len(missing))
+    ) as pool:
+        fetched = dict(zip(missing, pool.map(fetch, missing)))
+
+    for key, snaps in fetched.items():
+        if snaps is None:
+            redis_cache.set(
+                cache_keys[key], [], ttl=FEATURED_SNAPS_FAILURE_TTL
+            )
+            snaps = []
+        else:
+            redis_cache.set(cache_keys[key], snaps, ttl=FEATURED_SNAPS_TTL)
+        result[key] = snaps
+
+    return {key: result[key] for key in keys}
 
 
 def get_publisher_snaps(device_gateway, publisher):
