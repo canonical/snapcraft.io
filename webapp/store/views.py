@@ -1,4 +1,4 @@
-from concurrent.futures import ThreadPoolExecutor
+from functools import partial
 import logging
 from math import floor
 from operator import methodcaller
@@ -20,6 +20,7 @@ from canonicalwebteam.snap_recommendations import SnapRecommendations
 
 from webapp.api.exceptions import ApiError
 from webapp.store.snap_details_views import snap_details_views
+from webapp.store.concurrency import run_tasks
 from webapp.helpers import api_publisher_session, api_session
 from flask.json import jsonify
 from webapp.extensions import csrf
@@ -41,7 +42,7 @@ logger = logging.getLogger(__name__)
 def _get_cached_recommendation(cache_key, fetch):
     try:
         recommendations = redis_cache.get(cache_key, expected_type=list)
-        if not recommendations:
+        if recommendations is None:
             with requests.RecommendationsSession() as session:
                 recommendations = fetch(SnapRecommendations(session))
             redis_cache.set(cache_key, recommendations, ttl=3600)
@@ -58,7 +59,7 @@ def _get_cached_recommendation(cache_key, fetch):
 def _get_cached_categories():
     try:
         categories = redis_cache.get("explore:categories", expected_type=list)
-        if not categories:
+        if categories is None:
             with requests.Session() as session:
                 categories = DeviceGW("snap", session).get_categories()
             redis_cache.set("explore:categories", categories, ttl=3600)
@@ -206,27 +207,32 @@ def store_blueprint(store_query=None):
                 "title",
             ]
         )
-        with ThreadPoolExecutor(
-            max_workers=len(recommendation_fetchers) + 2
-        ) as executor:
-            recommendation_futures = {
-                name: executor.submit(
-                    _get_cached_recommendation,
-                    f"explore:{name}-snaps",
-                    fetch,
-                )
-                for name, fetch in recommendation_fetchers.items()
-            }
-            categories_future = executor.submit(_get_cached_categories)
-            featured_snaps_future = executor.submit(
-                _get_featured_snaps, featured_snaps_fields
+        recommendations = {
+            name: redis_cache.get(f"explore:{name}-snaps", expected_type=list)
+            for name in recommendation_fetchers
+        }
+        categories_results = redis_cache.get(
+            "explore:categories", expected_type=list
+        )
+        tasks = {
+            name: partial(
+                _get_cached_recommendation,
+                f"explore:{name}-snaps",
+                fetch,
             )
-            recommendations = {
-                name: future.result()
-                for name, future in recommendation_futures.items()
-            }
-            categories_results = categories_future.result()
-            featured_snaps = featured_snaps_future.result()
+            for name, fetch in recommendation_fetchers.items()
+            if recommendations[name] is None
+        }
+        if categories_results is None:
+            tasks["categories"] = _get_cached_categories
+        tasks["featured"] = partial(_get_featured_snaps, featured_snaps_fields)
+        results = run_tasks(tasks)
+        for name in recommendation_fetchers:
+            if recommendations[name] is None:
+                recommendations[name] = results[name]
+        if categories_results is None:
+            categories_results = results["categories"]
+        featured_snaps = results["featured"]
 
         popular_snaps = recommendations["popular"]
         recent_snaps = recommendations["recent"]

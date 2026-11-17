@@ -1,4 +1,4 @@
-from concurrent.futures import ThreadPoolExecutor
+from functools import partial
 import flask
 from flask import Response
 import requests
@@ -23,6 +23,7 @@ from canonicalwebteam.store_api.devicegw import DeviceGW
 from pybadges import badge
 from webapp.api.exceptions import ApiError
 from webapp.api.requests import Session
+from webapp.store.concurrency import run_tasks
 
 device_gateway = DeviceGW("snap", helpers.api_session)
 
@@ -58,29 +59,42 @@ FIELDS_EXTRA_DETAILS = [
 def _get_cached_extra_details(snap_name):
     cache_key = f"snap-extra-details:{snap_name}"
     details = redis_cache.get(cache_key, expected_type=dict)
-    if details:
+    if details is not None:
         return details
 
-    with Session() as session:
-        details = DeviceGW("snap", session).get_snap_details(
-            snap_name,
-            channel="",
-            fields=FIELDS_EXTRA_DETAILS,
-        )
-    redis_cache.set(cache_key, details, ttl=300)
-    return details
+    try:
+        # The empty channel avoids filtering to latest/stable, which
+        # fails for snaps that do not publish that channel.
+        with Session() as session:
+            details = DeviceGW("snap", session).get_snap_details(
+                snap_name,
+                channel="",
+                fields=FIELDS_EXTRA_DETAILS,
+            )
+        redis_cache.set(cache_key, details, ttl=300)
+        return details
+    except StoreApiResourceNotFound:
+        # Gated snaps may have no details endpoint; render without aliases.
+        return None
+    except (StoreApiError, ApiError, requests.RequestException):
+        logger.exception("Details endpoint returned an error")
+        return None
 
 
 def _get_cached_metrics(snap_id, end, query):
     cache_key = f"snap-public-metrics:{snap_id}:{end.isoformat()}"
     response = redis_cache.get(cache_key, expected_type=list)
-    if response:
+    if response is not None:
         return response
 
-    with Session() as session:
-        response = DeviceGW("snap", session).get_public_metrics(query)
-    redis_cache.set(cache_key, response, ttl=300)
-    return response
+    try:
+        with Session() as session:
+            response = DeviceGW("snap", session).get_public_metrics(query)
+        redis_cache.set(cache_key, response, ttl=300)
+        return response
+    except (StoreApiError, ApiError, requests.RequestException):
+        logger.exception("Metrics endpoint returned an error")
+        return None
 
 
 def snap_details_views(store):
@@ -377,31 +391,30 @@ def snap_details_views(store):
             ),
         ]
 
-        with ThreadPoolExecutor(max_workers=2) as executor:
-            # The empty channel avoids filtering to latest/stable, which
-            # fails for snaps that do not publish that channel.
-            extra_details_future = executor.submit(
-                _get_cached_extra_details,
-                snap_name,
+        extra_details = redis_cache.get(
+            f"snap-extra-details:{snap_name}", expected_type=dict
+        )
+        metrics_response = redis_cache.get(
+            f"snap-public-metrics:{context['snap_id']}:{end.isoformat()}",
+            expected_type=list,
+        )
+        tasks = {}
+        if extra_details is None:
+            tasks["extra_details"] = partial(
+                _get_cached_extra_details, snap_name
             )
-            metrics_future = executor.submit(
+        if metrics_response is None:
+            tasks["metrics"] = partial(
                 _get_cached_metrics,
                 context["snap_id"],
                 end,
                 metrics_query_json,
             )
-
-            try:
-                extra_details = extra_details_future.result()
-            except (StoreApiError, ApiError, requests.RequestException):
-                logger.exception("Details endpoint returned an error")
-                extra_details = None
-
-            try:
-                metrics_response = metrics_future.result()
-            except (StoreApiError, ApiError, requests.RequestException):
-                logger.exception("Metrics endpoint returned an error")
-                metrics_response = None
+        results = run_tasks(tasks)
+        if extra_details is None:
+            extra_details = results["extra_details"]
+        if metrics_response is None:
+            metrics_response = results["metrics"]
 
         if extra_details and extra_details["aliases"]:
             context["aliases"] = [
