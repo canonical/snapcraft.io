@@ -37,12 +37,15 @@ jobs:
       - name: Install Python requirements
         run: |
           python -m pip install --upgrade pip
-          pip3 install -r requirements.txt
+          pip3 install -r requirements-dev.txt
           pip3 install coverage
+
+      - name: Build assets
+        run: yarn build
 
       - name: Run Python tests with coverage
         run: |
-          SECRET_KEY=simplesecretkey coverage run --source=. -m unittest discover tests
+          FLASK_DEBUG=0 SECRET_KEY=simplesecretkey coverage run --source=. -m unittest discover tests
           coverage xml -o coverage/coverage.xml
           coverage html -d coverage/python
 
@@ -139,7 +142,7 @@ jobs:
       - name: Install Python requirements
         run: |
           python -m pip install --upgrade pip
-          pip3 install -r requirements.txt
+          pip3 install -r requirements-dev.txt
           pip3 install pylint
 
       - name: Install JS dependencies

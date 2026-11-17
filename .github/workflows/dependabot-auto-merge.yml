@@ -1,0 +1,185 @@
+name: Dependabot security auto-merge
+
+on:
+  workflow_run:
+    workflows: ["PR checks"]
+    types: [completed]
+
+permissions: {}
+
+concurrency:
+  group: dependabot-auto-merge-${{ github.event.workflow_run.pull_requests[0].number || github.event.workflow_run.id }}
+  cancel-in-progress: false
+
+jobs:
+  auto-merge:
+    if: >-
+      github.repository == 'canonical/snapcraft.io' &&
+      github.event.workflow_run.event == 'pull_request' &&
+      github.event.workflow_run.conclusion == 'success' &&
+      github.event.workflow_run.head_repository.id == github.event.repository.id
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      actions: read
+      contents: read
+      pull-requests: read
+    steps:
+      # Never check out PR code or consume artifacts or caches from the CI run.
+      - name: Check the tested commit and security update policy
+        id: policy
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
+        with:
+          script: |
+            const repo = context.repo;
+            const eventRun = context.payload.workflow_run;
+            const repository = context.payload.repository;
+            const skip = reason => core.notice(`No merge: ${reason}`);
+            const { data: run } = await github.rest.actions.getWorkflowRun({
+              ...repo, run_id: eventRun.id,
+            });
+
+            // Match the workflow file as well as its display name.
+            if (run.path !== '.github/workflows/pr.yml' ||
+                run.event !== 'pull_request' || run.status !== 'completed' ||
+                run.conclusion !== 'success' || run.run_attempt !== eventRun.run_attempt ||
+                run.head_repository?.id !== repository.id ||
+                run.head_sha !== eventRun.head_sha) {
+              return skip('The CI run is stale or does not meet the policy.');
+            }
+            if (run.pull_requests?.length !== 1) {
+              return skip('The CI run must identify exactly one pull request.');
+            }
+
+            const association = run.pull_requests[0];
+            const headSha = run.head_sha;
+            if (association.head.sha !== headSha ||
+                association.head.repo.id !== repository.id ||
+                association.base.repo.id !== repository.id ||
+                association.base.ref !== repository.default_branch) {
+              return skip('The CI run does not match a pull request in this repository.');
+            }
+
+            const pull = { ...repo, pull_number: association.number };
+            const eligiblePR = pr =>
+              pr.state === 'open' && !pr.merged && !pr.draft &&
+              pr.user.login === 'dependabot[bot]' &&
+              pr.head.repo?.id === repository.id &&
+              pr.base.repo?.id === repository.id &&
+              pr.base.ref === repository.default_branch &&
+              pr.head.ref === run.head_branch &&
+              pr.head.ref.startsWith('dependabot/') &&
+              pr.head.sha === headSha && pr.commits === 1;
+            const { data: pr } = await github.rest.pulls.get(pull);
+            if (!eligiblePR(pr)) {
+              return skip('The current pull request does not match the tested Dependabot head.');
+            }
+
+            // Two results are enough to reject PRs with additional commits.
+            const { data: commits } = await github.rest.pulls.listCommits({
+              ...pull, per_page: 2,
+            });
+            if (commits.length !== 1 || commits[0].sha !== headSha ||
+                commits[0].author?.login !== 'dependabot[bot]' ||
+                commits[0].commit.verification?.verified !== true) {
+              return skip('The pull request must contain only one signed Dependabot commit.');
+            }
+
+            // fetch-metadata requires a pull_request payload, absent on workflow_run.
+            // Read only the signed commit, never the editable PR title or body.
+            const message = commits[0].commit.message;
+            const blocks = [...message.matchAll(/^---\r?\n([\s\S]*?)^\.\.\.\r?$/gm)];
+            if (blocks.length !== 1 || /^---(?:\s|$)/m.test(blocks[0][1])) {
+              return skip('The commit does not contain one Dependabot metadata document.');
+            }
+            // Hosted Ubuntu includes Ruby. Its safe YAML loader needs no PR dependencies.
+            const { execFileSync } = require('node:child_process');
+            const metadata = JSON.parse(execFileSync('ruby', ['-ryaml', '-rjson', '-e',
+              'puts JSON.generate(YAML.safe_load(STDIN.read, permitted_classes: [], permitted_symbols: [], aliases: false))',
+            ], { input: blocks[0][1], encoding: 'utf8', timeout: 10000 }));
+            const dependencies = metadata?.['updated-dependencies'];
+            if (!Array.isArray(dependencies) || dependencies.length === 0) {
+              return skip('The commit contains no dependency updates.');
+            }
+
+            // Security metadata can omit update-type. Keep each occurrence of a
+            // dependency name because different directories can update different versions.
+            const versions = new Map();
+            for (const match of message.matchAll(/^Updates `([^`\r\n]+)` (?:from (\S+) )?to (\S+)\r?$/gm)) {
+              const [, name, from, to] = match;
+              if (!versions.has(name)) versions.set(name, []);
+              versions.get(name).push({ from, to });
+            }
+            const numericVersion = version => {
+              const match = /^v?(\d+)\.(\d+)(?:\.(\d+))?$/.exec(version);
+              if (!match) return null;
+              const parts = [Number(match[1]), Number(match[2]), Number(match[3] || 0)];
+              return parts.every(Number.isSafeInteger) ? parts : null;
+            };
+            const allowedTypes = ['version-update:semver-patch', 'version-update:semver-minor'];
+            const eligibleDependency = dependency => {
+              if (dependency?.['dependency-group'] !== 'security-updates' ||
+                  typeof dependency['dependency-name'] !== 'string' ||
+                  dependency['dependency-name'].trim() === '') return false;
+              const name = dependency['dependency-name'];
+              const change = versions.get(name)?.shift();
+              if (versions.has(name) && !change) return false;
+              if (change && change.to !== dependency['dependency-version']) return false;
+              const type = dependency['update-type'];
+              if (type !== undefined) return allowedTypes.includes(type);
+              if (!change?.from) return false;
+              const from = numericVersion(change.from);
+              const to = numericVersion(change.to);
+              // Unknown formats, prereleases, downgrades and major bumps stay manual.
+              return from && to && from[0] === to[0] &&
+                (to[1] > from[1] || (to[1] === from[1] && to[2] > from[2]));
+            };
+            if (!dependencies.every(eligibleDependency) ||
+                [...versions.values()].some(changes => changes.length !== 0)) {
+              return skip('Every update must be a security patch or minor update.');
+            }
+
+            // Do not merge from an old success if another CI run or attempt started.
+            const { data: latest } = await github.rest.actions.listWorkflowRuns({
+              ...repo, workflow_id: run.workflow_id, event: 'pull_request',
+              head_sha: headSha, branch: run.head_branch, per_page: 1,
+            });
+            const currentRun = latest.workflow_runs[0];
+            if (currentRun?.id !== run.id || currentRun.run_attempt !== run.run_attempt ||
+                currentRun.status !== 'completed' || currentRun.conclusion !== 'success') {
+              return skip('A newer CI run or attempt needs to finish successfully.');
+            }
+            const { data: currentPR } = await github.rest.pulls.get(pull);
+            if (!eligiblePR(currentPR)) {
+              return skip('The pull request changed after the initial checks.');
+            }
+
+            core.setOutput('pull_number', pr.number);
+            core.setOutput('head_sha', headSha);
+            core.setOutput('eligible', 'true');
+
+      # Only this step receives the bot token. Its merge triggers normal push workflows.
+      - name: Merge the tested security update with the bot token
+        if: steps.policy.outputs.eligible == 'true'
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.DEPENDABOT_MERGE_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+          PR_NUMBER: ${{ steps.policy.outputs.pull_number }}
+          HEAD_SHA: ${{ steps.policy.outputs.head_sha }}
+        run: |
+          if [ -z "$GH_TOKEN" ]; then
+            echo "::error::Set the DEPENDABOT_MERGE_TOKEN Actions secret before merging security updates."
+            exit 1
+          fi
+          # Approve the tested commit. If approval fails, do not attempt the merge.
+          gh api --method POST "repos/$GH_REPO/pulls/$PR_NUMBER/reviews" \
+            -f commit_id="$HEAD_SHA" \
+            -f event=APPROVE \
+            -f body="The tested commit passed CI and the security update policy checks." > /dev/null
+          # GitHub must enforce required checks and reviews for the bot account.
+          # Bind the merge to the tested SHA, even if the head changes between steps.
+          gh api --method PUT "repos/$GH_REPO/pulls/$PR_NUMBER/merge" \
+            -f sha="$HEAD_SHA" \
+            -f merge_method=squash > merge-result.json
+          jq -e '.merged == true' merge-result.json

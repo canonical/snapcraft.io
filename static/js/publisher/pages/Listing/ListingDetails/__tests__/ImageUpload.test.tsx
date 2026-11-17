@@ -1,7 +1,8 @@
 import { FieldValues, useForm } from "react-hook-form";
 import { http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
-import { render, screen, waitFor } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
+import { MemoryRouter, Route, Routes } from "react-router-dom";
 import userEvent from "@testing-library/user-event";
 import "@testing-library/jest-dom";
 
@@ -30,7 +31,13 @@ function TestImageUpload() {
 }
 
 function renderComponent() {
-  return render(<TestImageUpload />);
+  return render(
+    <MemoryRouter initialEntries={["/test_id/listing"]}>
+      <Routes>
+        <Route path="/:snapId/listing" element={<TestImageUpload />} />
+      </Routes>
+    </MemoryRouter>,
+  );
 }
 
 const server = setupServer();
@@ -62,63 +69,63 @@ describe("ImageUpload", () => {
   test("icon is displayed on page", () => {
     renderComponent();
 
-    waitFor(() => {
-      expect(screen.getByAltText("test_id icon")).toBeInTheDocument();
-    });
+    const iconUpload = within(
+      screen.getByText("Snap icon:").closest(".p-form__group") as HTMLElement,
+    );
+    expect(iconUpload.getByAltText("test_id icon")).toBeInTheDocument();
   });
 
-  test("icon can be removed", () => {
+  test("icon can be removed", async () => {
     const user = userEvent.setup();
 
     renderComponent();
 
-    waitFor(async () => {
-      await user.click(screen.getByRole("button", { name: "Remove icon" }));
-      expect(screen.queryByAltText("test_id icon")).not.toBeInTheDocument();
-    });
+    await user.click(screen.getByRole("button", { name: "Remove icon" }));
+    const iconUpload = within(
+      screen.getByText("Snap icon:").closest(".p-form__group") as HTMLElement,
+    );
+    expect(iconUpload.queryByAltText("test_id icon")).not.toBeInTheDocument();
   });
 
-  test("icon image restrictions toggle works", () => {
+  test("icon image restrictions toggle works", async () => {
     const user = userEvent.setup();
 
     renderComponent();
 
-    waitFor(async () => {
-      await user.click(
-        screen.getByRole("button", {
-          name: "Show image restrictions for icon",
-        }),
-      );
+    await user.click(
+      screen.getByRole("button", {
+        name: "Show image restrictions for icon",
+      }),
+    );
 
-      expect(
-        screen.queryByRole("button", {
-          name: "Show image restrictions for icon",
-        }),
-      ).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole("button", {
+        name: "Show image restrictions for icon",
+      }),
+    ).not.toBeInTheDocument();
 
-      expect(
-        screen.getByRole("button", {
-          name: "Hide image restrictions for icon",
-        }),
-      ).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", {
+        name: "Hide image restrictions for icon",
+      }),
+    ).toBeInTheDocument();
 
-      await user.click(
-        screen.getByRole("button", {
-          name: "Hide image restrictions for icon",
-        }),
-      );
+    await user.click(
+      screen.getByRole("button", {
+        name: "Hide image restrictions for icon",
+      }),
+    );
 
-      expect(
-        screen.queryByRole("button", {
-          name: "Hide image restrictions for icon",
-        }),
-      ).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole("button", {
+        name: "Hide image restrictions for icon",
+      }),
+    ).not.toBeInTheDocument();
 
-      expect(
-        screen.getByRole("button", {
-          name: "Show image restrictions for icon",
-        }),
-      ).toBeInTheDocument();
-    });
+    expect(
+      screen.getByRole("button", {
+        name: "Show image restrictions for icon",
+      }),
+    ).toBeInTheDocument();
   });
 });
