@@ -49,6 +49,14 @@ CI runs Yarn/Python directly with Python 3.12 and Node.js 24. For native setup (
 
 **Tests** mirror the backend layout under `tests/` (Python unittest). Frontend tests live in `__tests__/` / `.test.tsx` files colocated in `static/js/`, run by Vitest with Testing Library + MSW for API mocking.
 
+## Python requirements
+
+- `requirements.txt` contains runtime dependencies and is used by production
+  Rockcraft builds.
+- `requirements-dev.txt` includes runtime requirements plus Python test/lint
+  tools. Workshop and native CI checks install this set automatically. For
+  native development, install it in the virtual environment before testing.
+
 ## Conventions
 
 - **Use existing Vanilla Framework / `@canonical/react-components` / `@canonical/store-components` components** before building custom UI; keep to Vanilla's design tokens and spacing.
