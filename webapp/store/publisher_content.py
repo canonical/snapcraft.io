@@ -7,7 +7,6 @@ from urllib.parse import urlparse
 
 from ruamel.yaml import YAML
 
-
 HEX_COLOR_PATTERN = re.compile(r"^#[0-9a-fA-F]{6}$")
 
 
@@ -364,9 +363,9 @@ def initialize_publisher_content_registry(app) -> None:
         Path(app.root_path)
         / app.config["CONTENT_DIRECTORY"]["PUBLISHER_PAGES"]
     )
-    app.extensions[
-        "publisher_pages_registry"
-    ] = load_publisher_content_registry(
-        content_directory,
-        logger=app.logger,
+    app.extensions["publisher_pages_registry"] = (
+        load_publisher_content_registry(
+            content_directory,
+            logger=app.logger,
+        )
     )
