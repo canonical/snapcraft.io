@@ -25,9 +25,17 @@ test("snapcrafters curated page links to publisher search", async ({ page }) => 
   });
 
   await expect(seeAllLink).toBeVisible();
+  await expect(seeAllLink).toHaveAttribute(
+    "href",
+    "/search?q=publisher%3Asnapcrafters",
+  );
+
   await seeAllLink.click();
 
   await expect(page).toHaveURL(/\/search\?q=publisher%3Asnapcrafters$/);
+  await expect(page.getByRole("link", { name: "Sublime Text" })).toBeVisible();
+  await expect(page.getByRole("link", { name: "Discord" })).toBeVisible();
+  await expect(page.getByRole("link", { name: "Alacritty" })).toBeVisible();
 });
 
 test("decorative publisher icon is hidden from screen readers", async ({ page }) => {
