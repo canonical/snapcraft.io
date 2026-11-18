@@ -306,6 +306,127 @@ class GetPublisherPageTest(TestCase):
         self.assertNotIn('class="p-media-object p-media-object--snap"', body)
 
     @responses.activate
+    def test_verified_status_precedes_first_snap_for_custom_publishers(self):
+        fixtures = {
+            "jetbrains": JETBRAINS_FIND_RESPONSE,
+            "kde": {
+                "results": [
+                    _snap_result(
+                        "krita",
+                        "Krita",
+                        _publisher("kde", "KDE", "verified"),
+                    )
+                ]
+            },
+            "newpartner": {
+                "results": [
+                    _snap_result(
+                        "newpartner-snap",
+                        "New Partner Snap",
+                        _publisher(
+                            "newpartner",
+                            "New Partner",
+                            "verified",
+                        ),
+                    )
+                ]
+            },
+        }
+
+        self._set_custom_registry_entry(
+            "newpartner",
+            {
+                "display_name": "New Partner",
+                "summary": "Summary",
+                "description": "<p>description</p>",
+                "publisher_since": "January 2024",
+            },
+        )
+
+        for publisher_name, find_response in fixtures.items():
+            with self.subTest(publisher_name=publisher_name):
+                responses.add(
+                    responses.GET,
+                    self.api_url_find(publisher_name),
+                    json=find_response,
+                    status=200,
+                )
+
+                response = self.client.get(f"/publisher/{publisher_name}")
+                body = response.get_data(as_text=True)
+
+                self.assertEqual(response.status_code, 200)
+                self.assert_template_used("store/publisher-details.html")
+
+                verified_index = body.find("Verified account")
+                first_snap_index = body.find(
+                    'class="p-media-object p-media-object--snap"'
+                )
+
+                self.assertGreaterEqual(verified_index, 0)
+                self.assertGreaterEqual(first_snap_index, 0)
+                self.assertLess(verified_index, first_snap_index)
+
+    @responses.activate
+    def test_star_status_precedes_first_snap_for_snapcrafters(self):
+        responses.add(
+            responses.GET,
+            self.api_url_find("snapcrafters"),
+            json=SNAPCRAFTERS_FIND_RESPONSE,
+            status=200,
+        )
+
+        response = self.client.get("/publisher/snapcrafters")
+        body = response.get_data(as_text=True)
+
+        self.assertEqual(response.status_code, 200)
+        self.assert_template_used("store/publisher-details.html")
+
+        star_index = body.find("Star developer")
+        first_snap_index = body.find(
+            'class="p-media-object p-media-object--snap"'
+        )
+
+        self.assertGreaterEqual(star_index, 0)
+        self.assertGreaterEqual(first_snap_index, 0)
+        self.assertLess(star_index, first_snap_index)
+
+    @responses.activate
+    def test_custom_page_without_store_validation_hides_status_badges(self):
+        self._set_custom_registry_entry(
+            "nostatus",
+            {
+                "display_name": "No Status",
+                "summary": "Summary",
+                "description": "<p>description</p>",
+                "publisher_since": "January 2024",
+            },
+        )
+
+        responses.add(
+            responses.GET,
+            self.api_url_find("nostatus"),
+            json={
+                "results": [
+                    _snap_result(
+                        "nostatus-snap",
+                        "No Status Snap",
+                        _publisher("nostatus", "No Status", "unproven"),
+                    )
+                ]
+            },
+            status=200,
+        )
+
+        response = self.client.get("/publisher/nostatus")
+        body = response.get_data(as_text=True)
+
+        self.assertEqual(response.status_code, 200)
+        self.assert_template_used("store/publisher-details.html")
+        self.assertNotIn("Verified account", body)
+        self.assertNotIn("Star developer", body)
+
+    @responses.activate
     def test_featured_snaps_hydrated_from_api(self):
         # jetbrains.yaml features "intellij-idea" and "pycharm".
         # The API returns intellij-idea (listed) but not pycharm.
