@@ -50,9 +50,9 @@ describe("report snap modal", () => {
     return { appendSpy, render, reset };
   }
 
-  test("loads Turnstile only when the modal opens", async () => {
+  test("shows only the reason selector when the modal opens", async () => {
     const user = userEvent.setup();
-    const { appendSpy, render } = setupTurnstileMock();
+    const { appendSpy } = setupTurnstileMock();
 
     initReportSnap(TOGGLE_SELECTOR, MODAL_SELECTOR, FORM_URL);
 
@@ -60,6 +60,56 @@ describe("report snap modal", () => {
 
     await user.click(
       document.querySelector<HTMLAnchorElement>(TOGGLE_SELECTOR)!,
+    );
+
+    expect(appendSpy).not.toHaveBeenCalled();
+    expect(
+      document.querySelector(
+        "#report-snap-modal .js-report-snap-policy-fields",
+      ),
+    ).not.toHaveClass("is-open");
+    expect(
+      document.querySelector("#report-snap-modal .js-report-snap-bug-help"),
+    ).not.toHaveClass("is-open");
+  });
+
+  test("shows publisher contact guidance for snap bugs", async () => {
+    const user = userEvent.setup();
+    const { appendSpy } = setupTurnstileMock();
+
+    initReportSnap(TOGGLE_SELECTOR, MODAL_SELECTOR, FORM_URL);
+
+    await user.click(
+      document.querySelector<HTMLAnchorElement>(TOGGLE_SELECTOR)!,
+    );
+    await user.selectOptions(
+      document.querySelector<HTMLSelectElement>("#report-snap-reason")!,
+      "Snap bug",
+    );
+
+    expect(
+      document.querySelector(
+        "#report-snap-modal .js-report-snap-policy-fields",
+      ),
+    ).not.toHaveClass("is-open");
+    expect(
+      document.querySelector("#report-snap-modal .js-report-snap-bug-help"),
+    ).toHaveClass("is-open");
+    expect(appendSpy).not.toHaveBeenCalled();
+  });
+
+  test("loads Turnstile only when a policy reason is selected", async () => {
+    const user = userEvent.setup();
+    const { appendSpy, render } = setupTurnstileMock();
+
+    initReportSnap(TOGGLE_SELECTOR, MODAL_SELECTOR, FORM_URL);
+
+    await user.click(
+      document.querySelector<HTMLAnchorElement>(TOGGLE_SELECTOR)!,
+    );
+    await user.selectOptions(
+      document.querySelector<HTMLSelectElement>("#report-snap-reason")!,
+      "Copyright or trademark violation",
     );
 
     await waitFor(() => expect(render).toHaveBeenCalledTimes(1));
@@ -77,6 +127,10 @@ describe("report snap modal", () => {
 
     await user.click(
       document.querySelector<HTMLAnchorElement>(TOGGLE_SELECTOR)!,
+    );
+    await user.selectOptions(
+      document.querySelector<HTMLSelectElement>("#report-snap-reason")!,
+      "Snap Store terms of service violation",
     );
     await waitFor(() => expect(render).toHaveBeenCalledTimes(1));
 
@@ -101,6 +155,10 @@ describe("report snap modal", () => {
     await user.click(
       document.querySelector<HTMLAnchorElement>(TOGGLE_SELECTOR)!,
     );
+    await user.selectOptions(
+      document.querySelector<HTMLSelectElement>("#report-snap-reason")!,
+      "Snap Store terms of service violation",
+    );
 
     expect(reset).toHaveBeenCalledWith(42);
     expect(submitButton).toBeDisabled();
@@ -115,9 +173,21 @@ describe("report snap modal", () => {
     const submitButton = document.querySelector<HTMLButtonElement>(
       "#report-snap-modal button[type=submit]",
     )!;
+
+    await user.click(
+      document.querySelector<HTMLAnchorElement>(TOGGLE_SELECTOR)!,
+    );
+    await user.selectOptions(
+      document.querySelector<HTMLSelectElement>("#report-snap-reason")!,
+      "Snap Store terms of service violation",
+    );
     submitButton.disabled = true;
     submitButton.innerHTML = "Submitting…";
-
+    await user.click(
+      document.querySelector<HTMLButtonElement>(
+        "#report-snap-modal .js-modal-close",
+      )!,
+    );
     await user.click(
       document.querySelector<HTMLAnchorElement>(TOGGLE_SELECTOR)!,
     );
