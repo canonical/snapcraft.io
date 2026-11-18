@@ -1,3 +1,4 @@
+import copy
 from functools import partial
 import logging
 from math import floor
@@ -270,88 +271,90 @@ def store_blueprint(store_query=None):
             featured_snaps=currently_featured_snaps,
         )
 
-    @store.route("/publisher/<regex('[a-z0-9-]*[a-z][a-z0-9-]*'):publisher>")
-    def publisher_details(publisher):
-        """
-        A view to display the publisher details page for specific publisher.
-        """
+    def _render_custom_publisher_page(publisher, publisher_content):
+        context = copy.deepcopy(publisher_content)
 
-        # 404 for the snap-quarantine publisher
-        if publisher == "snap-quarantine":
-            flask.abort(404)
+        snaps_results = logic.get_publisher_snaps(device_gateway, publisher)
+        snaps_by_name = {}
+        all_public_snaps = []
 
-        publisher_content_path = flask.current_app.config["CONTENT_DIRECTORY"][
-            "PUBLISHER_PAGES"
-        ]
+        for snap in snaps_results:
+            item = snap["snap"]
+            item["package_name"] = snap["name"]
+            item["icon_url"] = helpers.get_icon(item.get("media", []))
+            snaps_by_name[snap["name"]] = item
+            all_public_snaps.append(item)
 
-        # special handling for some featured publishers with custom pages
-        if publisher in ["kde", "snapcrafters", "jetbrains"]:
-            context = helpers.get_yaml(
-                publisher_content_path + publisher + ".yaml", typ="safe"
-            )
+        featured_snaps = logic.hydrate_featured_snaps(
+            context.get("featured_snaps"),
+            snaps_by_name,
+        )
+        featured_names = {
+            featured_snap["package_name"] for featured_snap in featured_snaps
+        }
 
-            if not context:
-                flask.abort(404)
+        listed_snaps = context.get("listed_snaps") or []
+        listed_snaps_configured = len(listed_snaps) > 0
 
-            context["snaps"] = []
-            snaps_results = logic.get_publisher_snaps(
-                device_gateway, publisher
-            )
-
-            # Map package_name to live snap data so pre-defined lists below
-            # are hydrated.
-            snaps_by_name = {}
-            for snap in snaps_results:
-                item = snap["snap"]
-                item["package_name"] = snap["name"]
-                item["icon_url"] = helpers.get_icon(item["media"])
-                snaps_by_name[snap["name"]] = item
-                context["snaps"].append(item)
-
-            # "Popular snaps" is a pre-selected but the snap data comes
-            # from the API, so unlisted/removed snaps are dropped.
-            popular_snaps = helpers.get_yaml(
-                publisher_content_path + publisher + "-snaps.yaml",
-                typ="safe",
-            )
-            context["popular_snaps"] = (
-                [
-                    snaps_by_name[snap["package_name"]]
-                    for snap in popular_snaps["snaps"]
-                    if snap["package_name"] in snaps_by_name
-                ]
-                if popular_snaps
-                else []
-            )
-
-            context["featured_snaps"] = logic.hydrate_featured_snaps(
-                context.get("featured_snaps"), snaps_by_name
-            )
-
-            featured_snaps = [
-                snap["package_name"] for snap in context["featured_snaps"]
+        if listed_snaps_configured:
+            listed_snap_names = [
+                listed_snap["package_name"]
+                for listed_snap in listed_snaps
+                if isinstance(listed_snap, dict)
+                and "package_name" in listed_snap
             ]
 
-            context["snaps"] = [
+            listed_public_snaps = []
+            listed_seen = set()
+            for listed_snap_name in listed_snap_names:
+                if listed_snap_name in listed_seen:
+                    continue
+
+                listed_seen.add(listed_snap_name)
+                if listed_snap_name not in snaps_by_name:
+                    continue
+
+                if listed_snap_name in featured_names:
+                    continue
+
+                listed_public_snaps.append(snaps_by_name[listed_snap_name])
+
+            snaps = listed_public_snaps
+        else:
+            snaps = [
                 snap
-                for snap in context["snaps"]
-                if snap["package_name"] not in featured_snaps
+                for snap in all_public_snaps
+                if snap["package_name"] not in featured_names
             ]
 
-            context["snaps_count"] = len(context["snaps"]) + len(
-                featured_snaps
-            )
+        publisher_details = (
+            all_public_snaps[0].get("publisher", {})
+            if all_public_snaps
+            else {}
+        )
 
-            return flask.render_template(
-                "store/publisher-details.html", **context
-            )
+        context.update(
+            {
+                "featured_snaps": featured_snaps,
+                "snaps": snaps,
+                "snaps_count": len(all_public_snaps),
+                "publisher": context["display_name"],
+                "username": publisher,
+                "developer_validation": publisher_details.get("validation"),
+                "listed_snaps_configured": listed_snaps_configured,
+                "listed_snaps_unavailable": listed_snaps_configured
+                and len(snaps) == 0,
+                "show_all_snaps_link": listed_snaps_configured,
+            }
+        )
 
+        return flask.render_template("store/publisher-details.html", **context)
+
+    def _render_default_publisher_page(publisher):
         # standard page for all community publishers
         status_code = 200
         error_info = {}
-        snaps_results = []
         snaps = []
-        snaps_count = 0
         publisher_details = {"display-name": publisher, "username": publisher}
 
         snaps_results = device_gateway.find(
@@ -370,14 +373,12 @@ def store_blueprint(store_query=None):
             item["icon_url"] = helpers.get_icon(item["media"])
             snaps.append(item)
 
-        snaps_count = len(snaps)
-
-        if snaps_count > 0:
+        if snaps:
             publisher_details = snaps[0]["publisher"]
 
         context = {
             "snaps": snaps,
-            "snaps_count": snaps_count,
+            "snaps_count": len(snaps),
             "publisher": publisher_details,
             "error_info": error_info,
         }
@@ -388,6 +389,26 @@ def store_blueprint(store_query=None):
             ),
             status_code,
         )
+
+    @store.route("/publisher/<regex('[a-z0-9-]*[a-z][a-z0-9-]*'):publisher>")
+    def publisher_details(publisher):
+        """
+        A view to display the publisher details page for specific publisher.
+        """
+
+        # 404 for the snap-quarantine publisher
+        if publisher == "snap-quarantine":
+            flask.abort(404)
+
+        custom_publisher_registry = flask.current_app.extensions.get(
+            "publisher_pages_registry", {}
+        )
+
+        publisher_content = custom_publisher_registry.get(publisher)
+        if publisher_content is not None:
+            return _render_custom_publisher_page(publisher, publisher_content)
+
+        return _render_default_publisher_page(publisher)
 
     @store.route("/store/categories/<category>")
     def store_category(category):

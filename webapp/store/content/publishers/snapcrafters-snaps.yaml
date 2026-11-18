@@ -1,8 +1,0 @@
-snaps:
-  - { "package_name": "sublime-text" }
-  - { "package_name": "obs-studio" }
-  - { "package_name": "discord" }
-  - { "package_name": "signal-desktop" }
-  - { "package_name": "mattermost-desktop" }
-  - { "package_name": "android-studio" }
-  - { "package_name": "eclipse" }

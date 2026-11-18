@@ -1,92 +1,31 @@
-import responses
+import copy
 from urllib.parse import urlencode
-from flask_testing import TestCase
-from webapp.app import create_app
+
+import responses
 from cache.cache_utility import redis_cache
+from flask_testing import TestCase
 
-JETBRAINS_FIND_RESPONSE = {
-    "results": [
-        {
-            "name": "pycharm-community",
-            "snap": {
-                "media": [
-                    {
-                        "height": 400,
-                        "type": "icon",
-                        "url": (
-                            "https://dashboard.snapcraft.io/site_media/"
-                            "appmedia/2024/06/Avatar-7.png"
-                        ),
-                        "width": 400,
-                    },
-                    {
-                        "height": 2095,
-                        "type": "screenshot",
-                        "url": (
-                            "https://dashboard.snapcraft.io/site_media/"
-                            "appmedia/2017/12/pycharm_com_general.png"
-                        ),
-                        "width": 3713,
-                    },
-                ],
-                "publisher": {
-                    "display-name": "jetbrains",
-                    "id": "28zEonXNoBLvIB7xneRbltOsp0Nf7DwS",
-                    "username": "jetbrains",
-                    "validation": "verified",
-                },
-                "summary": "PyCharm Community Edition",
-                "title": "pycharm-community",
-            },
-            "snap-id": "Qo9GiW9eyzgN1tXmWpQ9gdstdFsj4K7E",
-        },
-    ]
-}
+from webapp.app import create_app
 
-LUKEWH_FIND_RESPONSE = {
-    "results": [
-        {
-            "name": "deluge-lukewh",
-            "snap": {
-                "media": [
-                    {
-                        "height": 300,
-                        "type": "icon",
-                        "url": (
-                            "https://dashboard.snapcraft.io/site_media/"
-                            "appmedia/2020/04/the-new-deluge-icon-300x300.png"
-                        ),
-                        "width": 300,
-                    },
-                    {
-                        "height": 720,
-                        "type": "banner",
-                        "url": (
-                            "https://dashboard.snapcraft.io/site_media/"
-                            "appmedia/2020/05/deluge-banner1.png"
-                        ),
-                        "width": 2160,
-                    },
-                ],
-                "publisher": {
-                    "display-name": "LukeWH",
-                    "id": "GMrEEEdGN4gN9BhRHjRRDCoJuUkyJJnm",
-                    "username": "lukewh",
-                    "validation": "unproven",
-                },
-                "summary": (
-                    "Deluge is a fully-featured cross-platform "
-                    "BitTorrent client"
-                ),
-                "title": "Deluge",
-            },
-            "snap-id": "5dm2RBhIIGdr8sAnA9WJZWco2MQgbni7",
-        },
-    ]
+
+JETBRAINS_PUBLISHER = {
+    "display-name": "JetBrains",
+    "id": "28zEonXNoBLvIB7xneRbltOsp0Nf7DwS",
+    "username": "jetbrains",
+    "validation": "verified",
 }
 
 
-def _snap_result(name, title):
+def _publisher(username, display_name, validation):
+    return {
+        "display-name": display_name,
+        "id": f"{username}-id",
+        "username": username,
+        "validation": validation,
+    }
+
+
+def _snap_result(name, title, publisher):
     return {
         "name": name,
         "snap": {
@@ -101,12 +40,7 @@ def _snap_result(name, title):
                     "width": 256,
                 }
             ],
-            "publisher": {
-                "display-name": "Snapcrafters",
-                "id": "snapcrafters-id",
-                "username": "snapcrafters",
-                "validation": "starred",
-            },
+            "publisher": publisher,
             "summary": title + " summary",
             "title": title,
         },
@@ -114,11 +48,43 @@ def _snap_result(name, title):
     }
 
 
+JETBRAINS_FIND_RESPONSE = {
+    "results": [
+        _snap_result(
+            "pycharm-community",
+            "PyCharm Community",
+            JETBRAINS_PUBLISHER,
+        )
+    ]
+}
+
+LUKEWH_FIND_RESPONSE = {
+    "results": [
+        _snap_result(
+            "deluge-lukewh",
+            "Deluge",
+            _publisher("lukewh", "LukeWH", "unproven"),
+        )
+    ]
+}
+
 SNAPCRAFTERS_FIND_RESPONSE = {
     "results": [
-        _snap_result("sublime-text", "Sublime Text"),
-        _snap_result("discord", "Discord"),
-        _snap_result("alacritty", "Alacritty"),
+        _snap_result(
+            "sublime-text",
+            "Sublime Text",
+            _publisher("snapcrafters", "Snapcrafters", "starred"),
+        ),
+        _snap_result(
+            "discord",
+            "Discord",
+            _publisher("snapcrafters", "Snapcrafters", "starred"),
+        ),
+        _snap_result(
+            "alacritty",
+            "Alacritty",
+            _publisher("snapcrafters", "Snapcrafters", "starred"),
+        ),
     ]
 }
 
@@ -126,38 +92,6 @@ SNAPCRAFTERS_FIND_RESPONSE = {
 class GetPublisherPageTest(TestCase):
     def setUp(self):
         redis_cache.fallback.clear()
-        self.api_url_publisher_items = "".join(
-            [
-                "https://api.snapcraft.io/api/v1/",
-                "snaps/search",
-                "?",
-                urlencode(
-                    {
-                        "q": "publisher:28zEonXNoBLvIB7xneRbltOsp0Nf7DwS",
-                        "size": "500",
-                        "page": "1",
-                        "scope": "wide",
-                        "confinement": "strict,classic",
-                        "fields": ",".join(
-                            [
-                                "package_name",
-                                "title",
-                                "summary",
-                                "architecture",
-                                "media",
-                                "developer_name",
-                                "developer_id",
-                                "developer_validation",
-                                "origin",
-                                "apps",
-                                "sections",
-                            ]
-                        ),
-                        "arch": "wide",
-                    }
-                ),
-            ]
-        )
         self.api_url_find = lambda publisher: "".join(
             [
                 "https://api.snapcraft.io/v2/",
@@ -200,7 +134,7 @@ class GetPublisherPageTest(TestCase):
         self.assert_template_used("store/community-publisher-details.html")
 
     @responses.activate
-    def test_existant_publisher(self):
+    def test_existing_custom_publisher(self):
         responses.add(
             responses.GET,
             self.api_url_find("jetbrains"),
@@ -223,35 +157,51 @@ class GetPublisherPageTest(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assert_template_used("store/community-publisher-details.html")
 
+    def test_snap_quarantine_is_not_public(self):
+        response = self.client.get("/publisher/snap-quarantine")
+        self.assertEqual(response.status_code, 404)
+
     @responses.activate
-    def test_api_error(self):
+    def test_api_error_on_custom_page_still_renders(self):
         responses.add(
-            responses.GET, self.api_url_find("jetbrains"), json={}, status=504
+            responses.GET,
+            self.api_url_find("jetbrains"),
+            json={},
+            status=504,
         )
+
         response = self.client.get("/publisher/jetbrains")
         self.assertEqual(response.status_code, 200)
         self.assert_template_used("store/publisher-details.html")
 
     @responses.activate
-    def test_no_snaps_from_api(self):
+    def test_no_snaps_from_api_for_custom_page(self):
         responses.add(
             responses.GET,
             self.api_url_find("jetbrains"),
             json={"results": []},
             status=200,
         )
+
         response = self.client.get("/publisher/jetbrains")
         self.assertEqual(response.status_code, 200)
         self.assert_template_used("store/publisher-details.html")
 
+        body = response.get_data(as_text=True)
+        self.assertNotIn("Verified account", body)
+
     @responses.activate
     def test_featured_snaps_hydrated_from_api(self):
-        # jetbrains.yaml features "intellij-idea" and "pycharm". The API
-        # returns intellij-idea (listed) but not pycharm (unlisted/gone).
+        # jetbrains.yaml features "intellij-idea" and "pycharm".
+        # The API returns intellij-idea (listed) but not pycharm.
         find_response = {
             "results": [
-                _snap_result("intellij-idea", "IntelliJ IDEA"),
-                _snap_result("goland", "GoLand"),
+                _snap_result(
+                    "intellij-idea",
+                    "IntelliJ IDEA",
+                    JETBRAINS_PUBLISHER,
+                ),
+                _snap_result("goland", "GoLand", JETBRAINS_PUBLISHER),
             ]
         }
         responses.add(
@@ -265,33 +215,59 @@ class GetPublisherPageTest(TestCase):
 
         featured = self.get_context_variable("featured_snaps")
         names = [snap["package_name"] for snap in featured]
-        # pycharm is not in the API response, so it is dropped.
         self.assertEqual(names, ["intellij-idea"])
 
         snap = featured[0]
-        # title/summary/icon come from the API
         self.assertEqual(snap["title"], "IntelliJ IDEA")
         self.assertEqual(snap["summary"], "IntelliJ IDEA summary")
         self.assertTrue(snap["icon_url"])
-        # background/description come from the YAML.
         self.assertEqual(snap["background"], "#000000")
         self.assertIn("IntelliJ IDEA", snap["description"])
 
     @responses.activate
-    def test_popular_snaps_hydrated_from_api(self):
+    def test_listed_snaps_hydrated_from_api(self):
         responses.add(
             responses.GET,
             self.api_url_find("snapcrafters"),
             json=SNAPCRAFTERS_FIND_RESPONSE,
             status=200,
         )
+
         response = self.client.get("/publisher/snapcrafters")
         self.assertEqual(response.status_code, 200)
         self.assert_template_used("store/publisher-details.html")
 
         body = response.get_data(as_text=True)
-        # make sure we render only the snaps listed in snapcrafters-snaps.yaml
+
+        # Snaps not listed in snapcrafters.yaml are omitted.
         self.assertIn('href="/sublime-text"', body)
         self.assertIn('href="/discord"', body)
-        self.assertNotIn('href="/eclipse"', body)
         self.assertNotIn('href="/alacritty"', body)
+
+        # the curated layout includes the "See all snaps" link
+        self.assertIn(
+            "See all snaps published by Snapcrafters",
+            body,
+        )
+
+    @responses.activate
+    def test_custom_registry_is_not_mutated_by_requests(self):
+        responses.add(
+            responses.GET,
+            self.api_url_find("jetbrains"),
+            json=JETBRAINS_FIND_RESPONSE,
+            status=200,
+        )
+
+        registry_before = copy.deepcopy(
+            self.app.extensions["publisher_pages_registry"]
+        )
+
+        self.client.get("/publisher/jetbrains")
+        self.client.get("/publisher/jetbrains")
+        self.client.get("/publisher/jetbrains")
+
+        self.assertEqual(
+            registry_before,
+            self.app.extensions["publisher_pages_registry"],
+        )

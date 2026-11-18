@@ -2,7 +2,6 @@
 
 {% block meta_copydoc %}{% endblock %}
 
-{# TODO: title, meta, etc #}
 {% block meta_title %}{{ publisher }} in the Snap Store{% endblock %}
 {% block meta_description %}
   {% if meta_description %}
@@ -18,16 +17,16 @@
   {% endblock %}
 {% endif %}
 
-
 {% block content %}
   <div class="p-strip--dark is-shallow" style="background: #262626;">
     <div class="u-fixed-width">
       <div class="p-snap-heading">
         {% if icon_url %}
-          <img class="p-snap-heading__icon" src="{{ icon_url }}" alt="{{ publisher }} snap" />
+          <img class="p-snap-heading__icon" src="{{ icon_url }}" alt="" />
         {% else %}
           <img class="p-snap-heading__icon" src="https://assets.ubuntu.com/v1/6fbb3483-snapcraft-default-snap-icon.svg" alt="" />
         {% endif %}
+
         <div class="p-snap-heading__title">
           <h1 class="p-heading--2 p-snap-heading__name">{{ publisher }}</h1>
           <p class="p-snap-heading__publisher">
@@ -52,34 +51,28 @@
             <a href="{{ contact }}" class="p-button">Contact publisher</a>
           {% endif %}
         </div>
-
       </div>
     </div>
   </div>
 
   {% if banner_url %}
-  <section
-    class="p-strip--image is-deep"
-    style="background-image: url('{{ banner_url }}');">
-  </section>
+    <section
+      class="p-strip--image is-deep"
+      style="background-image: url('{{ banner_url }}');"
+    ></section>
   {% endif %}
-
 
   <div class="p-strip is-shallow">
     <div class="row">
       <div class="col-8">
-        {% if summary %}<h4>{{ summary }}</h4>{% endif %}
+        <h4>{{ summary }}</h4>
         {{ description | safe }}
       </div>
       <div class="col-4">
         <h4>About {{ publisher }}</h4>
         <dl>
           <dt>Snaps published</dt>
-          {% if snaps_count %}
-            <dd>{{ snaps_count }}</dd>
-          {% else %}
-            <dd>{{ snaps|length + featured_snaps|length }}</dd>
-          {% endif %}
+          <dd>{{ snaps_count }}</dd>
           <dt>Publisher since</dt>
           <dd>{{ publisher_since }}</dd>
         </dl>
@@ -87,54 +80,40 @@
     </div>
   </div>
 
-  {% if blog_slug %}
-  <div data-js="blog-articles" style="display: none;">
-    <div class="u-fixed-width">
-      <hr />
-    </div>
-    <div class="p-strip is-shallow">
-      <div class="row">
-        <div class="col-3">
-          <h3 class="p-heading--4">Related blog posts</h3>
-        </div>
-      </div>
-      <div class="row u-equal-height" data-js="blog-article-list" data-snap="{{ blog_slug }}">
-      </div>
-    </div>
-  </div>
-  {% endif %}
-
   {% if featured_snaps %}
-  <div class="p-strip is-shallow">
-    <div class="grid-row u-equal-height">
+    <div class="p-strip is-shallow">
+      <div class="grid-row u-equal-height">
         {% set snap = featured_snaps[0] %}
         {% include 'partials/_publisher-featured-snap.html' %}
         {% if featured_snaps[1] %}
-        {% set snap = featured_snaps[1] %}
-        {% include 'partials/_publisher-featured-snap.html' %}
+          {% set snap = featured_snaps[1] %}
+          {% include 'partials/_publisher-featured-snap.html' %}
         {% endif %}
       </div>
     </div>
-  </div>
   {% endif %}
 
   <div class="p-strip is-shallow">
-    {% if show_popular_snaps %}
+    {% if listed_snaps_configured %}
       <div class="u-fixed-width">
-        <h2 class="p-heading--4">Popular snaps</h2>
+        <h2 class="p-heading--4">Snaps</h2>
       </div>
-      <div class="row">
-        {% set hide_publisher = True %}
-        {% set show_summary = True %}
-        {% for snap in popular_snaps %}
-          <div class="col-3">
-            {% include "store/_media-object-snap-partial.html" %}
-          </div>
-        {% endfor %}
-      </div>
-    {% endif %}
-
-    {% if hide_all_snaps != True %}
+      {% if listed_snaps_unavailable %}
+        <div class="u-fixed-width">
+          <p>This publisher's snaps are not available right now.</p>
+        </div>
+      {% else %}
+        <div class="row">
+          {% set hide_publisher = True %}
+          {% set show_summary = True %}
+          {% for snap in snaps %}
+            <div class="col-3">
+              {% include "store/_media-object-snap-partial.html" %}
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% else %}
       <div class="row">
         {% set hide_publisher = True %}
         {% set show_summary = True %}
@@ -146,9 +125,11 @@
       </div>
     {% endif %}
 
-    {% if link_to_search %}
+    {% if show_all_snaps_link %}
       <div class="u-fixed-width">
-        <p><a href="/search?q=publisher%3A{{username}}">See all snaps published by {{ publisher }}&nbsp;&rsaquo;</a></p>
+        <p>
+          <a href="/search?q=publisher%3A{{ username }}">See all snaps published by {{ publisher }}&nbsp;&rsaquo;</a>
+        </p>
       </div>
     {% endif %}
   </div>
@@ -164,35 +145,5 @@
         </div>
       </div>
     </div>
-  {% endif %}
-
-  {# templates #}
-  {% set article_title = {'rendered': '${title}'} %}
-  {% set article = {'slug': '${slug}', 'title': article_title} %}
-  {% if blog_slug %}
-    <script type="text/template" id="blog-article-template">
-      {% include 'partials/blog-card--minimal.html' %}
-    </script>
-  {% endif %}
-
-{% endblock %}
-
-{% block scripts_includes %}
-  {% if blog_slug %}
-    {{ vite_import('static/js/public/publisher-details.ts') }}
-  {% endif %}
-{% endblock %}
-
-{% block scripts %}
-  {% if blog_slug %}
-    <script>
-      window.addEventListener("DOMContentLoaded", function() {
-        try {
-          snapcraft.public.publisherDetails.snapDetailsPosts('[data-js="blog-article-list"]', '#blog-article-template', '[data-js="blog-articles"]');
-        } catch(e) {
-          Sentry.captureException(e);
-        }
-      });
-    </script>
   {% endif %}
 {% endblock %}
