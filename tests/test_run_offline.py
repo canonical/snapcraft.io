@@ -46,7 +46,9 @@ touch "$LOOPBACK_READY"
         }
         for name, body in commands.items():
             command = self.temp / name
-            command.write_text("#!/usr/bin/env bash\nset -euo pipefail\n" + body)
+            command.write_text(
+                "#!/usr/bin/env bash\nset -euo pipefail\n" + body
+            )
             command.chmod(0o755)
 
     def run_command(self, *args):
