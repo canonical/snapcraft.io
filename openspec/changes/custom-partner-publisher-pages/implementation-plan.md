@@ -182,6 +182,12 @@ Execution conventions and concrete locations:
 
 ## Execution evidence
 
+- 2026-11-18 (agent): Added `webapp/store/publisher_content.py` with a custom validator, filename/lowercase checks, startup-loader helpers, and reusable directory validation. Added `scripts/validate-publisher-content.py` and `tests/store/tests_publisher_content.py` (validator, loader, and CLI-process coverage for valid/missing-field/uppercase/malformed-YAML cases). Wired startup registry loading in `webapp/app.py`.
+- 2026-11-18 (agent): Refactored `webapp/store/views.py` publisher routing to dispatch via startup-loaded filename registry (`custom` vs `default` render functions), removed hardcoded publisher allowlist, preserved `snap-quarantine` 404, and ensured custom-page request logic uses Store-sourced trust status and request-local data.
+- 2026-11-18 (agent): Migrated production publisher content files to the new schema (`display_name`, `listed_snaps`, removed legacy keys), merged/deleted `webapp/store/content/publishers/snapcrafters-snaps.yaml`, updated `templates/store/publisher-details.html` for curated/all-snaps layouts, optional sections, decorative icon alt text, and unavailable-curated note.
+- 2026-11-18 (agent): Updated `tests/store/tests_publisher.py` for the refactored behavior (custom/default selection, quarantine 404, curated snap rendering, API-empty custom rendering, immutable startup registry across requests).
+- Verification blocker: local environment currently lacks required Python dependencies (`ruamel`, `responses`) and Workshop runtime bootstrap is unavailable in this shell, so RED/GREEN verification commands were not runnable here yet.
+
 ## Workflow follow-up
 
 - HUMAN, T12.a (PP “Preserve existing publisher content and page paths”): after an independently authorized production release, inspect GA reports for all three existing publisher paths for one week before and after the release date; verify page views continue under the same paths with no gap or new path. Keep this post-release check outside tracked implementation tasks; record its eventual human outcome without treating pre-release E2E as a substitute.
