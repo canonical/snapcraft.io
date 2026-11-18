@@ -9,6 +9,28 @@ from cache.cache_utility import redis_cache
 from webapp.app import create_app
 
 
+def _query_params_subset_matcher(expected_params):
+    def _matcher(request):
+        params = parse_qs(urlparse(request.url).query, keep_blank_values=True)
+
+        for key, expected_value in expected_params.items():
+            value = params.get(key, [None])[0]
+
+            if expected_value == "" and value is None:
+                continue
+
+            if value != expected_value:
+                message = (
+                    "Expected query param "
+                    f"'{key}' to be '{expected_value}', got '{value}'"
+                )
+                return (False, message)
+
+        return (True, None)
+
+    return _matcher
+
+
 def _register_find(
     mocker,
     publisher,
@@ -20,7 +42,7 @@ def _register_find(
         json={"results": results},
         status=200,
         match=[
-            responses.matchers.query_param_matcher(
+            _query_params_subset_matcher(
                 {
                     "q": "",
                     "fields": "title,summary,media,publisher",
@@ -36,28 +58,19 @@ def _register_store_search(
     query,
     results,
 ):
-    def _callback(request):
-        parsed = urlparse(request.url)
-        params = parse_qs(parsed.query)
-
-        if params.get("q", [""])[0] != query:
-            return (404, {}, "{}")
-
-        fields = params.get("fields", [""])[0]
-        if fields != "title,summary,media,publisher,categories":
-            return (404, {}, "{}")
-
-        return (
-            200,
-            {"Content-Type": "application/json"},
-            json.dumps({"results": results}),
-        )
-
-    mocker.add_callback(
+    mocker.add(
         responses.GET,
         "https://api.snapcraft.io/v2/snaps/find",
-        callback=_callback,
-        content_type="application/json",
+        json={"results": results},
+        status=200,
+        match=[
+            _query_params_subset_matcher(
+                {
+                    "q": query,
+                    "fields": "title,summary,media,publisher,categories",
+                }
+            )
+        ],
     )
 
 
