@@ -47,6 +47,20 @@ All contributions are subject to review. Please be patient while we review your 
 
 We usually require two approvals from project maintainers before merging a pull request.
 
+### Custom publisher content files
+
+If your change edits custom publisher page content in
+`webapp/store/content/publishers/*.yaml`, follow the content rules in
+[`webapp/store/content/publishers/README.md`](webapp/store/content/publishers/README.md)
+before submitting the PR.
+
+Run the validator locally:
+
+```bash
+workshop exec -- env PYTHONPATH=. python3 scripts/validate-publisher-content.py \
+  --content-dir webapp/store/content/publishers
+```
+
 ## A note on AI tools
 
 We welcome the use of AI tools and LLMs to assist in your contributions. However, we ask that you be transparent and thorough when using these tools.
