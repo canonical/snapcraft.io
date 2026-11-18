@@ -24,7 +24,7 @@
           <ul class="p-side-navigation__list">
             {% for category in featured_categories %}
               <li class="p-side-navigation__item">
-                <a href="#" class="p-side-navigation__link" data-js="featured-category-switch" data-category="{{ category }}" {% if loop.index == 1 %}aria-current="page"{% endif %}>{{ category }}</a>
+                <a href="#" class="p-side-navigation__link" data-js="featured-category-switch" data-category="{{ category|lower }}" {% if loop.index == 1 %}aria-current="page"{% endif %}>{{ category }}</a>
               </li>
             {% endfor %}
           </ul>
@@ -33,54 +33,52 @@
           <ul class="p-tabs__list is-light">
             {% for category in featured_categories %}
               <li class="p-tabs__item">
-                <a href="#" class="p-tabs__link" data-js="featured-category-switch" data-category="{{ category }}" {% if loop.index == 1 %}aria-selected="true"{% endif %}>{{ category }}</a>
+                <a href="#" class="p-tabs__link" data-js="featured-category-switch" data-category="{{ category|lower }}" {% if loop.index == 1 %}aria-selected="true"{% endif %}>{{ category }}</a>
               </li>
             {% endfor %}
           </ul>
         </div>
       </div>
       <div class="col">
-        <div class="row">
-          {% for i in range(0, 3) %}
-            <div class="col-3 col-medium-2 featured-snap-card" data-js="featured-snap-card">
-              <div class="snap-card-placeholder" data-js="featured-snap-card-placeholder">
-                <div class="snap-card-placeholder__image"></div>
-                <div class="snap-card-placeholder__title"></div>
-                <div class="snap-card-placeholder__publisher"></div>
-                <div class="snap-card-placeholder__description"></div>
-              </div>
-              <div class="u-hide" data-js="featured-snap-card-content"></div>
+        {% for category in featured_categories %}
+          {% set key = category|lower %}
+          <div data-js="featured-category-panel" data-category="{{ key }}" {% if not loop.first %}hidden{% endif %}>
+            <div class="row">
+              {% for snap in featured_snaps[key] %}
+                <div class="col-3 col-medium-2 featured-snap-card" data-js="featured-snap-card" data-snap-name="{{ snap.package_name }}" data-position="{{ loop.index }}">
+                  <hr class="p-rule u-hide--medium u-hide--large">
+                  <div class="p-block">
+                    <a href="/{{ snap.package_name }}">
+                      <div class="p-strip is-shallow">
+                        <img src="{{ snap.icon_url or DEFAULT_ICON_URL }}" alt="" width="64" height="64" style="display: block;">
+                      </div>
+                    </a>
+                    <h3 class="p-heading--2">
+                      <a class="p-link--soft" href="/{{ snap.package_name }}">{{ snap.title }}</a>
+                    </h3>
+                    <p class="p-muted-heading">
+                      {{- snap.developer_name -}}
+                      {%- if snap.developer_validation == "verified" %}<span class="p-verified"><img src="https://assets.ubuntu.com/v1/ba8a4b7b-Verified.svg" alt="Verified account" width="14" height="14" class="p-star"></span>{% endif -%}
+                      {%- if snap.developer_validation == "starred" %}<span class="p-verified"><img src="https://assets.ubuntu.com/v1/d810dee9-Orange+Star.svg" alt="Star developer" width="14" height="14" class="p-star"></span>{% endif -%}
+                    </p>
+                    <p>{{ snap.summary }}</p>
+                  </div>
+                </div>
+              {% endfor %}
             </div>
-          {% endfor %}
-        </div>
-        <hr class="p-rule">
-        <ul class="p-list--divided u-no-margin--bottom">
-          <li class="p-list__item">
-            <a href="/search?categories={{ featured_categories[0]|lower }}" data-js="view-category-link">
-              View all {{ featured_categories[0]|lower }} snaps
-            </a>            
-          </li>
-          <li class="p-list__item">
-            <a href="/store">View all snaps</a>    
-          </li>
-        </ul>
+            <hr class="p-rule">
+            <ul class="p-list--divided u-no-margin--bottom">
+              <li class="p-list__item">
+                <a href="/search?categories={{ key }}">View all {{ key }} snaps</a>
+              </li>
+              <li class="p-list__item">
+                <a href="/store">View all snaps</a>
+              </li>
+            </ul>
+          </div>
+        {% endfor %}
       </div>
     </div>
-    <template style="display: none;" id="featured-snap-card" >
-      <hr class="p-rule u-hide--medium u-hide--large">
-      <div class="p-block">
-        <a href="" data-js="snap-icon-link">
-          <div class="p-strip is-shallow">
-            <img src="" alt="" data-js="snap-icon" width="64" height="64" style="display: block;">
-          </div>
-          <h3 class="p-heading--2" data-js="snap-title">
-            <a class="p-link--soft" href="" data-js="snap-title-link"></a>
-          </h3>
-            <p data-js="snap-publisher" class="p-muted-heading"></p>
-            <p data-js="snap-description"></p>
-        </a>
-      </div>
-    </template>
   </section>
   <section class="p-section p-data-spotlight--3-blocks" data-js="stats-section">
   <div class="p-equal-height-row--wrap">

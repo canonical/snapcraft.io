@@ -2,13 +2,9 @@
 
 {% block meta_copydoc %}https://docs.google.com/document/d/1_uwPkHmAgV6_uE9ISqIgXjZGJxXPBD90vdeO95h7ikE/edit{% endblock %}
 
-{% set featured_categories = ["Featured", "Development", "Games", "Server"] %}
-
 {% block content %}
 <main id="main-content" class="p-section is-paper">
-  {% with featured_categories = featured_categories %}
-    {% include "home/_featured-snaps.html" %}
-  {% endwith %}
+  {% include "home/_featured-snaps.html" %}
 
   <section class="p-section">
     <hr class="p-rule is-fixed-width">
@@ -188,7 +184,7 @@
     } catch(e) {}
 
     try {
-      snapcraft.public.featuredSnaps.init({{ featured_categories|safe }});
+      snapcraft.public.featuredSnaps.init();
     } catch(e) {
       Sentry.captureException(e);
     }

@@ -3,6 +3,17 @@ import flask
 from webapp.config import DEFAULT_ICON_URL
 from webapp.llms import BASE_URL, store_llm
 from webapp.snapcraft import logic
+from webapp.api.requests import Session
+import webapp.store.logic as store_logic
+from canonicalwebteam.store_api.devicegw import DeviceGW
+
+
+def new_device_gateway():
+    session = Session()
+    return DeviceGW("snap", session), session
+
+
+FEATURED_CATEGORIES = ["Featured", "Development", "Games", "Server"]
 
 
 def snapcraft_blueprint():
@@ -14,8 +25,16 @@ def snapcraft_blueprint():
 
         livestream = logic.get_livestreams()
 
+        featured_snaps = store_logic.get_featured_snaps_by_category(
+            new_device_gateway, FEATURED_CATEGORIES
+        )
+
         return flask.render_template(
-            "index.html", nps=nps, livestream=livestream
+            "index.html",
+            nps=nps,
+            livestream=livestream,
+            featured_categories=FEATURED_CATEGORIES,
+            featured_snaps=featured_snaps,
         )
 
     @snapcraft.route("/account.json")
