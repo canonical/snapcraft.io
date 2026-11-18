@@ -1,4 +1,5 @@
 import copy
+from pathlib import Path
 from urllib.parse import urlencode
 
 import responses
@@ -248,6 +249,40 @@ class GetPublisherPageTest(TestCase):
             "See all snaps published by Snapcrafters",
             body,
         )
+
+    @responses.activate
+    def test_all_production_custom_pages_render(self):
+        content_directory = (
+            Path(self.app.root_path)
+            / self.app.config["CONTENT_DIRECTORY"]["PUBLISHER_PAGES"]
+        )
+        publisher_stems = sorted(
+            file_path.stem for file_path in content_directory.glob("*.yaml")
+        )
+
+        for publisher_stem in publisher_stems:
+            responses.add(
+                responses.GET,
+                self.api_url_find(publisher_stem),
+                json={
+                    "results": [
+                        _snap_result(
+                            f"{publisher_stem}-snap",
+                            f"{publisher_stem} snap",
+                            _publisher(
+                                publisher_stem,
+                                publisher_stem.title(),
+                                "verified",
+                            ),
+                        )
+                    ]
+                },
+                status=200,
+            )
+
+            response = self.client.get(f"/publisher/{publisher_stem}")
+            self.assertEqual(response.status_code, 200)
+            self.assert_template_used("store/publisher-details.html")
 
     @responses.activate
     def test_custom_registry_is_not_mutated_by_requests(self):

@@ -129,6 +129,10 @@ class PublisherContentRegistryLoadingTest(unittest.TestCase):
         file_path = Path(directory) / f"{name}.yaml"
         file_path.write_text(_yaml_for(content))
 
+    def _write_raw_file(self, directory, name, content):
+        file_path = Path(directory) / name
+        file_path.write_text(content)
+
     def _write_valid_triplet(self, directory):
         self._write_publisher_file(
             directory,
@@ -192,6 +196,109 @@ class PublisherContentRegistryLoadingTest(unittest.TestCase):
                 any("broken.yaml" in message for message in logs.output)
             )
 
+    def test_invalid_variants_are_skipped_and_non_yaml_is_ignored(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            temp_path = Path(temp_dir)
+            self._write_valid_triplet(temp_path)
+            (temp_path / "README.md").write_text("non-content")
+
+            missing_summary = _valid_content("Missing Summary")
+            del missing_summary["summary"]
+            self._write_publisher_file(
+                temp_path,
+                "missing-required",
+                missing_summary,
+            )
+
+            with_extra_field = _valid_content("Extra")
+            with_extra_field["unexpected"] = "nope"
+            self._write_publisher_file(
+                temp_path,
+                "unknown-field",
+                with_extra_field,
+            )
+
+            with_three_featured = _valid_content("Three")
+            with_three_featured["featured_snaps"] = [
+                {
+                    "package_name": "snap-one",
+                    "background": "#000000",
+                    "description": "one",
+                },
+                {
+                    "package_name": "snap-two",
+                    "background": "#111111",
+                    "description": "two",
+                },
+                {
+                    "package_name": "snap-three",
+                    "background": "#222222",
+                    "description": "three",
+                },
+            ]
+            self._write_publisher_file(
+                temp_path,
+                "three-featured",
+                with_three_featured,
+            )
+
+            with_invalid_color = _valid_content("Invalid color")
+            with_invalid_color["featured_snaps"] = [
+                {
+                    "package_name": "snap-one",
+                    "background": "red",
+                    "description": "one",
+                }
+            ]
+            self._write_publisher_file(
+                temp_path,
+                "invalid-color",
+                with_invalid_color,
+            )
+
+            self._write_raw_file(
+                temp_path,
+                "malformed.yaml",
+                "display_name: malformed\nsummary: test\ndescription: [\n",
+            )
+            self._write_raw_file(temp_path, "empty.yaml", "")
+
+            logger = logging.getLogger(
+                "publisher-content-test-invalid-variants"
+            )
+            with self.assertLogs(logger, level="ERROR") as logs:
+                registry = load_publisher_content_registry(
+                    temp_path,
+                    logger=logger,
+                )
+
+            self.assertEqual(
+                set(registry.keys()),
+                {"jetbrains", "kde", "snapcrafters"},
+            )
+
+            expected_invalid_files = {
+                "missing-required.yaml",
+                "unknown-field.yaml",
+                "three-featured.yaml",
+                "invalid-color.yaml",
+                "malformed.yaml",
+                "empty.yaml",
+            }
+
+            for expected_invalid_file in expected_invalid_files:
+                with self.subTest(file_name=expected_invalid_file):
+                    self.assertTrue(
+                        any(
+                            expected_invalid_file in message
+                            for message in logs.output
+                        )
+                    )
+
+            self.assertFalse(
+                any("README.md" in message for message in logs.output)
+            )
+
     def test_registry_data_is_plain_data(self):
         with tempfile.TemporaryDirectory() as temp_dir:
             temp_path = Path(temp_dir)
@@ -252,7 +359,35 @@ class PublisherContentValidationScriptTest(unittest.TestCase):
             self.assertEqual(result.returncode, 0)
             self.assertEqual(result.stdout.strip(), "")
 
-    def test_validation_command_reports_missing_field(self):
+    def test_validation_command_reports_missing_each_required_field(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            temp_path = Path(temp_dir)
+
+            base_content = {
+                "display_name": "JetBrains",
+                "summary": "Summary",
+                "description": "<p>desc</p>",
+                "publisher_since": "January 2020",
+            }
+
+            for missing_field in base_content:
+                with self.subTest(field=missing_field):
+                    content = dict(base_content)
+                    del content[missing_field]
+
+                    self._write_file(
+                        temp_path,
+                        "jetbrains.yaml",
+                        _yaml_for(content),
+                    )
+
+                    result = self._run_validation_script(temp_path)
+
+                    self.assertNotEqual(result.returncode, 0)
+                    self.assertIn("jetbrains.yaml", result.stdout)
+                    self.assertIn(missing_field, result.stdout)
+
+    def test_validation_command_reports_unknown_field(self):
         with tempfile.TemporaryDirectory() as temp_dir:
             temp_path = Path(temp_dir)
             self._write_file(
@@ -260,8 +395,10 @@ class PublisherContentValidationScriptTest(unittest.TestCase):
                 "jetbrains.yaml",
                 """
                 display_name: JetBrains
+                summary: Summary
                 description: "<p>desc</p>"
                 publisher_since: January 2020
+                extra_field: no
                 """,
             )
 
@@ -269,27 +406,105 @@ class PublisherContentValidationScriptTest(unittest.TestCase):
 
             self.assertNotEqual(result.returncode, 0)
             self.assertIn("jetbrains.yaml", result.stdout)
-            self.assertIn("summary", result.stdout)
+            self.assertIn("extra_field", result.stdout)
 
-    def test_validation_command_reports_uppercase_filename(self):
+    def test_validation_command_reports_three_featured_snaps(self):
         with tempfile.TemporaryDirectory() as temp_dir:
             temp_path = Path(temp_dir)
             self._write_file(
                 temp_path,
-                "JetBrains.yaml",
+                "jetbrains.yaml",
                 """
                 display_name: JetBrains
                 summary: Summary
                 description: "<p>desc</p>"
                 publisher_since: January 2020
+                featured_snaps:
+                  - package_name: one
+                    background: "#000000"
+                    description: one
+                  - package_name: two
+                    background: "#111111"
+                    description: two
+                  - package_name: three
+                    background: "#222222"
+                    description: three
                 """,
             )
 
             result = self._run_validation_script(temp_path)
 
             self.assertNotEqual(result.returncode, 0)
-            self.assertIn("JetBrains.yaml", result.stdout)
-            self.assertIn("must be lowercase", result.stdout)
+            self.assertIn("featured_snaps", result.stdout)
+
+    def test_validation_command_reports_invalid_featured_colors(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            temp_path = Path(temp_dir)
+
+            for invalid_color in ("#12345", "red", "#GGGGGG"):
+                with self.subTest(color=invalid_color):
+                    self._write_file(
+                        temp_path,
+                        "jetbrains.yaml",
+                        f"""
+                        display_name: JetBrains
+                        summary: Summary
+                        description: "<p>desc</p>"
+                        publisher_since: January 2020
+                        featured_snaps:
+                          - package_name: one
+                            background: "{invalid_color}"
+                            description: one
+                        """,
+                    )
+
+                    result = self._run_validation_script(temp_path)
+
+                    self.assertNotEqual(result.returncode, 0)
+                    self.assertIn("background", result.stdout)
+
+    def test_validation_command_reports_wrong_listed_type(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            temp_path = Path(temp_dir)
+            self._write_file(
+                temp_path,
+                "jetbrains.yaml",
+                """
+                display_name: JetBrains
+                summary: Summary
+                description: "<p>desc</p>"
+                publisher_since: January 2020
+                listed_snaps: not-a-list
+                """,
+            )
+
+            result = self._run_validation_script(temp_path)
+
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn("listed_snaps", result.stdout)
+
+    def test_validation_command_reports_uppercase_filename(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            temp_path = Path(temp_dir)
+
+            for filename in ("JetBrains.yaml", "KDE.yaml", "newPartner.yaml"):
+                with self.subTest(filename=filename):
+                    self._write_file(
+                        temp_path,
+                        filename,
+                        """
+                        display_name: JetBrains
+                        summary: Summary
+                        description: "<p>desc</p>"
+                        publisher_since: January 2020
+                        """,
+                    )
+
+                    result = self._run_validation_script(temp_path)
+
+                    self.assertNotEqual(result.returncode, 0)
+                    self.assertIn(filename, result.stdout)
+                    self.assertIn("must be lowercase", result.stdout)
 
     def test_validation_command_reports_malformed_yaml(self):
         with tempfile.TemporaryDirectory() as temp_dir:
