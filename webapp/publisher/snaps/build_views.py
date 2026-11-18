@@ -73,6 +73,8 @@ def get_builds(lp_snap, selection):
         snap_build = {
             "id": build["self_link"].split("/")[-1],
             "arch_tag": build["arch_tag"],
+            "target_architectures": build.get("target_architectures")
+            or [build["arch_tag"]],
             "datebuilt": build["datebuilt"],
             "duration": build["duration"],
             "logs": build["build_log_url"],
@@ -156,6 +158,8 @@ def get_snap_build(snap_name, build_id):
         context["snap_build"] = {
             "id": lp_build["self_link"].split("/")[-1],
             "arch_tag": lp_build["arch_tag"],
+            "target_architectures": lp_build.get("target_architectures")
+            or [lp_build["arch_tag"]],
             "datebuilt": lp_build["datebuilt"],
             "duration": lp_build["duration"],
             "logs": lp_build["build_log_url"],
