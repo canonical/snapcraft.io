@@ -39,5 +39,20 @@ class RequestsCacheTest(unittest.TestCase):
             method="GET",
             url="https://recommendations.snapcraft.io",
             timeout=1,
+            params=None,
+            allow_redirects=True,
+        )
+
+    def test_recommendations_session_allows_timeout_override(self):
+        session = requests.RecommendationsSession()
+
+        with patch.object(RequestsSession, "request") as request:
+            session.get("https://recommendations.snapcraft.io", timeout=5)
+
+        request.assert_called_once_with(
+            method="GET",
+            url="https://recommendations.snapcraft.io",
+            timeout=5,
+            params=None,
             allow_redirects=True,
         )

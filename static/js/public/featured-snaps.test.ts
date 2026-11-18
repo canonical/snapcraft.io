@@ -50,9 +50,34 @@ describe("featured snaps", () => {
     expect(side[1].hasAttribute("aria-selected")).toBe(false);
 
     const tabs = document.querySelectorAll(".p-tabs__link");
-    expect(tabs[0].hasAttribute("aria-selected")).toBe(false);
+    expect(tabs[0].getAttribute("aria-selected")).toBe("false");
     expect(tabs[1].getAttribute("aria-selected")).toBe("true");
     expect(tabs[1].hasAttribute("aria-current")).toBe(false);
+  });
+
+  it("keeps tab and side navigation state in sync when switching back", () => {
+    const tabs = document.querySelectorAll<HTMLElement>(".p-tabs__link");
+    tabs[1].click();
+    tabs[0].click();
+
+    expect(tabs[0].getAttribute("aria-selected")).toBe("true");
+    expect(tabs[1].getAttribute("aria-selected")).toBe("false");
+    tabs.forEach((tab) => {
+      expect(tab.hasAttribute("aria-current")).toBe(false);
+    });
+
+    const side = document.querySelectorAll(".p-side-navigation__link");
+    expect(side[0].getAttribute("aria-current")).toBe("page");
+    expect(side[1].hasAttribute("aria-current")).toBe(false);
+    side.forEach((link) => {
+      expect(link.hasAttribute("aria-selected")).toBe(false);
+    });
+
+    const panels = document.querySelectorAll<HTMLElement>(
+      "[data-js='featured-category-panel']",
+    );
+    expect(panels[0].hidden).toBe(false);
+    expect(panels[1].hidden).toBe(true);
   });
 
   it("tracks clicks on featured cards", () => {
