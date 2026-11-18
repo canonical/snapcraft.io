@@ -25,6 +25,8 @@ function init(): void {
           : "aria-current";
         if (el.dataset.category?.toLowerCase() === category) {
           el.setAttribute(attr, attr === "aria-selected" ? "true" : "page");
+        } else if (attr === "aria-selected") {
+          el.setAttribute(attr, "false");
         } else {
           el.removeAttribute(attr);
         }
@@ -64,6 +66,10 @@ async function initStats(): Promise<void> {
 
   try {
     const response = await fetch("/store/stats");
+    if (response.status === 204) {
+      if (statsSection) statsSection.hidden = true;
+      return;
+    }
     if (!response.ok) {
       if (statsSection) statsSection.hidden = true;
       return;

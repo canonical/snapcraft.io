@@ -1,6 +1,8 @@
 import unittest
+from unittest.mock import patch
 
 from requests.exceptions import ConnectionError, Timeout
+from requests import Session as RequestsSession
 
 import responses
 from webapp.api import requests
@@ -23,3 +25,34 @@ class RequestsCacheTest(unittest.TestCase):
         responses.add(responses.GET, test_url, body=Timeout())
         with self.assertRaises(ApiTimeoutError):
             session.get(test_url)
+
+    def test_recommendations_session_uses_shorter_timeout(self):
+        session = requests.RecommendationsSession()
+
+        with patch.object(
+            RequestsSession,
+            "request",
+        ) as request:
+            session.get("https://recommendations.snapcraft.io")
+
+        request.assert_called_once_with(
+            method="GET",
+            url="https://recommendations.snapcraft.io",
+            timeout=1,
+            params=None,
+            allow_redirects=True,
+        )
+
+    def test_recommendations_session_allows_timeout_override(self):
+        session = requests.RecommendationsSession()
+
+        with patch.object(RequestsSession, "request") as request:
+            session.get("https://recommendations.snapcraft.io", timeout=5)
+
+        request.assert_called_once_with(
+            method="GET",
+            url="https://recommendations.snapcraft.io",
+            timeout=5,
+            params=None,
+            allow_redirects=True,
+        )
