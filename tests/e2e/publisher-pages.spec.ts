@@ -1,9 +1,16 @@
 import AxeBuilder from "@axe-core/playwright";
-import { expect, test, type Locator, type Page } from "@playwright/test";
+import {
+  expect,
+  test,
+  type BrowserContext,
+  type Locator,
+  type Page,
+} from "@playwright/test";
 
 const analyticsRegex =
   /https:\/\/(www\.googletagmanager\.com|www\.google-analytics\.com|analytics\.google\.com|stats\.g\.doubleclick\.net)\//;
 
+const baseUrl = "http://127.0.0.1:8011";
 const customPublishers = ["jetbrains", "kde", "snapcrafters"] as const;
 const screenshotViewports = [375, 768, 1280] as const;
 const mobileAndDesktopWidths = [375, 1280] as const;
@@ -14,6 +21,16 @@ const trustStatusTextByPublisher: Record<string, string> = {
   kde: "Verified account",
   snapcrafters: "Star developer",
 };
+
+async function setEssentialCookie(context: BrowserContext) {
+  await context.addCookies([
+    {
+      name: "_cookies_accepted",
+      value: "essential",
+      url: baseUrl,
+    },
+  ]);
+}
 
 async function interceptAnalytics(page: Page, requests: string[] = []) {
   await page.route(analyticsRegex, async (route) => {
@@ -101,6 +118,7 @@ function formatAxeViolations(
 }
 
 test("trust badges are rendered from Store data", async ({ page }) => {
+  await setEssentialCookie(page.context());
   await interceptAnalytics(page);
 
   await page.goto("/publisher/jetbrains");
@@ -119,6 +137,7 @@ test("trust badges are rendered from Store data", async ({ page }) => {
 });
 
 test("snapcrafters curated page links to publisher search", async ({ page }) => {
+  await setEssentialCookie(page.context());
   await interceptAnalytics(page);
 
   await page.goto("/publisher/snapcrafters");
@@ -144,6 +163,7 @@ test("snapcrafters curated page links to publisher search", async ({ page }) => 
 test("decorative publisher icon and banner are hidden from screen readers", async ({
   page,
 }) => {
+  await setEssentialCookie(page.context());
   await interceptAnalytics(page);
 
   await page.goto("/publisher/jetbrains");
@@ -159,6 +179,7 @@ test("decorative publisher icon and banner are hidden from screen readers", asyn
 test("trust status is available via accessibility tree and keyboard focus", async ({
   page,
 }) => {
+  await setEssentialCookie(page.context());
   await interceptAnalytics(page);
 
   for (const publisher of customPublishers) {
@@ -186,6 +207,7 @@ test("trust status is available via accessibility tree and keyboard focus", asyn
 });
 
 test("custom publisher pages pass WCAG 2.1 AA axe checks", async ({ page }) => {
+  await setEssentialCookie(page.context());
   await interceptAnalytics(page);
 
   for (const publisher of customPublishers) {
@@ -210,6 +232,7 @@ test("custom publisher pages pass WCAG 2.1 AA axe checks", async ({ page }) => {
 for (const publisher of customPublishers) {
   for (const width of screenshotViewports) {
     test(`visual baseline: ${publisher} at ${width}px`, async ({ page }) => {
+      await setEssentialCookie(page.context());
       await interceptAnalytics(page);
 
       await page.setViewportSize({ width, height: 2400 });
@@ -230,8 +253,9 @@ test("analytics keep publisher page_view path and never reach GA", async ({
 
   for (const publisher of customPublishers) {
     const context = await browser.newContext({
-      baseURL: "http://127.0.0.1:8011",
+      baseURL: baseUrl,
     });
+
     const page = await context.newPage();
 
     const analyticsRequests: string[] = [];
