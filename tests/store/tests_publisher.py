@@ -401,74 +401,98 @@ class GetPublisherPageTest(TestCase):
 
     @responses.activate
     def test_curated_layout_omits_unavailable_curated_entries(self):
-        self._set_custom_registry_entry(
-            "newpartner",
-            {
-                "display_name": "New Partner",
-                "summary": "Summary",
-                "description": "<p>description</p>",
-                "publisher_since": "January 2024",
-                "featured_snaps": [
+        for missing_variant in (
+            "missing-listed",
+            "other-publisher-listed",
+        ):
+            with self.subTest(missing_variant=missing_variant):
+                self._set_custom_registry_entry(
+                    "newpartner",
                     {
-                        "package_name": "featured-available",
-                        "background": "#000000",
-                        "description": "featured",
+                        "display_name": "New Partner",
+                        "summary": "Summary",
+                        "description": "<p>description</p>",
+                        "publisher_since": "January 2024",
+                        "featured_snaps": [
+                            {
+                                "package_name": "featured-available",
+                                "background": "#000000",
+                                "description": "featured",
+                            },
+                            {
+                                "package_name": "missing-featured",
+                                "background": "#111111",
+                                "description": "missing",
+                            },
+                        ],
+                        "listed_snaps": [
+                            {"package_name": "listed-available-first"},
+                            {"package_name": missing_variant},
+                            {"package_name": "listed-available-second"},
+                        ],
                     },
-                    {
-                        "package_name": "missing-featured",
-                        "background": "#111111",
-                        "description": "missing",
+                )
+
+                responses.add(
+                    responses.GET,
+                    self.api_url_find("newpartner"),
+                    json={
+                        "results": [
+                            _snap_result(
+                                "featured-available",
+                                "Featured Available",
+                                _publisher(
+                                    "newpartner",
+                                    "New Partner",
+                                    "verified",
+                                ),
+                            ),
+                            _snap_result(
+                                "listed-available-second",
+                                "Listed Available Second",
+                                _publisher(
+                                    "newpartner",
+                                    "New Partner",
+                                    "verified",
+                                ),
+                            ),
+                            _snap_result(
+                                "listed-available-first",
+                                "Listed Available First",
+                                _publisher(
+                                    "newpartner",
+                                    "New Partner",
+                                    "verified",
+                                ),
+                            ),
+                        ]
                     },
-                ],
-                "listed_snaps": [
-                    {"package_name": "listed-available"},
-                    {"package_name": "missing-listed"},
-                    {"package_name": "other-publisher-listed"},
-                ],
-            },
-        )
+                    status=200,
+                )
 
-        responses.add(
-            responses.GET,
-            self.api_url_find("newpartner"),
-            json={
-                "results": [
-                    _snap_result(
-                        "featured-available",
-                        "Featured Available",
-                        _publisher("newpartner", "New Partner", "verified"),
-                    ),
-                    _snap_result(
-                        "listed-available",
-                        "Listed Available",
-                        _publisher("newpartner", "New Partner", "verified"),
-                    ),
-                ]
-            },
-            status=200,
-        )
+                response = self.client.get("/publisher/newpartner")
+                body = response.get_data(as_text=True)
 
-        response = self.client.get("/publisher/newpartner")
-        body = response.get_data(as_text=True)
+                self.assertEqual(response.status_code, 200)
+                self.assert_template_used("store/publisher-details.html")
 
-        self.assertEqual(response.status_code, 200)
-        self.assert_template_used("store/publisher-details.html")
+                featured_snaps = self.get_context_variable("featured_snaps")
+                self.assertEqual(
+                    [snap["package_name"] for snap in featured_snaps],
+                    ["featured-available"],
+                )
 
-        featured_snaps = self.get_context_variable("featured_snaps")
-        self.assertEqual(
-            [snap["package_name"] for snap in featured_snaps],
-            ["featured-available"],
-        )
+                listed_snaps = self.get_context_variable("snaps")
+                self.assertEqual(
+                    [snap["package_name"] for snap in listed_snaps],
+                    ["listed-available-first", "listed-available-second"],
+                )
 
-        listed_snaps = self.get_context_variable("snaps")
-        self.assertEqual(
-            [snap["package_name"] for snap in listed_snaps],
-            ["listed-available"],
-        )
-
-        self.assertNotIn('href="/missing-featured"', body)
-        self.assertNotIn('href="/missing-listed"', body)
-        self.assertNotIn('href="/other-publisher-listed"', body)
+                self.assertNotIn('href="/missing-featured"', body)
+                self.assertNotIn(
+                    f'href="/{missing_variant}"',
+                    body,
+                )
 
     @responses.activate
     def test_curated_layout_hides_featured_section_when_featured_missing(
