@@ -1,0 +1,172 @@
+{
+  "jetbrains": {
+    "results": [
+      {
+        "name": "intellij-idea",
+        "snap": {
+          "media": [
+            {
+              "height": 256,
+              "type": "icon",
+              "url": "https://dashboard.snapcraft.io/site_media/appmedia/2025/11/IntelliJ_IDEA_icon.svg.png",
+              "width": 256
+            }
+          ],
+          "publisher": {
+            "display-name": "JetBrains",
+            "id": "jetbrains-id",
+            "username": "jetbrains",
+            "validation": "verified"
+          },
+          "summary": "IntelliJ IDEA summary",
+          "title": "IntelliJ IDEA"
+        },
+        "snap-id": "intellij-idea-id"
+      },
+      {
+        "name": "goland",
+        "snap": {
+          "media": [
+            {
+              "height": 256,
+              "type": "icon",
+              "url": "https://dashboard.snapcraft.io/site_media/appmedia/2024/06/Avatar-4_Mo31k0N.png",
+              "width": 256
+            }
+          ],
+          "publisher": {
+            "display-name": "JetBrains",
+            "id": "jetbrains-id",
+            "username": "jetbrains",
+            "validation": "verified"
+          },
+          "summary": "GoLand summary",
+          "title": "GoLand"
+        },
+        "snap-id": "goland-id"
+      }
+    ]
+  },
+  "kde": {
+    "results": [
+      {
+        "name": "krita",
+        "snap": {
+          "media": [
+            {
+              "height": 256,
+              "type": "icon",
+              "url": "https://dashboard.snapcraft.io/site_media/appmedia/2019/04/unnamed.png",
+              "width": 256
+            }
+          ],
+          "publisher": {
+            "display-name": "KDE",
+            "id": "kde-id",
+            "username": "kde",
+            "validation": "verified"
+          },
+          "summary": "Krita summary",
+          "title": "Krita"
+        },
+        "snap-id": "krita-id"
+      }
+    ]
+  },
+  "lukewh": {
+    "results": [
+      {
+        "name": "deluge-lukewh",
+        "snap": {
+          "media": [
+            {
+              "height": 256,
+              "type": "icon",
+              "url": "https://dashboard.snapcraft.io/site_media/appmedia/2016/07/vlc.png",
+              "width": 256
+            }
+          ],
+          "publisher": {
+            "display-name": "LukeWH",
+            "id": "lukewh-id",
+            "username": "lukewh",
+            "validation": "unproven"
+          },
+          "summary": "Deluge summary",
+          "title": "Deluge"
+        },
+        "snap-id": "deluge-lukewh-id"
+      }
+    ]
+  },
+  "snapcrafters": {
+    "results": [
+      {
+        "name": "sublime-text",
+        "snap": {
+          "media": [
+            {
+              "height": 256,
+              "type": "icon",
+              "url": "https://dashboard.snapcraft.io/site_media/appmedia/2018/03/sublime-text.png",
+              "width": 256
+            }
+          ],
+          "publisher": {
+            "display-name": "Snapcrafters",
+            "id": "snapcrafters-id",
+            "username": "snapcrafters",
+            "validation": "starred"
+          },
+          "summary": "Sublime Text summary",
+          "title": "Sublime Text"
+        },
+        "snap-id": "sublime-text-id"
+      },
+      {
+        "name": "discord",
+        "snap": {
+          "media": [
+            {
+              "height": 256,
+              "type": "icon",
+              "url": "https://dashboard.snapcraft.io/site_media/appmedia/2023/10/com.discordapp.Discord_1.png",
+              "width": 256
+            }
+          ],
+          "publisher": {
+            "display-name": "Snapcrafters",
+            "id": "snapcrafters-id",
+            "username": "snapcrafters",
+            "validation": "starred"
+          },
+          "summary": "Discord summary",
+          "title": "Discord"
+        },
+        "snap-id": "discord-id"
+      },
+      {
+        "name": "alacritty",
+        "snap": {
+          "media": [
+            {
+              "height": 256,
+              "type": "icon",
+              "url": "https://dashboard.snapcraft.io/site_media/appmedia/2019/12/icon.svg_WTg5Oeb.png",
+              "width": 256
+            }
+          ],
+          "publisher": {
+            "display-name": "Snapcrafters",
+            "id": "snapcrafters-id",
+            "username": "snapcrafters",
+            "validation": "starred"
+          },
+          "summary": "Alacritty summary",
+          "title": "Alacritty"
+        },
+        "snap-id": "alacritty-id"
+      }
+    ]
+  }
+}

@@ -1,0 +1,125 @@
+{
+  "mainRevision": "f0ee8c17fd8a8d302e040e284e3b5351c855ea0d",
+  "capturedAt": "2026-11-18T17:56:45.677Z",
+  "axe": {
+    "jetbrains": {
+      "375": {
+        "violations": [],
+        "violationCount": 0
+      },
+      "1280": {
+        "violations": [
+          {
+            "id": "aria-required-children",
+            "impact": "critical",
+            "help": "Certain ARIA roles must contain particular children",
+            "nodes": 1
+          },
+          {
+            "id": "listitem",
+            "impact": "serious",
+            "help": "<li> elements must be contained in a <ul> or <ol>",
+            "nodes": 1
+          }
+        ],
+        "violationCount": 2
+      }
+    },
+    "kde": {
+      "375": {
+        "violations": [],
+        "violationCount": 0
+      },
+      "1280": {
+        "violations": [
+          {
+            "id": "aria-required-children",
+            "impact": "critical",
+            "help": "Certain ARIA roles must contain particular children",
+            "nodes": 1
+          },
+          {
+            "id": "listitem",
+            "impact": "serious",
+            "help": "<li> elements must be contained in a <ul> or <ol>",
+            "nodes": 1
+          }
+        ],
+        "violationCount": 2
+      }
+    },
+    "snapcrafters": {
+      "375": {
+        "violations": [],
+        "violationCount": 0
+      },
+      "1280": {
+        "violations": [
+          {
+            "id": "aria-required-children",
+            "impact": "critical",
+            "help": "Certain ARIA roles must contain particular children",
+            "nodes": 1
+          },
+          {
+            "id": "listitem",
+            "impact": "serious",
+            "help": "<li> elements must be contained in a <ul> or <ol>",
+            "nodes": 1
+          }
+        ],
+        "violationCount": 2
+      }
+    }
+  },
+  "analyticsRequests": {
+    "jetbrains": [
+      "https://www.googletagmanager.com/gtm.js?id=GTM-KCGXHQS"
+    ],
+    "kde": [
+      "https://www.googletagmanager.com/gtm.js?id=GTM-KCGXHQS"
+    ],
+    "snapcrafters": [
+      "https://www.googletagmanager.com/gtm.js?id=GTM-KCGXHQS"
+    ],
+    "lukewh": [
+      "https://www.googletagmanager.com/gtm.js?id=GTM-KCGXHQS"
+    ]
+  },
+  "assetRequestFailures": {
+    "jetbrains": [
+      {
+        "url": "https://www.googletagmanager.com/gtm.js?id=GTM-KCGXHQS",
+        "errorText": "net::ERR_FAILED"
+      }
+    ],
+    "kde": [
+      {
+        "url": "https://www.googletagmanager.com/gtm.js?id=GTM-KCGXHQS",
+        "errorText": "net::ERR_FAILED"
+      }
+    ],
+    "snapcrafters": [
+      {
+        "url": "https://www.googletagmanager.com/gtm.js?id=GTM-KCGXHQS",
+        "errorText": "net::ERR_FAILED"
+      }
+    ],
+    "lukewh": [
+      {
+        "url": "https://www.googletagmanager.com/gtm.js?id=GTM-KCGXHQS",
+        "errorText": "net::ERR_FAILED"
+      }
+    ]
+  },
+  "assetErrorResponses": {
+    "jetbrains": [],
+    "kde": [],
+    "snapcrafters": [],
+    "lukewh": []
+  },
+  "snapcraftersCuratedSnapLinks": [
+    "/sublime-text",
+    "/discord"
+  ]
+}
