@@ -1,5 +1,4 @@
-publisher: KDE
-username: kde
+display_name: KDE
 icon_url: https://assets.ubuntu.com/v1/98a86926-logo-white-blue-source.svg
 banner_url: https://assets.ubuntu.com/v1/90d703ca-1920x1080.png
 summary: KDE's vision is a world in which everyone has control over their digital life and enjoys freedom and privacy.
@@ -14,6 +13,4 @@ description: |
 publisher_since: January 2017
 website: https://kde.org/
 contact: https://kde.org/support/
-developer_validation: verified
-
 featured_snaps: []
