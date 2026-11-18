@@ -1,5 +1,14 @@
 import { expect, test } from "@playwright/test";
 
+test.beforeEach(async ({ page }) => {
+  await page.route(
+    /https:\/\/(www\.googletagmanager\.com|www\.google-analytics\.com|analytics\.google\.com|stats\.g\.doubleclick\.net)\//,
+    async (route) => {
+      await route.abort();
+    },
+  );
+});
+
 test("trust badges are shown from Store data", async ({ page }) => {
   await page.goto("/publisher/jetbrains");
   await expect(page.getByText("Verified account")).toBeVisible();
