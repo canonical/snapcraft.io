@@ -7,7 +7,6 @@ from flask_testing import TestCase
 
 from webapp.app import create_app
 
-
 JETBRAINS_PUBLISHER = {
     "display-name": "JetBrains",
     "id": "28zEonXNoBLvIB7xneRbltOsp0Nf7DwS",
@@ -100,7 +99,6 @@ class GetPublisherPageTest(TestCase):
                 urlencode(
                     {
                         "q": "",
-                        "publisher": publisher,
                         "fields": ",".join(
                             [
                                 "title",
@@ -109,6 +107,7 @@ class GetPublisherPageTest(TestCase):
                                 "publisher",
                             ]
                         ),
+                        "publisher": publisher,
                     }
                 ),
             ]
