@@ -2,10 +2,13 @@
 # Run a command without external networking, retaining loopback and the caller.
 set -euo pipefail
 
-exec sudo --preserve-env unshare --net -- bash -c '
+# Pass the environment explicitly: sudo-rs ignores bare --preserve-env.
+mapfile -d '' -t environment < <(env -0)
+
+exec sudo -- env "${environment[@]}" unshare --net -- bash -c '
   set -euo pipefail
   ip link set lo up
   user="$1"
   shift
-  exec sudo --preserve-env --user="$user" -- "$@"
-' bash "$(id -un)" env "PATH=$PATH" "$@"
+  exec sudo --user="$user" -- "$@"
+' bash "$(id -un)" env "${environment[@]}" "$@"

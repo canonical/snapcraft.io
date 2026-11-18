@@ -23,15 +23,14 @@ class RunOfflineTest(unittest.TestCase):
         }
         commands = {
             "sudo": """
-[[ "$1" == --preserve-env ]] || exit 91
-shift
 if [[ "$1" == --user=* ]]; then
   [[ "$1" == "--user=$(id -un)" ]] || exit 92
   shift
-  [[ "$1" == -- ]] || exit 93
-  shift
 fi
-exec "$@"
+[[ "$1" == -- ]] || exit 93
+shift
+# Emulate sudo-rs discarding the environment.
+exec env -i PATH="$PATH" "$@"
 """,
             "unshare": """
 [[ "$1" == --net && "$2" == -- ]] || exit 94
