@@ -1,4 +1,6 @@
 import atexit
+import json
+from urllib.parse import parse_qs, urlparse
 
 import responses
 
@@ -60,6 +62,46 @@ def _register_find(
     )
 
 
+def _register_store_search(
+    mocker,
+    query,
+    results,
+):
+    def _callback(request):
+        parsed = urlparse(request.url)
+        params = parse_qs(parsed.query)
+
+        if params.get("q", [""])[0] != query:
+            return (404, {}, "{}")
+
+        fields = params.get("fields", [""])[0]
+        if fields != "title,summary,media,publisher,categories":
+            return (404, {}, "{}")
+
+        return (
+            200,
+            {"Content-Type": "application/json"},
+            json.dumps({"results": results}),
+        )
+
+    mocker.add_callback(
+        responses.GET,
+        "https://api.snapcraft.io/v2/snaps/find",
+        callback=_callback,
+        content_type="application/json",
+    )
+
+
+def _register_categories(mocker):
+    mocker.add(
+        responses.GET,
+        "https://api.snapcraft.io/v2/snaps/categories",
+        json={"categories": []},
+        status=200,
+        match=[responses.matchers.query_param_matcher({"type": "shared"})],
+    )
+
+
 def create_stubbed_app():
     redis_cache.fallback.clear()
 
@@ -68,6 +110,8 @@ def create_stubbed_app():
 
     atexit.register(mocker.stop)
     atexit.register(mocker.reset)
+
+    _register_categories(mocker)
 
     _register_find(
         mocker,
@@ -98,26 +142,33 @@ def create_stubbed_app():
         ],
     )
 
+    snapcrafters_results = [
+        _snap_result(
+            "sublime-text",
+            "Sublime Text",
+            _publisher("snapcrafters", "Snapcrafters", "starred"),
+        ),
+        _snap_result(
+            "discord",
+            "Discord",
+            _publisher("snapcrafters", "Snapcrafters", "starred"),
+        ),
+        _snap_result(
+            "alacritty",
+            "Alacritty",
+            _publisher("snapcrafters", "Snapcrafters", "starred"),
+        ),
+    ]
+
     _register_find(
         mocker,
         "snapcrafters",
-        [
-            _snap_result(
-                "sublime-text",
-                "Sublime Text",
-                _publisher("snapcrafters", "Snapcrafters", "starred"),
-            ),
-            _snap_result(
-                "discord",
-                "Discord",
-                _publisher("snapcrafters", "Snapcrafters", "starred"),
-            ),
-            _snap_result(
-                "alacritty",
-                "Alacritty",
-                _publisher("snapcrafters", "Snapcrafters", "starred"),
-            ),
-        ],
+        snapcrafters_results,
+    )
+    _register_store_search(
+        mocker,
+        "publisher:snapcrafters",
+        snapcrafters_results,
     )
 
     app = create_app(testing=True)

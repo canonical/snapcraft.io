@@ -11,7 +11,8 @@ export default defineConfig({
     trace: "on-first-retry",
   },
   webServer: {
-    command: "PYTHONPATH=. python3 tests/e2e/publisher_server.py",
+    command:
+      "ENVIRONMENT=production FLASK_DEBUG=0 PYTHONPATH=. python3 tests/e2e/publisher_server.py", 
     url: "http://127.0.0.1:8011/publisher/jetbrains",
     timeout: 120_000,
     reuseExistingServer: false,
