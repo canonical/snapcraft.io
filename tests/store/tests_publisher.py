@@ -1,4 +1,5 @@
 import copy
+import re
 from pathlib import Path
 from urllib.parse import urlencode
 
@@ -60,11 +61,26 @@ JETBRAINS_FIND_RESPONSE = {
 
 LUKEWH_FIND_RESPONSE = {
     "results": [
-        _snap_result(
-            "deluge-lukewh",
-            "Deluge",
-            _publisher("lukewh", "LukeWH", "unproven"),
-        )
+        {
+            "name": "deluge-lukewh",
+            "snap": {
+                "media": [
+                    {
+                        "height": 256,
+                        "type": "icon",
+                        "url": (
+                            "https://dashboard.snapcraft.io/"
+                            "site_media/appmedia/2016/07/vlc.png"
+                        ),
+                        "width": 256,
+                    }
+                ],
+                "publisher": _publisher("lukewh", "LukeWH", "unproven"),
+                "summary": "Deluge summary",
+                "title": "Deluge",
+            },
+            "snap-id": "deluge-lukewh-id",
+        }
     ]
 }
 
@@ -125,6 +141,43 @@ class GetPublisherPageTest(TestCase):
         registry = self.app.extensions["publisher_pages_registry"]
         registry[publisher_name] = content
 
+    def _read_main_html_baseline(self, file_name):
+        fixture_path = (
+            Path(__file__).resolve().parents[1]
+            / "e2e"
+            / "fixtures"
+            / "main-baseline"
+            / "html"
+            / file_name
+        )
+
+        return fixture_path.read_text(encoding="utf-8")
+
+    def _normalize_html_for_baseline_compare(self, html):
+        no_doctype = re.sub(r"<!doctype html>", "", html, flags=re.I)
+        body_match = re.search(
+            r"<body[^>]*>.*</body>",
+            no_doctype,
+            flags=re.I | re.S,
+        )
+        comparable_markup = body_match.group(0) if body_match else no_doctype
+        comparable_markup = re.sub(
+            r"https?://localhost:5004/[^\"' >]+",
+            "__ASSET__",
+            comparable_markup,
+        )
+        comparable_markup = re.sub(
+            r"/static/js/dist/vite/[^\"' >]+",
+            "__ASSET__",
+            comparable_markup,
+        )
+        comparable_markup = re.sub(
+            r'window\.ENVIRONMENT\s*=\s*"[^"]+";',
+            'window.ENVIRONMENT = "__ENV__";',
+            comparable_markup,
+        )
+        return " ".join(comparable_markup.split())
+
     @responses.activate
     def test_community_publisher(self):
         responses.add(
@@ -150,6 +203,38 @@ class GetPublisherPageTest(TestCase):
         self.assert_template_used("store/publisher-details.html")
 
     @responses.activate
+    def test_existing_custom_publishers_keep_custom_template_routes(self):
+        fixtures = {
+            "jetbrains": JETBRAINS_FIND_RESPONSE,
+            "kde": {
+                "results": [
+                    _snap_result(
+                        "krita",
+                        "Krita",
+                        _publisher("kde", "KDE", "verified"),
+                    )
+                ]
+            },
+            "snapcrafters": SNAPCRAFTERS_FIND_RESPONSE,
+        }
+
+        for publisher_name, find_response in fixtures.items():
+            responses.add(
+                responses.GET,
+                self.api_url_find(publisher_name),
+                json=find_response,
+                status=200,
+            )
+
+            response = self.client.get(f"/publisher/{publisher_name}")
+
+            self.assertEqual(response.status_code, 200)
+            self.assertEqual(
+                response.request.path, f"/publisher/{publisher_name}"
+            )
+            self.assert_template_used("store/publisher-details.html")
+
+    @responses.activate
     def test_non_existant_publisher(self):
         responses.add(
             responses.GET,
@@ -160,6 +245,31 @@ class GetPublisherPageTest(TestCase):
         response = self.client.get("/publisher/toto")
         self.assertEqual(response.status_code, 200)
         self.assert_template_used("store/community-publisher-details.html")
+
+        body = response.get_data(as_text=True)
+        self.assertIn("(toto)", body)
+
+    @responses.activate
+    def test_default_publisher_page_body_matches_main_baseline(self):
+        responses.add(
+            responses.GET,
+            self.api_url_find("lukewh"),
+            json=LUKEWH_FIND_RESPONSE,
+            status=200,
+        )
+
+        response = self.client.get("/publisher/lukewh")
+
+        self.assertEqual(response.status_code, 200)
+        self.assert_template_used("store/community-publisher-details.html")
+        self.assertEqual(
+            self._normalize_html_for_baseline_compare(
+                response.get_data(as_text=True)
+            ),
+            self._normalize_html_for_baseline_compare(
+                self._read_main_html_baseline("lukewh.html")
+            ),
+        )
 
     def test_snap_quarantine_is_not_public(self):
         response = self.client.get("/publisher/snap-quarantine")
@@ -193,6 +303,7 @@ class GetPublisherPageTest(TestCase):
 
         body = response.get_data(as_text=True)
         self.assertNotIn("Verified account", body)
+        self.assertNotIn('class="p-media-object p-media-object--snap"', body)
 
     @responses.activate
     def test_featured_snaps_hydrated_from_api(self):
@@ -253,6 +364,184 @@ class GetPublisherPageTest(TestCase):
             "See all snaps published by Snapcrafters",
             body,
         )
+
+    @responses.activate
+    def test_non_curated_layout_shows_all_non_featured_public_snaps(self):
+        responses.add(
+            responses.GET,
+            self.api_url_find("jetbrains"),
+            json={
+                "results": [
+                    _snap_result(
+                        "intellij-idea",
+                        "IntelliJ IDEA",
+                        JETBRAINS_PUBLISHER,
+                    ),
+                    _snap_result(
+                        "goland",
+                        "GoLand",
+                        JETBRAINS_PUBLISHER,
+                    ),
+                ]
+            },
+            status=200,
+        )
+
+        response = self.client.get("/publisher/jetbrains")
+
+        self.assertEqual(response.status_code, 200)
+        self.assert_template_used("store/publisher-details.html")
+
+        rendered_snaps = self.get_context_variable("snaps")
+        self.assertEqual(
+            [snap["package_name"] for snap in rendered_snaps],
+            ["goland"],
+        )
+        self.assertFalse(self.get_context_variable("show_all_snaps_link"))
+
+    @responses.activate
+    def test_curated_layout_omits_unavailable_curated_entries(self):
+        self._set_custom_registry_entry(
+            "newpartner",
+            {
+                "display_name": "New Partner",
+                "summary": "Summary",
+                "description": "<p>description</p>",
+                "publisher_since": "January 2024",
+                "featured_snaps": [
+                    {
+                        "package_name": "featured-available",
+                        "background": "#000000",
+                        "description": "featured",
+                    },
+                    {
+                        "package_name": "missing-featured",
+                        "background": "#111111",
+                        "description": "missing",
+                    },
+                ],
+                "listed_snaps": [
+                    {"package_name": "listed-available"},
+                    {"package_name": "missing-listed"},
+                    {"package_name": "other-publisher-listed"},
+                ],
+            },
+        )
+
+        responses.add(
+            responses.GET,
+            self.api_url_find("newpartner"),
+            json={
+                "results": [
+                    _snap_result(
+                        "featured-available",
+                        "Featured Available",
+                        _publisher("newpartner", "New Partner", "verified"),
+                    ),
+                    _snap_result(
+                        "listed-available",
+                        "Listed Available",
+                        _publisher("newpartner", "New Partner", "verified"),
+                    ),
+                ]
+            },
+            status=200,
+        )
+
+        response = self.client.get("/publisher/newpartner")
+        body = response.get_data(as_text=True)
+
+        self.assertEqual(response.status_code, 200)
+        self.assert_template_used("store/publisher-details.html")
+
+        featured_snaps = self.get_context_variable("featured_snaps")
+        self.assertEqual(
+            [snap["package_name"] for snap in featured_snaps],
+            ["featured-available"],
+        )
+
+        listed_snaps = self.get_context_variable("snaps")
+        self.assertEqual(
+            [snap["package_name"] for snap in listed_snaps],
+            ["listed-available"],
+        )
+
+        self.assertNotIn('href="/missing-featured"', body)
+        self.assertNotIn('href="/missing-listed"', body)
+        self.assertNotIn('href="/other-publisher-listed"', body)
+
+    @responses.activate
+    def test_curated_layout_hides_featured_section_when_featured_missing(
+        self,
+    ):
+        self._set_custom_registry_entry(
+            "newpartner",
+            {
+                "display_name": "New Partner",
+                "summary": "Summary",
+                "description": "<p>description</p>",
+                "publisher_since": "January 2024",
+                "featured_snaps": [
+                    {
+                        "package_name": "missing-featured-a",
+                        "background": "#000000",
+                        "description": "missing",
+                    },
+                    {
+                        "package_name": "missing-featured-b",
+                        "background": "#111111",
+                        "description": "missing",
+                    },
+                ],
+                "listed_snaps": [{"package_name": "listed-available"}],
+            },
+        )
+
+        responses.add(
+            responses.GET,
+            self.api_url_find("newpartner"),
+            json={
+                "results": [
+                    _snap_result(
+                        "listed-available",
+                        "Listed Available",
+                        _publisher("newpartner", "New Partner", "verified"),
+                    )
+                ]
+            },
+            status=200,
+        )
+
+        response = self.client.get("/publisher/newpartner")
+        body = response.get_data(as_text=True)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(self.get_context_variable("featured_snaps"), [])
+        self.assertNotIn("p-featured-snap", body)
+
+    @responses.activate
+    def test_empty_results_with_curated_content_keep_section_states(
+        self,
+    ):
+        responses.add(
+            responses.GET,
+            self.api_url_find("snapcrafters"),
+            json={"results": []},
+            status=200,
+        )
+
+        response = self.client.get("/publisher/snapcrafters")
+        body = response.get_data(as_text=True)
+
+        self.assertEqual(response.status_code, 200)
+        self.assert_template_used("store/publisher-details.html")
+        self.assertIn('<h2 class="p-heading--4">Snaps</h2>', body)
+        self.assertIn(
+            "This publisher's snaps are not available right now.",
+            body,
+        )
+        self.assertIn("See all snaps published by Snapcrafters", body)
+        self.assertNotIn('class="p-media-object p-media-object--snap"', body)
 
     @responses.activate
     def test_all_production_custom_pages_render(self):
@@ -412,21 +701,37 @@ class GetPublisherPageTest(TestCase):
         self.assertNotIn("See all snaps published by", body)
 
     @responses.activate
-    def test_custom_registry_is_not_mutated_by_requests(self):
-        responses.add(
-            responses.GET,
-            self.api_url_find("jetbrains"),
-            json=JETBRAINS_FIND_RESPONSE,
-            status=200,
-        )
+    def test_custom_registry_is_not_mutated_by_repeated_requests(self):
+        find_responses = {
+            "jetbrains": JETBRAINS_FIND_RESPONSE,
+            "kde": {
+                "results": [
+                    _snap_result(
+                        "krita",
+                        "Krita",
+                        _publisher("kde", "KDE", "verified"),
+                    )
+                ]
+            },
+            "snapcrafters": SNAPCRAFTERS_FIND_RESPONSE,
+        }
+
+        for publisher_name, find_response in find_responses.items():
+            responses.add(
+                responses.GET,
+                self.api_url_find(publisher_name),
+                json=find_response,
+                status=200,
+            )
 
         registry_before = copy.deepcopy(
             self.app.extensions["publisher_pages_registry"]
         )
 
-        self.client.get("/publisher/jetbrains")
-        self.client.get("/publisher/jetbrains")
-        self.client.get("/publisher/jetbrains")
+        for publisher_name in ("jetbrains", "kde", "snapcrafters"):
+            for _ in range(3):
+                response = self.client.get(f"/publisher/{publisher_name}")
+                self.assertEqual(response.status_code, 200)
 
         self.assertEqual(
             registry_before,
