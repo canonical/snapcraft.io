@@ -1,43 +1,12 @@
 import atexit
 import json
+from pathlib import Path
 from urllib.parse import parse_qs, urlparse
 
 import responses
 
 from cache.cache_utility import redis_cache
 from webapp.app import create_app
-
-
-def _publisher(username, display_name, validation):
-    return {
-        "display-name": display_name,
-        "id": f"{username}-id",
-        "username": username,
-        "validation": validation,
-    }
-
-
-def _snap_result(name, title, publisher):
-    return {
-        "name": name,
-        "snap": {
-            "media": [
-                {
-                    "height": 256,
-                    "type": "icon",
-                    "url": (
-                        "https://dashboard.snapcraft.io/site_media/"
-                        f"appmedia/{name}.png"
-                    ),
-                    "width": 256,
-                }
-            ],
-            "publisher": publisher,
-            "summary": f"{title} summary",
-            "title": title,
-        },
-        "snap-id": f"{name}-id",
-    }
 
 
 def _register_find(
@@ -102,6 +71,15 @@ def _register_categories(mocker):
     )
 
 
+def _load_store_fixtures():
+    fixtures_path = (
+        Path(__file__).parent / "fixtures/main-baseline/store-fixtures.json"
+    )
+
+    with fixtures_path.open("r", encoding="utf-8") as fixtures_file:
+        return json.load(fixtures_file)
+
+
 def create_stubbed_app():
     redis_cache.fallback.clear()
 
@@ -113,62 +91,19 @@ def create_stubbed_app():
 
     _register_categories(mocker)
 
-    _register_find(
-        mocker,
-        "jetbrains",
-        [
-            _snap_result(
-                "intellij-idea",
-                "IntelliJ IDEA",
-                _publisher("jetbrains", "JetBrains", "verified"),
-            ),
-            _snap_result(
-                "goland",
-                "GoLand",
-                _publisher("jetbrains", "JetBrains", "verified"),
-            ),
-        ],
-    )
+    store_fixtures = _load_store_fixtures()
 
-    _register_find(
-        mocker,
-        "kde",
-        [
-            _snap_result(
-                "krita",
-                "Krita",
-                _publisher("kde", "KDE", "verified"),
-            )
-        ],
-    )
+    for publisher in ("jetbrains", "kde", "snapcrafters"):
+        _register_find(
+            mocker,
+            publisher,
+            store_fixtures[publisher]["results"],
+        )
 
-    snapcrafters_results = [
-        _snap_result(
-            "sublime-text",
-            "Sublime Text",
-            _publisher("snapcrafters", "Snapcrafters", "starred"),
-        ),
-        _snap_result(
-            "discord",
-            "Discord",
-            _publisher("snapcrafters", "Snapcrafters", "starred"),
-        ),
-        _snap_result(
-            "alacritty",
-            "Alacritty",
-            _publisher("snapcrafters", "Snapcrafters", "starred"),
-        ),
-    ]
-
-    _register_find(
-        mocker,
-        "snapcrafters",
-        snapcrafters_results,
-    )
     _register_store_search(
         mocker,
         "publisher:snapcrafters",
-        snapcrafters_results,
+        store_fixtures["snapcrafters"]["results"],
     )
 
     app = create_app(testing=True)
