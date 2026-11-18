@@ -102,7 +102,7 @@ class GetDetailsPageTest(TestCase):
                 "snaps/details/",
                 self.snap_name,
                 "?",
-                urlencode({"fields": ",".join(["aliases"])}),
+                urlencode({"fields": ",".join(["aliases"]), "channel": ""}),
             ]
         )
 
