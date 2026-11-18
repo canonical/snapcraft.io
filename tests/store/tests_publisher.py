@@ -178,6 +178,45 @@ class GetPublisherPageTest(TestCase):
         )
         return " ".join(comparable_markup.split())
 
+    def _extract_custom_page_snapshot_data(self, html):
+        def _match(pattern):
+            result = re.search(pattern, html, re.S)
+            if not result:
+                return None
+            return result.group(1).strip()
+
+        def _extract_cards(pattern):
+            cards = re.findall(pattern, html, re.S)
+            extracted = []
+
+            for href, title in cards:
+                extracted.append({"href": href, "title": title.strip()})
+
+            return extracted
+
+        return {
+            "publisher_name": _match(
+                r'<h1 class="p-heading--2 p-snap-heading__name">([^<]+)</h1>'
+            ),
+            "summary": _match(r'<div class="col-8">\s*<h4>([^<]+)</h4>'),
+            "publisher_since": _match(
+                r"<dt>Publisher since</dt>\s*<dd>([^<]+)</dd>"
+            ),
+            "featured_snaps": _extract_cards(
+                r'<a class="p-media-object--snap u-no-margin--bottom" '
+                r'href="([^"]+)">.*?<h4 class="p-media-object--snap__title">'
+                r"\s*([^<]+)"
+            ),
+            "listed_snaps": _extract_cards(
+                r'<a\s+class="p-media-object p-media-object--snap[^"]*"\s+'
+                r'href="([^"]+)"[^>]*>.*?<h4 class="p-media-object__title '
+                r'p-heading--5 u-no-margin--bottom">\s*([^<]+)'
+            ),
+            "see_all_href": _match(
+                r'<a href="([^"]+)">See all snaps published by'
+            ),
+        }
+
     @responses.activate
     def test_community_publisher(self):
         responses.add(
@@ -270,6 +309,53 @@ class GetPublisherPageTest(TestCase):
                 self._read_main_html_baseline("lukewh.html")
             ),
         )
+
+    @responses.activate
+    def test_existing_custom_pages_match_main_baseline_extracted_content(self):
+        fixtures = {
+            "jetbrains": {
+                "results": [
+                    _snap_result(
+                        "intellij-idea",
+                        "IntelliJ IDEA",
+                        JETBRAINS_PUBLISHER,
+                    ),
+                    _snap_result("goland", "GoLand", JETBRAINS_PUBLISHER),
+                ]
+            },
+            "kde": {
+                "results": [
+                    _snap_result(
+                        "krita",
+                        "Krita",
+                        _publisher("kde", "KDE", "verified"),
+                    )
+                ]
+            },
+            "snapcrafters": SNAPCRAFTERS_FIND_RESPONSE,
+        }
+
+        for publisher_name, find_response in fixtures.items():
+            with self.subTest(publisher_name=publisher_name):
+                responses.add(
+                    responses.GET,
+                    self.api_url_find(publisher_name),
+                    json=find_response,
+                    status=200,
+                )
+
+                response = self.client.get(f"/publisher/{publisher_name}")
+                self.assertEqual(response.status_code, 200)
+                self.assert_template_used("store/publisher-details.html")
+
+                actual_data = self._extract_custom_page_snapshot_data(
+                    response.get_data(as_text=True)
+                )
+                baseline_data = self._extract_custom_page_snapshot_data(
+                    self._read_main_html_baseline(f"{publisher_name}.html")
+                )
+
+                self.assertEqual(actual_data, baseline_data)
 
     def test_snap_quarantine_is_not_public(self):
         response = self.client.get("/publisher/snap-quarantine")
@@ -844,6 +930,234 @@ class GetPublisherPageTest(TestCase):
         self.assertNotIn("Visit publisher website", body)
         self.assertNotIn("Contact publisher", body)
         self.assertNotIn("See all snaps published by", body)
+
+    @responses.activate
+    def test_optional_content_omissions_keep_page_complete(self):
+        base_content = {
+            "display_name": "Optional Partner",
+            "summary": "Summary",
+            "description": "<p>description</p>",
+            "publisher_since": "January 2024",
+            "icon_url": "https://assets.ubuntu.com/v1/optional-icon.png",
+            "website": "https://example.com",
+            "contact": "mailto:optional@example.com",
+            "banner_url": "https://assets.ubuntu.com/v1/optional-banner.png",
+            "meta_description": "Custom optional meta description",
+            "featured_snaps": [
+                {
+                    "package_name": "featured-snap",
+                    "background": "#000000",
+                    "description": "featured",
+                }
+            ],
+            "listed_snaps": [{"package_name": "listed-snap"}],
+        }
+
+        optional_variants = {
+            "omit-icon": {"icon_url"},
+            "omit-banner": {"banner_url"},
+            "omit-website": {"website"},
+            "omit-contact": {"contact"},
+            "omit-featured": {"featured_snaps"},
+            "omit-listed": {"listed_snaps"},
+            "omit-all-optional": {
+                "icon_url",
+                "website",
+                "contact",
+                "banner_url",
+                "meta_description",
+                "featured_snaps",
+                "listed_snaps",
+            },
+        }
+
+        for variant_name, omitted_keys in optional_variants.items():
+            with self.subTest(variant_name=variant_name):
+                publisher_name = f"optional-{variant_name}"
+                content = copy.deepcopy(base_content)
+                for key in omitted_keys:
+                    content.pop(key, None)
+
+                self._set_custom_registry_entry(publisher_name, content)
+
+                responses.add(
+                    responses.GET,
+                    self.api_url_find(publisher_name),
+                    json={
+                        "results": [
+                            _snap_result(
+                                "featured-snap",
+                                "Featured Snap",
+                                _publisher(
+                                    publisher_name,
+                                    "Optional Partner",
+                                    "verified",
+                                ),
+                            ),
+                            _snap_result(
+                                "listed-snap",
+                                "Listed Snap",
+                                _publisher(
+                                    publisher_name,
+                                    "Optional Partner",
+                                    "verified",
+                                ),
+                            ),
+                            _snap_result(
+                                "extra-snap",
+                                "Extra Snap",
+                                _publisher(
+                                    publisher_name,
+                                    "Optional Partner",
+                                    "verified",
+                                ),
+                            ),
+                        ]
+                    },
+                    status=200,
+                )
+
+                response = self.client.get(f"/publisher/{publisher_name}")
+                body = response.get_data(as_text=True)
+
+                self.assertEqual(response.status_code, 200)
+                self.assert_template_used("store/publisher-details.html")
+
+                content_only = re.search(
+                    (
+                        r'(<div class="p-strip--dark is-shallow"'
+                        r'.*?<footer class="l-footer--sticky)'
+                    ),
+                    body,
+                    re.S,
+                )
+                self.assertIsNotNone(content_only)
+                page_content = content_only.group(1)
+
+                self.assertNotIn('href="#"', page_content)
+                self.assertNotIn('href=""', page_content)
+                self.assertNotIn('src=""', page_content)
+
+                if "icon_url" in omitted_keys:
+                    self.assertIn("snapcraft-default-snap-icon.svg", body)
+                if "banner_url" in omitted_keys:
+                    self.assertNotIn("p-strip--image", body)
+                if "website" in omitted_keys:
+                    self.assertNotIn("Visit publisher website", body)
+                if "contact" in omitted_keys:
+                    self.assertNotIn("Contact publisher", body)
+                if "featured_snaps" in omitted_keys:
+                    self.assertNotIn("p-featured-snap", body)
+
+                if "listed_snaps" in omitted_keys:
+                    self.assertNotIn(
+                        "See all snaps published by Optional Partner",
+                        body,
+                    )
+                    self.assertIn('href="/listed-snap"', body)
+                    self.assertIn('href="/extra-snap"', body)
+                else:
+                    self.assertIn(
+                        "See all snaps published by Optional Partner",
+                        body,
+                    )
+
+    @responses.activate
+    def test_meta_description_falls_back_when_omitted(self):
+        self._set_custom_registry_entry(
+            "metafallback",
+            {
+                "display_name": "Meta Fallback",
+                "summary": "Summary",
+                "description": "<p>description</p>",
+                "publisher_since": "January 2024",
+            },
+        )
+
+        responses.add(
+            responses.GET,
+            self.api_url_find("metafallback"),
+            json={
+                "results": [
+                    _snap_result(
+                        "metafallback-snap",
+                        "Meta Fallback Snap",
+                        _publisher(
+                            "metafallback",
+                            "Meta Fallback",
+                            "verified",
+                        ),
+                    )
+                ]
+            },
+            status=200,
+        )
+
+        response = self.client.get("/publisher/metafallback")
+        body = response.get_data(as_text=True)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(
+            "Install Meta Fallback software for Linux in the Snap Store",
+            body,
+        )
+
+    @responses.activate
+    def test_decorative_icon_and_banner_are_hidden_from_screen_readers(self):
+        self._set_custom_registry_entry(
+            "decorativepartner",
+            {
+                "display_name": "Decorative Partner",
+                "summary": "Summary",
+                "description": "<p>description</p>",
+                "publisher_since": "January 2024",
+                "icon_url": "https://assets.ubuntu.com/v1/decorative-icon.png",
+                "banner_url": (
+                    "https://assets.ubuntu.com/v1/decorative-banner.png"
+                ),
+            },
+        )
+
+        responses.add(
+            responses.GET,
+            self.api_url_find("decorativepartner"),
+            json={
+                "results": [
+                    _snap_result(
+                        "decorative-snap",
+                        "Decorative Snap",
+                        _publisher(
+                            "decorativepartner",
+                            "Decorative Partner",
+                            "verified",
+                        ),
+                    )
+                ]
+            },
+            status=200,
+        )
+
+        response = self.client.get("/publisher/decorativepartner")
+        body = response.get_data(as_text=True)
+
+        self.assertEqual(response.status_code, 200)
+
+        self.assertRegex(
+            body,
+            r'<img class="p-snap-heading__icon"[^>]*alt=""',
+        )
+        self.assertIn(
+            'class="p-strip--image is-deep"',
+            body,
+        )
+        self.assertIn(
+            "https://assets.ubuntu.com/v1/decorative-banner.png",
+            body,
+        )
+        self.assertNotIn(
+            '<img src="https://assets.ubuntu.com/v1/decorative-banner.png"',
+            body,
+        )
 
     @responses.activate
     def test_custom_registry_is_not_mutated_by_repeated_requests(self):
