@@ -121,6 +121,10 @@ class GetPublisherPageTest(TestCase):
 
         return app
 
+    def _set_custom_registry_entry(self, publisher_name, content):
+        registry = self.app.extensions["publisher_pages_registry"]
+        registry[publisher_name] = content
+
     @responses.activate
     def test_community_publisher(self):
         responses.add(
@@ -283,6 +287,129 @@ class GetPublisherPageTest(TestCase):
             response = self.client.get(f"/publisher/{publisher_stem}")
             self.assertEqual(response.status_code, 200)
             self.assert_template_used("store/publisher-details.html")
+
+    @responses.activate
+    def test_custom_page_without_listed_snaps_hides_see_all_link(self):
+        responses.add(
+            responses.GET,
+            self.api_url_find("jetbrains"),
+            json=JETBRAINS_FIND_RESPONSE,
+            status=200,
+        )
+
+        response = self.client.get("/publisher/jetbrains")
+        body = response.get_data(as_text=True)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertNotIn("See all snaps published by", body)
+
+    @responses.activate
+    def test_curated_page_shows_note_when_listed_snaps_are_unavailable(self):
+        responses.add(
+            responses.GET,
+            self.api_url_find("snapcrafters"),
+            json={
+                "results": [
+                    _snap_result(
+                        "alacritty",
+                        "Alacritty",
+                        _publisher("snapcrafters", "Snapcrafters", "starred"),
+                    )
+                ]
+            },
+            status=200,
+        )
+
+        response = self.client.get("/publisher/snapcrafters")
+        body = response.get_data(as_text=True)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(
+            "This publisher's snaps are not available right now.",
+            body,
+        )
+        self.assertIn("See all snaps published by Snapcrafters", body)
+        self.assertNotIn('href="/sublime-text"', body)
+
+    @responses.activate
+    def test_duplicate_featured_and_listed_snap_is_rendered_once(self):
+        self._set_custom_registry_entry(
+            "newpartner",
+            {
+                "display_name": "New Partner",
+                "summary": "Summary",
+                "description": "<p>description</p>",
+                "publisher_since": "January 2024",
+                "featured_snaps": [
+                    {
+                        "package_name": "dup-snap",
+                        "background": "#000000",
+                        "description": "dup",
+                    }
+                ],
+                "listed_snaps": [{"package_name": "dup-snap"}],
+            },
+        )
+
+        responses.add(
+            responses.GET,
+            self.api_url_find("newpartner"),
+            json={
+                "results": [
+                    _snap_result(
+                        "dup-snap",
+                        "Dup Snap",
+                        _publisher("newpartner", "New Partner", "verified"),
+                    )
+                ]
+            },
+            status=200,
+        )
+
+        response = self.client.get("/publisher/newpartner")
+        body = response.get_data(as_text=True)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(body.count('href="/dup-snap"'), 1)
+
+    @responses.activate
+    def test_page_renders_with_required_fields_only(self):
+        self._set_custom_registry_entry(
+            "minimalpartner",
+            {
+                "display_name": "Minimal Partner",
+                "summary": "Summary",
+                "description": "<p>description</p>",
+                "publisher_since": "January 2024",
+            },
+        )
+
+        responses.add(
+            responses.GET,
+            self.api_url_find("minimalpartner"),
+            json={
+                "results": [
+                    _snap_result(
+                        "minimal-snap",
+                        "Minimal Snap",
+                        _publisher(
+                            "minimalpartner",
+                            "Minimal Partner",
+                            "unproven",
+                        ),
+                    )
+                ]
+            },
+            status=200,
+        )
+
+        response = self.client.get("/publisher/minimalpartner")
+        body = response.get_data(as_text=True)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertNotIn("Visit publisher website", body)
+        self.assertNotIn("Contact publisher", body)
+        self.assertNotIn("See all snaps published by", body)
 
     @responses.activate
     def test_custom_registry_is_not_mutated_by_requests(self):
