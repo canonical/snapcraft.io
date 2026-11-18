@@ -1,0 +1,14 @@
+display_name: NVIDIA
+icon_url: https://assets.ubuntu.com/v1/1ffb2e78-nvidia-logo%2520dark-theme.png
+banner_url: https://assets.ubuntu.com/v1/8a1090c0-end_to_end_press_ces26_inside_vr_tech_blog_1920x1080_4671300_r1_jpg.png
+summary: NVIDIA pioneers accelerated computing to power AI, graphics, robotics, and high-performance computing workloads worldwide.
+description: |
+  <p>NVIDIA is a technology company known for advancing accelerated computing, from graphics and gaming to AI, simulation, robotics, and data center platforms.</p>
+  <p>Across industries, developers and enterprises use NVIDIA software and hardware to build intelligent systems, train and run AI models, and deliver high-performance visual experiences.</p>
+publisher_since: November 2026
+website: https://www.nvidia.com/
+contact: https://www.nvidia.com/en-us/about-nvidia/contact-us/
+featured_snaps:
+  - package_name: openshell
+    background: "#333333"
+    description: "An open-source runtime for executing fleets of autonomous AI agents in sandboxed environments with kernel-level isolation."
