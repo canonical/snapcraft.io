@@ -100,6 +100,7 @@ workshop run -- yarn test-python          # Python lint + unit tests
 workshop run -- yarn lint-js
 workshop run -- yarn lint-scss
 workshop run -- yarn lint-python
+workshop exec -- env PYTHONPATH=. python3 scripts/validate-publisher-content.py --content-dir webapp/store/content/publishers
 ```
 
 ## Dependency updates

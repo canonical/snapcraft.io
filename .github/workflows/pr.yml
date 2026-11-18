@@ -45,6 +45,7 @@ jobs:
               - '**/*.py'
               - 'requirements*.txt'
               - 'templates/**/*'
+              - 'webapp/store/content/publishers/**/*.yaml'
             js:
               - '.github/workflows/pr.yml'
               - '**/*.js'
@@ -149,6 +150,9 @@ jobs:
 
       - name: Lint python
         run: yarn lint-python
+
+      - name: Validate publisher content
+        run: yarn validate-publisher-content
 
   lint-scss:
     needs: changes

@@ -40,6 +40,7 @@ yarn run lint-js      # eslint
 yarn run lint-scss    # stylelint
 yarn run test-js      # vitest
 SECRET_KEY=test_key FLASK_DEBUG=0 python3 -m unittest discover tests
+python3 scripts/validate-publisher-content.py --content-dir webapp/store/content/publishers
 yarn run test         # Combined: lint-python + test-python + test-js + lint-scss
 ```
 
@@ -216,6 +217,7 @@ When reviewing pull requests, be a constructive and helpful reviewer:
 
 **Additional Best Practices**:
 - Review the entire change for consistency before commenting
+- For `webapp/store/content/publishers/*.yaml` changes, enforce the content rules in `webapp/store/content/publishers/README.md` and ask for validator output from `scripts/validate-publisher-content.py --content-dir webapp/store/content/publishers`
 - Check that new dependencies are necessary and well-maintained
 - Verify that error handling is appropriate and informative
 - Ensure logging doesn't expose sensitive information
