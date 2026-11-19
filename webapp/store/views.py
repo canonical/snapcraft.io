@@ -1,4 +1,3 @@
-import copy
 from functools import partial
 import logging
 from math import floor
@@ -272,8 +271,6 @@ def store_blueprint(store_query=None):
         )
 
     def _render_custom_publisher_page(publisher, publisher_content):
-        context = copy.deepcopy(publisher_content)
-
         snaps_results = logic.get_publisher_snaps(device_gateway, publisher)
         snaps_by_name = {}
         all_public_snaps = []
@@ -286,14 +283,14 @@ def store_blueprint(store_query=None):
             all_public_snaps.append(item)
 
         featured_snaps = logic.hydrate_featured_snaps(
-            context.get("featured_snaps"),
+            publisher_content.get("featured_snaps"),
             snaps_by_name,
         )
         featured_names = {
             featured_snap["package_name"] for featured_snap in featured_snaps
         }
 
-        listed_snaps = context.get("listed_snaps") or []
+        listed_snaps = publisher_content.get("listed_snaps") or []
         listed_snaps_configured = len(listed_snaps) > 0
 
         if listed_snaps_configured:
@@ -333,20 +330,22 @@ def store_blueprint(store_query=None):
             else {}
         )
 
-        context.update(
-            {
-                "featured_snaps": featured_snaps,
-                "snaps": snaps,
-                "snaps_count": len(all_public_snaps),
-                "publisher": context["display_name"],
-                "username": publisher,
-                "developer_validation": publisher_details.get("validation"),
-                "listed_snaps_configured": listed_snaps_configured,
-                "listed_snaps_unavailable": listed_snaps_configured
-                and len(snaps) == 0,
-                "show_all_snaps_link": listed_snaps_configured,
-            }
-        )
+        context = {
+            **publisher_content,
+            "featured_snaps": featured_snaps,
+            "snaps": snaps,
+            "snaps_count": len(all_public_snaps),
+            "publisher": publisher_content["display_name"],
+            "username": publisher,
+            "developer_validation": publisher_details.get("validation"),
+            "listed_snaps_configured": listed_snaps_configured,
+            "listed_snaps_unavailable": (
+                listed_snaps_configured and len(snaps) == 0
+            ),
+            "show_all_snaps_link": (
+                listed_snaps_configured and len(snaps) > 0
+            ),
+        }
 
         return flask.render_template("store/publisher-details.html", **context)
 

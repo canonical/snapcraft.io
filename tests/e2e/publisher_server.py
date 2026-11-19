@@ -6,7 +6,6 @@ import responses
 from cache.cache_utility import redis_cache
 from webapp.app import create_app
 
-
 STORE_FIXTURES = {
     "jetbrains": {
         "results": [
