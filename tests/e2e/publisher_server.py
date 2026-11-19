@@ -1,12 +1,176 @@
 import atexit
-import json
-from pathlib import Path
 from urllib.parse import parse_qs, urlparse
 
 import responses
 
 from cache.cache_utility import redis_cache
 from webapp.app import create_app
+
+
+STORE_FIXTURES = {
+    "jetbrains": {
+        "results": [
+            {
+                "name": "intellij-idea",
+                "snap": {
+                    "media": [
+                        {
+                            "height": 256,
+                            "type": "icon",
+                            "url": (
+                                "https://dashboard.snapcraft.io/site_media/"
+                                "appmedia/2025/11/IntelliJ_IDEA_icon.svg.png"
+                            ),
+                            "width": 256,
+                        }
+                    ],
+                    "publisher": {
+                        "display-name": "JetBrains",
+                        "id": "jetbrains-id",
+                        "username": "jetbrains",
+                        "validation": "verified",
+                    },
+                    "summary": "IntelliJ IDEA summary",
+                    "title": "IntelliJ IDEA",
+                },
+                "snap-id": "intellij-idea-id",
+            },
+            {
+                "name": "goland",
+                "snap": {
+                    "media": [
+                        {
+                            "height": 256,
+                            "type": "icon",
+                            "url": (
+                                "https://dashboard.snapcraft.io/site_media/"
+                                "appmedia/2024/06/Avatar-4_Mo31k0N.png"
+                            ),
+                            "width": 256,
+                        }
+                    ],
+                    "publisher": {
+                        "display-name": "JetBrains",
+                        "id": "jetbrains-id",
+                        "username": "jetbrains",
+                        "validation": "verified",
+                    },
+                    "summary": "GoLand summary",
+                    "title": "GoLand",
+                },
+                "snap-id": "goland-id",
+            },
+        ]
+    },
+    "kde": {
+        "results": [
+            {
+                "name": "krita",
+                "snap": {
+                    "media": [
+                        {
+                            "height": 256,
+                            "type": "icon",
+                            "url": (
+                                "https://dashboard.snapcraft.io/site_media/"
+                                "appmedia/2019/04/unnamed.png"
+                            ),
+                            "width": 256,
+                        }
+                    ],
+                    "publisher": {
+                        "display-name": "KDE",
+                        "id": "kde-id",
+                        "username": "kde",
+                        "validation": "verified",
+                    },
+                    "summary": "Krita summary",
+                    "title": "Krita",
+                },
+                "snap-id": "krita-id",
+            }
+        ]
+    },
+    "snapcrafters": {
+        "results": [
+            {
+                "name": "sublime-text",
+                "snap": {
+                    "media": [
+                        {
+                            "height": 256,
+                            "type": "icon",
+                            "url": (
+                                "https://dashboard.snapcraft.io/site_media/"
+                                "appmedia/2018/03/sublime-text.png"
+                            ),
+                            "width": 256,
+                        }
+                    ],
+                    "publisher": {
+                        "display-name": "Snapcrafters",
+                        "id": "snapcrafters-id",
+                        "username": "snapcrafters",
+                        "validation": "starred",
+                    },
+                    "summary": "Sublime Text summary",
+                    "title": "Sublime Text",
+                },
+                "snap-id": "sublime-text-id",
+            },
+            {
+                "name": "discord",
+                "snap": {
+                    "media": [
+                        {
+                            "height": 256,
+                            "type": "icon",
+                            "url": (
+                                "https://dashboard.snapcraft.io/site_media/"
+                                "appmedia/2023/10/com.discordapp.Discord_1.png"
+                            ),
+                            "width": 256,
+                        }
+                    ],
+                    "publisher": {
+                        "display-name": "Snapcrafters",
+                        "id": "snapcrafters-id",
+                        "username": "snapcrafters",
+                        "validation": "starred",
+                    },
+                    "summary": "Discord summary",
+                    "title": "Discord",
+                },
+                "snap-id": "discord-id",
+            },
+            {
+                "name": "alacritty",
+                "snap": {
+                    "media": [
+                        {
+                            "height": 256,
+                            "type": "icon",
+                            "url": (
+                                "https://dashboard.snapcraft.io/site_media/"
+                                "appmedia/2019/12/icon.svg_WTg5Oeb.png"
+                            ),
+                            "width": 256,
+                        }
+                    ],
+                    "publisher": {
+                        "display-name": "Snapcrafters",
+                        "id": "snapcrafters-id",
+                        "username": "snapcrafters",
+                        "validation": "starred",
+                    },
+                    "summary": "Alacritty summary",
+                    "title": "Alacritty",
+                },
+                "snap-id": "alacritty-id",
+            },
+        ]
+    },
+}
 
 
 def _query_params_subset_matcher(expected_params):
@@ -84,15 +248,6 @@ def _register_categories(mocker):
     )
 
 
-def _load_store_fixtures():
-    fixtures_path = (
-        Path(__file__).parent / "fixtures/main-baseline/store-fixtures.json"
-    )
-
-    with fixtures_path.open("r", encoding="utf-8") as fixtures_file:
-        return json.load(fixtures_file)
-
-
 def create_stubbed_app():
     redis_cache.fallback.clear()
 
@@ -104,19 +259,17 @@ def create_stubbed_app():
 
     _register_categories(mocker)
 
-    store_fixtures = _load_store_fixtures()
-
     for publisher in ("jetbrains", "kde", "snapcrafters"):
         _register_find(
             mocker,
             publisher,
-            store_fixtures[publisher]["results"],
+            STORE_FIXTURES[publisher]["results"],
         )
 
     _register_store_search(
         mocker,
         "publisher:snapcrafters",
-        store_fixtures["snapcrafters"]["results"],
+        STORE_FIXTURES["snapcrafters"]["results"],
     )
 
     app = create_app(testing=True)
