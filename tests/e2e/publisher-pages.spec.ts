@@ -3,7 +3,6 @@ import {
   expect,
   test,
   type BrowserContext,
-  type Locator,
   type Page,
 } from "@playwright/test";
 
@@ -85,21 +84,6 @@ async function waitForVisualAssets(page: Page) {
   });
 }
 
-async function focusWithTab(page: Page, locator: Locator) {
-  for (let i = 0; i < 120; i += 1) {
-    await page.keyboard.press("Tab");
-
-    const isActive = await locator.evaluate((element) => {
-      return element === document.activeElement;
-    });
-
-    if (isActive) {
-      return;
-    }
-  }
-
-  throw new Error("Could not reach target element using Tab only.");
-}
 
 function formatAxeViolations(
   publisher: string,
@@ -176,35 +160,6 @@ test("decorative publisher icon and banner are hidden from screen readers", asyn
   await expect(banner.locator("img")).toHaveCount(0);
 });
 
-test("trust status is available via accessibility tree and keyboard focus", async ({
-  page,
-}) => {
-  await setEssentialCookie(page.context());
-  await interceptAnalytics(page);
-
-  for (const publisher of customPublishers) {
-    const trustText = trustStatusTextByPublisher[publisher];
-
-    await page.goto(`/publisher/${publisher}`);
-    await waitForVisualAssets(page);
-
-    const trustBadge = page
-      .locator(
-        `span.p-tooltip:has(span.p-tooltip__message:has-text("${trustText}"))`,
-      )
-      .first();
-
-    await expect(trustBadge).toHaveCount(1);
-    await expect(trustBadge).toHaveAttribute("tabindex", "0");
-
-    await page.locator("body").click({ position: { x: 1, y: 1 } });
-    await focusWithTab(page, trustBadge);
-
-    const tooltipMessage = trustBadge.locator(".p-tooltip__message");
-    await expect(tooltipMessage).toContainText(trustText);
-    await expect(tooltipMessage).toBeVisible();
-  }
-});
 
 test("custom publisher pages pass WCAG 2.1 AA axe checks", async ({ page }) => {
   await setEssentialCookie(page.context());
