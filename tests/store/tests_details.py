@@ -8,6 +8,7 @@ from webapp.app import create_app
 from unittest.mock import patch
 from cache.cache_utility import redis_cache
 from webapp.api.exceptions import ApiTimeoutError
+from tests.store.fixtures import SNAP_PAYLOAD
 
 POPULAR_PATH = "webapp.store.views.SnapRecommendations.get_popular"
 RECENT_PATH = "webapp.store.views.SnapRecommendations.get_recent"
@@ -18,43 +19,6 @@ FEATURED_PATH = "webapp.store.views.DeviceGW.get_featured_snaps"
 
 
 EMPTY_EXTRA_DETAILS_PAYLOAD = {"aliases": None, "package_name": "vault"}
-SNAP_PAYLOAD = {
-    "snap-id": "id",
-    "name": "toto",
-    "default-track": None,
-    "snap": {
-        "title": "Snap Title",
-        "summary": "This is a summary",
-        "description": "this is a description",
-        "media": [],
-        "license": "license",
-        "publisher": {
-            "display-name": "Toto",
-            "username": "toto",
-            "validation": True,
-        },
-        "categories": [{"name": "test"}],
-        "trending": False,
-        "unlisted": False,
-        "links": {},
-    },
-    "channel-map": [
-        {
-            "channel": {
-                "architecture": "amd64",
-                "name": "stable",
-                "risk": "stable",
-                "track": "latest",
-                "released-at": "2018-09-18T14:45:28.064633+00:00",
-            },
-            "created-at": "2018-09-18T14:45:28.064633+00:00",
-            "version": "1.0",
-            "confinement": "conf",
-            "download": {"size": 100000},
-            "revision": 1,
-        }
-    ],
-}
 
 
 class GetDetailsPageTest(TestCase):

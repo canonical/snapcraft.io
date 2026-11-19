@@ -47,9 +47,13 @@ class TestGateUnreleasedSnapPages(TestEndpoints):
             "GET should bypass the gate"
         )
 
-        # We don't care about the eventual status — only that the gate did not
-        # short-circuit with 403 and did not call snap_release_history.
-        self.client.get(f"/api/{self.snap_name}/listing")
+        # Stub the downstream view: this test exercises only the gate.
+        with patch.dict(
+            self.app.view_functions,
+            {"publisher_snaps.get_listing_data": lambda snap_name: "Listing"},
+        ):
+            response = self.client.get(f"/api/{self.snap_name}/listing")
+        self.assertEqual(200, response.status_code)
         mock_dashboard.snap_release_history.assert_not_called()
 
     @patch("webapp.decorators._dashboard")

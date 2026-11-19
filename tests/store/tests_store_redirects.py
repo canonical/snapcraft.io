@@ -1,3 +1,4 @@
+from unittest.mock import patch
 from urllib.parse import parse_qs, urlparse
 
 from flask_testing import TestCase
@@ -63,7 +64,21 @@ class StoreRedirectsTest(TestCase):
             },
         )
 
-    def test_store_does_not_redirect_when_q_is_absent(self):
+    @patch("webapp.store.views.redis_cache.get", return_value=None)
+    @patch("webapp.store.views.snap_recommendations")
+    @patch("webapp.store.views.device_gateway")
+    def test_store_does_not_redirect_when_q_is_absent(
+        self, mock_gateway, mock_recommendations, mock_cache_get
+    ):
+        mock_gateway.get_categories.return_value = []
+        mock_gateway.get_featured_snaps.return_value = {}
+        mock_recommendations.get_popular.return_value = []
+        mock_recommendations.get_recent.return_value = []
+        mock_recommendations.get_trending.return_value = []
+        mock_recommendations.get_top_rated.return_value = []
+
         response = self.client.get("/store?foo=1", follow_redirects=False)
 
         self.assertEqual(response.status_code, 200)
+        mock_gateway.get_categories.assert_called_once()
+        mock_gateway.get_featured_snaps.assert_called_once()
