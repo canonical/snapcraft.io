@@ -80,10 +80,10 @@ tests/                   # Python unittest tests
 
 **Requirements**: Native checks use Python 3.12 and Node.js 24; JavaScript tests run in UTC. Python tests need `yarn build` first and `FLASK_DEBUG=0`; coverage is exported as XML for Codecov. Workshop setup installs dependencies and forwards ports 8004/5004.
 
-Python and JavaScript CI tests run through `scripts/run-offline.sh`, which allows
-loopback but blocks external networking. GitHub API cassettes are replay-only by
+Python and JavaScript CI tests use inline `unshare --net` steps, which allow
+loopback but block external networking. GitHub API cassettes are replay-only by
 default and always in CI; see HACKING.md for the local `VCR_RECORD_MODE` opt-in.
-Changes to the offline script or either test workflow trigger both test jobs.
+Changes to either test workflow trigger both test jobs.
 
 ## Dependency automation
 

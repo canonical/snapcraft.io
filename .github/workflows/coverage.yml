@@ -31,7 +31,15 @@ jobs:
 
       - name: Run JS tests with coverage (offline)
         run: |
-          scripts/run-offline.sh yarn test-js --coverage
+          # Pass the environment explicitly: sudo-rs ignores bare --preserve-env.
+          mapfile -d '' -t environment < <(env -0)
+          sudo -- env "${environment[@]}" unshare --net -- bash -c '
+            set -euo pipefail
+            ip link set lo up
+            user="$1"
+            shift
+            exec sudo --user="$user" -- "$@"
+          ' bash "$(id -un)" env "${environment[@]}" yarn test-js --coverage
           mv coverage/js/cobertura-coverage.xml coverage/cobertura-coverage.xml
 
       - name: Install Python requirements
@@ -48,7 +56,15 @@ jobs:
           FLASK_DEBUG: "0"
           SECRET_KEY: simplesecretkey
         run: |
-          scripts/run-offline.sh coverage run --source=. -m unittest discover tests
+          # Pass the environment explicitly: sudo-rs ignores bare --preserve-env.
+          mapfile -d '' -t environment < <(env -0)
+          sudo -- env "${environment[@]}" unshare --net -- bash -c '
+            set -euo pipefail
+            ip link set lo up
+            user="$1"
+            shift
+            exec sudo --user="$user" -- "$@"
+          ' bash "$(id -un)" env "${environment[@]}" coverage run --source=. -m unittest discover tests
           coverage xml -o coverage/coverage.xml
           coverage html -d coverage/python
 

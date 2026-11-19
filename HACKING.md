@@ -116,7 +116,7 @@ workshop exec --env VCR_RECORD_MODE=all --env TESTS_GITHUB_USER_TOKEN \
 
 Review cassette changes before committing; authorization headers are filtered.
 CI always disables recording, even when `VCR_RECORD_MODE` is set. CI test jobs
-also use `scripts/run-offline.sh` to isolate networking while allowing loopback.
+also isolate networking with inline `unshare --net` steps, allowing loopback.
 
 ## Dependency updates
 
