@@ -342,9 +342,7 @@ def store_blueprint(store_query=None):
             "listed_snaps_unavailable": (
                 listed_snaps_configured and len(snaps) == 0
             ),
-            "show_all_snaps_link": (
-                listed_snaps_configured and len(snaps) > 0
-            ),
+            "show_all_snaps_link": listed_snaps_configured,
         }
 
         return flask.render_template("store/publisher-details.html", **context)
