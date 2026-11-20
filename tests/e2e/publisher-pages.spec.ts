@@ -1,10 +1,5 @@
 import AxeBuilder from "@axe-core/playwright";
-import {
-  expect,
-  test,
-  type BrowserContext,
-  type Page,
-} from "@playwright/test";
+import { expect, test, type BrowserContext, type Page } from "@playwright/test";
 
 const analyticsRegex =
   /https:\/\/(www\.googletagmanager\.com|www\.google-analytics\.com|analytics\.google\.com|stats\.g\.doubleclick\.net)\//;
@@ -14,12 +9,6 @@ const customPublishers = ["jetbrains", "kde", "snapcrafters"] as const;
 const screenshotViewports = [375, 768, 1280] as const;
 const mobileAndDesktopWidths = [375, 1280] as const;
 const axeTags = ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"];
-
-const trustStatusTextByPublisher: Record<string, string> = {
-  jetbrains: "Verified account",
-  kde: "Verified account",
-  snapcrafters: "Star developer",
-};
 
 async function setEssentialCookie(context: BrowserContext) {
   await context.addCookies([
@@ -84,7 +73,6 @@ async function waitForVisualAssets(page: Page) {
   });
 }
 
-
 function formatAxeViolations(
   publisher: string,
   width: number,
@@ -94,7 +82,9 @@ function formatAxeViolations(
     `Axe violations for ${publisher} at ${width}px:`,
     ...violations.map((violation) => {
       const nodes = violation.nodes
-        .map((node) => `${node.target.join(" ")} => ${node.failureSummary || ""}`)
+        .map(
+          (node) => `${node.target.join(" ")} => ${node.failureSummary || ""}`,
+        )
         .join(" | ");
       return `${violation.id}: ${violation.help} (${nodes})`;
     }),
@@ -120,7 +110,9 @@ test("trust badges are rendered from Store data", async ({ page }) => {
   ).toHaveCount(1);
 });
 
-test("snapcrafters curated page links to publisher search", async ({ page }) => {
+test("snapcrafters curated page links to publisher search", async ({
+  page,
+}) => {
   await setEssentialCookie(page.context());
   await interceptAnalytics(page);
 
@@ -160,6 +152,33 @@ test("decorative publisher icon and banner are hidden from screen readers", asyn
   await expect(banner.locator("img")).toHaveCount(0);
 });
 
+test("listed snaps unavailable state renders and passes axe", async ({
+  page,
+}) => {
+  await setEssentialCookie(page.context());
+  await interceptAnalytics(page);
+
+  await page.goto("/publisher/unavailable-snaps");
+
+  await expect(
+    page.getByText("This publisher's snaps are not available right now."),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("link", {
+      name: "See all snaps published by Unavailable Snaps ›",
+    }),
+  ).toBeVisible();
+
+  const axeResult = await new AxeBuilder({ page })
+    .exclude(".js-nav-account")
+    .withTags(axeTags)
+    .analyze();
+
+  expect(
+    axeResult.violations,
+    formatAxeViolations("unavailable-snaps", 1280, axeResult.violations),
+  ).toEqual([]);
+});
 
 test("custom publisher pages pass WCAG 2.1 AA axe checks", async ({ page }) => {
   await setEssentialCookie(page.context());
@@ -224,7 +243,8 @@ test("analytics keep publisher page_view path and never reach GA", async ({
     }
 
     await page.waitForFunction(() => {
-      const dataLayer = (window as Window & { dataLayer?: unknown[] }).dataLayer;
+      const dataLayer = (window as Window & { dataLayer?: unknown[] })
+        .dataLayer;
       return Array.isArray(dataLayer)
         ? dataLayer.some(
             (entry) =>
@@ -238,7 +258,8 @@ test("analytics keep publisher page_view path and never reach GA", async ({
     });
 
     const pageViewEvents = await page.evaluate(() => {
-      const dataLayer = (window as Window & { dataLayer?: unknown[] }).dataLayer;
+      const dataLayer = (window as Window & { dataLayer?: unknown[] })
+        .dataLayer;
       if (!Array.isArray(dataLayer)) {
         return [];
       }

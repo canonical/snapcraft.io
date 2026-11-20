@@ -275,6 +275,17 @@ def create_stubbed_app():
     app.config["SECRET_KEY"] = "test_key"
     app.config["WTF_CSRF_METHODS"] = []
 
+    # Synthetic publisher whose curated listed_snaps are all unavailable
+    # from the Store API, to exercise the "snaps not available" state.
+    _register_find(mocker, "unavailable-snaps", [])
+    app.extensions["publisher_pages_registry"]["unavailable-snaps"] = {
+        "display_name": "Unavailable Snaps",
+        "summary": "Summary",
+        "description": "<p>Description</p>",
+        "publisher_since": "January 2024",
+        "listed_snaps": [{"package_name": "missing-snap"}],
+    }
+
     return app
 
 
