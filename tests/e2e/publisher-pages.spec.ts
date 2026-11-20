@@ -172,7 +172,9 @@ test("custom publisher pages pass WCAG 2.1 AA axe checks", async ({ page }) => {
   for (const publisher of customPublishers) {
     for (const width of mobileAndDesktopWidths) {
       await page.setViewportSize({ width, height: 2400 });
-      await page.goto(`/publisher/${publisher}`);
+      await page.goto(`/publisher/${publisher}`, {
+        waitUntil: "domcontentloaded",
+      });
       await waitForVisualAssets(page);
 
       const axeResult = await new AxeBuilder({ page })
@@ -194,7 +196,9 @@ for (const publisher of customPublishers) {
       await setEssentialCookie(page.context());
 
       await page.setViewportSize({ width, height: 2400 });
-      await page.goto(`/publisher/${publisher}`);
+      await page.goto(`/publisher/${publisher}`, {
+        waitUntil: "domcontentloaded",
+      });
       await waitForVisualAssets(page);
 
       await expect(page).toHaveScreenshot(`${publisher}-${width}.png`, {
