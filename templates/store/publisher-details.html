@@ -85,7 +85,7 @@
       <div class="grid-row u-equal-height">
         {% set snap = featured_snaps[0] %}
         {% include 'partials/_publisher-featured-snap.html' %}
-        {% if featured_snaps[1] %}
+        {% if featured_snaps|length > 1 %}
           {% set snap = featured_snaps[1] %}
           {% include 'partials/_publisher-featured-snap.html' %}
         {% endif %}
