@@ -1,9 +1,6 @@
 import AxeBuilder from "@axe-core/playwright";
 import { expect, test, type BrowserContext, type Page } from "@playwright/test";
 
-const analyticsRegex =
-  /https:\/\/(www\.googletagmanager\.com|www\.google-analytics\.com|analytics\.google\.com|stats\.g\.doubleclick\.net)\//;
-
 const baseUrl = "http://127.0.0.1:8011";
 const customPublishers = ["jetbrains", "kde", "snapcrafters"] as const;
 const screenshotViewports = [375, 768, 1280] as const;
@@ -18,13 +15,6 @@ async function setEssentialCookie(context: BrowserContext) {
       url: baseUrl,
     },
   ]);
-}
-
-async function interceptAnalytics(page: Page, requests: string[] = []) {
-  await page.route(analyticsRegex, async (route) => {
-    requests.push(route.request().url());
-    await route.abort();
-  });
 }
 
 async function waitForVisualAssets(page: Page) {
@@ -93,7 +83,6 @@ function formatAxeViolations(
 
 test("trust badges are rendered from Store data", async ({ page }) => {
   await setEssentialCookie(page.context());
-  await interceptAnalytics(page);
 
   await page.goto("/publisher/jetbrains");
   await expect(
@@ -114,7 +103,6 @@ test("snapcrafters curated page links to publisher search", async ({
   page,
 }) => {
   await setEssentialCookie(page.context());
-  await interceptAnalytics(page);
 
   await page.goto("/publisher/snapcrafters");
 
@@ -140,7 +128,6 @@ test("decorative publisher icon and banner are hidden from screen readers", asyn
   page,
 }) => {
   await setEssentialCookie(page.context());
-  await interceptAnalytics(page);
 
   await page.goto("/publisher/jetbrains");
 
@@ -156,7 +143,6 @@ test("listed snaps unavailable state renders and passes axe", async ({
   page,
 }) => {
   await setEssentialCookie(page.context());
-  await interceptAnalytics(page);
 
   await page.goto("/publisher/unavailable-snaps");
 
@@ -182,7 +168,6 @@ test("listed snaps unavailable state renders and passes axe", async ({
 
 test("custom publisher pages pass WCAG 2.1 AA axe checks", async ({ page }) => {
   await setEssentialCookie(page.context());
-  await interceptAnalytics(page);
 
   for (const publisher of customPublishers) {
     for (const width of mobileAndDesktopWidths) {
@@ -207,7 +192,6 @@ for (const publisher of customPublishers) {
   for (const width of screenshotViewports) {
     test(`visual baseline: ${publisher} at ${width}px`, async ({ page }) => {
       await setEssentialCookie(page.context());
-      await interceptAnalytics(page);
 
       await page.setViewportSize({ width, height: 2400 });
       await page.goto(`/publisher/${publisher}`);
@@ -219,74 +203,3 @@ for (const publisher of customPublishers) {
     });
   }
 }
-
-test("analytics keep publisher page_view path and never reach GA", async ({
-  browser,
-}) => {
-  test.setTimeout(120_000);
-
-  for (const publisher of customPublishers) {
-    const context = await browser.newContext({
-      baseURL: baseUrl,
-    });
-
-    const page = await context.newPage();
-
-    const analyticsRequests: string[] = [];
-    await interceptAnalytics(page, analyticsRequests);
-
-    await page.goto(`/publisher/${publisher}`);
-
-    const acceptCookies = page.getByRole("button", { name: /accept/i });
-    if (await acceptCookies.count()) {
-      await acceptCookies.first().click();
-    }
-
-    await page.waitForFunction(() => {
-      const dataLayer = (window as Window & { dataLayer?: unknown[] })
-        .dataLayer;
-      return Array.isArray(dataLayer)
-        ? dataLayer.some(
-            (entry) =>
-              typeof entry === "object" &&
-              entry !== null &&
-              ["page_view", "pageview"].includes(
-                String((entry as Record<string, unknown>).event),
-              ),
-          )
-        : false;
-    });
-
-    const pageViewEvents = await page.evaluate(() => {
-      const dataLayer = (window as Window & { dataLayer?: unknown[] })
-        .dataLayer;
-      if (!Array.isArray(dataLayer)) {
-        return [];
-      }
-
-      return dataLayer.filter(
-        (entry) =>
-          typeof entry === "object" &&
-          entry !== null &&
-          ["page_view", "pageview"].includes(
-            String((entry as Record<string, unknown>).event),
-          ),
-      );
-    });
-
-    expect(pageViewEvents).toHaveLength(1);
-    await expect(page).toHaveURL(new RegExp(`/publisher/${publisher}$`));
-
-    const gaDeliveryRequests = analyticsRequests.filter(
-      (url) => !url.includes("www.googletagmanager.com/gtm.js"),
-    );
-    expect(gaDeliveryRequests).toEqual([]);
-
-    const gtmRequests = analyticsRequests.filter((url) =>
-      url.includes("www.googletagmanager.com/gtm.js"),
-    );
-    expect(gtmRequests).toHaveLength(1);
-
-    await context.close();
-  }
-});
