@@ -40,6 +40,8 @@ yarn run lint-js      # eslint
 yarn run lint-scss    # stylelint
 yarn run test-js      # vitest
 SECRET_KEY=test_key FLASK_DEBUG=0 python3 -m unittest discover tests
+python3 scripts/validate-publisher-content.py --content-dir webapp/store/content/publishers
+yarn run test-e2e-publisher  # Playwright publisher-page checks
 yarn run test         # Combined: lint-python + test-python + test-js + lint-scss
 ```
 
@@ -76,7 +78,7 @@ tests/                   # Python unittest tests
 
 ## CI/CD (.github/workflows/pr.yml)
 
-**Jobs**: run-workshop (checks Flask and Vite), pack-rock (packs and starts the rock, then runs advisory Lighthouse checks for web changes), lint-python/js/scss (path-filtered), test-python/js (path-filtered), check-inclusive-naming
+**Jobs**: run-workshop (checks Flask and Vite), pack-rock (packs and starts the rock, then runs advisory Lighthouse checks for web changes), lint-python/js/scss (path-filtered), test-python/js (path-filtered), test-publisher-e2e (Playwright publisher-page checks), check-inclusive-naming
 
 **Requirements**: Native checks use Python 3.12 and Node.js 24; JavaScript tests run in UTC. Python tests need `yarn build` first and `FLASK_DEBUG=0`; coverage is exported as XML for Codecov. Workshop setup installs dependencies and forwards ports 8004/5004.
 
@@ -104,6 +106,8 @@ Dependabot is the only dependency update bot. `.github/dependabot.yml` covers np
 **Add React component**: Create in `static/js/`, use `vite_import()` in template for entry points, `yarn build`, add `__tests__/`, `yarn test-js`
 
 **Add Flask endpoint**: Add route in `webapp/*/views.py`, add tests in `tests/*/`, create template if needed, `yarn build` if using JS, test with SECRET_KEY set
+
+**Local OpenSpec workflow**: When using OpenSpec, follow `openspec/README.md` and the `human-authored` schema in `openspec/config.yaml`. The engineer supplies `human-spec.md` and `testing-plan.md`; agents copy them unchanged and compile capability deltas plus `implementation-plan.md`. Do not invent missing decisions or generate substitute inputs. Apply tracks the plan's verified checkboxes; human QA requires engineer confirmation. Validate this setup with `openspec schema validate human-authored` and `node --test openspec/schemas/human-authored/schema.test.mjs` (OpenSpec must be on `PATH`, or set `OPENSPEC_BIN` for the tests).
 
 ## Key Files
 
@@ -214,6 +218,7 @@ When reviewing pull requests, be a constructive and helpful reviewer:
 
 **Additional Best Practices**:
 - Review the entire change for consistency before commenting
+- For `webapp/store/content/publishers/*.yaml` changes, enforce the content rules in `webapp/store/content/publishers/README.md` and ask for validator output from `scripts/validate-publisher-content.py --content-dir webapp/store/content/publishers`
 - Check that new dependencies are necessary and well-maintained
 - Verify that error handling is appropriate and informative
 - Ensure logging doesn't expose sensitive information

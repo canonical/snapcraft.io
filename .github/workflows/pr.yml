@@ -31,6 +31,7 @@ jobs:
       js: ${{ steps.filter.outputs.js }}
       scss: ${{ steps.filter.outputs.scss }}
       lighthouse: ${{ steps.filter.outputs.lighthouse }}
+      publisher_e2e: ${{ steps.filter.outputs.publisher_e2e }}
     steps:
       - uses: dorny/paths-filter@v4
         id: filter
@@ -45,6 +46,7 @@ jobs:
               - '**/*.py'
               - 'requirements*.txt'
               - 'templates/**/*'
+              - 'webapp/store/content/publishers/**/*.yaml'
             js:
               - '.github/workflows/pr.yml'
               - '**/*.js'
@@ -75,6 +77,18 @@ jobs:
               - 'package.json'
               - 'yarn.lock'
               - 'requirements.txt'
+            publisher_e2e:
+              - '.github/workflows/pr.yml'
+              - 'playwright.config.ts'
+              - 'tests/e2e/**'
+              - 'templates/store/publisher-details.html'
+              - 'templates/partials/_verified_developer.html'
+              - 'templates/partials/_star_developer.html'
+              - 'webapp/store/**'
+              - 'webapp/store/content/publishers/**/*.yaml'
+              - 'scripts/validate-publisher-content.py'
+              - 'package.json'
+              - 'yarn.lock'
 
   pack-rock:
     needs: changes
@@ -149,6 +163,9 @@ jobs:
 
       - name: Lint python
         run: yarn lint-python
+
+      - name: Validate publisher content
+        run: yarn validate-publisher-content
 
   lint-scss:
     needs: changes
@@ -258,6 +275,42 @@ jobs:
         uses: codecov/codecov-action@v7
         with:
           flags: javascript
+
+  test-publisher-e2e:
+    needs: changes
+    if: ${{ needs.changes.outputs.publisher_e2e == 'true' }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: yarn
+
+      - name: Install dependencies
+        run: |
+          python -m pip install -r requirements-dev.txt
+          yarn install --immutable
+
+      - name: Install Playwright browsers
+        run: yarn playwright-install
+
+      - name: Build resources
+        run: yarn build
+
+      - name: Run publisher page Playwright checks
+        env:
+          SECRET_KEY: insecure_test_key
+          FLASK_DEBUG: 0
+        run: yarn test-e2e-publisher
 
   check-inclusive-naming:
     runs-on: ubuntu-latest
