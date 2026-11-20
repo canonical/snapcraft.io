@@ -118,6 +118,26 @@ class PublisherContentValidatorTest(unittest.TestCase):
                     [issue.field for issue in issues],
                 )
 
+    def test_rejects_removed_legacy_schema_fields(self):
+        legacy_fields = (
+            "publisher",
+            "username",
+            "developer_validation",
+            "blog_slug",
+            "link_to_search",
+            "hide_all_snaps",
+            "show_popular_snaps",
+        )
+
+        for legacy_field in legacy_fields:
+            with self.subTest(field=legacy_field):
+                content = _valid_content()
+                content[legacy_field] = "legacy"
+
+                issues = self.validator.validate(content)
+
+                self.assertIn(legacy_field, [issue.field for issue in issues])
+
     def test_rejects_invalid_uri_fields(self):
         content = _valid_content()
         content["website"] = "not-a-url"
