@@ -1,0 +1,24 @@
+display_name: 123
+summary:
+description:
+  - not
+  - a
+  - string
+publisher_since: true
+unexpected_top_level: should-not-be-here
+featured_snaps:
+  - package_name: 42
+    background: "#12345"
+    description: 999
+    extra_field: no
+  - package_name: second
+    background: "not-a-colour"
+    description: "ok"
+  - package_name: third
+    background: "#000000"
+    description: "too many featured snaps"
+listed_snaps:
+  - {}
+  - package_name: 123
+  - package_name: valid-name
+    extra: true
