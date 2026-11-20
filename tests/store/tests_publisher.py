@@ -209,7 +209,7 @@ class GetPublisherPageTest(TestCase):
             self.assert_template_used("store/publisher-details.html")
 
     @responses.activate
-    def test_non_existant_publisher(self):
+    def test_non_existent_publisher(self):
         responses.add(
             responses.GET,
             self.api_url_find("toto"),
