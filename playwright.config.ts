@@ -12,7 +12,8 @@ export default defineConfig({
   },
   webServer: {
     command:
-      "ENVIRONMENT=production FLASK_DEBUG=0 PYTHONPATH=. python3 tests/e2e/publisher_server.py",
+      "ENVIRONMENT=production FLASK_DEBUG=0 PYTHONPATH=. " +
+      "gunicorn --config tests/e2e/publisher_server.py",
     url: "http://127.0.0.1:8011/publisher/jetbrains",
     timeout: 120_000,
     // Reuse a locally running server to survive interrupted runs; in CI

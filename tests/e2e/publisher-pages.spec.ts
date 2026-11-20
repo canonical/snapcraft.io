@@ -17,6 +17,13 @@ async function setEssentialCookie(context: BrowserContext) {
   ]);
 }
 
+// Navigate waiting only for the DOM, not the full load event, so a slow or
+// unreachable external image CDN cannot block navigation past the timeout.
+// Visual tests call waitForVisualAssets afterwards to settle images/fonts.
+async function gotoPublisher(page: Page, path: string) {
+  await page.goto(path, { waitUntil: "domcontentloaded" });
+}
+
 async function waitForVisualAssets(page: Page) {
   await page.evaluate(async () => {
     const delay = (ms: number) =>
@@ -84,14 +91,14 @@ function formatAxeViolations(
 test("trust badges are rendered from Store data", async ({ page }) => {
   await setEssentialCookie(page.context());
 
-  await page.goto("/publisher/jetbrains");
+  await gotoPublisher(page, "/publisher/jetbrains");
   await expect(
     page.locator(
       'span.p-tooltip:has(span.p-tooltip__message:has-text("Verified account"))',
     ),
   ).toHaveCount(1);
 
-  await page.goto("/publisher/snapcrafters");
+  await gotoPublisher(page, "/publisher/snapcrafters");
   await expect(
     page.locator(
       'span.p-tooltip:has(span.p-tooltip__message:has-text("Star developer"))',
@@ -104,7 +111,7 @@ test("snapcrafters curated page links to publisher search", async ({
 }) => {
   await setEssentialCookie(page.context());
 
-  await page.goto("/publisher/snapcrafters");
+  await gotoPublisher(page, "/publisher/snapcrafters");
 
   const seeAllLink = page.getByRole("link", {
     name: "See all snaps published by Snapcrafters ›",
@@ -129,7 +136,7 @@ test("decorative publisher icon and banner are hidden from screen readers", asyn
 }) => {
   await setEssentialCookie(page.context());
 
-  await page.goto("/publisher/jetbrains");
+  await gotoPublisher(page, "/publisher/jetbrains");
 
   const publisherIcon = page.locator(".p-snap-heading__icon").first();
   await expect(publisherIcon).toHaveAttribute("alt", "");
@@ -144,7 +151,7 @@ test("listed snaps unavailable state renders and passes axe", async ({
 }) => {
   await setEssentialCookie(page.context());
 
-  await page.goto("/publisher/unavailable-snaps");
+  await gotoPublisher(page, "/publisher/unavailable-snaps");
 
   await expect(
     page.getByText("This publisher's snaps are not available right now."),
@@ -172,9 +179,7 @@ test("custom publisher pages pass WCAG 2.1 AA axe checks", async ({ page }) => {
   for (const publisher of customPublishers) {
     for (const width of mobileAndDesktopWidths) {
       await page.setViewportSize({ width, height: 2400 });
-      await page.goto(`/publisher/${publisher}`, {
-        waitUntil: "domcontentloaded",
-      });
+      await gotoPublisher(page, `/publisher/${publisher}`);
       await waitForVisualAssets(page);
 
       const axeResult = await new AxeBuilder({ page })
@@ -196,9 +201,7 @@ for (const publisher of customPublishers) {
       await setEssentialCookie(page.context());
 
       await page.setViewportSize({ width, height: 2400 });
-      await page.goto(`/publisher/${publisher}`, {
-        waitUntil: "domcontentloaded",
-      });
+      await gotoPublisher(page, `/publisher/${publisher}`);
       await waitForVisualAssets(page);
 
       await expect(page).toHaveScreenshot(`${publisher}-${width}.png`, {
