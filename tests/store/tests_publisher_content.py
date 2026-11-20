@@ -8,8 +8,11 @@ import textwrap
 import unittest
 from pathlib import Path
 
+from unittest.mock import MagicMock
+
 from webapp.store.publisher_content import (
     PublisherContentValidator,
+    initialize_publisher_content_registry,
     load_publisher_content_registry,
     validate_publisher_content_directory,
 )
@@ -310,6 +313,70 @@ class PublisherContentRegistryLoadingTest(unittest.TestCase):
             registry["jetbrains"]["summary"] = "changed"
 
             self.assertNotEqual(registry, original_registry)
+
+
+class InitializePublisherContentRegistryTest(unittest.TestCase):
+    def _app_for(self, content_directory):
+        app = MagicMock()
+        app.root_path = str(content_directory.parent)
+        app.config = {
+            "CONTENT_DIRECTORY": {
+                "PUBLISHER_PAGES": content_directory.name,
+            }
+        }
+        app.extensions = {}
+        return app
+
+    def test_valid_content_populates_registry_extension(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            content_directory = Path(temp_dir) / "publishers"
+            content_directory.mkdir()
+            (content_directory / "jetbrains.yaml").write_text(
+                _yaml_for(_valid_content("JetBrains"))
+            )
+
+            app = self._app_for(content_directory)
+            initialize_publisher_content_registry(app)
+
+            self.assertEqual(
+                set(app.extensions["publisher_pages_registry"].keys()),
+                {"jetbrains"},
+            )
+
+    def test_invalid_content_fails_startup(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            content_directory = Path(temp_dir) / "publishers"
+            content_directory.mkdir()
+            invalid_content = _valid_content("Broken")
+            del invalid_content["summary"]
+            (content_directory / "broken.yaml").write_text(
+                _yaml_for(invalid_content)
+            )
+
+            app = self._app_for(content_directory)
+            with self.assertRaises(RuntimeError) as raised:
+                initialize_publisher_content_registry(app)
+
+            self.assertIn("broken.yaml", str(raised.exception))
+            self.assertNotIn("publisher_pages_registry", app.extensions)
+
+    def test_all_invalid_content_fails_startup(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            content_directory = Path(temp_dir) / "publishers"
+            content_directory.mkdir()
+            (content_directory / "empty.yaml").write_text("")
+            (content_directory / "malformed.yaml").write_text(
+                "display_name: [\n"
+            )
+
+            app = self._app_for(content_directory)
+            with self.assertRaises(RuntimeError) as raised:
+                initialize_publisher_content_registry(app)
+
+            message = str(raised.exception)
+            self.assertIn("empty.yaml", message)
+            self.assertIn("malformed.yaml", message)
+            self.assertNotIn("publisher_pages_registry", app.extensions)
 
 
 class PublisherContentValidationScriptTest(unittest.TestCase):

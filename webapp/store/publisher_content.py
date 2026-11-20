@@ -363,9 +363,23 @@ def initialize_publisher_content_registry(app) -> None:
         Path(app.root_path)
         / app.config["CONTENT_DIRECTORY"]["PUBLISHER_PAGES"]
     )
-    app.extensions["publisher_pages_registry"] = (
-        load_publisher_content_registry(
-            content_directory,
-            logger=app.logger,
+
+    registry, failures = _validate_directory(content_directory)
+
+    for failure in failures:
+        issue_messages = ", ".join(issue.as_text() for issue in failure.issues)
+        app.logger.error(
+            "Invalid publisher content in %s: %s",
+            failure.file_name,
+            issue_messages,
         )
-    )
+
+    if failures:
+        file_names = ", ".join(failure.file_name for failure in failures)
+        raise RuntimeError(
+            "Invalid publisher content, refusing to start: "
+            f"{file_names}. Run scripts/validate-publisher-content.py "
+            "for details."
+        )
+
+    app.extensions["publisher_pages_registry"] = registry
