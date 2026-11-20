@@ -1015,6 +1015,29 @@ class GetPublisherPageTest(TestCase):
         )
 
     @responses.activate
+    def test_custom_page_uses_cached_publisher_snaps(self):
+        cached_results = [
+            _snap_result(
+                "cached-snap",
+                "Cached Snap",
+                _publisher("jetbrains", "JetBrains", "verified"),
+            )
+        ]
+        redis_cache.set("publisher-snaps:jetbrains", cached_results, ttl=3600)
+
+        # No HTTP mock registered: a cache miss would raise
+        # ConnectionError instead of calling the API.
+        response = self.client.get("/publisher/jetbrains")
+
+        self.assertEqual(response.status_code, 200)
+        self.assert_template_used("store/publisher-details.html")
+        rendered_snaps = self.get_context_variable("snaps")
+        self.assertEqual(
+            [snap["package_name"] for snap in rendered_snaps],
+            ["cached-snap"],
+        )
+
+    @responses.activate
     def test_custom_registry_is_not_mutated_by_repeated_requests(self):
         find_responses = {
             "jetbrains": JETBRAINS_FIND_RESPONSE,
