@@ -154,6 +154,17 @@ class GetPublisherPageTest(TestCase):
         self.assert_template_used("store/community-publisher-details.html")
 
     @responses.activate
+    def test_community_publisher_api_error_returns_502(self):
+        responses.add(
+            responses.GET,
+            self.api_url_find("lukewh"),
+            json={},
+            status=504,
+        )
+        response = self.client.get("/publisher/lukewh")
+        self.assertEqual(response.status_code, 502)
+
+    @responses.activate
     def test_existing_custom_publisher(self):
         responses.add(
             responses.GET,
