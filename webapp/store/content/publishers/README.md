@@ -17,9 +17,9 @@ workshop exec -- env PYTHONPATH=. python3 scripts/validate-publisher-content.py 
 
 The command exits non-zero on errors and reports the file and field.
 
-Invalid content also prevents the application from starting: the registry is
-validated at startup and any failure raises an error listing the offending
-files. Adding or changing a publisher page requires a deploy to take effect.
+At startup the registry is validated and any invalid file is logged and
+skipped; the affected publisher falls back to the standard community page.
+Adding or changing a publisher page requires a deploy to take effect.
 
 ## File schema
 

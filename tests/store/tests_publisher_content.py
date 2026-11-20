@@ -397,10 +397,13 @@ class InitializePublisherContentRegistryTest(unittest.TestCase):
                 {"jetbrains"},
             )
 
-    def test_invalid_content_fails_startup(self):
+    def test_invalid_content_is_skipped_and_app_starts(self):
         with tempfile.TemporaryDirectory() as temp_dir:
             content_directory = Path(temp_dir) / "publishers"
             content_directory.mkdir()
+            (content_directory / "jetbrains.yaml").write_text(
+                _yaml_for(_valid_content("JetBrains"))
+            )
             invalid_content = _valid_content("Broken")
             del invalid_content["summary"]
             (content_directory / "broken.yaml").write_text(
@@ -408,13 +411,13 @@ class InitializePublisherContentRegistryTest(unittest.TestCase):
             )
 
             app = self._app_for(content_directory)
-            with self.assertRaises(RuntimeError) as raised:
-                initialize_publisher_content_registry(app)
+            initialize_publisher_content_registry(app)
 
-            self.assertIn("broken.yaml", str(raised.exception))
-            self.assertNotIn("publisher_pages_registry", app.extensions)
+            registry = app.extensions["publisher_pages_registry"]
+            self.assertIn("jetbrains", registry)
+            self.assertNotIn("broken", registry)
 
-    def test_all_invalid_content_fails_startup(self):
+    def test_all_invalid_content_starts_with_empty_registry(self):
         with tempfile.TemporaryDirectory() as temp_dir:
             content_directory = Path(temp_dir) / "publishers"
             content_directory.mkdir()
@@ -424,13 +427,9 @@ class InitializePublisherContentRegistryTest(unittest.TestCase):
             )
 
             app = self._app_for(content_directory)
-            with self.assertRaises(RuntimeError) as raised:
-                initialize_publisher_content_registry(app)
+            initialize_publisher_content_registry(app)
 
-            message = str(raised.exception)
-            self.assertIn("empty.yaml", message)
-            self.assertIn("malformed.yaml", message)
-            self.assertNotIn("publisher_pages_registry", app.extensions)
+            self.assertEqual(app.extensions["publisher_pages_registry"], {})
 
 
 class PublisherContentValidationScriptTest(unittest.TestCase):

@@ -376,12 +376,4 @@ def initialize_publisher_content_registry(app) -> None:
             issue_messages,
         )
 
-    if failures:
-        file_names = ", ".join(failure.file_name for failure in failures)
-        raise RuntimeError(
-            "Invalid publisher content, refusing to start: "
-            f"{file_names}. Run scripts/validate-publisher-content.py "
-            "for details."
-        )
-
     app.extensions["publisher_pages_registry"] = registry
