@@ -51,17 +51,4 @@
       {% endfor %}
     </div>
   </div>
-
-  {% if api_error %}
-    <div class="row">
-      <div class="col-12">
-        <div class="p-notification--negative">
-          <div class="p-notification__content">
-            <h5 class="p-notification__title">Error</h5>
-            <p class="p-notification__message">API request failed</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  {% endif %}
 {% endblock %}

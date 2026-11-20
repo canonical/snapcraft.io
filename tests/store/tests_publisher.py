@@ -154,6 +154,17 @@ class GetPublisherPageTest(TestCase):
         self.assert_template_used("store/community-publisher-details.html")
 
     @responses.activate
+    def test_community_publisher_api_error_returns_502(self):
+        responses.add(
+            responses.GET,
+            self.api_url_find("lukewh"),
+            json={},
+            status=504,
+        )
+        response = self.client.get("/publisher/lukewh")
+        self.assertEqual(response.status_code, 502)
+
+    @responses.activate
     def test_existing_custom_publisher(self):
         responses.add(
             responses.GET,
@@ -198,7 +209,7 @@ class GetPublisherPageTest(TestCase):
             self.assert_template_used("store/publisher-details.html")
 
     @responses.activate
-    def test_non_existant_publisher(self):
+    def test_non_existent_publisher(self):
         responses.add(
             responses.GET,
             self.api_url_find("toto"),
@@ -1012,6 +1023,29 @@ class GetPublisherPageTest(TestCase):
         self.assertNotIn(
             '<img src="https://assets.ubuntu.com/v1/decorative-banner.png"',
             body,
+        )
+
+    @responses.activate
+    def test_custom_page_uses_cached_publisher_snaps(self):
+        cached_results = [
+            _snap_result(
+                "cached-snap",
+                "Cached Snap",
+                _publisher("jetbrains", "JetBrains", "verified"),
+            )
+        ]
+        redis_cache.set("publisher-snaps:jetbrains", cached_results, ttl=3600)
+
+        # No HTTP mock registered: a cache miss would raise
+        # ConnectionError instead of calling the API.
+        response = self.client.get("/publisher/jetbrains")
+
+        self.assertEqual(response.status_code, 200)
+        self.assert_template_used("store/publisher-details.html")
+        rendered_snaps = self.get_context_variable("snaps")
+        self.assertEqual(
+            [snap["package_name"] for snap in rendered_snaps],
+            ["cached-snap"],
         )
 
     @responses.activate

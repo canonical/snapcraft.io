@@ -8,8 +8,11 @@ import textwrap
 import unittest
 from pathlib import Path
 
+from unittest.mock import MagicMock
+
 from webapp.store.publisher_content import (
     PublisherContentValidator,
+    initialize_publisher_content_registry,
     load_publisher_content_registry,
     validate_publisher_content_directory,
 )
@@ -115,6 +118,26 @@ class PublisherContentValidatorTest(unittest.TestCase):
                     [issue.field for issue in issues],
                 )
 
+    def test_rejects_removed_legacy_schema_fields(self):
+        legacy_fields = (
+            "publisher",
+            "username",
+            "developer_validation",
+            "blog_slug",
+            "link_to_search",
+            "hide_all_snaps",
+            "show_popular_snaps",
+        )
+
+        for legacy_field in legacy_fields:
+            with self.subTest(field=legacy_field):
+                content = _valid_content()
+                content[legacy_field] = "legacy"
+
+                issues = self.validator.validate(content)
+
+                self.assertIn(legacy_field, [issue.field for issue in issues])
+
     def test_rejects_invalid_uri_fields(self):
         content = _valid_content()
         content["website"] = "not-a-url"
@@ -122,6 +145,54 @@ class PublisherContentValidatorTest(unittest.TestCase):
         issues = self.validator.validate(content)
 
         self.assertIn("website", [issue.field for issue in issues])
+
+    def test_rejects_disallowed_uri_schemes(self):
+        for invalid_uri in (
+            "javascript:alert(1)",
+            "data:text/html,<script>alert(1)</script>",
+            "ftp://example.com/icon.png",
+            "//example.com/protocol-relative",
+        ):
+            with self.subTest(uri=invalid_uri):
+                content = _valid_content()
+                content["icon_url"] = invalid_uri
+
+                issues = self.validator.validate(content)
+
+                self.assertIn("icon_url", [issue.field for issue in issues])
+
+    def test_rejects_invalid_contact_uri(self):
+        content = _valid_content()
+        content["contact"] = "not-a-url"
+
+        issues = self.validator.validate(content)
+
+        self.assertIn("contact", [issue.field for issue in issues])
+
+    def test_mailto_only_allowed_for_contact(self):
+        for field in ("icon_url", "website", "banner_url"):
+            with self.subTest(field=field):
+                content = _valid_content()
+                content[field] = "mailto:publisher@example.com"
+
+                issues = self.validator.validate(content)
+
+                self.assertIn(field, [issue.field for issue in issues])
+
+        content = _valid_content()
+        content["contact"] = "mailto:publisher@example.com"
+        self.assertEqual(self.validator.validate(content), [])
+
+    def test_accepts_https_and_mailto_uris(self):
+        content = _valid_content()
+        content["icon_url"] = "https://assets.ubuntu.com/v1/icon.svg"
+        content["banner_url"] = "https://assets.ubuntu.com/v1/banner.jpg"
+        content["website"] = "https://example.com/"
+        content["contact"] = "mailto:publisher@example.com"
+
+        issues = self.validator.validate(content)
+
+        self.assertEqual(issues, [])
 
 
 class PublisherContentRegistryLoadingTest(unittest.TestCase):
@@ -310,6 +381,69 @@ class PublisherContentRegistryLoadingTest(unittest.TestCase):
             registry["jetbrains"]["summary"] = "changed"
 
             self.assertNotEqual(registry, original_registry)
+
+
+class InitializePublisherContentRegistryTest(unittest.TestCase):
+    def _app_for(self, content_directory):
+        app = MagicMock()
+        app.root_path = str(content_directory.parent)
+        app.config = {
+            "CONTENT_DIRECTORY": {
+                "PUBLISHER_PAGES": content_directory.name,
+            }
+        }
+        app.extensions = {}
+        return app
+
+    def test_valid_content_populates_registry_extension(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            content_directory = Path(temp_dir) / "publishers"
+            content_directory.mkdir()
+            (content_directory / "jetbrains.yaml").write_text(
+                _yaml_for(_valid_content("JetBrains"))
+            )
+
+            app = self._app_for(content_directory)
+            initialize_publisher_content_registry(app)
+
+            self.assertEqual(
+                set(app.extensions["publisher_pages_registry"].keys()),
+                {"jetbrains"},
+            )
+
+    def test_invalid_content_is_skipped_and_app_starts(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            content_directory = Path(temp_dir) / "publishers"
+            content_directory.mkdir()
+            (content_directory / "jetbrains.yaml").write_text(
+                _yaml_for(_valid_content("JetBrains"))
+            )
+            invalid_content = _valid_content("Broken")
+            del invalid_content["summary"]
+            (content_directory / "broken.yaml").write_text(
+                _yaml_for(invalid_content)
+            )
+
+            app = self._app_for(content_directory)
+            initialize_publisher_content_registry(app)
+
+            registry = app.extensions["publisher_pages_registry"]
+            self.assertIn("jetbrains", registry)
+            self.assertNotIn("broken", registry)
+
+    def test_all_invalid_content_starts_with_empty_registry(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            content_directory = Path(temp_dir) / "publishers"
+            content_directory.mkdir()
+            (content_directory / "empty.yaml").write_text("")
+            (content_directory / "malformed.yaml").write_text(
+                "display_name: [\n"
+            )
+
+            app = self._app_for(content_directory)
+            initialize_publisher_content_registry(app)
+
+            self.assertEqual(app.extensions["publisher_pages_registry"], {})
 
 
 class PublisherContentValidationScriptTest(unittest.TestCase):

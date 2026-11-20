@@ -17,6 +17,10 @@ workshop exec -- env PYTHONPATH=. python3 scripts/validate-publisher-content.py 
 
 The command exits non-zero on errors and reports the file and field.
 
+At startup the registry is validated and any invalid file is logged and
+skipped; the affected publisher falls back to the standard community page.
+Adding or changing a publisher page requires a deploy to take effect.
+
 ## File schema
 
 Required top-level fields:
@@ -28,10 +32,10 @@ Required top-level fields:
 
 Optional top-level fields:
 
-- `icon_url` (URI string)
-- `website` (URI string)
-- `contact` (string)
-- `banner_url` (URI string)
+- `icon_url` (URI string; `https` only)
+- `website` (URI string; `https` only)
+- `contact` (URI string; `https` or `mailto`)
+- `banner_url` (URI string; `https` only)
 - `meta_description` (string)
 - `featured_snaps` (array, max 2)
 - `listed_snaps` (array)

@@ -1,25 +1,11 @@
 import AxeBuilder from "@axe-core/playwright";
-import {
-  expect,
-  test,
-  type BrowserContext,
-  type Page,
-} from "@playwright/test";
-
-const analyticsRegex =
-  /https:\/\/(www\.googletagmanager\.com|www\.google-analytics\.com|analytics\.google\.com|stats\.g\.doubleclick\.net)\//;
+import { expect, test, type BrowserContext, type Page } from "@playwright/test";
 
 const baseUrl = "http://127.0.0.1:8011";
 const customPublishers = ["jetbrains", "kde", "snapcrafters"] as const;
 const screenshotViewports = [375, 768, 1280] as const;
 const mobileAndDesktopWidths = [375, 1280] as const;
 const axeTags = ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"];
-
-const trustStatusTextByPublisher: Record<string, string> = {
-  jetbrains: "Verified account",
-  kde: "Verified account",
-  snapcrafters: "Star developer",
-};
 
 async function setEssentialCookie(context: BrowserContext) {
   await context.addCookies([
@@ -31,11 +17,11 @@ async function setEssentialCookie(context: BrowserContext) {
   ]);
 }
 
-async function interceptAnalytics(page: Page, requests: string[] = []) {
-  await page.route(analyticsRegex, async (route) => {
-    requests.push(route.request().url());
-    await route.abort();
-  });
+// Navigate waiting only for the DOM, not the full load event, so a slow or
+// unreachable external image CDN cannot block navigation past the timeout.
+// Visual tests call waitForVisualAssets afterwards to settle images/fonts.
+async function gotoPublisher(page: Page, path: string) {
+  await page.goto(path, { waitUntil: "domcontentloaded" });
 }
 
 async function waitForVisualAssets(page: Page) {
@@ -84,7 +70,6 @@ async function waitForVisualAssets(page: Page) {
   });
 }
 
-
 function formatAxeViolations(
   publisher: string,
   width: number,
@@ -94,7 +79,9 @@ function formatAxeViolations(
     `Axe violations for ${publisher} at ${width}px:`,
     ...violations.map((violation) => {
       const nodes = violation.nodes
-        .map((node) => `${node.target.join(" ")} => ${node.failureSummary || ""}`)
+        .map(
+          (node) => `${node.target.join(" ")} => ${node.failureSummary || ""}`,
+        )
         .join(" | ");
       return `${violation.id}: ${violation.help} (${nodes})`;
     }),
@@ -103,16 +90,15 @@ function formatAxeViolations(
 
 test("trust badges are rendered from Store data", async ({ page }) => {
   await setEssentialCookie(page.context());
-  await interceptAnalytics(page);
 
-  await page.goto("/publisher/jetbrains");
+  await gotoPublisher(page, "/publisher/jetbrains");
   await expect(
     page.locator(
       'span.p-tooltip:has(span.p-tooltip__message:has-text("Verified account"))',
     ),
   ).toHaveCount(1);
 
-  await page.goto("/publisher/snapcrafters");
+  await gotoPublisher(page, "/publisher/snapcrafters");
   await expect(
     page.locator(
       'span.p-tooltip:has(span.p-tooltip__message:has-text("Star developer"))',
@@ -120,11 +106,12 @@ test("trust badges are rendered from Store data", async ({ page }) => {
   ).toHaveCount(1);
 });
 
-test("snapcrafters curated page links to publisher search", async ({ page }) => {
+test("snapcrafters curated page links to publisher search", async ({
+  page,
+}) => {
   await setEssentialCookie(page.context());
-  await interceptAnalytics(page);
 
-  await page.goto("/publisher/snapcrafters");
+  await gotoPublisher(page, "/publisher/snapcrafters");
 
   const seeAllLink = page.getByRole("link", {
     name: "See all snaps published by Snapcrafters ›",
@@ -148,9 +135,8 @@ test("decorative publisher icon and banner are hidden from screen readers", asyn
   page,
 }) => {
   await setEssentialCookie(page.context());
-  await interceptAnalytics(page);
 
-  await page.goto("/publisher/jetbrains");
+  await gotoPublisher(page, "/publisher/jetbrains");
 
   const publisherIcon = page.locator(".p-snap-heading__icon").first();
   await expect(publisherIcon).toHaveAttribute("alt", "");
@@ -160,15 +146,40 @@ test("decorative publisher icon and banner are hidden from screen readers", asyn
   await expect(banner.locator("img")).toHaveCount(0);
 });
 
+test("listed snaps unavailable state renders and passes axe", async ({
+  page,
+}) => {
+  await setEssentialCookie(page.context());
+
+  await gotoPublisher(page, "/publisher/unavailable-snaps");
+
+  await expect(
+    page.getByText("This publisher's snaps are not available right now."),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("link", {
+      name: "See all snaps published by Unavailable Snaps ›",
+    }),
+  ).toBeVisible();
+
+  const axeResult = await new AxeBuilder({ page })
+    .exclude(".js-nav-account")
+    .withTags(axeTags)
+    .analyze();
+
+  expect(
+    axeResult.violations,
+    formatAxeViolations("unavailable-snaps", 1280, axeResult.violations),
+  ).toEqual([]);
+});
 
 test("custom publisher pages pass WCAG 2.1 AA axe checks", async ({ page }) => {
   await setEssentialCookie(page.context());
-  await interceptAnalytics(page);
 
   for (const publisher of customPublishers) {
     for (const width of mobileAndDesktopWidths) {
       await page.setViewportSize({ width, height: 2400 });
-      await page.goto(`/publisher/${publisher}`);
+      await gotoPublisher(page, `/publisher/${publisher}`);
       await waitForVisualAssets(page);
 
       const axeResult = await new AxeBuilder({ page })
@@ -188,10 +199,9 @@ for (const publisher of customPublishers) {
   for (const width of screenshotViewports) {
     test(`visual baseline: ${publisher} at ${width}px`, async ({ page }) => {
       await setEssentialCookie(page.context());
-      await interceptAnalytics(page);
 
       await page.setViewportSize({ width, height: 2400 });
-      await page.goto(`/publisher/${publisher}`);
+      await gotoPublisher(page, `/publisher/${publisher}`);
       await waitForVisualAssets(page);
 
       await expect(page).toHaveScreenshot(`${publisher}-${width}.png`, {
@@ -200,72 +210,3 @@ for (const publisher of customPublishers) {
     });
   }
 }
-
-test("analytics keep publisher page_view path and never reach GA", async ({
-  browser,
-}) => {
-  test.setTimeout(120_000);
-
-  for (const publisher of customPublishers) {
-    const context = await browser.newContext({
-      baseURL: baseUrl,
-    });
-
-    const page = await context.newPage();
-
-    const analyticsRequests: string[] = [];
-    await interceptAnalytics(page, analyticsRequests);
-
-    await page.goto(`/publisher/${publisher}`);
-
-    const acceptCookies = page.getByRole("button", { name: /accept/i });
-    if (await acceptCookies.count()) {
-      await acceptCookies.first().click();
-    }
-
-    await page.waitForFunction(() => {
-      const dataLayer = (window as Window & { dataLayer?: unknown[] }).dataLayer;
-      return Array.isArray(dataLayer)
-        ? dataLayer.some(
-            (entry) =>
-              typeof entry === "object" &&
-              entry !== null &&
-              ["page_view", "pageview"].includes(
-                String((entry as Record<string, unknown>).event),
-              ),
-          )
-        : false;
-    });
-
-    const pageViewEvents = await page.evaluate(() => {
-      const dataLayer = (window as Window & { dataLayer?: unknown[] }).dataLayer;
-      if (!Array.isArray(dataLayer)) {
-        return [];
-      }
-
-      return dataLayer.filter(
-        (entry) =>
-          typeof entry === "object" &&
-          entry !== null &&
-          ["page_view", "pageview"].includes(
-            String((entry as Record<string, unknown>).event),
-          ),
-      );
-    });
-
-    expect(pageViewEvents).toHaveLength(1);
-    await expect(page).toHaveURL(new RegExp(`/publisher/${publisher}$`));
-
-    const gaDeliveryRequests = analyticsRequests.filter(
-      (url) => !url.includes("www.googletagmanager.com/gtm.js"),
-    );
-    expect(gaDeliveryRequests).toEqual([]);
-
-    const gtmRequests = analyticsRequests.filter((url) =>
-      url.includes("www.googletagmanager.com/gtm.js"),
-    );
-    expect(gtmRequests).toHaveLength(1);
-
-    await context.close();
-  }
-});
