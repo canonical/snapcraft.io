@@ -15,6 +15,8 @@ export default defineConfig({
       "ENVIRONMENT=production FLASK_DEBUG=0 PYTHONPATH=. python3 tests/e2e/publisher_server.py",
     url: "http://127.0.0.1:8011/publisher/jetbrains",
     timeout: 120_000,
-    reuseExistingServer: false,
+    // Reuse a locally running server to survive interrupted runs; in CI
+    // always start a fresh one so a stale server can't mask failures.
+    reuseExistingServer: !process.env.CI,
   },
 });
