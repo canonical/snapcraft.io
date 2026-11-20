@@ -32,10 +32,10 @@ Required top-level fields:
 
 Optional top-level fields:
 
-- `icon_url` (URI string)
-- `website` (URI string)
-- `contact` (string)
-- `banner_url` (URI string)
+- `icon_url` (URI string; `https` only)
+- `website` (URI string; `https` only)
+- `contact` (URI string; `https` or `mailto`)
+- `banner_url` (URI string; `https` only)
 - `meta_description` (string)
 - `featured_snaps` (array, max 2)
 - `listed_snaps` (array)

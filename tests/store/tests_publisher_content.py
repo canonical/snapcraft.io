@@ -126,6 +126,40 @@ class PublisherContentValidatorTest(unittest.TestCase):
 
         self.assertIn("website", [issue.field for issue in issues])
 
+    def test_rejects_disallowed_uri_schemes(self):
+        for invalid_uri in (
+            "javascript:alert(1)",
+            "data:text/html,<script>alert(1)</script>",
+            "ftp://example.com/icon.png",
+            "//example.com/protocol-relative",
+        ):
+            with self.subTest(uri=invalid_uri):
+                content = _valid_content()
+                content["icon_url"] = invalid_uri
+
+                issues = self.validator.validate(content)
+
+                self.assertIn("icon_url", [issue.field for issue in issues])
+
+    def test_rejects_invalid_contact_uri(self):
+        content = _valid_content()
+        content["contact"] = "not-a-url"
+
+        issues = self.validator.validate(content)
+
+        self.assertIn("contact", [issue.field for issue in issues])
+
+    def test_accepts_https_and_mailto_uris(self):
+        content = _valid_content()
+        content["icon_url"] = "https://assets.ubuntu.com/v1/icon.svg"
+        content["banner_url"] = "https://assets.ubuntu.com/v1/banner.jpg"
+        content["website"] = "https://example.com/"
+        content["contact"] = "mailto:publisher@example.com"
+
+        issues = self.validator.validate(content)
+
+        self.assertEqual(issues, [])
+
 
 class PublisherContentRegistryLoadingTest(unittest.TestCase):
     def _write_publisher_file(self, directory, name, content):

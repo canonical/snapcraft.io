@@ -38,7 +38,9 @@ class PublisherContentValidator:
         "meta_description",
     }
 
-    URI_FIELDS = {"icon_url", "website", "banner_url"}
+    URI_FIELDS = {"icon_url", "website", "contact", "banner_url"}
+
+    ALLOWED_URI_SCHEMES = {"https", "mailto"}
 
     FEATURED_ITEM_FIELDS = {"package_name", "background", "description"}
     LISTED_ITEM_FIELDS = {"package_name"}
@@ -234,7 +236,7 @@ class PublisherContentValidator:
         except ValueError:
             return False
 
-        if not parsed_uri.scheme:
+        if parsed_uri.scheme not in self.ALLOWED_URI_SCHEMES:
             return False
 
         if parsed_uri.scheme == "mailto":
