@@ -1,4 +1,5 @@
 import atexit
+import threading
 from urllib.parse import parse_qs, urlparse
 
 import responses
@@ -247,7 +248,12 @@ def _register_categories(mocker):
     )
 
 
-def create_stubbed_app():
+def _install_store_mocks():
+    """Install the Store API request mocks in the current process.
+
+    responses patches requests per-process, so under gunicorn each worker
+    must register its own mocks (done via the post_fork hook below).
+    """
     redis_cache.fallback.clear()
 
     mocker = responses.RequestsMock(assert_all_requests_are_fired=False)
@@ -271,11 +277,70 @@ def create_stubbed_app():
         STORE_FIXTURES["snapcrafters"]["results"],
     )
 
+    # Synthetic publisher whose curated listed_snaps are all unavailable
+    # from the Store API, to exercise the "snaps not available" state.
+    _register_find(mocker, "unavailable-snaps", [])
+
+
+def _stubbed_registry_entries():
+    return {
+        "unavailable-snaps": {
+            "display_name": "Unavailable Snaps",
+            "summary": "Summary",
+            "description": "<p>Description</p>",
+            "publisher_since": "January 2024",
+            "listed_snaps": [{"package_name": "missing-snap"}],
+        }
+    }
+
+
+def create_stubbed_app():
+    _install_store_mocks()
+
     app = create_app(testing=True)
     app.config["SECRET_KEY"] = "test_key"
     app.config["WTF_CSRF_METHODS"] = []
+    app.extensions["publisher_pages_registry"].update(
+        _stubbed_registry_entries()
+    )
 
     return app
+
+
+# Gunicorn settings used when this module is passed as a config file.
+bind = "127.0.0.1:8011"
+# Sync workers with threads give concurrency without gevent's monkey-patching,
+# which conflicts with a Django settings lazy-object imported by the app.
+worker_class = "gthread"
+workers = 2
+threads = 8
+wsgi_app = "tests.e2e.publisher_server:application"
+
+
+class _LazyStubbedApp:
+    """Build the stubbed app lazily inside each worker process.
+
+    responses patches requests per-process, so the app (and its mocks) must
+    be created in the worker, not in the gunicorn parent process. Gunicorn
+    imports the WSGI app in the parent before forking; deferring construction
+    to the first request ensures each worker builds its own stubbed app.
+    """
+
+    _app = None
+    _lock = threading.Lock()
+
+    def __call__(self, environ, start_response):
+        if _LazyStubbedApp._app is None:
+            # gthread workers serve concurrent requests; guard against two
+            # threads building the app (and starting responses patchers)
+            # at once.
+            with _LazyStubbedApp._lock:
+                if _LazyStubbedApp._app is None:
+                    _LazyStubbedApp._app = create_stubbed_app()
+        return _LazyStubbedApp._app(environ, start_response)
+
+
+application = _LazyStubbedApp()
 
 
 if __name__ == "__main__":

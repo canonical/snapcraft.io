@@ -350,7 +350,6 @@ def store_blueprint(store_query=None):
     def _render_default_publisher_page(publisher):
         # standard page for all community publishers
         status_code = 200
-        error_info = {}
         snaps = []
         publisher_details = {"display-name": publisher, "username": publisher}
 
@@ -377,7 +376,6 @@ def store_blueprint(store_query=None):
             "snaps": snaps,
             "snaps_count": len(snaps),
             "publisher": publisher_details,
-            "error_info": error_info,
         }
 
         return (
