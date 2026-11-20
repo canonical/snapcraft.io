@@ -40,7 +40,14 @@ class PublisherContentValidator:
 
     URI_FIELDS = {"icon_url", "website", "contact", "banner_url"}
 
-    ALLOWED_URI_SCHEMES = {"https", "mailto"}
+    # contact may be a mailto link; the other URI fields are sources for
+    # images / CSS backgrounds or outbound links, so they must be https.
+    URI_FIELD_SCHEMES = {
+        "icon_url": {"https"},
+        "website": {"https"},
+        "contact": {"https", "mailto"},
+        "banner_url": {"https"},
+    }
 
     FEATURED_ITEM_FIELDS = {"package_name", "background", "description"}
     LISTED_ITEM_FIELDS = {"package_name"}
@@ -94,7 +101,9 @@ class PublisherContentValidator:
                 )
                 continue
 
-            if field in self.URI_FIELDS and not self._is_valid_uri(value):
+            if field in self.URI_FIELDS and not self._is_valid_uri(
+                field, value
+            ):
                 issues.append(
                     ValidationIssue(field=field, message="must be a valid URI")
                 )
@@ -230,13 +239,14 @@ class PublisherContentValidator:
 
         return issues
 
-    def _is_valid_uri(self, value: str) -> bool:
+    def _is_valid_uri(self, field: str, value: str) -> bool:
         try:
             parsed_uri = urlparse(value)
         except ValueError:
             return False
 
-        if parsed_uri.scheme not in self.ALLOWED_URI_SCHEMES:
+        allowed_schemes = self.URI_FIELD_SCHEMES.get(field, {"https"})
+        if parsed_uri.scheme not in allowed_schemes:
             return False
 
         if parsed_uri.scheme == "mailto":

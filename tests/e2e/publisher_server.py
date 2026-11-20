@@ -1,4 +1,5 @@
 import atexit
+import threading
 from urllib.parse import parse_qs, urlparse
 
 import responses
@@ -320,16 +321,22 @@ class _LazyStubbedApp:
     """Build the stubbed app lazily inside each worker process.
 
     responses patches requests per-process, so the app (and its mocks) must
-    be created in the worker, not in the gunicorn master. Gunicorn imports
-    the WSGI app in the master before forking; deferring construction to the
-    first request ensures each worker builds its own stubbed app.
+    be created in the worker, not in the gunicorn parent process. Gunicorn
+    imports the WSGI app in the parent before forking; deferring construction
+    to the first request ensures each worker builds its own stubbed app.
     """
 
     _app = None
+    _lock = threading.Lock()
 
     def __call__(self, environ, start_response):
         if _LazyStubbedApp._app is None:
-            _LazyStubbedApp._app = create_stubbed_app()
+            # gthread workers serve concurrent requests; guard against two
+            # threads building the app (and starting responses patchers)
+            # at once.
+            with _LazyStubbedApp._lock:
+                if _LazyStubbedApp._app is None:
+                    _LazyStubbedApp._app = create_stubbed_app()
         return _LazyStubbedApp._app(environ, start_response)
 
 

@@ -169,6 +169,20 @@ class PublisherContentValidatorTest(unittest.TestCase):
 
         self.assertIn("contact", [issue.field for issue in issues])
 
+    def test_mailto_only_allowed_for_contact(self):
+        for field in ("icon_url", "website", "banner_url"):
+            with self.subTest(field=field):
+                content = _valid_content()
+                content[field] = "mailto:publisher@example.com"
+
+                issues = self.validator.validate(content)
+
+                self.assertIn(field, [issue.field for issue in issues])
+
+        content = _valid_content()
+        content["contact"] = "mailto:publisher@example.com"
+        self.assertEqual(self.validator.validate(content), [])
+
     def test_accepts_https_and_mailto_uris(self):
         content = _valid_content()
         content["icon_url"] = "https://assets.ubuntu.com/v1/icon.svg"
