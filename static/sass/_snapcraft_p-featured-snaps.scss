@@ -1,35 +1,4 @@
 @mixin snapcraft-p-featured-snaps {
-  .snap-card-placeholder {
-    margin-bottom: 17.6px;
-  }
-
-  .snap-card-placeholder__image {
-    background-color: $color-mid-light;
-    height: 64px;
-    margin-bottom: 8px;
-    width: 64px;
-  }
-
-  .snap-card-placeholder__title {
-    background-color: $color-mid-light;
-    height: 25.6px;
-    margin-bottom: 14.4px;
-    width: 40%;
-  }
-
-  .snap-card-placeholder__publisher {
-    background-color: $color-mid-light;
-    height: 12.81px;
-    margin-bottom: 17.6px;
-    width: 100%;
-  }
-
-  .snap-card-placeholder__description {
-    background-color: $color-mid-light;
-    height: 78.41px;
-    width: 100%;
-  }
-
   .featured-snap-card {
     padding-top: 8px;
 

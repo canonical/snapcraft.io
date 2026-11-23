@@ -35,10 +35,9 @@
         {% endif %}
             <nav class="p-navigation__nav">
               <div class="p-navigation__items-wrapper">
-                <ul class="p-navigation__items" role="menu">
+                <ul class="p-navigation__items">
                   <li
                     class="p-navigation__item {% if request.path == '/store' %}is-selected{% endif %}"
-                    role="menuitem"
                   >
                     <a class="p-navigation__link" href="/store">
                       Snap Store
@@ -46,7 +45,6 @@
                   </li>
                   <li
                     class="p-navigation__item {% if request.path == '/about' %}is-selected{% endif %}"
-                    role="menuitem"
                   >
                     <a class="p-navigation__link" href="/about">
                       About <span class="u-hide--large">Snapcraft</span>
@@ -54,7 +52,6 @@
                   </li>
                   <li
                     class="p-navigation__item {% if request.path == '/docs' or request.path.startswith('/docs/') %}is-selected{% endif %}"
-                    role="menuitem"
                   >
                     <a class="p-navigation__link" href="/docs">
                       Docs
@@ -62,20 +59,19 @@
                   </li>
                   <li
                     class="p-navigation__item {% if request.path == '/iot' %}is-selected{% endif %}"
-                    role="menuitem"
                   >
                     <a class="p-navigation__link" href="/iot">
                       IoT
                     </a>
                   </li>
-                  <li class="p-navigation__item" role="menuitem">
+                  <li class="p-navigation__item">
                     <a class="p-navigation__link " href="https://forum.snapcraft.io/">Forum</a>
                   </li>
                 </ul>
-                <ul class="p-navigation__items js-nav-account global-nav" role="menu">
+                <ul class="p-navigation__items js-nav-account global-nav">
                   {# Authenticated #}
-                  <li class="p-navigation__item--dropdown-toggle js-nav-account--authenticated u-hide" role="menuitem" id="link-1">
-                    <a class="p-navigation__link js-account--name" aria-controls="account-menu" aria-expanded="false"> My account </a>
+                  <li class="p-navigation__item--dropdown-toggle js-nav-account--authenticated u-hide" id="link-1">
+                    <button type="button" class="p-navigation__link js-account--name" aria-controls="account-menu" aria-expanded="false"> My account </button>
                     <div class="p-navigation__dropdown--container">
                       <ul class="p-navigation__dropdown" id="account-menu" aria-hidden="true">
                         <li class="p-navigation__item--dropdown-close">
@@ -102,7 +98,7 @@
                     </div>
                   </li>
                   {# Not authenticated #}
-                  <li class="p-navigation__item js-nav-account--notauthenticated u-hide" role="menuitem">
+                  <li class="p-navigation__item js-nav-account--notauthenticated u-hide">
                     <a class="p-navigation__link" href="{{ url_for('publisher_snaps.get_account_snaps') }}"> Sign in <i class="p-icon--user is-light"></i>
                     </a>
                   </li>

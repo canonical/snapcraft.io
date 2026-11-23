@@ -1,186 +1,62 @@
 import declareGlobal from "../libs/declare";
 import { trackFeaturedSnapClicked } from "../store/utils/featuredTracker";
-import { DEFAULT_ICON_URL } from "../config/constants";
 
-type PackageData = {
-  apps: Array<string>;
-  architecture: Array<string>;
-  developer_id: string;
-  developer_name: string;
-  developer_validation: string;
-  icon_url: string;
-  media: Array<{
-    height: number;
-    type: string;
-    url: string;
-    width: number;
-  }>;
-  origin: string;
-  package_name: string;
-  sections: Array<{ featured: boolean; name: string }>;
-  summary: string;
-  title: string;
-};
-
-async function buildCards(category: string): Promise<void> {
-  const featuredSnapCards = document.querySelectorAll(
-    "[data-js='featured-snap-card']",
-  ) as NodeListOf<HTMLElement>;
-
-  if (window.sessionStorage.getItem(category)) {
-    const localData = JSON.parse(
-      window.sessionStorage.getItem(category) as string,
-    );
-
-    featuredSnapCards.forEach((featuredSnapCard, index) => {
-      buildCard(featuredSnapCard, localData[index], category, index);
-    });
-  } else {
-    const response = await fetch(`/store/featured-snaps/${category}`);
-    const data: Array<PackageData> = await response.json();
-
-    featuredSnapCards.forEach((featuredSnapCard, index) => {
-      buildCard(featuredSnapCard, data[index], category, index);
-    });
-
-    window.sessionStorage.setItem(category, JSON.stringify(data));
-  }
-}
-
-function buildCard(
-  featuredSnapCard: Element,
-  data: PackageData,
-  category: string,
-  index: number,
-) {
-  const placeholder = featuredSnapCard.querySelector(
-    "[data-js='featured-snap-card-placeholder']",
-  ) as HTMLElement;
-
-  const content = featuredSnapCard.querySelector(
-    "[data-js='featured-snap-card-content']",
-  ) as HTMLElement;
-
-  content.innerHTML = "";
-
-  if ("content" in document.createElement("template")) {
-    const template = document.querySelector(
-      "#featured-snap-card",
-    ) as HTMLTemplateElement;
-
-    const clone = template.content.cloneNode(true) as HTMLElement;
-
-    const snapIcon = clone.querySelector(
-      "[data-js='snap-icon']",
-    ) as HTMLImageElement;
-
-    const snapIconLink = clone.querySelector(
-      "[data-js='snap-icon-link']",
-    ) as HTMLLinkElement;
-
-    const snapTitleLink = clone.querySelector(
-      "[data-js='snap-title-link']",
-    ) as HTMLLinkElement;
-
-    const snapPublisher = clone.querySelector(
-      "[data-js='snap-publisher']",
-    ) as HTMLElement;
-
-    const snapDescription = clone.querySelector(
-      "[data-js='snap-description']",
-    ) as HTMLElement;
-
-    snapIcon.src = data.icon_url ? data.icon_url : DEFAULT_ICON_URL;
-    snapIconLink.href = `/${data.package_name}`;
-    snapTitleLink.href = `/${data.package_name}`;
-    snapTitleLink.innerText = data.title;
-    snapPublisher.innerText = data.developer_name;
-    snapDescription.innerText = data.summary;
-
-    const verifiedWrapper = document.createElement("span");
-    verifiedWrapper.classList.add("p-verified");
-
-    if (data.developer_validation === "verified") {
-      const verifiedBadge = document.createElement("img");
-      verifiedBadge.src = "https://assets.ubuntu.com/v1/ba8a4b7b-Verified.svg";
-      verifiedBadge.alt = "Verified account";
-      verifiedBadge.setAttribute("width", "14");
-      verifiedBadge.setAttribute("height", "14");
-      verifiedBadge.classList.add("p-star");
-      verifiedWrapper.appendChild(verifiedBadge);
-      snapPublisher.appendChild(verifiedWrapper);
-    }
-
-    if (data.developer_validation === "starred") {
-      const starredBadge = document.createElement("img");
-      starredBadge.src =
-        "https://assets.ubuntu.com/v1/d810dee9-Orange+Star.svg";
-      starredBadge.alt = "Star developer";
-      starredBadge.setAttribute("width", "14");
-      starredBadge.setAttribute("height", "14");
-      starredBadge.classList.add("p-star");
-      verifiedWrapper.appendChild(starredBadge);
-      snapPublisher.appendChild(verifiedWrapper);
-    }
-
-    content.appendChild(clone);
-
-    content.addEventListener("click", () => {
-      if (category === "featured") {
-        trackFeaturedSnapClicked(data.package_name, index + 1, "home");
-      }
-    });
-  }
-
-  placeholder.classList.add("u-hide");
-  content.classList.remove("u-hide");
-}
-
-async function init(featuredCategories: Array<string>): Promise<void> {
-  const featuredCategorySwitches = document.querySelectorAll(
+function init(): void {
+  const switches = document.querySelectorAll<HTMLElement>(
     "[data-js='featured-category-switch']",
   );
+  const panels = document.querySelectorAll<HTMLElement>(
+    "[data-js='featured-category-panel']",
+  );
 
-  const viewCategoryLink = document.querySelector(
-    "[data-js='view-category-link']",
-  ) as HTMLLinkElement;
-
-  featuredCategorySwitches.forEach((featuredCategorySwitch) => {
-    featuredCategorySwitch.addEventListener("click", async (e: Event) => {
+  switches.forEach((featuredCategorySwitch) => {
+    featuredCategorySwitch.addEventListener("click", (e: Event) => {
       e.preventDefault();
 
-      const target = e.target as HTMLLinkElement;
-      const category = target.dataset.category?.toLowerCase();
-      const previousTargetLink = document.querySelector(
-        "[data-js='featured-category-switch'][aria-current='page']",
-      );
-      const previousTargetTab = document.querySelector(
-        "[data-js='featured-category-switch'][aria-selected='true']",
-      );
-
-      if (previousTargetLink) {
-        previousTargetLink.removeAttribute("aria-current");
-      }
-
-      if (previousTargetTab) {
-        previousTargetTab.removeAttribute("aria-selected");
-      }
-
-      target.setAttribute("aria-current", "page");
-      target.setAttribute("aria-selected", "true");
+      const category = featuredCategorySwitch.dataset.category?.toLowerCase();
 
       if (!category) {
         return;
       }
 
-      await buildCards(category);
+      switches.forEach((el) => {
+        const attr = el.classList.contains("p-tabs__link")
+          ? "aria-selected"
+          : "aria-current";
+        if (el.dataset.category?.toLowerCase() === category) {
+          el.setAttribute(attr, attr === "aria-selected" ? "true" : "page");
+        } else if (attr === "aria-selected") {
+          el.setAttribute(attr, "false");
+        } else {
+          el.removeAttribute(attr);
+        }
+      });
 
-      viewCategoryLink?.setAttribute("href", `/search?categories=${category}`);
-      viewCategoryLink.innerText = `View all ${category} snaps`;
+      panels.forEach((panel) => {
+        panel.hidden = panel.dataset.category !== category;
+      });
     });
   });
 
-  await buildCards(featuredCategories[0].toLowerCase());
+  panels.forEach((panel) => {
+    if (panel.dataset.category !== "featured") {
+      return;
+    }
+
+    panel.addEventListener("click", (e: Event) => {
+      const card = (e.target as HTMLElement).closest<HTMLElement>(
+        "[data-js='featured-snap-card']",
+      );
+
+      if (card?.dataset.snapName && card.dataset.position) {
+        trackFeaturedSnapClicked(
+          card.dataset.snapName,
+          Number(card.dataset.position),
+          "home",
+        );
+      }
+    });
+  });
 }
 
 async function initStats(): Promise<void> {
@@ -190,6 +66,10 @@ async function initStats(): Promise<void> {
 
   try {
     const response = await fetch("/store/stats");
+    if (response.status === 204) {
+      if (statsSection) statsSection.hidden = true;
+      return;
+    }
     if (!response.ok) {
       if (statsSection) statsSection.hidden = true;
       return;

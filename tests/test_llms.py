@@ -1,10 +1,17 @@
+import copy
 import re
 import unittest
+from unittest.mock import patch
 
+import responses
 from werkzeug.exceptions import MethodNotAllowed, NotFound
 from werkzeug.routing.exceptions import RequestRedirect
 
 from webapp.app import create_app
+from tests.store.tests_details import (
+    EMPTY_EXTRA_DETAILS_PAYLOAD,
+    SNAP_PAYLOAD,
+)
 from webapp.llms import store_llm
 
 ROOT_CATCH_ALL = re.compile(r"/<[^>]+>")
@@ -89,6 +96,13 @@ class TestDiscoveredPages(unittest.TestCase):
 
 class TestRoutes(unittest.TestCase):
     def setUp(self):
+        featured = patch(
+            "webapp.snapcraft.views.store_logic."
+            "get_featured_snaps_by_category",
+            return_value={},
+        )
+        featured.start()
+        self.addCleanup(featured.stop)
         self.app = create_app(testing=True)
         self.client = self.app.test_client()
 
@@ -110,11 +124,39 @@ class TestRoutes(unittest.TestCase):
             self.assertIn(f"<loc>https://snapcraft.io{path}</loc>", body)
 
     def test_suffix_serves_markdown(self):
-        for path in ["/index.md", "/about.md", "/build.md", "/inkscape.md"]:
+        for path in ["/index.md", "/about.md", "/build.md"]:
             response = self.client.get(path)
 
             self.assertEqual(response.status_code, 200, path)
             self.assertIn("text/markdown", response.content_type, path)
+
+    @responses.activate
+    def test_suffix_serves_markdown_for_snap_page(self):
+        payload = copy.deepcopy(SNAP_PAYLOAD)
+        payload["name"] = "inkscape"
+        responses.add(
+            responses.GET,
+            "https://api.snapcraft.io/v2/snaps/info/inkscape",
+            json=payload,
+            status=200,
+        )
+        responses.add(
+            responses.GET,
+            "https://api.snapcraft.io/api/v1/snaps/details/inkscape",
+            json=EMPTY_EXTRA_DETAILS_PAYLOAD,
+            status=200,
+        )
+        responses.add(
+            responses.POST,
+            "https://api.snapcraft.io/api/v1/snaps/metrics",
+            json={},
+            status=200,
+        )
+
+        response = self.client.get("/inkscape.md")
+
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("text/markdown", response.content_type)
 
     def test_pages_behind_login_have_no_markdown_version(self):
         for path in ["/snaps.md", "/account/snaps.md", "/validation-sets.md"]:

@@ -14,11 +14,17 @@ def get_livestreams():
     )
 
     if livestreams:
-        now = datetime.now()
         lead_time = 4  # 4 days
         cooldown_time = 2  # 2 days
 
         for livestream in livestreams:
+            livestream_time = livestream["time"]
+            now = (
+                datetime.now(livestream_time.tzinfo)
+                if livestream_time.utcoffset() is not None
+                else datetime.now()
+            )
+
             instance_lead_time = lead_time
             if "lead_time" in livestream:
                 instance_lead_time = livestream["lead_time"]
@@ -27,8 +33,8 @@ def get_livestreams():
             if "cooldown_time" in livestream:
                 instance_cooldown_time = livestream["cooldown_time"]
 
-            show_from = livestream["time"] - timedelta(days=instance_lead_time)
-            show_until = livestream["time"] + timedelta(
+            show_from = livestream_time - timedelta(days=instance_lead_time)
+            show_until = livestream_time + timedelta(
                 days=instance_cooldown_time
             )
 

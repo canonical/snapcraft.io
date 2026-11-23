@@ -165,6 +165,7 @@ class GetPublisherPageTest(TestCase):
                 "?",
                 urlencode(
                     {
+                        "q": "",
                         "publisher": publisher,
                         "fields": ",".join(
                             [

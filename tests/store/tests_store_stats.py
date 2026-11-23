@@ -47,18 +47,18 @@ class StoreStatsTest(TestCase):
         data = json.loads(response.data)
         self.assertEqual(data["total_tracked"], 1234)
 
-    def test_stats_returns_503_on_connection_error(self):
+    def test_stats_returns_204_on_connection_error(self):
         with patch(
             STATS_PATH, side_effect=ApiConnectionError("connection error")
         ):
             response = self.client.get("/store/stats")
 
-        self.assertEqual(response.status_code, 503)
-        self.assertEqual(json.loads(response.data), {})
+        self.assertEqual(response.status_code, 204)
+        self.assertEqual(response.data, b"")
 
-    def test_stats_returns_503_on_timeout_error(self):
+    def test_stats_returns_204_on_timeout_error(self):
         with patch(STATS_PATH, side_effect=ApiTimeoutError("timeout")):
             response = self.client.get("/store/stats")
 
-        self.assertEqual(response.status_code, 503)
-        self.assertEqual(json.loads(response.data), {})
+        self.assertEqual(response.status_code, 204)
+        self.assertEqual(response.data, b"")
