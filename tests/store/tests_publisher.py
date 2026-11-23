@@ -1,6 +1,5 @@
 import copy
 import re
-from pathlib import Path
 from urllib.parse import urlencode
 
 import responses
@@ -642,26 +641,22 @@ class GetPublisherPageTest(TestCase):
 
     @responses.activate
     def test_all_production_custom_pages_render(self):
-        content_directory = (
-            Path(self.app.root_path)
-            / self.app.config["CONTENT_DIRECTORY"]["PUBLISHER_PAGES"]
-        )
-        publisher_stems = sorted(
-            file_path.stem for file_path in content_directory.glob("*.yaml")
+        custom_publisher_pages = sorted(
+            self.app.extensions["publisher_pages_registry"].keys()
         )
 
-        for publisher_stem in publisher_stems:
+        for publisher in custom_publisher_pages:
             responses.add(
                 responses.GET,
-                self.api_url_find(publisher_stem),
+                self.api_url_find(publisher),
                 json={
                     "results": [
                         _snap_result(
-                            f"{publisher_stem}-snap",
-                            f"{publisher_stem} snap",
+                            f"{publisher}-snap",
+                            f"{publisher} snap",
                             _publisher(
-                                publisher_stem,
-                                publisher_stem.title(),
+                                publisher,
+                                publisher.title(),
                                 "verified",
                             ),
                         )
@@ -670,7 +665,7 @@ class GetPublisherPageTest(TestCase):
                 status=200,
             )
 
-            response = self.client.get(f"/publisher/{publisher_stem}")
+            response = self.client.get(f"/publisher/{publisher}")
             self.assertEqual(response.status_code, 200)
             self.assert_template_used("store/publisher-details.html")
 
