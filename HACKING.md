@@ -102,6 +102,19 @@ workshop run -- yarn lint-scss
 workshop run -- yarn lint-python
 ```
 
+### Automated browser QA
+
+[Auto QA](.github/workflows/auto-qa.md) checks a PR's demo against live production and posts a report with desktop and mobile screenshots.
+
+1. Add clear `## How to QA` steps to the PR description.
+2. Wait for the controller's `github-actions[bot]` comment to say **PR demo: ready** and for the linked **PR demo** workflow to succeed. The deployed commit must match the latest PR commit.
+3. Add the **auto-qa** label to the PR.
+4. Check the **Auto QA preflight** run summary for any blocking or skipped checks and retry instructions. Otherwise, read the QA report on the PR and expand each viewport's details to compare screenshots. **Partial** and **Blocked** results do not mean the checks passed.
+
+To retry, remove and re-add the label once the latest commit's demo is ready. New commits and comments do not trigger QA; re-adding the label cancels any previous QA run for that PR.
+
+The browser is not logged in and cannot perform form submissions or other unsafe actions. Coverage is limited and comparisons use live production, not the PR's base commit, so this does not replace manual QA or tests. Screenshots are published persistently on the shared `assets/auto-qa` branch: only public, unauthenticated content belongs there.
+
 ## Dependency updates
 
 [Dependabot](.github/dependabot.yml) manages npm/Yarn, pip (root and charm), GitHub Actions, and Dockerfile dependencies.
