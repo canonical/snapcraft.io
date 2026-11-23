@@ -1,7 +1,8 @@
 import { useState } from "react";
 import type { ChangeEvent } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { useAtomValue } from "jotai";
+import { useQueryClient } from "react-query";
 import { Notification, Row, Col } from "@canonical/react-components";
 import { Button, Icon } from "@canonical/react-ds-global";
 import { Field, Form } from "@canonical/react-ds-global-form";
@@ -14,10 +15,10 @@ import { brandStoresState } from "../../state/brandStoreState";
 function RequestReservedName(): React.JSX.Element {
   const [claimComment, setClaimComment] = useState<string>();
   const [isSubmitting, setIsSubmitting] = useState<boolean>();
-  const [showSuccessNotification, setShowSuccessNotification] =
-    useState<boolean>(false);
   const [errorNotification, setErrorNotification] = useState<string>();
   const stores = useAtomValue(brandStoresState);
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const [searchParams] = useSearchParams();
   const snapName = searchParams.get("snap_name");
   const store = searchParams.get("store");
@@ -40,12 +41,6 @@ function RequestReservedName(): React.JSX.Element {
       <h1 className="p-heading--2">
         Request reserved name <strong>{snapName}</strong>
       </h1>
-
-      {showSuccessNotification && (
-        <Notification severity="positive">
-          Your claim has been submitted and will be reviewed
-        </Notification>
-      )}
 
       {errorNotification && (
         <Notification severity="caution">{errorNotification}</Notification>
@@ -87,7 +82,15 @@ function RequestReservedName(): React.JSX.Element {
                 if (!responseData.success) {
                   setErrorNotification(responseData.message);
                 } else {
-                  setShowSuccessNotification(true);
+                  window.PUBLISHER_FLASH_MESSAGES = [
+                    [
+                      "positive",
+                      "Your claim has been submitted and will be reviewed",
+                    ],
+                  ];
+                  queryClient.removeQueries({ queryKey: ["accountSnaps"] });
+                  navigate("/snaps");
+                  return;
                 }
 
                 setIsSubmitting(false);

@@ -1,5 +1,6 @@
 import { useState, Dispatch, SetStateAction, ChangeEvent } from "react";
 import { useNavigate } from "react-router-dom";
+import { useQueryClient } from "react-query";
 import { Row, Col } from "@canonical/react-components";
 import { Button } from "@canonical/react-ds-global";
 import { Field, Form } from "@canonical/react-ds-global-form";
@@ -41,6 +42,7 @@ function RegisterSnapForm({
   const snapName: string | undefined = methods.watch("snapName");
 
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
   const handleSubmit = async () => {
     setIsSending(true);
@@ -71,6 +73,7 @@ function RegisterSnapForm({
 
     setTimeout(() => {
       if (responseData.success) {
+        queryClient.removeQueries({ queryKey: ["accountSnaps"] });
         navigate("/snaps");
       } else {
         setRegistrationResponse(responseData.data);
