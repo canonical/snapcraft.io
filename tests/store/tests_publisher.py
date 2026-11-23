@@ -616,30 +616,6 @@ class GetPublisherPageTest(TestCase):
         self.assertNotIn("p-featured-snap", body)
 
     @responses.activate
-    def test_empty_results_with_curated_content_keep_section_states(
-        self,
-    ):
-        responses.add(
-            responses.GET,
-            self.api_url_find("snapcrafters"),
-            json={"results": []},
-            status=200,
-        )
-
-        response = self.client.get("/publisher/snapcrafters")
-        body = response.get_data(as_text=True)
-
-        self.assertEqual(response.status_code, 200)
-        self.assert_template_used("store/publisher-details.html")
-        self.assertIn('<h2 class="p-heading--4">Snaps</h2>', body)
-        self.assertIn(
-            "This publisher's snaps are not available right now.",
-            body,
-        )
-        self.assertIn("See all snaps published by Snapcrafters", body)
-        self.assertNotIn('class="p-media-object p-media-object--snap"', body)
-
-    @responses.activate
     def test_all_production_custom_pages_render(self):
         custom_publisher_pages = sorted(
             self.app.extensions["publisher_pages_registry"].keys()
@@ -686,10 +662,11 @@ class GetPublisherPageTest(TestCase):
 
     @responses.activate
     def test_curated_page_shows_note_when_listed_snaps_are_unavailable(self):
-        responses.add(
-            responses.GET,
-            self.api_url_find("snapcrafters"),
-            json={
+        # Both an empty catalogue and a catalogue whose listed snaps are all
+        # unavailable render the same "not available" state.
+        unavailable_fixtures = {
+            "empty-results": {"results": []},
+            "only-unlisted": {
                 "results": [
                     _snap_result(
                         "alacritty",
@@ -698,19 +675,31 @@ class GetPublisherPageTest(TestCase):
                     )
                 ]
             },
-            status=200,
-        )
+        }
 
-        response = self.client.get("/publisher/snapcrafters")
-        body = response.get_data(as_text=True)
+        for variant, find_response in unavailable_fixtures.items():
+            with self.subTest(variant=variant):
+                responses.add(
+                    responses.GET,
+                    self.api_url_find("snapcrafters"),
+                    json=find_response,
+                    status=200,
+                )
 
-        self.assertEqual(response.status_code, 200)
-        self.assertIn(
-            "This publisher's snaps are not available right now.",
-            body,
-        )
-        self.assertIn("See all snaps published by Snapcrafters", body)
-        self.assertNotIn('href="/sublime-text"', body)
+                response = self.client.get("/publisher/snapcrafters")
+                body = response.get_data(as_text=True)
+
+                self.assertEqual(response.status_code, 200)
+                self.assert_template_used("store/publisher-details.html")
+                self.assertIn('<h2 class="p-heading--4">Snaps</h2>', body)
+                self.assertIn(
+                    "This publisher's snaps are not available right now.",
+                    body,
+                )
+                self.assertIn("See all snaps published by Snapcrafters", body)
+                self.assertNotIn(
+                    'class="p-media-object p-media-object--snap"', body
+                )
 
     @responses.activate
     def test_duplicate_featured_and_listed_snap_is_rendered_once(self):
@@ -814,31 +803,61 @@ class GetPublisherPageTest(TestCase):
             "listed_snaps": [{"package_name": "listed-snap"}],
         }
 
-        optional_variants = {
-            "omit-icon": {"icon_url"},
-            "omit-banner": {"banner_url"},
-            "omit-website": {"website"},
-            "omit-contact": {"contact"},
-            "omit-featured": {"featured_snaps"},
-            "omit-listed": {"listed_snaps"},
-            "omit-all-optional": {
-                "icon_url",
-                "website",
-                "contact",
-                "banner_url",
-                "meta_description",
-                "featured_snaps",
-                "listed_snaps",
-            },
-        }
+        # Each variant omits some optional keys and asserts the page still
+        # renders without broken links or dangling references to them.
+        # (slug, omitted keys, expected absent, expected present)
+        optional_variants = [
+            (
+                "omit-icon",
+                {"icon_url"},
+                [],
+                ["snapcraft-default-snap-icon.svg"],
+            ),
+            ("omit-banner", {"banner_url"}, ["p-strip--image"], []),
+            ("omit-website", {"website"}, ["Visit publisher website"], []),
+            ("omit-contact", {"contact"}, ["Contact publisher"], []),
+            ("omit-featured", {"featured_snaps"}, ["p-featured-snap"], []),
+            (
+                "omit-listed",
+                {"listed_snaps"},
+                ["See all snaps published by Optional Partner"],
+                ['href="/listed-snap"', 'href="/extra-snap"'],
+            ),
+            (
+                "omit-all-optional",
+                set(base_content)
+                - {
+                    "display_name",
+                    "summary",
+                    "description",
+                    "publisher_since",
+                },
+                [
+                    "p-strip--image",
+                    "Visit publisher website",
+                    "Contact publisher",
+                    "p-featured-snap",
+                    "See all snaps published by Optional Partner",
+                ],
+                ["snapcraft-default-snap-icon.svg"],
+            ),
+        ]
 
-        for variant_name, omitted_keys in optional_variants.items():
-            with self.subTest(variant_name=variant_name):
-                publisher_name = f"optional-{variant_name}"
-                content = copy.deepcopy(base_content)
-                for key in omitted_keys:
-                    content.pop(key, None)
+        snap_names = ["featured-snap", "listed-snap", "extra-snap"]
 
+        for (
+            slug,
+            omitted_keys,
+            expected_absent,
+            expected_present,
+        ) in optional_variants:
+            with self.subTest(variant=slug):
+                publisher_name = f"optional-{slug}"
+                content = {
+                    key: value
+                    for key, value in base_content.items()
+                    if key not in omitted_keys
+                }
                 self._set_custom_registry_entry(publisher_name, content)
 
                 responses.add(
@@ -847,32 +866,15 @@ class GetPublisherPageTest(TestCase):
                     json={
                         "results": [
                             _snap_result(
-                                "featured-snap",
-                                "Featured Snap",
+                                name,
+                                name.title(),
                                 _publisher(
                                     publisher_name,
                                     "Optional Partner",
                                     "verified",
                                 ),
-                            ),
-                            _snap_result(
-                                "listed-snap",
-                                "Listed Snap",
-                                _publisher(
-                                    publisher_name,
-                                    "Optional Partner",
-                                    "verified",
-                                ),
-                            ),
-                            _snap_result(
-                                "extra-snap",
-                                "Extra Snap",
-                                _publisher(
-                                    publisher_name,
-                                    "Optional Partner",
-                                    "verified",
-                                ),
-                            ),
+                            )
+                            for name in snap_names
                         ]
                     },
                     status=200,
@@ -884,6 +886,8 @@ class GetPublisherPageTest(TestCase):
                 self.assertEqual(response.status_code, 200)
                 self.assert_template_used("store/publisher-details.html")
 
+                # Scope the dangling-link check to the main content region;
+                # the site chrome legitimately contains href="#" (menu toggle).
                 content_only = re.search(
                     (
                         r'(<div class="p-strip--dark is-shallow"'
@@ -899,29 +903,10 @@ class GetPublisherPageTest(TestCase):
                 self.assertNotIn('href=""', page_content)
                 self.assertNotIn('src=""', page_content)
 
-                if "icon_url" in omitted_keys:
-                    self.assertIn("snapcraft-default-snap-icon.svg", body)
-                if "banner_url" in omitted_keys:
-                    self.assertNotIn("p-strip--image", body)
-                if "website" in omitted_keys:
-                    self.assertNotIn("Visit publisher website", body)
-                if "contact" in omitted_keys:
-                    self.assertNotIn("Contact publisher", body)
-                if "featured_snaps" in omitted_keys:
-                    self.assertNotIn("p-featured-snap", body)
-
-                if "listed_snaps" in omitted_keys:
-                    self.assertNotIn(
-                        "See all snaps published by Optional Partner",
-                        body,
-                    )
-                    self.assertIn('href="/listed-snap"', body)
-                    self.assertIn('href="/extra-snap"', body)
-                else:
-                    self.assertIn(
-                        "See all snaps published by Optional Partner",
-                        body,
-                    )
+                for fragment in expected_absent:
+                    self.assertNotIn(fragment, body)
+                for fragment in expected_present:
+                    self.assertIn(fragment, body)
 
     @responses.activate
     def test_meta_description_falls_back_when_omitted(self):
