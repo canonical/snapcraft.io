@@ -41,7 +41,6 @@ yarn run lint-scss    # stylelint
 yarn run test-js      # vitest
 SECRET_KEY=test_key FLASK_DEBUG=0 python3 -m unittest discover tests
 python3 scripts/validate-publisher-content.py --content-dir webapp/store/content/publishers
-yarn run test-e2e-publisher  # Playwright publisher-page checks
 yarn run test         # Combined: lint-python + test-python + test-js + lint-scss
 ```
 
@@ -78,7 +77,7 @@ tests/                   # Python unittest tests
 
 ## CI/CD (.github/workflows/pr.yml)
 
-**Jobs**: run-workshop (checks Flask and Vite), pack-rock (packs and starts the rock, then runs advisory Lighthouse checks for web changes), lint-python/js/scss (path-filtered), test-python/js (path-filtered), test-publisher-e2e (Playwright publisher-page checks), check-inclusive-naming
+**Jobs**: run-workshop (checks Flask and Vite), pack-rock (packs and starts the rock, then runs advisory Lighthouse checks for web changes), lint-python/js/scss (path-filtered), test-python/js (path-filtered), check-inclusive-naming
 
 **Requirements**: Native checks use Python 3.12 and Node.js 24; JavaScript tests run in UTC. Python tests need `yarn build` first and `FLASK_DEBUG=0`; coverage is exported as XML for Codecov. Workshop setup installs dependencies and forwards ports 8004/5004.
 
