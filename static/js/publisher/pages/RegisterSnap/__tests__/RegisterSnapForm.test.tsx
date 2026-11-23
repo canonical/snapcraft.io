@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { BrowserRouter } from "react-router-dom";
+import { QueryClient, QueryClientProvider } from "react-query";
 import { http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
 import { render, screen, waitFor } from "@testing-library/react";
@@ -11,6 +12,7 @@ import RegisterSnapForm from "../RegisterSnapForm";
 window.CSRF_TOKEN = "test-csrf-token";
 
 const mockNavigate = vi.fn();
+const queryClient = new QueryClient();
 
 vi.mock("react-router-dom", async (importOriginal) => ({
   ...(await importOriginal<typeof import("react-router-dom")>()),
@@ -39,16 +41,18 @@ function Harness({
   const [selectedStore, setSelectedStore] = useState("ubuntu");
 
   return (
-    <BrowserRouter>
-      <RegisterSnapForm
-        isSending={isSending}
-        setIsSending={setIsSending}
-        setRegistrationResponse={setRegistrationResponse}
-        availableStores={stores}
-        selectedStore={selectedStore}
-        setSelectedStore={setSelectedStore}
-      />
-    </BrowserRouter>
+    <QueryClientProvider client={queryClient}>
+      <BrowserRouter>
+        <RegisterSnapForm
+          isSending={isSending}
+          setIsSending={setIsSending}
+          setRegistrationResponse={setRegistrationResponse}
+          availableStores={stores}
+          selectedStore={selectedStore}
+          setSelectedStore={setSelectedStore}
+        />
+      </BrowserRouter>
+    </QueryClientProvider>
   );
 }
 
@@ -366,6 +370,31 @@ describe("RegisterSnapForm", () => {
       await waitFor(
         () => {
           expect(mockNavigate).toHaveBeenCalledWith("/snaps");
+        },
+        { timeout: 3000 },
+      );
+    });
+
+    test("clears the cached account snaps on success", async () => {
+      const user = userEvent.setup();
+      const removeQueries = vi.spyOn(queryClient, "removeQueries");
+
+      server.use(
+        http.post("/api/register-snap", () =>
+          HttpResponse.json({ success: true }),
+        ),
+      );
+
+      renderComponent({ stores: availableStores });
+
+      await user.type(screen.getByLabelText("Snap name"), "test-snap");
+      await user.click(screen.getByRole("button", { name: "Register" }));
+
+      await waitFor(
+        () => {
+          expect(removeQueries).toHaveBeenCalledWith({
+            queryKey: ["accountSnaps"],
+          });
         },
         { timeout: 3000 },
       );

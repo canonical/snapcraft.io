@@ -1,4 +1,5 @@
 import { BrowserRouter } from "react-router-dom";
+import { QueryClient, QueryClientProvider } from "react-query";
 import { http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
 import { render, screen, waitFor } from "@testing-library/react";
@@ -11,6 +12,7 @@ import { brandStoresState } from "../../../state/brandStoreState";
 
 import RequestReservedName from "../RequestReservedName";
 
+const queryClient = new QueryClient();
 const testSnapName = "test-snap-name";
 const testStoreName = "Test store";
 
@@ -18,16 +20,21 @@ window.CSRF_TOKEN = "test-csrf-token";
 
 function renderComponent() {
   render(
-    <BrowserRouter>
-      <JotaiTestProvider initialValues={[[brandStoresState, storesResponse]]}>
-        <RequestReservedName />
-      </JotaiTestProvider>
-    </BrowserRouter>,
+    <QueryClientProvider client={queryClient}>
+      <BrowserRouter>
+        <JotaiTestProvider initialValues={[[brandStoresState, storesResponse]]}>
+          <RequestReservedName />
+        </JotaiTestProvider>
+      </BrowserRouter>
+    </QueryClientProvider>,
   );
 }
 
+const mockNavigate = vi.fn();
+
 vi.mock("react-router-dom", async (importOriginal) => ({
   ...(await importOriginal()),
+  useNavigate: () => mockNavigate,
   useSearchParams: () => [
     new URLSearchParams({
       snap_name: testSnapName,
@@ -44,6 +51,8 @@ beforeAll(() => {
 
 afterEach(() => {
   server.resetHandlers();
+  mockNavigate.mockClear();
+  delete window.PUBLISHER_FLASH_MESSAGES;
 });
 
 afterAll(() => {
@@ -144,7 +153,7 @@ describe("RequestReservedName", () => {
     server.use(
       http.post("/api/register-name-dispute", async () => {
         await requestReceived;
-        return HttpResponse.json({ success: true });
+        return HttpResponse.json({ success: false, message: "Test error" });
       }),
     );
 
@@ -166,14 +175,12 @@ describe("RequestReservedName", () => {
     });
   });
 
-  test("shows notification if form submitted successfully", async () => {
+  test("redirects to the snaps page with a success message if form submitted successfully", async () => {
     const user = userEvent.setup();
 
     server.use(
       http.post("/api/register-name-dispute", () => {
-        return HttpResponse.json({
-          success: true,
-        });
+        return HttpResponse.json({ success: true });
       }),
     );
 
@@ -183,9 +190,32 @@ describe("RequestReservedName", () => {
     await user.click(screen.getByRole("button", { name: "Yes, I am sure" }));
 
     await waitFor(() => {
-      expect(
-        screen.getByText("Your claim has been submitted and will be reviewed"),
-      ).toBeInTheDocument();
+      expect(mockNavigate).toHaveBeenCalledWith("/snaps");
+    });
+    expect(window.PUBLISHER_FLASH_MESSAGES).toEqual([
+      ["positive", "Your claim has been submitted and will be reviewed"],
+    ]);
+  });
+
+  test("clears the cached account snaps if form submitted successfully", async () => {
+    const user = userEvent.setup();
+    const removeQueries = vi.spyOn(queryClient, "removeQueries");
+
+    server.use(
+      http.post("/api/register-name-dispute", () => {
+        return HttpResponse.json({ success: true });
+      }),
+    );
+
+    renderComponent();
+
+    await user.type(screen.getByLabelText("Comment"), "This is a test comment");
+    await user.click(screen.getByRole("button", { name: "Yes, I am sure" }));
+
+    await waitFor(() => {
+      expect(removeQueries).toHaveBeenCalledWith({
+        queryKey: ["accountSnaps"],
+      });
     });
   });
 
