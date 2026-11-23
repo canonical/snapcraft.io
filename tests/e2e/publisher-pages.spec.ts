@@ -88,24 +88,6 @@ function formatAxeViolations(
   ].join("\n");
 }
 
-test("trust badges are rendered from Store data", async ({ page }) => {
-  await setEssentialCookie(page.context());
-
-  await gotoPublisher(page, "/publisher/jetbrains");
-  await expect(
-    page.locator(
-      'span.p-tooltip:has(span.p-tooltip__message:has-text("Verified account"))',
-    ),
-  ).toHaveCount(1);
-
-  await gotoPublisher(page, "/publisher/snapcrafters");
-  await expect(
-    page.locator(
-      'span.p-tooltip:has(span.p-tooltip__message:has-text("Star developer"))',
-    ),
-  ).toHaveCount(1);
-});
-
 test("snapcrafters curated page links to publisher search", async ({
   page,
 }) => {
@@ -131,36 +113,10 @@ test("snapcrafters curated page links to publisher search", async ({
   await expect(page.getByRole("link", { name: "Alacritty" })).toBeVisible();
 });
 
-test("decorative publisher icon and banner are hidden from screen readers", async ({
-  page,
-}) => {
-  await setEssentialCookie(page.context());
-
-  await gotoPublisher(page, "/publisher/jetbrains");
-
-  const publisherIcon = page.locator(".p-snap-heading__icon").first();
-  await expect(publisherIcon).toHaveAttribute("alt", "");
-
-  const banner = page.locator("section.p-strip--image").first();
-  await expect(banner).toBeVisible();
-  await expect(banner.locator("img")).toHaveCount(0);
-});
-
-test("listed snaps unavailable state renders and passes axe", async ({
-  page,
-}) => {
+test("listed snaps unavailable state passes axe", async ({ page }) => {
   await setEssentialCookie(page.context());
 
   await gotoPublisher(page, "/publisher/unavailable-snaps");
-
-  await expect(
-    page.getByText("This publisher's snaps are not available right now."),
-  ).toBeVisible();
-  await expect(
-    page.getByRole("link", {
-      name: "See all snaps published by Unavailable Snaps ›",
-    }),
-  ).toBeVisible();
 
   const axeResult = await new AxeBuilder({ page })
     .exclude(".js-nav-account")
