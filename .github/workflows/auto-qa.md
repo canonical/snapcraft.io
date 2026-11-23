@@ -4,11 +4,13 @@ description: Browser-based QA of a PR demo with production regression comparison
 intent: Help reviewers verify changed experiences and identify unexpected regressions with browser evidence.
 on:
   pull_request:
-    types: [labeled]
+    types: [labeled, synchronize]
   labels: [auto-qa]
   roles: [admin, maintainer, write]
   status-comment: false
+# Synchronize events only cancel the previous run via workflow concurrency.
 if: >-
+  github.event.action == 'labeled' &&
   github.event.pull_request.state == 'open' &&
   github.event.pull_request.head.repo.full_name == github.repository
 permissions:
@@ -24,7 +26,7 @@ timeout-minutes: 30
 max-ai-credits: 50
 max-daily-ai-credits: 150
 concurrency:
-  group: auto-qa-${{ github.event.pull_request.number }}-${{ github.event.label.name == 'auto-qa' && 'qa' || github.run_id }}
+  group: auto-qa-${{ github.event.pull_request.number }}-${{ (github.event.action == 'synchronize' || github.event.label.name == 'auto-qa') && 'qa' || github.run_id }}
   cancel-in-progress: true
 network:
   allowed:
