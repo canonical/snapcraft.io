@@ -72,19 +72,11 @@ if (modal) {
   });
 }
 
-function renderForm(args: DOMStringMap): HTMLFormElement | null {
-  const formEl = document.getElementById(
-    "contactFormTemplate",
-  ) as HTMLFormElement;
+function renderForm(): HTMLFormElement | null {
+  const template = document.getElementById("contactFormTemplate");
+  if (!(template instanceof HTMLTemplateElement) || !modalBody) return null;
 
-  let formTemplate = formEl.innerText;
-
-  Object.keys(args).forEach((arg: string) => {
-    formTemplate = formTemplate.split(`{{${arg}}}`).join(`${args[arg]}`);
-  });
-
-  if (!modalBody) return null;
-  modalBody.innerHTML = formTemplate;
+  modalBody.replaceChildren(template.content.cloneNode(true));
   const form = modalBody.querySelector<HTMLFormElement>(".js-contact-form");
   if (!form) return null;
 
@@ -105,7 +97,7 @@ function renderForm(args: DOMStringMap): HTMLFormElement | null {
 
 function openContactForm(link: HTMLElement): void {
   trigger = link;
-  renderForm(link.dataset);
+  renderForm();
   showPanel("form");
   pushEvent("contact_form_opened");
 }
@@ -124,7 +116,7 @@ if (modal) {
   modal
     .querySelector(".js-contact-try-again")
     ?.addEventListener("click", () => {
-      const form = renderForm({});
+      const form = renderForm();
       if (form) restoreAnswers(form);
       showPanel("form");
     });
