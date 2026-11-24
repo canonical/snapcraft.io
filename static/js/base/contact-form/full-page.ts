@@ -1,5 +1,5 @@
 import { clearAnswers, restoreAnswers } from "./saved-answers";
-import { pushEvent } from "./tracking";
+import { clearTracking, pushEvent } from "./tracking";
 
 export function setupFullPageResult(): void {
   const { pathname, hash } = window.location;
@@ -13,6 +13,7 @@ export function setupFullPageResult(): void {
       pushEvent("contact_form_success");
     }
     clearAnswers();
+    clearTracking();
   }
 
   if (pathname === "/about/contact-us/error" && hash === "#contact-form-fail") {

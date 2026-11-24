@@ -1,4 +1,5 @@
 import { saveAnswers } from "./saved-answers";
+import { fillTrackingFields } from "./tracking";
 
 type Field = HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement;
 const FIELDS = "input, select, textarea";
@@ -55,6 +56,7 @@ export function setupValidation(form: HTMLFormElement): void {
       return;
     }
 
+    fillTrackingFields(form);
     saveAnswers(form);
     form
       .querySelectorAll<HTMLButtonElement>('[type="submit"]')

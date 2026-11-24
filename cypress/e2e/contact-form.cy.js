@@ -260,6 +260,55 @@ describe("Contact form", () => {
     );
   });
 
+  function sendFromLandingLink(consent) {
+    cy.setCookie("_cookies_accepted", consent);
+    mockUbuntuSubmit();
+    cy.visit(
+      `${BASE}/?utm_source=google&utm_medium=cpc&utm_campaign=spring&utm_content=ad1&utm_term=snaps&gclid=g123&fbclid=f456`,
+    );
+    cy.get("footer").contains("a", "Contact us").click();
+    cy.get("#contact-form-modal").within(() => {
+      fillForm();
+      cy.get('[type="submit"]').click();
+    });
+    return cy
+      .wait("@marketoSubmit")
+      .then((interception) => new URLSearchParams(interception.request.body));
+  }
+
+  it("Cookies accepted", () => {
+    sendFromLandingLink("all").then((body) => {
+      expect(body.get("utm_source")).to.equal("google");
+      expect(body.get("utm_medium")).to.equal("cpc");
+      expect(body.get("utm_campaign")).to.equal("spring");
+      expect(body.get("utm_content")).to.equal("ad1");
+      expect(body.get("utm_term")).to.equal("snaps");
+      expect(body.get("GCLID__c")).to.equal("g123");
+      expect(body.get("Facebook_Click_ID__c")).to.equal("f456");
+      expect(body.get("_cookies_accepted")).to.equal("all");
+      expect(body.get("preferredLanguage")).to.not.equal("");
+    });
+  });
+
+  it("Cookies rejected", () => {
+    sendFromLandingLink("essential").then((body) => {
+      [
+        "utm_source",
+        "utm_medium",
+        "utm_campaign",
+        "utm_content",
+        "utm_term",
+        "GCLID__c",
+        "Facebook_Click_ID__c",
+      ].forEach((name) => {
+        expect(body.get(name) || "", name).to.equal("");
+      });
+      expect(body.get("_cookies_accepted")).to.equal("essential");
+      expect(body.get("acquisition_url")).to.equal(`${BASE}/`);
+      expect(body.get("returnURL")).to.equal(`${BASE}/#contact-form-success`);
+    });
+  });
+
   it("Footer link on the contact page stays on the page", () => {
     cy.visit(`${BASE}/about/contact-us`);
     cy.get("footer").contains("a", "Contact us").click();

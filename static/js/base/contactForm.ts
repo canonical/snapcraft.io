@@ -1,6 +1,10 @@
 import { setupContactForm } from "./contact-form";
 import { clearAnswers, restoreAnswers } from "./contact-form/saved-answers";
-import { pushEvent } from "./contact-form/tracking";
+import {
+  clearTracking,
+  currentURLWithoutTracking,
+  pushEvent,
+} from "./contact-form/tracking";
 
 const modal = document.getElementById("contact-form-modal") as
   | HTMLElement
@@ -49,7 +53,7 @@ function renderForm(args: DOMStringMap): HTMLFormElement | null {
     if (submitEvent.defaultPrevented) return;
     const returnURL = form.elements.namedItem("returnURL");
     if (returnURL instanceof HTMLInputElement) {
-      const url = new URL(window.location.href);
+      const url = currentURLWithoutTracking();
       url.hash = "contact-form-success";
       returnURL.value = url.href;
     }
@@ -85,6 +89,7 @@ if (modal) {
 
   if (window.location.hash === "#contact-form-success") {
     clearAnswers();
+    clearTracking();
     showPanel("success");
     pushEvent("contact_form_success");
   } else if (window.location.hash === "#contact-form-fail") {
