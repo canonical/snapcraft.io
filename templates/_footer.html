@@ -114,12 +114,12 @@
           class="p-link--inverted"
           href="/about/contact-us"
           data-js="contact-form-trigger"
-          data-formid="2639">
-          Contact us
-        </a>
+          data-formid="2639"><small>Contact us</small></a>
       </li>
     </ul>
   </div>
 </footer>
-{% include "shared/contact-form-modal.html" %}
+{% if request.path != '/about/contact-us' %}
+  {% include "shared/contact-form-modal.html" %}
+{% endif %}
 {% endif %}

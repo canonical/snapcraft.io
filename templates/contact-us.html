@@ -1,4 +1,4 @@
-{% extends '_base-layout.html' %}
+{% extends '_layout.html' %}
 
 {% block title %}Contact us{% endblock %}
 {% block meta_title %}Contact us {% endblock %}
@@ -13,9 +13,7 @@
   </div>
   <div class="row">
     <div class="col-8">
-      {% with formid="2639",
-       product="appstore",
-       returnURL="https://snapcraft.io/about/thank-you" %}
+      {% with returnURL=request.host_url ~ 'about/thank-you#contact-form-success' %}
         {% include 'shared/contact-form.html' %}
       {% endwith %}
     </div>
