@@ -71,9 +71,8 @@ describe("Contact form", () => {
       expect(fields.get("returnURL")).to.equal(
         `${BASE}/about/thank-you#contact-form-success`,
       );
-      expect(fields.get("acquisition_url")).to.equal(
-        `${BASE}/about/contact-us`,
-      );
+      // Form 2639 has no acquisition_url field; Marketo skips leads that send it
+      expect(fields.has("acquisition_url")).to.equal(false);
       expect(fields.get("_cookies_accepted")).to.equal("essential");
       expect(fields.get("phone")).to.equal("");
     });
@@ -304,7 +303,7 @@ describe("Contact form", () => {
         expect(body.get(name) || "", name).to.equal("");
       });
       expect(body.get("_cookies_accepted")).to.equal("essential");
-      expect(body.get("acquisition_url")).to.equal(`${BASE}/`);
+      expect(body.has("acquisition_url")).to.equal(false);
       expect(body.get("returnURL")).to.equal(`${BASE}/#contact-form-success`);
     });
   });

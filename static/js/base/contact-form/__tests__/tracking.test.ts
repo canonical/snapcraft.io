@@ -131,21 +131,26 @@ describe("Tracking in URLs", () => {
   it.each([
     ["essential", "/?q=postgresql"],
     ["all", "/?q=postgresql&utm_source=qa&gclid=g1&fbclid=f1"],
-  ])("with cookies %s sends %s", (consent, expected) => {
+  ])("with cookies %s returns %s", (consent, expected) => {
     document.cookie = `_cookies_accepted=${consent}`;
     window.history.replaceState(
       {},
       "",
       "/?q=postgresql&utm_source=qa&gclid=g1&fbclid=f1",
     );
-    document.body.innerHTML = `<form><input type="hidden" name="acquisition_url"></form>`;
+
+    expect(currentURLWithoutTracking().search).toBe(expected.slice(1));
+  });
+
+  it("does not fill acquisition_url", () => {
+    document.cookie = "_cookies_accepted=all";
+    document.body.innerHTML = `<form><input type="hidden" name="acquisition_url" value=""></form>`;
     const form = document.querySelector("form") as HTMLFormElement;
 
     fillTrackingFields(form);
 
     expect(
       (form.elements.namedItem("acquisition_url") as HTMLInputElement).value,
-    ).toBe(`${window.location.origin}${expected}`);
-    expect(currentURLWithoutTracking().search).toBe(expected.slice(1));
+    ).toBe("");
   });
 });

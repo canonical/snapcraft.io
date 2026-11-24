@@ -70,10 +70,6 @@ export function fillTrackingFields(form: HTMLFormElement): void {
   Object.values(PARAMS).forEach((field) => setField(field, saved[field] || ""));
   setField("_cookies_accepted", consent);
   setField("preferredLanguage", navigator.language || "");
-
-  const pageURL = currentURLWithoutTracking();
-  pageURL.hash = "";
-  setField("acquisition_url", pageURL.href);
 }
 
 function hasTrackingConsent(): boolean {

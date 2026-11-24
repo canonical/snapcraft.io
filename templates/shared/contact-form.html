@@ -76,7 +76,6 @@
     <input type="hidden" aria-hidden="true" aria-label="hidden field" name="formid" value="2639" />
     <input type="hidden" aria-hidden="true" aria-label="hidden field" name="returnURL" value="{{returnURL}}" />
     <input type="hidden" aria-hidden="true" aria-label="hidden field" name="Consent_to_Processing__c" value="yes" />
-    <input type="hidden" aria-hidden="true" aria-label="hidden field" name="acquisition_url" value="{{ request.url if request.cookies.get('_cookies_accepted') in ['functionality', 'performance', 'all'] else request.base_url }}" />
     <input type="hidden" aria-hidden="true" aria-label="hidden field" name="_cookies_accepted" value="{{ request.cookies.get('_cookies_accepted', '') }}" />
     <input type="hidden" aria-hidden="true" aria-label="hidden field" name="utm_campaign" id="contact-utm_campaign" value="" />
     <input type="hidden" aria-hidden="true" aria-label="hidden field" name="utm_medium" id="contact-utm_medium" value="" />
