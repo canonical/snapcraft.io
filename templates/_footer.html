@@ -119,7 +119,7 @@
     </ul>
   </div>
 </footer>
-{% if request.path != '/about/contact-us' %}
+{% if request.path not in ['/about/contact-us', '/about/contact-us/error', '/about/thank-you'] %}
   {% include "shared/contact-form-modal.html" %}
 {% endif %}
 {% endif %}

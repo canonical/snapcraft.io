@@ -1,3 +1,4 @@
+import { setupFullPageResult } from "./full-page";
 import { setupStateField } from "./state-field";
 import { setupValidation } from "./validation";
 
@@ -9,3 +10,4 @@ export function setupContactForm(form: HTMLFormElement): void {
 document
   .querySelectorAll<HTMLFormElement>(".js-contact-form")
   .forEach(setupContactForm);
+setupFullPageResult();

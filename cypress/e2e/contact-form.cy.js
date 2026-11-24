@@ -233,6 +233,33 @@ describe("Contact form", () => {
     });
   });
 
+  it("Full page, ubuntu.com returns #contact-form-fail", () => {
+    mockUbuntuSubmit("fail");
+    cy.visit(`${BASE}/about/contact-us`);
+
+    fillForm();
+    cy.get(`form[action="${MARKETO_SUBMIT}"] [type="submit"]`).click();
+
+    cy.wait("@marketoSubmit");
+    cy.location("pathname").should("eq", "/about/contact-us/error");
+    cy.contains(
+      "There was an error while sending your message. Please try again.",
+    );
+    cy.window().then((win) => {
+      const events = (win.dataLayer || []).map((entry) => entry.event);
+      expect(events).to.include("contact_form_failed");
+    });
+
+    cy.contains("a", "Try again").click();
+    cy.location("pathname").should("eq", "/about/contact-us");
+    cy.get('input[name="firstName"]').should("have.value", "Test");
+    cy.get('select[name="country"]').should("have.value", "NL");
+    cy.get('textarea[name="Comments_from_lead__c"]').should(
+      "have.value",
+      "Hello",
+    );
+  });
+
   it("Footer link on the contact page stays on the page", () => {
     cy.visit(`${BASE}/about/contact-us`);
     cy.get("footer").contains("a", "Contact us").click();

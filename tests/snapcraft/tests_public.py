@@ -27,6 +27,19 @@ class StorePage(TestCase):
         assert response.status_code == 200
         self.assert_template_used("index.html")
 
+    def test_contact_us_error(self):
+        response = self.client.get("/about/contact-us/error")
+        html = response.get_data(as_text=True)
+
+        assert response.status_code == 200
+        self.assertIn('<meta name="robots" content="noindex">', html)
+        self.assertIn(
+            "There was an error while sending your message. "
+            "Please try again.",
+            html,
+        )
+        self.assertIn('href="/about/contact-us"', html)
+
 
 def _snap(name, validation="unproven", icon=True):
     return {

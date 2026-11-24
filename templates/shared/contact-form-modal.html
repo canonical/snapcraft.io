@@ -10,11 +10,7 @@
       {% include "shared/_contact-thank-you.html" %}
     </div>
     <div hidden class="js-contact-error">
-      <div class="p-notification--negative">
-        <div class="p-notification__content">
-          <p class="p-notification__message">There was an error while sending your message. Please try again.</p>
-        </div>
-      </div>
+      {% include "shared/_contact-error-message.html" %}
       <button class="p-button--positive js-contact-try-again">Try again</button>
     </div>
   </section>
