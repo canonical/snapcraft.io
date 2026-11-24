@@ -6,8 +6,10 @@
     </header>
     <div id="modal-body"></div>
     <div hidden class="js-contact-success">
-      <p class="p-heading--3">Thanks for contacting us</p>
-      {% include "shared/_contact-thank-you.html" %}
+      <h3 class="p-heading--3">Thanks for contacting us</h3>
+      {% with message_tag="p" %}
+        {% include "shared/_contact-thank-you.html" %}
+      {% endwith %}
     </div>
     <div hidden class="js-contact-error">
       {% include "shared/_contact-error-message.html" %}

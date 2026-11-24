@@ -78,6 +78,7 @@ describe("Contact form", () => {
     });
     cy.location("pathname").should("eq", "/about/thank-you");
     cy.contains("h1", "Thanks for contacting us");
+    cy.contains("h2", "A member of our team will be in touch shortly.");
   });
 
   it("Footer link opens the pop-up, then success", () => {
@@ -113,6 +114,11 @@ describe("Contact form", () => {
       .should("be.visible")
       .and("contain", "Thanks for contacting us")
       .and("contain", "A member of our team will be in touch shortly.");
+    // Only the dialog title is an h2; the message sits under it
+    cy.get("#contact-form-modal .js-contact-success").within(() => {
+      cy.get("h2").should("not.exist");
+      cy.contains("h3", "Thanks for contacting us");
+    });
     cy.window().then((win) => {
       const events = (win.dataLayer || []).map((entry) => entry.event);
       expect(events).to.include("contact_form_success");
