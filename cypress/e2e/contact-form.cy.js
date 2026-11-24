@@ -325,6 +325,37 @@ describe("Contact form", () => {
     cy.get("#contact-form-modal").should("be.visible");
   });
 
+  it("Pop-up keyboard use", () => {
+    const footerLink = "footer a[data-js='contact-form-trigger']";
+    cy.visit(`${BASE}/`);
+    cy.get(footerLink).focus();
+    cy.press(Cypress.Keyboard.Keys.ENTER);
+    cy.focused().should("have.attr", "role", "dialog");
+    cy.get("#contact-form-modal [role=dialog]").should(
+      "have.attr",
+      "aria-modal",
+      "true",
+    );
+
+    cy.press(Cypress.Keyboard.Keys.TAB);
+    cy.focused().should("have.class", "p-modal__close");
+    cy.focused().trigger("keydown", { key: "Tab", shiftKey: true });
+    cy.focused().should("have.attr", "type", "submit");
+    cy.press(Cypress.Keyboard.Keys.TAB);
+    cy.focused().should("have.class", "p-modal__close");
+    cy.press(Cypress.Keyboard.Keys.TAB);
+    cy.focused().should("have.attr", "name", "firstName");
+
+    cy.press(Cypress.Keyboard.Keys.ESC);
+    cy.get("#contact-form-modal").should("not.be.visible");
+    cy.focused().should("match", footerLink);
+
+    cy.press(Cypress.Keyboard.Keys.ENTER);
+    cy.get("#contact-form-modal .p-modal__close").click();
+    cy.get("#contact-form-modal").should("not.be.visible");
+    cy.focused().should("match", footerLink);
+  });
+
   it("Footer link on the contact page stays on the page", () => {
     cy.visit(`${BASE}/about/contact-us`);
     cy.get("footer").contains("a", "Contact us").click();
