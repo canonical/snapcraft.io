@@ -309,6 +309,22 @@ describe("Contact form", () => {
     });
   });
 
+  it("IoT category page links", () => {
+    const IOT_CONTACT =
+      "https://ubuntu.com/internet-of-things/contact-us?product=appstore";
+    cy.visit(`${BASE}/iot`);
+
+    cy.get(`a[href="${IOT_CONTACT}"]`)
+      .should("have.length", 2)
+      .each(($link) => {
+        expect($link.attr("data-js")).to.not.equal("contact-form-trigger");
+      });
+
+    cy.get("footer").contains("a", "Contact us").click();
+    cy.location("pathname").should("eq", "/iot");
+    cy.get("#contact-form-modal").should("be.visible");
+  });
+
   it("Footer link on the contact page stays on the page", () => {
     cy.visit(`${BASE}/about/contact-us`);
     cy.get("footer").contains("a", "Contact us").click();
