@@ -41,9 +41,13 @@ export function captureLanding(): void {
   if (Object.keys(found).length) writeJSON(STORAGE_KEY, LABEL, found);
 }
 
+function hasTrackingConsent(): boolean {
+  return ACCEPTED.includes(getCookie("_cookies_accepted"));
+}
+
 export function fillTrackingFields(form: HTMLFormElement): void {
   const consent = getCookie("_cookies_accepted");
-  const saved = ACCEPTED.includes(consent) ? readJSON(STORAGE_KEY, LABEL) : {};
+  const saved = hasTrackingConsent() ? readJSON(STORAGE_KEY, LABEL) : {};
 
   const setField = (name: string, value: string) => {
     const field = form.elements.namedItem(name);
@@ -57,10 +61,6 @@ export function fillTrackingFields(form: HTMLFormElement): void {
   // The server value is stale if the cookie banner was accepted after load
   setField("_cookies_accepted", consent);
   setField("preferredLanguage", navigator.language || "");
-}
-
-function hasTrackingConsent(): boolean {
-  return ACCEPTED.includes(getCookie("_cookies_accepted"));
 }
 
 // Without consent, UTMs and click IDs must not leak through page URLs either
