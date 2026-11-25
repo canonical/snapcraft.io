@@ -13,6 +13,9 @@
   </div>
   <div class="row">
     <div class="col-8">
+      <div hidden class="js-contact-error">
+        {% include "shared/_contact-error-message.html" %}
+      </div>
       {% with returnURL=request.host_url ~ 'about/thank-you#contact-form-success' %}
         {% include 'shared/contact-form.html' %}
       {% endwith %}

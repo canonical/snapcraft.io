@@ -6,18 +6,17 @@ export function setupFullPageResult(): void {
 
   if (pathname === "/about/thank-you") {
     if (hash === "#contact-form-fail") {
-      window.location.replace("/about/contact-us/error#contact-form-fail");
+      window.location.replace("/about/contact-us#contact-form-fail");
     } else if (hash === "#contact-form-success") {
       contactFormSucceeded();
     }
   }
 
-  if (pathname === "/about/contact-us/error" && hash === "#contact-form-fail") {
-    contactFormFailed();
-  }
-
-  if (pathname === "/about/contact-us") {
+  if (pathname === "/about/contact-us" && hash === "#contact-form-fail") {
     const form = document.querySelector<HTMLFormElement>(".js-contact-form");
     if (form) restoreAnswers(form);
+    const error = document.querySelector<HTMLElement>(".js-contact-error");
+    if (error) error.hidden = false;
+    contactFormFailed();
   }
 }

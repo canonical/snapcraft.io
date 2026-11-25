@@ -39,10 +39,33 @@ describe("Full page result", () => {
     expect(trackEvent).not.toHaveBeenCalled();
   });
 
-  it("reports a failed send on the error page and keeps saved answers", () => {
-    visit("/about/contact-us/error#contact-form-fail");
+  function renderContactPage() {
+    document.body.innerHTML = `
+      <div class="js-contact-error" hidden></div>
+      <form class="js-contact-form"><input name="firstName"></form>
+    `;
+  }
 
+  const firstName = () =>
+    (document.querySelector('[name="firstName"]') as HTMLInputElement).value;
+  const errorShown = () =>
+    !(document.querySelector(".js-contact-error") as HTMLElement).hidden;
+
+  it("shows the error above the refilled form after a failed send", () => {
+    renderContactPage();
+    visit("/about/contact-us#contact-form-fail");
+
+    expect(errorShown()).toBe(true);
+    expect(firstName()).toBe("Test");
     expect(trackEvent).toHaveBeenCalledWith("contact_form_failed");
-    expect(window.sessionStorage.getItem(ANSWERS_KEY)).not.toBeNull();
+  });
+
+  it("starts empty when the contact page is opened normally", () => {
+    renderContactPage();
+    visit("/about/contact-us");
+
+    expect(errorShown()).toBe(false);
+    expect(firstName()).toBe("");
+    expect(trackEvent).not.toHaveBeenCalled();
   });
 });

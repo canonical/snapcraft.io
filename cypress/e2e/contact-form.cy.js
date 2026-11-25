@@ -184,6 +184,16 @@ describe("Contact form", () => {
     });
   });
 
+  function expectRefilled() {
+    cy.get('input[name="firstName"]').should("have.value", "Test");
+    cy.get('input[name="email"]').should("have.value", "test.user@example.com");
+    cy.get('select[name="country"]').should("have.value", "NL");
+    cy.get('textarea[name="Comments_from_lead__c"]').should(
+      "have.value",
+      "Hello",
+    );
+  }
+
   it("Pop-up, ubuntu.com returns #contact-form-fail", () => {
     mockUbuntuSubmit("fail");
     openPopup();
@@ -202,27 +212,20 @@ describe("Contact form", () => {
         "contain",
         "There was an error while sending your message. Please try again.",
       );
-
-    cy.get("#contact-form-modal").contains("button", "Try again").click();
+    // The error sits above the refilled form, with no extra step
     cy.get("#contact-form-modal").within(() => {
-      cy.get('input[name="firstName"]').should("have.value", "Test");
-      cy.get('input[name="email"]').should(
-        "have.value",
-        "test.user@example.com",
-      );
-      cy.get('select[name="country"]').should("have.value", "NL");
-      cy.get('textarea[name="Comments_from_lead__c"]').should(
-        "have.value",
-        "Hello",
-      );
+      cy.contains("button", "Try again").should("not.exist");
+      expectRefilled();
     });
 
+    // A later open starts empty
     cy.get("#contact-form-modal .p-modal__close").click();
     cy.get("footer").contains("a", "Contact us").click();
     cy.get('#contact-form-modal input[name="firstName"]').should(
       "have.value",
-      "Test",
+      "",
     );
+    cy.get("#contact-form-modal .js-contact-error").should("not.be.visible");
   });
 
   it("Full page, ubuntu.com returns #contact-form-fail", () => {
@@ -233,19 +236,16 @@ describe("Contact form", () => {
     cy.get(`form[action="${MARKETO_SUBMIT}"] [type="submit"]`).click();
 
     cy.wait("@marketoSubmit");
-    cy.location("pathname").should("eq", "/about/contact-us/error");
+    cy.location("pathname").should("eq", "/about/contact-us");
+    cy.location("hash").should("eq", "#contact-form-fail");
     cy.contains(
       "There was an error while sending your message. Please try again.",
-    );
+    ).should("be.visible");
+    expectRefilled();
 
-    cy.contains("a", "Try again").click();
-    cy.location("pathname").should("eq", "/about/contact-us");
-    cy.get('input[name="firstName"]').should("have.value", "Test");
-    cy.get('select[name="country"]').should("have.value", "NL");
-    cy.get('textarea[name="Comments_from_lead__c"]').should(
-      "have.value",
-      "Hello",
-    );
+    // Opening the page normally starts empty
+    cy.visit(`${BASE}/about/contact-us`);
+    cy.get('input[name="firstName"]').should("have.value", "");
   });
 
   function sendFromLandingLink(consent) {

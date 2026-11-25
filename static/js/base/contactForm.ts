@@ -23,7 +23,8 @@ const TRIGGER = "[data-js='contact-form-trigger']";
 let trigger = document.querySelector<HTMLElement>(TRIGGER);
 
 function showPanel(panel: "form" | "success" | "error"): void {
-  if (modalBody) modalBody.hidden = panel !== "form";
+  // The error is shown above the refilled form
+  if (modalBody) modalBody.hidden = panel === "success";
   if (successPanel) successPanel.hidden = panel !== "success";
   if (errorPanel) errorPanel.hidden = panel !== "error";
   modal?.classList.remove("u-hide");
@@ -62,7 +63,7 @@ function trapTabFocus(event: KeyboardEvent, container: HTMLElement): void {
   }
 }
 
-function renderForm(): void {
+function renderForm(refill: boolean): void {
   const template = document.getElementById("contactFormTemplate");
   if (!(template instanceof HTMLTemplateElement) || !modalBody) return;
 
@@ -71,7 +72,7 @@ function renderForm(): void {
   if (!form) return;
 
   setupContactForm(form);
-  restoreAnswers(form);
+  if (refill) restoreAnswers(form);
   // Runs after validation, which cancels invalid submits
   form.addEventListener("submit", (submitEvent) => {
     if (submitEvent.defaultPrevented) return;
@@ -87,7 +88,7 @@ function renderForm(): void {
 
 function openContactForm(link: HTMLElement): void {
   trigger = link;
-  renderForm();
+  renderForm(false);
   showPanel("form");
   trackFormEvent("contact_form_opened");
 }
@@ -115,17 +116,11 @@ if (modal) {
     openContactForm(link);
   });
 
-  modal
-    .querySelector(".js-contact-try-again")
-    ?.addEventListener("click", () => {
-      renderForm();
-      showPanel("form");
-    });
-
   if (window.location.hash === "#contact-form-success") {
     showPanel("success");
     contactFormSucceeded();
   } else if (window.location.hash === "#contact-form-fail") {
+    renderForm(true);
     showPanel("error");
     contactFormFailed();
   }

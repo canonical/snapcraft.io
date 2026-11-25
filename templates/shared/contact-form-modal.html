@@ -4,16 +4,15 @@
       <h2 class="p-modal__title" id="contact-form-modal-title">Contact us</h2>
       <button class="p-modal__close" aria-label="Close active modal" aria-controls="contact-form-modal" data-js="close-modal-control">Close</button>
     </header>
+    <div hidden class="js-contact-error">
+      {% include "shared/_contact-error-message.html" %}
+    </div>
     <div id="modal-body"></div>
     <div hidden class="js-contact-success">
       <h3 class="p-heading--3">Thanks for contacting us</h3>
       {% with message_tag="p" %}
         {% include "shared/_contact-thank-you.html" %}
       {% endwith %}
-    </div>
-    <div hidden class="js-contact-error">
-      {% include "shared/_contact-error-message.html" %}
-      <button class="p-button--positive js-contact-try-again">Try again</button>
     </div>
   </section>
 </div>
