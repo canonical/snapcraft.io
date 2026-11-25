@@ -8,13 +8,16 @@ const MARKETO_SUBMIT = "https://ubuntu.com/marketo/submit";
 function mockUbuntuSubmit(result = "success", delay = 0) {
   cy.intercept("POST", MARKETO_SUBMIT, (req) => {
     const returnURL = new URL(new URLSearchParams(req.body).get("returnURL"));
+    // The full page returns to production; stay on the local server
+    const local = new URL(returnURL.pathname + returnURL.search, BASE);
+    local.hash = returnURL.hash;
     if (result === "fail") {
-      returnURL.search = "";
-      returnURL.hash = "contact-form-fail";
+      local.search = "";
+      local.hash = "contact-form-fail";
     }
     req.reply({
       statusCode: 302,
-      headers: { location: returnURL.href },
+      headers: { location: local.href },
       delay,
     });
   }).as("marketoSubmit");
@@ -74,7 +77,7 @@ describe("Contact form", () => {
       const fields = new URLSearchParams(request.body);
       expect(fields.get("formid")).to.equal("2639");
       expect(fields.get("returnURL")).to.equal(
-        `${BASE}/about/thank-you#contact-form-success`,
+        "https://snapcraft.io/about/thank-you#contact-form-success",
       );
       // Form 2639 has no acquisition_url field; Marketo skips leads that send it
       expect(fields.has("acquisition_url")).to.equal(false);
