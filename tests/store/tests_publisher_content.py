@@ -1,5 +1,4 @@
 import copy
-import logging
 import tempfile
 import unittest
 from pathlib import Path
@@ -8,8 +7,8 @@ from unittest.mock import MagicMock
 
 from webapp.store.publisher_content import (
     PublisherContentValidator,
+    _validate_directory,
     initialize_publisher_content_registry,
-    load_publisher_content_registry,
     validate_publisher_content_directory,
 )
 
@@ -219,12 +218,13 @@ class PublisherContentRegistryLoadingTest(unittest.TestCase):
             self._write_valid_triplet(temp_path)
             (temp_path / "README.md").write_text("content")
 
-            registry = load_publisher_content_registry(temp_path)
+            registry, failures = _validate_directory(temp_path)
 
             self.assertEqual(
                 set(registry.keys()),
                 {"jetbrains", "kde", "snapcrafters"},
             )
+            self.assertEqual(failures, [])
 
     def test_adding_new_file_adds_new_publisher(self):
         with tempfile.TemporaryDirectory() as temp_dir:
@@ -236,32 +236,13 @@ class PublisherContentRegistryLoadingTest(unittest.TestCase):
                 _valid_content("New Partner"),
             )
 
-            registry = load_publisher_content_registry(temp_path)
+            registry, failures = _validate_directory(temp_path)
 
             self.assertEqual(
                 set(registry.keys()),
                 {"jetbrains", "kde", "newpartner", "snapcrafters"},
             )
-
-    def test_invalid_file_is_skipped_and_logged(self):
-        with tempfile.TemporaryDirectory() as temp_dir:
-            temp_path = Path(temp_dir)
-            self._write_valid_triplet(temp_path)
-            invalid_content = _valid_content()
-            del invalid_content["summary"]
-            self._write_publisher_file(temp_path, "broken", invalid_content)
-
-            logger = logging.getLogger("publisher-content-test")
-            with self.assertLogs(logger, level="ERROR") as logs:
-                registry = load_publisher_content_registry(
-                    temp_path,
-                    logger=logger,
-                )
-
-            self.assertNotIn("broken", registry)
-            self.assertTrue(
-                any("broken.yaml" in message for message in logs.output)
-            )
+            self.assertEqual(failures, [])
 
     def test_invalid_variants_are_skipped_and_non_yaml_is_ignored(self):
         with tempfile.TemporaryDirectory() as temp_dir:
@@ -330,40 +311,23 @@ class PublisherContentRegistryLoadingTest(unittest.TestCase):
             )
             self._write_raw_file(temp_path, "empty.yaml", "")
 
-            logger = logging.getLogger(
-                "publisher-content-test-invalid-variants"
-            )
-            with self.assertLogs(logger, level="ERROR") as logs:
-                registry = load_publisher_content_registry(
-                    temp_path,
-                    logger=logger,
-                )
+            registry, failures = _validate_directory(temp_path)
 
             self.assertEqual(
                 set(registry.keys()),
                 {"jetbrains", "kde", "snapcrafters"},
             )
 
-            expected_invalid_files = {
-                "missing-required.yaml",
-                "unknown-field.yaml",
-                "three-featured.yaml",
-                "invalid-color.yaml",
-                "malformed.yaml",
-                "empty.yaml",
-            }
-
-            for expected_invalid_file in expected_invalid_files:
-                with self.subTest(file_name=expected_invalid_file):
-                    self.assertTrue(
-                        any(
-                            expected_invalid_file in message
-                            for message in logs.output
-                        )
-                    )
-
-            self.assertFalse(
-                any("README.md" in message for message in logs.output)
+            self.assertEqual(
+                {failure.file_name for failure in failures},
+                {
+                    "missing-required.yaml",
+                    "unknown-field.yaml",
+                    "three-featured.yaml",
+                    "invalid-color.yaml",
+                    "malformed.yaml",
+                    "empty.yaml",
+                },
             )
 
     def test_registry_data_is_plain_data(self):
@@ -371,7 +335,7 @@ class PublisherContentRegistryLoadingTest(unittest.TestCase):
             temp_path = Path(temp_dir)
             self._write_valid_triplet(temp_path)
 
-            registry = load_publisher_content_registry(temp_path)
+            registry, _ = _validate_directory(temp_path)
             original_registry = copy.deepcopy(registry)
 
             registry["jetbrains"]["summary"] = "changed"

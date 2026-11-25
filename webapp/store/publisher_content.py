@@ -1,4 +1,3 @@
-import logging
 import re
 from dataclasses import dataclass
 from pathlib import Path
@@ -341,26 +340,6 @@ def _validate_directory(
         registry[file_path.stem] = content
 
     return registry, failures
-
-
-def load_publisher_content_registry(
-    content_directory: Path,
-    logger: logging.Logger | None = None,
-) -> dict[str, dict[str, Any]]:
-    if logger is None:
-        logger = logging.getLogger(__name__)
-
-    registry, failures = _validate_directory(content_directory)
-
-    for failure in failures:
-        issue_messages = ", ".join(issue.as_text() for issue in failure.issues)
-        logger.error(
-            "Invalid publisher content in %s: %s",
-            failure.file_name,
-            issue_messages,
-        )
-
-    return registry
 
 
 def validate_publisher_content_directory(
