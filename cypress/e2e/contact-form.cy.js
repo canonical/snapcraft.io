@@ -86,6 +86,23 @@ describe("Contact form", () => {
     cy.contains("h2", "A member of our team will be in touch shortly.");
   });
 
+  it("Sends no State, even for the US", () => {
+    mockUbuntuSubmit();
+    openPopup();
+
+    cy.get("#contact-form-modal").within(() => {
+      fillForm();
+      cy.get('select[name="country"]').select("US");
+      cy.get('[name="State"]').should("not.exist");
+      cy.get('[type="submit"]').click();
+    });
+
+    cy.wait("@marketoSubmit").then(({ request }) => {
+      // ubuntu.com moves country out of the lead, so Marketo rejects any State
+      expect(new URLSearchParams(request.body).has("State")).to.equal(false);
+    });
+  });
+
   it("Footer link opens the pop-up, then success", () => {
     mockUbuntuSubmit();
     openPopup();
