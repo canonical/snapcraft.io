@@ -341,6 +341,11 @@ describe("Contact form", () => {
       "aria-modal",
       "true",
     );
+    cy.get("#contact-form-modal [role=dialog]")
+      .invoke("attr", "aria-labelledby")
+      .then((id) => {
+        cy.get(`#${id}`).should("have.text", "Contact us");
+      });
 
     cy.press(Cypress.Keyboard.Keys.TAB);
     cy.focused().should("have.class", "p-modal__close");
