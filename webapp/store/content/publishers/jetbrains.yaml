@@ -1,5 +1,4 @@
-publisher: JetBrains
-username: jetbrains
+display_name: JetBrains
 icon_url: https://assets.ubuntu.com/v1/a82ec61c-logo-jetbrains.svg
 banner_url: https://assets.ubuntu.com/v1/b3a74fa1-jb_3840x1920.jpg
 summary: We make professional software development a more productive and enjoyable experience.
@@ -7,8 +6,6 @@ description: <p>JetBrains creates professional software development tools for co
 publisher_since: March 2017
 website: https://www.jetbrains.com/
 contact: https://www.jetbrains.com/company/contacts/
-developer_validation: verified
-
 featured_snaps:
   - package_name: intellij-idea
     background: "#000000"

@@ -30,6 +30,9 @@ from webapp.admin.views import admin
 from webapp.publisher.views import account
 from webapp.snapcraft.views import snapcraft_blueprint
 from webapp.store.views import store_blueprint
+from webapp.store.publisher_content import (
+    initialize_publisher_content_registry,
+)
 from webapp.tutorials.views import init_tutorials
 from webapp.packages.store_packages import store_packages
 from webapp.endpoints.views import endpoints
@@ -90,6 +93,7 @@ def create_app(testing=False):
 
     init_extensions(app)
     set_handlers(app)
+    initialize_publisher_content_registry(app)
 
     # Serve any page as Markdown at /page.md and llms.txt
     store_llm.init_app(app)

@@ -1,5 +1,4 @@
-publisher: Snapcrafters
-username: snapcrafters
+display_name: Snapcrafters
 icon_url: https://avatars.githubusercontent.com/u/29598503?s=200&v=4
 banner_url: https://assets.ubuntu.com/v1/c3f30344-snapcrafters-banner.jpg
 summary: We are a group of snap package enthusiasts and stakeholders working together to bring apps and services to the Snap Store for Linux.
@@ -7,9 +6,13 @@ description: <h2 class="p-heading--4">What is &ldquo;Snapcrafters&rdquo;?</h2><p
 publisher_since: July 2017
 website: https://github.com/snapcrafters
 contact: mailto:snap-advocacy@canonical.com
-developer_validation: starred
 featured_snaps: []
 meta_description: The "Snapcrafters" publisher in the Snap Store is a community of people who maintain snaps of applications that are not their own. Our goal is to be a trusted and reliable source for high-quality snaps. We are a group of Snap Package enthusiasts and stake-holders working together to bring apps and services to the Snap Store for Linux.
-link_to_search: True
-hide_all_snaps: True
-show_popular_snaps: True
+listed_snaps:
+  - package_name: sublime-text
+  - package_name: obs-studio
+  - package_name: discord
+  - package_name: signal-desktop
+  - package_name: mattermost-desktop
+  - package_name: android-studio
+  - package_name: eclipse
