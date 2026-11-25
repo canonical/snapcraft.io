@@ -11,7 +11,6 @@ export function setupStateField(form: HTMLFormElement): void {
     const show = STATE_COUNTRIES.includes(country.value);
     wrapper.hidden = !show;
     state.required = show;
-    // Disabled fields are not submitted
     state.disabled = !show;
     state
       .querySelectorAll<HTMLOptGroupElement>("optgroup[data-country]")

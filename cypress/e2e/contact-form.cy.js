@@ -49,6 +49,11 @@ function fillForm() {
   cy.get('textarea[name="Comments_from_lead__c"]').type("Hello");
 }
 
+function openPopup(path = "/") {
+  cy.visit(`${BASE}${path}`);
+  cy.get("footer").contains("a", "Contact us").click();
+}
+
 describe("Contact form", () => {
   beforeEach(() => {
     // Hide the cookie banner, which covers the footer
@@ -83,25 +88,13 @@ describe("Contact form", () => {
 
   it("Footer link opens the pop-up, then success", () => {
     mockUbuntuSubmit();
-    cy.visit(`${BASE}/`);
-
-    cy.get("footer").contains("a", "Contact us").click();
+    openPopup();
     cy.location("pathname").should("eq", "/");
     cy.get("#contact-form-modal").should("be.visible");
-    cy.window().then((win) => {
-      const events = (win.dataLayer || []).map((entry) => entry.event);
-      expect(events).to.include("contact_form_opened");
-    });
 
     cy.get("#contact-form-modal").within(() => {
       fillForm();
-      // Check before Cypress waits for the next page to load
-      cy.get('[type="submit"]').then(($button) => {
-        $button[0].click();
-        const win = $button[0].ownerDocument.defaultView;
-        const events = (win.dataLayer || []).map((entry) => entry.event);
-        expect(events).to.include("contact_form_submitted");
-      });
+      cy.get('[type="submit"]').click();
     });
 
     cy.wait("@marketoSubmit").then(({ request }) => {
@@ -114,14 +107,9 @@ describe("Contact form", () => {
       .should("be.visible")
       .and("contain", "Thanks for contacting us")
       .and("contain", "A member of our team will be in touch shortly.");
-    // Only the dialog title is an h2; the message sits under it
     cy.get("#contact-form-modal .js-contact-success").within(() => {
       cy.get("h2").should("not.exist");
       cy.contains("h3", "Thanks for contacting us");
-    });
-    cy.window().then((win) => {
-      const events = (win.dataLayer || []).map((entry) => entry.event);
-      expect(events).to.include("contact_form_success");
     });
   });
 
@@ -143,8 +131,7 @@ describe("Contact form", () => {
     cy.intercept("POST", MARKETO_SUBMIT, () => {
       requests += 1;
     });
-    cy.visit(`${BASE}/`);
-    cy.get("footer").contains("a", "Contact us").click();
+    openPopup();
 
     cy.get("#contact-form-modal").within(() => {
       cy.get('[type="submit"]').click();
@@ -177,17 +164,14 @@ describe("Contact form", () => {
     });
 
     cy.get("#contact-form-modal").should("be.visible");
-    cy.window().then((win) => {
-      const events = (win.dataLayer || []).map((entry) => entry.event);
-      expect(events).not.to.include("contact_form_submitted");
+    cy.then(() => {
       expect(requests).to.equal(0);
     });
   });
 
   it("Send button while sending", () => {
     mockUbuntuSubmit("success", 3000);
-    cy.visit(`${BASE}/`);
-    cy.get("footer").contains("a", "Contact us").click();
+    openPopup();
 
     cy.get("#contact-form-modal").within(() => {
       fillForm();
@@ -195,14 +179,14 @@ describe("Contact form", () => {
       cy.get('[type="submit"]').then(($button) => {
         $button[0].click();
         expect($button[0].disabled).to.equal(true);
+        expect($button[0].textContent).to.contain("Submitting…");
       });
     });
   });
 
   it("Pop-up, ubuntu.com returns #contact-form-fail", () => {
     mockUbuntuSubmit("fail");
-    cy.visit(`${BASE}/`);
-    cy.get("footer").contains("a", "Contact us").click();
+    openPopup();
 
     cy.get("#contact-form-modal").within(() => {
       fillForm();
@@ -218,10 +202,6 @@ describe("Contact form", () => {
         "contain",
         "There was an error while sending your message. Please try again.",
       );
-    cy.window().then((win) => {
-      const events = (win.dataLayer || []).map((entry) => entry.event);
-      expect(events).to.include("contact_form_failed");
-    });
 
     cy.get("#contact-form-modal").contains("button", "Try again").click();
     cy.get("#contact-form-modal").within(() => {
@@ -236,6 +216,13 @@ describe("Contact form", () => {
         "Hello",
       );
     });
+
+    cy.get("#contact-form-modal .p-modal__close").click();
+    cy.get("footer").contains("a", "Contact us").click();
+    cy.get('#contact-form-modal input[name="firstName"]').should(
+      "have.value",
+      "Test",
+    );
   });
 
   it("Full page, ubuntu.com returns #contact-form-fail", () => {
@@ -250,10 +237,6 @@ describe("Contact form", () => {
     cy.contains(
       "There was an error while sending your message. Please try again.",
     );
-    cy.window().then((win) => {
-      const events = (win.dataLayer || []).map((entry) => entry.event);
-      expect(events).to.include("contact_form_failed");
-    });
 
     cy.contains("a", "Try again").click();
     cy.location("pathname").should("eq", "/about/contact-us");
@@ -268,10 +251,9 @@ describe("Contact form", () => {
   function sendFromLandingLink(consent) {
     cy.setCookie("_cookies_accepted", consent);
     mockUbuntuSubmit();
-    cy.visit(
-      `${BASE}/?utm_source=google&utm_medium=cpc&utm_campaign=spring&utm_content=ad1&utm_term=snaps&gclid=g123&fbclid=f456`,
+    openPopup(
+      "/?utm_source=google&utm_medium=cpc&utm_campaign=spring&utm_content=ad1&utm_term=snaps&gclid=g123&fbclid=f456",
     );
-    cy.get("footer").contains("a", "Contact us").click();
     cy.get("#contact-form-modal").within(() => {
       fillForm();
       cy.get('[type="submit"]').click();
@@ -281,15 +263,21 @@ describe("Contact form", () => {
       .then((interception) => new URLSearchParams(interception.request.body));
   }
 
+  const TRACKING = {
+    utm_source: "google",
+    utm_medium: "cpc",
+    utm_campaign: "spring",
+    utm_content: "ad1",
+    utm_term: "snaps",
+    GCLID__c: "g123",
+    Facebook_Click_ID__c: "f456",
+  };
+
   it("Cookies accepted", () => {
     sendFromLandingLink("all").then((body) => {
-      expect(body.get("utm_source")).to.equal("google");
-      expect(body.get("utm_medium")).to.equal("cpc");
-      expect(body.get("utm_campaign")).to.equal("spring");
-      expect(body.get("utm_content")).to.equal("ad1");
-      expect(body.get("utm_term")).to.equal("snaps");
-      expect(body.get("GCLID__c")).to.equal("g123");
-      expect(body.get("Facebook_Click_ID__c")).to.equal("f456");
+      Object.entries(TRACKING).forEach(([name, value]) => {
+        expect(body.get(name), name).to.equal(value);
+      });
       expect(body.get("_cookies_accepted")).to.equal("all");
       expect(body.get("preferredLanguage")).to.not.equal("");
     });
@@ -297,15 +285,7 @@ describe("Contact form", () => {
 
   it("Cookies rejected", () => {
     sendFromLandingLink("essential").then((body) => {
-      [
-        "utm_source",
-        "utm_medium",
-        "utm_campaign",
-        "utm_content",
-        "utm_term",
-        "GCLID__c",
-        "Facebook_Click_ID__c",
-      ].forEach((name) => {
+      Object.keys(TRACKING).forEach((name) => {
         expect(body.get(name) || "", name).to.equal("");
       });
       expect(body.get("_cookies_accepted")).to.equal("essential");

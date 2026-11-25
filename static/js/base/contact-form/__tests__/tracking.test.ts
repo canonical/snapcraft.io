@@ -14,6 +14,7 @@ const FIELDS = [
   "GCLID__c",
   "Facebook_Click_ID__c",
 ];
+const EMPTY = Object.fromEntries(FIELDS.map((name) => [name, ""]));
 
 function renderForm() {
   document.body.innerHTML = `
@@ -55,13 +56,9 @@ describe("Campaign tracking fields", () => {
     fillTrackingFields(form);
 
     expect(sent(form)).toEqual({
+      ...EMPTY,
       utm_source: "google",
-      utm_medium: "",
       utm_campaign: "spring",
-      utm_content: "",
-      utm_term: "",
-      GCLID__c: "",
-      Facebook_Click_ID__c: "",
     });
   });
 
@@ -70,7 +67,7 @@ describe("Campaign tracking fields", () => {
     const form = renderForm();
     fillTrackingFields(form);
 
-    expect(Object.values(sent(form)).every((value) => value === "")).toBe(true);
+    expect(sent(form)).toEqual(EMPTY);
   });
 
   it("keeps UTMs and click IDs after moving to another page", () => {
@@ -92,7 +89,7 @@ describe("Campaign tracking fields", () => {
     const form = renderForm();
     fillTrackingFields(form);
 
-    expect(Object.values(sent(form)).every((value) => value === "")).toBe(true);
+    expect(sent(form)).toEqual(EMPTY);
   });
 
   it("continues when the browser blocks access to session storage", () => {
@@ -104,7 +101,7 @@ describe("Campaign tracking fields", () => {
 
     expect(() => visit("/?utm_source=google&gclid=abc")).not.toThrow();
     expect(() => fillTrackingFields(form)).not.toThrow();
-    expect(Object.values(sent(form)).every((value) => value === "")).toBe(true);
+    expect(sent(form)).toEqual(EMPTY);
     expect(() => clearTracking()).not.toThrow();
     expect(console.warn).toHaveBeenCalledTimes(3);
   });

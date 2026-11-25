@@ -76,16 +76,16 @@
     <input type="hidden" aria-hidden="true" aria-label="hidden field" name="formid" value="2639" />
     <input type="hidden" aria-hidden="true" aria-label="hidden field" name="returnURL" value="{{returnURL}}" />
     <input type="hidden" aria-hidden="true" aria-label="hidden field" name="Consent_to_Processing__c" value="yes" />
+    {# Set here for no-JS sends; tracking.ts refreshes it on submit #}
     <input type="hidden" aria-hidden="true" aria-label="hidden field" name="_cookies_accepted" value="{{ request.cookies.get('_cookies_accepted', '') }}" />
-    <input type="hidden" aria-hidden="true" aria-label="hidden field" name="utm_campaign" id="contact-utm_campaign" value="" />
-    <input type="hidden" aria-hidden="true" aria-label="hidden field" name="utm_medium" id="contact-utm_medium" value="" />
-    <input type="hidden" aria-hidden="true" aria-label="hidden field" name="utm_source" id="contact-utm_source" value="" />
-    <input type="hidden" aria-hidden="true" aria-label="hidden field" name="utm_content" id="contact-utm_content" value="" />
-    <input type="hidden" aria-hidden="true" aria-label="hidden field" name="utm_term" id="contact-utm_term" value="" />
-    <input type="hidden" aria-hidden="true" aria-label="hidden field" name="GCLID__c" id="contact-GCLID__c" value="" />
-    <input type="hidden" aria-hidden="true" aria-label="hidden field" name="Facebook_Click_ID__c"
-      id="contact-Facebook_Click_ID__c" value="" />
-    <input type="hidden" aria-hidden="true" aria-label="hidden field" id="contact-preferredLanguage" name="preferredLanguage"
+    <input type="hidden" aria-hidden="true" aria-label="hidden field" name="utm_campaign" value="" />
+    <input type="hidden" aria-hidden="true" aria-label="hidden field" name="utm_medium" value="" />
+    <input type="hidden" aria-hidden="true" aria-label="hidden field" name="utm_source" value="" />
+    <input type="hidden" aria-hidden="true" aria-label="hidden field" name="utm_content" value="" />
+    <input type="hidden" aria-hidden="true" aria-label="hidden field" name="utm_term" value="" />
+    <input type="hidden" aria-hidden="true" aria-label="hidden field" name="GCLID__c" value="" />
+    <input type="hidden" aria-hidden="true" aria-label="hidden field" name="Facebook_Click_ID__c" value="" />
+    <input type="hidden" aria-hidden="true" aria-label="hidden field" name="preferredLanguage"
       maxlength="255" value="" />
   </fieldset>
 </form>

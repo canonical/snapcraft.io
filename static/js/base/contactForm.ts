@@ -1,17 +1,21 @@
 import { setupContactForm } from "./contact-form";
-import { clearAnswers, restoreAnswers } from "./contact-form/saved-answers";
+import { setupFullPageResult } from "./contact-form/full-page";
+import { contactFormFailed, contactFormSucceeded } from "./contact-form/result";
+import { restoreAnswers } from "./contact-form/saved-answers";
 import {
-  clearTracking,
+  captureLanding,
   currentURLWithoutTracking,
-  pushEvent,
+  trackFormEvent,
 } from "./contact-form/tracking";
 
-const modal = document.getElementById("contact-form-modal") as
-  | HTMLElement
-  | undefined;
-const modalBody = document.getElementById("modal-body") as
-  | HTMLElement
-  | undefined;
+captureLanding();
+document
+  .querySelectorAll<HTMLFormElement>(".js-contact-form")
+  .forEach(setupContactForm);
+setupFullPageResult();
+
+const modal = document.getElementById("contact-form-modal");
+const modalBody = document.getElementById("modal-body");
 const successPanel = modal?.querySelector<HTMLElement>(".js-contact-success");
 const errorPanel = modal?.querySelector<HTMLElement>(".js-contact-error");
 const dialog = modal?.querySelector<HTMLElement>('[role="dialog"]');
@@ -58,6 +62,36 @@ function trapTabFocus(event: KeyboardEvent, container: HTMLElement): void {
   }
 }
 
+function renderForm(): void {
+  const template = document.getElementById("contactFormTemplate");
+  if (!(template instanceof HTMLTemplateElement) || !modalBody) return;
+
+  modalBody.replaceChildren(template.content.cloneNode(true));
+  const form = modalBody.querySelector<HTMLFormElement>(".js-contact-form");
+  if (!form) return;
+
+  setupContactForm(form);
+  restoreAnswers(form);
+  // Runs after validation, which cancels invalid submits
+  form.addEventListener("submit", (submitEvent) => {
+    if (submitEvent.defaultPrevented) return;
+    const returnURL = form.elements.namedItem("returnURL");
+    if (returnURL instanceof HTMLInputElement) {
+      const url = currentURLWithoutTracking();
+      url.hash = "contact-form-success";
+      returnURL.value = url.href;
+    }
+    trackFormEvent("contact_form_submitted");
+  });
+}
+
+function openContactForm(link: HTMLElement): void {
+  trigger = link;
+  renderForm();
+  showPanel("form");
+  trackFormEvent("contact_form_opened");
+}
+
 if (modal) {
   modal.querySelector(".p-modal__close")?.addEventListener("click", closeModal);
 
@@ -70,39 +104,7 @@ if (modal) {
       trapTabFocus(event, dialog);
     }
   });
-}
 
-function renderForm(): HTMLFormElement | null {
-  const template = document.getElementById("contactFormTemplate");
-  if (!(template instanceof HTMLTemplateElement) || !modalBody) return null;
-
-  modalBody.replaceChildren(template.content.cloneNode(true));
-  const form = modalBody.querySelector<HTMLFormElement>(".js-contact-form");
-  if (!form) return null;
-
-  setupContactForm(form);
-  // Runs after validation, which cancels invalid submits
-  form.addEventListener("submit", (submitEvent) => {
-    if (submitEvent.defaultPrevented) return;
-    const returnURL = form.elements.namedItem("returnURL");
-    if (returnURL instanceof HTMLInputElement) {
-      const url = currentURLWithoutTracking();
-      url.hash = "contact-form-success";
-      returnURL.value = url.href;
-    }
-    pushEvent("contact_form_submitted");
-  });
-  return form;
-}
-
-function openContactForm(link: HTMLElement): void {
-  trigger = link;
-  renderForm();
-  showPanel("form");
-  pushEvent("contact_form_opened");
-}
-
-if (modal) {
   // Delegated so links rendered later (e.g. by React) also open the pop-up
   document.addEventListener("click", (event) => {
     const link = (event.target as Element | null)?.closest<HTMLElement>(
@@ -116,18 +118,15 @@ if (modal) {
   modal
     .querySelector(".js-contact-try-again")
     ?.addEventListener("click", () => {
-      const form = renderForm();
-      if (form) restoreAnswers(form);
+      renderForm();
       showPanel("form");
     });
 
   if (window.location.hash === "#contact-form-success") {
-    clearAnswers();
-    clearTracking();
     showPanel("success");
-    pushEvent("contact_form_success");
+    contactFormSucceeded();
   } else if (window.location.hash === "#contact-form-fail") {
     showPanel("error");
-    pushEvent("contact_form_failed");
+    contactFormFailed();
   }
 }

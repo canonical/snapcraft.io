@@ -1,4 +1,8 @@
+import { trackEvent } from "@canonical/analytics-events";
+import { readJSON, remove, writeJSON } from "./storage";
+
 const STORAGE_KEY = "contact-form-tracking";
+const LABEL = "contact form tracking";
 const ACCEPTED = ["functionality", "performance", "all"];
 const PARAMS: Record<string, string> = {
   utm_source: "utm_source",
@@ -15,12 +19,9 @@ type ContactFormEvent =
   | "contact_form_submitted"
   | "contact_form_success"
   | "contact_form_failed";
-type DataLayerWindow = Window & { dataLayer?: Record<string, unknown>[] };
 
-export function pushEvent(event: ContactFormEvent): void {
-  const analyticsWindow = window as DataLayerWindow;
-  analyticsWindow.dataLayer ||= [];
-  analyticsWindow.dataLayer.push({ event });
+export function trackFormEvent(event: ContactFormEvent): void {
+  trackEvent(event);
 }
 
 function getCookie(name: string): string {
@@ -30,18 +31,6 @@ function getCookie(name: string): string {
   return match ? decodeURIComponent(match.split("=")[1]) : "";
 }
 
-function readSaved(): Record<string, string> {
-  try {
-    const saved = JSON.parse(
-      window.sessionStorage.getItem(STORAGE_KEY) || "{}",
-    );
-    return saved && typeof saved === "object" ? saved : {};
-  } catch (error) {
-    console.warn("Failed to read contact form tracking", error);
-    return {};
-  }
-}
-
 export function captureLanding(): void {
   const params = new URLSearchParams(window.location.search);
   const found: Record<string, string> = {};
@@ -49,25 +38,23 @@ export function captureLanding(): void {
     const value = params.get(param);
     if (value) found[field] = value;
   });
-  if (Object.keys(found).length) {
-    try {
-      window.sessionStorage.setItem(STORAGE_KEY, JSON.stringify(found));
-    } catch (error) {
-      console.warn("Failed to save contact form tracking", error);
-    }
-  }
+  if (Object.keys(found).length) writeJSON(STORAGE_KEY, LABEL, found);
 }
 
 export function fillTrackingFields(form: HTMLFormElement): void {
   const consent = getCookie("_cookies_accepted");
-  const saved = hasTrackingConsent() ? readSaved() : {};
+  const saved = ACCEPTED.includes(consent) ? readJSON(STORAGE_KEY, LABEL) : {};
 
   const setField = (name: string, value: string) => {
     const field = form.elements.namedItem(name);
     if (field instanceof HTMLInputElement) field.value = value;
   };
 
-  Object.values(PARAMS).forEach((field) => setField(field, saved[field] || ""));
+  Object.values(PARAMS).forEach((field) => {
+    const value = saved[field];
+    setField(field, typeof value === "string" ? value : "");
+  });
+  // The server value is stale if the cookie banner was accepted after load
   setField("_cookies_accepted", consent);
   setField("preferredLanguage", navigator.language || "");
 }
@@ -86,9 +73,5 @@ export function currentURLWithoutTracking(): URL {
 }
 
 export function clearTracking(): void {
-  try {
-    window.sessionStorage.removeItem(STORAGE_KEY);
-  } catch (error) {
-    console.warn("Failed to remove contact form tracking", error);
-  }
+  remove(STORAGE_KEY, LABEL);
 }

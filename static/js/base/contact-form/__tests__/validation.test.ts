@@ -54,6 +54,18 @@ describe("Form validation", () => {
     expect(submitForm(form).defaultPrevented).toBe(false);
   });
 
+  it("shows the submit button as loading after a valid submit", () => {
+    const form = renderForm();
+    type("firstName", "Ada");
+    type("email", "ada@example.com");
+    submitForm(form);
+
+    const button = form.querySelector("button") as HTMLButtonElement;
+    expect(button.disabled).toBe(true);
+    expect(button.textContent).toContain("Submitting…");
+    expect(button.querySelector(".p-icon--spinner")).not.toBeNull();
+  });
+
   it("clears a field's error once it is fixed", () => {
     submitForm(renderForm());
 

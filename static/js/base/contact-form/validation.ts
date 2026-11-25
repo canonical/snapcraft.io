@@ -1,8 +1,6 @@
-import { saveAnswers } from "./saved-answers";
+import { buttonLoading } from "../../libs/formHelpers";
+import { type Field, FIELDS, saveAnswers } from "./saved-answers";
 import { fillTrackingFields } from "./tracking";
-
-type Field = HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement;
-const FIELDS = "input, select, textarea";
 
 function clearError(wrapper: Element): void {
   wrapper.classList.remove("is-error");
@@ -26,7 +24,6 @@ function showError(field: Field): void {
 }
 
 export function setupValidation(form: HTMLFormElement): void {
-  // Show our own messages instead of the browser's bubbles
   form.noValidate = true;
 
   const errorWrappers = () =>
@@ -60,8 +57,6 @@ export function setupValidation(form: HTMLFormElement): void {
     saveAnswers(form);
     form
       .querySelectorAll<HTMLButtonElement>('[type="submit"]')
-      .forEach((button) => {
-        button.disabled = true;
-      });
+      .forEach((button) => buttonLoading(button, "Submitting…"));
   });
 }
