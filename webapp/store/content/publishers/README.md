@@ -11,8 +11,7 @@ Each publisher file must be named `<publisher-id>.yaml` using lowercase letters.
 Run the validator before opening a PR:
 
 ```bash
-workshop exec -- env PYTHONPATH=. python3 scripts/validate-publisher-content.py \
-  --content-dir webapp/store/content/publishers
+workshop run -- yarn validate-publisher-content
 ```
 
 The command exits non-zero on errors and reports the file and field.

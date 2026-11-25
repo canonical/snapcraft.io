@@ -57,8 +57,7 @@ before submitting the PR.
 Run the validator locally:
 
 ```bash
-workshop exec -- env PYTHONPATH=. python3 scripts/validate-publisher-content.py \
-  --content-dir webapp/store/content/publishers
+workshop run -- yarn validate-publisher-content
 ```
 
 ## A note on AI tools
