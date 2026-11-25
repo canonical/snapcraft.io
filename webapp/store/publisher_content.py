@@ -1,7 +1,7 @@
 import re
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any
+from typing import Any, ClassVar
 from urllib.parse import urlparse
 
 from ruamel.yaml import YAML
@@ -22,34 +22,40 @@ class ValidationIssue:
 
 
 class PublisherContentValidator:
-    REQUIRED_STRING_FIELDS = {
-        "display_name",
-        "summary",
-        "description",
-        "publisher_since",
-    }
+    REQUIRED_STRING_FIELDS = frozenset(
+        {
+            "description",
+            "display_name",
+            "publisher_since",
+            "summary",
+        }
+    )
 
-    OPTIONAL_STRING_FIELDS = {
-        "icon_url",
-        "website",
-        "contact",
-        "banner_url",
-        "meta_description",
-    }
+    OPTIONAL_STRING_FIELDS = frozenset(
+        {
+            "banner_url",
+            "contact",
+            "icon_url",
+            "meta_description",
+            "website",
+        }
+    )
 
-    URI_FIELDS = {"icon_url", "website", "contact", "banner_url"}
+    URI_FIELDS = frozenset({"icon_url", "website", "contact", "banner_url"})
 
     # contact may be a mailto link; the other URI fields are sources for
     # images / CSS backgrounds or outbound links, so they must be https.
-    URI_FIELD_SCHEMES = {
+    URI_FIELD_SCHEMES: ClassVar[dict[str, set[str]]] = {
         "icon_url": {"https"},
         "website": {"https"},
         "contact": {"https", "mailto"},
         "banner_url": {"https"},
     }
 
-    FEATURED_ITEM_FIELDS = {"package_name", "background", "description"}
-    LISTED_ITEM_FIELDS = {"package_name"}
+    FEATURED_ITEM_FIELDS = frozenset(
+        {"background", "description", "package_name"}
+    )
+    LISTED_ITEM_FIELDS = frozenset({"package_name"})
 
     def validate(self, content: Any) -> list[ValidationIssue]:
         if not isinstance(content, dict):
@@ -77,7 +83,7 @@ class PublisherContentValidator:
                     )
                 )
 
-        for field in sorted(self.REQUIRED_STRING_FIELDS):
+        for field in self.REQUIRED_STRING_FIELDS:
             if field not in content:
                 issues.append(
                     ValidationIssue(field=field, message="field is required")
@@ -89,7 +95,7 @@ class PublisherContentValidator:
                     ValidationIssue(field=field, message="must be a string")
                 )
 
-        for field in sorted(self.OPTIONAL_STRING_FIELDS):
+        for field in self.OPTIONAL_STRING_FIELDS:
             if field not in content:
                 continue
 
@@ -158,7 +164,7 @@ class PublisherContentValidator:
                     )
                 )
 
-            for required_field in sorted(self.FEATURED_ITEM_FIELDS):
+            for required_field in self.FEATURED_ITEM_FIELDS:
                 if required_field not in snap:
                     issues.append(
                         ValidationIssue(
@@ -212,7 +218,7 @@ class PublisherContentValidator:
                 continue
 
             unknown_fields = set(snap.keys()) - self.LISTED_ITEM_FIELDS
-            for unknown_field in sorted(unknown_fields):
+            for unknown_field in unknown_fields:
                 issues.append(
                     ValidationIssue(
                         field=f"{field_prefix}.{unknown_field}",
