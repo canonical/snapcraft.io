@@ -76,7 +76,7 @@ describe("Saved answers", () => {
     });
   });
 
-  it("is cleared after success", () => {
+  it("restores nothing once answers are cleared", () => {
     fill(renderForm());
     saveAnswers(document.querySelector("form") as HTMLFormElement);
     clearAnswers();

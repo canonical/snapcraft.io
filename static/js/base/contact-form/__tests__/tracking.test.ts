@@ -83,7 +83,7 @@ describe("Campaign tracking fields", () => {
     });
   });
 
-  it("clears tracking after success", () => {
+  it("fills nothing once tracking is cleared", () => {
     visit("/?utm_source=google&gclid=abc");
     clearTracking();
     const form = renderForm();
