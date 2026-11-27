@@ -1,16 +1,17 @@
-import { readJSON, remove, writeJSON } from "./storage";
+import { readJSON, removeItem, writeJSON } from "./storage";
 
 const STORAGE_KEY = "contact-form-answers";
 const LABEL = "contact form answers";
-// Bot traps are visible inputs but never typed by real users
-const SKIP = new Set(["website", "name"]);
 
 export type Field = HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement;
-export const FIELDS = "input, select, textarea";
 
 function userFields(form: HTMLFormElement): Field[] {
-  return Array.from(form.querySelectorAll<Field>(FIELDS)).filter(
-    (field) => field.name && field.type !== "hidden" && !SKIP.has(field.name),
+  return Array.from(
+    form.querySelectorAll<Field>("input[name], select[name], textarea[name]"),
+  ).filter(
+    // Bot traps live in an aria-hidden wrapper and are never typed by real users
+    (field) =>
+      field.type !== "hidden" && !field.closest('[aria-hidden="true"]'),
   );
 }
 
@@ -22,7 +23,7 @@ export function saveAnswers(form: HTMLFormElement): void {
         ? field.checked
         : field.value;
   });
-  writeJSON(STORAGE_KEY, LABEL, answers);
+  writeJSON(STORAGE_KEY, answers, LABEL);
 }
 
 export function restoreAnswers(form: HTMLFormElement): void {
@@ -33,11 +34,10 @@ export function restoreAnswers(form: HTMLFormElement): void {
       if (typeof value === "boolean") field.checked = value;
     } else if (typeof value === "string") {
       field.value = value;
-      field.dispatchEvent(new Event("change"));
     }
   });
 }
 
 export function clearAnswers(): void {
-  remove(STORAGE_KEY, LABEL);
+  removeItem(STORAGE_KEY, LABEL);
 }

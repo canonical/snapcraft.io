@@ -1,5 +1,5 @@
 import { trackEvent } from "@canonical/analytics-events";
-import { readJSON, remove, writeJSON } from "./storage";
+import { readJSON, removeItem, writeJSON } from "./storage";
 
 const STORAGE_KEY = "contact-form-tracking";
 const LABEL = "contact form tracking";
@@ -38,7 +38,7 @@ export function captureLanding(): void {
     const value = params.get(param);
     if (value) found[field] = value;
   });
-  if (Object.keys(found).length) writeJSON(STORAGE_KEY, LABEL, found);
+  if (Object.keys(found).length) writeJSON(STORAGE_KEY, found, LABEL);
 }
 
 function hasTrackingConsent(): boolean {
@@ -47,7 +47,7 @@ function hasTrackingConsent(): boolean {
 
 export function fillTrackingFields(form: HTMLFormElement): void {
   const consent = getCookie("_cookies_accepted");
-  const saved = hasTrackingConsent() ? readJSON(STORAGE_KEY, LABEL) : {};
+  const saved = ACCEPTED.includes(consent) ? readJSON(STORAGE_KEY, LABEL) : {};
 
   const setField = (name: string, value: string) => {
     const field = form.elements.namedItem(name);
@@ -73,5 +73,5 @@ export function currentURLWithoutTracking(): URL {
 }
 
 export function clearTracking(): void {
-  remove(STORAGE_KEY, LABEL);
+  removeItem(STORAGE_KEY, LABEL);
 }

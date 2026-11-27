@@ -132,4 +132,26 @@ describe("Saved answers", () => {
       error,
     );
   });
+
+  it("does not save or refill bot-trap fields", () => {
+    document.body.innerHTML = `
+      <form>
+        <input name="firstName" type="text" value="Test">
+        <div aria-hidden="true">
+          <input name="website" type="text" value="spam">
+        </div>
+      </form>
+    `;
+    const form = document.querySelector("form") as HTMLFormElement;
+    const website = form.elements.namedItem("website") as HTMLInputElement;
+    saveAnswers(form);
+
+    expect(window.sessionStorage.getItem("contact-form-answers")).not.toContain(
+      "spam",
+    );
+
+    website.value = "";
+    restoreAnswers(form);
+    expect(website.value).toBe("");
+  });
 });

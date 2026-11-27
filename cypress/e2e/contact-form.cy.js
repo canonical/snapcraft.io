@@ -122,7 +122,6 @@ describe("Contact form", () => {
       expect(fields.get("returnURL")).to.equal(`${BASE}/#contact-form-success`);
     });
     cy.location("pathname").should("eq", "/");
-    cy.location("hash").should("eq", "#contact-form-success");
     cy.get("#contact-form-modal")
       .should("be.visible")
       .and("contain", "Thanks for contacting us")
@@ -131,6 +130,10 @@ describe("Contact form", () => {
       cy.get("h2").should("not.exist");
       cy.contains("h3", "Thanks for contacting us");
     });
+
+    cy.location("hash").should("eq", "");
+    cy.reload();
+    cy.get("#contact-form-modal").should("not.be.visible");
   });
 
   it("Snap page and empty search links", () => {
@@ -225,7 +228,6 @@ describe("Contact form", () => {
 
     cy.wait("@marketoSubmit");
     cy.location("pathname").should("eq", "/");
-    cy.location("hash").should("eq", "#contact-form-fail");
     cy.get("#contact-form-modal")
       .should("be.visible")
       .and(
@@ -238,9 +240,12 @@ describe("Contact form", () => {
       expectRefilled();
     });
 
-    // A later open starts empty
+    cy.location("hash").should("eq", "");
     cy.get("#contact-form-modal .p-modal__close").click();
     cy.get("footer").contains("a", "Contact us").click();
+    cy.get("#contact-form-modal").within(expectRefilled);
+
+    openPopup();
     cy.get('#contact-form-modal input[name="firstName"]').should(
       "have.value",
       "",
@@ -257,11 +262,11 @@ describe("Contact form", () => {
 
     cy.wait("@marketoSubmit");
     cy.location("pathname").should("eq", "/about/contact-us");
-    cy.location("hash").should("eq", "#contact-form-fail");
     cy.contains(
       "There was an error while sending your message. Please try again.",
     ).should("be.visible");
     expectRefilled();
+    cy.location("hash").should("eq", "");
 
     // Opening the page normally starts empty
     cy.visit(`${BASE}/about/contact-us`);

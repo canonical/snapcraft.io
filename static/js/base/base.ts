@@ -1,4 +1,4 @@
-import "./contactForm";
+import "./contact-form";
 import "./sentry";
 import { initAnalytics } from "@canonical/analytics-events";
 

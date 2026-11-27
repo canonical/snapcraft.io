@@ -1,6 +1,8 @@
-import { buttonLoading } from "../../libs/formHelpers";
-import { type Field, FIELDS, saveAnswers } from "./saved-answers";
-import { fillTrackingFields } from "./tracking";
+import { buttonEnabled, buttonLoading } from "../../libs/formHelpers";
+import { type Field, saveAnswers } from "./saved-answers";
+import { fillTrackingFields, trackFormEvent } from "./tracking";
+
+const FIELDS = "input, select, textarea";
 
 function clearError(wrapper: Element): void {
   wrapper.classList.remove("is-error");
@@ -23,8 +25,14 @@ function showError(field: Field): void {
   field.setAttribute("aria-describedby", message.id);
 }
 
-export function setupValidation(form: HTMLFormElement): void {
+export function setupValidation(
+  form: HTMLFormElement,
+  beforeSend?: () => void,
+): void {
+  // Show our own messages instead of the browser's bubbles
   form.noValidate = true;
+
+  const sending = new Map<HTMLButtonElement, string>();
 
   const errorWrappers = () =>
     form.querySelectorAll(".p-form-validation.is-error");
@@ -53,10 +61,22 @@ export function setupValidation(form: HTMLFormElement): void {
       return;
     }
 
+    beforeSend?.();
+    trackFormEvent("contact_form_submitted");
     fillTrackingFields(form);
     saveAnswers(form);
     form
       .querySelectorAll<HTMLButtonElement>('[type="submit"]')
-      .forEach((button) => buttonLoading(button, "Submitting…"));
+      .forEach((button) => {
+        if (!sending.has(button)) sending.set(button, button.innerHTML);
+        buttonLoading(button, "Submitting…");
+      });
+  });
+
+  // Back can restore the page exactly as it was left, mid-send
+  window.addEventListener("pageshow", (event) => {
+    if (!event.persisted) return;
+    sending.forEach((label, button) => buttonEnabled(button, label));
+    sending.clear();
   });
 }

@@ -1,6 +1,9 @@
+import { trackEvent } from "@canonical/analytics-events";
 import { setupValidation } from "../validation";
 
-function renderForm() {
+vi.mock("@canonical/analytics-events", () => ({ trackEvent: vi.fn() }));
+
+function renderForm(beforeSend?: () => void) {
   document.body.innerHTML = `
     <form>
       <div class="p-form-validation">
@@ -16,7 +19,7 @@ function renderForm() {
     </form>
   `;
   const form = document.querySelector("form") as HTMLFormElement;
-  setupValidation(form);
+  setupValidation(form, beforeSend);
   return form;
 }
 
@@ -32,10 +35,20 @@ function type(id: string, value: string) {
   field.dispatchEvent(new Event("input", { bubbles: true }));
 }
 
+function submitValid(form: HTMLFormElement): Event {
+  type("firstName", "Ada");
+  type("email", "ada@example.com");
+  return submitForm(form);
+}
+
 const wrapper = (id: string) =>
   document.getElementById(id)?.closest(".p-form-validation") as HTMLElement;
 
 describe("Form validation", () => {
+  beforeEach(() => {
+    vi.mocked(trackEvent).mockClear();
+  });
+
   it("cancels the submit and marks each empty required field", () => {
     const submit = submitForm(renderForm());
 
@@ -44,21 +57,26 @@ describe("Form validation", () => {
     expect(wrapper("email").classList).toContain("is-error");
     expect(wrapper("phone").classList).not.toContain("is-error");
     expect(document.activeElement?.id).toBe("firstName");
+    expect(trackEvent).not.toHaveBeenCalled();
+  });
+
+  it("records a valid submit and runs the before-send step", () => {
+    const beforeSend = vi.fn();
+    const form = renderForm(beforeSend);
+    submitValid(form);
+
+    expect(beforeSend).toHaveBeenCalledTimes(1);
+    expect(trackEvent).toHaveBeenCalledWith("contact_form_submitted");
   });
 
   it("lets a valid form through with phone left empty", () => {
     const form = renderForm();
-    type("firstName", "Ada");
-    type("email", "ada@example.com");
-
-    expect(submitForm(form).defaultPrevented).toBe(false);
+    expect(submitValid(form).defaultPrevented).toBe(false);
   });
 
   it("shows the submit button as loading after a valid submit", () => {
     const form = renderForm();
-    type("firstName", "Ada");
-    type("email", "ada@example.com");
-    submitForm(form);
+    submitValid(form);
 
     const button = form.querySelector("button") as HTMLButtonElement;
     expect(button.disabled).toBe(true);
@@ -76,6 +94,22 @@ describe("Form validation", () => {
       wrapper("firstName").querySelector(".js-validation-message"),
     ).toBeNull();
     expect(wrapper("email").classList).toContain("is-error");
+  });
+
+  it("makes the submit button usable again after coming back with Back", () => {
+    const form = renderForm();
+    submitValid(form);
+
+    const button = form.querySelector("button") as HTMLButtonElement;
+    expect(button.disabled).toBe(true);
+
+    window.dispatchEvent(
+      Object.assign(new Event("pageshow"), { persisted: true }),
+    );
+
+    expect(button.disabled).toBe(false);
+    expect(button.textContent).toBe("Submit");
+    expect(button.querySelector(".p-icon--spinner")).toBeNull();
   });
 
   it("keeps the error while the field is still invalid", () => {
