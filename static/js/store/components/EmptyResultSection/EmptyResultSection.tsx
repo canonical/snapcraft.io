@@ -78,6 +78,7 @@ function EmptyResultSection({
                     href="/about/contact-us"
                     key={"contact-us"}
                     className={"snap-packages__list-item"}
+                    data-js="contact-form-trigger"
                   >
                     Contact us
                   </Link>,

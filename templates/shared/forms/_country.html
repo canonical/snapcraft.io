@@ -1,19 +1,13 @@
 {% if raw != "true" %}
-<li class="p-list__item">
-  <label for="country">{{ country or 'Country' }}:</label>
+<li class="p-list__item p-form-validation">
+  <label for="contact-country">{{ country or 'Country' }}: *</label>
   {% endif %}
   <select
     required
-    id="country"
+    id="contact-country"
     name="country"
   >
     <option value="">Select...</option
-    ><option value="FR">France</option
-    ><option value="DE">Germany</option
-    ><option value="JP">Japan</option
-    ><option value="GB">United Kingdom</option
-    ><option value="US">United States of America</option
-    ><option disabled>——————————————————</option
     ><option value="AF">Afghanistan</option
     ><option value="AX">Åland Islands</option
     ><option value="AL">Albania</option
